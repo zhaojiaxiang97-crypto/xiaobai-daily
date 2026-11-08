@@ -1,0 +1,1 @@
+import{t as e}from"./VoiceSynthesisWorkspace-hXj15Cwg.js";export{e as default};

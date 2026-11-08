@@ -1,0 +1,1 @@
+import{gt as e}from"./Switch-DLcnSLgF.js";import{t}from"./is-equal-8VOV02sH.js";function n(n,r){return e(n)?!1:Array.isArray(n)?n.some(e=>t(e,r)):t(n,r)}export{n as t};
