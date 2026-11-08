@@ -23,18 +23,32 @@ fi
 echo "[2/6] 解压外壳"
 tar xzf "$OUT/assets/app-shell.tar.gz" -C "$OUT/extract"
 
-echo "[3/6] 安装 @electron/asar 工具"
+echo "[3/6] 安装 @electron/asar"
 ASAR_PKG="$(mktemp -d)"
-npm install --prefix "$ASAR_PKG" @electron/asar --no-fund --no-audit >/dev/null 2>&1
-ASAR_BIN="$ASAR_PKG/node_modules/@electron/asar/bin/asar.js"
+(cd "$ASAR_PKG" && npm init -y >/dev/null 2>&1 && npm install @electron/asar --no-fund --no-audit >/dev/null 2>&1)
 
-echo "[4/6] 从本仓库源码打包 app.asar"
+echo "[4/6] 从本仓库源码打包 app.asar（含原生模块 unpack 记录）"
 SRC_DIR="$(cd "$(dirname "$0")" && pwd)"
-node "$ASAR_BIN" pack "$SRC_DIR" "$OUT/extract/小白日报.app/Contents/Resources/app.asar" --unpack-dir "node_modules"
-# 注: 本仓库 dist-electron/dist/package.json 即 asar 根内容
+RES_DIR="$OUT/extract/小白日报.app/Contents/Resources"
+# 组装打包目录：源码 + node_modules（asar 头需要 node_modules 条目指向 unpacked）
+PACK_DIR="$OUT/packdir"
+mkdir -p "$PACK_DIR"
+tar cf - -C "$SRC_DIR" dist dist-electron package.json | tar xf - -C "$PACK_DIR"
+tar xzf "$OUT/assets/app-unpacked.tar.gz" -C "$OUT" app.asar.unpacked
+cp -R "$OUT/app.asar.unpacked/node_modules" "$PACK_DIR/node_modules"
+node --input-type=module -e "
+import { createPackageWithOptions } from '$ASAR_PKG/node_modules/@electron/asar/lib/asar.js';
+await createPackageWithOptions('$PACK_DIR', '$RES_DIR/app.asar', { unpackDir: 'node_modules' });
+console.log('asar OK');
+"
+# pack 输出的 app.asar.unpacked（原生模块回位）+ 剩余 unpacked 资产
+if [ -d "$OUT/packdir.asar.unpacked" ]; then
+  rm -rf "$RES_DIR/app.asar.unpacked"
+  cp -R "$OUT/packdir.asar.unpacked" "$RES_DIR/app.asar.unpacked"
+fi
 
-echo "[5/6] 布置原生模块"
-tar xzf "$OUT/assets/app-unpacked.tar.gz" -C "$OUT/extract/小白日报.app/Contents/Resources/"
+echo "[5/6] 校验原生模块布局"
+[ -d "$RES_DIR/app.asar.unpacked/node_modules" ] || { echo "缺少 unpacked node_modules"; exit 1; }
 
 echo "[6/6] Ad-hoc 签名"
 codesign --force --deep --sign - "$OUT/extract/小白日报.app" >/dev/null 2>&1
