@@ -20,7 +20,28 @@ if [ ! -f "$OUT/assets/app-unpacked.tar.gz" ]; then
     || curl -L "$UNPACKED_URL" -o "$OUT/assets/app-unpacked.tar.gz"
 fi
 
-echo "[2/6] 解压外壳"
+echo "[2/6] 校验并解压外壳"
+# 完整性校验：下载中断/代理截断会产生"Unrecognized archive format"，先验证再解压
+verify_tar() {
+  local f="$1"
+  if ! tar tzf "$f" >/dev/null 2>&1; then
+    echo "资产损坏，重新下载: $f"
+    rm -f "$f"
+    return 1
+  fi
+  return 0
+}
+if ! verify_tar "$OUT/assets/app-shell.tar.gz"; then
+  gh release download "$RELEASE" -R "$REPO" -p "app-shell.tar.gz" -O "$OUT/assets/app-shell.tar.gz" 2>/dev/null \
+    || curl -fL "$ASAR_URL" -o "$OUT/assets/app-shell.tar.gz"
+  verify_tar "$OUT/assets/app-shell.tar.gz" || { echo "app-shell.tar.gz 重下后仍损坏，请检查网络"; exit 1; }
+fi
+if [ -f "$OUT/assets/app-unpacked.tar.gz" ] && ! verify_tar "$OUT/assets/app-unpacked.tar.gz"; then
+  echo "app-unpacked.tar.gz 损坏，重新下载"
+  rm -f "$OUT/assets/app-unpacked.tar.gz"
+  gh release download "$RELEASE" -R "$REPO" -p "app-unpacked.tar.gz" -O "$OUT/assets/app-unpacked.tar.gz" 2>/dev/null \
+    || curl -fL "$UNPACKED_URL" -o "$OUT/assets/app-unpacked.tar.gz"
+fi
 tar xzf "$OUT/assets/app-shell.tar.gz" -C "$OUT/extract"
 
 echo "[3/6] 安装 @electron/asar"

@@ -137,6 +137,18 @@ setup(t, { emit: n }) { let r = t; ... }
 
 实测：458 个 setup 中 305 个变为 `setup(props, ...)`；`ctx` 597 处、`renderCache` 1671 处。
 
+## API 客户端对象命名
+
+前端常见 `var xx = { async list(){}, async create(){}, ... }` 形式的 API 客户端对象。
+按**方法名关键词投票**决定业务域，命名 `<domain>Api`；置信度门槛 `命中数/方法数 ≥ 0.35`
+且命中 ≥2，否则跳过（方法太杂的对象误判率高，如 bot/消息类多域混合对象）。
+
+实测：59 个候选 → 高置信仅 4 个（`syncApi`/`reportApi`/`privacyApi`/`statsApi`）。
+
+补充：Vue 组合式 API（`defineProps`/`defineEmits`/`useSlots`/`useAttrs`/
+`useRouter`/`inject`）在打包产物中**已被编译器内联消除**，正则/AST 均搜不到，
+不要浪费时间在这条线上。
+
 ## 尚未安全的操作
 
 - **组件级物理拆分**：实测顶层 9986 声明零重复，但一条 `var` 逗号链常含多个组件；

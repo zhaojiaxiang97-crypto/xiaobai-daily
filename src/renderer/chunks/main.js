@@ -12121,7 +12121,7 @@ function xp(result) {
   if (result.ok) return result.data;
   throw Error(result.error.message);
 }
-var Sp = {
+var syncApi = {
   async getStatus() {
     return xp(await window.electronAPI.miniProgramSync.getStatus());
   },
@@ -12164,7 +12164,7 @@ function Cp() {
   }
   async function f() {
     try {
-      i.value = await Sp.getStatus(), i.value.backfillDone && i.value.phase !== `backfill` && !r.value && m();
+      i.value = await syncApi.getStatus(), i.value.backfillDone && i.value.phase !== `backfill` && !r.value && m();
     } catch {}
   }
   function p() {
@@ -13758,7 +13758,7 @@ function mm(result) {
   if (result.ok) return result.data;
   throw new pm(result.error.code, result.error.message, result.error.details);
 }
-var hm = {
+var reportApi = {
     async progress(progress) {
       return mm(await window.electronAPI.reports.progress(progress));
     },
@@ -16568,7 +16568,7 @@ function fg(result) {
   if (result.ok) return result.data;
   throw Error(result.error.message);
 }
-var pg = {
+var privacyApi = {
     async getConsentState() {
       return fg(await window.electronAPI.leaderboard.getConsentState());
     },
@@ -16861,11 +16861,11 @@ var Oae = [`data-kind`],
         if (!(a || document.hidden)) {
           a = true;
           try {
-            if (!(await pg.getConsentState()).enabled) {
+            if (!(await privacyApi.getConsentState()).enabled) {
               n.value = `join`, r.value = null;
               return;
             }
-            let daily = await pg.getDaily({
+            let daily = await privacyApi.getDaily({
               date: xg()
             });
             r.value = daily.me, n.value = daily.me ? `ranked` : `unranked`;
@@ -16914,7 +16914,7 @@ function Dg(result) {
   if (result.ok) return result.data;
   throw Error(result.error.message);
 }
-var Og = {
+var statsApi = {
     async list(e) {
       return Dg(await window.electronAPI.appUsage.list(e));
     },
@@ -17767,7 +17767,7 @@ var soe = {
         let e = ++g,
           t = Xg(new Date());
         try {
-          let barcode = await Og.barcode({
+          let barcode = await statsApi.barcode({
             startDate: t,
             endDate: t,
             colorBy: `app`
@@ -19446,7 +19446,7 @@ var ase = {
       }), watch(() => ise(_.value), () => {
         ++ee, j.value = null, E.value || Je(ee);
       }), onBeforeMount(async () => {
-        A = true, window.addEventListener(`focus`, Xe), document.addEventListener(`visibilitychange`, Ze), count = l_.onChanged(Ye), onStatusChangedResult = hm.onStatusChanged(e => {
+        A = true, window.addEventListener(`focus`, Xe), document.addEventListener(`visibilitychange`, Ze), count = l_.onChanged(Ye), onStatusChangedResult = reportApi.onStatusChanged(e => {
           e.status === `completed` && e.content.trim() && (N.value = false);
         }), await v(), A && (await qe(true), A && (E.value = false, await We(), window.electronAPI?.badges?.triggerEvent?.(`page_visit`, {
           page: `today_work`
@@ -43857,7 +43857,7 @@ var KF = {
         if (e && !x.value) {
           x.value = true;
           try {
-            await Og.clear(e), alertN(i18nTranslate(`settings.clearAppUsageSuccess`)), S.value = false, C.value = null;
+            await statsApi.clear(e), alertN(i18nTranslate(`settings.clearAppUsageSuccess`)), S.value = false, C.value = null;
           } catch (e) {
             alertT(e instanceof Error ? e.message : i18nTranslate(`errors.loadDataFailed`));
           } finally {
@@ -44341,7 +44341,7 @@ var tR = {
       async function d() {
         u.value = true;
         try {
-          l.value = f(await Og.distinctAppNames());
+          l.value = f(await statsApi.distinctAppNames());
         } catch {
           l.value = [];
         } finally {
@@ -54296,7 +54296,7 @@ All business endpoints use this response envelope:
         if (!p.value) {
           p.value = true;
           try {
-            let purgeCloud = await Sp.purgeCloud();
+            let purgeCloud = await syncApi.purgeCloud();
             f.value = false, d(), a.value = null, await n(), alertN(i18nTranslate(`settings.miniProgramSyncPurgeDone`, {
               rows: purgeCloud.totalRows
             }));
@@ -62126,7 +62126,7 @@ async function KU(e) {
   };
 }
 async function qU(e) {
-  return (await hm.list({
+  return (await reportApi.list({
     type: `all`,
     startDate: `${e}-01-01`,
     endDate: `${e}-12-31`,
@@ -63798,7 +63798,7 @@ function WW() {
     i = true;
     let t = HW;
     try {
-      let progress = await hm.progress(e);
+      let progress = await reportApi.progress(e);
       if (a || NW.value?.id !== e || t !== HW || !progress.report) return;
       s(progress.report), progress.report.status === `processing` && (BW.value = progress.content);
     } catch {} finally {
@@ -63819,7 +63819,7 @@ function WW() {
   async function l(t) {
     VW++, IW.value = true, NW.value = null, zW.value = null, BW.value = ``;
     try {
-      NW.value = await hm.generate(t), await o();
+      NW.value = await reportApi.generate(t), await o();
     } catch (n) {
       IW.value = false, BW.value = ``, zW.value = UW(n, i18nTranslate(`composables.reports.generateFailed`)), alertT(zW.value, bH(t.model) ? `premium_report` : `report`);
     }
@@ -63827,7 +63827,7 @@ function WW() {
   async function u(t) {
     VW++, IW.value = true, NW.value = null, zW.value = null, BW.value = ``;
     try {
-      return NW.value = await hm.generateFact(t), NW.value;
+      return NW.value = await reportApi.generateFact(t), NW.value;
     } catch (t) {
       return zW.value = UW(t, i18nTranslate(`composables.reports.generateFailed`)), alertT(zW.value), null;
     } finally {
@@ -63837,7 +63837,7 @@ function WW() {
   async function d(t = {}) {
     LW.value = true, zW.value = null;
     try {
-      let e = await hm.list(t);
+      let e = await reportApi.list(t);
       return PW.value = e.reports, FW.value = e.total, true;
     } catch (t) {
       return zW.value = UW(t, i18nTranslate(`composables.reports.loadFailed`)), PW.value = [], FW.value = 0, alertT(zW.value), false;
@@ -63848,7 +63848,7 @@ function WW() {
   async function f(t) {
     zW.value = null;
     try {
-      await hm.delete(t), PW.value = PW.value.filter(item => item.id !== t), FW.value = Math.max(0, FW.value - 1), alertN(i18nTranslate(`composables.reports.deleteSuccess`));
+      await reportApi.delete(t), PW.value = PW.value.filter(item => item.id !== t), FW.value = Math.max(0, FW.value - 1), alertN(i18nTranslate(`composables.reports.deleteSuccess`));
     } catch (t) {
       zW.value = UW(t, i18nTranslate(`composables.reports.deleteFailed`)), alertT(zW.value);
     }
@@ -63856,7 +63856,7 @@ function WW() {
   async function p(t, items) {
     RW.value = true;
     try {
-      let exportToFile = await hm.exportToFile({
+      let exportToFile = await reportApi.exportToFile({
         id: t.id,
         title: t.title,
         content: t.content,
@@ -63876,9 +63876,9 @@ function WW() {
     a = false, requestAnimationFrameResult = setInterval(() => void o(), 3e3);
     let e = VW,
       i = HW;
-    normalizeResult ||= hm.onStatusChanged(s), replaceResult ||= hm.onStreamChunk(c);
+    normalizeResult ||= reportApi.onStatusChanged(s), replaceResult ||= reportApi.onStreamChunk(c);
     try {
-      let t = await hm.list({});
+      let t = await reportApi.list({});
       if (a || VW !== e || HW !== i) return;
       let found = t.reports.find(item => item.status === `pending` || item.status === `processing`);
       if (found) NW.value = found, IW.value = true, await o();else if (IW.value = false, BW.value = ``, NW.value) {
@@ -86341,7 +86341,7 @@ var _6e = {
         if (e) {
           Tn.value = true, En.value = false, wn.value = null;
           try {
-            wn.value = await hm.estimateCredits({
+            wn.value = await reportApi.estimateCredits({
               type: l.value,
               startDate: p.value,
               endDate: m.value,
@@ -86743,7 +86743,7 @@ var _6e = {
         }
         let t = pn.value;
         if (t) try {
-          let updateContent = await hm.updateContent(t.id, trimmed);
+          let updateContent = await reportApi.updateContent(t.id, trimmed);
           pn.value = updateContent, gn.value = trimmed, ai.value = false, alertN(i18nTranslate(`generateReport.saveContentSuccess`));
         } catch {
           alertT(i18nTranslate(`generateReport.saveContentFailed`));
@@ -86848,7 +86848,7 @@ var _6e = {
           }),
           o;
         try {
-          let summary = await Og.summary({
+          let summary = await statsApi.summary({
             startedAt: n,
             endedAt: a
           });
@@ -86890,7 +86890,7 @@ var _6e = {
           }),
           replaceResult;
         try {
-          let summary = await Og.summary({
+          let summary = await statsApi.summary({
             startedAt: e,
             endedAt: t
           });
@@ -86933,7 +86933,7 @@ var _6e = {
           };
         Bi?.();
         let c = Qr.value.length ? [...Qr.value] : [`deepseek`];
-        Bi = hm.onStatusChanged(e => {
+        Bi = reportApi.onStatusChanged(e => {
           e.status === `completed` && c.some(item => e.model === `chat-${item}`) && e.type === s.type && e.templateId === s.templateId && e.startDate === s.startDate && e.endDate === s.endDate && (Bi?.(), Bi = null, Hi());
         });
         let count = [];
@@ -101299,7 +101299,7 @@ var Ylt = {
                 startedAt: lt.value,
                 endedAt: dt.value
               },
-              [t, n, a] = await Promise.all([l_.list(e), Og.summary(e).catch(() => []), toolIconV.getUserProfileContext().catch(() => ({
+              [t, n, a] = await Promise.all([l_.list(e), statsApi.summary(e).catch(() => []), toolIconV.getUserProfileContext().catch(() => ({
                 content: ``
               }))]);
             if (t.length === 0) {
@@ -105649,7 +105649,7 @@ var rgt = {
       async function Ne() {
         h.value = true, x.value = ``;
         try {
-          p.value = await pg.getConsentState(), !p.value.enabled && !A.value && (S.value = true, A.value = true);
+          p.value = await privacyApi.getConsentState(), !p.value.enabled && !A.value && (S.value = true, A.value = true);
         } catch (e) {
           x.value = e instanceof Error ? e.message : i18nTranslate(`leaderboard.loadFailed`);
         } finally {
@@ -105669,7 +105669,7 @@ var rgt = {
           };
         M = true, n || (g.value = true, x.value = ``), c.value = xg();
         try {
-          let daily = await pg.getDaily(o);
+          let daily = await privacyApi.getDaily(o);
           if (a !== ne) return false;
           if (daily.period) f.value = true;else if (o.period !== `day` || o.scope !== `global`) return f.value = false, u.value = `day`, d.value = `global`, false;
           return m.value = daily, e.silent || t(`insight_view_loaded`, {
@@ -105727,7 +105727,7 @@ var rgt = {
         if (!_.value) {
           _.value = true, x.value = ``;
           try {
-            p.value = await pg.acceptConsent({
+            p.value = await privacyApi.acceptConsent({
               profileVisible: k.value
             }), S.value = false, await Pe();
           } catch (e) {
@@ -105741,7 +105741,7 @@ var rgt = {
         if (!v.value) {
           v.value = true, x.value = ``;
           try {
-            p.value = await pg.updateProfileVisibility({
+            p.value = await privacyApi.updateProfileVisibility({
               profileVisible: e
             }), await Pe();
           } catch (e) {
@@ -105755,7 +105755,7 @@ var rgt = {
         if (!y.value) {
           y.value = true;
           try {
-            p.value = await pg.updateDailyDigest({
+            p.value = await privacyApi.updateDailyDigest({
               enabled: e
             });
           } catch (e) {
@@ -105772,7 +105772,7 @@ var rgt = {
         if (!b.value) {
           b.value = true, x.value = ``;
           try {
-            p.value = await pg.leave(), m.value = null, C.value = false, S.value = false, w.value = false;
+            p.value = await privacyApi.leave(), m.value = null, C.value = false, S.value = false, w.value = false;
           } catch (e) {
             x.value = e instanceof Error ? e.message : i18nTranslate(`leaderboard.leaveFailed`);
           } finally {
@@ -107116,7 +107116,7 @@ var D_t = {
           t = M();
         f.value = true, p.value = ``;
         try {
-          let barcode = await Og.barcode({
+          let barcode = await statsApi.barcode({
             ...t,
             colorBy: c.value
           });
@@ -108072,7 +108072,7 @@ var myt = [`aria-label`],
         let t = ++O;
         e || (y.value = true, x.value = ``);
         try {
-          let screenHeatmap = await Og.screenHeatmap({
+          let screenHeatmap = await statsApi.screenHeatmap({
             startDate: g.value,
             endDate: _.value
           });
@@ -109590,7 +109590,7 @@ var txt = [`tabindex`],
         let t = ++E;
         D = Date.now(), e || (v.value = true, b.value = ``);
         try {
-          let mouseHeatmap = await Og.mouseHeatmap({
+          let mouseHeatmap = await statsApi.mouseHeatmap({
             startDate: h.value,
             endDate: g.value
           });
@@ -112370,11 +112370,11 @@ var gSt = {
         d.value = true, f.value = false, w.value = null, T.value = false, v.value = false, g.value = null, _.value = null, S.value = null, C.value = {};
         try {
           let n = re(),
-            [r, a, o, s] = await Promise.all([Og.summary(n), Og.list({
+            [r, a, o, s] = await Promise.all([statsApi.summary(n), statsApi.list({
               ...n,
               limit: 50,
               activityState: A.value === `all` ? undefined : A.value
-            }), Og.overview(n), Og.flows(n).catch(err => (console.error(i18nTranslate(`errors.loadDataFailed`), err), {
+            }), statsApi.overview(n), statsApi.flows(n).catch(err => (console.error(i18nTranslate(`errors.loadDataFailed`), err), {
               periods: [],
               switches: []
             }))]);
@@ -112394,7 +112394,7 @@ var gSt = {
         let e = M;
         f.value = true;
         try {
-          let t = await Og.list({
+          let t = await statsApi.list({
             ...re(),
             limit: 50,
             cursor: w.value,
@@ -112669,7 +112669,7 @@ var gSt = {
         let r = ++ne;
         _.value = e, g.value = null, v.value = true, y.value = true;
         try {
-          let detail = await Og.detail({
+          let detail = await statsApi.detail({
             applicationId: e.applicationId,
             ...re()
           });
@@ -112693,7 +112693,7 @@ var gSt = {
           S.value = null;
           return;
         }
-        S.value = e.id, !C.value[e.id] && (C.value[e.id] = await Og.contexts([e.id]));
+        S.value = e.id, !C.value[e.id] && (C.value[e.id] = await statsApi.contexts([e.id]));
       }
       return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `productImpressionEl`,
@@ -114788,7 +114788,7 @@ var jOt = {
         }
         f.value = true;
         try {
-          await hm.updateContent(e.clientReportId, trimmed), o.value?.docId === e.docId && (o.value = {
+          await reportApi.updateContent(e.clientReportId, trimmed), o.value?.docId === e.docId && (o.value = {
             ...o.value,
             content: trimmed
           }), D(), alertN(i18nTranslate(`reportCc.editSaved`)), i(`edited`);
@@ -116473,7 +116473,7 @@ var oMt = {
           return;
         }
         try {
-          let updateContent = await hm.updateContent(Ce.value.id, trimmed);
+          let updateContent = await reportApi.updateContent(Ce.value.id, trimmed);
           Ce.value.content = updateContent.content, Ce.value.wordCount = g(updateContent.content);
           let index = l.value.findIndex(item => item.id === updateContent.id);
           index !== -1 && (l.value[index] = {
@@ -116514,7 +116514,7 @@ var oMt = {
           return;
         }
         try {
-          let updateTitle = await hm.updateTitle(Ce.value.id, trimmed);
+          let updateTitle = await reportApi.updateTitle(Ce.value.id, trimmed);
           Ce.value.title = updateTitle.title;
           let index = l.value.findIndex(item => item.id === updateTitle.id);
           index !== -1 && (l.value[index] = {
@@ -116650,7 +116650,7 @@ var oMt = {
         if (Dt.value) {
           Pt.value = true, It.value = null;
           try {
-            let [e, t, n] = await Promise.all([hm.visualReportQuote({
+            let [e, t, n] = await Promise.all([reportApi.visualReportQuote({
               title: Dt.value.title,
               content: Dt.value.content,
               requirements: kt.value.trim(),
@@ -116677,11 +116677,11 @@ var oMt = {
         if (Dt.value && !Ft.value) {
           It.value = null;
           try {
-            let visualReportSavePath = await hm.selectVisualReportSavePath({
+            let visualReportSavePath = await reportApi.selectVisualReportSavePath({
               title: Dt.value.title
             });
             Lt.value = `generating`, Ft.value = true, Rt.value = null, an();
-            let visualReport = await hm.generateVisualReport({
+            let visualReport = await reportApi.generateVisualReport({
               title: Dt.value.title,
               content: Dt.value.content,
               requirements: kt.value.trim(),
@@ -116704,7 +116704,7 @@ var oMt = {
       }
       async function Sn() {
         if (Rt.value?.filePath) try {
-          await hm.openVisualReportFile(Rt.value.filePath);
+          await reportApi.openVisualReportFile(Rt.value.filePath);
         } catch (e) {
           alertT(ln(e, i18nTranslate(`history.visualReportOpenFailed`)));
         }
@@ -144084,7 +144084,7 @@ var Z9 = new URLSearchParams(window.location.search).get(`window`),
 aa((e, t) => telemetryR(`action`, e, t)), $9.use(i18nR), Q9 === App ? Q2t().then(result => {
   result && (_r(), br());
 }).finally(() => $9.mount(`#app`)) : $9.mount(`#app`);
-export { kU as $, Zg as $t, FQ as A, Uo as An, ky as At, k3e as B, Ka as Bn, fme as Bt, v3e as C, ys as Cn, ome as Ct, j4e as D, ss as Dn, Sme as Dt, t$ as E, cs as En, Cme as Et, S4e as F, Za as Fn, mme as Ft, S3e as G, pa as Gn, Tv as Gt, w3e as H, Ha as Hn, vy as Ht, PreCodeNode as I, Xa as In, pme as It, e$ as J, f_ as Jt, $Q as K, sa as Kn, Y_ as Kt, i2e as L, Ya as Ln, jy as Lt, _3e as M, Io as Mn, Ay as Mt, XX as N, ko as Nn, yme as Nt, _$ as O, ts as On, bme as Ot, tZ as P, uo as Pn, Dy as Pt, MouseHeatmapConsentDialog as Q, r_ as Qt, CodeBlockShell as R, Ja as Rn, vme as Rt, uZ as S, Cs as Sn, joined as St, D3e as T, ls as Tn, lme as Tt, RQ as U, Ma as Un, by as Ut, ZX as V, Wa as Vn, wy as Vt, n$ as W, Sa as Wn, yy as Wt, MZ as X, i_ as Xt, PQ as Y, l_ as Yt, MU as Z, e_ as Zt, NQ as _, cc as _n, SelectValueComponent as _t, x9 as a, Pg as an, KeyboardSoundDialogs as at, m$ as b, Ls as bn, SelectContentComponent as bt, W7 as c, Checkbox as cn, Progress as ct, q7 as d, TabsTriggerComponent as dn, DateTimePickerField as dt, BarcodeCanvas as en, KeyboardHeatmapConsentDialog as et, KYt as f, TabsListComponent as fn, Hw as ft, z3 as g, DialogDescription as gn, Ob as gt, KeyboardHeatmapPanel as h, trackActionEvent as hn, kb as ht, O9 as i, Fg as in, SU as it, O3e as j, Vo as jn, xme as jt, IQ as k, Ko as kn, ume as kt, K7 as l, Textarea as ln, DropdownMenuSeparatorComponent as lt, MouseHeatmapPanel as m, Zf as mn, Mb as mt, V9 as n, Kg as nn, wU as nt, WoodenFishFigure as o, Og as on, gU as ot, GYt as p, Tabs as pn, ButtonGroup as pt, O4e as q, FeatureInfoDialog as qt, j9 as r, Ag as rn, TU as rt, tXt as s, href as sn, _U as st, z9 as t, Bg as tn, CU as tt, WYt as u, Input as un, hF as ut, _X as v, Ys as vn, SelectTriggerComponent as vt, x3e as w, gs as wn, _me as wt, zQ as x, As as xn, Select as xt, A4e as y, zs as yn, SelectItemComponent as yt, C4e as z, qa as zn, cme as zt };
+export { kU as $, Zg as $t, FQ as A, Uo as An, ky as At, k3e as B, Ka as Bn, fme as Bt, v3e as C, ys as Cn, ome as Ct, j4e as D, ss as Dn, Sme as Dt, t$ as E, cs as En, Cme as Et, S4e as F, Za as Fn, mme as Ft, S3e as G, pa as Gn, Tv as Gt, w3e as H, Ha as Hn, vy as Ht, PreCodeNode as I, Xa as In, pme as It, e$ as J, f_ as Jt, $Q as K, sa as Kn, Y_ as Kt, i2e as L, Ya as Ln, jy as Lt, _3e as M, Io as Mn, Ay as Mt, XX as N, ko as Nn, yme as Nt, _$ as O, ts as On, bme as Ot, tZ as P, uo as Pn, Dy as Pt, MouseHeatmapConsentDialog as Q, r_ as Qt, CodeBlockShell as R, Ja as Rn, vme as Rt, uZ as S, Cs as Sn, joined as St, D3e as T, ls as Tn, lme as Tt, RQ as U, Ma as Un, by as Ut, ZX as V, Wa as Vn, wy as Vt, n$ as W, Sa as Wn, yy as Wt, MZ as X, i_ as Xt, PQ as Y, l_ as Yt, MU as Z, e_ as Zt, NQ as _, cc as _n, SelectValueComponent as _t, x9 as a, Pg as an, KeyboardSoundDialogs as at, m$ as b, Ls as bn, SelectContentComponent as bt, W7 as c, Checkbox as cn, Progress as ct, q7 as d, TabsTriggerComponent as dn, DateTimePickerField as dt, BarcodeCanvas as en, KeyboardHeatmapConsentDialog as et, KYt as f, TabsListComponent as fn, Hw as ft, z3 as g, DialogDescription as gn, Ob as gt, KeyboardHeatmapPanel as h, trackActionEvent as hn, kb as ht, O9 as i, Fg as in, SU as it, O3e as j, Vo as jn, xme as jt, IQ as k, Ko as kn, ume as kt, K7 as l, Textarea as ln, DropdownMenuSeparatorComponent as lt, MouseHeatmapPanel as m, Zf as mn, Mb as mt, V9 as n, Kg as nn, wU as nt, WoodenFishFigure as o, statsApi as on, gU as ot, GYt as p, Tabs as pn, ButtonGroup as pt, O4e as q, FeatureInfoDialog as qt, j9 as r, Ag as rn, TU as rt, tXt as s, href as sn, _U as st, z9 as t, Bg as tn, CU as tt, WYt as u, Input as un, hF as ut, _X as v, Ys as vn, SelectTriggerComponent as vt, x3e as w, gs as wn, _me as wt, zQ as x, As as xn, Select as xt, A4e as y, zs as yn, SelectItemComponent as yt, C4e as z, qa as zn, cme as zt };
 var ApiSettingsPage = defineComponent({
   __name: "ApiSettingsPage",
   setup() {
