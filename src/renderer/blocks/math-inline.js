@@ -1,6 +1,6 @@
-import { Ct as e, S as t, Wt as n, Yt as r, b as i, bn as a, gt as o, j as s, ot as c, rr as l, ut as u, v as d, x as f, y as p } from "../chunks/vue-i18n.runtime.js";
-import { r as m } from "../i18n/en-US-player.js";
-import { H as h, L as g, O as _, S as v, X as y, v as b, w as x } from "../chunks/main.js";
+import { Ct as vueCt, S as vueS, Wt as vueWt, Yt as vueYt, b as vueB, bn as vueBn, gt as vueGt, j as vueJ, ot as vueOt, rr as vueRr, ut as vueUt, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { r as playerR } from "../i18n/en-US-player.js";
+import { H as mainH, L as mainL, O as mainO, S as mainS, X as mainX, v as mainV, w as mainW } from "../chunks/main.js";
 var handler = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
@@ -30,24 +30,24 @@ var handler = (e, t, n) => new Promise((fn, i) => {
     role: `status`,
     "aria-live": `polite`
   },
-  D = b(s({
+  D = mainV(vueJ({
     __name: `MathInlineNode`,
     props: {
       node: {}
     },
     setup(props) {
       let propsAlias = props,
-        D = a(null),
+        D = vueBn(null),
         O = typeof window > `u`,
-        k = d(() => propsAlias.node.markup === `$$`),
-        A = d(() => _(propsAlias.node.content)),
+        k = vueV(() => propsAlias.node.markup === `$$`),
+        A = vueV(() => mainO(propsAlias.node.content)),
         j = function () {
           if (!propsAlias.node.content || !O) return {
             html: ``,
             text: propsAlias.node.raw,
             loading: false
           };
-          let e = g();
+          let e = mainL();
           if (!e) return {
             html: ``,
             text: propsAlias.node.raw,
@@ -70,14 +70,14 @@ var handler = (e, t, n) => new Promise((fn, i) => {
             };
           }
         }(),
-        M = a(j.html),
-        N = a(j.text),
+        M = vueBn(j.html),
+        N = vueBn(j.text),
         P = false,
         F = 0,
         I = false,
         L = null,
-        R = a(j.loading),
-        z = y(),
+        R = vueBn(j.loading),
+        z = mainX(),
         B = null;
       function V() {
         return handler(this, null, function* () {
@@ -89,7 +89,7 @@ var handler = (e, t, n) => new Promise((fn, i) => {
           if (L = abortController, !P) try {
             !B && D.value && (B = z(D.value)), yield B?.whenVisible;
           } catch {}
-          h(A.value, k.value, {
+          mainH(A.value, k.value, {
             timeout: 1500,
             waitTimeout: 0,
             maxRetries: 0,
@@ -101,14 +101,14 @@ var handler = (e, t, n) => new Promise((fn, i) => {
             let fallbackValue = event?.code || event?.name,
               r = fallbackValue === `KATEX_DISABLED`;
             if (fallbackValue === `WORKER_INIT_ERROR` || event?.fallbackToRenderer || fallbackValue === `WORKER_BUSY` || fallbackValue === `WORKER_TIMEOUT`) {
-              let e = yield v();
+              let e = yield mainS();
               if (e) {
                 try {
                   let toStringResult = e.renderToString(A.value, {
                     throwOnError: propsAlias.node.loading,
                     displayMode: k.value
                   });
-                  M.value = toStringResult, N.value = ``, R.value = false, P = true, x(A.value, k.value, toStringResult);
+                  M.value = toStringResult, N.value = ``, R.value = false, P = true, mainW(A.value, k.value, toStringResult);
                 } catch {}
                 return;
               }
@@ -118,37 +118,37 @@ var handler = (e, t, n) => new Promise((fn, i) => {
           }));
         });
       }
-      return (j.html || j.text) && (P = true), n(() => propsAlias.node.content, () => {
+      return (j.html || j.text) && (P = true), vueWt(() => propsAlias.node.content, () => {
         V();
-      }), u(() => {
+      }), vueUt(() => {
         O || M.value || V();
-      }), c(() => {
+      }), vueOt(() => {
         var e;
         I = true, L &&= (L.abort(), null), (e = B?.destroy) == null || e.call(B), B = null;
-      }), (n, a) => (o(), t(`span`, {
+      }), (n, renderCache) => (vueGt(), vueS(`span`, {
         ref_key: `containerEl`,
         ref: D,
         class: `math-inline-wrapper`,
         "data-markstream-math": `inline`,
         "data-markstream-mode": M.value ? `katex` : N.value ? `fallback` : `loading`
-      }, [M.value ? (o(), t(`span`, {
+      }, [M.value ? (vueGt(), vueS(`span`, {
         key: 0,
         class: `math-inline`,
         innerHTML: M.value
-      }, null, 8, w)) : N.value ? (o(), t(`span`, T, l(N.value), 1)) : R.value ? (o(), i(m, {
+      }, null, 8, w)) : N.value ? (vueGt(), vueS(`span`, T, vueRr(N.value), 1)) : R.value ? (vueGt(), vueB(playerR, {
         key: 2,
         name: `table-node-fade`
       }, {
-        default: r(() => [p(`span`, options, [e(n.$slots, `loading`, {
+        default: vueYt(() => [vueY(`span`, options, [vueCt(n.$slots, `loading`, {
           isLoading: R.value
-        }, () => [a[0] ||= p(`span`, {
+        }, () => [renderCache[0] ||= vueY(`span`, {
           class: `math-inline__spinner animate-spin`,
           "aria-hidden": `true`
-        }, null, -1), a[1] ||= p(`span`, {
+        }, null, -1), renderCache[1] ||= vueY(`span`, {
           class: `sr-only`
         }, `Loading`, -1)], true)])]),
         _: 3
-      })) : f(``, true)], 8, C));
+      })) : vueX(``, true)], 8, C));
     }
   }), [[`__scopeId`, `data-v-6c6e62e1`]]);
 D.install = e => {

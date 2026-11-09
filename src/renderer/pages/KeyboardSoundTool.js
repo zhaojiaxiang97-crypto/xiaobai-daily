@@ -1,15 +1,15 @@
-import { r as e } from "../ui/Switch.js";
-import { $n as t, An as n, E as ee, O as r, S as i, St as te, Wt as ne, Yt as a, b as o, c as s, fn as c, gt as l, j as u, k as d, rr as f, v as p, x as m, y as h } from "../chunks/vue-i18n.runtime.js";
-import { r as g } from "../ui/icons/lucide-icons.js";
-import { t as re } from "../i18n/i18n-helper.js";
-import { t as ie } from "../chunks/check.js";
-import { r as ae } from "../chunks/tool-icons.js";
-import { t as oe } from "../chunks/volume-2.js";
-import { t as se } from "../ui/Slider.js";
-import { c as _ } from "../chunks/toolSettingsContext.js";
-import { Tn as ce, at as le, it as ue, nt as de, rt as fe, tt as pe, un as me } from "../chunks/main.js";
-import { t as he } from "./DesktopWidgetPage.js";
-var ge = g(`file-headphone`, [[`path`, {
+import { r as uiSwitchR } from "../ui/Switch.js";
+import { $n as vueN, An as vueAn, E as vueE, O as vueO, S as vueS, St as vueSt, Wt as vueWt, Yt as vueYt, b as vueB, c as vueC, fn as vueFn, gt as vueGt, j as vueJ, k as vueK, rr as vueRr, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+import { t as i18nT } from "../i18n/i18n-helper.js";
+import { t as checkT } from "../chunks/check.js";
+import { r as toolIconR } from "../chunks/tool-icons.js";
+import { t as volume2T } from "../chunks/volume-2.js";
+import { t as SliderT } from "../ui/Slider.js";
+import { c as toolSettingsC } from "../chunks/toolSettingsContext.js";
+import { Tn as mainTn, at as mainAt, it as mainIt, nt as mainNt, rt as mainRt, tt as mainTt, un as mainUn } from "../chunks/main.js";
+import { t as DesktopWidgetPageT } from "./DesktopWidgetPage.js";
+var ge = lucideR(`file-headphone`, [[`path`, {
     d: `M4 6.835V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-.343`,
     key: `1vfytu`
   }], [`path`, {
@@ -101,7 +101,7 @@ var ge = g(`file-headphone`, [[`path`, {
   we = {
     class: `text-xs text-muted-foreground`
   },
-  R = u({
+  R = vueJ({
     __name: `KeyboardSoundTool`,
     props: {
       tool: {},
@@ -120,11 +120,11 @@ var ge = g(`file-headphone`, [[`path`, {
       let propsAlias = props,
         Te = emit,
         {
-          t: z
-        } = re(),
+          t: translate
+        } = i18nT(),
         {
           settings: B
-        } = ae(),
+        } = toolIconR(),
         {
           controlsDisabled: V,
           enterKeyComponentState: H,
@@ -147,150 +147,150 @@ var ge = g(`file-headphone`, [[`path`, {
           changeMechanicalKeyboardSwitch: Fe,
           previewMechanicalKeyboardVolume: Ie,
           saveMechanicalKeyboardVolume: Le
-        } = fe(),
-        Re = p(() => pe.filter(state => state.value !== `custom`).map(state => {
-          let [t, ...n] = z(state.labelKey).split(` · `);
+        } = mainRt(),
+        Re = vueV(() => mainTt.filter(state => state.value !== `custom`).map(state => {
+          let [t, ...n] = translate(state.labelKey).split(` · `);
           return {
             value: state.value,
             name: t,
             description: n.join(` · `)
           };
         })),
-        X = p(() => V.value || U.value || q.value),
-        Z = p(() => B.value.mechanicalKeyboardSwitchType === `custom`),
-        Q = p(() => B.value.enableMechanicalKeyboardSound && H.value?.status === `error`);
+        X = vueV(() => V.value || U.value || q.value),
+        Z = vueV(() => B.value.mechanicalKeyboardSwitchType === `custom`),
+        Q = vueV(() => B.value.enableMechanicalKeyboardSound && H.value?.status === `error`);
       function $(e) {
         Fe(e, {
           alwaysPreview: true
         });
       }
       function ze(e) {
-        e.repeat || B.value.enableMechanicalKeyboardSound || ue.preview(B.value.mechanicalKeyboardSwitchType).catch(() => undefined);
+        e.repeat || B.value.enableMechanicalKeyboardSound || mainIt.preview(B.value.mechanicalKeyboardSwitchType).catch(() => undefined);
       }
-      return ne(() => propsAlias.active, e => {
+      return vueWt(() => propsAlias.active, e => {
         e && Oe();
-      }), (ne, u) => (l(), o(he, {
+      }), (ne, renderCache) => (vueGt(), vueB(DesktopWidgetPageT, {
         tool: propsAlias.tool,
         user: propsAlias.user,
         "credits-balance": propsAlias.creditsBalance,
-        description: n(z)(`toolboxNative.keyboardSoundToolIntro`),
-        enabled: n(B).enableMechanicalKeyboardSound,
-        "toggle-disabled": n(V) || n(U) || n(Ee),
+        description: vueAn(translate)(`toolboxNative.keyboardSoundToolIntro`),
+        enabled: vueAn(B).enableMechanicalKeyboardSound,
+        "toggle-disabled": vueAn(V) || vueAn(U) || vueAn(Ee),
         "requires-accessibility": ``,
-        onToggle: n(Me),
-        onBack: u[4] ||= e => Te(`back`)
-      }, ee({
-        default: a(() => [h(`section`, b, [h(`header`, x, [h(`strong`, S, f(n(z)(`settings.mechanicalKeyboardSwitchType`)), 1), h(`small`, C, f(n(z)(`toolboxNative.keyboardSoundTypesHint`)), 1)]), h(`div`, w, [(l(true), i(s, null, te(Re.value, state => (l(), i(`div`, {
+        onToggle: vueAn(Me),
+        onBack: renderCache[4] ||= e => Te(`back`)
+      }, vueE({
+        default: vueYt(() => [vueY(`section`, b, [vueY(`header`, x, [vueY(`strong`, S, vueRr(vueAn(translate)(`settings.mechanicalKeyboardSwitchType`)), 1), vueY(`small`, C, vueRr(vueAn(translate)(`toolboxNative.keyboardSoundTypesHint`)), 1)]), vueY(`div`, w, [(vueGt(true), vueS(vueC, null, vueSt(Re.value, state => (vueGt(), vueS(`div`, {
           key: state.value,
           class: `relative`
-        }, [h(`button`, {
+        }, [vueY(`button`, {
           type: `button`,
-          class: t([`flex w-full min-w-0 flex-col gap-0.5 rounded-lg border py-2.5 pr-11 pl-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60`, n(B).mechanicalKeyboardSwitchType === state.value ? `border-primary bg-primary/[0.05]` : `border-border hover:border-foreground/20 hover:bg-muted/50`]),
-          "aria-pressed": n(B).mechanicalKeyboardSwitchType === state.value,
+          class: vueN([`flex w-full min-w-0 flex-col gap-0.5 rounded-lg border py-2.5 pr-11 pl-3 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-60`, vueAn(B).mechanicalKeyboardSwitchType === state.value ? `border-primary bg-primary/[0.05]` : `border-border hover:border-foreground/20 hover:bg-muted/50`]),
+          "aria-pressed": vueAn(B).mechanicalKeyboardSwitchType === state.value,
           disabled: X.value,
           onClick: t => $(state.value)
-        }, [h(`strong`, E, [h(`span`, D, f(state.name), 1), n(B).mechanicalKeyboardSwitchType === state.value ? (l(), o(n(ie), {
+        }, [vueY(`strong`, E, [vueY(`span`, D, vueRr(state.name), 1), vueAn(B).mechanicalKeyboardSwitchType === state.value ? (vueGt(), vueB(vueAn(checkT), {
           key: 0,
           size: 13,
           class: `shrink-0 text-primary`
-        })) : m(``, true)]), h(`small`, O, f(state.description), 1)], 10, T), h(`button`, {
+        })) : vueX(``, true)]), vueY(`small`, O, vueRr(state.description), 1)], 10, T), vueY(`button`, {
           type: `button`,
           class: `absolute top-1/2 right-2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground`,
-          "aria-label": `${n(z)(`settings.keyboardSoundCustomPreview`)} ${state.name}`,
-          title: n(z)(`settings.keyboardSoundCustomPreview`),
-          onClick: t => n(Ae)(state.value)
-        }, [d(n(ce), {
+          "aria-label": `${vueAn(translate)(`settings.keyboardSoundCustomPreview`)} ${state.name}`,
+          title: vueAn(translate)(`settings.keyboardSoundCustomPreview`),
+          onClick: t => vueAn(Ae)(state.value)
+        }, [vueK(vueAn(mainTn), {
           size: 14
-        })], 8, k)]))), 128))]), h(`div`, {
-          class: t([`mx-4 mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border px-3 py-2.5`, Z.value ? `border-primary bg-primary/[0.05]` : `border-dashed border-border`])
-        }, [h(`span`, {
-          class: t([`inline-flex size-8 shrink-0 items-center justify-center rounded-lg`, Z.value ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
-        }, [d(n(ge), {
+        })], 8, k)]))), 128))]), vueY(`div`, {
+          class: vueN([`mx-4 mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border px-3 py-2.5`, Z.value ? `border-primary bg-primary/[0.05]` : `border-dashed border-border`])
+        }, [vueY(`span`, {
+          class: vueN([`inline-flex size-8 shrink-0 items-center justify-center rounded-lg`, Z.value ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
+        }, [vueK(vueAn(ge), {
           size: 16
-        })], 2), h(`div`, A, [h(`strong`, j, [r(f(n(z)(`toolboxNative.keyboardSoundCustomTitle`)) + ` `, 1), Z.value && n(K) ? (l(), i(`span`, M, f(n(z)(`toolboxNative.keyboardSoundInUse`)), 1)) : m(``, true)]), n(K) ? (l(), i(`small`, {
+        })], 2), vueY(`div`, A, [vueY(`strong`, j, [vueO(vueRr(vueAn(translate)(`toolboxNative.keyboardSoundCustomTitle`)) + ` `, 1), Z.value && vueAn(K) ? (vueGt(), vueS(`span`, M, vueRr(vueAn(translate)(`toolboxNative.keyboardSoundInUse`)), 1)) : vueX(``, true)]), vueAn(K) ? (vueGt(), vueS(`small`, {
           key: 0,
           class: `mt-0.5 block truncate text-[11px] text-muted-foreground`,
-          title: n(K).fileName
-        }, f(n(K).fileName) + ` · ` + f(n(de)(n(K).sizeBytes)) + ` · ` + f(n(K).processedDurationMs) + `ms `, 9, N)) : Z.value ? (l(), i(s, {
+          title: vueAn(K).fileName
+        }, vueRr(vueAn(K).fileName) + ` · ` + vueRr(vueAn(mainNt)(vueAn(K).sizeBytes)) + ` · ` + vueRr(vueAn(K).processedDurationMs) + `ms `, 9, N)) : Z.value ? (vueGt(), vueS(vueC, {
           key: 1
-        }, [h(`small`, P, f(n(z)(`settings.keyboardSoundCustomMissing`)), 1), h(`small`, F, f(n(z)(`settings.keyboardSoundCustomMissingDesc`)), 1)], 64)) : (l(), i(`small`, I, f(n(z)(`toolboxNative.keyboardSoundCustomHint`)), 1))]), h(`div`, L, [n(K) ? (l(), i(s, {
+        }, [vueY(`small`, P, vueRr(vueAn(translate)(`settings.keyboardSoundCustomMissing`)), 1), vueY(`small`, F, vueRr(vueAn(translate)(`settings.keyboardSoundCustomMissingDesc`)), 1)], 64)) : (vueGt(), vueS(`small`, I, vueRr(vueAn(translate)(`toolboxNative.keyboardSoundCustomHint`)), 1))]), vueY(`div`, L, [vueAn(K) ? (vueGt(), vueS(vueC, {
           key: 0
-        }, [d(n(e), {
+        }, [vueK(vueAn(uiSwitchR), {
           size: `sm`,
           variant: `ghost`,
           class: `h-7 px-2 text-xs`,
-          disabled: n(q),
-          onClick: n(je)
+          disabled: vueAn(q),
+          onClick: vueAn(je)
         }, {
-          default: a(() => [r(f(n(z)(`settings.keyboardSoundCustomPreview`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`settings.keyboardSoundCustomPreview`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`]), Z.value ? m(``, true) : (l(), o(n(e), {
+        }, 8, [`disabled`, `onClick`]), Z.value ? vueX(``, true) : (vueGt(), vueB(vueAn(uiSwitchR), {
           key: 0,
           size: `sm`,
           variant: `outline`,
           class: `h-7 px-2.5 text-xs`,
           disabled: X.value,
-          onClick: u[0] ||= e => $(`custom`)
+          onClick: renderCache[0] ||= e => $(`custom`)
         }, {
-          default: a(() => [r(f(n(z)(`toolboxNative.keyboardSoundCustomUse`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`toolboxNative.keyboardSoundCustomUse`)), 1)]),
           _: 1
-        }, 8, [`disabled`]))], 64)) : m(``, true), d(n(e), {
+        }, 8, [`disabled`]))], 64)) : vueX(``, true), vueK(vueAn(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 px-2.5 text-xs`,
-          disabled: n(q) || n(V),
-          onClick: n(ke)
+          disabled: vueAn(q) || vueAn(V),
+          onClick: vueAn(ke)
         }, {
-          default: a(() => [r(f(n(K) ? n(z)(`settings.keyboardSoundCustomReplace`) : n(z)(`settings.keyboardSoundCustomSelect`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(K) ? vueAn(translate)(`settings.keyboardSoundCustomReplace`) : vueAn(translate)(`settings.keyboardSoundCustomSelect`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`]), n(K) ? (l(), o(n(e), {
+        }, 8, [`disabled`, `onClick`]), vueAn(K) ? (vueGt(), vueB(vueAn(uiSwitchR), {
           key: 1,
           size: `sm`,
           variant: `ghost`,
           class: `h-7 px-2 text-xs text-destructive hover:text-destructive`,
-          disabled: n(q),
-          onClick: u[1] ||= e => J.value = true
+          disabled: vueAn(q),
+          onClick: renderCache[1] ||= e => J.value = true
         }, {
-          default: a(() => [r(f(n(z)(`settings.keyboardSoundCustomDelete`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`settings.keyboardSoundCustomDelete`)), 1)]),
           _: 1
-        }, 8, [`disabled`])) : m(``, true)])], 2)]), h(`section`, _e, [h(`div`, ve, [h(`strong`, ye, [d(n(oe), {
+        }, 8, [`disabled`])) : vueX(``, true)])], 2)]), vueY(`section`, _e, [vueY(`div`, ve, [vueY(`strong`, ye, [vueK(vueAn(volume2T), {
           size: 15,
           class: `text-muted-foreground`
-        }), r(f(n(z)(`settings.mechanicalKeyboardVolume`)), 1)]), d(n(se), {
+        }), vueO(vueRr(vueAn(translate)(`settings.mechanicalKeyboardVolume`)), 1)]), vueK(vueAn(SliderT), {
           class: `min-w-[160px] flex-1`,
-          "model-value": n(G),
+          "model-value": vueAn(G),
           min: 0,
           max: 100,
           step: 1,
           disabled: X.value,
-          "onUpdate:modelValue": n(Ie),
-          onValueCommit: n(Le)
-        }, null, 8, [`model-value`, `disabled`, `onUpdate:modelValue`, `onValueCommit`]), h(`span`, be, f(n(G)[0]) + `%`, 1)]), h(`div`, xe, [h(`div`, Se, [h(`strong`, Ce, f(n(z)(`toolboxNative.keyboardSoundTryTitle`)), 1), h(`small`, we, f(n(z)(`toolboxNative.keyboardSoundTryHint`)), 1)]), d(n(me), {
+          "onUpdate:modelValue": vueAn(Ie),
+          onValueCommit: vueAn(Le)
+        }, null, 8, [`model-value`, `disabled`, `onUpdate:modelValue`, `onValueCommit`]), vueY(`span`, be, vueRr(vueAn(G)[0]) + `%`, 1)]), vueY(`div`, xe, [vueY(`div`, Se, [vueY(`strong`, Ce, vueRr(vueAn(translate)(`toolboxNative.keyboardSoundTryTitle`)), 1), vueY(`small`, we, vueRr(vueAn(translate)(`toolboxNative.keyboardSoundTryHint`)), 1)]), vueK(vueAn(mainUn), {
           class: `h-9 text-sm`,
-          placeholder: n(z)(`toolboxNative.keyboardSoundTryPlaceholder`),
+          placeholder: vueAn(translate)(`toolboxNative.keyboardSoundTryPlaceholder`),
           onKeydown: ze
-        }, null, 8, [`placeholder`])])]), d(le, {
-          "consent-open": n(W),
-          "onUpdate:consentOpen": u[2] ||= e => c(W) ? W.value = e : null,
-          "delete-open": n(J),
-          "onUpdate:deleteOpen": u[3] ||= e => c(J) ? J.value = e : null,
-          "consent-info": n(De),
-          onConfirmConsent: n(Ne),
-          onConfirmDelete: n(Y)
+        }, null, 8, [`placeholder`])])]), vueK(mainAt, {
+          "consent-open": vueAn(W),
+          "onUpdate:consentOpen": renderCache[2] ||= e => vueFn(W) ? W.value = e : null,
+          "delete-open": vueAn(J),
+          "onUpdate:deleteOpen": renderCache[3] ||= e => vueFn(J) ? J.value = e : null,
+          "consent-info": vueAn(De),
+          onConfirmConsent: vueAn(Ne),
+          onConfirmDelete: vueAn(Y)
         }, null, 8, [`consent-open`, `delete-open`, `consent-info`, `onConfirmConsent`, `onConfirmDelete`])]),
         _: 2
-      }, [Q.value || n(_) && !n(B).enableMechanicalKeyboardSound ? {
+      }, [Q.value || vueAn(toolSettingsC) && !vueAn(B).enableMechanicalKeyboardSound ? {
         name: `notes`,
-        fn: a(() => [n(_) && !n(B).enableMechanicalKeyboardSound ? (l(), i(`p`, v, f(n(z)(`settings.mechanicalKeyboardWindowsNote`)), 1)) : m(``, true), Q.value ? (l(), i(`div`, y, [h(`span`, null, f(n(H)?.errorMessage || n(z)(`settings.mechanicalKeyboardSoundFailed`)), 1), d(n(e), {
+        fn: vueYt(() => [vueAn(toolSettingsC) && !vueAn(B).enableMechanicalKeyboardSound ? (vueGt(), vueS(`p`, v, vueRr(vueAn(translate)(`settings.mechanicalKeyboardWindowsNote`)), 1)) : vueX(``, true), Q.value ? (vueGt(), vueS(`div`, y, [vueY(`span`, null, vueRr(vueAn(H)?.errorMessage || vueAn(translate)(`settings.mechanicalKeyboardSoundFailed`)), 1), vueK(vueAn(uiSwitchR), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 shrink-0 text-xs`,
-          disabled: n(U),
-          onClick: n(Pe)
+          disabled: vueAn(U),
+          onClick: vueAn(Pe)
         }, {
-          default: a(() => [r(f(n(z)(`common.retry`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`common.retry`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`])])) : m(``, true)]),
+        }, 8, [`disabled`, `onClick`])])) : vueX(``, true)]),
         key: `0`
       } : undefined]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `onToggle`]));
     }

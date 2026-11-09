@@ -1,10 +1,10 @@
-import { r as e, t } from "../ui/Switch.js";
-import { $n as n, An as r, Ct as i, Et as a, O as o, S as s, Wt as c, Yt as l, b as u, gt as d, j as f, k as p, rr as m, ut as h, v as g, x as _, y as v } from "../chunks/vue-i18n.runtime.js";
-import { t as y } from "../i18n/i18n-helper.js";
-import { C as b, n as x, t as S } from "../chunks/tool-icons.js";
-import { t as C } from "./ToolboxWorkspaceHeader.js";
-import { t as w } from "../chunks/shield-alert.js";
-import { _n as T } from "../chunks/main.js";
+import { r as uiSwitchR, t as uiSwitchT } from "../ui/Switch.js";
+import { $n as vueN, An as vueAn, Ct as vueCt, Et as vueEt, O as vueO, S as vueS, Wt as vueWt, Yt as vueYt, b as vueB, gt as vueGt, j as vueJ, k as vueK, rr as vueRr, ut as vueUt, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { t as i18nT } from "../i18n/i18n-helper.js";
+import { C as toolIconC, n as toolIconN, t as toolIconT } from "../chunks/tool-icons.js";
+import { t as ToolboxWorkspaceHeaderT } from "./ToolboxWorkspaceHeader.js";
+import { t as shieldalertT } from "../chunks/shield-alert.js";
+import { _n as mainN } from "../chunks/main.js";
 var E = {
     class: `min-h-full bg-background`
   },
@@ -46,7 +46,7 @@ var E = {
   R = {
     class: `flex items-start gap-1.5 px-1 text-[11px] leading-relaxed text-muted-foreground`
   },
-  z = f({
+  z = vueJ({
     __name: `DesktopWidgetPage`,
     props: {
       tool: {},
@@ -73,19 +73,19 @@ var E = {
         emitAlias = emit,
         {
           t: H
-        } = y(),
+        } = i18nT(),
         {
           status: U,
           check: W,
           request: G
-        } = x(),
-        K = g(() => !!(propsAlias.requiresAccessibility && propsAlias.enabled && U.value?.required && !U.value.granted)),
-        q = g(() => S[propsAlias.tool.icon] || T);
-      return h(() => {
+        } = toolIconN(),
+        K = vueV(() => !!(propsAlias.requiresAccessibility && propsAlias.enabled && U.value?.required && !U.value.granted)),
+        q = vueV(() => toolIconT[propsAlias.tool.icon] || mainN);
+      return vueUt(() => {
         propsAlias.requiresAccessibility && W();
-      }), c(() => propsAlias.enabled, e => {
+      }), vueWt(() => propsAlias.enabled, e => {
         e && propsAlias.requiresAccessibility && W();
-      }), (c, f) => (d(), s(`div`, E, [p(C, {
+      }), (c, renderCache) => (vueGt(), vueS(`div`, E, [vueK(ToolboxWorkspaceHeaderT, {
         tool: propsAlias.tool,
         user: propsAlias.user,
         "credits-balance": propsAlias.creditsBalance,
@@ -93,36 +93,36 @@ var E = {
         "local-tool": ``,
         "show-history": false,
         "show-balance": false,
-        onBack: f[0] ||= e => emitAlias(`back`)
-      }, null, 8, [`tool`, `user`, `credits-balance`]), v(`div`, D, [v(`section`, O, [v(`div`, k, [v(`span`, {
-        class: n([`inline-flex size-12 shrink-0 items-center justify-center rounded-xl transition-colors`, propsAlias.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
-      }, [(d(), u(a(q.value), {
+        onBack: renderCache[0] ||= e => emitAlias(`back`)
+      }, null, 8, [`tool`, `user`, `credits-balance`]), vueY(`div`, D, [vueY(`section`, O, [vueY(`div`, k, [vueY(`span`, {
+        class: vueN([`inline-flex size-12 shrink-0 items-center justify-center rounded-xl transition-colors`, propsAlias.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
+      }, [(vueGt(), vueB(vueEt(q.value), {
         size: 24,
         "stroke-width": 1.8
-      }))], 2), v(`div`, A, [v(`div`, j, [v(`h1`, M, m(propsAlias.tool.name), 1), v(`span`, {
-        class: n([`inline-flex items-center gap-1 rounded-full px-2 py-px text-[11px] font-medium`, propsAlias.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
-      }, [v(`span`, {
-        class: n([`size-1.5 rounded-full`, propsAlias.enabled ? `bg-primary` : `bg-muted-foreground/50`])
-      }, null, 2), o(` ` + m(propsAlias.statusText || (propsAlias.enabled ? r(H)(`toolboxNative.desktopWidgetsOn`) : r(H)(`toolboxNative.desktopWidgetsOff`))), 1)], 2)]), v(`p`, N, m(propsAlias.description), 1)]), v(`div`, P, [i(c.$slots, `actions`), p(r(t), {
+      }))], 2), vueY(`div`, A, [vueY(`div`, j, [vueY(`h1`, M, vueRr(propsAlias.tool.name), 1), vueY(`span`, {
+        class: vueN([`inline-flex items-center gap-1 rounded-full px-2 py-px text-[11px] font-medium`, propsAlias.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
+      }, [vueY(`span`, {
+        class: vueN([`size-1.5 rounded-full`, propsAlias.enabled ? `bg-primary` : `bg-muted-foreground/50`])
+      }, null, 2), vueO(` ` + vueRr(propsAlias.statusText || (propsAlias.enabled ? vueAn(H)(`toolboxNative.desktopWidgetsOn`) : vueAn(H)(`toolboxNative.desktopWidgetsOff`))), 1)], 2)]), vueY(`p`, N, vueRr(propsAlias.description), 1)]), vueY(`div`, P, [vueCt(c.$slots, `actions`), vueK(vueAn(uiSwitchT), {
         "model-value": propsAlias.enabled,
         disabled: propsAlias.toggleDisabled,
         "aria-label": propsAlias.tool.name,
-        "onUpdate:modelValue": f[1] ||= e => emitAlias(`toggle`, e)
-      }, null, 8, [`model-value`, `disabled`, `aria-label`])])]), c.$slots.notes || K.value ? (d(), s(`div`, F, [i(c.$slots, `notes`), K.value ? (d(), s(`div`, I, [v(`span`, L, [p(r(w), {
+        "onUpdate:modelValue": renderCache[1] ||= e => emitAlias(`toggle`, e)
+      }, null, 8, [`model-value`, `disabled`, `aria-label`])])]), c.$slots.notes || K.value ? (vueGt(), vueS(`div`, F, [vueCt(c.$slots, `notes`), K.value ? (vueGt(), vueS(`div`, I, [vueY(`span`, L, [vueK(vueAn(shieldalertT), {
         size: 15,
         class: `shrink-0`
-      }), o(m(r(H)(`toolboxNative.desktopWidgetsMacAccessibility`)), 1)]), p(r(e), {
+      }), vueO(vueRr(vueAn(H)(`toolboxNative.desktopWidgetsMacAccessibility`)), 1)]), vueK(vueAn(uiSwitchR), {
         variant: `outline`,
         size: `sm`,
         class: `h-7 shrink-0 text-xs`,
-        onClick: r(G)
+        onClick: vueAn(G)
       }, {
-        default: l(() => [o(m(r(H)(`toolboxNative.desktopWidgetsGrantAccess`)), 1)]),
+        default: vueYt(() => [vueO(vueRr(vueAn(H)(`toolboxNative.desktopWidgetsGrantAccess`)), 1)]),
         _: 1
-      }, 8, [`onClick`])])) : _(``, true)])) : _(``, true)]), i(c.$slots, `default`), v(`p`, R, [p(r(b), {
+      }, 8, [`onClick`])])) : vueX(``, true)])) : vueX(``, true)]), vueCt(c.$slots, `default`), vueY(`p`, R, [vueK(vueAn(toolIconC), {
         size: 13,
         class: `mt-0.5 shrink-0`
-      }), o(m(propsAlias.footnote || r(H)(`toolboxNative.desktopWidgetsSyncNote`)), 1)])])]));
+      }), vueO(vueRr(propsAlias.footnote || vueAn(H)(`toolboxNative.desktopWidgetsSyncNote`)), 1)])])]));
     }
   });
 export { z as t };

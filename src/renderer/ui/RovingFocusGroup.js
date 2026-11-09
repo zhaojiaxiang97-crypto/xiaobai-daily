@@ -1,6 +1,6 @@
-import { at as e, j as t, vt as n, yt as r } from "./Switch.js";
-import { An as i, Ct as a, Dn as o, Yt as s, b as c, bn as l, gt as u, j as d, k as f } from "../chunks/vue-i18n.runtime.js";
-import { r as p, t as m } from "./Collection.js";
+import { at as uiSwitchAt, j as uiSwitchJ, vt as uiSwitchVt, yt as uiSwitchYt } from "./Switch.js";
+import { An as vueAn, Ct as vueCt, Dn as vueDn, Yt as vueYt, b as vueB, bn as vueBn, gt as vueGt, j as vueJ, k as vueK } from "../chunks/vue-i18n.runtime.js";
+import { r as CollectionR, t as CollectionT } from "./Collection.js";
 var h = `rovingFocusGroup.onEntryFocus`,
   g = {
     bubbles: false,
@@ -24,16 +24,16 @@ function y(event, t, n) {
   if (!(t === `vertical` && [`ArrowLeft`, `ArrowRight`].includes(r)) && !(t === `horizontal` && [`ArrowUp`, `ArrowDown`].includes(r))) return options[r];
 }
 function b(e, t = false) {
-  let r = n();
+  let r = uiSwitchVt();
   for (let i of e) if (i === r || (i.focus({
     preventScroll: t
-  }), n() !== r)) return;
+  }), uiSwitchVt() !== r)) return;
 }
 function x(items, t) {
   return items.map((item, r) => items[(t + r) % items.length]);
 }
-var [S, C] = r(`RovingFocusGroup`),
-  w = d({
+var [S, C] = uiSwitchYt(`RovingFocusGroup`),
+  w = vueJ({
     __name: `RovingFocusGroup`,
     props: {
       orientation: {
@@ -83,19 +83,19 @@ var [S, C] = r(`RovingFocusGroup`),
           loop: y,
           orientation: x,
           dir: S
-        } = o(_),
-        w = p(S),
-        T = e(_, `currentTabStopId`, emitAlias, {
+        } = vueDn(_),
+        w = CollectionR(S),
+        T = uiSwitchAt(_, `currentTabStopId`, emitAlias, {
           defaultValue: _.defaultCurrentTabStopId,
           passive: _.currentTabStopId === undefined
         }),
-        E = l(false),
-        D = l(false),
-        O = l(0),
+        E = vueBn(false),
+        D = vueBn(false),
+        O = vueBn(0),
         {
           getItems: k,
           CollectionSlot: A
-        } = m({
+        } = CollectionT({
           isProvider: true
         });
       function j(event) {
@@ -133,22 +133,22 @@ var [S, C] = r(`RovingFocusGroup`),
         onFocusableItemRemove: () => {
           O.value--;
         }
-      }), (e, n) => (u(), c(i(A), null, {
-        default: s(() => [f(i(t), {
+      }), (e, renderCache) => (vueGt(), vueB(vueAn(A), null, {
+        default: vueYt(() => [vueK(vueAn(uiSwitchJ), {
           tabindex: E.value || O.value === 0 ? -1 : 0,
-          "data-orientation": i(x),
+          "data-orientation": vueAn(x),
           as: e.as,
           "as-child": e.asChild,
-          dir: i(w),
+          dir: vueAn(w),
           style: {
             outline: `none`
           },
-          onMousedown: n[0] ||= e => D.value = true,
+          onMousedown: renderCache[0] ||= e => D.value = true,
           onMouseup: M,
           onFocus: j,
-          onBlur: n[1] ||= e => E.value = false
+          onBlur: renderCache[1] ||= e => E.value = false
         }, {
-          default: s(() => [a(e.$slots, `default`)]),
+          default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
         }, 8, [`tabindex`, `data-orientation`, `as`, `as-child`, `dir`])]),
         _: 3

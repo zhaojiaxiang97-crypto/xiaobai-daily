@@ -1,18 +1,18 @@
-import { A as e, J as t, K as n, M as r } from "./Switch.js";
-import { Gt as i, H as a, Wt as o, X as s, bn as c, j as l, mn as u, mt as d, ut as f, v as p, vt as m } from "../chunks/vue-i18n.runtime.js";
+import { A as uiSwitchA, J as uiSwitchJ, K as uiSwitchK, M as uiSwitchM } from "./Switch.js";
+import { Gt as vueGt, H as vueH, Wt as vueWt, X as vueX, bn as vueBn, j as vueJ, mn as vueMn, mt as vueMt, ut as vueUt, v as vueV, vt as vueVt } from "../chunks/vue-i18n.runtime.js";
 function h(e) {
-  let t = n({
-    dir: c(`ltr`)
+  let t = uiSwitchK({
+    dir: vueBn(`ltr`)
   });
-  return p(() => e?.value || t.dir?.value || `ltr`);
+  return vueV(() => e?.value || t.dir?.value || `ltr`);
 }
 function g(e) {
-  let n = c(),
-    r = p(() => n.value?.width ?? 0),
-    i = p(() => n.value?.height ?? 0),
+  let n = vueBn(),
+    r = vueV(() => n.value?.width ?? 0),
+    i = vueV(() => n.value?.height ?? 0),
     a;
-  return f(() => {
-    let r = t(e);
+  return vueUt(() => {
+    let r = uiSwitchJ(e);
     r ? (n.value = {
       width: r.offsetWidth,
       height: r.offsetHeight
@@ -33,7 +33,7 @@ function g(e) {
     }), a.observe(r, {
       box: `border-box`
     })) : n.value = undefined;
-  }), d(() => {
+  }), vueMt(() => {
     a?.disconnect(), a = undefined;
   }), {
     width: r,
@@ -49,12 +49,12 @@ function v(t = {}) {
     f = `${n}CollectionProvider`,
     h;
   if (d) {
-    let e = c(new Map());
+    let e = vueBn(new Map());
     h = {
-      collectionRef: c(),
+      collectionRef: vueBn(),
       itemMap: e
-    }, m(f, h);
-  } else h = s(f);
+    }, vueVt(f, h);
+  } else h = vueX(f);
   let g = (e = false) => {
       let t = h.collectionRef.value;
       if (!t) return [];
@@ -63,7 +63,7 @@ function v(t = {}) {
         i = Array.from(h.itemMap.value.values()).sort((e, t) => (r.get(e.ref) ?? -1) - (r.get(t.ref) ?? -1));
       return e ? i : i.filter(e => e.ref.dataset.disabled !== ``);
     },
-    v = l({
+    v = vueJ({
       name: `CollectionSlot`,
       inheritAttrs: false,
       setup(props, {
@@ -73,16 +73,16 @@ function v(t = {}) {
         let {
           primitiveElement: s,
           currentElement: c
-        } = e();
-        return o(c, () => {
+        } = uiSwitchA();
+        return vueWt(c, () => {
           h.collectionRef.value = c.value;
-        }), () => a(r, {
+        }), () => vueH(uiSwitchM, {
           ref: s,
           ...attrs
         }, slots);
       }
     }),
-    y = l({
+    y = vueJ({
       name: `CollectionItem`,
       inheritAttrs: false,
       props: {
@@ -97,16 +97,16 @@ function v(t = {}) {
         let {
           primitiveElement: s,
           currentElement: c
-        } = e();
-        return i(e => {
+        } = uiSwitchA();
+        return vueGt(e => {
           if (c.value) {
-            let n = u(c.value);
+            let n = vueMn(c.value);
             h.itemMap.value.set(n, {
               ref: c.value,
               value: props.value
             }), e(() => h.itemMap.value.delete(n));
           }
-        }), () => a(r, {
+        }), () => vueH(uiSwitchM, {
           ...attrs,
           [_]: ``,
           ref: s
@@ -115,8 +115,8 @@ function v(t = {}) {
     });
   return {
     getItems: g,
-    reactiveItems: p(() => Array.from(h.itemMap.value.values())),
-    itemMapSize: p(() => h.itemMap.value.size),
+    reactiveItems: vueV(() => Array.from(h.itemMap.value.values())),
+    itemMapSize: vueV(() => h.itemMap.value.size),
     CollectionSlot: v,
     CollectionItem: y
   };

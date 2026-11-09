@@ -1,4 +1,4 @@
-import { l as e, p as t } from "./work-motivator.js";
+import { l as motivatorL, p as motivatorP } from "./work-motivator.js";
 var n = 6e4,
   r = 60 * n,
   i = 24 * r,
@@ -19,7 +19,7 @@ function d(e, t) {
 }
 function f(e, n) {
   let r = n.getDay();
-  return e.weekPattern === `double` ? r >= 1 && r <= 5 : e.weekPattern === `single` ? r >= 1 && r <= 6 : t({
+  return e.weekPattern === `double` ? r >= 1 && r <= 5 : e.weekPattern === `single` ? r >= 1 && r <= 6 : motivatorP({
     days: [1, 2, 3, 4, 5, 6],
     anchorMonday: e.bigWeekMonday || s,
     secondWeekDays: [1, 2, 3, 4, 5]
@@ -211,7 +211,7 @@ function w(e, t) {
   return e === `week` ? u(t, -((t.getDay() + 6) % 7)) : e === `month` ? new Date(t.getFullYear(), t.getMonth(), 1) : l(t);
 }
 function T(t, n) {
-  return t.earnedRange === `today` ? n.earnedToday : C(t, e(w(t.earnedRange, n.day)), n);
+  return t.earnedRange === `today` ? n.earnedToday : C(t, motivatorL(w(t.earnedRange, n.day)), n);
 }
 function E(e, t) {
   if (e.earnedRange === `today`) return x(e, t);

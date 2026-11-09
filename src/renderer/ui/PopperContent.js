@@ -1,15 +1,15 @@
-import { V as e, a as t, c as n, ct as r, d as i, f as a, i as o, j as s, l as c, m as l, o as u, p as d, s as f, u as p, yt as m } from "./Switch.js";
-import { An as h, Cn as g, Ct as _, Gt as v, Kt as y, Qt as b, S as x, Sn as S, Wt as C, Yt as w, b as T, bn as E, et as D, gt as O, hn as k, j as A, nr as j, nt as M, sn as N, v as P } from "../chunks/vue-i18n.runtime.js";
-import { r as F } from "./icons/lucide-icons.js";
-import { n as I, r as L } from "./Collection.js";
-var R = F(`chevron-down`, [[`path`, {
+import { V as uiSwitchV, a as uiSwitchA, c as uiSwitchC, ct as uiSwitchCt, d as uiSwitchD, f as uiSwitchF, i as uiSwitchI, j as uiSwitchJ, l as uiSwitchL, m as uiSwitchM, o as uiSwitchO, p as uiSwitchP, s as uiSwitchS, u as uiSwitchU, yt as uiSwitchYt } from "./Switch.js";
+import { An as vueAn, Cn as vueCn, Ct as vueCt, Gt as vueGt, Kt as vueKt, Qt as vueQt, S as vueS, Sn as vueSn, Wt as vueWt, Yt as vueYt, b as vueB, bn as vueBn, et as vueEt, gt as O, hn as vueHn, j as vueJ, nr as vueNr, nt as vueNt, sn as N, v as vueV } from "../chunks/vue-i18n.runtime.js";
+import { r as lucideR } from "./icons/lucide-icons.js";
+import { n as CollectionN, r as CollectionR } from "./Collection.js";
+var R = lucideR(`chevron-down`, [[`path`, {
     d: `m6 9 6 6 6-6`,
     key: `qrunsl`
   }]]),
   z = 0;
 function B() {
-  v(fn => {
-    if (!r) return;
+  vueGt(fn => {
+    if (!uiSwitchCt) return;
     let selectorAll = document.querySelectorAll(`[data-reka-focus-guard]`);
     document.body.insertAdjacentElement(`afterbegin`, selectorAll[0] ?? V()), document.body.insertAdjacentElement(`beforeend`, selectorAll[1] ?? V()), z++, fn(() => {
       z === 1 && document.querySelectorAll(`[data-reka-focus-guard]`).forEach(item => item.remove()), z--;
@@ -20,19 +20,19 @@ function V() {
   let element = document.createElement(`span`);
   return element.setAttribute(`data-reka-focus-guard`, ``), element.tabIndex = 0, element.style.outline = `none`, element.style.opacity = `0`, element.style.position = `fixed`, element.style.pointerEvents = `none`, element;
 }
-var [H, U] = m(`PopperRoot`),
-  W = A({
+var [H, U] = uiSwitchYt(`PopperRoot`),
+  W = vueJ({
     inheritAttrs: false,
     __name: `PopperRoot`,
     setup(props) {
-      let t = E();
+      let t = vueBn();
       return U({
         anchor: t,
         onAnchorChange: e => t.value = e
-      }), (e, t) => _(e.$slots, `default`);
+      }), (e, t) => vueCt(e.$slots, `default`);
     }
   }),
-  G = A({
+  G = vueJ({
     __name: `PopperAnchor`,
     props: {
       reference: {
@@ -53,16 +53,16 @@ var [H, U] = m(`PopperRoot`),
         {
           forwardRef: r,
           currentElement: i
-        } = e(),
+        } = uiSwitchV(),
         a = H();
-      return y(() => {
+      return vueKt(() => {
         a.onAnchorChange(propsAlias.reference ?? i.value);
-      }), (e, t) => (O(), T(h(s), {
-        ref: h(r),
+      }), (e, t) => (O(), vueB(vueAn(uiSwitchJ), {
+        ref: vueAn(r),
         as: e.as,
         "as-child": e.asChild
       }, {
-        default: w(() => [_(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 8, [`as`, `as-child`]));
     }
@@ -117,12 +117,12 @@ function J(e) {
 function Y(e) {
   if (J(e)) {
     let t = e.$el;
-    return l(t) && d(t) === `#comment` ? null : t;
+    return uiSwitchM(t) && uiSwitchP(t) === `#comment` ? null : t;
   }
   return e;
 }
 function X(fn) {
-  return typeof fn == `function` ? fn() : h(fn);
+  return typeof fn == `function` ? fn() : vueAn(fn);
 }
 function te(e) {
   return {
@@ -130,7 +130,7 @@ function te(e) {
     options: e,
     fn(t) {
       let n = Y(X(e.element));
-      return n == null ? {} : o({
+      return n == null ? {} : uiSwitchI({
         element: n,
         padding: e.padding
       }).fn(t);
@@ -147,20 +147,20 @@ function Q(e, t) {
 function ne(e, t, n) {
   n === undefined && (n = {});
   let whileElementsMounted = n.whileElementsMounted,
-    i = P(() => X(n.open) ?? true),
-    a = P(() => X(n.middleware)),
-    o = P(() => X(n.placement) ?? `bottom`),
-    s = P(() => X(n.strategy) ?? `absolute`),
-    c = P(() => X(n.transform) ?? true),
-    l = P(() => Y(e.value)),
-    d = P(() => Y(t.value)),
-    f = E(0),
-    p = E(0),
-    m = E(s.value),
-    h = E(o.value),
-    _ = g({}),
-    v = E(false),
-    y = P(() => {
+    i = vueV(() => X(n.open) ?? true),
+    a = vueV(() => X(n.middleware)),
+    o = vueV(() => X(n.placement) ?? `bottom`),
+    s = vueV(() => X(n.strategy) ?? `absolute`),
+    c = vueV(() => X(n.transform) ?? true),
+    l = vueV(() => Y(e.value)),
+    d = vueV(() => Y(t.value)),
+    f = vueBn(0),
+    p = vueBn(0),
+    m = vueBn(s.value),
+    h = vueBn(o.value),
+    _ = vueCn({}),
+    v = vueBn(false),
+    y = vueV(() => {
       let options = {
         position: m.value,
         left: `0`,
@@ -185,7 +185,7 @@ function ne(e, t, n) {
   function x() {
     if (l.value == null || d.value == null) return;
     let e = i.value;
-    u(l.value, d.value, {
+    uiSwitchO(l.value, d.value, {
       middleware: a.value,
       placement: o.value,
       strategy: s.value
@@ -209,19 +209,19 @@ function ne(e, t, n) {
   function D() {
     i.value || (v.value = false);
   }
-  return C([a, o, s, i], x, {
+  return vueWt([a, o, s, i], x, {
     flush: `sync`
-  }), C([l, d], T, {
+  }), vueWt([l, d], T, {
     flush: `sync`
-  }), C(i, D, {
+  }), vueWt(i, D, {
     flush: `sync`
-  }), N() && k(w), {
-    x: S(f),
-    y: S(p),
-    strategy: S(m),
-    placement: S(h),
-    middlewareData: S(_),
-    isPositioned: S(v),
+  }), N() && vueHn(w), {
+    x: vueSn(f),
+    y: vueSn(p),
+    strategy: vueSn(m),
+    placement: vueSn(h),
+    middlewareData: vueSn(_),
+    isPositioned: vueSn(v),
     floatingStyles: y,
     update: x
   };
@@ -245,11 +245,11 @@ var re = [`dir`],
     updatePositionStrategy: `optimized`,
     prioritizePosition: false
   },
-  [ie, ae] = m(`PopperContent`),
-  oe = A({
+  [ie, ae] = uiSwitchYt(`PopperContent`),
+  oe = vueJ({
     inheritAttrs: false,
     __name: `PopperContent`,
-    props: D({
+    props: vueEt({
       memoDependencies: {
         type: Array,
         required: false
@@ -351,47 +351,47 @@ var re = [`dir`],
         {
           forwardRef: m,
           currentElement: g
-        } = e(),
-        S = L(P(() => propsAlias.dir)),
-        C = E(),
-        D = E(),
+        } = uiSwitchV(),
+        S = CollectionR(vueV(() => propsAlias.dir)),
+        C = vueBn(),
+        D = vueBn(),
         {
           width: k,
           height: A
-        } = I(D),
-        N = P(() => propsAlias.side + (propsAlias.align === `center` ? `` : `-${propsAlias.align}`)),
-        F = P(() => typeof propsAlias.collisionPadding == `number` ? propsAlias.collisionPadding : {
+        } = CollectionN(D),
+        N = vueV(() => propsAlias.side + (propsAlias.align === `center` ? `` : `-${propsAlias.align}`)),
+        F = vueV(() => typeof propsAlias.collisionPadding == `number` ? propsAlias.collisionPadding : {
           top: 0,
           right: 0,
           bottom: 0,
           left: 0,
           ...propsAlias.collisionPadding
         }),
-        R = P(() => Array.isArray(propsAlias.collisionBoundary) ? propsAlias.collisionBoundary : [propsAlias.collisionBoundary]),
-        z = P(() => ({
+        R = vueV(() => Array.isArray(propsAlias.collisionBoundary) ? propsAlias.collisionBoundary : [propsAlias.collisionBoundary]),
+        z = vueV(() => ({
           padding: F.value,
           boundary: R.value.filter(K),
           altBoundary: R.value.length > 0
         })),
-        B = P(() => ({
+        B = vueV(() => ({
           mainAxis: propsAlias.sideFlip,
           crossAxis: propsAlias.alignFlip
         })),
-        V = P(() => [p({
+        V = vueV(() => [uiSwitchU({
           mainAxis: propsAlias.sideOffset + A.value,
           alignmentAxis: propsAlias.alignOffset
-        }), propsAlias.prioritizePosition && propsAlias.avoidCollisions && f({
+        }), propsAlias.prioritizePosition && propsAlias.avoidCollisions && uiSwitchS({
           ...z.value,
           ...B.value
-        }), propsAlias.avoidCollisions && i({
+        }), propsAlias.avoidCollisions && uiSwitchD({
           mainAxis: true,
           crossAxis: !!propsAlias.prioritizePosition,
-          limiter: propsAlias.sticky === `partial` ? c() : undefined,
+          limiter: propsAlias.sticky === `partial` ? uiSwitchL() : undefined,
           ...z.value
-        }), !propsAlias.prioritizePosition && propsAlias.avoidCollisions && f({
+        }), !propsAlias.prioritizePosition && propsAlias.avoidCollisions && uiSwitchS({
           ...z.value,
           ...B.value
-        }), a({
+        }), uiSwitchF({
           ...z.value,
           apply: ({
             elements: e,
@@ -413,7 +413,7 @@ var re = [`dir`],
           arrowWidth: k.value,
           arrowHeight: A.value,
           dir: S.value
-        }), propsAlias.hideWhenDetached && n({
+        }), propsAlias.hideWhenDetached && uiSwitchC({
           strategy: `referenceHidden`,
           ...z.value
         })]),
@@ -423,77 +423,77 @@ var re = [`dir`],
           isPositioned: G,
           middlewareData: J,
           update: Y
-        } = ne(P(() => propsAlias.reference ?? d.anchor.value), C, {
+        } = ne(vueV(() => propsAlias.reference ?? d.anchor.value), C, {
           strategy: propsAlias.positionStrategy,
           placement: N,
-          whileElementsMounted: (...e) => t(...e, {
+          whileElementsMounted: (...e) => uiSwitchA(...e, {
             layoutShift: !propsAlias.disableUpdateOnLayoutShift,
             animationFrame: propsAlias.updatePositionStrategy === `always`
           }),
           middleware: V
         }),
-        X = P(() => q(W.value)[0]),
-        Z = P(() => q(W.value)[1]);
-      y(() => {
+        X = vueV(() => q(W.value)[0]),
+        Z = vueV(() => q(W.value)[1]);
+      vueKt(() => {
         G.value && emitAlias(`placed`);
       });
-      let Q = P(() => {
+      let Q = vueV(() => {
           let e = J.value.arrow?.centerOffset !== 0;
           return propsAlias.hideShiftedArrow && e;
         }),
-        $ = E(``);
-      return v(() => {
+        $ = vueBn(``);
+      return vueGt(() => {
         g.value && ($.value = window.getComputedStyle(g.value).zIndex);
       }), ae({
         placedSide: X,
         onArrowChange: e => D.value = e,
-        arrowX: P(() => J.value.arrow?.x ?? 0),
-        arrowY: P(() => J.value.arrow?.y ?? 0),
+        arrowX: vueV(() => J.value.arrow?.x ?? 0),
+        arrowY: vueV(() => J.value.arrow?.y ?? 0),
         shouldHideArrow: Q
-      }), (e, t) => (O(), x(`div`, {
+      }), (e, t) => (O(), vueS(`div`, {
         ref_key: `floatingRef`,
         ref: C,
         "data-reka-popper-content-wrapper": ``,
-        dir: h(S),
-        style: j({
-          ...h(U),
-          transform: h(G) ? h(U).transform : `translate(0, -200%)`,
+        dir: vueAn(S),
+        style: vueNr({
+          ...vueAn(U),
+          transform: vueAn(G) ? vueAn(U).transform : `translate(0, -200%)`,
           minWidth: `max-content`,
           zIndex: $.value,
-          "--reka-popper-transform-origin": [h(J).transformOrigin?.x, h(J).transformOrigin?.y].join(` `),
-          ...(h(J).hide?.referenceHidden && {
+          "--reka-popper-transform-origin": [vueAn(J).transformOrigin?.x, vueAn(J).transformOrigin?.y].join(` `),
+          ...(vueAn(J).hide?.referenceHidden && {
             visibility: `hidden`,
             pointerEvents: `none`
           })
         })
-      }, [propsAlias.memoDependencies ? b([propsAlias.asChild, propsAlias.as, X.value, Z.value, h(G), ...Object.values(e.$attrs), ...propsAlias.memoDependencies], () => (O(), T(h(s), M({
+      }, [propsAlias.memoDependencies ? vueQt([propsAlias.asChild, propsAlias.as, X.value, Z.value, vueAn(G), ...Object.values(e.$attrs), ...propsAlias.memoDependencies], () => (O(), vueB(vueAn(uiSwitchJ), vueNt({
         key: 0,
-        ref: h(m)
+        ref: vueAn(m)
       }, e.$attrs, {
         "as-child": propsAlias.asChild,
         as: propsAlias.as,
         "data-side": X.value,
         "data-align": Z.value,
         style: {
-          animation: h(G) ? undefined : `none`
+          animation: vueAn(G) ? undefined : `none`
         }
       }), {
-        default: w(() => [_(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
-      }, 16, [`as-child`, `as`, `data-side`, `data-align`, `style`])), t, 0) : (O(), T(h(s), M({
+      }, 16, [`as-child`, `as`, `data-side`, `data-align`, `style`])), t, 0) : (O(), vueB(vueAn(uiSwitchJ), vueNt({
         key: 1,
-        ref: h(m)
+        ref: vueAn(m)
       }, e.$attrs, {
         "as-child": propsAlias.asChild,
         as: propsAlias.as,
         "data-side": X.value,
         "data-align": Z.value,
-        dir: h(S),
+        dir: vueAn(S),
         style: {
-          animation: h(G) ? undefined : `none`
+          animation: vueAn(G) ? undefined : `none`
         }
       }), {
-        default: w(() => [_(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16, [`as-child`, `as`, `data-side`, `data-align`, `dir`, `style`]))], 12, re));
     }

@@ -1,7 +1,7 @@
-import { $n as e, An as t, S as n, St as r, Wt as i, Zt as a, bn as o, c as s, gt as c, j as l, n as u, nr as d, ot as f, rr as p, ut as m, v as h, x as ee, y as g } from "./vue-i18n.runtime.js";
-import { w as te } from "../i18n/en-US-player.js";
-import { C as ne, E as _, S as v, T as re, a as ie, h as ae, i as oe, l as se, m as ce, n as le, p as ue, r as de, s as y, t as fe, u as pe, v as me, x as he, y as ge } from "../vendors/OrbitControls.js";
-var b = new _();
+import { $n as vueN, An as vueAn, S as vueS, St as vueSt, Wt as vueWt, Zt as vueZt, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, n as u, nr as vueNr, ot as vueOt, rr as vueRr, ut as vueUt, v as vueV, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
+import { w as playerW } from "../i18n/en-US-player.js";
+import { C as OrbitControlsC, E as OrbitControlsE, S as OrbitControlsS, T as OrbitControlsT, a as OrbitControlsA, h as OrbitControlsH, i as OrbitControlsI, l as OrbitControlsL, m as OrbitControlsM, n as OrbitControlsN, p as OrbitControlsP, r as OrbitControlsR, s as y, t as fe, u as OrbitControlsU, v as OrbitControlsV, x as OrbitControlsX, y as OrbitControlsY } from "../vendors/OrbitControls.js";
+var b = new OrbitControlsE();
 function x(e, t, n, r, i, a) {
   let o = 2 * Math.PI * i / 4,
     s = Math.max(a - 2 * i, 0),
@@ -11,7 +11,7 @@ function x(e, t, n, r, i, a) {
     u = 1 - b.angleTo(e) / c;
   return Math.sign(b[n]) === 1 ? u * l : s / (o + s) + l + l * (1 - u);
 }
-var _e = class e extends ie {
+var _e = class e extends OrbitControlsA {
     constructor(e = 1, t = 1, n = 1, r = 2, i = .1) {
       let a = r * 2 + 1;
       if (i = Math.min(e / 2, t / 2, n / 2, i), super(1, 1, 1, a, a, a), this.type = `RoundedBoxGeometry`, this.parameters = {
@@ -23,14 +23,14 @@ var _e = class e extends ie {
       }, a === 1) return;
       let toNonIndexed = this.toNonIndexed();
       this.index = null, this.attributes.position = toNonIndexed.attributes.position, this.attributes.normal = toNonIndexed.attributes.normal, this.attributes.uv = toNonIndexed.attributes.uv;
-      let s = new _(),
-        c = new _(),
-        subScalar = new _(e, t, n).divideScalar(2).subScalar(i),
+      let s = new OrbitControlsE(),
+        c = new OrbitControlsE(),
+        subScalar = new OrbitControlsE(e, t, n).divideScalar(2).subScalar(i),
         array = this.attributes.position.array,
         d = this.attributes.normal.array,
         f = this.attributes.uv.array,
         p = array.length / 6,
-        m = new _(),
+        m = new OrbitControlsE(),
         h = .5 / a;
       for (let r = 0, a = 0; r < array.length; r += 3, a += 2) switch (s.fromArray(array, r), c.copy(s), c.x -= Math.sign(c.x) * h, c.y -= Math.sign(c.y) * h, c.z -= Math.sign(c.z) * h, c.normalize(), array[r + 0] = subScalar.x * Math.sign(s.x) + c.x * i, array[r + 1] = subScalar.y * Math.sign(s.y) + c.y * i, array[r + 2] = subScalar.z * Math.sign(s.z) + c.z * i, d[r + 0] = c.x, d[r + 1] = c.y, d[r + 2] = c.z, Math.floor(r / p)) {
         case 0:
@@ -81,7 +81,7 @@ var _e = class e extends ie {
   Pe = 22,
   Fe = 36,
   Ie = 4,
-  C = l({
+  C = vueJ({
     __name: `HeatmapBars3D`,
     props: {
       rows: {},
@@ -107,26 +107,26 @@ var _e = class e extends ie {
         } = u(),
         Re = [`--heatmap-empty`, `--heatmap-1`, `--heatmap-2`, `--heatmap-3`, `--heatmap-4`],
         ze = [.45, .65, .85, 1],
-        w = o(null),
-        T = o(null),
-        Be = o(null),
-        Ve = o(260),
-        E = o([]),
-        D = o([]),
-        O = o(null),
-        k = o(false),
-        He = h(() => Math.max(1, ...propsAlias.rows.map(item => item.cells.length))),
-        Ue = h(() => Math.max(3, He.value * .125)),
-        We = h(() => propsAlias.rows.some(item => item.label)),
-        Ge = h(() => propsAlias.rows.some(item => item.summary)),
+        w = vueBn(null),
+        T = vueBn(null),
+        Be = vueBn(null),
+        Ve = vueBn(260),
+        E = vueBn([]),
+        D = vueBn([]),
+        O = vueBn(null),
+        k = vueBn(false),
+        He = vueV(() => Math.max(1, ...propsAlias.rows.map(item => item.cells.length))),
+        Ue = vueV(() => Math.max(3, He.value * .125)),
+        We = vueV(() => propsAlias.rows.some(item => item.label)),
+        Ge = vueV(() => propsAlias.rows.some(item => item.summary)),
         emptyItems = [],
-        Ke = h(() => {
+        Ke = vueV(() => {
           if (!O.value) return ``;
           let e = emptyItems[O.value.index];
           return e ? X(e)?.tooltip ?? `` : ``;
         }),
-        qe = o(false),
-        Je = h(() => {
+        qe = vueBn(false),
+        Je = vueV(() => {
           if (!O.value) return {};
           let fallbackValue = w.value?.clientWidth ?? 0;
           return {
@@ -135,11 +135,11 @@ var _e = class e extends ie {
             transform: O.value.y < 40 ? `translate(-50%, 16px)` : `translate(-50%, calc(-100% - 10px))`
           };
         }),
-        j = new ne(),
-        M = new ge(14, 1, .5, 600),
-        N = new ge(),
+        j = new OrbitControlsC(),
+        M = new OrbitControlsY(14, 1, .5, 600),
+        N = new OrbitControlsY(),
         translate = new _e(be, 1, be, Se, xe).translate(0, .5, 0),
-        P = new me();
+        P = new OrbitControlsV();
       P.onBeforeCompile = e => {
         e.vertexShader = e.vertexShader.replace(`#include <common>`, `#include <common>
 attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include <beginnormal_vertex>
@@ -149,15 +149,15 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       transformed.y += step(0.5, position.y) * (barShapeHeight - 1.0);
       transformed.y *= barSquash;`);
       }, P.customProgramCacheKey = () => `heatmap-rounded-bar`;
-      let Xe = new he(),
-        Ze = new re(),
-        F = new _(),
-        Qe = new ae(),
-        $e = new oe(),
-        et = new _(),
+      let Xe = new OrbitControlsX(),
+        Ze = new OrbitControlsT(),
+        F = new OrbitControlsE(),
+        Qe = new OrbitControlsH(),
+        $e = new OrbitControlsI(),
+        et = new OrbitControlsE(),
         tt = new y(),
         nt = new y(),
-        setFromSphericalCoords = new _().setFromSphericalCoords(1, De, Oe),
+        setFromSphericalCoords = new OrbitControlsE().setFromSphericalCoords(1, De, Oe),
         I = null,
         L = null,
         R = null,
@@ -183,10 +183,10 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         ft = .45,
         pt = .3,
         mt = .55;
-      j.add(new de(16777215, .34 * Math.PI));
-      let ht = new se(16777215, .74 * Math.PI);
+      j.add(new OrbitControlsR(16777215, .34 * Math.PI));
+      let ht = new OrbitControlsL(16777215, .74 * Math.PI);
       ht.position.set(.35, 1, .55);
-      let gt = new se(16777215, .2 * Math.PI);
+      let gt = new OrbitControlsL(16777215, .2 * Math.PI);
       gt.position.set(-1, .25, -.4), j.add(ht, gt);
       function X(e) {
         return propsAlias.rows[e.row]?.cells[e.column] ?? null;
@@ -218,7 +218,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           back: n,
           front: r
         } = xt();
-        return new _((e + t) / 2, Ue.value * .3, (n + r) / 2);
+        return new OrbitControlsE((e + t) / 2, Ue.value * .3, (n + r) / 2);
       }
       function Ct() {
         let {
@@ -228,7 +228,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             front: r
           } = xt(),
           i = [];
-        for (let count of [e, t]) for (let value of [0, Ue.value]) for (let t of [n, r]) i.push(new _(count, value, t));
+        for (let count of [e, t]) for (let value of [0, Ue.value]) for (let t of [n, r]) i.push(new OrbitControlsE(count, value, t));
         return i;
       }
       function wt() {
@@ -249,7 +249,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function Et(e, t, n, r) {
         e.fillStyle = `#ffffff`, e.fillStyle = t.getPropertyValue(`--background`).trim() || `#ffffff`, e.fillRect(0, 0, 1, 1), e.fillStyle = r, e.fillStyle = t.getPropertyValue(n).trim() || r, e.fillRect(0, 0, 1, 1);
         let [i = 0, a = 0, o = 0] = e.getImageData(0, 0, 1, 1).data;
-        return new y().setRGB(i / 255, a / 255, o / 255, v);
+        return new y().setRGB(i / 255, a / 255, o / 255, OrbitControlsS);
       }
       function Dt() {
         let element = document.createElement(`canvas`);
@@ -276,7 +276,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         };
       function Ot() {
         let e = V[0];
-        ot = propsAlias.rows.map(item => !item.color || !e ? null : (e.getRGB(options, v), new y(item.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(options.r + (Q.r - options.r) * e, options.g + (Q.g - options.g) * e, options.b + (Q.b - options.b) * e, v))]));
+        ot = propsAlias.rows.map(item => !item.color || !e ? null : (e.getRGB(options, OrbitControlsS), new y(item.color).getRGB(Q, OrbitControlsS), [e, ...ze.map(e => new y().setRGB(options.r + (Q.r - options.r) * e, options.g + (Q.g - options.g) * e, options.b + (Q.b - options.b) * e, OrbitControlsS))]));
       }
       function kt(e, t) {
         if (e <= 0) return 0;
@@ -319,7 +319,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           });
         }), float32Array = new Float32Array(emptyItems.length).fill(S), at = new Float32Array(emptyItems.length).fill(S), z = new Float32Array(emptyItems.length).fill(S), H = -1, O.value = null, !emptyItems.length) return;
         let e = translate.clone();
-        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
+        B = new OrbitControlsP(z, 1), B.setUsage(OrbitControlsU), e.setAttribute(`barHeight`, B), R = new OrbitControlsM(e, P, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
           Qe.makeTranslation(_t(item.column), 0, vt(item.row)), R?.setMatrixAt(t, Qe);
         }), R.instanceMatrix.needsUpdate = true, j.add(R);
       }
@@ -546,17 +546,17 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function sn() {
         Dt(), Ot(), Mt(), $();
       }
-      let cn = h(() => propsAlias.rows.map(item => item.cells.map(e => +!!e).join(``)).join(`|`)),
-        ln = h(() => propsAlias.rows.map(state => state.cells.map(item => item?.value ?? ``).join(`,`)).join(`|`)),
-        un = h(() => propsAlias.rows.map(item => item.color ?? ``).join(`|`));
-      return i([cn, ln, un], ([e, t], [n, r]) => {
+      let cn = vueV(() => propsAlias.rows.map(item => item.cells.map(e => +!!e).join(``)).join(`|`)),
+        ln = vueV(() => propsAlias.rows.map(state => state.cells.map(item => item?.value ?? ``).join(`,`)).join(`|`)),
+        un = vueV(() => propsAlias.rows.map(item => item.color ?? ``).join(`|`));
+      return vueWt([cn, ln, un], ([e, t], [n, r]) => {
         I && (Ot(), e !== n && (Ft(), Yt(true)), e !== n || t !== r ? It() : (Mt(), $()));
-      }), m(() => {
+      }), vueUt(() => {
         let e = T.value,
           t = w.value;
         if (e && t) {
           try {
-            I = new le({
+            I = new OrbitControlsN({
               canvas: e,
               alpha: true,
               antialias: window.devicePixelRatio < 2,
@@ -577,54 +577,54 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             attributeFilter: [`class`]
           });
         }
-      }), f(() => {
+      }), vueOt(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
           capture: true
         }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && emitAlias(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
-      }), (i, o) => (c(), n(`div`, null, [g(`div`, {
+      }), (i, renderCache) => (vueGt(), vueS(`div`, null, [vueY(`div`, {
         ref_key: `containerRef`,
         ref: w,
         class: `relative select-none overflow-hidden`,
-        style: d({
+        style: vueNr({
           height: `${Ve.value}px`
         })
-      }, [g(`canvas`, {
+      }, [vueY(`canvas`, {
         ref_key: `canvasRef`,
         ref: T,
-        class: e([`block h-full w-full`, k.value ? `cursor-grabbing` : `cursor-grab`]),
-        style: d(qe.value && !k.value ? {
+        class: vueN([`block h-full w-full`, k.value ? `cursor-grabbing` : `cursor-grab`]),
+        style: vueNr(qe.value && !k.value ? {
           cursor: `pointer`
         } : undefined),
         onPointermove: en,
         onPointerleave: tn,
         onPointerdown: nn,
         onClick: an,
-        onDblclick: o[0] ||= e => Ht(true)
-      }, null, 38), We.value ? (c(true), n(s, {
+        onDblclick: renderCache[0] ||= e => Ht(true)
+      }, null, 38), We.value ? (vueGt(true), vueS(vueC, {
         key: 0
-      }, r(props.rows, (event, t) => a((c(), n(`div`, {
+      }, vueSt(props.rows, (event, t) => vueZt((vueGt(), vueS(`div`, {
         key: event.key,
         class: `pointer-events-none absolute -translate-x-full -translate-y-1/2 text-right`,
-        style: d({
+        style: vueNr({
           left: `${E.value[t]?.x ?? 0}px`,
           top: `${E.value[t]?.y ?? 0}px`
         })
-      }, [g(`span`, ve, p(event.label), 1), event.summary ? (c(), n(`div`, ye, p(event.summary), 1)) : ee(``, true)], 4)), [[te, E.value[t]?.visible]])), 128)) : ee(``, true), (c(true), n(s, null, r(props.columnLabels, (e, t) => a((c(), n(`span`, {
+      }, [vueY(`span`, ve, vueRr(event.label), 1), event.summary ? (vueGt(), vueS(`div`, ye, vueRr(event.summary), 1)) : vueX(``, true)], 4)), [[playerW, E.value[t]?.visible]])), 128)) : vueX(``, true), (vueGt(true), vueS(vueC, null, vueSt(props.columnLabels, (e, t) => vueZt((vueGt(), vueS(`span`, {
         key: `${e.index}-${e.text}`,
         class: `pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-xs text-[#bbb] leading-none whitespace-nowrap dark:text-muted-foreground/70`,
-        style: d({
+        style: vueNr({
           left: `${D.value[t]?.x ?? 0}px`,
           top: `${D.value[t]?.y ?? 0}px`
         })
-      }, p(e.text), 5)), [[te, D.value[t]?.visible]])), 128)), O.value && Ke.value ? (c(), n(`div`, {
+      }, vueRr(e.text), 5)), [[playerW, D.value[t]?.visible]])), 128)), O.value && Ke.value ? (vueGt(), vueS(`div`, {
         key: 1,
         class: `pointer-events-none absolute z-10 whitespace-nowrap rounded-md bg-[#1f2328]/90 px-2 py-1 text-xs text-white shadow-sm dark:bg-black/80`,
-        style: d(Je.value)
-      }, p(Ke.value), 5)) : ee(``, true)], 4), g(`p`, {
+        style: vueNr(Je.value)
+      }, vueRr(Ke.value), 5)) : vueX(``, true)], 4), vueY(`p`, {
         ref_key: `hintRef`,
         ref: Be,
         class: `mt-1.5 text-right text-xs text-[#bbb] leading-none dark:text-muted-foreground/70`
-      }, p(props.hint ?? t(Le)(`todayWork.heatmap3dHint`)), 513)]));
+      }, vueRr(props.hint ?? vueAn(Le)(`todayWork.heatmap3dHint`)), 513)]));
     }
   });
 export { C as default };

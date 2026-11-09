@@ -1,8 +1,8 @@
-import { t as e } from "../chunks/vue-i18n.runtime.js";
-import { n as t, t as n } from "./en-US-main.js";
-import { r } from "../ui/icons/lucide-icons.js";
+import { t as vueT } from "../chunks/vue-i18n.runtime.js";
+import { n as localeN, t as localeT } from "./en-US-main.js";
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
 import { n as i, t as a } from "./en-US-main.js";
-var o = r(`audio-lines`, [[`path`, {
+var o = lucideR(`audio-lines`, [[`path`, {
     d: `M2 10v3`,
     key: `1fnikh`
   }], [`path`, {
@@ -21,15 +21,15 @@ var o = r(`audio-lines`, [[`path`, {
     d: `M22 10v3`,
     key: `154ddg`
   }]]),
-  s = r(`chevron-left`, [[`path`, {
+  s = lucideR(`chevron-left`, [[`path`, {
     d: `m15 18-6-6 6-6`,
     key: `1wnfg3`
   }]]),
-  c = r(`folder-open`, [[`path`, {
+  c = lucideR(`folder-open`, [[`path`, {
     d: `m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2`,
     key: `usdka0`
   }]]),
-  l = r(`history`, [[`path`, {
+  l = lucideR(`history`, [[`path`, {
     d: `M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8`,
     key: `1357e3`
   }], [`path`, {
@@ -39,7 +39,7 @@ var o = r(`audio-lines`, [[`path`, {
     d: `M12 7v5l4 2`,
     key: `1fdv2h`
   }]]),
-  u = r(`save`, [[`path`, {
+  u = lucideR(`save`, [[`path`, {
     d: `M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z`,
     key: `1c8476`
   }], [`path`, {
@@ -49,7 +49,7 @@ var o = r(`audio-lines`, [[`path`, {
     d: `M7 3v4a1 1 0 0 0 1 1h7`,
     key: `t51u73`
   }]]),
-  d = r(`wallet-cards`, [[`rect`, {
+  d = lucideR(`wallet-cards`, [[`rect`, {
     width: `18`,
     height: `18`,
     x: `3`,
@@ -3895,26 +3895,26 @@ var o = r(`audio-lines`, [[`path`, {
   options = {
     "zh-CN": {
       ...i,
-      toolboxNative: t,
+      toolboxNative: localeN,
       milestoneTool: record
     },
     "en-US": {
       ...a,
-      toolboxNative: n,
+      toolboxNative: localeT,
       milestoneTool: h
     },
     "ja-JP": {
       ...f,
-      toolboxNative: t,
+      toolboxNative: localeN,
       milestoneTool: record
     },
     "ko-KR": {
       ...p,
-      toolboxNative: t,
+      toolboxNative: localeN,
       milestoneTool: record
     }
   },
-  v = e({
+  v = vueT({
     legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
@@ -3925,7 +3925,7 @@ var o = r(`audio-lines`, [[`path`, {
 function y(e) {
   v.global.locale.value = e, document.documentElement.lang = e, document.title = v.global.t(`common.appName`);
 }
-var b = new Map(Object.entries(t).map(([e, t]) => [t, `toolboxNative.${e}`]));
+var b = new Map(Object.entries(localeN).map(([e, t]) => [t, `toolboxNative.${e}`]));
 function x() {
   let locale = v.global.locale;
   function t(e, t = {}) {

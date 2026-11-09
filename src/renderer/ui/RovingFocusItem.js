@@ -1,8 +1,8 @@
-import { I as e, j as t } from "./Switch.js";
-import { An as n, Ct as r, Wt as i, Yt as a, b as o, gt as s, j as c, k as l, mt as u, rt as d, ut as f, v as p } from "../chunks/vue-i18n.runtime.js";
-import { t as m } from "./Collection.js";
-import { a as h, i as g, n as _, r as v } from "./RovingFocusGroup.js";
-var y = c({
+import { I as uiSwitchI, j as uiSwitchJ } from "./Switch.js";
+import { An as vueAn, Ct as vueCt, Wt as vueWt, Yt as vueYt, b as vueB, gt as vueGt, j as vueJ, k as vueK, mt as vueMt, rt as vueRt, ut as vueUt, v as vueV } from "../chunks/vue-i18n.runtime.js";
+import { t as CollectionT } from "./Collection.js";
+import { a as RovingFocusGroupA, i as RovingFocusGroupI, n as RovingFocusGroupN, r as RovingFocusGroupR } from "./RovingFocusGroup.js";
+var y = vueJ({
   __name: `RovingFocusItem`,
   props: {
     tabStopId: {
@@ -34,19 +34,19 @@ var y = c({
   },
   setup(props) {
     let propsAlias = props,
-      b = _(),
-      x = e(),
-      S = p(() => propsAlias.tabStopId || x),
-      C = p(() => b.currentTabStopId.value === S.value),
+      b = RovingFocusGroupN(),
+      x = uiSwitchI(),
+      S = vueV(() => propsAlias.tabStopId || x),
+      C = vueV(() => b.currentTabStopId.value === S.value),
       {
         getItems: w,
         CollectionItem: T
-      } = m();
-    f(() => {
+      } = CollectionT();
+    vueUt(() => {
       propsAlias.focusable && b.onFocusableItemAdd();
-    }), u(() => {
+    }), vueMt(() => {
       propsAlias.focusable && b.onFocusableItemRemove();
-    }), i(() => propsAlias.focusable, (e, t) => {
+    }), vueWt(() => propsAlias.focusable, (e, t) => {
       e !== t && (e ? b.onFocusableItemAdd() : b.onFocusableItemRemove());
     });
     function E(event) {
@@ -55,7 +55,7 @@ var y = c({
         return;
       }
       if (event.target !== event.currentTarget) return;
-      let t = g(event, b.orientation.value, b.dir.value);
+      let t = RovingFocusGroupI(event, b.orientation.value, b.dir.value);
       if (t !== undefined) {
         if (event.metaKey || event.ctrlKey || event.altKey || !propsAlias.allowShiftKey && event.shiftKey) return;
         event.preventDefault();
@@ -63,26 +63,26 @@ var y = c({
         if (t === `last`) n.reverse();else if (t === `prev` || t === `next`) {
           t === `prev` && n.reverse();
           let r = n.indexOf(event.currentTarget);
-          n = b.loop.value ? h(n, r + 1) : n.slice(r + 1);
+          n = b.loop.value ? RovingFocusGroupA(n, r + 1) : n.slice(r + 1);
         }
-        d(() => v(n));
+        vueRt(() => RovingFocusGroupR(n));
       }
     }
-    return (ctx, renderCache) => (s(), o(n(T), null, {
-      default: a(() => [l(n(t), {
+    return (ctx, renderCache) => (vueGt(), vueB(vueAn(T), null, {
+      default: vueYt(() => [vueK(vueAn(uiSwitchJ), {
         tabindex: C.value ? 0 : -1,
-        "data-orientation": n(b).orientation.value,
+        "data-orientation": vueAn(b).orientation.value,
         "data-active": ctx.active ? `` : undefined,
         "data-disabled": ctx.focusable ? undefined : ``,
         as: ctx.as,
         "as-child": ctx.asChild,
         onMousedown: renderCache[0] ||= event => {
-          ctx.focusable ? n(b).onItemFocus(S.value) : event.preventDefault();
+          ctx.focusable ? vueAn(b).onItemFocus(S.value) : event.preventDefault();
         },
-        onFocus: renderCache[1] ||= e => n(b).onItemFocus(S.value),
+        onFocus: renderCache[1] ||= e => vueAn(b).onItemFocus(S.value),
         onKeydown: E
       }, {
-        default: a(() => [r(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`tabindex`, `data-orientation`, `data-active`, `data-disabled`, `as`, `as-child`])]),
       _: 3

@@ -1,5 +1,5 @@
-import { r as e } from "./lucide-icons.js";
-var t = e(`minimize-2`, [[`path`, {
+import { r as lucideR } from "./lucide-icons.js";
+var t = lucideR(`minimize-2`, [[`path`, {
   d: `m14 10 7-7`,
   key: `oa77jy`
 }], [`path`, {

@@ -1,17 +1,17 @@
-import { At as e, Ct as t, Dt as n, Et as r, Ot as i, Tt as a, jt as o, kt as s, r as c, t as l, wt as u } from "../ui/Switch.js";
-import { $n as d, An as f, Cn as p, Et as m, O as h, S as g, St as _, Wt as v, Yt as y, Zt as b, b as x, bn as S, c as C, gt as w, j as T, k as E, nr as D, ot as O, rr as k, rt as ee, ut as A, v as j, x as M, y as N } from "../chunks/vue-i18n.runtime.js";
-import { C as P, E as F, r as te, w as ne } from "../i18n/en-US-player.js";
-import { n as re, r as I, t as L } from "../ui/icons/lucide-icons.js";
-import { t as ie } from "../chunks/check.js";
-import { s as ae } from "../ui/PopperContent.js";
-import { _ as R, a as oe, d as se, f as z, g as ce, i as le, m as ue, n as de, o as fe, p as B, r as pe, t as me, u as V, v as he, y as ge } from "../chunks/screenshot-beautifier.js";
-import { n as _e, t as ve } from "../ui/DropdownMenuItem.js";
-import { n as ye, t as be } from "../chunks/undo-2.js";
-import { _ as xe, a as Se, c as Ce, d as we, i as Te, l as H, m as Ee, n as De, o as Oe, p as ke, r as Ae, s as je, t as Me, u as U, v as Ne, y as Pe } from "../chunks/compose.js";
-import { n as Fe, r as Ie, t as Le } from "../ui/DropdownMenuTrigger.js";
-import { t as W } from "../ui/Slider.js";
-import { a as G, i as Re, n as ze, r as Be, t as Ve } from "../chunks/screenshotTool.js";
-var He = I(`grid-3x3`, [[`rect`, {
+import { At as uiSwitchAt, Ct as uiSwitchCt, Dt as uiSwitchDt, Et as uiSwitchEt, Ot as uiSwitchOt, Tt as uiSwitchTt, jt as uiSwitchJt, kt as uiSwitchKt, r as uiSwitchR, t as uiSwitchT, wt as uiSwitchWt } from "../ui/Switch.js";
+import { $n as vueN, An as vueAn, Cn as vueCn, Et as vueEt, O as vueO, S as vueS, St as vueSt, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { C as playerC, E as playerE, r as playerR, w as playerW } from "../i18n/en-US-player.js";
+import { n as lucideN, r as lucideR, t as lucideT } from "../ui/icons/lucide-icons.js";
+import { t as checkT } from "../chunks/check.js";
+import { s as PopperContentS } from "../ui/PopperContent.js";
+import { _ as beautifier, a as beautifierA, d as beautifierD, f as beautifierF, g as beautifierG, i as beautifierI, m as beautifierM, n as beautifierN, o as beautifierO, p as beautifierP, r as beautifierR, t as beautifierT, u as beautifierU, v as beautifierV, y as beautifierY } from "../chunks/screenshot-beautifier.js";
+import { n as DropdownMenuItemN, t as DropdownMenuItemT } from "../ui/DropdownMenuItem.js";
+import { n as undo2N, t as undo2T } from "../chunks/undo-2.js";
+import { _ as compose, a as composeA, c as composeC, d as composeD, i as composeI, l as composeL, m as composeM, n as composeN, o as composeO, p as composeP, r as composeR, s as composeS, t as composeT, u as composeU, v as composeV, y as composeY } from "../chunks/compose.js";
+import { n as DropdownMenuTriggerN, r as DropdownMenuTriggerR, t as DropdownMenuTriggerT } from "../ui/DropdownMenuTrigger.js";
+import { t as SliderT } from "../ui/Slider.js";
+import { a as screenshotToolA, i as screenshotToolI, n as screenshotToolN, r as screenshotToolR, t as screenshotToolT } from "../chunks/screenshotTool.js";
+var He = lucideR(`grid-3x3`, [[`rect`, {
     width: `18`,
     height: `18`,
     x: `3`,
@@ -31,21 +31,21 @@ var He = I(`grid-3x3`, [[`rect`, {
     d: `M15 3v18`,
     key: `14nvp0`
   }]]),
-  Ue = I(`highlighter`, [[`path`, {
+  Ue = lucideR(`highlighter`, [[`path`, {
     d: `m9 11-6 6v3h9l3-3`,
     key: `1a3l36`
   }], [`path`, {
     d: `m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4`,
     key: `14a9rk`
   }]]),
-  We = I(`move-up-right`, [[`path`, {
+  We = lucideR(`move-up-right`, [[`path`, {
     d: `M13 5H19V11`,
     key: `1n1gyv`
   }], [`path`, {
     d: `M19 5L5 19`,
     key: `72u4yj`
   }]]),
-  Ge = I(`redo-2`, [[`path`, {
+  Ge = lucideR(`redo-2`, [[`path`, {
     d: `m15 14 5-5-5-5`,
     key: `12vg1m`
   }], [`path`, {
@@ -66,7 +66,7 @@ var He = I(`grid-3x3`, [[`rect`, {
     key: 0,
     class: `text-xs text-muted-foreground`
   },
-  Ye = T({
+  Ye = vueJ({
     __name: `OcrPanel`,
     props: {
       sessionId: {},
@@ -85,11 +85,11 @@ var He = I(`grid-3x3`, [[`rect`, {
       let propsAlias = props,
         emitAlias = emit,
         editor = window.screenshotToolAPI.editor,
-        o = S(false),
-        s = S(``),
-        l = S(``),
-        u = S(false),
-        d = S(false),
+        o = vueBn(false),
+        s = vueBn(``),
+        l = vueBn(``),
+        u = vueBn(false),
+        d = vueBn(false),
         p = 0,
         m = null;
       async function _() {
@@ -114,20 +114,20 @@ var He = I(`grid-3x3`, [[`rect`, {
       }
       async function T() {
         if (s.value) try {
-          await navigator.clipboard.writeText(s.value), d.value = true, emitAlias(`toast`, G(`OcrCopied`)), m !== null && window.clearTimeout(m), m = window.setTimeout(() => {
+          await navigator.clipboard.writeText(s.value), d.value = true, emitAlias(`toast`, screenshotToolA(`OcrCopied`)), m !== null && window.clearTimeout(m), m = window.setTimeout(() => {
             d.value = false, m = null;
           }, 1400);
         } catch {
-          emitAlias(`toast`, G(`ActionFailed`));
+          emitAlias(`toast`, screenshotToolA(`ActionFailed`));
         }
       }
-      return v(() => propsAlias.sessionId, () => {
+      return vueWt(() => propsAlias.sessionId, () => {
         p += 1, o.value = false, s.value = ``, l.value = ``, u.value = false, propsAlias.autoRun && _();
       }, {
         immediate: true
       }), expose({
         run: _
-      }), (t, n) => (w(), g(`div`, K, [N(`p`, Ke, k(props.supported ? f(G)(`OcrHint`) : f(G)(`OcrUnsupported`)), 1), props.supported ? (w(), x(f(c), {
+      }), (t, renderCache) => (vueGt(), vueS(`div`, K, [vueY(`p`, Ke, vueRr(props.supported ? vueAn(screenshotToolA)(`OcrHint`) : vueAn(screenshotToolA)(`OcrUnsupported`)), 1), props.supported ? (vueGt(), vueB(vueAn(uiSwitchR), {
         key: 0,
         variant: `outline`,
         size: `sm`,
@@ -135,38 +135,38 @@ var He = I(`grid-3x3`, [[`rect`, {
         disabled: o.value,
         onClick: _
       }, {
-        default: y(() => [o.value ? (w(), x(f(R), {
+        default: vueYt(() => [o.value ? (vueGt(), vueB(vueAn(beautifier), {
           key: 0,
           size: 14,
           class: `animate-spin`
-        })) : (w(), x(f(Pe), {
+        })) : (vueGt(), vueB(vueAn(composeY), {
           key: 1,
           size: 14
-        })), h(` ` + k(o.value ? f(G)(`OcrRunning`) : u.value ? f(G)(`OcrRerun`) : f(G)(`OcrRun`)), 1)]),
+        })), vueO(` ` + vueRr(o.value ? vueAn(screenshotToolA)(`OcrRunning`) : u.value ? vueAn(screenshotToolA)(`OcrRerun`) : vueAn(screenshotToolA)(`OcrRun`)), 1)]),
         _: 1
-      }, 8, [`disabled`])) : M(``, true), l.value ? (w(), g(`p`, qe, k(l.value), 1)) : M(``, true), u.value && !l.value ? (w(), g(C, {
+      }, 8, [`disabled`])) : vueX(``, true), l.value ? (vueGt(), vueS(`p`, qe, vueRr(l.value), 1)) : vueX(``, true), u.value && !l.value ? (vueGt(), vueS(vueC, {
         key: 2
-      }, [s.value ? (w(), g(C, {
+      }, [s.value ? (vueGt(), vueS(vueC, {
         key: 1
-      }, [b(N(`textarea`, {
-        "onUpdate:modelValue": n[0] ||= e => s.value = e,
+      }, [vueZt(vueY(`textarea`, {
+        "onUpdate:modelValue": renderCache[0] ||= e => s.value = e,
         class: `min-h-0 flex-1 resize-none rounded-lg border border-input bg-background p-2.5 text-[13px] leading-relaxed outline-none focus:border-ring`,
         spellcheck: `false`,
-        onKeydown: n[1] ||= F(() => {}, [`stop`])
-      }, null, 544), [[P, s.value]]), E(f(c), {
+        onKeydown: renderCache[1] ||= playerE(() => {}, [`stop`])
+      }, null, 544), [[playerC, s.value]]), vueK(vueAn(uiSwitchR), {
         size: `sm`,
         class: `w-full text-xs`,
         onClick: T
       }, {
-        default: y(() => [d.value ? (w(), x(f(ie), {
+        default: vueYt(() => [d.value ? (vueGt(), vueB(vueAn(checkT), {
           key: 0,
           size: 14
-        })) : (w(), x(f(ge), {
+        })) : (vueGt(), vueB(vueAn(beautifierY), {
           key: 1,
           size: 14
-        })), h(k(f(G)(`OcrCopy`)), 1)]),
+        })), vueO(vueRr(vueAn(screenshotToolA)(`OcrCopy`)), 1)]),
         _: 1
-      })], 64)) : (w(), g(`p`, Je, k(f(G)(`OcrEmpty`)), 1))], 64)) : M(``, true)]));
+      })], 64)) : (vueGt(), vueS(`p`, Je, vueRr(vueAn(screenshotToolA)(`OcrEmpty`)), 1))], 64)) : vueX(``, true)]));
     }
   }),
   q = {
@@ -354,7 +354,7 @@ var He = I(`grid-3x3`, [[`rect`, {
     class: `text-[11px] text-muted-foreground`
   },
   rn = `repeating-conic-gradient(#e4e4e7 0% 25%, #ffffff 0% 50%) 50% / 10px 10px`,
-  an = T({
+  an = vueJ({
     __name: `StylePanel`,
     props: {
       current: {},
@@ -371,9 +371,9 @@ var He = I(`grid-3x3`, [[`rect`, {
     }) {
       let resultAlias = result,
         emitAlias = emit,
-        o = S(false),
-        s = S(``),
-        c = S(null),
+        o = vueBn(false),
+        s = vueBn(``),
+        c = vueBn(null),
         options = {
           image: `BackgroundImage`,
           blur: `BackgroundBlur`,
@@ -388,10 +388,10 @@ var He = I(`grid-3x3`, [[`rect`, {
           "browser-light": `FrameBrowserLight`,
           "browser-dark": `FrameBrowserDark`
         },
-        m = j(() => !B.includes(resultAlias.current.backgroundColor)),
-        y = j(() => [...le.map(item => ({
+        m = vueV(() => !beautifierP.includes(resultAlias.current.backgroundColor)),
+        y = vueV(() => [...beautifierI.map(item => ({
           id: `builtin:${item.id}`,
-          name: G(`Preset${item.id}`),
+          name: screenshotToolA(`Preset${item.id}`),
           style: item.style,
           builtin: true
         })), ...resultAlias.presets.map(item => ({
@@ -404,10 +404,10 @@ var He = I(`grid-3x3`, [[`rect`, {
           ...e
         });
       }
-      let O = S(false),
-        A = S(``),
-        F = S([]),
-        te = S(``);
+      let O = vueBn(false),
+        A = vueBn(``),
+        F = vueBn([]),
+        te = vueBn(``);
       async function ne(e) {
         let background = await window.screenshotToolAPI.editor.loadBackground(e.id);
         if (!background.ok) throw Error(background.error.message);
@@ -426,18 +426,18 @@ var He = I(`grid-3x3`, [[`rect`, {
         let found = F.value.find(item => item.file === trimmed);
         te.value = found?.id ?? ``;
       }
-      v(() => resultAlias.backgroundLibrary, e => {
+      vueWt(() => resultAlias.backgroundLibrary, e => {
         F.value = [...e], re();
       }, {
         immediate: true
-      }), v(() => resultAlias.current.backgroundImageSource, () => re());
+      }), vueWt(() => resultAlias.current.backgroundImageSource, () => re());
       async function I(e) {
         if (!O.value) {
           O.value = true, A.value = ``;
           try {
             await ne(e);
           } catch (e) {
-            A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
+            A.value = e instanceof Error ? e.message : screenshotToolA(`BackgroundImageFailed`);
           } finally {
             O.value = false;
           }
@@ -449,9 +449,9 @@ var He = I(`grid-3x3`, [[`rect`, {
           try {
             let backgrounds = await window.screenshotToolAPI.editor.backgrounds(`system`);
             if (!backgrounds.ok) throw Error(backgrounds.error.message);
-            backgrounds.data.length ? (F.value = backgrounds.data, re()) : (F.value = [], A.value = G(`BackgroundSystemEmpty`));
+            backgrounds.data.length ? (F.value = backgrounds.data, re()) : (F.value = [], A.value = screenshotToolA(`BackgroundSystemEmpty`));
           } catch (e) {
-            A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
+            A.value = e instanceof Error ? e.message : screenshotToolA(`BackgroundImageFailed`);
           } finally {
             O.value = false;
           }
@@ -466,7 +466,7 @@ var He = I(`grid-3x3`, [[`rect`, {
             if (!backgrounds.data.length) return;
             F.value = backgrounds.data, backgrounds.data[0] && (await ne(backgrounds.data[0]));
           } catch (e) {
-            A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
+            A.value = e instanceof Error ? e.message : screenshotToolA(`BackgroundImageFailed`);
           } finally {
             O.value = false;
           }
@@ -476,7 +476,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         return JSON.stringify(e) === JSON.stringify(t);
       }
       function me(e) {
-        let fallbackValue = fe.find(item => item.id === e) ?? fe[0];
+        let fallbackValue = beautifierO.find(item => item.id === e) ?? beautifierO[0];
         return `linear-gradient(135deg, ${fallbackValue.stops[0]}, ${fallbackValue.stops[1]})`;
       }
       function he(e) {
@@ -517,11 +517,11 @@ var He = I(`grid-3x3`, [[`rect`, {
       function _e(event) {
         T({
           backgroundKind: `solid`,
-          backgroundColor: ue(event.target.value, resultAlias.current.backgroundColor)
+          backgroundColor: beautifierM(event.target.value, resultAlias.current.backgroundColor)
         });
       }
       function ve() {
-        s.value = ``, o.value = true, ee(() => c.value?.focus());
+        s.value = ``, o.value = true, vueRt(() => c.value?.focus());
       }
       function ye() {
         let trimmed = s.value.trim();
@@ -530,140 +530,140 @@ var He = I(`grid-3x3`, [[`rect`, {
       function be(event) {
         event.stopPropagation(), event.key === `Enter` && !event.isComposing ? (event.preventDefault(), ye()) : event.key === `Escape` && (event.preventDefault(), o.value = false);
       }
-      return (ctx, renderCache) => (w(), g(`div`, q, [N(`div`, J, [N(`div`, Xe, [N(`strong`, Ze, k(f(G)(`StyleEnabled`)), 1), N(`small`, Qe, k(f(G)(`StyleEnabledDesc`)), 1)]), E(f(l), {
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, q, [vueY(`div`, J, [vueY(`div`, Xe, [vueY(`strong`, Ze, vueRr(vueAn(screenshotToolA)(`StyleEnabled`)), 1), vueY(`small`, Qe, vueRr(vueAn(screenshotToolA)(`StyleEnabledDesc`)), 1)]), vueK(vueAn(uiSwitchT), {
         "model-value": result.current.enabled,
-        "aria-label": f(G)(`StyleEnabled`),
+        "aria-label": vueAn(screenshotToolA)(`StyleEnabled`),
         "onUpdate:modelValue": renderCache[0] ||= e => T({
           enabled: !!e
         })
-      }, null, 8, [`model-value`, `aria-label`])]), N(`div`, {
-        class: d([result.current.enabled ? `` : `pointer-events-none opacity-45`, `flex flex-col gap-5`])
-      }, [N(`section`, Y, [N(`div`, X, [N(`span`, $e, k(f(G)(`Presets`)), 1), !o.value && result.presets.length < f(12) ? (w(), g(`button`, {
+      }, null, 8, [`model-value`, `aria-label`])]), vueY(`div`, {
+        class: vueN([result.current.enabled ? `` : `pointer-events-none opacity-45`, `flex flex-col gap-5`])
+      }, [vueY(`section`, Y, [vueY(`div`, X, [vueY(`span`, $e, vueRr(vueAn(screenshotToolA)(`Presets`)), 1), !o.value && result.presets.length < vueAn(12) ? (vueGt(), vueS(`button`, {
         key: 0,
         type: `button`,
         class: `inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline`,
         onClick: ve
-      }, [E(f(n), {
+      }, [vueK(vueAn(uiSwitchDt), {
         size: 12
-      }), h(k(f(G)(`PresetSave`)), 1)])) : M(``, true)]), o.value ? (w(), g(`div`, et, [b(N(`input`, {
+      }), vueO(vueRr(vueAn(screenshotToolA)(`PresetSave`)), 1)])) : vueX(``, true)]), o.value ? (vueGt(), vueS(`div`, et, [vueZt(vueY(`input`, {
         ref_key: `presetInput`,
         ref: c,
         "onUpdate:modelValue": renderCache[1] ||= e => s.value = e,
-        maxlength: f(20),
+        maxlength: vueAn(20),
         class: `h-7 min-w-0 flex-1 rounded-md border border-input bg-background px-2 text-xs outline-none focus:border-ring`,
-        placeholder: f(G)(`PresetNamePlaceholder`),
+        placeholder: vueAn(screenshotToolA)(`PresetNamePlaceholder`),
         onKeydown: be
-      }, null, 40, tt), [[P, s.value]]), N(`button`, {
+      }, null, 40, tt), [[playerC, s.value]]), vueY(`button`, {
         type: `button`,
         class: `inline-flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground disabled:opacity-50`,
         disabled: !s.value.trim() || result.savingPreset,
-        title: f(G)(`PresetSaveConfirm`),
+        title: vueAn(screenshotToolA)(`PresetSaveConfirm`),
         onClick: ye
-      }, [E(f(ie), {
+      }, [vueK(vueAn(checkT), {
         size: 14
-      })], 8, nt), N(`button`, {
+      })], 8, nt), vueY(`button`, {
         type: `button`,
         class: `inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted`,
-        title: f(G)(`Cancel`),
+        title: vueAn(screenshotToolA)(`Cancel`),
         onClick: renderCache[2] ||= e => o.value = false
-      }, [E(f(L), {
+      }, [vueK(vueAn(lucideT), {
         size: 14
-      })], 8, rt)])) : M(``, true), N(`div`, it, [(w(true), g(C, null, _(y.value, el => (w(), g(`div`, {
+      })], 8, rt)])) : vueX(``, true), vueY(`div`, it, [(vueGt(true), vueS(vueC, null, vueSt(y.value, el => (vueGt(), vueS(`div`, {
         key: el.id,
         class: `group relative`
-      }, [N(`button`, {
+      }, [vueY(`button`, {
         type: `button`,
-        class: d([`flex w-full flex-col items-stretch gap-1 rounded-lg p-1 text-left transition-colors hover:bg-muted`, ce(el.style, result.current) ? `bg-primary/[0.07] ring-1 ring-primary/50` : ``]),
+        class: vueN([`flex w-full flex-col items-stretch gap-1 rounded-lg p-1 text-left transition-colors hover:bg-muted`, ce(el.style, result.current) ? `bg-primary/[0.07] ring-1 ring-primary/50` : ``]),
         title: el.name,
         onClick: t => emitAlias(`update:style`, {
           ...el.style,
           enabled: true
         })
-      }, [N(`span`, ot, [N(`span`, {
+      }, [vueY(`span`, ot, [vueY(`span`, {
         class: `absolute inset-0`,
-        style: D(he(el.style))
-      }, null, 4), N(`span`, st, [el.style.frame === `none` ? M(``, true) : (w(), g(`span`, {
+        style: vueNr(he(el.style))
+      }, null, 4), vueY(`span`, st, [el.style.frame === `none` ? vueX(``, true) : (vueGt(), vueS(`span`, {
         key: 0,
-        class: d([`absolute inset-x-0 top-0 h-1.5 rounded-t-[3px]`, el.style.frame.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200 dark:bg-zinc-300`])
-      }, null, 2))])]), N(`span`, ct, k(el.name), 1)], 10, at), el.builtin ? M(``, true) : (w(), g(`button`, {
+        class: vueN([`absolute inset-x-0 top-0 h-1.5 rounded-t-[3px]`, el.style.frame.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200 dark:bg-zinc-300`])
+      }, null, 2))])]), vueY(`span`, ct, vueRr(el.name), 1)], 10, at), el.builtin ? vueX(``, true) : (vueGt(), vueS(`button`, {
         key: 0,
         type: `button`,
         class: `absolute -right-1 -top-1 hidden size-4 items-center justify-center rounded-full bg-zinc-700 text-white group-hover:inline-flex`,
-        title: f(G)(`PresetDelete`),
+        title: vueAn(screenshotToolA)(`PresetDelete`),
         onClick: t => emitAlias(`deletePreset`, el.id)
-      }, [E(f(L), {
+      }, [vueK(vueAn(lucideT), {
         size: 10
-      })], 8, lt))]))), 128))])]), N(`section`, Z, [N(`span`, ut, k(f(G)(`Background`)), 1), N(`div`, dt, [(w(true), g(C, null, _(f(pe), e => (w(), g(`button`, {
+      })], 8, lt))]))), 128))])]), vueY(`section`, Z, [vueY(`span`, ut, vueRr(vueAn(screenshotToolA)(`Background`)), 1), vueY(`div`, dt, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(beautifierR), e => (vueGt(), vueS(`button`, {
         key: e,
         type: `button`,
-        class: d([`h-7 rounded-md text-xs transition-colors`, result.current.backgroundKind === e ? `bg-background font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
+        class: vueN([`h-7 rounded-md text-xs transition-colors`, result.current.backgroundKind === e ? `bg-background font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
         onClick: t => T({
           backgroundKind: e
         })
-      }, k(f(G)(options[e])), 11, Q))), 128))]), result.current.backgroundKind === `image` ? (w(), g(`div`, ft, [N(`div`, pt, [N(`button`, {
+      }, vueRr(vueAn(screenshotToolA)(options[e])), 11, Q))), 128))]), result.current.backgroundKind === `image` ? (vueGt(), vueS(`div`, ft, [vueY(`div`, pt, [vueY(`button`, {
         type: `button`,
         class: `text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-50`,
         disabled: O.value,
         onClick: ae
-      }, k(O.value ? f(G)(`BackgroundLoading`) : f(G)(`BackgroundLoadSystem`)), 9, mt)]), N(`button`, {
+      }, vueRr(O.value ? vueAn(screenshotToolA)(`BackgroundLoading`) : vueAn(screenshotToolA)(`BackgroundLoadSystem`)), 9, mt)]), vueY(`button`, {
         type: `button`,
         class: `flex w-full items-center justify-center gap-1.5 rounded-md border border-border bg-background py-2 text-xs font-medium hover:bg-muted disabled:opacity-50`,
         disabled: O.value,
         onClick: R
-      }, [E(f(e), {
+      }, [vueK(vueAn(uiSwitchAt), {
         size: 14
-      }), h(` ` + k(f(G)(`BackgroundChooseImage`)), 1)], 8, ht), O.value && !F.value.length && !result.current.backgroundImage ? (w(), g(`div`, gt, k(f(G)(`BackgroundLoading`)), 1)) : F.value.length ? (w(), g(`div`, _t, [(w(true), g(C, null, _(F.value, e => (w(), g(`button`, {
+      }), vueO(` ` + vueRr(vueAn(screenshotToolA)(`BackgroundChooseImage`)), 1)], 8, ht), O.value && !F.value.length && !result.current.backgroundImage ? (vueGt(), vueS(`div`, gt, vueRr(vueAn(screenshotToolA)(`BackgroundLoading`)), 1)) : F.value.length ? (vueGt(), vueS(`div`, _t, [(vueGt(true), vueS(vueC, null, vueSt(F.value, e => (vueGt(), vueS(`button`, {
         key: e.id,
         type: `button`,
-        class: d([`relative h-12 overflow-hidden rounded-md border border-border disabled:opacity-50`, te.value === e.id ? `ring-2 ring-primary` : ``]),
+        class: vueN([`relative h-12 overflow-hidden rounded-md border border-border disabled:opacity-50`, te.value === e.id ? `ring-2 ring-primary` : ``]),
         disabled: O.value,
         title: e.name,
         onClick: t => I(e)
-      }, [N(`img`, {
+      }, [vueY(`img`, {
         src: e.thumbnail,
         alt: e.name,
         loading: `lazy`,
         class: `size-full object-cover`
-      }, null, 8, yt)], 10, vt))), 128))])) : M(``, true), !O.value && !F.value.length && !result.current.backgroundImage ? (w(), g(`p`, bt, k(f(G)(`BackgroundImageEmptyHint`)), 1)) : M(``, true), O.value ? M(``, true) : (w(), g(`p`, xt, k(f(G)(`BackgroundImageDesc`)), 1)), A.value ? (w(), g(`p`, St, k(A.value), 1)) : M(``, true)])) : result.current.backgroundKind === `solid` ? (w(), g(`div`, Ct, [(w(true), g(C, null, _(f(B), e => (w(), g(`button`, {
+      }, null, 8, yt)], 10, vt))), 128))])) : vueX(``, true), !O.value && !F.value.length && !result.current.backgroundImage ? (vueGt(), vueS(`p`, bt, vueRr(vueAn(screenshotToolA)(`BackgroundImageEmptyHint`)), 1)) : vueX(``, true), O.value ? vueX(``, true) : (vueGt(), vueS(`p`, xt, vueRr(vueAn(screenshotToolA)(`BackgroundImageDesc`)), 1)), A.value ? (vueGt(), vueS(`p`, St, vueRr(A.value), 1)) : vueX(``, true)])) : result.current.backgroundKind === `solid` ? (vueGt(), vueS(`div`, Ct, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(beautifierP), e => (vueGt(), vueS(`button`, {
         key: e,
         type: `button`,
-        class: d([`size-7 rounded-md border border-black/10 dark:border-white/15`, result.current.backgroundColor === e ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
-        style: D({
+        class: vueN([`size-7 rounded-md border border-black/10 dark:border-white/15`, result.current.backgroundColor === e ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
+        style: vueNr({
           background: e
         }),
         title: e,
         onClick: t => T({
           backgroundColor: e
         })
-      }, null, 14, wt))), 128)), N(`label`, {
-        class: d([`relative inline-flex size-7 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-dashed border-black/25 text-muted-foreground dark:border-white/25`, m.value ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
-        style: D(m.value ? {
+      }, null, 14, wt))), 128)), vueY(`label`, {
+        class: vueN([`relative inline-flex size-7 cursor-pointer items-center justify-center overflow-hidden rounded-md border border-dashed border-black/25 text-muted-foreground dark:border-white/25`, m.value ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
+        style: vueNr(m.value ? {
           background: result.current.backgroundColor,
           borderStyle: `solid`
         } : {}),
-        title: f(G)(`CustomColor`)
-      }, [m.value ? M(``, true) : (w(), x(f(n), {
+        title: vueAn(screenshotToolA)(`CustomColor`)
+      }, [m.value ? vueX(``, true) : (vueGt(), vueB(vueAn(uiSwitchDt), {
         key: 0,
         size: 13
-      })), N(`input`, {
+      })), vueY(`input`, {
         type: `color`,
         class: `absolute inset-0 cursor-pointer opacity-0`,
         value: result.current.backgroundColor,
         onInput: _e
-      }, null, 40, Et)], 14, Tt)])) : result.current.backgroundKind === `gradient` ? (w(), g(`div`, Dt, [(w(true), g(C, null, _(f(fe), e => (w(), g(`button`, {
+      }, null, 40, Et)], 14, Tt)])) : result.current.backgroundKind === `gradient` ? (vueGt(), vueS(`div`, Dt, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(beautifierO), e => (vueGt(), vueS(`button`, {
         key: e.id,
         type: `button`,
-        class: d([`size-7 rounded-md border border-black/10 dark:border-white/15`, result.current.gradientId === e.id ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
-        style: D({
+        class: vueN([`size-7 rounded-md border border-black/10 dark:border-white/15`, result.current.gradientId === e.id ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
+        style: vueNr({
           background: me(e.id)
         }),
         onClick: t => T({
           gradientId: e.id
         })
-      }, null, 14, Ot))), 128))])) : result.current.backgroundKind === `blur` ? (w(), g(`p`, kt, k(f(G)(`BackgroundBlurDesc`)), 1)) : (w(), g(`p`, At, k(f(G)(`BackgroundTransparentDesc`)), 1))]), N(`section`, $, [N(`div`, jt, [N(`span`, Mt, [N(`span`, Nt, k(f(G)(`Padding`)), 1), N(`span`, Pt, k(result.current.padding), 1)]), E(f(W), {
+      }, null, 14, Ot))), 128))])) : result.current.backgroundKind === `blur` ? (vueGt(), vueS(`p`, kt, vueRr(vueAn(screenshotToolA)(`BackgroundBlurDesc`)), 1)) : (vueGt(), vueS(`p`, At, vueRr(vueAn(screenshotToolA)(`BackgroundTransparentDesc`)), 1))]), vueY(`section`, $, [vueY(`div`, jt, [vueY(`span`, Mt, [vueY(`span`, Nt, vueRr(vueAn(screenshotToolA)(`Padding`)), 1), vueY(`span`, Pt, vueRr(result.current.padding), 1)]), vueK(vueAn(SliderT), {
         "model-value": [result.current.padding],
-        min: f(V).min,
-        max: f(V).max,
+        min: vueAn(beautifierU).min,
+        max: vueAn(beautifierU).max,
         step: 4,
         "onUpdate:modelValue": renderCache[3] ||= e => {
           let t = ge(e);
@@ -671,10 +671,10 @@ var He = I(`grid-3x3`, [[`rect`, {
             padding: t
           });
         }
-      }, null, 8, [`model-value`, `min`, `max`])]), N(`div`, Ft, [N(`span`, It, [N(`span`, Lt, k(f(G)(`Radius`)), 1), N(`span`, Rt, k(result.current.radius), 1)]), E(f(W), {
+      }, null, 8, [`model-value`, `min`, `max`])]), vueY(`div`, Ft, [vueY(`span`, It, [vueY(`span`, Lt, vueRr(vueAn(screenshotToolA)(`Radius`)), 1), vueY(`span`, Rt, vueRr(result.current.radius), 1)]), vueK(vueAn(SliderT), {
         "model-value": [result.current.radius],
-        min: f(se).min,
-        max: f(se).max,
+        min: vueAn(beautifierD).min,
+        max: vueAn(beautifierD).max,
         step: 1,
         "onUpdate:modelValue": renderCache[4] ||= e => {
           let t = ge(e);
@@ -682,10 +682,10 @@ var He = I(`grid-3x3`, [[`rect`, {
             radius: t
           });
         }
-      }, null, 8, [`model-value`, `min`, `max`])]), N(`div`, zt, [N(`span`, Bt, [N(`span`, Vt, k(f(G)(`Shadow`)), 1), N(`span`, Ht, k(result.current.shadow), 1)]), E(f(W), {
+      }, null, 8, [`model-value`, `min`, `max`])]), vueY(`div`, zt, [vueY(`span`, Bt, [vueY(`span`, Vt, vueRr(vueAn(screenshotToolA)(`Shadow`)), 1), vueY(`span`, Ht, vueRr(result.current.shadow), 1)]), vueK(vueAn(SliderT), {
         "model-value": [result.current.shadow],
-        min: f(z).min,
-        max: f(z).max,
+        min: vueAn(beautifierF).min,
+        max: vueAn(beautifierF).max,
         step: 5,
         "onUpdate:modelValue": renderCache[5] ||= e => {
           let t = ge(e);
@@ -693,36 +693,36 @@ var He = I(`grid-3x3`, [[`rect`, {
             shadow: t
           });
         }
-      }, null, 8, [`model-value`, `min`, `max`])])]), N(`section`, Ut, [N(`span`, Wt, k(f(G)(`Frame`)), 1), N(`div`, Gt, [(w(true), g(C, null, _(f(oe), text => (w(), g(`button`, {
+      }, null, 8, [`model-value`, `min`, `max`])])]), vueY(`section`, Ut, [vueY(`span`, Wt, vueRr(vueAn(screenshotToolA)(`Frame`)), 1), vueY(`div`, Gt, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(beautifierA), text => (vueGt(), vueS(`button`, {
         key: text,
         type: `button`,
-        class: d([`flex flex-col items-center gap-1 rounded-lg p-1 transition-colors hover:bg-muted`, result.current.frame === text ? `bg-primary/[0.07] ring-1 ring-primary/50` : ``]),
-        title: f(G)(p[text]),
+        class: vueN([`flex flex-col items-center gap-1 rounded-lg p-1 transition-colors hover:bg-muted`, result.current.frame === text ? `bg-primary/[0.07] ring-1 ring-primary/50` : ``]),
+        title: vueAn(screenshotToolA)(p[text]),
         onClick: t => T({
           frame: text
         })
-      }, [N(`span`, qt, [text === `none` ? M(``, true) : (w(), g(`span`, {
+      }, [vueY(`span`, qt, [text === `none` ? vueX(``, true) : (vueGt(), vueS(`span`, {
         key: 0,
-        class: d([`absolute inset-x-0 top-0 flex h-2 items-center gap-[2px] px-[3px]`, text.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200`])
-      }, [renderCache[7] ||= N(`i`, {
+        class: vueN([`absolute inset-x-0 top-0 flex h-2 items-center gap-[2px] px-[3px]`, text.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200`])
+      }, [renderCache[7] ||= vueY(`i`, {
         class: `size-[3px] rounded-full bg-[#ff5f57]`
-      }, null, -1), renderCache[8] ||= N(`i`, {
+      }, null, -1), renderCache[8] ||= vueY(`i`, {
         class: `size-[3px] rounded-full bg-[#febc2e]`
-      }, null, -1), renderCache[9] ||= N(`i`, {
+      }, null, -1), renderCache[9] ||= vueY(`i`, {
         class: `size-[3px] rounded-full bg-[#28c840]`
-      }, null, -1), text.startsWith(`browser`) ? (w(), g(`i`, {
+      }, null, -1), text.startsWith(`browser`) ? (vueGt(), vueS(`i`, {
         key: 0,
-        class: d([`ml-[2px] h-[3px] flex-1 rounded-full`, text.endsWith(`dark`) ? `bg-zinc-500` : `bg-white`])
-      }, null, 2)) : M(``, true)], 2))]), N(`span`, Jt, k(f(G)(p[text])), 1)], 10, Kt))), 128))])]), N(`section`, Yt, [N(`span`, Xt, k(f(G)(`Ratio`)), 1), N(`div`, Zt, [(w(true), g(C, null, _(f(de), e => (w(), g(`button`, {
+        class: vueN([`ml-[2px] h-[3px] flex-1 rounded-full`, text.endsWith(`dark`) ? `bg-zinc-500` : `bg-white`])
+      }, null, 2)) : vueX(``, true)], 2))]), vueY(`span`, Jt, vueRr(vueAn(screenshotToolA)(p[text])), 1)], 10, Kt))), 128))])]), vueY(`section`, Yt, [vueY(`span`, Xt, vueRr(vueAn(screenshotToolA)(`Ratio`)), 1), vueY(`div`, Zt, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(beautifierN), e => (vueGt(), vueS(`button`, {
         key: e,
         type: `button`,
-        class: d([`h-7 rounded-md text-[11px] tabular-nums transition-colors`, result.current.ratio === e ? `bg-background font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
+        class: vueN([`h-7 rounded-md text-[11px] tabular-nums transition-colors`, result.current.ratio === e ? `bg-background font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
         onClick: t => T({
           ratio: e
         })
-      }, k(e === `auto` ? f(G)(`RatioAuto`) : e), 11, Qt))), 128))])]), N(`div`, $t, [N(`div`, en, [N(`strong`, tn, k(f(G)(`Balance`)), 1), N(`small`, nn, k(f(G)(`BalanceDesc`)), 1)]), E(f(l), {
+      }, vueRr(e === `auto` ? vueAn(screenshotToolA)(`RatioAuto`) : e), 11, Qt))), 128))])]), vueY(`div`, $t, [vueY(`div`, en, [vueY(`strong`, tn, vueRr(vueAn(screenshotToolA)(`Balance`)), 1), vueY(`small`, nn, vueRr(vueAn(screenshotToolA)(`BalanceDesc`)), 1)]), vueK(vueAn(uiSwitchT), {
         "model-value": result.current.balance,
-        "aria-label": f(G)(`Balance`),
+        "aria-label": vueAn(screenshotToolA)(`Balance`),
         "onUpdate:modelValue": renderCache[6] ||= e => T({
           balance: !!e
         })
@@ -787,21 +787,21 @@ function dn() {
 }
 var fn = 100;
 function pn(e) {
-  let t = p([]),
-    n = p(null),
-    r = S(null),
-    i = S(null),
-    a = S(`arrow`),
-    o = S(sn[0]),
-    s = S(`m`),
-    c = p([]),
-    l = p([]),
+  let t = vueCn([]),
+    n = vueCn(null),
+    r = vueBn(null),
+    i = vueBn(null),
+    a = vueBn(`arrow`),
+    o = vueBn(sn[0]),
+    s = vueBn(`m`),
+    c = vueCn([]),
+    l = vueCn([]),
     u = null,
     d = null,
-    f = j(() => t.value.find(item => item.id === r.value) ?? null),
-    m = j(() => c.value.length > 0),
-    h = j(() => l.value.length > 0),
-    g = j(() => n.value ? [...t.value, n.value] : t.value);
+    f = vueV(() => t.value.find(item => item.id === r.value) ?? null),
+    m = vueV(() => c.value.length > 0),
+    h = vueV(() => l.value.length > 0),
+    g = vueV(() => n.value ? [...t.value, n.value] : t.value);
   function _() {
     return JSON.stringify(t.value);
   }
@@ -855,13 +855,13 @@ function pn(e) {
   function k(e, n) {
     for (let r = t.value.length - 1; r >= 0; --r) {
       let i = t.value[r];
-      if (H(i, e.x, e.y, n)) return i;
+      if (composeL(i, e.x, e.y, n)) return i;
     }
     return null;
   }
   function ee(e, t) {
     let n = f.value;
-    return n ? Ce(n).find(item => Math.hypot(item.x - e.x, item.y - e.y) <= t * 1.4)?.handle ?? null : null;
+    return n ? composeC(n).find(item => Math.hypot(item.x - e.x, item.y - e.y) <= t * 1.4)?.handle ?? null : null;
   }
   function A(t) {
     r.value = t?.id ?? null, t && (t.kind !== `mosaic` && (o.value = t.color), s.value = un(t, e()));
@@ -1020,7 +1020,7 @@ function pn(e) {
       return;
     }
     if (r.type === `move`) {
-      b(r.id, U(r.original, e.x - r.startX, e.y - r.startY));
+      b(r.id, composeU(r.original, e.x - r.startX, e.y - r.startY));
       return;
     }
     let i = e;
@@ -1030,7 +1030,7 @@ function pn(e) {
     } : {
       x: r.original.x1,
       y: r.original.y1
-    }, e, r.original.kind, true)), b(r.id, we(r.original, r.handle, i.x, i.y));
+    }, e, r.original.kind, true)), b(r.id, composeD(r.original, r.handle, i.x, i.y));
   }
   function I() {
     let i = u;
@@ -1038,7 +1038,7 @@ function pn(e) {
       if (i.type === `draw`) {
         let i = n.value;
         if (n.value = null, !i) return;
-        let a = je(i),
+        let a = composeS(i),
           o = e();
         if (i.kind !== `pen` && i.kind !== `highlighter` && (i.kind === `arrow` || i.kind === `line` ? Math.hypot(a.width, a.height) < 4 * o : a.width < 3 * o || a.height < 3 * o)) return;
         let s = i.kind === `rect` || i.kind === `ellipse` || i.kind === `mosaic` ? {
@@ -1154,36 +1154,36 @@ var mn = {
   },
   Ln = 400,
   Rn = 48,
-  zn = T({
+  zn = vueJ({
     __name: `EditorApp`,
     setup(event) {
       let editor = window.screenshotToolAPI.editor,
-        l = p(null),
-        T = p(null),
-        P = p(null),
-        I = S({
-          ...me
+        l = vueCn(null),
+        T = vueCn(null),
+        P = vueCn(null),
+        I = vueBn({
+          ...beautifierT
         }),
-        L = S([]),
-        oe = S([]),
-        se = S(``),
-        z = S(`style`),
-        le = S(null),
-        ue = S(null),
-        de = S(null),
-        fe = S({
+        L = vueBn([]),
+        oe = vueBn([]),
+        se = vueBn(``),
+        z = vueBn(`style`),
+        le = vueBn(null),
+        ue = vueBn(null),
+        de = vueBn(null),
+        fe = vueBn({
           width: 0,
           height: 0
         }),
-        B = S(null),
-        pe = S(false),
-        V = S(0),
-        we = S(-1),
-        H = S(``),
-        U = S(null),
-        W = j(() => Math.max(1, l.value?.scale ?? 1)),
+        B = vueBn(null),
+        pe = vueBn(false),
+        V = vueBn(0),
+        we = vueBn(-1),
+        H = vueBn(``),
+        U = vueBn(null),
+        W = vueV(() => Math.max(1, l.value?.scale ?? 1)),
         K = pn(() => W.value),
-        Ke = De(),
+        Ke = composeN(),
         qe = false,
         Je = false,
         q = null,
@@ -1191,13 +1191,13 @@ var mn = {
         Xe = 0,
         Ze = null,
         emptyItems = [],
-        Y = j(() => T.value ? Me({
+        Y = vueV(() => T.value ? composeT({
           source: T.value,
           scale: W.value,
           style: I.value,
           balance: P.value
         }) : null),
-        X = j(() => {
+        X = vueV(() => {
           let e = Y.value;
           if (!e) return null;
           let t = Math.max(40, fe.value.width - Rn),
@@ -1208,13 +1208,13 @@ var mn = {
             height: Math.max(1, Math.round(e.height * r))
           };
         }),
-        $e = j(() => Y.value && X.value ? Y.value.width / X.value.width : 1),
-        et = j(() => {
+        $e = vueV(() => Y.value && X.value ? Y.value.width / X.value.width : 1),
+        et = vueV(() => {
           let e = K.editingTextId.value,
             found = K.annotations.value.find(item => item.id === e);
           return found?.kind === `text` ? found : null;
         }),
-        tt = j(() => {
+        tt = vueV(() => {
           let e = et.value,
             t = Y.value;
           if (!e || !t) return null;
@@ -1226,64 +1226,64 @@ var mn = {
             fontSize: `${r}px`,
             lineHeight: `1.3`,
             color: e.color,
-            fontFamily: Oe,
+            fontFamily: composeO,
             fontWeight: `600`,
             minWidth: `${Math.max(24, r * 2)}px`
           };
         }),
-        nt = j(() => H.value ? H.value : K.tool.value === `select` ? `default` : K.tool.value === `text` ? `text` : `crosshair`),
-        rt = j(() => B.value ? G(`StatusExporting`) : we.value === V.value ? G(`StatusCopied`) : we.value >= 0 ? G(`StatusChanged`) : G(`StatusIdle`)),
-        it = j(() => Y.value ? `${Y.value.width} × ${Y.value.height}` : ``),
-        at = j(() => I.value.enabled && I.value.backgroundKind === `transparent`),
-        ot = j(() => [{
+        nt = vueV(() => H.value ? H.value : K.tool.value === `select` ? `default` : K.tool.value === `text` ? `text` : `crosshair`),
+        rt = vueV(() => B.value ? screenshotToolA(`StatusExporting`) : we.value === V.value ? screenshotToolA(`StatusCopied`) : we.value >= 0 ? screenshotToolA(`StatusChanged`) : screenshotToolA(`StatusIdle`)),
+        it = vueV(() => Y.value ? `${Y.value.width} × ${Y.value.height}` : ``),
+        at = vueV(() => I.value.enabled && I.value.backgroundKind === `transparent`),
+        ot = vueV(() => [{
           tool: `select`,
-          icon: ye,
-          label: G(`ToolSelect`),
+          icon: undo2N,
+          label: screenshotToolA(`ToolSelect`),
           key: `V`
         }, {
           tool: `rect`,
-          icon: a,
-          label: G(`ToolRect`),
+          icon: uiSwitchTt,
+          label: screenshotToolA(`ToolRect`),
           key: `R`
         }, {
           tool: `ellipse`,
-          icon: o,
-          label: G(`ToolEllipse`),
+          icon: uiSwitchJt,
+          label: screenshotToolA(`ToolEllipse`),
           key: `O`
         }, {
           tool: `arrow`,
           icon: We,
-          label: G(`ToolArrow`),
+          label: screenshotToolA(`ToolArrow`),
           key: `A`
         }, {
           tool: `line`,
-          icon: s,
-          label: G(`ToolLine`),
+          icon: uiSwitchKt,
+          label: screenshotToolA(`ToolLine`),
           key: `L`
         }, {
           tool: `pen`,
-          icon: i,
-          label: G(`ToolPen`),
+          icon: uiSwitchOt,
+          label: screenshotToolA(`ToolPen`),
           key: `P`
         }, {
           tool: `highlighter`,
           icon: Ue,
-          label: G(`ToolHighlighter`),
+          label: screenshotToolA(`ToolHighlighter`),
           key: `H`
         }, {
           tool: `text`,
-          icon: t,
-          label: G(`ToolText`),
+          icon: uiSwitchCt,
+          label: screenshotToolA(`ToolText`),
           key: `T`
         }, {
           tool: `number`,
-          icon: _e,
-          label: G(`ToolNumber`),
+          icon: DropdownMenuItemN,
+          label: screenshotToolA(`ToolNumber`),
           key: `N`
         }, {
           tool: `mosaic`,
           icon: He,
-          label: G(`ToolMosaic`),
+          label: screenshotToolA(`ToolMosaic`),
           key: `M`
         }]),
         st = [{
@@ -1299,7 +1299,7 @@ var mn = {
           dot: 10,
           label: `SizeLarge`
         }],
-        ct = Be ? `⌘` : `Ctrl+`;
+        ct = screenshotToolR ? `⌘` : `Ctrl+`;
       function lt() {
         return JSON.parse(JSON.stringify(I.value));
       }
@@ -1318,7 +1318,7 @@ var mn = {
         if (!qe && T.value && I.value.balance) {
           qe = true;
           try {
-            P.value = Se(T.value, W.value);
+            P.value = composeA(T.value, W.value);
           } catch {
             P.value = null;
           }
@@ -1340,8 +1340,8 @@ var mn = {
           o = Math.max(1, Math.round(t.width * a)),
           s = Math.max(1, Math.round(t.height * a));
         (e.width !== o || e.height !== s) && (e.width = o, e.height = s);
-        let c = ke(e);
-        c.setTransform(1, 0, 0, 1, 0, 0), Te(c, {
+        let c = composeP(e);
+        c.setTransform(1, 0, 0, 1, 0, 0), composeI(c, {
           source: n,
           scale: W.value,
           style: I.value,
@@ -1356,10 +1356,10 @@ var mn = {
           r = K.selected.value;
         if (!n || !r || K.editingTextId.value === r.id) return;
         let handler = e => e * $e.value,
-          a = je(r),
+          a = composeS(r),
           o = handler(4);
         e.save(), e.setTransform(t, 0, 0, t, n.origin.x * t, n.origin.y * t), e.setLineDash([handler(4), handler(3)]), e.lineWidth = handler(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
-        for (let t of Ce(r)) e.beginPath(), e.arc(t.x, t.y, handler(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = handler(1.5), e.stroke();
+        for (let t of composeC(r)) e.beginPath(), e.arc(t.x, t.y, handler(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = handler(1.5), e.stroke();
         e.restore();
       }
       function mt(e) {
@@ -1398,7 +1398,7 @@ var mn = {
         t && (K.doubleClick(t, ht()), Q(), K.editingTextId.value && bt());
       }
       async function bt() {
-        await ee();
+        await vueRt();
         let e = de.value;
         e && (e.focus(), e.setSelectionRange(e.value.length, e.value.length));
       }
@@ -1414,10 +1414,10 @@ var mn = {
       async function wt() {
         K.finishTextEditing();
         let e = T.value;
-        if (!e) throw Error(G(`ActionFailed`));
+        if (!e) throw Error(screenshotToolA(`ActionFailed`));
         let {
           png: t
-        } = await Ae({
+        } = await composeR({
           source: e,
           scale: W.value,
           style: I.value,
@@ -1434,7 +1434,7 @@ var mn = {
             let r = V.value;
             await t(await wt(), n.id), e === `copy` && (we.value = r);
           } catch (e) {
-            Z(G(`ToastFailed`, {
+            Z(screenshotToolA(`ToastFailed`, {
               reason: ut(e)
             }));
           } finally {
@@ -1451,7 +1451,7 @@ var mn = {
           Et(await editor.copy({
             id: i,
             image: r
-          })), e ? Mt() : t || Z(G(`ToastCopied`));
+          })), e ? Mt() : t || Z(screenshotToolA(`ToastCopied`));
         });
       }
       async function Ot(e) {
@@ -1463,10 +1463,10 @@ var mn = {
           }));
           if (!i) return;
           let fallbackValue = i.filePath.split(/[\\/]/).pop() || i.filePath;
-          Z(G(`ToastSaved`, {
+          Z(screenshotToolA(`ToastSaved`, {
             name: fallbackValue
           }), {
-            label: G(`ToastReveal`),
+            label: screenshotToolA(`ToastReveal`),
             run: () => editor.revealFile(i.filePath)
           });
         });
@@ -1476,7 +1476,7 @@ var mn = {
           Et(await editor.pin({
             id: t,
             image: e
-          })), Z(G(`ToastPinned`));
+          })), Z(screenshotToolA(`ToastPinned`));
         });
       }
       async function At() {
@@ -1509,9 +1509,9 @@ var mn = {
             L.value = Et(await editor.savePreset({
               name: e,
               style: lt()
-            })), Z(G(`PresetSaved`));
+            })), Z(screenshotToolA(`PresetSaved`));
           } catch (e) {
-            Z(G(`ToastFailed`, {
+            Z(screenshotToolA(`ToastFailed`, {
               reason: ut(e)
             }));
           } finally {
@@ -1525,7 +1525,7 @@ var mn = {
             id: e
           }));
         } catch (e) {
-          Z(G(`ToastFailed`, {
+          Z(screenshotToolA(`ToastFailed`, {
             reason: ut(e)
           }));
         }
@@ -1535,7 +1535,7 @@ var mn = {
         let t = e.target;
         if (t && (t.tagName === `INPUT` || t.tagName === `TEXTAREA` || t.isContentEditable)) return;
         let lowercased = e.key.toLowerCase(),
-          r = Re(e);
+          r = screenshotToolI(e);
         if (e.key === `Escape`) {
           e.preventDefault(), K.cancelDraft() ? Q() : K.selectedId.value ? (K.select(null), Q()) : Mt();
           return;
@@ -1568,160 +1568,160 @@ var mn = {
       }
       function It(e) {
         let t = Math.min(1, 96 / Math.max(e.width, e.height)),
-          n = Ee(e.width * t, e.height * t);
-        ke(n).drawImage(e, 0, 0, n.width, n.height);
+          n = composeM(e.width * t, e.height * t);
+        composeP(n).drawImage(e, 0, 0, n.width, n.height);
         let toDataURL = n.toDataURL(`image/jpeg`, .7);
-        return Ne(n), toDataURL;
+        return composeV(n), toDataURL;
       }
       async function Lt(el) {
-        $(), ze(el);
+        $(), screenshotToolN(el);
         let t;
         try {
-          t = await xe(el.image);
+          t = await compose(el.image);
         } catch (e) {
-          Z(G(`ToastFailed`, {
+          Z(screenshotToolA(`ToastFailed`, {
             reason: ut(e)
           }));
           return;
         }
-        Je = true, Ne(T.value), T.value = t, l.value = el, I.value = {
+        Je = true, composeV(T.value), T.value = t, l.value = el, I.value = {
           ...el.style
-        }, L.value = el.presets, oe.value = el.backgroundLibrary ?? [], P.value = null, qe = false, Ke.key = ``, dt(), K.load(el.annotations), K.setTool(el.annotations.length > 0 ? `select` : K.tool.value), se.value = It(t), z.value = el.runOcr ? `text` : `style`, U.value = null, await ee(), Je = false, V.value = 0, we.value = -1, ft(), el.autoCopy && Dt(false, true);
+        }, L.value = el.presets, oe.value = el.backgroundLibrary ?? [], P.value = null, qe = false, Ke.key = ``, dt(), K.load(el.annotations), K.setTool(el.annotations.length > 0 ? `select` : K.tool.value), se.value = It(t), z.value = el.runOcr ? `text` : `style`, U.value = null, await vueRt(), Je = false, V.value = 0, we.value = -1, ft(), el.autoCopy && Dt(false, true);
       }
       function Rt() {
-        K.finishTextEditing(), $(), l.value = null, Ne(T.value), T.value = null, P.value = null, qe = false, Ke.key = ``, Ne(Ke.canvas), Ke.canvas = null, K.load([]), se.value = ``, U.value = null;
+        K.finishTextEditing(), $(), l.value = null, composeV(T.value), T.value = null, P.value = null, qe = false, Ke.key = ``, composeV(Ke.canvas), Ke.canvas = null, K.load([]), se.value = ``, U.value = null;
       }
-      return v(I, () => {
+      return vueWt(I, () => {
         dt(), !Je && (V.value += 1, jt(), Q());
       }, {
         deep: true
-      }), v(() => [I.value.backgroundKind, I.value.backgroundImage, I.value.backgroundImageSource], () => {
+      }), vueWt(() => [I.value.backgroundKind, I.value.backgroundImage, I.value.backgroundImageSource], () => {
         Je || $();
-      }), v(() => K.annotations.value, () => {
+      }), vueWt(() => K.annotations.value, () => {
         Je || (V.value += 1, jt(), Q());
-      }), v([() => K.selectedId.value, () => K.draft.value, () => K.editingTextId.value, X], () => Q()), A(() => {
+      }), vueWt([() => K.selectedId.value, () => K.draft.value, () => K.editingTextId.value, X], () => Q()), vueUt(() => {
         let screenshotToolAPI = window.screenshotToolAPI;
         emptyItems.push(editor.onOpen(e => {
           Lt(e);
         }), editor.onReset(Rt), screenshotToolAPI.onTheme(({
           dark: e
-        }) => Ve(e))), window.addEventListener(`keydown`, Ft), window.addEventListener(`beforeunload`, $), le.value && (Ze = new ResizeObserver(e => {
+        }) => screenshotToolT(e))), window.addEventListener(`keydown`, Ft), window.addEventListener(`beforeunload`, $), le.value && (Ze = new ResizeObserver(e => {
           let t = e[0]?.contentRect;
           t && (fe.value = {
             width: t.width,
             height: t.height
           });
         }), Ze.observe(le.value)), screenshotToolAPI.ready();
-      }), O(() => {
+      }), vueOt(() => {
         for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, Ft), window.removeEventListener(`beforeunload`, $), Ze?.disconnect(), Xe && cancelAnimationFrame(Xe), J !== null && window.clearTimeout(J), $();
-      }), (e, t) => (w(), g(`div`, mn, [N(`header`, {
+      }), (e, t) => (vueGt(), vueS(`div`, mn, [vueY(`header`, {
         class: `screenshot-drag-region flex h-12 shrink-0 items-center gap-3 border-b border-border bg-[#fafafa] dark:bg-[#18181b]`,
-        style: D({
-          paddingLeft: f(Be) ? `84px` : `14px`,
-          paddingRight: f(Be) ? `14px` : `150px`
+        style: vueNr({
+          paddingLeft: vueAn(screenshotToolR) ? `84px` : `14px`,
+          paddingRight: vueAn(screenshotToolR) ? `14px` : `150px`
         })
-      }, [N(`div`, hn, [E(f(ce), {
+      }, [vueY(`div`, hn, [vueK(vueAn(beautifierG), {
         size: 15,
         class: `text-primary`
-      }), h(k(f(G)(`EditorTitle`)), 1)]), N(`div`, gn, [(w(true), g(C, null, _(ot.value, e => (w(), g(`button`, {
+      }), vueO(vueRr(vueAn(screenshotToolA)(`EditorTitle`)), 1)]), vueY(`div`, gn, [(vueGt(true), vueS(vueC, null, vueSt(ot.value, e => (vueGt(), vueS(`button`, {
         key: e.tool,
         type: `button`,
-        class: d([`inline-flex size-8 items-center justify-center rounded-lg transition-colors`, f(K).tool.value === e.tool ? `bg-primary/12 text-primary` : `text-foreground/75 hover:bg-black/[0.05] dark:hover:bg-white/10`]),
+        class: vueN([`inline-flex size-8 items-center justify-center rounded-lg transition-colors`, vueAn(K).tool.value === e.tool ? `bg-primary/12 text-primary` : `text-foreground/75 hover:bg-black/[0.05] dark:hover:bg-white/10`]),
         title: `${e.label} (${e.key})`,
         "aria-label": e.label,
-        "aria-pressed": f(K).tool.value === e.tool,
-        onMousedown: t[0] ||= F(() => {}, [`prevent`]),
+        "aria-pressed": vueAn(K).tool.value === e.tool,
+        onMousedown: t[0] ||= playerE(() => {}, [`prevent`]),
         onClick: t => Ct(e.tool)
-      }, [(w(), x(m(e.icon), {
+      }, [(vueGt(), vueB(vueEt(e.icon), {
         size: 16
-      }))], 42, _n))), 128)), t[19] ||= N(`span`, {
+      }))], 42, _n))), 128)), t[19] ||= vueY(`span`, {
         class: `mx-1.5 h-5 w-px bg-border`
-      }, null, -1), (w(true), g(C, null, _(f(sn), e => (w(), g(`button`, {
+      }, null, -1), (vueGt(true), vueS(vueC, null, vueSt(vueAn(sn), e => (vueGt(), vueS(`button`, {
         key: e,
         type: `button`,
         class: `inline-flex size-6 items-center justify-center rounded-full`,
         title: e,
-        onMousedown: t[1] ||= F(() => {}, [`prevent`]),
+        onMousedown: t[1] ||= playerE(() => {}, [`prevent`]),
         onClick: t => {
-          f(K).setColor(e), Q();
+          vueAn(K).setColor(e), Q();
         }
-      }, [N(`span`, {
-        class: d([`size-4 rounded-full border border-black/15 dark:border-white/20`, f(K).color.value === e ? `ring-2 ring-primary ring-offset-1 ring-offset-[#fafafa] dark:ring-offset-[#18181b]` : ``]),
-        style: D({
+      }, [vueY(`span`, {
+        class: vueN([`size-4 rounded-full border border-black/15 dark:border-white/20`, vueAn(K).color.value === e ? `ring-2 ring-primary ring-offset-1 ring-offset-[#fafafa] dark:ring-offset-[#18181b]` : ``]),
+        style: vueNr({
           background: e
         })
-      }, null, 6)], 40, vn))), 128)), t[20] ||= N(`span`, {
+      }, null, 6)], 40, vn))), 128)), t[20] ||= vueY(`span`, {
         class: `mx-1.5 h-5 w-px bg-border`
-      }, null, -1), (w(), g(C, null, _(st, e => N(`button`, {
+      }, null, -1), (vueGt(), vueS(vueC, null, vueSt(st, e => vueY(`button`, {
         key: e.level,
         type: `button`,
-        class: d([`inline-flex size-7 items-center justify-center rounded-lg transition-colors`, f(K).level.value === e.level ? `bg-primary/12 text-primary` : `text-foreground/70 hover:bg-black/[0.05] dark:hover:bg-white/10`]),
-        title: f(G)(e.label),
-        onMousedown: t[2] ||= F(() => {}, [`prevent`]),
+        class: vueN([`inline-flex size-7 items-center justify-center rounded-lg transition-colors`, vueAn(K).level.value === e.level ? `bg-primary/12 text-primary` : `text-foreground/70 hover:bg-black/[0.05] dark:hover:bg-white/10`]),
+        title: vueAn(screenshotToolA)(e.label),
+        onMousedown: t[2] ||= playerE(() => {}, [`prevent`]),
         onClick: t => {
-          f(K).setLevel(e.level), Q();
+          vueAn(K).setLevel(e.level), Q();
         }
-      }, [N(`span`, {
+      }, [vueY(`span`, {
         class: `rounded-full bg-current`,
-        style: D({
+        style: vueNr({
           width: `${e.dot}px`,
           height: `${e.dot}px`
         })
-      }, null, 4)], 42, yn)), 64)), t[21] ||= N(`span`, {
+      }, null, 4)], 42, yn)), 64)), t[21] ||= vueY(`span`, {
         class: `mx-1.5 h-5 w-px bg-border`
-      }, null, -1), N(`button`, {
+      }, null, -1), vueY(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg text-foreground/75 hover:bg-black/[0.05] disabled:opacity-35 dark:hover:bg-white/10`,
-        disabled: !f(K).canUndo.value,
-        title: `${f(G)(`Undo`)} (${f(ct)}Z)`,
-        onMousedown: t[3] ||= F(() => {}, [`prevent`]),
+        disabled: !vueAn(K).canUndo.value,
+        title: `${vueAn(screenshotToolA)(`Undo`)} (${vueAn(ct)}Z)`,
+        onMousedown: t[3] ||= playerE(() => {}, [`prevent`]),
         onClick: t[4] ||= e => {
-          f(K).undo(), Q();
+          vueAn(K).undo(), Q();
         }
-      }, [E(f(be), {
+      }, [vueK(vueAn(undo2T), {
         size: 16
-      })], 40, bn), N(`button`, {
+      })], 40, bn), vueY(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg text-foreground/75 hover:bg-black/[0.05] disabled:opacity-35 dark:hover:bg-white/10`,
-        disabled: !f(K).canRedo.value,
-        title: `${f(G)(`Redo`)} (${f(ct)}${f(Be) ? `⇧Z` : `Y`})`,
-        onMousedown: t[5] ||= F(() => {}, [`prevent`]),
+        disabled: !vueAn(K).canRedo.value,
+        title: `${vueAn(screenshotToolA)(`Redo`)} (${vueAn(ct)}${vueAn(screenshotToolR) ? `⇧Z` : `Y`})`,
+        onMousedown: t[5] ||= playerE(() => {}, [`prevent`]),
         onClick: t[6] ||= e => {
-          f(K).redo(), Q();
+          vueAn(K).redo(), Q();
         }
-      }, [E(f(Ge), {
+      }, [vueK(vueAn(Ge), {
         size: 16
-      })], 40, xn), N(`button`, {
+      })], 40, xn), vueY(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg text-foreground/75 hover:bg-black/[0.05] hover:text-destructive disabled:opacity-35 dark:hover:bg-white/10`,
-        disabled: !f(K).selectedId.value,
-        title: `${f(G)(`Delete`)} (Delete)`,
-        onMousedown: t[7] ||= F(() => {}, [`prevent`]),
+        disabled: !vueAn(K).selectedId.value,
+        title: `${vueAn(screenshotToolA)(`Delete`)} (Delete)`,
+        onMousedown: t[7] ||= playerE(() => {}, [`prevent`]),
         onClick: t[8] ||= e => {
-          f(K).deleteSelected(), Q();
+          vueAn(K).deleteSelected(), Q();
         }
-      }, [E(f(u), {
+      }, [vueK(vueAn(uiSwitchWt), {
         size: 16
-      })], 40, Sn)])], 4), N(`div`, Cn, [N(`main`, wn, [N(`div`, {
+      })], 40, Sn)])], 4), vueY(`div`, Cn, [vueY(`main`, wn, [vueY(`div`, {
         ref_key: `stageRef`,
         ref: le,
         class: `relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-[#ececee] dark:bg-[#0e0e10]`
-      }, [X.value ? (w(), g(`div`, {
+      }, [X.value ? (vueGt(), vueS(`div`, {
         key: 0,
         class: `relative shadow-[0_0_0_1px_rgb(0_0_0/0.04)]`,
-        style: D({
+        style: vueNr({
           width: `${X.value.width}px`,
           height: `${X.value.height}px`,
           ...(at.value ? {
             background: `repeating-conic-gradient(#e4e4e7 0% 25%, #ffffff 0% 50%) 50% / 16px 16px`
           } : {})
         })
-      }, [N(`canvas`, {
+      }, [vueY(`canvas`, {
         ref_key: `canvasRef`,
         ref: ue,
         class: `block h-full w-full touch-none`,
-        style: D({
+        style: vueNr({
           cursor: nt.value
         }),
         onPointerdown: gt,
@@ -1730,153 +1730,153 @@ var mn = {
         onPointercancel: vt,
         onPointerleave: t[9] ||= e => H.value = ``,
         onDblclick: yt
-      }, null, 36), et.value && tt.value ? (w(), g(`textarea`, {
+      }, null, 36), et.value && tt.value ? (vueGt(), vueS(`textarea`, {
         key: 0,
         ref_key: `textareaRef`,
         ref: de,
         class: `absolute m-0 resize-none overflow-hidden whitespace-pre border-0 bg-transparent p-0 outline-none [field-sizing:content]`,
-        style: D(tt.value),
+        style: vueNr(tt.value),
         value: et.value.text,
-        placeholder: f(G)(`TextPlaceholder`),
+        placeholder: vueAn(screenshotToolA)(`TextPlaceholder`),
         rows: `1`,
         spellcheck: `false`,
-        onInput: t[10] ||= e => f(K).updateEditingText(e.target.value),
+        onInput: t[10] ||= e => vueAn(K).updateEditingText(e.target.value),
         onKeydown: xt,
         onBlur: St
-      }, null, 44, Tn)) : M(``, true)], 4)) : (w(), g(`div`, En, [E(f(R), {
+      }, null, 44, Tn)) : vueX(``, true)], 4)) : (vueGt(), vueS(`div`, En, [vueK(vueAn(beautifier), {
         size: 16,
         class: `animate-spin`
-      }), h(k(f(G)(`EditorLoading`)), 1)])), E(te, {
+      }), vueO(vueRr(vueAn(screenshotToolA)(`EditorLoading`)), 1)])), vueK(playerR, {
         "enter-from-class": `opacity-0 translate-y-1`,
         "leave-to-class": `opacity-0`,
         "enter-active-class": `transition duration-150`,
         "leave-active-class": `transition duration-150`
       }, {
-        default: y(() => [U.value ? (w(), g(`div`, Dn, [N(`span`, null, k(U.value.message), 1), U.value.action ? (w(), g(`button`, {
+        default: vueYt(() => [U.value ? (vueGt(), vueS(`div`, Dn, [vueY(`span`, null, vueRr(U.value.message), 1), U.value.action ? (vueGt(), vueS(`button`, {
           key: 0,
           type: `button`,
           class: `font-semibold text-emerald-300 hover:underline dark:text-emerald-700`,
           onClick: t[11] ||= e => U.value.action.run()
-        }, k(U.value.action.label), 1)) : M(``, true)])) : M(``, true)]),
+        }, vueRr(U.value.action.label), 1)) : vueX(``, true)])) : vueX(``, true)]),
         _: 1
-      })], 512), N(`footer`, On, [N(`div`, kn, [we.value === V.value && !B.value ? (w(), x(f(ie), {
+      })], 512), vueY(`footer`, On, [vueY(`div`, kn, [we.value === V.value && !B.value ? (vueGt(), vueB(vueAn(checkT), {
         key: 0,
         size: 14,
         class: `shrink-0 text-primary`
-      })) : B.value ? (w(), x(f(R), {
+      })) : B.value ? (vueGt(), vueB(vueAn(beautifier), {
         key: 1,
         size: 14,
         class: `shrink-0 animate-spin`
-      })) : M(``, true), N(`span`, An, k(rt.value), 1), it.value ? (w(), g(`span`, jn, `· ` + k(it.value), 1)) : M(``, true)]), N(`div`, Mn, [E(f(c), {
+      })) : vueX(``, true), vueY(`span`, An, vueRr(rt.value), 1), it.value ? (vueGt(), vueS(`span`, jn, `· ` + vueRr(it.value), 1)) : vueX(``, true)]), vueY(`div`, Mn, [vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `sm`,
         class: `text-xs`,
         disabled: !l.value || B.value !== null,
         onClick: kt
       }, {
-        default: y(() => [E(f(re), {
+        default: vueYt(() => [vueK(vueAn(lucideN), {
           size: 14
-        }), h(k(f(G)(`ActionPin`)), 1)]),
+        }), vueO(vueRr(vueAn(screenshotToolA)(`ActionPin`)), 1)]),
         _: 1
-      }, 8, [`disabled`]), E(f(c), {
+      }, 8, [`disabled`]), vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `sm`,
         class: `text-xs`,
         disabled: !l.value || B.value !== null,
         onClick: At
       }, {
-        default: y(() => [B.value === `bot` ? (w(), x(f(R), {
+        default: vueYt(() => [B.value === `bot` ? (vueGt(), vueB(vueAn(beautifier), {
           key: 0,
           size: 14,
           class: `animate-spin`
-        })) : (w(), x(f(r), {
+        })) : (vueGt(), vueB(vueAn(uiSwitchEt), {
           key: 1,
           size: 14
-        })), h(k(f(G)(`ActionSendToBot`)), 1)]),
+        })), vueO(vueRr(vueAn(screenshotToolA)(`ActionSendToBot`)), 1)]),
         _: 1
-      }, 8, [`disabled`]), N(`div`, Nn, [E(f(c), {
+      }, 8, [`disabled`]), vueY(`div`, Nn, [vueK(vueAn(uiSwitchR), {
         variant: `outline`,
         size: `sm`,
         class: `rounded-r-none text-xs`,
         disabled: !l.value || B.value !== null,
-        title: `${f(ct)}S`,
+        title: `${vueAn(ct)}S`,
         onClick: t[12] ||= e => Ot(false)
       }, {
-        default: y(() => [B.value === `save` ? (w(), x(f(R), {
+        default: vueYt(() => [B.value === `save` ? (vueGt(), vueB(vueAn(beautifier), {
           key: 0,
           size: 14,
           class: `animate-spin`
-        })) : (w(), x(f(he), {
+        })) : (vueGt(), vueB(vueAn(beautifierV), {
           key: 1,
           size: 14
-        })), h(k(f(G)(`ActionSave`)), 1)]),
+        })), vueO(vueRr(vueAn(screenshotToolA)(`ActionSave`)), 1)]),
         _: 1
-      }, 8, [`disabled`, `title`]), E(f(Ie), null, {
-        default: y(() => [E(f(Le), {
+      }, 8, [`disabled`, `title`]), vueK(vueAn(DropdownMenuTriggerR), null, {
+        default: vueYt(() => [vueK(vueAn(DropdownMenuTriggerT), {
           "as-child": ``
         }, {
-          default: y(() => [E(f(c), {
+          default: vueYt(() => [vueK(vueAn(uiSwitchR), {
             variant: `outline`,
             size: `icon-sm`,
             class: `-ml-px rounded-l-none`,
             disabled: !l.value || B.value !== null,
-            "aria-label": f(G)(`ActionSaveAs`)
+            "aria-label": vueAn(screenshotToolA)(`ActionSaveAs`)
           }, {
-            default: y(() => [E(f(ae), {
+            default: vueYt(() => [vueK(vueAn(PopperContentS), {
               size: 14
             })]),
             _: 1
           }, 8, [`disabled`, `aria-label`])]),
           _: 1
-        }), E(f(Fe), {
+        }), vueK(vueAn(DropdownMenuTriggerN), {
           align: `end`,
           class: `min-w-36`
         }, {
-          default: y(() => [E(f(ve), {
+          default: vueYt(() => [vueK(vueAn(DropdownMenuItemT), {
             class: `text-xs`,
             onSelect: t[13] ||= e => Ot(false)
           }, {
-            default: y(() => [h(k(f(G)(`ActionSaveToFolder`)), 1)]),
+            default: vueYt(() => [vueO(vueRr(vueAn(screenshotToolA)(`ActionSaveToFolder`)), 1)]),
             _: 1
-          }), E(f(ve), {
+          }), vueK(vueAn(DropdownMenuItemT), {
             class: `text-xs`,
             onSelect: t[14] ||= e => Ot(true)
           }, {
-            default: y(() => [h(k(f(G)(`ActionSaveAs`)), 1)]),
+            default: vueYt(() => [vueO(vueRr(vueAn(screenshotToolA)(`ActionSaveAs`)), 1)]),
             _: 1
           })]),
           _: 1
         })]),
         _: 1
-      })]), E(f(c), {
+      })]), vueK(vueAn(uiSwitchR), {
         size: `sm`,
         class: `min-w-24 text-xs`,
         disabled: !l.value || B.value !== null,
-        title: f(G)(`ActionCopyHint`),
+        title: vueAn(screenshotToolA)(`ActionCopyHint`),
         onClick: t[15] ||= e => Dt(true)
       }, {
-        default: y(() => [B.value === `copy` ? (w(), x(f(R), {
+        default: vueYt(() => [B.value === `copy` ? (vueGt(), vueB(vueAn(beautifier), {
           key: 0,
           size: 14,
           class: `animate-spin`
-        })) : (w(), x(f(ge), {
+        })) : (vueGt(), vueB(vueAn(beautifierY), {
           key: 1,
           size: 14
-        })), h(k(f(G)(`ActionCopy`)), 1)]),
+        })), vueO(vueRr(vueAn(screenshotToolA)(`ActionCopy`)), 1)]),
         _: 1
-      }, 8, [`disabled`, `title`])])])]), N(`aside`, Pn, [N(`div`, Fn, [N(`button`, {
+      }, 8, [`disabled`, `title`])])])]), vueY(`aside`, Pn, [vueY(`div`, Fn, [vueY(`button`, {
         type: `button`,
-        class: d([`inline-flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md text-xs transition-colors`, z.value === `style` ? `bg-muted font-semibold text-foreground` : `text-muted-foreground hover:text-foreground`]),
+        class: vueN([`inline-flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md text-xs transition-colors`, z.value === `style` ? `bg-muted font-semibold text-foreground` : `text-muted-foreground hover:text-foreground`]),
         onClick: t[16] ||= e => z.value = `style`
-      }, [E(f(ce), {
+      }, [vueK(vueAn(beautifierG), {
         size: 13
-      }), h(k(f(G)(`TabStyle`)), 1)], 2), N(`button`, {
+      }), vueO(vueRr(vueAn(screenshotToolA)(`TabStyle`)), 1)], 2), vueY(`button`, {
         type: `button`,
-        class: d([`inline-flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md text-xs transition-colors`, z.value === `text` ? `bg-muted font-semibold text-foreground` : `text-muted-foreground hover:text-foreground`]),
+        class: vueN([`inline-flex h-7 flex-1 items-center justify-center gap-1.5 rounded-md text-xs transition-colors`, z.value === `text` ? `bg-muted font-semibold text-foreground` : `text-muted-foreground hover:text-foreground`]),
         onClick: t[17] ||= e => z.value = `text`
-      }, [E(f(Pe), {
+      }, [vueK(vueAn(composeY), {
         size: 13
-      }), h(k(f(G)(`TabText`)), 1)], 2)]), N(`div`, In, [b(E(an, {
+      }), vueO(vueRr(vueAn(screenshotToolA)(`TabText`)), 1)], 2)]), vueY(`div`, In, [vueZt(vueK(an, {
         current: I.value,
         presets: L.value,
         "background-library": oe.value,
@@ -1885,13 +1885,13 @@ var mn = {
         "onUpdate:style": t[18] ||= e => I.value = e,
         onSavePreset: Nt,
         onDeletePreset: Pt
-      }, null, 8, [`current`, `presets`, `background-library`, `thumbnail`, `saving-preset`]), [[ne, z.value === `style`]]), l.value ? b((w(), x(Ye, {
+      }, null, 8, [`current`, `presets`, `background-library`, `thumbnail`, `saving-preset`]), [[playerW, z.value === `style`]]), l.value ? vueZt((vueGt(), vueB(Ye, {
         key: 0,
         "session-id": l.value.id,
         supported: l.value.ocrSupported,
         "auto-run": l.value.runOcr,
         onToast: Z
-      }, null, 8, [`session-id`, `supported`, `auto-run`])), [[ne, z.value === `text`]]) : M(``, true)])])])]));
+      }, null, 8, [`session-id`, `supported`, `auto-run`])), [[playerW, z.value === `text`]]) : vueX(``, true)])])])]));
     }
   });
 export { zn as default };

@@ -1,5 +1,5 @@
-import { r as e } from "../ui/icons/lucide-icons.js";
-var t = e(`eye-off`, [[`path`, {
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+var t = lucideR(`eye-off`, [[`path`, {
     d: `M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49`,
     key: `ct8e1f`
   }], [`path`, {
@@ -12,7 +12,7 @@ var t = e(`eye-off`, [[`path`, {
     d: `m2 2 20 20`,
     key: `1ooewy`
   }]]),
-  n = e(`eye`, [[`path`, {
+  n = lucideR(`eye`, [[`path`, {
     d: `M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0`,
     key: `1nclc0`
   }], [`circle`, {
@@ -21,7 +21,7 @@ var t = e(`eye-off`, [[`path`, {
     r: `3`,
     key: `1v7zrd`
   }]]),
-  r = e(`settings-2`, [[`path`, {
+  r = lucideR(`settings-2`, [[`path`, {
     d: `M14 17H5`,
     key: `gfn3mx`
   }], [`path`, {

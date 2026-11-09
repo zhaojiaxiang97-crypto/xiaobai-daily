@@ -1,6 +1,6 @@
-import { $n as e, An as t, Ct as n, E as r, S as i, Wt as a, Yt as o, Zt as s, b as c, bn as l, f as u, gt as d, j as f, k as p, mt as ee, nr as te, ot as ne, rr as re, rt as ie, ut as m, v as h, x as ae, y as g, z as oe } from "../chunks/vue-i18n.runtime.js";
-import { E as se, w as ce } from "../i18n/en-US-player.js";
-import { D as le, E as ue, F as de, I as fe, J as pe, K as me, N as he, P as ge, R as _e, V as ve, W as ye, X as be, q as xe, v as Se, y as _, z as Ce } from "../chunks/main.js";
+import { $n as vueN, An as vueAn, Ct as vueCt, E as vueE, S as vueS, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, f as vueF, gt as vueGt, j as vueJ, k as vueK, mt as vueMt, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, x as vueX, y as vueY, z as vueZ } from "../chunks/vue-i18n.runtime.js";
+import { E as playerE, w as playerW } from "../i18n/en-US-player.js";
+import { D as mainD, E as mainE, F as mainF, I as mainI, J as mainJ, K as mainK, N as mainN, P as mainP, R as mainR, V as mainV, W as mainW, X as mainX, q as mainQ, v as Se, y as mainY, z as mainZ } from "../chunks/main.js";
 var defineProperty = Object.defineProperty,
   defineProperties = Object.defineProperties,
   getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
@@ -47,7 +47,7 @@ var defineProperty = Object.defineProperty,
     class: `html-preview-frame__label`
   },
   E = [`sandbox`, `srcdoc`],
-  ke = Se(f({
+  ke = Se(vueJ({
     __name: `HtmlPreviewFrame`,
     props: {
       code: {},
@@ -67,13 +67,13 @@ var defineProperty = Object.defineProperty,
       let propsAlias = props,
         {
           t: i
-        } = ge(),
-        a = h(() => {
+        } = mainP(),
+        a = vueV(() => {
           let fallbackValue = propsAlias.code || ``,
             lowercased = fallbackValue.trim().toLowerCase();
           return lowercased.startsWith(`<!doctype`) || lowercased.startsWith(`<html`) || lowercased.startsWith(`<body`) ? fallbackValue : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${propsAlias.isDark ? `#020617` : `#ffffff`};\n        color: ${propsAlias.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${fallbackValue}\n  </body>\n</html>`;
         }),
-        o = h(() => {
+        o = vueV(() => {
           return htmlPreviewSandbox = propsAlias.htmlPreviewSandbox, payload = propsAlias.htmlPreviewAllowScripts, typeof htmlPreviewSandbox == `string` ? htmlPreviewSandbox : htmlPreviewSandbox === undefined && true === payload ? `allow-scripts` : ``;
           var htmlPreviewSandbox, payload;
         });
@@ -81,29 +81,29 @@ var defineProperty = Object.defineProperty,
         var payload;
         event.key !== `Escape` && event.key !== `Esc` || (payload = propsAlias.onClose) == null || payload.call(propsAlias);
       }
-      return m(() => {
+      return vueUt(() => {
         typeof window < `u` && window.addEventListener(`keydown`, s);
-      }), ee(() => {
+      }), vueMt(() => {
         typeof window < `u` && window.removeEventListener(`keydown`, s);
-      }), (n, s) => (d(), c(u, {
+      }), (n, renderCache) => (vueGt(), vueB(vueF, {
         to: `body`
-      }, [g(`div`, {
-        class: e([`markstream-vue`, {
+      }, [vueY(`div`, {
+        class: vueN([`markstream-vue`, {
           dark: propsAlias.isDark
         }])
-      }, [g(`div`, {
+      }, [vueY(`div`, {
         class: `html-preview-frame__backdrop`,
-        onClick: s[2] ||= e => propsAlias.onClose?.call(propsAlias)
-      }, [g(`div`, {
+        onClick: renderCache[2] ||= e => propsAlias.onClose?.call(propsAlias)
+      }, [vueY(`div`, {
         class: `html-preview-frame`,
-        onClick: s[1] ||= se(() => {}, [`stop`])
-      }, [g(`div`, Oe, [g(`div`, w, [s[3] ||= g(`span`, {
+        onClick: renderCache[1] ||= playerE(() => {}, [`stop`])
+      }, [vueY(`div`, Oe, [vueY(`div`, w, [renderCache[3] ||= vueY(`span`, {
         class: `html-preview-frame__dot`
-      }, null, -1), g(`span`, T, re(propsAlias.title || t(i)(`common.preview`) || `Preview`), 1)]), g(`button`, {
+      }, null, -1), vueY(`span`, T, vueRr(propsAlias.title || vueAn(i)(`common.preview`) || `Preview`), 1)]), vueY(`button`, {
         type: `button`,
         class: `html-preview-frame__close`,
-        onClick: s[0] ||= e => propsAlias.onClose?.call(propsAlias)
-      }, ` × `)]), g(`iframe`, {
+        onClick: renderCache[0] ||= e => propsAlias.onClose?.call(propsAlias)
+      }, ` × `)]), vueY(`iframe`, {
         class: `html-preview-frame__iframe`,
         sandbox: o.value,
         referrerpolicy: `no-referrer`,
@@ -138,7 +138,7 @@ var defineProperty = Object.defineProperty,
     class: `code-editor-layer`
   },
   We = `__markstreamMonacoPassiveTouchState__`,
-  O = Se(f({
+  O = Se(vueJ({
     __name: `CodeBlockNode`,
     props: {
       node: {},
@@ -218,35 +218,35 @@ var defineProperty = Object.defineProperty,
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        Se = oe(),
-        we = h(() => {
+        Se = vueZ(),
+        we = vueV(() => {
           let e = Se?.vnode.props;
           return !(!e || !e.onPreviewCode && !e.onPreviewCode);
         }),
         {
-          t: Te
-        } = ge(),
-        v = l(null),
-        Ee = l(null),
-        De = l(false),
-        y = l(pe(propsAlias.node.language)),
-        b = h(() => xe(y.value)),
-        Oe = h(() => b.value === `plaintext`),
-        w = l(false),
-        T = l(false),
-        E = l(false),
-        O = l(false),
-        Ge = l(false),
+          t: translate
+        } = mainP(),
+        v = vueBn(null),
+        Ee = vueBn(null),
+        De = vueBn(false),
+        y = vueBn(mainJ(propsAlias.node.language)),
+        b = vueV(() => mainQ(y.value)),
+        Oe = vueV(() => b.value === `plaintext`),
+        w = vueBn(false),
+        T = vueBn(false),
+        E = vueBn(false),
+        O = vueBn(false),
+        Ge = vueBn(false),
         k = false,
         Ke = null,
-        A = l(null),
-        j = l(null),
+        A = vueBn(null),
+        j = vueBn(null),
         qe = 0,
         Je = 0,
-        Ye = be(),
-        Xe = l(null),
-        M = l(typeof window > `u`);
-      typeof window < `u` && a(() => Ee.value, e => {
+        Ye = mainX(),
+        Xe = vueBn(null),
+        M = vueBn(typeof window > `u`);
+      typeof window < `u` && vueWt(() => Ee.value, e => {
         var payload;
         if ((payload = Xe.value) == null || payload.destroy(), Xe.value = null, !e) return void (M.value = false);
         let n = Ye(e, {
@@ -257,7 +257,7 @@ var defineProperty = Object.defineProperty,
         });
       }, {
         immediate: true
-      }), ne(() => {
+      }), vueOt(() => {
         var htmlPreviewSandbox;
         k = true, (htmlPreviewSandbox = Xe.value) == null || htmlPreviewSandbox.destroy(), Xe.value = null;
       });
@@ -289,12 +289,12 @@ var defineProperty = Object.defineProperty,
         emptyItems = [],
         ot = [],
         R = null,
-        z = h(() => propsAlias.node.diff),
-        B = l({
+        z = vueV(() => propsAlias.node.diff),
+        B = vueBn({
           removed: 0,
           added: 0
         }),
-        st = h(() => `-${B.value.removed} +${B.value.added}`),
+        st = vueV(() => `-${B.value.removed} +${B.value.added}`),
         ct = Object.freeze({
           enabled: false
         }),
@@ -321,7 +321,7 @@ var defineProperty = Object.defineProperty,
           updated: String(t ?? ``)
         };
       }
-      let V = h(() => {
+      let V = vueV(() => {
           var htmlPreviewSandbox;
           let t = propsAlias.monacoOptions ? x({}, propsAlias.monacoOptions) : {};
           if (!z.value) return t;
@@ -365,20 +365,20 @@ var defineProperty = Object.defineProperty,
             diffHideUnchangedRegions: a
           });
         }),
-        ft = h(() => z.value ? `diff` : `single`),
-        pt = l(ft.value),
-        mt = l(false),
-        H = l(false),
-        ht = l(false),
-        gt = h(() => {
+        ft = vueV(() => z.value ? `diff` : `single`),
+        pt = vueBn(ft.value),
+        mt = vueBn(false),
+        H = vueBn(false),
+        ht = vueBn(false),
+        gt = vueV(() => {
           let e = propsAlias.monacoOptions?.wordWrap;
           return e == null || String(e) !== `off`;
         }),
-        _t = h(() => !(mt.value || !ht.value && (de() || H.value))),
-        vt = l(false);
+        _t = vueV(() => !(mt.value || !ht.value && (mainF() || H.value))),
+        vt = vueBn(false);
       typeof window < `u` && C(null, null, function* () {
         try {
-          let e = yield Ce();
+          let e = yield mainZ();
           if (k) return;
           if (!e) return void (mt.value = true);
           let useMonaco = e.useMonaco,
@@ -395,43 +395,43 @@ var defineProperty = Object.defineProperty,
           mt.value = true;
         }
       });
-      let U = l(typeof propsAlias.monacoOptions?.fontSize == `number` ? propsAlias.monacoOptions.fontSize : NaN),
-        W = l(U.value),
-        yt = h(() => {
+      let U = vueBn(typeof propsAlias.monacoOptions?.fontSize == `number` ? propsAlias.monacoOptions.fontSize : NaN),
+        W = vueBn(U.value),
+        yt = vueV(() => {
           let e = U.value,
             t = W.value;
           return typeof e == `number` && Number.isFinite(e) && e > 0 && typeof t == `number` && Number.isFinite(t) && t > 0;
         }),
-        bt = h(() => {
+        bt = vueV(() => {
           let e = propsAlias.monacoOptions?.fontSize;
           if (typeof e == `number` && Number.isFinite(e) && e > 0) return e;
           let t = W.value;
           return typeof t == `number` && Number.isFinite(t) && t > 0 ? t : 14;
         }),
-        xt = h(() => {
+        xt = vueV(() => {
           let e = propsAlias.monacoOptions?.lineHeight;
           return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : Math.max(12, Math.round(1.35 * bt.value));
         }),
-        St = h(() => {
+        St = vueV(() => {
           let e = propsAlias.monacoOptions?.tabSize;
           return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : 4;
         }),
-        Ct = h(() => {
+        Ct = vueV(() => {
           let e = propsAlias.monacoOptions?.padding;
           return {
             top: typeof e?.top == `number` && Number.isFinite(e.top) && e.top > 0 ? e.top : 0,
             bottom: typeof e?.bottom == `number` && Number.isFinite(e.bottom) && e.bottom > 0 ? e.bottom : 0
           };
         }),
-        G = h(() => {
+        G = vueV(() => {
           let estimatedContentHeightPx = propsAlias.estimatedContentHeightPx;
           return typeof estimatedContentHeightPx == `number` && Number.isFinite(estimatedContentHeightPx) && estimatedContentHeightPx > 0 ? estimatedContentHeightPx : null;
         }),
-        wt = h(() => {
+        wt = vueV(() => {
           let estimatedHeightPx = propsAlias.estimatedHeightPx;
           return typeof estimatedHeightPx == `number` && Number.isFinite(estimatedHeightPx) && estimatedHeightPx > 0 ? estimatedHeightPx : null;
         }),
-        Tt = h(() => {
+        Tt = vueV(() => {
           let e = propsAlias.monacoOptions?.fontFamily;
           return x(x({
             fontSize: `${bt.value}px`,
@@ -449,13 +449,13 @@ var defineProperty = Object.defineProperty,
             "--markstream-code-font-family": e.trim()
           } : {});
         }),
-        Et = h(() => G.value != null && (!H.value || K() != null)),
-        Dt = h(() => {
+        Et = vueV(() => G.value != null && (!H.value || K() != null)),
+        Dt = vueV(() => {
           if (Et.value) return {
             minHeight: `${G.value}px`
           };
         }),
-        Ot = l(null);
+        Ot = vueBn(null);
       function K() {
         let e = Ot.value;
         return typeof e == `number` && Number.isFinite(e) && e > 0 ? Math.round(e) : null;
@@ -467,7 +467,7 @@ var defineProperty = Object.defineProperty,
       }
       function At() {
         return new Promise(e => {
-          _(() => e());
+          mainY(() => e());
         });
       }
       function jt() {
@@ -716,7 +716,7 @@ var defineProperty = Object.defineProperty,
         for (var htmlPreviewSandbox, payload; emptyItems.length > 0;) try {
           (payload = (htmlPreviewSandbox = emptyItems.pop())?.dispose) == null || payload.call(htmlPreviewSandbox);
         } catch {}
-        Ke != null && (le(Ke), Ke = null);
+        Ke != null && (mainD(Ke), Ke = null);
       }
       function J() {
         for (var htmlPreviewSandbox; ot.length > 0;) try {
@@ -832,10 +832,10 @@ var defineProperty = Object.defineProperty,
               event.preventDefault(), event.stopPropagation();
             },
             l = event => {
-              event.preventDefault(), event.stopPropagation(), selectorResult.click(), _(() => Z());
+              event.preventDefault(), event.stopPropagation(), selectorResult.click(), mainY(() => Z());
             },
             u = event => {
-              event.key !== `Enter` && event.key !== ` ` || (event.preventDefault(), event.stopPropagation(), selectorResult.click(), _(() => Z()));
+              event.key !== `Enter` && event.key !== ` ` || (event.preventDefault(), event.stopPropagation(), selectorResult.click(), mainY(() => Z()));
             };
           element.addEventListener(`mousedown`, c), element.addEventListener(`click`, l), element.addEventListener(`keydown`, u), a.appendChild(element), ot.push(() => {
             element.removeEventListener(`mousedown`, c), element.removeEventListener(`click`, l), element.removeEventListener(`keydown`, u), element.parentElement === a && a.removeChild(element);
@@ -843,8 +843,8 @@ var defineProperty = Object.defineProperty,
         }
       }
       function Z(e = false) {
-        Ke ??= _(() => {
-          Ke = null, _(() => {
+        Ke ??= mainY(() => {
+          Ke = null, mainY(() => {
             X(), Y(e);
           });
         });
@@ -864,14 +864,14 @@ var defineProperty = Object.defineProperty,
         let t = String(fallbackValue).match(/^(\d+(?:\.\d+)?)/);
         return t ? Number.parseFloat(t[1]) : 500;
       }
-      let Yt = h(() => propsAlias.isShowPreview && (y.value === `html` || y.value === `svg`));
-      a(() => propsAlias.node.language, e => {
-        y.value = pe(e);
-      }), a(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, z.value], () => {
-        It(), _(() => Lt());
+      let Yt = vueV(() => propsAlias.isShowPreview && (y.value === `html` || y.value === `svg`));
+      vueWt(() => propsAlias.node.language, e => {
+        y.value = mainJ(e);
+      }), vueWt(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, z.value], () => {
+        It(), mainY(() => Lt());
       }, {
         immediate: true
-      }), a(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, b.value, z.value], e => C(null, [e], function* ([e, t, n, r]) {
+      }), vueWt(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, b.value, z.value], e => C(null, [e], function* ([e, t, n, r]) {
         if (false === propsAlias.stream || !r) return;
         if (N && !E.value && v.value) try {
           yield ln(v.value);
@@ -882,20 +882,20 @@ var defineProperty = Object.defineProperty,
           if (k || !z.value) return;
           rt(), X(), Lt(), Z();
         }
-        w.value && _(() => Kt());
-      })), a(() => propsAlias.node.code, e => C(null, null, function* () {
-        if (false !== propsAlias.stream && (y.value ||= pe(it(e)), !z.value)) {
+        w.value && mainY(() => Kt());
+      })), vueWt(() => propsAlias.node.code, e => C(null, null, function* () {
+        if (false !== propsAlias.stream && (y.value ||= mainJ(it(e)), !z.value)) {
           if (N && !E.value && v.value) try {
             yield ln(v.value);
           } catch {}
-          Qe(e, b.value), w.value && _(() => Kt());
+          Qe(e, b.value), w.value && mainY(() => Kt());
         }
       }));
-      let Xt = h(() => {
+      let Xt = vueV(() => {
           let e = y.value;
-          return e ? ye[e] || e.charAt(0).toUpperCase() + e.slice(1) : ye[``] || `Plain Text`;
+          return e ? mainW[e] || e.charAt(0).toUpperCase() + e.slice(1) : mainW[``] || `Plain Text`;
         }),
-        Zt = h(() => function (items) {
+        Zt = vueV(() => function (items) {
           let t = function (e) {
             let fallbackValue = String(e ?? ``).split(/\r?\n/, 1)[0]?.trim() ?? ``;
             if (fallbackValue.length < 3) return ``;
@@ -915,10 +915,10 @@ var defineProperty = Object.defineProperty,
           }
           return ``;
         }(String(propsAlias.node.raw ?? ``))),
-        Qt = h(() => Zt.value || Xt.value),
-        $t = h(() => Zt.value ? z.value ? `Diff / ${Xt.value}` : Xt.value : ``),
-        en = h(() => (me.value, ue(y.value || ``))),
-        tn = h(() => {
+        Qt = vueV(() => Zt.value || Xt.value),
+        $t = vueV(() => Zt.value ? z.value ? `Diff / ${Xt.value}` : Xt.value : ``),
+        en = vueV(() => (mainK.value, mainE(y.value || ``))),
+        tn = vueV(() => {
           let e = {},
             t = e => {
               if (e != null) return typeof e == `number` ? `${e}px` : String(e);
@@ -927,7 +927,7 @@ var defineProperty = Object.defineProperty,
             r = t(propsAlias.maxWidth);
           return n && (e.minWidth = n), r && (e.maxWidth = r), Et.value && (e.minHeight = `${wt.value ?? G.value}px`), z.value || (e.color = `var(--vscode-editor-foreground, var(--markstream-code-fallback-fg))`, e.backgroundColor = `var(--vscode-editor-background, var(--markstream-code-fallback-bg))`, e.borderColor = `var(--markstream-code-border-color)`), e;
         }),
-        nn = h(() => false !== propsAlias.showTooltips);
+        nn = vueV(() => false !== propsAlias.showTooltips);
       function rn() {
         return C(this, null, function* () {
           try {
@@ -946,8 +946,8 @@ var defineProperty = Object.defineProperty,
             return !fallbackValue || fallbackValue.disabled ? null : fallbackValue;
           }(event);
           if (t) {
-            let e = w.value ? Te(`common.collapse`) || `Collapse` : Te(`common.expand`) || `Expand`;
-            he(t, e, `top`, false, undefined, propsAlias.isDark);
+            let e = w.value ? translate(`common.collapse`) || `Collapse` : translate(`common.expand`) || `Expand`;
+            mainN(t, e, `top`, false, undefined, propsAlias.isDark);
           }
         }
         let t = z.value ? F() : P(),
@@ -968,7 +968,7 @@ var defineProperty = Object.defineProperty,
           try {
             (payload = e?.layout) == null || payload.call(e);
           } catch {}
-          Je = 2, _(() => {
+          Je = 2, mainY(() => {
             Y(true);
           });
         }
@@ -978,7 +978,7 @@ var defineProperty = Object.defineProperty,
         let e = y.value;
         if (we.value) {
           let t = e === `html` ? `text/html` : `image/svg+xml`,
-            n = e === `html` ? Te(`artifacts.htmlPreviewTitle`) || `HTML Preview` : Te(`artifacts.svgPreviewTitle`) || `SVG Preview`;
+            n = e === `html` ? translate(`artifacts.htmlPreviewTitle`) || `HTML Preview` : translate(`artifacts.svgPreviewTitle`) || `SVG Preview`;
           emitAlias(`previewCode`, {
             node: propsAlias.node,
             artifactType: t,
@@ -1080,7 +1080,7 @@ var defineProperty = Object.defineProperty,
               }
               w.value || T.value || Y(false), yield function () {
                 return C(this, null, function* () {
-                  K() != null && (X(), Y(false), yield ie(), yield At(), X(), Y(false), yield At(), X(), Y(false));
+                  K() != null && (X(), Y(false), yield vueRt(), yield At(), X(), Y(false), yield At(), X(), Y(false));
                 });
               }(), k || (O.value = true, function () {
                 if (qt(), z.value) {
@@ -1097,7 +1097,7 @@ var defineProperty = Object.defineProperty,
                     };
                   try {
                     let t = e?.onDidUpdateDiff?.call(e, () => {
-                      Z(), _(() => Lt());
+                      Z(), mainY(() => Lt());
                     });
                     t && emptyItems.push(t);
                   } catch {}
@@ -1115,7 +1115,7 @@ var defineProperty = Object.defineProperty,
                 } catch {}
               }(), Wt(), X(), Lt(), Z(), yield function () {
                 return C(this, null, function* () {
-                  X(), Y(false), yield ie(), yield At(), X(), Y(false), yield At(), X(), Y(false);
+                  X(), Y(false), yield vueRt(), yield At(), X(), Y(false), yield At(), X(), Y(false);
                 });
               }(), k || (H.value = true));
             });
@@ -1125,9 +1125,9 @@ var defineProperty = Object.defineProperty,
         });
         return I = t, t;
       }
-      a(nn, e => {
-        e || ve();
-      }), a(() => W.value, (e, t) => {
+      vueWt(nn, e => {
+        e || mainV();
+      }), vueWt(() => W.value, (e, t) => {
         let n = z.value ? F() : P();
         n && typeof e == `number` && Number.isFinite(e) && e > 0 && (n.updateOptions({
           fontSize: e
@@ -1136,7 +1136,7 @@ var defineProperty = Object.defineProperty,
         flush: `post`,
         immediate: false
       });
-      let un = a(() => [v.value, z.value, propsAlias.stream, propsAlias.loading, Ge.value, M.value], e => C(null, [e], function* ([e, t, n, r, i, a]) {
+      let un = vueWt(() => [v.value, z.value, propsAlias.stream, propsAlias.loading, Ge.value, M.value], e => C(null, [e], function* ([e, t, n, r, i, a]) {
         if (!e || !N || !a || false === n && false !== r) return;
         let o = ln(e);
         if (o) {
@@ -1179,7 +1179,7 @@ var defineProperty = Object.defineProperty,
         let o = $(t);
         return t != null && o && filtered.includes(o) ? t : r[0];
       }
-      a(ft, (e, t) => C(null, null, function* () {
+      vueWt(ft, (e, t) => C(null, null, function* () {
         if (e === t || (pt.value = e, !N || !v.value) || !E.value || false === propsAlias.stream && false !== propsAlias.loading || !M.value) return;
         let n = I;
         if (n) {
@@ -1189,12 +1189,12 @@ var defineProperty = Object.defineProperty,
           if (k || !v.value) return;
         }
         try {
-          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield ie(), yield ln(v.value);
+          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield vueRt(), yield ln(v.value);
         } catch {
           O.value = false, H.value = false, ht.value = true;
         }
       }));
-      let mn = h(() => (propsAlias.theme === undefined ? fn(propsAlias.darkTheme, propsAlias.lightTheme) : !dn(propsAlias.theme)) ? function (e) {
+      let mn = vueV(() => (propsAlias.theme === undefined ? fn(propsAlias.darkTheme, propsAlias.lightTheme) : !dn(propsAlias.theme)) ? function (e) {
           if (e && typeof e == `object` && e.colors?.[`editor.background`]) {
             let t = Ut(e.colors[`editor.background`]);
             if (t != null) return t < 128;
@@ -1202,12 +1202,12 @@ var defineProperty = Object.defineProperty,
           let lowercased = ($(e) ?? ``).toLowerCase();
           return lowercased ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(item => lowercased.includes(item)) && ![`light`, `latte`, `dawn`, `lotus`].some(item => lowercased.includes(item)) : !!propsAlias.isDark;
         }(pn()) : !!propsAlias.isDark),
-        hn = h(() => {
+        hn = vueV(() => {
           if (!z.value) return mn.value ? `dark` : `light`;
           let e = V.value?.diffAppearance;
           return e === `light` || e === `dark` ? e : mn.value ? `dark` : `light`;
         }),
-        gn = h(() => z.value ? hn.value === `dark` : mn.value);
+        gn = vueV(() => z.value ? hn.value === `dark` : mn.value);
       function _n() {
         return S(x(S(x({
           wordWrap: `on`,
@@ -1229,7 +1229,7 @@ var defineProperty = Object.defineProperty,
         for (let payload of Object.keys(R)) payload in e || delete R[payload];
         return Object.assign(R, e), R;
       }
-      let yn = h(() => {
+      let yn = vueV(() => {
         var htmlPreviewSandbox, payload, n, parentElement, i;
         return JSON.stringify({
           diffLineStyle: V.value?.diffLineStyle ?? `background`,
@@ -1242,7 +1242,7 @@ var defineProperty = Object.defineProperty,
           originalEditable: (i = V.value?.originalEditable) != null && i
         });
       });
-      return a(() => [propsAlias.monacoOptions, M.value], () => {
+      return vueWt(() => [propsAlias.monacoOptions, M.value], () => {
         var htmlPreviewSandbox;
         if (vn(), !N || !M.value) return;
         let t = z.value ? F() : P(),
@@ -1252,13 +1252,13 @@ var defineProperty = Object.defineProperty,
         })), Y(false);
       }, {
         deep: true
-      }), a(() => [pn(), hn.value, Ge.value, E.value, M.value], ([e], t) => {
+      }), vueWt(() => [pn(), hn.value, Ge.value, E.value, M.value], ([e], t) => {
         Ge.value && E.value && M.value && function (e = {}) {
           if (e.appearanceOnly) return;
           vn();
           let t = pn(),
             n = () => {
-              z.value && rt(), _(() => {
+              z.value && rt(), mainY(() => {
                 Wt(), Z();
               });
             };
@@ -1296,7 +1296,7 @@ var defineProperty = Object.defineProperty,
         });
       }, {
         flush: `post`
-      }), a(() => [yn.value, Ge.value, M.value], (e, t) => C(null, [e, t], function* ([e, t, n], [r]) {
+      }), vueWt(() => [yn.value, Ge.value, M.value], (e, t) => C(null, [e, t], function* ([e, t, n], [r]) {
         if (vn(), !t || !n || !N || !v.value || !E.value || e === r || false === propsAlias.stream && false !== propsAlias.loading) return;
         let i = I;
         if (i) {
@@ -1306,17 +1306,17 @@ var defineProperty = Object.defineProperty,
           if (k || !v.value) return;
         }
         try {
-          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield ie(), yield ln(v.value);
+          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield vueRt(), yield ln(v.value);
         } catch {
           O.value = false, H.value = false, ht.value = true;
         }
       }), {
         flush: `post`
-      }), a(() => [propsAlias.loading, M.value], (e, t) => C(null, [e, t], function* ([e, t], n) {
+      }), vueWt(() => [propsAlias.loading, M.value], (e, t) => C(null, [e, t], function* ([e, t], n) {
         if (!t || e) return;
         let r = n?.[0],
           i = r !== undefined && false !== r;
-        yield ie(), _(() => {
+        yield vueRt(), mainY(() => {
           C(null, null, function* () {
             try {
               if (i && E.value) {
@@ -1338,18 +1338,18 @@ var defineProperty = Object.defineProperty,
       }), {
         immediate: true,
         flush: `post`
-      }), ee(() => {
+      }), vueMt(() => {
         qt(), J(), tt();
-      }), (a, l) => mt.value ? (d(), c(t(fe), {
+      }), (a, l) => mt.value ? (vueGt(), vueB(vueAn(mainI), {
         key: 0,
         node: propsAlias.node,
         loading: propsAlias.loading
-      }, null, 8, [`node`, `loading`])) : (d(), i(`div`, {
+      }, null, 8, [`node`, `loading`])) : (vueGt(), vueS(`div`, {
         key: 1,
         ref_key: `container`,
         ref: Ee,
-        style: te(tn.value),
-        class: e([`code-block-container rounded-lg border`, [{
+        style: vueNr(tn.value),
+        class: vueN([`code-block-container rounded-lg border`, [{
           dark: propsAlias.isDark,
           "is-rendering": propsAlias.loading,
           "is-dark": gn.value,
@@ -1358,7 +1358,7 @@ var defineProperty = Object.defineProperty,
         }]]),
         "data-markstream-code-block": `1`,
         "data-markstream-enhanced": H.value && !mt.value ? `true` : `false`
-      }, [p(_e, {
+      }, [vueK(mainR, {
         "show-header": propsAlias.showHeader,
         "show-collapse-button": propsAlias.showCollapseButton,
         "show-font-size-buttons": propsAlias.showFontSizeButtons,
@@ -1388,49 +1388,49 @@ var defineProperty = Object.defineProperty,
         onCopy: rn,
         onToggleExpand: an,
         onPreview: sn
-      }, r({
-        "header-left": o(() => [n(a.$slots, `header-left`, {}, () => [g(`div`, Re, [g(`span`, {
+      }, vueE({
+        "header-left": vueYt(() => [vueCt(a.$slots, `header-left`, {}, () => [vueY(`div`, Re, [vueY(`span`, {
           class: `icon-slot h-4 w-4 flex-shrink-0`,
           innerHTML: en.value
-        }, null, 8, ze), g(`div`, Be, [g(`div`, Ve, re(Qt.value), 1), $t.value ? (d(), i(`div`, He, re($t.value), 1)) : ae(``, true)])])], true)]),
-        loading: o(() => [n(a.$slots, `loading`, {
+        }, null, 8, ze), vueY(`div`, Be, [vueY(`div`, Ve, vueRr(Qt.value), 1), $t.value ? (vueGt(), vueS(`div`, He, vueRr($t.value), 1)) : vueX(``, true)])])], true)]),
+        loading: vueYt(() => [vueCt(a.$slots, `loading`, {
           loading: props.loading,
           stream: props.stream
-        }, () => [l[0] ||= g(`div`, {
+        }, () => [l[0] ||= vueY(`div`, {
           class: `loading-skeleton`
-        }, [g(`div`, {
+        }, [vueY(`div`, {
           class: `skeleton-line`
-        }), g(`div`, {
+        }), vueY(`div`, {
           class: `skeleton-line`
-        }), g(`div`, {
+        }), vueY(`div`, {
           class: `skeleton-line short`
         })], -1)], true)]),
-        default: o(() => [s(g(`div`, Ue, [g(`div`, {
+        default: vueYt(() => [vueZt(vueY(`div`, Ue, [vueY(`div`, {
           ref_key: `codeEditor`,
           ref: v,
-          class: e([`code-editor-container`, [props.stream ? `` : `code-height-placeholder`, {
+          class: vueN([`code-editor-container`, [props.stream ? `` : `code-height-placeholder`, {
             "is-hidden": _t.value
           }]]),
-          style: te(Dt.value)
-        }, null, 6), _t.value ? (d(), c(t(fe), {
+          style: vueNr(Dt.value)
+        }, null, 6), _t.value ? (vueGt(), vueB(vueAn(mainI), {
           key: 0,
-          class: e([`code-pre-fallback`, {
+          class: vueN([`code-pre-fallback`, {
             "is-wrap": gt.value
           }]),
-          style: te(Tt.value),
+          style: vueNr(Tt.value),
           node: propsAlias.node
-        }, null, 8, [`class`, `style`, `node`])) : ae(``, true)], 512), [[ce, !(T.value || !props.stream && props.loading)]]), vt.value && !we.value && Yt.value && y.value === `html` ? (d(), c(ke, {
+        }, null, 8, [`class`, `style`, `node`])) : vueX(``, true)], 512), [[playerW, !(T.value || !props.stream && props.loading)]]), vt.value && !we.value && Yt.value && y.value === `html` ? (vueGt(), vueB(ke, {
           key: 0,
           code: propsAlias.node.code,
           "html-preview-allow-scripts": propsAlias.htmlPreviewAllowScripts,
           "html-preview-sandbox": propsAlias.htmlPreviewSandbox,
           "is-dark": propsAlias.isDark,
           "on-close": () => vt.value = false
-        }, null, 8, [`code`, `html-preview-allow-scripts`, `html-preview-sandbox`, `is-dark`, `on-close`])) : ae(``, true)]),
+        }, null, 8, [`code`, `html-preview-allow-scripts`, `html-preview-sandbox`, `is-dark`, `on-close`])) : vueX(``, true)]),
         _: 2
       }, [a.$slots[`header-right`] ? {
         name: `header-right`,
-        fn: o(() => [n(a.$slots, `header-right`, {}, undefined, true)]),
+        fn: vueYt(() => [vueCt(a.$slots, `header-right`, {}, undefined, true)]),
         key: `0`
       } : undefined]), 1032, [`show-header`, `show-collapse-button`, `show-font-size-buttons`, `enable-font-size-control`, `show-copy-button`, `show-expand-button`, `show-preview-button`, `show-tooltips`, `is-dark`, `loading`, `stream`, `is-collapsed`, `is-expanded`, `copy-text`, `is-previewable`, `code-font-size`, `default-code-font-size`, `font-baseline-ready`, `diff-stats`, `diff-stats-aria-label`])], 14, Le));
     }

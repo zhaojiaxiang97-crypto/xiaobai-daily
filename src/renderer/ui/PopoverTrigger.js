@@ -1,9 +1,9 @@
-import { B as e, I as t, K as n, L as r, N as i, O as a, V as o, W as s, _ as c, at as l, j as u, k as d, lt as f, xt as p, yt as m, z as h } from "./Switch.js";
-import { An as g, Ct as _, Dn as ee, Et as te, V as ne, Wt as re, Yt as v, b as y, bn as b, gt as x, j as S, k as ie, nt as C, tr as ae, ut as oe, v as w } from "../chunks/vue-i18n.runtime.js";
-import { E as se } from "../i18n/en-US-player.js";
-import { r as ce } from "./icons/lucide-icons.js";
-import { a as le, i as ue, n as de, o as fe } from "./PopperContent.js";
-var pe = ce(`chevron-right`, [[`path`, {
+import { B as uiSwitchB, I as uiSwitchI, K as uiSwitchK, L as uiSwitchL, N as uiSwitchN, O as uiSwitchO, V as uiSwitchV, W as uiSwitchW, _ as uiSwitch, at as uiSwitchAt, j as uiSwitchJ, k as d, lt as uiSwitchLt, xt as uiSwitchXt, yt as uiSwitchYt, z as uiSwitchZ } from "./Switch.js";
+import { An as vueAn, Ct as vueCt, Dn as vueDn, Et as vueEt, V as vueV, Wt as vueWt, Yt as vueYt, b as vueB, bn as vueBn, gt as vueGt, j as vueJ, k as vueK, nt as vueNt, tr as vueTr, ut as vueUt, v as w } from "../chunks/vue-i18n.runtime.js";
+import { E as playerE } from "../i18n/en-US-player.js";
+import { r as lucideR } from "./icons/lucide-icons.js";
+import { a as PopperContentA, i as PopperContentI, n as PopperContentN, o as PopperContentO } from "./PopperContent.js";
+var pe = lucideR(`chevron-right`, [[`path`, {
   d: `m9 18 6-6-6-6`,
   key: `mthhwq`
 }]]);
@@ -1623,7 +1623,7 @@ function ar(e) {
   return (1 - Te(new B(2025, 1, 6), e) + 7) % 7;
 }
 function or(e, t = {}) {
-  let n = b(e);
+  let n = vueBn(e);
   function r() {
     return n.value;
   }
@@ -1768,8 +1768,8 @@ function sr() {
   };
 }
 function cr(e) {
-  let t = n({
-    locale: b(`en`)
+  let t = uiSwitchK({
+    locale: vueBn(`en`)
   });
   return w(() => e?.value || t.locale?.value || `en`);
 }
@@ -1823,7 +1823,7 @@ function mr(e) {
       };
       return e.placeholder.value.calendar.identifier === `gregory` && e.placeholder.value.era === `BC` && (t.era = `short`), t;
     }),
-    r = b(Q({
+    r = vueBn(Q({
       dateObj: e.placeholder.value,
       weekStartsOn: e.weekStartsOn.value,
       locale: e.locale.value,
@@ -1927,7 +1927,7 @@ function mr(e) {
         ...a
       });
     };
-  re(e.placeholder, t => {
+  vueWt(e.placeholder, t => {
     i.value.some(item => xe(item, t)) || (r.value = Q({
       dateObj: t,
       weekStartsOn: e.weekStartsOn.value,
@@ -1935,7 +1935,7 @@ function mr(e) {
       fixedWeeks: e.fixedWeeks.value,
       numberOfMonths: e.numberOfMonths.value
     }));
-  }), re([e.locale, e.weekStartsOn, e.fixedWeeks, e.numberOfMonths], () => {
+  }), vueWt([e.locale, e.weekStartsOn, e.fixedWeeks, e.numberOfMonths], () => {
     r.value = Q({
       dateObj: e.placeholder.value,
       weekStartsOn: e.weekStartsOn.value,
@@ -1988,8 +1988,8 @@ function mr(e) {
     })
   };
 }
-var [$, hr] = m(`PopoverRoot`),
-  gr = S({
+var [$, hr] = uiSwitchYt(`PopoverRoot`),
+  gr = vueJ({
     __name: `PopoverRoot`,
     props: {
       defaultOpen: {
@@ -2016,8 +2016,8 @@ var [$, hr] = m(`PopoverRoot`),
         emitAlias = emit,
         {
           modal: i
-        } = ee(propsAlias),
-        a = l(propsAlias, `open`, emitAlias, {
+        } = vueDn(propsAlias),
+        a = uiSwitchAt(propsAlias, `open`, emitAlias, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         });
@@ -2032,18 +2032,18 @@ var [$, hr] = m(`PopoverRoot`),
         onOpenToggle: () => {
           a.value = !a.value;
         },
-        triggerElement: b(),
-        hasCustomAnchor: b(false)
-      }), (e, t) => (x(), y(g(le), null, {
-        default: v(() => [_(e.$slots, `default`, {
-          open: g(a),
+        triggerElement: vueBn(),
+        hasCustomAnchor: vueBn(false)
+      }), (e, t) => (vueGt(), vueB(vueAn(PopperContentA), null, {
+        default: vueYt(() => [vueCt(e.$slots, `default`, {
+          open: vueAn(a),
           close: () => a.value = false
         })]),
         _: 3
       }));
     }
   }),
-  _r = S({
+  _r = vueJ({
     __name: `PopoverContentImpl`,
     props: {
       trapFocus: {
@@ -2149,32 +2149,32 @@ var [$, hr] = m(`PopoverRoot`),
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        s = e(f(propsAlias, `trapFocus`, `disableOutsidePointerEvents`)),
+        s = uiSwitchB(uiSwitchLt(propsAlias, `trapFocus`, `disableOutsidePointerEvents`)),
         {
           forwardRef: c
-        } = o(),
+        } = uiSwitchV(),
         l = $();
-      return fe(), (e, t) => (x(), y(g(a), {
+      return PopperContentO(), (e, renderCache) => (vueGt(), vueB(vueAn(uiSwitchO), {
         "as-child": ``,
         loop: ``,
         trapped: e.trapFocus,
-        onMountAutoFocus: t[5] ||= e => emitAlias(`openAutoFocus`, e),
-        onUnmountAutoFocus: t[6] ||= e => emitAlias(`closeAutoFocus`, e)
+        onMountAutoFocus: renderCache[5] ||= e => emitAlias(`openAutoFocus`, e),
+        onUnmountAutoFocus: renderCache[6] ||= e => emitAlias(`closeAutoFocus`, e)
       }, {
-        default: v(() => [ie(g(d), {
+        default: vueYt(() => [vueK(vueAn(d), {
           "as-child": ``,
           "disable-outside-pointer-events": e.disableOutsidePointerEvents,
-          onPointerDownOutside: t[0] ||= e => emitAlias(`pointerDownOutside`, e),
-          onInteractOutside: t[1] ||= e => emitAlias(`interactOutside`, e),
-          onEscapeKeyDown: t[2] ||= e => emitAlias(`escapeKeyDown`, e),
-          onFocusOutside: t[3] ||= e => emitAlias(`focusOutside`, e),
-          onDismiss: t[4] ||= e => g(l).onOpenChange(false)
+          onPointerDownOutside: renderCache[0] ||= e => emitAlias(`pointerDownOutside`, e),
+          onInteractOutside: renderCache[1] ||= e => emitAlias(`interactOutside`, e),
+          onEscapeKeyDown: renderCache[2] ||= e => emitAlias(`escapeKeyDown`, e),
+          onFocusOutside: renderCache[3] ||= e => emitAlias(`focusOutside`, e),
+          onDismiss: renderCache[4] ||= e => vueAn(l).onOpenChange(false)
         }, {
-          default: v(() => [ie(g(de), C(g(s), {
-            id: g(l).contentId,
-            ref: g(c),
-            "data-state": g(l).open.value ? `open` : `closed`,
-            "aria-labelledby": g(l).triggerId,
+          default: vueYt(() => [vueK(vueAn(PopperContentN), vueNt(vueAn(s), {
+            id: vueAn(l).contentId,
+            ref: vueAn(c),
+            "data-state": vueAn(l).open.value ? `open` : `closed`,
+            "aria-labelledby": vueAn(l).triggerId,
             style: {
               "--reka-popover-content-transform-origin": `var(--reka-popper-transform-origin)`,
               "--reka-popover-content-available-width": `var(--reka-popper-available-width)`,
@@ -2184,7 +2184,7 @@ var [$, hr] = m(`PopoverRoot`),
             },
             role: `dialog`
           }), {
-            default: v(() => [_(e.$slots, `default`)]),
+            default: vueYt(() => [vueCt(e.$slots, `default`)]),
             _: 3
           }, 16, [`id`, `data-state`, `aria-labelledby`])]),
           _: 3
@@ -2193,7 +2193,7 @@ var [$, hr] = m(`PopoverRoot`),
       }, 8, [`trapped`]));
     }
   }),
-  vr = S({
+  vr = vueJ({
     __name: `PopoverContentModal`,
     props: {
       memoDependencies: {
@@ -2296,19 +2296,19 @@ var [$, hr] = m(`PopoverRoot`),
       let propsAlias = props,
         emitAlias = emit,
         a = $(),
-        c = b(false);
-      s(true);
-      let l = h(propsAlias, emitAlias),
+        c = vueBn(false);
+      uiSwitchW(true);
+      let l = uiSwitchZ(propsAlias, emitAlias),
         {
           forwardRef: u,
           currentElement: d
-        } = o();
-      return r(d), (e, event) => (x(), y(_r, C(g(l), {
-        ref: g(u),
-        "trap-focus": g(a).open.value,
+        } = uiSwitchV();
+      return uiSwitchL(d), (e, event) => (vueGt(), vueB(_r, vueNt(vueAn(l), {
+        ref: vueAn(u),
+        "trap-focus": vueAn(a).open.value,
         "disable-outside-pointer-events": ``,
-        onCloseAutoFocus: event[0] ||= se(e => {
-          emitAlias(`closeAutoFocus`, e), c.value || g(a).triggerElement.value?.focus();
+        onCloseAutoFocus: event[0] ||= playerE(e => {
+          emitAlias(`closeAutoFocus`, e), c.value || vueAn(a).triggerElement.value?.focus();
         }, [`prevent`]),
         onPointerDownOutside: event[1] ||= e => {
           emitAlias(`pointerDownOutside`, e);
@@ -2317,14 +2317,14 @@ var [$, hr] = m(`PopoverRoot`),
             fallbackValue = originalEvent.button === 2 || n;
           c.value = fallbackValue;
         },
-        onFocusOutside: event[2] ||= se(() => {}, [`prevent`])
+        onFocusOutside: event[2] ||= playerE(() => {}, [`prevent`])
       }), {
-        default: v(() => [_(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16, [`trap-focus`]));
     }
   }),
-  yr = S({
+  yr = vueJ({
     __name: `PopoverContentNonModal`,
     props: {
       memoDependencies: {
@@ -2427,27 +2427,27 @@ var [$, hr] = m(`PopoverRoot`),
       let eventAlias = event,
         emitAlias = emit,
         i = $(),
-        a = b(false),
-        o = b(false),
-        s = h(eventAlias, emitAlias);
-      return (ctx, renderCache) => (x(), y(_r, C(g(s), {
+        a = vueBn(false),
+        o = vueBn(false),
+        s = uiSwitchZ(eventAlias, emitAlias);
+      return (ctx, renderCache) => (vueGt(), vueB(_r, vueNt(vueAn(s), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,
         onCloseAutoFocus: renderCache[0] ||= e => {
-          emitAlias(`closeAutoFocus`, e), e.defaultPrevented || (a.value || g(i).triggerElement.value?.focus(), e.preventDefault()), a.value = false, o.value = false;
+          emitAlias(`closeAutoFocus`, e), e.defaultPrevented || (a.value || vueAn(i).triggerElement.value?.focus(), e.preventDefault()), a.value = false, o.value = false;
         },
         onInteractOutside: renderCache[1] ||= async e => {
           emitAlias(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
           let t = e.target;
-          g(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
+          vueAn(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
         }
       }), {
-        default: v(() => [_(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  br = S({
+  br = vueJ({
     __name: `PopoverContent`,
     props: {
       forceMount: {
@@ -2554,33 +2554,33 @@ var [$, hr] = m(`PopoverRoot`),
       let propsAlias = props,
         emitAlias = emit,
         s = $(),
-        c = h(propsAlias, emitAlias),
+        c = uiSwitchZ(propsAlias, emitAlias),
         {
           forwardRef: l
-        } = o();
-      return s.contentId ||= t(undefined, `reka-popover-content`), (e, t) => (x(), y(g(i), {
-        present: e.forceMount || g(s).open.value
+        } = uiSwitchV();
+      return s.contentId ||= uiSwitchI(undefined, `reka-popover-content`), (e, t) => (vueGt(), vueB(vueAn(uiSwitchN), {
+        present: e.forceMount || vueAn(s).open.value
       }, {
-        default: v(() => [g(s).modal.value ? (x(), y(vr, C({
+        default: vueYt(() => [vueAn(s).modal.value ? (vueGt(), vueB(vr, vueNt({
           key: 0
-        }, g(c), {
-          ref: g(l)
+        }, vueAn(c), {
+          ref: vueAn(l)
         }), {
-          default: v(() => [_(e.$slots, `default`)]),
+          default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
-        }, 16)) : (x(), y(yr, C({
+        }, 16)) : (vueGt(), vueB(yr, vueNt({
           key: 1
-        }, g(c), {
-          ref: g(l)
+        }, vueAn(c), {
+          ref: vueAn(l)
         }), {
-          default: v(() => [_(e.$slots, `default`)]),
+          default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
         }, 16))]),
         _: 3
       }, 8, [`present`]));
     }
   }),
-  xr = S({
+  xr = vueJ({
     __name: `PopoverPortal`,
     props: {
       to: {
@@ -2602,13 +2602,13 @@ var [$, hr] = m(`PopoverRoot`),
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (x(), y(g(c), ae(ne(propsAlias)), {
-        default: v(() => [_(ctx.$slots, `default`)]),
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitch), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  Sr = S({
+  Sr = vueJ({
     __name: `PopoverTrigger`,
     props: {
       asChild: {
@@ -2627,32 +2627,32 @@ var [$, hr] = m(`PopoverRoot`),
         {
           forwardRef: i,
           currentElement: a
-        } = o();
-      return r.triggerId ||= t(undefined, `reka-popover-trigger`), r.contentId ||= t(undefined, `reka-popover-content`), oe(() => {
+        } = uiSwitchV();
+      return r.triggerId ||= uiSwitchI(undefined, `reka-popover-trigger`), r.contentId ||= uiSwitchI(undefined, `reka-popover-content`), vueUt(() => {
         r.triggerElement.value = a.value;
-      }), (e, t) => (x(), y(te(g(r).hasCustomAnchor.value ? g(u) : g(ue)), {
+      }), (e, t) => (vueGt(), vueB(vueEt(vueAn(r).hasCustomAnchor.value ? vueAn(uiSwitchJ) : vueAn(PopperContentI)), {
         "as-child": ``
       }, {
-        default: v(() => [ie(g(u), {
-          id: g(r).triggerId,
-          ref: g(i),
+        default: vueYt(() => [vueK(vueAn(uiSwitchJ), {
+          id: vueAn(r).triggerId,
+          ref: vueAn(i),
           type: e.as === `button` ? `button` : undefined,
           "aria-haspopup": `dialog`,
-          "aria-expanded": g(r).open.value,
-          "aria-controls": g(r).open.value ? g(r).contentId : undefined,
-          "data-state": g(r).open.value ? `open` : `closed`,
+          "aria-expanded": vueAn(r).open.value,
+          "aria-controls": vueAn(r).open.value ? vueAn(r).contentId : undefined,
+          "data-state": vueAn(r).open.value ? `open` : `closed`,
           as: e.as,
           "as-child": propsAlias.asChild,
-          onClick: g(r).onOpenToggle
+          onClick: vueAn(r).onOpenToggle
         }, {
-          default: v(() => [_(e.$slots, `default`)]),
+          default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
         }, 8, [`id`, `type`, `aria-expanded`, `aria-controls`, `data-state`, `as`, `as-child`, `onClick`])]),
         _: 3
       }));
     }
   }),
-  Cr = S({
+  Cr = vueJ({
     __name: `Popover`,
     props: {
       defaultOpen: {
@@ -2669,16 +2669,16 @@ var [$, hr] = m(`PopoverRoot`),
     setup(props, {
       emit: emit
     }) {
-      let n = h(props, emit);
-      return (ctx, renderCache) => (x(), y(g(gr), C({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(gr), vueNt({
         "data-slot": `popover`
-      }, g(n)), {
-        default: v(t => [_(ctx.$slots, `default`, ae(ne(t)))]),
+      }, vueAn(n)), {
+        default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
     }
   }),
-  wr = S({
+  wr = vueJ({
     inheritAttrs: false,
     __name: `PopoverContent`,
     props: {
@@ -2740,25 +2740,25 @@ var [$, hr] = m(`PopoverRoot`),
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = f(propsAlias, `class`),
-        a = h(i, emitAlias);
-      return (ctx, renderCache) => (x(), y(g(xr), null, {
-        default: v(() => [ie(g(br), C({
+        i = uiSwitchLt(propsAlias, `class`),
+        a = uiSwitchZ(i, emitAlias);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(xr), null, {
+        default: vueYt(() => [vueK(vueAn(br), vueNt({
           "data-slot": `popover-content`
         }, {
           ...ctx.$attrs,
-          ...g(a)
+          ...vueAn(a)
         }, {
-          class: g(p)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, propsAlias.class)
+          class: vueAn(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, propsAlias.class)
         }), {
-          default: v(() => [_(ctx.$slots, `default`)]),
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
       }));
     }
   }),
-  Tr = S({
+  Tr = vueJ({
     __name: `PopoverTrigger`,
     props: {
       asChild: {
@@ -2768,10 +2768,10 @@ var [$, hr] = m(`PopoverRoot`),
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (x(), y(g(Sr), C({
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(Sr), vueNt({
         "data-slot": `popover-trigger`
       }, propsAlias), {
-        default: v(() => [_(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }

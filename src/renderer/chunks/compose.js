@@ -1,6 +1,6 @@
-import { r as e } from "../ui/icons/lucide-icons.js";
-import { l as t, o as n } from "./screenshot-beautifier.js";
-var r = e(`scan-text`, [[`path`, {
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+import { l as beautifierL, o as beautifierO } from "./screenshot-beautifier.js";
+var r = lucideR(`scan-text`, [[`path`, {
   d: `M3 7V5a2 2 0 0 1 2-2h2`,
   key: `aa7l1z`
 }], [`path`, {
@@ -549,7 +549,7 @@ function G(e, t, r, i) {
       } else n.ready.then(() => t.onBackgroundLoaded?.(), () => {});
     }
   } else if (a.backgroundKind === `solid`) e.fillStyle = a.backgroundColor, e.fillRect(0, 0, o, s);else if (a.backgroundKind === `gradient`) {
-    let fallbackValue = n.find(item => item.id === a.gradientId) ?? n[0],
+    let fallbackValue = beautifierO.find(item => item.id === a.gradientId) ?? beautifierO[0],
       linearGradient = e.createLinearGradient(0, 0, o, s);
     linearGradient.addColorStop(0, fallbackValue.stops[0]), linearGradient.addColorStop(1, fallbackValue.stops[1]), e.fillStyle = linearGradient, e.fillRect(0, 0, o, s);
   } else a.backgroundKind === `blur` && H(e, t.source, o, s);
@@ -634,7 +634,7 @@ function q(e, t, n, r = 1, event) {
 async function J(el) {
   el.style.enabled && el.style.backgroundKind === `image` && el.style.backgroundImage && (await W(el.style.backgroundImage).ready);
   let n = B(el),
-    r = Math.min(1, t / Math.max(n.width, n.height)),
+    r = Math.min(1, beautifierL / Math.max(n.width, n.height)),
     o = i(Math.round(n.width * r), Math.round(n.height * r));
   q(a(o), el, n, r);
   let s = await c(o),

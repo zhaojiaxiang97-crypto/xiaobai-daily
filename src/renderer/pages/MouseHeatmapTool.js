@@ -1,12 +1,12 @@
-import { r as e } from "../ui/Switch.js";
-import { An as t, E as n, Et as r, O as i, S as a, St as o, Yt as s, b as c, c as l, fn as u, gt as d, j as f, k as p, nr as m, rr as h, v as g, x as _, y as v } from "../chunks/vue-i18n.runtime.js";
-import { l as y, s as b } from "../chunks/HeatMapRangePicker.js";
-import { t as x } from "../i18n/i18n-helper.js";
-import { O as S } from "../chunks/work-motivator.js";
-import { x as C } from "../chunks/tool-icons.js";
-import { t as w } from "../chunks/toolSettingsContext.js";
-import { Q as T, Z as E, m as D } from "../chunks/main.js";
-import { t as O } from "./DesktopWidgetPage.js";
+import { r as uiSwitchR } from "../ui/Switch.js";
+import { An as vueAn, E as vueE, Et as vueEt, O as vueO, S as vueS, St as vueSt, Yt as vueYt, b as vueB, c as vueC, fn as vueFn, gt as vueGt, j as vueJ, k as vueK, nr as vueNr, rr as vueRr, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { l as heatRangeL, s as heatRangeS } from "../chunks/HeatMapRangePicker.js";
+import { t as i18nT } from "../i18n/i18n-helper.js";
+import { O as motivatorO } from "../chunks/work-motivator.js";
+import { x as toolIconX } from "../chunks/tool-icons.js";
+import { t as toolSettingsT } from "../chunks/toolSettingsContext.js";
+import { Q as mainQ, Z as mainZ, m as mainM } from "../chunks/main.js";
+import { t as DesktopWidgetPageT } from "./DesktopWidgetPage.js";
 var k = {
     class: `grid gap-5 rounded-xl border border-border bg-card p-5 @3xl:grid-cols-[minmax(0,1fr)_280px] @3xl:items-center`
   },
@@ -47,7 +47,7 @@ var k = {
   V = {
     class: `text-[11px] leading-snug text-muted-foreground`
   },
-  H = f({
+  H = vueJ({
     __name: `MouseHeatmapPreview`,
     props: {
       enableDisabled: {
@@ -61,7 +61,7 @@ var k = {
       let emitAlias = emit,
         {
           t: g
-        } = x(),
+        } = i18nT(),
         joined = [{
           x: 14,
           y: 18,
@@ -99,35 +99,35 @@ var k = {
           alpha: .22
         }].map(count => `radial-gradient(circle at ${count.x}% ${count.y}%, rgba(22, 163, 74, ${count.alpha}) 0, rgba(22, 163, 74, 0) ${count.size}%)`).join(`, `),
         y = [{
-          icon: C,
+          icon: toolIconX,
           title: `toolboxNative.mouseHeatmapPointCountTitle`,
           desc: `toolboxNative.mouseHeatmapPointCountDesc`
         }, {
-          icon: S,
+          icon: motivatorO,
           title: `toolboxNative.mouseHeatmapPointPrivacyTitle`,
           desc: `toolboxNative.mouseHeatmapPointPrivacyDesc`
         }, {
-          icon: b,
+          icon: heatRangeS,
           title: `toolboxNative.mouseHeatmapPointLocalTitle`,
           desc: `toolboxNative.mouseHeatmapPointLocalDesc`
         }];
-      return (ctx, renderCache) => (d(), a(`section`, k, [v(`div`, A, [v(`div`, j, [v(`div`, {
+      return (ctx, renderCache) => (vueGt(), vueS(`section`, k, [vueY(`div`, A, [vueY(`div`, j, [vueY(`div`, {
         class: `aspect-[16/9] w-full rounded-lg border border-border/70 bg-[#f1f1ef] dark:bg-[#22262a]`,
-        style: m({
-          backgroundImage: t(joined)
+        style: vueNr({
+          backgroundImage: vueAn(joined)
         })
-      }, null, 4)]), v(`span`, M, h(t(g)(`toolboxNative.mouseHeatmapSample`)), 1)]), v(`div`, N, [v(`div`, P, [v(`strong`, F, h(t(g)(`toolboxNative.mouseHeatmapPreviewTitle`)), 1), v(`small`, I, h(t(g)(`toolboxNative.mouseHeatmapPreviewDesc`)), 1)]), v(`ul`, L, [(d(), a(l, null, o(y, e => v(`li`, {
+      }, null, 4)]), vueY(`span`, M, vueRr(vueAn(g)(`toolboxNative.mouseHeatmapSample`)), 1)]), vueY(`div`, N, [vueY(`div`, P, [vueY(`strong`, F, vueRr(vueAn(g)(`toolboxNative.mouseHeatmapPreviewTitle`)), 1), vueY(`small`, I, vueRr(vueAn(g)(`toolboxNative.mouseHeatmapPreviewDesc`)), 1)]), vueY(`ul`, L, [(vueGt(), vueS(vueC, null, vueSt(y, e => vueY(`li`, {
         key: e.title,
         class: `flex gap-2.5`
-      }, [v(`span`, R, [(d(), c(r(e.icon), {
+      }, [vueY(`span`, R, [(vueGt(), vueB(vueEt(e.icon), {
         size: 14
-      }))]), v(`span`, z, [v(`strong`, B, h(t(g)(e.title)), 1), v(`small`, V, h(t(g)(e.desc)), 1)])])), 64))]), p(t(e), {
+      }))]), vueY(`span`, z, [vueY(`strong`, B, vueRr(vueAn(g)(e.title)), 1), vueY(`small`, V, vueRr(vueAn(g)(e.desc)), 1)])])), 64))]), vueK(vueAn(uiSwitchR), {
         size: `sm`,
         class: `self-start`,
         disabled: props.enableDisabled,
         onClick: renderCache[0] ||= e => emitAlias(`enable`)
       }, {
-        default: s(() => [i(h(t(g)(`toolboxNative.mouseHeatmapEnableAction`)), 1)]),
+        default: vueYt(() => [vueO(vueRr(vueAn(g)(`toolboxNative.mouseHeatmapEnableAction`)), 1)]),
         _: 1
       }, 8, [`disabled`])])]));
     }
@@ -149,7 +149,7 @@ var k = {
     class: `flex items-center gap-1.5`
   },
   J = `toolbox-mouse-heatmap-range`,
-  Y = f({
+  Y = vueJ({
     __name: `MouseHeatmapTool`,
     props: {
       tool: {},
@@ -168,12 +168,12 @@ var k = {
       let propsAlias = props,
         emitAlias = emit,
         {
-          t: m
-        } = x(),
+          t: translate
+        } = i18nT(),
         {
           controlsDisabled: b,
           navigate: S
-        } = w(),
+        } = toolSettingsT(),
         {
           mouseHeatmapEnabled: C,
           mouseHeatmapAppUsageOff: k,
@@ -181,59 +181,59 @@ var k = {
           isChangingMouseHeatmap: j,
           handleMouseHeatmapToggle: M,
           enableMouseHeatmap: N
-        } = E(`toolbox`),
-        P = g(() => b.value || j.value),
-        F = g(() => C.value && !k.value ? m(`settings.mouseHeatmapRunning`) : undefined),
-        I = g(() => C.value && k.value);
-      return (ctx, renderCache) => (d(), c(O, {
+        } = mainZ(`toolbox`),
+        P = vueV(() => b.value || j.value),
+        F = vueV(() => C.value && !k.value ? translate(`settings.mouseHeatmapRunning`) : undefined),
+        I = vueV(() => C.value && k.value);
+      return (ctx, renderCache) => (vueGt(), vueB(DesktopWidgetPageT, {
         tool: propsAlias.tool,
         user: propsAlias.user,
         "credits-balance": propsAlias.creditsBalance,
-        description: t(m)(`toolboxNative.mouseHeatmapToolIntro`),
-        enabled: t(C),
+        description: vueAn(translate)(`toolboxNative.mouseHeatmapToolIntro`),
+        enabled: vueAn(C),
         "toggle-disabled": P.value,
         "status-text": F.value,
-        onToggle: t(M),
+        onToggle: vueAn(M),
         onBack: renderCache[4] ||= e => emitAlias(`back`)
-      }, n({
-        default: s(() => [t(C) ? (d(), a(`section`, W, [v(`header`, G, [v(`strong`, K, h(t(m)(`toolboxNative.mouseHeatmapDataTitle`)), 1), v(`div`, q, [v(`div`, {
+      }, vueE({
+        default: vueYt(() => [vueAn(C) ? (vueGt(), vueS(`section`, W, [vueY(`header`, G, [vueY(`strong`, K, vueRr(vueAn(translate)(`toolboxNative.mouseHeatmapDataTitle`)), 1), vueY(`div`, q, [vueY(`div`, {
           id: J,
           class: `flex items-center`
-        }), p(t(e), {
+        }), vueK(vueAn(uiSwitchR), {
           variant: `ghost`,
           size: `sm`,
           class: `h-7 gap-1 px-2 text-xs text-muted-foreground`,
-          onClick: renderCache[1] ||= e => t(S)(`heat-map-mouse`)
+          onClick: renderCache[1] ||= e => vueAn(S)(`heat-map-mouse`)
         }, {
-          default: s(() => [i(h(t(m)(`toolboxNative.mouseHeatmapOpenPage`)), 1), p(t(y), {
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`toolboxNative.mouseHeatmapOpenPage`)), 1), vueK(vueAn(heatRangeL), {
             size: 14
           })]),
           _: 1
-        })])]), propsAlias.active ? (d(), c(D, {
+        })])]), propsAlias.active ? (vueGt(), vueB(mainM, {
           key: 0,
           "refresh-key": 0,
           "range-picker-target": `#${J}`,
           embedded: ``,
-          onNavigate: t(S)
-        }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, true)])) : (d(), c(H, {
+          onNavigate: vueAn(S)
+        }, null, 8, [`range-picker-target`, `onNavigate`])) : vueX(``, true)])) : (vueGt(), vueB(H, {
           key: 1,
           "enable-disabled": P.value,
-          onEnable: renderCache[2] ||= e => t(M)(true)
-        }, null, 8, [`enable-disabled`])), p(T, {
-          open: t(A),
-          "onUpdate:open": renderCache[3] ||= e => u(A) ? A.value = e : null,
-          onConfirm: t(N)
+          onEnable: renderCache[2] ||= e => vueAn(M)(true)
+        }, null, 8, [`enable-disabled`])), vueK(mainQ, {
+          open: vueAn(A),
+          "onUpdate:open": renderCache[3] ||= e => vueFn(A) ? A.value = e : null,
+          onConfirm: vueAn(N)
         }, null, 8, [`open`, `onConfirm`])]),
         _: 2
       }, [I.value ? {
         name: `notes`,
-        fn: s(() => [v(`div`, U, [v(`span`, null, h(t(m)(`settings.mouseHeatmapAppUsageOff`)), 1), p(t(e), {
+        fn: vueYt(() => [vueY(`div`, U, [vueY(`span`, null, vueRr(vueAn(translate)(`settings.mouseHeatmapAppUsageOff`)), 1), vueK(vueAn(uiSwitchR), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 shrink-0 text-xs`,
-          onClick: renderCache[0] ||= e => t(S)(`settings-app-usage-tracking`)
+          onClick: renderCache[0] ||= e => vueAn(S)(`settings-app-usage-tracking`)
         }, {
-          default: s(() => [i(h(t(m)(`settings.mouseHeatmapOpenAppUsage`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`settings.mouseHeatmapOpenAppUsage`)), 1)]),
           _: 1
         })])]),
         key: `0`

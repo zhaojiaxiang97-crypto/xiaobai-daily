@@ -1,8 +1,8 @@
-import { I as e, L as t, N as n, O as r, U as i, V as a, W as o, at as s, j as c, k as l, vt as u, w as d, yt as f } from "./Switch.js";
-import { An as p, Ct as m, Dn as h, Wt as g, Yt as _, Zt as v, b as y, bn as b, gt as x, j as S, k as C, nt as w, ut as T, v as E, x as D } from "../chunks/vue-i18n.runtime.js";
-import { E as O, w as k } from "../i18n/en-US-player.js";
-var [A, j] = f(`DialogRoot`),
-  M = S({
+import { I as uiSwitchI, L as uiSwitchL, N as uiSwitchN, O as uiSwitchO, U as uiSwitchU, V as uiSwitchV, W as uiSwitchW, at as uiSwitchAt, j as uiSwitchJ, k as uiSwitchK, vt as uiSwitchVt, w as d, yt as uiSwitchYt } from "./Switch.js";
+import { An as vueAn, Ct as vueCt, Dn as vueDn, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, gt as vueGt, j as vueJ, k as vueK, nt as vueNt, ut as vueUt, v as vueV, x as vueX } from "../chunks/vue-i18n.runtime.js";
+import { E as playerE, w as playerW } from "../i18n/en-US-player.js";
+var [A, j] = uiSwitchYt(`DialogRoot`),
+  M = vueJ({
     inheritAttrs: false,
     __name: `DialogRoot`,
     props: {
@@ -32,16 +32,16 @@ var [A, j] = f(`DialogRoot`),
       emit: emit
     }) {
       let propsAlias = props,
-        r = s(propsAlias, `open`, emit, {
+        r = uiSwitchAt(propsAlias, `open`, emit, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         }),
-        i = b(),
-        a = b(),
+        i = vueBn(),
+        a = vueBn(),
         {
           modal: o,
           unmountOnHide: c
-        } = h(propsAlias);
+        } = vueDn(propsAlias);
       return j({
         open: r,
         modal: o,
@@ -60,13 +60,13 @@ var [A, j] = f(`DialogRoot`),
         descriptionId: ``,
         triggerElement: i,
         contentElement: a
-      }), (e, t) => m(e.$slots, `default`, {
-        open: p(r),
+      }), (e, t) => vueCt(e.$slots, `default`, {
+        open: vueAn(r),
         close: () => r.value = false
       });
     }
   }),
-  N = S({
+  N = vueJ({
     __name: `DialogClose`,
     props: {
       asChild: {
@@ -81,18 +81,18 @@ var [A, j] = f(`DialogRoot`),
     },
     setup(props) {
       let propsAlias = props;
-      a();
+      uiSwitchV();
       let n = A();
-      return (ctx, renderCache) => (x(), y(p(c), w(propsAlias, {
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitchJ), vueNt(propsAlias, {
         type: ctx.as === `button` ? `button` : undefined,
-        onClick: renderCache[0] ||= e => p(n).onOpenChange(false)
+        onClick: renderCache[0] ||= e => vueAn(n).onOpenChange(false)
       }), {
-        default: _(() => [m(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`type`]));
     }
   }),
-  P = S({
+  P = vueJ({
     __name: `DialogContentImpl`,
     props: {
       forceMount: {
@@ -130,43 +130,43 @@ var [A, j] = f(`DialogRoot`),
         {
           forwardRef: c,
           currentElement: f
-        } = a();
-      return s.titleId ||= e(undefined, `reka-dialog-title`), s.descriptionId ||= e(undefined, `reka-dialog-description`), T(() => {
-        s.contentElement = f, u() !== document.body && (s.triggerElement.value = u());
-      }), (e, t) => (x(), y(p(r), {
+        } = uiSwitchV();
+      return s.titleId ||= uiSwitchI(undefined, `reka-dialog-title`), s.descriptionId ||= uiSwitchI(undefined, `reka-dialog-description`), vueUt(() => {
+        s.contentElement = f, uiSwitchVt() !== document.body && (s.triggerElement.value = uiSwitchVt());
+      }), (e, renderCache) => (vueGt(), vueB(vueAn(uiSwitchO), {
         "as-child": ``,
         loop: ``,
         trapped: propsAlias.trapFocus,
         present: propsAlias.present,
-        onMountAutoFocus: t[5] ||= e => emitAlias(`openAutoFocus`, e),
-        onUnmountAutoFocus: t[6] ||= e => emitAlias(`closeAutoFocus`, e)
+        onMountAutoFocus: renderCache[5] ||= e => emitAlias(`openAutoFocus`, e),
+        onUnmountAutoFocus: renderCache[6] ||= e => emitAlias(`closeAutoFocus`, e)
       }, {
-        default: _(() => [C(p(l), w({
-          id: p(s).contentId,
-          ref: p(c),
+        default: vueYt(() => [vueK(vueAn(uiSwitchK), vueNt({
+          id: vueAn(s).contentId,
+          ref: vueAn(c),
           as: e.as,
           "as-child": e.asChild,
           present: propsAlias.present,
           "disable-outside-pointer-events": e.disableOutsidePointerEvents,
           role: `dialog`,
-          "aria-describedby": p(s).descriptionId,
-          "aria-labelledby": p(s).titleId,
-          "data-state": p(d)(p(s).open.value)
+          "aria-describedby": vueAn(s).descriptionId,
+          "aria-labelledby": vueAn(s).titleId,
+          "data-state": vueAn(d)(vueAn(s).open.value)
         }, e.$attrs, {
-          onDismiss: t[0] ||= e => p(s).onOpenChange(false),
-          onEscapeKeyDown: t[1] ||= e => emitAlias(`escapeKeyDown`, e),
-          onFocusOutside: t[2] ||= e => emitAlias(`focusOutside`, e),
-          onInteractOutside: t[3] ||= e => emitAlias(`interactOutside`, e),
-          onPointerDownOutside: t[4] ||= e => emitAlias(`pointerDownOutside`, e)
+          onDismiss: renderCache[0] ||= e => vueAn(s).onOpenChange(false),
+          onEscapeKeyDown: renderCache[1] ||= e => emitAlias(`escapeKeyDown`, e),
+          onFocusOutside: renderCache[2] ||= e => emitAlias(`focusOutside`, e),
+          onInteractOutside: renderCache[3] ||= e => emitAlias(`interactOutside`, e),
+          onPointerDownOutside: renderCache[4] ||= e => emitAlias(`pointerDownOutside`, e)
         }), {
-          default: _(() => [m(e.$slots, `default`)]),
+          default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
         }, 16, [`id`, `as`, `as-child`, `present`, `disable-outside-pointer-events`, `aria-describedby`, `aria-labelledby`, `data-state`])]),
         _: 3
       }, 8, [`trapped`, `present`]));
     }
   }),
-  F = S({
+  F = vueJ({
     __name: `DialogContentModal`,
     props: {
       forceMount: {
@@ -202,32 +202,32 @@ var [A, j] = f(`DialogRoot`),
       let eventAlias = event,
         emitAlias = emit,
         s = A(),
-        c = i(emitAlias),
+        c = uiSwitchU(emitAlias),
         {
           forwardRef: l,
           currentElement: u
-        } = a(),
-        d = E(() => eventAlias.present ? u.value : undefined);
-      t(d);
-      let f = E(() => {
+        } = uiSwitchV(),
+        d = vueV(() => eventAlias.present ? u.value : undefined);
+      uiSwitchL(d);
+      let f = vueV(() => {
         let {
           present: e,
           ...t
         } = eventAlias;
         return t;
       });
-      return g(() => eventAlias.present, (e, t) => {
+      return vueWt(() => eventAlias.present, (e, t) => {
         !e && t && s.triggerElement.value?.focus();
-      }), (e, t) => (x(), y(P, w({
+      }), (e, t) => (vueGt(), vueB(P, vueNt({
         ...f.value,
-        ...p(c)
+        ...vueAn(c)
       }, {
-        ref: p(l),
+        ref: vueAn(l),
         present: e.present,
-        "trap-focus": p(s).open.value,
+        "trap-focus": vueAn(s).open.value,
         "disable-outside-pointer-events": eventAlias.disableOutsidePointerEvents,
         onCloseAutoFocus: t[0] ||= e => {
-          e.defaultPrevented || (e.preventDefault(), p(s).triggerElement.value?.focus());
+          e.defaultPrevented || (e.preventDefault(), vueAn(s).triggerElement.value?.focus());
         },
         onPointerDownOutside: t[1] ||= e => {
           let originalEvent = e.detail.originalEvent,
@@ -238,12 +238,12 @@ var [A, j] = f(`DialogRoot`),
           e.preventDefault();
         }
       }), {
-        default: _(() => [m(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16, [`present`, `trap-focus`, `disable-outside-pointer-events`]));
     }
   }),
-  I = S({
+  I = vueJ({
     __name: `DialogContentNonModal`,
     props: {
       forceMount: {
@@ -276,42 +276,42 @@ var [A, j] = f(`DialogRoot`),
       emit: emit
     }) {
       let eventAlias = event,
-        r = i(emit);
-      a();
+        r = uiSwitchU(emit);
+      uiSwitchV();
       let o = A(),
-        s = b(false),
-        c = b(false),
-        l = E(() => {
+        s = vueBn(false),
+        c = vueBn(false),
+        l = vueV(() => {
           let {
             present: e,
             ...t
           } = eventAlias;
           return t;
         });
-      return g(() => eventAlias.present, (e, t) => {
+      return vueWt(() => eventAlias.present, (e, t) => {
         !e && t && (s.value || o.triggerElement.value?.focus(), s.value = false, c.value = false);
-      }), (e, t) => (x(), y(P, w({
+      }), (e, t) => (vueGt(), vueB(P, vueNt({
         ...l.value,
-        ...p(r)
+        ...vueAn(r)
       }, {
         present: e.present,
         "trap-focus": false,
         "disable-outside-pointer-events": false,
         onCloseAutoFocus: t[0] ||= e => {
-          e.defaultPrevented || (s.value || p(o).triggerElement.value?.focus(), e.preventDefault()), s.value = false, c.value = false;
+          e.defaultPrevented || (s.value || vueAn(o).triggerElement.value?.focus(), e.preventDefault()), s.value = false, c.value = false;
         },
         onInteractOutside: t[1] ||= e => {
           e.defaultPrevented || (s.value = true, e.detail.originalEvent.type === `pointerdown` && (c.value = true));
           let t = e.target;
-          p(o).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && c.value && e.preventDefault();
+          vueAn(o).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && c.value && e.preventDefault();
         }
       }), {
-        default: _(() => [m(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16, [`present`]));
     }
   }),
-  L = S({
+  L = vueJ({
     __name: `DialogContent`,
     props: {
       forceMount: {
@@ -339,44 +339,44 @@ var [A, j] = f(`DialogRoot`),
       let propsAlias = props,
         emitAlias = emit,
         s = A(),
-        c = i(emitAlias),
+        c = uiSwitchU(emitAlias),
         {
           forwardRef: l
-        } = a();
-      return (ctx, renderCache) => (x(), y(p(n), {
-        present: ctx.forceMount || p(s).open.value,
-        "force-mount": ctx.forceMount || !p(s).unmountOnHide.value
+        } = uiSwitchV();
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitchN), {
+        present: ctx.forceMount || vueAn(s).open.value,
+        "force-mount": ctx.forceMount || !vueAn(s).unmountOnHide.value
       }, {
-        default: _(({
+        default: vueYt(({
           present: t
-        }) => [p(s).modal.value ? v((x(), y(F, w({
+        }) => [vueAn(s).modal.value ? vueZt((vueGt(), vueB(F, vueNt({
           key: 0,
-          ref: p(l),
-          present: p(s).unmountOnHide.value || t
+          ref: vueAn(l),
+          present: vueAn(s).unmountOnHide.value || t
         }, {
           ...propsAlias,
-          ...p(c),
+          ...vueAn(c),
           ...ctx.$attrs
         }), {
-          default: _(() => [m(ctx.$slots, `default`)]),
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 2
-        }, 1040, [`present`])), [[k, p(s).unmountOnHide.value || t]]) : v((x(), y(I, w({
+        }, 1040, [`present`])), [[playerW, vueAn(s).unmountOnHide.value || t]]) : vueZt((vueGt(), vueB(I, vueNt({
           key: 1,
-          ref: p(l),
-          present: p(s).unmountOnHide.value || t
+          ref: vueAn(l),
+          present: vueAn(s).unmountOnHide.value || t
         }, {
           ...propsAlias,
-          ...p(c),
+          ...vueAn(c),
           ...ctx.$attrs
         }), {
-          default: _(() => [m(ctx.$slots, `default`)]),
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 2
-        }, 1040, [`present`])), [[k, p(s).unmountOnHide.value || t]])]),
+        }, 1040, [`present`])), [[playerW, vueAn(s).unmountOnHide.value || t]])]),
         _: 3
       }, 8, [`present`, `force-mount`]));
     }
   }),
-  R = S({
+  R = vueJ({
     __name: `DialogDescription`,
     props: {
       asChild: {
@@ -391,17 +391,17 @@ var [A, j] = f(`DialogRoot`),
     },
     setup(props) {
       let propsAlias = props;
-      a();
+      uiSwitchV();
       let n = A();
-      return (ctx, renderCache) => (x(), y(p(c), w(propsAlias, {
-        id: p(n).descriptionId
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitchJ), vueNt(propsAlias, {
+        id: vueAn(n).descriptionId
       }), {
-        default: _(() => [m(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }
   }),
-  z = S({
+  z = vueJ({
     __name: `DialogOverlayImpl`,
     props: {
       asChild: {
@@ -421,22 +421,22 @@ var [A, j] = f(`DialogRoot`),
     setup(props) {
       let propsAlias = props,
         n = A(),
-        r = o(propsAlias.present);
-      return g(() => propsAlias.present, e => r.value = e), a(), (e, t) => (x(), y(p(c), {
+        r = uiSwitchW(propsAlias.present);
+      return vueWt(() => propsAlias.present, e => r.value = e), uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(uiSwitchJ), {
         as: e.as,
         "as-child": e.asChild,
-        "data-state": p(n).open.value ? `open` : `closed`,
+        "data-state": vueAn(n).open.value ? `open` : `closed`,
         style: {
           "pointer-events": `auto`
         },
-        onPointerdown: t[0] ||= O(() => {}, [`left`, `self`, `prevent`])
+        onPointerdown: t[0] ||= playerE(() => {}, [`left`, `self`, `prevent`])
       }, {
-        default: _(() => [m(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 8, [`as`, `as-child`, `data-state`]));
     }
   }),
-  B = S({
+  B = vueJ({
     __name: `DialogOverlay`,
     props: {
       forceMount: {
@@ -456,28 +456,28 @@ var [A, j] = f(`DialogRoot`),
       let t = A(),
         {
           forwardRef: r
-        } = a();
-      return (ctx, renderCache) => p(t)?.modal.value ? (x(), y(p(n), {
+        } = uiSwitchV();
+      return (ctx, renderCache) => vueAn(t)?.modal.value ? (vueGt(), vueB(vueAn(uiSwitchN), {
         key: 0,
-        present: ctx.forceMount || p(t).open.value,
-        "force-mount": ctx.forceMount || !p(t).unmountOnHide.value
+        present: ctx.forceMount || vueAn(t).open.value,
+        "force-mount": ctx.forceMount || !vueAn(t).unmountOnHide.value
       }, {
-        default: _(({
+        default: vueYt(({
           present: n
-        }) => [v(C(z, w(ctx.$attrs, {
-          ref: p(r),
+        }) => [vueZt(vueK(z, vueNt(ctx.$attrs, {
+          ref: vueAn(r),
           as: ctx.as,
           "as-child": ctx.asChild,
-          present: p(t).unmountOnHide.value || n
+          present: vueAn(t).unmountOnHide.value || n
         }), {
-          default: _(() => [m(ctx.$slots, `default`)]),
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 2
-        }, 1040, [`as`, `as-child`, `present`]), [[k, p(t).unmountOnHide.value || n]])]),
+        }, 1040, [`as`, `as-child`, `present`]), [[playerW, vueAn(t).unmountOnHide.value || n]])]),
         _: 3
-      }, 8, [`present`, `force-mount`])) : D(`v-if`, true);
+      }, 8, [`present`, `force-mount`])) : vueX(`v-if`, true);
     }
   }),
-  V = S({
+  V = vueJ({
     __name: `DialogTitle`,
     props: {
       asChild: {
@@ -493,10 +493,10 @@ var [A, j] = f(`DialogRoot`),
     setup(props) {
       let propsAlias = props,
         n = A();
-      return a(), (e, r) => (x(), y(p(c), w(propsAlias, {
-        id: p(n).titleId
+      return uiSwitchV(), (e, r) => (vueGt(), vueB(vueAn(uiSwitchJ), vueNt(propsAlias, {
+        id: vueAn(n).titleId
       }), {
-        default: _(() => [m(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }

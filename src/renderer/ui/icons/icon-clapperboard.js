@@ -1,5 +1,5 @@
-import { r as e } from "./lucide-icons.js";
-var t = e(`clapperboard`, [[`path`, {
+import { r as lucideR } from "./lucide-icons.js";
+var t = lucideR(`clapperboard`, [[`path`, {
   d: `m12.296 3.464 3.02 3.956`,
   key: `qash78`
 }], [`path`, {

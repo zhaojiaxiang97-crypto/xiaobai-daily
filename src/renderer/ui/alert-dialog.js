@@ -1,8 +1,8 @@
-import { U as e, V as t, _ as n, lt as r, n as i, xt as a, yt as o, z as s } from "./Switch.js";
-import { $n as c, An as l, Ct as u, S as d, V as f, Yt as p, b as m, bn as h, gt as g, j as _, k as v, nt as y, rt as b, tr as x, ut as S } from "../chunks/vue-i18n.runtime.js";
-import { E as C } from "../i18n/en-US-player.js";
-import { a as w, i as T, n as E, o as D, r as O, t as k } from "./DialogTitle.js";
-var A = _({
+import { U as uiSwitchU, V as uiSwitchV, _ as uiSwitch, lt as uiSwitchLt, n as uiSwitchN, xt as uiSwitchXt, yt as uiSwitchYt, z as uiSwitchZ } from "./Switch.js";
+import { $n as vueN, An as vueAn, Ct as vueCt, S as vueS, V as vueV, Yt as vueYt, b as vueB, bn as vueBn, gt as vueGt, j as vueJ, k as vueK, nt as vueNt, rt as vueRt, tr as vueTr, ut as vueUt } from "../chunks/vue-i18n.runtime.js";
+import { E as playerE } from "../i18n/en-US-player.js";
+import { a as DialogTitleA, i as DialogTitleI, n as DialogTitleN, o as DialogTitleO, r as DialogTitleR, t as DialogTitleT } from "./DialogTitle.js";
+var A = vueJ({
     __name: `AlertDialogAction`,
     props: {
       asChild: {
@@ -17,14 +17,14 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return t(), (e, t) => (g(), m(l(w), x(f(propsAlias)), {
-        default: p(() => [u(e.$slots, `default`)]),
+      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DialogTitleA), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  [j, M] = o(`AlertDialogContent`),
-  N = _({
+  [j, M] = uiSwitchYt(`AlertDialogContent`),
+  N = vueJ({
     __name: `AlertDialogContent`,
     props: {
       forceMount: {
@@ -50,34 +50,34 @@ var A = _({
       emit: emit
     }) {
       let propsAlias = props,
-        a = e(emit);
-      t();
-      let o = h();
+        a = uiSwitchU(emit);
+      uiSwitchV();
+      let o = vueBn();
       return M({
         onCancelElementChange: e => {
           o.value = e;
         }
-      }), (e, t) => (g(), m(l(T), y({
+      }), (e, renderCache) => (vueGt(), vueB(vueAn(DialogTitleI), vueNt({
         ...propsAlias,
-        ...l(a)
+        ...vueAn(a)
       }, {
         role: `alertdialog`,
-        onPointerDownOutside: t[0] ||= C(() => {}, [`prevent`]),
-        onInteractOutside: t[1] ||= C(() => {}, [`prevent`]),
-        onOpenAutoFocus: t[2] ||= () => {
-          b(() => {
+        onPointerDownOutside: renderCache[0] ||= playerE(() => {}, [`prevent`]),
+        onInteractOutside: renderCache[1] ||= playerE(() => {}, [`prevent`]),
+        onOpenAutoFocus: renderCache[2] ||= () => {
+          vueRt(() => {
             o.value?.focus({
               preventScroll: true
             });
           });
         }
       }), {
-        default: p(() => [u(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  P = _({
+  P = vueJ({
     __name: `AlertDialogCancel`,
     props: {
       asChild: {
@@ -96,18 +96,18 @@ var A = _({
         {
           forwardRef: i,
           currentElement: a
-        } = t();
-      return S(() => {
+        } = uiSwitchV();
+      return vueUt(() => {
         r.onCancelElementChange(a.value);
-      }), (e, t) => (g(), m(l(w), y(propsAlias, {
-        ref: l(i)
+      }), (e, t) => (vueGt(), vueB(vueAn(DialogTitleA), vueNt(propsAlias, {
+        ref: vueAn(i)
       }), {
-        default: p(() => [u(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  F = _({
+  F = vueJ({
     __name: `AlertDialogDescription`,
     props: {
       asChild: {
@@ -122,13 +122,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return t(), (e, t) => (g(), m(l(O), x(f(propsAlias)), {
-        default: p(() => [u(e.$slots, `default`)]),
+      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DialogTitleR), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  I = _({
+  I = vueJ({
     __name: `AlertDialogOverlay`,
     props: {
       forceMount: {
@@ -146,13 +146,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return t(), (e, t) => (g(), m(l(E), x(f(propsAlias)), {
-        default: p(() => [u(e.$slots, `default`)]),
+      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DialogTitleN), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  L = _({
+  L = vueJ({
     __name: `AlertDialogPortal`,
     props: {
       to: {
@@ -174,13 +174,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (g(), m(l(n), x(f(propsAlias)), {
-        default: p(() => [u(ctx.$slots, `default`)]),
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitch), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  R = _({
+  R = vueJ({
     __name: `AlertDialogRoot`,
     props: {
       open: {
@@ -200,16 +200,16 @@ var A = _({
     setup(props, {
       emit: emit
     }) {
-      let r = s(props, emit);
-      return t(), (e, t) => (g(), m(l(D), y(l(r), {
+      let r = uiSwitchZ(props, emit);
+      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DialogTitleO), vueNt(vueAn(r), {
         modal: true
       }), {
-        default: p(t => [u(e.$slots, `default`, x(f(t)))]),
+        default: vueYt(t => [vueCt(e.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
     }
   }),
-  z = _({
+  z = vueJ({
     __name: `AlertDialogTitle`,
     props: {
       asChild: {
@@ -224,13 +224,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return t(), (e, t) => (g(), m(l(k), x(f(propsAlias)), {
-        default: p(() => [u(e.$slots, `default`)]),
+      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DialogTitleT), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  B = _({
+  B = vueJ({
     __name: `AlertDialog`,
     props: {
       open: {
@@ -247,16 +247,16 @@ var A = _({
     setup(props, {
       emit: emit
     }) {
-      let n = s(props, emit);
-      return (ctx, renderCache) => (g(), m(l(R), y({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(R), vueNt({
         "data-slot": `alert-dialog`
-      }, l(n)), {
-        default: p(t => [u(ctx.$slots, `default`, x(f(t)))]),
+      }, vueAn(n)), {
+        default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
     }
   }),
-  V = _({
+  V = vueJ({
     __name: `AlertDialogAction`,
     props: {
       asChild: {
@@ -275,21 +275,21 @@ var A = _({
     },
     setup(count) {
       let countAlias = count,
-        n = r(countAlias, `class`, `variant`, `size`);
-      return (ctx, renderCache) => (g(), m(l(A), y({
+        n = uiSwitchLt(countAlias, `class`, `variant`, `size`);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(A), vueNt({
         "data-slot": `alert-dialog-action`
-      }, l(n), {
-        class: l(a)(``, l(i)({
+      }, vueAn(n), {
+        class: vueAn(uiSwitchXt)(``, vueAn(uiSwitchN)({
           variant: count.variant,
           size: count.size
         }), countAlias.class)
       }), {
-        default: p(() => [u(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
   }),
-  H = _({
+  H = vueJ({
     __name: `AlertDialogCancel`,
     props: {
       asChild: {
@@ -308,21 +308,21 @@ var A = _({
     },
     setup(count) {
       let countAlias = count,
-        n = r(countAlias, `class`, `variant`, `size`);
-      return (ctx, renderCache) => (g(), m(l(P), y({
+        n = uiSwitchLt(countAlias, `class`, `variant`, `size`);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(P), vueNt({
         "data-slot": `alert-dialog-cancel`
-      }, l(n), {
-        class: l(a)(``, l(i)({
+      }, vueAn(n), {
+        class: vueAn(uiSwitchXt)(``, vueAn(uiSwitchN)({
           variant: count.variant,
           size: count.size
         }), countAlias.class)
       }), {
-        default: p(() => [u(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
   }),
-  U = _({
+  U = vueJ({
     inheritAttrs: false,
     __name: `AlertDialogContent`,
     props: {
@@ -352,36 +352,36 @@ var A = _({
     }) {
       let countAlias = count,
         emitAlias = emit,
-        o = r(countAlias, `class`, `size`, `overlayClass`),
-        d = s(o, emitAlias);
-      return (ctx, renderCache) => (g(), m(l(L), null, {
-        default: p(() => [v(l(I), {
+        o = uiSwitchLt(countAlias, `class`, `size`, `overlayClass`),
+        d = uiSwitchZ(o, emitAlias);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(L), null, {
+        default: vueYt(() => [vueK(vueAn(I), {
           "data-slot": `alert-dialog-overlay`,
-          class: c(l(a)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 z-50`, countAlias.overlayClass)),
+          class: vueN(vueAn(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 z-50`, countAlias.overlayClass)),
           style: {
             "-webkit-app-region": `no-drag`
           }
-        }, null, 8, [`class`]), v(l(N), y({
+        }, null, 8, [`class`]), vueK(vueAn(N), vueNt({
           "data-slot": `alert-dialog-content`,
           "data-size": count.size
         }, {
           ...ctx.$attrs,
-          ...l(d)
+          ...vueAn(d)
         }, {
-          class: l(a)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-popover text-popover-foreground ring-foreground/10 gap-4 rounded-xl p-4 ring-1 duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none`, countAlias.class),
+          class: vueAn(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-popover text-popover-foreground ring-foreground/10 gap-4 rounded-xl p-4 ring-1 duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none`, countAlias.class),
           style: {
             "-webkit-app-region": `no-drag`,
             "pointer-events": `auto`
           }
         }), {
-          default: p(() => [u(ctx.$slots, `default`)]),
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`data-size`, `class`])]),
         _: 3
       }));
     }
   }),
-  W = _({
+  W = vueJ({
     __name: `AlertDialogDescription`,
     props: {
       asChild: {
@@ -394,18 +394,18 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props,
-        n = r(propsAlias, `class`);
-      return (ctx, renderCache) => (g(), m(l(F), y({
+        n = uiSwitchLt(propsAlias, `class`);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(F), vueNt({
         "data-slot": `alert-dialog-description`
-      }, l(n), {
-        class: l(a)(`text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3`, propsAlias.class)
+      }, vueAn(n), {
+        class: vueAn(uiSwitchXt)(`text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3`, propsAlias.class)
       }), {
-        default: p(() => [u(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
   }),
-  G = _({
+  G = vueJ({
     __name: `AlertDialogFooter`,
     props: {
       class: {
@@ -414,13 +414,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (g(), d(`div`, {
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, {
         "data-slot": `alert-dialog-footer`,
-        class: c(l(a)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end`, propsAlias.class))
-      }, [u(ctx.$slots, `default`)], 2));
+        class: vueN(vueAn(uiSwitchXt)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end`, propsAlias.class))
+      }, [vueCt(ctx.$slots, `default`)], 2));
     }
   }),
-  K = _({
+  K = vueJ({
     __name: `AlertDialogHeader`,
     props: {
       class: {
@@ -429,13 +429,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (g(), d(`div`, {
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, {
         "data-slot": `alert-dialog-header`,
-        class: c(l(a)(`grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]`, propsAlias.class))
-      }, [u(ctx.$slots, `default`)], 2));
+        class: vueN(vueAn(uiSwitchXt)(`grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]`, propsAlias.class))
+      }, [vueCt(ctx.$slots, `default`)], 2));
     }
   }),
-  q = _({
+  q = vueJ({
     __name: `AlertDialogTitle`,
     props: {
       asChild: {
@@ -448,13 +448,13 @@ var A = _({
     },
     setup(props) {
       let propsAlias = props,
-        n = r(propsAlias, `class`);
-      return (ctx, renderCache) => (g(), m(l(z), y({
+        n = uiSwitchLt(propsAlias, `class`);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(z), vueNt({
         "data-slot": `alert-dialog-title`
-      }, l(n), {
-        class: l(a)(`text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 cn-font-heading`, propsAlias.class)
+      }, vueAn(n), {
+        class: vueAn(uiSwitchXt)(`text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 cn-font-heading`, propsAlias.class)
       }), {
-        default: p(() => [u(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }

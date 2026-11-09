@@ -1,20 +1,20 @@
-import { Dt as e, Ot as t, r as n, t as r, wt as i } from "../ui/Switch.js";
-import { $n as a, An as o, O as s, S as c, St as ee, Wt as te, Yt as l, Zt as ne, b as u, bn as d, c as f, gt as p, j as re, k as m, ot as ie, rr as h, rt as ae, ut as oe, v as g, x as _, y as v } from "./vue-i18n.runtime.js";
-import { C as se, E as ce } from "../i18n/en-US-player.js";
-import { n as le, r as ue, t as de } from "../ui/icons/lucide-icons.js";
-import { t as fe } from "../i18n/i18n-helper.js";
-import { t as pe } from "./check.js";
-import { t as me } from "./clipboard-list.js";
-import { _ as he, y as ge } from "./screenshot-beautifier.js";
-import { t as _e } from "../pages/ToolboxWorkspaceHeader.js";
-import { a as ve, i as ye, n as be, r as xe, t as Se } from "./dialog.js";
-import { a as Ce, c as we, i as Te, n as Ee, r as De, t as Oe } from "../ui/alert-dialog.js";
-import { n as ke, t as Ae } from "./alert.js";
-import { En as je, Sn as Me, un as Ne, ut as Pe } from "./main.js";
-import { n as Fe, t as Ie } from "./clipboard-assistant-page.js";
-import { t as Le } from "./shortcut-label.js";
-import { t as Re } from "../pages/ToolboxSelect.js";
-var ze = ue(`grip-vertical`, [[`circle`, {
+import { Dt as uiSwitchDt, Ot as uiSwitchOt, r as uiSwitchR, t as uiSwitchT, wt as uiSwitchWt } from "../ui/Switch.js";
+import { $n as vueN, An as vueAn, O as vueO, S as vueS, St as vueSt, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
+import { C as playerC, E as playerE } from "../i18n/en-US-player.js";
+import { n as lucideN, r as lucideR, t as lucideT } from "../ui/icons/lucide-icons.js";
+import { t as i18nT } from "../i18n/i18n-helper.js";
+import { t as checkT } from "./check.js";
+import { t as clipListT } from "./clipboard-list.js";
+import { _ as beautifier, y as beautifierY } from "./screenshot-beautifier.js";
+import { t as ToolboxWorkspaceHeaderT } from "../pages/ToolboxWorkspaceHeader.js";
+import { a as dialogA, i as dialogI, n as dialogN, r as dialogR, t as dialogT } from "./dialog.js";
+import { a as alertDialogA, c as alertDialogC, i as alertDialogI, n as alertDialogN, r as alertDialogR, t as alertDialogT } from "../ui/alert-dialog.js";
+import { n as alertN, t as alertT } from "./alert.js";
+import { En as mainEn, Sn as mainSn, un as mainUn, ut as mainUt } from "./main.js";
+import { n as clipboardassistantpageN, t as clipboardassistantpageT } from "./clipboard-assistant-page.js";
+import { t as shortcutlabelT } from "./shortcut-label.js";
+import { t as ToolboxSelectT } from "../pages/ToolboxSelect.js";
+var ze = lucideR(`grip-vertical`, [[`circle`, {
   cx: `9`,
   cy: `12`,
   r: `1`,
@@ -307,7 +307,7 @@ var b = {
   },
   $t = 50,
   en = 160,
-  x = re({
+  x = vueJ({
     __name: `ClipboardAssistantWorkspace`,
     props: {
       active: {
@@ -317,49 +317,49 @@ var b = {
     setup(props) {
       let propsAlias = props,
         {
-          t: _e,
+          t: translate,
           locale: y
-        } = fe(),
-        handler = (e, t = {}) => _e(`toolboxNative.clipboardAssistant${e}`, t),
+        } = i18nT(),
+        handler = (e, t = {}) => translate(`toolboxNative.clipboardAssistant${e}`, t),
         fallbackValue = window.electronAPI?.platform || `win32`,
         tn = fallbackValue === `darwin`,
-        C = d(null),
-        w = d(`history`),
-        T = d(false),
-        E = d([]),
-        nn = d(true),
-        rn = d(false),
-        an = d(false),
-        on = d(null),
-        D = d(``),
-        O = d([]),
-        sn = d(true),
-        k = d(``),
-        cn = d(null),
-        A = d(false),
-        j = d(``),
-        M = d(``),
-        ln = d(null),
-        N = d(null),
+        C = vueBn(null),
+        w = vueBn(`history`),
+        T = vueBn(false),
+        E = vueBn([]),
+        nn = vueBn(true),
+        rn = vueBn(false),
+        an = vueBn(false),
+        on = vueBn(null),
+        D = vueBn(``),
+        O = vueBn([]),
+        sn = vueBn(true),
+        k = vueBn(``),
+        cn = vueBn(null),
+        A = vueBn(false),
+        j = vueBn(``),
+        M = vueBn(``),
+        ln = vueBn(null),
+        N = vueBn(null),
         P = null,
         un = null,
-        F = d(false),
-        I = d(null),
-        L = d(``),
-        R = d(``),
-        z = d(false),
-        B = d(``),
-        dn = d(null),
-        V = d(null),
+        F = vueBn(false),
+        I = vueBn(null),
+        L = vueBn(``),
+        R = vueBn(``),
+        z = vueBn(false),
+        B = vueBn(``),
+        dn = vueBn(null),
+        V = vueBn(null),
         H = false,
         fn = 0,
         U = null,
         W = null,
         pn = null,
-        G = g(() => C.value?.enabled === true),
-        mn = g(() => Le(C.value?.effectiveShortcut || ``, fallbackValue)),
-        hn = g(() => !C.value?.shortcut),
-        gn = g({
+        G = vueV(() => C.value?.enabled === true),
+        mn = vueV(() => shortcutlabelT(C.value?.effectiveShortcut || ``, fallbackValue)),
+        hn = vueV(() => !C.value?.shortcut),
+        gn = vueV({
           get: () => String(C.value?.retentionDays ?? 0),
           set: e => {
             X({
@@ -367,13 +367,13 @@ var b = {
             });
           }
         }),
-        _n = g(() => Ie.map(item => ({
+        _n = vueV(() => clipboardassistantpageT.map(item => ({
           value: String(item),
           label: item === 0 ? handler(`RetentionForever`) : item === 365 ? handler(`RetentionYear`) : handler(`RetentionDays`, {
             n: item
           })
         }))),
-        vn = g(() => {
+        vn = vueV(() => {
           switch (N.value) {
             case `enable-recording`:
               return {
@@ -412,8 +412,8 @@ var b = {
               };
           }
         }),
-        yn = g(() => D.value.trim() ? handler(`HistoryNoMatch`) : handler(`HistoryEmpty`)),
-        bn = g(() => [{
+        yn = vueV(() => D.value.trim() ? handler(`HistoryNoMatch`) : handler(`HistoryEmpty`)),
+        bn = vueV(() => [{
           value: `history`,
           label: handler(`TabHistory`),
           count: C.value?.historyCount ?? 0
@@ -426,7 +426,7 @@ var b = {
         return e instanceof Error && e.message ? e.message : handler(`OperationFailed`);
       }
       function q(e, t = false) {
-        t ? Ae(e) : ke(e);
+        t ? alertT(e) : alertN(e);
       }
       function J(e) {
         return P?.(false), N.value = e, new Promise(e => {
@@ -546,7 +546,7 @@ var b = {
         }
       }
       function An(e) {
-        I.value = e?.id ?? null, L.value = e?.title ?? ``, R.value = e?.content ?? ``, B.value = ``, F.value = true, ae(() => dn.value?.focus());
+        I.value = e?.id ?? null, L.value = e?.title ?? ``, R.value = e?.content ?? ``, B.value = ``, F.value = true, vueRt(() => dn.value?.focus());
       }
       function jn() {
         z.value || (F.value = false);
@@ -615,7 +615,7 @@ var b = {
             q(K(e), true);
             return;
           }
-          j.value = ``, M.value = ``, A.value = true, ae(() => ln.value?.focus());
+          j.value = ``, M.value = ``, A.value = true, vueRt(() => ln.value?.focus());
         }
       }
       async function $() {
@@ -638,11 +638,11 @@ var b = {
           n = event.code.match(/^Key([A-Z])$/)?.[1] || (/^[a-z]$/i.test(event.key) ? event.key.toUpperCase() : ``),
           joined = [event.ctrlKey && `Ctrl`, event.altKey && `Alt`, event.metaKey && (tn ? `Command` : `Super`), event.shiftKey && `Shift`].filter(Boolean).join(`+`),
           i = includesResult ? `` : n || (event.key === ` ` ? `Space` : event.key);
-        if (j.value = Le([joined, i].filter(Boolean).join(`+`), fallbackValue), includesResult) {
+        if (j.value = shortcutlabelT([joined, i].filter(Boolean).join(`+`), fallbackValue), includesResult) {
           M.value = ``;
           return;
         }
-        let a = Pe([joined, i].filter(Boolean).join(`+`));
+        let a = mainUt([joined, i].filter(Boolean).join(`+`));
         if (!a) {
           M.value = handler(`ShortcutInvalid`);
           return;
@@ -691,7 +691,7 @@ var b = {
           append: true
         });
       }
-      return te(D, () => {
+      return vueWt(D, () => {
         U !== null && window.clearTimeout(U), U = window.setTimeout(() => {
           U = null, cn.value?.scrollTo({
             top: 0
@@ -699,7 +699,7 @@ var b = {
             silent: true
           });
         }, 220);
-      }), te(() => propsAlias.active, e => {
+      }), vueWt(() => propsAlias.active, e => {
         if (!e) {
           $();
           return;
@@ -707,47 +707,47 @@ var b = {
         Y(), Z({
           silent: true
         }), Q();
-      }), oe(() => {
+      }), vueUt(() => {
         pn = b.onChanged(e => {
           propsAlias.active && (e.reasons.includes(`history`) && Z({
             silent: true
           }), e.reasons.includes(`phrases`) && !F.value && !V.value && Q(), Y());
         }), Y(), Z(), Q();
-      }), ie(() => {
+      }), vueOt(() => {
         $(), P?.(false), P = null, pn?.();
         for (let e of [U, W]) e !== null && window.clearTimeout(e);
-      }), (te, d) => (p(), c(`div`, {
+      }), (te, renderCache) => (vueGt(), vueS(`div`, {
         ref_key: `scrollRef`,
         ref: cn,
         class: `no-scrollbar flex h-0 min-h-0 w-full flex-1 flex-col gap-3.5 overflow-y-auto overflow-x-hidden px-7 pb-9 pt-1 text-foreground`,
         onScroll: Hn
-      }, [v(`section`, Be, [v(`span`, Ve, [m(o(me), {
+      }, [vueY(`section`, Be, [vueY(`span`, Ve, [vueK(vueAn(clipListT), {
         size: 14
-      }), s(` ` + h(handler(`Kicker`)), 1)]), v(`h1`, He, h(handler(`ToolName`)), 1), v(`p`, Ue, h(handler(`HeroDesc`, {
+      }), vueO(` ` + vueRr(handler(`Kicker`)), 1)]), vueY(`h1`, He, vueRr(handler(`ToolName`)), 1), vueY(`p`, Ue, vueRr(handler(`HeroDesc`, {
         shortcut: mn.value
-      })), 1)]), v(`section`, {
+      })), 1)]), vueY(`section`, {
         class: `flex shrink-0 flex-col divide-y divide-border rounded-xl border border-border bg-card`,
         "aria-busy": T.value
-      }, [v(`div`, Ge, [v(`div`, Ke, [v(`strong`, qe, h(handler(`RecordTitle`)), 1), v(`small`, Je, h(handler(`RecordDesc`)), 1)]), m(o(r), {
+      }, [vueY(`div`, Ge, [vueY(`div`, Ke, [vueY(`strong`, qe, vueRr(handler(`RecordTitle`)), 1), vueY(`small`, Je, vueRr(handler(`RecordDesc`)), 1)]), vueK(vueAn(uiSwitchT), {
         "model-value": G.value,
         "aria-label": handler(`RecordTitle`),
         disabled: !C.value || T.value,
         "onUpdate:modelValue": Sn
-      }, null, 8, [`model-value`, `aria-label`, `disabled`])]), v(`div`, Ye, [v(`div`, Xe, [v(`strong`, {
-        class: a([`text-[13px] font-semibold`, G.value ? `` : `text-muted-foreground`])
-      }, h(handler(`ShortcutTitle`)), 3), M.value ? (p(), c(`small`, Ze, h(M.value), 1)) : G.value && C.value?.shortcutError ? (p(), c(`small`, Qe, h(handler(`ShortcutInactive`, {
+      }, null, 8, [`model-value`, `aria-label`, `disabled`])]), vueY(`div`, Ye, [vueY(`div`, Xe, [vueY(`strong`, {
+        class: vueN([`text-[13px] font-semibold`, G.value ? `` : `text-muted-foreground`])
+      }, vueRr(handler(`ShortcutTitle`)), 3), M.value ? (vueGt(), vueS(`small`, Ze, vueRr(M.value), 1)) : G.value && C.value?.shortcutError ? (vueGt(), vueS(`small`, Qe, vueRr(handler(`ShortcutInactive`, {
         reason: C.value.shortcutError
-      })), 1)) : (p(), c(`small`, $e, h(G.value ? handler(`ShortcutDesc`) : handler(`ShortcutDisabledHint`)), 1))]), v(`div`, et, [v(`button`, {
+      })), 1)) : (vueGt(), vueS(`small`, $e, vueRr(G.value ? handler(`ShortcutDesc`) : handler(`ShortcutDisabledHint`)), 1))]), vueY(`div`, et, [vueY(`button`, {
         ref_key: `shortcutButtonRef`,
         ref: ln,
         type: `button`,
-        class: a([`h-[30px] min-w-[132px] rounded-lg border px-3 text-xs font-semibold tracking-wide transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-55`, A.value ? `border-primary bg-card text-muted-foreground` : `border-border bg-muted text-foreground hover:border-foreground/25`]),
+        class: vueN([`h-[30px] min-w-[132px] rounded-lg border px-3 text-xs font-semibold tracking-wide transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-55`, A.value ? `border-primary bg-card text-muted-foreground` : `border-border bg-muted text-foreground hover:border-foreground/25`]),
         disabled: !G.value || T.value,
         title: handler(`ShortcutChange`),
         onClick: Rn,
         onKeydown: zn,
         onBlur: $
-      }, h(A.value ? j.value || handler(`ShortcutPress`) : mn.value), 43, tt), hn.value ? _(``, true) : (p(), u(o(n), {
+      }, vueRr(A.value ? j.value || handler(`ShortcutPress`) : mn.value), 43, tt), hn.value ? vueX(``, true) : (vueGt(), vueB(vueAn(uiSwitchR), {
         key: 0,
         variant: `ghost`,
         size: `sm`,
@@ -755,128 +755,128 @@ var b = {
         disabled: !G.value || T.value,
         onClick: Bn
       }, {
-        default: l(() => [s(h(handler(`ShortcutReset`)), 1)]),
+        default: vueYt(() => [vueO(vueRr(handler(`ShortcutReset`)), 1)]),
         _: 1
-      }, 8, [`disabled`]))])]), v(`div`, nt, [v(`div`, rt, [v(`strong`, it, [s(h(handler(`TimelineTitle`)) + ` `, 1), C.value?.syncToTimeline ? (p(), c(`span`, at, h(handler(`TimelineCloudBadge`)), 1)) : _(``, true)]), v(`small`, ot, h(handler(`TimelineDesc`)), 1)]), m(o(r), {
+      }, 8, [`disabled`]))])]), vueY(`div`, nt, [vueY(`div`, rt, [vueY(`strong`, it, [vueO(vueRr(handler(`TimelineTitle`)) + ` `, 1), C.value?.syncToTimeline ? (vueGt(), vueS(`span`, at, vueRr(handler(`TimelineCloudBadge`)), 1)) : vueX(``, true)]), vueY(`small`, ot, vueRr(handler(`TimelineDesc`)), 1)]), vueK(vueAn(uiSwitchT), {
         "model-value": C.value?.syncToTimeline === true,
         "aria-label": handler(`TimelineTitle`),
         disabled: !C.value || T.value,
         "onUpdate:modelValue": Cn
-      }, null, 8, [`model-value`, `aria-label`, `disabled`])]), v(`div`, st, [v(`div`, ct, [v(`strong`, lt, h(handler(`RetentionTitle`)), 1), v(`small`, ut, h(handler(`RetentionDesc`)), 1)]), v(`div`, dt, [m(Re, {
+      }, null, 8, [`model-value`, `aria-label`, `disabled`])]), vueY(`div`, st, [vueY(`div`, ct, [vueY(`strong`, lt, vueRr(handler(`RetentionTitle`)), 1), vueY(`small`, ut, vueRr(handler(`RetentionDesc`)), 1)]), vueY(`div`, dt, [vueK(ToolboxSelectT, {
         modelValue: gn.value,
-        "onUpdate:modelValue": d[0] ||= e => gn.value = e,
+        "onUpdate:modelValue": renderCache[0] ||= e => gn.value = e,
         options: _n.value,
         disabled: !C.value || T.value,
         label: handler(`RetentionTitle`),
         compact: ``
-      }, null, 8, [`modelValue`, `options`, `disabled`, `label`])])])], 8, We), v(`section`, ft, [v(`header`, pt, [v(`div`, mt, [(p(true), c(f, null, ee(bn.value, state => (p(), c(`button`, {
+      }, null, 8, [`modelValue`, `options`, `disabled`, `label`])])])], 8, We), vueY(`section`, ft, [vueY(`header`, pt, [vueY(`div`, mt, [(vueGt(true), vueS(vueC, null, vueSt(bn.value, state => (vueGt(), vueS(`button`, {
         key: state.value,
         type: `button`,
         role: `tab`,
         "aria-selected": w.value === state.value,
-        class: a([`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs transition-colors`, w.value === state.value ? `bg-card font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
+        class: vueN([`inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs transition-colors`, w.value === state.value ? `bg-card font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
         onClick: t => w.value = state.value
-      }, [s(h(state.label), 1), v(`span`, {
-        class: a([`rounded-full px-1.5 text-[10px] leading-4`, w.value === state.value ? `bg-primary/10 text-primary` : `bg-foreground/[0.06]`])
-      }, h(state.count), 3)], 10, ht))), 128))]), w.value === `history` ? (p(), c(`div`, gt, [v(`label`, _t, [m(o(Me), {
+      }, [vueO(vueRr(state.label), 1), vueY(`span`, {
+        class: vueN([`rounded-full px-1.5 text-[10px] leading-4`, w.value === state.value ? `bg-primary/10 text-primary` : `bg-foreground/[0.06]`])
+      }, vueRr(state.count), 3)], 10, ht))), 128))]), w.value === `history` ? (vueGt(), vueS(`div`, gt, [vueY(`label`, _t, [vueK(vueAn(mainSn), {
         size: 14,
         class: `shrink-0`
-      }), ne(v(`input`, {
-        "onUpdate:modelValue": d[1] ||= e => D.value = e,
+      }), vueZt(vueY(`input`, {
+        "onUpdate:modelValue": renderCache[1] ||= e => D.value = e,
         type: `search`,
         class: `min-w-0 flex-1 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:appearance-none`,
         placeholder: handler(`SearchPlaceholder`)
-      }, null, 8, vt), [[se, D.value]]), D.value ? (p(), c(`button`, {
+      }, null, 8, vt), [[playerC, D.value]]), D.value ? (vueGt(), vueS(`button`, {
         key: 0,
         type: `button`,
         class: `inline-flex shrink-0 hover:text-foreground`,
         "aria-label": handler(`ClearSearch`),
         title: handler(`ClearSearch`),
-        onMousedown: d[2] ||= ce(() => {}, [`prevent`]),
-        onClick: d[3] ||= e => D.value = ``
-      }, [m(o(de), {
+        onMousedown: renderCache[2] ||= playerE(() => {}, [`prevent`]),
+        onClick: renderCache[3] ||= e => D.value = ``
+      }, [vueK(vueAn(lucideT), {
         size: 13
-      })], 40, yt)) : _(``, true)]), m(o(n), {
+      })], 40, yt)) : vueX(``, true)]), vueK(vueAn(uiSwitchR), {
         variant: `outline`,
         size: `sm`,
         class: `shrink-0 text-xs`,
         disabled: !C.value || C.value.historyCount === C.value.pinnedCount,
         onClick: On
       }, {
-        default: l(() => [m(o(i), {
+        default: vueYt(() => [vueK(vueAn(uiSwitchWt), {
           size: 14
-        }), s(h(handler(`ClearHistory`)), 1)]),
+        }), vueO(vueRr(handler(`ClearHistory`)), 1)]),
         _: 1
-      }, 8, [`disabled`])])) : (p(), c(`div`, bt, [m(o(n), {
+      }, 8, [`disabled`])])) : (vueGt(), vueS(`div`, bt, [vueK(vueAn(uiSwitchR), {
         variant: `outline`,
         size: `sm`,
         class: `border-primary/30 text-xs text-primary hover:bg-primary/10 hover:text-primary`,
-        onClick: d[4] ||= e => An()
+        onClick: renderCache[4] ||= e => An()
       }, {
-        default: l(() => [m(o(e), {
+        default: vueYt(() => [vueK(vueAn(uiSwitchDt), {
           size: 14
-        }), s(h(handler(`NewPhrase`)), 1)]),
+        }), vueO(vueRr(handler(`NewPhrase`)), 1)]),
         _: 1
-      })]))]), w.value === `history` ? (p(), c(f, {
+      })]))]), w.value === `history` ? (vueGt(), vueS(vueC, {
         key: 0
-      }, [nn.value ? (p(), c(`div`, xt, [m(o(he), {
+      }, [nn.value ? (vueGt(), vueS(`div`, xt, [vueK(vueAn(beautifier), {
         class: `animate-spin`,
         size: 20
-      }), s(h(handler(`Loading`)), 1)])) : E.value.length === 0 ? (p(), c(`div`, St, [m(o(me), {
+      }), vueO(vueRr(handler(`Loading`)), 1)])) : E.value.length === 0 ? (vueGt(), vueS(`div`, St, [vueK(vueAn(clipListT), {
         size: 26
-      }), v(`strong`, Ct, h(yn.value), 1), D.value.trim() ? _(``, true) : (p(), c(`small`, wt, h(G.value ? handler(`HistoryEmptyDesc`) : handler(`HistoryDisabledDesc`)), 1))])) : (p(), c(`div`, Tt, [(p(true), c(f, null, ee(E.value, e => (p(), c(`article`, {
+      }), vueY(`strong`, Ct, vueRr(yn.value), 1), D.value.trim() ? vueX(``, true) : (vueGt(), vueS(`small`, wt, vueRr(G.value ? handler(`HistoryEmptyDesc`) : handler(`HistoryDisabledDesc`)), 1))])) : (vueGt(), vueS(`div`, Tt, [(vueGt(true), vueS(vueC, null, vueSt(E.value, e => (vueGt(), vueS(`article`, {
         key: e.id,
-        class: a([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, e.isPinned ? `bg-primary/[0.04]` : ``])
-      }, [v(`button`, {
+        class: vueN([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, e.isPinned ? `bg-primary/[0.04]` : ``])
+      }, [vueY(`button`, {
         type: `button`,
         class: `flex min-w-0 flex-1 flex-col gap-1 px-2.5 py-2 text-left`,
         title: handler(`Copy`),
         onClick: t => Tn(e)
-      }, [v(`p`, Dt, h(e.preview), 1), v(`span`, Ot, [e.isPinned ? (p(), u(o(le), {
+      }, [vueY(`p`, Dt, vueRr(e.preview), 1), vueY(`span`, Ot, [e.isPinned ? (vueGt(), vueB(vueAn(lucideN), {
         key: 0,
         size: 11,
         class: `text-primary`
-      })) : _(``, true), v(`span`, null, h(handler(`Characters`, {
+      })) : vueX(``, true), vueY(`span`, null, vueRr(handler(`Characters`, {
         n: e.characterCount.toLocaleString()
-      })), 1), d[12] ||= v(`i`, {
+      })), 1), renderCache[12] ||= vueY(`i`, {
         class: `not-italic`
-      }, `·`, -1), e.copyCount > 1 ? (p(), c(`span`, kt, h(handler(`CopyCount`, {
+      }, `·`, -1), e.copyCount > 1 ? (vueGt(), vueS(`span`, kt, vueRr(handler(`CopyCount`, {
         n: e.copyCount
-      })), 1)) : _(``, true), e.copyCount > 1 ? (p(), c(`i`, At, `·`)) : _(``, true), v(`time`, {
+      })), 1)) : vueX(``, true), e.copyCount > 1 ? (vueGt(), vueS(`i`, At, `·`)) : vueX(``, true), vueY(`time`, {
         datetime: e.copiedAt
-      }, h(Vn(e.copiedAt)), 9, jt)])], 8, Et), v(`div`, Mt, [m(o(n), {
+      }, vueRr(Vn(e.copiedAt)), 9, jt)])], 8, Et), vueY(`div`, Mt, [vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `icon-sm`,
-        class: a(k.value === `history:${e.id}` ? `text-primary` : `text-muted-foreground`),
+        class: vueN(k.value === `history:${e.id}` ? `text-primary` : `text-muted-foreground`),
         title: handler(`Copy`),
         "aria-label": handler(`Copy`),
         onClick: t => Tn(e)
       }, {
-        default: l(() => [k.value === `history:${e.id}` ? (p(), u(o(pe), {
+        default: vueYt(() => [k.value === `history:${e.id}` ? (vueGt(), vueB(vueAn(checkT), {
           key: 0,
           size: 15
-        })) : (p(), u(o(ge), {
+        })) : (vueGt(), vueB(vueAn(beautifierY), {
           key: 1,
           size: 15
         }))]),
         _: 2
-      }, 1032, [`class`, `title`, `aria-label`, `onClick`]), m(o(n), {
+      }, 1032, [`class`, `title`, `aria-label`, `onClick`]), vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `icon-sm`,
-        class: a(e.isPinned ? `text-primary` : `text-muted-foreground`),
+        class: vueN(e.isPinned ? `text-primary` : `text-muted-foreground`),
         title: e.isPinned ? handler(`Unpin`) : handler(`Pin`),
         "aria-label": e.isPinned ? handler(`Unpin`) : handler(`Pin`),
         onClick: t => En(e)
       }, {
-        default: l(() => [e.isPinned ? (p(), u(o(je), {
+        default: vueYt(() => [e.isPinned ? (vueGt(), vueB(vueAn(mainEn), {
           key: 0,
           size: 15
-        })) : (p(), u(o(le), {
+        })) : (vueGt(), vueB(vueAn(lucideN), {
           key: 1,
           size: 15
         }))]),
         _: 2
-      }, 1032, [`class`, `title`, `aria-label`, `onClick`]), m(o(n), {
+      }, 1032, [`class`, `title`, `aria-label`, `onClick`]), vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `icon-sm`,
         class: `text-muted-foreground hover:text-destructive`,
@@ -884,66 +884,66 @@ var b = {
         "aria-label": handler(`Delete`),
         onClick: t => Dn(e)
       }, {
-        default: l(() => [m(o(i), {
+        default: vueYt(() => [vueK(vueAn(uiSwitchWt), {
           size: 15
         })]),
         _: 1
-      }, 8, [`title`, `aria-label`, `onClick`])])], 2))), 128)), rn.value ? (p(), c(`div`, Nt, [m(o(he), {
+      }, 8, [`title`, `aria-label`, `onClick`])])], 2))), 128)), rn.value ? (vueGt(), vueS(`div`, Nt, [vueK(vueAn(beautifier), {
         class: `animate-spin`,
         size: 15
-      }), s(h(handler(`LoadingMore`)), 1)])) : _(``, true)]))], 64)) : (p(), c(f, {
+      }), vueO(vueRr(handler(`LoadingMore`)), 1)])) : vueX(``, true)]))], 64)) : (vueGt(), vueS(vueC, {
         key: 1
-      }, [sn.value ? (p(), c(`div`, Pt, [m(o(he), {
+      }, [sn.value ? (vueGt(), vueS(`div`, Pt, [vueK(vueAn(beautifier), {
         class: `animate-spin`,
         size: 20
-      }), s(h(handler(`Loading`)), 1)])) : O.value.length === 0 ? (p(), c(`div`, Ft, [m(o(me), {
+      }), vueO(vueRr(handler(`Loading`)), 1)])) : O.value.length === 0 ? (vueGt(), vueS(`div`, Ft, [vueK(vueAn(clipListT), {
         size: 26
-      }), v(`strong`, It, h(handler(`PhrasesEmpty`)), 1), v(`small`, Lt, h(handler(`PhrasesEmptyDesc`)), 1)])) : (p(), c(`div`, Rt, [(p(true), c(f, null, ee(O.value, e => (p(), c(`article`, {
+      }), vueY(`strong`, It, vueRr(handler(`PhrasesEmpty`)), 1), vueY(`small`, Lt, vueRr(handler(`PhrasesEmptyDesc`)), 1)])) : (vueGt(), vueS(`div`, Rt, [(vueGt(true), vueS(vueC, null, vueSt(O.value, e => (vueGt(), vueS(`article`, {
         key: e.id,
-        class: a([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, V.value === e.id ? `opacity-50` : ``]),
+        class: vueN([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, V.value === e.id ? `opacity-50` : ``]),
         onDragover: t => In(e, t),
-        onDrop: d[5] ||= ce(() => {}, [`prevent`])
-      }, [v(`span`, {
+        onDrop: renderCache[5] ||= playerE(() => {}, [`prevent`])
+      }, [vueY(`span`, {
         class: `mt-2.5 grid size-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground opacity-40 transition-opacity active:cursor-grabbing group-hover:opacity-100`,
         draggable: `true`,
         title: handler(`DragToSort`),
         "aria-label": handler(`DragToSort`),
         onDragstart: t => Fn(e, t),
         onDragend: Ln
-      }, [m(o(ze), {
+      }, [vueK(vueAn(ze), {
         size: 14
-      })], 40, Bt), v(`button`, {
+      })], 40, Bt), vueY(`button`, {
         type: `button`,
         class: `flex min-w-0 flex-1 flex-col gap-1 px-1 py-2 text-left`,
         title: handler(`Copy`),
         onClick: t => kn(e)
-      }, [e.title ? (p(), c(`strong`, Ht, h(e.title), 1)) : _(``, true), v(`p`, {
-        class: a([`line-clamp-3 whitespace-pre-wrap break-words text-[13px] leading-relaxed`, e.title ? `text-muted-foreground` : ``])
-      }, h(e.content), 3), v(`span`, Ut, [v(`span`, null, h(handler(`Characters`, {
+      }, [e.title ? (vueGt(), vueS(`strong`, Ht, vueRr(e.title), 1)) : vueX(``, true), vueY(`p`, {
+        class: vueN([`line-clamp-3 whitespace-pre-wrap break-words text-[13px] leading-relaxed`, e.title ? `text-muted-foreground` : ``])
+      }, vueRr(e.content), 3), vueY(`span`, Ut, [vueY(`span`, null, vueRr(handler(`Characters`, {
         n: e.content.length.toLocaleString()
-      })), 1), e.useCount > 0 ? (p(), c(f, {
+      })), 1), e.useCount > 0 ? (vueGt(), vueS(vueC, {
         key: 0
-      }, [d[13] ||= v(`i`, {
+      }, [renderCache[13] ||= vueY(`i`, {
         class: `not-italic`
-      }, `·`, -1), v(`span`, null, h(handler(`UseCount`, {
+      }, `·`, -1), vueY(`span`, null, vueRr(handler(`UseCount`, {
         n: e.useCount
-      })), 1)], 64)) : _(``, true)])], 8, Vt), v(`div`, Wt, [m(o(n), {
+      })), 1)], 64)) : vueX(``, true)])], 8, Vt), vueY(`div`, Wt, [vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `icon-sm`,
-        class: a(k.value === `phrase:${e.id}` ? `text-primary` : `text-muted-foreground`),
+        class: vueN(k.value === `phrase:${e.id}` ? `text-primary` : `text-muted-foreground`),
         title: handler(`Copy`),
         "aria-label": handler(`Copy`),
         onClick: t => kn(e)
       }, {
-        default: l(() => [k.value === `phrase:${e.id}` ? (p(), u(o(pe), {
+        default: vueYt(() => [k.value === `phrase:${e.id}` ? (vueGt(), vueB(vueAn(checkT), {
           key: 0,
           size: 15
-        })) : (p(), u(o(ge), {
+        })) : (vueGt(), vueB(vueAn(beautifierY), {
           key: 1,
           size: 15
         }))]),
         _: 2
-      }, 1032, [`class`, `title`, `aria-label`, `onClick`]), m(o(n), {
+      }, 1032, [`class`, `title`, `aria-label`, `onClick`]), vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `icon-sm`,
         class: `text-muted-foreground`,
@@ -951,11 +951,11 @@ var b = {
         "aria-label": handler(`Edit`),
         onClick: t => An(e)
       }, {
-        default: l(() => [m(o(t), {
+        default: vueYt(() => [vueK(vueAn(uiSwitchOt), {
           size: 15
         })]),
         _: 1
-      }, 8, [`title`, `aria-label`, `onClick`]), m(o(n), {
+      }, 8, [`title`, `aria-label`, `onClick`]), vueK(vueAn(uiSwitchR), {
         variant: `ghost`,
         size: `icon-sm`,
         class: `text-muted-foreground hover:text-destructive`,
@@ -963,63 +963,63 @@ var b = {
         "aria-label": handler(`Delete`),
         onClick: t => Pn(e)
       }, {
-        default: l(() => [m(o(i), {
+        default: vueYt(() => [vueK(vueAn(uiSwitchWt), {
           size: 15
         })]),
         _: 1
-      }, 8, [`title`, `aria-label`, `onClick`])])], 42, zt))), 128))]))], 64))]), m(o(ve), {
+      }, 8, [`title`, `aria-label`, `onClick`])])], 42, zt))), 128))]))], 64))]), vueK(vueAn(dialogA), {
         open: F.value,
-        "onUpdate:open": d[8] ||= e => {
+        "onUpdate:open": renderCache[8] ||= e => {
           e || jn();
         }
       }, {
-        default: l(() => [m(o(ye), {
+        default: vueYt(() => [vueK(vueAn(dialogI), {
           class: `sm:max-w-[480px]`
         }, {
-          default: l(() => [m(o(be), null, {
-            default: l(() => [m(o(Se), null, {
-              default: l(() => [s(h(I.value ? handler(`PhraseEditorEdit`) : handler(`PhraseEditorCreate`)), 1)]),
+          default: vueYt(() => [vueK(vueAn(dialogN), null, {
+            default: vueYt(() => [vueK(vueAn(dialogT), null, {
+              default: vueYt(() => [vueO(vueRr(I.value ? handler(`PhraseEditorEdit`) : handler(`PhraseEditorCreate`)), 1)]),
               _: 1
             })]),
             _: 1
-          }), v(`label`, Gt, [v(`span`, Kt, h(handler(`PhraseTitleLabel`)), 1), m(o(Ne), {
+          }), vueY(`label`, Gt, [vueY(`span`, Kt, vueRr(handler(`PhraseTitleLabel`)), 1), vueK(vueAn(mainUn), {
             modelValue: L.value,
-            "onUpdate:modelValue": d[6] ||= e => L.value = e,
+            "onUpdate:modelValue": renderCache[6] ||= e => L.value = e,
             type: `text`,
             class: `h-9 text-sm`,
-            maxlength: o(60),
+            maxlength: vueAn(60),
             placeholder: handler(`PhraseTitlePlaceholder`),
             onKeydown: Nn
-          }, null, 8, [`modelValue`, `maxlength`, `placeholder`])]), v(`label`, qt, [v(`span`, Jt, h(handler(`PhraseContentLabel`)), 1), ne(v(`textarea`, {
+          }, null, 8, [`modelValue`, `maxlength`, `placeholder`])]), vueY(`label`, qt, [vueY(`span`, Jt, vueRr(handler(`PhraseContentLabel`)), 1), vueZt(vueY(`textarea`, {
             ref_key: `editorContentRef`,
             ref: dn,
-            "onUpdate:modelValue": d[7] ||= e => R.value = e,
+            "onUpdate:modelValue": renderCache[7] ||= e => R.value = e,
             rows: `7`,
             class: `min-h-36 w-full resize-y rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm leading-relaxed outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30`,
-            maxlength: o(Fe),
+            maxlength: vueAn(clipboardassistantpageN),
             placeholder: handler(`PhraseContentPlaceholder`),
             onKeydown: Nn
-          }, null, 40, Yt), [[se, R.value]])]), B.value ? (p(), c(`p`, options, h(B.value), 1)) : _(``, true), m(o(xe), {
+          }, null, 40, Yt), [[playerC, R.value]])]), B.value ? (vueGt(), vueS(`p`, options, vueRr(B.value), 1)) : vueX(``, true), vueK(vueAn(dialogR), {
             class: `items-center sm:justify-between`
           }, {
-            default: l(() => [v(`small`, Zt, h(handler(`PhraseSaveHint`, {
+            default: vueYt(() => [vueY(`small`, Zt, vueRr(handler(`PhraseSaveHint`, {
               key: tn ? `⌘ + Enter` : `Ctrl + Enter`
-            })), 1), v(`div`, Qt, [m(o(n), {
+            })), 1), vueY(`div`, Qt, [vueK(vueAn(uiSwitchR), {
               variant: `outline`,
               disabled: z.value,
               onClick: jn
             }, {
-              default: l(() => [s(h(handler(`Cancel`)), 1)]),
+              default: vueYt(() => [vueO(vueRr(handler(`Cancel`)), 1)]),
               _: 1
-            }, 8, [`disabled`]), m(o(n), {
+            }, 8, [`disabled`]), vueK(vueAn(uiSwitchR), {
               disabled: z.value || !R.value.trim(),
               onClick: Mn
             }, {
-              default: l(() => [z.value ? (p(), u(o(he), {
+              default: vueYt(() => [z.value ? (vueGt(), vueB(vueAn(beautifier), {
                 key: 0,
                 class: `animate-spin`,
                 size: 14
-              })) : _(``, true), s(h(handler(`Save`)), 1)]),
+              })) : vueX(``, true), vueO(vueRr(handler(`Save`)), 1)]),
               _: 1
             }, 8, [`disabled`])])]),
             _: 1
@@ -1027,38 +1027,38 @@ var b = {
           _: 1
         })]),
         _: 1
-      }, 8, [`open`]), m(o(we), {
+      }, 8, [`open`]), vueK(vueAn(alertDialogC), {
         open: !!N.value,
-        "onUpdate:open": d[11] ||= e => {
+        "onUpdate:open": renderCache[11] ||= e => {
           e || xn(false);
         }
       }, {
-        default: l(() => [m(o(Ce), null, {
-          default: l(() => [m(o(Ee), null, {
-            default: l(() => [m(o(Oe), null, {
-              default: l(() => [s(h(vn.value.title), 1)]),
+        default: vueYt(() => [vueK(vueAn(alertDialogA), null, {
+          default: vueYt(() => [vueK(vueAn(alertDialogN), null, {
+            default: vueYt(() => [vueK(vueAn(alertDialogT), null, {
+              default: vueYt(() => [vueO(vueRr(vn.value.title), 1)]),
               _: 1
-            }), m(o(Te), {
+            }), vueK(vueAn(alertDialogI), {
               class: `flex flex-col gap-1.5`
             }, {
-              default: l(() => [(p(true), c(f, null, ee(vn.value.lines, e => (p(), c(`span`, {
+              default: vueYt(() => [(vueGt(true), vueS(vueC, null, vueSt(vn.value.lines, e => (vueGt(), vueS(`span`, {
                 key: e
-              }, h(e), 1))), 128))]),
+              }, vueRr(e), 1))), 128))]),
               _: 1
             })]),
             _: 1
-          }), m(o(De), null, {
-            default: l(() => [m(o(n), {
+          }), vueK(vueAn(alertDialogR), null, {
+            default: vueYt(() => [vueK(vueAn(uiSwitchR), {
               variant: `outline`,
-              onClick: d[9] ||= e => xn(false)
+              onClick: renderCache[9] ||= e => xn(false)
             }, {
-              default: l(() => [s(h(handler(`Cancel`)), 1)]),
+              default: vueYt(() => [vueO(vueRr(handler(`Cancel`)), 1)]),
               _: 1
-            }), m(o(n), {
+            }), vueK(vueAn(uiSwitchR), {
               variant: vn.value.danger ? `destructive` : `default`,
-              onClick: d[10] ||= e => xn(true)
+              onClick: renderCache[10] ||= e => xn(true)
             }, {
-              default: l(() => [s(h(vn.value.action), 1)]),
+              default: vueYt(() => [vueO(vueRr(vn.value.action), 1)]),
               _: 1
             }, 8, [`variant`])]),
             _: 1
@@ -1072,7 +1072,7 @@ var b = {
   S = {
     class: `flex h-full min-h-0 w-full flex-col overflow-hidden bg-background`
   },
-  tn = re({
+  tn = vueJ({
     __name: `ClipboardAssistantTool`,
     props: {
       tool: {},
@@ -1090,7 +1090,7 @@ var b = {
     }) {
       let propsAlias = props,
         emitAlias = emit;
-      return (ctx, renderCache) => (p(), c(`div`, S, [m(_e, {
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, S, [vueK(ToolboxWorkspaceHeaderT, {
         tool: propsAlias.tool,
         user: propsAlias.user,
         "credits-balance": propsAlias.creditsBalance,
@@ -1100,7 +1100,7 @@ var b = {
         "show-balance": false,
         onBack: renderCache[0] ||= e => emitAlias(`back`),
         onRecharge: renderCache[1] ||= e => emitAlias(`recharge`)
-      }, null, 8, [`tool`, `user`, `credits-balance`]), m(x, {
+      }, null, 8, [`tool`, `user`, `credits-balance`]), vueK(x, {
         active: propsAlias.active
       }, null, 8, [`active`])]));
     }

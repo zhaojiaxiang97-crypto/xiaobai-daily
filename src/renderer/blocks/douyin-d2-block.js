@@ -1,6 +1,6 @@
-import { $n as e, An as t, S as n, Wt as r, Zt as i, bn as a, gt as o, j as s, nr as c, ot as l, rr as u, rt as d, ut as ee, v as f, x as p, y as m } from "../chunks/vue-i18n.runtime.js";
-import { w as te } from "../i18n/en-US-player.js";
-import { M as ne, N as h, P as re, V as ie, X as ae, v as g } from "../chunks/main.js";
+import { $n as vueN, An as vueAn, S as vueS, Wt as vueWt, Zt as vueZt, bn as vueBn, gt as vueGt, j as vueJ, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { w as playerW } from "../i18n/en-US-player.js";
+import { M as mainM, N as mainN, P as mainP, V as mainV, X as mainX, v as g } from "../chunks/main.js";
 var defineProperty = Object.defineProperty,
   getOwnPropertySymbols = Object.getOwnPropertySymbols,
   hasOwnProperty = Object.prototype.hasOwnProperty,
@@ -99,7 +99,7 @@ var defineProperty = Object.defineProperty,
     key: 0,
     class: `d2-error px-4 pb-3 text-xs`
   },
-  E = g(s({
+  E = g(vueJ({
     __name: `D2BlockNode`,
     props: {
       node: {},
@@ -146,32 +146,32 @@ var defineProperty = Object.defineProperty,
     setup(props) {
       let propsAlias = props,
         {
-          t: _
-        } = re(),
-        v = a(false),
-        y = a(false),
-        b = a(false),
-        x = a(false),
-        E = a(null),
-        D = a(false),
-        O = a(``),
-        k = a(0),
-        A = a(null),
-        j = a(null),
-        M = a(null),
-        Se = ae(),
-        N = a(null),
-        P = a(typeof window > `u`),
-        F = f(() => propsAlias.node.code ?? ``),
-        Ce = f(() => `${propsAlias.isDark ? `dark` : `light`}:${F.value}`),
-        I = f(() => b.value || !x.value || !O.value),
-        we = f(() => !!O.value),
-        Te = f(() => {
+          t: translate
+        } = mainP(),
+        v = vueBn(false),
+        y = vueBn(false),
+        b = vueBn(false),
+        x = vueBn(false),
+        E = vueBn(null),
+        D = vueBn(false),
+        O = vueBn(``),
+        k = vueBn(0),
+        A = vueBn(null),
+        j = vueBn(null),
+        M = vueBn(null),
+        Se = mainX(),
+        N = vueBn(null),
+        P = vueBn(typeof window > `u`),
+        F = vueV(() => propsAlias.node.code ?? ``),
+        Ce = vueV(() => `${propsAlias.isDark ? `dark` : `light`}:${F.value}`),
+        I = vueV(() => b.value || !x.value || !O.value),
+        we = vueV(() => !!O.value),
+        Te = vueV(() => {
           if (I.value && j.value) return {
             minHeight: `${j.value}px`
           };
         }),
-        Ee = f(() => propsAlias.maxHeight === `none` ? {
+        Ee = vueV(() => propsAlias.maxHeight === `none` ? {
           maxHeight: `none`
         } : propsAlias.maxHeight == null ? undefined : {
           maxHeight: typeof propsAlias.maxHeight == `number` ? `${propsAlias.maxHeight}px` : String(propsAlias.maxHeight)
@@ -185,7 +185,7 @@ var defineProperty = Object.defineProperty,
         U = false,
         W = null,
         G = ``;
-      typeof window < `u` && r(() => M.value, e => {
+      typeof window < `u` && vueWt(() => M.value, e => {
         var payload;
         if ((payload = N.value) == null || payload.destroy(), N.value = null, !e) return void (P.value = false);
         let n = Se(e, {
@@ -227,20 +227,20 @@ var defineProperty = Object.defineProperty,
             x: eventAlias.clientX,
             y: eventAlias.clientY
           } : undefined;
-        h(event.currentTarget, t, n, false, i, propsAlias.isDark);
+        mainN(event.currentTarget, t, n, false, i, propsAlias.isDark);
       }
       function J() {
-        ie();
+        mainV();
       }
       function Y(event) {
         if (K(event.currentTarget)) return;
-        let t = v.value ? _(`common.copied`) || `Copied` : _(`common.copy`) || `Copy`,
+        let t = v.value ? translate(`common.copied`) || `Copied` : translate(`common.copy`) || `Copy`,
           eventAlias = event,
           r = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
             x: eventAlias.clientX,
             y: eventAlias.clientY
           } : undefined;
-        h(event.currentTarget, t, `top`, false, r, propsAlias.isDark);
+        mainN(event.currentTarget, t, `top`, false, r, propsAlias.isDark);
       }
       function Oe() {
         return C(this, null, function* () {
@@ -283,7 +283,7 @@ var defineProperty = Object.defineProperty,
             let r = yield function () {
               return C(this, null, function* () {
                 if (R) return R;
-                let e = yield ne();
+                let e = yield mainM();
                 if (!e) return null;
                 if (typeof e == `function`) {
                   let t = new e();
@@ -397,98 +397,98 @@ var defineProperty = Object.defineProperty,
         let t = e.getBoundingClientRect().height;
         t > 0 && (j.value = t);
       }
-      return r(() => [propsAlias.node.code, propsAlias.loading, propsAlias.isDark], () => {
+      return vueWt(() => [propsAlias.node.code, propsAlias.loading, propsAlias.isDark], () => {
         Q();
       }, {
         immediate: true
-      }), r(() => propsAlias.loading, (e, t) => {
+      }), vueWt(() => propsAlias.loading, (e, t) => {
         t && !e && Q(true);
-      }), r(() => P.value, e => {
+      }), vueWt(() => P.value, e => {
         e && Q(true);
-      }), r(() => [I.value, O.value, F.value], () => {
-        d(() => {
+      }), vueWt(() => [I.value, O.value, F.value], () => {
+        vueRt(() => {
           $();
         });
-      }), ee(() => {
-        d(() => {
+      }), vueUt(() => {
+        vueRt(() => {
           $();
         }), typeof ResizeObserver < `u` && (W = new ResizeObserver(() => {
           $();
         }), A.value && W.observe(A.value));
-      }), l(() => {
+      }), vueOt(() => {
         var value;
         B = true, G = ``, (value = N.value) == null || value.destroy(), N.value = null, H != null && (clearTimeout(H), H = null), W?.disconnect(), W = null;
-      }), (r, a) => (o(), n(`div`, {
+      }), (r, renderCache) => (vueGt(), vueS(`div`, {
         ref_key: `viewportTarget`,
         ref: M,
-        class: e([`d2-block-container rounded-lg border overflow-hidden`, {
+        class: vueN([`d2-block-container rounded-lg border overflow-hidden`, {
           dark: propsAlias.isDark
         }]),
         "data-markstream-d2": `1`,
         "data-markstream-mode": I.value ? `fallback` : `preview`
-      }, [propsAlias.showHeader ? (o(), n(`div`, se, [a[16] ||= m(`div`, {
+      }, [propsAlias.showHeader ? (vueGt(), vueS(`div`, se, [renderCache[16] ||= vueY(`div`, {
         class: `flex items-center gap-x-2`
-      }, [m(`span`, {
+      }, [vueY(`span`, {
         class: `d2-label font-medium font-mono`
-      }, `D2`)], -1), m(`div`, ce, [propsAlias.showModeToggle ? (o(), n(`div`, le, [m(`button`, {
+      }, `D2`)], -1), vueY(`div`, ce, [propsAlias.showModeToggle ? (vueGt(), vueS(`div`, le, [vueY(`button`, {
         type: `button`,
-        class: e([`mode-btn px-2 py-0.5 rounded`, b.value ? `` : `is-active`]),
-        onClick: a[0] ||= e => X(`preview`),
-        onMouseenter: a[1] ||= e => q(e, t(_)(`common.preview`) || `Preview`),
-        onFocus: a[2] ||= e => q(e, t(_)(`common.preview`) || `Preview`),
+        class: vueN([`mode-btn px-2 py-0.5 rounded`, b.value ? `` : `is-active`]),
+        onClick: renderCache[0] ||= e => X(`preview`),
+        onMouseenter: renderCache[1] ||= e => q(e, vueAn(translate)(`common.preview`) || `Preview`),
+        onFocus: renderCache[2] ||= e => q(e, vueAn(translate)(`common.preview`) || `Preview`),
         onMouseleave: J,
         onBlur: J
-      }, u(t(_)(`common.preview`) || `Preview`), 35), m(`button`, {
+      }, vueRr(vueAn(translate)(`common.preview`) || `Preview`), 35), vueY(`button`, {
         type: `button`,
-        class: e([`mode-btn px-2 py-0.5 rounded`, b.value ? `is-active` : ``]),
-        onClick: a[3] ||= e => X(`source`),
-        onMouseenter: a[4] ||= e => q(e, t(_)(`common.source`) || `Source`),
-        onFocus: a[5] ||= e => q(e, t(_)(`common.source`) || `Source`),
+        class: vueN([`mode-btn px-2 py-0.5 rounded`, b.value ? `is-active` : ``]),
+        onClick: renderCache[3] ||= e => X(`source`),
+        onMouseenter: renderCache[4] ||= e => q(e, vueAn(translate)(`common.source`) || `Source`),
+        onFocus: renderCache[5] ||= e => q(e, vueAn(translate)(`common.source`) || `Source`),
         onMouseleave: J,
         onBlur: J
-      }, u(t(_)(`common.source`) || `Source`), 35)])) : p(``, true), propsAlias.showCopyButton ? (o(), n(`button`, {
+      }, vueRr(vueAn(translate)(`common.source`) || `Source`), 35)])) : vueX(``, true), propsAlias.showCopyButton ? (vueGt(), vueS(`button`, {
         key: 1,
         type: `button`,
         class: `d2-action-btn p-[var(--ms-action-btn-padding)] rounded-md`,
-        "aria-label": v.value ? t(_)(`common.copied`) || `Copied` : t(_)(`common.copy`) || `Copy`,
+        "aria-label": v.value ? vueAn(translate)(`common.copied`) || `Copied` : vueAn(translate)(`common.copy`) || `Copy`,
         onClick: Oe,
-        onMouseenter: a[6] ||= e => Y(e),
-        onFocus: a[7] ||= e => Y(e),
+        onMouseenter: renderCache[6] ||= e => Y(e),
+        onFocus: renderCache[7] ||= e => Y(e),
         onMouseleave: J,
         onBlur: J
-      }, [v.value ? (o(), n(`svg`, de, [...(a[13] ||= [m(`path`, {
+      }, [v.value ? (vueGt(), vueS(`svg`, de, [...(renderCache[13] ||= [vueY(`path`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `M20 6L9 17l-5-5`
-      }, null, -1)])])) : (o(), n(`svg`, options, [...(a[12] ||= [m(`g`, {
+      }, null, -1)])])) : (vueGt(), vueS(`svg`, options, [...(renderCache[12] ||= [vueY(`g`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
         "stroke-linejoin": `round`,
         "stroke-width": `2`
-      }, [m(`rect`, {
+      }, [vueY(`rect`, {
         width: `14`,
         height: `14`,
         x: `8`,
         y: `8`,
         rx: `2`,
         ry: `2`
-      }), m(`path`, {
+      }), vueY(`path`, {
         d: `M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`
-      })], -1)])]))], 40, ue)) : p(``, true), propsAlias.showExportButton && O.value ? (o(), n(`button`, {
+      })], -1)])]))], 40, ue)) : vueX(``, true), propsAlias.showExportButton && O.value ? (vueGt(), vueS(`button`, {
         key: 2,
         type: `button`,
         class: `d2-action-btn p-[var(--ms-action-btn-padding)] rounded-md`,
-        "aria-label": t(_)(`common.export`) || `Export`,
+        "aria-label": vueAn(translate)(`common.export`) || `Export`,
         onClick: Pe,
-        onMouseenter: a[8] ||= e => q(e, t(_)(`common.export`) || `Export`),
-        onFocus: a[9] ||= e => q(e, t(_)(`common.export`) || `Export`),
+        onMouseenter: renderCache[8] ||= e => q(e, vueAn(translate)(`common.export`) || `Export`),
+        onFocus: renderCache[9] ||= e => q(e, vueAn(translate)(`common.export`) || `Export`),
         onMouseleave: J,
         onBlur: J
-      }, [...(a[14] ||= [m(`svg`, {
+      }, [...(renderCache[14] ||= [vueY(`svg`, {
         xmlns: `http://www.w3.org/2000/svg`,
         "aria-hidden": `true`,
         role: `img`,
@@ -496,25 +496,25 @@ var defineProperty = Object.defineProperty,
         height: `1em`,
         viewBox: `0 0 24 24`,
         class: `action-icon`
-      }, [m(`path`, {
+      }, [vueY(`path`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `M12 3v12m0-12l-4 4m4-4l4 4M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4`
-      })], -1)])], 40, fe)) : p(``, true), propsAlias.showCollapseButton ? (o(), n(`button`, {
+      })], -1)])], 40, fe)) : vueX(``, true), propsAlias.showCollapseButton ? (vueGt(), vueS(`button`, {
         key: 3,
         type: `button`,
         class: `d2-action-btn p-[var(--ms-action-btn-padding)] rounded-md`,
         "aria-pressed": y.value,
         onClick: ke,
-        onMouseenter: a[10] ||= e => q(e, y.value ? t(_)(`common.expand`) || `Expand` : t(_)(`common.collapse`) || `Collapse`),
-        onFocus: a[11] ||= e => q(e, y.value ? t(_)(`common.expand`) || `Expand` : t(_)(`common.collapse`) || `Collapse`),
+        onMouseenter: renderCache[10] ||= e => q(e, y.value ? vueAn(translate)(`common.expand`) || `Expand` : vueAn(translate)(`common.collapse`) || `Collapse`),
+        onFocus: renderCache[11] ||= e => q(e, y.value ? vueAn(translate)(`common.expand`) || `Expand` : vueAn(translate)(`common.collapse`) || `Collapse`),
         onMouseleave: J,
         onBlur: J
-      }, [(o(), n(`svg`, {
-        style: c({
+      }, [(vueGt(), vueS(`svg`, {
+        style: vueNr({
           rotate: y.value ? `0deg` : `90deg`
         }),
         xmlns: `http://www.w3.org/2000/svg`,
@@ -524,26 +524,26 @@ var defineProperty = Object.defineProperty,
         height: `1em`,
         viewBox: `0 0 24 24`,
         class: `action-icon`
-      }, [...(a[15] ||= [m(`path`, {
+      }, [...(renderCache[15] ||= [vueY(`path`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `m9 18l6-6l-6-6`
-      }, null, -1)])], 4))], 40, pe)) : p(``, true)])])) : p(``, true), i(m(`div`, {
+      }, null, -1)])], 4))], 40, pe)) : vueX(``, true)])])) : vueX(``, true), vueZt(vueY(`div`, {
         ref_key: `bodyRef`,
         ref: A,
         class: `d2-block-body`,
-        style: c(Te.value)
-      }, [propsAlias.loading && !we.value ? (o(), n(`div`, me, [m(`pre`, he, [m(`code`, null, u(F.value), 1)]), E.value ? (o(), n(`p`, ge, u(E.value), 1)) : p(``, true)])) : (o(), n(`div`, _e, [I.value ? (o(), n(`div`, ve, [m(`pre`, ye, [m(`code`, null, u(F.value), 1)]), E.value ? (o(), n(`p`, be, u(E.value), 1)) : p(``, true)])) : (o(), n(`div`, {
+        style: vueNr(Te.value)
+      }, [propsAlias.loading && !we.value ? (vueGt(), vueS(`div`, me, [vueY(`pre`, he, [vueY(`code`, null, vueRr(F.value), 1)]), E.value ? (vueGt(), vueS(`p`, ge, vueRr(E.value), 1)) : vueX(``, true)])) : (vueGt(), vueS(`div`, _e, [I.value ? (vueGt(), vueS(`div`, ve, [vueY(`pre`, ye, [vueY(`code`, null, vueRr(F.value), 1)]), E.value ? (vueGt(), vueS(`p`, be, vueRr(E.value), 1)) : vueX(``, true)])) : (vueGt(), vueS(`div`, {
         key: 1,
         class: `d2-render`,
-        style: c(Ee.value)
-      }, [m(`div`, {
+        style: vueNr(Ee.value)
+      }, [vueY(`div`, {
         class: `d2-svg`,
         innerHTML: O.value
-      }, null, 8, xe), E.value ? (o(), n(`p`, T, u(E.value), 1)) : p(``, true)], 4))]))], 4), [[te, !y.value]])], 10, oe));
+      }, null, 8, xe), E.value ? (vueGt(), vueS(`p`, T, vueRr(E.value), 1)) : vueX(``, true)], 4))]))], 4), [[playerW, !y.value]])], 10, oe));
     }
   }), [[`__scopeId`, `data-v-9be36d9c`]]);
 E.install = e => {

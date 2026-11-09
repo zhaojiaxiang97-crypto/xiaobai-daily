@@ -1,6 +1,6 @@
-import { X as e, bn as t, mt as n, n as r, ut as i, v as a, vt as o, z as s } from "./vue-i18n.runtime.js";
-import { n as c, r as l } from "./tool-icons.js";
-import { t as u } from "./points.js";
+import { X as vueX, bn as vueBn, mt as vueMt, n as vueN, ut as vueUt, v as vueV, vt as vueVt, z as vueZ } from "./vue-i18n.runtime.js";
+import { n as toolIconN, r as toolIconR } from "./tool-icons.js";
+import { t as pointsT } from "./points.js";
 function d(result) {
   if (result.ok) return result.data;
   throw Error(result.error.message);
@@ -37,47 +37,47 @@ var m = {
       return window.electronAPI.enterKeyComponent.onStatusChanged(status);
     }
   },
-  h = a(() => window.electronAPI?.platform === `win32`),
-  g = a(() => window.electronAPI?.platform === `darwin`),
-  _ = a(() => h.value || g.value),
-  v = a(() => h.value || g.value),
+  h = vueV(() => window.electronAPI?.platform === `win32`),
+  g = vueV(() => window.electronAPI?.platform === `darwin`),
+  _ = vueV(() => h.value || g.value),
+  v = vueV(() => h.value || g.value),
   y = Symbol(`settings-page-context`);
 function b(items, t) {
-  items.push(t), s() && n(() => {
+  items.push(t), vueZ() && vueMt(() => {
     let n = items.indexOf(t);
     n >= 0 && items.splice(n, 1);
   });
 }
 function x(event) {
   let {
-      t: s
-    } = r(),
+      t: translate
+    } = vueN(),
     {
       isLoading: c,
       isSaving: d,
       loadSettings: p,
       settings: h
-    } = l(),
-    v = a(() => c.value || d.value),
+    } = toolIconR(),
+    v = vueV(() => c.value || d.value),
     emptyItems = [],
     S = [],
-    C = t(0),
-    w = t(false),
-    T = t(false);
+    C = vueBn(0),
+    w = vueBn(false),
+    T = vueBn(false);
   async function E() {
     try {
-      w.value = true, C.value = await u.getCreditsBalance();
+      w.value = true, C.value = await pointsT.getCreditsBalance();
     } catch {
       C.value = 0;
     } finally {
       w.value = false;
     }
   }
-  let D = t(null),
-    O = t(false),
-    k = t(``),
-    A = t(null),
-    j = t(false);
+  let D = vueBn(null),
+    O = vueBn(false),
+    k = vueBn(``),
+    A = vueBn(null),
+    j = vueBn(false);
   async function M() {
     if (g.value) try {
       A.value = await window.electronAPI.checkAccessibility();
@@ -99,7 +99,7 @@ function x(event) {
           granted: found.granted
         });
       } catch (e) {
-        k.value = e instanceof Error ? e.message : s(`settings.permissionCheck.loadFailed`);
+        k.value = e instanceof Error ? e.message : translate(`settings.permissionCheck.loadFailed`);
       } finally {
         O.value = false;
       }
@@ -122,16 +122,16 @@ function x(event) {
   function F() {
     g.value && (j.value = true, N());
   }
-  let I = t(null),
-    L = a(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
+  let I = vueBn(null),
+    L = vueV(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
     R;
-  i(() => {
+  vueUt(() => {
     M(), N(), _.value ? (m.getStatus().then(result => {
       I.value = result;
     }), R = m.onStatusChanged(e => {
       I.value = e;
     })) : (h.value.enableEnterKeyListener || !h.value.enterKeyLegacyMigrationHandled) && m.disable().then(() => p());
-  }), n(() => {
+  }), vueMt(() => {
     R?.();
   });
   let options = {
@@ -162,7 +162,7 @@ function x(event) {
     enterKeyComponentState: I,
     enterKeyComponentBusy: L
   };
-  return o(y, options), {
+  return vueVt(y, options), {
     ...options,
     runRefreshLoaders: () => {
       emptyItems.forEach(item => item());
@@ -170,47 +170,47 @@ function x(event) {
   };
 }
 function S() {
-  let t = e(y);
+  let t = vueX(y);
   if (!t) throw Error(`useSettingsPageContext() 只能在设置页分区组件中使用`);
   return t;
 }
 function C() {
-  return e(y, null);
+  return vueX(y, null);
 }
 var w = Symbol(`app-navigate`);
 function T(e) {
-  o(w, e);
+  vueVt(w, e);
 }
 function E() {
-  return e(w, () => undefined);
+  return vueX(w, () => undefined);
 }
 var D = [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`];
 function O() {
   let {
       isLoading: e,
       isSaving: r
-    } = l(),
+    } = toolIconR(),
     o = E(),
     {
       check: s
-    } = c(),
-    u = t(null),
+    } = toolIconN(),
+    u = vueBn(null),
     d;
-  return i(() => {
+  return vueUt(() => {
     _.value && (m.getStatus().then(result => {
       u.value = result;
     }).catch(() => undefined), d = m.onStatusChanged(e => {
       u.value = e;
     }));
-  }), n(() => {
+  }), vueMt(() => {
     d?.();
   }), {
-    controlsDisabled: a(() => e.value || r.value),
-    highlightedItem: t(null),
+    controlsDisabled: vueV(() => e.value || r.value),
+    highlightedItem: vueBn(null),
     navigate: o,
     checkAccessibility: s,
     enterKeyComponentState: u,
-    enterKeyComponentBusy: a(() => D.includes(u.value?.status || ``))
+    enterKeyComponentBusy: vueV(() => D.includes(u.value?.status || ``))
   };
 }
 function k() {

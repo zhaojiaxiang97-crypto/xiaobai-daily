@@ -1,10 +1,10 @@
-import { At as e } from "../ui/Switch.js";
-import { $n as t, An as n, S as r, St as i, b as a, bn as o, c as s, gt as c, j as l, k as u, ot as d, rr as f, v as p, vn as m, x as h, y as g } from "./vue-i18n.runtime.js";
-import { t as _ } from "../ui/icons/lucide-icons.js";
-import { t as v } from "../i18n/i18n-helper.js";
-import { _ as y } from "./screenshot-beautifier.js";
-import { Ht as b } from "./main.js";
-import { t as x } from "../pages/ToolDropzone.js";
+import { At as uiSwitchAt } from "../ui/Switch.js";
+import { $n as vueN, An as vueAn, S as vueS, St as vueSt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, ot as vueOt, rr as vueRr, v as vueV, vn as vueVn, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
+import { t as lucideT } from "../ui/icons/lucide-icons.js";
+import { t as i18nT } from "../i18n/i18n-helper.js";
+import { _ as beautifier } from "./screenshot-beautifier.js";
+import { Ht as mainHt } from "./main.js";
+import { t as ToolDropzoneT } from "../pages/ToolDropzone.js";
 var S = {
     class: `flex flex-wrap items-stretch gap-2`
   },
@@ -38,7 +38,7 @@ var S = {
     key: 0,
     class: `mt-2 text-[11px] text-destructive`
   },
-  N = l({
+  N = vueJ({
     __name: `ReferenceImageUploader`,
     props: {
       items: {},
@@ -55,8 +55,8 @@ var S = {
       let propsAlias = props,
         {
           t: p
-        } = v(),
-        m = o(null);
+        } = i18nT(),
+        m = vueBn(null);
       function b(e) {
         return e <= 0 ? `0 KB` : e >= 1048576 ? `${(e / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(e / 1024))} KB`;
       }
@@ -65,7 +65,7 @@ var S = {
           n = Array.from(t.files || []);
         t.value = ``, propsAlias.addFiles(n);
       }
-      return (ctx, renderCache) => (c(), r(s, null, [g(`input`, {
+      return (ctx, renderCache) => (vueGt(), vueS(vueC, null, [vueY(`input`, {
         ref_key: `input`,
         ref: m,
         class: `sr-only`,
@@ -73,36 +73,36 @@ var S = {
         multiple: ``,
         accept: `image/jpeg,image/png,image/webp,image/bmp,image/tiff,image/gif,image/heic,image/heif,.heic,.heif`,
         onChange: N
-      }, null, 544), g(`div`, S, [(c(true), r(s, null, i(propsAlias.items, (count, o) => (c(), r(`article`, {
+      }, null, 544), vueY(`div`, S, [(vueGt(true), vueS(vueC, null, vueSt(propsAlias.items, (count, o) => (vueGt(), vueS(`article`, {
         key: count.id,
-        class: t([`grid h-[78px] w-[250px] min-w-0 shrink-0 grid-cols-[48px_minmax(0,1fr)_26px] items-center gap-2 rounded-[10px] border bg-card p-[7px]`, count.error ? `border-destructive/45` : `border-border`])
-      }, [g(`div`, C, [count.previewFailed ? (c(), a(n(e), {
+        class: vueN([`grid h-[78px] w-[250px] min-w-0 shrink-0 grid-cols-[48px_minmax(0,1fr)_26px] items-center gap-2 rounded-[10px] border bg-card p-[7px]`, count.error ? `border-destructive/45` : `border-border`])
+      }, [vueY(`div`, C, [count.previewFailed ? (vueGt(), vueB(vueAn(uiSwitchAt), {
         key: 1,
         size: 24
-      })) : (c(), r(`img`, {
+      })) : (vueGt(), vueS(`img`, {
         key: 0,
         class: `size-full object-cover`,
         src: count.previewUrl,
         alt: count.name,
         onError: e => count.previewFailed = true
-      }, null, 40, w)), g(`span`, T, f(o + 1), 1), count.uploading ? (c(), r(`span`, E, [u(n(y), {
+      }, null, 40, w)), vueY(`span`, T, vueRr(o + 1), 1), count.uploading ? (vueGt(), vueS(`span`, E, [vueK(vueAn(beautifier), {
         size: 18,
         class: `animate-spin`
-      })])) : h(``, true)]), g(`div`, D, [g(`strong`, O, f(count.name), 1), count.error ? (c(), r(`span`, k, f(count.error), 1)) : (c(), r(`span`, A, f(count.uploading ? n(p)(`toolboxNative.uploading`) : b(count.size)), 1))]), g(`button`, {
+      })])) : vueX(``, true)]), vueY(`div`, D, [vueY(`strong`, O, vueRr(count.name), 1), count.error ? (vueGt(), vueS(`span`, k, vueRr(count.error), 1)) : (vueGt(), vueS(`span`, A, vueRr(count.uploading ? vueAn(p)(`toolboxNative.uploading`) : b(count.size)), 1))]), vueY(`button`, {
         type: `button`,
         class: `inline-flex size-[26px] items-center justify-center rounded-[7px] text-muted-foreground transition-colors hover:bg-muted hover:text-destructive`,
-        "aria-label": n(p)(`toolboxNative.removeReferenceImage`),
+        "aria-label": vueAn(p)(`toolboxNative.removeReferenceImage`),
         onClick: e => propsAlias.remove(count.id)
-      }, [u(n(_), {
+      }, [vueK(vueAn(lucideT), {
         size: 14
-      })], 8, j)], 2))), 128)), propsAlias.items.length < 10 ? (c(), a(x, {
+      })], 8, j)], 2))), 128)), propsAlias.items.length < 10 ? (vueGt(), vueB(ToolDropzoneT, {
         key: 0,
         class: `h-[78px] w-[340px] max-w-full shrink`,
-        title: n(p)(`toolboxNative.clickOrDropReferenceImagesHere`),
-        hint: `${n(p)(`toolboxNative.jpgPngWebpAndMoreMaximumPerImage`)} ${propsAlias.maxMb}MB`,
+        title: vueAn(p)(`toolboxNative.clickOrDropReferenceImagesHere`),
+        hint: `${vueAn(p)(`toolboxNative.jpgPngWebpAndMoreMaximumPerImage`)} ${propsAlias.maxMb}MB`,
         onSelect: renderCache[0] ||= e => m.value?.click(),
         onDrop: propsAlias.addFiles
-      }, null, 8, [`title`, `hint`, `onDrop`])) : h(``, true)]), propsAlias.error ? (c(), r(`p`, M, f(propsAlias.error), 1)) : h(``, true)], 64));
+      }, null, 8, [`title`, `hint`, `onDrop`])) : vueX(``, true)]), propsAlias.error ? (vueGt(), vueS(`p`, M, vueRr(propsAlias.error), 1)) : vueX(``, true)], 64));
     }
   });
 function P() {
@@ -112,12 +112,12 @@ function F(e) {
   return new Set([`image/jpeg`, `image/png`, `image/webp`, `image/bmp`, `image/x-ms-bmp`, `image/tiff`, `image/gif`, `image/heic`, `image/heif`]).has(e.type.toLocaleLowerCase()) ? true : /\.(jpe?g|png|webp|bmp|tiff?|gif|heic|heif)$/i.test(e.name);
 }
 function I(e) {
-  let t = o([]),
-    n = o(``),
+  let t = vueBn([]),
+    n = vueBn(``),
     r = new Map(),
     fallbackValue = e.maxCount ?? 10,
-    a = p(() => t.value.some(item => item.uploading)),
-    s = p(() => t.value.some(item => item.error || !item.token));
+    a = vueV(() => t.value.some(item => item.uploading)),
+    s = vueV(() => t.value.some(item => item.error || !item.token));
   async function c(t) {
     if (!e.user.value) return;
     t.uploading = true, t.error = ``;
@@ -126,7 +126,7 @@ function I(e) {
     let abortController = new AbortController();
     r.set(t.id, abortController);
     try {
-      let r = await b(`reference-upload.php`, {
+      let r = await mainHt(`reference-upload.php`, {
         method: `POST`,
         csrfToken: e.user.value.csrfToken,
         body: formData,
@@ -169,7 +169,7 @@ function I(e) {
         });
         continue;
       }
-      let r = m({
+      let r = vueVn({
         id: P(),
         file: i,
         name: i.name,
@@ -191,7 +191,7 @@ function I(e) {
   function f() {
     r.forEach(item => item.abort()), r.clear(), t.value.forEach(item => URL.revokeObjectURL(item.previewUrl)), t.value = [], n.value = ``;
   }
-  return d(f), {
+  return vueOt(f), {
     items: t,
     error: n,
     hasPending: a,

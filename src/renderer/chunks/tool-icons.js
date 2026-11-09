@@ -1,18 +1,18 @@
-import { Et as e } from "../ui/Switch.js";
-import { D as t, S as n, bn as r, gt as i, j as a, n as ee } from "./vue-i18n.runtime.js";
-import { r as o } from "../ui/icons/lucide-icons.js";
-import { a as s, d as te, i as c, r as l } from "../i18n/i18n-helper.js";
-import { t as ne } from "./camera.js";
-import { t as re } from "../ui/icons/icon-clapperboard.js";
-import { t as ie } from "./clipboard-list.js";
-import { g as ae, t as oe } from "./screenshot-beautifier.js";
-import { t as se, u as ce } from "./work-motivator.js";
-import { t as u } from "./file-down.js";
-import { t as d } from "./flag.js";
-import { t as le } from "./image-down.js";
-import { t as ue } from "../ui/icons/icon-minimize.js";
-import { t as de } from "./square-play.js";
-var fe = o(`file-pen-line`, [[`path`, {
+import { Et as uiSwitchEt } from "../ui/Switch.js";
+import { D as vueD, S as vueS, bn as vueBn, gt as vueGt, j as vueJ, n as vueN } from "./vue-i18n.runtime.js";
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+import { a as i18nA, d as i18nD, i as i18nI, r as i18nR } from "../i18n/i18n-helper.js";
+import { t as cameraT } from "./camera.js";
+import { t as iconclapperboardT } from "../ui/icons/icon-clapperboard.js";
+import { t as clipListT } from "./clipboard-list.js";
+import { g as beautifierG, t as beautifierT } from "./screenshot-beautifier.js";
+import { t as motivatorT, u as motivatorU } from "./work-motivator.js";
+import { t as filedownT } from "./file-down.js";
+import { t as flagT } from "./flag.js";
+import { t as imagedownT } from "./image-down.js";
+import { t as iconminimizeT } from "../ui/icons/icon-minimize.js";
+import { t as squareplayT } from "./square-play.js";
+var fe = lucideR(`file-pen-line`, [[`path`, {
     d: `M14.364 13.634a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506l4.013-4.009a1 1 0 0 0-3.004-3.004z`,
     key: `ukzhwg`
   }], [`path`, {
@@ -25,7 +25,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M8 18h1`,
     key: `13wk12`
   }]]),
-  f = o(`file-search`, [[`path`, {
+  f = lucideR(`file-search`, [[`path`, {
     d: `M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z`,
     key: `1oefj6`
   }], [`path`, {
@@ -40,7 +40,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M13.3 16.3 15 18`,
     key: `2quom7`
   }]]),
-  pe = o(`files`, [[`path`, {
+  pe = lucideR(`files`, [[`path`, {
     d: `M15 2h-4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8`,
     key: `14sh0y`
   }], [`path`, {
@@ -50,7 +50,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M5 7a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h8a2 2 0 0 0 1.732-1`,
     key: `l4dndm`
   }]]),
-  me = o(`hand-coins`, [[`path`, {
+  me = lucideR(`hand-coins`, [[`path`, {
     d: `M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17`,
     key: `geh8rc`
   }], [`path`, {
@@ -70,7 +70,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     r: `3`,
     key: `151irh`
   }]]),
-  he = o(`image-up`, [[`path`, {
+  he = lucideR(`image-up`, [[`path`, {
     d: `M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21`,
     key: `9csbqa`
   }], [`path`, {
@@ -85,7 +85,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     r: `2`,
     key: `af1f0g`
   }]]),
-  ge = o(`info`, [[`circle`, {
+  ge = lucideR(`info`, [[`circle`, {
     cx: `12`,
     cy: `12`,
     r: `10`,
@@ -97,7 +97,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M12 8h.01`,
     key: `e9boi3`
   }]]),
-  _e = o(`keyboard-music`, [[`rect`, {
+  _e = lucideR(`keyboard-music`, [[`rect`, {
     width: `20`,
     height: `16`,
     x: `2`,
@@ -129,7 +129,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M18 12v4`,
     key: `tjjnbz`
   }]]),
-  p = o(`keyboard`, [[`path`, {
+  p = lucideR(`keyboard`, [[`path`, {
     d: `M10 8h.01`,
     key: `1r9ogq`
   }], [`path`, {
@@ -161,7 +161,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     rx: `2`,
     key: `18n3k1`
   }]]),
-  m = o(`mouse-pointer-click`, [[`path`, {
+  m = lucideR(`mouse-pointer-click`, [[`path`, {
     d: `M14 4.1 12 6`,
     key: `ita8i4`
   }], [`path`, {
@@ -177,7 +177,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M9.037 9.69a.498.498 0 0 1 .653-.653l11 4.5a.5.5 0 0 1-.074.949l-4.349 1.041a1 1 0 0 0-.74.739l-1.04 4.35a.5.5 0 0 1-.95.074z`,
     key: `s0h3yz`
   }]]),
-  ve = o(`network`, [[`rect`, {
+  ve = lucideR(`network`, [[`rect`, {
     x: `16`,
     y: `16`,
     width: `6`,
@@ -205,7 +205,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M12 12V8`,
     key: `2874zd`
   }]]),
-  h = o(`notebook-pen`, [[`path`, {
+  h = lucideR(`notebook-pen`, [[`path`, {
     d: `M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4`,
     key: `re6nr2`
   }], [`path`, {
@@ -224,7 +224,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z`,
     key: `pqwjuv`
   }]]),
-  ye = o(`pen-tool`, [[`path`, {
+  ye = lucideR(`pen-tool`, [[`path`, {
     d: `M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z`,
     key: `nt11vn`
   }], [`path`, {
@@ -239,7 +239,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     r: `2`,
     key: `xmgehs`
   }]]),
-  be = o(`scissors`, [[`circle`, {
+  be = lucideR(`scissors`, [[`circle`, {
     cx: `6`,
     cy: `6`,
     r: `3`,
@@ -259,7 +259,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M14.8 14.8 20 20`,
     key: `ptml3r`
   }]]),
-  xe = o(`shopping-bag`, [[`path`, {
+  xe = lucideR(`shopping-bag`, [[`path`, {
     d: `M16 10a4 4 0 0 1-8 0`,
     key: `1ltviw`
   }], [`path`, {
@@ -269,7 +269,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     d: `M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z`,
     key: `o988cm`
   }]]),
-  Se = o(`square-m`, [[`path`, {
+  Se = lucideR(`square-m`, [[`path`, {
     d: `M8 16V8.5a.5.5 0 0 1 .9-.3l2.7 3.599a.5.5 0 0 0 .8 0l2.7-3.6a.5.5 0 0 1 .9.3V16`,
     key: `1ywlsj`
   }], [`rect`, {
@@ -280,7 +280,7 @@ var fe = o(`file-pen-line`, [[`path`, {
     rx: `2`,
     key: `h1oib`
   }]]),
-  g = o(`wand-sparkles`, [[`path`, {
+  g = lucideR(`wand-sparkles`, [[`path`, {
     d: `m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72`,
     key: `ul74o6`
   }], [`path`, {
@@ -4993,7 +4993,7 @@ function Ee(e) {
 }
 var De = [`work`, `student`],
   A = {
-    recordingSchedule: ce,
+    recordingSchedule: motivatorU,
     autoStart: true,
     networkProxyEnabled: false,
     networkProxyMode: `system`,
@@ -5069,7 +5069,7 @@ var De = [`work`, `student`],
     woodenFishAnchorX: -1,
     woodenFishAnchorY: -1,
     showWorkMotivator: false,
-    workMotivatorConfig: se,
+    workMotivatorConfig: motivatorT,
     workMotivatorHasSavedPosition: false,
     workMotivatorX: -1,
     workMotivatorY: -1,
@@ -5091,7 +5091,7 @@ var De = [`work`, `student`],
     screenshotBeautifierShortcut: ``,
     screenshotBeautifierAfterCapture: `editor`,
     screenshotBeautifierAutoCopy: true,
-    screenshotBeautifierStyle: oe,
+    screenshotBeautifierStyle: beautifierT,
     screenshotBeautifierPresets: [],
     screenshotBeautifierSaveDirectory: ``,
     screenshotBeautifierHistoryLimit: 50,
@@ -5192,7 +5192,7 @@ var ke = {
       "en-US": options
     }
   },
-  fromEntries = Object.fromEntries(Object.keys(c).map(item => [item, c[item]])),
+  fromEntries = Object.fromEntries(Object.keys(i18nI).map(item => [item, i18nI[item]])),
   M = `work`;
 function N(e) {
   return !!e && typeof e == `object` && !Array.isArray(e);
@@ -5227,7 +5227,7 @@ function L(e) {
       let n = fromEntries[e],
         r = ke[t][e],
         i = r ? F(n, r) : n;
-      l.global.setLocaleMessage(e, i);
+      i18nR.global.setLocaleMessage(e, i);
     }
   }
 }
@@ -5254,14 +5254,14 @@ function Ne() {
 matchMedia.addEventListener(`change`, () => {
   B === `system` && V(`system`);
 });
-var U = r({
+var U = vueBn({
     ...A
   }),
-  W = r(false),
-  G = r(false),
-  K = r(false),
-  q = r(null),
-  J = r(null),
+  W = vueBn(false),
+  G = vueBn(false),
+  K = vueBn(false),
+  q = vueBn(null),
+  J = vueBn(null),
   Y = null,
   X = null;
 function Z(e, t) {
@@ -5269,8 +5269,8 @@ function Z(e, t) {
 }
 function Pe() {
   let {
-    t: e
-  } = ee();
+    t: translate
+  } = vueN();
   async function t() {
     return Y || (!X && window.electronAPI?.settings?.onChanged && (X = window.electronAPI.settings.onChanged(e => {
       U.value = {
@@ -5281,9 +5281,9 @@ function Pe() {
       U.value = {
         ...A,
         ...result
-      }, H(U.value.themeMode), L(U.value.usageMode), U.value.language && U.value.language !== l.global.locale.value && s(U.value.language), K.value = true;
+      }, H(U.value.themeMode), L(U.value.usageMode), U.value.language && U.value.language !== i18nR.global.locale.value && i18nA(U.value.language), K.value = true;
     }).catch(err => {
-      q.value = Z(err, e(`composables.settings.loadFailed`));
+      q.value = Z(err, translate(`composables.settings.loadFailed`));
     }).finally(() => {
       K.value = true, W.value = false, Y = null;
     }), Y);
@@ -5302,7 +5302,7 @@ function Pe() {
         ...t
       }, n.silent || (J.value = Date.now()), true;
     } catch (n) {
-      return U.value = r, t.themeMode !== undefined && H(r.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), false;
+      return U.value = r, t.themeMode !== undefined && H(r.themeMode), q.value = Z(n, translate(`composables.settings.saveFailed`)), false;
     } finally {
       G.value = false;
     }
@@ -5316,7 +5316,7 @@ function Pe() {
         ...switchUsageMode.settings
       }, L(U.value.usageMode), J.value = Date.now(), switchUsageMode;
     } catch (t) {
-      return q.value = Z(t, e(`composables.settings.saveFailed`)), null;
+      return q.value = Z(t, translate(`composables.settings.saveFailed`)), null;
     } finally {
       G.value = false;
     }
@@ -5333,7 +5333,7 @@ function Pe() {
     switchUsageMode: r
   };
 }
-var Q = r(null);
+var Q = vueBn(null);
 function $() {
   return window.electronAPI?.platform === `darwin`;
 }
@@ -5369,28 +5369,28 @@ function Fe() {
 }
 var Ie = [`width`, `height`, `stroke-width`],
   Le = {
-    sparkles: ae,
+    sparkles: beautifierG,
     "shopping-bag": xe,
     scissors: be,
-    minimize: ue,
+    minimize: iconminimizeT,
     "image-up": he,
-    "image-down": le,
-    clapperboard: re,
-    "clipboard-list": ie,
-    "play-square": de,
+    "image-down": imagedownT,
+    clapperboard: iconclapperboardT,
+    "clipboard-list": clipListT,
+    "play-square": squareplayT,
     "notebook-pen": h,
     "wand-text": g,
     "file-search": f,
-    "file-down": u,
+    "file-down": filedownT,
     "file-pen-line": fe,
     "square-m": Se,
     files: pe,
     network: ve,
-    "audio-lines": te,
-    flag: d,
+    "audio-lines": i18nD,
+    flag: flagT,
     "pen-tool": ye,
-    send: e,
-    "wooden-fish": a({
+    send: uiSwitchEt,
+    "wooden-fish": vueJ({
       __name: `WoodenFishIcon`,
       props: {
         size: {
@@ -5401,7 +5401,7 @@ var Ie = [`width`, `height`, `stroke-width`],
         }
       },
       setup(count) {
-        return (ctx, renderCache) => (i(), n(`svg`, {
+        return (ctx, renderCache) => (vueGt(), vueS(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           width: count.size,
           height: count.size,
@@ -5412,13 +5412,13 @@ var Ie = [`width`, `height`, `stroke-width`],
           "stroke-linecap": `round`,
           "stroke-linejoin": `round`,
           "aria-hidden": `true`
-        }, [...(renderCache[0] ||= [t(`<path d="M4.6 19.5C3.2 17.8 2.6 15.8 3 13.6 3.8 9.4 7.2 6.5 11 6.5s7.2 2.9 8 7.1c.4 2.2-.2 4.2-1.6 5.9Z"></path><path d="M6 14.2c3.3 1.2 6.7 1.2 10 0"></path><path d="M2.5 22h17"></path><circle cx="18.6" cy="4.4" r="1.9"></circle><path d="m20.2 3.3 2.3-1.3"></path>`, 5)])], 8, Ie));
+        }, [...(renderCache[0] ||= [vueD(`<path d="M4.6 19.5C3.2 17.8 2.6 15.8 3 13.6 3.8 9.4 7.2 6.5 11 6.5s7.2 2.9 8 7.1c.4 2.2-.2 4.2-1.6 5.9Z"></path><path d="M6 14.2c3.3 1.2 6.7 1.2 10 0"></path><path d="M2.5 22h17"></path><circle cx="18.6" cy="4.4" r="1.9"></circle><path d="m20.2 3.3 2.3-1.3"></path>`, 5)])], 8, Ie));
       }
     }),
     keyboard: p,
     "keyboard-music": _e,
     "mouse-pointer-click": m,
-    camera: ne,
+    camera: cameraT,
     "hand-coins": me
   };
 export { ge as C, p as S, S as _, L as a, h as b, E as c, Te as d, Ee as f, y as g, C as h, Ne as i, w as l, x as m, Fe as n, Ae as o, k as p, Pe as r, T as s, Le as t, D as u, v, f as w, m as x, g as y };

@@ -1,5 +1,5 @@
-import { r as e } from "../ui/icons/lucide-icons.js";
-var t = e(`circle-question-mark`, [[`circle`, {
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+var t = lucideR(`circle-question-mark`, [[`circle`, {
   cx: `12`,
   cy: `12`,
   r: `10`,

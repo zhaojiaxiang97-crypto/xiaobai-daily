@@ -1,4 +1,4 @@
-import { Wt as e, bn as t, n, v as r } from "./vue-i18n.runtime.js";
+import { Wt as vueWt, bn as vueBn, n as vueN, v as vueV } from "./vue-i18n.runtime.js";
 function i(t, fn, r) {
   let i = crypto.randomUUID(),
     a = false,
@@ -25,7 +25,7 @@ function i(t, fn, r) {
         params: r?.params
       }).catch(() => undefined) : desktopSync.unsubscribe(i).catch(() => undefined));
     },
-    u = e(() => r?.active?.() ?? true, l, {
+    u = vueWt(() => r?.active?.() ?? true, l, {
       immediate: true
     });
   return document.addEventListener(`visibilitychange`, l), () => {
@@ -100,9 +100,9 @@ var s = {
       };
     }
   },
-  u = t(null),
-  d = t(null),
-  f = t(false);
+  u = vueBn(null),
+  d = vueBn(null),
+  f = vueBn(false);
 function p(fn) {
   return {
     planId: `free`,
@@ -116,14 +116,14 @@ function p(fn) {
     pointsBalance: 0
   };
 }
-var m = t(null),
-  h = t(false),
-  g = t(false),
-  _ = t(false),
-  v = t(``),
-  y = t(false),
-  b = t(``),
-  x = t(false),
+var m = vueBn(null),
+  h = vueBn(false),
+  g = vueBn(false),
+  _ = vueBn(false),
+  v = vueBn(``),
+  y = vueBn(false),
+  b = vueBn(``),
+  x = vueBn(false),
   S = false,
   C = null,
   w = null,
@@ -135,9 +135,9 @@ var m = t(null),
 function A(e) {
   try {
     let {
-      t
-    } = n();
-    return t(e);
+      t: translate
+    } = vueN();
+    return translate(e);
   } catch {
     return e;
   }
@@ -145,8 +145,8 @@ function A(e) {
 function j() {
   let {
       t: e
-    } = n(),
-    t = r(() => true);
+    } = vueN(),
+    t = vueV(() => true);
   function c(event) {
     if (event instanceof a) {
       let n = `composables.auth.error.${event.code}`,

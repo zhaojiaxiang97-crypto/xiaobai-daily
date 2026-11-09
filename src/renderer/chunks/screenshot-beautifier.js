@@ -1,5 +1,5 @@
-import { r as e } from "../ui/icons/lucide-icons.js";
-var t = e(`copy`, [[`rect`, {
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+var t = lucideR(`copy`, [[`rect`, {
     width: `14`,
     height: `14`,
     x: `8`,
@@ -11,7 +11,7 @@ var t = e(`copy`, [[`rect`, {
     d: `M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`,
     key: `zix9uf`
   }]]),
-  n = e(`download`, [[`path`, {
+  n = lucideR(`download`, [[`path`, {
     d: `M12 15V3`,
     key: `m9g1x1`
   }], [`path`, {
@@ -21,11 +21,11 @@ var t = e(`copy`, [[`rect`, {
     d: `m7 10 5 5 5-5`,
     key: `brsn70`
   }]]),
-  r = e(`loader-circle`, [[`path`, {
+  r = lucideR(`loader-circle`, [[`path`, {
     d: `M21 12a9 9 0 1 1-6.219-8.56`,
     key: `13zald`
   }]]),
-  i = e(`sparkles`, [[`path`, {
+  i = lucideR(`sparkles`, [[`path`, {
     d: `M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z`,
     key: `1s2grr`
   }], [`path`, {

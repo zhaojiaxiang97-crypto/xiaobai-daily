@@ -1,6 +1,6 @@
-import { $n as e, S as t, Wt as n, Yt as r, bn as i, gt as a, j as o, k as s, ot as c, rr as l, ut as u, v as d, x as f, y as p } from "../chunks/vue-i18n.runtime.js";
-import { r as m } from "../i18n/en-US-player.js";
-import { H as h, L as g, O as _, S as v, X as y, v as b, w as x } from "../chunks/main.js";
+import { $n as vueN, S as vueS, Wt as vueWt, Yt as vueYt, bn as vueBn, gt as vueGt, j as vueJ, k as vueK, ot as vueOt, rr as vueRr, ut as vueUt, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { r as playerR } from "../i18n/en-US-player.js";
+import { H as mainH, L as mainL, O as mainO, S as mainS, X as mainX, v as mainV, w as mainW } from "../chunks/main.js";
 var handler = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
@@ -29,22 +29,22 @@ var handler = (e, t, n) => new Promise((fn, i) => {
     key: 1,
     class: `math-block__fallback text-left`
   },
-  D = b(o({
+  D = mainV(vueJ({
     __name: `MathBlockNode`,
     props: {
       node: {}
     },
     setup(props) {
       let propsAlias = props,
-        D = i(null),
-        O = d(() => _(propsAlias.node.content)),
+        D = vueBn(null),
+        O = vueV(() => mainO(propsAlias.node.content)),
         k = function () {
           if (!propsAlias.node.content) return {
             html: ``,
             text: propsAlias.node.raw,
             loading: false
           };
-          let e = g();
+          let e = mainL();
           if (!e) return {
             html: ``,
             text: propsAlias.node.loading ? `` : propsAlias.node.raw,
@@ -67,15 +67,15 @@ var handler = (e, t, n) => new Promise((fn, i) => {
             };
           }
         }(),
-        A = i(k.html),
-        j = i(k.text),
+        A = vueBn(k.html),
+        j = vueBn(k.text),
         M = false,
         N = 0,
         P = false,
         F = null,
-        I = y(),
+        I = mainX(),
         L = null,
-        R = i(k.loading);
+        R = vueBn(k.loading);
       function z() {
         return handler(this, null, function* () {
           if (P) return;
@@ -86,7 +86,7 @@ var handler = (e, t, n) => new Promise((fn, i) => {
           F &&= (F.abort(), null);
           let e = ++N,
             abortController = new AbortController();
-          F = abortController, h(O.value, true, {
+          F = abortController, mainH(O.value, true, {
             timeout: 3e3,
             waitTimeout: 2e3,
             maxRetries: 1,
@@ -98,14 +98,14 @@ var handler = (e, t, n) => new Promise((fn, i) => {
             let fallbackValue = event?.code || event?.name,
               r = fallbackValue === `KATEX_DISABLED`;
             if (fallbackValue === `WORKER_INIT_ERROR` || event?.fallbackToRenderer || fallbackValue === `WORKER_BUSY` || fallbackValue === `WORKER_TIMEOUT`) {
-              let e = yield v();
+              let e = yield mainS();
               if (e) {
                 try {
                   let toStringResult = e.renderToString(O.value, {
                     throwOnError: propsAlias.node.loading,
                     displayMode: true
                   });
-                  A.value = toStringResult, j.value = ``, M = true, R.value = false, x(O.value, true, toStringResult);
+                  A.value = toStringResult, j.value = ``, M = true, R.value = false, mainW(O.value, true, toStringResult);
                 } catch {}
                 return;
               }
@@ -115,35 +115,35 @@ var handler = (e, t, n) => new Promise((fn, i) => {
           }));
         });
       }
-      return (k.html || k.text) && (M = true), n(() => propsAlias.node.content, () => {
+      return (k.html || k.text) && (M = true), vueWt(() => propsAlias.node.content, () => {
         z();
-      }), u(() => {
+      }), vueUt(() => {
         A.value || z();
-      }), c(() => {
+      }), vueOt(() => {
         var e;
         P = true, F &&= (F.abort(), null), (e = L?.destroy) == null || e.call(L), L = null;
-      }), (n, i) => (a(), t(`div`, {
+      }), (n, renderCache) => (vueGt(), vueS(`div`, {
         ref_key: `containerEl`,
         ref: D,
         class: `math-block text-center overflow-x-auto relative`,
         "data-markstream-math": `block`,
         "data-markstream-mode": A.value ? `katex` : j.value ? `fallback` : `loading`
-      }, [s(m, {
+      }, [vueK(playerR, {
         name: `math-fade`
       }, {
-        default: r(() => [!R.value || A.value || j.value ? f(``, true) : (a(), t(`div`, w, [...(i[0] ||= [p(`div`, {
+        default: vueYt(() => [!R.value || A.value || j.value ? vueX(``, true) : (vueGt(), vueS(`div`, w, [...(renderCache[0] ||= [vueY(`div`, {
           class: `math-loading-spinner`
         }, null, -1)])]))]),
         _: 1
-      }), A.value ? (a(), t(`div`, {
+      }), A.value ? (vueGt(), vueS(`div`, {
         key: 0,
-        class: e([`math-block__content`, {
+        class: vueN([`math-block__content`, {
           "math-rendering": R.value
         }]),
         innerHTML: A.value
-      }, null, 10, T)) : j.value ? (a(), t(`pre`, E, l(j.value), 1)) : (a(), t(`div`, {
+      }, null, 10, T)) : j.value ? (vueGt(), vueS(`pre`, E, vueRr(j.value), 1)) : (vueGt(), vueS(`div`, {
         key: 2,
-        class: e([`math-block__content`, {
+        class: vueN([`math-block__content`, {
           "math-rendering": R.value
         }])
       }, null, 2))], 8, C));

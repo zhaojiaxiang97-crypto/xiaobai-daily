@@ -1,15 +1,15 @@
-import { r as e } from "../ui/Switch.js";
-import { An as t, E as n, Et as r, O as i, S as a, St as o, Yt as s, b as c, c as l, fn as u, gt as d, j as f, k as p, nr as m, rr as h, v as g, x as _, y as v } from "../chunks/vue-i18n.runtime.js";
-import { r as y } from "../ui/icons/lucide-icons.js";
-import { l as b, s as x } from "../chunks/HeatMapRangePicker.js";
-import { t as S } from "../i18n/i18n-helper.js";
-import { O as C } from "../chunks/work-motivator.js";
-import { r as w } from "../chunks/tool-icons.js";
-import { t as T } from "../chunks/useAuth.js";
-import { c as E, o as D } from "../chunks/toolSettingsContext.js";
-import { $ as O, et as k, h as A } from "../chunks/main.js";
-import { t as j } from "./DesktopWidgetPage.js";
-var M = y(`hash`, [[`line`, {
+import { r as uiSwitchR } from "../ui/Switch.js";
+import { An as vueAn, E as vueE, Et as vueEt, O as vueO, S as vueS, St as vueSt, Yt as vueYt, b as vueB, c as vueC, fn as vueFn, gt as vueGt, j as vueJ, k as vueK, nr as vueNr, rr as vueRr, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { r as lucideR } from "../ui/icons/lucide-icons.js";
+import { l as heatRangeL, s as heatRangeS } from "../chunks/HeatMapRangePicker.js";
+import { t as i18nT } from "../i18n/i18n-helper.js";
+import { O as motivatorO } from "../chunks/work-motivator.js";
+import { r as toolIconR } from "../chunks/tool-icons.js";
+import { t as useAuthT } from "../chunks/useAuth.js";
+import { c as toolSettingsC, o as toolSettingsO } from "../chunks/toolSettingsContext.js";
+import { $ as main, et as mainEt, h as mainH } from "../chunks/main.js";
+import { t as DesktopWidgetPageT } from "./DesktopWidgetPage.js";
+var M = lucideR(`hash`, [[`line`, {
     x1: `4`,
     x2: `20`,
     y1: `9`,
@@ -74,7 +74,7 @@ var M = y(`hash`, [[`line`, {
   G = {
     class: `text-[11px] leading-snug text-muted-foreground`
   },
-  K = f({
+  K = vueJ({
     __name: `KeyboardHeatmapPreview`,
     props: {
       enableDisabled: {
@@ -88,7 +88,7 @@ var M = y(`hash`, [[`line`, {
       let emitAlias = emit,
         {
           t: g
-        } = S(),
+        } = i18nT(),
         options = {
           Space: 4,
           E: 4,
@@ -126,7 +126,7 @@ var M = y(`hash`, [[`line`, {
           2: 1,
           0: 1
         },
-        y = D.value ? [{
+        y = toolSettingsO.value ? [{
           label: `fn`
         }, {
           label: `⌃`
@@ -169,7 +169,7 @@ var M = y(`hash`, [[`line`, {
           label: `Ctrl`,
           width: 1.5
         }],
-        b = D.value ? `⇧` : `Shift`,
+        b = toolSettingsO.value ? `⇧` : `Shift`,
         handler = e => [...e].map(item => ({
           label: item
         })),
@@ -204,36 +204,36 @@ var M = y(`hash`, [[`line`, {
         title: `toolboxNative.keyboardHeatmapPointCountTitle`,
         desc: `toolboxNative.keyboardHeatmapPointCountDesc`
       }, {
-        icon: C,
+        icon: motivatorO,
         title: `toolboxNative.keyboardHeatmapPointPrivacyTitle`,
         desc: `toolboxNative.keyboardHeatmapPointPrivacyDesc`
       }, {
-        icon: x,
+        icon: heatRangeS,
         title: `toolboxNative.keyboardHeatmapPointLocalTitle`,
         desc: `toolboxNative.keyboardHeatmapPointLocalDesc`
       }];
-      return (ctx, renderCache) => (d(), a(`section`, N, [v(`div`, P, [v(`div`, F, [(d(), a(l, null, o(T, (e, t) => v(`div`, {
+      return (ctx, renderCache) => (vueGt(), vueS(`section`, N, [vueY(`div`, P, [vueY(`div`, F, [(vueGt(), vueS(vueC, null, vueSt(T, (e, t) => vueY(`div`, {
         key: t,
         class: `flex gap-1`
-      }, [(d(true), a(l, null, o(e, (e, t) => (d(), a(`span`, {
+      }, [(vueGt(true), vueS(vueC, null, vueSt(e, (e, t) => (vueGt(), vueS(`span`, {
         key: t,
         class: `flex h-7 min-w-0 items-center justify-center overflow-hidden rounded-[5px] border border-border/70 text-[10px] leading-none text-foreground/70`,
-        style: m({
+        style: vueNr({
           flex: `${e.width ?? 1} 1 0`,
           background: E(e.label)
         })
-      }, h(e.label === `Space` ? `` : e.label), 5))), 128))])), 64))]), v(`span`, I, h(t(g)(`toolboxNative.keyboardHeatmapSample`)), 1)]), v(`div`, L, [v(`div`, R, [v(`strong`, z, h(t(g)(`toolboxNative.keyboardHeatmapPreviewTitle`)), 1), v(`small`, B, h(t(g)(`toolboxNative.keyboardHeatmapPreviewDesc`)), 1)]), v(`ul`, V, [(d(), a(l, null, o(O, e => v(`li`, {
+      }, vueRr(e.label === `Space` ? `` : e.label), 5))), 128))])), 64))]), vueY(`span`, I, vueRr(vueAn(g)(`toolboxNative.keyboardHeatmapSample`)), 1)]), vueY(`div`, L, [vueY(`div`, R, [vueY(`strong`, z, vueRr(vueAn(g)(`toolboxNative.keyboardHeatmapPreviewTitle`)), 1), vueY(`small`, B, vueRr(vueAn(g)(`toolboxNative.keyboardHeatmapPreviewDesc`)), 1)]), vueY(`ul`, V, [(vueGt(), vueS(vueC, null, vueSt(O, e => vueY(`li`, {
         key: e.title,
         class: `flex gap-2.5`
-      }, [v(`span`, H, [(d(), c(r(e.icon), {
+      }, [vueY(`span`, H, [(vueGt(), vueB(vueEt(e.icon), {
         size: 14
-      }))]), v(`span`, U, [v(`strong`, W, h(t(g)(e.title)), 1), v(`small`, G, h(t(g)(e.desc)), 1)])])), 64))]), p(t(e), {
+      }))]), vueY(`span`, U, [vueY(`strong`, W, vueRr(vueAn(g)(e.title)), 1), vueY(`small`, G, vueRr(vueAn(g)(e.desc)), 1)])])), 64))]), vueK(vueAn(uiSwitchR), {
         size: `sm`,
         class: `self-start`,
         disabled: props.enableDisabled,
         onClick: renderCache[0] ||= e => emitAlias(`enable`)
       }, {
-        default: s(() => [i(h(t(g)(`toolboxNative.keyboardHeatmapEnableAction`)), 1)]),
+        default: vueYt(() => [vueO(vueRr(vueAn(g)(`toolboxNative.keyboardHeatmapEnableAction`)), 1)]),
         _: 1
       }, 8, [`disabled`])])]));
     }
@@ -264,7 +264,7 @@ var M = y(`hash`, [[`line`, {
     class: `flex items-center gap-1.5`
   },
   $ = `toolbox-keyboard-heatmap-range`,
-  te = f({
+  te = vueJ({
     __name: `KeyboardHeatmapTool`,
     props: {
       tool: {},
@@ -283,14 +283,14 @@ var M = y(`hash`, [[`line`, {
       let propsAlias = props,
         emitAlias = emit,
         {
-          t: m
-        } = S(),
+          t: translate
+        } = i18nT(),
         {
           settings: y
-        } = w(),
+        } = toolIconR(),
         {
           isLoggedIn: x
-        } = T(),
+        } = useAuthT(),
         {
           controlsDisabled: C,
           navigate: M,
@@ -302,66 +302,66 @@ var M = y(`hash`, [[`line`, {
           handleKeyboardHeatmapToggle: R,
           enableKeyboardHeatmap: z,
           retryKeyboardHeatmap: B
-        } = O(),
-        V = g(() => y.value.enableKeyboardHeatmap),
-        H = g(() => C.value || L.value || I.value || !x.value && !V.value),
-        U = g(() => V.value && (N.value?.status === `error` || N.value?.status === `revoked`)),
-        W = g(() => V.value ? `` : E.value ? m(`settings.keyboardHeatmapWindowsNote`) : D.value ? m(`settings.keyboardHeatmapMacNote`) : ``),
-        G = g(() => !!W.value || !x.value || U.value);
-      return (ctx, renderCache) => (d(), c(j, {
+        } = main(),
+        V = vueV(() => y.value.enableKeyboardHeatmap),
+        H = vueV(() => C.value || L.value || I.value || !x.value && !V.value),
+        U = vueV(() => V.value && (N.value?.status === `error` || N.value?.status === `revoked`)),
+        W = vueV(() => V.value ? `` : toolSettingsC.value ? translate(`settings.keyboardHeatmapWindowsNote`) : toolSettingsO.value ? translate(`settings.keyboardHeatmapMacNote`) : ``),
+        G = vueV(() => !!W.value || !x.value || U.value);
+      return (ctx, renderCache) => (vueGt(), vueB(DesktopWidgetPageT, {
         tool: propsAlias.tool,
         user: propsAlias.user,
         "credits-balance": propsAlias.creditsBalance,
-        description: t(m)(`toolboxNative.keyboardHeatmapToolIntro`),
+        description: vueAn(translate)(`toolboxNative.keyboardHeatmapToolIntro`),
         enabled: V.value,
         "toggle-disabled": H.value,
-        "status-text": V.value && t(N)?.running ? t(m)(`settings.keyboardHeatmapRunning`) : undefined,
+        "status-text": V.value && vueAn(N)?.running ? vueAn(translate)(`settings.keyboardHeatmapRunning`) : undefined,
         "requires-accessibility": ``,
-        onToggle: t(R),
+        onToggle: vueAn(R),
         onBack: renderCache[3] ||= e => emitAlias(`back`)
-      }, n({
-        default: s(() => [V.value ? (d(), a(`section`, X, [v(`header`, Z, [v(`strong`, Q, h(t(m)(`toolboxNative.keyboardHeatmapDataTitle`)), 1), v(`div`, ee, [v(`div`, {
+      }, vueE({
+        default: vueYt(() => [V.value ? (vueGt(), vueS(`section`, X, [vueY(`header`, Z, [vueY(`strong`, Q, vueRr(vueAn(translate)(`toolboxNative.keyboardHeatmapDataTitle`)), 1), vueY(`div`, ee, [vueY(`div`, {
           id: $,
           class: `flex items-center`
-        }), p(t(e), {
+        }), vueK(vueAn(uiSwitchR), {
           variant: `ghost`,
           size: `sm`,
           class: `h-7 gap-1 px-2 text-xs text-muted-foreground`,
-          onClick: renderCache[0] ||= e => t(M)(`heat-map-keyboard`)
+          onClick: renderCache[0] ||= e => vueAn(M)(`heat-map-keyboard`)
         }, {
-          default: s(() => [i(h(t(m)(`toolboxNative.keyboardHeatmapOpenPage`)), 1), p(t(b), {
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`toolboxNative.keyboardHeatmapOpenPage`)), 1), vueK(vueAn(heatRangeL), {
             size: 14
           })]),
           _: 1
-        })])]), propsAlias.active ? (d(), c(A, {
+        })])]), propsAlias.active ? (vueGt(), vueB(mainH, {
           key: 0,
           "refresh-key": 0,
           "range-picker-target": `#${$}`,
           "hide-tracking-error": ``,
-          onNavigate: t(M)
-        }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, true)])) : (d(), c(K, {
+          onNavigate: vueAn(M)
+        }, null, 8, [`range-picker-target`, `onNavigate`])) : vueX(``, true)])) : (vueGt(), vueB(K, {
           key: 1,
           "enable-disabled": H.value,
-          onEnable: renderCache[1] ||= e => t(R)(true)
-        }, null, 8, [`enable-disabled`])), p(k, {
-          open: t(F),
-          "onUpdate:open": renderCache[2] ||= e => u(F) ? F.value = e : null,
-          "consent-info": t(P),
-          onConfirm: t(z)
+          onEnable: renderCache[1] ||= e => vueAn(R)(true)
+        }, null, 8, [`enable-disabled`])), vueK(mainEt, {
+          open: vueAn(F),
+          "onUpdate:open": renderCache[2] ||= e => vueFn(F) ? F.value = e : null,
+          "consent-info": vueAn(P),
+          onConfirm: vueAn(z)
         }, null, 8, [`open`, `consent-info`, `onConfirm`])]),
         _: 2
       }, [G.value ? {
         name: `notes`,
-        fn: s(() => [W.value ? (d(), a(`p`, q, h(W.value), 1)) : _(``, true), t(x) ? _(``, true) : (d(), a(`p`, J, h(t(m)(`settings.keyboardHeatmapLoginRequired`)), 1)), U.value ? (d(), a(`div`, Y, [v(`span`, null, h(t(N)?.errorMessage || t(m)(`settings.keyboardHeatmapFailed`)), 1), p(t(e), {
+        fn: vueYt(() => [W.value ? (vueGt(), vueS(`p`, q, vueRr(W.value), 1)) : vueX(``, true), vueAn(x) ? vueX(``, true) : (vueGt(), vueS(`p`, J, vueRr(vueAn(translate)(`settings.keyboardHeatmapLoginRequired`)), 1)), U.value ? (vueGt(), vueS(`div`, Y, [vueY(`span`, null, vueRr(vueAn(N)?.errorMessage || vueAn(translate)(`settings.keyboardHeatmapFailed`)), 1), vueK(vueAn(uiSwitchR), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 shrink-0 text-xs`,
-          disabled: t(I),
-          onClick: t(B)
+          disabled: vueAn(I),
+          onClick: vueAn(B)
         }, {
-          default: s(() => [i(h(t(m)(`common.retry`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(translate)(`common.retry`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`])])) : _(``, true)]),
+        }, 8, [`disabled`, `onClick`])])) : vueX(``, true)]),
         key: `0`
       } : undefined]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `status-text`, `onToggle`]));
     }

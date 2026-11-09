@@ -1,5 +1,5 @@
-import { t as e } from "./vue-i18n.runtime.js";
-import { n as t, t as n } from "../i18n/en-US-main.js";
+import { t as vueT } from "./vue-i18n.runtime.js";
+import { n as localeN, t as localeT } from "../i18n/en-US-main.js";
 var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
   options = {
     id: `custom-sound-pack-1582707445334`,
@@ -937,13 +937,13 @@ function A(e) {
   return new k(e);
 }
 var keyboardSoundAudioAPI = window.keyboardSoundAudioAPI,
-  M = e({
+  M = vueT({
     legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
     messages: {
-      "zh-CN": t,
-      "en-US": n
+      "zh-CN": localeN,
+      "en-US": localeT
     }
   }),
   N = A({

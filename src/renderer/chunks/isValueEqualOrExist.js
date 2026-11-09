@@ -1,6 +1,6 @@
-import { gt as e } from "../ui/Switch.js";
-import { t } from "./is-equal.js";
+import { gt as uiSwitchGt } from "../ui/Switch.js";
+import { t as isequalT } from "./is-equal.js";
 function n(items, r) {
-  return e(items) ? false : Array.isArray(items) ? items.some(e => t(e, r)) : t(items, r);
+  return uiSwitchGt(items) ? false : Array.isArray(items) ? items.some(e => isequalT(e, r)) : isequalT(items, r);
 }
 export { n as t };

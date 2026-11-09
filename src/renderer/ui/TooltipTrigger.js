@@ -1,14 +1,14 @@
-import { B as e, C as t, G as n, I as r, N as i, Q as a, T as o, V as s, _ as c, at as l, dt as u, g as d, j as f, k as p, lt as m, mt as h, ot as g, ut as _, xt as v, yt as y, z as b } from "./Switch.js";
-import { An as x, Ct as S, Dn as C, Et as ee, Gt as w, Nt as te, O as ne, S as T, V as E, Wt as re, Yt as D, b as O, bn as k, gt as A, j, k as M, nr as ie, nt as N, rr as ae, tr as P, ut as F, v as I, x as L } from "../chunks/vue-i18n.runtime.js";
-import { E as R } from "../i18n/en-US-player.js";
-import { a as z, i as B, n as V, r as H } from "./PopperContent.js";
+import { B as uiSwitchB, C as uiSwitchC, G as uiSwitchG, I as uiSwitchI, N as uiSwitchN, Q as uiSwitchQ, T as uiSwitchT, V as uiSwitchV, _ as uiSwitch, at as uiSwitchAt, dt as uiSwitchDt, g as d, j as uiSwitchJ, k as uiSwitchK, lt as uiSwitchLt, mt as uiSwitchMt, ot as uiSwitchOt, ut as uiSwitchUt, xt as uiSwitchXt, yt as uiSwitchYt, z as uiSwitchZ } from "./Switch.js";
+import { An as vueAn, Ct as vueCt, Dn as vueDn, Et as vueEt, Gt as vueGt, Nt as vueNt, O as vueO, S as vueS, V as vueV, Wt as vueWt, Yt as vueYt, b as vueB, bn as vueBn, gt as A, j as vueJ, k as vueK, nr as vueNr, nt as N, rr as vueRr, tr as vueTr, ut as vueUt, v as I, x as vueX } from "../chunks/vue-i18n.runtime.js";
+import { E as playerE } from "../i18n/en-US-player.js";
+import { a as PopperContentA, i as PopperContentI, n as PopperContentN, r as PopperContentR } from "./PopperContent.js";
 function U(event, el) {
-  let n = _(false, 300);
-  u(() => {
+  let n = uiSwitchUt(false, 300);
+  uiSwitchDt(() => {
     n.value = false;
   });
-  let r = k(null),
-    i = g();
+  let r = vueBn(null),
+    i = uiSwitchOt();
   function a() {
     r.value = null, n.value = false;
   }
@@ -24,7 +24,7 @@ function U(event, el) {
       c = J([...o, ...s]);
     r.value = c, n.value = true;
   }
-  return w(fn => {
+  return vueGt(fn => {
     if (event.value && el.value) {
       let handler = e => o(e, el.value),
         i = t => o(t, event.value);
@@ -32,7 +32,7 @@ function U(event, el) {
         event.value?.removeEventListener(`pointerleave`, handler), el.value?.removeEventListener(`pointerleave`, i);
       });
     }
-  }), w(n => {
+  }), vueGt(n => {
     if (r.value) {
       let handler = n => {
         if (!r.value || !(n.target instanceof Element)) return;
@@ -185,7 +185,7 @@ var se = {
     key: 1,
     d: `M0 0L4.58579 4.58579C5.36683 5.36683 6.63316 5.36684 7.41421 4.58579L12 0`
   },
-  le = j({
+  le = vueJ({
     __name: `Arrow`,
     props: {
       width: {
@@ -214,13 +214,13 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return s(), (e, n) => (A(), O(x(f), N(propsAlias, {
+      return uiSwitchV(), (e, n) => (A(), vueB(vueAn(uiSwitchJ), N(propsAlias, {
         width: e.width,
         height: e.height,
         viewBox: e.asChild ? undefined : `0 0 12 6`,
         preserveAspectRatio: e.asChild ? undefined : `none`
       }), {
-        default: D(() => [S(e.$slots, `default`, {}, () => [e.rounded ? (A(), T(`path`, ce)) : (A(), T(`path`, se))])]),
+        default: vueYt(() => [vueCt(e.$slots, `default`, {}, () => [e.rounded ? (A(), vueS(`path`, ce)) : (A(), vueS(`path`, se))])]),
         _: 3
       }, 16, [`width`, `height`, `viewBox`, `preserveAspectRatio`]));
     }
@@ -231,7 +231,7 @@ var se = {
     bottom: `top`,
     left: `right`
   },
-  de = j({
+  de = vueJ({
     inheritAttrs: false,
     __name: `PopperArrow`,
     props: {
@@ -260,34 +260,34 @@ var se = {
     setup(props) {
       let {
           forwardRef: t
-        } = s(),
-        n = H(),
+        } = uiSwitchV(),
+        n = PopperContentR(),
         r = I(() => options[n.placedSide.value]);
-      return (ctx, renderCache) => (A(), T(`span`, {
+      return (ctx, renderCache) => (A(), vueS(`span`, {
         ref: e => {
-          x(n).onArrowChange(e ?? undefined);
+          vueAn(n).onArrowChange(e ?? undefined);
         },
-        style: ie({
+        style: vueNr({
           position: `absolute`,
-          left: x(n).arrowX?.value ? `${x(n).arrowX?.value}px` : undefined,
-          top: x(n).arrowY?.value ? `${x(n).arrowY?.value}px` : undefined,
+          left: vueAn(n).arrowX?.value ? `${vueAn(n).arrowX?.value}px` : undefined,
+          top: vueAn(n).arrowY?.value ? `${vueAn(n).arrowY?.value}px` : undefined,
           [r.value]: 0,
           transformOrigin: {
             top: ``,
             right: `0 0`,
             bottom: `center 0`,
             left: `100% 0`
-          }[x(n).placedSide.value],
+          }[vueAn(n).placedSide.value],
           transform: {
             top: `translateY(100%)`,
             right: `translateY(50%) rotate(90deg) translateX(-50%)`,
             bottom: `rotate(180deg)`,
             left: `translateY(50%) rotate(-90deg) translateX(50%)`
-          }[x(n).placedSide.value],
-          visibility: x(n).shouldHideArrow.value ? `hidden` : undefined
+          }[vueAn(n).placedSide.value],
+          visibility: vueAn(n).shouldHideArrow.value ? `hidden` : undefined
         })
-      }, [M(le, N(ctx.$attrs, {
-        ref: x(t),
+      }, [vueK(le, N(ctx.$attrs, {
+        ref: vueAn(t),
         style: {
           display: `block`
         },
@@ -297,13 +297,13 @@ var se = {
         width: ctx.width,
         height: ctx.height
       }), {
-        default: D(() => [S(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`as`, `as-child`, `rounded`, `width`, `height`])], 4));
     }
   }),
-  [fe, pe] = y([`MenuCheckboxItem`, `MenuRadioItem`], `MenuItemIndicatorContext`),
-  me = j({
+  [fe, pe] = uiSwitchYt([`MenuCheckboxItem`, `MenuRadioItem`], `MenuItemIndicatorContext`),
+  me = vueJ({
     __name: `MenuItemIndicator`,
     props: {
       forceMount: {
@@ -322,25 +322,25 @@ var se = {
     },
     setup(props) {
       let n = fe({
-        modelValue: k(false)
+        modelValue: vueBn(false)
       });
-      return (ctx, renderCache) => (A(), O(x(i), {
-        present: ctx.forceMount || x(o)(x(n).modelValue.value) || x(n).modelValue.value === true
+      return (ctx, renderCache) => (A(), vueB(vueAn(uiSwitchN), {
+        present: ctx.forceMount || vueAn(uiSwitchT)(vueAn(n).modelValue.value) || vueAn(n).modelValue.value === true
       }, {
-        default: D(() => [M(x(f), {
+        default: vueYt(() => [vueK(vueAn(uiSwitchJ), {
           as: ctx.as,
           "as-child": ctx.asChild,
-          "data-state": x(t)(x(n).modelValue.value)
+          "data-state": vueAn(uiSwitchC)(vueAn(n).modelValue.value)
         }, {
-          default: D(() => [S(ctx.$slots, `default`)]),
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
         }, 8, [`as`, `as-child`, `data-state`])]),
         _: 3
       }, 8, [`present`]));
     }
   }),
-  [he, ge] = y(`MenuGroup`),
-  _e = j({
+  [he, ge] = uiSwitchYt(`MenuGroup`),
+  _e = vueJ({
     __name: `MenuGroup`,
     props: {
       asChild: {
@@ -354,20 +354,20 @@ var se = {
     },
     setup(props) {
       let propsAlias = props,
-        n = r(undefined, `reka-menu-group`);
+        n = uiSwitchI(undefined, `reka-menu-group`);
       return ge({
         id: n
-      }), (e, r) => (A(), O(x(f), N({
+      }), (e, r) => (A(), vueB(vueAn(uiSwitchJ), N({
         role: `group`
       }, propsAlias, {
-        "aria-labelledby": x(n)
+        "aria-labelledby": vueAn(n)
       }), {
-        default: D(() => [S(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16, [`aria-labelledby`]));
     }
   }),
-  ve = j({
+  ve = vueJ({
     __name: `MenuLabel`,
     props: {
       asChild: {
@@ -385,15 +385,15 @@ var se = {
         n = he({
           id: ``
         });
-      return (ctx, renderCache) => (A(), O(x(f), N(propsAlias, {
-        id: x(n).id || undefined
+      return (ctx, renderCache) => (A(), vueB(vueAn(uiSwitchJ), N(propsAlias, {
+        id: vueAn(n).id || undefined
       }), {
-        default: D(() => [S(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }
   }),
-  ye = j({
+  ye = vueJ({
     __name: `DropdownMenuItemIndicator`,
     props: {
       forceMount: {
@@ -411,13 +411,13 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return s(), (e, n) => (A(), O(x(me), P(E(propsAlias)), {
-        default: D(() => [S(e.$slots, `default`)]),
+      return uiSwitchV(), (e, n) => (A(), vueB(vueAn(me), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  be = j({
+  be = vueJ({
     __name: `DropdownMenuLabel`,
     props: {
       asChild: {
@@ -431,13 +431,13 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return s(), (e, n) => (A(), O(x(ve), P(E(propsAlias)), {
-        default: D(() => [S(e.$slots, `default`)]),
+      return uiSwitchV(), (e, n) => (A(), vueB(vueAn(ve), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  xe = j({
+  xe = vueJ({
     __name: `TooltipArrow`,
     props: {
       width: {
@@ -462,14 +462,14 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return s(), (e, n) => (A(), O(x(de), P(E(propsAlias)), {
-        default: D(() => [S(e.$slots, `default`)]),
+      return uiSwitchV(), (e, n) => (A(), vueB(vueAn(de), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  [Y, Se] = y(`TooltipProvider`),
-  Ce = j({
+  [Y, Se] = uiSwitchYt(`TooltipProvider`),
+  Ce = vueJ({
     inheritAttrs: false,
     __name: `TooltipProvider`,
     props: {
@@ -515,14 +515,14 @@ var se = {
         ignoreNonKeyboardFocus: a,
         disabled: o,
         content: c
-      } = C(props);
-      s();
-      let l = k(true),
-        u = k(false),
+      } = vueDn(props);
+      uiSwitchV();
+      let l = vueBn(true),
+        u = vueBn(false),
         {
           start: d,
           stop: f
-        } = h(() => {
+        } = uiSwitchMt(() => {
           l.value = true;
         }, n, {
           immediate: false
@@ -542,12 +542,12 @@ var se = {
         disabled: o,
         ignoreNonKeyboardFocus: a,
         content: c
-      }), (e, t) => S(e.$slots, `default`);
+      }), (e, t) => vueCt(e.$slots, `default`);
     }
   }),
   X = `tooltip.open`,
-  [Z, we] = y(`TooltipRoot`),
-  Te = j({
+  [Z, we] = uiSwitchYt(`TooltipRoot`),
+  Te = vueJ({
     __name: `TooltipRoot`,
     props: {
       defaultOpen: {
@@ -592,27 +592,27 @@ var se = {
     }) {
       let propsAlias = props,
         emitAlias = emit;
-      s();
+      uiSwitchV();
       let i = Y(),
         a = I(() => propsAlias.disableHoverableContent ?? i.disableHoverableContent.value),
         o = I(() => propsAlias.disableClosingTrigger ?? i.disableClosingTrigger.value),
         c = I(() => propsAlias.disabled ?? i.disabled.value),
         u = I(() => propsAlias.delayDuration ?? i.delayDuration.value),
         d = I(() => propsAlias.ignoreNonKeyboardFocus ?? i.ignoreNonKeyboardFocus.value),
-        f = l(propsAlias, `open`, emitAlias, {
+        f = uiSwitchAt(propsAlias, `open`, emitAlias, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         });
-      re(f, e => {
+      vueWt(f, e => {
         i.onClose && (e ? (i.onOpen(), document.dispatchEvent(new CustomEvent(X))) : i.onClose());
       });
-      let p = k(false),
-        m = k(),
+      let p = vueBn(false),
+        m = vueBn(),
         g = I(() => f.value ? p.value ? `delayed-open` : `instant-open` : `closed`),
         {
           start: _,
           stop: v
-        } = h(() => {
+        } = uiSwitchMt(() => {
           p.value = true, f.value = true;
         }, u, {
           immediate: false
@@ -646,15 +646,15 @@ var se = {
         disableClosingTrigger: o,
         disabled: c,
         ignoreNonKeyboardFocus: d
-      }), (e, t) => (A(), O(x(z), null, {
-        default: D(() => [S(e.$slots, `default`, {
-          open: x(f)
+      }), (e, t) => (A(), vueB(vueAn(PopperContentA), null, {
+        default: vueYt(() => [vueCt(e.$slots, `default`, {
+          open: vueAn(f)
         })]),
         _: 3
       }));
     }
   }),
-  Q = j({
+  Q = vueJ({
     __name: `TooltipContentImpl`,
     props: {
       ariaLabel: {
@@ -732,14 +732,14 @@ var se = {
         {
           forwardRef: l,
           currentElement: u
-        } = s(),
+        } = uiSwitchV(),
         f = I(() => eventAlias.ariaLabel || u.value?.textContent),
         m = I(() => {
           let {
             ariaLabel: e,
             ...t
           } = eventAlias;
-          return n(t, c.content.value ?? {}, {
+          return uiSwitchG(t, c.content.value ?? {}, {
             side: `top`,
             sideOffset: 0,
             align: `center`,
@@ -751,25 +751,25 @@ var se = {
             hideWhenDetached: false
           });
         });
-      return F(() => {
-        a(window, `scroll`, e => {
+      return vueUt(() => {
+        uiSwitchQ(window, `scroll`, e => {
           e.target?.contains(o.trigger.value) && o.onClose();
         }, {
           capture: true
-        }), a(document, X, o.onClose);
-      }), (e, t) => (A(), O(x(p), {
+        }), uiSwitchQ(document, X, o.onClose);
+      }), (e, renderCache) => (A(), vueB(vueAn(uiSwitchK), {
         "as-child": ``,
         "disable-outside-pointer-events": false,
-        onEscapeKeyDown: t[0] ||= e => emitAlias(`escapeKeyDown`, e),
-        onPointerDownOutside: t[1] ||= e => {
-          x(o).disableClosingTrigger.value && x(o).trigger.value?.contains(e.target) && e.preventDefault(), emitAlias(`pointerDownOutside`, e);
+        onEscapeKeyDown: renderCache[0] ||= e => emitAlias(`escapeKeyDown`, e),
+        onPointerDownOutside: renderCache[1] ||= e => {
+          vueAn(o).disableClosingTrigger.value && vueAn(o).trigger.value?.contains(e.target) && e.preventDefault(), emitAlias(`pointerDownOutside`, e);
         },
-        onFocusOutside: t[2] ||= R(() => {}, [`prevent`]),
-        onDismiss: t[3] ||= e => x(o).onClose()
+        onFocusOutside: renderCache[2] ||= playerE(() => {}, [`prevent`]),
+        onDismiss: renderCache[3] ||= e => vueAn(o).onClose()
       }, {
-        default: D(() => [M(x(V), N({
-          ref: x(l),
-          "data-state": x(o).stateAttribute.value
+        default: vueYt(() => [vueK(vueAn(PopperContentN), N({
+          ref: vueAn(l),
+          "data-state": vueAn(o).stateAttribute.value
         }, {
           ...e.$attrs,
           ...m.value
@@ -782,11 +782,11 @@ var se = {
             "--reka-tooltip-trigger-height": `var(--reka-popper-anchor-height)`
           }
         }), {
-          default: D(() => [S(e.$slots, `default`), M(x(d), {
-            id: x(o).contentId,
+          default: vueYt(() => [vueCt(e.$slots, `default`), vueK(vueAn(d), {
+            id: vueAn(o).contentId,
             role: `tooltip`
           }, {
-            default: D(() => [ne(ae(f.value), 1)]),
+            default: vueYt(() => [vueO(vueRr(f.value), 1)]),
             _: 1
           }, 8, [`id`])]),
           _: 3
@@ -795,7 +795,7 @@ var se = {
       }));
     }
   }),
-  Ee = j({
+  Ee = vueJ({
     __name: `TooltipContentHoverable`,
     props: {
       ariaLabel: {
@@ -860,11 +860,11 @@ var se = {
       }
     },
     setup(props) {
-      let n = e(props),
+      let n = uiSwitchB(props),
         {
           forwardRef: r,
           currentElement: i
-        } = s(),
+        } = uiSwitchV(),
         {
           trigger: a,
           onClose: o
@@ -876,15 +876,15 @@ var se = {
         } = U(a, i);
       return c.isPointerInTransitRef = l, u(() => {
         o();
-      }), (e, t) => (A(), O(Q, N({
-        ref: x(r)
-      }, x(n)), {
-        default: D(() => [S(e.$slots, `default`)]),
+      }), (e, t) => (A(), vueB(Q, N({
+        ref: vueAn(r)
+      }, vueAn(n)), {
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  De = j({
+  De = vueJ({
     __name: `TooltipContent`,
     props: {
       forceMount: {
@@ -959,24 +959,24 @@ var se = {
       let propsAlias = props,
         emitAlias = emit,
         a = Z(),
-        o = b(propsAlias, emitAlias),
+        o = uiSwitchZ(propsAlias, emitAlias),
         {
           forwardRef: c
-        } = s();
-      return (ctx, renderCache) => (A(), O(x(i), {
-        present: ctx.forceMount || x(a).open.value
+        } = uiSwitchV();
+      return (ctx, renderCache) => (A(), vueB(vueAn(uiSwitchN), {
+        present: ctx.forceMount || vueAn(a).open.value
       }, {
-        default: D(() => [(A(), O(ee(x(a).disableHoverableContent.value ? Q : Ee), N({
-          ref: x(c)
-        }, x(o)), {
-          default: D(() => [S(ctx.$slots, `default`)]),
+        default: vueYt(() => [(A(), vueB(vueEt(vueAn(a).disableHoverableContent.value ? Q : Ee), N({
+          ref: vueAn(c)
+        }, vueAn(o)), {
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
         }, 16))]),
         _: 3
       }, 8, [`present`]));
     }
   }),
-  $ = j({
+  $ = vueJ({
     __name: `TooltipPortal`,
     props: {
       to: {
@@ -998,13 +998,13 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (A(), O(x(c), P(E(propsAlias)), {
-        default: D(() => [S(ctx.$slots, `default`)]),
+      return (ctx, renderCache) => (A(), vueB(vueAn(uiSwitch), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  Oe = j({
+  Oe = vueJ({
     __name: `TooltipTrigger`,
     props: {
       reference: {
@@ -1025,13 +1025,13 @@ var se = {
       let eventAlias = event,
         n = Z(),
         i = Y();
-      n.contentId ||= r(undefined, `reka-tooltip-content`);
+      n.contentId ||= uiSwitchI(undefined, `reka-tooltip-content`);
       let {
           forwardRef: a,
           currentElement: o
-        } = s(),
-        c = k(false),
-        l = k(false),
+        } = uiSwitchV(),
+        c = vueBn(false),
+        l = vueBn(false),
         u = I(() => n.disabled.value ? {} : {
           click: v,
           focus: g,
@@ -1040,7 +1040,7 @@ var se = {
           pointerdown: p,
           blur: _
         });
-      F(() => {
+      vueUt(() => {
         n.onTriggerChange(o.value);
       });
       function d() {
@@ -1068,26 +1068,26 @@ var se = {
       function v() {
         n.disableClosingTrigger.value || n.onClose();
       }
-      return (ctx, renderCache) => (A(), O(x(B), {
+      return (ctx, renderCache) => (A(), vueB(vueAn(PopperContentI), {
         "as-child": ``,
         reference: ctx.reference
       }, {
-        default: D(() => [M(x(f), N({
-          ref: x(a),
-          "aria-describedby": x(n).open.value ? x(n).contentId : undefined,
-          "data-state": x(n).stateAttribute.value,
+        default: vueYt(() => [vueK(vueAn(uiSwitchJ), N({
+          ref: vueAn(a),
+          "aria-describedby": vueAn(n).open.value ? vueAn(n).contentId : undefined,
+          "data-state": vueAn(n).stateAttribute.value,
           as: ctx.as,
           "as-child": eventAlias.asChild,
           "data-grace-area-trigger": ``
-        }, te(u.value)), {
-          default: D(() => [S(ctx.$slots, `default`)]),
+        }, vueNt(u.value)), {
+          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`aria-describedby`, `data-state`, `as`, `as-child`])]),
         _: 3
       }, 8, [`reference`]));
     }
   }),
-  ke = j({
+  ke = vueJ({
     __name: `DropdownMenuLabel`,
     props: {
       asChild: {
@@ -1103,20 +1103,20 @@ var se = {
     },
     setup(props) {
       let propsAlias = props,
-        r = m(propsAlias, `class`, `inset`),
-        i = e(r);
-      return (ctx, renderCache) => (A(), O(x(be), N({
+        r = uiSwitchLt(propsAlias, `class`, `inset`),
+        i = uiSwitchB(r);
+      return (ctx, renderCache) => (A(), vueB(vueAn(be), N({
         "data-slot": `dropdown-menu-label`,
         "data-inset": props.inset ? `` : undefined
-      }, x(i), {
-        class: x(v)(`text-muted-foreground px-1.5 py-1 text-xs font-medium data-inset:pl-7`, propsAlias.class)
+      }, vueAn(i), {
+        class: vueAn(uiSwitchXt)(`text-muted-foreground px-1.5 py-1 text-xs font-medium data-inset:pl-7`, propsAlias.class)
       }), {
-        default: D(() => [S(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`data-inset`, `class`]));
     }
   }),
-  Ae = j({
+  Ae = vueJ({
     __name: `Tooltip`,
     props: {
       defaultOpen: {
@@ -1143,16 +1143,16 @@ var se = {
     setup(props, {
       emit: emit
     }) {
-      let n = b(props, emit);
-      return (ctx, renderCache) => (A(), O(x(Te), N({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, renderCache) => (A(), vueB(vueAn(Te), N({
         "data-slot": `tooltip`
-      }, x(n)), {
-        default: D(t => [S(ctx.$slots, `default`, P(E(t)))]),
+      }, vueAn(n)), {
+        default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
     }
   }),
-  je = j({
+  je = vueJ({
     inheritAttrs: false,
     __name: `TooltipContent`,
     props: {
@@ -1195,18 +1195,18 @@ var se = {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = m(propsAlias, `class`, `hideArrow`),
-        a = b(i, emitAlias);
-      return (ctx, renderCache) => (A(), O(x($), null, {
-        default: D(() => [M(x(De), N({
+        i = uiSwitchLt(propsAlias, `class`, `hideArrow`),
+        a = uiSwitchZ(i, emitAlias);
+      return (ctx, renderCache) => (A(), vueB(vueAn($), null, {
+        default: vueYt(() => [vueK(vueAn(De), N({
           "data-slot": `tooltip-content`
         }, {
-          ...x(a),
+          ...vueAn(a),
           ...ctx.$attrs
         }, {
-          class: x(v)(`data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm bg-foreground text-background z-50 w-fit max-w-xs origin-(--reka-tooltip-content-transform-origin)`, propsAlias.class)
+          class: vueAn(uiSwitchXt)(`data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm bg-foreground text-background z-50 w-fit max-w-xs origin-(--reka-tooltip-content-transform-origin)`, propsAlias.class)
         }), {
-          default: D(() => [S(ctx.$slots, `default`), propsAlias.hideArrow ? L(``, true) : (A(), O(x(xe), {
+          default: vueYt(() => [vueCt(ctx.$slots, `default`), propsAlias.hideArrow ? vueX(``, true) : (A(), vueB(vueAn(xe), {
             key: 0,
             class: `size-2.5 rotate-45 rounded-[2px] bg-foreground fill-foreground z-50 translate-y-[calc(-50%_-_2px)]`
           }))]),
@@ -1216,7 +1216,7 @@ var se = {
       }));
     }
   }),
-  Me = j({
+  Me = vueJ({
     __name: `TooltipProvider`,
     props: {
       delayDuration: {
@@ -1239,13 +1239,13 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (A(), O(x(Ce), P(E(propsAlias)), {
-        default: D(() => [S(ctx.$slots, `default`)]),
+      return (ctx, renderCache) => (A(), vueB(vueAn(Ce), vueTr(vueV(propsAlias)), {
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  Ne = j({
+  Ne = vueJ({
     __name: `TooltipTrigger`,
     props: {
       reference: {},
@@ -1256,10 +1256,10 @@ var se = {
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (A(), O(x(Oe), N({
+      return (ctx, renderCache) => (A(), vueB(vueAn(Oe), N({
         "data-slot": `tooltip-trigger`
       }, propsAlias), {
-        default: D(() => [S(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }

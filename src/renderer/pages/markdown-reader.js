@@ -1,33 +1,33 @@
-import { B as e, C as t, T as n, U as r, V as i, at as a, lt as o, r as s, xt as c, z as l } from "../ui/Switch.js";
-import { $n as u, An as d, Cn as f, Ct as p, Et as m, O as h, S as g, St as _, V as ee, Wt as v, Yt as y, Zt as b, b as x, bn as S, c as C, f as te, fn as w, gt as T, j as E, k as D, mt as O, nr as ne, nt as k, ot as re, rr as A, rt as ie, tr as j, ut as ae, v as M, vn as oe, x as N, y as P } from "../chunks/vue-i18n.runtime.js";
-import { C as F, E as I, T as se } from "../i18n/en-US-player.js";
-import { r as L, t as R } from "../ui/icons/lucide-icons.js";
-import { l as ce, s as le, t as ue } from "../i18n/i18n-helper.js";
-import { i as de, n as fe, r as pe, t as me } from "../chunks/purify.es.js";
-import { t as z } from "../chunks/check.js";
-import { s as he } from "../ui/PopperContent.js";
-import { t as ge } from "../chunks/chevron-up.js";
-import { _ as _e, y as ve } from "../chunks/screenshot-beautifier.js";
-import { n as ye, t as B } from "../ui/DropdownMenuItem.js";
-import { t as be } from "../chunks/pen-line.js";
-import { t as xe } from "./ToolboxWorkspaceHeader.js";
-import { n as Se, o as Ce, r as we, t as Te } from "../ui/DropdownMenuTrigger.js";
-import { a as Ee, c as V, i as H, n as De, o as Oe, r as ke, t as U } from "../ui/TooltipTrigger.js";
-import { a as Ae, c as je, i as Me, n as Ne, r as Pe, t as Fe } from "../ui/alert-dialog.js";
-import { n as Ie, t as W } from "../chunks/alert.js";
-import { t as Le } from "../chunks/_plugin-vue_export-helper.js";
-import { t as Re } from "../chunks/useAuth.js";
-import { t as ze } from "../chunks/useGrowthTelemetry.js";
-import { Fn as Be, Mn as Ve, Nn as He, Pn as Ue, Sn as We, Wn as Ge, d as Ke, dn as qe, f as Je, fn as Ye, g as G, gt as K, ht as Xe, l as Ze, lt as Qe, mn as $e, mt as et, n as q, p as tt, pn as nt, s as rt, t as it, u as at, wn as ot, xn as st, yn as ct } from "../chunks/main.js";
-import { t as lt } from "../ui/Kbd.js";
-var ut = L(`corner-up-left`, [[`path`, {
+import { B as uiSwitchB, C as uiSwitchC, T as uiSwitchT, U as uiSwitchU, V as uiSwitchV, at as uiSwitchAt, lt as uiSwitchLt, r as uiSwitchR, xt as uiSwitchXt, z as uiSwitchZ } from "../ui/Switch.js";
+import { $n as vueN, An as vueAn, Cn as vueCn, Ct as vueCt, Et as vueEt, O as vueO, S as vueS, St as vueSt, V as vueV, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, c as vueC, f as vueF, fn as vueFn, gt as vueGt, j as vueJ, k as vueK, mt as vueMt, nr as vueNr, nt as vueNt, ot as vueOt, rr as vueRr, rt as vueRt, tr as vueTr, ut as vueUt, v as M, vn as vueVn, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { C as playerC, E as playerE, T as playerT } from "../i18n/en-US-player.js";
+import { r as lucideR, t as lucideT } from "../ui/icons/lucide-icons.js";
+import { l as i18nL, s as i18nS, t as i18nT } from "../i18n/i18n-helper.js";
+import { i as purifyI, n as purifyN, r as purifyR, t as purifyT } from "../chunks/purify.es.js";
+import { t as checkT } from "../chunks/check.js";
+import { s as PopperContentS } from "../ui/PopperContent.js";
+import { t as chevronupT } from "../chunks/chevron-up.js";
+import { _ as beautifier, y as beautifierY } from "../chunks/screenshot-beautifier.js";
+import { n as DropdownMenuItemN, t as DropdownMenuItemT } from "../ui/DropdownMenuItem.js";
+import { t as penlineT } from "../chunks/pen-line.js";
+import { t as ToolboxWorkspaceHeaderT } from "./ToolboxWorkspaceHeader.js";
+import { n as DropdownMenuTriggerN, o as DropdownMenuTriggerO, r as DropdownMenuTriggerR, t as DropdownMenuTriggerT } from "../ui/DropdownMenuTrigger.js";
+import { a as TooltipTriggerA, c as TooltipTriggerC, i as TooltipTriggerI, n as TooltipTriggerN, o as TooltipTriggerO, r as TooltipTriggerR, t as TooltipTriggerT } from "../ui/TooltipTrigger.js";
+import { a as alertDialogA, c as alertDialogC, i as alertDialogI, n as alertDialogN, r as alertDialogR, t as alertDialogT } from "../ui/alert-dialog.js";
+import { n as alertN, t as alertT } from "../chunks/alert.js";
+import { t as pluginvueexporthelperT } from "../chunks/_plugin-vue_export-helper.js";
+import { t as useAuthT } from "../chunks/useAuth.js";
+import { t as growthTelT } from "../chunks/useGrowthTelemetry.js";
+import { Fn as mainFn, Mn as mainMn, Nn as mainNn, Pn as mainPn, Sn as mainSn, Wn as mainWn, d as mainD, dn as mainDn, f as mainF, fn as Ye, g as mainG, gt as mainGt, ht as mainHt, l as mainL, lt as mainLt, mn as $e, mt as mainMt, n as mainN, p as mainP, pn as nt, s as mainS, t as mainT, u as mainU, wn as ot, xn as mainXn, yn as mainYn } from "../chunks/main.js";
+import { t as KbdT } from "../ui/Kbd.js";
+var ut = lucideR(`corner-up-left`, [[`path`, {
     d: `M20 20v-7a4 4 0 0 0-4-4H4`,
     key: `1nkjon`
   }], [`path`, {
     d: `M9 14 4 9l5-5`,
     key: `102s5s`
   }]]),
-  dt = L(`file-code-corner`, [[`path`, {
+  dt = lucideR(`file-code-corner`, [[`path`, {
     d: `M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35`,
     key: `1wthlu`
   }], [`path`, {
@@ -40,7 +40,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     d: `m9 22 3-3-3-3`,
     key: `lsp7cz`
   }]]),
-  ft = L(`file-output`, [[`path`, {
+  ft = lucideR(`file-output`, [[`path`, {
     d: `M4.226 20.925A2 2 0 0 0 6 22h12a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v3.127`,
     key: `wfxp4w`
   }], [`path`, {
@@ -53,7 +53,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     d: `m5 17-3-3h10`,
     key: `1mvvaf`
   }]]),
-  pt = L(`file-plus-corner`, [[`path`, {
+  pt = lucideR(`file-plus-corner`, [[`path`, {
     d: `M11.35 22H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v5.35`,
     key: `17jvcc`
   }], [`path`, {
@@ -66,7 +66,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     d: `M17 16v6`,
     key: `18yu1i`
   }]]),
-  mt = L(`link-2`, [[`path`, {
+  mt = lucideR(`link-2`, [[`path`, {
     d: `M9 17H7A5 5 0 0 1 7 7h2`,
     key: `8i5ue5`
   }], [`path`, {
@@ -79,7 +79,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     y2: `12`,
     key: `1jonct`
   }]]),
-  ht = L(`panel-left-close`, [[`rect`, {
+  ht = lucideR(`panel-left-close`, [[`rect`, {
     width: `18`,
     height: `18`,
     x: `3`,
@@ -93,7 +93,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     d: `m16 15-3-3 3-3`,
     key: `14y99z`
   }]]),
-  gt = L(`panel-left-open`, [[`rect`, {
+  gt = lucideR(`panel-left-open`, [[`rect`, {
     width: `18`,
     height: `18`,
     x: `3`,
@@ -107,14 +107,14 @@ var ut = L(`corner-up-left`, [[`path`, {
     d: `m14 9 3 3-3 3`,
     key: `8010ee`
   }]]),
-  _t = L(`quote`, [[`path`, {
+  _t = lucideR(`quote`, [[`path`, {
     d: `M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z`,
     key: `rib7q0`
   }], [`path`, {
     d: `M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z`,
     key: `1ymkrd`
   }]]),
-  vt = L(`square-split-horizontal`, [[`path`, {
+  vt = lucideR(`square-split-horizontal`, [[`path`, {
     d: `M8 19H5c-1 0-2-1-2-2V7c0-1 1-2 2-2h3`,
     key: `lubmu8`
   }], [`path`, {
@@ -127,7 +127,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     y2: `20`,
     key: `1tx1rr`
   }]]),
-  yt = E({
+  yt = vueJ({
     __name: `MenuCheckboxItem`,
     props: {
       modelValue: {
@@ -158,28 +158,28 @@ var ut = L(`corner-up-left`, [[`path`, {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        l = o(propsAlias, [`modelValue`]),
-        u = e(l),
-        f = a(propsAlias, `modelValue`, emitAlias);
-      return V({
+        l = uiSwitchLt(propsAlias, [`modelValue`]),
+        u = uiSwitchB(l),
+        f = uiSwitchAt(propsAlias, `modelValue`, emitAlias);
+      return TooltipTriggerC({
         modelValue: f
-      }), (e, r) => (T(), x(Ce, k({
+      }), (e, renderCache) => (vueGt(), vueB(DropdownMenuTriggerO, vueNt({
         role: `menuitemcheckbox`
-      }, d(u), {
-        "aria-checked": d(n)(d(f)) ? `mixed` : d(f),
-        "data-state": d(t)(d(f)),
-        onSelect: r[0] ||= async e => {
-          emitAlias(`select`, e), d(n)(d(f)) ? f.value = true : f.value = !d(f);
+      }, vueAn(u), {
+        "aria-checked": vueAn(uiSwitchT)(vueAn(f)) ? `mixed` : vueAn(f),
+        "data-state": vueAn(uiSwitchC)(vueAn(f)),
+        onSelect: renderCache[0] ||= async e => {
+          emitAlias(`select`, e), vueAn(uiSwitchT)(vueAn(f)) ? f.value = true : f.value = !vueAn(f);
         }
       }), {
-        default: y(() => [p(e.$slots, `default`, {
-          modelValue: d(f)
+        default: vueYt(() => [vueCt(e.$slots, `default`, {
+          modelValue: vueAn(f)
         })]),
         _: 3
       }, 16, [`aria-checked`, `data-state`]));
     }
   }),
-  bt = E({
+  bt = vueJ({
     __name: `DropdownMenuCheckboxItem`,
     props: {
       modelValue: {
@@ -208,12 +208,12 @@ var ut = L(`corner-up-left`, [[`path`, {
       emit: emit
     }) {
       let propsAlias = props,
-        a = r(emit);
-      return i(), (e, t) => (T(), x(d(yt), j(ee({
+        a = uiSwitchU(emit);
+      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(yt), vueTr(vueV({
         ...propsAlias,
-        ...d(a)
+        ...vueAn(a)
       })), {
-        default: y(() => [p(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -222,7 +222,7 @@ var ut = L(`corner-up-left`, [[`path`, {
     class: `absolute right-2 flex items-center justify-center pointer-events-none`,
     "data-slot": `dropdown-menu-checkbox-item-indicator`
   },
-  St = E({
+  St = vueJ({
     __name: `DropdownMenuCheckboxItem`,
     props: {
       modelValue: {
@@ -246,22 +246,22 @@ var ut = L(`corner-up-left`, [[`path`, {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = o(propsAlias, `class`),
-        a = l(i, emitAlias);
-      return (ctx, renderCache) => (T(), x(d(bt), k({
+        i = uiSwitchLt(propsAlias, `class`),
+        a = uiSwitchZ(i, emitAlias);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(bt), vueNt({
         "data-slot": `dropdown-menu-checkbox-item`
-      }, d(a), {
-        class: d(c)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
+      }, vueAn(a), {
+        class: vueAn(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
-        default: y(() => [P(`span`, xt, [D(d(Oe), null, {
-          default: y(() => [p(ctx.$slots, `indicator-icon`, {}, () => [D(d(z))])]),
+        default: vueYt(() => [vueY(`span`, xt, [vueK(vueAn(TooltipTriggerO), null, {
+          default: vueYt(() => [vueCt(ctx.$slots, `indicator-icon`, {}, () => [vueK(vueAn(checkT))])]),
           _: 3
-        })]), p(ctx.$slots, `default`)]),
+        })]), vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
   }),
-  Ct = E({
+  Ct = vueJ({
     __name: `DropdownMenuShortcut`,
     props: {
       class: {
@@ -270,14 +270,14 @@ var ut = L(`corner-up-left`, [[`path`, {
     },
     setup(props) {
       let propsAlias = props;
-      return (ctx, renderCache) => (T(), g(`span`, {
+      return (ctx, renderCache) => (vueGt(), vueS(`span`, {
         "data-slot": `dropdown-menu-shortcut`,
-        class: u(d(c)(`text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground ml-auto text-xs tracking-widest`, propsAlias.class))
-      }, [p(ctx.$slots, `default`)], 2));
+        class: vueN(vueAn(uiSwitchXt)(`text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground ml-auto text-xs tracking-widest`, propsAlias.class))
+      }, [vueCt(ctx.$slots, `default`)], 2));
     }
   }),
   J = [`aria-label`, `aria-pressed`, `disabled`],
-  wt = E({
+  wt = vueJ({
     __name: `ReaderIconButton`,
     props: {
       label: {},
@@ -305,31 +305,31 @@ var ut = L(`corner-up-left`, [[`path`, {
     }) {
       let propsAlias = props,
         emitAlias = emit;
-      return (ctx, renderCache) => (T(), x(d(H), null, {
-        default: y(() => [D(d(U), {
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(TooltipTriggerI), null, {
+        default: vueYt(() => [vueK(vueAn(TooltipTriggerT), {
           "as-child": ``
         }, {
-          default: y(() => [P(`button`, {
+          default: vueYt(() => [vueY(`button`, {
             type: `button`,
-            class: u([`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-40`, [propsAlias.size === `xs` ? `size-6` : `size-7`, propsAlias.active ? `bg-primary text-primary-foreground` : `text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10`]]),
+            class: vueN([`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-40`, [propsAlias.size === `xs` ? `size-6` : `size-7`, propsAlias.active ? `bg-primary text-primary-foreground` : `text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10`]]),
             "aria-label": propsAlias.label,
             "aria-pressed": propsAlias.active || undefined,
             disabled: propsAlias.disabled,
-            onMousedown: renderCache[0] ||= I(() => {}, [`prevent`]),
+            onMousedown: renderCache[0] ||= playerE(() => {}, [`prevent`]),
             onClick: renderCache[1] ||= e => emitAlias(`click`, e)
-          }, [p(ctx.$slots, `default`)], 42, J)]),
+          }, [vueCt(ctx.$slots, `default`)], 42, J)]),
           _: 3
-        }), D(d(ke), {
+        }), vueK(vueAn(TooltipTriggerR), {
           side: propsAlias.side,
           "side-offset": 6,
           "hide-arrow": ``
         }, {
-          default: y(() => [h(A(propsAlias.label) + ` `, 1), propsAlias.shortcut ? (T(), x(d(lt), {
+          default: vueYt(() => [vueO(vueRr(propsAlias.label) + ` `, 1), propsAlias.shortcut ? (vueGt(), vueB(vueAn(KbdT), {
             key: 0
           }, {
-            default: y(() => [h(A(propsAlias.shortcut), 1)]),
+            default: vueYt(() => [vueO(vueRr(propsAlias.shortcut), 1)]),
             _: 1
-          })) : N(``, true)]),
+          })) : vueX(``, true)]),
           _: 1
         }, 8, [`side`])]),
         _: 3
@@ -1122,7 +1122,7 @@ function Sn(el, t) {
 }
 function Cn(el, t, n) {
   let r = t.parser([el]),
-    sanitize = me.sanitize(r, {
+    sanitize = purifyT.sanitize(r, {
       ALLOWED_TAGS: parts,
       ALLOWED_ATTR: nn,
       ALLOW_DATA_ATTR: false,
@@ -1337,7 +1337,7 @@ body { margin: 0; background: #fff; }
   Fn = [`placeholder`, `aria-label`],
   Q = 20,
   In = 3e4,
-  Ln = E({
+  Ln = vueJ({
     __name: `MarkdownReaderEditor`,
     props: {
       modelValue: {},
@@ -1359,19 +1359,19 @@ body { margin: 0; background: #fff; }
       let eventAlias = event,
         emitAlias = emit,
         {
-          t: a
-        } = ue(),
-        o = S(null),
-        s = S(null),
-        c = f([]),
-        l = S(0),
-        p = S(0),
-        ee = S(`100%`),
-        b = S({
+          t: translate
+        } = i18nT(),
+        o = vueBn(null),
+        s = vueBn(null),
+        c = vueCn([]),
+        l = vueBn(0),
+        p = vueBn(0),
+        ee = vueBn(`100%`),
+        b = vueBn({
           start: 0,
           end: 0
         }),
-        te = S(false),
+        te = vueBn(false),
         w = null,
         E = null,
         D = false,
@@ -1410,53 +1410,53 @@ body { margin: 0; background: #fff; }
           return [[{
             key: `h1`,
             text: `H1`,
-            label: a(`toolboxNative.markdownHeading1`)
+            label: translate(`toolboxNative.markdownHeading1`)
           }, {
             key: `h2`,
             text: `H2`,
-            label: a(`toolboxNative.markdownHeading2`)
+            label: translate(`toolboxNative.markdownHeading2`)
           }, {
             key: `h3`,
             text: `H3`,
-            label: a(`toolboxNative.markdownHeading3`)
+            label: translate(`toolboxNative.markdownHeading3`)
           }], [{
             key: `bold`,
-            icon: de,
-            label: a(`toolboxNative.markdownBold`),
+            icon: purifyI,
+            label: translate(`toolboxNative.markdownBold`),
             shortcut: `${modifierLabel}B`
           }, {
             key: `italic`,
-            icon: He,
-            label: a(`toolboxNative.markdownItalic`),
+            icon: mainNn,
+            label: translate(`toolboxNative.markdownItalic`),
             shortcut: `${modifierLabel}I`
           }, {
             key: `strike`,
-            icon: ct,
-            label: a(`toolboxNative.markdownStrike`)
+            icon: mainYn,
+            label: translate(`toolboxNative.markdownStrike`)
           }], [{
             key: `unordered-list`,
-            icon: fe,
-            label: a(`toolboxNative.markdownUnorderedList`)
+            icon: purifyN,
+            label: translate(`toolboxNative.markdownUnorderedList`)
           }, {
             key: `ordered-list`,
-            icon: ye,
-            label: a(`toolboxNative.markdownOrderedList`)
+            icon: DropdownMenuItemN,
+            label: translate(`toolboxNative.markdownOrderedList`)
           }, {
             key: `task-list`,
-            icon: Ve,
-            label: a(`toolboxNative.markdownTaskList`)
+            icon: mainMn,
+            label: translate(`toolboxNative.markdownTaskList`)
           }, {
             key: `quote`,
             icon: _t,
-            label: a(`toolboxNative.markdownQuote`)
+            label: translate(`toolboxNative.markdownQuote`)
           }], [{
             key: `code`,
-            icon: Be,
-            label: a(`toolboxNative.markdownCode`)
+            icon: mainFn,
+            label: translate(`toolboxNative.markdownCode`)
           }, {
             key: `link`,
             icon: mt,
-            label: a(`toolboxNative.markdownLink`),
+            label: translate(`toolboxNative.markdownLink`),
             shortcut: `${modifierLabel}K`
           }]];
         }),
@@ -1648,14 +1648,14 @@ body { margin: 0; background: #fff; }
       function De() {
         !te.value && document.activeElement === o.value && le();
       }
-      return v(() => eventAlias.modelValue, (text, t) => {
+      return vueWt(() => eventAlias.modelValue, (text, t) => {
         ge(text), Se(text.split(`
 `).length !== (t ?? ``).split(`
 `).length);
-      }), v(() => [eventAlias.lineNumbers, eventAlias.measureLines], () => ie(() => Se(true))), ae(() => {
+      }), vueWt(() => [eventAlias.lineNumbers, eventAlias.measureLines], () => vueRt(() => Se(true))), vueUt(() => {
         let e = o.value;
         e && (e.value = eventAlias.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
-      }), re(() => {
+      }), vueOt(() => {
         E?.disconnect(), document.removeEventListener(`selectionchange`, De), w !== null && window.clearTimeout(w);
       }), expose({
         focus: () => o.value?.focus(),
@@ -1666,13 +1666,13 @@ body { margin: 0; background: #fff; }
         isAtBottom: Ee,
         revealLine: V,
         selectRange: H
-      }), (e, t) => (T(), g(`section`, kn, [P(`div`, {
+      }), (e, t) => (vueGt(), vueS(`section`, kn, [vueY(`div`, {
         class: `mx-2 mt-2 flex shrink-0 flex-wrap items-center gap-0.5 rounded-md border border-black/8 bg-black/[0.02] p-1 dark:border-white/10 dark:bg-white/[0.03]`,
         role: `toolbar`,
-        "aria-label": d(a)(`toolboxNative.markdownFormattingTools`)
-      }, [(T(true), g(C, null, _(se.value, (e, t) => (T(), g(C, {
+        "aria-label": vueAn(translate)(`toolboxNative.markdownFormattingTools`)
+      }, [(vueGt(true), vueS(vueC, null, vueSt(se.value, (e, t) => (vueGt(), vueS(vueC, {
         key: t
-      }, [t > 0 ? (T(), g(`span`, jn)) : N(``, true), (T(true), g(C, null, _(e, e => (T(), x(wt, {
+      }, [t > 0 ? (vueGt(), vueS(`span`, jn)) : vueX(``, true), (vueGt(true), vueS(vueC, null, vueSt(e, e => (vueGt(), vueB(wt, {
         key: e.key,
         size: `xs`,
         label: e.label,
@@ -1680,46 +1680,46 @@ body { margin: 0; background: #fff; }
         active: F.value.has(e.key),
         onClick: t => ve(e.key)
       }, {
-        default: y(() => [e.icon ? (T(), x(m(e.icon), {
+        default: vueYt(() => [e.icon ? (vueGt(), vueB(vueEt(e.icon), {
           key: 0,
           size: 13
-        })) : (T(), g(`span`, Mn, A(e.text), 1))]),
+        })) : (vueGt(), vueS(`span`, Mn, vueRr(e.text), 1))]),
         _: 2
-      }, 1032, [`label`, `shortcut`, `active`, `onClick`]))), 128))], 64))), 128))], 8, An), P(`div`, {
-        class: u([`relative flex min-h-0 min-w-0 flex-1`, eventAlias.lineNumbers ? `[--editor-pad-left:12px]` : `[--editor-pad-left:24px]`])
-      }, [eventAlias.lineNumbers ? (T(), g(`div`, {
+      }, 1032, [`label`, `shortcut`, `active`, `onClick`]))), 128))], 64))), 128))], 8, An), vueY(`div`, {
+        class: vueN([`relative flex min-h-0 min-w-0 flex-1`, eventAlias.lineNumbers ? `[--editor-pad-left:12px]` : `[--editor-pad-left:24px]`])
+      }, [eventAlias.lineNumbers ? (vueGt(), vueS(`div`, {
         key: 0,
         class: `relative shrink-0 select-none overflow-hidden text-xs tabular-nums text-muted-foreground/60`,
-        style: ne({
+        style: vueNr({
           width: oe.value
         }),
         "aria-hidden": `true`
-      }, [(T(true), g(C, null, _(L.value, e => (T(), g(`span`, {
+      }, [(vueGt(true), vueS(vueC, null, vueSt(L.value, e => (vueGt(), vueS(`span`, {
         key: e.line,
-        class: u([`absolute right-2 flex h-[24.5px] items-center`, e.line === j.value ? `text-foreground` : ``]),
-        style: ne({
+        class: vueN([`absolute right-2 flex h-[24.5px] items-center`, e.line === j.value ? `text-foreground` : ``]),
+        style: vueNr({
           top: `${e.top}px`
         })
-      }, A(e.line + 1), 7))), 128))], 4)) : N(``, true), P(`div`, Nn, [I.value.length ? (T(), g(`div`, Pn, [P(`div`, {
+      }, vueRr(e.line + 1), 7))), 128))], 4)) : vueX(``, true), vueY(`div`, Nn, [I.value.length ? (vueGt(), vueS(`div`, Pn, [vueY(`div`, {
         class: `whitespace-pre-wrap pb-24 pr-6 pl-[var(--editor-pad-left)] pt-5 text-sm leading-[1.75] text-transparent [overflow-wrap:break-word] [tab-size:2]`,
-        style: ne({
+        style: vueNr({
           width: ee.value,
           transform: `translateY(${-l.value}px)`
         })
-      }, [(T(true), g(C, null, _(I.value, (e, t) => (T(), g(C, {
+      }, [(vueGt(true), vueS(vueC, null, vueSt(I.value, (e, t) => (vueGt(), vueS(vueC, {
         key: t
-      }, [e.mark ? (T(), g(`mark`, {
+      }, [e.mark ? (vueGt(), vueS(`mark`, {
         key: 0,
-        class: u([`rounded-[2px] text-transparent`, e.current ? `bg-orange-400/45` : `bg-yellow-300/45`])
-      }, A(e.text), 3)) : (T(), g(C, {
+        class: vueN([`rounded-[2px] text-transparent`, e.current ? `bg-orange-400/45` : `bg-yellow-300/45`])
+      }, vueRr(e.text), 3)) : (vueGt(), vueS(vueC, {
         key: 1
-      }, [h(A(e.text), 1)], 64))], 64))), 128))], 4)])) : N(``, true), P(`textarea`, {
+      }, [vueO(vueRr(e.text), 1)], 64))], 64))), 128))], 4)])) : vueX(``, true), vueY(`textarea`, {
         ref_key: `textareaRef`,
         ref: o,
         spellcheck: `false`,
         class: `relative block h-full min-h-0 w-full min-w-0 resize-none overflow-y-auto border-0 bg-transparent pb-24 pl-[var(--editor-pad-left)] pr-6 pt-5 text-sm leading-[1.75] text-foreground outline-none [caret-color:var(--primary)] [scrollbar-gutter:stable] [tab-size:2] placeholder:text-muted-foreground/70 selection:bg-primary/20`,
-        placeholder: d(a)(`toolboxNative.markdownEditorPlaceholder`),
-        "aria-label": d(a)(`toolboxNative.markdownEditorLabel`),
+        placeholder: vueAn(translate)(`toolboxNative.markdownEditorPlaceholder`),
+        "aria-label": vueAn(translate)(`toolboxNative.markdownEditorLabel`),
         onInput: me,
         onCompositionstart: t[0] ||= e => te.value = true,
         onCompositionend: z,
@@ -1728,7 +1728,7 @@ body { margin: 0; background: #fff; }
         onKeyup: le,
         onMouseup: le,
         onScroll: be
-      }, null, 40, Fn)]), P(`div`, {
+      }, null, 40, Fn)]), vueY(`div`, {
         ref_key: `mirrorRef`,
         ref: s,
         class: `pointer-events-none invisible absolute left-0 top-0 whitespace-pre-wrap text-sm leading-[1.75] [overflow-wrap:break-word] [tab-size:2]`,
@@ -1755,7 +1755,7 @@ body { margin: 0; background: #fff; }
   Wn = {
     class: `mt-4 text-xs text-muted-foreground/80`
   },
-  Gn = E({
+  Gn = vueJ({
     __name: `MarkdownReaderEmptyState`,
     props: {
       modifierLabel: {}
@@ -1768,11 +1768,11 @@ body { margin: 0; background: #fff; }
         emitAlias = emit,
         {
           t: i
-        } = ue(),
+        } = i18nT(),
         {
           user: a
-        } = Re(),
-        o = S(G),
+        } = useAuthT(),
+        o = vueBn(mainG),
         c = true,
         l = 0;
       async function u() {
@@ -1780,42 +1780,42 @@ body { margin: 0; background: #fff; }
         if (a.value?.token) try {
           let summary = await window.electronAPI.growth.summary(),
             n = summary?.available ? summary.pet.mediaSlots?.timeline?.url : undefined,
-            r = n ? await et(n, G) : G;
+            r = n ? await mainMt(n, mainG) : mainG;
           c && e === l && (o.value = r);
         } catch {}
       }
-      return v(() => a.value?.token, () => void u(), {
+      return vueWt(() => a.value?.token, () => void u(), {
         immediate: true
-      }), ae(() => {
+      }), vueUt(() => {
         c = true;
-      }), O(() => {
+      }), vueMt(() => {
         c = false;
-      }), (e, t) => (T(), g(`div`, Rn, [P(`div`, zn, [P(`img`, {
+      }), (e, t) => (vueGt(), vueS(`div`, Rn, [vueY(`div`, zn, [vueY(`img`, {
         src: o.value,
         alt: ``,
         class: `mb-3 size-[120px] object-contain`,
         draggable: `false`,
-        onError: t[0] ||= e => o.value = d(G)
-      }, null, 40, Bn), P(`h2`, Vn, A(d(i)(`toolboxNative.markdownEmptyTitle`)), 1), P(`p`, Hn, A(d(i)(`toolboxNative.markdownReaderWelcome`)), 1), P(`div`, Un, [D(d(s), {
+        onError: t[0] ||= e => o.value = vueAn(mainG)
+      }, null, 40, Bn), vueY(`h2`, Vn, vueRr(vueAn(i)(`toolboxNative.markdownEmptyTitle`)), 1), vueY(`p`, Hn, vueRr(vueAn(i)(`toolboxNative.markdownReaderWelcome`)), 1), vueY(`div`, Un, [vueK(vueAn(uiSwitchR), {
         size: `sm`,
         class: `gap-1.5 text-xs`,
         onClick: t[1] ||= e => emitAlias(`open`)
       }, {
-        default: y(() => [D(d(ce), {
+        default: vueYt(() => [vueK(vueAn(i18nL), {
           size: 14
-        }), h(A(d(i)(`toolboxNative.markdownOpenFile`)), 1)]),
+        }), vueO(vueRr(vueAn(i)(`toolboxNative.markdownOpenFile`)), 1)]),
         _: 1
-      }), D(d(s), {
+      }), vueK(vueAn(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
         class: `gap-1.5 text-xs`,
         onClick: t[2] ||= e => emitAlias(`create`)
       }, {
-        default: y(() => [D(d(pt), {
+        default: vueYt(() => [vueK(vueAn(pt), {
           size: 14
-        }), h(A(d(i)(`toolboxNative.createMarkdownDocument`)), 1)]),
+        }), vueO(vueRr(vueAn(i)(`toolboxNative.createMarkdownDocument`)), 1)]),
         _: 1
-      })]), P(`p`, Wn, A(d(i)(`toolboxNative.markdownEmptyHint`, {
+      })]), vueY(`p`, Wn, vueRr(vueAn(i)(`toolboxNative.markdownEmptyHint`, {
         open: `${propsAlias.modifierLabel}O`,
         create: `${propsAlias.modifierLabel}N`
       })), 1)])]));
@@ -1826,7 +1826,7 @@ body { margin: 0; background: #fff; }
     role: `search`
   },
   qn = [`placeholder`, `aria-label`],
-  Jn = E({
+  Jn = vueJ({
     __name: `MarkdownReaderFindBar`,
     props: {
       query: {},
@@ -1844,8 +1844,8 @@ body { margin: 0; background: #fff; }
         emitAlias = emit,
         {
           t: a
-        } = ue(),
-        o = S(null),
+        } = i18nT(),
+        o = vueBn(null),
         s = false;
       function c() {
         o.value && emitAlias(`update:query`, o.value.value);
@@ -1859,7 +1859,7 @@ body { margin: 0; background: #fff; }
       function p() {
         s = false, c();
       }
-      v(() => eventAlias.query, e => {
+      vueWt(() => eventAlias.query, e => {
         let t = o.value;
         t && !s && t.value !== e && (t.value = e);
       });
@@ -1867,62 +1867,62 @@ body { margin: 0; background: #fff; }
         e.isComposing || e.keyCode === 229 || (e.key === `Enter` ? (e.preventDefault(), e.shiftKey ? emitAlias(`previous`) : emitAlias(`next`)) : e.key === `Escape` && (e.preventDefault(), e.stopPropagation(), emitAlias(`close`)));
       }
       function h() {
-        ie(() => {
+        vueRt(() => {
           o.value?.focus(), o.value?.select();
         });
       }
-      return ae(() => {
+      return vueUt(() => {
         o.value && (o.value.value = eventAlias.query), h();
       }), expose({
         focus: h
-      }), (e, t) => (T(), g(`div`, Kn, [D(d(We), {
+      }), (e, t) => (vueGt(), vueS(`div`, Kn, [vueK(vueAn(mainSn), {
         size: 14,
         class: `shrink-0 text-muted-foreground`
-      }), P(`input`, {
+      }), vueY(`input`, {
         ref_key: `inputRef`,
         ref: o,
         type: `text`,
         class: `h-7 w-44 min-w-0 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground`,
-        placeholder: d(a)(`toolboxNative.markdownFindPlaceholder`),
-        "aria-label": d(a)(`toolboxNative.markdownFindPlaceholder`),
+        placeholder: vueAn(a)(`toolboxNative.markdownFindPlaceholder`),
+        "aria-label": vueAn(a)(`toolboxNative.markdownFindPlaceholder`),
         onInput: l,
         onCompositionstart: t[0] ||= e => f(true),
         onCompositionend: p,
         onBlur: t[1] ||= e => f(false),
         onKeydown: m
-      }, null, 40, qn), P(`span`, {
-        class: u([`min-w-9 shrink-0 text-right text-xs tabular-nums`, eventAlias.query && !eventAlias.hasMatches ? `text-destructive` : `text-muted-foreground`])
-      }, A(eventAlias.summary), 3), t[5] ||= P(`span`, {
+      }, null, 40, qn), vueY(`span`, {
+        class: vueN([`min-w-9 shrink-0 text-right text-xs tabular-nums`, eventAlias.query && !eventAlias.hasMatches ? `text-destructive` : `text-muted-foreground`])
+      }, vueRr(eventAlias.summary), 3), t[5] ||= vueY(`span`, {
         class: `mx-0.5 h-4 w-px bg-border`
-      }, null, -1), D(wt, {
+      }, null, -1), vueK(wt, {
         size: `xs`,
-        label: d(a)(`toolboxNative.markdownFindPrevious`),
+        label: vueAn(a)(`toolboxNative.markdownFindPrevious`),
         shortcut: `⇧Enter`,
         disabled: !eventAlias.hasMatches,
         onClick: t[2] ||= e => emitAlias(`previous`)
       }, {
-        default: y(() => [D(d(ge), {
+        default: vueYt(() => [vueK(vueAn(chevronupT), {
           size: 14
         })]),
         _: 1
-      }, 8, [`label`, `disabled`]), D(wt, {
+      }, 8, [`label`, `disabled`]), vueK(wt, {
         size: `xs`,
-        label: d(a)(`toolboxNative.markdownFindNext`),
+        label: vueAn(a)(`toolboxNative.markdownFindNext`),
         shortcut: `Enter`,
         disabled: !eventAlias.hasMatches,
         onClick: t[3] ||= e => emitAlias(`next`)
       }, {
-        default: y(() => [D(d(he), {
+        default: vueYt(() => [vueK(vueAn(PopperContentS), {
           size: 14
         })]),
         _: 1
-      }, 8, [`label`, `disabled`]), D(wt, {
+      }, 8, [`label`, `disabled`]), vueK(wt, {
         size: `xs`,
-        label: d(a)(`toolboxNative.markdownFindClose`),
+        label: vueAn(a)(`toolboxNative.markdownFindClose`),
         shortcut: `Esc`,
         onClick: t[4] ||= e => emitAlias(`close`)
       }, {
-        default: y(() => [D(d(R), {
+        default: vueYt(() => [vueK(vueAn(lucideT), {
           size: 14
         })]),
         _: 1
@@ -1938,7 +1938,7 @@ function Qn(e, t) {
   let n = Zn(e, t),
     r = Yn.get(n);
   if (r) return r;
-  let i = q.readAsset({
+  let i = mainN.readAsset({
     documentPath: e,
     source: t
   }).then(result => result.dataUrl);
@@ -1971,7 +1971,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
   rr = [`aria-label`],
   ir = [`src`, `alt`],
   ar = [`aria-label`],
-  or = Le(E({
+  or = pluginvueexporthelperT(vueJ({
     __name: `MarkdownReaderRenderer`,
     props: {
       blocks: {},
@@ -1987,9 +1987,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         emitAlias = emit,
         {
           t: a
-        } = ue(),
-        o = S(null),
-        s = S(null),
+        } = i18nT(),
+        o = vueBn(null),
+        s = vueBn(null),
         c = new Map();
       function l(el, t) {
         el.classList.remove(`is-loading`), el.classList.add(`is-unavailable`), el.alt ||= a(`toolboxNative.markdownImageLoadFailed`, {
@@ -2028,7 +2028,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
             c.delete(e), f(e, false);
           }, 1200));
         } catch {
-          W(a(`toolboxNative.markdownCodeCopyFailed`));
+          alertT(a(`toolboxNative.markdownCodeCopyFailed`));
         }
       }
       function m(e) {
@@ -2061,7 +2061,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
           return;
         }
         if (/^(https?:|mailto:)/i.test(fallbackValue)) {
-          q.openExternal(fallbackValue).catch(() => W(a(`toolboxNative.markdownErrorInvalidLink`)));
+          mainN.openExternal(fallbackValue).catch(() => alertT(a(`toolboxNative.markdownErrorInvalidLink`)));
           return;
         }
         emitAlias(`openLink`, fallbackValue);
@@ -2087,56 +2087,56 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       }
       function b() {
         let e = s.value;
-        if (e && /^(data|blob):/i.test(e.src)) return () => Xe(e.src, e.name);
+        if (e && /^(data|blob):/i.test(e.src)) return () => mainHt(e.src, e.name);
       }
       function w(e) {
         e.key === `Escape` && (e.stopPropagation(), s.value = null);
       }
-      return v(s, e => {
+      return vueWt(s, e => {
         e ? window.addEventListener(`keydown`, w, true) : window.removeEventListener(`keydown`, w, true);
-      }), v(() => [eventAlias.blocks, eventAlias.epoch], u, {
+      }), vueWt(() => [eventAlias.blocks, eventAlias.epoch], u, {
         flush: `post`,
         immediate: true
-      }), re(() => {
+      }), vueOt(() => {
         window.removeEventListener(`keydown`, w, true);
         for (let filePath of c.values()) window.clearTimeout(filePath);
       }), expose({
         root: () => o.value,
         scrollToAnchor: m
-      }), (e, t) => (T(), g(C, null, [P(`article`, {
+      }), (e, t) => (vueGt(), vueS(vueC, null, [vueY(`article`, {
         ref_key: `rootRef`,
         ref: o,
         class: `markdown-reader-rendered text-[15px] leading-[1.8] text-[#1a1a1a] dark:text-foreground`,
         onClick: h,
         onChange: ee
-      }, [(T(true), g(C, null, _(eventAlias.blocks, (e, t) => (T(), g(`div`, {
+      }, [(vueGt(true), vueS(vueC, null, vueSt(eventAlias.blocks, (e, t) => (vueGt(), vueS(`div`, {
         key: `${eventAlias.epoch}:${e.key}`,
         class: `markdown-block`,
         "data-block-index": t,
         "data-source-line": e.line,
         innerHTML: e.html
-      }, null, 8, nr))), 128))], 544), (T(), x(te, {
+      }, null, 8, nr))), 128))], 544), (vueGt(), vueB(vueF, {
         to: `body`
-      }, [s.value ? (T(), g(`div`, {
+      }, [s.value ? (vueGt(), vueS(`div`, {
         key: 0,
         class: `fixed inset-0 z-[90] flex cursor-zoom-out items-center justify-center bg-black/75 p-8 animate-in fade-in-0`,
         role: `dialog`,
         "aria-modal": `true`,
-        "aria-label": s.value.alt || d(a)(`toolboxNative.markdownImagePreview`),
+        "aria-label": s.value.alt || vueAn(a)(`toolboxNative.markdownImagePreview`),
         onClick: t[2] ||= e => s.value = null
-      }, [P(`img`, {
+      }, [vueY(`img`, {
         src: s.value.src,
         alt: s.value.alt,
         class: `max-h-full max-w-full rounded-lg object-contain shadow-2xl`,
-        onContextmenu: t[0] ||= e => d(K)(e, b())
-      }, null, 40, ir), P(`button`, {
+        onContextmenu: t[0] ||= e => vueAn(mainGt)(e, b())
+      }, null, 40, ir), vueY(`button`, {
         type: `button`,
         class: `absolute right-5 top-5 inline-flex size-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20`,
-        "aria-label": d(a)(`toolboxNative.markdownCloseImagePreview`),
-        onClick: t[1] ||= I(e => s.value = null, [`stop`])
-      }, [D(d(R), {
+        "aria-label": vueAn(a)(`toolboxNative.markdownCloseImagePreview`),
+        onClick: t[1] ||= playerE(e => s.value = null, [`stop`])
+      }, [vueK(vueAn(lucideT), {
         size: 18
-      })], 8, ar)], 8, rr)) : N(``, true)]))], 64));
+      })], 8, ar)], 8, rr)) : vueX(``, true)]))], 64));
     }
   }), [[`__scopeId`, `data-v-d17fed93`]]),
   sr = {
@@ -2181,7 +2181,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
     key: 0,
     class: `px-3 py-8 text-center text-xs leading-relaxed text-muted-foreground`
   },
-  wr = E({
+  wr = vueJ({
     __name: `MarkdownReaderSidePanel`,
     props: {
       tab: {},
@@ -2199,9 +2199,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         {
           locale: i,
           t: a
-        } = ue(),
-        o = S(``),
-        s = S(null),
+        } = i18nT(),
+        o = vueBn(``),
+        s = vueBn(null),
         c = M(() => i?.value || `zh-CN`),
         l = M(() => {
           let toLocaleLowerCase = o.value.trim().toLocaleLowerCase(c.value);
@@ -2227,98 +2227,98 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       function m(e, event) {
         event.stopPropagation(), emitAlias(`removeRecent`, e);
       }
-      return v(() => [propsAlias.activeHeadingId, propsAlias.tab], async () => {
-        await ie();
+      return vueWt(() => [propsAlias.activeHeadingId, propsAlias.tab], async () => {
+        await vueRt();
         let e = s.value,
           t = e?.querySelector(`[aria-current="location"]`);
         if (!e || !t) return;
         let boundingClientRect = e.getBoundingClientRect(),
           boundingClientRectResult = t.getBoundingClientRect();
         boundingClientRectResult.top < boundingClientRect.top ? e.scrollTop += boundingClientRectResult.top - boundingClientRect.top - 8 : boundingClientRectResult.bottom > boundingClientRect.bottom && (e.scrollTop += boundingClientRectResult.bottom - boundingClientRect.bottom + 8);
-      }), (e, t) => (T(), g(`aside`, sr, [D(d(nt), {
+      }), (e, t) => (vueGt(), vueS(`aside`, sr, [vueK(vueAn(nt), {
         class: `shrink-0 px-2 pt-2`,
         "model-value": propsAlias.tab,
         "onUpdate:modelValue": t[0] ||= e => emitAlias(`update:tab`, e)
       }, {
-        default: y(() => [D(d(Ye), {
+        default: vueYt(() => [vueK(vueAn(Ye), {
           class: `w-full group-data-horizontal/tabs:h-8`
         }, {
-          default: y(() => [D(d(qe), {
+          default: vueYt(() => [vueK(vueAn(mainDn), {
             value: `files`,
             class: `text-xs`
           }, {
-            default: y(() => [h(A(d(a)(`toolboxNative.markdownRecentFiles`)), 1)]),
+            default: vueYt(() => [vueO(vueRr(vueAn(a)(`toolboxNative.markdownRecentFiles`)), 1)]),
             _: 1
-          }), D(d(qe), {
+          }), vueK(vueAn(mainDn), {
             value: `outline`,
             class: `text-xs`
           }, {
-            default: y(() => [h(A(d(a)(`toolboxNative.documentOutline`)) + ` `, 1), propsAlias.headings.length ? (T(), g(`span`, cr, A(propsAlias.headings.length), 1)) : N(``, true)]),
+            default: vueYt(() => [vueO(vueRr(vueAn(a)(`toolboxNative.documentOutline`)) + ` `, 1), propsAlias.headings.length ? (vueGt(), vueS(`span`, cr, vueRr(propsAlias.headings.length), 1)) : vueX(``, true)]),
             _: 1
           })]),
           _: 1
         })]),
         _: 1
-      }, 8, [`model-value`]), propsAlias.tab === `files` ? (T(), g(C, {
+      }, 8, [`model-value`]), propsAlias.tab === `files` ? (vueGt(), vueS(vueC, {
         key: 0
-      }, [P(`div`, lr, [P(`label`, ur, [D(d(We), {
+      }, [vueY(`div`, lr, [vueY(`label`, ur, [vueK(vueAn(mainSn), {
         size: 14,
         class: `pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground`
-      }), b(P(`input`, {
+      }), vueZt(vueY(`input`, {
         "onUpdate:modelValue": t[1] ||= e => o.value = e,
         type: `text`,
         class: `h-8 w-full rounded-lg border border-input bg-background pl-8 pr-7 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground hover:border-black/15 focus:border-[#86efac] dark:hover:border-white/20 dark:focus:border-primary/60`,
-        placeholder: d(a)(`toolboxNative.searchRecentDocuments`),
-        onKeydown: t[2] ||= se(I(e => o.value = ``, [`stop`]), [`esc`])
-      }, null, 40, dr), [[F, o.value]]), o.value ? (T(), g(`button`, {
+        placeholder: vueAn(a)(`toolboxNative.searchRecentDocuments`),
+        onKeydown: t[2] ||= playerT(playerE(e => o.value = ``, [`stop`]), [`esc`])
+      }, null, 40, dr), [[playerC, o.value]]), o.value ? (vueGt(), vueS(`button`, {
         key: 0,
         type: `button`,
         class: `absolute right-1 top-1/2 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10`,
-        "aria-label": d(a)(`toolboxNative.markdownClearSearch`),
+        "aria-label": vueAn(a)(`toolboxNative.markdownClearSearch`),
         onClick: t[3] ||= e => o.value = ``
-      }, [D(d(R), {
+      }, [vueK(vueAn(lucideT), {
         size: 13
-      })], 8, fr)) : N(``, true)])]), P(`div`, pr, [(T(true), g(C, null, _(l.value, e => (T(), g(`div`, {
+      })], 8, fr)) : vueX(``, true)])]), vueY(`div`, pr, [(vueGt(true), vueS(vueC, null, vueSt(l.value, e => (vueGt(), vueS(`div`, {
         key: e.filePath,
-        class: u([`group relative mt-0.5 rounded-lg transition-colors`, propsAlias.currentPath === e.filePath ? `bg-[var(--app-sidebar-nav-active-background)]` : `hover:bg-[var(--app-sidebar-nav-hover-background)]`])
-      }, [P(`button`, {
+        class: vueN([`group relative mt-0.5 rounded-lg transition-colors`, propsAlias.currentPath === e.filePath ? `bg-[var(--app-sidebar-nav-active-background)]` : `hover:bg-[var(--app-sidebar-nav-hover-background)]`])
+      }, [vueY(`button`, {
         type: `button`,
         class: `block w-full min-w-0 rounded-lg px-2.5 py-2 pr-8 text-left disabled:cursor-not-allowed`,
         title: e.filePath,
         disabled: !e.exists,
         onClick: t => emitAlias(`openRecent`, e)
-      }, [P(`span`, {
-        class: u([`block truncate text-sm font-medium`, e.exists ? `text-foreground` : `text-muted-foreground line-through decoration-muted-foreground/50`])
-      }, A(e.name), 3), P(`span`, hr, [P(`span`, gr, A(e.exists ? e.folder : d(a)(`toolboxNative.markdownFileMissing`)), 1), t[4] ||= P(`span`, {
+      }, [vueY(`span`, {
+        class: vueN([`block truncate text-sm font-medium`, e.exists ? `text-foreground` : `text-muted-foreground line-through decoration-muted-foreground/50`])
+      }, vueRr(e.name), 3), vueY(`span`, hr, [vueY(`span`, gr, vueRr(e.exists ? e.folder : vueAn(a)(`toolboxNative.markdownFileMissing`)), 1), t[4] ||= vueY(`span`, {
         class: `shrink-0 opacity-60`
-      }, `·`, -1), P(`span`, _r, A(p(e.openedAt)), 1)])], 8, mr), P(`button`, {
+      }, `·`, -1), vueY(`span`, _r, vueRr(p(e.openedAt)), 1)])], 8, mr), vueY(`button`, {
         type: `button`,
         class: `absolute right-1.5 top-2 inline-flex size-6 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-black/5 hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 dark:hover:bg-white/10`,
-        title: d(a)(`toolboxNative.removeFromRecent`),
-        "aria-label": `${d(a)(`toolboxNative.removeFromRecent`)}：${e.name}`,
+        title: vueAn(a)(`toolboxNative.removeFromRecent`),
+        "aria-label": `${vueAn(a)(`toolboxNative.removeFromRecent`)}：${e.name}`,
         onClick: t => m(e, t)
-      }, [D(d(R), {
+      }, [vueK(vueAn(lucideT), {
         size: 13
-      })], 8, vr)], 2))), 128)), l.value.length === 0 ? (T(), g(`p`, yr, A(o.value ? d(a)(`toolboxNative.markdownNoSearchResults`) : d(a)(`toolboxNative.noRecentMarkdownDocuments`)), 1)) : N(``, true)]), P(`p`, br, [D(d(st), {
+      })], 8, vr)], 2))), 128)), l.value.length === 0 ? (vueGt(), vueS(`p`, yr, vueRr(o.value ? vueAn(a)(`toolboxNative.markdownNoSearchResults`) : vueAn(a)(`toolboxNative.noRecentMarkdownDocuments`)), 1)) : vueX(``, true)]), vueY(`p`, br, [vueK(vueAn(mainXn), {
         size: 13,
         class: `shrink-0`
-      }), h(A(d(a)(`toolboxNative.markdownLocalPrivacyNote`)), 1)])], 64)) : (T(), g(`nav`, {
+      }), vueO(vueRr(vueAn(a)(`toolboxNative.markdownLocalPrivacyNote`)), 1)])], 64)) : (vueGt(), vueS(`nav`, {
         key: 1,
         ref_key: `outlineRef`,
         ref: s,
         class: `min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-3 pt-2`,
-        "aria-label": d(a)(`toolboxNative.documentOutline`)
-      }, [(T(true), g(C, null, _(propsAlias.headings, e => (T(), g(`button`, {
+        "aria-label": vueAn(a)(`toolboxNative.documentOutline`)
+      }, [(vueGt(true), vueS(vueC, null, vueSt(propsAlias.headings, e => (vueGt(), vueS(`button`, {
         key: e.id,
         type: `button`,
-        class: u([`block w-full truncate rounded-md py-1.5 pr-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30`, propsAlias.activeHeadingId === e.id ? `bg-[var(--app-sidebar-nav-active-background)] font-medium text-foreground` : `text-muted-foreground hover:bg-[var(--app-sidebar-nav-hover-background)] hover:text-foreground`]),
-        style: ne({
+        class: vueN([`block w-full truncate rounded-md py-1.5 pr-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30`, propsAlias.activeHeadingId === e.id ? `bg-[var(--app-sidebar-nav-active-background)] font-medium text-foreground` : `text-muted-foreground hover:bg-[var(--app-sidebar-nav-hover-background)] hover:text-foreground`]),
+        style: vueNr({
           paddingLeft: `${10 + Math.max(0, e.level - f.value) * 14}px`
         }),
         title: e.text,
         "aria-current": propsAlias.activeHeadingId === e.id ? `location` : undefined,
         onClick: t => emitAlias(`selectHeading`, e)
-      }, A(e.text || d(a)(`toolboxNative.markdownUntitledHeading`)), 15, Sr))), 128)), propsAlias.headings.length === 0 ? (T(), g(`p`, Cr, A(d(a)(`toolboxNative.markdownOutlineEmpty`)), 1)) : N(``, true)], 8, xr))]));
+      }, vueRr(e.text || vueAn(a)(`toolboxNative.markdownUntitledHeading`)), 15, Sr))), 128)), propsAlias.headings.length === 0 ? (vueGt(), vueS(`p`, Cr, vueRr(vueAn(a)(`toolboxNative.markdownOutlineEmpty`)), 1)) : vueX(``, true)], 8, xr))]));
     }
   }),
   Tr = 2e3;
@@ -2331,13 +2331,13 @@ function Er() {
   } : null;
 }
 function Dr(el) {
-  let t = S(false),
-    n = S(``),
-    r = S(0),
-    i = S(0),
+  let t = vueBn(false),
+    n = vueBn(``),
+    r = vueBn(0),
+    i = vueBn(0),
     emptyItems = [],
     total = [],
-    s = f([]),
+    s = vueCn([]),
     c = false,
     l = M(() => i.value ? `${r.value + 1}/${i.value}` : `0/0`);
   function u() {
@@ -2496,7 +2496,7 @@ var Or = {
   $r = 300,
   ei = 320,
   ti = 36,
-  ni = E({
+  ni = vueJ({
     __name: `MarkdownReaderWorkspace`,
     props: {
       tool: {},
@@ -2530,45 +2530,45 @@ var Or = {
         {
           locale: c,
           t: l
-        } = ue(),
+        } = i18nT(),
         {
           captureGrowthObservation: p
-        } = ze(),
+        } = growthTelT(),
         ee = /Mac|iPhone|iPad/i.test(navigator.platform),
         b = ee ? `⌘` : `Ctrl+`,
         te = ee ? `⇧` : `Shift+`,
         E = new wn(),
-        O = oe(at()),
-        k = S(O.mode),
-        j = S(null),
-        F = S(false),
-        I = S(``),
-        se = S(``),
-        L = S([]),
-        de = f({
+        O = vueVn(mainU()),
+        k = vueBn(O.mode),
+        j = vueBn(null),
+        F = vueBn(false),
+        I = vueBn(``),
+        se = vueBn(``),
+        L = vueBn([]),
+        de = vueCn({
           blocks: [],
           headings: []
         }),
-        fe = S(0),
-        me = S(``),
-        z = S(false),
-        ge = S(false),
-        ye = S(false),
-        Ce = S(false),
-        V = S(null),
-        H = S([]),
-        Oe = S(false),
-        ke = S(1200),
-        U = S(false),
-        Le = S(false),
-        Re = S(false),
-        Be = S(`discard`),
-        Ve = S(null),
-        He = S(null),
-        G = S(null),
-        K = S(null),
-        Xe = S(null),
-        $e = S(null),
+        fe = vueBn(0),
+        me = vueBn(``),
+        z = vueBn(false),
+        ge = vueBn(false),
+        ye = vueBn(false),
+        Ce = vueBn(false),
+        V = vueBn(null),
+        H = vueBn([]),
+        Oe = vueBn(false),
+        ke = vueBn(1200),
+        U = vueBn(false),
+        Le = vueBn(false),
+        Re = vueBn(false),
+        Be = vueBn(`discard`),
+        Ve = vueBn(null),
+        He = vueBn(null),
+        G = vueBn(null),
+        K = vueBn(null),
+        Xe = vueBn(null),
+        $e = vueBn(null),
         et = null,
         st = null,
         ct = 0,
@@ -2604,11 +2604,11 @@ var Or = {
         Wt = M(() => L.value.filter(item => item.exists).slice(0, 5)),
         Gt = M(() => [{
           value: `preview`,
-          icon: Ge,
+          icon: mainWn,
           label: l(`toolboxNative.readMode`)
         }, {
           value: `edit`,
-          icon: be,
+          icon: penlineT,
           label: l(`toolboxNative.editMode`)
         }, ...(Vt.value ? [{
           value: `split`,
@@ -2644,7 +2644,7 @@ var Or = {
           selectSource: (e, t) => K.value?.selectRange(e, t, false)
         });
       function cn(e, t) {
-        return e instanceof it && options[e.code] ? l(`toolboxNative.${options[e.code]}`) : l(t);
+        return e instanceof mainT && options[e.code] ? l(`toolboxNative.${options[e.code]}`) : l(t);
       }
       function ln() {
         et !== null && (window.clearTimeout(et), et = null);
@@ -2657,7 +2657,7 @@ var Or = {
           de.value = {
             blocks: [],
             headings: []
-          }, W(l(`toolboxNative.markdownRenderFailed`));
+          }, alertT(l(`toolboxNative.markdownRenderFailed`));
         }
       }
       function un() {
@@ -2691,7 +2691,7 @@ var Or = {
         kt = null, Re.value = false, t?.(e);
       }
       function gn(e) {
-        e.preventDefault(), ie(() => document.querySelector(`[data-confirm-primary]`)?.focus());
+        e.preventDefault(), vueRt(() => document.querySelector(`[data-confirm-primary]`)?.focus());
       }
       function _n(e) {
         !e && kt ? hn(`cancel`) : Re.value = e;
@@ -2708,24 +2708,24 @@ var Or = {
         };
       }
       function bn(e) {
-        ie(() => {
+        vueRt(() => {
           window.requestAnimationFrame(() => {
             G.value && (G.value.scrollTop = e.preview), K.value?.setScrollTop(e.editor);
           });
         });
       }
       function xn() {
-        ie(() => {
+        vueRt(() => {
           G.value && (G.value.scrollTop = 0), K.value?.setScrollTop(0);
         });
       }
       function Sn(e, t = {}) {
         let n = j.value?.filePath === e.filePath;
-        j.value = e, I.value = e.content, se.value = e.content, F.value = true, V.value = null, Je.lastPath = e.filePath, tr(e.filePath), fe.value += 1, ln(), n || q.watch(e.filePath).catch(() => undefined), t.keepScroll || xn(), Cn();
+        j.value = e, I.value = e.content, se.value = e.content, F.value = true, V.value = null, mainF.lastPath = e.filePath, tr(e.filePath), fe.value += 1, ln(), n || mainN.watch(e.filePath).catch(() => undefined), t.keepScroll || xn(), Cn();
       }
       async function Cn() {
         try {
-          L.value = await q.recent();
+          L.value = await mainN.recent();
         } catch {}
       }
       function On(e) {
@@ -2740,9 +2740,9 @@ var Or = {
         dn();
         try {
           let t = await e();
-          return i === Mt && (n.keepHistory || (H.value = []), Sn(t), X.value || (U.value = false), await ie(), On(r), true);
+          return i === Mt && (n.keepHistory || (H.value = []), Sn(t), X.value || (U.value = false), await vueRt(), On(r), true);
         } catch (e) {
-          return i === Mt && W(cn(e, t)), false;
+          return i === Mt && alertT(cn(e, t)), false;
         } finally {
           fn();
         }
@@ -2751,18 +2751,18 @@ var Or = {
         if (!(await vn())) return;
         let filePath;
         try {
-          let select = await q.select({
+          let select = await mainN.select({
             title: l(`toolboxNative.markdownOpenDialogTitle`),
             filterName: l(`toolboxNative.markdownFileFilterName`)
           });
           if (select.cancelled || !select.filePath) return;
           filePath = select.filePath;
         } catch (e) {
-          W(cn(e, `toolboxNative.markdownOpenFailed`));
+          alertT(cn(e, `toolboxNative.markdownOpenFailed`));
           return;
         }
         let filePathAlias = filePath;
-        await kn(() => q.read(filePathAlias), `toolboxNative.markdownOpenFailed`, {
+        await kn(() => mainN.read(filePathAlias), `toolboxNative.markdownOpenFailed`, {
           skipConfirm: true
         });
       }
@@ -2771,16 +2771,16 @@ var Or = {
           U.value = false;
           return;
         }
-        e.exists && ((await kn(() => q.read(e.filePath), `toolboxNative.markdownOpenFailed`)) || (await Cn()));
+        e.exists && ((await kn(() => mainN.read(e.filePath), `toolboxNative.markdownOpenFailed`)) || (await Cn()));
       }
       async function Mn(e) {
-        Ze(e.requestId) || (Ke(e.requestId), Nt = true, await kn(() => q.read(e.filePath), `toolboxNative.markdownOpenFailed`));
+        mainL(e.requestId) || (mainD(e.requestId), Nt = true, await kn(() => mainN.read(e.filePath), `toolboxNative.markdownOpenFailed`));
       }
       async function Nn() {
-        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = true, V.value = null, H.value = [], Je.lastPath = null, fe.value += 1, ln(), q.watch(null).catch(() => undefined), k.value === `preview` && (k.value = Vt.value ? `split` : `edit`), X.value || (U.value = false), await ie(), K.value?.focus());
+        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = true, V.value = null, H.value = [], mainF.lastPath = null, fe.value += 1, ln(), mainN.watch(null).catch(() => undefined), k.value === `preview` && (k.value = Vt.value ? `split` : `edit`), X.value || (U.value = false), await vueRt(), K.value?.focus());
       }
       async function Pn() {
-        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = false, V.value = null, H.value = [], Je.lastPath = null, ln(), nn(), q.watch(null).catch(() => undefined));
+        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = false, V.value = null, H.value = [], mainF.lastPath = null, ln(), nn(), mainN.watch(null).catch(() => undefined));
       }
       function Fn() {
         return j.value ? j.value.name : `${(Lt.value[0]?.text || I.value.split(`
@@ -2794,7 +2794,7 @@ var Or = {
         z.value = true;
         let n = I.value;
         try {
-          return j.value = await q.save({
+          return j.value = await mainN.save({
             filePath: t.filePath,
             content: n,
             expectedModifiedAt: e ? undefined : t.modifiedAt,
@@ -2803,14 +2803,14 @@ var Or = {
             hasBom: t.hasBom
           }), se.value = n, V.value = null, pn(), true;
         } catch (e) {
-          if (e instanceof it && e.code === `FILE_CHANGED`) {
+          if (e instanceof mainT && e.code === `FILE_CHANGED`) {
             z.value = false;
             let e = await mn(`conflict`);
             return e === `overwrite` ? await Q(true) : (e === `reload` && (await Rn({
               skipConfirm: true
             })), false);
           }
-          return W(cn(e, `toolboxNative.markdownSaveFailed`)), false;
+          return alertT(cn(e, `toolboxNative.markdownSaveFailed`)), false;
         } finally {
           z.value = false;
         }
@@ -2821,7 +2821,7 @@ var Or = {
         let e = I.value,
           t = j.value;
         try {
-          let saveAs = await q.saveAs({
+          let saveAs = await mainN.saveAs({
             content: e,
             suggestedName: Fn(),
             sourcePath: t?.filePath,
@@ -2832,11 +2832,11 @@ var Or = {
               filterName: l(`toolboxNative.markdownFileFilterName`)
             }
           });
-          return saveAs.cancelled || !saveAs.document ? false : (j.value = saveAs.document, se.value = e, F.value = true, V.value = null, Je.lastPath = saveAs.document.filePath, t?.filePath !== saveAs.document.filePath && (fe.value += 1, ln(), q.watch(saveAs.document.filePath).catch(() => undefined)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
+          return saveAs.cancelled || !saveAs.document ? false : (j.value = saveAs.document, se.value = e, F.value = true, V.value = null, mainF.lastPath = saveAs.document.filePath, t?.filePath !== saveAs.document.filePath && (fe.value += 1, ln(), mainN.watch(saveAs.document.filePath).catch(() => undefined)), Cn(), alertN(l(`toolboxNative.markdownSavedAs`, {
             name: saveAs.document.name
           })), true);
         } catch (e) {
-          return W(cn(e, `toolboxNative.markdownSaveFailed`)), false;
+          return alertT(cn(e, `toolboxNative.markdownSaveFailed`)), false;
         } finally {
           z.value = false;
         }
@@ -2848,7 +2848,7 @@ var Or = {
           r = ++Mt;
         dn();
         try {
-          let e = await q.read(t.filePath, {
+          let e = await mainN.read(t.filePath, {
             touch: false
           });
           if (r !== Mt) return;
@@ -2856,28 +2856,28 @@ var Or = {
             keepScroll: true
           }), bn(n);
         } catch (e) {
-          r === Mt && W(cn(e, `toolboxNative.markdownReloadFailed`));
+          r === Mt && alertT(cn(e, `toolboxNative.markdownReloadFailed`));
         } finally {
           fn();
         }
       }
       async function zn(e) {
         try {
-          await q.removeRecent(e.filePath);
+          await mainN.removeRecent(e.filePath);
         } catch {
-          W(l(`toolboxNative.markdownRecentRemoveFailed`));
+          alertT(l(`toolboxNative.markdownRecentRemoveFailed`));
         }
         await Cn();
       }
       async function Bn() {
-        j.value && (await q.reveal(j.value.filePath).catch(() => W(l(`toolboxNative.markdownRevealFailed`))));
+        j.value && (await mainN.reveal(j.value.filePath).catch(() => alertT(l(`toolboxNative.markdownRevealFailed`))));
       }
       async function Vn() {
         let e = j.value;
         if (!e) return;
         let t = yn();
         try {
-          let n = await q.read(e.filePath, {
+          let n = await mainN.read(e.filePath, {
             touch: false
           });
           if (j.value?.filePath !== e.filePath) return;
@@ -2887,7 +2887,7 @@ var Or = {
           }
           Sn(n, {
             keepScroll: true
-          }), bn(t), Date.now() - Ot > 1e4 && (Ot = Date.now(), Ie(l(`toolboxNative.markdownExternalReloaded`)));
+          }), bn(t), Date.now() - Ot > 1e4 && (Ot = Date.now(), alertN(l(`toolboxNative.markdownExternalReloaded`)));
         } catch {
           V.value = `deleted`;
         }
@@ -2923,7 +2923,7 @@ var Or = {
       async function Wn(text) {
         let t = j.value;
         if (!t) {
-          W(l(`toolboxNative.markdownSaveBeforeLink`));
+          alertT(l(`toolboxNative.markdownSaveBeforeLink`));
           return;
         }
         let [n, r = ``] = text.split(`#`),
@@ -2934,12 +2934,12 @@ var Or = {
         }
         if (!a.includes(Un(text))) {
           try {
-            (await q.openLocalFile({
+            (await mainN.openLocalFile({
               documentPath: t.filePath,
               source: text
-            })).action === `revealed` && Ie(l(`toolboxNative.markdownLinkRevealed`));
+            })).action === `revealed` && alertN(l(`toolboxNative.markdownLinkRevealed`));
           } catch (e) {
-            W(cn(e, `toolboxNative.markdownLinkedOpenFailed`));
+            alertT(cn(e, `toolboxNative.markdownLinkedOpenFailed`));
           }
           return;
         }
@@ -2950,7 +2950,7 @@ var Or = {
           },
           flag = null;
         if ((await kn(async () => {
-          let linked = await q.openLinked({
+          let linked = await mainN.openLinked({
             documentPath: t.filePath,
             source: text
           });
@@ -2959,12 +2959,12 @@ var Or = {
           keepHistory: true
         })) && (H.value = [...H.value.slice(-19), entity], flag)) {
           let flagAlias = flag;
-          await ie(), window.requestAnimationFrame(() => qn(flagAlias));
+          await vueRt(), window.requestAnimationFrame(() => qn(flagAlias));
         }
       }
       async function Kn() {
         let e = H.value.at(-1);
-        e && (await kn(() => q.read(e.filePath, {
+        e && (await kn(() => mainN.read(e.filePath, {
           touch: false
         }), `toolboxNative.markdownOpenFailed`, {
           keepHistory: true
@@ -3119,7 +3119,7 @@ var Or = {
       async function ur(e) {
         if (e === k.value) return;
         let t = F.value ? lr() : 0;
-        k.value = e, O.mode = e, F.value && (await ie(), window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+        k.value = e, O.mode = e, F.value && (await vueRt(), window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
           if (J = null, $n(300), Z.value !== `preview` && K.value?.setScrollTop(K.value.scrollTopForLine(t)), Z.value !== `edit`) {
             let e = G.value,
               found = [...nr()].reverse().find(item => item.line <= t);
@@ -3171,9 +3171,9 @@ var Or = {
       }
       async function yr() {
         try {
-          await navigator.clipboard.writeText(I.value), Ie(l(`toolboxNative.markdownCopiedMarkdown`));
+          await navigator.clipboard.writeText(I.value), alertN(l(`toolboxNative.markdownCopiedMarkdown`));
         } catch {
-          W(l(`toolboxNative.markdownCopyFailed`));
+          alertT(l(`toolboxNative.markdownCopyFailed`));
         }
       }
       async function br() {
@@ -3186,9 +3186,9 @@ var Or = {
             "text/plain": new Blob([I.value], {
               type: `text/plain`
             })
-          })]), Ie(l(`toolboxNative.markdownCopiedRichText`));
+          })]), alertN(l(`toolboxNative.markdownCopiedRichText`));
         } catch {
-          W(l(`toolboxNative.markdownCopyFailed`));
+          alertT(l(`toolboxNative.markdownCopyFailed`));
         }
       }
       async function xr(e) {
@@ -3197,7 +3197,7 @@ var Or = {
           try {
             let t = vr(),
               n = Dn(await _r(), t, Pt.value),
-              exportDocument = await q.exportDocument({
+              exportDocument = await mainN.exportDocument({
                 format: e,
                 html: n,
                 suggestedName: `${t}.${e}`,
@@ -3207,11 +3207,11 @@ var Or = {
                   filterName: e === `pdf` ? `PDF` : `HTML`
                 }
               });
-            !exportDocument.cancelled && exportDocument.filePath && Ie(l(`toolboxNative.markdownExported`, {
+            !exportDocument.cancelled && exportDocument.filePath && alertN(l(`toolboxNative.markdownExported`, {
               name: exportDocument.filePath.split(/[\\/]/).pop() || exportDocument.filePath
             }));
           } catch (e) {
-            W(cn(e, `toolboxNative.markdownExportFailed`));
+            alertT(cn(e, `toolboxNative.markdownExportFailed`));
           } finally {
             ge.value = false;
           }
@@ -3244,15 +3244,15 @@ var Or = {
         e.preventDefault(), Dt = 0, Oe.value = false;
         let found = Array.from(e.dataTransfer?.files || []).find(item => a.includes(Un(item.name)));
         if (!found) {
-          W(l(`toolboxNative.markdownDropUnsupported`));
+          alertT(l(`toolboxNative.markdownDropUnsupported`));
           return;
         }
-        let pathForFile = q.getPathForFile(found);
+        let pathForFile = mainN.getPathForFile(found);
         if (!pathForFile) {
-          W(l(`toolboxNative.markdownOpenFailed`));
+          alertT(l(`toolboxNative.markdownOpenFailed`));
           return;
         }
-        await kn(() => q.openDropped(pathForFile), `toolboxNative.markdownOpenFailed`);
+        await kn(() => mainN.openDropped(pathForFile), `toolboxNative.markdownOpenFailed`);
       }
       function ai() {
         return eventAlias.active !== false && !!Ve.value?.offsetParent && !Re.value;
@@ -3284,23 +3284,23 @@ var Or = {
       }
       expose({
         requestClose: si
-      }), v(I, un), v(() => O.softBreaks, ln), c && v(c, ln);
+      }), vueWt(I, un), vueWt(() => O.softBreaks, ln), c && vueWt(c, ln);
       let ci = null;
-      return v(O, () => {
+      return vueWt(O, () => {
         ci !== null && window.clearTimeout(ci), ci = window.setTimeout(() => {
-          ci = null, tt({
+          ci = null, mainP({
             ...O
           });
         }, 200);
       }, {
         deep: true
-      }), v(de, () => {
+      }), vueWt(de, () => {
         J = null, $(), Yt.value && (xt !== null && window.clearTimeout(xt), xt = window.setTimeout(() => {
           xt = null, an();
         }, 150));
       }, {
         flush: `post`
-      }), v(Xt, () => rn()), v(G, e => {
+      }), vueWt(Xt, () => rn()), vueWt(G, e => {
         if (Tt?.disconnect(), J = null, !e) return;
         Tt = new ResizeObserver(() => {
           J = null;
@@ -3309,41 +3309,41 @@ var Or = {
         firstElementChild && Tt.observe(firstElementChild);
       }, {
         flush: `post`
-      }), v(Z, () => {
+      }), vueWt(Z, () => {
         J = null, $();
-      }), v(X, e => {
+      }), vueWt(X, e => {
         e && (U.value = false);
-      }), v(() => eventAlias.openRequest, e => {
+      }), vueWt(() => eventAlias.openRequest, e => {
         e && Mn(e);
       }, {
         immediate: true
-      }), ae(() => {
-        if (window.addEventListener(`keydown`, oi), jt = q.onFileChanged(Hn), At = rt({
+      }), vueUt(() => {
+        if (window.addEventListener(`keydown`, oi), jt = mainN.onFileChanged(Hn), At = mainS({
           hasUnsavedChanges: () => Ft.value,
           confirmLeave: vn
         }), Ve.value && (ke.value = Ve.value.clientWidth || ke.value, Et = new ResizeObserver(e => {
           let t = e[0]?.contentRect.width;
           t && (ke.value = t), J = null;
-        }), Et.observe(Ve.value)), Cn(), !Nt && !F.value && Je.lastPath) {
-          let lastPath = Je.lastPath;
-          kn(() => q.read(lastPath, {
+        }), Et.observe(Ve.value)), Cn(), !Nt && !F.value && mainF.lastPath) {
+          let lastPath = mainF.lastPath;
+          kn(() => mainN.read(lastPath, {
             touch: false
           }), `toolboxNative.markdownOpenFailed`, {
             skipConfirm: true
           }).then(result => {
-            result || (Je.lastPath = null);
+            result || (mainF.lastPath = null);
           });
         }
-      }), re(() => {
+      }), vueOt(() => {
         window.removeEventListener(`keydown`, oi), jt?.(), At?.(), Et?.disconnect(), Tt?.disconnect();
         for (let filePath of [et, st, lt, bt, xt]) filePath !== null && window.clearTimeout(filePath);
-        ci !== null && (window.clearTimeout(ci), tt({
+        ci !== null && (window.clearTimeout(ci), mainP({
           ...O
-        })), mt !== null && window.cancelAnimationFrame(mt), nn(), kt?.(`cancel`), kt = null, q.watch(null).catch(() => undefined);
-      }), (e, t) => (T(), x(d(De), {
+        })), mt !== null && window.cancelAnimationFrame(mt), nn(), kt?.(`cancel`), kt = null, mainN.watch(null).catch(() => undefined);
+      }), (e, t) => (vueGt(), vueB(vueAn(TooltipTriggerN), {
         "delay-duration": 300
       }, {
-        default: y(() => [P(`div`, {
+        default: vueYt(() => [vueY(`div`, {
           ref_key: `workspaceRef`,
           ref: Ve,
           class: `relative flex min-h-0 w-full flex-1 flex-col bg-background`,
@@ -3351,7 +3351,7 @@ var Or = {
           onDragover: ni,
           onDragleave: ri,
           onDrop: ii
-        }, [D(xe, {
+        }, [vueK(ToolboxWorkspaceHeaderT, {
           tool: eventAlias.tool,
           user: eventAlias.user,
           "credits-balance": eventAlias.creditsBalance,
@@ -3360,288 +3360,288 @@ var Or = {
           onBack: t[16] ||= e => emitAlias(`back`),
           onRecharge: t[17] ||= e => emitAlias(`recharge`)
         }, {
-          title: y(() => [P(`div`, Or, [D(wt, {
-            label: d(l)(zt.value ? `toolboxNative.markdownHidePanel` : `toolboxNative.markdownShowPanel`),
-            shortcut: `${d(b)}\\`,
+          title: vueYt(() => [vueY(`div`, Or, [vueK(wt, {
+            label: vueAn(l)(zt.value ? `toolboxNative.markdownHidePanel` : `toolboxNative.markdownShowPanel`),
+            shortcut: `${vueAn(b)}\\`,
             onClick: dr
           }, {
-            default: y(() => [zt.value ? (T(), x(d(ht), {
+            default: vueYt(() => [zt.value ? (vueGt(), vueB(vueAn(ht), {
               key: 0,
               size: 16
-            })) : (T(), x(d(gt), {
+            })) : (vueGt(), vueB(vueAn(gt), {
               key: 1,
               size: 16
             }))]),
             _: 1
-          }, 8, [`label`, `shortcut`]), !F.value || !Y.value ? (T(), g(`span`, {
+          }, 8, [`label`, `shortcut`]), !F.value || !Y.value ? (vueGt(), vueS(`span`, {
             key: 0,
-            class: u([`ml-1 shrink-0 truncate text-sm font-medium text-muted-foreground`, F.value ? `max-w-[160px]` : ``])
-          }, A(eventAlias.tool.name), 3)) : N(``, true), F.value ? (T(), g(C, {
+            class: vueN([`ml-1 shrink-0 truncate text-sm font-medium text-muted-foreground`, F.value ? `max-w-[160px]` : ``])
+          }, vueRr(eventAlias.tool.name), 3)) : vueX(``, true), F.value ? (vueGt(), vueS(vueC, {
             key: 1
-          }, [Y.value ? N(``, true) : (T(), g(`span`, kr, `/`)), H.value.length ? (T(), x(wt, {
+          }, [Y.value ? vueX(``, true) : (vueGt(), vueS(`span`, kr, `/`)), H.value.length ? (vueGt(), vueB(wt, {
             key: 1,
-            label: d(l)(`toolboxNative.markdownBackToDocument`, {
+            label: vueAn(l)(`toolboxNative.markdownBackToDocument`, {
               name: H.value[H.value.length - 1].name
             }),
             shortcut: `Alt+←`,
             onClick: Kn
           }, {
-            default: y(() => [D(d(ut), {
+            default: vueYt(() => [vueK(vueAn(ut), {
               size: 15
             })]),
             _: 1
-          }, 8, [`label`])) : N(``, true), P(`strong`, {
+          }, 8, [`label`])) : vueX(``, true), vueY(`strong`, {
             class: `min-w-0 truncate text-sm font-medium text-foreground`,
-            title: j.value?.filePath || d(l)(`toolboxNative.markdownNewDocumentHint`)
-          }, A(Rt.value), 9, Ar), Ft.value ? (T(), g(`span`, jr, [t[33] ||= P(`span`, {
+            title: j.value?.filePath || vueAn(l)(`toolboxNative.markdownNewDocumentHint`)
+          }, vueRr(Rt.value), 9, Ar), Ft.value ? (vueGt(), vueS(`span`, jr, [t[33] ||= vueY(`span`, {
             class: `size-1.5 rounded-full bg-amber-500`
-          }, null, -1), h(A(d(l)(`toolboxNative.markdownUnsaved`)), 1)])) : Ce.value ? (T(), g(`span`, Mr, A(d(l)(`toolboxNative.markdownSaved`)), 1)) : N(``, true)], 64)) : N(``, true)])]),
-          actions: y(() => [F.value ? (T(), x(d(nt), {
+          }, null, -1), vueO(vueRr(vueAn(l)(`toolboxNative.markdownUnsaved`)), 1)])) : Ce.value ? (vueGt(), vueS(`span`, Mr, vueRr(vueAn(l)(`toolboxNative.markdownSaved`)), 1)) : vueX(``, true)], 64)) : vueX(``, true)])]),
+          actions: vueYt(() => [F.value ? (vueGt(), vueB(vueAn(nt), {
             key: 0,
             "model-value": Z.value,
             "onUpdate:modelValue": t[0] ||= e => ur(e)
           }, {
-            default: y(() => [D(d(Ye), {
+            default: vueYt(() => [vueK(vueAn(Ye), {
               class: `group-data-horizontal/tabs:h-7`,
-              "aria-label": d(l)(`toolboxNative.markdownViewMode`)
+              "aria-label": vueAn(l)(`toolboxNative.markdownViewMode`)
             }, {
-              default: y(() => [(T(true), g(C, null, _(Gt.value, state => (T(), x(d(qe), {
+              default: vueYt(() => [(vueGt(true), vueS(vueC, null, vueSt(Gt.value, state => (vueGt(), vueB(vueAn(mainDn), {
                 key: state.value,
                 value: state.value,
                 class: `gap-1 px-2 text-xs`,
                 title: state.label
               }, {
-                default: y(() => [(T(), x(m(state.icon), {
+                default: vueYt(() => [(vueGt(), vueB(vueEt(state.icon), {
                   size: 13
-                })), Y.value ? N(``, true) : (T(), g(`span`, Nr, A(state.label), 1))]),
+                })), Y.value ? vueX(``, true) : (vueGt(), vueS(`span`, Nr, vueRr(state.label), 1))]),
                 _: 2
               }, 1032, [`value`, `title`]))), 128))]),
               _: 1
             }, 8, [`aria-label`])]),
             _: 1
-          }, 8, [`model-value`])) : N(``, true), D(d(we), null, {
-            default: y(() => [P(`div`, Pr, [P(`button`, {
+          }, 8, [`model-value`])) : vueX(``, true), vueK(vueAn(DropdownMenuTriggerR), null, {
+            default: vueYt(() => [vueY(`div`, Pr, [vueY(`button`, {
               type: `button`,
-              class: u([`inline-flex items-center gap-1.5 rounded-l-lg pl-2.5 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06]`, Y.value ? `pr-2` : `pr-2.5`]),
-              title: `${d(l)(`toolboxNative.markdownOpenFile`)} (${d(b)}O)`,
+              class: vueN([`inline-flex items-center gap-1.5 rounded-l-lg pl-2.5 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06]`, Y.value ? `pr-2` : `pr-2.5`]),
+              title: `${vueAn(l)(`toolboxNative.markdownOpenFile`)} (${vueAn(b)}O)`,
               onClick: An
-            }, [D(d(ce), {
+            }, [vueK(vueAn(i18nL), {
               size: 14
-            }), Y.value ? N(``, true) : (T(), g(`span`, Ir, A(d(l)(`toolboxNative.openDocument`)), 1))], 10, Fr), t[34] ||= P(`span`, {
+            }), Y.value ? vueX(``, true) : (vueGt(), vueS(`span`, Ir, vueRr(vueAn(l)(`toolboxNative.openDocument`)), 1))], 10, Fr), t[34] ||= vueY(`span`, {
               class: `my-1.5 w-px bg-border`,
               "aria-hidden": `true`
-            }, null, -1), D(d(Te), {
+            }, null, -1), vueK(vueAn(DropdownMenuTriggerT), {
               "as-child": ``
             }, {
-              default: y(() => [P(`button`, {
+              default: vueYt(() => [vueY(`button`, {
                 type: `button`,
                 class: `inline-flex w-6 items-center justify-center rounded-r-lg text-muted-foreground transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]`,
-                "aria-label": d(l)(`toolboxNative.markdownOpenMenu`)
-              }, [D(d(he), {
+                "aria-label": vueAn(l)(`toolboxNative.markdownOpenMenu`)
+              }, [vueK(vueAn(PopperContentS), {
                 size: 13
               })], 8, Lr)]),
               _: 1
-            })]), D(d(Se), {
+            })]), vueK(vueAn(DropdownMenuTriggerN), {
               align: `end`,
               class: `w-60`
             }, {
-              default: y(() => [D(d(B), {
+              default: vueYt(() => [vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 onSelect: t[1] ||= e => Nn()
               }, {
-                default: y(() => [D(d(pt), {
+                default: vueYt(() => [vueK(vueAn(pt), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.createMarkdownDocument`)) + ` `, 1), D(d(Ct), null, {
-                  default: y(() => [h(A(d(b)) + `N`, 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.createMarkdownDocument`)) + ` `, 1), vueK(vueAn(Ct), null, {
+                  default: vueYt(() => [vueO(vueRr(vueAn(b)) + `N`, 1)]),
                   _: 1
                 })]),
                 _: 1
-              }), D(d(B), {
+              }), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 onSelect: t[2] ||= e => An()
               }, {
-                default: y(() => [D(d(ce), {
+                default: vueYt(() => [vueK(vueAn(i18nL), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownOpenFile`)) + ` `, 1), D(d(Ct), null, {
-                  default: y(() => [h(A(d(b)) + `O`, 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownOpenFile`)) + ` `, 1), vueK(vueAn(Ct), null, {
+                  default: vueYt(() => [vueO(vueRr(vueAn(b)) + `O`, 1)]),
                   _: 1
                 })]),
                 _: 1
-              }), Wt.value.length ? (T(), g(C, {
+              }), Wt.value.length ? (vueGt(), vueS(vueC, {
                 key: 0
-              }, [D(d(Qe)), D(d(Ee), {
+              }, [vueK(vueAn(mainLt)), vueK(vueAn(TooltipTriggerA), {
                 class: `text-xs font-normal text-muted-foreground`
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownRecentFiles`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownRecentFiles`)), 1)]),
                 _: 1
-              }), (T(true), g(C, null, _(Wt.value, e => (T(), x(d(B), {
+              }), (vueGt(true), vueS(vueC, null, vueSt(Wt.value, e => (vueGt(), vueB(vueAn(DropdownMenuItemT), {
                 key: e.filePath,
                 class: `text-xs`,
                 title: e.filePath,
                 onSelect: t => jn(e)
               }, {
-                default: y(() => [D(d(Ue), {
+                default: vueYt(() => [vueK(vueAn(mainPn), {
                   size: 14
-                }), P(`span`, Rr, A(e.name), 1), P(`span`, zr, A(e.folder), 1)]),
+                }), vueY(`span`, Rr, vueRr(e.name), 1), vueY(`span`, zr, vueRr(e.folder), 1)]),
                 _: 2
-              }, 1032, [`title`, `onSelect`]))), 128))], 64)) : N(``, true)]),
+              }, 1032, [`title`, `onSelect`]))), 128))], 64)) : vueX(``, true)]),
               _: 1
             })]),
             _: 1
-          }), F.value ? (T(), g(C, {
+          }), F.value ? (vueGt(), vueS(vueC, {
             key: 1
-          }, [D(d(s), {
+          }, [vueK(vueAn(uiSwitchR), {
             size: `sm`,
             variant: `outline`,
-            class: u([`h-7 gap-1.5 text-xs`, Y.value ? `px-2` : `px-2.5`]),
+            class: vueN([`h-7 gap-1.5 text-xs`, Y.value ? `px-2` : `px-2.5`]),
             disabled: !Ft.value || z.value,
-            title: `${d(l)(`toolboxNative.saveDocument`)} (${d(b)}S)`,
+            title: `${vueAn(l)(`toolboxNative.saveDocument`)} (${vueAn(b)}S)`,
             onClick: t[3] ||= e => Q()
           }, {
-            default: y(() => [z.value ? (T(), x(d(_e), {
+            default: vueYt(() => [z.value ? (vueGt(), vueB(vueAn(beautifier), {
               key: 0,
               size: 14,
               class: `animate-spin`
-            })) : (T(), x(d(le), {
+            })) : (vueGt(), vueB(vueAn(i18nS), {
               key: 1,
               size: 14
-            })), Y.value ? N(``, true) : (T(), g(`span`, Br, A(d(l)(`toolboxNative.saveDocument`)), 1))]),
+            })), Y.value ? vueX(``, true) : (vueGt(), vueS(`span`, Br, vueRr(vueAn(l)(`toolboxNative.saveDocument`)), 1))]),
             _: 1
-          }, 8, [`class`, `disabled`, `title`]), D(d(we), null, {
-            default: y(() => [D(d(Te), {
+          }, 8, [`class`, `disabled`, `title`]), vueK(vueAn(DropdownMenuTriggerR), null, {
+            default: vueYt(() => [vueK(vueAn(DropdownMenuTriggerT), {
               "as-child": ``
             }, {
-              default: y(() => [D(d(s), {
+              default: vueYt(() => [vueK(vueAn(uiSwitchR), {
                 variant: `ghost`,
                 size: `icon-sm`,
                 class: `size-7 text-muted-foreground`,
-                "aria-label": d(l)(`toolboxNative.moreActions`),
-                title: d(l)(`toolboxNative.moreActions`)
+                "aria-label": vueAn(l)(`toolboxNative.moreActions`),
+                title: vueAn(l)(`toolboxNative.moreActions`)
               }, {
-                default: y(() => [D(d(pe), {
+                default: vueYt(() => [vueK(vueAn(purifyR), {
                   size: 16
                 })]),
                 _: 1
               }, 8, [`aria-label`, `title`])]),
               _: 1
-            }), D(d(Se), {
+            }), vueK(vueAn(DropdownMenuTriggerN), {
               align: `end`,
               class: `w-56`
             }, {
-              default: y(() => [D(d(B), {
+              default: vueYt(() => [vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 disabled: z.value,
                 onSelect: t[4] ||= e => In()
               }, {
-                default: y(() => [D(d(ft), {
+                default: vueYt(() => [vueK(vueAn(ft), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.saveDocumentAs`)) + ` `, 1), D(d(Ct), null, {
-                  default: y(() => [h(A(d(te)) + A(d(b)) + `S`, 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.saveDocumentAs`)) + ` `, 1), vueK(vueAn(Ct), null, {
+                  default: vueYt(() => [vueO(vueRr(vueAn(te)) + vueRr(vueAn(b)) + `S`, 1)]),
                   _: 1
                 })]),
                 _: 1
-              }, 8, [`disabled`]), D(d(B), {
+              }, 8, [`disabled`]), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 onSelect: t[5] ||= e => yr()
               }, {
-                default: y(() => [D(d(ve), {
+                default: vueYt(() => [vueK(vueAn(beautifierY), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownCopyMarkdown`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownCopyMarkdown`)), 1)]),
                 _: 1
-              }), D(d(B), {
+              }), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 onSelect: t[6] ||= e => br()
               }, {
-                default: y(() => [D(d(ve), {
+                default: vueYt(() => [vueK(vueAn(beautifierY), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownCopyRichText`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownCopyRichText`)), 1)]),
                 _: 1
-              }), D(d(B), {
+              }), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 disabled: ge.value,
                 onSelect: t[7] ||= e => xr(`pdf`)
               }, {
-                default: y(() => [D(d(Ue), {
+                default: vueYt(() => [vueK(vueAn(mainPn), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownExportPdf`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownExportPdf`)), 1)]),
                 _: 1
-              }, 8, [`disabled`]), D(d(B), {
+              }, 8, [`disabled`]), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 disabled: ge.value,
                 onSelect: t[8] ||= e => xr(`html`)
               }, {
-                default: y(() => [D(d(dt), {
+                default: vueYt(() => [vueK(vueAn(dt), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownExportHtml`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownExportHtml`)), 1)]),
                 _: 1
-              }, 8, [`disabled`]), D(d(Qe)), D(d(B), {
+              }, 8, [`disabled`]), vueK(vueAn(mainLt)), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 onSelect: t[9] ||= e => Cr()
               }, {
-                default: y(() => [D(d(We), {
+                default: vueYt(() => [vueK(vueAn(mainSn), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownFind`)) + ` `, 1), D(d(Ct), null, {
-                  default: y(() => [h(A(d(b)) + `F`, 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownFind`)) + ` `, 1), vueK(vueAn(Ct), null, {
+                  default: vueYt(() => [vueO(vueRr(vueAn(b)) + `F`, 1)]),
                   _: 1
                 })]),
                 _: 1
-              }), D(d(B), {
+              }), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 disabled: !j.value,
                 onSelect: t[10] ||= e => Bn()
               }, {
-                default: y(() => [D(d(ce), {
+                default: vueYt(() => [vueK(vueAn(i18nL), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.showInFolder`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.showInFolder`)), 1)]),
                 _: 1
-              }, 8, [`disabled`]), D(d(B), {
+              }, 8, [`disabled`]), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 disabled: !j.value,
                 onSelect: t[11] ||= e => Rn()
               }, {
-                default: y(() => [D(d(ot), {
+                default: vueYt(() => [vueK(vueAn(ot), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.reloadDocument`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.reloadDocument`)), 1)]),
                 _: 1
-              }, 8, [`disabled`]), D(d(Qe)), D(d(St), {
+              }, 8, [`disabled`]), vueK(vueAn(mainLt)), vueK(vueAn(St), {
                 class: `text-xs`,
                 "model-value": O.lineNumbers,
                 "onUpdate:modelValue": t[12] ||= e => O.lineNumbers = !!e
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownShowLineNumbers`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownShowLineNumbers`)), 1)]),
                 _: 1
-              }, 8, [`model-value`]), D(d(St), {
+              }, 8, [`model-value`]), vueK(vueAn(St), {
                 class: `text-xs`,
                 "model-value": O.syncScroll,
                 "onUpdate:modelValue": t[13] ||= e => O.syncScroll = !!e
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownSyncScroll`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownSyncScroll`)), 1)]),
                 _: 1
-              }, 8, [`model-value`]), D(d(St), {
+              }, 8, [`model-value`]), vueK(vueAn(St), {
                 class: `text-xs`,
                 "model-value": O.softBreaks,
                 "onUpdate:modelValue": t[14] ||= e => O.softBreaks = !!e
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownSoftBreaks`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownSoftBreaks`)), 1)]),
                 _: 1
-              }, 8, [`model-value`]), D(d(Qe)), D(d(B), {
+              }, 8, [`model-value`]), vueK(vueAn(mainLt)), vueK(vueAn(DropdownMenuItemT), {
                 class: `text-xs`,
                 onSelect: t[15] ||= e => Pn()
               }, {
-                default: y(() => [D(d(R), {
+                default: vueYt(() => [vueK(vueAn(lucideT), {
                   size: 14
-                }), h(A(d(l)(`toolboxNative.markdownCloseDocument`)), 1)]),
+                }), vueO(vueRr(vueAn(l)(`toolboxNative.markdownCloseDocument`)), 1)]),
                 _: 1
               })]),
               _: 1
             })]),
             _: 1
-          })], 64)) : N(``, true)]),
+          })], 64)) : vueX(``, true)]),
           _: 1
-        }, 8, [`tool`, `user`, `credits-balance`]), P(`div`, Vr, [zt.value ? (T(), g(`div`, {
+        }, 8, [`tool`, `user`, `credits-balance`]), vueY(`div`, Vr, [zt.value ? (vueGt(), vueS(`div`, {
           key: 0,
-          class: u([`min-h-0 shrink-0`, X.value ? `w-[248px]` : `absolute bottom-3 left-3 top-0 z-30 w-[268px] rounded-[10px] bg-background shadow-[0_8px_24px_rgb(20_28_23/0.14)]`])
-        }, [D(wr, {
+          class: vueN([`min-h-0 shrink-0`, X.value ? `w-[248px]` : `absolute bottom-3 left-3 top-0 z-30 w-[268px] rounded-[10px] bg-background shadow-[0_8px_24px_rgb(20_28_23/0.14)]`])
+        }, [vueK(wr, {
           tab: O.panelTab,
           "onUpdate:tab": t[18] ||= e => O.panelTab = e,
           "recent-files": L.value,
@@ -3651,15 +3651,15 @@ var Or = {
           onOpenRecent: jn,
           onRemoveRecent: zn,
           onSelectHeading: Xn
-        }, null, 8, [`tab`, `recent-files`, `current-path`, `headings`, `active-heading-id`])], 2)) : N(``, true), !X.value && U.value ? (T(), g(`div`, {
+        }, null, 8, [`tab`, `recent-files`, `current-path`, `headings`, `active-heading-id`])], 2)) : vueX(``, true), !X.value && U.value ? (vueGt(), vueS(`div`, {
           key: 1,
           class: `absolute inset-0 z-20`,
           onClick: t[19] ||= e => U.value = false
-        })) : N(``, true), P(`main`, Hr, [V.value ? (T(), g(`div`, Ur, [P(`span`, Wr, A(d(l)(V.value === `deleted` ? `toolboxNative.markdownExternalDeleted` : `toolboxNative.markdownExternalModified`, {
+        })) : vueX(``, true), vueY(`main`, Hr, [V.value ? (vueGt(), vueS(`div`, Ur, [vueY(`span`, Wr, vueRr(vueAn(l)(V.value === `deleted` ? `toolboxNative.markdownExternalDeleted` : `toolboxNative.markdownExternalModified`, {
           name: Rt.value
-        })), 1), V.value === `modified` ? (T(), g(C, {
+        })), 1), V.value === `modified` ? (vueGt(), vueS(vueC, {
           key: 0
-        }, [D(d(s), {
+        }, [vueK(vueAn(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 bg-background text-xs`,
@@ -3667,53 +3667,53 @@ var Or = {
             skipConfirm: true
           })
         }, {
-          default: y(() => [h(A(d(l)(`toolboxNative.markdownLoadExternalVersion`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownLoadExternalVersion`)), 1)]),
           _: 1
-        }), D(d(s), {
+        }), vueK(vueAn(uiSwitchR), {
           size: `sm`,
           variant: `ghost`,
           class: `h-7 text-xs`,
           onClick: t[21] ||= e => V.value = null
         }, {
-          default: y(() => [h(A(d(l)(`toolboxNative.markdownKeepMyChanges`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownKeepMyChanges`)), 1)]),
           _: 1
-        })], 64)) : (T(), g(C, {
+        })], 64)) : (vueGt(), vueS(vueC, {
           key: 1
-        }, [D(d(s), {
+        }, [vueK(vueAn(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 bg-background text-xs`,
           onClick: t[22] ||= e => In()
         }, {
-          default: y(() => [h(A(d(l)(`toolboxNative.saveDocumentAs`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.saveDocumentAs`)), 1)]),
           _: 1
-        }), D(d(s), {
+        }), vueK(vueAn(uiSwitchR), {
           size: `sm`,
           variant: `ghost`,
           class: `h-7 text-xs`,
           onClick: t[23] ||= e => V.value = null
         }, {
-          default: y(() => [h(A(d(l)(`toolboxNative.markdownDismiss`)), 1)]),
+          default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownDismiss`)), 1)]),
           _: 1
-        })], 64))])) : N(``, true), d(Yt) && F.value ? (T(), x(Jn, {
+        })], 64))])) : vueX(``, true), vueAn(Yt) && F.value ? (vueGt(), vueB(Jn, {
           key: 1,
           ref_key: `findBarRef`,
           ref: $e,
-          query: d(Xt),
-          "onUpdate:query": t[24] ||= e => w(Xt) ? Xt.value = e : null,
+          query: vueAn(Xt),
+          "onUpdate:query": t[24] ||= e => vueFn(Xt) ? Xt.value = e : null,
           class: `absolute right-3 top-2 z-20`,
-          summary: d(Zt),
-          "has-matches": d(Qt) > 0,
-          onNext: d(on),
-          onPrevious: d(sn),
-          onClose: d(nn)
-        }, null, 8, [`query`, `summary`, `has-matches`, `onNext`, `onPrevious`, `onClose`])) : N(``, true), F.value ? (T(), g(`div`, {
+          summary: vueAn(Zt),
+          "has-matches": vueAn(Qt) > 0,
+          onNext: vueAn(on),
+          onPrevious: vueAn(sn),
+          onClose: vueAn(nn)
+        }, null, 8, [`query`, `summary`, `has-matches`, `onNext`, `onPrevious`, `onClose`])) : vueX(``, true), F.value ? (vueGt(), vueS(`div`, {
           key: 3,
           ref_key: `panesRef`,
           ref: He,
-          class: u([`grid min-h-0 flex-1 overflow-hidden`, Le.value ? `cursor-col-resize select-none [&_*]:!cursor-col-resize` : ``]),
-          style: ne(Kt.value)
-        }, [Z.value === `preview` ? N(``, true) : (T(), x(Ln, {
+          class: vueN([`grid min-h-0 flex-1 overflow-hidden`, Le.value ? `cursor-col-resize select-none [&_*]:!cursor-col-resize` : ``]),
+          style: vueNr(Kt.value)
+        }, [Z.value === `preview` ? vueX(``, true) : (vueGt(), vueB(Ln, {
           key: 0,
           ref_key: `editorRef`,
           ref: K,
@@ -3721,30 +3721,30 @@ var Or = {
           "onUpdate:modelValue": t[25] ||= e => I.value = e,
           "line-numbers": O.lineNumbers,
           "measure-lines": true,
-          "modifier-label": d(b),
-          "find-matches": d(Yt) && Z.value === `edit` ? d(en) : undefined,
-          "find-current": d($t),
+          "modifier-label": vueAn(b),
+          "find-matches": vueAn(Yt) && Z.value === `edit` ? vueAn(en) : undefined,
+          "find-current": vueAn($t),
           onScroll: ar,
           onWheelPassive: cr,
           onKeydown: cr
-        }, null, 8, [`modelValue`, `line-numbers`, `modifier-label`, `find-matches`, `find-current`])), Z.value === `split` ? (T(), g(`div`, {
+        }, null, 8, [`modelValue`, `line-numbers`, `modifier-label`, `find-matches`, `find-current`])), Z.value === `split` ? (vueGt(), vueS(`div`, {
           key: 1,
-          class: u([`group relative z-[3] cursor-col-resize touch-none outline-none before:absolute before:inset-y-2 before:left-1 before:w-px before:bg-black/[0.08] before:transition-[width,background-color] before:content-[''] hover:before:w-0.5 hover:before:bg-primary/50 focus-visible:before:w-0.5 focus-visible:before:bg-primary/50 dark:before:bg-white/10`, Le.value ? `before:w-0.5 before:bg-primary/50` : ``]),
+          class: vueN([`group relative z-[3] cursor-col-resize touch-none outline-none before:absolute before:inset-y-2 before:left-1 before:w-px before:bg-black/[0.08] before:transition-[width,background-color] before:content-[''] hover:before:w-0.5 hover:before:bg-primary/50 focus-visible:before:w-0.5 focus-visible:before:bg-primary/50 dark:before:bg-white/10`, Le.value ? `before:w-0.5 before:bg-primary/50` : ``]),
           role: `separator`,
           tabindex: `0`,
           "aria-orientation": `vertical`,
           "aria-valuemin": `0`,
           "aria-valuemax": `100`,
           "aria-valuenow": Math.round(O.splitRatio * 100),
-          "aria-label": d(l)(`toolboxNative.markdownResizeSplitPanes`),
-          title: d(l)(`toolboxNative.markdownResizeSplitPanesHint`),
+          "aria-label": vueAn(l)(`toolboxNative.markdownResizeSplitPanes`),
+          title: vueAn(l)(`toolboxNative.markdownResizeSplitPanesHint`),
           onPointerdown: pr,
           onPointermove: mr,
           onPointerup: hr,
           onPointercancel: hr,
-          onDblclick: t[26] ||= e => O.splitRatio = d(.5),
+          onDblclick: t[26] ||= e => O.splitRatio = vueAn(.5),
           onKeydown: gr
-        }, null, 42, Gr)) : N(``, true), Z.value === `edit` ? N(``, true) : (T(), g(`section`, {
+        }, null, 42, Gr)) : vueX(``, true), Z.value === `edit` ? vueX(``, true) : (vueGt(), vueS(`section`, {
           key: 2,
           ref_key: `previewScrollRef`,
           ref: G,
@@ -3754,9 +3754,9 @@ var Or = {
           onWheelPassive: cr,
           onPointerdown: cr,
           onKeydown: cr
-        }, [P(`div`, {
-          class: u([`min-h-full w-full pb-20 pt-9`, Z.value === `split` ? `px-7` : `mx-auto max-w-[820px] px-10`])
-        }, [D(or, {
+        }, [vueY(`div`, {
+          class: vueN([`min-h-full w-full pb-20 pt-9`, Z.value === `split` ? `px-7` : `mx-auto max-w-[820px] px-10`])
+        }, [vueK(or, {
           ref_key: `rendererRef`,
           ref: Xe,
           blocks: de.value.blocks,
@@ -3764,78 +3764,78 @@ var Or = {
           epoch: fe.value,
           onToggleTask: Sr,
           onOpenLink: Wn
-        }, null, 8, [`blocks`, `document-path`, `epoch`]), de.value.blocks.length ? N(``, true) : (T(), g(`p`, Kr, A(d(l)(`toolboxNative.markdownPreviewEmpty`)), 1))], 2)], 544))], 6)) : (T(), x(Gn, {
+        }, null, 8, [`blocks`, `document-path`, `epoch`]), de.value.blocks.length ? vueX(``, true) : (vueGt(), vueS(`p`, Kr, vueRr(vueAn(l)(`toolboxNative.markdownPreviewEmpty`)), 1))], 2)], 544))], 6)) : (vueGt(), vueB(Gn, {
           key: 2,
-          "modifier-label": d(b),
+          "modifier-label": vueAn(b),
           onOpen: An,
           onCreate: Nn
-        }, null, 8, [`modifier-label`])), F.value && Z.value !== `preview` ? (T(), g(`footer`, qr, [P(`span`, null, A(d(l)(`toolboxNative.markdownLineCount`, {
+        }, null, 8, [`modifier-label`])), F.value && Z.value !== `preview` ? (vueGt(), vueS(`footer`, qr, [vueY(`span`, null, vueRr(vueAn(l)(`toolboxNative.markdownLineCount`, {
           count: Ht.value.toLocaleString(Pt.value)
-        })), 1), P(`span`, null, A(d(l)(`toolboxNative.markdownCharacterCount`, {
+        })), 1), vueY(`span`, null, vueRr(vueAn(l)(`toolboxNative.markdownCharacterCount`, {
           count: Ut.value.toLocaleString(Pt.value)
-        })), 1)])) : N(``, true), ye.value || ge.value ? (T(), g(`div`, Jr, [D(d(_e), {
+        })), 1)])) : vueX(``, true), ye.value || ge.value ? (vueGt(), vueS(`div`, Jr, [vueK(vueAn(beautifier), {
           size: 22,
           class: `animate-spin`
-        }), P(`span`, null, A(d(l)(ge.value ? `toolboxNative.markdownExporting` : `toolboxNative.loadingMarkdownDocument`)), 1)])) : N(``, true)]), Oe.value ? (T(), g(`div`, Yr, A(d(l)(`toolboxNative.markdownDropToOpen`)), 1)) : N(``, true)]), D(d(je), {
+        }), vueY(`span`, null, vueRr(vueAn(l)(ge.value ? `toolboxNative.markdownExporting` : `toolboxNative.loadingMarkdownDocument`)), 1)])) : vueX(``, true)]), Oe.value ? (vueGt(), vueS(`div`, Yr, vueRr(vueAn(l)(`toolboxNative.markdownDropToOpen`)), 1)) : vueX(``, true)]), vueK(vueAn(alertDialogC), {
           open: Re.value,
           "onUpdate:open": _n
         }, {
-          default: y(() => [D(d(Ae), {
+          default: vueYt(() => [vueK(vueAn(alertDialogA), {
             onOpenAutoFocus: gn
           }, {
-            default: y(() => [D(d(Ne), null, {
-              default: y(() => [D(d(Fe), null, {
-                default: y(() => [h(A(qt.value), 1)]),
+            default: vueYt(() => [vueK(vueAn(alertDialogN), null, {
+              default: vueYt(() => [vueK(vueAn(alertDialogT), null, {
+                default: vueYt(() => [vueO(vueRr(qt.value), 1)]),
                 _: 1
-              }), D(d(Me), null, {
-                default: y(() => [h(A(Jt.value), 1)]),
+              }), vueK(vueAn(alertDialogI), null, {
+                default: vueYt(() => [vueO(vueRr(Jt.value), 1)]),
                 _: 1
               })]),
               _: 1
-            }), D(d(Pe), {
+            }), vueK(vueAn(alertDialogR), {
               class: `gap-2`
             }, {
-              default: y(() => [Be.value === `discard` ? (T(), g(C, {
+              default: vueYt(() => [Be.value === `discard` ? (vueGt(), vueS(vueC, {
                 key: 0
-              }, [D(d(s), {
+              }, [vueK(vueAn(uiSwitchR), {
                 variant: `ghost`,
                 class: `text-destructive hover:text-destructive sm:mr-auto`,
                 onClick: t[27] ||= e => hn(`discard`)
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownDiscardChangesAction`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownDiscardChangesAction`)), 1)]),
                 _: 1
-              }), D(d(s), {
+              }), vueK(vueAn(uiSwitchR), {
                 variant: `outline`,
                 onClick: t[28] ||= e => hn(`cancel`)
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownConfirmCancel`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownConfirmCancel`)), 1)]),
                 _: 1
-              }), D(d(s), {
+              }), vueK(vueAn(uiSwitchR), {
                 "data-confirm-primary": ``,
                 onClick: t[29] ||= e => hn(`save`)
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownSaveChangesAction`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownSaveChangesAction`)), 1)]),
                 _: 1
-              })], 64)) : (T(), g(C, {
+              })], 64)) : (vueGt(), vueS(vueC, {
                 key: 1
-              }, [D(d(s), {
+              }, [vueK(vueAn(uiSwitchR), {
                 variant: `ghost`,
                 class: `sm:mr-auto`,
                 onClick: t[30] ||= e => hn(`reload`)
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownLoadExternalVersion`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownLoadExternalVersion`)), 1)]),
                 _: 1
-              }), D(d(s), {
+              }), vueK(vueAn(uiSwitchR), {
                 variant: `outline`,
                 onClick: t[31] ||= e => hn(`cancel`)
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownConfirmCancel`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownConfirmCancel`)), 1)]),
                 _: 1
-              }), D(d(s), {
+              }), vueK(vueAn(uiSwitchR), {
                 "data-confirm-primary": ``,
                 onClick: t[32] ||= e => hn(`overwrite`)
               }, {
-                default: y(() => [h(A(d(l)(`toolboxNative.markdownOverwriteChangesAction`)), 1)]),
+                default: vueYt(() => [vueO(vueRr(vueAn(l)(`toolboxNative.markdownOverwriteChangesAction`)), 1)]),
                 _: 1
               })], 64))]),
               _: 1
@@ -3851,7 +3851,7 @@ var Or = {
   ri = {
     class: `flex h-full min-h-0 w-full flex-col overflow-hidden bg-background`
   },
-  ii = E({
+  ii = vueJ({
     __name: `MarkdownReaderTool`,
     props: {
       tool: {},
@@ -3870,13 +3870,13 @@ var Or = {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        a = S(null);
+        a = vueBn(null);
       async function o() {
         return (await a.value?.requestClose()) ?? true;
       }
       return expose({
         requestClose: o
-      }), (e, t) => (T(), g(`div`, ri, [D(ni, {
+      }), (e, t) => (vueGt(), vueS(`div`, ri, [vueK(ni, {
         ref_key: `reader`,
         ref: a,
         tool: propsAlias.tool,

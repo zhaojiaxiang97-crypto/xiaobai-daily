@@ -1,19 +1,19 @@
 const __vite__mapDeps = (items, m = __vite__mapDeps, d = m.f || (m.f = ["../ui/icons/matrix-math.js", "../ui/Switch.js", "../chunks/vue-i18n.runtime.js", "../i18n/en-US-player.js", "../ui/icons/lucide-icons.js"])) => items.map(item => d[item]);
-import { $n as e, An as t, Cn as n, O as r, S as i, St as a, Wt as o, Yt as s, Zt as c, b as l, bn as u, c as d, f, gt as p, j as m, k as h, n as g, nr as _, ot as v, rr as y, ut as b, v as x, vn as S, x as C, y as w } from "../chunks/vue-i18n.runtime.js";
-import { E as T, r as E, w as D } from "../i18n/en-US-player.js";
-import { t as O } from "../chunks/preload-helper.js";
-import { r as k, t as ee } from "../ui/icons/lucide-icons.js";
-import { t as te } from "../ui/icons/icon-clapperboard.js";
-import { _ as ne } from "../chunks/screenshot-beautifier.js";
-import { t as re } from "../ui/icons/icon-minimize.js";
-import { t as ie } from "../ui/icons/icon-pause.js";
-import { n as ae, t as oe } from "../chunks/alert.js";
-import { t as se } from "../chunks/_plugin-vue_export-helper.js";
-import { t as ce } from "../chunks/useAuth.js";
-import { $t as A, Cn as le, Jt as ue, Qt as de, Tn as fe, Xt as pe, Yt as me, Zt as he, an as ge, en as _e, hn as j, in as ve, kn as ye, nn as be, on as xe, rn as M, sn as Se, tn as Ce } from "../chunks/main.js";
-import { E as N, _ as we, a as P, b as Te, f as F, g as Ee, h as De, i as I, m as Oe, p as L, s as ke, v as Ae } from "../vendors/OrbitControls.js";
-import { n as je, o as Me, r as Ne, t as R } from "../vendors/three-stage.js";
-var Pe = k(`crosshair`, [[`circle`, {
+import { $n as vueN, An as vueAn, Cn as vueCn, O as vueO, S as vueS, St as vueSt, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, c as vueC, f as vueF, gt as vueGt, j as vueJ, k as vueK, n as g, nr as vueNr, ot as vueOt, rr as vueRr, ut as vueUt, v as vueV, vn as vueVn, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { E as playerE, r as playerR, w as playerW } from "../i18n/en-US-player.js";
+import { t as preloadT } from "../chunks/preload-helper.js";
+import { r as lucideR, t as lucideT } from "../ui/icons/lucide-icons.js";
+import { t as iconclapperboardT } from "../ui/icons/icon-clapperboard.js";
+import { _ as beautifier } from "../chunks/screenshot-beautifier.js";
+import { t as iconminimizeT } from "../ui/icons/icon-minimize.js";
+import { t as iconpauseT } from "../ui/icons/icon-pause.js";
+import { n as alertN, t as alertT } from "../chunks/alert.js";
+import { t as pluginvueexporthelperT } from "../chunks/_plugin-vue_export-helper.js";
+import { t as useAuthT } from "../chunks/useAuth.js";
+import { $t as mainT, Cn as mainCn, Jt as mainJt, Qt as mainQt, Tn as mainTn, Xt as mainXt, Yt as mainYt, Zt as mainZt, an as mainAn, en as mainEn, hn as mainHn, in as mainIn, kn as mainKn, nn as mainNn, on as mainOn, rn as mainRn, sn as mainSn, tn as Ce } from "../chunks/main.js";
+import { E as OrbitControlsE, _ as OrbitControls, a as OrbitControlsA, b as OrbitControlsB, f as OrbitControlsF, g as OrbitControlsG, h as OrbitControlsH, i as OrbitControlsI, m as OrbitControlsM, p as OrbitControlsP, s as OrbitControlsS, v as OrbitControlsV } from "../vendors/OrbitControls.js";
+import { n as threestageN, o as threestageO, r as threestageR, t as threestageT } from "../vendors/three-stage.js";
+var Pe = lucideR(`crosshair`, [[`circle`, {
     cx: `12`,
     cy: `12`,
     r: `10`,
@@ -43,7 +43,7 @@ var Pe = k(`crosshair`, [[`circle`, {
     y2: `18`,
     key: `15g9kq`
   }]]),
-  Fe = k(`film`, [[`rect`, {
+  Fe = lucideR(`film`, [[`rect`, {
     width: `18`,
     height: `18`,
     x: `3`,
@@ -189,7 +189,7 @@ var Ke = {
   tt = {
     class: `mt-4 flex items-center justify-end gap-2`
   },
-  nt = m({
+  nt = vueJ({
     __name: `ReplayExportDialog`,
     props: {
       options: {},
@@ -205,12 +205,12 @@ var Ke = {
       let stateAlias = state,
         emitAlias = emit,
         {
-          t: c
+          t: translate
         } = g(),
-        l = S({
+        l = vueVn({
           ...stateAlias.options
         }),
-        u = x(() => ({
+        u = vueV(() => ({
           ...l,
           screenshots: stateAlias.hasScreenshots ? l.screenshots : `none`
         })),
@@ -228,52 +228,52 @@ var Ke = {
           timelapse: `dayReplay.exportPaceTimelapse`,
           hold: `dayReplay.exportPaceHold`
         },
-        _ = x(() => [{
+        _ = vueV(() => [{
           key: `screenshots`,
-          label: c(`dayReplay.exportScreenshots`),
+          label: translate(`dayReplay.exportScreenshots`),
           choices: B.map(item => ({
             value: item,
-            label: c(m[item]),
+            label: translate(m[item]),
             disabled: item !== `none` && !stateAlias.hasScreenshots
           })),
-          hint: stateAlias.hasScreenshots ? undefined : c(`dayReplay.exportNoScreenshots`)
+          hint: stateAlias.hasScreenshots ? undefined : translate(`dayReplay.exportNoScreenshots`)
         }, {
           key: `pace`,
-          label: c(`dayReplay.exportPace`),
+          label: translate(`dayReplay.exportPace`),
           choices: V.map(item => ({
             value: item,
-            label: c(h[item])
+            label: translate(h[item])
           })),
           disabled: u.value.screenshots === `none`
         }, {
           key: `speed`,
-          label: c(`dayReplay.exportSpeed`),
+          label: translate(`dayReplay.exportSpeed`),
           choices: H.map(item => ({
             value: item,
             label: `${item}×`
           }))
         }, {
           key: `resolution`,
-          label: c(`dayReplay.exportResolution`),
+          label: translate(`dayReplay.exportResolution`),
           choices: Le.map(item => ({
             value: item,
             label: f[item]
           }))
         }, {
           key: `frameRate`,
-          label: c(`dayReplay.exportFrameRate`),
+          label: translate(`dayReplay.exportFrameRate`),
           choices: U.map(item => ({
             value: item,
-            label: c(`dayReplay.exportFrameRateValue`, {
+            label: translate(`dayReplay.exportFrameRateValue`, {
               fps: item
             })
           }))
         }]),
-        v = x(() => {
+        v = vueV(() => {
           let e = u.value,
             t = q(e.resolution),
             n = Ue(stateAlias.timelineDurationMs, e) / 1024 / 1024;
-          return c(`dayReplay.exportEstimate`, {
+          return translate(`dayReplay.exportEstimate`, {
             seconds: Math.ceil(He(stateAlias.timelineDurationMs, e.speed) / 1e3),
             width: t.width,
             height: t.height,
@@ -288,43 +288,43 @@ var Ke = {
           ...l
         });
       }
-      return (ctx, renderCache) => (p(), i(`div`, Ke, [w(`h3`, qe, y(t(c)(`dayReplay.exportVideo`)), 1), w(`div`, Je, [(p(true), i(d, null, a(_.value, event => (p(), i(d, {
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, Ke, [vueY(`h3`, qe, vueRr(vueAn(translate)(`dayReplay.exportVideo`)), 1), vueY(`div`, Je, [(vueGt(true), vueS(vueC, null, vueSt(_.value, event => (vueGt(), vueS(vueC, {
         key: event.key
-      }, [w(`span`, {
-        class: e([`pt-1.5 text-xs text-[#888] dark:text-muted-foreground`, event.disabled ? `opacity-50` : ``])
-      }, y(event.label), 3), w(`div`, null, [w(`div`, {
+      }, [vueY(`span`, {
+        class: vueN([`pt-1.5 text-xs text-[#888] dark:text-muted-foreground`, event.disabled ? `opacity-50` : ``])
+      }, vueRr(event.label), 3), vueY(`div`, null, [vueY(`div`, {
         class: `inline-flex flex-wrap items-center gap-0.5 rounded-md bg-black/[0.03] p-0.5 dark:bg-white/5`,
         role: `radiogroup`,
         "aria-label": event.label,
         "aria-disabled": event.disabled || undefined
-      }, [(p(true), i(d, null, a(event.choices, n => (p(), i(`button`, {
+      }, [(vueGt(true), vueS(vueC, null, vueSt(event.choices, n => (vueGt(), vueS(`button`, {
         key: String(n.value),
         type: `button`,
         role: `radio`,
         "aria-checked": u.value[event.key] === n.value,
-        class: e([`h-6 min-w-10 rounded-[5px] px-2 text-xs tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-40`, u.value[event.key] === n.value ? `bg-white text-[#111] shadow-sm dark:bg-white/15 dark:text-foreground` : `text-[#888] hover:text-[#333] dark:text-muted-foreground dark:hover:text-foreground`]),
+        class: vueN([`h-6 min-w-10 rounded-[5px] px-2 text-xs tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-40`, u.value[event.key] === n.value ? `bg-white text-[#111] shadow-sm dark:bg-white/15 dark:text-foreground` : `text-[#888] hover:text-[#333] dark:text-muted-foreground dark:hover:text-foreground`]),
         disabled: event.disabled || n.disabled,
         onClick: e => b(event.key, n.value)
-      }, y(n.label), 11, Xe))), 128))], 8, Ye), event.hint ? (p(), i(`p`, Ze, y(event.hint), 1)) : C(``, true)])], 64))), 128))]), w(`div`, Qe, [w(`p`, $e, y(v.value), 1), u.value.screenshots === `none` ? C(``, true) : (p(), i(`p`, et, y(t(c)(`dayReplay.exportPrivacyHint`)), 1))]), w(`div`, tt, [w(`button`, {
+      }, vueRr(n.label), 11, Xe))), 128))], 8, Ye), event.hint ? (vueGt(), vueS(`p`, Ze, vueRr(event.hint), 1)) : vueX(``, true)])], 64))), 128))]), vueY(`div`, Qe, [vueY(`p`, $e, vueRr(v.value), 1), u.value.screenshots === `none` ? vueX(``, true) : (vueGt(), vueS(`p`, et, vueRr(vueAn(translate)(`dayReplay.exportPrivacyHint`)), 1))]), vueY(`div`, tt, [vueY(`button`, {
         type: `button`,
         class: `h-8 rounded-md px-3 text-xs text-[#666] transition-colors hover:bg-black/[0.05] dark:text-muted-foreground dark:hover:bg-white/5`,
         onClick: renderCache[0] ||= e => emitAlias(`cancel`)
-      }, y(t(c)(`dayReplay.exportCancel`)), 1), w(`button`, {
+      }, vueRr(vueAn(translate)(`dayReplay.exportCancel`)), 1), vueY(`button`, {
         type: `button`,
         class: `h-8 rounded-md bg-[#111] px-3 text-xs text-white transition-colors hover:bg-[#333] dark:bg-foreground dark:text-background dark:hover:bg-foreground/85`,
         onClick: T
-      }, y(t(c)(`dayReplay.exportStart`)), 1)])]));
+      }, vueRr(vueAn(translate)(`dayReplay.exportStart`)), 1)])]));
     }
   }),
-  rt = m({
+  rt = vueJ({
     __name: `ReplayScreenshotView`,
     props: {
       bitmap: {}
     },
     setup(props) {
       let propsAlias = props,
-        n = u(null),
-        r = u(null),
+        n = vueBn(null),
+        r = vueBn(null),
         payload = null,
         s = 0;
       function c() {
@@ -355,15 +355,15 @@ var Ke = {
       function l() {
         s ||= requestAnimationFrame(c);
       }
-      return o(() => propsAlias.bitmap, l), b(() => {
+      return vueWt(() => propsAlias.bitmap, l), vueUt(() => {
         n.value && (payload = new ResizeObserver(l), payload.observe(n.value)), l();
-      }), v(() => {
+      }), vueOt(() => {
         payload?.disconnect(), s && cancelAnimationFrame(s);
-      }), (e, t) => (p(), i(`div`, {
+      }), (e, t) => (vueGt(), vueS(`div`, {
         ref_key: `containerRef`,
         ref: n,
         class: `relative h-full w-full`
-      }, [w(`canvas`, {
+      }, [vueY(`canvas`, {
         ref_key: `canvasRef`,
         ref: r,
         class: `absolute inset-0 block h-full w-full`
@@ -371,7 +371,7 @@ var Ke = {
     }
   }),
   it = [`aria-label`, `aria-valuenow`],
-  at = m({
+  at = vueJ({
     __name: `ReplayScrubber`,
     props: {
       street: {},
@@ -388,9 +388,9 @@ var Ke = {
     }) {
       let eventAlias = event,
         emitAlias = emit,
-        a = u(null),
-        o = u(false),
-        s = x(() => ({
+        a = vueBn(null),
+        o = vueBn(false),
+        s = vueV(() => ({
           start: eventAlias.startMinute / 5,
           end: eventAlias.endMinute / 5
         }));
@@ -409,7 +409,7 @@ var Ke = {
       function f(e) {
         o.value && (o.value = false, e.currentTarget.releasePointerCapture(e.pointerId), emitAlias(`scrub-end`));
       }
-      return (ctx, renderCache) => (p(), i(`div`, {
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, {
         ref_key: `trackRef`,
         ref: a,
         class: `min-w-0 cursor-pointer touch-none`,
@@ -422,7 +422,7 @@ var Ke = {
         onPointermove: d,
         onPointerup: f,
         onPointercancel: f
-      }, [h(_e, {
+      }, [vueK(mainEn, {
         compact: ``,
         result: event.street,
         colors: event.colors,
@@ -442,9 +442,9 @@ var Ke = {
     stage;
     scene;
     lastTime = 0;
-    target = new N();
-    position = new N();
-    offset = new N();
+    target = new OrbitControlsE();
+    position = new OrbitControlsE();
+    offset = new OrbitControlsE();
     constructor(constructor, constructorValue) {
       this.stage = constructor, this.scene = constructorValue;
     }
@@ -483,7 +483,7 @@ var Ke = {
   Ct = .32,
   wt = .8;
 function Tt(e) {
-  let t = new Ae();
+  let t = new OrbitControlsV();
   return t.onBeforeCompile = t => {
     t.uniforms.uPlayhead = e.uPlayhead, t.uniforms.uGround = e.uGround, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute vec2 aSpan;
@@ -503,7 +503,7 @@ diffuseColor.rgb = mix(diffuseColor.rgb, uGround, vReplayFuture * ${yt.toFixed(2
   }, t.customProgramCacheKey = () => `day-replay-building`, t;
 }
 var Et = class {
-    root = new F();
+    root = new OrbitControlsF();
     framing;
     maxHeight;
     blocks;
@@ -515,21 +515,21 @@ var Et = class {
         value: 0
       },
       uGround: {
-        value: new ke()
+        value: new OrbitControlsS()
       }
     };
     buildingGeometry;
     buildingMaterial;
     buildings;
     trackGeometry;
-    trackMaterial = new Ae();
+    trackMaterial = new OrbitControlsV();
     beamGeometry;
     beamMaterial;
     beam;
-    hitBox = new I();
-    hitPoint = new N();
+    hitBox = new OrbitControlsI();
+    hitPoint = new OrbitControlsE();
     constructor(constructor, constructorValue) {
-      this.blocks = Ne(constructor).blocks, this.centerBucket = (constructorValue.startBucket + constructorValue.endBucket) / 2;
+      this.blocks = threestageR(constructor).blocks, this.centerBucket = (constructorValue.startBucket + constructorValue.endBucket) / 2;
       let n = (constructorValue.endBucket - constructorValue.startBucket) / 2,
         r = (constructorValue.endBucket - constructorValue.startBucket) / pt,
         i = Math.max(1, Math.ceil(r / mt));
@@ -538,26 +538,26 @@ var Et = class {
       let a = this.blocks.length,
         float32Array = new Float32Array(a * 2),
         s = new Float32Array(a),
-        c = new De(),
-        l = new N(),
-        u = new Te(),
-        d = new N();
-      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(float32Array, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new L(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
+        c = new OrbitControlsH(),
+        l = new OrbitControlsE(),
+        u = new OrbitControlsB(),
+        d = new OrbitControlsE();
+      this.buildingGeometry = new OrbitControlsA(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new OrbitControlsP(float32Array, 2)), this.buildingGeometry.setAttribute(`aKind`, new OrbitControlsP(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new OrbitControlsM(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new OrbitControlsP(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
       let f = 6;
       this.blocks.forEach((item, t) => {
-        float32Array[t * 2] = item.start, float32Array[t * 2 + 1] = item.end, s[t] = +!Me(item), Me(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), l.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
-      }), this.buildings.instanceMatrix.needsUpdate = true, this.maxHeight = f, this.trackGeometry = new P(n * 2 + 2, xt, 14).translate(0, -.2 / 2, 0);
-      let p = new Ee(this.trackGeometry, this.trackMaterial);
-      p.position.y = bt, this.beamGeometry = new P(X, 1, 16).translate(0, .5, 0), this.beamMaterial = new we({
+        float32Array[t * 2] = item.start, float32Array[t * 2 + 1] = item.end, s[t] = +!threestageO(item), threestageO(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), l.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
+      }), this.buildings.instanceMatrix.needsUpdate = true, this.maxHeight = f, this.trackGeometry = new OrbitControlsA(n * 2 + 2, xt, 14).translate(0, -.2 / 2, 0);
+      let p = new OrbitControlsG(this.trackGeometry, this.trackMaterial);
+      p.position.y = bt, this.beamGeometry = new OrbitControlsA(X, 1, 16).translate(0, .5, 0), this.beamMaterial = new OrbitControls({
         color: St,
         transparent: true,
         opacity: Ct,
         depthWrite: false
-      }), this.beam = new Ee(this.beamGeometry, this.beamMaterial), this.beam.scale.y = f * 1.25, this.beam.renderOrder = 1, this.root.add(p, this.buildings, this.beam);
+      }), this.beam = new OrbitControlsG(this.beamGeometry, this.beamMaterial), this.beam.scale.y = f * 1.25, this.beam.renderOrder = 1, this.root.add(p, this.buildings, this.beam);
       let emptyItems = [];
-      for (let count of [-n - 2, n + 2]) for (let t of [0, f]) for (let total of [-7, 13]) emptyItems.push(new N(count, t, total));
+      for (let count of [-n - 2, n + 2]) for (let t of [0, f]) for (let total of [-7, 13]) emptyItems.push(new OrbitControlsE(count, t, total));
       this.framing = {
-        target: new N(0, f * .25, 0),
+        target: new OrbitControlsE(0, f * .25, 0),
         corners: emptyItems,
         homeView: {
           polar: 1.02,
@@ -581,9 +581,9 @@ var Et = class {
       return this.bucketToX(minute / 5);
     }
     setColors(colors, colorsValue) {
-      let n = new ke();
+      let n = new OrbitControlsS();
       this.blocks.forEach((item, i) => {
-        this.buildings.setColorAt(i, n.set(je(item, colors, colorsValue)));
+        this.buildings.setColorAt(i, n.set(threestageN(item, colors, colorsValue)));
       }), this.buildings.instanceColor && (this.buildings.instanceColor.needsUpdate = true), this.uniforms.uGround.value.set(colorsValue.ground), this.trackMaterial.color.set(colorsValue.ground);
     }
     setPlayhead(playhead) {
@@ -594,7 +594,7 @@ var Et = class {
       let t = this.blocks[current];
       if (!t) return 0;
       let n = Math.min(t.end - t.start, Math.max(0, this.uniforms.uPlayhead.value - t.start));
-      return n <= 0 ? _t : Me(t) ? gt : ht * Math.sqrt(n);
+      return n <= 0 ? _t : threestageO(t) ? gt : ht * Math.sqrt(n);
     }
     anchorAt(anchor, anchorValue) {
       let n = Math.min(ft - 1, Math.max(0, Math.floor(anchor / 5))),
@@ -628,7 +628,7 @@ var Et = class {
     class: `pointer-events-none absolute inset-0`
   },
   Ot = 4,
-  kt = m({
+  kt = vueJ({
     __name: `ReplayStreet`,
     props: {
       street: {},
@@ -656,11 +656,11 @@ var Et = class {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        f = u(null),
-        m = u(null),
-        h = u(null),
-        g = u(false),
-        _ = n([]),
+        f = vueBn(null),
+        m = vueBn(null),
+        h = vueBn(null),
+        g = vueBn(false),
+        _ = vueCn([]),
         emptyItems = [],
         S = null,
         C = null,
@@ -669,8 +669,8 @@ var Et = class {
         O = false,
         payload = null,
         ee = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
-        te = new N(),
-        ne = new N();
+        te = new OrbitControlsE(),
+        ne = new OrbitControlsE();
       function re(e, t) {
         emptyItems[t] = e instanceof HTMLElement ? e : null;
       }
@@ -724,21 +724,21 @@ var Et = class {
       function de() {
         propsAlias.following && emitAlias(`update:following`, false);
       }
-      return o(() => propsAlias.minute, e => {
+      return vueWt(() => propsAlias.minute, e => {
         C?.setPlayhead(e), S?.requestRender();
-      }), o([() => propsAlias.colors, () => propsAlias.theme], () => {
+      }), vueWt([() => propsAlias.colors, () => propsAlias.theme], () => {
         C?.setColors(propsAlias.colors, propsAlias.theme), S?.requestRender();
-      }), o(() => propsAlias.following, e => {
+      }), vueWt(() => propsAlias.following, e => {
         e && S && (S.viewTouched = false, E?.reset(), S.requestRender());
-      }), o(() => propsAlias.overview, e => {
+      }), vueWt(() => propsAlias.overview, e => {
         S && (e ? S.resetHome(true) : S.requestRender());
-      }), o(() => propsAlias.currentLabel, () => S?.requestRender()), o(() => propsAlias.compact, () => S?.requestRender()), o(() => propsAlias.playing, e => {
+      }), vueWt(() => propsAlias.currentLabel, () => S?.requestRender()), vueWt(() => propsAlias.compact, () => S?.requestRender()), vueWt(() => propsAlias.playing, e => {
         e || S?.requestRender();
-      }), b(() => {
+      }), vueUt(() => {
         let e = m.value,
           t = f.value;
         if (e && t) {
-          if (S = R.create(e, 30, {
+          if (S = threestageT.create(e, 30, {
             onFrame: ie,
             onRendered: oe
           }), !S) {
@@ -750,21 +750,21 @@ var Et = class {
             passive: true
           }), window.addEventListener(`pointerup`, A), window.addEventListener(`pointercancel`, A), T = new ResizeObserver(se), T.observe(t);
         }
-      }), v(() => {
+      }), vueOt(() => {
         T?.disconnect(), T = null, f.value?.removeEventListener(`wheel`, ue, {
           capture: true
         }), window.removeEventListener(`pointerup`, A), window.removeEventListener(`pointercancel`, A), S?.controls.removeEventListener(`start`, de), C?.dispose(), C = null, S?.dispose(), S = null;
-      }), (n, r) => (p(), i(`div`, {
+      }), (n, r) => (vueGt(), vueS(`div`, {
         ref_key: `containerRef`,
         ref: f,
         class: `relative h-full w-full select-none overflow-hidden`
-      }, [w(`canvas`, {
+      }, [vueY(`canvas`, {
         ref_key: `canvasRef`,
         ref: m,
-        class: e([`block h-full w-full`, props.compact ? `pointer-events-none` : g.value ? `cursor-grabbing` : `cursor-grab`]),
+        class: vueN([`block h-full w-full`, props.compact ? `pointer-events-none` : g.value ? `cursor-grabbing` : `cursor-grab`]),
         onPointerdown: ce,
         onClick: le
-      }, null, 34), c(w(`div`, Dt, [(p(true), i(d, null, a(_.value, (e, t) => (p(), i(`span`, {
+      }, null, 34), vueZt(vueY(`div`, Dt, [(vueGt(true), vueS(vueC, null, vueSt(_.value, (e, t) => (vueGt(), vueS(`span`, {
         key: e,
         ref_for: true,
         ref: e => re(e, t),
@@ -772,14 +772,14 @@ var Et = class {
         style: {
           visibility: `hidden`
         }
-      }, y(e) + `:00`, 1))), 128)), w(`span`, {
+      }, vueRr(e) + `:00`, 1))), 128)), vueY(`span`, {
         ref_key: `currentLabelRef`,
         ref: h,
         class: `absolute left-0 top-0 whitespace-nowrap rounded-md bg-white/90 px-2 py-1 text-xs font-medium leading-none text-[#333] shadow-sm ring-1 ring-black/5 dark:bg-black/60 dark:text-foreground dark:ring-white/10`,
         style: {
           visibility: `hidden`
         }
-      }, y(props.currentLabel), 513)], 512), [[D, !props.compact]])], 512));
+      }, vueRr(props.currentLabel), 513)], 512), [[playerW, !props.compact]])], 512));
     }
   });
 function At() {
@@ -787,7 +787,7 @@ function At() {
     t: e,
     duration: t,
     cellName: n
-  } = A();
+  } = mainT();
   function r(r, i) {
     let {
       longest: a
@@ -802,7 +802,7 @@ function At() {
       detail: a ? n(i, a.value) : ``
     }, {
       label: e(`dayReplay.summarySpan`),
-      value: r.firstMinute !== null && r.lastMinute !== null ? `${ve(r.firstMinute)} – ${r.lastMinute >= 1440 ? `24:00` : ve(r.lastMinute)}` : `--`,
+      value: r.firstMinute !== null && r.lastMinute !== null ? `${mainIn(r.firstMinute)} – ${r.lastMinute >= 1440 ? `24:00` : mainIn(r.lastMinute)}` : `--`,
       detail: ``
     }, {
       label: e(`dayReplay.summaryRecords`),
@@ -868,7 +868,7 @@ var jt = {
   Wt = {
     class: `mt-5 flex justify-end gap-2`
   },
-  Gt = m({
+  Gt = vueJ({
     __name: `ReplaySummary`,
     props: {
       summary: {},
@@ -890,32 +890,32 @@ var jt = {
           summaryItems: l,
           topItems: u
         } = At(),
-        f = x(() => l(eventAlias.summary, eventAlias.street)),
-        m = x(() => u(eventAlias.summary, eventAlias.street, eventAlias.colors));
-      return (ctx, renderCache) => (p(), i(`div`, jt, [w(`div`, Mt, [w(`h3`, Nt, y(t(c)(`dayReplay.summaryTitle`)), 1), w(`span`, Pt, y(event.dateLabel), 1)]), w(`div`, Ft, [(p(true), i(d, null, a(f.value, state => (p(), i(`div`, {
+        f = vueV(() => l(eventAlias.summary, eventAlias.street)),
+        m = vueV(() => u(eventAlias.summary, eventAlias.street, eventAlias.colors));
+      return (ctx, renderCache) => (vueGt(), vueS(`div`, jt, [vueY(`div`, Mt, [vueY(`h3`, Nt, vueRr(vueAn(c)(`dayReplay.summaryTitle`)), 1), vueY(`span`, Pt, vueRr(event.dateLabel), 1)]), vueY(`div`, Ft, [(vueGt(true), vueS(vueC, null, vueSt(f.value, state => (vueGt(), vueS(`div`, {
         key: state.label,
         class: `min-w-0`
-      }, [w(`div`, It, y(state.value), 1), w(`div`, Lt, [r(y(state.label), 1), state.detail ? (p(), i(d, {
+      }, [vueY(`div`, It, vueRr(state.value), 1), vueY(`div`, Lt, [vueO(vueRr(state.label), 1), state.detail ? (vueGt(), vueS(vueC, {
         key: 0
-      }, [r(` · ` + y(state.detail), 1)], 64)) : C(``, true)])]))), 128))]), m.value.length ? (p(), i(`div`, Rt, [w(`div`, zt, y(t(c)(`dayReplay.summaryTop`)), 1), w(`div`, Bt, [(p(true), i(d, null, a(m.value, e => (p(), i(`div`, {
+      }, [vueO(` · ` + vueRr(state.detail), 1)], 64)) : vueX(``, true)])]))), 128))]), m.value.length ? (vueGt(), vueS(`div`, Rt, [vueY(`div`, zt, vueRr(vueAn(c)(`dayReplay.summaryTop`)), 1), vueY(`div`, Bt, [(vueGt(true), vueS(vueC, null, vueSt(m.value, e => (vueGt(), vueS(`div`, {
         key: e.key,
         class: `flex items-center gap-2 text-xs`
-      }, [w(`span`, {
+      }, [vueY(`span`, {
         class: `size-2.5 shrink-0 rounded-[3px]`,
-        style: _({
+        style: vueNr({
           background: e.color
         })
-      }, null, 4), w(`span`, Vt, y(e.name), 1), w(`span`, Ht, y(e.duration), 1)]))), 128))])])) : C(``, true), event.hasScreenshots ? C(``, true) : (p(), i(`p`, Ut, y(t(c)(`dayReplay.noScreenshotHint`)), 1)), w(`div`, Wt, [w(`button`, {
+      }, null, 4), vueY(`span`, Vt, vueRr(e.name), 1), vueY(`span`, Ht, vueRr(e.duration), 1)]))), 128))])])) : vueX(``, true), event.hasScreenshots ? vueX(``, true) : (vueGt(), vueS(`p`, Ut, vueRr(vueAn(c)(`dayReplay.noScreenshotHint`)), 1)), vueY(`div`, Wt, [vueY(`button`, {
         type: `button`,
         class: `h-8 rounded-md px-3 text-xs text-[#666] transition-colors hover:bg-black/[0.04] dark:text-muted-foreground dark:hover:bg-white/5`,
         onClick: renderCache[0] ||= e => emitAlias(`close`)
-      }, y(t(c)(`dayReplay.close`)), 1), w(`button`, {
+      }, vueRr(vueAn(c)(`dayReplay.close`)), 1), vueY(`button`, {
         type: `button`,
         class: `flex h-8 items-center gap-1.5 rounded-md bg-[#111] px-3 text-xs text-white transition-colors hover:bg-[#333] dark:bg-foreground dark:text-background dark:hover:bg-foreground/85`,
         onClick: renderCache[1] ||= e => emitAlias(`replay`)
-      }, [h(t(le), {
+      }, [vueK(vueAn(mainCn), {
         size: 13
-      }), r(` ` + y(t(c)(`dayReplay.replay`)), 1)])])]));
+      }), vueO(` ` + vueRr(vueAn(c)(`dayReplay.replay`)), 1)])])]));
     }
   }),
   Kt = 288,
@@ -1087,7 +1087,7 @@ function vn(e) {
     total = null,
     diff = null,
     payload = null;
-  for (let count of M(fallbackValue)) {
+  for (let count of mainRn(fallbackValue)) {
     if (count.value < 0) continue;
     total === null && (total = count.start * Z), diff = count.end * Z;
     let t = (count.end - count.start) * Z;
@@ -1109,31 +1109,31 @@ function vn(e) {
   };
 }
 function yn(e, t, r) {
-  let i = n(e()),
+  let i = vueCn(e()),
     a = 0,
     count = null;
   function c() {
     count && clearTimeout(count), count = null, i.value = e(), a = performance.now();
   }
-  return o(e, e => {
+  return vueWt(e, e => {
     if (Object.is(e, i.value)) {
       count && clearTimeout(count), count = null;
       return;
     }
     let n = r() ? 0 : t - (performance.now() - a);
     n <= 0 ? c() : count ||= setTimeout(c, n);
-  }), o(r, e => {
+  }), vueWt(r, e => {
     e && count && c();
-  }), v(() => {
+  }), vueOt(() => {
     count && clearTimeout(count), count = null;
   }), i;
 }
 var bn = 100,
   xn = [.5, 1, 2];
 function Sn(state, t) {
-  let n = u(0),
-    r = u(false),
-    i = u(1),
+  let n = vueBn(0),
+    r = vueBn(false),
+    i = vueBn(1),
     a = 0,
     o = 0;
   function s(c) {
@@ -1167,7 +1167,7 @@ function Sn(state, t) {
   function p() {
     document.hidden && l();
   }
-  return document.addEventListener(`visibilitychange`, p), v(() => {
+  return document.addEventListener(`visibilitychange`, p), vueOt(() => {
     document.removeEventListener(`visibilitychange`, p), l();
   }), {
     progress: n,
@@ -1184,9 +1184,9 @@ var Cn = 8,
   Tn = 6,
   En = 30;
 function Dn() {
-  let e = u(0),
-    t = u(0),
-    n = u(0),
+  let e = vueBn(0),
+    t = vueBn(0),
+    n = vueBn(0),
     emptyItems = [],
     diff = [],
     a = new Map(),
@@ -1255,7 +1255,7 @@ function Dn() {
   function g(e) {
     return diff[e] instanceof Blob;
   }
-  return v(() => {
+  return vueOt(() => {
     c = true, s += 1, l(), diff = [];
   }), {
     total: e,
@@ -1429,7 +1429,7 @@ function Zn(e, t, n) {
   }));
 }
 function Qn(e, t, n) {
-  e.save(), e.translate(Mn, Pn), be(e, {
+  e.save(), e.translate(Mn, Pn), mainNn(e, {
     result: n.street,
     colors: n.colors,
     theme: n.theme,
@@ -1625,7 +1625,7 @@ async function vr(e, t, n) {
   let l = o ? i.screenshots : `none`,
     u = Vn(l),
     element = document.createElement(`canvas`),
-    f = R.create(element, 30, {}, {
+    f = threestageT.create(element, 30, {}, {
       manual: true,
       antialias: true
     });
@@ -1659,8 +1659,8 @@ async function vr(e, t, n) {
       }
     },
     y = Ve(r.durationMs, i.speed),
-    b = new N(),
-    x = new N(),
+    b = new OrbitControlsE(),
+    x = new OrbitControlsE(),
     S = null,
     C = -1 / 0,
     w = ``,
@@ -1693,7 +1693,7 @@ async function vr(e, t, n) {
       h !== w && t - T >= cr && (w = h, T = t);
       let E = {
         minute: a,
-        clock: ve(Math.min(a, 1439)),
+        clock: mainIn(Math.min(a, 1439)),
         fastForward: t >= 900 && i < y && ln(r, a),
         record: S,
         label: t >= 900 ? w : ``,
@@ -1717,7 +1717,7 @@ async function yr(e, t, n, r, i) {
   if (typeof VideoEncoder > `u`) return null;
   let payload;
   try {
-    payload = await O(() => import(`./matrix-math.js`), __vite__mapDeps([0, 1, 2, 3, 4]), import.meta.url);
+    payload = await preloadT(() => import(`./matrix-math.js`), __vite__mapDeps([0, 1, 2, 3, 4]), import.meta.url);
   } catch (e) {
     return console.warn(`[DayReplay] 视频封装模块加载失败，改用实时录制:`, e), null;
   }
@@ -1980,7 +1980,7 @@ var Sr = [`aria-label`],
   },
   fi = 1600,
   pi = 700,
-  mi = se(m({
+  mi = pluginvueexporthelperT(vueJ({
     __name: `DayReplayPlayer`,
     props: {
       date: {},
@@ -1997,10 +1997,10 @@ var Sr = [`aria-label`],
           locale: O,
           dayLabel: k,
           cellName: se
-        } = A(),
-        handler = e => ue(e, O.value),
-        _e = pe(),
-        be = x(() => he(_e.value)),
+        } = mainT(),
+        handler = e => mainJt(e, O.value),
+        _e = mainXt(),
+        be = vueV(() => mainZt(_e.value)),
         M = Dn(),
         {
           summaryItems: Ce,
@@ -2008,33 +2008,33 @@ var Sr = [`aria-label`],
         } = At(),
         {
           user: we
-        } = ce(),
-        P = u(false),
-        Te = u(We()),
-        F = u(false),
-        Ee = u(0),
-        De = u(`encoding`),
-        I = n(null),
+        } = useAuthT(),
+        P = vueBn(false),
+        Te = vueBn(We()),
+        F = vueBn(false),
+        Ee = vueBn(0),
+        De = vueBn(`encoding`),
+        I = vueCn(null),
         Oe = null,
         L = false,
-        ke = x(() => Math.round(Ee.value * 100)),
-        Ae = x(() => z.value && I.value ? Math.ceil(He(z.value.durationMs, I.value.speed) / 1e3) : 0),
-        je = x(() => {
+        ke = vueV(() => Math.round(Ee.value * 100)),
+        Ae = vueV(() => z.value && I.value ? Math.ceil(He(z.value.durationMs, I.value.speed) / 1e3) : 0),
+        je = vueV(() => {
           let fallbackValue = I.value?.resolution ?? 1080;
           return fallbackValue === 1440 ? `2K` : `${fallbackValue}p`;
         }),
-        Me = u(null),
-        Ne = u(true),
-        R = u(``),
-        z = n(null),
-        B = u(true),
-        V = u(false),
-        H = u(false),
-        Le = u(false),
-        U = n(null),
+        Me = vueBn(null),
+        Ne = vueBn(true),
+        R = vueBn(``),
+        z = vueCn(null),
+        B = vueBn(true),
+        V = vueBn(false),
+        H = vueBn(false),
+        Le = vueBn(false),
+        U = vueCn(null),
         Re = false,
-        W = Sn(x(() => z.value?.durationMs ?? 2e4), () => {
-          V.value = true, j(`feature_map_heat_click`, {
+        W = Sn(vueV(() => z.value?.durationMs ?? 2e4), () => {
+          V.value = true, mainHn(`feature_map_heat_click`, {
             entry: `day_replay_finished`
           });
         }),
@@ -2043,18 +2043,18 @@ var Sr = [`aria-label`],
           playing: G,
           speed: Be
         } = W,
-        K = x(() => z.value?.street ?? null),
-        q = x(() => K.value ? de(K.value, be.value) : []),
-        J = x(() => z.value ? sn(z.value, ze.value) : 0),
-        Ve = x(() => ve(Math.min(J.value, 1439))),
-        Ue = x(() => (z.value?.startBucket ?? 0) * 5),
-        Ke = x(() => (z.value?.endBucket ?? 288) * 5),
-        qe = x(() => z.value ? _n(z.value, J.value) : -1),
-        Je = x(() => K.value && qe.value !== -1 ? se(K.value, qe.value) : ``),
-        Ye = x(() => z.value ? ln(z.value, J.value) : false),
-        Xe = x(() => z.value && V.value ? vn(z.value) : null),
-        Ze = x(() => k(propsAlias.date)),
-        Qe = x(() => z.value ? dn(z.value, J.value) : null),
+        K = vueV(() => z.value?.street ?? null),
+        q = vueV(() => K.value ? mainQt(K.value, be.value) : []),
+        J = vueV(() => z.value ? sn(z.value, ze.value) : 0),
+        Ve = vueV(() => mainIn(Math.min(J.value, 1439))),
+        Ue = vueV(() => (z.value?.startBucket ?? 0) * 5),
+        Ke = vueV(() => (z.value?.endBucket ?? 288) * 5),
+        qe = vueV(() => z.value ? _n(z.value, J.value) : -1),
+        Je = vueV(() => K.value && qe.value !== -1 ? se(K.value, qe.value) : ``),
+        Ye = vueV(() => z.value ? ln(z.value, J.value) : false),
+        Xe = vueV(() => z.value && V.value ? vn(z.value) : null),
+        Ze = vueV(() => k(propsAlias.date)),
+        Qe = vueV(() => z.value ? dn(z.value, J.value) : null),
         $e = () => !G.value,
         et = yn(() => Qe.value, fi, $e),
         tt = yn(() => Je.value, pi, $e);
@@ -2068,22 +2068,22 @@ var Sr = [`aria-label`],
       async function ot() {
         Ne.value = true, R.value = ``;
         try {
-          let [e, t] = await Promise.all([me.list({
+          let [e, t] = await Promise.all([mainYt.list({
               ...it(propsAlias.date),
               excludeSummary: true
-            }), xe.barcode({
+            }), mainOn.barcode({
               startDate: propsAlias.date,
               endDate: propsAlias.date,
               colorBy: `app`
             })]),
             n = t;
-          if (!ge(n)) {
-            let barcode = await xe.barcode({
+          if (!mainAn(n)) {
+            let barcode = await mainOn.barcode({
               startDate: propsAlias.date,
               endDate: propsAlias.date,
               colorBy: `category`
             });
-            ge(barcode) && (n = barcode);
+            mainAn(barcode) && (n = barcode);
           }
           z.value = on(propsAlias.date, n, an(propsAlias.date, e)), z.value?.frames.length && M.load(z.value.frames);
         } catch (e) {
@@ -2097,7 +2097,7 @@ var Sr = [`aria-label`],
         V.value ? ct() : W.toggle();
       }
       function ct() {
-        V.value = false, B.value = true, W.seek(0), W.play(), j(`feature_map_heat_click`, {
+        V.value = false, B.value = true, W.seek(0), W.play(), mainHn(`feature_map_heat_click`, {
           entry: `day_replay_restart`
         });
       }
@@ -2134,7 +2134,7 @@ var Sr = [`aria-label`],
         if (!t || !n || F.value) return;
         W.pause();
         let abortController = new AbortController();
-        Oe = abortController, F.value = true, Ee.value = 0, De.value = `encoding`, I.value = e, j(`feature_map_heat_click`, {
+        Oe = abortController, F.value = true, Ee.value = 0, De.value = `encoding`, I.value = e, mainHn(`feature_map_heat_click`, {
           entry: `day_replay_export_start`,
           ...e
         });
@@ -2156,7 +2156,7 @@ var Sr = [`aria-label`],
               colors: q.value,
               theme: be.value,
               fontFamily: getComputedStyle(document.body).fontFamily || `system-ui, sans-serif`,
-              logoUrl: Se,
+              logoUrl: mainSn,
               avatarDataUrl: diff,
               cellName: e => se(n, e),
               texts: {
@@ -2181,12 +2181,12 @@ var Sr = [`aria-label`],
             uint8Array = new Uint8Array(await s.blob.arrayBuffer()),
             date = new Date(),
             joined = [date.getHours(), date.getMinutes(), date.getSeconds()].map(item => String(item).padStart(2, `0`)).join(``);
-          (await Ie.saveVideo(uint8Array, `${D(`dayReplay.videoFileName`)}_${propsAlias.date}_${joined}`, s.extension)).cancelled || (ae(D(`dayReplay.exportSaved`)), j(`feature_map_heat_click`, {
+          (await Ie.saveVideo(uint8Array, `${D(`dayReplay.videoFileName`)}_${propsAlias.date}_${joined}`, s.extension)).cancelled || (alertN(D(`dayReplay.exportSaved`)), mainHn(`feature_map_heat_click`, {
             entry: `day_replay_export_saved_${s.extension}`
           }));
         } catch (t) {
           if (t instanceof DOMException && t.name === `AbortError`) return;
-          console.warn(`[DayReplay] 导出视频失败:`, t, e), oe(D(t instanceof pr && t.code === `UNSUPPORTED` ? `dayReplay.exportUnsupported` : `dayReplay.exportFailed`));
+          console.warn(`[DayReplay] 导出视频失败:`, t, e), alertT(D(t instanceof pr && t.code === `UNSUPPORTED` ? `dayReplay.exportUnsupported` : `dayReplay.exportFailed`));
         } finally {
           Oe === abortController && (Oe = null), F.value = false;
         }
@@ -2201,16 +2201,16 @@ var Sr = [`aria-label`],
         }
         F.value || P.value || (event.key === ` ` || event.code === `Space`) && !(event.target instanceof HTMLButtonElement) && (event.preventDefault(), st());
       }
-      let yt = x(() => !!z.value?.frames.length),
-        bt = x(() => z.value ? gn(z.value.frames, J.value) : -1),
-        xt = x(() => M.loaded.value < M.total.value),
-        X = x(() => Le.value && yt.value && !V.value),
-        St = x(() => !X.value && !V.value && bt.value >= 0),
-        Ct = x(() => bt.value >= 0 && xt.value ? D(`dayReplay.preparingFrames`, {
+      let yt = vueV(() => !!z.value?.frames.length),
+        bt = vueV(() => z.value ? gn(z.value.frames, J.value) : -1),
+        xt = vueV(() => M.loaded.value < M.total.value),
+        X = vueV(() => Le.value && yt.value && !V.value),
+        St = vueV(() => !X.value && !V.value && bt.value >= 0),
+        Ct = vueV(() => bt.value >= 0 && xt.value ? D(`dayReplay.preparingFrames`, {
           loaded: M.loaded.value,
           total: M.total.value
         }) : D(`dayReplay.noFrameNow`));
-      o([bt, M.version], ([e]) => {
+      vueWt([bt, M.version], ([e]) => {
         if (e < 0) {
           U.value = null;
           return;
@@ -2219,19 +2219,19 @@ var Sr = [`aria-label`],
         (bitmapAt || !M.isLoaded(e)) && (U.value = bitmapAt);
       });
       function wt(e) {
-        Le.value = e, e && (B.value = true), j(`feature_map_heat_click`, {
+        Le.value = e, e && (B.value = true), mainHn(`feature_map_heat_click`, {
           entry: e ? `day_replay_screenshot_main` : `day_replay_street_main`
         });
       }
-      return b(() => {
-        window.addEventListener(`keydown`, vt), Me.value?.focus(), j(`feature_map_heat_click`, {
+      return vueUt(() => {
+        window.addEventListener(`keydown`, vt), Me.value?.focus(), mainHn(`feature_map_heat_click`, {
           entry: `day_replay_open_${propsAlias.source}`
         }), ot();
-      }), v(() => {
+      }), vueOt(() => {
         Y(), window.removeEventListener(`keydown`, vt);
-      }), (n, o) => (p(), l(f, {
+      }), (n, renderCache) => (vueGt(), vueB(vueF, {
         to: `body`
-      }, [w(`div`, {
+      }, [vueY(`div`, {
         ref_key: `rootRef`,
         ref: Me,
         class: `fixed inset-0 z-[70] flex flex-col bg-[#fbfbfa] outline-none dark:bg-background`,
@@ -2240,36 +2240,36 @@ var Sr = [`aria-label`],
         },
         role: `dialog`,
         "aria-modal": `true`,
-        "aria-label": t(D)(`dayReplay.title`),
+        "aria-label": vueAn(D)(`dayReplay.title`),
         tabindex: `-1`
-      }, [w(`header`, Cr, [w(`div`, wr, [w(`h2`, Tr, y(t(D)(`dayReplay.title`)), 1), w(`span`, Er, y(Ze.value), 1)]), w(`div`, Dr, [w(`button`, {
+      }, [vueY(`header`, Cr, [vueY(`div`, wr, [vueY(`h2`, Tr, vueRr(vueAn(D)(`dayReplay.title`)), 1), vueY(`span`, Er, vueRr(Ze.value), 1)]), vueY(`div`, Dr, [vueY(`button`, {
         type: `button`,
         class: `flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs text-[#555] transition-colors hover:bg-black/[0.05] hover:text-[#111] disabled:cursor-not-allowed disabled:opacity-40 dark:text-muted-foreground dark:hover:bg-white/5 dark:hover:text-foreground`,
         disabled: !z.value || F.value || H.value,
         onClick: mt
-      }, [h(t(te), {
+      }, [vueK(vueAn(iconclapperboardT), {
         size: 14
-      }), r(` ` + y(t(D)(`dayReplay.exportVideo`)), 1)], 8, Or), w(`button`, {
+      }), vueO(` ` + vueRr(vueAn(D)(`dayReplay.exportVideo`)), 1)], 8, Or), vueY(`button`, {
         type: `button`,
         class: `flex size-8 items-center justify-center rounded-md text-[#888] transition-colors hover:bg-black/[0.05] hover:text-[#222] dark:text-muted-foreground dark:hover:bg-white/5 dark:hover:text-foreground`,
-        "aria-label": t(D)(`dayReplay.close`),
+        "aria-label": vueAn(D)(`dayReplay.close`),
         onClick: pt
-      }, [h(t(ee), {
+      }, [vueK(vueAn(lucideT), {
         size: 16
-      })], 8, kr)])]), w(`div`, Ar, [Ne.value ? (p(), i(`div`, jr, [h(t(ne), {
+      })], 8, kr)])]), vueY(`div`, Ar, [Ne.value ? (vueGt(), vueS(`div`, jr, [vueK(vueAn(beautifier), {
         size: 20,
         class: `animate-spin`
-      }), r(` ` + y(t(D)(`dayReplay.loading`)), 1)])) : R.value ? (p(), i(`div`, Mr, y(R.value), 1)) : !z.value || !K.value ? (p(), i(`div`, Nr, [w(`div`, Pr, [h(t(Fe), {
+      }), vueO(` ` + vueRr(vueAn(D)(`dayReplay.loading`)), 1)])) : R.value ? (vueGt(), vueS(`div`, Mr, vueRr(R.value), 1)) : !z.value || !K.value ? (vueGt(), vueS(`div`, Nr, [vueY(`div`, Pr, [vueK(vueAn(Fe), {
         size: 18,
         class: `text-[#bbb] dark:text-muted-foreground`
-      })]), w(`div`, Fr, [w(`p`, Ir, y(t(D)(`dayReplay.empty`)), 1), w(`p`, Lr, y(t(D)(`dayReplay.emptyDesc`)), 1)])])) : (p(), i(d, {
+      })]), vueY(`div`, Fr, [vueY(`p`, Ir, vueRr(vueAn(D)(`dayReplay.empty`)), 1), vueY(`p`, Lr, vueRr(vueAn(D)(`dayReplay.emptyDesc`)), 1)])])) : (vueGt(), vueS(vueC, {
         key: 3
-      }, [H.value ? (p(), i(`div`, Br, [w(`span`, Vr, y(Ve.value), 1), w(`span`, Hr, y(t(tt)), 1)])) : (p(), i(`div`, {
+      }, [H.value ? (vueGt(), vueS(`div`, Br, [vueY(`span`, Vr, vueRr(Ve.value), 1), vueY(`span`, Hr, vueRr(vueAn(tt)), 1)])) : (vueGt(), vueS(`div`, {
         key: 0,
-        class: e(X.value ? `absolute right-5 top-5 z-10 aspect-[16/10] w-[min(320px,34%)] overflow-hidden rounded-[10px] border border-black/8 bg-[#fbfbfa] shadow-sm dark:border-border dark:bg-background` : `absolute inset-0`)
-      }, [h(kt, {
+        class: vueN(X.value ? `absolute right-5 top-5 z-10 aspect-[16/10] w-[min(320px,34%)] overflow-hidden rounded-[10px] border border-black/8 bg-[#fbfbfa] shadow-sm dark:border-border dark:bg-background` : `absolute inset-0`)
+      }, [vueK(kt, {
         following: B.value,
-        "onUpdate:following": o[0] ||= e => B.value = e,
+        "onUpdate:following": renderCache[0] ||= e => B.value = e,
         class: `absolute inset-0`,
         street: K.value,
         span: {
@@ -2280,52 +2280,52 @@ var Sr = [`aria-label`],
         theme: be.value,
         minute: J.value,
         overview: V.value,
-        playing: t(G),
+        playing: vueAn(G),
         compact: X.value,
-        "current-label": t(tt),
+        "current-label": vueAn(tt),
         onSeek: lt,
-        onUnavailable: o[1] ||= e => H.value = true
-      }, null, 8, [`following`, `street`, `span`, `colors`, `theme`, `minute`, `overview`, `playing`, `compact`, `current-label`]), X.value ? (p(), i(`button`, {
+        onUnavailable: renderCache[1] ||= e => H.value = true
+      }, null, 8, [`following`, `street`, `span`, `colors`, `theme`, `minute`, `overview`, `playing`, `compact`, `current-label`]), X.value ? (vueGt(), vueS(`button`, {
         key: 0,
         type: `button`,
         class: `group absolute inset-0 flex cursor-pointer items-end justify-end p-2`,
-        "aria-label": t(D)(`dayReplay.screenshotCollapse`),
-        title: t(D)(`dayReplay.screenshotCollapse`),
-        onClick: o[2] ||= e => wt(false)
-      }, [w(`span`, zr, [h(t(ye), {
+        "aria-label": vueAn(D)(`dayReplay.screenshotCollapse`),
+        title: vueAn(D)(`dayReplay.screenshotCollapse`),
+        onClick: renderCache[2] ||= e => wt(false)
+      }, [vueY(`span`, zr, [vueK(vueAn(mainKn), {
         size: 12
-      })])], 8, Rr)) : C(``, true)], 2)), X.value ? (p(), i(`div`, Ur, [h(rt, {
+      })])], 8, Rr)) : vueX(``, true)], 2)), X.value ? (vueGt(), vueS(`div`, Ur, [vueK(rt, {
         bitmap: U.value
-      }, null, 8, [`bitmap`]), U.value ? C(``, true) : (p(), i(`p`, Wr, y(Ct.value), 1)), w(`button`, {
+      }, null, 8, [`bitmap`]), U.value ? vueX(``, true) : (vueGt(), vueS(`p`, Wr, vueRr(Ct.value), 1)), vueY(`button`, {
         type: `button`,
         class: `absolute left-5 top-5 flex h-7 items-center gap-1.5 rounded-md bg-white/90 px-2.5 text-xs text-[#555] shadow-sm ring-1 ring-black/5 transition-colors hover:text-[#111] dark:bg-black/50 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
-        onClick: o[3] ||= e => wt(false)
-      }, [h(t(re), {
+        onClick: renderCache[3] ||= e => wt(false)
+      }, [vueK(vueAn(iconminimizeT), {
         size: 13
-      }), r(` ` + y(t(D)(`dayReplay.screenshotCollapse`)), 1)])])) : C(``, true), !B.value && !H.value && !V.value && !X.value ? (p(), i(`button`, {
+      }), vueO(` ` + vueRr(vueAn(D)(`dayReplay.screenshotCollapse`)), 1)])])) : vueX(``, true), !B.value && !H.value && !V.value && !X.value ? (vueGt(), vueS(`button`, {
         key: 3,
         type: `button`,
         class: `absolute left-5 top-5 flex h-7 items-center gap-1.5 rounded-md bg-white/90 px-2.5 text-xs text-[#555] shadow-sm ring-1 ring-black/5 transition-colors hover:text-[#111] dark:bg-black/50 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
-        onClick: o[4] ||= e => B.value = true
-      }, [h(t(Pe), {
+        onClick: renderCache[4] ||= e => B.value = true
+      }, [vueK(vueAn(Pe), {
         size: 13
-      }), r(` ` + y(t(D)(`dayReplay.follow`)), 1)])) : C(``, true), h(E, {
+      }), vueO(` ` + vueRr(vueAn(D)(`dayReplay.follow`)), 1)])) : vueX(``, true), vueK(playerR, {
         name: `replay-fade`
       }, {
-        default: s(() => [St.value ? (p(), i(`button`, {
+        default: vueYt(() => [St.value ? (vueGt(), vueS(`button`, {
           key: 0,
           type: `button`,
           class: `group absolute right-5 top-5 aspect-[16/10] w-[min(320px,34%)] cursor-pointer overflow-hidden rounded-[10px] border border-black/8 bg-white shadow-sm dark:border-border dark:bg-card`,
-          "aria-label": t(D)(`dayReplay.screenshotExpand`),
-          title: t(D)(`dayReplay.screenshotExpand`),
-          onClick: o[5] ||= e => wt(true)
-        }, [h(rt, {
+          "aria-label": vueAn(D)(`dayReplay.screenshotExpand`),
+          title: vueAn(D)(`dayReplay.screenshotExpand`),
+          onClick: renderCache[5] ||= e => wt(true)
+        }, [vueK(rt, {
           bitmap: U.value
-        }, null, 8, [`bitmap`]), U.value ? C(``, true) : (p(), i(`span`, Kr, y(Ct.value), 1)), w(`span`, qr, [h(t(ye), {
+        }, null, 8, [`bitmap`]), U.value ? vueX(``, true) : (vueGt(), vueS(`span`, Kr, vueRr(Ct.value), 1)), vueY(`span`, qr, [vueK(vueAn(mainKn), {
           size: 12
-        })])], 8, Gr)) : C(``, true)]),
+        })])], 8, Gr)) : vueX(``, true)]),
         _: 1
-      }), V.value && Xe.value ? (p(), i(`div`, Jr, [h(Gt, {
+      }), V.value && Xe.value ? (vueGt(), vueS(`div`, Jr, [vueK(Gt, {
         summary: Xe.value,
         street: K.value,
         colors: q.value,
@@ -2333,29 +2333,29 @@ var Sr = [`aria-label`],
         "has-screenshots": z.value.hasScreenshots,
         onReplay: ct,
         onClose: pt
-      }, null, 8, [`summary`, `street`, `colors`, `date-label`, `has-screenshots`])])) : C(``, true)], 64))]), z.value && K.value ? (p(), i(`div`, Yr, [w(`div`, Xr, [w(`div`, Zr, [r(y(Ve.value), 1), Ye.value ? (p(), i(d, {
+      }, null, 8, [`summary`, `street`, `colors`, `date-label`, `has-screenshots`])])) : vueX(``, true)], 64))]), z.value && K.value ? (vueGt(), vueS(`div`, Yr, [vueY(`div`, Xr, [vueY(`div`, Zr, [vueO(vueRr(Ve.value), 1), Ye.value ? (vueGt(), vueS(vueC, {
         key: 0
-      }, [r(` · ` + y(t(D)(`dayReplay.fastForward`)), 1)], 64)) : C(``, true)]), w(`div`, Qr, [h(E, {
+      }, [vueO(` · ` + vueRr(vueAn(D)(`dayReplay.fastForward`)), 1)], 64)) : vueX(``, true)]), vueY(`div`, Qr, [vueK(playerR, {
         name: `replay-fade`
       }, {
-        default: s(() => [t(et) ? (p(), i(`p`, {
-          key: t(et).id,
+        default: vueYt(() => [vueAn(et) ? (vueGt(), vueS(`p`, {
+          key: vueAn(et).id,
           class: `absolute inset-x-0 top-0 line-clamp-2 text-center text-sm leading-[22px] text-[#333] dark:text-foreground`
-        }, [t(et).category ? (p(), i(`span`, $r, y(handler(t(et).category)) + ` · `, 1)) : C(``, true), r(y(t(et).summary), 1)])) : C(``, true)]),
+        }, [vueAn(et).category ? (vueGt(), vueS(`span`, $r, vueRr(handler(vueAn(et).category)) + ` · `, 1)) : vueX(``, true), vueO(vueRr(vueAn(et).summary), 1)])) : vueX(``, true)]),
         _: 1
-      })])]), w(`div`, ei, [w(`button`, {
+      })])]), vueY(`div`, ei, [vueY(`button`, {
         type: `button`,
         class: `flex size-9 shrink-0 items-center justify-center rounded-full bg-[#111] text-white transition-colors hover:bg-[#333] dark:bg-foreground dark:text-background dark:hover:bg-foreground/85`,
-        "aria-label": t(G) ? t(D)(`dayReplay.pause`) : t(D)(`dayReplay.play`),
+        "aria-label": vueAn(G) ? vueAn(D)(`dayReplay.pause`) : vueAn(D)(`dayReplay.play`),
         onClick: st
-      }, [t(G) ? (p(), l(t(ie), {
+      }, [vueAn(G) ? (vueGt(), vueB(vueAn(iconpauseT), {
         key: 0,
         size: 15
-      })) : (p(), l(t(fe), {
+      })) : (vueGt(), vueB(vueAn(mainTn), {
         key: 1,
         size: 15,
         class: `translate-x-px`
-      }))], 8, ti), h(at, {
+      }))], 8, ti), vueK(at, {
         class: `flex-1`,
         street: K.value,
         colors: q.value,
@@ -2363,42 +2363,42 @@ var Sr = [`aria-label`],
         minute: J.value,
         "start-minute": Ue.value,
         "end-minute": Ke.value,
-        label: t(D)(`dayReplay.progress`),
+        label: vueAn(D)(`dayReplay.progress`),
         onSeek: lt,
         onScrubStart: ut,
         onScrubEnd: dt
-      }, null, 8, [`street`, `colors`, `theme`, `minute`, `start-minute`, `end-minute`, `label`]), w(`div`, ni, [(p(true), i(d, null, a(t(xn), n => (p(), i(`button`, {
+      }, null, 8, [`street`, `colors`, `theme`, `minute`, `start-minute`, `end-minute`, `label`]), vueY(`div`, ni, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(xn), n => (vueGt(), vueS(`button`, {
         key: n,
         type: `button`,
-        class: e([`h-6 min-w-9 rounded-[5px] px-1.5 text-xs tabular-nums transition-colors`, t(Be) === n ? `bg-white text-[#111] shadow-sm dark:bg-white/15 dark:text-foreground` : `text-[#888] hover:text-[#333] dark:text-muted-foreground dark:hover:text-foreground`]),
+        class: vueN([`h-6 min-w-9 rounded-[5px] px-1.5 text-xs tabular-nums transition-colors`, vueAn(Be) === n ? `bg-white text-[#111] shadow-sm dark:bg-white/15 dark:text-foreground` : `text-[#888] hover:text-[#333] dark:text-muted-foreground dark:hover:text-foreground`]),
         onClick: e => ft(n)
-      }, y(n) + `× `, 11, ri))), 128))])]), w(`p`, ii, y(t(D)(`dayReplay.shortcutHint`)), 1)])) : C(``, true), P.value && z.value ? (p(), i(`div`, {
+      }, vueRr(n) + `× `, 11, ri))), 128))])]), vueY(`p`, ii, vueRr(vueAn(D)(`dayReplay.shortcutHint`)), 1)])) : vueX(``, true), P.value && z.value ? (vueGt(), vueS(`div`, {
         key: 1,
         class: `absolute inset-0 z-20 flex items-center justify-center bg-[#fbfbfa]/80 backdrop-blur-[2px] dark:bg-background/80`,
-        onClick: T(ht, [`self`])
-      }, [h(nt, {
+        onClick: playerE(ht, [`self`])
+      }, [vueK(nt, {
         options: Te.value,
         "has-screenshots": yt.value,
         "timeline-duration-ms": z.value.durationMs,
         onConfirm: gt,
         onCancel: ht
-      }, null, 8, [`options`, `has-screenshots`, `timeline-duration-ms`])])) : C(``, true), F.value ? (p(), i(`div`, ai, [w(`div`, oi, [w(`div`, si, [h(t(ne), {
+      }, null, 8, [`options`, `has-screenshots`, `timeline-duration-ms`])])) : vueX(``, true), F.value ? (vueGt(), vueS(`div`, ai, [vueY(`div`, oi, [vueY(`div`, si, [vueK(vueAn(beautifier), {
         size: 15,
         class: `animate-spin text-[#999]`
-      }), r(` ` + y(t(D)(`dayReplay.exporting`)), 1)]), w(`p`, ci, y(De.value === `screenshots` ? t(D)(`dayReplay.exportPreparingScreenshots`) : t(D)(`dayReplay.exportHint`, {
+      }), vueO(` ` + vueRr(vueAn(D)(`dayReplay.exporting`)), 1)]), vueY(`p`, ci, vueRr(De.value === `screenshots` ? vueAn(D)(`dayReplay.exportPreparingScreenshots`) : vueAn(D)(`dayReplay.exportHint`, {
         seconds: Ae.value,
         quality: je.value,
         fps: I.value?.frameRate ?? 60
-      })), 1), w(`div`, li, [w(`div`, {
+      })), 1), vueY(`div`, li, [vueY(`div`, {
         class: `h-full rounded-full bg-[#10b981] transition-[width] duration-200`,
-        style: _({
+        style: vueNr({
           width: `${ke.value}%`
         })
-      }, null, 4)]), w(`div`, ui, [w(`span`, di, y(ke.value) + `%`, 1), w(`button`, {
+      }, null, 4)]), vueY(`div`, ui, [vueY(`span`, di, vueRr(ke.value) + `%`, 1), vueY(`button`, {
         type: `button`,
         class: `h-7 rounded-md px-2.5 text-xs text-[#666] transition-colors hover:bg-black/[0.05] dark:text-muted-foreground dark:hover:bg-white/5`,
         onClick: Y
-      }, y(t(D)(`dayReplay.exportCancel`)), 1)])])])) : C(``, true)], 8, Sr)]));
+      }, vueRr(vueAn(D)(`dayReplay.exportCancel`)), 1)])])])) : vueX(``, true)], 8, Sr)]));
     }
   }), [[`__scopeId`, `data-v-499495b2`]]);
 export { mi as default };

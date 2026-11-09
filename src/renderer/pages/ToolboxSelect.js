@@ -1,11 +1,11 @@
-import { $n as e, An as t, E as n, Lt as r, O as i, S as a, St as o, Yt as s, b as c, c as l, gt as u, j as d, k as f, rr as p, tt as m, v as h, y as g } from "../chunks/vue-i18n.runtime.js";
-import { _t as _, bt as v, vt as y, xt as b, yt as x } from "../chunks/main.js";
+import { $n as vueN, An as vueAn, E as vueE, Lt as vueLt, O as vueO, S as vueS, St as vueSt, Yt as vueYt, b as vueB, c as vueC, gt as vueGt, j as vueJ, k as vueK, rr as vueRr, tt as vueTt, v as vueV, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { _t as mainT, bt as mainBt, vt as mainVt, xt as mainXt, yt as mainYt } from "../chunks/main.js";
 var S = {
     class: `text-[11px] font-normal text-muted-foreground`
   },
-  C = d({
+  C = vueJ({
     __name: `ToolboxSelect`,
-    props: m({
+    props: vueTt({
       options: {},
       disabled: {
         type: Boolean
@@ -30,41 +30,41 @@ var S = {
     emits: [`update:modelValue`],
     setup(options) {
       let optionsAlias = options,
-        C = r(options, `modelValue`),
-        w = h(() => optionsAlias.compact ? `w-full data-[size=default]:h-7 text-xs text-muted-foreground` : optionsAlias.comfortable ? `w-full data-[size=default]:h-9 text-sm` : `w-full data-[size=default]:h-9 text-xs font-medium`),
-        T = h(() => optionsAlias.comfortable ? `text-sm` : `text-xs`);
+        C = vueLt(options, `modelValue`),
+        w = vueV(() => optionsAlias.compact ? `w-full data-[size=default]:h-7 text-xs text-muted-foreground` : optionsAlias.comfortable ? `w-full data-[size=default]:h-9 text-sm` : `w-full data-[size=default]:h-9 text-xs font-medium`),
+        T = vueV(() => optionsAlias.comfortable ? `text-sm` : `text-xs`);
       function E(e) {
         typeof e == `string` && (C.value = e);
       }
-      return (ctx, renderCache) => (u(), c(t(b), {
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(mainXt), {
         "model-value": C.value,
         disabled: options.disabled,
         "onUpdate:modelValue": E
       }, {
-        default: s(() => [f(t(y), {
-          class: e(w.value),
+        default: vueYt(() => [vueK(vueAn(mainVt), {
+          class: vueN(w.value),
           "aria-label": options.label
         }, {
-          default: s(() => [f(t(_), {
+          default: vueYt(() => [vueK(vueAn(mainT), {
             placeholder: options.placeholder
           }, null, 8, [`placeholder`])]),
           _: 1
-        }, 8, [`class`, `aria-label`]), f(t(v), {
+        }, 8, [`class`, `aria-label`]), vueK(vueAn(mainBt), {
           position: `popper`,
           align: `start`,
-          class: e(options.compact ? `min-w-[220px] max-w-[300px]` : undefined)
+          class: vueN(options.compact ? `min-w-[220px] max-w-[300px]` : undefined)
         }, {
-          default: s(() => [(u(true), a(l, null, o(options.options, r => (u(), c(t(x), {
+          default: vueYt(() => [(vueGt(true), vueS(vueC, null, vueSt(options.options, r => (vueGt(), vueB(vueAn(mainYt), {
             key: r.value,
             value: r.value,
             disabled: r.disabled,
-            class: e([T.value, r.description ? `flex-col items-start gap-0.5 py-1.5` : `py-1.5`])
-          }, n({
-            default: s(() => [i(p(r.label) + ` `, 1)]),
+            class: vueN([T.value, r.description ? `flex-col items-start gap-0.5 py-1.5` : `py-1.5`])
+          }, vueE({
+            default: vueYt(() => [vueO(vueRr(r.label) + ` `, 1)]),
             _: 2
           }, [r.description ? {
             name: `extra`,
-            fn: s(() => [g(`small`, S, p(r.description), 1)]),
+            fn: vueYt(() => [vueY(`small`, S, vueRr(r.description), 1)]),
             key: `0`
           } : undefined]), 1032, [`value`, `disabled`, `class`]))), 128))]),
           _: 1

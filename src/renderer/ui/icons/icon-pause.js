@@ -1,5 +1,5 @@
-import { r as e } from "./lucide-icons.js";
-var t = e(`pause`, [[`rect`, {
+import { r as lucideR } from "./lucide-icons.js";
+var t = lucideR(`pause`, [[`rect`, {
   x: `14`,
   y: `3`,
   width: `5`,

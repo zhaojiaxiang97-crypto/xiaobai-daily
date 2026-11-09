@@ -1,13 +1,13 @@
-import { $ as e, H as t, V as n, at as r, bt as i, h as a, j as o, lt as s, xt as c, yt as l, z as u } from "./Switch.js";
-import { An as d, Ct as f, Dn as p, Et as m, S as h, St as g, Tn as _, Yt as v, b as y, bn as b, c as x, gt as S, j as C, k as w, mt as T, nr as E, nt as D, ut as O, v as k, x as A } from "../chunks/vue-i18n.runtime.js";
-import { n as j, r as ee, t as M } from "./Collection.js";
+import { $ as uiSwitch, H as uiSwitchH, V as uiSwitchV, at as uiSwitchAt, bt as uiSwitchBt, h as a, j as uiSwitchJ, lt as uiSwitchLt, xt as uiSwitchXt, yt as uiSwitchYt, z as uiSwitchZ } from "./Switch.js";
+import { An as vueAn, Ct as vueCt, Dn as vueDn, Et as vueEt, S as vueS, St as vueSt, Tn as vueTn, Yt as vueYt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, mt as vueMt, nr as vueNr, nt as vueNt, ut as vueUt, v as vueV, x as vueX } from "../chunks/vue-i18n.runtime.js";
+import { n as CollectionN, r as CollectionR, t as CollectionT } from "./Collection.js";
 function N(e = [], t, n) {
   let r = [...e];
   return r[n] = t, r.sort((left, right) => left - right);
 }
 function P(e, t, n) {
   let r = 100 / (n - t) * (e - t);
-  return i(r, 0, 100);
+  return uiSwitchBt(r, 0, 100);
 }
 function F(e, t) {
   if (t > 2) return `Value ${e + 1} of ${t}`;
@@ -55,8 +55,8 @@ var U = [`PageUp`, `PageDown`],
     "from-bottom": [`Home`, `PageDown`, `ArrowDown`, `ArrowLeft`],
     "from-top": [`Home`, `PageUp`, `ArrowUp`, `ArrowLeft`]
   },
-  [K, q] = l([`SliderVertical`, `SliderHorizontal`]),
-  J = C({
+  [K, q] = uiSwitchYt([`SliderVertical`, `SliderHorizontal`]),
+  J = vueJ({
     __name: `SliderHorizontal`,
     props: {
       dir: {
@@ -87,15 +87,15 @@ var U = [`PageUp`, `PageDown`],
           min: o,
           dir: s,
           inverted: c
-        } = p(eventAlias),
+        } = vueDn(eventAlias),
         {
           forwardRef: l,
           currentElement: u
-        } = n(),
+        } = uiSwitchV(),
         m = X(),
-        h = b(),
-        g = b(),
-        _ = k(() => s?.value !== `rtl` && !c.value || s?.value !== `ltr` && c.value);
+        h = vueBn(),
+        g = vueBn(),
+        _ = vueV(() => s?.value !== `rtl` && !c.value || s?.value !== `ltr` && c.value);
       function x(e, t) {
         let fallbackValue = g.value || u.value.getBoundingClientRect(),
           r = [...m.thumbElements.value][m.valueIndexToChangeRef.value],
@@ -105,42 +105,42 @@ var U = [`PageUp`, `PageDown`],
         return g.value = fallbackValue, s(t ? e.clientX - fallbackValue.left - i / 2 : e.clientX - fallbackValue.left - (h.value ?? 0));
       }
       return q({
-        startEdge: k(() => _.value ? `left` : `right`),
-        endEdge: k(() => _.value ? `right` : `left`),
-        direction: k(() => _.value ? 1 : -1),
+        startEdge: vueV(() => _.value ? `left` : `right`),
+        endEdge: vueV(() => _.value ? `right` : `left`),
+        direction: vueV(() => _.value ? 1 : -1),
         size: `width`
-      }), (e, t) => (S(), y($, {
-        ref: d(l),
-        dir: d(s),
+      }), (e, renderCache) => (vueGt(), vueB($, {
+        ref: vueAn(l),
+        dir: vueAn(s),
         "data-orientation": `horizontal`,
-        style: E({
-          "--reka-slider-thumb-transform": !_.value && d(m).thumbAlignment.value === `overflow` ? `translateX(50%)` : `translateX(-50%)`
+        style: vueNr({
+          "--reka-slider-thumb-transform": !_.value && vueAn(m).thumbAlignment.value === `overflow` ? `translateX(50%)` : `translateX(-50%)`
         }),
-        onSlideStart: t[0] ||= e => {
+        onSlideStart: renderCache[0] ||= e => {
           let t = x(e, true);
           emitAlias(`slideStart`, t);
         },
-        onSlideMove: t[1] ||= e => {
+        onSlideMove: renderCache[1] ||= e => {
           let t = x(e);
           emitAlias(`slideMove`, t);
         },
-        onSlideEnd: t[2] ||= () => {
+        onSlideEnd: renderCache[2] ||= () => {
           g.value = undefined, h.value = undefined, emitAlias(`slideEnd`);
         },
-        onStepKeyDown: t[3] ||= e => {
+        onStepKeyDown: renderCache[3] ||= e => {
           let t = _.value ? `from-left` : `from-right`,
-            includesResult = d(options)[t].includes(e.key);
+            includesResult = vueAn(options)[t].includes(e.key);
           emitAlias(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
-        onEndKeyDown: t[4] ||= e => emitAlias(`endKeyDown`, e),
-        onHomeKeyDown: t[5] ||= e => emitAlias(`homeKeyDown`, e)
+        onEndKeyDown: renderCache[4] ||= e => emitAlias(`endKeyDown`, e),
+        onHomeKeyDown: renderCache[5] ||= e => emitAlias(`homeKeyDown`, e)
       }, {
-        default: v(() => [f(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 8, [`dir`, `style`]));
     }
   }),
-  Y = C({
+  Y = vueJ({
     __name: `SliderVertical`,
     props: {
       min: {
@@ -166,15 +166,15 @@ var U = [`PageUp`, `PageDown`],
           max: a,
           min: o,
           inverted: s
-        } = p(eventAlias),
+        } = vueDn(eventAlias),
         c = X(),
         {
           forwardRef: l,
           currentElement: u
-        } = n(),
-        m = b(),
-        h = b(),
-        g = k(() => !s.value);
+        } = uiSwitchV(),
+        m = vueBn(),
+        h = vueBn(),
+        g = vueV(() => !s.value);
       function _(e, t) {
         let fallbackValue = h.value || u.value.getBoundingClientRect(),
           r = [...c.thumbElements.value][c.valueIndexToChangeRef.value],
@@ -185,15 +185,15 @@ var U = [`PageUp`, `PageDown`],
         return h.value = fallbackValue, s(l);
       }
       return q({
-        startEdge: k(() => g.value ? `bottom` : `top`),
-        endEdge: k(() => g.value ? `top` : `bottom`),
-        direction: k(() => g.value ? 1 : -1),
+        startEdge: vueV(() => g.value ? `bottom` : `top`),
+        endEdge: vueV(() => g.value ? `top` : `bottom`),
+        direction: vueV(() => g.value ? 1 : -1),
         size: `height`
-      }), (e, t) => (S(), y($, {
-        ref: d(l),
+      }), (e, t) => (vueGt(), vueB($, {
+        ref: vueAn(l),
         "data-orientation": `vertical`,
-        style: E({
-          "--reka-slider-thumb-transform": !g.value && d(c).thumbAlignment.value === `overflow` ? `translateY(-50%)` : `translateY(50%)`
+        style: vueNr({
+          "--reka-slider-thumb-transform": !g.value && vueAn(c).thumbAlignment.value === `overflow` ? `translateY(-50%)` : `translateY(50%)`
         }),
         onSlideStart: t[0] ||= e => {
           let t = _(e, true);
@@ -208,19 +208,19 @@ var U = [`PageUp`, `PageDown`],
         },
         onStepKeyDown: t[3] ||= e => {
           let t = g.value ? `from-bottom` : `from-top`,
-            includesResult = d(options)[t].includes(e.key);
+            includesResult = vueAn(options)[t].includes(e.key);
           emitAlias(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
         onEndKeyDown: t[4] ||= e => emitAlias(`endKeyDown`, e),
         onHomeKeyDown: t[5] ||= e => emitAlias(`homeKeyDown`, e)
       }, {
-        default: v(() => [f(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 8, [`style`]));
     }
   }),
-  [X, Z] = l(`SliderRoot`),
-  Q = C({
+  [X, Z] = uiSwitchYt(`SliderRoot`),
+  Q = vueJ({
     inheritAttrs: false,
     __name: `SliderRoot`,
     props: {
@@ -310,25 +310,25 @@ var U = [`PageUp`, `PageDown`],
           disabled: C,
           thumbAlignment: w,
           dir: T
-        } = p(eventAlias),
-        E = ee(T),
+        } = vueDn(eventAlias),
+        E = CollectionR(T),
         {
           forwardRef: O,
           currentElement: j
-        } = n(),
-        P = t(j),
+        } = uiSwitchV(),
+        P = uiSwitchH(j),
         {
           CollectionSlot: F
-        } = M({
+        } = CollectionT({
           isProvider: true
         }),
-        L = r(eventAlias, `modelValue`, emitAlias, {
+        L = uiSwitchAt(eventAlias, `modelValue`, emitAlias, {
           defaultValue: eventAlias.defaultValue,
           passive: eventAlias.modelValue === undefined
         }),
-        R = k(() => Array.isArray(L.value) ? [...L.value] : []),
-        B = b(0),
-        G = b(R.value);
+        R = vueV(() => Array.isArray(L.value) ? [...L.value] : []),
+        B = vueBn(0),
+        G = vueBn(R.value);
       function K(e) {
         Q(e, I(R.value, e));
       }
@@ -337,7 +337,7 @@ var U = [`PageUp`, `PageDown`],
       }
       function X() {
         let e = G.value[B.value];
-        R.value[B.value] !== e && emitAlias(`valueCommit`, _(R.value));
+        R.value[B.value] !== e && emitAlias(`valueCommit`, vueTn(R.value));
       }
       function Q(e, t, {
         commit: n
@@ -346,7 +346,7 @@ var U = [`PageUp`, `PageDown`],
       }) {
         let r = V(h.value),
           a = H(Math.round((e - l.value) / h.value) * h.value + l.value, r),
-          o = i(a, l.value, u.value),
+          o = uiSwitchBt(a, l.value, u.value),
           s = N(R.value, o, t);
         if (z(s, g.value * h.value)) {
           B.value = s.indexOf(o);
@@ -354,7 +354,7 @@ var U = [`PageUp`, `PageDown`],
           e && n && emitAlias(`valueCommit`, s), e && ($.value[B.value]?.focus(), L.value = s);
         }
       }
-      let $ = b([]);
+      let $ = vueBn([]);
       return Z({
         modelValue: L,
         currentModelValue: R,
@@ -365,58 +365,58 @@ var U = [`PageUp`, `PageDown`],
         max: u,
         disabled: C,
         thumbAlignment: w
-      }), (e, t) => (S(), y(d(F), null, {
-        default: v(() => [(S(), y(m(d(x) === `horizontal` ? J : Y), D(e.$attrs, {
-          ref: d(O),
+      }), (e, t) => (vueGt(), vueB(vueAn(F), null, {
+        default: vueYt(() => [(vueGt(), vueB(vueEt(vueAn(x) === `horizontal` ? J : Y), vueNt(e.$attrs, {
+          ref: vueAn(O),
           "as-child": e.asChild,
           as: e.as,
-          min: d(l),
-          max: d(u),
-          dir: d(E),
+          min: vueAn(l),
+          max: vueAn(u),
+          dir: vueAn(E),
           inverted: e.inverted,
-          "aria-disabled": d(C),
-          "data-disabled": d(C) ? `` : undefined,
+          "aria-disabled": vueAn(C),
+          "data-disabled": vueAn(C) ? `` : undefined,
           onPointerdown: t[0] ||= () => {
-            d(C) || (G.value = R.value);
+            vueAn(C) || (G.value = R.value);
           },
-          onSlideStart: t[1] ||= e => !d(C) && K(e),
-          onSlideMove: t[2] ||= e => !d(C) && q(e),
-          onSlideEnd: t[3] ||= e => !d(C) && X(),
-          onHomeKeyDown: t[4] ||= e => !d(C) && Q(d(l), 0, {
+          onSlideStart: t[1] ||= e => !vueAn(C) && K(e),
+          onSlideMove: t[2] ||= e => !vueAn(C) && q(e),
+          onSlideEnd: t[3] ||= e => !vueAn(C) && X(),
+          onHomeKeyDown: t[4] ||= e => !vueAn(C) && Q(vueAn(l), 0, {
             commit: true
           }),
-          onEndKeyDown: t[5] ||= e => !d(C) && Q(d(u), R.value.length - 1, {
+          onEndKeyDown: t[5] ||= e => !vueAn(C) && Q(vueAn(u), R.value.length - 1, {
             commit: true
           }),
           onStepKeyDown: t[6] ||= (e, t) => {
-            if (!d(C)) {
-              let n = d(U).includes(e.key) || e.shiftKey && d(W).includes(e.key) ? 10 : 1,
+            if (!vueAn(C)) {
+              let n = vueAn(U).includes(e.key) || e.shiftKey && vueAn(W).includes(e.key) ? 10 : 1,
                 r = B.value,
                 i = R.value[r];
-              Q(i + d(h) * n * t, r, {
+              Q(i + vueAn(h) * n * t, r, {
                 commit: true
               });
             }
           }
         }), {
-          default: v(() => [f(e.$slots, `default`, {
-            modelValue: d(L)
-          }), d(P) && e.name ? (S(), y(d(a), {
+          default: vueYt(() => [vueCt(e.$slots, `default`, {
+            modelValue: vueAn(L)
+          }), vueAn(P) && e.name ? (vueGt(), vueB(vueAn(a), {
             key: 0,
             type: `number`,
-            value: d(L),
+            value: vueAn(L),
             name: e.name,
             required: e.required,
-            disabled: d(C),
-            step: d(h)
-          }, null, 8, [`value`, `name`, `required`, `disabled`, `step`])) : A(`v-if`, true)]),
+            disabled: vueAn(C),
+            step: vueAn(h)
+          }, null, 8, [`value`, `name`, `required`, `disabled`, `step`])) : vueX(`v-if`, true)]),
           _: 3
         }, 16, [`as-child`, `as`, `min`, `max`, `dir`, `inverted`, `aria-disabled`, `data-disabled`]))]),
         _: 3
       }));
     }
   }),
-  $ = C({
+  $ = vueJ({
     __name: `SliderImpl`,
     props: {
       asChild: {
@@ -436,15 +436,15 @@ var U = [`PageUp`, `PageDown`],
       let eventAlias = event,
         emitAlias = emit,
         i = X();
-      return (ctx, renderCache) => (S(), y(d(o), D({
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitchJ), vueNt({
         "data-slider-impl": ``
       }, eventAlias, {
         onKeydown: renderCache[0] ||= e => {
-          e.key === `Home` ? (emitAlias(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (emitAlias(`endKeyDown`, e), e.preventDefault()) : d(U).concat(d(W)).includes(e.key) && (emitAlias(`stepKeyDown`, e), e.preventDefault());
+          e.key === `Home` ? (emitAlias(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (emitAlias(`endKeyDown`, e), e.preventDefault()) : vueAn(U).concat(vueAn(W)).includes(e.key) && (emitAlias(`stepKeyDown`, e), e.preventDefault());
         },
         onPointerdown: renderCache[1] ||= e => {
           let t = e.target;
-          t.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(t) ? t.focus() : emitAlias(`slideStart`, e);
+          t.setPointerCapture(e.pointerId), e.preventDefault(), vueAn(i).thumbElements.value.includes(t) ? t.focus() : emitAlias(`slideStart`, e);
         },
         onPointermove: renderCache[2] ||= e => {
           e.target.hasPointerCapture(e.pointerId) && emitAlias(`slideMove`, e);
@@ -454,12 +454,12 @@ var U = [`PageUp`, `PageDown`],
           t.hasPointerCapture(e.pointerId) && (t.releasePointerCapture(e.pointerId), emitAlias(`slideEnd`, e));
         }
       }), {
-        default: v(() => [f(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  te = C({
+  te = vueJ({
     __name: `SliderRange`,
     props: {
       asChild: {
@@ -475,26 +475,26 @@ var U = [`PageUp`, `PageDown`],
     setup(props) {
       let t = X(),
         r = K();
-      n();
-      let i = k(() => t.currentModelValue.value.map(item => P(item, t.min.value, t.max.value))),
-        a = k(() => t.currentModelValue.value.length > 1 ? Math.min(...i.value) : 0),
-        s = k(() => 100 - Math.max(...i.value, 0));
-      return (ctx, renderCache) => (S(), y(d(o), {
-        "data-disabled": d(t).disabled.value ? `` : undefined,
-        "data-orientation": d(t).orientation.value,
+      uiSwitchV();
+      let i = vueV(() => t.currentModelValue.value.map(item => P(item, t.min.value, t.max.value))),
+        a = vueV(() => t.currentModelValue.value.length > 1 ? Math.min(...i.value) : 0),
+        s = vueV(() => 100 - Math.max(...i.value, 0));
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitchJ), {
+        "data-disabled": vueAn(t).disabled.value ? `` : undefined,
+        "data-orientation": vueAn(t).orientation.value,
         "as-child": ctx.asChild,
         as: ctx.as,
-        style: E({
-          [d(r).startEdge.value]: `${a.value}%`,
-          [d(r).endEdge.value]: `${s.value}%`
+        style: vueNr({
+          [vueAn(r).startEdge.value]: `${a.value}%`,
+          [vueAn(r).endEdge.value]: `${s.value}%`
         })
       }, {
-        default: v(() => [f(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`data-disabled`, `data-orientation`, `as-child`, `as`, `style`]));
     }
   }),
-  ne = C({
+  ne = vueJ({
     inheritAttrs: false,
     __name: `SliderThumbImpl`,
     props: {
@@ -518,54 +518,54 @@ var U = [`PageUp`, `PageDown`],
         {
           forwardRef: s,
           currentElement: c
-        } = n(),
+        } = uiSwitchV(),
         {
           CollectionItem: l
-        } = M(),
-        u = k(() => i.modelValue?.value?.[propsAlias.index]),
-        p = k(() => u.value === undefined ? 0 : P(u.value, i.min.value ?? 0, i.max.value ?? 100)),
-        m = k(() => F(propsAlias.index, i.modelValue?.value?.length ?? 0)),
-        h = j(c),
-        g = k(() => h[a.size].value),
-        _ = k(() => i.thumbAlignment.value === `overflow` || !g.value ? 0 : L(g.value, p.value, a.direction.value)),
-        b = e();
-      return O(() => {
+        } = CollectionT(),
+        u = vueV(() => i.modelValue?.value?.[propsAlias.index]),
+        p = vueV(() => u.value === undefined ? 0 : P(u.value, i.min.value ?? 0, i.max.value ?? 100)),
+        m = vueV(() => F(propsAlias.index, i.modelValue?.value?.length ?? 0)),
+        h = CollectionN(c),
+        g = vueV(() => h[a.size].value),
+        _ = vueV(() => i.thumbAlignment.value === `overflow` || !g.value ? 0 : L(g.value, p.value, a.direction.value)),
+        b = uiSwitch();
+      return vueUt(() => {
         i.thumbElements.value.push(c.value);
-      }), T(() => {
+      }), vueMt(() => {
         let fallbackValue = i.thumbElements.value.findIndex(item => item === c.value) ?? -1;
         i.thumbElements.value.splice(fallbackValue, 1);
-      }), (e, t) => (S(), y(d(l), null, {
-        default: v(() => [w(d(o), D(e.$attrs, {
-          ref: d(s),
+      }), (e, t) => (vueGt(), vueB(vueAn(l), null, {
+        default: vueYt(() => [vueK(vueAn(uiSwitchJ), vueNt(e.$attrs, {
+          ref: vueAn(s),
           role: `slider`,
-          tabindex: d(i).disabled.value ? undefined : 0,
+          tabindex: vueAn(i).disabled.value ? undefined : 0,
           "aria-label": e.$attrs[`aria-label`] || m.value,
-          "data-disabled": d(i).disabled.value ? `` : undefined,
-          "data-orientation": d(i).orientation.value,
+          "data-disabled": vueAn(i).disabled.value ? `` : undefined,
+          "data-orientation": vueAn(i).orientation.value,
           "aria-valuenow": u.value,
-          "aria-valuemin": d(i).min.value,
-          "aria-valuemax": d(i).max.value,
-          "aria-orientation": d(i).orientation.value,
+          "aria-valuemin": vueAn(i).min.value,
+          "aria-valuemax": vueAn(i).max.value,
+          "aria-orientation": vueAn(i).orientation.value,
           "as-child": e.asChild,
           as: e.as,
           style: {
             transform: `var(--reka-slider-thumb-transform)`,
             position: `absolute`,
-            [d(a).startEdge.value]: `calc(${p.value}% + ${_.value}px)`,
-            display: !d(b) && u.value === undefined ? `none` : undefined
+            [vueAn(a).startEdge.value]: `calc(${p.value}% + ${_.value}px)`,
+            display: !vueAn(b) && u.value === undefined ? `none` : undefined
           },
           onFocus: t[0] ||= () => {
-            d(i).valueIndexToChangeRef.value = e.index;
+            vueAn(i).valueIndexToChangeRef.value = e.index;
           }
         }), {
-          default: v(() => [f(e.$slots, `default`)]),
+          default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
         }, 16, [`tabindex`, `aria-label`, `data-disabled`, `data-orientation`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-orientation`, `as-child`, `as`, `style`])]),
         _: 3
       }));
     }
   }),
-  re = C({
+  re = vueJ({
     __name: `SliderThumb`,
     props: {
       asChild: {
@@ -582,23 +582,23 @@ var U = [`PageUp`, `PageDown`],
       let propsAlias = props,
         {
           getItems: r
-        } = M(),
+        } = CollectionT(),
         {
           forwardRef: i,
           currentElement: a
-        } = n(),
-        o = k(() => a.value ? r(true).findIndex(item => item.ref === a.value) : -1);
-      return (ctx, renderCache) => (S(), y(ne, D({
-        ref: d(i)
+        } = uiSwitchV(),
+        o = vueV(() => a.value ? r(true).findIndex(item => item.ref === a.value) : -1);
+      return (ctx, renderCache) => (vueGt(), vueB(ne, vueNt({
+        ref: vueAn(i)
       }, propsAlias, {
         index: o.value
       }), {
-        default: v(() => [f(ctx.$slots, `default`)]),
+        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`index`]));
     }
   }),
-  ie = C({
+  ie = vueJ({
     __name: `SliderTrack`,
     props: {
       asChild: {
@@ -613,18 +613,18 @@ var U = [`PageUp`, `PageDown`],
     },
     setup(props) {
       let t = X();
-      return n(), (e, n) => (S(), y(d(o), {
+      return uiSwitchV(), (e, n) => (vueGt(), vueB(vueAn(uiSwitchJ), {
         "as-child": e.asChild,
         as: e.as,
-        "data-disabled": d(t).disabled.value ? `` : undefined,
-        "data-orientation": d(t).orientation.value
+        "data-disabled": vueAn(t).disabled.value ? `` : undefined,
+        "data-orientation": vueAn(t).orientation.value
       }, {
-        default: v(() => [f(e.$slots, `default`)]),
+        default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 8, [`as-child`, `as`, `data-disabled`, `data-orientation`]));
     }
   }),
-  ae = C({
+  ae = vueJ({
     __name: `Slider`,
     props: {
       defaultValue: {},
@@ -660,29 +660,29 @@ var U = [`PageUp`, `PageDown`],
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = s(propsAlias, `class`),
-        a = u(i, emitAlias);
-      return (ctx, renderCache) => (S(), y(d(Q), D({
+        i = uiSwitchLt(propsAlias, `class`),
+        a = uiSwitchZ(i, emitAlias);
+      return (ctx, renderCache) => (vueGt(), vueB(vueAn(Q), vueNt({
         "data-slot": `slider`,
         "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
-        class: d(c)(`data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col`, propsAlias.class)
-      }, d(a)), {
-        default: v(({
+        class: vueAn(uiSwitchXt)(`data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col`, propsAlias.class)
+      }, vueAn(a)), {
+        default: vueYt(({
           modelValue: e
-        }) => [w(d(ie), {
+        }) => [vueK(vueAn(ie), {
           "data-slot": `slider-track`,
           "data-horizontal": propsAlias.orientation === `vertical` ? undefined : ``,
           "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
           class: `bg-muted rounded-full data-horizontal:h-1 data-vertical:w-1 relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full`
         }, {
-          default: v(() => [w(d(te), {
+          default: vueYt(() => [vueK(vueAn(te), {
             "data-slot": `slider-range`,
             "data-horizontal": propsAlias.orientation === `vertical` ? undefined : ``,
             "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
             class: `bg-primary absolute select-none data-horizontal:h-full data-vertical:w-full`
           }, null, 8, [`data-horizontal`, `data-vertical`])]),
           _: 1
-        }, 8, [`data-horizontal`, `data-vertical`]), (S(true), h(x, null, g(e, (e, t) => (S(), y(d(re), {
+        }, 8, [`data-horizontal`, `data-vertical`]), (vueGt(true), vueS(vueC, null, vueSt(e, (e, t) => (vueGt(), vueB(vueAn(re), {
           key: t,
           "data-slot": `slider-thumb`,
           "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
