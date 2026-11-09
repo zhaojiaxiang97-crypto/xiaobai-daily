@@ -200,10 +200,10 @@ var Ke = {
     },
     emits: [`confirm`, `cancel`],
     setup(state, {
-      emit: r
+      emit: emit
     }) {
       let stateAlias = state,
-        s = r,
+        emitAlias = emit,
         {
           t: c
         } = g(),
@@ -284,11 +284,11 @@ var Ke = {
         l[e] = t;
       }
       function T() {
-        s(`confirm`, {
+        emitAlias(`confirm`, {
           ...l
         });
       }
-      return (n, r) => (p(), i(`div`, Ke, [w(`h3`, qe, y(t(c)(`dayReplay.exportVideo`)), 1), w(`div`, Je, [(p(true), i(d, null, a(_.value, event => (p(), i(d, {
+      return (ctx, renderCache) => (p(), i(`div`, Ke, [w(`h3`, qe, y(t(c)(`dayReplay.exportVideo`)), 1), w(`div`, Je, [(p(true), i(d, null, a(_.value, event => (p(), i(d, {
         key: event.key
       }, [w(`span`, {
         class: e([`pt-1.5 text-xs text-[#888] dark:text-muted-foreground`, event.disabled ? `opacity-50` : ``])
@@ -308,7 +308,7 @@ var Ke = {
       }, y(n.label), 11, Xe))), 128))], 8, Ye), event.hint ? (p(), i(`p`, Ze, y(event.hint), 1)) : C(``, true)])], 64))), 128))]), w(`div`, Qe, [w(`p`, $e, y(v.value), 1), u.value.screenshots === `none` ? C(``, true) : (p(), i(`p`, et, y(t(c)(`dayReplay.exportPrivacyHint`)), 1))]), w(`div`, tt, [w(`button`, {
         type: `button`,
         class: `h-8 rounded-md px-3 text-xs text-[#666] transition-colors hover:bg-black/[0.05] dark:text-muted-foreground dark:hover:bg-white/5`,
-        onClick: r[0] ||= e => s(`cancel`)
+        onClick: renderCache[0] ||= e => emitAlias(`cancel`)
       }, y(t(c)(`dayReplay.exportCancel`)), 1), w(`button`, {
         type: `button`,
         class: `h-8 rounded-md bg-[#111] px-3 text-xs text-white transition-colors hover:bg-[#333] dark:bg-foreground dark:text-background dark:hover:bg-foreground/85`,
@@ -321,8 +321,8 @@ var Ke = {
     props: {
       bitmap: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = u(null),
         r = u(null),
         payload = null,
@@ -342,7 +342,7 @@ var Ke = {
         let context = e.getContext(`2d`);
         if (!context) return;
         context.clearRect(0, 0, l, u);
-        let bitmap = t.bitmap;
+        let bitmap = propsAlias.bitmap;
         if (!bitmap) return;
         let p = Math.min(l / bitmap.width, u / bitmap.height),
           m = bitmap.width * p,
@@ -355,7 +355,7 @@ var Ke = {
       function l() {
         s ||= requestAnimationFrame(c);
       }
-      return o(() => t.bitmap, l), b(() => {
+      return o(() => propsAlias.bitmap, l), b(() => {
         n.value && (payload = new ResizeObserver(l), payload.observe(n.value)), l();
       }), v(() => {
         payload?.disconnect(), s && cancelAnimationFrame(s);
@@ -384,10 +384,10 @@ var Ke = {
     },
     emits: [`seek`, `scrub-start`, `scrub-end`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         a = u(null),
         o = u(false),
         s = x(() => ({
@@ -401,15 +401,15 @@ var Ke = {
         return eventAlias.startMinute + r * (eventAlias.endMinute - eventAlias.startMinute);
       }
       function l(e) {
-        e.button === 0 && (o.value = true, e.currentTarget.setPointerCapture(e.pointerId), r(`scrub-start`), r(`seek`, c(e)));
+        e.button === 0 && (o.value = true, e.currentTarget.setPointerCapture(e.pointerId), emitAlias(`scrub-start`), emitAlias(`seek`, c(e)));
       }
       function d(e) {
-        o.value && r(`seek`, c(e));
+        o.value && emitAlias(`seek`, c(e));
       }
       function f(e) {
-        o.value && (o.value = false, e.currentTarget.releasePointerCapture(e.pointerId), r(`scrub-end`));
+        o.value && (o.value = false, e.currentTarget.releasePointerCapture(e.pointerId), emitAlias(`scrub-end`));
       }
-      return (t, n) => (p(), i(`div`, {
+      return (ctx, renderCache) => (p(), i(`div`, {
         ref_key: `trackRef`,
         ref: a,
         class: `min-w-0 cursor-pointer touch-none`,
@@ -651,11 +651,11 @@ var Et = class {
       }
     },
     emits: [`unavailable`, `update:following`, `seek`],
-    setup(t, {
-      emit: r
+    setup(props, {
+      emit: emit
     }) {
-      let s = t,
-        l = r,
+      let propsAlias = props,
+        emitAlias = emit,
         f = u(null),
         m = u(null),
         h = u(null),
@@ -675,9 +675,9 @@ var Et = class {
         emptyItems[t] = e instanceof HTMLElement ? e : null;
       }
       function ie(e) {
-        if (!S || !E || !s.following || s.overview || S.isCameraTweening) return E?.reset(), false;
-        let t = E.update(e, s.minute);
-        return !s.playing && t;
+        if (!S || !E || !propsAlias.following || propsAlias.overview || S.isCameraTweening) return E?.reset(), false;
+        let t = E.update(e, propsAlias.minute);
+        return !propsAlias.playing && t;
       }
       function ae(el, t) {
         el && (el.style.visibility = t.visible ? `visible` : `hidden`, el.style.transform = `translate(${t.x}px, ${t.y}px) translate(-50%, -50%)`);
@@ -685,22 +685,22 @@ var Et = class {
       function oe() {
         let e = f.value,
           t = S;
-        if (!t || !C || !e || s.compact) return;
+        if (!t || !C || !e || propsAlias.compact) return;
         let clientWidth = e.clientWidth,
           clientHeight = e.clientHeight,
           i = C;
         _.value.forEach((item, a) => {
           ne.set(i.minuteToX(item * 60), 0, 10), ae(emptyItems[a] ?? null, t.project(ne, clientWidth, clientHeight));
         });
-        let a = t.project(C.anchorAt(s.minute, te), clientWidth, clientHeight);
+        let a = t.project(C.anchorAt(propsAlias.minute, te), clientWidth, clientHeight);
         ae(h.value, {
           ...a,
-          visible: a.visible && !!s.currentLabel
+          visible: a.visible && !!propsAlias.currentLabel
         });
       }
       function se() {
         let e = f.value;
-        S && e && S.resize(e.clientWidth, e.clientHeight) && (O ? s.following && !s.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
+        S && e && S.resize(e.clientWidth, e.clientHeight) && (O ? propsAlias.following && !propsAlias.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
       }
       function ce(event) {
         g.value = true, payload = {
@@ -716,23 +716,23 @@ var Et = class {
         let t = Math.hypot(event.clientX - payload.x, event.clientY - payload.y);
         if (payload = null, t > Ot) return;
         let n = C.pick(S.rayFromEvent(event));
-        n && l(`seek`, n.minute);
+        n && emitAlias(`seek`, n.minute);
       }
       function ue(event) {
         S && (S.controls.enableZoom = event.ctrlKey || event.metaKey);
       }
       function de() {
-        s.following && l(`update:following`, false);
+        propsAlias.following && emitAlias(`update:following`, false);
       }
-      return o(() => s.minute, e => {
+      return o(() => propsAlias.minute, e => {
         C?.setPlayhead(e), S?.requestRender();
-      }), o([() => s.colors, () => s.theme], () => {
-        C?.setColors(s.colors, s.theme), S?.requestRender();
-      }), o(() => s.following, e => {
+      }), o([() => propsAlias.colors, () => propsAlias.theme], () => {
+        C?.setColors(propsAlias.colors, propsAlias.theme), S?.requestRender();
+      }), o(() => propsAlias.following, e => {
         e && S && (S.viewTouched = false, E?.reset(), S.requestRender());
-      }), o(() => s.overview, e => {
+      }), o(() => propsAlias.overview, e => {
         S && (e ? S.resetHome(true) : S.requestRender());
-      }), o(() => s.currentLabel, () => S?.requestRender()), o(() => s.compact, () => S?.requestRender()), o(() => s.playing, e => {
+      }), o(() => propsAlias.currentLabel, () => S?.requestRender()), o(() => propsAlias.compact, () => S?.requestRender()), o(() => propsAlias.playing, e => {
         e || S?.requestRender();
       }), b(() => {
         let e = m.value,
@@ -742,10 +742,10 @@ var Et = class {
             onFrame: ie,
             onRendered: oe
           }), !S) {
-            l(`unavailable`);
+            emitAlias(`unavailable`);
             return;
           }
-          C = new Et(s.street, s.span), _.value = C.hourMarks, C.setColors(s.colors, s.theme), C.setPlayhead(s.minute), S.scene.add(C.root), S.setFraming(C.framing), E = new dt(S, C), S.controls.addEventListener(`start`, de), t.addEventListener(`wheel`, ue, {
+          C = new Et(propsAlias.street, propsAlias.span), _.value = C.hourMarks, C.setColors(propsAlias.colors, propsAlias.theme), C.setPlayhead(propsAlias.minute), S.scene.add(C.root), S.setFraming(C.framing), E = new dt(S, C), S.controls.addEventListener(`start`, de), t.addEventListener(`wheel`, ue, {
             capture: true,
             passive: true
           }), window.addEventListener(`pointerup`, A), window.addEventListener(`pointercancel`, A), T = new ResizeObserver(se), T.observe(t);
@@ -761,7 +761,7 @@ var Et = class {
       }, [w(`canvas`, {
         ref_key: `canvasRef`,
         ref: m,
-        class: e([`block h-full w-full`, t.compact ? `pointer-events-none` : g.value ? `cursor-grabbing` : `cursor-grab`]),
+        class: e([`block h-full w-full`, props.compact ? `pointer-events-none` : g.value ? `cursor-grabbing` : `cursor-grab`]),
         onPointerdown: ce,
         onClick: le
       }, null, 34), c(w(`div`, Dt, [(p(true), i(d, null, a(_.value, (e, t) => (p(), i(`span`, {
@@ -779,7 +779,7 @@ var Et = class {
         style: {
           visibility: `hidden`
         }
-      }, y(t.currentLabel), 513)], 512), [[D, !t.compact]])], 512));
+      }, y(props.currentLabel), 513)], 512), [[D, !props.compact]])], 512));
     }
   });
 function At() {
@@ -881,10 +881,10 @@ var jt = {
     },
     emits: [`replay`, `close`],
     setup(event, {
-      emit: n
+      emit: emit
     }) {
       let eventAlias = event,
-        s = n,
+        emitAlias = emit,
         {
           t: c,
           summaryItems: l,
@@ -892,7 +892,7 @@ var jt = {
         } = At(),
         f = x(() => l(eventAlias.summary, eventAlias.street)),
         m = x(() => u(eventAlias.summary, eventAlias.street, eventAlias.colors));
-      return (n, o) => (p(), i(`div`, jt, [w(`div`, Mt, [w(`h3`, Nt, y(t(c)(`dayReplay.summaryTitle`)), 1), w(`span`, Pt, y(event.dateLabel), 1)]), w(`div`, Ft, [(p(true), i(d, null, a(f.value, state => (p(), i(`div`, {
+      return (ctx, renderCache) => (p(), i(`div`, jt, [w(`div`, Mt, [w(`h3`, Nt, y(t(c)(`dayReplay.summaryTitle`)), 1), w(`span`, Pt, y(event.dateLabel), 1)]), w(`div`, Ft, [(p(true), i(d, null, a(f.value, state => (p(), i(`div`, {
         key: state.label,
         class: `min-w-0`
       }, [w(`div`, It, y(state.value), 1), w(`div`, Lt, [r(y(state.label), 1), state.detail ? (p(), i(d, {
@@ -908,11 +908,11 @@ var jt = {
       }, null, 4), w(`span`, Vt, y(e.name), 1), w(`span`, Ht, y(e.duration), 1)]))), 128))])])) : C(``, true), event.hasScreenshots ? C(``, true) : (p(), i(`p`, Ut, y(t(c)(`dayReplay.noScreenshotHint`)), 1)), w(`div`, Wt, [w(`button`, {
         type: `button`,
         class: `h-8 rounded-md px-3 text-xs text-[#666] transition-colors hover:bg-black/[0.04] dark:text-muted-foreground dark:hover:bg-white/5`,
-        onClick: o[0] ||= e => s(`close`)
+        onClick: renderCache[0] ||= e => emitAlias(`close`)
       }, y(t(c)(`dayReplay.close`)), 1), w(`button`, {
         type: `button`,
         class: `flex h-8 items-center gap-1.5 rounded-md bg-[#111] px-3 text-xs text-white transition-colors hover:bg-[#333] dark:bg-foreground dark:text-background dark:hover:bg-foreground/85`,
-        onClick: o[1] ||= e => s(`replay`)
+        onClick: renderCache[1] ||= e => emitAlias(`replay`)
       }, [h(t(le), {
         size: 13
       }), r(` ` + y(t(c)(`dayReplay.replay`)), 1)])])]));
@@ -1987,11 +1987,11 @@ var Sr = [`aria-label`],
       source: {}
     },
     emits: [`close`],
-    setup(c, {
-      emit: m
+    setup(props, {
+      emit: emit
     }) {
-      let g = c,
-        S = m,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: D,
           locale: O,
@@ -2053,7 +2053,7 @@ var Sr = [`aria-label`],
         Je = x(() => K.value && qe.value !== -1 ? se(K.value, qe.value) : ``),
         Ye = x(() => z.value ? ln(z.value, J.value) : false),
         Xe = x(() => z.value && V.value ? vn(z.value) : null),
-        Ze = x(() => k(g.date)),
+        Ze = x(() => k(propsAlias.date)),
         Qe = x(() => z.value ? dn(z.value, J.value) : null),
         $e = () => !G.value,
         et = yn(() => Qe.value, fi, $e),
@@ -2069,23 +2069,23 @@ var Sr = [`aria-label`],
         Ne.value = true, R.value = ``;
         try {
           let [e, t] = await Promise.all([me.list({
-              ...it(g.date),
+              ...it(propsAlias.date),
               excludeSummary: true
             }), xe.barcode({
-              startDate: g.date,
-              endDate: g.date,
+              startDate: propsAlias.date,
+              endDate: propsAlias.date,
               colorBy: `app`
             })]),
             n = t;
           if (!ge(n)) {
             let barcode = await xe.barcode({
-              startDate: g.date,
-              endDate: g.date,
+              startDate: propsAlias.date,
+              endDate: propsAlias.date,
               colorBy: `category`
             });
             ge(barcode) && (n = barcode);
           }
-          z.value = on(g.date, n, an(g.date, e)), z.value?.frames.length && M.load(z.value.frames);
+          z.value = on(propsAlias.date, n, an(propsAlias.date, e)), z.value?.frames.length && M.load(z.value.frames);
         } catch (e) {
           R.value = e instanceof Error ? e.message : D(`errors.loadDataFailed`);
         } finally {
@@ -2114,7 +2114,7 @@ var Sr = [`aria-label`],
         Be.value = e;
       }
       function pt() {
-        Y(), W.pause(), S(`close`);
+        Y(), W.pause(), emitAlias(`close`);
       }
       function mt() {
         z.value && !F.value && (L = G.value, W.pause(), P.value = true);
@@ -2181,7 +2181,7 @@ var Sr = [`aria-label`],
             uint8Array = new Uint8Array(await s.blob.arrayBuffer()),
             date = new Date(),
             joined = [date.getHours(), date.getMinutes(), date.getSeconds()].map(item => String(item).padStart(2, `0`)).join(``);
-          (await Ie.saveVideo(uint8Array, `${D(`dayReplay.videoFileName`)}_${g.date}_${joined}`, s.extension)).cancelled || (ae(D(`dayReplay.exportSaved`)), j(`feature_map_heat_click`, {
+          (await Ie.saveVideo(uint8Array, `${D(`dayReplay.videoFileName`)}_${propsAlias.date}_${joined}`, s.extension)).cancelled || (ae(D(`dayReplay.exportSaved`)), j(`feature_map_heat_click`, {
             entry: `day_replay_export_saved_${s.extension}`
           }));
         } catch (t) {
@@ -2225,7 +2225,7 @@ var Sr = [`aria-label`],
       }
       return b(() => {
         window.addEventListener(`keydown`, vt), Me.value?.focus(), j(`feature_map_heat_click`, {
-          entry: `day_replay_open_${g.source}`
+          entry: `day_replay_open_${propsAlias.source}`
         }), ot();
       }), v(() => {
         Y(), window.removeEventListener(`keydown`, vt);

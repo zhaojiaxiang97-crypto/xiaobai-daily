@@ -143,8 +143,8 @@ var defineProperty = Object.defineProperty,
         default: true
       }
     },
-    setup(s) {
-      let g = s,
+    setup(props) {
+      let propsAlias = props,
         {
           t: _
         } = re(),
@@ -162,8 +162,8 @@ var defineProperty = Object.defineProperty,
         Se = ae(),
         N = a(null),
         P = a(typeof window > `u`),
-        F = f(() => g.node.code ?? ``),
-        Ce = f(() => `${g.isDark ? `dark` : `light`}:${F.value}`),
+        F = f(() => propsAlias.node.code ?? ``),
+        Ce = f(() => `${propsAlias.isDark ? `dark` : `light`}:${F.value}`),
         I = f(() => b.value || !x.value || !O.value),
         we = f(() => !!O.value),
         Te = f(() => {
@@ -171,10 +171,10 @@ var defineProperty = Object.defineProperty,
             minHeight: `${j.value}px`
           };
         }),
-        Ee = f(() => g.maxHeight === `none` ? {
+        Ee = f(() => propsAlias.maxHeight === `none` ? {
           maxHeight: `none`
-        } : g.maxHeight == null ? undefined : {
-          maxHeight: typeof g.maxHeight == `number` ? `${g.maxHeight}px` : String(g.maxHeight)
+        } : propsAlias.maxHeight == null ? undefined : {
+          maxHeight: typeof propsAlias.maxHeight == `number` ? `${propsAlias.maxHeight}px` : String(propsAlias.maxHeight)
         }),
         L = typeof window < `u`,
         R = null,
@@ -227,7 +227,7 @@ var defineProperty = Object.defineProperty,
             x: eventAlias.clientX,
             y: eventAlias.clientY
           } : undefined;
-        h(event.currentTarget, t, n, false, i, g.isDark);
+        h(event.currentTarget, t, n, false, i, propsAlias.isDark);
       }
       function J() {
         ie();
@@ -240,7 +240,7 @@ var defineProperty = Object.defineProperty,
             x: eventAlias.clientX,
             y: eventAlias.clientY
           } : undefined;
-        h(event.currentTarget, t, `top`, false, r, g.isDark);
+        h(event.currentTarget, t, `top`, false, r, propsAlias.isDark);
       }
       function Oe() {
         return C(this, null, function* () {
@@ -272,9 +272,9 @@ var defineProperty = Object.defineProperty,
       }
       function Ne() {
         return C(this, null, function* () {
-          if (!L || B || !P.value || g.loading && !g.progressiveRender) return;
+          if (!L || B || !P.value || propsAlias.loading && !propsAlias.progressiveRender) return;
           let e = Ce.value;
-          if (e === G && !E.value && O.value) return x.value = true, void (g.loading && (b.value = false));
+          if (e === G && !E.value && O.value) return x.value = true, void (propsAlias.loading && (b.value = false));
           let t = F.value;
           if (!t) return Z(), E.value = null, void (G = ``);
           let n = ++k.value;
@@ -299,10 +299,10 @@ var defineProperty = Object.defineProperty,
             if (n !== k.value) return;
             let fallbackValue = i?.diagram ?? i,
               o = i?.renderOptions ?? i?.options ?? {},
-              s = g.themeId ?? o.themeID,
-              c = g.darkThemeId ?? o.darkThemeID,
+              s = propsAlias.themeId ?? o.themeID,
+              c = propsAlias.darkThemeId ?? o.darkThemeID,
               l = S({}, o);
-            if (l.themeID = g.isDark && c != null ? c : s, l.darkThemeID = null, l.darkThemeOverrides = null, g.isDark) {
+            if (l.themeID = propsAlias.isDark && c != null ? c : s, l.darkThemeID = null, l.darkThemeOverrides = null, propsAlias.isDark) {
               let e = o.themeOverrides && typeof o.themeOverrides == `object` ? o.themeOverrides : null;
               l.themeOverrides = S(S({}, De), e || {});
             }
@@ -352,11 +352,11 @@ var defineProperty = Object.defineProperty,
                 }(documentElementAlias), documentElementAlias.classList.add(`markstream-d2-root-svg`), documentElementAlias.outerHTML;
               }(el);
               O.value = t || ``;
-            })(d), G = e, g.loading && (b.value = false), E.value = null;
+            })(d), G = e, propsAlias.loading && (b.value = false), E.value = null;
           } catch (e) {
             if (n !== k.value) return;
             let t = e?.message ? String(e.message) : `D2 render failed.`;
-            g.loading || (E.value = t), G = ``, t.includes(`@terrastruct/d2`) && (x.value = false, b.value = true);
+            propsAlias.loading || (E.value = t), G = ``, t.includes(`@terrastruct/d2`) && (x.value = false, b.value = true);
           } finally {
             n === k.value && (D.value = false, U && (U = false, Q()));
           }
@@ -365,7 +365,7 @@ var defineProperty = Object.defineProperty,
       function Q(e = false) {
         if (z || !L || B) return;
         if (D.value) return void (U = true);
-        let t = Math.max(120, Number(g.progressiveIntervalMs) || 0),
+        let t = Math.max(120, Number(propsAlias.progressiveIntervalMs) || 0),
           n = Date.now() - V;
         if (!e && n < t) return U = true, void (H == null && (H = window.setTimeout(() => {
           H = null, U && (U = false, Q(true));
@@ -397,11 +397,11 @@ var defineProperty = Object.defineProperty,
         let t = e.getBoundingClientRect().height;
         t > 0 && (j.value = t);
       }
-      return r(() => [g.node.code, g.loading, g.isDark], () => {
+      return r(() => [propsAlias.node.code, propsAlias.loading, propsAlias.isDark], () => {
         Q();
       }, {
         immediate: true
-      }), r(() => g.loading, (e, t) => {
+      }), r(() => propsAlias.loading, (e, t) => {
         t && !e && Q(true);
       }), r(() => P.value, e => {
         e && Q(true);
@@ -422,15 +422,15 @@ var defineProperty = Object.defineProperty,
         ref_key: `viewportTarget`,
         ref: M,
         class: e([`d2-block-container rounded-lg border overflow-hidden`, {
-          dark: g.isDark
+          dark: propsAlias.isDark
         }]),
         "data-markstream-d2": `1`,
         "data-markstream-mode": I.value ? `fallback` : `preview`
-      }, [g.showHeader ? (o(), n(`div`, se, [a[16] ||= m(`div`, {
+      }, [propsAlias.showHeader ? (o(), n(`div`, se, [a[16] ||= m(`div`, {
         class: `flex items-center gap-x-2`
       }, [m(`span`, {
         class: `d2-label font-medium font-mono`
-      }, `D2`)], -1), m(`div`, ce, [g.showModeToggle ? (o(), n(`div`, le, [m(`button`, {
+      }, `D2`)], -1), m(`div`, ce, [propsAlias.showModeToggle ? (o(), n(`div`, le, [m(`button`, {
         type: `button`,
         class: e([`mode-btn px-2 py-0.5 rounded`, b.value ? `` : `is-active`]),
         onClick: a[0] ||= e => X(`preview`),
@@ -446,7 +446,7 @@ var defineProperty = Object.defineProperty,
         onFocus: a[5] ||= e => q(e, t(_)(`common.source`) || `Source`),
         onMouseleave: J,
         onBlur: J
-      }, u(t(_)(`common.source`) || `Source`), 35)])) : p(``, true), g.showCopyButton ? (o(), n(`button`, {
+      }, u(t(_)(`common.source`) || `Source`), 35)])) : p(``, true), propsAlias.showCopyButton ? (o(), n(`button`, {
         key: 1,
         type: `button`,
         class: `d2-action-btn p-[var(--ms-action-btn-padding)] rounded-md`,
@@ -478,7 +478,7 @@ var defineProperty = Object.defineProperty,
         ry: `2`
       }), m(`path`, {
         d: `M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`
-      })], -1)])]))], 40, ue)) : p(``, true), g.showExportButton && O.value ? (o(), n(`button`, {
+      })], -1)])]))], 40, ue)) : p(``, true), propsAlias.showExportButton && O.value ? (o(), n(`button`, {
         key: 2,
         type: `button`,
         class: `d2-action-btn p-[var(--ms-action-btn-padding)] rounded-md`,
@@ -503,7 +503,7 @@ var defineProperty = Object.defineProperty,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `M12 3v12m0-12l-4 4m4-4l4 4M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4`
-      })], -1)])], 40, fe)) : p(``, true), g.showCollapseButton ? (o(), n(`button`, {
+      })], -1)])], 40, fe)) : p(``, true), propsAlias.showCollapseButton ? (o(), n(`button`, {
         key: 3,
         type: `button`,
         class: `d2-action-btn p-[var(--ms-action-btn-padding)] rounded-md`,
@@ -536,7 +536,7 @@ var defineProperty = Object.defineProperty,
         ref: A,
         class: `d2-block-body`,
         style: c(Te.value)
-      }, [g.loading && !we.value ? (o(), n(`div`, me, [m(`pre`, he, [m(`code`, null, u(F.value), 1)]), E.value ? (o(), n(`p`, ge, u(E.value), 1)) : p(``, true)])) : (o(), n(`div`, _e, [I.value ? (o(), n(`div`, ve, [m(`pre`, ye, [m(`code`, null, u(F.value), 1)]), E.value ? (o(), n(`p`, be, u(E.value), 1)) : p(``, true)])) : (o(), n(`div`, {
+      }, [propsAlias.loading && !we.value ? (o(), n(`div`, me, [m(`pre`, he, [m(`code`, null, u(F.value), 1)]), E.value ? (o(), n(`p`, ge, u(E.value), 1)) : p(``, true)])) : (o(), n(`div`, _e, [I.value ? (o(), n(`div`, ve, [m(`pre`, ye, [m(`code`, null, u(F.value), 1)]), E.value ? (o(), n(`p`, be, u(E.value), 1)) : p(``, true)])) : (o(), n(`div`, {
         key: 1,
         class: `d2-render`,
         style: c(Ee.value)

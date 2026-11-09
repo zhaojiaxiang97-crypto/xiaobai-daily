@@ -314,8 +314,8 @@ var b = {
         type: Boolean
       }
     },
-    setup(re) {
-      let ue = re,
+    setup(props) {
+      let propsAlias = props,
         {
           t: _e,
           locale: y
@@ -699,7 +699,7 @@ var b = {
             silent: true
           });
         }, 220);
-      }), te(() => ue.active, e => {
+      }), te(() => propsAlias.active, e => {
         if (!e) {
           $();
           return;
@@ -709,7 +709,7 @@ var b = {
         }), Q();
       }), oe(() => {
         pn = b.onChanged(e => {
-          ue.active && (e.reasons.includes(`history`) && Z({
+          propsAlias.active && (e.reasons.includes(`history`) && Z({
             silent: true
           }), e.reasons.includes(`phrases`) && !F.value && !V.value && Q(), Y());
         }), Y(), Z(), Q();
@@ -1085,23 +1085,23 @@ var b = {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t;
-      return (e, t) => (p(), c(`div`, S, [m(_e, {
-        tool: n.tool,
-        user: n.user,
-        "credits-balance": n.creditsBalance,
+      let propsAlias = props,
+        emitAlias = emit;
+      return (ctx, renderCache) => (p(), c(`div`, S, [m(_e, {
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
         "voice-tool": false,
         "show-history": false,
         "local-tool": ``,
         "show-balance": false,
-        onBack: t[0] ||= e => r(`back`),
-        onRecharge: t[1] ||= e => r(`recharge`)
+        onBack: renderCache[0] ||= e => emitAlias(`back`),
+        onRecharge: renderCache[1] ||= e => emitAlias(`recharge`)
       }, null, 8, [`tool`, `user`, `credits-balance`]), m(x, {
-        active: n.active
+        active: propsAlias.active
       }, null, 8, [`active`])]));
     }
   });

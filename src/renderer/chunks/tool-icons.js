@@ -5401,7 +5401,7 @@ var Ie = [`width`, `height`, `stroke-width`],
         }
       },
       setup(count) {
-        return (r, a) => (i(), n(`svg`, {
+        return (ctx, renderCache) => (i(), n(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           width: count.size,
           height: count.size,
@@ -5412,7 +5412,7 @@ var Ie = [`width`, `height`, `stroke-width`],
           "stroke-linecap": `round`,
           "stroke-linejoin": `round`,
           "aria-hidden": `true`
-        }, [...(a[0] ||= [t(`<path d="M4.6 19.5C3.2 17.8 2.6 15.8 3 13.6 3.8 9.4 7.2 6.5 11 6.5s7.2 2.9 8 7.1c.4 2.2-.2 4.2-1.6 5.9Z"></path><path d="M6 14.2c3.3 1.2 6.7 1.2 10 0"></path><path d="M2.5 22h17"></path><circle cx="18.6" cy="4.4" r="1.9"></circle><path d="m20.2 3.3 2.3-1.3"></path>`, 5)])], 8, Ie));
+        }, [...(renderCache[0] ||= [t(`<path d="M4.6 19.5C3.2 17.8 2.6 15.8 3 13.6 3.8 9.4 7.2 6.5 11 6.5s7.2 2.9 8 7.1c.4 2.2-.2 4.2-1.6 5.9Z"></path><path d="M6 14.2c3.3 1.2 6.7 1.2 10 0"></path><path d="M2.5 22h17"></path><circle cx="18.6" cy="4.4" r="1.9"></circle><path d="m20.2 3.3 2.3-1.3"></path>`, 5)])], 8, Ie));
       }
     }),
     keyboard: p,

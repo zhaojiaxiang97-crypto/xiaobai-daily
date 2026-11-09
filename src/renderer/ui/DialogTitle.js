@@ -28,20 +28,20 @@ var [A, j] = f(`DialogRoot`),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = s(n, `open`, t, {
-          defaultValue: n.defaultOpen,
-          passive: n.open === undefined
+      let propsAlias = props,
+        r = s(propsAlias, `open`, emit, {
+          defaultValue: propsAlias.defaultOpen,
+          passive: propsAlias.open === undefined
         }),
         i = b(),
         a = b(),
         {
           modal: o,
           unmountOnHide: c
-        } = h(n);
+        } = h(propsAlias);
       return j({
         open: r,
         modal: o,
@@ -79,15 +79,15 @@ var [A, j] = f(`DialogRoot`),
         default: `button`
       }
     },
-    setup(e) {
-      let t = e;
+    setup(props) {
+      let propsAlias = props;
       a();
       let n = A();
-      return (e, r) => (x(), y(p(c), w(t, {
-        type: e.as === `button` ? `button` : undefined,
-        onClick: r[0] ||= e => p(n).onOpenChange(false)
+      return (ctx, renderCache) => (x(), y(p(c), w(propsAlias, {
+        type: ctx.as === `button` ? `button` : undefined,
+        onClick: renderCache[0] ||= e => p(n).onOpenChange(false)
       }), {
-        default: _(() => [m(e.$slots, `default`)]),
+        default: _(() => [m(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`type`]));
     }
@@ -121,11 +121,11 @@ var [A, j] = f(`DialogRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(t, {
-      emit: n
+    setup(props, {
+      emit: emit
     }) {
-      let i = t,
-        o = n,
+      let propsAlias = props,
+        emitAlias = emit,
         s = A(),
         {
           forwardRef: c,
@@ -136,17 +136,17 @@ var [A, j] = f(`DialogRoot`),
       }), (e, t) => (x(), y(p(r), {
         "as-child": ``,
         loop: ``,
-        trapped: i.trapFocus,
-        present: i.present,
-        onMountAutoFocus: t[5] ||= e => o(`openAutoFocus`, e),
-        onUnmountAutoFocus: t[6] ||= e => o(`closeAutoFocus`, e)
+        trapped: propsAlias.trapFocus,
+        present: propsAlias.present,
+        onMountAutoFocus: t[5] ||= e => emitAlias(`openAutoFocus`, e),
+        onUnmountAutoFocus: t[6] ||= e => emitAlias(`closeAutoFocus`, e)
       }, {
         default: _(() => [C(p(l), w({
           id: p(s).contentId,
           ref: p(c),
           as: e.as,
           "as-child": e.asChild,
-          present: i.present,
+          present: propsAlias.present,
           "disable-outside-pointer-events": e.disableOutsidePointerEvents,
           role: `dialog`,
           "aria-describedby": p(s).descriptionId,
@@ -154,10 +154,10 @@ var [A, j] = f(`DialogRoot`),
           "data-state": p(d)(p(s).open.value)
         }, e.$attrs, {
           onDismiss: t[0] ||= e => p(s).onOpenChange(false),
-          onEscapeKeyDown: t[1] ||= e => o(`escapeKeyDown`, e),
-          onFocusOutside: t[2] ||= e => o(`focusOutside`, e),
-          onInteractOutside: t[3] ||= e => o(`interactOutside`, e),
-          onPointerDownOutside: t[4] ||= e => o(`pointerDownOutside`, e)
+          onEscapeKeyDown: t[1] ||= e => emitAlias(`escapeKeyDown`, e),
+          onFocusOutside: t[2] ||= e => emitAlias(`focusOutside`, e),
+          onInteractOutside: t[3] ||= e => emitAlias(`interactOutside`, e),
+          onPointerDownOutside: t[4] ||= e => emitAlias(`pointerDownOutside`, e)
         }), {
           default: _(() => [m(e.$slots, `default`)]),
           _: 3
@@ -197,12 +197,12 @@ var [A, j] = f(`DialogRoot`),
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
     setup(event, {
-      emit: n
+      emit: emit
     }) {
       let eventAlias = event,
-        o = n,
+        emitAlias = emit,
         s = A(),
-        c = i(o),
+        c = i(emitAlias),
         {
           forwardRef: l,
           currentElement: u
@@ -273,10 +273,10 @@ var [A, j] = f(`DialogRoot`),
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = i(t);
+        r = i(emit);
       a();
       let o = A(),
         s = b(false),
@@ -333,19 +333,19 @@ var [A, j] = f(`DialogRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let r = e,
-        o = t,
+      let propsAlias = props,
+        emitAlias = emit,
         s = A(),
-        c = i(o),
+        c = i(emitAlias),
         {
           forwardRef: l
         } = a();
-      return (e, t) => (x(), y(p(n), {
-        present: e.forceMount || p(s).open.value,
-        "force-mount": e.forceMount || !p(s).unmountOnHide.value
+      return (ctx, renderCache) => (x(), y(p(n), {
+        present: ctx.forceMount || p(s).open.value,
+        "force-mount": ctx.forceMount || !p(s).unmountOnHide.value
       }, {
         default: _(({
           present: t
@@ -354,22 +354,22 @@ var [A, j] = f(`DialogRoot`),
           ref: p(l),
           present: p(s).unmountOnHide.value || t
         }, {
-          ...r,
+          ...propsAlias,
           ...p(c),
-          ...e.$attrs
+          ...ctx.$attrs
         }), {
-          default: _(() => [m(e.$slots, `default`)]),
+          default: _(() => [m(ctx.$slots, `default`)]),
           _: 2
         }, 1040, [`present`])), [[k, p(s).unmountOnHide.value || t]]) : v((x(), y(I, w({
           key: 1,
           ref: p(l),
           present: p(s).unmountOnHide.value || t
         }, {
-          ...r,
+          ...propsAlias,
           ...p(c),
-          ...e.$attrs
+          ...ctx.$attrs
         }), {
-          default: _(() => [m(e.$slots, `default`)]),
+          default: _(() => [m(ctx.$slots, `default`)]),
           _: 2
         }, 1040, [`present`])), [[k, p(s).unmountOnHide.value || t]])]),
         _: 3
@@ -389,14 +389,14 @@ var [A, j] = f(`DialogRoot`),
         default: `p`
       }
     },
-    setup(e) {
-      let t = e;
+    setup(props) {
+      let propsAlias = props;
       a();
       let n = A();
-      return (e, r) => (x(), y(p(c), w(t, {
+      return (ctx, renderCache) => (x(), y(p(c), w(propsAlias, {
         id: p(n).descriptionId
       }), {
-        default: _(() => [m(e.$slots, `default`)]),
+        default: _(() => [m(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }
@@ -418,11 +418,11 @@ var [A, j] = f(`DialogRoot`),
         default: true
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = A(),
-        r = o(t.present);
-      return g(() => t.present, e => r.value = e), a(), (e, t) => (x(), y(p(c), {
+        r = o(propsAlias.present);
+      return g(() => propsAlias.present, e => r.value = e), a(), (e, t) => (x(), y(p(c), {
         as: e.as,
         "as-child": e.asChild,
         "data-state": p(n).open.value ? `open` : `closed`,
@@ -452,25 +452,25 @@ var [A, j] = f(`DialogRoot`),
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let t = A(),
         {
           forwardRef: r
         } = a();
-      return (e, i) => p(t)?.modal.value ? (x(), y(p(n), {
+      return (ctx, renderCache) => p(t)?.modal.value ? (x(), y(p(n), {
         key: 0,
-        present: e.forceMount || p(t).open.value,
-        "force-mount": e.forceMount || !p(t).unmountOnHide.value
+        present: ctx.forceMount || p(t).open.value,
+        "force-mount": ctx.forceMount || !p(t).unmountOnHide.value
       }, {
         default: _(({
           present: n
-        }) => [v(C(z, w(e.$attrs, {
+        }) => [v(C(z, w(ctx.$attrs, {
           ref: p(r),
-          as: e.as,
-          "as-child": e.asChild,
+          as: ctx.as,
+          "as-child": ctx.asChild,
           present: p(t).unmountOnHide.value || n
         }), {
-          default: _(() => [m(e.$slots, `default`)]),
+          default: _(() => [m(ctx.$slots, `default`)]),
           _: 2
         }, 1040, [`as`, `as-child`, `present`]), [[k, p(t).unmountOnHide.value || n]])]),
         _: 3
@@ -490,10 +490,10 @@ var [A, j] = f(`DialogRoot`),
         default: `h2`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = A();
-      return a(), (e, r) => (x(), y(p(c), w(t, {
+      return a(), (e, r) => (x(), y(p(c), w(propsAlias, {
         id: p(n).titleId
       }), {
         default: _(() => [m(e.$slots, `default`)]),

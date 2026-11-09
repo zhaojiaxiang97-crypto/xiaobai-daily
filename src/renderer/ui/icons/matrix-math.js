@@ -14646,9 +14646,9 @@ var Mc = class {
         });
         let n = this._createPacketSink(),
           fallbackValue = (await n.getKeyPacket(e, g)) ?? (await n.getFirstKeyPacket(g)),
-          v = fallbackValue,
+          fallbackValueAlias = fallbackValue,
           y = n.packets(fallbackValue ?? undefined, undefined, g);
-        for (await y.next(); v && !d && !this._track.input._disposed;) {
+        for (await y.next(); fallbackValueAlias && !d && !this._track.input._disposed;) {
           let e = ou(total.length);
           if (total.length + p.getDecodeQueueSize() > e) {
             ({
@@ -14657,10 +14657,10 @@ var Mc = class {
             } = O()), await c;
             continue;
           }
-          p.decode(v);
+          p.decode(fallbackValueAlias);
           let t = await y.next();
           if (t.done) break;
-          v = t.value;
+          fallbackValueAlias = t.value;
         }
         await y.return(), !f && !this._track.input._disposed && (await p.flush()), !i && count && total.push(count), u = true, s();
       })().catch(err => {

@@ -2396,11 +2396,11 @@ function oa(e = {}) {
     r = l(),
     i = R({
       name: `${n}.define`,
-      setup(e, {
-        slots: t
+      setup(props, {
+        slots: slots
       }) {
         return () => {
-          r.value = t.default;
+          r.value = slots.default;
         };
       }
     }),
@@ -2408,15 +2408,15 @@ function oa(e = {}) {
       inheritAttrs: t,
       name: `${n}.reuse`,
       props: e.props,
-      setup(n, {
-        attrs: i,
-        slots: a
+      setup(props, {
+        attrs: attrs,
+        slots: slots
       }) {
         return () => {
           if (!r.value) throw Error(`[VueUse] Failed to find the definition of reusable template`);
           let o = r.value?.call(r, {
-            ...(e.props == null ? sa(i) : n),
-            $slots: a
+            ...(e.props == null ? sa(attrs) : props),
+            $slots: slots
           });
           return t && o?.length === 1 ? o[0] : o;
         };
@@ -3477,22 +3477,22 @@ var xo = R({
       }
     },
     slots: {},
-    setup(e, {
-      slots: t,
-      expose: n
+    setup(props, {
+      slots: slots,
+      expose: expose
     }) {
       let {
           present: r,
           forceMount: i
-        } = f(e),
+        } = f(props),
         a = I(),
         {
           isPresent: o
         } = yo(r, a);
-      n({
+      expose({
         present: o
       });
-      let s = t.default({
+      let s = slots.default({
         present: o.value
       });
       s = za(s || []);
@@ -3503,7 +3503,7 @@ var xo = R({
 `)].join(`
 `));
       }
-      return () => i.value || r.value || o.value ? x(t.default({
+      return () => i.value || r.value || o.value ? x(slots.default({
         present: o.value
       })[0], {
         ref: e => {
@@ -3517,17 +3517,17 @@ var xo = R({
     name: `PrimitiveSlot`,
     inheritAttrs: false,
     setup(count, {
-      attrs: t,
-      slots: n
+      attrs: attrs,
+      slots: slots
     }) {
       return () => {
-        if (!n.default) return null;
-        let e = za(n.default()),
+        if (!slots.default) return null;
+        let e = za(slots.default()),
           indexResult = e.findIndex(item => item.type !== Me);
         if (indexResult === -1) return e;
         let i = e[indexResult];
         delete i.props?.ref;
-        let a = i.props ? mt(t, i.props) : t,
+        let a = i.props ? mt(attrs, i.props) : attrs,
           o = ke({
             ...i,
             props: {}
@@ -3550,15 +3550,15 @@ var xo = R({
         default: `div`
       }
     },
-    setup(e, {
-      attrs: t,
-      slots: n
+    setup(props, {
+      attrs: attrs,
+      slots: slots
     }) {
-      let r = e.asChild ? `template` : e.as;
-      return typeof r == `string` && Co.includes(r) ? () => x(r, t) : r === `template` ? () => x(So, t, {
-        default: n.default
-      }) : () => x(e.as, t, {
-        default: n.default
+      let r = props.asChild ? `template` : props.as;
+      return typeof r == `string` && Co.includes(r) ? () => x(r, attrs) : r === `template` ? () => x(So, attrs, {
+        default: slots.default
+      }) : () => x(props.as, attrs, {
+        default: slots.default
       });
     }
   });
@@ -3664,10 +3664,10 @@ var jo = R({
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `dismiss`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         {
           forwardRef: a,
           currentElement: o
@@ -3684,14 +3684,14 @@ var jo = R({
         }),
         p = ko(async e => {
           let t = [...Q.branches].some(item => item?.contains(e.target));
-          eventAlias.present && f.value && !t && (r(`pointerDownOutside`, e), r(`interactOutside`, e), await z(), e.defaultPrevented || r(`dismiss`));
+          eventAlias.present && f.value && !t && (emitAlias(`pointerDownOutside`, e), emitAlias(`interactOutside`, e), await z(), e.defaultPrevented || emitAlias(`dismiss`));
         }, o, () => eventAlias.present),
         m = Ao(e => {
           let t = [...Q.branches].some(item => item?.contains(e.target));
-          eventAlias.present && !t && (r(`focusOutside`, e), r(`interactOutside`, e), e.defaultPrevented || r(`dismiss`));
+          eventAlias.present && !t && (emitAlias(`focusOutside`, e), emitAlias(`interactOutside`, e), e.defaultPrevented || emitAlias(`dismiss`));
         }, o);
       return pa(`Escape`, e => {
-        eventAlias.present && l.value === c.value.size - 1 && (r(`escapeKeyDown`, e), e.defaultPrevented || r(`dismiss`));
+        eventAlias.present && l.value === c.value.size - 1 && (emitAlias(`escapeKeyDown`, e), e.defaultPrevented || emitAlias(`dismiss`));
       }), P([o, () => eventAlias.disableOutsidePointerEvents, () => eventAlias.present], ([e, t, n], r, i) => {
         e && n && t && (Q.layersWithOutsidePointerEventsDisabled.size === 0 && (Q.originalBodyPointerEvents = s.value.body.style.pointerEvents, s.value.body.style.pointerEvents = `none`), Q.layersWithOutsidePointerEventsDisabled.add(e), i(() => {
           Q.layersWithOutsidePointerEventsDisabled.delete(e), Q.layersWithOutsidePointerEventsDisabled.size === 0 && !bi(Q.originalBodyPointerEvents) && (s.value.body.style.pointerEvents = Q.originalBodyPointerEvents);
@@ -3830,10 +3830,10 @@ var Go = R({
     },
     emits: [`mountAutoFocus`, `unmountAutoFocus`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         {
           currentRef: a,
           currentElement: o
@@ -3884,7 +3884,7 @@ var Go = R({
       });
       function d(e, t) {
         let customEvent = new CustomEvent(Fo, Lo),
-          i = e => r(`mountAutoFocus`, e);
+          i = e => emitAlias(`mountAutoFocus`, e);
         e.addEventListener(Fo, i), e.dispatchEvent(customEvent), e.removeEventListener(Fo, i), customEvent.defaultPrevented || (Ro(Bo(e), {
           select: true
         }), K() === t && Wo(e));
@@ -3897,7 +3897,7 @@ var Go = R({
         !t.contains(i) && eventAlias.present !== false && d(t, i), e(() => {
           let customEvent = new CustomEvent(Io, Lo),
             n = e => {
-              r(`unmountAutoFocus`, e);
+              emitAlias(`unmountAutoFocus`, e);
             };
           t.addEventListener(Io, n), t.dispatchEvent(customEvent), t.setAttribute(`data-focus-scope-unmounting`, ``), setTimeout(() => {
             customEvent.defaultPrevented || Wo(i ?? document.body, {
@@ -3932,15 +3932,15 @@ var Go = R({
           })) : r === t && e.preventDefault();
         }
       }
-      return (e, t) => (L(), F(i(wo), {
+      return (ctx, renderCache) => (L(), F(i(wo), {
         ref_key: `currentRef`,
         ref: a,
         tabindex: `-1`,
-        "as-child": e.asChild,
-        as: e.as,
+        "as-child": ctx.asChild,
+        as: ctx.as,
         onKeydown: f
       }, {
-        default: Ee(() => [u(e.$slots, `default`)]),
+        default: Ee(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`as-child`, `as`]));
     }
@@ -4008,17 +4008,17 @@ var is = R({
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = Ba({}),
-        r = B(() => t.to ?? n.teleportTo?.value ?? `body`),
+        r = B(() => propsAlias.to ?? n.teleportTo?.value ?? `body`),
         a = la();
-      return (e, t) => i(a) || e.forceMount ? (L(), F(We, {
+      return (ctx, renderCache) => i(a) || ctx.forceMount ? (L(), F(We, {
         key: 0,
         to: r.value,
-        disabled: e.disabled,
-        defer: e.defer
-      }, [u(e.$slots, `default`)], 8, [`to`, `disabled`, `defer`])) : Bt(`v-if`, true);
+        disabled: ctx.disabled,
+        defer: ctx.defer
+      }, [u(ctx.$slots, `default`)], 8, [`to`, `disabled`, `defer`])) : Bt(`v-if`, true);
     }
   }),
   as = R({
@@ -4039,13 +4039,13 @@ var is = R({
         default: `span`
       }
     },
-    setup(e) {
-      return (e, t) => (L(), F(i(wo), {
-        as: e.as,
-        "as-child": e.asChild,
-        "aria-hidden": e.feature === `focusable` || e.feature === `fully-hidden` ? `true` : undefined,
-        "data-hidden": e.feature === `fully-hidden` ? `` : undefined,
-        tabindex: e.feature === `fully-hidden` ? `-1` : undefined,
+    setup(props) {
+      return (ctx, renderCache) => (L(), F(i(wo), {
+        as: ctx.as,
+        "as-child": ctx.asChild,
+        "aria-hidden": ctx.feature === `focusable` || ctx.feature === `fully-hidden` ? `true` : undefined,
+        "data-hidden": ctx.feature === `fully-hidden` ? `` : undefined,
+        tabindex: ctx.feature === `fully-hidden` ? `-1` : undefined,
         style: {
           position: `absolute`,
           border: 0,
@@ -4062,7 +4062,7 @@ var is = R({
           left: `-1px`
         }
       }, {
-        default: Ee(() => [u(e.$slots, `default`)]),
+        default: Ee(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`as`, `as-child`, `aria-hidden`, `data-hidden`, `tabindex`]));
     }
@@ -4098,13 +4098,13 @@ var is = R({
         default: `fully-hidden`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         {
           primitiveElement: n,
           currentElement: r
         } = To(),
-        i = B(() => t.checked ?? t.value);
+        i = B(() => propsAlias.checked ?? propsAlias.value);
       return P(i, (e, t) => {
         if (!r.value) return;
         let n = r.value,
@@ -4123,7 +4123,7 @@ var is = R({
         ref_key: `primitiveElement`,
         ref: n
       }, {
-        ...t,
+        ...propsAlias,
         ...e.$attrs
       }, {
         as: `input`
@@ -4161,30 +4161,30 @@ var is = R({
         default: `fully-hidden`
       }
     },
-    setup(e) {
-      let t = e,
-        n = B(() => typeof t.value == `object` && Array.isArray(t.value) && t.value.length === 0 && t.required),
-        r = B(() => typeof t.value == `string` || typeof t.value == `number` || typeof t.value == `boolean` || t.value === null || t.value === undefined ? [{
-          name: t.name,
-          value: t.value
-        }] : typeof t.value == `object` && Array.isArray(t.value) ? t.value.flatMap((item, n) => typeof item == `object` ? Object.entries(item).map(([e, r]) => ({
-          name: `${t.name}[${n}][${e}]`,
+    setup(props) {
+      let propsAlias = props,
+        n = B(() => typeof propsAlias.value == `object` && Array.isArray(propsAlias.value) && propsAlias.value.length === 0 && propsAlias.required),
+        r = B(() => typeof propsAlias.value == `string` || typeof propsAlias.value == `number` || typeof propsAlias.value == `boolean` || propsAlias.value === null || propsAlias.value === undefined ? [{
+          name: propsAlias.name,
+          value: propsAlias.value
+        }] : typeof propsAlias.value == `object` && Array.isArray(propsAlias.value) ? propsAlias.value.flatMap((item, n) => typeof item == `object` ? Object.entries(item).map(([e, r]) => ({
+          name: `${propsAlias.name}[${n}][${e}]`,
           value: r
         })) : {
-          name: `${t.name}[${n}]`,
+          name: `${propsAlias.name}[${n}]`,
           value: item
-        }) : t.value !== null && typeof t.value == `object` && !Array.isArray(t.value) ? Object.entries(t.value).map(([e, n]) => ({
-          name: `${t.name}[${e}]`,
+        }) : propsAlias.value !== null && typeof propsAlias.value == `object` && !Array.isArray(propsAlias.value) ? Object.entries(propsAlias.value).map(([e, n]) => ({
+          name: `${propsAlias.name}[${e}]`,
           value: n
         })) : []);
-      return (e, i) => (L(), fe(Ie, null, [Bt(` We render single input if it's required `), n.value ? (L(), F(os, mt({
-        key: e.name
+      return (ctx, renderCache) => (L(), fe(Ie, null, [Bt(` We render single input if it's required `), n.value ? (L(), F(os, mt({
+        key: ctx.name
       }, {
-        ...t,
-        ...e.$attrs
+        ...propsAlias,
+        ...ctx.$attrs
       }, {
-        name: e.name,
-        value: e.value
+        name: ctx.name,
+        value: ctx.value
       }), null, 16, [`name`, `value`])) : (L(true), fe(Ie, {
         key: 1
       }, me(r.value, n => (L(), F(os, mt({
@@ -4192,8 +4192,8 @@ var is = R({
       }, {
         ref_for: true
       }, {
-        ...t,
-        ...e.$attrs
+        ...propsAlias,
+        ...ctx.$attrs
       }, {
         name: n.name,
         value: n.value
@@ -5485,21 +5485,21 @@ var Xc = qs,
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           disabled: a
-        } = f(n),
-        o = Ra(n, `modelValue`, r, {
-          defaultValue: n.defaultValue ?? n.falseValue,
-          passive: n.modelValue === undefined
+        } = f(propsAlias),
+        o = Ra(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue ?? propsAlias.falseValue,
+          passive: propsAlias.modelValue === undefined
         }),
-        s = B(() => o.value === n.trueValue);
+        s = B(() => o.value === propsAlias.trueValue);
       function c() {
-        a.value || (o.value = s.value ? n.falseValue : n.trueValue);
+        a.value || (o.value = s.value ? propsAlias.falseValue : propsAlias.trueValue);
       }
       let {
           forwardRef: l,
@@ -5507,7 +5507,7 @@ var Xc = qs,
         } = Qa(),
         p = Za(d),
         m = to(),
-        h = B(() => n.id && d.value ? document.querySelector(`[for="${n.id}"]`)?.innerText : undefined);
+        h = B(() => propsAlias.id && d.value ? document.querySelector(`[for="${propsAlias.id}"]`)?.innerText : undefined);
       return al({
         checked: s,
         toggleCheck: c,
@@ -5562,7 +5562,7 @@ var Xc = qs,
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       let t = il();
       return Qa(), (e, n) => (L(), F(i(wo), {
         "data-state": i(t).checked.value ? `checked` : `unchecked`,
@@ -5592,7 +5592,7 @@ var Xc = qs,
     },
     setup(count) {
       let countAlias = count;
-      return (r, a) => (L(), F(i(wo), {
+      return (ctx, renderCache) => (L(), F(i(wo), {
         "data-slot": `button`,
         "data-variant": count.variant,
         "data-size": count.size,
@@ -5603,7 +5603,7 @@ var Xc = qs,
           size: count.size
         }), countAlias.class))
       }, {
-        default: Ee(() => [u(r.$slots, `default`)]),
+        default: Ee(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`data-variant`, `data-size`, `as`, `as-child`, `class`]));
     }
@@ -5663,12 +5663,12 @@ var Xc = qs,
     },
     emits: [`update:modelValue`],
     setup(count, {
-      emit: t
+      emit: emit
     }) {
       let countAlias = count,
-        r = t,
-        a = eo(Ji(countAlias, `class`, `size`), r);
-      return (t, r) => (L(), F(i(ol), mt({
+        emitAlias = emit,
+        a = eo(Ji(countAlias, `class`, `size`), emitAlias);
+      return (ctx, renderCache) => (L(), F(i(ol), mt({
         "data-slot": `switch`,
         "data-size": count.size
       }, i(a), {
@@ -5678,7 +5678,7 @@ var Xc = qs,
           "data-slot": `switch-thumb`,
           class: `bg-background dark:data-unchecked:bg-foreground dark:data-checked:bg-primary-foreground rounded-full group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0 pointer-events-none block ring-0 transition-transform`
         }, {
-          default: Ee(() => [u(t.$slots, `thumb`, At(be(e)))]),
+          default: Ee(() => [u(ctx.$slots, `thumb`, At(be(e)))]),
           _: 2
         }, 1024)]),
         _: 3

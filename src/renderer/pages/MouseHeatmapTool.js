@@ -55,10 +55,10 @@ var k = {
       }
     },
     emits: [`enable`],
-    setup(n, {
-      emit: u
+    setup(props, {
+      emit: emit
     }) {
-      let f = u,
+      let emitAlias = emit,
         {
           t: g
         } = x(),
@@ -111,7 +111,7 @@ var k = {
           title: `toolboxNative.mouseHeatmapPointLocalTitle`,
           desc: `toolboxNative.mouseHeatmapPointLocalDesc`
         }];
-      return (u, b) => (d(), a(`section`, k, [v(`div`, A, [v(`div`, j, [v(`div`, {
+      return (ctx, renderCache) => (d(), a(`section`, k, [v(`div`, A, [v(`div`, j, [v(`div`, {
         class: `aspect-[16/9] w-full rounded-lg border border-border/70 bg-[#f1f1ef] dark:bg-[#22262a]`,
         style: m({
           backgroundImage: t(joined)
@@ -124,8 +124,8 @@ var k = {
       }))]), v(`span`, z, [v(`strong`, B, h(t(g)(e.title)), 1), v(`small`, V, h(t(g)(e.desc)), 1)])])), 64))]), p(t(e), {
         size: `sm`,
         class: `self-start`,
-        disabled: n.enableDisabled,
-        onClick: b[0] ||= e => f(`enable`)
+        disabled: props.enableDisabled,
+        onClick: renderCache[0] ||= e => emitAlias(`enable`)
       }, {
         default: s(() => [i(h(t(g)(`toolboxNative.mouseHeatmapEnableAction`)), 1)]),
         _: 1
@@ -162,11 +162,11 @@ var k = {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(r, {
-      emit: o
+    setup(props, {
+      emit: emit
     }) {
-      let l = r,
-        f = o,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: m
         } = x(),
@@ -185,16 +185,16 @@ var k = {
         P = g(() => b.value || j.value),
         F = g(() => C.value && !k.value ? m(`settings.mouseHeatmapRunning`) : undefined),
         I = g(() => C.value && k.value);
-      return (r, o) => (d(), c(O, {
-        tool: l.tool,
-        user: l.user,
-        "credits-balance": l.creditsBalance,
+      return (ctx, renderCache) => (d(), c(O, {
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
         description: t(m)(`toolboxNative.mouseHeatmapToolIntro`),
         enabled: t(C),
         "toggle-disabled": P.value,
         "status-text": F.value,
         onToggle: t(M),
-        onBack: o[4] ||= e => f(`back`)
+        onBack: renderCache[4] ||= e => emitAlias(`back`)
       }, n({
         default: s(() => [t(C) ? (d(), a(`section`, W, [v(`header`, G, [v(`strong`, K, h(t(m)(`toolboxNative.mouseHeatmapDataTitle`)), 1), v(`div`, q, [v(`div`, {
           id: J,
@@ -203,13 +203,13 @@ var k = {
           variant: `ghost`,
           size: `sm`,
           class: `h-7 gap-1 px-2 text-xs text-muted-foreground`,
-          onClick: o[1] ||= e => t(S)(`heat-map-mouse`)
+          onClick: renderCache[1] ||= e => t(S)(`heat-map-mouse`)
         }, {
           default: s(() => [i(h(t(m)(`toolboxNative.mouseHeatmapOpenPage`)), 1), p(t(y), {
             size: 14
           })]),
           _: 1
-        })])]), l.active ? (d(), c(D, {
+        })])]), propsAlias.active ? (d(), c(D, {
           key: 0,
           "refresh-key": 0,
           "range-picker-target": `#${J}`,
@@ -218,10 +218,10 @@ var k = {
         }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, true)])) : (d(), c(H, {
           key: 1,
           "enable-disabled": P.value,
-          onEnable: o[2] ||= e => t(M)(true)
+          onEnable: renderCache[2] ||= e => t(M)(true)
         }, null, 8, [`enable-disabled`])), p(T, {
           open: t(A),
-          "onUpdate:open": o[3] ||= e => u(A) ? A.value = e : null,
+          "onUpdate:open": renderCache[3] ||= e => u(A) ? A.value = e : null,
           onConfirm: t(N)
         }, null, 8, [`open`, `onConfirm`])]),
         _: 2
@@ -231,7 +231,7 @@ var k = {
           variant: `outline`,
           size: `sm`,
           class: `h-7 shrink-0 text-xs`,
-          onClick: o[0] ||= e => t(S)(`settings-app-usage-tracking`)
+          onClick: renderCache[0] ||= e => t(S)(`settings-app-usage-tracking`)
         }, {
           default: s(() => [i(h(t(m)(`settings.mouseHeatmapOpenAppUsage`)), 1)]),
           _: 1

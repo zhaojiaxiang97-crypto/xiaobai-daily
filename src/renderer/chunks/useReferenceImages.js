@@ -51,8 +51,8 @@ var S = {
         type: Function
       }
     },
-    setup(l) {
-      let d = l,
+    setup(props) {
+      let propsAlias = props,
         {
           t: p
         } = v(),
@@ -63,9 +63,9 @@ var S = {
       function N(event) {
         let t = event.target,
           n = Array.from(t.files || []);
-        t.value = ``, d.addFiles(n);
+        t.value = ``, propsAlias.addFiles(n);
       }
-      return (o, l) => (c(), r(s, null, [g(`input`, {
+      return (ctx, renderCache) => (c(), r(s, null, [g(`input`, {
         ref_key: `input`,
         ref: m,
         class: `sr-only`,
@@ -73,7 +73,7 @@ var S = {
         multiple: ``,
         accept: `image/jpeg,image/png,image/webp,image/bmp,image/tiff,image/gif,image/heic,image/heif,.heic,.heif`,
         onChange: N
-      }, null, 544), g(`div`, S, [(c(true), r(s, null, i(d.items, (count, o) => (c(), r(`article`, {
+      }, null, 544), g(`div`, S, [(c(true), r(s, null, i(propsAlias.items, (count, o) => (c(), r(`article`, {
         key: count.id,
         class: t([`grid h-[78px] w-[250px] min-w-0 shrink-0 grid-cols-[48px_minmax(0,1fr)_26px] items-center gap-2 rounded-[10px] border bg-card p-[7px]`, count.error ? `border-destructive/45` : `border-border`])
       }, [g(`div`, C, [count.previewFailed ? (c(), a(n(e), {
@@ -92,17 +92,17 @@ var S = {
         type: `button`,
         class: `inline-flex size-[26px] items-center justify-center rounded-[7px] text-muted-foreground transition-colors hover:bg-muted hover:text-destructive`,
         "aria-label": n(p)(`toolboxNative.removeReferenceImage`),
-        onClick: e => d.remove(count.id)
+        onClick: e => propsAlias.remove(count.id)
       }, [u(n(_), {
         size: 14
-      })], 8, j)], 2))), 128)), d.items.length < 10 ? (c(), a(x, {
+      })], 8, j)], 2))), 128)), propsAlias.items.length < 10 ? (c(), a(x, {
         key: 0,
         class: `h-[78px] w-[340px] max-w-full shrink`,
         title: n(p)(`toolboxNative.clickOrDropReferenceImagesHere`),
-        hint: `${n(p)(`toolboxNative.jpgPngWebpAndMoreMaximumPerImage`)} ${d.maxMb}MB`,
-        onSelect: l[0] ||= e => m.value?.click(),
-        onDrop: d.addFiles
-      }, null, 8, [`title`, `hint`, `onDrop`])) : h(``, true)]), d.error ? (c(), r(`p`, M, f(d.error), 1)) : h(``, true)], 64));
+        hint: `${n(p)(`toolboxNative.jpgPngWebpAndMoreMaximumPerImage`)} ${propsAlias.maxMb}MB`,
+        onSelect: renderCache[0] ||= e => m.value?.click(),
+        onDrop: propsAlias.addFiles
+      }, null, 8, [`title`, `hint`, `onDrop`])) : h(``, true)]), propsAlias.error ? (c(), r(`p`, M, f(propsAlias.error), 1)) : h(``, true)], 64));
     }
   });
 function P() {

@@ -82,10 +82,10 @@ var M = y(`hash`, [[`line`, {
       }
     },
     emits: [`enable`],
-    setup(n, {
-      emit: u
+    setup(props, {
+      emit: emit
     }) {
-      let f = u,
+      let emitAlias = emit,
         {
           t: g
         } = S(),
@@ -212,7 +212,7 @@ var M = y(`hash`, [[`line`, {
         title: `toolboxNative.keyboardHeatmapPointLocalTitle`,
         desc: `toolboxNative.keyboardHeatmapPointLocalDesc`
       }];
-      return (u, _) => (d(), a(`section`, N, [v(`div`, P, [v(`div`, F, [(d(), a(l, null, o(T, (e, t) => v(`div`, {
+      return (ctx, renderCache) => (d(), a(`section`, N, [v(`div`, P, [v(`div`, F, [(d(), a(l, null, o(T, (e, t) => v(`div`, {
         key: t,
         class: `flex gap-1`
       }, [(d(true), a(l, null, o(e, (e, t) => (d(), a(`span`, {
@@ -230,8 +230,8 @@ var M = y(`hash`, [[`line`, {
       }))]), v(`span`, U, [v(`strong`, W, h(t(g)(e.title)), 1), v(`small`, G, h(t(g)(e.desc)), 1)])])), 64))]), p(t(e), {
         size: `sm`,
         class: `self-start`,
-        disabled: n.enableDisabled,
-        onClick: _[0] ||= e => f(`enable`)
+        disabled: props.enableDisabled,
+        onClick: renderCache[0] ||= e => emitAlias(`enable`)
       }, {
         default: s(() => [i(h(t(g)(`toolboxNative.keyboardHeatmapEnableAction`)), 1)]),
         _: 1
@@ -277,11 +277,11 @@ var M = y(`hash`, [[`line`, {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(r, {
-      emit: o
+    setup(props, {
+      emit: emit
     }) {
-      let l = r,
-        f = o,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: m
         } = S(),
@@ -308,17 +308,17 @@ var M = y(`hash`, [[`line`, {
         U = g(() => V.value && (N.value?.status === `error` || N.value?.status === `revoked`)),
         W = g(() => V.value ? `` : E.value ? m(`settings.keyboardHeatmapWindowsNote`) : D.value ? m(`settings.keyboardHeatmapMacNote`) : ``),
         G = g(() => !!W.value || !x.value || U.value);
-      return (r, o) => (d(), c(j, {
-        tool: l.tool,
-        user: l.user,
-        "credits-balance": l.creditsBalance,
+      return (ctx, renderCache) => (d(), c(j, {
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
         description: t(m)(`toolboxNative.keyboardHeatmapToolIntro`),
         enabled: V.value,
         "toggle-disabled": H.value,
         "status-text": V.value && t(N)?.running ? t(m)(`settings.keyboardHeatmapRunning`) : undefined,
         "requires-accessibility": ``,
         onToggle: t(R),
-        onBack: o[3] ||= e => f(`back`)
+        onBack: renderCache[3] ||= e => emitAlias(`back`)
       }, n({
         default: s(() => [V.value ? (d(), a(`section`, X, [v(`header`, Z, [v(`strong`, Q, h(t(m)(`toolboxNative.keyboardHeatmapDataTitle`)), 1), v(`div`, ee, [v(`div`, {
           id: $,
@@ -327,13 +327,13 @@ var M = y(`hash`, [[`line`, {
           variant: `ghost`,
           size: `sm`,
           class: `h-7 gap-1 px-2 text-xs text-muted-foreground`,
-          onClick: o[0] ||= e => t(M)(`heat-map-keyboard`)
+          onClick: renderCache[0] ||= e => t(M)(`heat-map-keyboard`)
         }, {
           default: s(() => [i(h(t(m)(`toolboxNative.keyboardHeatmapOpenPage`)), 1), p(t(b), {
             size: 14
           })]),
           _: 1
-        })])]), l.active ? (d(), c(A, {
+        })])]), propsAlias.active ? (d(), c(A, {
           key: 0,
           "refresh-key": 0,
           "range-picker-target": `#${$}`,
@@ -342,10 +342,10 @@ var M = y(`hash`, [[`line`, {
         }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, true)])) : (d(), c(K, {
           key: 1,
           "enable-disabled": H.value,
-          onEnable: o[1] ||= e => t(R)(true)
+          onEnable: renderCache[1] ||= e => t(R)(true)
         }, null, 8, [`enable-disabled`])), p(k, {
           open: t(F),
-          "onUpdate:open": o[2] ||= e => u(F) ? F.value = e : null,
+          "onUpdate:open": renderCache[2] ||= e => u(F) ? F.value = e : null,
           "consent-info": t(P),
           onConfirm: t(z)
         }, null, 8, [`open`, `consent-info`, `onConfirm`])]),

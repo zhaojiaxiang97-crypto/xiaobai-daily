@@ -78,12 +78,12 @@ var He = I(`grid-3x3`, [[`rect`, {
       }
     },
     emits: [`toast`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let r = e,
-        i = n,
+      let propsAlias = props,
+        emitAlias = emit,
         editor = window.screenshotToolAPI.editor,
         o = S(false),
         s = S(``),
@@ -93,12 +93,12 @@ var He = I(`grid-3x3`, [[`rect`, {
         p = 0,
         m = null;
       async function _() {
-        if (!r.supported || o.value || !r.sessionId) return;
+        if (!propsAlias.supported || o.value || !propsAlias.sessionId) return;
         let e = ++p;
         o.value = true, l.value = ``;
         try {
           let t = await editor.ocr({
-            id: r.sessionId
+            id: propsAlias.sessionId
           });
           if (e !== p) return;
           if (!t.ok) {
@@ -114,20 +114,20 @@ var He = I(`grid-3x3`, [[`rect`, {
       }
       async function T() {
         if (s.value) try {
-          await navigator.clipboard.writeText(s.value), d.value = true, i(`toast`, G(`OcrCopied`)), m !== null && window.clearTimeout(m), m = window.setTimeout(() => {
+          await navigator.clipboard.writeText(s.value), d.value = true, emitAlias(`toast`, G(`OcrCopied`)), m !== null && window.clearTimeout(m), m = window.setTimeout(() => {
             d.value = false, m = null;
           }, 1400);
         } catch {
-          i(`toast`, G(`ActionFailed`));
+          emitAlias(`toast`, G(`ActionFailed`));
         }
       }
-      return v(() => r.sessionId, () => {
-        p += 1, o.value = false, s.value = ``, l.value = ``, u.value = false, r.autoRun && _();
+      return v(() => propsAlias.sessionId, () => {
+        p += 1, o.value = false, s.value = ``, l.value = ``, u.value = false, propsAlias.autoRun && _();
       }, {
         immediate: true
-      }), t({
+      }), expose({
         run: _
-      }), (t, n) => (w(), g(`div`, K, [N(`p`, Ke, k(e.supported ? f(G)(`OcrHint`) : f(G)(`OcrUnsupported`)), 1), e.supported ? (w(), x(f(c), {
+      }), (t, n) => (w(), g(`div`, K, [N(`p`, Ke, k(props.supported ? f(G)(`OcrHint`) : f(G)(`OcrUnsupported`)), 1), props.supported ? (w(), x(f(c), {
         key: 0,
         variant: `outline`,
         size: `sm`,
@@ -367,10 +367,10 @@ var He = I(`grid-3x3`, [[`rect`, {
     },
     emits: [`update:style`, `savePreset`, `deletePreset`],
     setup(result, {
-      emit: r
+      emit: emit
     }) {
       let resultAlias = result,
-        a = r,
+        emitAlias = emit,
         o = S(false),
         s = S(``),
         c = S(null),
@@ -399,7 +399,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           builtin: false
         }))]);
       function T(e) {
-        a(`update:style`, {
+        emitAlias(`update:style`, {
           ...resultAlias.current,
           ...e
         });
@@ -525,15 +525,15 @@ var He = I(`grid-3x3`, [[`rect`, {
       }
       function ye() {
         let trimmed = s.value.trim();
-        trimmed && (a(`savePreset`, trimmed), o.value = false);
+        trimmed && (emitAlias(`savePreset`, trimmed), o.value = false);
       }
       function be(event) {
         event.stopPropagation(), event.key === `Enter` && !event.isComposing ? (event.preventDefault(), ye()) : event.key === `Escape` && (event.preventDefault(), o.value = false);
       }
-      return (r, i) => (w(), g(`div`, q, [N(`div`, J, [N(`div`, Xe, [N(`strong`, Ze, k(f(G)(`StyleEnabled`)), 1), N(`small`, Qe, k(f(G)(`StyleEnabledDesc`)), 1)]), E(f(l), {
+      return (ctx, renderCache) => (w(), g(`div`, q, [N(`div`, J, [N(`div`, Xe, [N(`strong`, Ze, k(f(G)(`StyleEnabled`)), 1), N(`small`, Qe, k(f(G)(`StyleEnabledDesc`)), 1)]), E(f(l), {
         "model-value": result.current.enabled,
         "aria-label": f(G)(`StyleEnabled`),
-        "onUpdate:modelValue": i[0] ||= e => T({
+        "onUpdate:modelValue": renderCache[0] ||= e => T({
           enabled: !!e
         })
       }, null, 8, [`model-value`, `aria-label`])]), N(`div`, {
@@ -548,7 +548,7 @@ var He = I(`grid-3x3`, [[`rect`, {
       }), h(k(f(G)(`PresetSave`)), 1)])) : M(``, true)]), o.value ? (w(), g(`div`, et, [b(N(`input`, {
         ref_key: `presetInput`,
         ref: c,
-        "onUpdate:modelValue": i[1] ||= e => s.value = e,
+        "onUpdate:modelValue": renderCache[1] ||= e => s.value = e,
         maxlength: f(20),
         class: `h-7 min-w-0 flex-1 rounded-md border border-input bg-background px-2 text-xs outline-none focus:border-ring`,
         placeholder: f(G)(`PresetNamePlaceholder`),
@@ -565,7 +565,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         type: `button`,
         class: `inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted`,
         title: f(G)(`Cancel`),
-        onClick: i[2] ||= e => o.value = false
+        onClick: renderCache[2] ||= e => o.value = false
       }, [E(f(L), {
         size: 14
       })], 8, rt)])) : M(``, true), N(`div`, it, [(w(true), g(C, null, _(y.value, el => (w(), g(`div`, {
@@ -575,7 +575,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         type: `button`,
         class: d([`flex w-full flex-col items-stretch gap-1 rounded-lg p-1 text-left transition-colors hover:bg-muted`, ce(el.style, result.current) ? `bg-primary/[0.07] ring-1 ring-primary/50` : ``]),
         title: el.name,
-        onClick: t => a(`update:style`, {
+        onClick: t => emitAlias(`update:style`, {
           ...el.style,
           enabled: true
         })
@@ -590,7 +590,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         type: `button`,
         class: `absolute -right-1 -top-1 hidden size-4 items-center justify-center rounded-full bg-zinc-700 text-white group-hover:inline-flex`,
         title: f(G)(`PresetDelete`),
-        onClick: t => a(`deletePreset`, el.id)
+        onClick: t => emitAlias(`deletePreset`, el.id)
       }, [E(f(L), {
         size: 10
       })], 8, lt))]))), 128))])]), N(`section`, Z, [N(`span`, ut, k(f(G)(`Background`)), 1), N(`div`, dt, [(w(true), g(C, null, _(f(pe), e => (w(), g(`button`, {
@@ -665,7 +665,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         min: f(V).min,
         max: f(V).max,
         step: 4,
-        "onUpdate:modelValue": i[3] ||= e => {
+        "onUpdate:modelValue": renderCache[3] ||= e => {
           let t = ge(e);
           t !== null && T({
             padding: t
@@ -676,7 +676,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         min: f(se).min,
         max: f(se).max,
         step: 1,
-        "onUpdate:modelValue": i[4] ||= e => {
+        "onUpdate:modelValue": renderCache[4] ||= e => {
           let t = ge(e);
           t !== null && T({
             radius: t
@@ -687,7 +687,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         min: f(z).min,
         max: f(z).max,
         step: 5,
-        "onUpdate:modelValue": i[5] ||= e => {
+        "onUpdate:modelValue": renderCache[5] ||= e => {
           let t = ge(e);
           t !== null && T({
             shadow: t
@@ -704,11 +704,11 @@ var He = I(`grid-3x3`, [[`rect`, {
       }, [N(`span`, qt, [text === `none` ? M(``, true) : (w(), g(`span`, {
         key: 0,
         class: d([`absolute inset-x-0 top-0 flex h-2 items-center gap-[2px] px-[3px]`, text.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200`])
-      }, [i[7] ||= N(`i`, {
+      }, [renderCache[7] ||= N(`i`, {
         class: `size-[3px] rounded-full bg-[#ff5f57]`
-      }, null, -1), i[8] ||= N(`i`, {
+      }, null, -1), renderCache[8] ||= N(`i`, {
         class: `size-[3px] rounded-full bg-[#febc2e]`
-      }, null, -1), i[9] ||= N(`i`, {
+      }, null, -1), renderCache[9] ||= N(`i`, {
         class: `size-[3px] rounded-full bg-[#28c840]`
       }, null, -1), text.startsWith(`browser`) ? (w(), g(`i`, {
         key: 0,
@@ -723,7 +723,7 @@ var He = I(`grid-3x3`, [[`rect`, {
       }, k(e === `auto` ? f(G)(`RatioAuto`) : e), 11, Qt))), 128))])]), N(`div`, $t, [N(`div`, en, [N(`strong`, tn, k(f(G)(`Balance`)), 1), N(`small`, nn, k(f(G)(`BalanceDesc`)), 1)]), E(f(l), {
         "model-value": result.current.balance,
         "aria-label": f(G)(`Balance`),
-        "onUpdate:modelValue": i[6] ||= e => T({
+        "onUpdate:modelValue": renderCache[6] ||= e => T({
           balance: !!e
         })
       }, null, 8, [`model-value`, `aria-label`])])], 2)]));

@@ -35,31 +35,31 @@ var h = [`disabled`],
       }
     },
     emits: [`select`, `drop`],
-    setup(s, {
-      emit: b
+    setup(props, {
+      emit: emit
     }) {
-      let x = s,
-        S = b,
+      let propsAlias = props,
+        emitAlias = emit,
         C = a(false),
-        w = u(() => x.layout === `column` ? `min-h-24 flex-col items-center justify-center gap-1.5 px-4 py-5 text-center` : `min-h-[60px] items-center gap-3 px-3.5 py-3 text-left`),
-        T = u(() => C.value ? `border-primary bg-primary/10` : x.selected ? `border-primary/40 bg-primary/[0.05] hover:border-primary hover:bg-primary/[0.08]` : `border-primary/35 bg-primary/[0.03] hover:border-primary hover:bg-primary/[0.07]`);
+        w = u(() => propsAlias.layout === `column` ? `min-h-24 flex-col items-center justify-center gap-1.5 px-4 py-5 text-center` : `min-h-[60px] items-center gap-3 px-3.5 py-3 text-left`),
+        T = u(() => C.value ? `border-primary bg-primary/10` : propsAlias.selected ? `border-primary/40 bg-primary/[0.05] hover:border-primary hover:bg-primary/[0.08]` : `border-primary/35 bg-primary/[0.03] hover:border-primary hover:bg-primary/[0.07]`);
       function E(e) {
-        C.value = false, !x.disabled && S(`drop`, Array.from(e.dataTransfer?.files || []));
+        C.value = false, !propsAlias.disabled && emitAlias(`drop`, Array.from(e.dataTransfer?.files || []));
       }
-      return (a, u) => (o(), i(`button`, {
+      return (ctx, renderCache) => (o(), i(`button`, {
         type: `button`,
-        disabled: s.disabled,
-        class: t(n(e)(`flex w-full rounded-[10px] border border-dashed transition-colors disabled:cursor-not-allowed disabled:opacity-60`, w.value, T.value, x.class)),
-        onClick: u[0] ||= e => S(`select`),
-        onDragenter: u[1] ||= p(e => C.value = !s.disabled, [`prevent`]),
-        onDragover: u[2] ||= p(e => C.value = !s.disabled, [`prevent`]),
-        onDragleave: u[3] ||= p(e => C.value = false, [`prevent`]),
+        disabled: props.disabled,
+        class: t(n(e)(`flex w-full rounded-[10px] border border-dashed transition-colors disabled:cursor-not-allowed disabled:opacity-60`, w.value, T.value, propsAlias.class)),
+        onClick: renderCache[0] ||= e => emitAlias(`select`),
+        onDragenter: renderCache[1] ||= p(e => C.value = !props.disabled, [`prevent`]),
+        onDragover: renderCache[2] ||= p(e => C.value = !props.disabled, [`prevent`]),
+        onDragleave: renderCache[3] ||= p(e => C.value = false, [`prevent`]),
         onDrop: p(E, [`prevent`])
-      }, [f(`span`, g, [r(a.$slots, `icon`, {}, () => [c(n(m), {
+      }, [f(`span`, g, [r(ctx.$slots, `icon`, {}, () => [c(n(m), {
         size: 18
       })])]), f(`span`, {
-        class: t([`min-w-0`, s.layout === `column` ? `` : `flex-1`])
-      }, [f(`strong`, _, l(s.title), 1), s.hint ? (o(), i(`small`, v, l(s.hint), 1)) : d(``, true)], 2), s.note ? (o(), i(`em`, y, l(s.note), 1)) : d(``, true)], 42, h));
+        class: t([`min-w-0`, props.layout === `column` ? `` : `flex-1`])
+      }, [f(`strong`, _, l(props.title), 1), props.hint ? (o(), i(`small`, v, l(props.hint), 1)) : d(``, true)], 2), props.note ? (o(), i(`em`, y, l(props.note), 1)) : d(``, true)], 42, h));
     }
   });
 export { b as t };

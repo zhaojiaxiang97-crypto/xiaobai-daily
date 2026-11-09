@@ -34,26 +34,26 @@ var handler = (e, t, n) => new Promise((fn, i) => {
     props: {
       node: {}
     },
-    setup(o) {
-      let b = o,
+    setup(props) {
+      let propsAlias = props,
         D = i(null),
-        O = d(() => _(b.node.content)),
+        O = d(() => _(propsAlias.node.content)),
         k = function () {
-          if (!b.node.content) return {
+          if (!propsAlias.node.content) return {
             html: ``,
-            text: b.node.raw,
+            text: propsAlias.node.raw,
             loading: false
           };
           let e = g();
           if (!e) return {
             html: ``,
-            text: b.node.loading ? `` : b.node.raw,
-            loading: b.node.loading
+            text: propsAlias.node.loading ? `` : propsAlias.node.raw,
+            loading: propsAlias.node.loading
           };
           try {
             return {
               html: e.renderToString(O.value, {
-                throwOnError: b.node.loading,
+                throwOnError: propsAlias.node.loading,
                 displayMode: true
               }),
               text: ``,
@@ -62,8 +62,8 @@ var handler = (e, t, n) => new Promise((fn, i) => {
           } catch {
             return {
               html: ``,
-              text: b.node.loading ? `` : b.node.raw,
-              loading: b.node.loading
+              text: propsAlias.node.loading ? `` : propsAlias.node.raw,
+              loading: propsAlias.node.loading
             };
           }
         }(),
@@ -79,7 +79,7 @@ var handler = (e, t, n) => new Promise((fn, i) => {
       function z() {
         return handler(this, null, function* () {
           if (P) return;
-          if (!b.node.content) return R.value = false, A.value = ``, j.value = b.node.raw, void (M = true);
+          if (!propsAlias.node.content) return R.value = false, A.value = ``, j.value = propsAlias.node.raw, void (M = true);
           if (!M) try {
             !L && D.value && (L = I(D.value)), yield L?.whenVisible;
           } catch {}
@@ -102,7 +102,7 @@ var handler = (e, t, n) => new Promise((fn, i) => {
               if (e) {
                 try {
                   let toStringResult = e.renderToString(O.value, {
-                    throwOnError: b.node.loading,
+                    throwOnError: propsAlias.node.loading,
                     displayMode: true
                   });
                   A.value = toStringResult, j.value = ``, M = true, R.value = false, x(O.value, true, toStringResult);
@@ -110,12 +110,12 @@ var handler = (e, t, n) => new Promise((fn, i) => {
                 return;
               }
             }
-            if (r) return R.value = false, A.value = ``, void (j.value = b.node.raw);
-            M || (R.value = true), b.node.loading || (R.value = false, A.value = ``, j.value = b.node.raw);
+            if (r) return R.value = false, A.value = ``, void (j.value = propsAlias.node.raw);
+            M || (R.value = true), propsAlias.node.loading || (R.value = false, A.value = ``, j.value = propsAlias.node.raw);
           }));
         });
       }
-      return (k.html || k.text) && (M = true), n(() => b.node.content, () => {
+      return (k.html || k.text) && (M = true), n(() => propsAlias.node.content, () => {
         z();
       }), u(() => {
         A.value || z();

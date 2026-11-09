@@ -114,10 +114,10 @@ var Qe = [`id`],
     },
     emits: [`toggleExpand`, `edit`, `delete`, `toggleComplete`, `openTodo`, `download`, `cancelUploads`, `retryUpload`, `dismissUpload`],
     setup(event, {
-      emit: s
+      emit: emit
     }) {
       let eventAlias = event,
-        f = s,
+        emitAlias = emit,
         {
           t: m,
           locale: g
@@ -165,9 +165,9 @@ var Qe = [`id`],
         return [e.project || e.assignee.remark || e.assignee.nickname, e.dueDate, e.archived ? m(`milestoneTool.card.archived`) : ``].filter(Boolean).join(` · `);
       }
       function oe(e) {
-        window.getSelection()?.toString() || e.target?.closest(`button, a, [role="menuitem"], [data-no-toggle]`) || f(`toggleExpand`);
+        window.getSelection()?.toString() || e.target?.closest(`button, a, [role="menuitem"], [data-no-toggle]`) || emitAlias(`toggleExpand`);
       }
-      return (s, c) => (v(), u(`article`, {
+      return (ctx, renderCache) => (v(), u(`article`, {
         id: `milestone-card-${event.item.id}`,
         class: `relative grid grid-cols-[68px_minmax(0,1fr)] gap-x-5`
       }, [A(`span`, {
@@ -188,7 +188,7 @@ var Qe = [`id`],
         title: S.value ? o(m)(`milestoneTool.card.autoCompleted`) : y.value ? o(m)(`milestoneTool.card.markIncomplete`) : o(m)(`milestoneTool.card.markComplete`),
         "aria-label": y.value ? o(m)(`milestoneTool.card.markIncomplete`) : o(m)(`milestoneTool.card.markComplete`),
         "aria-pressed": y.value,
-        onClick: c[0] ||= e => f(`toggleComplete`)
+        onClick: renderCache[0] ||= e => emitAlias(`toggleComplete`)
       }, [event.toggling ? (v(), h(o(re), {
         key: 0,
         size: 10,
@@ -202,7 +202,7 @@ var Qe = [`id`],
         class: a([`min-w-0 flex-1 text-left text-sm font-medium leading-5 outline-none focus-visible:underline`, y.value ? `text-muted-foreground` : `text-foreground`]),
         "aria-expanded": event.expanded,
         title: event.expanded ? o(m)(`milestoneTool.card.collapse`) : o(m)(`milestoneTool.card.expand`),
-        onClick: c[1] ||= e => f(`toggleExpand`)
+        onClick: renderCache[1] ||= e => emitAlias(`toggleExpand`)
       }, [A(`span`, ot, C(event.item.title), 1)], 10, at), A(`span`, {
         class: a([`mt-px shrink-0 rounded-md px-1.5 text-[11px] font-medium leading-[18px]`, N.value.className])
       }, C(N.value.label), 3), b(o(W), null, {
@@ -224,7 +224,7 @@ var Qe = [`id`],
         }, {
           default: p(() => [b(o(H), {
             class: `text-xs`,
-            onSelect: c[2] ||= e => f(`edit`)
+            onSelect: renderCache[2] ||= e => emitAlias(`edit`)
           }, {
             default: p(() => [b(o(t)), l(C(o(m)(`milestoneTool.card.edit`)), 1)]),
             _: 1
@@ -232,7 +232,7 @@ var Qe = [`id`],
             key: 0,
             class: `text-xs`,
             disabled: event.toggling,
-            onSelect: c[3] ||= e => f(`toggleComplete`)
+            onSelect: renderCache[3] ||= e => emitAlias(`toggleComplete`)
           }, {
             default: p(() => [y.value ? (v(), h(o(n), {
               key: 0
@@ -243,7 +243,7 @@ var Qe = [`id`],
           }, 8, [`disabled`])) : k(``, true), b(o(Ue)), b(o(H), {
             variant: `destructive`,
             class: `text-xs`,
-            onSelect: c[4] ||= e => f(`delete`)
+            onSelect: renderCache[4] ||= e => emitAlias(`delete`)
           }, {
             default: p(() => [b(o(i)), l(C(o(m)(`milestoneTool.card.delete`)), 1)]),
             _: 1
@@ -292,7 +292,7 @@ var Qe = [`id`],
       }, [A(`button`, {
         type: `button`,
         class: `flex w-full items-center gap-2 px-2.5 py-1.5 text-left transition-colors hover:bg-muted/60`,
-        onClick: t => f(`openTodo`, e.id)
+        onClick: t => emitAlias(`openTodo`, e.id)
       }, [e.status === `done` ? (v(), h(o(Fe), {
         key: 0,
         size: 14,
@@ -314,14 +314,14 @@ var Qe = [`id`],
         class: `grid size-6 shrink-0 place-items-center rounded-md transition-colors hover:bg-muted hover:text-foreground`,
         title: o(m)(`milestoneTool.card.download`),
         "aria-label": o(m)(`milestoneTool.card.download`),
-        onClick: t => f(`download`, count)
+        onClick: t => emitAlias(`download`, count)
       }, [b(o(z), {
         size: 13
       })], 8, yt)]))), 128))])) : k(``, true), A(`div`, bt, [b(o(r), {
         variant: `ghost`,
         size: `xs`,
         class: `text-muted-foreground`,
-        onClick: c[5] ||= e => f(`toggleExpand`)
+        onClick: renderCache[5] ||= e => emitAlias(`toggleExpand`)
       }, {
         default: p(() => [b(o(R)), l(C(o(m)(`milestoneTool.card.collapse`)), 1)]),
         _: 1
@@ -329,11 +329,11 @@ var Qe = [`id`],
         variant: `ghost`,
         size: `xs`,
         class: `text-muted-foreground`,
-        onClick: c[6] ||= e => f(`edit`)
+        onClick: renderCache[6] ||= e => emitAlias(`edit`)
       }, {
         default: p(() => [b(o(t)), l(C(o(m)(`milestoneTool.card.edit`)), 1)]),
         _: 1
-      })])], 2)) : k(``, true), c[8] ||= A(`div`, {
+      })])], 2)) : k(``, true), renderCache[8] ||= A(`div`, {
         class: `h-2.5`
       }, null, -1), event.uploads.length ? (v(), u(`div`, {
         key: 4,
@@ -348,7 +348,7 @@ var Qe = [`id`],
       })), 1), A(`button`, {
         type: `button`,
         class: `shrink-0 font-medium hover:text-foreground`,
-        onClick: c[7] ||= e => f(`cancelUploads`)
+        onClick: renderCache[7] ||= e => emitAlias(`cancelUploads`)
       }, C(o(m)(`milestoneTool.card.cancelUpload`)), 1)])) : k(``, true), (v(true), u(_, null, d(B.value, e => (v(), u(`div`, {
         key: e.id,
         class: `flex items-center gap-2 text-destructive`
@@ -364,7 +364,7 @@ var Qe = [`id`],
       })), 9, Ct), A(`button`, {
         type: `button`,
         class: `inline-flex shrink-0 items-center gap-1 font-medium hover:underline`,
-        onClick: t => f(`retryUpload`, e.id)
+        onClick: t => emitAlias(`retryUpload`, e.id)
       }, [b(o(xe), {
         size: 12
       }), l(C(o(m)(`milestoneTool.card.retryUpload`)), 1)], 8, wt), A(`button`, {
@@ -372,7 +372,7 @@ var Qe = [`id`],
         class: `grid size-5 shrink-0 place-items-center rounded text-muted-foreground hover:text-foreground`,
         title: o(m)(`milestoneTool.card.dismissUpload`),
         "aria-label": o(m)(`milestoneTool.card.dismissUpload`),
-        onClick: t => f(`dismissUpload`, e.id)
+        onClick: t => emitAlias(`dismissUpload`, e.id)
       }, [b(o(ne), {
         size: 12
       })], 8, Tt)]))), 128))], 2)) : k(``, true)], 2)])], 8, Qe));
@@ -535,11 +535,11 @@ var Qe = [`id`],
     }),
     emits: T([`confirm`], [`update:open`]),
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
         i = c(event, `open`),
-        s = t,
+        emitAlias = emit,
         {
           t: y
         } = ee(),
@@ -622,7 +622,7 @@ var Qe = [`id`],
         x.value = t;
       }
       function ae() {
-        s(`confirm`, [...x.value.values()]), i.value = false;
+        emitAlias(`confirm`, [...x.value.values()]), i.value = false;
       }
       return f(i, e => {
         if (!e) {
@@ -896,11 +896,11 @@ var Qe = [`id`],
     }),
     emits: T([`saved`, `delete`, `download`, `cancelUpload`], [`update:open`]),
     setup(options, {
-      emit: s
+      emit: emit
     }) {
       let optionsAlias = options,
         y = c(options, `open`),
-        x = s,
+        emitAlias = emit,
         {
           t: S,
           locale: T
@@ -1148,7 +1148,7 @@ var Qe = [`id`],
           } catch (e) {
             emptyItems.push(Ie(e));
           }
-          x(`saved`, {
+          emitAlias(`saved`, {
             item: i,
             files: W.value.filter(item => !item.error).map(item => item.file),
             isNew: !j.value,
@@ -1169,9 +1169,9 @@ var Qe = [`id`],
         Ne.value && (event.preventDefault(), P.value || (R.value = true));
       }
       function st() {
-        j.value && !P.value && x(`delete`, j.value);
+        j.value && !P.value && emitAlias(`delete`, j.value);
       }
-      return (s, c) => (v(), u(_, null, [b(o(oe), {
+      return (ctx, renderCache) => (v(), u(_, null, [b(o(oe), {
         open: y.value,
         "onUpdate:open": Je
       }, {
@@ -1213,21 +1213,21 @@ var Qe = [`id`],
             type: `button`,
             class: `shrink-0 font-medium hover:underline`,
             onClick: Ue
-          }, C(o(S)(`milestoneTool.editor.reload`)), 1)) : k(``, true)])) : k(``, true), A(`label`, $t, [A(`span`, en, [A(`span`, null, [l(C(o(S)(`milestoneTool.editor.title`)) + ` `, 1), c[11] ||= A(`em`, {
+          }, C(o(S)(`milestoneTool.editor.reload`)), 1)) : k(``, true)])) : k(``, true), A(`label`, $t, [A(`span`, en, [A(`span`, null, [l(C(o(S)(`milestoneTool.editor.title`)) + ` `, 1), renderCache[11] ||= A(`em`, {
             class: `not-italic text-destructive`
           }, `*`, -1)]), De.value ? (v(), u(`span`, tn, C(Array.from(V.title).length) + `/` + C(o(500)), 1)) : k(``, true)]), b(o(Ge), {
             ref_key: `titleInput`,
             ref: E,
             modelValue: V.title,
-            "onUpdate:modelValue": c[0] ||= e => V.title = e,
+            "onUpdate:modelValue": renderCache[0] ||= e => V.title = e,
             maxlength: o(500),
             placeholder: o(S)(`milestoneTool.editor.titlePlaceholder`),
             class: `text-sm`
-          }, null, 8, [`modelValue`, `maxlength`, `placeholder`])]), A(`div`, nn, [A(`span`, rn, [l(C(o(S)(`milestoneTool.editor.date`)) + ` `, 1), c[12] ||= A(`em`, {
+          }, null, 8, [`modelValue`, `maxlength`, `placeholder`])]), A(`div`, nn, [A(`span`, rn, [l(C(o(S)(`milestoneTool.editor.date`)) + ` `, 1), renderCache[12] ||= A(`em`, {
             class: `not-italic text-destructive`
           }, `*`, -1)]), A(`div`, an, [b(ze, {
             modelValue: V.date,
-            "onUpdate:modelValue": c[1] ||= e => V.date = e,
+            "onUpdate:modelValue": renderCache[1] ||= e => V.date = e,
             label: o(S)(`milestoneTool.editor.date`),
             mode: `date`,
             "value-format": `date`,
@@ -1238,7 +1238,7 @@ var Qe = [`id`],
             key: 0
           }, [b(ze, {
             modelValue: V.time,
-            "onUpdate:modelValue": c[2] ||= e => V.time = e,
+            "onUpdate:modelValue": renderCache[2] ||= e => V.time = e,
             label: o(S)(`milestoneTool.editor.time`),
             mode: `time`,
             precision: `minute`,
@@ -1251,7 +1251,7 @@ var Qe = [`id`],
             class: `text-muted-foreground`,
             title: o(S)(`milestoneTool.editor.clearTime`),
             "aria-label": o(S)(`milestoneTool.editor.clearTime`),
-            onClick: c[3] ||= e => V.time = ``
+            onClick: renderCache[3] ||= e => V.time = ``
           }, {
             default: p(() => [b(o(ne))]),
             _: 1
@@ -1260,7 +1260,7 @@ var Qe = [`id`],
             variant: `ghost`,
             size: `sm`,
             class: `text-xs text-muted-foreground`,
-            onClick: c[4] ||= e => V.time = `09:00`
+            onClick: renderCache[4] ||= e => V.time = `09:00`
           }, {
             default: p(() => [b(o(je)), l(C(o(S)(`milestoneTool.editor.addTime`)), 1)]),
             _: 1
@@ -1271,7 +1271,7 @@ var Qe = [`id`],
             onClick: t => V.date = state.value
           }, C(state.label), 11, cn))), 128))])]), A(`div`, ln, [A(`span`, un, C(o(S)(`milestoneTool.editor.content`)), 1), b(Mt, {
             modelValue: V.content,
-            "onUpdate:modelValue": c[5] ||= e => V.content = e,
+            "onUpdate:modelValue": renderCache[5] ||= e => V.content = e,
             placeholder: o(S)(`milestoneTool.editor.contentPlaceholder`)
           }, null, 8, [`modelValue`, `placeholder`])]), A(`section`, dn, [A(`div`, fn, [A(`span`, pn, [l(C(o(S)(`milestoneTool.editor.todos`)) + ` `, 1), H.value.length ? (v(), u(`span`, mn, C(o(S)(`milestoneTool.editor.todoSummary`, {
             done: we.value,
@@ -1279,7 +1279,7 @@ var Qe = [`id`],
           })), 1)) : k(``, true)]), b(o(r), {
             variant: `outline`,
             size: `xs`,
-            onClick: c[6] ||= e => L.value = true
+            onClick: renderCache[6] ||= e => L.value = true
           }, {
             default: p(() => [b(o(e)), l(C(o(S)(`milestoneTool.editor.chooseTodos`)), 1)]),
             _: 1
@@ -1335,7 +1335,7 @@ var Qe = [`id`],
               size: o(Ae)(options.config.attachmentMaxBytes)
             }),
             disabled: Te.value,
-            onSelect: c[7] ||= e => te.value?.click(),
+            onSelect: renderCache[7] ||= e => te.value?.click(),
             onDrop: Qe
           }, null, 8, [`title`, `hint`, `disabled`]), ie.value.length || options.uploads.length || W.value.length ? (v(), u(`ul`, Cn, [(v(true), u(_, null, d(ie.value, count => (v(), u(`li`, {
             key: `saved-${count.id}`,
@@ -1358,7 +1358,7 @@ var Qe = [`id`],
             class: `grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground`,
             title: o(S)(`milestoneTool.card.download`),
             "aria-label": o(S)(`milestoneTool.card.download`),
-            onClick: t => x(`download`, count)
+            onClick: t => emitAlias(`download`, count)
           }, [b(o(z), {
             size: 14
           })], 8, Dn), A(`button`, {
@@ -1379,7 +1379,7 @@ var Qe = [`id`],
             class: `grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground`,
             title: o(S)(`milestoneTool.card.cancelUpload`),
             "aria-label": o(S)(`milestoneTool.card.cancelUpload`),
-            onClick: t => x(`cancelUpload`, e.id)
+            onClick: t => emitAlias(`cancelUpload`, e.id)
           }, [b(o(ne), {
             size: 14
           })], 8, Mn)]))), 128)), (v(true), u(_, null, d(W.value, e => (v(), u(`li`, {
@@ -1438,12 +1438,12 @@ var Qe = [`id`],
         _: 1
       }, 8, [`open`]), b(Kt, {
         open: L.value,
-        "onUpdate:open": c[8] ||= e => L.value = e,
+        "onUpdate:open": renderCache[8] ||= e => L.value = e,
         selected: H.value,
-        onConfirm: c[9] ||= e => H.value = e
+        onConfirm: renderCache[9] ||= e => H.value = e
       }, null, 8, [`open`, `selected`]), b(o(de), {
         open: R.value,
-        "onUpdate:open": c[10] ||= e => R.value = e
+        "onUpdate:open": renderCache[10] ||= e => R.value = e
       }, {
         default: p(() => [b(o(ue), {
           size: `sm`
@@ -1656,12 +1656,12 @@ var Vn = {
       openRequest: {}
     },
     emits: [`back`, `openTodo`, `openRequestHandled`],
-    setup(t, {
-      expose: n,
-      emit: i
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let a = t,
-        s = i,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: c,
           locale: y
@@ -1702,7 +1702,7 @@ var Vn = {
         Ae,
         je = null;
       function Me() {
-        let milestoneConfig = a.tool.milestoneConfig;
+        let milestoneConfig = propsAlias.tool.milestoneConfig;
         return {
           createEnabled: milestoneConfig?.createEnabled !== false,
           attachmentLimit: milestoneConfig?.attachmentLimit ?? 10,
@@ -1714,7 +1714,7 @@ var Vn = {
         return e instanceof Error && e.message ? e.message : c(`milestoneTool.errors.generic`);
       }
       let Z = Bn({
-          csrfToken: () => a.user?.csrfToken ?? null,
+          csrfToken: () => propsAlias.user?.csrfToken ?? null,
           onUploaded: e => {
             $e(e);
           },
@@ -1789,7 +1789,7 @@ var Vn = {
       }
       async function Qe(e) {
         let t = x();
-        if (!a.user) return false;
+        if (!propsAlias.user) return false;
         let n = ++xe,
           r = !!e.quiet;
         z.value = X(), r || (P.value = true, L.value = ``);
@@ -1808,7 +1808,7 @@ var Vn = {
           let s = new Set(o.items.map(item => item.id));
           W.value = new Set([...W.value].filter(item => s.has(item)));
           for (let token of O.value) W.value.has(token.id) && qe(token) && et(token.id);
-          return Ce = Date.now(), I.value = true, L.value = ``, (e.observeView ?? !r) && a.active && t(`tool_view_loaded`, {
+          return Ce = Date.now(), I.value = true, L.value = ``, (e.observeView ?? !r) && propsAlias.active && t(`tool_view_loaded`, {
             panel: `milestone`
           }), true;
         } catch (e) {
@@ -1874,7 +1874,7 @@ var Vn = {
         q.value = null, e?.();
       }
       function ot() {
-        a.user && G.value.createEnabled && (le.value = null, ce.value = true);
+        propsAlias.user && G.value.createEnabled && (le.value = null, ce.value = true);
       }
       function st(e) {
         le.value = e.id, ce.value = true;
@@ -1896,23 +1896,23 @@ var Vn = {
       }
       async function dt() {
         let e = K.value;
-        if (K.value = null, e && a.user) {
+        if (K.value = null, e && propsAlias.user) {
           Z.cancelFor(e.id), O.value = O.value.filter(item => item.id !== e.id), Ge(W, e.id, false);
           try {
-            await Q.delete(a.user.csrfToken, e.id);
+            await Q.delete(propsAlias.user.csrfToken, e.id);
           } catch (t) {
             Ye(e, true), L.value = Pe(t);
           }
         }
       }
       async function ft(e, t, n = true) {
-        if (!a.user || oe.value.has(e.id) || e.completedAt === undefined) return;
+        if (!propsAlias.user || oe.value.has(e.id) || e.completedAt === undefined) return;
         let fallbackValue = e.completedAt ?? null;
         Ge(oe, e.id, true), Xe(e.id, {
           completedAt: t ? new Date().toISOString() : null
         });
         try {
-          let setCompleted = await Q.setCompleted(a.user.csrfToken, e.id, t, X()),
+          let setCompleted = await Q.setCompleted(propsAlias.user.csrfToken, e.id, t, X()),
             found = O.value.find(item => item.id === e.id);
           Ye(found && found.content !== null && setCompleted.content === null ? {
             ...setCompleted,
@@ -1971,11 +1971,11 @@ var Vn = {
           Oe = e;
         }));
       }
-      return n({
+      return expose({
         requestClose: vt
-      }), f(() => a.user?.id, () => {
-        Z.cancelAll(), xe += 1, O.value = [], W.value = new Set(), I.value = false, ce.value = false, K.value = null, rt(false), a.user && $();
-      }), f(() => a.active, e => {
+      }), f(() => propsAlias.user?.id, () => {
+        Z.cancelAll(), xe += 1, O.value = [], W.value = new Set(), I.value = false, ce.value = false, K.value = null, rt(false), propsAlias.user && $();
+      }), f(() => propsAlias.active, e => {
         if (e) {
           if (Date.now() - Ce > hr) $({
             quiet: O.value.length > 0,
@@ -1983,46 +1983,46 @@ var Vn = {
           });else if (Ce > 0 && !L.value) {
             let e = x();
             w(() => {
-              a.active && e(`tool_view_loaded`, {
+              propsAlias.active && e(`tool_view_loaded`, {
                 panel: `milestone`
               });
             });
           }
         }
-      }), a.user && $(), f(() => [a.openRequest?.requestId, a.user?.id], async () => {
-        let openRequest = a.openRequest;
-        if (openRequest && a.user) try {
+      }), propsAlias.user && $(), f(() => [propsAlias.openRequest?.requestId, propsAlias.user?.id], async () => {
+        let openRequest = propsAlias.openRequest;
+        if (openRequest && propsAlias.user) try {
           await ht(openRequest.milestoneId);
         } finally {
-          s(`openRequestHandled`, openRequest.requestId);
+          emitAlias(`openRequestHandled`, openRequest.requestId);
         }
       }, {
         immediate: true
       }), E(() => {
         je = () => {
-          z.value = X(), a.active && document.visibilityState === `visible` && Date.now() - Ce > hr && $({
+          z.value = X(), propsAlias.active && document.visibilityState === `visible` && Date.now() - Ce > hr && $({
             quiet: true
           });
         }, window.addEventListener(`focus`, je), Ae = window.electronAPI?.todos?.onChanged?.(() => {
-          a.active ? $({
+          propsAlias.active ? $({
             quiet: true
           }) : Ce = 0;
         }), ke = ve(`milestones`, () => $({
           quiet: true
         }), {
-          active: () => a.active
+          active: () => propsAlias.active
         });
       }), S(() => {
         Z.cancelAll(), J !== null && window.clearTimeout(J), Y !== null && window.clearTimeout(Y), Ee !== null && window.clearTimeout(Ee), je && window.removeEventListener(`focus`, je), Ae?.(), ke?.(), Oe && gt(true);
       }), (n, i) => (v(), u(`div`, Vn, [b(ie, {
-        tool: t.tool,
-        user: t.user,
-        "credits-balance": t.creditsBalance,
+        tool: props.tool,
+        user: props.user,
+        "credits-balance": props.creditsBalance,
         "voice-tool": false,
         "show-history": false,
         "show-balance": false,
-        onBack: i[0] ||= e => s(`back`)
-      }, null, 8, [`tool`, `user`, `credits-balance`]), t.user ? (v(), u(`div`, {
+        onBack: i[0] ||= e => emitAlias(`back`)
+      }, null, 8, [`tool`, `user`, `credits-balance`]), props.user ? (v(), u(`div`, {
         key: 1,
         ref_key: `scrollRef`,
         ref: T,
@@ -2141,7 +2141,7 @@ var Vn = {
         onEdit: e => st(t),
         onDelete: e => lt(t),
         onToggleComplete: e => pt(t),
-        onOpenTodo: i[7] ||= e => s(`openTodo`, e),
+        onOpenTodo: i[7] ||= e => emitAlias(`openTodo`, e),
         onDownload: mt,
         onCancelUploads: e => o(Z).cancelFor(t.id),
         onRetryUpload: o(Z).retry,
@@ -2167,7 +2167,7 @@ var Vn = {
         open: ce.value,
         "onUpdate:open": i[8] ||= e => ce.value = e,
         "milestone-id": le.value,
-        user: t.user,
+        user: props.user,
         config: G.value,
         uploads: He.value,
         onSaved: ct,

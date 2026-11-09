@@ -73,19 +73,19 @@ var [S, C] = r(`RovingFocusGroup`),
       }
     },
     emits: [`entryFocus`, `update:currentTabStopId`],
-    setup(n, {
-      expose: r,
-      emit: d
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let _ = n,
-        v = d,
+      let _ = props,
+        emitAlias = emit,
         {
           loop: y,
           orientation: x,
           dir: S
         } = o(_),
         w = p(S),
-        T = e(_, `currentTabStopId`, v, {
+        T = e(_, `currentTabStopId`, emitAlias, {
           defaultValue: _.defaultCurrentTabStopId,
           passive: _.currentTabStopId === undefined
         }),
@@ -102,7 +102,7 @@ var [S, C] = r(`RovingFocusGroup`),
         let t = !D.value;
         if (event.currentTarget && event.target === event.currentTarget && t && !E.value) {
           let customEvent = new CustomEvent(h, g);
-          if (event.currentTarget.dispatchEvent(customEvent), v(`entryFocus`, customEvent), !customEvent.defaultPrevented) {
+          if (event.currentTarget.dispatchEvent(customEvent), emitAlias(`entryFocus`, customEvent), !customEvent.defaultPrevented) {
             let filtered = k().map(item => item.ref).filter(item => item.dataset.disabled !== ``);
             b([filtered.find(item => item.getAttribute(`data-active`) === ``), filtered.find(item => item.getAttribute(`data-highlighted`) === ``), filtered.find(item => item.id === T.value), ...filtered].filter(Boolean), _.preventScrollOnEntryFocus);
           }
@@ -114,7 +114,7 @@ var [S, C] = r(`RovingFocusGroup`),
           D.value = false;
         }, 1);
       }
-      return r({
+      return expose({
         getItems: k
       }), C({
         loop: y,

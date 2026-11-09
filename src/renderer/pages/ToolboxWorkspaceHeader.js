@@ -67,33 +67,33 @@ var x = p(`save-all`, [[`path`, {
       }
     },
     emits: [`back`, `history`, `voiceLibrary`, `voiceActivity`, `recharge`, `whiteboardOpen`, `whiteboardSave`, `whiteboardSaveAs`],
-    setup(s, {
-      emit: p
+    setup(props, {
+      emit: emit
     }) {
-      let I = s,
-        L = p,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: R
         } = y(),
-        z = u(() => I.localTool || I.tool.price > 0 ? !I.localTool : Object.values(I.tool.priceOptions || {}).some(item => Number(item) > 0) || Object.values(I.tool.characterPriceOptions || {}).some(item => Number(item) > 0) ? true : Object.values(I.tool.tokenRateOptions || {}).some(item => Number(item?.withVideo) > 0 || Number(item?.withoutVideo) > 0)),
+        z = u(() => propsAlias.localTool || propsAlias.tool.price > 0 ? !propsAlias.localTool : Object.values(propsAlias.tool.priceOptions || {}).some(item => Number(item) > 0) || Object.values(propsAlias.tool.characterPriceOptions || {}).some(item => Number(item) > 0) ? true : Object.values(propsAlias.tool.tokenRateOptions || {}).some(item => Number(item?.withVideo) > 0 || Number(item?.withoutVideo) > 0)),
         B = `${F} hover:bg-muted hover:text-foreground`,
         V = `${F} hover:bg-primary/10`;
-      return (u, p) => (o(), i(`header`, S, [f(`div`, C, [f(`button`, {
+      return (ctx, renderCache) => (o(), i(`header`, S, [f(`div`, C, [f(`button`, {
         type: `button`,
         class: `inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-[background-color,color,transform] hover:bg-muted hover:text-foreground active:scale-[0.96]`,
         "aria-label": n(R)(`toolboxNative.backToToolbox`),
         title: n(R)(`toolboxNative.backToToolbox`),
-        onClick: p[0] ||= e => L(`back`)
+        onClick: renderCache[0] ||= e => emitAlias(`back`)
       }, [c(n(b), {
         size: 18
-      })], 8, w), r(u.$slots, `title`, {}, () => [f(`strong`, T, l(s.tool.name), 1)])]), f(`div`, E, [r(u.$slots, `actions`), s.whiteboardTool ? (o(), i(a, {
+      })], 8, w), r(ctx.$slots, `title`, {}, () => [f(`strong`, T, l(props.tool.name), 1)])]), f(`div`, E, [r(ctx.$slots, `actions`), props.whiteboardTool ? (o(), i(a, {
         key: 0
       }, [f(`button`, {
         type: `button`,
         class: t(B),
         "aria-label": n(R)(`toolboxNative.whiteboardOpen`),
         title: n(R)(`toolboxNative.whiteboardOpen`),
-        onClick: p[1] ||= e => L(`whiteboardOpen`)
+        onClick: renderCache[1] ||= e => emitAlias(`whiteboardOpen`)
       }, [c(n(g), {
         size: 15
       }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardOpenShort`)), 1)], 8, D), f(`button`, {
@@ -101,7 +101,7 @@ var x = p(`save-all`, [[`path`, {
         class: t(B),
         "aria-label": n(R)(`toolboxNative.whiteboardSave`),
         title: n(R)(`toolboxNative.whiteboardSave`),
-        onClick: p[2] ||= e => L(`whiteboardSave`)
+        onClick: renderCache[2] ||= e => emitAlias(`whiteboardSave`)
       }, [c(n(v), {
         size: 15
       }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveShort`)), 1)], 8, O), f(`button`, {
@@ -109,17 +109,17 @@ var x = p(`save-all`, [[`path`, {
         class: t(B),
         "aria-label": n(R)(`toolboxNative.whiteboardSaveAs`),
         title: n(R)(`toolboxNative.whiteboardSaveAs`),
-        onClick: p[3] ||= e => L(`whiteboardSaveAs`)
+        onClick: renderCache[3] ||= e => emitAlias(`whiteboardSaveAs`)
       }, [c(n(x), {
         size: 15
-      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveAsShort`)), 1)], 8, k)], 64)) : d(``, true), s.voiceTool ? (o(), i(a, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveAsShort`)), 1)], 8, k)], 64)) : d(``, true), props.voiceTool ? (o(), i(a, {
         key: 1
       }, [f(`button`, {
         type: `button`,
         class: t(B),
         "aria-label": n(R)(`toolboxNative.myVoiceLibrary`),
         title: n(R)(`toolboxNative.myVoiceLibrary`),
-        onClick: p[4] ||= e => L(`voiceLibrary`)
+        onClick: renderCache[4] ||= e => emitAlias(`voiceLibrary`)
       }, [c(n(h), {
         size: 15
       }), f(`span`, null, l(n(R)(`toolboxNative.myVoiceLibrary`)), 1)], 8, A), f(`button`, {
@@ -127,27 +127,27 @@ var x = p(`save-all`, [[`path`, {
         class: t(B),
         "aria-label": n(R)(`toolboxNative.voiceActivity`),
         title: n(R)(`toolboxNative.voiceActivity`),
-        onClick: p[5] ||= e => L(`voiceActivity`)
+        onClick: renderCache[5] ||= e => emitAlias(`voiceActivity`)
       }, [c(n(m), {
         size: 15
-      }), f(`span`, null, l(n(R)(`toolboxNative.voiceActivity`)), 1)], 8, j)], 64)) : s.showHistory && !s.localTool ? (o(), i(`button`, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.voiceActivity`)), 1)], 8, j)], 64)) : props.showHistory && !props.localTool ? (o(), i(`button`, {
         key: 2,
         type: `button`,
         class: t(B),
-        "aria-label": s.historyLabel || n(R)(`toolboxNative.generationHistory`),
-        title: s.historyLabel || n(R)(`toolboxNative.generationHistory`),
-        onClick: p[6] ||= e => L(`history`)
+        "aria-label": props.historyLabel || n(R)(`toolboxNative.generationHistory`),
+        title: props.historyLabel || n(R)(`toolboxNative.generationHistory`),
+        onClick: renderCache[6] ||= e => emitAlias(`history`)
       }, [c(n(m), {
         size: 15
-      }), f(`span`, null, l(s.historyLabel || n(R)(`toolboxNative.generationHistory`)), 1)], 8, M)) : d(``, true), s.user && s.showBalance && z.value ? (o(), i(`button`, {
+      }), f(`span`, null, l(props.historyLabel || n(R)(`toolboxNative.generationHistory`)), 1)], 8, M)) : d(``, true), props.user && props.showBalance && z.value ? (o(), i(`button`, {
         key: 3,
         type: `button`,
         class: t(V),
-        title: `${n(R)(`toolboxNative.balance`)} ${s.creditsBalance.toLocaleString()}`,
-        onClick: p[7] ||= e => L(`recharge`)
+        title: `${n(R)(`toolboxNative.balance`)} ${props.creditsBalance.toLocaleString()}`,
+        onClick: renderCache[7] ||= e => emitAlias(`recharge`)
       }, [c(n(_), {
         size: 15
-      }), f(`span`, null, l(n(R)(`toolboxNative.balance`)), 1), f(`strong`, P, l(s.creditsBalance.toLocaleString()), 1), c(n(e), {
+      }), f(`span`, null, l(n(R)(`toolboxNative.balance`)), 1), f(`strong`, P, l(props.creditsBalance.toLocaleString()), 1), c(n(e), {
         size: 13
       })], 8, N)) : d(``, true)])]));
     }

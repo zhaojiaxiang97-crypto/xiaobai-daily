@@ -96,12 +96,12 @@ var _e = class e extends ie {
       }
     },
     emits: [`unavailable`, `cell-hover`, `cell-click`],
-    setup(l, {
-      expose: ie,
-      emit: b
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let x = l,
-        C = b,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: Le
         } = u(),
@@ -115,10 +115,10 @@ var _e = class e extends ie {
         D = o([]),
         O = o(null),
         k = o(false),
-        He = h(() => Math.max(1, ...x.rows.map(item => item.cells.length))),
+        He = h(() => Math.max(1, ...propsAlias.rows.map(item => item.cells.length))),
         Ue = h(() => Math.max(3, He.value * .125)),
-        We = h(() => x.rows.some(item => item.label)),
-        Ge = h(() => x.rows.some(item => item.summary)),
+        We = h(() => propsAlias.rows.some(item => item.label)),
+        Ge = h(() => propsAlias.rows.some(item => item.summary)),
         emptyItems = [],
         Ke = h(() => {
           if (!O.value) return ``;
@@ -189,19 +189,19 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       let gt = new se(16777215, .2 * Math.PI);
       gt.position.set(-1, .25, -.4), j.add(ht, gt);
       function X(e) {
-        return x.rows[e.row]?.cells[e.column] ?? null;
+        return propsAlias.rows[e.row]?.cells[e.column] ?? null;
       }
       function _t(e) {
         return e - (He.value - 1) / 2;
       }
       function vt(e) {
-        return (e - (x.rows.length - 1) / 2) * x.rowPitch;
+        return (e - (propsAlias.rows.length - 1) / 2) * propsAlias.rowPitch;
       }
       function yt() {
         return He.value / 2;
       }
       function bt() {
-        return Math.max(1, x.rows.length) * x.rowPitch / 2;
+        return Math.max(1, propsAlias.rows.length) * propsAlias.rowPitch / 2;
       }
       function xt() {
         return {
@@ -237,14 +237,14 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let fontFamily = getComputedStyle(w.value ?? document.body).fontFamily;
         Y.font = `${je} ${fontFamily}`;
         let t = 0;
-        for (let value of x.rows) t = Math.max(t, Y.measureText(value.label).width), value.summary && (t = Math.max(t, Y.measureText(value.summary).width));
+        for (let value of propsAlias.rows) t = Math.max(t, Y.measureText(value.label).width), value.summary && (t = Math.max(t, Y.measureText(value.summary).width));
         return Math.ceil(t) + 4;
       }
       function Tt(e) {
         let t = wt(),
           n = Math.max(4, (e * Ee - t - Me) / He.value),
           r = n * Math.cos(De);
-        ft = Me / n, dt = t ? t / n + ft : 0, mt = Ne / r, pt = x.columnLabels.length ? Pe / r : .3;
+        ft = Me / n, dt = t ? t / n + ft : 0, mt = Ne / r, pt = propsAlias.columnLabels.length ? Pe / r : .3;
       }
       function Et(e, t, n, r) {
         e.fillStyle = `#ffffff`, e.fillStyle = t.getPropertyValue(`--background`).trim() || `#ffffff`, e.fillRect(0, 0, 1, 1), e.fillStyle = r, e.fillStyle = t.getPropertyValue(n).trim() || r, e.fillRect(0, 0, 1, 1);
@@ -276,7 +276,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         };
       function Ot() {
         let e = V[0];
-        ot = x.rows.map(item => !item.color || !e ? null : (e.getRGB(options, v), new y(item.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(options.r + (Q.r - options.r) * e, options.g + (Q.g - options.g) * e, options.b + (Q.b - options.b) * e, v))]));
+        ot = propsAlias.rows.map(item => !item.color || !e ? null : (e.getRGB(options, v), new y(item.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(options.r + (Q.r - options.r) * e, options.g + (Q.g - options.g) * e, options.b + (Q.b - options.b) * e, v))]));
       }
       function kt(e, t) {
         if (e <= 0) return 0;
@@ -285,7 +285,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }
       function At() {
         let e = 1;
-        for (let t of x.rows) for (let n of t.cells) n && n.value > e && (e = n.value);
+        for (let t of propsAlias.rows) for (let n of t.cells) n && n.value > e && (e = n.value);
         return e;
       }
       function jt(e, t) {
@@ -310,7 +310,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         R && (j.remove(R), R.geometry.dispose(), R.dispose(), R = null, B = null);
       }
       function Ft() {
-        if (Pt(), emptyItems = [], x.rows.forEach((item, t) => {
+        if (Pt(), emptyItems = [], propsAlias.rows.forEach((item, t) => {
           item.cells.forEach((e, n) => {
             e && emptyItems.push({
               row: t,
@@ -407,7 +407,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         if (!e) return;
         let clientWidth = e.clientWidth,
           clientHeight = e.clientHeight,
-          mapped = x.rows.map((item, r) => item.label ? Wt(-yt() - ft, 0, vt(r), clientWidth, clientHeight) : Gt),
+          mapped = propsAlias.rows.map((item, r) => item.label ? Wt(-yt() - ft, 0, vt(r), clientWidth, clientHeight) : Gt),
           i = Ge.value ? 28 : 14,
           a = 1 / 0;
         for (let e = mapped.length - 1; e >= 0; e--) {
@@ -416,7 +416,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         }
         E.value = mapped;
         let o = -1 / 0;
-        D.value = x.columnLabels.map(item => {
+        D.value = propsAlias.columnLabels.map(item => {
           let r = Wt(_t(item.index), 0, bt() + mt, clientWidth, clientHeight);
           return !r.visible || r.x - o < Fe ? Gt : (o = r.x, r);
         });
@@ -463,7 +463,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           image.remove(), t.style.display = ``, i && (i.style.display = ``);
         };
       }
-      ie({
+      expose({
         freezeForExport: Zt
       });
       function Qt(event) {
@@ -485,7 +485,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function $t(e) {
         let t = emptyItems[e],
           n = t ? X(t) : null,
-          r = t ? x.rows[t.row] : undefined;
+          r = t ? propsAlias.rows[t.row] : undefined;
         return t && n && r ? {
           rowKey: r.key,
           cellKey: n.key
@@ -501,13 +501,13 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           y: event.clientY - n.top
         } : null;
         let r = $t(t);
-        qe.value = x.clickable && t >= 0 && (X(emptyItems[t])?.value ?? 0) > 0, r ? (C(`cell-hover`, {
+        qe.value = propsAlias.clickable && t >= 0 && (X(emptyItems[t])?.value ?? 0) > 0, r ? (emitAlias(`cell-hover`, {
           ...r,
           event: event
-        }), U = true) : U &&= (C(`cell-hover`, null), false), Nt(t);
+        }), U = true) : U &&= (emitAlias(`cell-hover`, null), false), Nt(t);
       }
       function tn() {
-        O.value = null, qe.value = false, U &&= (C(`cell-hover`, null), false), Nt(-1);
+        O.value = null, qe.value = false, U &&= (emitAlias(`cell-hover`, null), false), Nt(-1);
       }
       function nn(event) {
         k.value = true, payload = {
@@ -529,7 +529,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let boundingClientRect = i.getBoundingClientRect(),
           o = event.clientX - boundingClientRect.left,
           s = event.clientY - boundingClientRect.top;
-        C(`cell-click`, {
+        emitAlias(`cell-click`, {
           ...r,
           value: X(emptyItems[n])?.value ?? 0,
           anchor: {
@@ -546,9 +546,9 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function sn() {
         Dt(), Ot(), Mt(), $();
       }
-      let cn = h(() => x.rows.map(item => item.cells.map(e => +!!e).join(``)).join(`|`)),
-        ln = h(() => x.rows.map(state => state.cells.map(item => item?.value ?? ``).join(`,`)).join(`|`)),
-        un = h(() => x.rows.map(item => item.color ?? ``).join(`|`));
+      let cn = h(() => propsAlias.rows.map(item => item.cells.map(e => +!!e).join(``)).join(`|`)),
+        ln = h(() => propsAlias.rows.map(state => state.cells.map(item => item?.value ?? ``).join(`,`)).join(`|`)),
+        un = h(() => propsAlias.rows.map(item => item.color ?? ``).join(`|`));
       return i([cn, ln, un], ([e, t], [n, r]) => {
         I && (Ot(), e !== n && (Ft(), Yt(true)), e !== n || t !== r ? It() : (Mt(), $()));
       }), m(() => {
@@ -564,7 +564,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
               failIfMajorPerformanceCaveat: true
             });
           } catch {
-            C(`unavailable`);
+            emitAlias(`unavailable`);
             return;
           }
           I.setClearColor(0, 0), e.addEventListener(`webglcontextrestored`, $), L = new fe(M, e), L.enableDamping = true, L.dampingFactor = .12, L.enablePan = false, L.enableZoom = false, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
@@ -580,7 +580,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }), f(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
           capture: true
-        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
+        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && emitAlias(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
       }), (i, o) => (c(), n(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: w,
@@ -602,14 +602,14 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         onDblclick: o[0] ||= e => Ht(true)
       }, null, 38), We.value ? (c(true), n(s, {
         key: 0
-      }, r(l.rows, (event, t) => a((c(), n(`div`, {
+      }, r(props.rows, (event, t) => a((c(), n(`div`, {
         key: event.key,
         class: `pointer-events-none absolute -translate-x-full -translate-y-1/2 text-right`,
         style: d({
           left: `${E.value[t]?.x ?? 0}px`,
           top: `${E.value[t]?.y ?? 0}px`
         })
-      }, [g(`span`, ve, p(event.label), 1), event.summary ? (c(), n(`div`, ye, p(event.summary), 1)) : ee(``, true)], 4)), [[te, E.value[t]?.visible]])), 128)) : ee(``, true), (c(true), n(s, null, r(l.columnLabels, (e, t) => a((c(), n(`span`, {
+      }, [g(`span`, ve, p(event.label), 1), event.summary ? (c(), n(`div`, ye, p(event.summary), 1)) : ee(``, true)], 4)), [[te, E.value[t]?.visible]])), 128)) : ee(``, true), (c(true), n(s, null, r(props.columnLabels, (e, t) => a((c(), n(`span`, {
         key: `${e.index}-${e.text}`,
         class: `pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-xs text-[#bbb] leading-none whitespace-nowrap dark:text-muted-foreground/70`,
         style: d({
@@ -624,7 +624,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         ref_key: `hintRef`,
         ref: Be,
         class: `mt-1.5 text-right text-xs text-[#bbb] leading-none dark:text-muted-foreground/70`
-      }, p(l.hint ?? t(Le)(`todayWork.heatmap3dHint`)), 513)]));
+      }, p(props.hint ?? t(Le)(`todayWork.heatmap3dHint`)), 513)]));
     }
   });
 export { C as default };

@@ -8,7 +8,7 @@ var h = [`src`],
   _ = 14,
   v = a({
     __name: `PinApp`,
-    setup(a) {
+    setup(props) {
       let v = window.screenshotToolAPI.pin,
         y = r(``),
         b = r(document.hasFocus()),

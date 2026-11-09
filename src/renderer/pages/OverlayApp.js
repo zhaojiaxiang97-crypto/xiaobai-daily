@@ -36,7 +36,7 @@ var Se = {
   S = 8,
   C = te({
     __name: `OverlayApp`,
-    setup(te) {
+    setup(props) {
       let overlay = window.screenshotToolAPI.overlay,
         w = t(null),
         T = s(null),

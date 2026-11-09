@@ -66,11 +66,11 @@ var E = {
       footnote: {}
     },
     emits: [`back`, `toggle`],
-    setup(f, {
-      emit: z
+    setup(props, {
+      emit: emit
     }) {
-      let B = f,
-        V = z,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: H
         } = y(),
@@ -79,35 +79,35 @@ var E = {
           check: W,
           request: G
         } = x(),
-        K = g(() => !!(B.requiresAccessibility && B.enabled && U.value?.required && !U.value.granted)),
-        q = g(() => S[B.tool.icon] || T);
+        K = g(() => !!(propsAlias.requiresAccessibility && propsAlias.enabled && U.value?.required && !U.value.granted)),
+        q = g(() => S[propsAlias.tool.icon] || T);
       return h(() => {
-        B.requiresAccessibility && W();
-      }), c(() => B.enabled, e => {
-        e && B.requiresAccessibility && W();
+        propsAlias.requiresAccessibility && W();
+      }), c(() => propsAlias.enabled, e => {
+        e && propsAlias.requiresAccessibility && W();
       }), (c, f) => (d(), s(`div`, E, [p(C, {
-        tool: B.tool,
-        user: B.user,
-        "credits-balance": B.creditsBalance,
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
         "voice-tool": false,
         "local-tool": ``,
         "show-history": false,
         "show-balance": false,
-        onBack: f[0] ||= e => V(`back`)
+        onBack: f[0] ||= e => emitAlias(`back`)
       }, null, 8, [`tool`, `user`, `credits-balance`]), v(`div`, D, [v(`section`, O, [v(`div`, k, [v(`span`, {
-        class: n([`inline-flex size-12 shrink-0 items-center justify-center rounded-xl transition-colors`, B.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
+        class: n([`inline-flex size-12 shrink-0 items-center justify-center rounded-xl transition-colors`, propsAlias.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
       }, [(d(), u(a(q.value), {
         size: 24,
         "stroke-width": 1.8
-      }))], 2), v(`div`, A, [v(`div`, j, [v(`h1`, M, m(B.tool.name), 1), v(`span`, {
-        class: n([`inline-flex items-center gap-1 rounded-full px-2 py-px text-[11px] font-medium`, B.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
+      }))], 2), v(`div`, A, [v(`div`, j, [v(`h1`, M, m(propsAlias.tool.name), 1), v(`span`, {
+        class: n([`inline-flex items-center gap-1 rounded-full px-2 py-px text-[11px] font-medium`, propsAlias.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
       }, [v(`span`, {
-        class: n([`size-1.5 rounded-full`, B.enabled ? `bg-primary` : `bg-muted-foreground/50`])
-      }, null, 2), o(` ` + m(B.statusText || (B.enabled ? r(H)(`toolboxNative.desktopWidgetsOn`) : r(H)(`toolboxNative.desktopWidgetsOff`))), 1)], 2)]), v(`p`, N, m(B.description), 1)]), v(`div`, P, [i(c.$slots, `actions`), p(r(t), {
-        "model-value": B.enabled,
-        disabled: B.toggleDisabled,
-        "aria-label": B.tool.name,
-        "onUpdate:modelValue": f[1] ||= e => V(`toggle`, e)
+        class: n([`size-1.5 rounded-full`, propsAlias.enabled ? `bg-primary` : `bg-muted-foreground/50`])
+      }, null, 2), o(` ` + m(propsAlias.statusText || (propsAlias.enabled ? r(H)(`toolboxNative.desktopWidgetsOn`) : r(H)(`toolboxNative.desktopWidgetsOff`))), 1)], 2)]), v(`p`, N, m(propsAlias.description), 1)]), v(`div`, P, [i(c.$slots, `actions`), p(r(t), {
+        "model-value": propsAlias.enabled,
+        disabled: propsAlias.toggleDisabled,
+        "aria-label": propsAlias.tool.name,
+        "onUpdate:modelValue": f[1] ||= e => emitAlias(`toggle`, e)
       }, null, 8, [`model-value`, `disabled`, `aria-label`])])]), c.$slots.notes || K.value ? (d(), s(`div`, F, [i(c.$slots, `notes`), K.value ? (d(), s(`div`, I, [v(`span`, L, [p(r(w), {
         size: 15,
         class: `shrink-0`
@@ -122,7 +122,7 @@ var E = {
       }, 8, [`onClick`])])) : _(``, true)])) : _(``, true)]), i(c.$slots, `default`), v(`p`, R, [p(r(b), {
         size: 13,
         class: `mt-0.5 shrink-0`
-      }), o(m(B.footnote || r(H)(`toolboxNative.desktopWidgetsSyncNote`)), 1)])])]));
+      }), o(m(propsAlias.footnote || r(H)(`toolboxNative.desktopWidgetsSyncNote`)), 1)])])]));
     }
   });
 export { z as t };

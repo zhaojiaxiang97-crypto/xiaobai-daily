@@ -153,14 +153,14 @@ var ut = L(`corner-up-left`, [[`path`, {
       }
     },
     emits: [`select`, `update:modelValue`],
-    setup(r, {
-      emit: i
+    setup(props, {
+      emit: emit
     }) {
-      let s = r,
-        c = i,
-        l = o(s, [`modelValue`]),
+      let propsAlias = props,
+        emitAlias = emit,
+        l = o(propsAlias, [`modelValue`]),
         u = e(l),
-        f = a(s, `modelValue`, c);
+        f = a(propsAlias, `modelValue`, emitAlias);
       return V({
         modelValue: f
       }), (e, r) => (T(), x(Ce, k({
@@ -169,7 +169,7 @@ var ut = L(`corner-up-left`, [[`path`, {
         "aria-checked": d(n)(d(f)) ? `mixed` : d(f),
         "data-state": d(t)(d(f)),
         onSelect: r[0] ||= async e => {
-          c(`select`, e), d(n)(d(f)) ? f.value = true : f.value = !d(f);
+          emitAlias(`select`, e), d(n)(d(f)) ? f.value = true : f.value = !d(f);
         }
       }), {
         default: y(() => [p(e.$slots, `default`, {
@@ -204,13 +204,13 @@ var ut = L(`corner-up-left`, [[`path`, {
       }
     },
     emits: [`select`, `update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        a = r(t);
+      let propsAlias = props,
+        a = r(emit);
       return i(), (e, t) => (T(), x(d(yt), j(ee({
-        ...n,
+        ...propsAlias,
         ...d(a)
       })), {
         default: y(() => [p(e.$slots, `default`)]),
@@ -241,22 +241,22 @@ var ut = L(`corner-up-left`, [[`path`, {
       }
     },
     emits: [`select`, `update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
-        i = o(n, `class`),
-        a = l(i, r);
-      return (e, t) => (T(), x(d(bt), k({
+      let propsAlias = props,
+        emitAlias = emit,
+        i = o(propsAlias, `class`),
+        a = l(i, emitAlias);
+      return (ctx, renderCache) => (T(), x(d(bt), k({
         "data-slot": `dropdown-menu-checkbox-item`
       }, d(a), {
-        class: d(c)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class)
+        class: d(c)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
         default: y(() => [P(`span`, xt, [D(d(Oe), null, {
-          default: y(() => [p(e.$slots, `indicator-icon`, {}, () => [D(d(z))])]),
+          default: y(() => [p(ctx.$slots, `indicator-icon`, {}, () => [D(d(z))])]),
           _: 3
-        })]), p(e.$slots, `default`)]),
+        })]), p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -268,12 +268,12 @@ var ut = L(`corner-up-left`, [[`path`, {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (T(), g(`span`, {
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (T(), g(`span`, {
         "data-slot": `dropdown-menu-shortcut`,
-        class: u(d(c)(`text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground ml-auto text-xs tracking-widest`, t.class))
-      }, [p(e.$slots, `default`)], 2));
+        class: u(d(c)(`text-muted-foreground group-focus/dropdown-menu-item:text-accent-foreground ml-auto text-xs tracking-widest`, propsAlias.class))
+      }, [p(ctx.$slots, `default`)], 2));
     }
   }),
   J = [`aria-label`, `aria-pressed`, `disabled`],
@@ -300,34 +300,34 @@ var ut = L(`corner-up-left`, [[`path`, {
       }
     },
     emits: [`click`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t;
-      return (e, t) => (T(), x(d(H), null, {
+      let propsAlias = props,
+        emitAlias = emit;
+      return (ctx, renderCache) => (T(), x(d(H), null, {
         default: y(() => [D(d(U), {
           "as-child": ``
         }, {
           default: y(() => [P(`button`, {
             type: `button`,
-            class: u([`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-40`, [n.size === `xs` ? `size-6` : `size-7`, n.active ? `bg-primary text-primary-foreground` : `text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10`]]),
-            "aria-label": n.label,
-            "aria-pressed": n.active || undefined,
-            disabled: n.disabled,
-            onMousedown: t[0] ||= I(() => {}, [`prevent`]),
-            onClick: t[1] ||= e => r(`click`, e)
-          }, [p(e.$slots, `default`)], 42, J)]),
+            class: u([`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-40`, [propsAlias.size === `xs` ? `size-6` : `size-7`, propsAlias.active ? `bg-primary text-primary-foreground` : `text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10`]]),
+            "aria-label": propsAlias.label,
+            "aria-pressed": propsAlias.active || undefined,
+            disabled: propsAlias.disabled,
+            onMousedown: renderCache[0] ||= I(() => {}, [`prevent`]),
+            onClick: renderCache[1] ||= e => emitAlias(`click`, e)
+          }, [p(ctx.$slots, `default`)], 42, J)]),
           _: 3
         }), D(d(ke), {
-          side: n.side,
+          side: propsAlias.side,
           "side-offset": 6,
           "hide-arrow": ``
         }, {
-          default: y(() => [h(A(n.label) + ` `, 1), n.shortcut ? (T(), x(d(lt), {
+          default: y(() => [h(A(propsAlias.label) + ` `, 1), propsAlias.shortcut ? (T(), x(d(lt), {
             key: 0
           }, {
-            default: y(() => [h(A(n.shortcut), 1)]),
+            default: y(() => [h(A(propsAlias.shortcut), 1)]),
             _: 1
           })) : N(``, true)]),
           _: 1
@@ -1353,11 +1353,11 @@ body { margin: 0; background: #fff; }
     },
     emits: [`update:modelValue`, `scroll`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        emitAlias = emit,
         {
           t: a
         } = ue(),
@@ -1509,7 +1509,7 @@ body { margin: 0; background: #fff; }
       }
       function pe() {
         let e = o.value;
-        e && (i(`update:modelValue`, e.value), le());
+        e && (emitAlias(`update:modelValue`, e.value), le());
       }
       function me(e) {
         e.isComposing || pe();
@@ -1532,7 +1532,7 @@ body { margin: 0; background: #fff; }
       }
       function _e(e) {
         let t = o.value;
-        t && e && (t.focus(), t.setSelectionRange(e.start, e.end), (e.replacement ? document.execCommand(`insertText`, false, e.replacement) : e.start === e.end || document.execCommand(`delete`, false)) || t.setRangeText(e.replacement, e.start, e.end, `end`), i(`update:modelValue`, t.value), t.setSelectionRange(e.selectionStart, e.selectionEnd), le());
+        t && e && (t.focus(), t.setSelectionRange(e.start, e.end), (e.replacement ? document.execCommand(`insertText`, false, e.replacement) : e.start === e.end || document.execCommand(`delete`, false)) || t.setRangeText(e.replacement, e.start, e.end, `end`), emitAlias(`update:modelValue`, t.value), t.setSelectionRange(e.selectionStart, e.selectionEnd), le());
       }
       function ve(e) {
         if (!o.value) return;
@@ -1566,7 +1566,7 @@ body { margin: 0; background: #fff; }
       }
       function be() {
         let e = o.value;
-        e && (l.value = e.scrollTop, i(`scroll`));
+        e && (l.value = e.scrollTop, emitAlias(`scroll`));
       }
       function xe() {
         let e = o.value,
@@ -1657,7 +1657,7 @@ body { margin: 0; background: #fff; }
         e && (e.value = eventAlias.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
       }), re(() => {
         E?.disconnect(), document.removeEventListener(`selectionchange`, De), w !== null && window.clearTimeout(w);
-      }), t({
+      }), expose({
         focus: () => o.value?.focus(),
         element: () => o.value,
         lineAtScrollTop: Ce,
@@ -1761,11 +1761,11 @@ body { margin: 0; background: #fff; }
       modifierLabel: {}
     },
     emits: [`open`, `create`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = ue(),
@@ -1799,7 +1799,7 @@ body { margin: 0; background: #fff; }
       }, null, 40, Bn), P(`h2`, Vn, A(d(i)(`toolboxNative.markdownEmptyTitle`)), 1), P(`p`, Hn, A(d(i)(`toolboxNative.markdownReaderWelcome`)), 1), P(`div`, Un, [D(d(s), {
         size: `sm`,
         class: `gap-1.5 text-xs`,
-        onClick: t[1] ||= e => r(`open`)
+        onClick: t[1] ||= e => emitAlias(`open`)
       }, {
         default: y(() => [D(d(ce), {
           size: 14
@@ -1809,15 +1809,15 @@ body { margin: 0; background: #fff; }
         size: `sm`,
         variant: `outline`,
         class: `gap-1.5 text-xs`,
-        onClick: t[2] ||= e => r(`create`)
+        onClick: t[2] ||= e => emitAlias(`create`)
       }, {
         default: y(() => [D(d(pt), {
           size: 14
         }), h(A(d(i)(`toolboxNative.createMarkdownDocument`)), 1)]),
         _: 1
       })]), P(`p`, Wn, A(d(i)(`toolboxNative.markdownEmptyHint`, {
-        open: `${n.modifierLabel}O`,
-        create: `${n.modifierLabel}N`
+        open: `${propsAlias.modifierLabel}O`,
+        create: `${propsAlias.modifierLabel}N`
       })), 1)])]));
     }
   }),
@@ -1837,18 +1837,18 @@ body { margin: 0; background: #fff; }
     },
     emits: [`update:query`, `next`, `previous`, `close`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        emitAlias = emit,
         {
           t: a
         } = ue(),
         o = S(null),
         s = false;
       function c() {
-        o.value && i(`update:query`, o.value.value);
+        o.value && emitAlias(`update:query`, o.value.value);
       }
       function l(e) {
         e.isComposing || c();
@@ -1864,7 +1864,7 @@ body { margin: 0; background: #fff; }
         t && !s && t.value !== e && (t.value = e);
       });
       function m(e) {
-        e.isComposing || e.keyCode === 229 || (e.key === `Enter` ? (e.preventDefault(), e.shiftKey ? i(`previous`) : i(`next`)) : e.key === `Escape` && (e.preventDefault(), e.stopPropagation(), i(`close`)));
+        e.isComposing || e.keyCode === 229 || (e.key === `Enter` ? (e.preventDefault(), e.shiftKey ? emitAlias(`previous`) : emitAlias(`next`)) : e.key === `Escape` && (e.preventDefault(), e.stopPropagation(), emitAlias(`close`)));
       }
       function h() {
         ie(() => {
@@ -1873,7 +1873,7 @@ body { margin: 0; background: #fff; }
       }
       return ae(() => {
         o.value && (o.value.value = eventAlias.query), h();
-      }), t({
+      }), expose({
         focus: h
       }), (e, t) => (T(), g(`div`, Kn, [D(d(We), {
         size: 14,
@@ -1899,7 +1899,7 @@ body { margin: 0; background: #fff; }
         label: d(a)(`toolboxNative.markdownFindPrevious`),
         shortcut: `⇧Enter`,
         disabled: !eventAlias.hasMatches,
-        onClick: t[2] ||= e => i(`previous`)
+        onClick: t[2] ||= e => emitAlias(`previous`)
       }, {
         default: y(() => [D(d(ge), {
           size: 14
@@ -1910,7 +1910,7 @@ body { margin: 0; background: #fff; }
         label: d(a)(`toolboxNative.markdownFindNext`),
         shortcut: `Enter`,
         disabled: !eventAlias.hasMatches,
-        onClick: t[3] ||= e => i(`next`)
+        onClick: t[3] ||= e => emitAlias(`next`)
       }, {
         default: y(() => [D(d(he), {
           size: 14
@@ -1920,7 +1920,7 @@ body { margin: 0; background: #fff; }
         size: `xs`,
         label: d(a)(`toolboxNative.markdownFindClose`),
         shortcut: `Esc`,
-        onClick: t[4] ||= e => i(`close`)
+        onClick: t[4] ||= e => emitAlias(`close`)
       }, {
         default: y(() => [D(d(R), {
           size: 14
@@ -1980,11 +1980,11 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
     },
     emits: [`toggleTask`, `openLink`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        emitAlias = emit,
         {
           t: a
         } = ue(),
@@ -2064,7 +2064,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
           q.openExternal(fallbackValue).catch(() => W(a(`toolboxNative.markdownErrorInvalidLink`)));
           return;
         }
-        i(`openLink`, fallbackValue);
+        emitAlias(`openLink`, fallbackValue);
       }
       function ee(e) {
         let t = e.target;
@@ -2075,7 +2075,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
           t.checked = !t.checked;
           return;
         }
-        i(`toggleTask`, a);
+        emitAlias(`toggleTask`, a);
       }
       function y(text) {
         let fallbackValue = text.split(/[?#]/)[0].split(/[\\/]/).pop() || ``;
@@ -2100,7 +2100,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       }), re(() => {
         window.removeEventListener(`keydown`, w, true);
         for (let filePath of c.values()) window.clearTimeout(filePath);
-      }), t({
+      }), expose({
         root: () => o.value,
         scrollToAnchor: m
       }), (e, t) => (T(), g(C, null, [P(`article`, {
@@ -2191,11 +2191,11 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       activeHeadingId: {}
     },
     emits: [`update:tab`, `openRecent`, `removeRecent`, `selectHeading`],
-    setup(el, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = el,
-        r = t,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           locale: i,
           t: a
@@ -2205,9 +2205,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         c = M(() => i?.value || `zh-CN`),
         l = M(() => {
           let toLocaleLowerCase = o.value.trim().toLocaleLowerCase(c.value);
-          return toLocaleLowerCase ? n.recentFiles.filter(item => `${item.name} ${item.filePath}`.toLocaleLowerCase(c.value).includes(toLocaleLowerCase)) : n.recentFiles;
+          return toLocaleLowerCase ? propsAlias.recentFiles.filter(item => `${item.name} ${item.filePath}`.toLocaleLowerCase(c.value).includes(toLocaleLowerCase)) : propsAlias.recentFiles;
         }),
-        f = M(() => n.headings.length ? Math.min(...n.headings.map(item => item.level)) : 1);
+        f = M(() => propsAlias.headings.length ? Math.min(...propsAlias.headings.map(item => item.level)) : 1);
       function p(e) {
         let date = new Date(e);
         if (Number.isNaN(date.getTime())) return ``;
@@ -2225,9 +2225,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         });
       }
       function m(e, event) {
-        event.stopPropagation(), r(`removeRecent`, e);
+        event.stopPropagation(), emitAlias(`removeRecent`, e);
       }
-      return v(() => [n.activeHeadingId, n.tab], async () => {
+      return v(() => [propsAlias.activeHeadingId, propsAlias.tab], async () => {
         await ie();
         let e = s.value,
           t = e?.querySelector(`[aria-current="location"]`);
@@ -2237,8 +2237,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         boundingClientRectResult.top < boundingClientRect.top ? e.scrollTop += boundingClientRectResult.top - boundingClientRect.top - 8 : boundingClientRectResult.bottom > boundingClientRect.bottom && (e.scrollTop += boundingClientRectResult.bottom - boundingClientRect.bottom + 8);
       }), (e, t) => (T(), g(`aside`, sr, [D(d(nt), {
         class: `shrink-0 px-2 pt-2`,
-        "model-value": n.tab,
-        "onUpdate:modelValue": t[0] ||= e => r(`update:tab`, e)
+        "model-value": propsAlias.tab,
+        "onUpdate:modelValue": t[0] ||= e => emitAlias(`update:tab`, e)
       }, {
         default: y(() => [D(d(Ye), {
           class: `w-full group-data-horizontal/tabs:h-8`
@@ -2253,13 +2253,13 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
             value: `outline`,
             class: `text-xs`
           }, {
-            default: y(() => [h(A(d(a)(`toolboxNative.documentOutline`)) + ` `, 1), n.headings.length ? (T(), g(`span`, cr, A(n.headings.length), 1)) : N(``, true)]),
+            default: y(() => [h(A(d(a)(`toolboxNative.documentOutline`)) + ` `, 1), propsAlias.headings.length ? (T(), g(`span`, cr, A(propsAlias.headings.length), 1)) : N(``, true)]),
             _: 1
           })]),
           _: 1
         })]),
         _: 1
-      }, 8, [`model-value`]), n.tab === `files` ? (T(), g(C, {
+      }, 8, [`model-value`]), propsAlias.tab === `files` ? (T(), g(C, {
         key: 0
       }, [P(`div`, lr, [P(`label`, ur, [D(d(We), {
         size: 14,
@@ -2280,13 +2280,13 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         size: 13
       })], 8, fr)) : N(``, true)])]), P(`div`, pr, [(T(true), g(C, null, _(l.value, e => (T(), g(`div`, {
         key: e.filePath,
-        class: u([`group relative mt-0.5 rounded-lg transition-colors`, n.currentPath === e.filePath ? `bg-[var(--app-sidebar-nav-active-background)]` : `hover:bg-[var(--app-sidebar-nav-hover-background)]`])
+        class: u([`group relative mt-0.5 rounded-lg transition-colors`, propsAlias.currentPath === e.filePath ? `bg-[var(--app-sidebar-nav-active-background)]` : `hover:bg-[var(--app-sidebar-nav-hover-background)]`])
       }, [P(`button`, {
         type: `button`,
         class: `block w-full min-w-0 rounded-lg px-2.5 py-2 pr-8 text-left disabled:cursor-not-allowed`,
         title: e.filePath,
         disabled: !e.exists,
-        onClick: t => r(`openRecent`, e)
+        onClick: t => emitAlias(`openRecent`, e)
       }, [P(`span`, {
         class: u([`block truncate text-sm font-medium`, e.exists ? `text-foreground` : `text-muted-foreground line-through decoration-muted-foreground/50`])
       }, A(e.name), 3), P(`span`, hr, [P(`span`, gr, A(e.exists ? e.folder : d(a)(`toolboxNative.markdownFileMissing`)), 1), t[4] ||= P(`span`, {
@@ -2308,17 +2308,17 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         ref: s,
         class: `min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-3 pt-2`,
         "aria-label": d(a)(`toolboxNative.documentOutline`)
-      }, [(T(true), g(C, null, _(n.headings, e => (T(), g(`button`, {
+      }, [(T(true), g(C, null, _(propsAlias.headings, e => (T(), g(`button`, {
         key: e.id,
         type: `button`,
-        class: u([`block w-full truncate rounded-md py-1.5 pr-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30`, n.activeHeadingId === e.id ? `bg-[var(--app-sidebar-nav-active-background)] font-medium text-foreground` : `text-muted-foreground hover:bg-[var(--app-sidebar-nav-hover-background)] hover:text-foreground`]),
+        class: u([`block w-full truncate rounded-md py-1.5 pr-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30`, propsAlias.activeHeadingId === e.id ? `bg-[var(--app-sidebar-nav-active-background)] font-medium text-foreground` : `text-muted-foreground hover:bg-[var(--app-sidebar-nav-hover-background)] hover:text-foreground`]),
         style: ne({
           paddingLeft: `${10 + Math.max(0, e.level - f.value) * 14}px`
         }),
         title: e.text,
-        "aria-current": n.activeHeadingId === e.id ? `location` : undefined,
-        onClick: t => r(`selectHeading`, e)
-      }, A(e.text || d(a)(`toolboxNative.markdownUntitledHeading`)), 15, Sr))), 128)), n.headings.length === 0 ? (T(), g(`p`, Cr, A(d(a)(`toolboxNative.markdownOutlineEmpty`)), 1)) : N(``, true)], 8, xr))]));
+        "aria-current": propsAlias.activeHeadingId === e.id ? `location` : undefined,
+        onClick: t => emitAlias(`selectHeading`, e)
+      }, A(e.text || d(a)(`toolboxNative.markdownUntitledHeading`)), 15, Sr))), 128)), propsAlias.headings.length === 0 ? (T(), g(`p`, Cr, A(d(a)(`toolboxNative.markdownOutlineEmpty`)), 1)) : N(``, true)], 8, xr))]));
     }
   }),
   Tr = 2e3;
@@ -2509,11 +2509,11 @@ var Or = {
     },
     emits: [`back`, `recharge`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        emitAlias = emit,
         a = [`.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, `.mdwn`, `.txt`],
         options = {
           FILE_ACCESS_DENIED: `markdownErrorAccessDenied`,
@@ -3282,7 +3282,7 @@ var Or = {
       async function si() {
         return await vn();
       }
-      t({
+      expose({
         requestClose: si
       }), v(I, un), v(() => O.softBreaks, ln), c && v(c, ln);
       let ci = null;
@@ -3357,8 +3357,8 @@ var Or = {
           "credits-balance": eventAlias.creditsBalance,
           "voice-tool": false,
           "show-history": false,
-          onBack: t[16] ||= e => i(`back`),
-          onRecharge: t[17] ||= e => i(`recharge`)
+          onBack: t[16] ||= e => emitAlias(`back`),
+          onRecharge: t[17] ||= e => emitAlias(`recharge`)
         }, {
           title: y(() => [P(`div`, Or, [D(wt, {
             label: d(l)(zt.value ? `toolboxNative.markdownHidePanel` : `toolboxNative.markdownShowPanel`),
@@ -3864,28 +3864,28 @@ var Or = {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let r = e,
-        i = n,
+      let propsAlias = props,
+        emitAlias = emit,
         a = S(null);
       async function o() {
         return (await a.value?.requestClose()) ?? true;
       }
-      return t({
+      return expose({
         requestClose: o
       }), (e, t) => (T(), g(`div`, ri, [D(ni, {
         ref_key: `reader`,
         ref: a,
-        tool: r.tool,
-        user: r.user,
-        "credits-balance": r.creditsBalance,
-        active: r.active,
-        "open-request": r.openRequest,
-        onBack: t[0] ||= e => i(`back`),
-        onRecharge: t[1] ||= e => i(`recharge`)
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
+        active: propsAlias.active,
+        "open-request": propsAlias.openRequest,
+        onBack: t[0] ||= e => emitAlias(`back`),
+        onRecharge: t[1] ||= e => emitAlias(`recharge`)
       }, null, 8, [`tool`, `user`, `credits-balance`, `active`, `open-request`])]));
     }
   });

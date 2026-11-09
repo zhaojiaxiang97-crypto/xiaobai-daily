@@ -114,11 +114,11 @@ var ge = g(`file-headphone`, [[`path`, {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(u, {
-      emit: g
+    setup(props, {
+      emit: emit
     }) {
-      let R = u,
-        Te = g,
+      let propsAlias = props,
+        Te = emit,
         {
           t: z
         } = re(),
@@ -167,12 +167,12 @@ var ge = g(`file-headphone`, [[`path`, {
       function ze(e) {
         e.repeat || B.value.enableMechanicalKeyboardSound || ue.preview(B.value.mechanicalKeyboardSwitchType).catch(() => undefined);
       }
-      return ne(() => R.active, e => {
+      return ne(() => propsAlias.active, e => {
         e && Oe();
       }), (ne, u) => (l(), o(he, {
-        tool: R.tool,
-        user: R.user,
-        "credits-balance": R.creditsBalance,
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
         description: n(z)(`toolboxNative.keyboardSoundToolIntro`),
         enabled: n(B).enableMechanicalKeyboardSound,
         "toggle-disabled": n(V) || n(U) || n(Ee),

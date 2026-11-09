@@ -24,7 +24,7 @@ var [H, U] = m(`PopperRoot`),
   W = A({
     inheritAttrs: false,
     __name: `PopperRoot`,
-    setup(e) {
+    setup(props) {
       let t = E();
       return U({
         anchor: t,
@@ -48,15 +48,15 @@ var [H, U] = m(`PopperRoot`),
         required: false
       }
     },
-    setup(t) {
-      let n = t,
+    setup(props) {
+      let propsAlias = props,
         {
           forwardRef: r,
           currentElement: i
         } = e(),
         a = H();
       return y(() => {
-        a.onAnchorChange(n.reference ?? i.value);
+        a.onAnchorChange(propsAlias.reference ?? i.value);
       }), (e, t) => (O(), T(h(s), {
         ref: h(r),
         as: e.as,
@@ -342,53 +342,53 @@ var re = [`dir`],
       ...options
     }),
     emits: [`placed`],
-    setup(r, {
-      emit: o
+    setup(props, {
+      emit: emit
     }) {
-      let l = r,
-        u = o,
+      let propsAlias = props,
+        emitAlias = emit,
         d = H(),
         {
           forwardRef: m,
           currentElement: g
         } = e(),
-        S = L(P(() => l.dir)),
+        S = L(P(() => propsAlias.dir)),
         C = E(),
         D = E(),
         {
           width: k,
           height: A
         } = I(D),
-        N = P(() => l.side + (l.align === `center` ? `` : `-${l.align}`)),
-        F = P(() => typeof l.collisionPadding == `number` ? l.collisionPadding : {
+        N = P(() => propsAlias.side + (propsAlias.align === `center` ? `` : `-${propsAlias.align}`)),
+        F = P(() => typeof propsAlias.collisionPadding == `number` ? propsAlias.collisionPadding : {
           top: 0,
           right: 0,
           bottom: 0,
           left: 0,
-          ...l.collisionPadding
+          ...propsAlias.collisionPadding
         }),
-        R = P(() => Array.isArray(l.collisionBoundary) ? l.collisionBoundary : [l.collisionBoundary]),
+        R = P(() => Array.isArray(propsAlias.collisionBoundary) ? propsAlias.collisionBoundary : [propsAlias.collisionBoundary]),
         z = P(() => ({
           padding: F.value,
           boundary: R.value.filter(K),
           altBoundary: R.value.length > 0
         })),
         B = P(() => ({
-          mainAxis: l.sideFlip,
-          crossAxis: l.alignFlip
+          mainAxis: propsAlias.sideFlip,
+          crossAxis: propsAlias.alignFlip
         })),
         V = P(() => [p({
-          mainAxis: l.sideOffset + A.value,
-          alignmentAxis: l.alignOffset
-        }), l.prioritizePosition && l.avoidCollisions && f({
+          mainAxis: propsAlias.sideOffset + A.value,
+          alignmentAxis: propsAlias.alignOffset
+        }), propsAlias.prioritizePosition && propsAlias.avoidCollisions && f({
           ...z.value,
           ...B.value
-        }), l.avoidCollisions && i({
+        }), propsAlias.avoidCollisions && i({
           mainAxis: true,
-          crossAxis: !!l.prioritizePosition,
-          limiter: l.sticky === `partial` ? c() : undefined,
+          crossAxis: !!propsAlias.prioritizePosition,
+          limiter: propsAlias.sticky === `partial` ? c() : undefined,
           ...z.value
-        }), !l.prioritizePosition && l.avoidCollisions && f({
+        }), !propsAlias.prioritizePosition && propsAlias.avoidCollisions && f({
           ...z.value,
           ...B.value
         }), a({
@@ -408,12 +408,12 @@ var re = [`dir`],
           }
         }), D.value && te({
           element: D.value,
-          padding: l.arrowPadding
+          padding: propsAlias.arrowPadding
         }), ee({
           arrowWidth: k.value,
           arrowHeight: A.value,
           dir: S.value
-        }), l.hideWhenDetached && n({
+        }), propsAlias.hideWhenDetached && n({
           strategy: `referenceHidden`,
           ...z.value
         })]),
@@ -423,23 +423,23 @@ var re = [`dir`],
           isPositioned: G,
           middlewareData: J,
           update: Y
-        } = ne(P(() => l.reference ?? d.anchor.value), C, {
-          strategy: l.positionStrategy,
+        } = ne(P(() => propsAlias.reference ?? d.anchor.value), C, {
+          strategy: propsAlias.positionStrategy,
           placement: N,
           whileElementsMounted: (...e) => t(...e, {
-            layoutShift: !l.disableUpdateOnLayoutShift,
-            animationFrame: l.updatePositionStrategy === `always`
+            layoutShift: !propsAlias.disableUpdateOnLayoutShift,
+            animationFrame: propsAlias.updatePositionStrategy === `always`
           }),
           middleware: V
         }),
         X = P(() => q(W.value)[0]),
         Z = P(() => q(W.value)[1]);
       y(() => {
-        G.value && u(`placed`);
+        G.value && emitAlias(`placed`);
       });
       let Q = P(() => {
           let e = J.value.arrow?.centerOffset !== 0;
-          return l.hideShiftedArrow && e;
+          return propsAlias.hideShiftedArrow && e;
         }),
         $ = E(``);
       return v(() => {
@@ -466,12 +466,12 @@ var re = [`dir`],
             pointerEvents: `none`
           })
         })
-      }, [l.memoDependencies ? b([l.asChild, l.as, X.value, Z.value, h(G), ...Object.values(e.$attrs), ...l.memoDependencies], () => (O(), T(h(s), M({
+      }, [propsAlias.memoDependencies ? b([propsAlias.asChild, propsAlias.as, X.value, Z.value, h(G), ...Object.values(e.$attrs), ...propsAlias.memoDependencies], () => (O(), T(h(s), M({
         key: 0,
         ref: h(m)
       }, e.$attrs, {
-        "as-child": l.asChild,
-        as: l.as,
+        "as-child": propsAlias.asChild,
+        as: propsAlias.as,
         "data-side": X.value,
         "data-align": Z.value,
         style: {
@@ -484,8 +484,8 @@ var re = [`dir`],
         key: 1,
         ref: h(m)
       }, e.$attrs, {
-        "as-child": l.asChild,
-        as: l.as,
+        "as-child": propsAlias.asChild,
+        as: propsAlias.as,
         "data-side": X.value,
         "data-align": Z.value,
         dir: h(S),

@@ -15,9 +15,9 @@ var A = _({
         default: `button`
       }
     },
-    setup(e) {
-      let n = e;
-      return t(), (e, t) => (g(), m(l(w), x(f(n)), {
+    setup(props) {
+      let propsAlias = props;
+      return t(), (e, t) => (g(), m(l(w), x(f(propsAlias)), {
         default: p(() => [u(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -46,11 +46,11 @@ var A = _({
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(n, {
-      emit: r
+    setup(props, {
+      emit: emit
     }) {
-      let i = n,
-        a = e(r);
+      let propsAlias = props,
+        a = e(emit);
       t();
       let o = h();
       return M({
@@ -58,7 +58,7 @@ var A = _({
           o.value = e;
         }
       }), (e, t) => (g(), m(l(T), y({
-        ...i,
+        ...propsAlias,
         ...l(a)
       }, {
         role: `alertdialog`,
@@ -90,8 +90,8 @@ var A = _({
         default: `button`
       }
     },
-    setup(e) {
-      let n = e,
+    setup(props) {
+      let propsAlias = props,
         r = j(),
         {
           forwardRef: i,
@@ -99,7 +99,7 @@ var A = _({
         } = t();
       return S(() => {
         r.onCancelElementChange(a.value);
-      }), (e, t) => (g(), m(l(w), y(n, {
+      }), (e, t) => (g(), m(l(w), y(propsAlias, {
         ref: l(i)
       }), {
         default: p(() => [u(e.$slots, `default`)]),
@@ -120,9 +120,9 @@ var A = _({
         default: `p`
       }
     },
-    setup(e) {
-      let n = e;
-      return t(), (e, t) => (g(), m(l(O), x(f(n)), {
+    setup(props) {
+      let propsAlias = props;
+      return t(), (e, t) => (g(), m(l(O), x(f(propsAlias)), {
         default: p(() => [u(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -144,9 +144,9 @@ var A = _({
         required: false
       }
     },
-    setup(e) {
-      let n = e;
-      return t(), (e, t) => (g(), m(l(E), x(f(n)), {
+    setup(props) {
+      let propsAlias = props;
+      return t(), (e, t) => (g(), m(l(E), x(f(propsAlias)), {
         default: p(() => [u(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -172,10 +172,10 @@ var A = _({
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, r) => (g(), m(l(n), x(f(t)), {
-        default: p(() => [u(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (g(), m(l(n), x(f(propsAlias)), {
+        default: p(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -197,10 +197,10 @@ var A = _({
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: n
+    setup(props, {
+      emit: emit
     }) {
-      let r = s(e, n);
+      let r = s(props, emit);
       return t(), (e, t) => (g(), m(l(D), y(l(r), {
         modal: true
       }), {
@@ -222,9 +222,9 @@ var A = _({
         default: `h2`
       }
     },
-    setup(e) {
-      let n = e;
-      return t(), (e, t) => (g(), m(l(k), x(f(n)), {
+    setup(props) {
+      let propsAlias = props;
+      return t(), (e, t) => (g(), m(l(k), x(f(propsAlias)), {
         default: p(() => [u(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -244,14 +244,14 @@ var A = _({
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = s(e, t);
-      return (e, t) => (g(), m(l(R), y({
+      let n = s(props, emit);
+      return (ctx, renderCache) => (g(), m(l(R), y({
         "data-slot": `alert-dialog`
       }, l(n)), {
-        default: p(t => [u(e.$slots, `default`, x(f(t)))]),
+        default: p(t => [u(ctx.$slots, `default`, x(f(t)))]),
         _: 3
       }, 16));
     }
@@ -276,7 +276,7 @@ var A = _({
     setup(count) {
       let countAlias = count,
         n = r(countAlias, `class`, `variant`, `size`);
-      return (r, o) => (g(), m(l(A), y({
+      return (ctx, renderCache) => (g(), m(l(A), y({
         "data-slot": `alert-dialog-action`
       }, l(n), {
         class: l(a)(``, l(i)({
@@ -284,7 +284,7 @@ var A = _({
           size: count.size
         }), countAlias.class)
       }), {
-        default: p(() => [u(r.$slots, `default`)]),
+        default: p(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -309,7 +309,7 @@ var A = _({
     setup(count) {
       let countAlias = count,
         n = r(countAlias, `class`, `variant`, `size`);
-      return (r, o) => (g(), m(l(P), y({
+      return (ctx, renderCache) => (g(), m(l(P), y({
         "data-slot": `alert-dialog-cancel`
       }, l(n), {
         class: l(a)(``, l(i)({
@@ -317,7 +317,7 @@ var A = _({
           size: count.size
         }), countAlias.class)
       }), {
-        default: p(() => [u(r.$slots, `default`)]),
+        default: p(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -348,13 +348,13 @@ var A = _({
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
     setup(count, {
-      emit: t
+      emit: emit
     }) {
       let countAlias = count,
-        i = t,
+        emitAlias = emit,
         o = r(countAlias, `class`, `size`, `overlayClass`),
-        d = s(o, i);
-      return (t, r) => (g(), m(l(L), null, {
+        d = s(o, emitAlias);
+      return (ctx, renderCache) => (g(), m(l(L), null, {
         default: p(() => [v(l(I), {
           "data-slot": `alert-dialog-overlay`,
           class: c(l(a)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 z-50`, countAlias.overlayClass)),
@@ -365,7 +365,7 @@ var A = _({
           "data-slot": `alert-dialog-content`,
           "data-size": count.size
         }, {
-          ...t.$attrs,
+          ...ctx.$attrs,
           ...l(d)
         }, {
           class: l(a)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-popover text-popover-foreground ring-foreground/10 gap-4 rounded-xl p-4 ring-1 duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none`, countAlias.class),
@@ -374,7 +374,7 @@ var A = _({
             "pointer-events": `auto`
           }
         }), {
-          default: p(() => [u(t.$slots, `default`)]),
+          default: p(() => [u(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`data-size`, `class`])]),
         _: 3
@@ -392,15 +392,15 @@ var A = _({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
-        n = r(t, `class`);
-      return (e, r) => (g(), m(l(F), y({
+    setup(props) {
+      let propsAlias = props,
+        n = r(propsAlias, `class`);
+      return (ctx, renderCache) => (g(), m(l(F), y({
         "data-slot": `alert-dialog-description`
       }, l(n), {
-        class: l(a)(`text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3`, t.class)
+        class: l(a)(`text-muted-foreground *:[a]:hover:text-foreground text-sm text-balance md:text-pretty *:[a]:underline *:[a]:underline-offset-3`, propsAlias.class)
       }), {
-        default: p(() => [u(e.$slots, `default`)]),
+        default: p(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -412,12 +412,12 @@ var A = _({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (g(), d(`div`, {
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (g(), d(`div`, {
         "data-slot": `alert-dialog-footer`,
-        class: c(l(a)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end`, t.class))
-      }, [u(e.$slots, `default`)], 2));
+        class: c(l(a)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end`, propsAlias.class))
+      }, [u(ctx.$slots, `default`)], 2));
     }
   }),
   K = _({
@@ -427,12 +427,12 @@ var A = _({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (g(), d(`div`, {
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (g(), d(`div`, {
         "data-slot": `alert-dialog-header`,
-        class: c(l(a)(`grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]`, t.class))
-      }, [u(e.$slots, `default`)], 2));
+        class: c(l(a)(`grid grid-rows-[auto_1fr] place-items-center gap-1.5 text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-left sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]`, propsAlias.class))
+      }, [u(ctx.$slots, `default`)], 2));
     }
   }),
   q = _({
@@ -446,15 +446,15 @@ var A = _({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
-        n = r(t, `class`);
-      return (e, r) => (g(), m(l(z), y({
+    setup(props) {
+      let propsAlias = props,
+        n = r(propsAlias, `class`);
+      return (ctx, renderCache) => (g(), m(l(z), y({
         "data-slot": `alert-dialog-title`
       }, l(n), {
-        class: l(a)(`text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 cn-font-heading`, t.class)
+        class: l(a)(`text-base font-medium sm:group-data-[size=default]/alert-dialog-content:group-has-data-[slot=alert-dialog-media]/alert-dialog-content:col-start-2 cn-font-heading`, propsAlias.class)
       }), {
-        default: p(() => [u(e.$slots, `default`)]),
+        default: p(() => [u(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }

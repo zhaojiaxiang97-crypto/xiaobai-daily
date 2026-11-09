@@ -66,9 +66,9 @@ function v(t = {}) {
     v = l({
       name: `CollectionSlot`,
       inheritAttrs: false,
-      setup(t, {
-        slots: n,
-        attrs: i
+      setup(props, {
+        slots: slots,
+        attrs: attrs
       }) {
         let {
           primitiveElement: s,
@@ -78,8 +78,8 @@ function v(t = {}) {
           h.collectionRef.value = c.value;
         }), () => a(r, {
           ref: s,
-          ...i
-        }, n);
+          ...attrs
+        }, slots);
       }
     }),
     y = l({
@@ -90,9 +90,9 @@ function v(t = {}) {
           validator: () => true
         }
       },
-      setup(t, {
-        slots: n,
-        attrs: o
+      setup(props, {
+        slots: slots,
+        attrs: attrs
       }) {
         let {
           primitiveElement: s,
@@ -103,14 +103,14 @@ function v(t = {}) {
             let n = u(c.value);
             h.itemMap.value.set(n, {
               ref: c.value,
-              value: t.value
+              value: props.value
             }), e(() => h.itemMap.value.delete(n));
           }
         }), () => a(r, {
-          ...o,
+          ...attrs,
           [_]: ``,
           ref: s
-        }, n);
+        }, slots);
       }
     });
   return {

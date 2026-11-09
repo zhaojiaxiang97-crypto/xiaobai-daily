@@ -226,11 +226,11 @@ var defineProperty = Object.defineProperty,
       onRenderError: {}
     },
     emits: [`copy`, `export`, `openModal`, `toggleMode`],
-    setup(te, {
-      emit: we
+    setup(props, {
+      emit: emit
     }) {
-      let g = te,
-        _ = we,
+      let propsAlias = props,
+        _ = emit,
         Oe = {
           USE_PROFILES: {
             svg: true
@@ -243,7 +243,7 @@ var defineProperty = Object.defineProperty,
         },
         ke = typeof window < `u` && Se(),
         v = l(ke),
-        b = p(() => g.isStrict ? `strict` : `loose`),
+        b = p(() => propsAlias.isStrict ? `strict` : `loose`),
         rt = p(() => ({
           startOnLoad: false,
           securityLevel: b.value,
@@ -367,7 +367,7 @@ var defineProperty = Object.defineProperty,
         ft = l(null),
         pt = l(typeof window > `u`),
         mt = l(),
-        O = p(() => g.node.code.replace(/\]::([^:])/g, `]:::$1`).replace(/:::subgraphNode$/gm, `::subgraphNode`));
+        O = p(() => propsAlias.node.code.replace(/\]::([^:])/g, `]:::$1`).replace(/:::subgraphNode$/gm, `::subgraphNode`));
       function ht() {
         return `${function (e) {
           let t = function () {
@@ -376,7 +376,7 @@ var defineProperty = Object.defineProperty,
             }(),
             n = an();
           return _e(e, t, n);
-        }(xe(g.estimatedPreviewHeightPx) ?? de(O.value))}px`;
+        }(xe(propsAlias.estimatedPreviewHeightPx) ?? de(O.value))}px`;
       }
       let k = l(1),
         A = l(0),
@@ -392,12 +392,12 @@ var defineProperty = Object.defineProperty,
         yt = l(null),
         bt = l(0),
         xt = l(false),
-        St = p(() => Math.max(0, g.renderDebounceMs ?? 300)),
-        Ct = p(() => Math.max(0, g.contentStableDelayMs ?? 500)),
-        wt = p(() => Math.max(120, g.previewPollDelayMs ?? 800)),
-        Tt = p(() => Math.max(wt.value, g.previewPollMaxDelayMs ?? 4e3)),
-        Et = p(() => Math.max(1, Math.trunc(g.previewPollMaxAttempts ?? 12))),
-        P = p(() => false !== g.loading),
+        St = p(() => Math.max(0, propsAlias.renderDebounceMs ?? 300)),
+        Ct = p(() => Math.max(0, propsAlias.contentStableDelayMs ?? 500)),
+        wt = p(() => Math.max(120, propsAlias.previewPollDelayMs ?? 800)),
+        Tt = p(() => Math.max(wt.value, propsAlias.previewPollMaxDelayMs ?? 4e3)),
+        Et = p(() => Math.max(1, Math.trunc(propsAlias.previewPollMaxAttempts ?? 12))),
+        P = p(() => false !== propsAlias.loading),
         Dt = null,
         Ot = null,
         kt = null,
@@ -427,7 +427,7 @@ var defineProperty = Object.defineProperty,
         if (typeof globalThis > `u`) return;
         let t = Math.max(0, e);
         Pt(), Ot = globalThis.setTimeout(() => {
-          Ot = null, g.loading || N.value || !F() ? Ft(Math.min(1200, Math.max(300, 1.2 * t))) : Nt();
+          Ot = null, propsAlias.loading || N.value || !F() ? Ft(Math.min(1200, Math.max(300, 1.2 * t))) : Nt();
         }, t);
       }
       let I = l(ht()),
@@ -446,14 +446,14 @@ var defineProperty = Object.defineProperty,
           translateY: 0,
           containerHeight: I.value
         }),
-        zt = p(() => g.enableWheelZoom ? {
+        zt = p(() => propsAlias.enableWheelZoom ? {
           wheel: hn
         } : {}),
         W = p(() => ({
-          worker: g.workerTimeoutMs ?? 1400,
-          parse: g.parseTimeoutMs ?? 1800,
-          render: g.renderTimeoutMs ?? 2500,
-          fullRender: g.fullRenderTimeoutMs ?? 4e3
+          worker: propsAlias.workerTimeoutMs ?? 1400,
+          parse: propsAlias.parseTimeoutMs ?? 1800,
+          render: propsAlias.renderTimeoutMs ?? 2500,
+          fullRender: propsAlias.fullRenderTimeoutMs ?? 4e3
         })),
         Bt = globalThis.cancelIdleCallback ?? (e => clearTimeout(e)),
         Vt = null,
@@ -488,7 +488,7 @@ var defineProperty = Object.defineProperty,
       }
       function qt(e) {
         if (typeof document > `u` || !E.value) return;
-        if (typeof g.onRenderError == `function` && true === g.onRenderError(e, O.value, E.value)) return H.value = true, void $();
+        if (typeof propsAlias.onRenderError == `function` && true === propsAlias.onRenderError(e, O.value, E.value)) return H.value = true, void $();
         let element = document.createElement(`div`);
         element.style.padding = `var(--ms-inset-panel-body)`, element.style.color = `hsl(var(--ms-destructive))`, element.textContent = `Failed to render diagram: `;
         let elementResult = document.createElement(`span`);
@@ -511,7 +511,7 @@ var defineProperty = Object.defineProperty,
         var value;
         (value = ft.value) == null || value.destroy(), ft.value = null, Mt();
       });
-      let Jt = p(() => false !== g.showTooltips);
+      let Jt = p(() => false !== propsAlias.showTooltips);
       function Yt(e) {
         return !e || e.disabled;
       }
@@ -522,7 +522,7 @@ var defineProperty = Object.defineProperty,
             x: eventAlias.clientX,
             y: eventAlias.clientY
           } : undefined;
-        me(event.currentTarget, t, n, false, i, g.isDark);
+        me(event.currentTarget, t, n, false, i, propsAlias.isDark);
       }
       function Y() {
         Jt.value && ve();
@@ -535,7 +535,7 @@ var defineProperty = Object.defineProperty,
             x: eventAlias.clientX,
             y: eventAlias.clientY
           } : undefined;
-        me(event.currentTarget, t, `top`, false, r, g.isDark);
+        me(event.currentTarget, t, `top`, false, r, propsAlias.isDark);
       }
       function Zt(e, t) {
         let n = `%%{init: {"theme": "${t === `dark` ? `dark` : `default`}"}}%%\n`;
@@ -652,9 +652,9 @@ var defineProperty = Object.defineProperty,
       }
       let rn = p(() => M.value || N.value || w.value);
       function an() {
-        if (g.maxHeight === `none`) return null;
-        if (g.maxHeight != null) {
-          let float = Number.parseFloat(String(g.maxHeight));
+        if (propsAlias.maxHeight === `none`) return null;
+        if (propsAlias.maxHeight != null) {
+          let float = Number.parseFloat(String(propsAlias.maxHeight));
           if (Number.isFinite(float)) return float;
         }
         let e = T.value;
@@ -735,7 +735,7 @@ var defineProperty = Object.defineProperty,
         gt.value = false;
       }
       function hn(event) {
-        if (g.enableWheelZoom && (event.ctrlKey || event.metaKey)) {
+        if (propsAlias.enableWheelZoom && (event.ctrlKey || event.metaKey)) {
           if (event.preventDefault(), !T.value) return;
           let boundingClientRect = T.value.getBoundingClientRect(),
             n = event.clientX - boundingClientRect.left,
@@ -884,7 +884,7 @@ var defineProperty = Object.defineProperty,
                   let n = t,
                     r = `%%{init: {"theme": "${e === `dark` ? `dark` : `default`}"}}%%\n`;
                   return n.trim().startsWith(`%%{`) ? n : r + n;
-                }(g.isDark ? `dark` : `light`),
+                }(propsAlias.isDark ? `dark` : `light`),
                 o = (yield Kt(() => r.render(i, a), {
                   timeoutMs: W.value.fullRender
                 }))?.svg;
@@ -897,7 +897,7 @@ var defineProperty = Object.defineProperty,
                   translateY: j.value,
                   containerHeight: I.value
                 });
-                let t = g.isDark ? `dark` : `light`;
+                let t = propsAlias.isDark ? `dark` : `light`;
                 e && (z.value[t] = e), It.value &&= false, H.value = false, At = 0, Pt();
               }
               return true;
@@ -907,7 +907,7 @@ var defineProperty = Object.defineProperty,
                   return typeof t == `string` && /timed out/i.test(t);
                 }(e),
                 n = At + 1;
-              return t && n <= 3 ? (At = n, Ft(Math.min(1200, 600 * n))) : (At = 0, Pt(), false === g.loading && console.error(`Failed to render mermaid diagram:`, e), false === g.loading && qt(e)), false;
+              return t && n <= 3 ? (At = n, Ft(Math.min(1200, 600 * n))) : (At = 0, Pt(), false === propsAlias.loading && console.error(`Failed to render mermaid diagram:`, e), false === propsAlias.loading && qt(e)), false;
             } finally {
               N.value = false, yt.value = null;
             }
@@ -932,7 +932,7 @@ var defineProperty = Object.defineProperty,
               let t = yield ct();
               if (!t) return;
               let n = `mermaid-partial-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
-                r = g.isDark ? `dark` : `light`,
+                r = propsAlias.isDark ? `dark` : `light`,
                 i = en(e),
                 a = Zt(i && i.trim() ? i : e, r),
                 o = (yield Kt(() => t.render(n, a), {
@@ -951,7 +951,7 @@ var defineProperty = Object.defineProperty,
             t = ++Rt.value;
           V && V.abort(), V = new AbortController();
           let signal = V.signal,
-            r = g.isDark ? `dark` : `light`,
+            r = propsAlias.isDark ? `dark` : `light`,
             i = O.value,
             replaced = i.replace(/\s+/g, ``);
           if (!i.trim()) return E.value && x(E.value), Lt.value = null, B.value = ``, void (H.value = false);
@@ -999,9 +999,9 @@ var defineProperty = Object.defineProperty,
           Ht = fallbackValue(() => y(null, null, function* () {
             if (!G) return;
             if (!F() || M.value || R.value) return void $();
-            let e = g.isDark ? `dark` : `light`,
+            let e = propsAlias.isDark ? `dark` : `light`,
               t = O.value;
-            if (!t.trim()) return false === g.loading ? void $() : void Tn(K);
+            if (!t.trim()) return false === propsAlias.loading ? void $() : void Tn(K);
             if (Gt++, Gt > Et.value) $();else {
               q && q.abort(), q = new AbortController();
               try {
@@ -1038,9 +1038,9 @@ var defineProperty = Object.defineProperty,
             xt.value && M.value && O.value.trim() && (xt.value = false, bn(`preview`));
           }, Ct.value));
         }();
-      }), a(() => g.isDark, () => y(null, null, function* () {
+      }), a(() => propsAlias.isDark, () => y(null, null, function* () {
         if (!R.value || H.value) return;
-        let e = g.isDark ? `dark` : `light`,
+        let e = propsAlias.isDark ? `dark` : `light`,
           t = z.value[e];
         if (t) return void (E.value && S(E.value, t));
         let n = {
@@ -1059,17 +1059,17 @@ var defineProperty = Object.defineProperty,
           containerHeight: I.value
         });else {
           if (H.value) return;
-          let e = g.isDark ? `dark` : `light`;
+          let e = propsAlias.isDark ? `dark` : `light`;
           if (R.value && z.value[e]) return yield f(), E.value && S(E.value, z.value[e]), k.value = U.value.zoom, A.value = U.value.translateX, j.value = U.value.translateY, void (I.value = U.value.containerHeight);
           if (yield f(), !v.value || !F()) return;
           if (!P.value) return $(), void (yield Q());
           En(), yield Cn();
         }
-      })), a(() => g.loading, (e, t) => y(null, null, function* () {
+      })), a(() => propsAlias.loading, (e, t) => y(null, null, function* () {
         if (true === t && false === e) {
           let trimmed = O.value.trim();
           if (!trimmed) return wn();
-          let t = g.isDark ? `dark` : `light`,
+          let t = propsAlias.isDark ? `dark` : `light`,
             replaced = trimmed.replace(/\s+/g, ``);
           if (R.value && replaced === B.value) return yield f(), E.value && !E.value.querySelector(`svg`) && z.value[t] && S(E.value, z.value[t]), void wn();
           try {
@@ -1095,14 +1095,14 @@ var defineProperty = Object.defineProperty,
         }), yield f(), vt.value || (M.value = !v.value), F() && (P.value ? (Nt(), bt.value = O.value.length) : M.value || Q());
       })), a(() => v.value, e => {
         vt.value || (M.value = !e);
-      }), a(() => g.maxHeight, () => {
+      }), a(() => propsAlias.maxHeight, () => {
         f(() => {
           on();
         });
-      }), a([() => g.estimatedPreviewHeightPx, () => O.value], () => {
+      }), a([() => propsAlias.estimatedPreviewHeightPx, () => O.value], () => {
         R.value || M.value || (I.value = ht());
       }), a(() => pt.value, e => {
-        e && (R.value || (P.value ? (Nt(), bt.value = O.value.length) : Q()), g.loading || R.value || Q(), !M.value && v.value && P.value && En());
+        e && (R.value || (P.value ? (Nt(), bt.value = O.value.length) : Q()), propsAlias.loading || R.value || Q(), !M.value && v.value && P.value && En());
       }, {
         immediate: false
       }), re(() => {
@@ -1113,12 +1113,12 @@ var defineProperty = Object.defineProperty,
         immediate: false
       }), (a, l) => (u(), i(`div`, {
         class: e([`mermaid-block-container rounded-lg border overflow-hidden`, [{
-          "is-rendering": g.loading,
-          dark: g.isDark
+          "is-rendering": propsAlias.loading,
+          dark: propsAlias.isDark
         }]]),
         "data-markstream-mermaid": `1`,
         "data-markstream-mode": M.value ? `fallback` : R.value ? `preview` : `pending`
-      }, [g.showHeader ? (u(), i(`div`, Me, [a.$slots[`header-left`] ? (u(), i(`div`, Ne, [n(a.$slots, `header-left`, {}, undefined, true)])) : (u(), i(`div`, Pe, [h(`span`, {
+      }, [propsAlias.showHeader ? (u(), i(`div`, Me, [a.$slots[`header-left`] ? (u(), i(`div`, Ne, [n(a.$slots, `header-left`, {}, undefined, true)])) : (u(), i(`div`, Pe, [h(`span`, {
         class: `icon-slot action-icon shrink-0`,
         innerHTML: t(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
   <path fill="none" stroke="#ca9ee6" stroke-linecap="round" stroke-linejoin="round" d="M1.5 2.5c0 6 2.25 5.75 4 7 .83.67 1.17 2 1 4h3c-.17-2 .17-3.33 1-4 1.75-1.25 4-1 4-7C12 2.5 10 3 8 7 6 3 4 2.5 1.5 2.5" />
@@ -1126,7 +1126,7 @@ var defineProperty = Object.defineProperty,
 `)
       }, null, 8, Fe), l[21] ||= h(`span`, {
         class: `mermaid-label-text text-[length:var(--ms-text-label)] font-medium font-mono truncate`
-      }, `Mermaid`, -1)])), a.$slots[`header-center`] ? (u(), i(`div`, Ie, [n(a.$slots, `header-center`, {}, undefined, true)])) : g.showModeToggle && v.value ? (u(), i(`div`, Le, [h(`button`, {
+      }, `Mermaid`, -1)])), a.$slots[`header-center`] ? (u(), i(`div`, Ie, [n(a.$slots, `header-center`, {}, undefined, true)])) : propsAlias.showModeToggle && v.value ? (u(), i(`div`, Le, [h(`button`, {
         class: e([`mermaid-mode-btn px-2 py-0.5 rounded transition-colors`, [M.value ? `` : `is-active`]]),
         onClick: l[0] ||= () => yn(`preview`),
         onMouseenter: l[1] ||= e => J(e, t(C)(`common.preview`) || `Preview`),
@@ -1177,7 +1177,7 @@ var defineProperty = Object.defineProperty,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `m16 18l6-6l-6-6M8 6l-6 6l6 6`
-      })], -1), h(`span`, null, d(t(C)(`common.source`) || `Source`), 1)])], 34)])) : m(``, true), a.$slots[`header-right`] ? (u(), i(`div`, Be, [n(a.$slots, `header-right`, {}, undefined, true)])) : (u(), i(`div`, Ve, [g.showCollapseButton ? (u(), i(`button`, {
+      })], -1), h(`span`, null, d(t(C)(`common.source`) || `Source`), 1)])], 34)])) : m(``, true), a.$slots[`header-right`] ? (u(), i(`div`, Be, [n(a.$slots, `header-right`, {}, undefined, true)])) : (u(), i(`div`, Ve, [propsAlias.showCollapseButton ? (u(), i(`button`, {
         key: 0,
         class: e(nt),
         "aria-pressed": w.value,
@@ -1205,7 +1205,7 @@ var defineProperty = Object.defineProperty,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `m9 18l6-6l-6-6`
-      }, null, -1)])], 4))], 40, He)) : m(``, true), g.showCopyButton ? (u(), i(`button`, {
+      }, null, -1)])], 4))], 40, He)) : m(``, true), propsAlias.showCopyButton ? (u(), i(`button`, {
         key: 1,
         class: e(nt),
         onClick: gn,
@@ -1235,7 +1235,7 @@ var defineProperty = Object.defineProperty,
         ry: `2`
       }), h(`path`, {
         d: `M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`
-      })], -1)])]))], 32)) : m(``, true), g.showExportButton && v.value ? (u(), i(`button`, {
+      })], -1)])]))], 32)) : m(``, true), propsAlias.showExportButton && v.value ? (u(), i(`button`, {
         key: 2,
         class: e(`${nt} ${rn.value ? `opacity-50 cursor-not-allowed` : ``}`),
         "aria-label": t(C)(`common.export`) || `Export`,
@@ -1264,7 +1264,7 @@ var defineProperty = Object.defineProperty,
         d: `M12 15V3m9 12v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4`
       }), h(`path`, {
         d: `m7 10l5 5l5-5`
-      })])], -1)])], 42, Ge)) : m(``, true), g.showFullscreenButton && v.value ? (u(), i(`button`, {
+      })])], -1)])], 42, Ge)) : m(``, true), propsAlias.showFullscreenButton && v.value ? (u(), i(`button`, {
         key: 3,
         class: e(`${nt} ${rn.value ? `opacity-50 cursor-not-allowed` : ``}`),
         "aria-label": X.value ? t(C)(`common.minimize`) || `Minimize` : t(C)(`common.open`) || `Open`,
@@ -1291,7 +1291,7 @@ var defineProperty = Object.defineProperty,
       }, null, -1)])]))], 42, Ke)) : m(``, true)]))])) : m(``, true), s(h(`div`, {
         ref_key: `modeContainerRef`,
         ref: mt
-      }, [M.value ? (u(), i(`div`, Ye, [h(`pre`, Xe, d(O.value), 1)])) : (u(), i(`div`, Ze, [g.showZoomControls ? (u(), i(`div`, Qe, [h(`div`, $e, [h(`button`, {
+      }, [M.value ? (u(), i(`div`, Ye, [h(`pre`, Xe, d(O.value), 1)])) : (u(), i(`div`, Ze, [propsAlias.showZoomControls ? (u(), i(`div`, Qe, [h(`div`, $e, [h(`button`, {
         class: `mermaid-action-btn p-[var(--ms-action-btn-padding)] rounded transition-colors`,
         onClick: un,
         onMouseenter: l[15] ||= e => J(e, t(C)(`common.zoomIn`) || `Zoom in`),
@@ -1383,7 +1383,7 @@ var defineProperty = Object.defineProperty,
         to: `body`
       }, [h(`div`, {
         class: e([`markstream-vue`, {
-          dark: g.isDark
+          dark: propsAlias.isDark
         }])
       }, [ne(le, {
         name: `mermaid-dialog`,

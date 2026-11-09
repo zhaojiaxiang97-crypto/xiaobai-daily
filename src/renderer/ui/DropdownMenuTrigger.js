@@ -53,10 +53,10 @@ var X = F({
       required: false
     }
   },
-  setup(e) {
-    let t = e;
-    return (e, n) => (P(), j(T(W), z(O(t)), {
-      default: A(() => [E(e.$slots, `default`)]),
+  setup(props) {
+    let propsAlias = props;
+    return (ctx, renderCache) => (P(), j(T(W), z(O(propsAlias)), {
+      default: A(() => [E(ctx.$slots, `default`)]),
       _: 3
     }, 16));
   }
@@ -99,17 +99,17 @@ var ue = v(le),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           modal: i,
           dir: a
-        } = D(n),
+        } = D(propsAlias),
         o = K(a),
-        s = p(n, `open`, r),
+        s = p(propsAlias, `open`, emitAlias),
         c = M(),
         l = ue();
       return de({
@@ -243,10 +243,10 @@ var ue = v(le),
     }),
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `entryFocus`, `openAutoFocus`, `closeAutoFocus`, `dismiss`],
     setup(event, {
-      emit: r
+      emit: emit
     }) {
       let eventAlias = event,
-        a = r,
+        emitAlias = emit,
         c = Z(),
         f = Q(),
         {
@@ -302,7 +302,7 @@ var ue = v(le),
         return C.value === S.value?.side && t(e, S.value?.area);
       }
       async function ie(e) {
-        a(`openAutoFocus`, e), !e.defaultPrevented && (e.preventDefault(), F.value?.focus({
+        emitAlias(`openAutoFocus`, e), !e.defaultPrevented && (e.preventDefault(), F.value?.focus({
           preventScroll: true
         }));
       }
@@ -364,16 +364,16 @@ var ue = v(le),
         "as-child": ``,
         trapped: T(p),
         onMountAutoFocus: ie,
-        onUnmountAutoFocus: t[7] ||= e => a(`closeAutoFocus`, e)
+        onUnmountAutoFocus: t[7] ||= e => emitAlias(`closeAutoFocus`, e)
       }, {
         default: A(() => [I(T(g), {
           "as-child": ``,
           "disable-outside-pointer-events": T(h),
-          onEscapeKeyDown: t[2] ||= e => a(`escapeKeyDown`, e),
-          onPointerDownOutside: t[3] ||= e => a(`pointerDownOutside`, e),
-          onFocusOutside: t[4] ||= e => a(`focusOutside`, e),
-          onInteractOutside: t[5] ||= e => a(`interactOutside`, e),
-          onDismiss: t[6] ||= e => a(`dismiss`)
+          onEscapeKeyDown: t[2] ||= e => emitAlias(`escapeKeyDown`, e),
+          onPointerDownOutside: t[3] ||= e => emitAlias(`pointerDownOutside`, e),
+          onFocusOutside: t[4] ||= e => emitAlias(`focusOutside`, e),
+          onInteractOutside: t[5] ||= e => emitAlias(`interactOutside`, e),
+          onDismiss: t[6] ||= e => emitAlias(`dismiss`)
         }, {
           default: A(() => [I(T(se), {
             ref_key: `rovingFocusGroupRef`,
@@ -385,7 +385,7 @@ var ue = v(le),
             dir: T(f).dir.value,
             loop: T(_),
             onEntryFocus: t[1] ||= e => {
-              a(`entryFocus`, e), T(f).isUsingKeyboardRef.value || e.preventDefault();
+              emitAlias(`entryFocus`, e), T(f).isUsingKeyboardRef.value || e.preventDefault();
             }
           }, {
             default: A(() => [I(T(ae), {
@@ -473,31 +473,31 @@ var ue = v(le),
       async function d(e) {
         await R(), !e.defaultPrevented && n(e) && r.highlightedElement.value === a.value && !r.onItemLeave(e) && r.highlightedElement.value === a.value && (r.highlightedElement.value = undefined);
       }
-      return (e, t) => (P(), j(T(o), {
+      return (ctx, renderCache) => (P(), j(T(o), {
         value: {
-          textValue: e.textValue
+          textValue: ctx.textValue
         }
       }, {
         default: A(() => [I(T(h), L({
           ref: T(i),
           role: `menuitem`,
           tabindex: `-1`
-        }, e.$attrs, {
-          as: e.as,
-          "as-child": e.asChild,
-          "aria-disabled": e.disabled || undefined,
-          "data-disabled": e.disabled ? `` : undefined,
+        }, ctx.$attrs, {
+          as: ctx.as,
+          "as-child": ctx.asChild,
+          "aria-disabled": ctx.disabled || undefined,
+          "data-disabled": ctx.disabled ? `` : undefined,
           "data-highlighted": c.value ? `` : undefined,
           onPointermove: l,
           onPointerleave: d,
-          onFocus: t[0] ||= async t => {
-            await R(), !(t.defaultPrevented || e.disabled) && (s.value = true, T(r).highlightedElement.value = t.currentTarget);
+          onFocus: renderCache[0] ||= async t => {
+            await R(), !(t.defaultPrevented || ctx.disabled) && (s.value = true, T(r).highlightedElement.value = t.currentTarget);
           },
-          onBlur: t[1] ||= async e => {
+          onBlur: renderCache[1] ||= async e => {
             await R(), !e.defaultPrevented && (s.value = false);
           }
         }), {
-          default: A(() => [E(e.$slots, `default`)]),
+          default: A(() => [E(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`as`, `as-child`, `aria-disabled`, `data-disabled`, `data-highlighted`])]),
         _: 3
@@ -526,10 +526,10 @@ var ue = v(le),
     },
     emits: [`select`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         {
           forwardRef: i,
           currentElement: a
@@ -544,24 +544,24 @@ var ue = v(le),
             bubbles: true,
             cancelable: true
           });
-          r(`select`, customEvent), await R(), customEvent.defaultPrevented ? c.value = false : o.onClose();
+          emitAlias(`select`, customEvent), await R(), customEvent.defaultPrevented ? c.value = false : o.onClose();
         }
       }
-      return (e, t) => (P(), j(_e, L(eventAlias, {
+      return (ctx, renderCache) => (P(), j(_e, L(eventAlias, {
         ref: T(i),
         onClick: l,
-        onPointerdown: t[0] ||= () => {
+        onPointerdown: renderCache[0] ||= () => {
           c.value = true;
         },
-        onPointerup: t[1] ||= async e => {
+        onPointerup: renderCache[1] ||= async e => {
           await R(), !e.defaultPrevented && (c.value || e.currentTarget?.click());
         },
-        onKeydown: t[2] ||= async t => {
+        onKeydown: renderCache[2] ||= async t => {
           let n = T(s).searchRef.value !== ``;
-          e.disabled || n && t.key === ` ` || T(x).includes(t.key) && (t.currentTarget?.click(), t.preventDefault());
+          ctx.disabled || n && t.key === ` ` || T(x).includes(t.key) && (t.currentTarget?.click(), t.preventDefault());
         }
       }), {
-        default: A(() => [E(e.$slots, `default`)]),
+        default: A(() => [E(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -659,12 +659,12 @@ var ue = v(le),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `entryFocus`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
-        a = w(n, r),
+      let propsAlias = props,
+        emitAlias = emit,
+        a = w(propsAlias, emitAlias),
         o = Z(),
         {
           forwardRef: s,
@@ -676,7 +676,7 @@ var ue = v(le),
         "disable-outside-pointer-events": T(o).open.value,
         "disable-outside-scroll": true,
         onDismiss: t[0] ||= e => T(o).onOpenChange(false),
-        onFocusOutside: t[1] ||= H(e => r(`focusOutside`, e), [`prevent`])
+        onFocusOutside: t[1] ||= H(e => emitAlias(`focusOutside`, e), [`prevent`])
       }), {
         default: A(() => [E(e.$slots, `default`)]),
         _: 3
@@ -776,18 +776,18 @@ var ue = v(le),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `entryFocus`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = w(e, t),
+      let n = w(props, emit),
         r = Z();
-      return (e, t) => (P(), j(ge, L(T(n), {
+      return (ctx, renderCache) => (P(), j(ge, L(T(n), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,
         "disable-outside-scroll": false,
-        onDismiss: t[0] ||= e => T(r).onOpenChange(false)
+        onDismiss: renderCache[0] ||= e => T(r).onOpenChange(false)
       }), {
-        default: A(() => [E(e.$slots, `default`)]),
+        default: A(() => [E(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -889,30 +889,30 @@ var ue = v(le),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `entryFocus`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = w(e, t),
+      let n = w(props, emit),
         r = Z(),
         i = Q();
-      return (e, t) => (P(), j(T(a), {
-        present: e.forceMount || T(r).open.value
+      return (ctx, renderCache) => (P(), j(T(a), {
+        present: ctx.forceMount || T(r).open.value
       }, {
         default: A(() => [T(i).modal.value ? (P(), j(ye, z(L({
           key: 0
         }, {
-          ...e.$attrs,
+          ...ctx.$attrs,
           ...T(n)
         })), {
-          default: A(() => [E(e.$slots, `default`)]),
+          default: A(() => [E(ctx.$slots, `default`)]),
           _: 3
         }, 16)) : (P(), j(be, z(L({
           key: 1
         }, {
-          ...e.$attrs,
+          ...ctx.$attrs,
           ...T(n)
         })), {
-          default: A(() => [E(e.$slots, `default`)]),
+          default: A(() => [E(ctx.$slots, `default`)]),
           _: 3
         }, 16))]),
         _: 3
@@ -939,10 +939,10 @@ var ue = v(le),
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (P(), j(T(f), z(O(t)), {
-        default: A(() => [E(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (P(), j(T(f), z(O(propsAlias)), {
+        default: A(() => [E(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -971,21 +971,21 @@ var ue = v(le),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t;
+      let propsAlias = props,
+        emitAlias = emit;
       u();
-      let i = p(n, `open`, r, {
-          defaultValue: n.defaultOpen,
-          passive: n.open === undefined
+      let i = p(propsAlias, `open`, emitAlias, {
+          defaultValue: propsAlias.defaultOpen,
+          passive: propsAlias.open === undefined
         }),
         a = M(),
         {
           modal: o,
           dir: s
-        } = D(n),
+        } = D(propsAlias),
         c = K(s);
       return Ce({
         open: i,
@@ -1111,9 +1111,9 @@ var ue = v(le),
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `closeAutoFocus`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
-      let n = w(event, t);
+      let n = w(event, emit);
       u();
       let i = Se(),
         a = M(false);
@@ -1166,10 +1166,10 @@ var ue = v(le),
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (P(), j(T(xe), z(O(t)), {
-        default: A(() => [E(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (P(), j(T(xe), z(O(propsAlias)), {
+        default: A(() => [E(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -1191,8 +1191,8 @@ var ue = v(le),
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = Se(),
         {
           forwardRef: i,
@@ -1207,7 +1207,7 @@ var ue = v(le),
           id: T(n).triggerId,
           ref: T(i),
           type: e.as === `button` ? `button` : undefined,
-          "as-child": t.asChild,
+          "as-child": propsAlias.asChild,
           as: e.as,
           "aria-haspopup": `menu`,
           "aria-expanded": T(n).open.value,
@@ -1244,14 +1244,14 @@ var ue = v(le),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = w(e, t);
-      return (e, t) => (P(), j(T(we), L({
+      let n = w(props, emit);
+      return (ctx, renderCache) => (P(), j(T(we), L({
         "data-slot": `dropdown-menu`
       }, T(n)), {
-        default: A(t => [E(e.$slots, `default`, z(O(t)))]),
+        default: A(t => [E(ctx.$slots, `default`, z(O(t)))]),
         _: 3
       }, 16));
     }
@@ -1312,27 +1312,27 @@ var ue = v(le),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
-        i = _(n, `class`),
-        a = w(i, r);
-      return (e, t) => (P(), j(T(Ee), null, {
+      let propsAlias = props,
+        emitAlias = emit,
+        i = _(propsAlias, `class`),
+        a = w(i, emitAlias);
+      return (ctx, renderCache) => (P(), j(T(Ee), null, {
         default: A(() => [I(T(Te), L({
           "data-slot": `dropdown-menu-content`
         }, {
-          ...e.$attrs,
+          ...ctx.$attrs,
           ...T(a)
         }, {
-          class: T(te)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-100 cn-menu-translucent z-50 max-h-(--reka-dropdown-menu-content-available-height) w-(--reka-dropdown-menu-trigger-width) origin-(--reka-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden`, n.class),
+          class: T(te)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-100 cn-menu-translucent z-50 max-h-(--reka-dropdown-menu-content-available-height) w-(--reka-dropdown-menu-trigger-width) origin-(--reka-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden`, propsAlias.class),
           style: {
             "-webkit-app-region": `no-drag`,
             "pointer-events": `auto`
           }
         }), {
-          default: A(() => [E(e.$slots, `default`)]),
+          default: A(() => [E(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
@@ -1350,12 +1350,12 @@ var ue = v(le),
       },
       as: {}
     },
-    setup(t) {
-      let n = e(t);
-      return (e, t) => (P(), j(T(De), L({
+    setup(props) {
+      let n = e(props);
+      return (ctx, renderCache) => (P(), j(T(De), L({
         "data-slot": `dropdown-menu-trigger`
       }, T(n)), {
-        default: A(() => [E(e.$slots, `default`)]),
+        default: A(() => [E(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }

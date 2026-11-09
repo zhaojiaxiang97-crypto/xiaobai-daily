@@ -22,10 +22,10 @@ var D = h({
         required: false
       }
     },
-    setup(e) {
-      let n = e;
-      return (e, r) => (m(), p(s(t), v(d(n)), {
-        default: f(() => [c(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (m(), p(s(t), v(d(propsAlias)), {
+        default: f(() => [c(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -47,14 +47,14 @@ var D = h({
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = a(e, t);
-      return (e, t) => (m(), p(s(T), _({
+      let n = a(props, emit);
+      return (ctx, renderCache) => (m(), p(s(T), _({
         "data-slot": `dialog`
       }, s(n)), {
-        default: f(t => [c(e.$slots, `default`, v(d(t)))]),
+        default: f(t => [c(ctx.$slots, `default`, v(d(t)))]),
         _: 3
       }, 16));
     }
@@ -73,18 +73,18 @@ var D = h({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
-        r = n(t, `class`);
-      return (e, n) => (m(), p(s(w), _({
+    setup(props) {
+      let propsAlias = props,
+        r = n(propsAlias, `class`);
+      return (ctx, renderCache) => (m(), p(s(w), _({
         "data-slot": `dialog-overlay`
       }, s(r), {
-        class: s(i)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 pointer-events-auto bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50`, t.class),
+        class: s(i)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 pointer-events-auto bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50`, propsAlias.class),
         style: {
           "-webkit-app-region": `no-drag`
         }
       }), {
-        default: f(() => [c(e.$slots, `default`)]),
+        default: f(() => [c(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -115,29 +115,29 @@ var D = h({
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let l = e,
-        u = t,
-        d = n(l, `class`, `overlayClass`, `showCloseButton`),
-        h = a(d, u);
-      return (t, n) => (m(), p(s(D), null, {
+      let propsAlias = props,
+        emitAlias = emit,
+        d = n(propsAlias, `class`, `overlayClass`, `showCloseButton`),
+        h = a(d, emitAlias);
+      return (ctx, renderCache) => (m(), p(s(D), null, {
         default: f(() => [g(k, {
-          class: o(l.overlayClass)
+          class: o(propsAlias.overlayClass)
         }, null, 8, [`class`]), g(s(C), _({
           "data-slot": `dialog-content`
         }, {
-          ...t.$attrs,
+          ...ctx.$attrs,
           ...s(h)
         }, {
-          class: s(i)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none`, l.class),
+          class: s(i)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none`, propsAlias.class),
           style: {
             "-webkit-app-region": `no-drag`,
             "pointer-events": `auto`
           }
         }), {
-          default: f(() => [c(t.$slots, `default`), e.showCloseButton ? (m(), p(s(S), {
+          default: f(() => [c(ctx.$slots, `default`), props.showCloseButton ? (m(), p(s(S), {
             key: 0,
             "data-slot": `dialog-close`,
             "as-child": ``
@@ -147,7 +147,7 @@ var D = h({
               class: `absolute top-2 right-2 cursor-pointer`,
               size: `icon-sm`
             }, {
-              default: f(() => [g(s(x)), n[0] ||= b(`span`, {
+              default: f(() => [g(s(x)), renderCache[0] ||= b(`span`, {
                 class: `sr-only`
               }, `Close`, -1)]),
               _: 1
@@ -171,19 +171,19 @@ var D = h({
         default: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (n, a) => (m(), u(`div`, {
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (m(), u(`div`, {
         "data-slot": `dialog-footer`,
-        class: o(s(i)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end`, t.class))
-      }, [c(n.$slots, `default`), e.showCloseButton ? (m(), p(s(S), {
+        class: o(s(i)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end`, propsAlias.class))
+      }, [c(ctx.$slots, `default`), props.showCloseButton ? (m(), p(s(S), {
         key: 0,
         "as-child": ``
       }, {
         default: f(() => [g(s(r), {
           variant: `outline`
         }, {
-          default: f(() => [...(a[0] ||= [l(` Close `, -1)])]),
+          default: f(() => [...(renderCache[0] ||= [l(` Close `, -1)])]),
           _: 1
         })]),
         _: 1
@@ -197,12 +197,12 @@ var D = h({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (m(), u(`div`, {
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (m(), u(`div`, {
         "data-slot": `dialog-header`,
-        class: o(s(i)(`gap-2 flex flex-col`, t.class))
-      }, [c(e.$slots, `default`)], 2));
+        class: o(s(i)(`gap-2 flex flex-col`, propsAlias.class))
+      }, [c(ctx.$slots, `default`)], 2));
     }
   }),
   N = h({
@@ -216,16 +216,16 @@ var D = h({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(t) {
-      let r = t,
-        a = n(r, `class`),
+    setup(props) {
+      let propsAlias = props,
+        a = n(propsAlias, `class`),
         o = e(a);
-      return (e, t) => (m(), p(s(E), _({
+      return (ctx, renderCache) => (m(), p(s(E), _({
         "data-slot": `dialog-title`
       }, s(o), {
-        class: s(i)(`text-base leading-none font-medium cn-font-heading`, r.class)
+        class: s(i)(`text-base leading-none font-medium cn-font-heading`, propsAlias.class)
       }), {
-        default: f(() => [c(e.$slots, `default`)]),
+        default: f(() => [c(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }

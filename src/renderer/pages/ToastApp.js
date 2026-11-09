@@ -25,7 +25,7 @@ var b = {
   O = [`title`],
   k = a({
     __name: `ToastApp`,
-    setup(a) {
+    setup(props) {
       let toast = window.screenshotToolAPI.toast,
         A = t(null),
         emptyItems = [],

@@ -272,8 +272,8 @@ var Fe = C(`circle-dashed`, [[`path`, {
   en = 2,
   tn = re({
     __name: `WhiteboardWorkspace`,
-    setup(re, {
-      expose: C
+    setup(props, {
+      expose: expose
     }) {
       let {
           captureGrowthObservation: _e
@@ -1962,7 +1962,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
       async function Li() {
         return $(), dr.value ? wi(`board`, `image`, null) : (sr.value = true, `pending`);
       }
-      return C({
+      return expose({
         requestClose: Pi,
         openBoard: bi,
         saveCurrentBoard: Ii,
@@ -2402,28 +2402,28 @@ var Fe = C(`circle-dashed`, [[`path`, {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let r = e,
-        i = n,
+      let propsAlias = props,
+        emitAlias = emit,
         a = m(null);
       async function o() {
         return (await a.value?.requestClose()) ?? true;
       }
-      return t({
+      return expose({
         requestClose: o
       }), (e, t) => (h(), d(`div`, nn, [g(_e, {
-        tool: r.tool,
-        user: r.user,
-        "credits-balance": r.creditsBalance,
+        tool: propsAlias.tool,
+        user: propsAlias.user,
+        "credits-balance": propsAlias.creditsBalance,
         "voice-tool": false,
         "local-tool": ``,
         "whiteboard-tool": ``,
         "show-history": false,
-        onBack: t[0] ||= e => i(`back`),
-        onRecharge: t[1] ||= e => i(`recharge`),
+        onBack: t[0] ||= e => emitAlias(`back`),
+        onRecharge: t[1] ||= e => emitAlias(`recharge`),
         onWhiteboardOpen: t[2] ||= e => a.value?.openBoard(),
         onWhiteboardSave: t[3] ||= e => a.value?.saveCurrentBoard(),
         onWhiteboardSaveAs: t[4] ||= e => a.value?.openSaveAsDialog()

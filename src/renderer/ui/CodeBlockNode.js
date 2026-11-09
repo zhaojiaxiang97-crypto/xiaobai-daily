@@ -63,23 +63,23 @@ var defineProperty = Object.defineProperty,
       },
       title: {}
     },
-    setup(n) {
-      let r = n,
+    setup(props) {
+      let propsAlias = props,
         {
           t: i
         } = ge(),
         a = h(() => {
-          let fallbackValue = r.code || ``,
+          let fallbackValue = propsAlias.code || ``,
             lowercased = fallbackValue.trim().toLowerCase();
-          return lowercased.startsWith(`<!doctype`) || lowercased.startsWith(`<html`) || lowercased.startsWith(`<body`) ? fallbackValue : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${r.isDark ? `#020617` : `#ffffff`};\n        color: ${r.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${fallbackValue}\n  </body>\n</html>`;
+          return lowercased.startsWith(`<!doctype`) || lowercased.startsWith(`<html`) || lowercased.startsWith(`<body`) ? fallbackValue : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${propsAlias.isDark ? `#020617` : `#ffffff`};\n        color: ${propsAlias.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${fallbackValue}\n  </body>\n</html>`;
         }),
         o = h(() => {
-          return htmlPreviewSandbox = r.htmlPreviewSandbox, payload = r.htmlPreviewAllowScripts, typeof htmlPreviewSandbox == `string` ? htmlPreviewSandbox : htmlPreviewSandbox === undefined && true === payload ? `allow-scripts` : ``;
+          return htmlPreviewSandbox = propsAlias.htmlPreviewSandbox, payload = propsAlias.htmlPreviewAllowScripts, typeof htmlPreviewSandbox == `string` ? htmlPreviewSandbox : htmlPreviewSandbox === undefined && true === payload ? `allow-scripts` : ``;
           var htmlPreviewSandbox, payload;
         });
       function s(event) {
         var payload;
-        event.key !== `Escape` && event.key !== `Esc` || (payload = r.onClose) == null || payload.call(r);
+        event.key !== `Escape` && event.key !== `Esc` || (payload = propsAlias.onClose) == null || payload.call(propsAlias);
       }
       return m(() => {
         typeof window < `u` && window.addEventListener(`keydown`, s);
@@ -89,20 +89,20 @@ var defineProperty = Object.defineProperty,
         to: `body`
       }, [g(`div`, {
         class: e([`markstream-vue`, {
-          dark: r.isDark
+          dark: propsAlias.isDark
         }])
       }, [g(`div`, {
         class: `html-preview-frame__backdrop`,
-        onClick: s[2] ||= e => r.onClose?.call(r)
+        onClick: s[2] ||= e => propsAlias.onClose?.call(propsAlias)
       }, [g(`div`, {
         class: `html-preview-frame`,
         onClick: s[1] ||= se(() => {}, [`stop`])
       }, [g(`div`, Oe, [g(`div`, w, [s[3] ||= g(`span`, {
         class: `html-preview-frame__dot`
-      }, null, -1), g(`span`, T, re(r.title || t(i)(`common.preview`) || `Preview`), 1)]), g(`button`, {
+      }, null, -1), g(`span`, T, re(propsAlias.title || t(i)(`common.preview`) || `Preview`), 1)]), g(`button`, {
         type: `button`,
         class: `html-preview-frame__close`,
-        onClick: s[0] ||= e => r.onClose?.call(r)
+        onClick: s[0] ||= e => propsAlias.onClose?.call(propsAlias)
       }, ` × `)]), g(`iframe`, {
         class: `html-preview-frame__iframe`,
         sandbox: o.value,
@@ -213,11 +213,11 @@ var defineProperty = Object.defineProperty,
       estimatedContentHeightPx: {}
     },
     emits: [`previewCode`, `copy`],
-    setup(u, {
-      emit: f
+    setup(props, {
+      emit: emit
     }) {
-      let m = u,
-        se = f,
+      let propsAlias = props,
+        emitAlias = emit,
         Se = oe(),
         we = h(() => {
           let e = Se?.vnode.props;
@@ -229,7 +229,7 @@ var defineProperty = Object.defineProperty,
         v = l(null),
         Ee = l(null),
         De = l(false),
-        y = l(pe(m.node.language)),
+        y = l(pe(propsAlias.node.language)),
         b = h(() => xe(y.value)),
         Oe = h(() => b.value === `plaintext`),
         w = l(false),
@@ -284,12 +284,12 @@ var defineProperty = Object.defineProperty,
         nt = () => {},
         rt = () => {},
         I = null,
-        it = () => String(m.node.language ?? `plaintext`),
+        it = () => String(propsAlias.node.language ?? `plaintext`),
         at = () => C(null, null, function* () {}),
         emptyItems = [],
         ot = [],
         R = null,
-        z = h(() => m.node.diff),
+        z = h(() => propsAlias.node.diff),
         B = l({
           removed: 0,
           added: 0
@@ -323,11 +323,11 @@ var defineProperty = Object.defineProperty,
       }
       let V = h(() => {
           var htmlPreviewSandbox;
-          let t = m.monacoOptions ? x({}, m.monacoOptions) : {};
+          let t = propsAlias.monacoOptions ? x({}, propsAlias.monacoOptions) : {};
           if (!z.value) return t;
           let n = t.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(t.diffHideUnchangedRegions),
             r = t.hideUnchangedRegions === undefined ? undefined : ut(t.hideUnchangedRegions),
-            i = false !== m.stream && false !== m.loading,
+            i = false !== propsAlias.stream && false !== propsAlias.loading,
             a = i ? x({}, ct) : n,
             o = i ? x({}, ct) : r,
             s = x({}, t.experimental ?? {}),
@@ -371,7 +371,7 @@ var defineProperty = Object.defineProperty,
         H = l(false),
         ht = l(false),
         gt = h(() => {
-          let e = m.monacoOptions?.wordWrap;
+          let e = propsAlias.monacoOptions?.wordWrap;
           return e == null || String(e) !== `off`;
         }),
         _t = h(() => !(mt.value || !ht.value && (de() || H.value))),
@@ -385,7 +385,7 @@ var defineProperty = Object.defineProperty,
             detectLanguage = e.detectLanguage;
           if (typeof detectLanguage == `function` && (it = detectLanguage), typeof useMonaco == `function`) {
             let e = pn();
-            if (e && m.themes && Array.isArray(m.themes) && !m.themes.includes(e)) throw Error(`Preferred theme not in provided themes array`);
+            if (e && propsAlias.themes && Array.isArray(propsAlias.themes) && !propsAlias.themes.includes(e)) throw Error(`Preferred theme not in provided themes array`);
             R = _n();
             let useMonacoResult = useMonaco(R);
             N = useMonacoResult.createEditor || N, Ze = useMonacoResult.createDiffEditor || Ze, Qe = useMonacoResult.updateCode || Qe, $e = useMonacoResult.updateDiff || $e, et = useMonacoResult.getEditor || et, P = useMonacoResult.getEditorView || P, F = useMonacoResult.getDiffEditorView || F, tt = useMonacoResult.cleanupEditor || tt, nt = useMonacoResult.safeClean || useMonacoResult.cleanupEditor || nt, rt = useMonacoResult.refreshDiffPresentation || rt, at = useMonacoResult.setTheme || at, Ge.value = true, !k && v.value && (yield ln(v.value));
@@ -395,7 +395,7 @@ var defineProperty = Object.defineProperty,
           mt.value = true;
         }
       });
-      let U = l(typeof m.monacoOptions?.fontSize == `number` ? m.monacoOptions.fontSize : NaN),
+      let U = l(typeof propsAlias.monacoOptions?.fontSize == `number` ? propsAlias.monacoOptions.fontSize : NaN),
         W = l(U.value),
         yt = h(() => {
           let e = U.value,
@@ -403,36 +403,36 @@ var defineProperty = Object.defineProperty,
           return typeof e == `number` && Number.isFinite(e) && e > 0 && typeof t == `number` && Number.isFinite(t) && t > 0;
         }),
         bt = h(() => {
-          let e = m.monacoOptions?.fontSize;
+          let e = propsAlias.monacoOptions?.fontSize;
           if (typeof e == `number` && Number.isFinite(e) && e > 0) return e;
           let t = W.value;
           return typeof t == `number` && Number.isFinite(t) && t > 0 ? t : 14;
         }),
         xt = h(() => {
-          let e = m.monacoOptions?.lineHeight;
+          let e = propsAlias.monacoOptions?.lineHeight;
           return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : Math.max(12, Math.round(1.35 * bt.value));
         }),
         St = h(() => {
-          let e = m.monacoOptions?.tabSize;
+          let e = propsAlias.monacoOptions?.tabSize;
           return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : 4;
         }),
         Ct = h(() => {
-          let e = m.monacoOptions?.padding;
+          let e = propsAlias.monacoOptions?.padding;
           return {
             top: typeof e?.top == `number` && Number.isFinite(e.top) && e.top > 0 ? e.top : 0,
             bottom: typeof e?.bottom == `number` && Number.isFinite(e.bottom) && e.bottom > 0 ? e.bottom : 0
           };
         }),
         G = h(() => {
-          let estimatedContentHeightPx = m.estimatedContentHeightPx;
+          let estimatedContentHeightPx = propsAlias.estimatedContentHeightPx;
           return typeof estimatedContentHeightPx == `number` && Number.isFinite(estimatedContentHeightPx) && estimatedContentHeightPx > 0 ? estimatedContentHeightPx : null;
         }),
         wt = h(() => {
-          let estimatedHeightPx = m.estimatedHeightPx;
+          let estimatedHeightPx = propsAlias.estimatedHeightPx;
           return typeof estimatedHeightPx == `number` && Number.isFinite(estimatedHeightPx) && estimatedHeightPx > 0 ? estimatedHeightPx : null;
         }),
         Tt = h(() => {
-          let e = m.monacoOptions?.fontFamily;
+          let e = propsAlias.monacoOptions?.fontFamily;
           return x(x({
             fontSize: `${bt.value}px`,
             lineHeight: `${xt.value}px`,
@@ -555,7 +555,7 @@ var defineProperty = Object.defineProperty,
             removed: Math.max(0, a - i + 1),
             added: Math.max(0, o - i + 1)
           };
-        }(String(m.node.originalCode ?? ``), String(m.node.updatedCode ?? ``)) : B.value = {
+        }(String(propsAlias.node.originalCode ?? ``), String(propsAlias.node.updatedCode ?? ``)) : B.value = {
           removed: 0,
           added: 0
         };
@@ -582,7 +582,7 @@ var defineProperty = Object.defineProperty,
       function Rt() {
         if (Number.isFinite(W.value) && W.value > 0 && Number.isFinite(U.value)) return W.value;
         let e = jt();
-        return typeof m.monacoOptions?.fontSize == `number` ? (U.value = m.monacoOptions.fontSize, W.value = m.monacoOptions.fontSize, W.value) : e && e > 0 ? (U.value = e, W.value = e, e) : (U.value = 12, W.value = 12, 12);
+        return typeof propsAlias.monacoOptions?.fontSize == `number` ? (U.value = propsAlias.monacoOptions.fontSize, W.value = propsAlias.monacoOptions.fontSize, W.value) : e && e > 0 ? (U.value = e, W.value = e, e) : (U.value = 12, W.value = 12, 12);
       }
       function zt() {
         let e = Rt(),
@@ -859,32 +859,32 @@ var defineProperty = Object.defineProperty,
         return i;
       }
       function Jt() {
-        let fallbackValue = m.monacoOptions?.MAX_HEIGHT ?? 500;
+        let fallbackValue = propsAlias.monacoOptions?.MAX_HEIGHT ?? 500;
         if (typeof fallbackValue == `number`) return fallbackValue;
         let t = String(fallbackValue).match(/^(\d+(?:\.\d+)?)/);
         return t ? Number.parseFloat(t[1]) : 500;
       }
-      let Yt = h(() => m.isShowPreview && (y.value === `html` || y.value === `svg`));
-      a(() => m.node.language, e => {
+      let Yt = h(() => propsAlias.isShowPreview && (y.value === `html` || y.value === `svg`));
+      a(() => propsAlias.node.language, e => {
         y.value = pe(e);
-      }), a(() => [m.node.originalCode, m.node.updatedCode, z.value], () => {
+      }), a(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, z.value], () => {
         It(), _(() => Lt());
       }, {
         immediate: true
-      }), a(() => [m.node.originalCode, m.node.updatedCode, b.value, z.value], e => C(null, [e], function* ([e, t, n, r]) {
-        if (false === m.stream || !r) return;
+      }), a(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, b.value, z.value], e => C(null, [e], function* ([e, t, n, r]) {
+        if (false === propsAlias.stream || !r) return;
         if (N && !E.value && v.value) try {
           yield ln(v.value);
         } catch {}
         let i = dt(String(e ?? ``), String(t ?? ``)),
-          a = false === m.loading;
+          a = false === propsAlias.loading;
         if (a && vn(), yield $e(i.original, i.updated, b.value), a) {
           if (k || !z.value) return;
           rt(), X(), Lt(), Z();
         }
         w.value && _(() => Kt());
-      })), a(() => m.node.code, e => C(null, null, function* () {
-        if (false !== m.stream && (y.value ||= pe(it(e)), !z.value)) {
+      })), a(() => propsAlias.node.code, e => C(null, null, function* () {
+        if (false !== propsAlias.stream && (y.value ||= pe(it(e)), !z.value)) {
           if (N && !E.value && v.value) try {
             yield ln(v.value);
           } catch {}
@@ -914,7 +914,7 @@ var defineProperty = Object.defineProperty,
             if (t && /[./\\-]/.test(t)) return t;
           }
           return ``;
-        }(String(m.node.raw ?? ``))),
+        }(String(propsAlias.node.raw ?? ``))),
         Qt = h(() => Zt.value || Xt.value),
         $t = h(() => Zt.value ? z.value ? `Diff / ${Xt.value}` : Xt.value : ``),
         en = h(() => (me.value, ue(y.value || ``))),
@@ -923,15 +923,15 @@ var defineProperty = Object.defineProperty,
             t = e => {
               if (e != null) return typeof e == `number` ? `${e}px` : String(e);
             },
-            n = t(m.minWidth),
-            r = t(m.maxWidth);
+            n = t(propsAlias.minWidth),
+            r = t(propsAlias.maxWidth);
           return n && (e.minWidth = n), r && (e.maxWidth = r), Et.value && (e.minHeight = `${wt.value ?? G.value}px`), z.value || (e.color = `var(--vscode-editor-foreground, var(--markstream-code-fallback-fg))`, e.backgroundColor = `var(--vscode-editor-background, var(--markstream-code-fallback-bg))`, e.borderColor = `var(--markstream-code-border-color)`), e;
         }),
-        nn = h(() => false !== m.showTooltips);
+        nn = h(() => false !== propsAlias.showTooltips);
       function rn() {
         return C(this, null, function* () {
           try {
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(m.node.code)), De.value = true, se(`copy`, m.node.code), setTimeout(() => {
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(propsAlias.node.code)), De.value = true, emitAlias(`copy`, propsAlias.node.code), setTimeout(() => {
               De.value = false;
             }, 1e3);
           } catch (e) {
@@ -947,7 +947,7 @@ var defineProperty = Object.defineProperty,
           }(event);
           if (t) {
             let e = w.value ? Te(`common.collapse`) || `Collapse` : Te(`common.expand`) || `Expand`;
-            he(t, e, `top`, false, undefined, m.isDark);
+            he(t, e, `top`, false, undefined, propsAlias.isDark);
           }
         }
         let t = z.value ? F() : P(),
@@ -979,8 +979,8 @@ var defineProperty = Object.defineProperty,
         if (we.value) {
           let t = e === `html` ? `text/html` : `image/svg+xml`,
             n = e === `html` ? Te(`artifacts.htmlPreviewTitle`) || `HTML Preview` : Te(`artifacts.svgPreviewTitle`) || `SVG Preview`;
-          se(`previewCode`, {
-            node: m.node,
+          emitAlias(`previewCode`, {
+            node: propsAlias.node,
             artifactType: t,
             artifactTitle: n,
             id: `temp-${e}-${Date.now()}`
@@ -1066,15 +1066,15 @@ var defineProperty = Object.defineProperty,
               }(e), k)) return;
               if (z.value) {
                 nt();
-                let t = dt(String(m.node.originalCode ?? ``), String(m.node.updatedCode ?? ``));
-                Ze ? yield Ze(e, t.original, t.updated, b.value) : yield N(e, m.node.code, b.value);
-              } else yield N(e, m.node.code, b.value);
+                let t = dt(String(propsAlias.node.originalCode ?? ``), String(propsAlias.node.updatedCode ?? ``));
+                Ze ? yield Ze(e, t.original, t.updated, b.value) : yield N(e, propsAlias.node.code, b.value);
+              } else yield N(e, propsAlias.node.code, b.value);
               if (k) return;
               let t = z.value ? F() : P();
-              if (typeof m.monacoOptions?.fontSize == `number`) t?.updateOptions({
-                fontSize: m.monacoOptions.fontSize,
+              if (typeof propsAlias.monacoOptions?.fontSize == `number`) t?.updateOptions({
+                fontSize: propsAlias.monacoOptions.fontSize,
                 automaticLayout: false
-              }), U.value = m.monacoOptions.fontSize, W.value = m.monacoOptions.fontSize;else {
+              }), U.value = propsAlias.monacoOptions.fontSize, W.value = propsAlias.monacoOptions.fontSize;else {
                 let e = jt();
                 e && e > 0 ? (U.value = e, W.value = e) : (U.value = 12, W.value = 12);
               }
@@ -1136,7 +1136,7 @@ var defineProperty = Object.defineProperty,
         flush: `post`,
         immediate: false
       });
-      let un = a(() => [v.value, z.value, m.stream, m.loading, Ge.value, M.value], e => C(null, [e], function* ([e, t, n, r, i, a]) {
+      let un = a(() => [v.value, z.value, propsAlias.stream, propsAlias.loading, Ge.value, M.value], e => C(null, [e], function* ([e, t, n, r, i, a]) {
         if (!e || !N || !a || false === n && false !== r) return;
         let o = ln(e);
         if (o) {
@@ -1162,16 +1162,16 @@ var defineProperty = Object.defineProperty,
       }
       function pn() {
         let e = function () {
-            if (m.theme !== undefined) {
-              let theme = m.theme;
-              return dn(theme) ? m.isDark ? theme.dark : theme.light : theme;
+            if (propsAlias.theme !== undefined) {
+              let theme = propsAlias.theme;
+              return dn(theme) ? propsAlias.isDark ? theme.dark : theme.light : theme;
             }
-            return m.isDark ? m.darkTheme : m.lightTheme;
+            return propsAlias.isDark ? propsAlias.darkTheme : propsAlias.lightTheme;
           }(),
           t = V.value?.theme,
           fallbackValue = e ?? t;
         if (typeof fallbackValue == `object` && fallbackValue) return fallbackValue;
-        let r = Array.isArray(m.themes) ? m.themes : [];
+        let r = Array.isArray(propsAlias.themes) ? propsAlias.themes : [];
         if (!r.length || fallbackValue == null) return fallbackValue;
         let i = $(fallbackValue),
           filtered = r.map(item => $(item)).filter(item => !!item);
@@ -1180,7 +1180,7 @@ var defineProperty = Object.defineProperty,
         return t != null && o && filtered.includes(o) ? t : r[0];
       }
       a(ft, (e, t) => C(null, null, function* () {
-        if (e === t || (pt.value = e, !N || !v.value) || !E.value || false === m.stream && false !== m.loading || !M.value) return;
+        if (e === t || (pt.value = e, !N || !v.value) || !E.value || false === propsAlias.stream && false !== propsAlias.loading || !M.value) return;
         let n = I;
         if (n) {
           try {
@@ -1194,14 +1194,14 @@ var defineProperty = Object.defineProperty,
           O.value = false, H.value = false, ht.value = true;
         }
       }));
-      let mn = h(() => (m.theme === undefined ? fn(m.darkTheme, m.lightTheme) : !dn(m.theme)) ? function (e) {
+      let mn = h(() => (propsAlias.theme === undefined ? fn(propsAlias.darkTheme, propsAlias.lightTheme) : !dn(propsAlias.theme)) ? function (e) {
           if (e && typeof e == `object` && e.colors?.[`editor.background`]) {
             let t = Ut(e.colors[`editor.background`]);
             if (t != null) return t < 128;
           }
           let lowercased = ($(e) ?? ``).toLowerCase();
-          return lowercased ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(item => lowercased.includes(item)) && ![`light`, `latte`, `dawn`, `lotus`].some(item => lowercased.includes(item)) : !!m.isDark;
-        }(pn()) : !!m.isDark),
+          return lowercased ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(item => lowercased.includes(item)) && ![`light`, `latte`, `dawn`, `lotus`].some(item => lowercased.includes(item)) : !!propsAlias.isDark;
+        }(pn()) : !!propsAlias.isDark),
         hn = h(() => {
           if (!z.value) return mn.value ? `dark` : `light`;
           let e = V.value?.diffAppearance;
@@ -1212,7 +1212,7 @@ var defineProperty = Object.defineProperty,
         return S(x(S(x({
           wordWrap: `on`,
           wrappingIndent: `same`,
-          themes: m.themes
+          themes: propsAlias.themes
         }, V.value || {}), {
           theme: pn()
         }), z.value ? {
@@ -1234,7 +1234,7 @@ var defineProperty = Object.defineProperty,
         return JSON.stringify({
           diffLineStyle: V.value?.diffLineStyle ?? `background`,
           diffUnchangedRegionStyle: V.value?.diffUnchangedRegionStyle ?? `line-info`,
-          diffHideUnchangedRegions: m.monacoOptions?.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(m.monacoOptions.diffHideUnchangedRegions),
+          diffHideUnchangedRegions: propsAlias.monacoOptions?.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(propsAlias.monacoOptions.diffHideUnchangedRegions),
           renderSideBySide: (htmlPreviewSandbox = V.value?.renderSideBySide) == null || htmlPreviewSandbox,
           useInlineViewWhenSpaceIsLimited: (payload = V.value?.useInlineViewWhenSpaceIsLimited) == null || payload,
           enableSplitViewResizing: (n = V.value?.enableSplitViewResizing) == null || n,
@@ -1242,11 +1242,11 @@ var defineProperty = Object.defineProperty,
           originalEditable: (i = V.value?.originalEditable) != null && i
         });
       });
-      return a(() => [m.monacoOptions, M.value], () => {
+      return a(() => [propsAlias.monacoOptions, M.value], () => {
         var htmlPreviewSandbox;
         if (vn(), !N || !M.value) return;
         let t = z.value ? F() : P(),
-          n = typeof m.monacoOptions?.fontSize == `number` ? m.monacoOptions.fontSize : Number.isFinite(W.value) ? W.value : undefined;
+          n = typeof propsAlias.monacoOptions?.fontSize == `number` ? propsAlias.monacoOptions.fontSize : Number.isFinite(W.value) ? W.value : undefined;
         typeof n == `number` && Number.isFinite(n) && n > 0 && ((htmlPreviewSandbox = t?.updateOptions) == null || htmlPreviewSandbox.call(t, {
           fontSize: n
         })), Y(false);
@@ -1297,7 +1297,7 @@ var defineProperty = Object.defineProperty,
       }, {
         flush: `post`
       }), a(() => [yn.value, Ge.value, M.value], (e, t) => C(null, [e, t], function* ([e, t, n], [r]) {
-        if (vn(), !t || !n || !N || !v.value || !E.value || e === r || false === m.stream && false !== m.loading) return;
+        if (vn(), !t || !n || !N || !v.value || !E.value || e === r || false === propsAlias.stream && false !== propsAlias.loading) return;
         let i = I;
         if (i) {
           try {
@@ -1312,7 +1312,7 @@ var defineProperty = Object.defineProperty,
         }
       }), {
         flush: `post`
-      }), a(() => [m.loading, M.value], (e, t) => C(null, [e, t], function* ([e, t], n) {
+      }), a(() => [propsAlias.loading, M.value], (e, t) => C(null, [e, t], function* ([e, t], n) {
         if (!t || e) return;
         let r = n?.[0],
           i = r !== undefined && false !== r;
@@ -1326,10 +1326,10 @@ var defineProperty = Object.defineProperty,
                     yield e;
                   } catch {}
                   vn();
-                  let t = dt(String(m.node.originalCode ?? ``), String(m.node.updatedCode ?? ``));
+                  let t = dt(String(propsAlias.node.originalCode ?? ``), String(propsAlias.node.updatedCode ?? ``));
                   if (yield $e(t.original, t.updated, b.value), k || !z.value) return;
                   rt(), X(), Lt();
-                } else Qe(String(m.node.code ?? ``), b.value);
+                } else Qe(String(propsAlias.node.code ?? ``), b.value);
               }
               Y(false);
             } catch {}
@@ -1342,16 +1342,16 @@ var defineProperty = Object.defineProperty,
         qt(), J(), tt();
       }), (a, l) => mt.value ? (d(), c(t(fe), {
         key: 0,
-        node: m.node,
-        loading: m.loading
+        node: propsAlias.node,
+        loading: propsAlias.loading
       }, null, 8, [`node`, `loading`])) : (d(), i(`div`, {
         key: 1,
         ref_key: `container`,
         ref: Ee,
         style: te(tn.value),
         class: e([`code-block-container rounded-lg border`, [{
-          dark: m.isDark,
-          "is-rendering": m.loading,
+          dark: propsAlias.isDark,
+          "is-rendering": propsAlias.loading,
           "is-dark": gn.value,
           "is-diff": z.value,
           "is-plain-text": Oe.value
@@ -1359,17 +1359,17 @@ var defineProperty = Object.defineProperty,
         "data-markstream-code-block": `1`,
         "data-markstream-enhanced": H.value && !mt.value ? `true` : `false`
       }, [p(_e, {
-        "show-header": m.showHeader,
-        "show-collapse-button": m.showCollapseButton,
-        "show-font-size-buttons": m.showFontSizeButtons,
-        "enable-font-size-control": m.enableFontSizeControl,
-        "show-copy-button": m.showCopyButton,
-        "show-expand-button": m.showExpandButton,
-        "show-preview-button": m.showPreviewButton,
-        "show-tooltips": m.showTooltips,
-        "is-dark": m.isDark,
-        loading: m.loading,
-        stream: u.stream,
+        "show-header": propsAlias.showHeader,
+        "show-collapse-button": propsAlias.showCollapseButton,
+        "show-font-size-buttons": propsAlias.showFontSizeButtons,
+        "enable-font-size-control": propsAlias.enableFontSizeControl,
+        "show-copy-button": propsAlias.showCopyButton,
+        "show-expand-button": propsAlias.showExpandButton,
+        "show-preview-button": propsAlias.showPreviewButton,
+        "show-tooltips": propsAlias.showTooltips,
+        "is-dark": propsAlias.isDark,
+        loading: propsAlias.loading,
+        stream: props.stream,
         "is-collapsed": T.value,
         "is-expanded": w.value,
         "copy-text": De.value,
@@ -1394,8 +1394,8 @@ var defineProperty = Object.defineProperty,
           innerHTML: en.value
         }, null, 8, ze), g(`div`, Be, [g(`div`, Ve, re(Qt.value), 1), $t.value ? (d(), i(`div`, He, re($t.value), 1)) : ae(``, true)])])], true)]),
         loading: o(() => [n(a.$slots, `loading`, {
-          loading: u.loading,
-          stream: u.stream
+          loading: props.loading,
+          stream: props.stream
         }, () => [l[0] ||= g(`div`, {
           class: `loading-skeleton`
         }, [g(`div`, {
@@ -1408,7 +1408,7 @@ var defineProperty = Object.defineProperty,
         default: o(() => [s(g(`div`, Ue, [g(`div`, {
           ref_key: `codeEditor`,
           ref: v,
-          class: e([`code-editor-container`, [u.stream ? `` : `code-height-placeholder`, {
+          class: e([`code-editor-container`, [props.stream ? `` : `code-height-placeholder`, {
             "is-hidden": _t.value
           }]]),
           style: te(Dt.value)
@@ -1418,13 +1418,13 @@ var defineProperty = Object.defineProperty,
             "is-wrap": gt.value
           }]),
           style: te(Tt.value),
-          node: m.node
-        }, null, 8, [`class`, `style`, `node`])) : ae(``, true)], 512), [[ce, !(T.value || !u.stream && u.loading)]]), vt.value && !we.value && Yt.value && y.value === `html` ? (d(), c(ke, {
+          node: propsAlias.node
+        }, null, 8, [`class`, `style`, `node`])) : ae(``, true)], 512), [[ce, !(T.value || !props.stream && props.loading)]]), vt.value && !we.value && Yt.value && y.value === `html` ? (d(), c(ke, {
           key: 0,
-          code: m.node.code,
-          "html-preview-allow-scripts": m.htmlPreviewAllowScripts,
-          "html-preview-sandbox": m.htmlPreviewSandbox,
-          "is-dark": m.isDark,
+          code: propsAlias.node.code,
+          "html-preview-allow-scripts": propsAlias.htmlPreviewAllowScripts,
+          "html-preview-sandbox": propsAlias.htmlPreviewSandbox,
+          "is-dark": propsAlias.isDark,
           "on-close": () => vt.value = false
         }, null, 8, [`code`, `html-preview-allow-scripts`, `html-preview-sandbox`, `is-dark`, `on-close`])) : ae(``, true)]),
         _: 2

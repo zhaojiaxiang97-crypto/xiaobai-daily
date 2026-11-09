@@ -714,7 +714,7 @@ var weakMap = new WeakMap(),
       moveClass: String
     }),
     setup(event, {
-      slots: r
+      slots: slots
     }) {
       let i = T(),
         o = te(),
@@ -746,7 +746,7 @@ var weakMap = new WeakMap(),
           let n = resolvedValue[e];
           n.el && n.el instanceof Element && !n.el[L] && (ratio.push(n), t(n, a(n, u, o, i)), weakMap.set(n, Ot(n.el)));
         }
-        resolvedValue = r.default ? n(r.default()) : [];
+        resolvedValue = slots.default ? n(slots.default()) : [];
         for (let e = 0; e < resolvedValue.length; e++) {
           let n = resolvedValue[e];
           n.key != null && t(n, a(n, u, o, i));

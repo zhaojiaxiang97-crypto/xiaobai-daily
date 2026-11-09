@@ -2009,17 +2009,17 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           modal: i
-        } = ee(n),
-        a = l(n, `open`, r, {
-          defaultValue: n.defaultOpen,
-          passive: n.open === undefined
+        } = ee(propsAlias),
+        a = l(propsAlias, `open`, emitAlias, {
+          defaultValue: propsAlias.defaultOpen,
+          passive: propsAlias.open === undefined
         });
       return hr({
         contentId: ``,
@@ -2144,12 +2144,12 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(t, {
-      emit: n
+    setup(props, {
+      emit: emit
     }) {
-      let r = t,
-        i = n,
-        s = e(f(r, `trapFocus`, `disableOutsidePointerEvents`)),
+      let propsAlias = props,
+        emitAlias = emit,
+        s = e(f(propsAlias, `trapFocus`, `disableOutsidePointerEvents`)),
         {
           forwardRef: c
         } = o(),
@@ -2158,16 +2158,16 @@ var [$, hr] = m(`PopoverRoot`),
         "as-child": ``,
         loop: ``,
         trapped: e.trapFocus,
-        onMountAutoFocus: t[5] ||= e => i(`openAutoFocus`, e),
-        onUnmountAutoFocus: t[6] ||= e => i(`closeAutoFocus`, e)
+        onMountAutoFocus: t[5] ||= e => emitAlias(`openAutoFocus`, e),
+        onUnmountAutoFocus: t[6] ||= e => emitAlias(`closeAutoFocus`, e)
       }, {
         default: v(() => [ie(g(d), {
           "as-child": ``,
           "disable-outside-pointer-events": e.disableOutsidePointerEvents,
-          onPointerDownOutside: t[0] ||= e => i(`pointerDownOutside`, e),
-          onInteractOutside: t[1] ||= e => i(`interactOutside`, e),
-          onEscapeKeyDown: t[2] ||= e => i(`escapeKeyDown`, e),
-          onFocusOutside: t[3] ||= e => i(`focusOutside`, e),
+          onPointerDownOutside: t[0] ||= e => emitAlias(`pointerDownOutside`, e),
+          onInteractOutside: t[1] ||= e => emitAlias(`interactOutside`, e),
+          onEscapeKeyDown: t[2] ||= e => emitAlias(`escapeKeyDown`, e),
+          onFocusOutside: t[3] ||= e => emitAlias(`focusOutside`, e),
           onDismiss: t[4] ||= e => g(l).onOpenChange(false)
         }, {
           default: v(() => [ie(g(de), C(g(s), {
@@ -2290,15 +2290,15 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        i = t,
+      let propsAlias = props,
+        emitAlias = emit,
         a = $(),
         c = b(false);
       s(true);
-      let l = h(n, i),
+      let l = h(propsAlias, emitAlias),
         {
           forwardRef: u,
           currentElement: d
@@ -2308,10 +2308,10 @@ var [$, hr] = m(`PopoverRoot`),
         "trap-focus": g(a).open.value,
         "disable-outside-pointer-events": ``,
         onCloseAutoFocus: event[0] ||= se(e => {
-          i(`closeAutoFocus`, e), c.value || g(a).triggerElement.value?.focus();
+          emitAlias(`closeAutoFocus`, e), c.value || g(a).triggerElement.value?.focus();
         }, [`prevent`]),
         onPointerDownOutside: event[1] ||= e => {
-          i(`pointerDownOutside`, e);
+          emitAlias(`pointerDownOutside`, e);
           let originalEvent = e.detail.originalEvent,
             n = originalEvent.button === 0 && originalEvent.ctrlKey === true,
             fallbackValue = originalEvent.button === 2 || n;
@@ -2422,27 +2422,27 @@ var [$, hr] = m(`PopoverRoot`),
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         i = $(),
         a = b(false),
         o = b(false),
-        s = h(eventAlias, r);
-      return (e, t) => (x(), y(_r, C(g(s), {
+        s = h(eventAlias, emitAlias);
+      return (ctx, renderCache) => (x(), y(_r, C(g(s), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,
-        onCloseAutoFocus: t[0] ||= e => {
-          r(`closeAutoFocus`, e), e.defaultPrevented || (a.value || g(i).triggerElement.value?.focus(), e.preventDefault()), a.value = false, o.value = false;
+        onCloseAutoFocus: renderCache[0] ||= e => {
+          emitAlias(`closeAutoFocus`, e), e.defaultPrevented || (a.value || g(i).triggerElement.value?.focus(), e.preventDefault()), a.value = false, o.value = false;
         },
-        onInteractOutside: t[1] ||= async e => {
-          r(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
+        onInteractOutside: renderCache[1] ||= async e => {
+          emitAlias(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
           let t = e.target;
           g(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
         }
       }), {
-        default: v(() => [_(e.$slots, `default`)]),
+        default: v(() => [_(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -2548,13 +2548,13 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: n
+    setup(props, {
+      emit: emit
     }) {
-      let r = e,
-        a = n,
+      let propsAlias = props,
+        emitAlias = emit,
         s = $(),
-        c = h(r, a),
+        c = h(propsAlias, emitAlias),
         {
           forwardRef: l
         } = o();
@@ -2600,10 +2600,10 @@ var [$, hr] = m(`PopoverRoot`),
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (x(), y(g(c), ae(ne(t)), {
-        default: v(() => [_(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (x(), y(g(c), ae(ne(propsAlias)), {
+        default: v(() => [_(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -2621,8 +2621,8 @@ var [$, hr] = m(`PopoverRoot`),
         default: `button`
       }
     },
-    setup(e) {
-      let n = e,
+    setup(props) {
+      let propsAlias = props,
         r = $(),
         {
           forwardRef: i,
@@ -2642,7 +2642,7 @@ var [$, hr] = m(`PopoverRoot`),
           "aria-controls": g(r).open.value ? g(r).contentId : undefined,
           "data-state": g(r).open.value ? `open` : `closed`,
           as: e.as,
-          "as-child": n.asChild,
+          "as-child": propsAlias.asChild,
           onClick: g(r).onOpenToggle
         }, {
           default: v(() => [_(e.$slots, `default`)]),
@@ -2666,14 +2666,14 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = h(e, t);
-      return (e, t) => (x(), y(g(gr), C({
+      let n = h(props, emit);
+      return (ctx, renderCache) => (x(), y(g(gr), C({
         "data-slot": `popover`
       }, g(n)), {
-        default: v(t => [_(e.$slots, `default`, ae(ne(t)))]),
+        default: v(t => [_(ctx.$slots, `default`, ae(ne(t)))]),
         _: 3
       }, 16));
     }
@@ -2735,23 +2735,23 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
-        i = f(n, `class`),
-        a = h(i, r);
-      return (e, t) => (x(), y(g(xr), null, {
+      let propsAlias = props,
+        emitAlias = emit,
+        i = f(propsAlias, `class`),
+        a = h(i, emitAlias);
+      return (ctx, renderCache) => (x(), y(g(xr), null, {
         default: v(() => [ie(g(br), C({
           "data-slot": `popover-content`
         }, {
-          ...e.$attrs,
+          ...ctx.$attrs,
           ...g(a)
         }, {
-          class: g(p)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, n.class)
+          class: g(p)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, propsAlias.class)
         }), {
-          default: v(() => [_(e.$slots, `default`)]),
+          default: v(() => [_(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
@@ -2766,12 +2766,12 @@ var [$, hr] = m(`PopoverRoot`),
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (x(), y(g(Sr), C({
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (x(), y(g(Sr), C({
         "data-slot": `popover-trigger`
-      }, t), {
-        default: v(() => [_(e.$slots, `default`)]),
+      }, propsAlias), {
+        default: v(() => [_(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }

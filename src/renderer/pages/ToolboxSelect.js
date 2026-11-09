@@ -36,7 +36,7 @@ var S = {
       function E(e) {
         typeof e == `string` && (C.value = e);
       }
-      return (r, m) => (u(), c(t(b), {
+      return (ctx, renderCache) => (u(), c(t(b), {
         "model-value": C.value,
         disabled: options.disabled,
         "onUpdate:modelValue": E

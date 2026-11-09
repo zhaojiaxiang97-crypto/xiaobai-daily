@@ -318,11 +318,11 @@ var _e = {
       }
     },
     emits: [`update:modelValue`, `update:validModelValue`, `update:placeholder`, `update:startValue`],
-    setup(t, {
-      emit: a
+    setup(props, {
+      emit: emit
     }) {
-      let o = t,
-        s = a,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           disabled: c,
           readonly: l,
@@ -346,23 +346,23 @@ var _e = {
           disableDaysOutsideCurrentView: re,
           fixedDate: ie,
           maximumDays: ae
-        } = m(o),
+        } = m(propsAlias),
         {
           primitiveElement: I,
           currentElement: L
         } = e(),
         R = me(j),
         V = fe(N),
-        H = M(() => o.weekStartsOn ?? de(V.value)),
+        H = M(() => propsAlias.weekStartsOn ?? de(V.value)),
         le = S(),
         U = S(),
         W = S(false),
-        G = r(o, `modelValue`, s, {
-          defaultValue: o.defaultValue ?? {
+        G = r(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue ?? {
             start: undefined,
             end: undefined
           },
-          passive: o.modelValue === undefined
+          passive: propsAlias.modelValue === undefined
         }),
         handler = e => e ?? {
           start: undefined,
@@ -371,18 +371,18 @@ var _e = {
         q = M(() => handler(G.value)),
         J = S(handler(G.value));
       y(J, e => {
-        s(`update:validModelValue`, e);
+        emitAlias(`update:validModelValue`, e);
       });
       let pe = ce({
-          defaultPlaceholder: o.placeholder,
+          defaultPlaceholder: propsAlias.placeholder,
           defaultValue: handler(G.value).start,
-          locale: o.locale
+          locale: propsAlias.locale
         }),
         Y = S(handler(G.value).start),
         X = S(handler(G.value).end),
-        Z = r(o, `placeholder`, s, {
-          defaultValue: o.defaultPlaceholder ?? pe.copy(),
-          passive: o.placeholder === undefined
+        Z = r(propsAlias, `placeholder`, emitAlias, {
+          defaultValue: propsAlias.defaultPlaceholder ?? pe.copy(),
+          passive: propsAlias.placeholder === undefined
         });
       function he(e) {
         Z.value = e.copy();
@@ -447,7 +447,7 @@ var _e = {
         let t = handler(e);
         !t.start && !Y.value || t.start && Y.value && z(t.start, Y.value) || (Y.value = t.start?.copy?.()), !t.end && !X.value || t.end && X.value && z(t.end, X.value) || (X.value = t.end?.copy?.());
       }), y(Y, e => {
-        e && !z(e, Z.value) && he(e), s(`update:startValue`, e);
+        e && !z(e, Z.value) && he(e), emitAlias(`update:startValue`, e);
       }), y([Y, X], ([e, t]) => {
         let n = G.value;
         if (!(n && n.start && n.end && e && t && z(n.start, e) && z(n.end, t))) {
@@ -572,17 +572,17 @@ var _e = {
         default: `td`
       }
     },
-    setup(e) {
+    setup(props) {
       let t = Q();
-      return (e, n) => (w(), x(d(i), {
-        as: e.as,
-        "as-child": e.asChild,
+      return (ctx, renderCache) => (w(), x(d(i), {
+        as: ctx.as,
+        "as-child": ctx.asChild,
         role: `gridcell`,
-        "aria-selected": d(t).isSelected(e.date) ? true : undefined,
-        "aria-disabled": d(t).isDateDisabled(e.date) || d(t).isDateUnavailable?.(e.date) || d(t).disableDaysOutsideCurrentView.value,
-        "data-disabled": d(t).isDateDisabled(e.date) || d(t).disableDaysOutsideCurrentView.value ? `` : undefined
+        "aria-selected": d(t).isSelected(ctx.date) ? true : undefined,
+        "aria-disabled": d(t).isDateDisabled(ctx.date) || d(t).isDateUnavailable?.(ctx.date) || d(t).disableDaysOutsideCurrentView.value,
+        "data-disabled": d(t).isDateDisabled(ctx.date) || d(t).disableDaysOutsideCurrentView.value ? `` : undefined
       }, {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`as`, `as-child`, `aria-selected`, `aria-disabled`, `data-disabled`]));
     }
@@ -608,34 +608,34 @@ var _e = {
         default: `div`
       }
     },
-    setup(el) {
-      let n = el,
+    setup(props) {
+      let propsAlias = props,
         r = Q(),
         a = se(),
         {
           primitiveElement: o,
           currentElement: s
         } = e(),
-        c = M(() => r.formatter.custom(V(n.day), {
+        c = M(() => r.formatter.custom(V(propsAlias.day), {
           weekday: `long`,
           month: `long`,
           day: `numeric`,
           year: `numeric`
         })),
-        l = M(() => r.isDateUnavailable?.(n.day) ?? false),
-        u = M(() => r.isSelected(n.day)),
-        f = M(() => r.isSelectionStart(n.day)),
-        m = M(() => r.isSelectionEnd(n.day)),
-        g = M(() => r.isHighlightedStart(n.day)),
-        _ = M(() => r.isHighlightedEnd(n.day)),
-        v = M(() => r.highlightedRange.value ? Y(n.day, r.highlightedRange.value.start, r.highlightedRange.value.end) : false),
+        l = M(() => r.isDateUnavailable?.(propsAlias.day) ?? false),
+        u = M(() => r.isSelected(propsAlias.day)),
+        f = M(() => r.isSelectionStart(propsAlias.day)),
+        m = M(() => r.isSelectionEnd(propsAlias.day)),
+        g = M(() => r.isHighlightedStart(propsAlias.day)),
+        _ = M(() => r.isHighlightedEnd(propsAlias.day)),
+        v = M(() => r.highlightedRange.value ? Y(propsAlias.day, r.highlightedRange.value.start, r.highlightedRange.value.end) : false),
         y = M(() => r.allowNonContiguousRanges.value),
-        S = M(() => J(n.day, I())),
-        C = M(() => !L(n.day, n.month)),
-        T = M(() => r.isOutsideVisibleView(n.day)),
-        E = M(() => r.isDateDisabled(n.day) || r.disableDaysOutsideCurrentView.value && C.value),
-        D = M(() => n.day.day.toLocaleString(r.locale.value)),
-        O = M(() => C.value || E.value ? false : !r.disabled.value && r.isPlaceholderFocusable.value && U(n.day, r.placeholder.value) ? true : !r.disabled.value && r.selectedFocusableDate.value && !r.isPlaceholderFocusable.value ? U(n.day, r.selectedFocusableDate.value) : !r.disabled.value && (!r.hasSelectedDate.value || r.isSelectedDisabled.value) && !r.isPlaceholderFocusable.value ? r.firstFocusableDate.value && U(n.day, r.firstFocusableDate.value) : false);
+        S = M(() => J(propsAlias.day, I())),
+        C = M(() => !L(propsAlias.day, propsAlias.month)),
+        T = M(() => r.isOutsideVisibleView(propsAlias.day)),
+        E = M(() => r.isDateDisabled(propsAlias.day) || r.disableDaysOutsideCurrentView.value && C.value),
+        D = M(() => propsAlias.day.day.toLocaleString(r.locale.value)),
+        O = M(() => C.value || E.value ? false : !r.disabled.value && r.isPlaceholderFocusable.value && U(propsAlias.day, r.placeholder.value) ? true : !r.disabled.value && r.selectedFocusableDate.value && !r.isPlaceholderFocusable.value ? U(propsAlias.day, r.selectedFocusableDate.value) : !r.disabled.value && (!r.hasSelectedDate.value || r.isSelectedDisabled.value) && !r.isPlaceholderFocusable.value ? r.firstFocusableDate.value && U(propsAlias.day, r.firstFocusableDate.value) : false);
       function j(event, t) {
         if (!r.readonly.value && !(r.isDateDisabled(t) || r.isDateUnavailable?.(t))) {
           if (r.startValue.value && r.highlightedRange.value === null) {
@@ -656,10 +656,10 @@ var _e = {
         }
       }
       function ee(e) {
-        E.value || j(e, n.day);
+        E.value || j(e, propsAlias.day);
       }
       function N() {
-        E.value || r.isDateUnavailable?.(n.day) || (r.focusedValue.value = n.day.copy());
+        E.value || r.isDateUnavailable?.(propsAlias.day) || (r.focusedValue.value = propsAlias.day.copy());
       }
       function P(event) {
         if (E.value || (event.code === a.ENTER || event.code === a.SPACE_CODE) && (event.ctrlKey || event.metaKey || event.altKey)) return;
@@ -668,20 +668,20 @@ var _e = {
           i = r.dir.value === `rtl` ? -1 : 1;
         switch (event.code) {
           case a.ARROW_RIGHT:
-            o(n.day, i);
+            o(propsAlias.day, i);
             break;
           case a.ARROW_LEFT:
-            o(n.day, -i);
+            o(propsAlias.day, -i);
             break;
           case a.ARROW_UP:
-            o(n.day, -7);
+            o(propsAlias.day, -7);
             break;
           case a.ARROW_DOWN:
-            o(n.day, 7);
+            o(propsAlias.day, 7);
             break;
           case a.ENTER:
           case a.SPACE_CODE:
-            j(event, n.day);
+            j(event, propsAlias.day);
         }
         function o(e, n) {
           let i = e.add({
@@ -706,11 +706,11 @@ var _e = {
           r.onPlaceholderChange(i), selector?.focus();
         }
       }
-      return (e, t) => (w(), x(d(i), {
+      return (ctx, renderCache) => (w(), x(d(i), {
         ref_key: `primitiveElement`,
         ref: o,
-        as: e.as,
-        "as-child": e.asChild,
+        as: ctx.as,
+        "as-child": ctx.asChild,
         role: `button`,
         "aria-label": c.value,
         "data-reka-calendar-cell-trigger": ``,
@@ -723,7 +723,7 @@ var _e = {
         "data-highlighted-end": _.value ? true : undefined,
         "data-selected": u.value && (y.value || !l.value) ? true : undefined,
         "data-outside-visible-view": T.value ? `` : undefined,
-        "data-value": e.day.toString(),
+        "data-value": ctx.day.toString(),
         "data-disabled": E.value ? `` : undefined,
         "data-unavailable": l.value ? `` : undefined,
         "data-today": S.value ? `` : undefined,
@@ -735,7 +735,7 @@ var _e = {
         onMouseenter: N,
         onKeydown: te(P, [`up`, `down`, `left`, `right`, `enter`, `space`])
       }, {
-        default: b(() => [p(e.$slots, `default`, {
+        default: b(() => [p(ctx.$slots, `default`, {
           dayValue: D.value,
           disabled: E.value,
           today: S.value,
@@ -766,21 +766,21 @@ var _e = {
         default: `table`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = Q(),
         r = M(() => n.disabled.value ? true : undefined),
         a = M(() => n.readonly.value ? true : undefined);
-      return (e, o) => (w(), x(d(i), O(t, {
+      return (ctx, renderCache) => (w(), x(d(i), O(propsAlias, {
         tabindex: `-1`,
         role: `application`,
         "aria-readonly": a.value,
         "aria-disabled": r.value,
         "data-readonly": a.value && ``,
         "data-disabled": r.value && ``,
-        onMouseleave: o[0] ||= e => d(n).focusedValue.value = undefined
+        onMouseleave: renderCache[0] ||= e => d(n).focusedValue.value = undefined
       }), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`aria-readonly`, `aria-disabled`, `data-readonly`, `data-disabled`]));
     }
@@ -798,10 +798,10 @@ var _e = {
         default: `tbody`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(i), j(v(t)), {
-        default: b(() => [p(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(i), j(v(propsAlias)), {
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -819,12 +819,12 @@ var _e = {
         default: `thead`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(i), O(t, {
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(i), O(propsAlias, {
         "aria-hidden": `true`
       }), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -842,10 +842,10 @@ var _e = {
         default: `tr`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(i), j(v(t)), {
-        default: b(() => [p(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(i), j(v(propsAlias)), {
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -863,10 +863,10 @@ var _e = {
         default: `th`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(i), j(v(t)), {
-        default: b(() => [p(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(i), j(v(propsAlias)), {
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -884,10 +884,10 @@ var _e = {
         default: `div`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(i), j(v(t)), {
-        default: b(() => [p(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(i), j(v(propsAlias)), {
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -905,13 +905,13 @@ var _e = {
         default: `div`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = Q();
-      return (e, r) => (w(), x(d(i), O(t, {
+      return (ctx, renderCache) => (w(), x(d(i), O(propsAlias, {
         "data-disabled": d(n).disabled.value ? `` : undefined
       }), {
-        default: b(() => [p(e.$slots, `default`, {
+        default: b(() => [p(ctx.$slots, `default`, {
           headingValue: d(n).headingValue.value
         }, () => [h(k(d(n).headingValue.value), 1)])]),
         _: 3
@@ -935,26 +935,26 @@ var _e = {
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
-        n = M(() => r.disabled.value || r.isNextButtonDisabled(t.nextPage)),
+    setup(props) {
+      let propsAlias = props,
+        n = M(() => r.disabled.value || r.isNextButtonDisabled(propsAlias.nextPage)),
         r = Q();
       function a() {
-        n.value || r.nextPage(t.nextPage);
+        n.value || r.nextPage(propsAlias.nextPage);
       }
-      return (e, r) => (w(), x(d(i), {
-        as: t.as,
-        "as-child": t.asChild,
+      return (ctx, renderCache) => (w(), x(d(i), {
+        as: propsAlias.as,
+        "as-child": propsAlias.asChild,
         "aria-label": `Next page`,
-        type: t.as === `button` ? `button` : undefined,
+        type: propsAlias.as === `button` ? `button` : undefined,
         "aria-disabled": n.value || undefined,
         "data-disabled": n.value || undefined,
         disabled: n.value,
         onClick: a
       }, {
-        default: b(() => [p(e.$slots, `default`, {
+        default: b(() => [p(ctx.$slots, `default`, {
           disabled: n.value
-        }, () => [r[0] ||= h(` Next page `)])]),
+        }, () => [renderCache[0] ||= h(` Next page `)])]),
         _: 3
       }, 8, [`as`, `as-child`, `type`, `aria-disabled`, `data-disabled`, `disabled`]));
     }
@@ -976,26 +976,26 @@ var _e = {
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
-        n = M(() => r.disabled.value || r.isPrevButtonDisabled(t.prevPage)),
+    setup(props) {
+      let propsAlias = props,
+        n = M(() => r.disabled.value || r.isPrevButtonDisabled(propsAlias.prevPage)),
         r = Q();
       function a() {
-        n.value || r.prevPage(t.prevPage);
+        n.value || r.prevPage(propsAlias.prevPage);
       }
-      return (e, r) => (w(), x(d(i), {
-        as: t.as,
-        "as-child": t.asChild,
+      return (ctx, renderCache) => (w(), x(d(i), {
+        as: propsAlias.as,
+        "as-child": propsAlias.asChild,
         "aria-label": `Previous page`,
-        type: t.as === `button` ? `button` : undefined,
+        type: propsAlias.as === `button` ? `button` : undefined,
         "aria-disabled": n.value || undefined,
         "data-disabled": n.value || undefined,
         disabled: n.value,
         onClick: a
       }, {
-        default: b(() => [p(e.$slots, `default`, {
+        default: b(() => [p(ctx.$slots, `default`, {
           disabled: n.value
-        }, () => [r[0] ||= h(` Prev page `)])]),
+        }, () => [renderCache[0] ||= h(` Prev page `)])]),
         _: 3
       }, 8, [`as`, `as-child`, `type`, `aria-disabled`, `data-disabled`, `disabled`]));
     }
@@ -1072,13 +1072,13 @@ var _e = {
     },
     emits: [`update:modelValue`, `update:validModelValue`, `update:placeholder`, `update:startValue`],
     setup(state, {
-      emit: t
+      emit: emit
     }) {
       let stateAlias = state,
-        r = t,
+        emitAlias = emit,
         i = a(stateAlias, `class`),
-        o = l(i, r);
-      return (e, t) => (w(), x(d(be), O({
+        o = l(i, emitAlias);
+      return (ctx, renderCache) => (w(), x(d(be), O({
         "data-slot": `range-calendar`,
         class: d(s)(`p-3`, stateAlias.class)
       }, d(o)), {
@@ -1139,15 +1139,15 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(xe), O({
+      return (ctx, renderCache) => (w(), x(d(xe), O({
         "data-slot": `range-calendar-cell`,
-        class: d(s)(`relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-accent first:[&:has([data-selected])]:rounded-l-md last:[&:has([data-selected])]:rounded-r-md [&:has([data-selected][data-selection-end])]:rounded-r-md [&:has([data-selected][data-selection-start])]:rounded-l-md`, n.class)
+        class: d(s)(`relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-accent first:[&:has([data-selected])]:rounded-l-md last:[&:has([data-selected])]:rounded-r-md [&:has([data-selected][data-selection-end])]:rounded-r-md [&:has([data-selected][data-selection-start])]:rounded-l-md`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -1167,17 +1167,17 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(Se), O({
+      return (ctx, renderCache) => (w(), x(d(Se), O({
         "data-slot": `range-calendar-trigger`,
         class: d(s)(d(o)({
           variant: `ghost`
-        }), `h-8 w-8 p-0 font-normal data-[selected]:opacity-100`, `[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground`, `data-[selection-start]:bg-primary data-[selection-start]:text-primary-foreground data-[selection-start]:hover:bg-primary data-[selection-start]:hover:text-primary-foreground data-[selection-start]:focus:bg-primary data-[selection-start]:focus:text-primary-foreground`, `data-[selection-end]:bg-primary data-[selection-end]:text-primary-foreground data-[selection-end]:hover:bg-primary data-[selection-end]:hover:text-primary-foreground data-[selection-end]:focus:bg-primary data-[selection-end]:focus:text-primary-foreground`, `data-[outside-view]:text-muted-foreground`, `data-[disabled]:text-muted-foreground data-[disabled]:opacity-50`, `data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through`, n.class)
+        }), `h-8 w-8 p-0 font-normal data-[selected]:opacity-100`, `[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground`, `data-[selection-start]:bg-primary data-[selection-start]:text-primary-foreground data-[selection-start]:hover:bg-primary data-[selection-start]:hover:text-primary-foreground data-[selection-start]:focus:bg-primary data-[selection-start]:focus:text-primary-foreground`, `data-[selection-end]:bg-primary data-[selection-end]:text-primary-foreground data-[selection-end]:hover:bg-primary data-[selection-end]:hover:text-primary-foreground data-[selection-end]:focus:bg-primary data-[selection-end]:focus:text-primary-foreground`, `data-[outside-view]:text-muted-foreground`, `data-[disabled]:text-muted-foreground data-[disabled]:opacity-50`, `data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -1193,15 +1193,15 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(Ce), O({
+      return (ctx, renderCache) => (w(), x(d(Ce), O({
         "data-slot": `range-calendar-grid`,
-        class: d(s)(`w-full border-collapse space-x-1`, n.class)
+        class: d(s)(`w-full border-collapse space-x-1`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -1214,12 +1214,12 @@ var _e = {
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(we), O({
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(we), O({
         "data-slot": `range-calendar-grid-body`
-      }, t), {
-        default: b(() => [p(e.$slots, `default`)]),
+      }, propsAlias), {
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -1232,12 +1232,12 @@ var _e = {
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (w(), x(d(Te), O({
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (w(), x(d(Te), O({
         "data-slot": `range-calendar-grid-head`
-      }, t), {
-        default: b(() => [p(e.$slots, `default`)]),
+      }, propsAlias), {
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -1253,15 +1253,15 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(Ee), O({
+      return (ctx, renderCache) => (w(), x(d(Ee), O({
         "data-slot": `range-calendar-grid-row`,
-        class: d(s)(`flex`, n.class)
+        class: d(s)(`flex`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -1277,15 +1277,15 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(De), O({
+      return (ctx, renderCache) => (w(), x(d(De), O({
         "data-slot": `range-calendar-head-cell`,
-        class: d(s)(`w-8 rounded-md text-[0.8rem] font-normal text-muted-foreground`, n.class)
+        class: d(s)(`w-8 rounded-md text-[0.8rem] font-normal text-muted-foreground`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -1301,15 +1301,15 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(Oe), O({
+      return (ctx, renderCache) => (w(), x(d(Oe), O({
         "data-slot": `range-calendar-header`,
-        class: d(s)(`flex justify-center pt-1 relative items-center w-full`, n.class)
+        class: d(s)(`flex justify-center pt-1 relative items-center w-full`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`)]),
+        default: b(() => [p(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -1325,17 +1325,17 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(ke), O({
+      return (ctx, renderCache) => (w(), x(d(ke), O({
         "data-slot": `range-calendar-heading`,
-        class: d(s)(`text-sm font-medium`, n.class)
+        class: d(s)(`text-sm font-medium`, propsAlias.class)
       }, d(i)), {
         default: b(({
           headingValue: t
-        }) => [p(e.$slots, `default`, {
+        }) => [p(ctx.$slots, `default`, {
           headingValue: t
         }, () => [h(k(t), 1)])]),
         _: 3
@@ -1356,17 +1356,17 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(Ae), O({
+      return (ctx, renderCache) => (w(), x(d(Ae), O({
         "data-slot": `range-calendar-next-button`,
         class: d(s)(d(o)({
           variant: `outline`
-        }), `absolute right-1`, `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, n.class)
+        }), `absolute right-1`, `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`, {}, () => [E(d(ae), {
+        default: b(() => [p(ctx.$slots, `default`, {}, () => [E(d(ae), {
           class: `size-4`
         })])]),
         _: 3
@@ -1387,17 +1387,17 @@ var _e = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let n = e,
-        r = a(n, `class`),
+    setup(props) {
+      let propsAlias = props,
+        r = a(propsAlias, `class`),
         i = t(r);
-      return (e, t) => (w(), x(d(je), O({
+      return (ctx, renderCache) => (w(), x(d(je), O({
         "data-slot": `range-calendar-prev-button`,
         class: d(s)(d(o)({
           variant: `outline`
-        }), `absolute left-1`, `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, n.class)
+        }), `absolute left-1`, `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, propsAlias.class)
       }, d(i)), {
-        default: b(() => [p(e.$slots, `default`, {}, () => [E(d(ne), {
+        default: b(() => [p(ctx.$slots, `default`, {}, () => [E(d(ne), {
           class: `size-4`
         })])]),
         _: 3
@@ -1459,10 +1459,10 @@ var Ze = [`aria-label`, `title`],
     },
     emits: [`change`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         {
           t: i,
           locale: a
@@ -1500,17 +1500,17 @@ var Ze = [`aria-label`, `title`],
         });
       });
       function te(e) {
-        T.value = e, e.start && e.end && (r(`change`, {
+        T.value = e, e.start && e.end && (emitAlias(`change`, {
           start: handler(e.start),
           end: handler(e.end)
         }), o.value = false);
       }
       function F(e) {
-        r(`change`, Ye(e)), o.value = false;
+        emitAlias(`change`, Ye(e)), o.value = false;
       }
-      return (e, t) => (w(), x(d(G), {
+      return (ctx, renderCache) => (w(), x(d(G), {
         open: o.value,
-        "onUpdate:open": t[0] ||= e => o.value = e
+        "onUpdate:open": renderCache[0] ||= e => o.value = e
       }, {
         default: b(() => [E(d(K), {
           "as-child": ``

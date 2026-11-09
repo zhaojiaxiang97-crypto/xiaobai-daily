@@ -222,7 +222,7 @@ var k = .5,
   ot = 45,
   M = fe(d({
     __name: `WorkMotivatorApp`,
-    setup(d) {
+    setup(props) {
       let workMotivatorAPI = window.workMotivatorAPI,
         {
           t: ie,

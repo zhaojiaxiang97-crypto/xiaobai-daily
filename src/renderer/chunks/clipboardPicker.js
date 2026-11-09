@@ -72,7 +72,7 @@ var ce = {
   },
   b = y(te({
     __name: `ClipboardPickerApp`,
-    setup(te) {
+    setup(props) {
       let clipboardPickerAPI = window.clipboardPickerAPI,
         fallbackValue = clipboardPickerAPI?.platform || `win32`,
         _ = fallbackValue === `darwin`,

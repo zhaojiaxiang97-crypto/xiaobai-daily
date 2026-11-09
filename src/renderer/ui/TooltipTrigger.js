@@ -212,9 +212,9 @@ var se = {
         default: `svg`
       }
     },
-    setup(e) {
-      let t = e;
-      return s(), (e, n) => (A(), O(x(f), N(t, {
+    setup(props) {
+      let propsAlias = props;
+      return s(), (e, n) => (A(), O(x(f), N(propsAlias, {
         width: e.width,
         height: e.height,
         viewBox: e.asChild ? undefined : `0 0 12 6`,
@@ -257,13 +257,13 @@ var se = {
         default: `svg`
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           forwardRef: t
         } = s(),
         n = H(),
         r = I(() => options[n.placedSide.value]);
-      return (e, i) => (A(), T(`span`, {
+      return (ctx, renderCache) => (A(), T(`span`, {
         ref: e => {
           x(n).onArrowChange(e ?? undefined);
         },
@@ -286,18 +286,18 @@ var se = {
           }[x(n).placedSide.value],
           visibility: x(n).shouldHideArrow.value ? `hidden` : undefined
         })
-      }, [M(le, N(e.$attrs, {
+      }, [M(le, N(ctx.$attrs, {
         ref: x(t),
         style: {
           display: `block`
         },
-        as: e.as,
-        "as-child": e.asChild,
-        rounded: e.rounded,
-        width: e.width,
-        height: e.height
+        as: ctx.as,
+        "as-child": ctx.asChild,
+        rounded: ctx.rounded,
+        width: ctx.width,
+        height: ctx.height
       }), {
-        default: D(() => [S(e.$slots, `default`)]),
+        default: D(() => [S(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`as`, `as-child`, `rounded`, `width`, `height`])], 4));
     }
@@ -320,19 +320,19 @@ var se = {
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       let n = fe({
         modelValue: k(false)
       });
-      return (e, r) => (A(), O(x(i), {
-        present: e.forceMount || x(o)(x(n).modelValue.value) || x(n).modelValue.value === true
+      return (ctx, renderCache) => (A(), O(x(i), {
+        present: ctx.forceMount || x(o)(x(n).modelValue.value) || x(n).modelValue.value === true
       }, {
         default: D(() => [M(x(f), {
-          as: e.as,
-          "as-child": e.asChild,
+          as: ctx.as,
+          "as-child": ctx.asChild,
           "data-state": x(t)(x(n).modelValue.value)
         }, {
-          default: D(() => [S(e.$slots, `default`)]),
+          default: D(() => [S(ctx.$slots, `default`)]),
           _: 3
         }, 8, [`as`, `as-child`, `data-state`])]),
         _: 3
@@ -352,14 +352,14 @@ var se = {
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = r(undefined, `reka-menu-group`);
       return ge({
         id: n
       }), (e, r) => (A(), O(x(f), N({
         role: `group`
-      }, t, {
+      }, propsAlias, {
         "aria-labelledby": x(n)
       }), {
         default: D(() => [S(e.$slots, `default`)]),
@@ -380,15 +380,15 @@ var se = {
         default: `div`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         n = he({
           id: ``
         });
-      return (e, r) => (A(), O(x(f), N(t, {
+      return (ctx, renderCache) => (A(), O(x(f), N(propsAlias, {
         id: x(n).id || undefined
       }), {
-        default: D(() => [S(e.$slots, `default`)]),
+        default: D(() => [S(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }
@@ -409,9 +409,9 @@ var se = {
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return s(), (e, n) => (A(), O(x(me), P(E(t)), {
+    setup(props) {
+      let propsAlias = props;
+      return s(), (e, n) => (A(), O(x(me), P(E(propsAlias)), {
         default: D(() => [S(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -429,9 +429,9 @@ var se = {
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return s(), (e, n) => (A(), O(x(ve), P(E(t)), {
+    setup(props) {
+      let propsAlias = props;
+      return s(), (e, n) => (A(), O(x(ve), P(E(propsAlias)), {
         default: D(() => [S(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -460,9 +460,9 @@ var se = {
         default: `svg`
       }
     },
-    setup(e) {
-      let t = e;
-      return s(), (e, n) => (A(), O(x(de), P(E(t)), {
+    setup(props) {
+      let propsAlias = props;
+      return s(), (e, n) => (A(), O(x(de), P(E(propsAlias)), {
         default: D(() => [S(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -506,7 +506,7 @@ var se = {
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let {
         delayDuration: t,
         skipDelayDuration: n,
@@ -515,7 +515,7 @@ var se = {
         ignoreNonKeyboardFocus: a,
         disabled: o,
         content: c
-      } = C(e);
+      } = C(props);
       s();
       let l = k(true),
         u = k(false),
@@ -587,21 +587,21 @@ var se = {
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t;
+      let propsAlias = props,
+        emitAlias = emit;
       s();
       let i = Y(),
-        a = I(() => n.disableHoverableContent ?? i.disableHoverableContent.value),
-        o = I(() => n.disableClosingTrigger ?? i.disableClosingTrigger.value),
-        c = I(() => n.disabled ?? i.disabled.value),
-        u = I(() => n.delayDuration ?? i.delayDuration.value),
-        d = I(() => n.ignoreNonKeyboardFocus ?? i.ignoreNonKeyboardFocus.value),
-        f = l(n, `open`, r, {
-          defaultValue: n.defaultOpen,
-          passive: n.open === undefined
+        a = I(() => propsAlias.disableHoverableContent ?? i.disableHoverableContent.value),
+        o = I(() => propsAlias.disableClosingTrigger ?? i.disableClosingTrigger.value),
+        c = I(() => propsAlias.disabled ?? i.disabled.value),
+        u = I(() => propsAlias.delayDuration ?? i.delayDuration.value),
+        d = I(() => propsAlias.ignoreNonKeyboardFocus ?? i.ignoreNonKeyboardFocus.value),
+        f = l(propsAlias, `open`, emitAlias, {
+          defaultValue: propsAlias.defaultOpen,
+          passive: propsAlias.open === undefined
         });
       re(f, e => {
         i.onClose && (e ? (i.onOpen(), document.dispatchEvent(new CustomEvent(X))) : i.onClose());
@@ -723,10 +723,10 @@ var se = {
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        i = t,
+        emitAlias = emit,
         o = Z(),
         c = Y(),
         {
@@ -760,9 +760,9 @@ var se = {
       }), (e, t) => (A(), O(x(p), {
         "as-child": ``,
         "disable-outside-pointer-events": false,
-        onEscapeKeyDown: t[0] ||= e => i(`escapeKeyDown`, e),
+        onEscapeKeyDown: t[0] ||= e => emitAlias(`escapeKeyDown`, e),
         onPointerDownOutside: t[1] ||= e => {
-          x(o).disableClosingTrigger.value && x(o).trigger.value?.contains(e.target) && e.preventDefault(), i(`pointerDownOutside`, e);
+          x(o).disableClosingTrigger.value && x(o).trigger.value?.contains(e.target) && e.preventDefault(), emitAlias(`pointerDownOutside`, e);
         },
         onFocusOutside: t[2] ||= R(() => {}, [`prevent`]),
         onDismiss: t[3] ||= e => x(o).onClose()
@@ -859,8 +859,8 @@ var se = {
         required: false
       }
     },
-    setup(t) {
-      let n = e(t),
+    setup(props) {
+      let n = e(props),
         {
           forwardRef: r,
           currentElement: i
@@ -953,23 +953,23 @@ var se = {
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let propsAlias = props,
+        emitAlias = emit,
         a = Z(),
-        o = b(n, r),
+        o = b(propsAlias, emitAlias),
         {
           forwardRef: c
         } = s();
-      return (e, t) => (A(), O(x(i), {
-        present: e.forceMount || x(a).open.value
+      return (ctx, renderCache) => (A(), O(x(i), {
+        present: ctx.forceMount || x(a).open.value
       }, {
         default: D(() => [(A(), O(ee(x(a).disableHoverableContent.value ? Q : Ee), N({
           ref: x(c)
         }, x(o)), {
-          default: D(() => [S(e.$slots, `default`)]),
+          default: D(() => [S(ctx.$slots, `default`)]),
           _: 3
         }, 16))]),
         _: 3
@@ -996,10 +996,10 @@ var se = {
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (A(), O(x(c), P(E(t)), {
-        default: D(() => [S(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (A(), O(x(c), P(E(propsAlias)), {
+        default: D(() => [S(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -1068,19 +1068,19 @@ var se = {
       function v() {
         n.disableClosingTrigger.value || n.onClose();
       }
-      return (e, r) => (A(), O(x(B), {
+      return (ctx, renderCache) => (A(), O(x(B), {
         "as-child": ``,
-        reference: e.reference
+        reference: ctx.reference
       }, {
         default: D(() => [M(x(f), N({
           ref: x(a),
           "aria-describedby": x(n).open.value ? x(n).contentId : undefined,
           "data-state": x(n).stateAttribute.value,
-          as: e.as,
+          as: ctx.as,
           "as-child": eventAlias.asChild,
           "data-grace-area-trigger": ``
         }, te(u.value)), {
-          default: D(() => [S(e.$slots, `default`)]),
+          default: D(() => [S(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`aria-describedby`, `data-state`, `as`, `as-child`])]),
         _: 3
@@ -1101,17 +1101,17 @@ var se = {
         type: Boolean
       }
     },
-    setup(t) {
-      let n = t,
-        r = m(n, `class`, `inset`),
+    setup(props) {
+      let propsAlias = props,
+        r = m(propsAlias, `class`, `inset`),
         i = e(r);
-      return (e, r) => (A(), O(x(be), N({
+      return (ctx, renderCache) => (A(), O(x(be), N({
         "data-slot": `dropdown-menu-label`,
-        "data-inset": t.inset ? `` : undefined
+        "data-inset": props.inset ? `` : undefined
       }, x(i), {
-        class: x(v)(`text-muted-foreground px-1.5 py-1 text-xs font-medium data-inset:pl-7`, n.class)
+        class: x(v)(`text-muted-foreground px-1.5 py-1 text-xs font-medium data-inset:pl-7`, propsAlias.class)
       }), {
-        default: D(() => [S(e.$slots, `default`)]),
+        default: D(() => [S(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`data-inset`, `class`]));
     }
@@ -1140,14 +1140,14 @@ var se = {
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = b(e, t);
-      return (e, t) => (A(), O(x(Te), N({
+      let n = b(props, emit);
+      return (ctx, renderCache) => (A(), O(x(Te), N({
         "data-slot": `tooltip`
       }, x(n)), {
-        default: D(t => [S(e.$slots, `default`, P(E(t)))]),
+        default: D(t => [S(ctx.$slots, `default`, P(E(t)))]),
         _: 3
       }, 16));
     }
@@ -1190,23 +1190,23 @@ var se = {
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
-        i = m(n, `class`, `hideArrow`),
-        a = b(i, r);
-      return (e, t) => (A(), O(x($), null, {
+      let propsAlias = props,
+        emitAlias = emit,
+        i = m(propsAlias, `class`, `hideArrow`),
+        a = b(i, emitAlias);
+      return (ctx, renderCache) => (A(), O(x($), null, {
         default: D(() => [M(x(De), N({
           "data-slot": `tooltip-content`
         }, {
           ...x(a),
-          ...e.$attrs
+          ...ctx.$attrs
         }, {
-          class: x(v)(`data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm bg-foreground text-background z-50 w-fit max-w-xs origin-(--reka-tooltip-content-transform-origin)`, n.class)
+          class: x(v)(`data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm bg-foreground text-background z-50 w-fit max-w-xs origin-(--reka-tooltip-content-transform-origin)`, propsAlias.class)
         }), {
-          default: D(() => [S(e.$slots, `default`), n.hideArrow ? L(``, true) : (A(), O(x(xe), {
+          default: D(() => [S(ctx.$slots, `default`), propsAlias.hideArrow ? L(``, true) : (A(), O(x(xe), {
             key: 0,
             class: `size-2.5 rotate-45 rounded-[2px] bg-foreground fill-foreground z-50 translate-y-[calc(-50%_-_2px)]`
           }))]),
@@ -1237,10 +1237,10 @@ var se = {
       },
       content: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (A(), O(x(Ce), P(E(t)), {
-        default: D(() => [S(e.$slots, `default`)]),
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (A(), O(x(Ce), P(E(propsAlias)), {
+        default: D(() => [S(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -1254,12 +1254,12 @@ var se = {
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (A(), O(x(Oe), N({
+    setup(props) {
+      let propsAlias = props;
+      return (ctx, renderCache) => (A(), O(x(Oe), N({
         "data-slot": `tooltip-trigger`
-      }, t), {
-        default: D(() => [S(e.$slots, `default`)]),
+      }, propsAlias), {
+        default: D(() => [S(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }

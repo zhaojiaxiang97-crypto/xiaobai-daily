@@ -78,10 +78,10 @@ var U = [`PageUp`, `PageDown`],
     },
     emits: [`slideEnd`, `slideStart`, `slideMove`, `homeKeyDown`, `endKeyDown`, `stepKeyDown`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        i = t,
+        emitAlias = emit,
         {
           max: a,
           min: o,
@@ -118,22 +118,22 @@ var U = [`PageUp`, `PageDown`],
         }),
         onSlideStart: t[0] ||= e => {
           let t = x(e, true);
-          i(`slideStart`, t);
+          emitAlias(`slideStart`, t);
         },
         onSlideMove: t[1] ||= e => {
           let t = x(e);
-          i(`slideMove`, t);
+          emitAlias(`slideMove`, t);
         },
         onSlideEnd: t[2] ||= () => {
-          g.value = undefined, h.value = undefined, i(`slideEnd`);
+          g.value = undefined, h.value = undefined, emitAlias(`slideEnd`);
         },
         onStepKeyDown: t[3] ||= e => {
           let t = _.value ? `from-left` : `from-right`,
             includesResult = d(options)[t].includes(e.key);
-          i(`stepKeyDown`, e, includesResult ? -1 : 1);
+          emitAlias(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
-        onEndKeyDown: t[4] ||= e => i(`endKeyDown`, e),
-        onHomeKeyDown: t[5] ||= e => i(`homeKeyDown`, e)
+        onEndKeyDown: t[4] ||= e => emitAlias(`endKeyDown`, e),
+        onHomeKeyDown: t[5] ||= e => emitAlias(`homeKeyDown`, e)
       }, {
         default: v(() => [f(e.$slots, `default`)]),
         _: 3
@@ -158,10 +158,10 @@ var U = [`PageUp`, `PageDown`],
     },
     emits: [`slideEnd`, `slideStart`, `slideMove`, `homeKeyDown`, `endKeyDown`, `stepKeyDown`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        i = t,
+        emitAlias = emit,
         {
           max: a,
           min: o,
@@ -197,22 +197,22 @@ var U = [`PageUp`, `PageDown`],
         }),
         onSlideStart: t[0] ||= e => {
           let t = _(e, true);
-          i(`slideStart`, t);
+          emitAlias(`slideStart`, t);
         },
         onSlideMove: t[1] ||= e => {
           let t = _(e);
-          i(`slideMove`, t);
+          emitAlias(`slideMove`, t);
         },
         onSlideEnd: t[2] ||= () => {
-          h.value = undefined, m.value = undefined, i(`slideEnd`);
+          h.value = undefined, m.value = undefined, emitAlias(`slideEnd`);
         },
         onStepKeyDown: t[3] ||= e => {
           let t = g.value ? `from-bottom` : `from-top`,
             includesResult = d(options)[t].includes(e.key);
-          i(`stepKeyDown`, e, includesResult ? -1 : 1);
+          emitAlias(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
-        onEndKeyDown: t[4] ||= e => i(`endKeyDown`, e),
-        onHomeKeyDown: t[5] ||= e => i(`homeKeyDown`, e)
+        onEndKeyDown: t[4] ||= e => emitAlias(`endKeyDown`, e),
+        onHomeKeyDown: t[5] ||= e => emitAlias(`homeKeyDown`, e)
       }, {
         default: v(() => [f(e.$slots, `default`)]),
         _: 3
@@ -297,10 +297,10 @@ var U = [`PageUp`, `PageDown`],
     },
     emits: [`update:modelValue`, `valueCommit`],
     setup(event, {
-      emit: o
+      emit: emit
     }) {
       let eventAlias = event,
-        c = o,
+        emitAlias = emit,
         {
           min: l,
           max: u,
@@ -322,7 +322,7 @@ var U = [`PageUp`, `PageDown`],
         } = M({
           isProvider: true
         }),
-        L = r(eventAlias, `modelValue`, c, {
+        L = r(eventAlias, `modelValue`, emitAlias, {
           defaultValue: eventAlias.defaultValue,
           passive: eventAlias.modelValue === undefined
         }),
@@ -337,7 +337,7 @@ var U = [`PageUp`, `PageDown`],
       }
       function X() {
         let e = G.value[B.value];
-        R.value[B.value] !== e && c(`valueCommit`, _(R.value));
+        R.value[B.value] !== e && emitAlias(`valueCommit`, _(R.value));
       }
       function Q(e, t, {
         commit: n
@@ -351,7 +351,7 @@ var U = [`PageUp`, `PageDown`],
         if (z(s, g.value * h.value)) {
           B.value = s.indexOf(o);
           let e = String(s) !== String(L.value);
-          e && n && c(`valueCommit`, s), e && ($.value[B.value]?.focus(), L.value = s);
+          e && n && emitAlias(`valueCommit`, s), e && ($.value[B.value]?.focus(), L.value = s);
         }
       }
       let $ = b([]);
@@ -431,30 +431,30 @@ var U = [`PageUp`, `PageDown`],
     },
     emits: [`slideStart`, `slideMove`, `slideEnd`, `homeKeyDown`, `endKeyDown`, `stepKeyDown`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        emitAlias = emit,
         i = X();
-      return (e, t) => (S(), y(d(o), D({
+      return (ctx, renderCache) => (S(), y(d(o), D({
         "data-slider-impl": ``
       }, eventAlias, {
-        onKeydown: t[0] ||= e => {
-          e.key === `Home` ? (r(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (r(`endKeyDown`, e), e.preventDefault()) : d(U).concat(d(W)).includes(e.key) && (r(`stepKeyDown`, e), e.preventDefault());
+        onKeydown: renderCache[0] ||= e => {
+          e.key === `Home` ? (emitAlias(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (emitAlias(`endKeyDown`, e), e.preventDefault()) : d(U).concat(d(W)).includes(e.key) && (emitAlias(`stepKeyDown`, e), e.preventDefault());
         },
-        onPointerdown: t[1] ||= e => {
+        onPointerdown: renderCache[1] ||= e => {
           let t = e.target;
-          t.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(t) ? t.focus() : r(`slideStart`, e);
+          t.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(t) ? t.focus() : emitAlias(`slideStart`, e);
         },
-        onPointermove: t[2] ||= e => {
-          e.target.hasPointerCapture(e.pointerId) && r(`slideMove`, e);
+        onPointermove: renderCache[2] ||= e => {
+          e.target.hasPointerCapture(e.pointerId) && emitAlias(`slideMove`, e);
         },
-        onPointerup: t[3] ||= e => {
+        onPointerup: renderCache[3] ||= e => {
           let t = e.target;
-          t.hasPointerCapture(e.pointerId) && (t.releasePointerCapture(e.pointerId), r(`slideEnd`, e));
+          t.hasPointerCapture(e.pointerId) && (t.releasePointerCapture(e.pointerId), emitAlias(`slideEnd`, e));
         }
       }), {
-        default: v(() => [f(e.$slots, `default`)]),
+        default: v(() => [f(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -472,24 +472,24 @@ var U = [`PageUp`, `PageDown`],
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       let t = X(),
         r = K();
       n();
       let i = k(() => t.currentModelValue.value.map(item => P(item, t.min.value, t.max.value))),
         a = k(() => t.currentModelValue.value.length > 1 ? Math.min(...i.value) : 0),
         s = k(() => 100 - Math.max(...i.value, 0));
-      return (e, n) => (S(), y(d(o), {
+      return (ctx, renderCache) => (S(), y(d(o), {
         "data-disabled": d(t).disabled.value ? `` : undefined,
         "data-orientation": d(t).orientation.value,
-        "as-child": e.asChild,
-        as: e.as,
+        "as-child": ctx.asChild,
+        as: ctx.as,
         style: E({
           [d(r).startEdge.value]: `${a.value}%`,
           [d(r).endEdge.value]: `${s.value}%`
         })
       }, {
-        default: v(() => [f(e.$slots, `default`)]),
+        default: v(() => [f(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`data-disabled`, `data-orientation`, `as-child`, `as`, `style`]));
     }
@@ -511,8 +511,8 @@ var U = [`PageUp`, `PageDown`],
         required: false
       }
     },
-    setup(t) {
-      let r = t,
+    setup(props) {
+      let propsAlias = props,
         i = X(),
         a = K(),
         {
@@ -522,9 +522,9 @@ var U = [`PageUp`, `PageDown`],
         {
           CollectionItem: l
         } = M(),
-        u = k(() => i.modelValue?.value?.[r.index]),
+        u = k(() => i.modelValue?.value?.[propsAlias.index]),
         p = k(() => u.value === undefined ? 0 : P(u.value, i.min.value ?? 0, i.max.value ?? 100)),
-        m = k(() => F(r.index, i.modelValue?.value?.length ?? 0)),
+        m = k(() => F(propsAlias.index, i.modelValue?.value?.length ?? 0)),
         h = j(c),
         g = k(() => h[a.size].value),
         _ = k(() => i.thumbAlignment.value === `overflow` || !g.value ? 0 : L(g.value, p.value, a.direction.value)),
@@ -578,8 +578,8 @@ var U = [`PageUp`, `PageDown`],
         default: `span`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let propsAlias = props,
         {
           getItems: r
         } = M(),
@@ -588,12 +588,12 @@ var U = [`PageUp`, `PageDown`],
           currentElement: a
         } = n(),
         o = k(() => a.value ? r(true).findIndex(item => item.ref === a.value) : -1);
-      return (e, n) => (S(), y(ne, D({
+      return (ctx, renderCache) => (S(), y(ne, D({
         ref: d(i)
-      }, t, {
+      }, propsAlias, {
         index: o.value
       }), {
-        default: v(() => [f(e.$slots, `default`)]),
+        default: v(() => [f(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`index`]));
     }
@@ -611,7 +611,7 @@ var U = [`PageUp`, `PageDown`],
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       let t = X();
       return n(), (e, n) => (S(), y(d(o), {
         "as-child": e.asChild,
@@ -655,37 +655,37 @@ var U = [`PageUp`, `PageDown`],
       }
     },
     emits: [`update:modelValue`, `valueCommit`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
-        i = s(n, `class`),
-        a = u(i, r);
-      return (e, t) => (S(), y(d(Q), D({
+      let propsAlias = props,
+        emitAlias = emit,
+        i = s(propsAlias, `class`),
+        a = u(i, emitAlias);
+      return (ctx, renderCache) => (S(), y(d(Q), D({
         "data-slot": `slider`,
-        "data-vertical": n.orientation === `vertical` ? `` : undefined,
-        class: d(c)(`data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col`, n.class)
+        "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
+        class: d(c)(`data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col`, propsAlias.class)
       }, d(a)), {
         default: v(({
           modelValue: e
         }) => [w(d(ie), {
           "data-slot": `slider-track`,
-          "data-horizontal": n.orientation === `vertical` ? undefined : ``,
-          "data-vertical": n.orientation === `vertical` ? `` : undefined,
+          "data-horizontal": propsAlias.orientation === `vertical` ? undefined : ``,
+          "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
           class: `bg-muted rounded-full data-horizontal:h-1 data-vertical:w-1 relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full`
         }, {
           default: v(() => [w(d(te), {
             "data-slot": `slider-range`,
-            "data-horizontal": n.orientation === `vertical` ? undefined : ``,
-            "data-vertical": n.orientation === `vertical` ? `` : undefined,
+            "data-horizontal": propsAlias.orientation === `vertical` ? undefined : ``,
+            "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
             class: `bg-primary absolute select-none data-horizontal:h-full data-vertical:w-full`
           }, null, 8, [`data-horizontal`, `data-vertical`])]),
           _: 1
         }, 8, [`data-horizontal`, `data-vertical`]), (S(true), h(x, null, g(e, (e, t) => (S(), y(d(re), {
           key: t,
           "data-slot": `slider-thumb`,
-          "data-vertical": n.orientation === `vertical` ? `` : undefined,
+          "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
           class: `border-ring ring-ring/50 relative size-3 rounded-full border bg-white transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-3 focus-visible:outline-hidden active:ring-3 block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50`
         }, null, 8, [`data-vertical`]))), 128))]),
         _: 1

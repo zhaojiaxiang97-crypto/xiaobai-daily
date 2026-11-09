@@ -2396,12 +2396,12 @@ var oa = lucideR(`activity`, [[`path`, {
       variant: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `alert`,
-        class: normalizeClass(unref(uiSwitchXt)(unref(pc)({
+        class: normalizeClass(unref(uiSwitchXt)(unref(uiSwitchStResult)({
           variant: props.variant
-        }), t.class)),
+        }), propsAlias.class)),
         role: `alert`
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
@@ -2414,10 +2414,10 @@ var oa = lucideR(`activity`, [[`path`, {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `alert-description`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -2429,14 +2429,14 @@ var oa = lucideR(`activity`, [[`path`, {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `alert-title`,
-        class: normalizeClass(unref(uiSwitchXt)(`font-medium group-has-[>svg]/alert:col-start-2 cn-font-heading [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`font-medium group-has-[>svg]/alert:col-start-2 cn-font-heading [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
-  pc = uiSwitchSt(`grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*=size-])]:size-4 group/alert relative w-full`, {
+  uiSwitchStResult = uiSwitchSt(`grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*=size-])]:size-4 group/alert relative w-full`, {
     variants: {
       variant: {
         default: `bg-card text-card-foreground`,
@@ -2532,23 +2532,23 @@ function Sc({
 }
 function Cc(e, items) {
   let computedResult = computed(() => xc(e)),
-    r = uiSwitchAt(e, `modelValue`, items, {
+    uiSwitchAtResult = uiSwitchAt(e, `modelValue`, items, {
       defaultValue: Sc(e),
       passive: e.modelValue === undefined,
       deep: true
     });
   function i(e) {
-    if (computedResult.value === `single`) r.value = isequalT(e, r.value) ? undefined : e;else {
-      let t = Array.isArray(r.value) ? [...(r.value || [])] : [r.value].filter(Boolean);
+    if (computedResult.value === `single`) uiSwitchAtResult.value = isequalT(e, uiSwitchAtResult.value) ? undefined : e;else {
+      let t = Array.isArray(uiSwitchAtResult.value) ? [...(uiSwitchAtResult.value || [])] : [uiSwitchAtResult.value].filter(Boolean);
       if (Lr(t, e)) {
         let index = t.findIndex(item => isequalT(item, e));
         t.splice(index, 1);
       } else t.push(e);
-      r.value = t;
+      uiSwitchAtResult.value = t;
     }
   }
   return {
-    modelValue: r,
+    modelValue: uiSwitchAtResult,
     changeModelValue: i,
     isSingle: computed(() => computedResult.value === `single`)
   };
@@ -2567,7 +2567,7 @@ var DialogTrigger = defineComponent({
     }
   },
   setup(props) {
-    let t = props,
+    let propsAlias = props,
       n = ci(),
       {
         forwardRef: r,
@@ -2575,7 +2575,7 @@ var DialogTrigger = defineComponent({
       } = uiSwitchV();
     return n.contentId ||= uiSwitchI(undefined, `reka-dialog-content`), onBeforeMount(() => {
       n.triggerElement.value = i.value;
-    }), (e, i) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+    }), (e, i) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
       ref: unref(r),
       type: e.as === `button` ? `button` : undefined,
       "aria-haspopup": `dialog`,
@@ -2661,7 +2661,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       emit: emit
     }) {
       let itemsAlias = items,
-        a = emit,
+        emitAlias = emit,
         {
           multiple: o,
           highlightOnHover: s,
@@ -2683,27 +2683,27 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
           currentElement: g
         } = e(),
         _ = bn(),
-        v = collectionR(f),
+        collectionRResult = collectionR(f),
         b = kc(null);
       Ac({
         suppressHighlightScroll: ref(false),
         onHighlightScrollRequest: () => {}
       });
-      let x = uiSwitchH(g),
+      let uiSwitchHResult = uiSwitchH(g),
         state = ref(),
         flag = ref(false),
         w = ref(true),
-        T = uiSwitchAt(itemsAlias, `modelValue`, a, {
+        uiSwitchAtResult = uiSwitchAt(itemsAlias, `modelValue`, emitAlias, {
           defaultValue: itemsAlias.defaultValue ?? (o.value ? [] : undefined),
           passive: itemsAlias.modelValue === undefined,
           deep: true
         });
       function E(e) {
         if (flag.value = true, itemsAlias.multiple) {
-          let t = Array.isArray(T.value) ? [...T.value] : [],
+          let t = Array.isArray(uiSwitchAtResult.value) ? [...uiSwitchAtResult.value] : [],
             index = t.findIndex(item => Ec(item, e, itemsAlias.by));
-          itemsAlias.selectionBehavior === `toggle` ? (index === -1 ? t.push(e) : t.splice(index, 1), T.value = t) : (T.value = [e], state.value = e);
-        } else itemsAlias.selectionBehavior === `toggle` && Ec(T.value, e, itemsAlias.by) ? T.value = undefined : T.value = e;
+          itemsAlias.selectionBehavior === `toggle` ? (index === -1 ? t.push(e) : t.splice(index, 1), uiSwitchAtResult.value = t) : (uiSwitchAtResult.value = [e], state.value = e);
+        } else itemsAlias.selectionBehavior === `toggle` && Ec(uiSwitchAtResult.value, e, itemsAlias.by) ? uiSwitchAtResult.value = undefined : uiSwitchAtResult.value = e;
         setTimeout(() => {
           flag.value = false;
         }, 1);
@@ -2733,7 +2733,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
           block: `nearest`
         });
         let found = p().find(item => item.ref === e);
-        a(`highlight`, found);
+        emitAlias(`highlight`, found);
       }
       function ie(e) {
         if (k.value) te.trigger(e);else {
@@ -2754,7 +2754,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
             if (fallbackValue && event.key === `a` && o.value) {
               let t = p(),
                 mapped = t.map(state => state.value);
-              T.value = [...mapped], event.preventDefault();
+              uiSwitchAtResult.value = [...mapped], event.preventDefault();
               let r = t.at(-1);
               r && re(r.ref);
             } else if (!fallbackValue) {
@@ -2784,14 +2784,14 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       }
       function de(e) {
         let t = D.value;
-        t?.isConnected && (O.value = t), D.value = null, a(`leave`, e);
+        t?.isConnected && (O.value = t), D.value = null, emitAlias(`leave`, e);
       }
       function pe(event) {
         let customEvent = new CustomEvent(`listbox.entryFocus`, {
           bubbles: false,
           cancelable: true
         });
-        if (event.currentTarget?.dispatchEvent(customEvent), a(`entryFocus`, customEvent), !customEvent.defaultPrevented) {
+        if (event.currentTarget?.dispatchEvent(customEvent), emitAlias(`entryFocus`, customEvent), !customEvent.defaultPrevented) {
           if (O.value) re(O.value);else {
             let e = ne()?.[0];
             re(e);
@@ -2799,7 +2799,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         }
       }
       function me(e) {
-        let t = wi(e, c.value, v.value);
+        let t = wi(e, c.value, collectionRResult.value);
         if (!t) return;
         let n = ne();
         if (D.value) {
@@ -2817,12 +2817,12 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         if (k.value) return ee.trigger(e);
       }
       function he(event, t) {
-        if (!k.value && itemsAlias.selectionBehavior === `replace` && o.value && Array.isArray(T.value) && (!event.altKey && !event.ctrlKey && !event.metaKey || event.shiftKey) && event.shiftKey) {
+        if (!k.value && itemsAlias.selectionBehavior === `replace` && o.value && Array.isArray(uiSwitchAtResult.value) && (!event.altKey && !event.ctrlKey && !event.metaKey || event.shiftKey) && event.shiftKey) {
           let filtered = p().filter(item => item.ref.dataset.disabled !== ``),
             r = filtered.find(item => item.ref === t)?.value;
           if (event.key === _.END ? r = filtered.at(-1)?.value : event.key === _.HOME && (r = filtered[0]?.value), !r || !state.value) return;
           let i = mc(filtered.map(state => state.value), state.value, r);
-          T.value = i;
+          uiSwitchAtResult.value = i;
         }
       }
       async function ge(e, t = true) {
@@ -2839,7 +2839,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         }
       }
       let _e = false;
-      return watch(T, () => {
+      return watch(uiSwitchAtResult, () => {
         if (!flag.value) {
           let e = _e;
           _e = true, vueRt(() => {
@@ -2856,11 +2856,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         highlightSelected: ge,
         getItems: p
       }), Oc({
-        modelValue: T,
+        modelValue: uiSwitchAtResult,
         onValueChange: E,
         multiple: o,
         orientation: c,
-        dir: v,
+        dir: collectionRResult,
         disabled: u,
         highlightOnHover: s,
         highlightedElement: D,
@@ -2886,7 +2886,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         ref: h,
         as: event.as,
         "as-child": event.asChild,
-        dir: unref(v),
+        dir: unref(collectionRResult),
         "data-disabled": unref(u) ? `` : undefined,
         onPointerleave: de,
         onFocusout: renderCache[0] ||= async e => {
@@ -2895,11 +2895,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         }
       }, {
         default: H(() => [withCtx(event.$slots, `default`, {
-          modelValue: unref(T)
-        }), unref(x) && event.name ? (openBlock(), createBlock(unref(ce), {
+          modelValue: unref(uiSwitchAtResult)
+        }), unref(uiSwitchHResult) && event.name ? (openBlock(), createBlock(unref(ce), {
           key: 0,
           name: event.name,
-          value: unref(T),
+          value: unref(uiSwitchAtResult),
           disabled: unref(u),
           required: event.required
         }, null, 8, [`name`, `value`, `disabled`, `required`])) : createCommentVNode(`v-if`, true)]),
@@ -2978,21 +2978,21 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
     setup(props, {
       emit: emit
     }) {
-      let r = props,
-        i = uiSwitchAt(r, `modelValue`, emit, {
+      let propsAlias = props,
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emit, {
           defaultValue: ``,
-          passive: r.modelValue === undefined
+          passive: propsAlias.modelValue === undefined
         }),
         a = Dc(),
         {
           primitiveElement: o,
           currentElement: s
         } = e(),
-        computedResult = computed(() => r.disabled || a.disabled.value || false),
+        computedResult = computed(() => propsAlias.disabled || a.disabled.value || false),
         state = ref();
       lt(() => state.value = a.highlightedElement.value?.id), onBeforeMount(() => {
         a.focusable.value = false, setTimeout(() => {
-          r.autoFocus && s.value?.focus();
+          propsAlias.autoFocus && s.value?.focus();
         }, 1);
       }), onUnmounted(() => {
         a.focusable.value = true;
@@ -3004,13 +3004,13 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         handleCompositionUpdate: p,
         handleCompositionEnd: m
       } = vc(event => {
-        i.value = event.target.value, a.onCompositionEnd(), a.highlightFirstItem();
+        uiSwitchAtResult.value = event.target.value, a.onCompositionEnd(), a.highlightFirstItem();
       });
       function h() {
         a.onCompositionStart(), f();
       }
       function g(event) {
-        d.value || (i.value = event.target.value, a.highlightFirstItem());
+        d.value || (uiSwitchAtResult.value = event.target.value, a.highlightFirstItem());
       }
       function _(event) {
         u.value || (event.preventDefault(), a.onKeydownNavigation(event));
@@ -3023,7 +3023,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         ref: o,
         as: ctx.as,
         "as-child": ctx.asChild,
-        value: unref(i),
+        value: unref(uiSwitchAtResult),
         disabled: computedResult.value ? `` : undefined,
         "data-disabled": computedResult.value ? `` : undefined,
         "aria-disabled": computedResult.value ?? undefined,
@@ -3036,7 +3036,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         onCompositionend: unref(m)
       }, {
         default: H(() => [withCtx(ctx.$slots, `default`, {
-          modelValue: unref(i)
+          modelValue: unref(uiSwitchAtResult)
         })]),
         _: 3
       }, 8, [`as`, `as-child`, `value`, `disabled`, `data-disabled`, `aria-disabled`, `aria-activedescendant`, `onCompositionupdate`, `onCompositionend`]));
@@ -3056,14 +3056,14 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchI(undefined, `reka-listbox-group`);
+      let propsAlias = props,
+        uiSwitchIResult = uiSwitchI(undefined, `reka-listbox-group`);
       return Fc({
-        id: n
+        id: uiSwitchIResult
       }), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         role: `group`
-      }, t, {
-        "aria-labelledby": unref(n)
+      }, propsAlias, {
+        "aria-labelledby": unref(uiSwitchIResult)
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -3088,11 +3088,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = Pc({
           id: ``
         });
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         id: unref(n).id
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
@@ -3127,9 +3127,9 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchI(undefined, `reka-listbox-item`),
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchIResult = uiSwitchI(undefined, `reka-listbox-item`),
         {
           CollectionItem: a
         } = collectionT(),
@@ -3139,15 +3139,15 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         } = uiSwitchV(),
         c = Dc(),
         computedResult = computed(() => s.value != null && s.value === c.highlightedElement.value),
-        computedData = computed(() => Tc(c.modelValue.value, n.value, c.by)),
-        f = computed(() => c.disabled.value || n.disabled);
+        computedData = computed(() => Tc(c.modelValue.value, propsAlias.value, c.by)),
+        f = computed(() => c.disabled.value || propsAlias.disabled);
       async function p(e) {
-        r(`select`, e), !e?.defaultPrevented && !f.value && e && (c.onValueChange(n.value), c.changeHighlight(s.value));
+        emitAlias(`select`, e), !e?.defaultPrevented && !f.value && e && (c.onValueChange(propsAlias.value), c.changeHighlight(s.value));
       }
       function m(e) {
         let t = {
           originalEvent: e,
-          value: n.value
+          value: propsAlias.value
         };
         ee(Rc, p, t);
       }
@@ -3157,7 +3157,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         value: e.value
       }, {
         default: H(() => [Ke([computedResult.value, computedData.value, f.value, unref(c).focusable.value], () => resolveComponent(unref(uiSwitchJ), vueNt({
-          id: unref(i)
+          id: unref(uiSwitchIResult)
         }, e.$attrs, {
           ref: unref(o),
           role: `option`,
@@ -3232,15 +3232,15 @@ var [Hc, Uc] = uiSwitchYt(`AvatarRoot`),
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = Hc();
       uiSwitchV();
-      let r = ref(t.delayMs === undefined);
+      let r = ref(propsAlias.delayMs === undefined);
       return vueGt(e => {
-        if (t.delayMs && N) {
+        if (propsAlias.delayMs && N) {
           let n = window.setTimeout(() => {
             r.value = true;
-          }, t.delayMs);
+          }, propsAlias.delayMs);
           e(() => {
             window.clearTimeout(n);
           });
@@ -3313,13 +3313,13 @@ var AvatarImage = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           src: i,
           referrerPolicy: a,
           crossOrigin: o
-        } = vueDn(n);
+        } = vueDn(propsAlias);
       uiSwitchV();
       let s = Hc(),
         c = qc(i, {
@@ -3327,7 +3327,7 @@ var AvatarImage = defineComponent({
           crossOrigin: o
         });
       return watch(c, value => {
-        r(`loadingStatusChange`, value), value !== `idle` && (s.imageLoadingStatus.value = value);
+        emitAlias(`loadingStatusChange`, value), value !== `idle` && (s.imageLoadingStatus.value = value);
       }, {
         immediate: true
       }), (e, t) => vueZt((openBlock(), createBlock(unref(uiSwitchJ), {
@@ -3490,7 +3490,7 @@ var AvatarImage = defineComponent({
       emit: emit
     }) {
       let itemsAlias = items,
-        i = emit,
+        emitAlias = emit,
         {
           disabled: a,
           readonly: o,
@@ -3518,18 +3518,18 @@ var AvatarImage = defineComponent({
           currentElement: E
         } = e(),
         D = jn(C),
-        O = collectionR(S),
+        collectionRResult = collectionR(S),
         computedResult = computed(() => itemsAlias.weekStartsOn ?? kn(D.value)),
-        A = uiSwitchAt(itemsAlias, `modelValue`, i, {
+        uiSwitchAtResult = uiSwitchAt(itemsAlias, `modelValue`, emitAlias, {
           defaultValue: y.value,
           passive: itemsAlias.modelValue === undefined
         }),
         j = Sn({
           defaultPlaceholder: itemsAlias.placeholder,
-          defaultValue: A.value,
+          defaultValue: uiSwitchAtResult.value,
           locale: itemsAlias.locale
         }),
-        ee = uiSwitchAt(itemsAlias, `placeholder`, i, {
+        ee = uiSwitchAt(itemsAlias, `placeholder`, emitAlias, {
           defaultValue: itemsAlias.defaultPlaceholder ?? j.copy(),
           passive: itemsAlias.placeholder === undefined
         });
@@ -3574,11 +3574,11 @@ var AvatarImage = defineComponent({
           hasSelectedDate: ve,
           isSelectedDateDisabled: ye
         } = On({
-          date: A,
+          date: uiSwitchAtResult,
           isDateDisabled: re,
           isDateUnavailable: ie
         });
-      watch(A, value => {
+      watch(uiSwitchAtResult, value => {
         if (Array.isArray(value) && value.length) {
           let t = value.at(-1);
           t && !_n(ee.value, t) && te(t);
@@ -3586,19 +3586,19 @@ var AvatarImage = defineComponent({
       });
       function be(e) {
         if (!d.value) {
-          if (!A.value) {
-            A.value = e.copy();
+          if (!uiSwitchAtResult.value) {
+            uiSwitchAtResult.value = e.copy();
             return;
           }
-          !h.value && _n(A.value, e) ? (ee.value = e.copy(), A.value = undefined) : A.value = e.copy();
-        } else if (!A.value) A.value = [e.copy()];else if (Array.isArray(A.value)) {
-          if (A.value.findIndex(item => wn(item, e)) === -1) A.value = [...A.value, e];else if (!h.value) {
-            let filtered = A.value.filter(item => !wn(item, e));
+          !h.value && _n(uiSwitchAtResult.value, e) ? (ee.value = e.copy(), uiSwitchAtResult.value = undefined) : uiSwitchAtResult.value = e.copy();
+        } else if (!uiSwitchAtResult.value) uiSwitchAtResult.value = [e.copy()];else if (Array.isArray(uiSwitchAtResult.value)) {
+          if (uiSwitchAtResult.value.findIndex(item => wn(item, e)) === -1) uiSwitchAtResult.value = [...uiSwitchAtResult.value, e];else if (!h.value) {
+            let filtered = uiSwitchAtResult.value.filter(item => !wn(item, e));
             if (!filtered.length) {
-              ee.value = e.copy(), A.value = undefined;
+              ee.value = e.copy(), uiSwitchAtResult.value = undefined;
               return;
             }
-            A.value = filtered.map(item => item.copy());
+            uiSwitchAtResult.value = filtered.map(item => item.copy());
           }
         }
       }
@@ -3606,11 +3606,11 @@ var AvatarImage = defineComponent({
         s.value && En(E.value);
       }), Qc({
         isDateUnavailable: ie,
-        dir: O,
+        dir: collectionRResult,
         isDateDisabled: re,
         locale: D,
         formatter: de,
-        modelValue: A,
+        modelValue: uiSwitchAtResult,
         placeholder: ee,
         disabled: a,
         initialFocus: s,
@@ -3652,7 +3652,7 @@ var AvatarImage = defineComponent({
         "data-readonly": unref(o) ? `` : undefined,
         "data-disabled": unref(a) ? `` : undefined,
         "data-invalid": unref(ge) ? `` : undefined,
-        dir: unref(O)
+        dir: unref(collectionRResult)
       }, {
         default: H(() => [withCtx(e.$slots, `default`, {
           date: unref(ee),
@@ -3661,7 +3661,7 @@ var AvatarImage = defineComponent({
           weekStartsOn: computedResult.value,
           locale: unref(D),
           fixedWeeks: unref(u),
-          modelValue: unref(A)
+          modelValue: unref(uiSwitchAtResult)
         }), createElementVNode(`div`, Yc, [createElementVNode(`div`, Xc, toDisplayString(unref(ne)), 1)])]),
         _: 3
       }, 8, [`as`, `as-child`, `aria-label`, `data-readonly`, `data-disabled`, `data-invalid`, `dir`]));
@@ -3721,32 +3721,32 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let n = props,
+      let propsAlias = props,
         r = bn(),
         i = Zc(),
         {
           primitiveElement: a,
           currentElement: o
         } = e(),
-        computedResult = computed(() => n.day.day.toLocaleString(i.locale.value)),
-        computedData = computed(() => i.formatter.custom(popoverB(n.day), {
+        computedResult = computed(() => propsAlias.day.day.toLocaleString(i.locale.value)),
+        computedData = computed(() => i.formatter.custom(popoverB(propsAlias.day), {
           weekday: `long`,
           month: `long`,
           day: `numeric`,
           year: `numeric`
         })),
-        l = computed(() => i.isDateUnavailable?.(n.day) ?? false),
-        u = computed(() => Pn(n.day, popoverD())),
-        d = computed(() => !mn(n.day, n.month)),
-        f = computed(() => i.isOutsideVisibleView(n.day)),
-        p = computed(() => i.isDateDisabled(n.day) || i.disableDaysOutsideCurrentView.value && d.value),
-        m = computed(() => d.value || p.value ? false : !i.disabled.value && i.isPlaceholderFocusable.value && wn(n.day, i.placeholder.value) ? true : (!i.hasSelectedDate.value || i.isSelectedDateDisabled.value) && !i.isPlaceholderFocusable.value ? i.firstFocusableDate.value && wn(n.day, i.firstFocusableDate.value) : false),
-        h = computed(() => i.isDateSelected(n.day));
+        l = computed(() => i.isDateUnavailable?.(propsAlias.day) ?? false),
+        u = computed(() => Pn(propsAlias.day, popoverD())),
+        d = computed(() => !mn(propsAlias.day, propsAlias.month)),
+        f = computed(() => i.isOutsideVisibleView(propsAlias.day)),
+        p = computed(() => i.isDateDisabled(propsAlias.day) || i.disableDaysOutsideCurrentView.value && d.value),
+        m = computed(() => d.value || p.value ? false : !i.disabled.value && i.isPlaceholderFocusable.value && wn(propsAlias.day, i.placeholder.value) ? true : (!i.hasSelectedDate.value || i.isSelectedDateDisabled.value) && !i.isPlaceholderFocusable.value ? i.firstFocusableDate.value && wn(propsAlias.day, i.firstFocusableDate.value) : false),
+        h = computed(() => i.isDateSelected(propsAlias.day));
       function g(e) {
         i.readonly.value || i.isDateDisabled(e) || i.isDateUnavailable?.(e) || i.onDateChange(e);
       }
       function _() {
-        p.value || g(n.day);
+        p.value || g(propsAlias.day);
       }
       function v(event) {
         if (p.value || (event.code === r.ENTER || event.code === r.SPACE_CODE) && (event.ctrlKey || event.metaKey || event.altKey)) return;
@@ -3755,20 +3755,20 @@ var AvatarImage = defineComponent({
           a = i.dir.value === `rtl` ? -1 : 1;
         switch (event.code) {
           case r.ARROW_RIGHT:
-            o(n.day, a);
+            o(propsAlias.day, a);
             break;
           case r.ARROW_LEFT:
-            o(n.day, -a);
+            o(propsAlias.day, -a);
             break;
           case r.ARROW_UP:
-            o(n.day, -7);
+            o(propsAlias.day, -7);
             break;
           case r.ARROW_DOWN:
-            o(n.day, 7);
+            o(propsAlias.day, 7);
             break;
           case r.ENTER:
           case r.SPACE_CODE:
-            g(n.day);
+            g(propsAlias.day);
         }
         function o(e, n) {
           let r = e.add({
@@ -3796,8 +3796,8 @@ var AvatarImage = defineComponent({
       return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         ref_key: `primitiveElement`,
         ref: a,
-        as: n.as,
-        "as-child": n.asChild,
+        as: propsAlias.as,
+        "as-child": propsAlias.asChild,
         role: `button`,
         "aria-label": computedData.value,
         "data-reka-calendar-cell-trigger": ``,
@@ -3841,11 +3841,11 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = Zc(),
         computedResult = computed(() => n.disabled.value ? true : undefined),
         computedData = computed(() => n.readonly.value ? true : undefined);
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         tabindex: `-1`,
         role: `application`,
         "aria-readonly": computedData.value,
@@ -3872,8 +3872,8 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -3893,8 +3893,8 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         "aria-hidden": `true`
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
@@ -3916,8 +3916,8 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -3937,8 +3937,8 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -3958,8 +3958,8 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -3979,9 +3979,9 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = Zc();
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         "data-disabled": unref(n).disabled.value ? `` : undefined
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`, {
@@ -4009,17 +4009,17 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        computedResult = computed(() => r.disabled.value || r.isNextButtonDisabled(t.nextPage)),
+      let propsAlias = props,
+        computedResult = computed(() => r.disabled.value || r.isNextButtonDisabled(propsAlias.nextPage)),
         r = Zc();
       function i() {
-        computedResult.value || r.nextPage(t.nextPage);
+        computedResult.value || r.nextPage(propsAlias.nextPage);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
-        as: t.as,
-        "as-child": t.asChild,
+        as: propsAlias.as,
+        "as-child": propsAlias.asChild,
         "aria-label": `Next page`,
-        type: t.as === `button` ? `button` : undefined,
+        type: propsAlias.as === `button` ? `button` : undefined,
         "aria-disabled": computedResult.value || undefined,
         "data-disabled": computedResult.value || undefined,
         disabled: computedResult.value,
@@ -4050,17 +4050,17 @@ var AvatarImage = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        computedResult = computed(() => r.disabled.value || r.isPrevButtonDisabled(t.prevPage)),
+      let propsAlias = props,
+        computedResult = computed(() => r.disabled.value || r.isPrevButtonDisabled(propsAlias.prevPage)),
         r = Zc();
       function i() {
-        computedResult.value || r.prevPage(t.prevPage);
+        computedResult.value || r.prevPage(propsAlias.prevPage);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         "aria-label": `Previous page`,
-        as: t.as,
-        "as-child": t.asChild,
-        type: t.as === `button` ? `button` : undefined,
+        as: propsAlias.as,
+        "as-child": propsAlias.asChild,
+        type: propsAlias.as === `button` ? `button` : undefined,
         "aria-disabled": computedResult.value || undefined,
         "data-disabled": computedResult.value || undefined,
         disabled: computedResult.value,
@@ -4140,21 +4140,21 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       emit: emit
     }) {
       let itemsAlias = items,
-        r = emit,
+        emitAlias = emit,
         {
           forwardRef: i,
           currentElement: a
         } = uiSwitchV(),
         o = dl(null),
-        s = uiSwitchAt(itemsAlias, `modelValue`, r, {
+        uiSwitchAtResult = uiSwitchAt(itemsAlias, `modelValue`, emitAlias, {
           defaultValue: itemsAlias.defaultValue ?? itemsAlias.falseValue,
           passive: itemsAlias.modelValue === undefined
         }),
         computedResult = computed(() => o?.disabled.value || itemsAlias.disabled),
-        computedData = computed(() => isequalT(s.value, itemsAlias.trueValue)),
-        d = computed(() => uiSwitchGt(o?.modelValue.value) ? s.value === `indeterminate` ? `indeterminate` : computedData.value : Lr(o.modelValue.value, itemsAlias.value));
+        computedData = computed(() => isequalT(uiSwitchAtResult.value, itemsAlias.trueValue)),
+        d = computed(() => uiSwitchGt(o?.modelValue.value) ? uiSwitchAtResult.value === `indeterminate` ? `indeterminate` : computedData.value : Lr(o.modelValue.value, itemsAlias.value));
       function f() {
-        if (uiSwitchGt(o?.modelValue.value)) s.value === `indeterminate` ? s.value = itemsAlias.trueValue : s.value = computedData.value ? itemsAlias.falseValue : itemsAlias.trueValue;else {
+        if (uiSwitchGt(o?.modelValue.value)) uiSwitchAtResult.value === `indeterminate` ? uiSwitchAtResult.value = itemsAlias.trueValue : uiSwitchAtResult.value = computedData.value ? itemsAlias.falseValue : itemsAlias.trueValue;else {
           let e = [...(o.modelValue.value || [])];
           if (Lr(e, itemsAlias.value)) {
             let index = e.findIndex(item => isequalT(item, itemsAlias.value));
@@ -4163,7 +4163,7 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
           o.modelValue.value = e;
         }
       }
-      let p = uiSwitchH(a),
+      let uiSwitchHResult = uiSwitchH(a),
         m = x(),
         h = vueFt(),
         g = computed(() => {
@@ -4193,11 +4193,11 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
         onClick: f
       }), {
         default: H(() => [withCtx(e.$slots, `default`, {
-          modelValue: unref(s),
+          modelValue: unref(uiSwitchAtResult),
           state: d.value
         })]),
         _: 3
-      }, 16, [`id`, `as-child`, `as`, `type`, `aria-checked`, `aria-required`, `aria-label`, `data-state`, `data-disabled`, `disabled`, `focusable`, `onKeydown`])), unref(p) && e.name && !unref(o) ? (openBlock(), createBlock(unref(ce), vueNt({
+      }, 16, [`id`, `as-child`, `as`, `type`, `aria-checked`, `aria-required`, `aria-label`, `data-state`, `data-disabled`, `disabled`, `focusable`, `onKeydown`])), unref(uiSwitchHResult) && e.name && !unref(o) ? (openBlock(), createBlock(unref(ce), vueNt({
         key: 0,
         type: `checkbox`,
         checked: !!d.value,
@@ -4272,19 +4272,19 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     setup(props, {
       emit: emit
     }) {
-      let r = props,
-        i = emit,
-        a = uiSwitchLt(r, [`modelValue`]),
-        o = uiSwitchB(a),
-        s = uiSwitchAt(r, `modelValue`, i);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, [`modelValue`]),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult),
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias);
       return yl({
-        modelValue: s,
+        modelValue: uiSwitchAtResult,
         onValueChange: e => {
-          s.value = e;
+          uiSwitchAtResult.value = e;
         }
-      }), (e, t) => (openBlock(), createBlock(ti, vueTr(vueV(unref(o))), {
+      }), (e, t) => (openBlock(), createBlock(ti, vueTr(vueV(unref(uiSwitchBResult))), {
         default: H(() => [withCtx(e.$slots, `default`, {
-          modelValue: unref(s)
+          modelValue: unref(uiSwitchAtResult)
         })]),
         _: 3
       }, 16));
@@ -4318,24 +4318,24 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     setup(props, {
       emit: emit
     }) {
-      let i = props,
-        a = emit,
-        o = uiSwitchLt(i, [`value`]),
-        s = uiSwitchB(o),
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, [`value`]),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult),
         {
           value: c
-        } = vueDn(i),
+        } = vueDn(propsAlias),
         l = vl(),
         computedResult = computed(() => l.modelValue.value === c?.value);
       return Xr({
         modelValue: computedResult
       }), (e, renderCache) => (openBlock(), createBlock(Ur, vueNt({
         role: `menuitemradio`
-      }, unref(s), {
+      }, unref(uiSwitchBResult), {
         "aria-checked": computedResult.value,
         "data-state": unref(r)(computedResult.value),
         onSelect: renderCache[0] ||= async e => {
-          a(`select`, e), unref(l).onValueChange(unref(c));
+          emitAlias(`select`, e), unref(l).onValueChange(unref(c));
         }
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
@@ -4356,8 +4356,8 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         role: `separator`,
         "aria-orientation": `horizontal`
       }), {
@@ -4390,31 +4390,31 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           dir: i,
           modal: a,
           pressOpenDelay: o
-        } = vueDn(n);
+        } = vueDn(propsAlias);
       uiSwitchV();
-      let s = collectionR(i),
+      let collectionRResult = collectionR(i),
         flag = ref(false);
       return wl({
         open: flag,
         onOpenChange: e => {
           flag.value = e;
         },
-        dir: s,
+        dir: collectionRResult,
         modal: a,
         triggerElement: ref(),
         pressOpenDelay: o
       }), watch(flag, value => {
-        r(`update:open`, value);
+        emitAlias(`update:open`, value);
       }), (e, renderCache) => (openBlock(), createBlock(unref(Gr), {
         open: flag.value,
         "onUpdate:open": renderCache[0] ||= e => flag.value = e,
-        dir: unref(s),
+        dir: unref(collectionRResult),
         modal: unref(a)
       }, {
         default: H(() => [withCtx(e.$slots, `default`)]),
@@ -4508,11 +4508,11 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     setup(event, {
       emit: emit
     }) {
-      let n = uiSwitchZ(event, emit);
+      let uiSwitchZResult = uiSwitchZ(event, emit);
       uiSwitchV();
       let r = Cl(),
         flag = ref(false);
-      return (ctx, renderCache) => (openBlock(), createBlock(unref(Rr), vueNt(unref(n), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(Rr), vueNt(unref(uiSwitchZResult), {
         side: `right`,
         "side-offset": 2,
         align: `start`,
@@ -4549,8 +4549,8 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     setup(props) {
-      let t = props;
-      return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(ti), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(ti), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -4580,10 +4580,10 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     setup(props, {
       emit: emit
     }) {
-      let n = props,
+      let propsAlias = props,
         r = T(emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(Ur), vueTr(vueV({
-        ...n,
+        ...propsAlias,
         ...unref(r)
       })), {
         default: H(() => [withCtx(e.$slots, `default`)]),
@@ -4612,8 +4612,8 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(Br), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(Br), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -4728,14 +4728,14 @@ var ContextMenuTrigger = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       uiSwitchV();
       let n = Cn();
       return Ze(() => {
         n.hasCustomAnchor.value = true;
       }), onUnmounted(() => {
         n.hasCustomAnchor.value = false;
-      }), (e, n) => (openBlock(), createBlock(unref(sn), vueTr(vueV(t)), {
+      }), (e, n) => (openBlock(), createBlock(unref(sn), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -4754,8 +4754,8 @@ var ContextMenuTrigger = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(ti), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(ti), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -4781,10 +4781,10 @@ var ContextMenuTrigger = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
+      let propsAlias = props,
         r = T(emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(MenuRadioGroup), vueTr(vueV({
-        ...n,
+        ...propsAlias,
         ...unref(r)
       })), {
         default: H(() => [withCtx(e.$slots, `default`)]),
@@ -4820,8 +4820,8 @@ var ContextMenuTrigger = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
-      return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(MenuRadioItem), vueTr(vueV(unref(n))), {
+      let uiSwitchZResult = uiSwitchZ(props, emit);
+      return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(MenuRadioItem), vueTr(vueV(unref(uiSwitchZResult))), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -4840,8 +4840,8 @@ var ContextMenuTrigger = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
-      return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(MenuSeparator), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(MenuSeparator), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -4924,29 +4924,29 @@ var ProgressRoot = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit;
+      let propsAlias = props,
+        emitAlias = emit;
       uiSwitchV();
-      let i = uiSwitchAt(n, `modelValue`, r, {
-          passive: n.modelValue === undefined
+      let uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+          passive: propsAlias.modelValue === undefined
         }),
-        a = uiSwitchAt(n, `max`, r, {
-          passive: n.max === undefined
+        a = uiSwitchAt(propsAlias, `max`, emitAlias, {
+          passive: propsAlias.max === undefined
         });
-      watch(() => i.value, async value => {
-        let t = Hl(value, n.max);
-        t !== value && (await vueRt(), i.value = t);
+      watch(() => uiSwitchAtResult.value, async value => {
+        let t = Hl(value, propsAlias.max);
+        t !== value && (await vueRt(), uiSwitchAtResult.value = t);
       }, {
         immediate: true
-      }), watch(() => n.max, value => {
-        let t = Ul(n.max);
+      }), watch(() => propsAlias.max, value => {
+        let t = Ul(propsAlias.max);
         t !== value && (a.value = t);
       }, {
         immediate: true
       });
-      let computedResult = computed(() => uiSwitchGt(i.value) ? `indeterminate` : i.value === a.value ? `complete` : `loading`);
+      let computedResult = computed(() => uiSwitchGt(uiSwitchAtResult.value) ? `indeterminate` : uiSwitchAtResult.value === a.value ? `complete` : `loading`);
       return Bl({
-        modelValue: i,
+        modelValue: uiSwitchAtResult,
         max: a,
         progressState: computedResult
       }), (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
@@ -4954,16 +4954,16 @@ var ProgressRoot = defineComponent({
         as: e.as,
         "aria-valuemax": unref(a),
         "aria-valuemin": 0,
-        "aria-valuenow": Vl(unref(i)) ? unref(i) : undefined,
-        "aria-valuetext": e.getValueText?.(unref(i), unref(a)),
-        "aria-label": e.getValueLabel(unref(i), unref(a)),
+        "aria-valuenow": Vl(unref(uiSwitchAtResult)) ? unref(uiSwitchAtResult) : undefined,
+        "aria-valuetext": e.getValueText?.(unref(uiSwitchAtResult), unref(a)),
+        "aria-label": e.getValueLabel(unref(uiSwitchAtResult), unref(a)),
         role: `progressbar`,
         "data-state": computedResult.value,
-        "data-value": unref(i) ?? undefined,
+        "data-value": unref(uiSwitchAtResult) ?? undefined,
         "data-max": unref(a)
       }, {
         default: H(() => [withCtx(e.$slots, `default`, {
-          modelValue: unref(i)
+          modelValue: unref(uiSwitchAtResult)
         })]),
         _: 3
       }, 8, [`as-child`, `as`, `aria-valuemax`, `aria-valuenow`, `aria-valuetext`, `aria-label`, `data-state`, `data-value`, `data-max`]));
@@ -4982,9 +4982,9 @@ var ProgressRoot = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = zl();
-      return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         "data-state": unref(n).progressState.value,
         "data-value": unref(n).modelValue?.value ?? undefined,
         "data-max": unref(n).max.value
@@ -5046,8 +5046,8 @@ var Radio = defineComponent({
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
-        i = uiSwitchAt(eventAlias, `checked`, r, {
+        emitAlias = emit,
+        uiSwitchAtResult = uiSwitchAt(eventAlias, `checked`, emitAlias, {
           passive: eventAlias.checked === undefined
         }),
         {
@@ -5057,12 +5057,12 @@ var Radio = defineComponent({
           forwardRef: o,
           currentElement: s
         } = uiSwitchV(),
-        c = uiSwitchH(s),
+        uiSwitchHResult = uiSwitchH(s),
         u = x(),
         computedResult = computed(() => eventAlias.id && s.value ? document.querySelector(`[for="${eventAlias.id}"]`)?.innerText : undefined);
       function f(e) {
         eventAlias.disabled || ql(e, eventAlias.value, e => {
-          r(`select`, e), !e?.defaultPrevented && (i.value = true, c.value && e.stopPropagation());
+          emitAlias(`select`, e), !e?.defaultPrevented && (uiSwitchAtResult.value = true, uiSwitchHResult.value && e.stopPropagation());
         });
       }
       return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
@@ -5071,11 +5071,11 @@ var Radio = defineComponent({
         role: `radio`,
         type: ctx.as === `button` ? `button` : undefined,
         as: ctx.as,
-        "aria-checked": unref(i) ?? false,
+        "aria-checked": unref(uiSwitchAtResult) ?? false,
         "aria-label": computedResult.value,
         "as-child": ctx.asChild,
         disabled: ctx.disabled ? `` : undefined,
-        "data-state": unref(i) ? `checked` : `unchecked`,
+        "data-state": unref(uiSwitchAtResult) ? `checked` : `unchecked`,
         "data-disabled": ctx.disabled ? `` : undefined,
         value: unref(a),
         required: ctx.required,
@@ -5087,15 +5087,15 @@ var Radio = defineComponent({
         onClick: withDirectives(f, [`stop`])
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`, {
-          checked: unref(i)
+          checked: unref(uiSwitchAtResult)
         })]),
         _: 3
-      }, 16, [`id`, `type`, `as`, `aria-checked`, `aria-label`, `as-child`, `disabled`, `data-state`, `data-disabled`, `value`, `required`, `name`]), unref(c) && ctx.name ? (openBlock(), createBlock(unref(ce), vueNt({
+      }, 16, [`id`, `type`, `as`, `aria-checked`, `aria-label`, `as-child`, `disabled`, `data-state`, `data-disabled`, `value`, `required`, `name`]), unref(uiSwitchHResult) && ctx.name ? (openBlock(), createBlock(unref(ce), vueNt({
         key: 0,
         type: `radio`,
         tabindex: `-1`,
         value: unref(a),
-        checked: !!unref(i),
+        checked: !!unref(uiSwitchAtResult),
         name: ctx.name,
         disabled: ctx.disabled,
         required: ctx.required
@@ -5155,15 +5155,15 @@ var Radio = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           forwardRef: i,
           currentElement: a
         } = uiSwitchV(),
-        o = uiSwitchAt(n, `modelValue`, r, {
-          defaultValue: n.defaultValue,
-          passive: n.modelValue === undefined
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue,
+          passive: propsAlias.modelValue === undefined
         }),
         {
           disabled: s,
@@ -5172,13 +5172,13 @@ var Radio = defineComponent({
           name: d,
           required: f,
           dir: p
-        } = vueDn(n),
-        m = collectionR(p),
-        h = uiSwitchH(a);
+        } = vueDn(propsAlias),
+        collectionRResult = collectionR(p),
+        uiSwitchHResult = uiSwitchH(a);
       return Xl({
-        modelValue: o,
+        modelValue: uiSwitchAtResult,
         changeModelValue: e => {
-          o.value = e;
+          uiSwitchAtResult.value = e;
         },
         disabled: s,
         loop: c,
@@ -5188,7 +5188,7 @@ var Radio = defineComponent({
       }), (e, t) => (openBlock(), createBlock(unref(Ti), {
         "as-child": ``,
         orientation: unref(u),
-        dir: unref(m),
+        dir: unref(collectionRResult),
         loop: unref(c)
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), {
@@ -5199,15 +5199,15 @@ var Radio = defineComponent({
           as: e.as,
           "aria-orientation": unref(u),
           "aria-required": unref(f),
-          dir: unref(m)
+          dir: unref(collectionRResult)
         }, {
           default: H(() => [withCtx(e.$slots, `default`, {
-            modelValue: unref(o)
-          }), unref(h) && unref(d) ? (openBlock(), createBlock(unref(ce), {
+            modelValue: unref(uiSwitchAtResult)
+          }), unref(uiSwitchHResult) && unref(d) ? (openBlock(), createBlock(unref(ce), {
             key: 0,
             required: unref(f),
             disabled: unref(s),
-            value: unref(o),
+            value: unref(uiSwitchAtResult),
             name: unref(d)
           }, null, 8, [`required`, `disabled`, `value`, `name`])) : createCommentVNode(`v-if`, true)]),
           _: 3
@@ -5257,7 +5257,7 @@ var Radio = defineComponent({
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           forwardRef: i,
           currentElement: a
@@ -5300,7 +5300,7 @@ var Radio = defineComponent({
           required: computedData.value,
           disabled: computedResult.value,
           "onUpdate:checked": cache[0] ||= t => unref(o).changeModelValue(state.value),
-          onSelect: cache[1] ||= e => r(`select`, e),
+          onSelect: cache[1] ||= e => emitAlias(`select`, e),
           onKeydown: cache[2] ||= playerT(withDirectives(() => {}, [`prevent`]), [`enter`]),
           onFocus: f
         }), {
@@ -5384,7 +5384,7 @@ var Radio = defineComponent({
     setup(props, {
       expose: expose
     }) {
-      let n = props,
+      let propsAlias = props,
         counter = ref(0),
         i = ref(0),
         state = ref(),
@@ -5397,8 +5397,8 @@ var Radio = defineComponent({
           type: d,
           dir: f,
           scrollHideDelay: p
-        } = vueDn(n),
-        m = collectionR(f);
+        } = vueDn(propsAlias),
+        collectionRResult = collectionR(f);
       function h() {
         state.value?.scrollTo({
           top: 0
@@ -5421,7 +5421,7 @@ var Radio = defineComponent({
       } = uiSwitchV();
       return ru({
         type: d,
-        dir: m,
+        dir: collectionRResult,
         scrollHideDelay: p,
         scrollArea: v,
         viewport: state,
@@ -5456,9 +5456,9 @@ var Radio = defineComponent({
         }
       }), (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
         ref: unref(_),
-        "as-child": n.asChild,
+        "as-child": propsAlias.asChild,
         as: e.as,
-        dir: unref(m),
+        dir: unref(collectionRResult),
         style: vueNr({
           position: `relative`,
           "--reka-scroll-area-corner-width": `${counter.value}px`,
@@ -5514,7 +5514,7 @@ var Radio = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           forwardRef: n
         } = uiSwitchV(),
@@ -5523,7 +5523,7 @@ var Radio = defineComponent({
         computedData = computed(() => r.type.value !== `scroll` && computedResult.value);
       return (ctx, cache) => computedData.value ? (openBlock(), createBlock(ScrollAreaCornerImpl, vueNt({
         key: 0
-      }, t, {
+      }, propsAlias, {
         ref: unref(n)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
@@ -5931,12 +5931,12 @@ var ScrollAreaScrollbarX = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           forwardRef: n
         } = uiSwitchV(),
         r = nu(),
-        computedResult = computed(() => t.orientation === `horizontal`);
+        computedResult = computed(() => propsAlias.orientation === `horizontal`);
       watch(computedResult, () => {
         computedResult.value ? r.onScrollbarXEnabledChange(true) : r.onScrollbarYEnabledChange(true);
       }, {
@@ -5949,7 +5949,7 @@ var ScrollAreaScrollbarX = defineComponent({
         forceMount: o,
         asChild: s,
         as: c
-      } = vueDn(t);
+      } = vueDn(propsAlias);
       return Su({
         orientation: a,
         forceMount: o,
@@ -6104,7 +6104,7 @@ var ScrollAreaScrollbarX = defineComponent({
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         i = nu(),
         a = wu(),
         o = xu(),
@@ -6118,7 +6118,7 @@ var ScrollAreaScrollbarX = defineComponent({
         if (state.value) {
           let t = e.clientX - state.value?.left,
             n = e.clientY - state.value?.top;
-          r(`onDragScroll`, {
+          emitAlias(`onDragScroll`, {
             x: t,
             y: n
           });
@@ -6265,10 +6265,10 @@ var ScrollAreaScrollbarX = defineComponent({
     setup(props, {
       expose: expose
     }) {
-      let n = props,
+      let propsAlias = props,
         {
           nonce: r
-        } = vueDn(n),
+        } = vueDn(propsAlias),
         i = Vc(r),
         a = nu(),
         state = ref();
@@ -6296,7 +6296,7 @@ var ScrollAreaScrollbarX = defineComponent({
         style: vueNr({
           minWidth: unref(a).scrollbarXEnabled.value ? `fit-content` : undefined
         }),
-        "as-child": n.asChild,
+        "as-child": propsAlias.asChild,
         as: ctx.as
       }, {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
@@ -6384,22 +6384,22 @@ var Fu = [`value`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           required: i,
           disabled: a,
           multiple: o,
           dir: s
-        } = vueDn(n),
-        c = uiSwitchAt(n, `modelValue`, r, {
-          defaultValue: n.defaultValue ?? (o.value ? [] : undefined),
-          passive: n.modelValue === undefined,
+        } = vueDn(propsAlias),
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue ?? (o.value ? [] : undefined),
+          passive: propsAlias.modelValue === undefined,
           deep: true
         }),
-        u = uiSwitchAt(n, `open`, r, {
-          defaultValue: n.defaultOpen,
-          passive: n.open === undefined
+        u = uiSwitchAt(propsAlias, `open`, emitAlias, {
+          defaultValue: propsAlias.defaultOpen,
+          passive: propsAlias.open === undefined
         }),
         state = ref(),
         f = ref(),
@@ -6407,23 +6407,23 @@ var Fu = [`value`],
           x: 0,
           y: 0
         }),
-        computedResult = computed(() => o.value && Array.isArray(c.value) ? c.value?.length === 0 : uiSwitchGt(c.value));
+        computedResult = computed(() => o.value && Array.isArray(uiSwitchAtResult.value) ? uiSwitchAtResult.value?.length === 0 : uiSwitchGt(uiSwitchAtResult.value));
       collectionT({
         isProvider: true
       });
-      let h = collectionR(s),
-        g = uiSwitchH(state),
+      let collectionRResult = collectionR(s),
+        uiSwitchHResult = uiSwitchH(state),
         _ = ref(new Set()),
         computedData = computed(() => Array.from(_.value).map(state => state.value).join(`;`));
       function y(e) {
         if (o.value) {
-          let t = Array.isArray(c.value) ? [...c.value] : [],
-            index = t.findIndex(item => Nu(item, e, n.by));
-          index === -1 ? t.push(e) : t.splice(index, 1), c.value = [...t];
-        } else c.value = e;
+          let t = Array.isArray(uiSwitchAtResult.value) ? [...uiSwitchAtResult.value] : [],
+            index = t.findIndex(item => Nu(item, e, propsAlias.by));
+          index === -1 ? t.push(e) : t.splice(index, 1), uiSwitchAtResult.value = [...t];
+        } else uiSwitchAtResult.value = e;
       }
       function b(e) {
-        return Array.from(_.value).find(state => Mu(e, state.value, n.by));
+        return Array.from(_.value).find(state => Mu(e, state.value, propsAlias.by));
       }
       return Lu({
         triggerElement: state,
@@ -6435,16 +6435,16 @@ var Fu = [`value`],
           f.value = e;
         },
         contentId: ``,
-        modelValue: c,
+        modelValue: uiSwitchAtResult,
         onValueChange: y,
-        by: n.by,
+        by: propsAlias.by,
         open: u,
         multiple: o,
         required: i,
         onOpenChange: e => {
           u.value = e;
         },
-        dir: h,
+        dir: collectionRResult,
         triggerPointerDownPosRef: p,
         disabled: a,
         isEmptyModelValue: computedResult,
@@ -6459,9 +6459,9 @@ var Fu = [`value`],
         }
       }), (e, t) => (openBlock(), createBlock(unref(on), null, {
         default: H(() => [withCtx(e.$slots, `default`, {
-          modelValue: unref(c),
+          modelValue: unref(uiSwitchAtResult),
           open: unref(u)
-        }), unref(g) && e.name ? (openBlock(), createBlock(BubbleSelect, {
+        }), unref(uiSwitchHResult) && e.name ? (openBlock(), createBlock(BubbleSelect, {
           key: computedData.value,
           "aria-hidden": `true`,
           tabindex: `-1`,
@@ -6470,9 +6470,9 @@ var Fu = [`value`],
           name: e.name,
           autocomplete: e.autocomplete,
           disabled: unref(a),
-          value: unref(c)
+          value: unref(uiSwitchAtResult)
         }, {
-          default: H(() => [unref(uiSwitchGt)(unref(c)) ? (openBlock(), createElementBlock(`option`, {
+          default: H(() => [unref(uiSwitchGt)(unref(uiSwitchAtResult)) ? (openBlock(), createElementBlock(`option`, {
             key: 0,
             value: e.nullableValue
           }, null, 8, Fu)) : createCommentVNode(`v-if`, true), (openBlock(true), createElementBlock(Fragment, null, renderList(Array.from(_.value), state => (openBlock(), createElementBlock(`option`, vueNt({
@@ -6651,8 +6651,8 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = uiSwitchB(props);
-      return (ctx, cache) => (openBlock(), createBlock(unref(cn), vueNt(unref(t), {
+      let uiSwitchBResult = uiSwitchB(props);
+      return (ctx, cache) => (openBlock(), createBlock(unref(cn), vueNt(unref(uiSwitchBResult), {
         style: {
           boxSizing: `border-box`,
           "--reka-select-content-transform-origin": `var(--reka-popper-transform-origin)`,
@@ -6786,7 +6786,7 @@ var Fu = [`value`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         a = Iu();
       ln(), D(eventAlias.bodyLock);
       let {
@@ -6852,7 +6852,7 @@ var Fu = [`value`],
         }
       }
       let computedResult = computed(() => eventAlias.position === `popper` ? eventAlias : {}),
-        O = uiSwitchB(computedResult.value);
+        uiSwitchBResult = uiSwitchB(computedResult.value);
       return Uu({
         content: state,
         viewport: f,
@@ -6886,7 +6886,7 @@ var Fu = [`value`],
           "as-child": ``,
           onMountAutoFocus: t[6] ||= withDirectives(() => {}, [`prevent`]),
           onUnmountAutoFocus: t[7] ||= e => {
-            i(`closeAutoFocus`, e), !e.defaultPrevented && (unref(a).triggerElement.value?.focus({
+            emitAlias(`closeAutoFocus`, e), !e.defaultPrevented && (unref(a).triggerElement.value?.focus({
               preventScroll: true
             }), e.preventDefault());
           }
@@ -6896,12 +6896,12 @@ var Fu = [`value`],
             "disable-outside-pointer-events": e.disableOutsidePointerEvents,
             onFocusOutside: t[2] ||= withDirectives(() => {}, [`prevent`]),
             onDismiss: t[3] ||= e => unref(a).onOpenChange(false),
-            onEscapeKeyDown: t[4] ||= e => i(`escapeKeyDown`, e),
-            onPointerDownOutside: t[5] ||= e => i(`pointerDownOutside`, e)
+            onEscapeKeyDown: t[4] ||= e => emitAlias(`escapeKeyDown`, e),
+            onPointerDownOutside: t[5] ||= e => emitAlias(`pointerDownOutside`, e)
           }, {
             default: H(() => [(openBlock(), createBlock(vueEt(e.position === `popper` ? SelectPopperPosition : SelectItemAlignedPosition), vueNt({
               ...e.$attrs,
-              ...unref(O)
+              ...unref(uiSwitchBResult)
             }, {
               id: unref(a).contentId,
               ref: e => {
@@ -6950,8 +6950,8 @@ var Fu = [`value`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           getItems: i
         } = collectionT(),
@@ -7026,7 +7026,7 @@ var Fu = [`value`],
             let t = Math.max(E, _ + f.value.offsetTop + (e ? w : 0) + O) + j;
             state.value.style.height = `${t}px`, f.value.scrollTop = A - E + f.value.offsetTop;
           }
-          state.value.style.margin = `10px 0`, state.value.style.minHeight = `${S}px`, state.value.style.maxHeight = `${u}px`, r(`placed`), requestAnimationFrame(() => flag.value = true);
+          state.value.style.margin = `10px 0`, state.value.style.minHeight = `${S}px`, state.value.style.maxHeight = `${u}px`, emitAlias(`placed`), requestAnimationFrame(() => flag.value = true);
         }
       }
       let _ = ref(``);
@@ -7059,7 +7059,7 @@ var Fu = [`value`],
         }
       }, {
         ...e.$attrs,
-        ...n
+        ...propsAlias
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -7195,15 +7195,15 @@ var Fu = [`value`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = uiSwitchZ(n, emit),
+      let propsAlias = props,
+        uiSwitchZResult = uiSwitchZ(propsAlias, emit),
         i = Iu(),
         state = ref();
       onBeforeMount(() => {
         state.value = new DocumentFragment();
       });
       let o = ref(),
-        computedResult = computed(() => n.forceMount || i.open.value),
+        computedResult = computed(() => propsAlias.forceMount || i.open.value),
         c = ref(computedResult.value),
         setTimeoutResult;
       function u() {
@@ -7220,7 +7220,7 @@ var Fu = [`value`],
         present: computedResult.value
       }, {
         default: H(() => [resolveComponent(SelectContentImpl, vueTr(vueV({
-          ...unref(r),
+          ...unref(uiSwitchZResult),
           ...e.$attrs
         })), {
           default: H(() => [withCtx(e.$slots, `default`)]),
@@ -7251,14 +7251,14 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchI(undefined, `reka-select-group`);
+      let propsAlias = props,
+        uiSwitchIResult = uiSwitchI(undefined, `reka-select-group`);
       return Qu({
-        id: n
+        id: uiSwitchIResult
       }), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         role: `group`
-      }, t, {
-        "aria-labelledby": unref(n)
+      }, propsAlias, {
+        "aria-labelledby": unref(uiSwitchIResult)
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -7319,7 +7319,7 @@ var Fu = [`value`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           disabled: i
         } = vueDn(eventAlias),
@@ -7335,7 +7335,7 @@ var Fu = [`value`],
         computedResult = computed(() => Mu(a.modelValue?.value, eventAlias.value, a.by)),
         flag = ref(false),
         p = ref(eventAlias.textValue ?? ``),
-        m = uiSwitchI(undefined, `reka-select-item-text`);
+        uiSwitchIResult = uiSwitchI(undefined, `reka-select-item-text`);
       async function h(e) {
         if (e.defaultPrevented) return;
         let t = {
@@ -7345,7 +7345,7 @@ var Fu = [`value`],
         ee(`select.select`, g, t);
       }
       async function g(e) {
-        await vueRt(), r(`select`, e), !e.defaultPrevented && (i.value || (a.onValueChange(eventAlias.value), a.multiple.value || a.onOpenChange(false)));
+        await vueRt(), emitAlias(`select`, e), !e.defaultPrevented && (i.value || (a.onValueChange(eventAlias.value), a.multiple.value || a.onOpenChange(false)));
       }
       async function _(e) {
         await vueRt(), !e.defaultPrevented && (i.value ? o.onItemLeave?.() : e.currentTarget?.focus({
@@ -7364,10 +7364,10 @@ var Fu = [`value`],
       }), nd({
         value: eventAlias.value,
         disabled: i,
-        textId: m,
+        textId: uiSwitchIResult,
         isSelected: computedResult,
-        onItemTextChange: e => {
-          p.value = ((p.value || e?.textContent) ?? ``).trim();
+        onItemTextChange: el => {
+          p.value = ((p.value || el?.textContent) ?? ``).trim();
         }
       }), (e, t) => (openBlock(), createBlock(unref(l), {
         value: {
@@ -7377,7 +7377,7 @@ var Fu = [`value`],
         default: H(() => [resolveComponent(unref(uiSwitchJ), {
           ref: unref(s),
           role: `option`,
-          "aria-labelledby": unref(m),
+          "aria-labelledby": unref(uiSwitchIResult),
           "data-highlighted": flag.value ? `` : undefined,
           "aria-selected": computedResult.value,
           "data-state": computedResult.value ? `checked` : `unchecked`,
@@ -7420,12 +7420,12 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = td();
       return (ctx, cache) => unref(n).isSelected.value ? (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         key: 0,
         "aria-hidden": `true`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16)) : createCommentVNode(`v-if`, true);
@@ -7446,7 +7446,7 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = Iu(),
         r = Hu(),
         i = td(),
@@ -7467,7 +7467,7 @@ var Fu = [`value`],
         id: unref(i).textId,
         ref: unref(a)
       }, {
-        ...t,
+        ...propsAlias,
         ...e.$attrs
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
@@ -7493,11 +7493,11 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = Zu({
           id: ``
         });
-      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         id: unref(n).id
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
@@ -7526,8 +7526,8 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(unref(j), vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(j), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -7539,7 +7539,7 @@ var Fu = [`value`],
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           getItems: r
         } = collectionT(),
@@ -7555,12 +7555,12 @@ var Fu = [`value`],
       });
       function s() {
         a.value === null && (a.value = window.setInterval(() => {
-          n(`autoScroll`);
+          emitAlias(`autoScroll`);
         }, 50));
       }
       function c() {
         i.onItemLeave?.(), a.value === null && (a.value = window.setInterval(() => {
-          n(`autoScroll`);
+          emitAlias(`autoScroll`);
         }, 50));
       }
       return onMounted(() => o()), (e, renderCache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
@@ -7930,14 +7930,14 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = [`horizontal`, `vertical`];
       function r(e) {
         return n.includes(e);
       }
-      let computedResult = computed(() => r(t.orientation) ? t.orientation : `horizontal`),
-        computedData = computed(() => computedResult.value === `vertical` ? t.orientation : undefined),
-        o = computed(() => t.decorative ? {
+      let computedResult = computed(() => r(propsAlias.orientation) ? propsAlias.orientation : `horizontal`),
+        computedData = computed(() => computedResult.value === `vertical` ? propsAlias.orientation : undefined),
+        o = computed(() => propsAlias.decorative ? {
           role: `none`
         } : {
           "aria-orientation": computedData.value,
@@ -7975,8 +7975,8 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createBlock(BaseSeparator, vueTr(vueV(t)), {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createBlock(BaseSeparator, vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -8035,64 +8035,64 @@ var Fu = [`value`],
       expose: expose,
       emit: emit
     }) {
-      let r = props,
-        i = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           dir: a,
           orientation: o,
           linear: s
-        } = vueDn(r),
-        c = collectionR(a),
+        } = vueDn(propsAlias),
+        collectionRResult = collectionR(a),
         l = ref(new Set()),
-        u = uiSwitchAt(r, `modelValue`, i, {
-          defaultValue: r.defaultValue,
-          passive: r.modelValue === undefined
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue,
+          passive: propsAlias.modelValue === undefined
         }),
         computedResult = computed(() => Array.from(l.value)),
-        computedData = computed(() => u.value === 1),
-        p = computed(() => u.value === computedResult.value.length),
+        computedData = computed(() => uiSwitchAtResult.value === 1),
+        p = computed(() => uiSwitchAtResult.value === computedResult.value.length),
         m = computed(() => l.value.size);
       function h(e) {
-        e > m.value || e < 1 || l.value.size && computedResult.value[e] && computedResult.value[e].getAttribute(`disabled`) || s.value && e > (u.value ?? 1) + 1 || (u.value = e);
+        e > m.value || e < 1 || l.value.size && computedResult.value[e] && computedResult.value[e].getAttribute(`disabled`) || s.value && e > (uiSwitchAtResult.value ?? 1) + 1 || (uiSwitchAtResult.value = e);
       }
       function g() {
-        h((u.value ?? 1) + 1);
+        h((uiSwitchAtResult.value ?? 1) + 1);
       }
       function _() {
-        h((u.value ?? 1) - 1);
+        h((uiSwitchAtResult.value ?? 1) - 1);
       }
       function v() {
-        return (u.value ?? 1) < m.value;
+        return (uiSwitchAtResult.value ?? 1) < m.value;
       }
       function y() {
-        return (u.value ?? 1) > 1;
+        return (uiSwitchAtResult.value ?? 1) > 1;
       }
       let b = ref(null),
         x = ref(null),
         S = computed(() => !b.value || b.value.getAttribute(`disabled`) === ``),
         C = computed(() => !x.value || x.value.getAttribute(`disabled`) === ``);
-      return watch(u, async () => {
+      return watch(uiSwitchAtResult, async () => {
         await vueRt(() => {
-          b.value = computedResult.value.length && u.value < computedResult.value.length ? computedResult.value[u.value] : null, x.value = computedResult.value.length && u.value > 1 ? computedResult.value[u.value - 2] : null;
+          b.value = computedResult.value.length && uiSwitchAtResult.value < computedResult.value.length ? computedResult.value[uiSwitchAtResult.value] : null, x.value = computedResult.value.length && uiSwitchAtResult.value > 1 ? computedResult.value[uiSwitchAtResult.value - 2] : null;
         });
       }), watch(computedResult, async () => {
         await vueRt(() => {
-          b.value = computedResult.value.length && u.value < computedResult.value.length ? computedResult.value[u.value] : null, x.value = computedResult.value.length && u.value > 1 ? computedResult.value[u.value - 2] : null;
+          b.value = computedResult.value.length && uiSwitchAtResult.value < computedResult.value.length ? computedResult.value[uiSwitchAtResult.value] : null, x.value = computedResult.value.length && uiSwitchAtResult.value > 1 ? computedResult.value[uiSwitchAtResult.value - 2] : null;
         });
       }), vd({
-        modelValue: u,
+        modelValue: uiSwitchAtResult,
         changeModelValue: e => {
-          u.value = e;
+          uiSwitchAtResult.value = e;
         },
         orientation: o,
-        dir: c,
+        dir: collectionRResult,
         linear: s,
         totalStepperItems: l
       }), expose({
         goToStep: h,
         nextStep: g,
         prevStep: _,
-        modelValue: u,
+        modelValue: uiSwitchAtResult,
         totalSteps: m,
         isNextDisabled: S,
         isPrevDisabled: C,
@@ -8109,7 +8109,7 @@ var Fu = [`value`],
         "data-orientation": e.orientation
       }, {
         default: H(() => [withCtx(e.$slots, `default`, {
-          modelValue: unref(u),
+          modelValue: unref(uiSwitchAtResult),
           totalSteps: l.value.size,
           isNextDisabled: S.value,
           isPrevDisabled: C.value,
@@ -8120,7 +8120,7 @@ var Fu = [`value`],
           prevStep: _,
           hasNext: v,
           hasPrev: y
-        }), createElementVNode(`div`, options, ` Step ` + toDisplayString(unref(u)) + ` of ` + toDisplayString(l.value.size), 1)]),
+        }), createElementVNode(`div`, options, ` Step ` + toDisplayString(unref(uiSwitchAtResult)) + ` of ` + toDisplayString(l.value.size), 1)]),
         _: 3
       }, 8, [`as`, `as-child`, `data-linear`, `data-orientation`]));
     }
@@ -8162,12 +8162,12 @@ var Fu = [`value`],
           forwardRef: i
         } = uiSwitchV(),
         a = _d(),
-        o = uiSwitchI(undefined, `reka-stepper-item-title`),
+        uiSwitchIResult = uiSwitchI(undefined, `reka-stepper-item-title`),
         s = uiSwitchI(undefined, `reka-stepper-item-description`),
         computedResult = computed(() => r.value ? `completed` : a.modelValue.value === n.value ? `active` : a.modelValue.value > n.value ? `completed` : `inactive`),
         computedData = computed(() => t.value ? false : !a.linear.value || n.value <= a.modelValue.value || n.value === a.modelValue.value + 1);
       return xd({
-        titleId: o,
+        titleId: uiSwitchIResult,
         descriptionId: s,
         state: computedResult,
         disabled: t,
@@ -8204,9 +8204,9 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = bd();
-      return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+      return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(propsAlias)), {
         default: H(() => [withCtx(e.$slots, `default`, {
           step: unref(n).step.value
         }, () => [createTextVNode(` Step ` + toDisplayString(unref(n).step.value), 1)])]),
@@ -8228,9 +8228,9 @@ var Fu = [`value`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = bd();
-      return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(propsAlias, {
         id: unref(n).titleId
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
@@ -8352,30 +8352,30 @@ var Fu = [`value`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           orientation: i,
           unmountOnHide: a,
           dir: o
-        } = vueDn(n),
-        s = collectionR(o);
+        } = vueDn(propsAlias),
+        collectionRResult = collectionR(o);
       uiSwitchV();
-      let c = uiSwitchAt(n, `modelValue`, r, {
-          defaultValue: n.defaultValue,
-          passive: n.modelValue === undefined
+      let uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue,
+          passive: propsAlias.modelValue === undefined
         }),
         state = ref(),
         d = vueCn(new Set());
       return Dd({
-        modelValue: c,
+        modelValue: uiSwitchAtResult,
         changeModelValue: e => {
-          c.value = e;
+          uiSwitchAtResult.value = e;
         },
         orientation: i,
-        dir: s,
+        dir: collectionRResult,
         unmountOnHide: a,
-        activationMode: n.activationMode,
+        activationMode: propsAlias.activationMode,
         baseId: uiSwitchI(undefined, `reka-tabs`),
         tabsList: state,
         contentIds: d,
@@ -8387,13 +8387,13 @@ var Fu = [`value`],
           t.delete(e), d.value = t;
         }
       }), (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
-        dir: unref(s),
+        dir: unref(collectionRResult),
         "data-orientation": unref(i),
         "as-child": e.asChild,
         as: e.as
       }, {
         default: H(() => [withCtx(e.$slots, `default`, {
-          modelValue: unref(c)
+          modelValue: unref(uiSwitchAtResult)
         })]),
         _: 3
       }, 8, [`dir`, `data-orientation`, `as-child`, `as`]));
@@ -8426,21 +8426,21 @@ var TabsContent = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           forwardRef: n
         } = uiSwitchV(),
         r = Ed(),
-        computedResult = computed(() => kd(r.baseId, t.value)),
-        computedData = computed(() => Ad(r.baseId, t.value)),
-        o = computed(() => t.value === r.modelValue.value),
+        computedResult = computed(() => kd(r.baseId, propsAlias.value)),
+        computedData = computed(() => Ad(r.baseId, propsAlias.value)),
+        o = computed(() => propsAlias.value === r.modelValue.value),
         s = ref(o.value);
       return onBeforeMount(() => {
-        r.registerContent(t.value), requestAnimationFrame(() => {
+        r.registerContent(propsAlias.value), requestAnimationFrame(() => {
           s.value = false;
         });
       }), onMounted(() => {
-        r.unregisterContent(t.value);
+        r.unregisterContent(propsAlias.value);
       }), (e, t) => (openBlock(), createBlock(unref(uiSwitchN), {
         present: e.forceMount || o.value,
         "force-mount": ``
@@ -8540,14 +8540,14 @@ var TabsContent = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           forwardRef: n
         } = uiSwitchV(),
         r = Ed(),
-        computedResult = computed(() => kd(r.baseId, t.value)),
-        computedData = computed(() => r.contentIds.value.has(t.value) ? Ad(r.baseId, t.value) : undefined),
-        o = computed(() => t.value === r.modelValue.value);
+        computedResult = computed(() => kd(r.baseId, propsAlias.value)),
+        computedData = computed(() => r.contentIds.value.has(propsAlias.value) ? Ad(r.baseId, propsAlias.value) : undefined),
+        o = computed(() => propsAlias.value === r.modelValue.value);
       return (ctx, event) => (openBlock(), createBlock(unref(Ei), {
         "as-child": ``,
         focusable: !ctx.disabled,
@@ -8642,15 +8642,15 @@ var TabsContent = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           loop: i,
           rovingFocus: a,
           disabled: o,
           dir: s
-        } = vueDn(n),
-        c = collectionR(s),
+        } = vueDn(propsAlias),
+        collectionRResult = collectionR(s),
         {
           forwardRef: u,
           currentElement: d
@@ -8659,21 +8659,21 @@ var TabsContent = defineComponent({
           modelValue: f,
           changeModelValue: p,
           isSingle: m
-        } = Cc(n, r),
-        h = uiSwitchH(d);
+        } = Cc(propsAlias, emitAlias),
+        uiSwitchHResult = uiSwitchH(d);
       return Fd({
         isSingle: m,
         modelValue: f,
         changeModelValue: p,
-        dir: c,
-        orientation: n.orientation,
+        dir: collectionRResult,
+        orientation: propsAlias.orientation,
         loop: i,
         rovingFocus: a,
         disabled: o
       }), (e, t) => (openBlock(), createBlock(vueEt(unref(a) ? unref(Ti) : unref(uiSwitchJ)), {
         "as-child": ``,
         orientation: unref(a) ? e.orientation : undefined,
-        dir: unref(c),
+        dir: unref(collectionRResult),
         loop: unref(a) ? unref(i) : undefined
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), {
@@ -8684,7 +8684,7 @@ var TabsContent = defineComponent({
         }, {
           default: H(() => [withCtx(e.$slots, `default`, {
             modelValue: unref(f)
-          }), unref(h) && e.name ? (openBlock(), createBlock(ce, {
+          }), unref(uiSwitchHResult) && e.name ? (openBlock(), createBlock(ce, {
             key: 0,
             name: e.name,
             required: e.required,
@@ -8736,29 +8736,29 @@ var TabsContent = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           forwardRef: i,
           currentElement: a
         } = uiSwitchV(),
         o = x(),
         s = Pd(null),
-        c = uiSwitchAt(n, `modelValue`, r, {
-          defaultValue: n.defaultValue,
-          passive: n.modelValue === undefined
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+          defaultValue: propsAlias.defaultValue,
+          passive: propsAlias.modelValue === undefined
         });
       function u() {
-        c.value = !c.value;
+        uiSwitchAtResult.value = !uiSwitchAtResult.value;
       }
-      let computedResult = computed(() => c.value ? `on` : `off`),
-        f = uiSwitchH(a);
+      let computedResult = computed(() => uiSwitchAtResult.value ? `on` : `off`),
+        uiSwitchHResult = uiSwitchH(a);
       return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
         ref: unref(i),
         type: ctx.as === `button` ? `button` : undefined,
-        "as-child": n.asChild,
+        "as-child": propsAlias.asChild,
         as: ctx.as,
-        "aria-pressed": unref(c),
+        "aria-pressed": unref(uiSwitchAtResult),
         "data-state": computedResult.value,
         "data-disabled": ctx.disabled ? `` : undefined,
         disabled: ctx.disabled
@@ -8769,17 +8769,17 @@ var TabsContent = defineComponent({
         onClick: u
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`, {
-          modelValue: unref(c),
+          modelValue: unref(uiSwitchAtResult),
           disabled: ctx.disabled,
-          pressed: unref(c),
+          pressed: unref(uiSwitchAtResult),
           state: computedResult.value
         })]),
         _: 3
-      }, 16, [`type`, `as-child`, `as`, `aria-pressed`, `data-state`, `data-disabled`, `disabled`]), unref(f) && ctx.name && !unref(s) ? (openBlock(), createBlock(ce, vueNt({
+      }, 16, [`type`, `as-child`, `as`, `aria-pressed`, `data-state`, `data-disabled`, `disabled`]), unref(uiSwitchHResult) && ctx.name && !unref(s) ? (openBlock(), createBlock(ce, vueNt({
         key: 0,
         type: `checkbox`,
         name: ctx.name,
-        value: unref(c),
+        value: unref(uiSwitchAtResult),
         required: ctx.required
       }, unref(o)), null, 16, [`name`, `value`, `required`])) : createCommentVNode(`v-if`, true)], 64));
     }
@@ -8845,10 +8845,10 @@ var TabsContent = defineComponent({
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(ri), vueNt({
         "data-slot": `dialog-close`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -8866,13 +8866,13 @@ var TabsContent = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(si), vueNt({
         "data-slot": `dialog-description`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`text-muted-foreground *:[a]:hover:text-foreground text-sm *:[a]:underline *:[a]:underline-offset-3`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`text-muted-foreground *:[a]:hover:text-foreground text-sm *:[a]:underline *:[a]:underline-offset-3`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -8888,10 +8888,10 @@ var TabsContent = defineComponent({
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(DialogTrigger), vueNt({
         "data-slot": `dialog-trigger`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -10787,7 +10787,7 @@ var Vee = [`innerHTML`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         parts = `a.b.blockquote.br.code.del.div.em.h1.h2.h3.hr.i.li.ol.p.pre.s.span.strike.strong.table.tbody.td.th.thead.tr.u.ul`.split(`.`);
       function a(e) {
         try {
@@ -11080,7 +11080,7 @@ var Vee = [`innerHTML`],
           }
           o === E && (T.value = fromString.body.innerHTML);
         } catch (e) {
-          o === E && r(`localPathError`, i18nR.global.t(`markdownRenderer.pathCheckFailed`, {
+          o === E && emitAlias(`localPathError`, i18nR.global.t(`markdownRenderer.pathCheckFailed`, {
             error: e instanceof Error ? e.message : String(e)
           }));
         }
@@ -11125,7 +11125,7 @@ var Vee = [`innerHTML`],
             });
             if (!showReplyFileMenu.ok) throw Error(showReplyFileMenu.error.message);
           } catch (e) {
-            r(`localPathError`, e instanceof Error ? e.message : String(e));
+            emitAlias(`localPathError`, e instanceof Error ? e.message : String(e));
           }
         }
       }
@@ -11133,7 +11133,7 @@ var Vee = [`innerHTML`],
         if (!(e.target instanceof Element)) return;
         let t = e.target.closest(`[data-local-path]`);
         if (eventAlias.openLocalLinks && t) {
-          e.preventDefault(), r(`openLocalLink`, t.dataset.localPath ?? ``, t.dataset.revealFile === `true`);
+          e.preventDefault(), emitAlias(`openLocalLink`, t.dataset.localPath ?? ``, t.dataset.revealFile === `true`);
           return;
         }
         if (!eventAlias.openExternalLinks) return;
@@ -11144,7 +11144,7 @@ var Vee = [`innerHTML`],
         try {
           let e = new URL(fallbackValue);
           if (![`http:`, `https:`].includes(e.protocol) || e.username || e.password) return;
-          r(`openLink`, e.toString());
+          emitAlias(`openLink`, e.toString());
         } catch {}
       }
       return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
@@ -11266,7 +11266,7 @@ var Vee = [`innerHTML`],
           t: i18nTranslate
         } = vueN(),
         eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         computedResult = computed(() => eventAlias.state ? eventAlias.state.phase === `downloaded` ? `updateDialog.packageReady` : eventAlias.state.phase === `install_requested` || eventAlias.state.phase === `handoff_preparing` ? eventAlias.state.isSlowHandoff ? `updateDialog.handoffSlow` : `updateDialog.preparingInstallDesc` : eventAlias.state.phase === `handoff_started` || eventAlias.state.phase === `relaunch_pending` ? `updateDialog.handoffStarted` : null : null),
         computedData = computed(() => eventAlias.state?.downloadStage === `retry_wait` ? i18nTranslate(`updateDialog.retryingDownload`, {
           attempt: eventAlias.state.sourceAttempt || 1,
@@ -11305,10 +11305,10 @@ var Vee = [`innerHTML`],
         u = computed(() => eventAlias.state ? [`available`, `downloaded`, `recoverable_failed`, `manual_action_required`].includes(eventAlias.state.phase) : !eventAlias.data.updateFailed || eventAlias.data.canRetry !== false),
         d = computed(() => eventAlias.isUpdating ? eventAlias.data.readyToInstall || eventAlias.state?.phase === `downloaded` ? `updateDialog.installing` : `updateDialog.downloading` : eventAlias.data.updateFailed || [`recoverable_failed`, `manual_action_required`].includes(eventAlias.state?.phase || ``) ? `updateDialog.retryUpdate` : eventAlias.data.readyToInstall || eventAlias.state?.phase === `downloaded` ? `updateDialog.installNow` : `updateDialog.downloadUpdate`);
       function f(e) {
-        eventAlias.data.isForceUpdate || e.target === e.currentTarget && i(`cancel`);
+        eventAlias.data.isForceUpdate || e.target === e.currentTarget && emitAlias(`cancel`);
       }
       function p(e) {
-        e.key === `Escape` && !eventAlias.data.isForceUpdate && i(`cancel`);
+        e.key === `Escape` && !eventAlias.data.isForceUpdate && emitAlias(`cancel`);
       }
       return watch(() => eventAlias.open, value => {
         value ? (trackActionEvent(`update_dialog_impression`, {
@@ -11476,7 +11476,7 @@ var Vee = [`innerHTML`],
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
@@ -11494,7 +11494,7 @@ var Vee = [`innerHTML`],
           size: `sm`,
           variant: `outline`,
           class: `update-ready-toast-outline cursor-pointer`,
-          onClick: cache[0] ||= e => n(`changelog`)
+          onClick: cache[0] ||= e => emitAlias(`changelog`)
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(r)(`updateToast.changelog`)), 1)]),
           _: 1
@@ -11502,7 +11502,7 @@ var Vee = [`innerHTML`],
           size: `sm`,
           class: `cursor-pointer`,
           "data-testid": `update-ready-toast-action`,
-          onClick: cache[1] ||= e => n(`update`)
+          onClick: cache[1] ||= e => emitAlias(`update`)
         }, {
           default: H(() => [createTextVNode(toDisplayString(props.ready ? unref(r)(`updateToast.restartToUpdate`) : unref(r)(`updateToast.updateNow`)), 1)]),
           _: 1
@@ -11510,7 +11510,7 @@ var Vee = [`innerHTML`],
           type: `button`,
           class: `update-ready-toast-close`,
           "aria-label": unref(r)(`common.close`),
-          onClick: cache[2] ||= e => n(`close`)
+          onClick: cache[2] ||= e => emitAlias(`close`)
         }, [resolveComponent(unref(lucideT), {
           size: 12,
           "stroke-width": 2
@@ -11557,8 +11557,8 @@ var Vee = [`innerHTML`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           tm: a,
@@ -11579,16 +11579,16 @@ var Vee = [`innerHTML`],
           points: s(`usageMode.studentPoints`)
         }]);
       function l(e) {
-        return n.recommended === e ? {
+        return propsAlias.recommended === e ? {
           text: i18nTranslate(`usageMode.recommended`),
           tone: `primary`
-        } : n.current === e ? {
+        } : propsAlias.current === e ? {
           text: i18nTranslate(`usageMode.current`),
           tone: `muted`
         } : null;
       }
       function u(e) {
-        n.disabled || r(`update:modelValue`, e);
+        propsAlias.disabled || emitAlias(`update:modelValue`, e);
       }
       return (options, cache) => (openBlock(), createElementBlock(`div`, {
         class: normalizeClass([`grid gap-4`, props.compact ? `grid-cols-1` : `grid-cols-2`]),
@@ -11656,21 +11656,21 @@ var Vee = [`innerHTML`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
-        a = ref(n.recommendedMode ?? n.currentMode);
-      watch(() => [n.open, n.recommendedMode, n.currentMode], ([e]) => {
-        e && (a.value = n.recommendedMode ?? n.currentMode);
+        a = ref(propsAlias.recommendedMode ?? propsAlias.currentMode);
+      watch(() => [propsAlias.open, propsAlias.recommendedMode, propsAlias.currentMode], ([e]) => {
+        e && (a.value = propsAlias.recommendedMode ?? propsAlias.currentMode);
       });
       function o() {
-        r(`choose`, a.value);
+        emitAlias(`choose`, a.value);
       }
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: props.open,
-        "onUpdate:open": renderCache[1] ||= t => !props.switching && r(`update:open`, t)
+        "onUpdate:open": renderCache[1] ||= t => !props.switching && emitAlias(`update:open`, t)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `gap-6 p-7 sm:max-w-[720px]`,
@@ -11733,7 +11733,7 @@ var Vee = [`innerHTML`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           tm: a,
@@ -11756,7 +11756,7 @@ var Vee = [`innerHTML`],
         }, 0);
       });
       function f() {
-        u.value || (flag.value = false, r(`update:target`, null));
+        u.value || (flag.value = false, emitAlias(`update:target`, null));
       }
       async function p() {
         let e = eventAlias.target;
@@ -11774,7 +11774,7 @@ var Vee = [`innerHTML`],
               a = t.changed ? [i18nTranslate(`usageMode.switched`, {
                 mode: i18nTranslate(`usageMode.${e}`)
               }), n ? i18nTranslate(`usageMode.templateOutcome.${n}`) : ``].filter(Boolean).join(` `) : ``;
-            r(`switched`, t, a), flag.value = false, r(`update:target`, null);
+            emitAlias(`switched`, t, a), flag.value = false, emitAlias(`update:target`, null);
           } finally {
             u.value = false;
           }
@@ -11839,10 +11839,10 @@ var Vee = [`innerHTML`],
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(PopoverAnchor), vueNt({
         "data-slot": `popover-anchor`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -11871,15 +11871,15 @@ var Vee = [`innerHTML`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(TabsRoot), vueNt({
         "data-slot": `tabs`,
-        "data-orientation": unref(a).orientation || `horizontal`
-      }, unref(a), {
-        class: unref(uiSwitchXt)(`gap-2 group/tabs flex data-horizontal:flex-col`, n.class)
+        "data-orientation": unref(uiSwitchZResult).orientation || `horizontal`
+      }, unref(uiSwitchZResult), {
+        class: unref(uiSwitchXt)(`gap-2 group/tabs flex data-horizontal:flex-col`, propsAlias.class)
       }), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
@@ -11902,12 +11902,12 @@ var Vee = [`innerHTML`],
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(TabsContent), vueNt({
         "data-slot": `tabs-content`,
-        class: unref(uiSwitchXt)(`text-sm flex-1 outline-none`, t.class)
-      }, unref(n)), {
+        class: unref(uiSwitchXt)(`text-sm flex-1 outline-none`, propsAlias.class)
+      }, unref(uiSwitchLtResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -11931,15 +11931,15 @@ var Vee = [`innerHTML`],
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`, `variant`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `variant`);
       return (ctx, cache) => (openBlock(), createBlock(unref(TabsList), vueNt({
         "data-slot": `tabs-list`,
         "data-variant": props.variant
-      }, unref(n), {
+      }, unref(uiSwitchLtResult), {
         class: unref(uiSwitchXt)(unref(Ete)({
           variant: props.variant
-        }), t.class)
+        }), propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -11962,13 +11962,13 @@ var Vee = [`innerHTML`],
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(TabsTrigger), vueNt({
         "data-slot": `tabs-trigger`,
-        class: unref(uiSwitchXt)(`gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg:not([class*=size-])]:size-4 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0`, `group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent`, `data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground`, `after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg:not([class*=size-])]:size-4 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0`, `group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent`, `data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground`, `after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -12025,7 +12025,7 @@ var Vee = [`innerHTML`],
     }) {
       let n = vueLt(props, `consentOpen`),
         r = vueLt(props, `progressOpen`),
-        i = emit,
+        emitAlias = emit,
         {
           t: a
         } = vueN();
@@ -12052,7 +12052,7 @@ var Vee = [`innerHTML`],
               default: H(() => [createTextVNode(toDisplayString(unref(a)(`settings.miniProgramSyncDecline`)), 1)]),
               _: 1
             }), resolveComponent(unref(alertDialogS), {
-              onClick: renderCache[0] ||= e => i(`confirm-consent`)
+              onClick: renderCache[0] ||= e => emitAlias(`confirm-consent`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(a)(`settings.miniProgramSyncAgree`)), 1)]),
               _: 1
@@ -12580,10 +12580,10 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-content`,
-        class: normalizeClass(unref(uiSwitchXt)(`px-4 group-data-[size=sm]/card:px-3`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`px-4 group-data-[size=sm]/card:px-3`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -12595,10 +12595,10 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-description`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-sm`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-sm`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -12610,10 +12610,10 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-footer`,
-        class: normalizeClass(unref(uiSwitchXt)(`bg-muted/50 rounded-b-xl border-t p-4 group-data-[size=sm]/card:p-3 flex items-center`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`bg-muted/50 rounded-b-xl border-t p-4 group-data-[size=sm]/card:p-3 flex items-center`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -12625,10 +12625,10 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-header`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3 group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3 group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -12640,10 +12640,10 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-title`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-base leading-snug font-medium group-data-[size=sm]/card:text-sm cn-font-heading`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-base leading-snug font-medium group-data-[size=sm]/card:text-sm cn-font-heading`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -12666,12 +12666,12 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(Separator), vueNt({
         "data-slot": `separator`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch`, propsAlias.class)
       }), null, 16, [`class`]));
     }
   }),
@@ -12688,15 +12688,15 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         "data-slot": `badge`,
         "data-variant": props.variant,
         class: unref(uiSwitchXt)(unref(qte)({
           variant: props.variant
-        }), t.class)
-      }, unref(n)), {
+        }), propsAlias.class)
+      }, unref(uiSwitchLtResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`data-variant`, `class`]));
@@ -12832,7 +12832,7 @@ var Jte = {
           locale: a
         } = vueN(),
         o = A(`credit-campaign-claimed`),
-        s = emit,
+        emitAlias = emit,
         c = ref(null),
         flag = ref(false),
         u = ref(null),
@@ -12916,7 +12916,7 @@ var Jte = {
           if (n !== h || userId !== textAlias.userId || !_) return;
           k(claimCreditCampaign), flag.value = true, Ep.success(claimCreditCampaign.alreadyClaimed ? i18nTranslate(`creditCampaign.toastAlreadyClaimed`) : i18nTranslate(`creditCampaign.toastClaimed`, {
             credits: T(claimCreditCampaign.grantedCredits)
-          })), s(`claimed`), userId !== null && o.emit(userId);
+          })), emitAlias(`claimed`), userId !== null && o.emit(userId);
         } catch (e) {
           n === h && _ && Ep.error(e instanceof Error ? e.message : i18nTranslate(`creditCampaign.claimFailed`));
         } finally {
@@ -13127,16 +13127,16 @@ var Jte = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = uiSwitchAt(n, `modelValue`, emit, {
+      let propsAlias = props,
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emit, {
           passive: true,
-          defaultValue: n.defaultValue
+          defaultValue: propsAlias.defaultValue
         });
       return (ctx, renderCache) => vueZt((openBlock(), createElementBlock(`input`, {
-        "onUpdate:modelValue": renderCache[0] ||= e => vueFn(r) ? r.value = e : null,
+        "onUpdate:modelValue": renderCache[0] ||= e => vueFn(uiSwitchAtResult) ? uiSwitchAtResult.value = e : null,
         "data-slot": `input`,
-        class: normalizeClass(unref(uiSwitchXt)(`dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50`, n.class))
-      }, null, 2)), [[playerC, unref(r)]]);
+        class: normalizeClass(unref(uiSwitchXt)(`dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50`, propsAlias.class))
+      }, null, 2)), [[playerC, unref(uiSwitchAtResult)]]);
     }
   }),
   Textarea = defineComponent({
@@ -13152,16 +13152,16 @@ var Jte = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = uiSwitchAt(n, `modelValue`, emit, {
+      let propsAlias = props,
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emit, {
           passive: true,
-          defaultValue: n.defaultValue
+          defaultValue: propsAlias.defaultValue
         });
       return (ctx, renderCache) => vueZt((openBlock(), createElementBlock(`textarea`, {
-        "onUpdate:modelValue": renderCache[0] ||= e => vueFn(r) ? r.value = e : null,
+        "onUpdate:modelValue": renderCache[0] ||= e => vueFn(uiSwitchAtResult) ? uiSwitchAtResult.value = e : null,
         "data-slot": `textarea`,
-        class: normalizeClass(unref(uiSwitchXt)(`border-input dark:bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 rounded-lg border bg-transparent px-2.5 py-2 text-base transition-colors focus-visible:ring-3 aria-invalid:ring-3 md:text-sm flex field-sizing-content min-h-16 w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50`, n.class))
-      }, null, 2)), [[playerC, unref(r)]]);
+        class: normalizeClass(unref(uiSwitchXt)(`border-input dark:bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 rounded-lg border bg-transparent px-2.5 py-2 text-base transition-colors focus-visible:ring-3 aria-invalid:ring-3 md:text-sm flex field-sizing-content min-h-16 w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50`, propsAlias.class))
+      }, null, 2)), [[playerC, unref(uiSwitchAtResult)]]);
     }
   }),
   ScrollBar = defineComponent({
@@ -13182,13 +13182,13 @@ var Jte = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(ScrollAreaScrollbar), vueNt({
         "data-slot": `scroll-area-scrollbar`,
         "data-orientation": props.orientation
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`data-horizontal:h-2 data-horizontal:flex-col data-horizontal:border-t data-horizontal:border-t-transparent data-vertical:h-full data-vertical:w-2 data-vertical:border-l data-vertical:border-l-transparent flex touch-none p-px transition-colors select-none`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`data-horizontal:h-2 data-horizontal:flex-col data-horizontal:border-t data-horizontal:border-t-transparent data-vertical:h-full data-vertical:w-2 data-vertical:border-l data-vertical:border-l-transparent flex touch-none p-px transition-colors select-none`, propsAlias.class)
       }), {
         default: H(() => [resolveComponent(unref(ScrollAreaThumb), {
           "data-slot": `scroll-area-thumb`,
@@ -13213,12 +13213,12 @@ var Jte = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(ScrollAreaRoot), vueNt({
         "data-slot": `scroll-area`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`relative`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`relative`, propsAlias.class)
       }), {
         default: H(() => [resolveComponent(unref(ScrollAreaViewport), {
           "data-slot": `scroll-area-viewport`,
@@ -13332,7 +13332,7 @@ var jne = {
         } = growthTelT(),
         r = vueLt(text, `open`),
         textAlias = text,
-        a = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -13376,7 +13376,7 @@ var jne = {
             });
             [updateUserProfileMemory.rolePositioning, updateUserProfileMemory.organizationsAndTitles, updateUserProfileMemory.projectsAndBusiness, updateUserProfileMemory.responsibilitiesAndWork, updateUserProfileMemory.teamAndCollaborators, updateUserProfileMemory.additionalContext].some(item => item.trim()) && e(`settings_action_success`, {
               action: `work_context_saved`
-            }), alertN(i18nTranslate(`generateReport.userProfileSaved`)), r.value = false, a(`saved`, updateUserProfileMemory);
+            }), alertN(i18nTranslate(`generateReport.userProfileSaved`)), r.value = false, emitAlias(`saved`, updateUserProfileMemory);
           } catch (e) {
             l.value = e instanceof Error ? e.message : i18nTranslate(`generateReport.userProfileSaveFailed`);
           } finally {
@@ -13385,7 +13385,7 @@ var jne = {
         }
       }
       function f() {
-        r.value = false, a(`skipped`);
+        r.value = false, emitAlias(`skipped`);
       }
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
@@ -14326,10 +14326,10 @@ var lre = [`title`],
           trackBotEntryClick: r
         } = km(),
         itemsAlias = items,
-        a = emit,
+        emitAlias = emit,
         o = ref(null);
       watch(o, value => {
-        value && a(`contact-panel-target-change`, value);
+        value && emitAlias(`contact-panel-target-change`, value);
       }, {
         flush: `post`
       });
@@ -14553,17 +14553,17 @@ var lre = [`title`],
         electronAPI?.close?.();
       }
       function we() {
-        a(`update:collapsed`, !itemsAlias.collapsed);
+        emitAlias(`update:collapsed`, !itemsAlias.collapsed);
       }
       function Te(e) {
-        e === `xiaohei-bot` && r(), (e === `subscribe` || e === `profile`) && l(), a(`update:activeNav`, e);
+        e === `xiaohei-bot` && r(), (e === `subscribe` || e === `profile`) && l(), emitAlias(`update:activeNav`, e);
       }
       function Ee(e) {
         if (e === `invite` && N(), e === `community-group`) {
-          a(`show-wechat-qrcode`, `group`);
+          emitAlias(`show-wechat-qrcode`, `group`);
           return;
         }
-        a(`update:activeNav`, e);
+        emitAlias(`update:activeNav`, e);
       }
       let De = computed(() => (s.value?.nickname || s.value?.email || `?`).charAt(0).toUpperCase()),
         Oe = computed(() => !c.value || !c.value.isActive ? i18nTranslate(`common.freePlan`) : c.value.planName),
@@ -14858,7 +14858,7 @@ var lre = [`title`],
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -14882,7 +14882,7 @@ var lre = [`title`],
             let t = Pi(await window.electronAPI.auth.browserPoll());
             if (d || e !== c) return;
             if (t.status === `complete`) {
-              a.value = `finishing`, o.value = ``, t.isNewUser && n(`registered`, t.result), await i();
+              a.value = `finishing`, o.value = ``, t.isNewUser && emitAlias(`registered`, t.result), await i();
               return;
             }
             if (t.status === `expired`) {
@@ -14957,7 +14957,7 @@ var lre = [`title`],
         onClick: renderCache[1] ||= e => g(`user-agreement`)
       }, toDisplayString(unref(i18nTranslate)(`login.browser.terms`)), 1), createElementVNode(`button`, {
         type: `button`,
-        onClick: renderCache[2] ||= e => n(`show-wechat-qrcode`)
+        onClick: renderCache[2] ||= e => emitAlias(`show-wechat-qrcode`)
       }, toDisplayString(unref(i18nTranslate)(`login.browser.support`)), 1)])]));
     }
   }), [[`__scopeId`, `data-v-c8ac9b5f`]]),
@@ -15102,26 +15102,26 @@ var Die = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
         a = e => `promptOnboarding.welcome.${e}`,
-        o = n.platform === `darwin`,
+        o = propsAlias.platform === `darwin`,
         {
           statuses: s,
           openSettings: c
         } = Eie(o),
-        computedResult = computed(() => !!(n.credits?.claimed || n.credits?.alreadyClaimed)),
-        computedData = computed(() => computedResult.value ? n.credits?.grantedCredits ?? 0 : 0),
+        computedResult = computed(() => !!(propsAlias.credits?.claimed || propsAlias.credits?.alreadyClaimed)),
+        computedData = computed(() => computedResult.value ? propsAlias.credits?.grantedCredits ?? 0 : 0),
         d = [3e3, 8e3],
         f = 0,
         setTimeoutResult = null,
         m = ref(false);
-      watch(() => [n.newRegistration, n.creditsLoading, computedResult.value], ([e, t, n]) => {
+      watch(() => [propsAlias.newRegistration, propsAlias.creditsLoading, computedResult.value], ([e, t, n]) => {
         !e || t || n || setTimeoutResult || f >= d.length || (m.value = true, setTimeoutResult = setTimeout(() => {
-          setTimeoutResult = null, m.value = false, f += 1, r(`retryCredits`);
+          setTimeoutResult = null, m.value = false, f += 1, emitAlias(`retryCredits`);
         }, d[f]));
       }, {
         immediate: true
@@ -15167,7 +15167,7 @@ var Die = {
       }, [createElementVNode(`p`, Rm, toDisplayString(unref(i)(a(`giftPending`))), 1), createElementVNode(`p`, zm, [createTextVNode(toDisplayString(unref(i)(a(`giftPendingDesc`))) + ` `, 1), createElementVNode(`button`, {
         type: `button`,
         class: `ml-1 cursor-pointer font-medium text-primary underline-offset-4 hover:underline`,
-        onClick: renderCache[0] ||= e => r(`retryCredits`)
+        onClick: renderCache[0] ||= e => emitAlias(`retryCredits`)
       }, toDisplayString(unref(i)(a(`giftRetry`))), 1)])], 64)), computedResult.value ? (openBlock(), createElementBlock(`p`, Bm, toDisplayString(unref(i)(a(`giftUsage`))), 1)) : createCommentVNode(``, true)])])) : createCommentVNode(``, true), createElementVNode(`section`, {
         class: normalizeClass(props.newRegistration ? `mt-5` : ``)
       }, [createElementVNode(`h2`, Vm, toDisplayString(unref(i)(a(`capabilitiesTitle`))), 1), createElementVNode(`ul`, Hm, [(openBlock(), createElementBlock(Fragment, null, renderList(h, t => createElementVNode(`li`, {
@@ -15196,7 +15196,7 @@ var Die = {
       }), createTextVNode(toDisplayString(unref(i)(a(`screenPermissionMissing`))), 1)])) : createCommentVNode(``, true)], 2), createElementVNode(`footer`, $m, [resolveComponent(unref(uiSwitchR), {
         class: `h-9 cursor-pointer gap-2 px-4`,
         "data-testid": `onboarding-welcome-next`,
-        onClick: renderCache[1] ||= e => r(`next`)
+        onClick: renderCache[1] ||= e => emitAlias(`next`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i)(`promptOnboarding.next`)), 1), resolveComponent(unref(pa), {
           class: `size-4`
@@ -15235,7 +15235,7 @@ var Die = {
       emit: emit
     }) {
       let n = vueLt(props, `modelValue`),
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -15254,7 +15254,7 @@ var Die = {
               l.value = s.value || i18nTranslate(`promptOnboarding.saveFailed`);
               return;
             }
-            r(`next`);
+            emitAlias(`next`);
           } finally {
             c.value = false;
           }
@@ -15269,7 +15269,7 @@ var Die = {
         variant: `ghost`,
         class: `h-9 cursor-pointer gap-1.5 px-3`,
         disabled: c.value,
-        onClick: renderCache[1] ||= e => r(`back`)
+        onClick: renderCache[1] ||= e => emitAlias(`back`)
       }, {
         default: H(() => [resolveComponent(unref(fa), {
           class: `size-4`
@@ -15443,9 +15443,9 @@ var ch = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
+      let propsAlias = props,
         r = vueLt(props, `open`),
-        i = emit,
+        emitAlias = emit,
         {
           t: a
         } = vueN(),
@@ -15456,10 +15456,10 @@ var ch = {
       });
       let computedResult = computed(() => {
         let lowercased = s.value.trim().toLowerCase();
-        return lowercased ? n.templates.filter(item => item.name.toLowerCase().includes(lowercased) || (item.description?.toLowerCase().includes(lowercased) ?? false) || item.category.name.toLowerCase().includes(lowercased)) : n.templates;
+        return lowercased ? propsAlias.templates.filter(item => item.name.toLowerCase().includes(lowercased) || (item.description?.toLowerCase().includes(lowercased) ?? false) || item.category.name.toLowerCase().includes(lowercased)) : propsAlias.templates;
       });
       function l(e) {
-        i(`select`, e), r.value = false;
+        emitAlias(`select`, e), r.value = false;
       }
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
@@ -15667,7 +15667,7 @@ var Sh = {
     }) {
       let eventAlias = event,
         r = vueLt(event, `interval`),
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -15736,7 +15736,7 @@ var Sh = {
               y.value = p.value || i18nTranslate(`promptOnboarding.saveFailed`);
               return;
             }
-            i(e ? `open-settings` : `complete`);
+            emitAlias(e ? `open-settings` : `complete`);
           } catch (e) {
             y.value = e instanceof Error ? e.message : i18nTranslate(`promptOnboarding.saveFailed`);
           } finally {
@@ -15803,7 +15803,7 @@ var Sh = {
         variant: `ghost`,
         class: `h-9 cursor-pointer gap-1.5 px-3`,
         disabled: !!v.value,
-        onClick: renderCache[2] ||= e => i(`back`)
+        onClick: renderCache[2] ||= e => emitAlias(`back`)
       }, {
         default: H(() => [resolveComponent(unref(fa), {
           class: `size-4`
@@ -15884,8 +15884,8 @@ var Sh = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         i = [`welcome`, `mode`, `recording`],
         {
           t: i18nTranslate
@@ -15893,12 +15893,12 @@ var Sh = {
         {
           settings: o
         } = toolIconR(),
-        s = ref(n.includeWelcome ? `welcome` : `mode`),
+        s = ref(propsAlias.includeWelcome ? `welcome` : `mode`),
         computedResult = computed(() => i.indexOf(s.value)),
-        l = ref(n.recommendedUsageMode ?? o.value.usageMode),
+        l = ref(propsAlias.recommendedUsageMode ?? o.value.usageMode),
         counter = ref(300),
         d = ref(null),
-        computedData = computed(() => s.value === `welcome` ? n.newRegistration ? {
+        computedData = computed(() => s.value === `welcome` ? propsAlias.newRegistration ? {
           title: i18nTranslate(`promptOnboarding.welcome.titleNew`),
           subtitle: i18nTranslate(`promptOnboarding.welcome.subtitleNew`)
         } : {
@@ -15912,8 +15912,8 @@ var Sh = {
           subtitle: i18nTranslate(`promptOnboarding.recording.subtitle`)
         }),
         p = computed(() => {
-          let credits = n.credits;
-          return !n.newRegistration || !credits || !(credits.claimed || credits.alreadyClaimed) ? null : credits.grantedCredits > 0 ? credits.grantedCredits : null;
+          let credits = propsAlias.credits;
+          return !propsAlias.newRegistration || !credits || !(credits.claimed || credits.alreadyClaimed) ? null : credits.grantedCredits > 0 ? credits.grantedCredits : null;
         });
       watch(s, () => {
         d.value?.scrollTo({
@@ -15921,7 +15921,7 @@ var Sh = {
         });
       });
       function m() {
-        n.includeWelcome && r(`welcome-complete`), s.value = `mode`;
+        propsAlias.includeWelcome && emitAlias(`welcome-complete`), s.value = `mode`;
       }
       return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `scrollContainer`,
@@ -15950,7 +15950,7 @@ var Sh = {
         "new-registration": props.newRegistration,
         credits: props.credits,
         "credits-loading": props.creditsLoading,
-        onRetryCredits: renderCache[0] ||= e => r(`retry-credits`),
+        onRetryCredits: renderCache[0] ||= e => emitAlias(`retry-credits`),
         onNext: m
       }, null, 8, [`platform`, `new-registration`, `credits`, `credits-loading`])) : s.value === `mode` ? (openBlock(), createBlock(OnboardingModeStep, {
         key: 1,
@@ -15965,8 +15965,8 @@ var Sh = {
         "onUpdate:interval": renderCache[4] ||= e => counter.value = e,
         "gift-credits": p.value,
         onBack: renderCache[5] ||= e => s.value = `mode`,
-        onComplete: renderCache[6] ||= e => r(`complete`),
-        onOpenSettings: renderCache[7] ||= e => r(`open-settings`)
+        onComplete: renderCache[6] ||= e => emitAlias(`complete`),
+        onOpenSettings: renderCache[7] ||= e => emitAlias(`open-settings`)
       }, null, 8, [`interval`, `gift-credits`]))])])], 512));
     }
   }),
@@ -15993,12 +15993,12 @@ var Sh = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
       function i(e) {
-        e || n(`reject`);
+        e || emitAlias(`reject`);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), {
         open: props.open,
@@ -16031,13 +16031,13 @@ var Sh = {
           }), createElementVNode(`div`, Pie, [resolveComponent(unref(uiSwitchR), {
             variant: `outline`,
             class: `h-9 cursor-pointer px-4`,
-            onClick: cache[0] ||= e => n(`reject`)
+            onClick: cache[0] ||= e => emitAlias(`reject`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(r)(`todoSyncAgreement.reject`)), 1)]),
             _: 1
           }), resolveComponent(unref(uiSwitchR), {
             class: `h-9 cursor-pointer px-4`,
-            onClick: cache[1] ||= e => n(`accept`)
+            onClick: cache[1] ||= e => emitAlias(`accept`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(r)(`todoSyncAgreement.accept`)), 1)]),
             _: 1
@@ -16076,14 +16076,14 @@ var Sh = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(CheckboxRoot), vueNt({
         "data-slot": `checkbox`
-      }, unref(a), {
-        class: unref(uiSwitchXt)(`border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[4px] border transition-colors group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50`, n.class)
+      }, unref(uiSwitchZResult), {
+        class: unref(uiSwitchXt)(`border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[4px] border transition-colors group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50`, propsAlias.class)
       }), {
         default: H(t => [resolveComponent(unref(CheckboxIndicator), {
           "data-slot": `checkbox-indicator`,
@@ -16121,22 +16121,22 @@ var Sh = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
         a = ref(false);
-      watch(() => n.open, value => {
+      watch(() => propsAlias.open, value => {
         value && (a.value = false);
       });
       let computedResult = computed(() => {
-        let fallbackValue = n.snapshot?.focusMinutes ?? 0,
+        let fallbackValue = propsAlias.snapshot?.focusMinutes ?? 0,
           t = fallbackValue / 60;
         return t < 0.1 ? `${fallbackValue}min` : `${Number.isInteger(t) ? String(t) : t.toFixed(1)}h`;
       });
       function s(e) {
-        a.value = e === true, r(`suppressChange`, a.value);
+        a.value = e === true, emitAlias(`suppressChange`, a.value);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), {
         open: props.open
@@ -16176,14 +16176,14 @@ var Sh = {
               size: `sm`,
               variant: `outline`,
               class: `cursor-pointer`,
-              onClick: cache[0] ||= e => r(`exit`)
+              onClick: cache[0] ||= e => emitAlias(`exit`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`exitReportReminder.exit`)), 1)]),
               _: 1
             }), resolveComponent(unref(uiSwitchR), {
               size: `sm`,
               class: `cursor-pointer`,
-              onClick: cache[1] ||= e => r(`generate`)
+              onClick: cache[1] ||= e => emitAlias(`generate`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`exitReportReminder.generate`)) + ` `, 1), resolveComponent(unref(pa), {
                 size: 14
@@ -16241,12 +16241,12 @@ var Vie = [`src`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = ref(null),
         r = ref(null),
         i = 0,
         a,
-        computedResult = computed(() => t.height > 0 ? t.height : Math.round(t.width / Uie));
+        computedResult = computed(() => propsAlias.height > 0 ? propsAlias.height : Math.round(propsAlias.width / Uie));
       function s(e) {
         let replaced = e.replace(`#`, ``);
         return [Number.parseInt(replaced.slice(0, 2), 16), Number.parseInt(replaced.slice(2, 4), 16), Number.parseInt(replaced.slice(4, 6), 16)];
@@ -16281,19 +16281,19 @@ var Vie = [`src`],
         context.clearRect(0, 0, o, d), context.drawImage(e, 0, 0, o, d);
         let imageData = context.getImageData(0, 0, o, d),
           p = imageData.data,
-          [m, h, g] = s(t.keyColor),
-          threshold = t.threshold,
-          v = Math.max(t.smoothness, 1);
+          [m, h, g] = s(propsAlias.keyColor),
+          threshold = propsAlias.threshold,
+          v = Math.max(propsAlias.smoothness, 1);
         for (let e = 0; e < p.length; e += 4) {
           let fallbackValue = p[e] ?? 0,
             r = p[e + 1] ?? 0,
             i = p[e + 2] ?? 0,
             a = 255;
-          if (t.keyMode === `green`) a = l(r - Math.max(fallbackValue, i), threshold, v);else {
+          if (propsAlias.keyMode === `green`) a = l(r - Math.max(fallbackValue, i), threshold, v);else {
             let e = Math.max(Math.abs(fallbackValue - m), Math.abs(r - h), Math.abs(i - g));
             e <= threshold ? a = 0 : e < threshold + v && (a = Math.round(c((e - threshold) / v) * 255));
           }
-          if (t.keyMode === `green` && a > 0) {
+          if (propsAlias.keyMode === `green` && a > 0) {
             let [t, o, s] = u(fallbackValue, r, i, a);
             p[e] = t, p[e + 1] = o, p[e + 2] = s;
           }
@@ -16341,7 +16341,7 @@ var Vie = [`src`],
         }), e.readyState >= 2 && m());
       }), onUnmounted(() => {
         p(), a?.removeEventListener(`change`, g), document.removeEventListener(`visibilitychange`, h);
-      }), watch(() => [t.src, t.keyMode, t.keyColor, t.threshold, t.smoothness, t.width, t.height], () => {
+      }), watch(() => [propsAlias.src, propsAlias.keyMode, propsAlias.keyColor, propsAlias.threshold, propsAlias.smoothness, propsAlias.width, propsAlias.height], () => {
         p();
         let e = r.value;
         e && e.load();
@@ -16529,7 +16529,7 @@ var Vie = [`src`],
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
@@ -16547,7 +16547,7 @@ var Vie = [`src`],
       })), 1), createElementVNode(`div`, mae, [resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         class: `cursor-pointer`,
-        onClick: renderCache[0] ||= e => n(`generate`)
+        onClick: renderCache[0] ||= e => emitAlias(`generate`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(r)(`todayWork.firstReportGuide.generate`)) + ` `, 1), resolveComponent(unref(pa), {
           size: 14
@@ -16557,7 +16557,7 @@ var Vie = [`src`],
         size: `sm`,
         variant: `outline`,
         class: `cursor-pointer`,
-        onClick: renderCache[1] ||= e => n(`dismiss`)
+        onClick: renderCache[1] ||= e => emitAlias(`dismiss`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(r)(`todayWork.firstReportGuide.dismiss`)), 1)]),
         _: 1
@@ -16804,11 +16804,11 @@ var Oae = [`data-kind`],
       item: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: n
         } = vueN(),
-        computedResult = computed(() => wg(t.item));
+        computedResult = computed(() => wg(propsAlias.item));
       return (ctx, renderCache) => computedResult.value.kind === `unknown` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: `lb-change`,
@@ -17343,7 +17343,7 @@ var Jae = [`aria-label`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         a = ref(null),
         o = ref(null),
         counter = ref(0),
@@ -17388,21 +17388,21 @@ var Jae = [`aria-label`],
         if (!t) return;
         let boundingClientRect = t.getBoundingClientRect(),
           a = qg(computedResult.value, e.clientX - boundingClientRect.left, e.clientY - boundingClientRect.top, eventAlias.bucketRange ?? undefined);
-        c.value = a?.dayIndex ?? null, i(`hover`, a ? {
+        c.value = a?.dayIndex ?? null, emitAlias(`hover`, a ? {
           ...a,
           clientX: e.clientX,
           clientY: e.clientY
         } : null);
       }
       function _() {
-        c.value = null, i(`hover`, null);
+        c.value = null, emitAlias(`hover`, null);
       }
       function v(e) {
         let t = o.value;
         if (!eventAlias.selectable || !t) return;
         let boundingClientRect = t.getBoundingClientRect(),
           a = qg(computedResult.value, e.clientX - boundingClientRect.left, e.clientY - boundingClientRect.top, eventAlias.bucketRange ?? undefined);
-        a && eventAlias.result.days[a.dayIndex]?.activeSec && i(`select`, a.dayIndex);
+        a && eventAlias.result.days[a.dayIndex]?.activeSec && emitAlias(`select`, a.dayIndex);
       }
       function y(e) {
         return u && cancelAnimationFrame(u), count = Math.max(e, window.devicePixelRatio || 1), c.value = null, m(), () => {
@@ -17741,7 +17741,7 @@ var soe = {
       emit: emit
     }) {
       let itemsAlias = items,
-        r = emit,
+        emitAlias = emit,
         i = vueA(() => preloadT(() => import(`./DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
         a = ref(null);
       function o() {
@@ -17814,12 +17814,12 @@ var soe = {
       }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`dayReplay.openToday`)), 1)]), createElementVNode(`button`, {
         type: `button`,
         class: `flex items-center gap-0.5 text-xs text-[#999] transition-colors hover:text-[#555] dark:text-muted-foreground dark:hover:text-foreground`,
-        onClick: renderCache[0] ||= e => r(`open`)
+        onClick: renderCache[0] ||= e => emitAlias(`open`)
       }, [createTextVNode(toDisplayString(unref(i18nTranslate)(`appBarcode.todayOpenWall`)) + ` `, 1), resolveComponent(unref(popoverA), {
         size: 13
       })])])]), createElementVNode(`div`, {
         class: `cursor-pointer`,
-        onClick: renderCache[2] ||= e => r(`open`)
+        onClick: renderCache[2] ||= e => emitAlias(`open`)
       }, [resolveComponent(BarcodeCanvas, {
         compact: ``,
         result: f.value,
@@ -17865,8 +17865,8 @@ var soe = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
@@ -17875,7 +17875,7 @@ var soe = {
       function s() {
         a.value || (a.value = true, localStorage.setItem(a_, `1`));
       }
-      watch(() => [n.container, n.ready, a.value], ([e, t, n], value, i) => {
+      watch(() => [propsAlias.container, propsAlias.ready, a.value], ([e, t, n], value, i) => {
         if (o.value = false, !e || !t || n) return;
         let a = true,
           c = () => {
@@ -17897,7 +17897,7 @@ var soe = {
         immediate: true
       });
       function c() {
-        s(), r(`jump`);
+        s(), emitAlias(`jump`);
       }
       return (ctx, cache) => (openBlock(), createBlock(playerR, {
         name: `scroll-hint`
@@ -18194,7 +18194,7 @@ var koe = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -18365,7 +18365,7 @@ var koe = {
       }
       function ue(e) {
         e || (d.value = false, f.value = true, setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
-          setTimeoutResult = null, r(`close`);
+          setTimeoutResult = null, emitAlias(`close`);
         }, Qoe));
       }
       function de(e) {
@@ -18373,7 +18373,7 @@ var koe = {
         fallbackValue instanceof Element && fallbackValue.closest(`[data-heatmap-cell]`) && e.preventDefault();
       }
       function fe(e) {
-        !e && !d.value && !f.value && r(`close`);
+        !e && !d.value && !f.value && emitAlias(`close`);
       }
       function pe(items) {
         let t = items.screenshotPath?.trim();
@@ -19117,7 +19117,7 @@ var ase = {
           captureGrowthObservation: n
         } = growthTelT(),
         eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -19381,7 +19381,7 @@ var ase = {
         }
       }
       function Ke() {
-        telemetryR(`action`, `first_report_guide_click`), i(`generate-first-report`);
+        telemetryR(`action`, `first_report_guide_click`), emitAlias(`generate-first-report`);
       }
       async function qe(e = false) {
         let t = n();
@@ -19494,7 +19494,7 @@ var ase = {
       })), 1), createElementVNode(`p`, Fse, [createTextVNode(toDisplayString(unref(i18nTranslate)(`todayWork.recordingStarted.pauseTip`)) + ` `, 1), createElementVNode(`button`, {
         type: `button`,
         class: `ml-1 cursor-pointer text-primary underline-offset-4 hover:underline`,
-        onClick: renderCache[0] ||= e => i(`navigate`, `settings`)
+        onClick: renderCache[0] ||= e => emitAlias(`navigate`, `settings`)
       }, toDisplayString(unref(i18nTranslate)(`todayWork.recordingStarted.openSettings`)), 1)]), computedData.value ? (openBlock(), createElementBlock(`p`, Ise, toDisplayString(unref(i18nTranslate)(`todayWork.recordingStarted.woodenFishTip`)), 1)) : createCommentVNode(``, true)])])) : (openBlock(), createElementBlock(`div`, Lse, [createElementVNode(`div`, Rse, [resolveComponent(unref(As), {
         size: 18,
         class: `text-primary/50`
@@ -19574,7 +19574,7 @@ var ase = {
         ref_key: `barcodeCard`,
         ref: w,
         "refresh-key": event.refreshKey,
-        onOpen: renderCache[4] ||= e => i(`navigate`, `heat-map-barcode`)
+        onOpen: renderCache[4] ||= e => emitAlias(`navigate`, `heat-map-barcode`)
       }, null, 8, [`refresh-key`]), createElementVNode(`section`, vce, [createElementVNode(`div`, yce, [createElementVNode(`div`, bce, [resolveComponent(unref(rs), {
         size: 13,
         "stroke-width": 1.5,
@@ -19625,7 +19625,7 @@ var ase = {
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           captureGrowthObservation: n
         } = growthTelT(),
@@ -19639,10 +19639,10 @@ var ase = {
       }
       function s() {
         let countAlias = count;
-        count = null, r.value && !t.disabled && countAlias?.(t.eventName, {
-          ...t.eventProps,
-          ...(t.panel ? {
-            panel: t.panel
+        count = null, r.value && !propsAlias.disabled && countAlias?.(propsAlias.eventName, {
+          ...propsAlias.eventProps,
+          ...(propsAlias.panel ? {
+            panel: propsAlias.panel
           } : {}),
           interaction: `explicit_open`
         });
@@ -19863,7 +19863,7 @@ var ase = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -19884,10 +19884,10 @@ var ase = {
         h = computed(() => computedData.value ? computedResult.value.filter(text => [eventAlias.displayName(text), text.nickname, text.email].some(item => item?.toLowerCase().includes(computedData.value))) : computedResult.value),
         g = computed(() => l.test(a.value.trim()) && !computedResult.value.some(item => item.email.toLowerCase() === computedData.value));
       function _(e) {
-        c.value = ``, f(e) ? r(`remove`, e) : r(`add`, e);
+        c.value = ``, f(e) ? emitAlias(`remove`, e) : emitAlias(`add`, e);
       }
       function v(e) {
-        f(e) || r(`add`, e), a.value = ``, s.value = null, c.value = ``;
+        f(e) || emitAlias(`add`, e), a.value = ``, s.value = null, c.value = ``;
       }
       async function y() {
         let trimmed = a.value.trim();
@@ -20537,7 +20537,7 @@ var TodoCommentBody = defineComponent({
       emit: emit
     }) {
       let itemsAlias = items,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -20558,7 +20558,7 @@ var TodoCommentBody = defineComponent({
           }, 3e3);
           return;
         }
-        o && clearTimeout(o), a.value = false, r(`remove`, itemsAlias.activity);
+        o && clearTimeout(o), a.value = false, emitAlias(`remove`, itemsAlias.activity);
       }
       return onMounted(() => {
         o && clearTimeout(o);
@@ -20578,7 +20578,7 @@ var TodoCommentBody = defineComponent({
         type: `button`,
         class: `inline-flex h-6 items-center justify-center rounded-md px-1 text-[#9ca3af] transition-colors hover:bg-[#f3f4f6] hover:text-[#111827]`,
         title: unref(i18nTranslate)(`todo.activity.reply`),
-        onClick: renderCache[0] ||= t => r(`reply`, items.activity)
+        onClick: renderCache[0] ||= t => emitAlias(`reply`, items.activity)
       }, [resolveComponent(unref(Qo), {
         size: 14,
         "stroke-width": 1.8
@@ -20616,7 +20616,7 @@ var Ole = [`innerHTML`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: n
         } = vueN(),
@@ -20624,11 +20624,11 @@ var Ole = [`innerHTML`],
         i = ref(false),
         a = ref(false),
         o = null,
-        computedResult = computed(() => Tv(t.html)),
+        computedResult = computed(() => Tv(propsAlias.html)),
         computedData = computed(() => i.value ? {} : {
           display: `-webkit-box`,
           WebkitBoxOrient: `vertical`,
-          WebkitLineClamp: String(t.maxLines),
+          WebkitLineClamp: String(propsAlias.maxLines),
           overflow: `hidden`
         });
       function l() {
@@ -20637,7 +20637,7 @@ var Ole = [`innerHTML`],
       }
       return onBeforeMount(() => {
         vueRt(l), r.value && typeof ResizeObserver < `u` && (o = new ResizeObserver(l), o.observe(r.value));
-      }), onMounted(() => o?.disconnect()), watch(() => t.html, () => {
+      }), onMounted(() => o?.disconnect()), watch(() => propsAlias.html, () => {
         i.value = false, vueRt(l);
       }), (e, renderCache) => (openBlock(), createElementBlock(`div`, null, [createElementVNode(`div`, {
         ref_key: `bodyRef`,
@@ -20835,7 +20835,7 @@ var Ole = [`innerHTML`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -20921,7 +20921,7 @@ var Ole = [`innerHTML`],
         });
       }
       function be(e) {
-        counter.value = e, eventAlias.todoId && r(`comment-count`, eventAlias.todoId, e);
+        counter.value = e, eventAlias.todoId && emitAlias(`comment-count`, eventAlias.todoId, e);
       }
       async function xe() {
         if (!eventAlias.todoId) return;
@@ -21303,7 +21303,7 @@ var Ole = [`innerHTML`],
       }
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: event.open,
-        "onUpdate:open": renderCache[8] ||= e => r(`update:open`, e)
+        "onUpdate:open": renderCache[8] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           "show-close-button": false,
@@ -21317,7 +21317,7 @@ var Ole = [`innerHTML`],
             type: `button`,
             class: `absolute right-4 top-4 z-10 flex size-8 items-center justify-center rounded-lg text-[#6b7280] transition-colors hover:bg-[#f3f4f6] hover:text-[#111827]`,
             "aria-label": unref(i18nTranslate)(`common.close`),
-            onClick: renderCache[0] ||= e => r(`update:open`, false)
+            onClick: renderCache[0] ||= e => emitAlias(`update:open`, false)
           }, [resolveComponent(unref(lucideT), {
             size: 18,
             "stroke-width": 1.8
@@ -21570,7 +21570,7 @@ var Ole = [`innerHTML`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
@@ -21587,20 +21587,20 @@ var Ole = [`innerHTML`],
         value && (o.value = ``);
       });
       function p(e) {
-        e && eventAlias.disabled || r(`update:open`, e);
+        e && eventAlias.disabled || emitAlias(`update:open`, e);
       }
       function m(text) {
         let part = text.trim().slice(0, jv);
-        part && (r(`select`, part), r(`update:open`, false));
+        part && (emitAlias(`select`, part), emitAlias(`update:open`, false));
       }
       function h(e) {
         e.isComposing || e.key === `Process` || e.keyCode === 229 || (e.preventDefault(), m(computedResult.value));
       }
       function g() {
-        r(`clear`), r(`update:open`, false);
+        emitAlias(`clear`), emitAlias(`update:open`, false);
       }
       function _(e) {
-        r(`remove-history`, e), r(`update:open`, false);
+        emitAlias(`remove-history`, e), emitAlias(`update:open`, false);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(popoverR), {
         open: event.open,
@@ -21720,8 +21720,8 @@ var Ole = [`innerHTML`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN();
@@ -21731,10 +21731,10 @@ var Ole = [`innerHTML`],
         });
       }
       function o(e) {
-        e && n.disabled || r(`update:open`, e);
+        e && propsAlias.disabled || emitAlias(`update:open`, e);
       }
       function s(e) {
-        r(`select`, e), r(`update:open`, false);
+        emitAlias(`select`, e), emitAlias(`update:open`, false);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(popoverR), {
         open: props.open,
@@ -21825,8 +21825,8 @@ var Ole = [`innerHTML`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -21837,7 +21837,7 @@ var Ole = [`innerHTML`],
         let e = ++s;
         try {
           let activities = await Y_.listActivities({
-            todoId: n.todoId,
+            todoId: propsAlias.todoId,
             filter: `comment`,
             threaded: true,
             limit: 3
@@ -21848,14 +21848,14 @@ var Ole = [`innerHTML`],
           e === s && (o.value = []);
         }
       }
-      watch(() => [n.todoId, n.refreshKey], () => {
-        n.commentCount > 0 || n.refreshKey > 0 ? c() : o.value = [];
+      watch(() => [propsAlias.todoId, propsAlias.refreshKey], () => {
+        propsAlias.commentCount > 0 || propsAlias.refreshKey > 0 ? c() : o.value = [];
       }, {
         immediate: true
-      }), watch(() => n.commentCount, (value, t) => {
+      }), watch(() => propsAlias.commentCount, (value, t) => {
         value > 0 && t === 0 && c();
       });
-      let computedResult = computed(() => n.commentCount === 0);
+      let computedResult = computed(() => propsAlias.commentCount === 0);
       function u(e) {
         return e.user.remark || e.user.nickname || e.user.email || i18nTranslate(`todo.activity.unknownUser`);
       }
@@ -21870,23 +21870,23 @@ var Ole = [`innerHTML`],
         key: 0,
         type: `button`,
         class: `text-xs font-medium text-[#16a34a] transition-colors hover:text-[#15803d]`,
-        onClick: renderCache[0] ||= e => r(`open`)
-      }, toDisplayString(unref(i18nTranslate)(`todo.activity.viewAll`)), 1))]), o.value.length ? (openBlock(), createElementBlock(`div`, ade, [(openBlock(true), createElementBlock(Fragment, null, renderList(o.value, e => (openBlock(), createElementBlock(`button`, {
-        key: e.id,
+        onClick: renderCache[0] ||= e => emitAlias(`open`)
+      }, toDisplayString(unref(i18nTranslate)(`todo.activity.viewAll`)), 1))]), o.value.length ? (openBlock(), createElementBlock(`div`, ade, [(openBlock(true), createElementBlock(Fragment, null, renderList(o.value, row => (openBlock(), createElementBlock(`button`, {
+        key: row.id,
         type: `button`,
         class: `flex w-full items-start gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[#f9fafb]`,
-        onClick: renderCache[1] ||= e => r(`open`)
-      }, [createElementVNode(`span`, ode, [e.user.avatarUrl ? (openBlock(), createElementBlock(`img`, {
+        onClick: renderCache[1] ||= e => emitAlias(`open`)
+      }, [createElementVNode(`span`, ode, [row.user.avatarUrl ? (openBlock(), createElementBlock(`img`, {
         key: 0,
-        src: e.user.avatarUrl,
+        src: row.user.avatarUrl,
         class: `size-full object-cover`
-      }, null, 8, sde)) : (openBlock(), createElementBlock(`span`, cde, toDisplayString(Array.from(u(e))[0]?.toUpperCase() || `?`), 1))]), createElementVNode(`span`, lde, [createElementVNode(`span`, ude, [createElementVNode(`span`, dde, toDisplayString(u(e)), 1), createElementVNode(`span`, {
+      }, null, 8, sde)) : (openBlock(), createElementBlock(`span`, cde, toDisplayString(Array.from(u(row))[0]?.toUpperCase() || `?`), 1))]), createElementVNode(`span`, lde, [createElementVNode(`span`, ude, [createElementVNode(`span`, dde, toDisplayString(u(row)), 1), createElementVNode(`span`, {
         class: `shrink-0 text-[#9ca3af]`,
-        title: unref(Sv)(e.createdAt)
-      }, toDisplayString(unref(xv)(e.createdAt, unref(a), unref(i18nTranslate))), 9, fde)]), createElementVNode(`span`, pde, toDisplayString(e.content), 1)])]))), 128))])) : createCommentVNode(``, true), createElementVNode(`button`, {
+        title: unref(Sv)(row.createdAt)
+      }, toDisplayString(unref(xv)(row.createdAt, unref(a), unref(i18nTranslate))), 9, fde)]), createElementVNode(`span`, pde, toDisplayString(row.content), 1)])]))), 128))])) : createCommentVNode(``, true), createElementVNode(`button`, {
         type: `button`,
         class: `mt-2 flex h-9 w-full items-center rounded-lg border border-[#e5e7eb] bg-white px-3 text-left text-sm text-[#9ca3af] transition-colors hover:border-[#d1d5db]`,
-        onClick: renderCache[2] ||= e => r(`open`)
+        onClick: renderCache[2] ||= e => emitAlias(`open`)
       }, toDisplayString(computedResult.value ? unref(i18nTranslate)(`todo.activity.summaryEmpty`) : unref(i18nTranslate)(`todo.activity.placeholder`)), 1)]));
     }
   }),
@@ -22213,7 +22213,7 @@ var Dde = [`data-drag-mode`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -22678,7 +22678,7 @@ var Dde = [`data-drag-mode`],
       });
       function Ge() {
         let e = p.value;
-        e && eventAlias.hasMore && !eventAlias.loadingMore && e.scrollHeight - e.scrollTop - e.clientHeight <= Sfe && r(`loadMore`);
+        e && eventAlias.hasMore && !eventAlias.loadingMore && e.scrollHeight - e.scrollTop - e.clientHeight <= Sfe && emitAlias(`loadMore`);
       }
       watch([() => M.value.length, () => eventAlias.hasMore], () => {
         vueRt(Ge);
@@ -22831,7 +22831,7 @@ var Dde = [`data-drag-mode`],
           originStart: s,
           originEnd: c
         } = t;
-        vt(), n && (yt(i), (a !== s || o !== c) && r(`reschedule`, {
+        vt(), n && (yt(i), (a !== s || o !== c) && emitAlias(`reschedule`, {
           taskId: i,
           start: Gv(a),
           end: Gv(o)
@@ -22857,7 +22857,7 @@ var Dde = [`data-drag-mode`],
           rt = null;
           return;
         }
-        r(`select`, e.key);
+        emitAlias(`select`, e.key);
       }
       function St() {
         _.value = Hv();
@@ -23009,7 +23009,7 @@ var Dde = [`data-drag-mode`],
         style: vueNr({
           width: `${qv}px`
         }),
-        onClick: withDirectives(e => r(`select`, a.key), [`stop`])
+        onClick: withDirectives(e => emitAlias(`select`, a.key), [`stop`])
       }, [withCtx(t.$slots, `task`, {
         task: a.row.task,
         rangeLabel: a.rangeLabel,
@@ -23072,7 +23072,7 @@ var Dde = [`data-drag-mode`],
         }),
         "aria-label": unref(i18nTranslate)(`todo.action.comments`),
         onPointerdown: renderCache[4] ||= withDirectives(() => {}, [`stop`]),
-        onClick: withDirectives(e => r(`openComments`, a.key), [`stop`]),
+        onClick: withDirectives(e => emitAlias(`openComments`, a.key), [`stop`]),
         onMouseenter: e => Ye(a, e),
         onMouseleave: Xe
       }, [resolveComponent(unref(ts), {
@@ -23102,7 +23102,7 @@ var Dde = [`data-drag-mode`],
         "aria-label": P(a),
         onPointerdown: e => lt(a, `move`, e),
         onClick: e => bt(a, e),
-        onKeydown: [playerT(withDirectives(e => r(`select`, a.key), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(e => r(`select`, a.key), [`prevent`, `stop`]), [`space`])],
+        onKeydown: [playerT(withDirectives(e => emitAlias(`select`, a.key), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(e => emitAlias(`select`, a.key), [`prevent`, `stop`]), [`space`])],
         onMouseenter: e => Ye(a, e),
         onMouseleave: Xe,
         onFocus: e => Ye(a, e),
@@ -23171,7 +23171,7 @@ var Dde = [`data-drag-mode`],
         type: `button`,
         class: `inline-flex h-8 items-center justify-center rounded-lg border border-[#e5e7eb] bg-white px-4 font-medium text-[#4b5563] transition-colors hover:border-[#bbf7d0] hover:bg-[#f0fdf4] hover:text-[#16a34a] disabled:cursor-not-allowed disabled:opacity-60`,
         disabled: event.loadingMore,
-        onClick: renderCache[5] ||= withDirectives(e => r(`loadMore`), [`stop`])
+        onClick: renderCache[5] ||= withDirectives(e => emitAlias(`loadMore`), [`stop`])
       }, toDisplayString(event.loadingMore ? unref(i18nTranslate)(`todo.loadingMore`) : unref(i18nTranslate)(`todo.loadMore`)), 9, ofe)) : (openBlock(), createElementBlock(`span`, sfe, toDisplayString(unref(i18nTranslate)(`todo.loadedAll`)), 1))], 4)) : createCommentVNode(``, true)], 4)], 34), Ne.value ? (openBlock(), createElementBlock(`div`, {
         key: 0,
         ref_key: `cardEl`,
@@ -23299,7 +23299,7 @@ var kfe = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -23390,7 +23390,7 @@ var kfe = {
           pinned: Qv(t),
           overStatus: null,
           dropIndex: null
-        }, e.dataTransfer && (e.dataTransfer.effectAllowed = `move`, e.dataTransfer.setData(`text/plain`, String(t.id))), r(`dragStart`);
+        }, e.dataTransfer && (e.dataTransfer.effectAllowed = `move`, e.dataTransfer.setData(`text/plain`, String(t.id))), emitAlias(`dragStart`);
       }
       function x(e, t) {
         let n = o.value;
@@ -23423,7 +23423,7 @@ var kfe = {
             r = e.filter(item => Qv(item)).length;
           emptyItems = Ofe(i.pinned ? e.slice(0, r) : e.slice(r), i.pinned ? a : a - r, found, eventAlias.sortDirection);
         }
-        r(`move`, {
+        emitAlias(`move`, {
           taskId: found.id,
           status: t.status,
           sortOrders: emptyItems
@@ -23463,7 +23463,7 @@ var kfe = {
         class: normalizeClass([`group relative select-none rounded-lg border p-3 text-left transition-colors`, T(n)]),
         "data-board-task-id": n.id,
         draggable: event.canManage(n),
-        onClick: withDirectives(e => r(`select`, n.id), [`stop`]),
+        onClick: withDirectives(e => emitAlias(`select`, n.id), [`stop`]),
         onDragstart: e => b(e, n, s.status),
         onDragend: w
       }, [y.value?.taskId === n.id ? (openBlock(), createElementBlock(`span`, {
@@ -23488,7 +23488,7 @@ var kfe = {
         type: `button`,
         class: `inline-flex h-8 shrink-0 items-center justify-center rounded-lg text-xs font-medium text-[#9ca3af] transition-colors hover:bg-[#f9fafb] hover:text-[#16a34a] disabled:cursor-not-allowed disabled:opacity-60`,
         disabled: event.loadingMore,
-        onClick: cache[1] ||= withDirectives(e => r(`loadMore`), [`stop`])
+        onClick: cache[1] ||= withDirectives(e => emitAlias(`loadMore`), [`stop`])
       }, toDisplayString(event.loadingMore ? unref(i18nTranslate)(`todo.loadingMore`) : unref(i18nTranslate)(`todo.board.unloaded`, {
         count: s.total - s.loaded
       })), 9, Ife)) : createCommentVNode(``, true)], 2)], 42, Afe))), 128))], 4)]));
@@ -23656,7 +23656,7 @@ var Kfe = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -23780,7 +23780,7 @@ var Kfe = {
         if (!i) return;
         let a = n.schedule.due + i,
           o = Uv(n.schedule.start) === n.dueDay || n.schedule.start > a ? n.schedule.start + i : n.schedule.start;
-        r(`reschedule`, {
+        emitAlias(`reschedule`, {
           taskId: n.task.id,
           start: Gv(o),
           end: Gv(a)
@@ -23794,10 +23794,10 @@ var Kfe = {
         };
       }
       function M(e, t) {
-        e.target?.closest(`[data-calendar-chip], [data-calendar-more], [data-calendar-day], [data-calendar-popover]`) || r(`create`, te(t.day));
+        e.target?.closest(`[data-calendar-chip], [data-calendar-more], [data-calendar-day], [data-calendar-popover]`) || emitAlias(`create`, te(t.day));
       }
       function ne(e, t) {
-        e.preventDefault(), u.value = null, r(`contextMenu`, {
+        e.preventDefault(), u.value = null, emitAlias(`contextMenu`, {
           clientX: e.clientX,
           clientY: e.clientY,
           ...te(t.day)
@@ -23844,7 +23844,7 @@ var Kfe = {
         "data-calendar-day": ``,
         class: normalizeClass([`flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-medium tabular-nums transition-colors`, T(e)]),
         title: unref(i18nTranslate)(`todo.calendar.openWeek`),
-        onClick: withDirectives(t => r(`openWeek`, e.day), [`stop`])
+        onClick: withDirectives(t => emitAlias(`openWeek`, e.day), [`stop`])
       }, toDisplayString(e.date), 11, Xfe)]), (openBlock(true), createElementBlock(Fragment, null, renderList(e.visible, e => (openBlock(), createElementBlock(`div`, {
         key: e.task.id,
         "data-calendar-chip": ``,
@@ -23853,8 +23853,8 @@ var Kfe = {
         class: normalizeClass([`flex h-5 min-w-0 shrink-0 select-none items-center gap-1 rounded px-1 text-[11px] leading-5 transition-colors`, y(e)]),
         draggable: v(e),
         title: C(e),
-        onClick: withDirectives(t => r(`select`, e.task.id), [`stop`]),
-        onKeydown: [playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`space`])],
+        onClick: withDirectives(t => emitAlias(`select`, e.task.id), [`stop`]),
+        onKeydown: [playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`space`])],
         onDragstart: t => k(t, e),
         onDragend: D
       }, [createElementVNode(`span`, {
@@ -23897,8 +23897,8 @@ var Kfe = {
         class: normalizeClass([`flex h-6 min-w-0 shrink-0 select-none items-center gap-1.5 rounded px-1.5 text-xs transition-colors`, y(e)]),
         draggable: v(e),
         title: C(e),
-        onClick: withDirectives(t => r(`select`, e.task.id), [`stop`]),
-        onKeydown: [playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`space`])],
+        onClick: withDirectives(t => emitAlias(`select`, e.task.id), [`stop`]),
+        onKeydown: [playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`space`])],
         onDragstart: t => k(t, e),
         onDragend: D
       }, [createElementVNode(`span`, {
@@ -23951,7 +23951,7 @@ var Kfe = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -24122,7 +24122,7 @@ var Kfe = {
           originStart: s,
           originDue: c
         } = t;
-        se(), n && (ce(), (a !== s || o !== c) && r(`reschedule`, {
+        se(), n && (ce(), (a !== s || o !== c) && emitAlias(`reschedule`, {
           taskId: i,
           start: Gv(a),
           end: Gv(o)
@@ -24147,7 +24147,7 @@ var Kfe = {
         j && (j = false, e.stopPropagation());
       }
       function ue(e, t) {
-        t.stopPropagation(), r(`select`, e);
+        t.stopPropagation(), emitAlias(`select`, e);
       }
       function de(e, t) {
         let r = e.currentTarget,
@@ -24160,10 +24160,10 @@ var Kfe = {
         };
       }
       function fe(e, t) {
-        e.target?.closest(`[data-week-item]`) || r(`create`, de(e, t));
+        e.target?.closest(`[data-week-item]`) || emitAlias(`create`, de(e, t));
       }
       function pe(e, t) {
-        e.preventDefault(), r(`contextMenu`, {
+        e.preventDefault(), emitAlias(`contextMenu`, {
           clientX: e.clientX,
           clientY: e.clientY,
           ...de(e, t)
@@ -24174,7 +24174,7 @@ var Kfe = {
         let boundingClientRect = e.currentTarget.getBoundingClientRect(),
           i = Math.min(6, Math.max(0, Math.floor((e.clientX - boundingClientRect.left) / (boundingClientRect.width / 7)))),
           a = ey(eventAlias.startDay + i);
-        r(`contextMenu`, {
+        emitAlias(`contextMenu`, {
           clientX: e.clientX,
           clientY: e.clientY,
           start: `${a}T09:30`,
@@ -24255,7 +24255,7 @@ var Kfe = {
         title: E(e.task, e.schedule),
         onPointerdown: t => M(`lane`, `move`, e.task, e.schedule, t),
         onClick: t => ue(e.task.id, t),
-        onKeydown: [playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`space`])]
+        onKeydown: [playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`space`])]
       }, [createElementVNode(`span`, {
         class: normalizeClass([`min-w-0 truncate`, {
           "line-through": e.task.status === `done`
@@ -24306,7 +24306,7 @@ var Kfe = {
         title: E(e.task, e.schedule),
         onPointerdown: t => M(`timed`, `move`, e.task, e.schedule, t),
         onClick: t => ue(e.task.id, t),
-        onKeydown: [playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => r(`select`, e.task.id), [`prevent`, `stop`]), [`space`])]
+        onKeydown: [playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`enter`]), playerT(withDirectives(t => emitAlias(`select`, e.task.id), [`prevent`, `stop`]), [`space`])]
       }, [D(e) >= 34 ? (openBlock(), createElementBlock(Fragment, {
         key: 0
       }, [createElementVNode(`div`, {
@@ -24379,7 +24379,7 @@ var Kfe = {
     setup(event, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN();
@@ -24401,7 +24401,7 @@ var Kfe = {
         } catch {}
       });
       let computedData = computed(() => ty(a.value, c.value));
-      watch([a, () => computedData.value.startDay, () => computedData.value.endDay], () => n(`rangeChange`, {
+      watch([a, () => computedData.value.startDay, () => computedData.value.endDay], () => emitAlias(`rangeChange`, {
         mode: a.value,
         start: ey(computedData.value.startDay),
         end: ey(computedData.value.endDay)
@@ -24484,7 +24484,7 @@ var Kfe = {
       }
       function C() {
         let e = b.value;
-        S(), e && n(`create`, {
+        S(), e && emitAlias(`create`, {
           start: e.start,
           end: e.end
         });
@@ -24564,9 +24564,9 @@ var Kfe = {
         now: o.value,
         "selected-task-id": event.selectedTaskId,
         "can-manage": event.canManage,
-        onSelect: renderCache[3] ||= e => n(`select`, e),
-        onReschedule: renderCache[4] ||= e => n(`reschedule`, e),
-        onCreate: renderCache[5] ||= e => n(`create`, e),
+        onSelect: renderCache[3] ||= e => emitAlias(`select`, e),
+        onReschedule: renderCache[4] ||= e => emitAlias(`reschedule`, e),
+        onCreate: renderCache[5] ||= e => emitAlias(`create`, e),
         onOpenWeek: _,
         onContextMenu: x
       }, null, 8, [`tasks`, `start-day`, `anchor-day`, `today-day`, `now`, `selected-task-id`, `can-manage`])) : (openBlock(), createBlock(TodoCalendarWeek, {
@@ -24577,9 +24577,9 @@ var Kfe = {
         now: o.value,
         "selected-task-id": event.selectedTaskId,
         "can-manage": event.canManage,
-        onSelect: renderCache[6] ||= e => n(`select`, e),
-        onReschedule: renderCache[7] ||= e => n(`reschedule`, e),
-        onCreate: renderCache[8] ||= e => n(`create`, e),
+        onSelect: renderCache[6] ||= e => emitAlias(`select`, e),
+        onReschedule: renderCache[7] ||= e => emitAlias(`reschedule`, e),
+        onCreate: renderCache[8] ||= e => emitAlias(`create`, e),
         onContextMenu: x
       }, null, 8, [`tasks`, `start-day`, `today-day`, `now`, `selected-task-id`, `can-manage`])), b.value ? (openBlock(), createElementBlock(`div`, {
         key: 2,
@@ -24684,7 +24684,7 @@ var Kfe = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -24782,7 +24782,7 @@ var Kfe = {
         if (!n || !f(t)) return;
         e.preventDefault();
         let taskId = n.taskId;
-        b(), r(`changePriority`, {
+        b(), emitAlias(`changePriority`, {
           taskId: taskId,
           priority: Gfe(t) ? `high` : `medium`
         });
@@ -24816,7 +24816,7 @@ var Kfe = {
         key: n.id,
         class: normalizeClass([`select-none rounded-lg border p-2.5 text-left transition-colors`, h(n)]),
         draggable: event.canManage(n),
-        onClick: withDirectives(e => r(`select`, n.id), [`stop`]),
+        onClick: withDirectives(e => emitAlias(`select`, n.id), [`stop`]),
         onDragstart: e => x(e, n, t.id),
         onDragend: b
       }, [createElementVNode(`div`, Gpe, [createElementVNode(`button`, {
@@ -24825,7 +24825,7 @@ var Kfe = {
         disabled: !event.canManage(n),
         "aria-label": unref(i18nTranslate)(`todo.matrix.complete`),
         title: unref(i18nTranslate)(`todo.matrix.complete`),
-        onClick: withDirectives(e => r(`toggleDone`, n), [`stop`])
+        onClick: withDirectives(e => emitAlias(`toggleDone`, n), [`stop`])
       }, [resolveComponent(unref(checkT), {
         size: 12,
         "stroke-width": 3
@@ -24833,11 +24833,11 @@ var Kfe = {
         type: `button`,
         class: `w-full text-left text-sm font-semibold leading-5 text-[#111827]`,
         title: n.title,
-        onClick: withDirectives(e => r(`select`, n.id), [`stop`])
+        onClick: withDirectives(e => emitAlias(`select`, n.id), [`stop`])
       }, [createElementVNode(`span`, Ype, toDisplayString(n.title), 1)], 8, Jpe), createElementVNode(`div`, Xpe, [createElementVNode(`button`, {
         type: `button`,
         class: normalizeClass([`inline-flex items-center gap-1 rounded-md border border-transparent px-1 py-0.5 transition-colors`, _(n)]),
-        onClick: withDirectives(e => r(`editDue`, n), [`stop`])
+        onClick: withDirectives(e => emitAlias(`editDue`, n), [`stop`])
       }, [resolveComponent(unref(heatRangeC), {
         size: 13,
         "stroke-width": 1.8
@@ -25332,20 +25332,20 @@ var Eme = [`src`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: i18nTranslate
         } = vueN(),
         r = ref(false);
-      watch(() => t.avatarUrl, () => {
+      watch(() => propsAlias.avatarUrl, () => {
         r.value = false;
       });
-      let computedResult = computed(() => Tae(t.colorKey)),
-        computedData = computed(() => Eae(t.name, i18nTranslate(`leaderboard.anonymousAvatar`))),
+      let computedResult = computed(() => Tae(propsAlias.colorKey)),
+        computedData = computed(() => Eae(propsAlias.name, i18nTranslate(`leaderboard.anonymousAvatar`))),
         o = computed(() => ({
-          width: `${t.size}px`,
-          height: `${t.size}px`,
-          fontSize: `${Math.round(t.size * 0.42)}px`,
+          width: `${propsAlias.size}px`,
+          height: `${propsAlias.size}px`,
+          fontSize: `${Math.round(propsAlias.size * 0.42)}px`,
           "--avatar-bg": computedResult.value.background,
           "--avatar-fg": computedResult.value.color
         }));
@@ -25702,7 +25702,7 @@ var kme = {
     }) {
       let eventAlias = event,
         r = vueLt(event, `open`),
-        i = emit,
+        emitAlias = emit,
         a = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         {
           t: i18nTranslate
@@ -25754,7 +25754,7 @@ var kme = {
         return e.remark?.trim() || e.nickname?.trim() || e.email.split(`@`)[0] || e.email;
       }
       function ae(e) {
-        y.value = e, i(`changed`, e);
+        y.value = e, emitAlias(`changed`, e);
       }
       async function oe() {
         let e = ++j;
@@ -25827,7 +25827,7 @@ var kme = {
           name: ie(e)
         })), trackActionEvent(`feature_map_heat_click`, {
           entry: `${t}_${eventAlias.context}`
-        }), i(`added`, e);
+        }), emitAlias(`added`, e);
       }
       async function fe() {
         let e = u.value;
@@ -26295,10 +26295,10 @@ var kme = {
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectRoot), vueNt({
         "data-slot": `select`
-      }, unref(n)), {
+      }, unref(uiSwitchZResult)), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
@@ -26368,19 +26368,19 @@ var kme = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectPortal), null, {
         default: H(() => [resolveComponent(unref(SelectContent), vueNt({
           "data-slot": `select-content`,
           "data-align-trigger": props.position === `item-aligned`
         }, {
           ...ctx.$attrs,
-          ...unref(a)
+          ...unref(uiSwitchZResult)
         }, {
-          class: unref(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 cn-menu-translucent relative z-50 !max-h-[min(20rem,calc(100vh-2rem))] origin-(--reka-select-content-transform-origin) overflow-hidden data-[align-trigger=true]:animate-none`, props.position === `popper` && `data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1`, n.class)
+          class: unref(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 cn-menu-translucent relative z-50 !max-h-[min(20rem,calc(100vh-2rem))] origin-(--reka-select-content-transform-origin) overflow-hidden data-[align-trigger=true]:animate-none`, props.position === `popper` && `data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1`, propsAlias.class)
         }), {
           default: H(() => [resolveComponent(unref(SelectScrollUpButtonComponent)), resolveComponent(unref(SelectViewport), {
             "data-position": props.position,
@@ -26407,12 +26407,12 @@ var kme = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectGroup), vueNt({
         "data-slot": `select-group`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`scroll-my-1 p-1`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`scroll-my-1 p-1`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -26439,13 +26439,13 @@ var kme = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectItem), vueNt({
         "data-slot": `select-item`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*=size-])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full cursor-default items-center outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*=size-])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full cursor-default items-center outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
         default: H(() => [createElementVNode(`span`, oge, [resolveComponent(unref(SelectItemIndicator), null, {
           default: H(() => [withCtx(ctx.$slots, `indicator-icon`, {}, () => [resolveComponent(unref(checkT), {
@@ -26473,10 +26473,10 @@ var kme = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectLabel), {
         "data-slot": `select-label`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground px-1.5 py-1 text-xs`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground px-1.5 py-1 text-xs`, propsAlias.class))
       }, {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -26495,13 +26495,13 @@ var kme = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectScrollDownButton), vueNt({
         "data-slot": `select-scroll-down-button`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(PopperContentS))])]),
         _: 3
@@ -26520,13 +26520,13 @@ var kme = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectScrollUpButton), vueNt({
         "data-slot": `select-scroll-up-button`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(In))])]),
         _: 3
@@ -26553,12 +26553,12 @@ var kme = {
     },
     setup(count) {
       let countAlias = count,
-        r = uiSwitchLt(countAlias, `class`, `size`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(countAlias, `class`, `size`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectTrigger), vueNt({
         "data-slot": `select-trigger`,
         "data-size": count.size
-      }, unref(i), {
+      }, unref(uiSwitchBResult), {
         class: unref(uiSwitchXt)(`border-input data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-lg border bg-transparent py-2 pr-2 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*=size-])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0`, countAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`), resolveComponent(unref(SelectIcon), {
@@ -26583,10 +26583,10 @@ var kme = {
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(SelectValue), vueNt({
         "data-slot": `select-value`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -26713,7 +26713,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
@@ -26737,7 +26737,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
         eventAlias.disabled || s.value || (s.value = true, u());
       }
       function f(e) {
-        s.value = false, c.value = e, e !== eventAlias.modelValue && r(`update:modelValue`, e);
+        s.value = false, c.value = e, e !== eventAlias.modelValue && emitAlias(`update:modelValue`, e);
       }
       function p() {
         let e = $y(c.value);
@@ -26745,7 +26745,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
       }
       function m(e) {
         let t = fge($y(c.value) ?? eventAlias.modelValue, e);
-        c.value = eventAlias.min && t < eventAlias.min ? eventAlias.min : t, c.value !== eventAlias.modelValue && r(`update:modelValue`, c.value), d();
+        c.value = eventAlias.min && t < eventAlias.min ? eventAlias.min : t, c.value !== eventAlias.modelValue && emitAlias(`update:modelValue`, c.value), d();
       }
       function h(e) {
         e.key === `ArrowDown` || e.key === `ArrowUp` ? (e.preventDefault(), m(e.key === `ArrowDown` ? 1 : -1)) : e.key === `Enter` ? (e.preventDefault(), p(), s.value = false) : e.key === `Escape` && (c.value = eventAlias.modelValue);
@@ -26890,20 +26890,20 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: o
         } = vueN(),
         s = ref(null),
         c = ref(null),
-        l = popoverO(popoverD()),
-        text = l.toString();
+        popoverOResult = popoverO(popoverD()),
+        text = popoverOResult.toString();
       function d(e) {
         try {
           return fn(e);
         } catch {
-          return l;
+          return popoverOResult;
         }
       }
       let computedResult = computed(() => eventAlias.modelValue.start.slice(0, 10)),
@@ -26996,7 +26996,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
         }));
       });
       function D(e) {
-        eventAlias.disabled || (y.value = e.toString(), i(`update:modelValue`, lge(eventAlias.modelValue, eventAlias.target, e.toString())), i(`update:target`, `due`));
+        eventAlias.disabled || (y.value = e.toString(), emitAlias(`update:modelValue`, lge(eventAlias.modelValue, eventAlias.target, e.toString())), emitAlias(`update:target`, `due`));
       }
       function O(e) {
         v.value = v.value.add({
@@ -27041,7 +27041,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
         invalid: !m.value
       }]);
       function ee(e, t) {
-        i(`update:modelValue`, e === `start` ? Xy(eventAlias.modelValue, `${computedResult.value}T${t}`) : {
+        emitAlias(`update:modelValue`, e === `start` ? Xy(eventAlias.modelValue, `${computedResult.value}T${t}`) : {
           ...eventAlias.modelValue,
           end: `${computedData.value}T${t}`
         });
@@ -27083,7 +27083,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
           }];
         }),
         ne = e => eventAlias.modelValue.start === `${e}T${eventAlias.quickStart}` && eventAlias.modelValue.end === `${e}T${eventAlias.quickEnd}`,
-        N = e => i(`update:modelValue`, {
+        N = e => emitAlias(`update:modelValue`, {
           start: `${e}T${eventAlias.quickStart}`,
           end: `${e}T${eventAlias.quickEnd}`
         });
@@ -27167,13 +27167,13 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
         "data-active": event.target === t.boundary,
         "data-selected-datetime": t.value,
         class: normalizeClass([`flex items-center gap-2 rounded-lg border px-2.5 py-2 transition-colors`, event.target === t.boundary ? `border-primary/50 bg-primary/5` : `border-border`]),
-        onFocusin: e => i(`update:target`, t.boundary)
+        onFocusin: e => emitAlias(`update:target`, t.boundary)
       }, [createElementVNode(`button`, {
         type: `button`,
         class: `flex min-w-0 flex-1 flex-col items-start gap-0.5 rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-ring`,
         "aria-pressed": event.target === t.boundary,
         disabled: event.disabled,
-        onClick: e => i(`update:target`, t.boundary)
+        onClick: e => emitAlias(`update:target`, t.boundary)
       }, [createElementVNode(`span`, Age, toDisplayString(t.label), 1), createElementVNode(`span`, {
         class: normalizeClass([`max-w-full truncate text-sm font-semibold`, t.invalid ? `text-destructive` : `text-foreground`])
       }, toDisplayString(T(t.value.slice(0, 10))), 3)], 8, kge), createElementVNode(`div`, jge, [resolveComponent(TodoTimeInput, {
@@ -27195,7 +27195,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
         class: `h-7 px-2 text-xs`,
         "aria-pressed": t.active,
         disabled: event.disabled,
-        onClick: e => i(`update:modelValue`, t.apply())
+        onClick: e => emitAlias(`update:modelValue`, t.apply())
       }, {
         default: H(() => [createTextVNode(toDisplayString(t.label), 1)]),
         _: 2
@@ -28942,7 +28942,7 @@ var Qge = {
     }) {
       let n = Ud(`todo_create_impression`),
         eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: s
@@ -30164,7 +30164,7 @@ var Qge = {
           if (t !== bo) return;
           Zn.value = e instanceof Error ? e.message : i18nTranslate(`todo.error.loadFailed`);
         } finally {
-          i(`openTaskRequestHandled`, e.requestId);
+          emitAlias(`openTaskRequestHandled`, e.requestId);
         }
       }
       function So() {
@@ -33699,7 +33699,7 @@ var Qge = {
             key: e.id,
             type: `button`,
             class: `flex w-full items-center justify-between gap-3 rounded-lg border border-[#e5e7eb] bg-[#f9fafb] px-3 py-2.5 text-left transition-colors hover:border-[#86d9c8] hover:bg-[#f0fdfa]`,
-            onClick: withDirectives(t => i(`openMilestone`, e.id), [`stop`])
+            onClick: withDirectives(t => emitAlias(`openMilestone`, e.id), [`stop`])
           }, [createElementVNode(`span`, fSe, [createElementVNode(`strong`, pSe, toDisplayString(e.title), 1), createElementVNode(`small`, mSe, [createTextVNode(toDisplayString(e.date), 1), e.time ? (openBlock(), createElementBlock(Fragment, {
             key: 0
           }, [createTextVNode(` · ` + toDisplayString(unref(ky)(e.time)), 1)], 64)) : createCommentVNode(``, true)])]), createElementVNode(`span`, {
@@ -34942,14 +34942,14 @@ var Qge = {
       orientation: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `group`,
         "data-slot": `button-group`,
-        "data-orientation": t.orientation,
+        "data-orientation": propsAlias.orientation,
         class: normalizeClass(unref(uiSwitchXt)(unref(lw)({
-          orientation: t.orientation
-        }), t.class))
+          orientation: propsAlias.orientation
+        }), propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 10, sw));
     }
   }),
@@ -34964,7 +34964,7 @@ var Qge = {
       orientation: `horizontal`
     }
   }),
-  uw = uiSwitchMt((e, t) => {
+  uiSwitchMtResult = uiSwitchMt((e, t) => {
     t.exports = function () {
       return typeof Promise == `function` && Promise.prototype && Promise.prototype.then;
     };
@@ -35918,8 +35918,8 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
   }),
   Fw = uiSwitchMt(e => {
     var t = Pw();
-    function n(e, t, n) {
-      e.clearRect(0, 0, t.width, t.height), t.style ||= {}, t.height = n, t.width = n, t.style.height = n + `px`, t.style.width = n + `px`;
+    function n(e, el, n) {
+      e.clearRect(0, 0, el.width, el.height), el.style ||= {}, el.height = n, el.width = n, el.style.height = n + `px`, el.style.width = n + `px`;
     }
     function r() {
       try {
@@ -35982,7 +35982,7 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
     };
   }),
   Lw = c(uiSwitchMt(e => {
-    var t = uw(),
+    var uiSwitchMtResultResult = uiSwitchMtResult(),
       n = Nw(),
       r = Fw(),
       i = Iw();
@@ -35990,7 +35990,7 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
       let s = [].slice.call(arguments, 1),
         c = s.length,
         l = typeof s[c - 1] == `function`;
-      if (!l && !t()) throw Error(`Callback required as last argument`);
+      if (!l && !uiSwitchMtResultResult()) throw Error(`Callback required as last argument`);
       if (l) {
         if (c < 2) throw Error(`Too few arguments provided`);
         c === 2 ? (o = i, i = r, r = a = undefined) : c === 3 && (r.getContext && o === undefined ? (o = a, a = undefined) : (o = a, a = i, i = r, r = undefined));
@@ -36737,7 +36737,7 @@ var Uw = {
         } = growthTelT(),
         r = Ud(`plan_card_impression`, 0),
         eventAlias = event,
-        o = emit,
+        emitAlias = emit,
         s = Date.now(),
         c = `${CO}/uploads/image/subscribe-banner.png?v=${s}`,
         l = `${CO}/uploads/image/subscribe-banner-dark.png?v=${s}`,
@@ -37647,7 +37647,7 @@ var Uw = {
         size: `sm`,
         variant: `outline`,
         class: `h-7 gap-1 text-xs`,
-        onClick: renderCache[6] ||= e => o(`show-wechat-qrcode`)
+        onClick: renderCache[6] ||= e => emitAlias(`show-wechat-qrcode`)
       }, {
         default: H(() => [resolveComponent(unref(hs), {
           size: 12
@@ -37839,10 +37839,10 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-4 rounded-xl border-dashed p-6 flex w-full min-w-0 flex-1 flex-col items-center justify-center text-center text-balance`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-4 rounded-xl border-dashed p-6 flex w-full min-w-0 flex-1 flex-col items-center justify-center text-center text-balance`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -37868,10 +37868,10 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty-header`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-2 flex max-w-sm flex-col items-center`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-2 flex max-w-sm flex-col items-center`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -37887,13 +37887,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty-icon`,
         "data-variant": props.variant,
         class: normalizeClass(unref(uiSwitchXt)(unref(MO)({
           variant: props.variant
-        }), t.class))
+        }), propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 10, kO));
     }
   }),
@@ -37905,10 +37905,10 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty-title`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-sm font-medium tracking-tight cn-font-heading`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-sm font-medium tracking-tight cn-font-heading`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -37931,10 +37931,10 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `skeleton`,
-        class: normalizeClass(unref(uiSwitchXt)(`bg-muted rounded-md`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`bg-muted rounded-md`, propsAlias.class))
       }, null, 2));
     }
   }),
@@ -37951,12 +37951,12 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(Label), vueNt({
         "data-slot": `label`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`gap-2 text-sm leading-none font-medium group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50 flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`gap-2 text-sm leading-none font-medium group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50 flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -38042,8 +38042,8 @@ var Empty = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -38071,7 +38071,7 @@ var Empty = defineComponent({
       async function v(e = c.value.page, t = l.value.page) {
         p.value = true, d.value = ``;
         try {
-          let [r, i, a] = await Promise.all([Ry(n.token, `invite.php?action=summary`), Ry(n.token, `invite.php?action=withdrawals&page=${e}`), Ry(n.token, `invite.php?action=commissions&page=${t}`)]);
+          let [r, i, a] = await Promise.all([Ry(propsAlias.token, `invite.php?action=summary`), Ry(propsAlias.token, `invite.php?action=withdrawals&page=${e}`), Ry(propsAlias.token, `invite.php?action=commissions&page=${t}`)]);
           s.value = r, c.value = i, l.value = a;
         } catch (e) {
           d.value = e instanceof Error ? e.message : i18nTranslate(`invite.convert.errorNetwork`);
@@ -38083,7 +38083,7 @@ var Empty = defineComponent({
         if (g.value && !m.value) {
           m.value = true, d.value = ``, f.value = ``;
           try {
-            let e = await Ry(n.token, `invite.php`, {
+            let e = await Ry(propsAlias.token, `invite.php`, {
               action: `convert_to_points`,
               amount: computedData.value
             });
@@ -38098,7 +38098,7 @@ var Empty = defineComponent({
       return onBeforeMount(() => void v()), (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: true,
         "onUpdate:open": renderCache[8] ||= e => {
-          e || r(`close`);
+          e || emitAlias(`close`);
         }
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
@@ -38162,7 +38162,7 @@ var Empty = defineComponent({
             variant: `outline`,
             class: `self-start`,
             disabled: s.value.balance <= 0,
-            onClick: renderCache[3] ||= e => r(`contact`)
+            onClick: renderCache[3] ||= e => emitAlias(`contact`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(computedResult.value ? `Contact support to withdraw` : `联系客服申请提现`), 1)]),
             _: 1
@@ -38482,7 +38482,7 @@ var Empty = defineComponent({
         } = growthTelT(),
         r = Ud(`invite_reward_impression`, 0),
         eventAlias = event,
-        a = emit,
+        emitAlias = emit,
         {
           user: o
         } = useAuthT(),
@@ -38591,7 +38591,7 @@ var Empty = defineComponent({
           })]), resolveComponent(unref(uiSwitchR), {
             variant: `ghost`,
             size: `sm`,
-            onClick: renderCache[1] ||= e => a(`navigate`, `profile`)
+            onClick: renderCache[1] ||= e => emitAlias(`navigate`, `profile`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(computedResult.value.viewBalance), 1)]),
             _: 1
@@ -38813,7 +38813,7 @@ var Empty = defineComponent({
         onClose: renderCache[8] ||= e => {
           m.value = false, unref(p)();
         },
-        onContact: renderCache[9] ||= e => a(`show-wechat-qrcode`)
+        onContact: renderCache[9] ||= e => emitAlias(`show-wechat-qrcode`)
       }, null, 8, [`token`])) : createCommentVNode(``, true)], 512));
     }
   }), [[`__scopeId`, `data-v-51f275ba`]]),
@@ -39078,7 +39078,7 @@ var Empty = defineComponent({
       let {
           captureGrowthObservation: t
         } = growthTelT(),
-        n = props,
+        propsAlias = props,
         {
           t: i18nTranslate
         } = vueN(),
@@ -39086,7 +39086,7 @@ var Empty = defineComponent({
       function a(e) {
         i.value = i.value === e ? null : e;
       }
-      watch(() => n.refreshKey, () => {
+      watch(() => propsAlias.refreshKey, () => {
         i.value = null, t()(`settings_view_loaded`, {
           panel: `privacy`
         });
@@ -39297,7 +39297,7 @@ var Empty = defineComponent({
       expose: expose,
       emit: emit
     }) {
-      let r = emit,
+      let emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -39338,11 +39338,11 @@ var Empty = defineComponent({
       }
       async function b() {
         let e = p.value;
-        d.value = true, r(`busy`, true), _();
+        d.value = true, emitAlias(`busy`, true), _();
         let t = h;
         u.value = false, p.value = null;
         let allSettled = await Promise.allSettled([s(), pointsT.getCreditsBalance()]);
-        d.value = false, r(`busy`, false), t === h && r(`paid`, {
+        d.value = false, emitAlias(`busy`, false), t === h && emitAlias(`paid`, {
           orderNo: e.orderNo,
           credits: e.creditsAmount,
           balance: allSettled[1].status === `fulfilled` ? allSettled[1].value : null
@@ -39358,8 +39358,8 @@ var Empty = defineComponent({
               return;
             }
             if ([`cancelled`, `expired`, `refunded`, `closed`, `failed`].includes(t)) {
-              let e = i18nTranslate(`botRecharge.orderExpired`);
-              C(), p.value = null, r(`error`, e);
+              let i18nTranslateResult = i18nTranslate(`botRecharge.orderExpired`);
+              C(), p.value = null, emitAlias(`error`, i18nTranslateResult);
               return;
             }
             f.value = ``;
@@ -39372,21 +39372,21 @@ var Empty = defineComponent({
       }
       async function S(e) {
         if (d.value || u.value) return;
-        if (r(`error`, ``), !Number.isFinite(e) || e < 0.01 || e > 9999 || Math.abs(e * 100 - Math.round(e * 100)) > 1e-6) {
-          r(`error`, i18nTranslate(`botRecharge.amountError`));
+        if (emitAlias(`error`, ``), !Number.isFinite(e) || e < 0.01 || e > 9999 || Math.abs(e * 100 - Math.round(e * 100)) > 1e-6) {
+          emitAlias(`error`, i18nTranslate(`botRecharge.amountError`));
           return;
         }
         let deviceId = c.value.deviceId,
           n = o.value?.token;
         if (!deviceId || !n) {
-          r(`error`, i18nTranslate(`botRecharge.loginRequired`));
+          emitAlias(`error`, i18nTranslate(`botRecharge.loginRequired`));
           return;
         }
         trackActionEvent(`credit_package_select`, {
           entry: `recharge`
         }), _();
         let a = h;
-        d.value = true, r(`busy`, true), f.value = ``;
+        d.value = true, emitAlias(`busy`, true), f.value = ``;
         try {
           if (p.value) {
             let t = await y();
@@ -39440,9 +39440,9 @@ var Empty = defineComponent({
             entry: `recharge`
           }), m = setTimeout(() => void x(a), 3e3);
         } catch (e) {
-          a === h && r(`error`, e instanceof Error ? e.message : i18nTranslate(`errors.networkError`));
+          a === h && emitAlias(`error`, e instanceof Error ? e.message : i18nTranslate(`errors.networkError`));
         } finally {
-          d.value = false, r(`busy`, false);
+          d.value = false, emitAlias(`busy`, false);
         }
       }
       function C() {
@@ -39615,7 +39615,7 @@ var Empty = defineComponent({
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i,
           locale: a
@@ -39743,10 +39743,10 @@ var Empty = defineComponent({
         g.value?.start(computedResult.value);
       }
       async function j(e) {
-        e.balance !== null && (counter.value = e.balance, r(`balanceChanged`, e.balance)), u.value = null, d.value = ``, await T();
+        e.balance !== null && (counter.value = e.balance, emitAlias(`balanceChanged`, e.balance)), u.value = null, d.value = ``, await T();
       }
       function ee() {
-        g.value?.close(), r(`update:open`, false);
+        g.value?.close(), emitAlias(`update:open`, false);
       }
       return watch(() => eventAlias.open, async value => {
         value ? (trackActionEvent(`feature_map_recharge_expose`, {
@@ -39756,7 +39756,7 @@ var Empty = defineComponent({
         eventAlias.open && T(m.value);
       }), (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: eventAlias.open,
-        "onUpdate:open": renderCache[2] ||= e => r(`update:open`, e)
+        "onUpdate:open": renderCache[2] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `!w-[620px] !max-w-[calc(100vw-32px)] max-h-[88vh] flex flex-col`
@@ -39890,14 +39890,14 @@ var Empty = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(RadioGroupRoot), vueNt({
         "data-slot": `radio-group`,
-        class: unref(uiSwitchXt)(`grid gap-2 w-full`, n.class)
-      }, unref(a)), {
+        class: unref(uiSwitchXt)(`grid gap-2 w-full`, propsAlias.class)
+      }, unref(uiSwitchZResult)), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`class`]));
@@ -39924,13 +39924,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(RadioGroupItem), vueNt({
         "data-slot": `radio-group-item`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group/radio-group-item peer relative aspect-square shrink-0 border outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group/radio-group-item peer relative aspect-square shrink-0 border outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50`, propsAlias.class)
       }), {
         default: H(() => [resolveComponent(unref(RadioGroupIndicator), {
           "data-slot": `radio-group-indicator`,
@@ -40324,11 +40324,11 @@ var Empty = defineComponent({
       id: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: n
         } = vueN(),
-        computedResult = computed(() => WM.find(item => item.id === t.id));
+        computedResult = computed(() => WM.find(item => item.id === propsAlias.id));
       return (ctx, cache) => (openBlock(), createElementBlock(`section`, {
         id: `settings-${props.id}`,
         class: `scroll-mt-6 rounded-[10px] bg-black/[0.02] p-5 px-[18px] dark:bg-card`
@@ -40655,25 +40655,25 @@ var Empty = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = uiSwitchAt(n, `modelValue`, emit, {
+      let propsAlias = props,
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emit, {
           passive: true,
           defaultValue: ``
         }),
-        i = uiSwitchLt(n, `class`, `size`);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `size`);
       return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         class: `group/native-select relative w-fit has-[select:disabled]:opacity-50`,
         "data-slot": `native-select-wrapper`,
-        "data-size": n.size ?? `default`
+        "data-size": propsAlias.size ?? `default`
       }, [vueZt(createElementVNode(`select`, vueNt({
         ...ctx.$attrs,
-        ...unref(i)
+        ...unref(uiSwitchLtResult)
       }, {
-        "onUpdate:modelValue": renderCache[0] ||= e => vueFn(r) ? r.value = e : null,
+        "onUpdate:modelValue": renderCache[0] ||= e => vueFn(uiSwitchAtResult) ? uiSwitchAtResult.value = e : null,
         "data-slot": `native-select`,
-        "data-size": n.size ?? `default`,
-        class: unref(uiSwitchXt)(`border-input placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-8 w-full min-w-0 appearance-none rounded-lg border bg-transparent py-1 pr-8 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:py-0.5 outline-none disabled:pointer-events-none disabled:cursor-not-allowed`, n.class)
-      }), [withCtx(ctx.$slots, `default`)], 16, CN), [[bt, unref(r)]]), resolveComponent(unref(PopperContentS), {
+        "data-size": propsAlias.size ?? `default`,
+        class: unref(uiSwitchXt)(`border-input placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-8 w-full min-w-0 appearance-none rounded-lg border bg-transparent py-1 pr-8 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:py-0.5 outline-none disabled:pointer-events-none disabled:cursor-not-allowed`, propsAlias.class)
+      }), [withCtx(ctx.$slots, `default`)], 16, CN), [[bt, unref(uiSwitchAtResult)]]), resolveComponent(unref(PopperContentS), {
         class: `text-muted-foreground top-1/2 right-2.5 size-4 -translate-y-1/2 pointer-events-none absolute select-none`,
         "aria-hidden": `true`,
         "data-slot": `native-select-icon`
@@ -40688,10 +40688,10 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`option`, {
         "data-slot": `native-select-option`,
-        class: normalizeClass(unref(uiSwitchXt)(`bg-[Canvas] text-[CanvasText]`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`bg-[Canvas] text-[CanvasText]`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -40793,9 +40793,9 @@ var Empty = defineComponent({
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
-        i = uiSwitchLt(eventAlias, `class`, `layout`, `placeholder`),
-        a = uiSwitchAt(eventAlias, `placeholder`, r, {
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(eventAlias, `class`, `layout`, `placeholder`),
+        uiSwitchAtResult = uiSwitchAt(eventAlias, `placeholder`, emitAlias, {
           passive: true,
           defaultValue: eventAlias.defaultPlaceholder ?? popoverO(popoverD())
         }),
@@ -40806,7 +40806,7 @@ var Empty = defineComponent({
         })),
         [c, l] = Se(),
         [u, d] = Se(),
-        f = uiSwitchZ(i, r);
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(c), null, {
         default: H(({
           date: e
@@ -40815,7 +40815,7 @@ var Empty = defineComponent({
         })), 1), resolveComponent(unref(NativeSelect), {
           class: `text-xs h-8 pr-6 pl-2 text-transparent relative`,
           onChange: renderCache[0] ||= e => {
-            a.value = unref(a).set({
+            uiSwitchAtResult.value = unref(uiSwitchAtResult).set({
               month: Number(e?.target?.value)
             });
           }
@@ -40843,7 +40843,7 @@ var Empty = defineComponent({
         })), 1), resolveComponent(unref(NativeSelect), {
           class: `text-xs h-8 pr-6 pl-2 text-transparent relative`,
           onChange: renderCache[1] ||= e => {
-            a.value = unref(a).set({
+            uiSwitchAtResult.value = unref(uiSwitchAtResult).set({
               year: Number(e?.target?.value)
             });
           }
@@ -40861,9 +40861,9 @@ var Empty = defineComponent({
           _: 2
         }, 1024)])])]),
         _: 1
-      }), resolveComponent(unref(CalendarRoot), vueNt(unref(f), {
-        placeholder: unref(a),
-        "onUpdate:placeholder": renderCache[2] ||= e => vueFn(a) ? a.value = e : null,
+      }), resolveComponent(unref(CalendarRoot), vueNt(unref(uiSwitchZResult), {
+        placeholder: unref(uiSwitchAtResult),
+        "onUpdate:placeholder": renderCache[2] ||= e => vueFn(uiSwitchAtResult) ? uiSwitchAtResult.value = e : null,
         "data-slot": `calendar`,
         class: unref(uiSwitchXt)(`p-2 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(7)] group/calendar bg-background in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent`, eventAlias.class)
       }), {
@@ -40952,13 +40952,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarCell), vueNt({
         "data-slot": `calendar-cell`,
-        class: unref(uiSwitchXt)(`relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:rounded-md [&:has([data-selected])]:bg-accent`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:rounded-md [&:has([data-selected])]:bg-accent`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -40980,15 +40980,15 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarCellTrigger), vueNt({
         "data-slot": `calendar-cell-trigger`,
         class: unref(uiSwitchXt)(unref(_e)({
           variant: `ghost`
-        }), `size-8 p-0 font-normal aria-selected:opacity-100 cursor-default`, `[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground`, `data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:opacity-100 data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground`, `data-[disabled]:text-muted-foreground data-[disabled]:opacity-50`, `data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through`, `data-[outside-view]:text-muted-foreground`, t.class)
-      }, unref(i)), {
+        }), `size-8 p-0 font-normal aria-selected:opacity-100 cursor-default`, `[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground`, `data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:opacity-100 data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground`, `data-[disabled]:text-muted-foreground data-[disabled]:opacity-50`, `data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through`, `data-[outside-view]:text-muted-foreground`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -41006,13 +41006,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGrid), vueNt({
         "data-slot": `calendar-grid`,
-        class: unref(uiSwitchXt)(`w-full border-collapse space-x-1`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`w-full border-collapse space-x-1`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -41027,10 +41027,10 @@ var Empty = defineComponent({
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGridBody), vueNt({
         "data-slot": `calendar-grid-body`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -41048,10 +41048,10 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGridHead), vueNt({
         "data-slot": `calendar-grid-head`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -41069,13 +41069,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGridRow), vueNt({
         "data-slot": `calendar-grid-row`,
-        class: unref(uiSwitchXt)(`flex`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`flex`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -41093,13 +41093,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarHeadCell), vueNt({
         "data-slot": `calendar-head-cell`,
-        class: unref(uiSwitchXt)(`text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem]`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem]`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -41117,13 +41117,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarHeader), vueNt({
         "data-slot": `calendar-header`,
-        class: unref(uiSwitchXt)(`flex justify-center pt-1 relative items-center w-full px-8`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`flex justify-center pt-1 relative items-center w-full px-8`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -41141,13 +41141,13 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarHeading), vueNt({
         "data-slot": `calendar-heading`,
-        class: unref(uiSwitchXt)(`text-sm font-medium`, t.class)
-      }, unref(i)), {
+        class: unref(uiSwitchXt)(`text-sm font-medium`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(({
           headingValue: t
         }) => [withCtx(ctx.$slots, `default`, {
@@ -41172,15 +41172,15 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarNext), vueNt({
         "data-slot": `calendar-next-button`,
         class: unref(uiSwitchXt)(unref(_e)({
           variant: `outline`
-        }), `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, t.class)
-      }, unref(i)), {
+        }), `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(popoverA), {
           class: `cn-rtl-flip size-4`
         })])]),
@@ -41203,15 +41203,15 @@ var Empty = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(CalendarPrev), vueNt({
         "data-slot": `calendar-prev-button`,
         class: unref(uiSwitchXt)(unref(_e)({
           variant: `outline`
-        }), `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, t.class)
-      }, unref(i)), {
+        }), `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, propsAlias.class)
+      }, unref(uiSwitchBResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(i18nU), {
           class: `cn-rtl-flip size-4`
         })])]),
@@ -41336,7 +41336,7 @@ var Empty = defineComponent({
       emit: emit
     }) {
       let optionsAlias = options,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -41467,10 +41467,10 @@ var Empty = defineComponent({
         return optionsAlias.mode === `time` || optionsAlias.valueFormat === `time` ? r : optionsAlias.valueFormat === `local` ? `${e}T${r}` : optionsAlias.valueFormat === `report` ? `${e} ${optionsAlias.precision === `second` ? r : `${t}:${optionsAlias.endBoundary ? `59` : `00`}`}` : new Date(c.value.year, c.value.month - 1, c.value.day, Number(l.value), Number(u.value), Number(d.value)).toISOString();
       }
       function le() {
-        te.value && (r(`update:modelValue`, ce()), o.value = false);
+        te.value && (emitAlias(`update:modelValue`, ce()), o.value = false);
       }
       function ue(e, t) {
-        fe(e, t) || (e === `hour` ? l.value = t : e === `minute` ? u.value = t : d.value = t, optionsAlias.mode === `time` && r(`update:modelValue`, ce()));
+        fe(e, t) || (e === `hour` ? l.value = t : e === `minute` ? u.value = t : d.value = t, optionsAlias.mode === `time` && emitAlias(`update:modelValue`, ce()));
       }
       function de(e) {
         if (!e) return;
@@ -44079,14 +44079,14 @@ var KF = {
       emit: emit
     }) {
       let countAlias = count,
-        r = emit;
+        emitAlias = emit;
       vueVt(`toggleGroup`, {
         variant: countAlias.variant,
         size: countAlias.size,
         spacing: countAlias.spacing
       });
-      let i = uiSwitchLt(countAlias, `class`, `size`, `variant`),
-        a = uiSwitchZ(i, r);
+      let uiSwitchLtResult = uiSwitchLt(countAlias, `class`, `size`, `variant`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(ToggleGroupRoot), vueNt({
         "data-slot": `toggle-group`,
         "data-size": count.size,
@@ -44095,7 +44095,7 @@ var KF = {
         style: {
           "--gap": count.spacing
         }
-      }, unref(a), {
+      }, unref(uiSwitchZResult), {
         class: unref(uiSwitchXt)(`rounded-lg data-[size=sm]:rounded-[min(var(--radius-md),10px)] group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] data-vertical:flex-col data-vertical:items-stretch`, countAlias.class)
       }), {
         default: H(e => [withCtx(ctx.$slots, `default`, vueTr(vueV(e)))]),
@@ -44140,14 +44140,14 @@ var KF = {
     setup(count) {
       let countAlias = count,
         r = vueX(`toggleGroup`),
-        i = uiSwitchLt(countAlias, `class`, `size`, `variant`),
-        a = uiSwitchB(i);
+        uiSwitchLtResult = uiSwitchLt(countAlias, `class`, `size`, `variant`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(ToggleGroupItem), vueNt({
         "data-slot": `toggle-group-item`,
         "data-variant": unref(r)?.variant || count.variant,
         "data-size": unref(r)?.size || count.size,
         "data-spacing": unref(r)?.spacing
-      }, unref(a), {
+      }, unref(uiSwitchBResult), {
         class: unref(uiSwitchXt)(`group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:px-2 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-end]:pr-1.5 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-start]:pl-1.5 group-data-horizontal/toggle-group:data-[spacing=0]:first:rounded-l-lg group-data-vertical/toggle-group:data-[spacing=0]:first:rounded-t-lg group-data-horizontal/toggle-group:data-[spacing=0]:last:rounded-r-lg group-data-vertical/toggle-group:data-[spacing=0]:last:rounded-b-lg shrink-0 focus:z-10 focus-visible:z-10 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t`, unref(qL)({
           variant: unref(r)?.variant || count.variant,
           size: unref(r)?.size || count.size
@@ -44325,7 +44325,7 @@ var tR = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -44386,13 +44386,13 @@ var tR = {
         e.key === `Enter` && (e.preventDefault(), C());
       }
       function T() {
-        r(`save`, {
+        emitAlias(`save`, {
           excludeApps: computedResult.value,
           allowApps: computedData.value
-        }), r(`update:open`, false);
+        }), emitAlias(`update:open`, false);
       }
       function E() {
-        r(`update:open`, false);
+        emitAlias(`update:open`, false);
       }
       function D(e) {
         return y(e, `exclude`) ? `exclude` : y(e, `allow`) ? `allow` : null;
@@ -44409,7 +44409,7 @@ var tR = {
       }
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: event.open,
-        "onUpdate:open": renderCache[1] ||= e => r(`update:open`, e)
+        "onUpdate:open": renderCache[1] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `sm:max-w-[520px] max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden`
@@ -44602,7 +44602,7 @@ var jR = {
       emit: emit
     }) {
       let textAlias = text,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -44634,7 +44634,7 @@ var jR = {
             (await textAlias.save({
               screenshotExcludeDomains: [...a.value],
               screenshotAllowDomains: [...s.value]
-            })) ? r(`update:open`, false) : l.value = i18nTranslate(`settings.websitePrivacy.saveFailed`);
+            })) ? emitAlias(`update:open`, false) : l.value = i18nTranslate(`settings.websitePrivacy.saveFailed`);
           } catch {
             l.value = i18nTranslate(`settings.websitePrivacy.saveFailed`);
           } finally {
@@ -44644,7 +44644,7 @@ var jR = {
       }
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: text.open,
-        "onUpdate:open": renderCache[7] ||= e => !u.value && r(`update:open`, e)
+        "onUpdate:open": renderCache[7] ||= e => !u.value && emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `sm:max-w-[520px] max-h-[85vh] flex flex-col gap-0 p-0 overflow-hidden`
@@ -44729,7 +44729,7 @@ var jR = {
               variant: `outline`,
               size: `sm`,
               disabled: u.value,
-              onClick: renderCache[6] ||= e => r(`update:open`, false)
+              onClick: renderCache[6] ||= e => emitAlias(`update:open`, false)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.cancel`)), 1)]),
               _: 1
@@ -44858,15 +44858,15 @@ var ZR = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
         o = ref(``),
         s = ref(false),
-        computedResult = computed(() => new Set(n.modelValue)),
-        computedData = computed(() => n.modelValue.length >= 8);
+        computedResult = computed(() => new Set(propsAlias.modelValue)),
+        computedData = computed(() => propsAlias.modelValue.length >= 8);
       function u(e) {
         return e.normalize(`NFKC`).trim().toLocaleLowerCase();
       }
@@ -44874,24 +44874,24 @@ var ZR = {
         let t = u(e);
         if (t) {
           if (computedResult.value.has(t)) {
-            r(`update:modelValue`, n.modelValue.filter(item => item !== t));
+            emitAlias(`update:modelValue`, propsAlias.modelValue.filter(item => item !== t));
             return;
           }
-          computedData.value || r(`update:modelValue`, [...n.modelValue, t]);
+          computedData.value || emitAlias(`update:modelValue`, [...propsAlias.modelValue, t]);
         }
       }
       function f() {
         let e = u(o.value);
-        !e || /\s/u.test(e) || Array.from(e).length > 5 || computedResult.value.has(e) || computedData.value || (r(`update:modelValue`, [...n.modelValue, e]), o.value = ``);
+        !e || /\s/u.test(e) || Array.from(e).length > 5 || computedResult.value.has(e) || computedData.value || (emitAlias(`update:modelValue`, [...propsAlias.modelValue, e]), o.value = ``);
       }
       async function p() {
-        if (n.modelValue.length) try {
-          await navigator.clipboard.writeText(n.modelValue.join(` `)), s.value = true;
+        if (propsAlias.modelValue.length) try {
+          await navigator.clipboard.writeText(propsAlias.modelValue.join(` `)), s.value = true;
         } catch {
           s.value = false;
         }
       }
-      return watch(() => n.modelValue, () => {
+      return watch(() => propsAlias.modelValue, () => {
         s.value = false;
       }, {
         deep: true
@@ -44944,7 +44944,7 @@ var ZR = {
         variant: `ghost`,
         class: `h-7 gap-1.5 px-2 text-xs text-muted-foreground`,
         disabled: props.loading,
-        onClick: renderCache[1] ||= e => r(`refresh`)
+        onClick: renderCache[1] ||= e => emitAlias(`refresh`)
       }, {
         default: H(() => [resolveComponent(unref(gs), {
           size: 13,
@@ -44986,15 +44986,15 @@ var ZR = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i
         } = vueN(),
         a = ref(false),
         computedResult = computed({
-          get: () => n.modelValue,
-          set: e => r(`update:modelValue`, String(e))
+          get: () => propsAlias.modelValue,
+          set: e => emitAlias(`update:modelValue`, String(e))
         });
       return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, mz, [resolveComponent(unref(Input), {
         modelValue: computedResult.value,
@@ -45209,7 +45209,7 @@ var ZR = {
       let {
           t: i18nTranslate
         } = vueN(),
-        r = emit,
+        emitAlias = emit,
         i = ref({
           configured: false,
           enabled: false,
@@ -45247,7 +45247,7 @@ var ZR = {
         ee = computed(() => s.value || !w.value || T.value.length < 3 || T.value.length > 8);
       async function te() {
         try {
-          i.value = await ZR.getState(), o.value = true, r(`loaded`);
+          i.value = await ZR.getState(), o.value = true, emitAlias(`loaded`);
         } catch (e) {
           alertT(e instanceof Error ? e.message : i18nTranslate(`appLock.operationFailed`));
         } finally {
@@ -45888,14 +45888,14 @@ var ZR = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `group`,
         "data-slot": `field`,
         "data-orientation": props.orientation,
         class: normalizeClass(unref(uiSwitchXt)(unref(KB)({
           orientation: props.orientation
-        }), t.class))
+        }), propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 10, zB));
     }
   }),
@@ -45907,10 +45907,10 @@ var ZR = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`p`, {
         "data-slot": `field-description`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-left text-sm [[data-variant=legend]+&]:-mt-1.5 leading-normal font-normal group-has-data-horizontal/field:text-balance`, `last:mt-0 nth-last-2:-mt-1`, `[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-left text-sm [[data-variant=legend]+&]:-mt-1.5 leading-normal font-normal group-has-data-horizontal/field:text-balance`, `last:mt-0 nth-last-2:-mt-1`, `[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -45953,10 +45953,10 @@ var ZR = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `field-group`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4 group/field-group @container/field-group flex w-full flex-col`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4 group/field-group @container/field-group flex w-full flex-col`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -45968,10 +45968,10 @@ var ZR = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(LabelComponent), {
         "data-slot": `field-label`,
-        class: normalizeClass(unref(uiSwitchXt)(`has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug`, `has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug`, `has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col`, propsAlias.class))
       }, {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -46385,7 +46385,7 @@ var YB = {
     }),
     emits: [`update:open`],
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: n
         } = vueN(),
@@ -46416,7 +46416,7 @@ var YB = {
           provider: item,
           model: e
         })))[0],
-        computedResult = computed(() => !!y(t.purpose === `screenshot` ? m.value : h.value, t.purpose === `screenshot`));
+        computedResult = computed(() => !!y(propsAlias.purpose === `screenshot` ? m.value : h.value, propsAlias.purpose === `screenshot`));
       function x(e) {
         let t = y(e === `screenshot` ? m.value : h.value)?.model,
           fallbackValue = t?.thinkingLevels ?? (t?.reasoning ? [`off`, `minimal`, `low`, `medium`, `high`] : [`off`]);
@@ -46451,7 +46451,7 @@ var YB = {
         i++, value && C();
       });
       async function w() {
-        let purpose = t.purpose,
+        let purpose = propsAlias.purpose,
           n = y(purpose === `screenshot` ? m.value : h.value, purpose === `screenshot`);
         if (!n) return;
         let r = x(purpose).includes(g.value[purpose]) ? g.value[purpose] : `default`,
@@ -46483,7 +46483,7 @@ var YB = {
         }, {
           default: H(() => [resolveComponent(unref(dialogN), null, {
             default: H(() => [resolveComponent(unref(dialogT), null, {
-              default: H(() => [createTextVNode(toDisplayString(unref(n)(t.purpose === `screenshot` ? `settings.modelConfiguration.screenshot` : `settings.modelConfiguration.report`)), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(unref(n)(propsAlias.purpose === `screenshot` ? `settings.modelConfiguration.screenshot` : `settings.modelConfiguration.report`)), 1)]),
               _: 1
             }), resolveComponent(unref(DialogDescription), null, {
               default: H(() => [createTextVNode(toDisplayString(unref(n)(`settings.subscriptionBinding.description`)), 1)]),
@@ -46509,7 +46509,7 @@ var YB = {
             default: H(() => [createTextVNode(toDisplayString(unref(n)(`settings.subscriptionBinding.accounts`)), 1)]),
             _: 1
           })]), resolveComponent(unref(FieldGroup), null, {
-            default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList([t.purpose], e => (openBlock(), createBlock(unref(Field), {
+            default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList([propsAlias.purpose], e => (openBlock(), createBlock(unref(Field), {
               key: e
             }, {
               default: H(() => [resolveComponent(unref(FieldLabel), {
@@ -46662,7 +46662,7 @@ var gV = {
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: i18nTranslate
         } = vueN(),
@@ -46698,7 +46698,7 @@ var gV = {
         key: 0,
         size: `sm`,
         variant: `outline`,
-        disabled: t.disabled || unref(a),
+        disabled: propsAlias.disabled || unref(a),
         onClick: f
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.timelineSummary.configure`)), 1)]),
@@ -46706,7 +46706,7 @@ var gV = {
       }, 8, [`disabled`])) : createCommentVNode(``, true), resolveComponent(unref(uiSwitchT), {
         id: `enable-timeline-summary`,
         "model-value": computedData.value,
-        disabled: !computedResult.value || t.disabled || unref(a),
+        disabled: !computedResult.value || propsAlias.disabled || unref(a),
         "aria-describedby": `timeline-summary-description`,
         "onUpdate:modelValue": renderCache[0] ||= e => unref(i)({
           enableTimelineSummary: e
@@ -46762,7 +46762,7 @@ var gV = {
             }), resolveComponent(unref(uiSwitchR), {
               type: `submit`,
               size: `sm`,
-              disabled: t.disabled || unref(a) || !computedData.value
+              disabled: propsAlias.disabled || unref(a) || !computedData.value
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.save`)), 1)]),
               _: 1
@@ -46901,8 +46901,8 @@ var gV = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -47031,7 +47031,7 @@ var gV = {
           localReportEndpointPath: e.endpointPath.trim(),
           localReportCustomParams: e.customParams.trim()
         };
-        (await l(t)) && (m.value = false, r(`test`, h.value, `auto-save`));
+        (await l(t)) && (m.value = false, emitAlias(`test`, h.value, `auto-save`));
       }
       return (state, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, kSe, [(openBlock(), createElementBlock(Fragment, null, renderList(f, (e, t) => (openBlock(), createElementBlock(Fragment, {
         key: e
@@ -47043,13 +47043,13 @@ var gV = {
         description: unref(i18nTranslate)(`settings.modelConfiguration.${e}Hint`),
         "event-name": `settings_view_loaded`,
         panel: `model_connection`,
-        disabled: n.disabled
+        disabled: propsAlias.disabled
       }, {
         default: H(() => [createElementVNode(`p`, null, toDisplayString(S(x(e))), 1), createElementVNode(`p`, null, toDisplayString(w(e)), 1), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`settings.customModelUsageHint`)), 1)]),
         _: 2
       }, 1032, [`title`, `description`, `disabled`])]), createElementVNode(`p`, ISe, toDisplayString(unref(i18nTranslate)(`settings.modelConfiguration.${e}Hint`)), 1)]), resolveComponent(unref(Select), {
         "model-value": x(e),
-        disabled: n.disabled || unref(u),
+        disabled: propsAlias.disabled || unref(u),
         "onUpdate:modelValue": t => O(e, t)
       }, {
         default: H(() => [resolveComponent(unref(SelectTriggerComponent), {
@@ -47076,17 +47076,17 @@ var gV = {
         key: 0,
         size: `sm`,
         variant: `outline`,
-        disabled: n.disabled || n.testing || unref(u),
+        disabled: propsAlias.disabled || propsAlias.testing || unref(u),
         "data-credit-feature": `model_diagnosis`,
         "data-credit-action": `test`,
-        onClick: t => r(`test`, e, `manual`)
+        onClick: t => emitAlias(`test`, e, `manual`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.connectionTest`)), 1)]),
         _: 1
       }, 8, [`disabled`, `onClick`])) : createCommentVNode(``, true), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
-        disabled: n.disabled || unref(u),
+        disabled: propsAlias.disabled || unref(u),
         onClick: t => D(e)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.subscriptionBinding.manage`)), 1)]),
@@ -47098,13 +47098,13 @@ var gV = {
       }, null, 8, [`purpose`, `open`, `onUpdate:open`])], 8, jSe)], 64))), 64)), resolveComponent(unref(SeparatorComponent)), createElementVNode(`div`, BSe, [createElementVNode(`div`, VSe, [createElementVNode(`label`, HSe, toDisplayString(unref(i18nTranslate)(`settings.enableAiWorkOverview`)), 1), createElementVNode(`p`, USe, toDisplayString(unref(i18nTranslate)(`settings.enableAiWorkOverviewDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
         id: `enable-ai-work-overview`,
         "model-value": unref(c).enableAiWorkOverview,
-        disabled: n.disabled || unref(u),
+        disabled: propsAlias.disabled || unref(u),
         "aria-describedby": `ai-work-overview-description`,
         "onUpdate:modelValue": renderCache[0] ||= e => unref(l)({
           enableAiWorkOverview: e
         })
       }, null, 8, [`model-value`, `disabled`])]), resolveComponent(unref(SeparatorComponent)), resolveComponent(TimelineSummarySettings, {
-        disabled: n.disabled
+        disabled: propsAlias.disabled
       }, null, 8, [`disabled`]), unref(d) ? (openBlock(), createElementBlock(`p`, WSe, toDisplayString(unref(d)), 1)) : createCommentVNode(``, true)]), resolveComponent(unref(dialogA), {
         open: m.value,
         "onUpdate:open": renderCache[9] ||= e => m.value = e
@@ -48053,13 +48053,13 @@ var PV = {
       }
       function A(e) {
         let n = `settings.tokenUsageFeature.${e}`,
-          r = i18nTranslate(n);
-        return r === n ? e : r;
+          i18nTranslateResult = i18nTranslate(n);
+        return i18nTranslateResult === n ? e : i18nTranslateResult;
       }
       function j(e) {
         let n = `settings.tokenUsageModelSource.${e}`,
-          r = i18nTranslate(n);
-        return r === n ? e : r;
+          i18nTranslateResult = i18nTranslate(n);
+        return i18nTranslateResult === n ? e : i18nTranslateResult;
       }
       return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, fwe, [createElementVNode(`div`, pwe, [createElementVNode(`div`, mwe, [createElementVNode(`p`, hwe, toDisplayString(unref(i18nTranslate)(`settings.tokenUsage`)), 1), a.value?.estimatedCount ? (openBlock(), createElementBlock(`span`, gwe, toDisplayString(unref(i18nTranslate)(`settings.tokenUsageEstimatedCount`, {
         count: a.value.estimatedCount
@@ -48660,7 +48660,7 @@ var PV = {
           t: i18nTranslate
         } = vueN(),
         itemsAlias = items,
-        i = emit,
+        emitAlias = emit,
         {
           templates: a,
           loadTemplates: o,
@@ -48729,11 +48729,11 @@ var PV = {
       async function j() {
         if (_.value) {
           let e = await M();
-          e && (i(`apply`, {
+          e && (emitAlias(`apply`, {
             templateId: e.id,
             content: e.content,
             name: e.name
-          }), i(`update:open`, false));
+          }), emitAlias(`update:open`, false));
           return;
         }
         if (!E.value) return;
@@ -48750,14 +48750,14 @@ var PV = {
             language: E.value.language || undefined
           });
         }
-        counter.value === -1 && y.value && (await M()), i(`apply`, {
+        counter.value === -1 && y.value && (await M()), emitAlias(`apply`, {
           templateId: e,
           content: m.value,
           name: E.value.name
-        }), i(`update:open`, false);
+        }), emitAlias(`update:open`, false);
       }
       function ee() {
-        i(`update:open`, false);
+        emitAlias(`update:open`, false);
       }
       function te() {
         if (E.value && E.value.isBuiltin) {
@@ -48817,7 +48817,7 @@ var PV = {
       }
       return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: items.open,
-        "onUpdate:open": renderCache[9] ||= e => i(`update:open`, e)
+        "onUpdate:open": renderCache[9] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           "show-close-button": false,
@@ -50221,10 +50221,10 @@ var DropdownMenuGroupComponent = defineComponent({
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuGroup), vueNt({
         "data-slot": `dropdown-menu-group`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -50243,10 +50243,10 @@ var DropdownMenuGroupComponent = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuRadioGroup), vueNt({
         "data-slot": `dropdown-menu-radio-group`
-      }, unref(n)), {
+      }, unref(uiSwitchZResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -50276,14 +50276,14 @@ var DropdownMenuGroupComponent = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuRadioItem), vueNt({
         "data-slot": `dropdown-menu-radio-item`
-      }, unref(a), {
-        class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class)
+      }, unref(uiSwitchZResult), {
+        class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
         default: H(() => [createElementVNode(`span`, _Oe, [resolveComponent(unref($r), null, {
           default: H(() => [withCtx(ctx.$slots, `indicator-icon`, {}, () => [resolveComponent(unref(checkT))])]),
@@ -50305,12 +50305,12 @@ var DropdownMenuGroupComponent = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuSeparator), vueNt({
         "data-slot": `dropdown-menu-separator`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`bg-border -mx-1 my-1 h-px`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`bg-border -mx-1 my-1 h-px`, propsAlias.class)
       }), null, 16, [`class`]));
     }
   }),
@@ -50339,16 +50339,16 @@ var DropdownMenuGroupComponent = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = ref(false);
-      watch(() => t.avatarUrl, () => {
+      watch(() => propsAlias.avatarUrl, () => {
         n.value = false;
       });
-      let computedResult = computed(() => Array.from(t.name.trim())[0]?.toUpperCase() || `?`),
+      let computedResult = computed(() => Array.from(propsAlias.name.trim())[0]?.toUpperCase() || `?`),
         computedData = computed(() => ({
-          width: `${t.size}px`,
-          height: `${t.size}px`,
-          fontSize: `${Math.max(10, Math.round(t.size * 0.42))}px`
+          width: `${propsAlias.size}px`,
+          height: `${propsAlias.size}px`,
+          fontSize: `${Math.max(10, Math.round(propsAlias.size * 0.42))}px`
         }));
       return (ctx, renderCache) => (openBlock(), createElementBlock(`span`, {
         class: normalizeClass([`inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-primary/10 font-semibold leading-none text-primary`, [props.muted ? `opacity-35 grayscale` : ``, props.ring ? `ring-2 ring-white dark:ring-background` : ``]]),
@@ -50569,19 +50569,19 @@ var wOe = [`disabled`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
         a = pH(),
-        computedResult = computed(() => a.taskTitle(n.task)),
-        computedData = computed(() => [n.task.name.trim() ? `${a.typeLabel(n.task.type)} · ${a.rangeLabel(n.task.range)}` : ``, `${a.repeatText(n.task.repeat)} ${n.task.time}`, a.modeText(n.task)].filter(Boolean)),
-        c = computed(() => n.task.autoShare && n.task.recipients.length > 0),
-        l = computed(() => n.task.enabled ? n.nextRun ? i18nTranslate(`settings.autoReport.nextRun`, {
-          time: a.formatRunTime(n.nextRun)
+        computedResult = computed(() => a.taskTitle(propsAlias.task)),
+        computedData = computed(() => [propsAlias.task.name.trim() ? `${a.typeLabel(propsAlias.task.type)} · ${a.rangeLabel(propsAlias.task.range)}` : ``, `${a.repeatText(propsAlias.task.repeat)} ${propsAlias.task.time}`, a.modeText(propsAlias.task)].filter(Boolean)),
+        c = computed(() => propsAlias.task.autoShare && propsAlias.task.recipients.length > 0),
+        l = computed(() => propsAlias.task.enabled ? propsAlias.nextRun ? i18nTranslate(`settings.autoReport.nextRun`, {
+          time: a.formatRunTime(propsAlias.nextRun)
         }) : i18nTranslate(`settings.autoReport.noUpcoming`) : i18nTranslate(`settings.autoReport.paused`)),
-        u = computed(() => a.runStatus(n.run)),
+        u = computed(() => a.runStatus(propsAlias.run)),
         d = computed(() => ({
           success: `bg-primary`,
           muted: `bg-black/25 dark:bg-white/30`,
@@ -50589,7 +50589,7 @@ var wOe = [`disabled`],
           danger: `bg-red-500`,
           active: `bg-primary animate-pulse`
         })[u.value?.tone ?? `muted`]),
-        f = computed(() => n.run?.status === `queued` || n.run?.status === `running`);
+        f = computed(() => propsAlias.run?.status === `queued` || propsAlias.run?.status === `running`);
       function p(e) {
         setTimeout(e, 0);
       }
@@ -50601,7 +50601,7 @@ var wOe = [`disabled`],
           "opacity-50": !props.task.enabled
         }]),
         disabled: props.disabled,
-        onClick: renderCache[0] ||= e => r(`edit`)
+        onClick: renderCache[0] ||= e => emitAlias(`edit`)
       }, [createElementVNode(`div`, TOe, toDisplayString(computedResult.value), 1), createElementVNode(`div`, EOe, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedData.value, (e, t) => (openBlock(), createElementBlock(Fragment, {
         key: t
       }, [t > 0 ? (openBlock(), createElementBlock(`span`, DOe, `·`)) : createCommentVNode(``, true), createElementVNode(`span`, OOe, toDisplayString(e), 1)], 64))), 128)), renderCache[6] ||= createElementVNode(`span`, {
@@ -50628,14 +50628,14 @@ var wOe = [`disabled`],
         "model-value": props.task.enabled,
         disabled: props.disabled,
         "aria-label": unref(i18nTranslate)(props.task.enabled ? `settings.autoReport.actions.disable` : `settings.autoReport.actions.enable`),
-        "onUpdate:modelValue": renderCache[1] ||= e => r(`toggle`, e)
+        "onUpdate:modelValue": renderCache[1] ||= e => emitAlias(`toggle`, e)
       }, null, 8, [`model-value`, `disabled`, `aria-label`]), createElementVNode(`div`, LOe, [resolveComponent(unref(uiSwitchR), {
         variant: `ghost`,
         size: `icon`,
         class: `h-7 w-7`,
         disabled: props.disabled,
         "aria-label": unref(i18nTranslate)(`settings.autoReport.actions.edit`),
-        onClick: renderCache[2] ||= e => r(`edit`)
+        onClick: renderCache[2] ||= e => emitAlias(`edit`)
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchOt), {
           size: 13
@@ -50667,7 +50667,7 @@ var wOe = [`disabled`],
           default: H(() => [resolveComponent(unref(DropdownMenuItemT), {
             class: `gap-2 text-xs`,
             disabled: f.value,
-            onSelect: renderCache[3] ||= e => p(() => r(`runNow`))
+            onSelect: renderCache[3] ||= e => p(() => emitAlias(`runNow`))
           }, {
             default: H(() => [resolveComponent(unref(ls), {
               size: 13
@@ -50675,7 +50675,7 @@ var wOe = [`disabled`],
             _: 1
           }, 8, [`disabled`]), resolveComponent(unref(DropdownMenuItemT), {
             class: `gap-2 text-xs`,
-            onSelect: renderCache[4] ||= e => p(() => r(`duplicate`))
+            onSelect: renderCache[4] ||= e => p(() => emitAlias(`duplicate`))
           }, {
             default: H(() => [resolveComponent(unref(beautifierY), {
               size: 13
@@ -50683,7 +50683,7 @@ var wOe = [`disabled`],
             _: 1
           }), resolveComponent(unref(DropdownMenuSeparatorComponent)), resolveComponent(unref(DropdownMenuItemT), {
             class: `gap-2 text-xs text-destructive focus:text-destructive`,
-            onSelect: renderCache[5] ||= e => p(() => r(`delete`))
+            onSelect: renderCache[5] ||= e => p(() => emitAlias(`delete`))
           }, {
             default: H(() => [resolveComponent(unref(uiSwitchWt), {
               size: 13
@@ -50871,7 +50871,7 @@ var BOe = {
     }) {
       let itemsAlias = items,
         r = vueLt(items, `modelValue`),
-        i = emit,
+        emitAlias = emit,
         {
           t: a
         } = vueN(),
@@ -50922,7 +50922,7 @@ var BOe = {
         size: `sm`,
         variant: `ghost`,
         class: `h-7 bg-black/[0.045] text-xs hover:bg-black/[0.07]`,
-        onClick: renderCache[1] ||= e => i(`retry`)
+        onClick: renderCache[1] ||= e => emitAlias(`retry`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(a)(`common.retry`)), 1)]),
         _: 1
@@ -50948,7 +50948,7 @@ var BOe = {
         size: `sm`,
         variant: `ghost`,
         class: `h-7 gap-1 bg-black/[0.045] text-xs hover:bg-black/[0.07]`,
-        onClick: renderCache[2] ||= e => i(`addFriends`)
+        onClick: renderCache[2] ||= e => emitAlias(`addFriends`)
       }, {
         default: H(() => [resolveComponent(unref(tc), {
           size: 12
@@ -51261,7 +51261,7 @@ var BOe = {
     }) {
       let eventAlias = event,
         r = vueLt(event, `open`),
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: s
@@ -51515,8 +51515,8 @@ var BOe = {
       }
       function je(e) {
         let fallbackValue = e.source ?? (e.isBuiltin ? `cloud` : `custom`),
-          n = i18nTranslate(fallbackValue === `template_market` ? `generateReport.templateMarket` : e.isBuiltin ? `generateReport.cloudTemplate` : `generateReport.customTemplate`);
-        return fallbackValue === `template_market` ? n : e.tag || n;
+          i18nTranslateResult = i18nTranslate(fallbackValue === `template_market` ? `generateReport.templateMarket` : e.isBuiltin ? `generateReport.cloudTemplate` : `generateReport.customTemplate`);
+        return fallbackValue === `template_market` ? i18nTranslateResult : e.tag || i18nTranslateResult;
       }
       function Me() {
         k.value = null, j = null, A.value = false;
@@ -51631,7 +51631,7 @@ var BOe = {
           Ke(y.value, i18nTranslate(`settings.autoReport.validation.invalid`));
           return;
         }
-        C.value = null, i(`save`, safeParse.data, e);
+        C.value = null, emitAlias(`save`, safeParse.data, e);
       }
       watch(v, () => {
         C.value &&= null;
@@ -53048,7 +53048,7 @@ var BOe = {
         }), ue();
       }), onUnmounted(() => {
         Ee?.();
-      }), (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, rje, [createElementVNode(`div`, ije, [createElementVNode(`div`, aje, [createElementVNode(`p`, oje, toDisplayString(unref(i18nTranslate)(`settings.todoAutoCompletion.featureTitle`)), 1), resolveComponent(unref(Badge), {
+      }), (row, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, rje, [createElementVNode(`div`, ije, [createElementVNode(`div`, aje, [createElementVNode(`p`, oje, toDisplayString(unref(i18nTranslate)(`settings.todoAutoCompletion.featureTitle`)), 1), resolveComponent(unref(Badge), {
         variant: `outline`,
         class: `border-orange-200 bg-orange-50 px-1.5 py-0 text-[11px] font-normal text-orange-600`
       }, {
@@ -53589,10 +53589,10 @@ var BOe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, jNe, [createElementVNode(`table`, {
         "data-slot": `table`,
-        class: normalizeClass(unref(uiSwitchXt)(`w-full caption-bottom text-sm`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`w-full caption-bottom text-sm`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2)]));
     }
   }),
@@ -53604,10 +53604,10 @@ var BOe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`tbody`, {
         "data-slot": `table-body`,
-        class: normalizeClass(unref(uiSwitchXt)(`[&_tr:last-child]:border-0`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`[&_tr:last-child]:border-0`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -53619,10 +53619,10 @@ var BOe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`td`, {
         "data-slot": `table-cell`,
-        class: normalizeClass(unref(uiSwitchXt)(`p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -53634,10 +53634,10 @@ var BOe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`tr`, {
         "data-slot": `table-row`,
-        class: normalizeClass(unref(uiSwitchXt)(`hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors has-aria-expanded:bg-muted/50`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors has-aria-expanded:bg-muted/50`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -53649,10 +53649,10 @@ var BOe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`th`, {
         "data-slot": `table-head`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -53664,10 +53664,10 @@ var BOe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`thead`, {
         "data-slot": `table-header`,
-        class: normalizeClass(unref(uiSwitchXt)(`[&_tr]:border-b`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`[&_tr]:border-b`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -53978,7 +53978,7 @@ All business endpoints use this response envelope:
         await A(), setTimeoutResult = setInterval(k, 1e4);
       }), onUnmounted(() => {
         u++, setTimeoutResult &&= (clearInterval(setTimeoutResult), null);
-      }), (e, renderCache) => (openBlock(), createElementBlock(`div`, FNe, [createElementVNode(`div`, INe, [resolveComponent(unref(ks), {
+      }), (row, renderCache) => (openBlock(), createElementBlock(`div`, FNe, [createElementVNode(`div`, INe, [resolveComponent(unref(ks), {
         size: 16,
         "stroke-width": 1.5,
         class: `text-[#999]`
@@ -54209,13 +54209,13 @@ All business endpoints use this response envelope:
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: props.open,
-        "onUpdate:open": renderCache[0] ||= e => n(`update:open`, e)
+        "onUpdate:open": renderCache[0] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `!h-[calc(100vh-96px)] !max-h-[720px] !w-[calc(100vw-96px)] !max-w-[1000px] !gap-0 overflow-hidden !p-0`
@@ -54440,16 +54440,16 @@ All business endpoints use this response envelope:
       }
     },
     setup(props) {
-      let t = props,
-        computedResult = computed(() => Array.isArray(t.value)),
-        computedData = computed(() => t.value !== null && typeof t.value == `object` && !Array.isArray(t.value)),
+      let propsAlias = props,
+        computedResult = computed(() => Array.isArray(propsAlias.value)),
+        computedData = computed(() => propsAlias.value !== null && typeof propsAlias.value == `object` && !Array.isArray(propsAlias.value)),
         i = computed(() => computedResult.value || computedData.value),
-        a = computed(() => Array.isArray(t.value) ? t.value : []),
-        o = computed(() => computedData.value ? Object.entries(t.value) : []),
+        a = computed(() => Array.isArray(propsAlias.value) ? propsAlias.value : []),
+        o = computed(() => computedData.value ? Object.entries(propsAlias.value) : []),
         s = computed(() => computedResult.value ? a.value.length : o.value.length),
-        c = computed(() => t.label === undefined ? `` : typeof t.label == `number` ? `[${t.label}]` : JSON.stringify(t.label)),
-        l = computed(() => typeof t.value == `string` ? JSON.stringify(t.value) : typeof t.value == `number` || typeof t.value == `boolean` ? String(t.value) : t.value === null ? `null` : JSON.stringify(t.value)),
-        u = computed(() => typeof t.value == `string` ? `text-emerald-700` : typeof t.value == `number` ? `text-sky-700` : typeof t.value == `boolean` ? `text-purple-700` : `text-[#777]`);
+        c = computed(() => propsAlias.label === undefined ? `` : typeof propsAlias.label == `number` ? `[${propsAlias.label}]` : JSON.stringify(propsAlias.label)),
+        l = computed(() => typeof propsAlias.value == `string` ? JSON.stringify(propsAlias.value) : typeof propsAlias.value == `number` || typeof propsAlias.value == `boolean` ? String(propsAlias.value) : propsAlias.value === null ? `null` : JSON.stringify(propsAlias.value)),
+        u = computed(() => typeof propsAlias.value == `string` ? `text-emerald-700` : typeof propsAlias.value == `number` ? `text-sky-700` : typeof propsAlias.value == `boolean` ? `text-purple-700` : `text-[#777]`);
       return (ctx, renderCache) => {
         let d = vueWt(`JsonTreeNode`, true);
         return openBlock(), createElementBlock(`div`, SPe, [i.value ? (openBlock(), createElementBlock(`details`, {
@@ -56210,17 +56210,17 @@ var RH = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(ProgressRoot), vueNt({
         "data-slot": `progress`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`bg-muted h-1 rounded-full relative flex w-full items-center overflow-x-hidden`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`bg-muted h-1 rounded-full relative flex w-full items-center overflow-x-hidden`, propsAlias.class)
       }), {
         default: H(() => [resolveComponent(unref(ProgressIndicator), {
           "data-slot": `progress-indicator`,
           class: `bg-primary size-full flex-1 transition-all`,
-          style: vueNr(`transform: translateX(-${100 - (t.modelValue ?? 0)}%);`)
+          style: vueNr(`transform: translateX(-${100 - (propsAlias.modelValue ?? 0)}%);`)
         }, null, 8, [`style`])]),
         _: 1
       }, 16, [`class`]));
@@ -56692,7 +56692,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           locale: i
         } = vueN(),
@@ -56720,7 +56720,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
         });
       });
       function p(e) {
-        d.value = e, e.start && e.end && (r(`change`, {
+        d.value = e, e.start && e.end && (emitAlias(`change`, {
           start: l(e.start),
           end: l(e.end)
         }), a.value = false);
@@ -56799,7 +56799,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
           return new popoverX(t, n, r);
         },
         s = e => `${e.year}-${String(e.month).padStart(2, `0`)}-${String(e.day).padStart(2, `0`)}`,
-        c = popoverO(popoverD()),
+        popoverOResult = popoverO(popoverD()),
         computedResult = computed(() => o(n.value.date));
       function u(e) {
         n.value = {
@@ -56859,7 +56859,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
             "model-value": computedResult.value,
             "prevent-deselect": ``,
             locale: unref(i),
-            "max-value": unref(c),
+            "max-value": unref(popoverOResult),
             "fixed-weeks": ``,
             "onUpdate:modelValue": d
           }, null, 8, [`model-value`, `locale`, `max-value`])]),
@@ -57147,9 +57147,9 @@ var DRe = {
     }) {
       let n = [`all`, `custom`],
         r = [`skip`, `merge`, `replace`],
-        i = props,
+        propsAlias = props,
         a = vueLt(props, `open`),
-        o = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -57164,9 +57164,9 @@ var DRe = {
         m = ref(false),
         h = ref(false),
         g = 0,
-        _ = computed(() => qH.map(item => item.id).filter(item => i.preview?.groupCounts?.[item] !== undefined));
+        _ = computed(() => qH.map(item => item.id).filter(item => propsAlias.preview?.groupCounts?.[item] !== undefined));
       async function v() {
-        let e = i.preview?.filePath;
+        let e = propsAlias.preview?.filePath;
         if (!e || !_.value.length) return;
         let t = ++g;
         f.value = null;
@@ -57191,10 +57191,10 @@ var DRe = {
       }, {
         deep: true
       });
-      let computedResult = computed(() => i.preview?.filePath?.split(/[\\/]/).pop() ?? ``),
-        computedData = computed(() => i.preview?.exportedAt ? new Date(i.preview.exportedAt).toLocaleString() : `--`),
+      let computedResult = computed(() => propsAlias.preview?.filePath?.split(/[\\/]/).pop() ?? ``),
+        computedData = computed(() => propsAlias.preview?.exportedAt ? new Date(propsAlias.preview.exportedAt).toLocaleString() : `--`),
         x = computed(() => {
-          let e = i.preview?.range;
+          let e = propsAlias.preview?.range;
           return !e?.from && !e?.to ? i18nTranslate(`settings.dataTransfer.import.coverageAll`) : `${e.from?.replaceAll(`-`, `/`) ?? `…`} – ${e.to?.replaceAll(`-`, `/`) ?? `…`}`;
         });
       function S(e) {
@@ -57219,7 +57219,7 @@ var DRe = {
           let t = f.value?.get(item.id);
           return {
             id: item.id,
-            count: t ? t.incoming : f.value ? i.preview?.groupCounts?.[item.id] ?? 0 : null,
+            count: t ? t.incoming : f.value ? propsAlias.preview?.groupCounts?.[item.id] ?? 0 : null,
             detail: S(t)
           };
         })),
@@ -57236,7 +57236,7 @@ var DRe = {
         }
       }
       async function O() {
-        let e = i.preview?.filePath;
+        let e = propsAlias.preview?.filePath;
         if (e) {
           h.value = false, m.value = true;
           try {
@@ -57246,7 +57246,7 @@ var DRe = {
               groups: [...u.value],
               range: lU(d.value)
             });
-            t?.ok && (p.value = t.impacts ?? [], o(`imported`));
+            t?.ok && (p.value = t.impacts ?? [], emitAlias(`imported`));
           } finally {
             m.value = false;
           }
@@ -57454,7 +57454,7 @@ var DRe = {
       let n = [`all`, `before`, `custom`],
         mapped = qH.filter(item => item.clearable).map(item => item.id),
         i = vueLt(props, `open`),
-        a = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -57540,7 +57540,7 @@ var DRe = {
               groups: [...l.value],
               range: lU(u.value),
               deleteScreenshots: d.value && S.value
-            }))?.ok && (a(`cleared`), i.value = false);
+            }))?.ok && (emitAlias(`cleared`), i.value = false);
           } finally {
             p.value = false;
           }
@@ -58666,7 +58666,7 @@ var LBe = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         r = vueLt(props, `consentOpen`),
         i = vueLt(props, `deleteOpen`),
         {
@@ -58698,7 +58698,7 @@ var LBe = {
               default: H(() => [createTextVNode(toDisplayString(unref(a)(`common.cancel`)), 1)]),
               _: 1
             }), resolveComponent(unref(alertDialogS), {
-              onClick: renderCache[0] ||= e => n(`confirmConsent`)
+              onClick: renderCache[0] ||= e => emitAlias(`confirmConsent`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(a)(`settings.mechanicalKeyboardConsentConfirm`)), 1)]),
               _: 1
@@ -58728,7 +58728,7 @@ var LBe = {
               _: 1
             }), resolveComponent(unref(alertDialogS), {
               variant: `destructive`,
-              onClick: renderCache[2] ||= e => n(`confirmDelete`)
+              onClick: renderCache[2] ||= e => emitAlias(`confirmDelete`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(a)(`settings.keyboardSoundCustomDeleteConfirm`)), 1)]),
               _: 1
@@ -59335,7 +59335,7 @@ var eVe = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         r = vueLt(props, `open`),
         {
           t: i
@@ -59365,7 +59365,7 @@ var eVe = {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`common.cancel`)), 1)]),
               _: 1
             }), resolveComponent(unref(alertDialogS), {
-              onClick: renderCache[0] ||= e => n(`confirm`)
+              onClick: renderCache[0] ||= e => emitAlias(`confirm`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`settings.keyboardHeatmapConsentConfirm`)), 1)]),
               _: 1
@@ -59619,7 +59619,7 @@ var DVe = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         r = vueLt(props, `open`),
         {
           t: i
@@ -59645,7 +59645,7 @@ var DVe = {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`common.cancel`)), 1)]),
               _: 1
             }), resolveComponent(unref(alertDialogS), {
-              onClick: renderCache[0] ||= e => n(`confirm`)
+              onClick: renderCache[0] ||= e => emitAlias(`confirm`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`settings.mouseHeatmapConsentConfirm`)), 1)]),
               _: 1
@@ -59966,7 +59966,7 @@ var PU = {
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: i18nTranslate,
           locale: r
@@ -60089,14 +60089,14 @@ var PU = {
         size: `sm`,
         variant: `outline`,
         class: `h-7 text-xs`,
-        disabled: t.disabled,
+        disabled: propsAlias.disabled,
         onClick: E
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.agentSessionImport.configure`)), 1)]),
         _: 1
       }, 8, [`disabled`])) : createCommentVNode(``, true), resolveComponent(unref(uiSwitchT), {
         "model-value": _.value,
-        disabled: t.disabled || unref(o),
+        disabled: propsAlias.disabled || unref(o),
         "onUpdate:modelValue": w
       }, null, 8, [`model-value`, `disabled`])])]), resolveComponent(unref(dialogA), {
         open: l.value,
@@ -60249,7 +60249,7 @@ var PU = {
             }), resolveComponent(unref(uiSwitchR), {
               type: `submit`,
               size: `sm`,
-              disabled: t.disabled || unref(o)
+              disabled: propsAlias.disabled || unref(o)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.save`)), 1)]),
               _: 1
@@ -61308,8 +61308,8 @@ var RU = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -61330,15 +61330,15 @@ var RU = {
           growthSettingsLoaded: l,
           highlightedItem: u,
           refresh: h,
-          navigate: e => r(`navigate`, e),
-          openUpdate: () => r(`open-update`)
+          navigate: e => emitAlias(`navigate`, e),
+          openUpdate: () => emitAlias(`open-update`)
         });
       function h() {
         l.value = false, c().then(() => {
           l.value = !o.value;
         }), p(), m();
       }
-      watch(() => n.refreshKey, h);
+      watch(() => propsAlias.refreshKey, h);
       let computedResult = computed(() => a.value ? i18nTranslate(`settings.status.loading`) : o.value ? o.value : ``),
         _ = computed(() => o.value ? `text-destructive` : `text-[#999]`),
         v = ref(false),
@@ -61382,10 +61382,10 @@ var RU = {
       function O() {
         emptyItems.forEach(clearTimeout), emptyItems = [];
       }
-      function k(e) {
+      function k(el) {
         let countAlias = count;
         if (!countAlias) return true;
-        let boundingClientRect = e.getBoundingClientRect(),
+        let boundingClientRect = el.getBoundingClientRect(),
           boundingClientRectResult = countAlias.getBoundingClientRect();
         return boundingClientRect.top >= boundingClientRectResult.top && boundingClientRect.bottom <= boundingClientRectResult.bottom;
       }
@@ -61410,13 +61410,13 @@ var RU = {
           u.value = null;
         }, 2400));
       }
-      return watch(() => n.focusTarget, value => {
+      return watch(() => propsAlias.focusTarget, value => {
         value && vueRt(() => A(value));
       }), onBeforeMount(() => {
         vueRt(() => {
           count = b.value?.closest(`.content-body`) ?? null, count?.addEventListener(`scroll`, T, {
             passive: true
-          }), w(), n.focusTarget && A(n.focusTarget);
+          }), w(), propsAlias.focusTarget && A(propsAlias.focusTarget);
         }), window.electronAPI?.badges?.triggerEvent?.(`page_visit`, {
           page: `settings`
         }), h();
@@ -61515,7 +61515,7 @@ var RU = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -61538,7 +61538,7 @@ var RU = {
           }) : methodLabel;
         });
       function u(e) {
-        r(`update:modelValue`, eventAlias.modelValue.includes(e) ? eventAlias.modelValue.filter(item => item !== e) : [...eventAlias.modelValue, e]);
+        emitAlias(`update:modelValue`, eventAlias.modelValue.includes(e) ? eventAlias.modelValue.filter(item => item !== e) : [...eventAlias.modelValue, e]);
       }
       return (ctx, cache) => (openBlock(), createBlock(unref(popoverR), {
         modal: ``
@@ -61570,7 +61570,7 @@ var RU = {
             key: 0,
             type: `button`,
             class: `text-xs text-primary hover:underline`,
-            onClick: cache[0] ||= e => r(`update:modelValue`, [])
+            onClick: cache[0] ||= e => emitAlias(`update:modelValue`, [])
           }, toDisplayString(unref(i18nTranslate)(`profile.ledgerMethodClear`)), 1)) : createCommentVNode(``, true)]), event.items.length > VWe ? (openBlock(), createElementBlock(`div`, FWe, [resolveComponent(unref(Cs), {
             size: 13,
             class: `pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground`
@@ -62667,7 +62667,7 @@ var KGe = {
           t: i18nTranslate,
           locale: i
         } = vueN(),
-        a = emit,
+        emitAlias = emit,
         eventAlias = event,
         {
           user: s,
@@ -62739,12 +62739,12 @@ var KGe = {
       let ve = computed(() => {
         let e = he.value,
           t = e ? xW(e.savedMinutes) : null,
-          n = i18nTranslate(`profile.insights.unitDays`);
+          i18nTranslateResult = i18nTranslate(`profile.insights.unitDays`);
         return [{
           key: `activeDays`,
           label: i18nTranslate(`profile.insights.activeDays`),
           value: e ? _e(e.activeDays) : `—`,
-          unit: e ? n : ``,
+          unit: e ? i18nTranslateResult : ``,
           hint: i18nTranslate(`profile.insights.activeDaysHint`)
         }, {
           key: `reports`,
@@ -62762,7 +62762,7 @@ var KGe = {
           key: `streak`,
           label: i18nTranslate(`profile.insights.currentStreak`),
           value: e ? _e(e.currentStreak) : `—`,
-          unit: e ? n : ``,
+          unit: e ? i18nTranslateResult : ``,
           hint: i18nTranslate(`profile.insights.currentStreakHint`)
         }];
       });
@@ -62818,7 +62818,7 @@ var KGe = {
       }
       function ke(e) {
         if (e.level === 0) {
-          a(`navigate`, `heat-map-year`);
+          emitAlias(`navigate`, `heat-map-year`);
           return;
         }
         aW(e, be.value, i18nTranslate(`heatMap.yearHighlights.levelTag`, {
@@ -63400,7 +63400,7 @@ var KGe = {
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: n
         } = vueN(),
@@ -63414,7 +63414,7 @@ var KGe = {
         a = ref({
           ...i
         }),
-        computedResult = computed(() => a.value[t.state === `completed` ? `completed` : `writing`]),
+        computedResult = computed(() => a.value[propsAlias.state === `completed` ? `completed` : `writing`]),
         s = true,
         c = 0;
       async function l() {
@@ -63446,7 +63446,7 @@ var KGe = {
         document.hidden || l();
       }
       function d() {
-        let e = t.state === `completed` ? `completed` : `writing`;
+        let e = propsAlias.state === `completed` ? `completed` : `writing`;
         a.value[e] !== i[e] && (a.value = {
           ...a.value,
           [e]: i[e]
@@ -63566,10 +63566,10 @@ var KGe = {
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, cache) => (openBlock(), createBlock(unref(oi), vueNt({
         "data-slot": `sheet`
-      }, unref(n)), {
+      }, unref(uiSwitchZResult)), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
@@ -63584,10 +63584,10 @@ var KGe = {
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(ri), vueNt({
         "data-slot": `sheet-close`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -63608,12 +63608,12 @@ var KGe = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(ai), vueNt({
         "data-slot": `sheet-overlay`,
-        class: unref(uiSwitchXt)(`bg-black/10 dark:bg-black/60 supports-backdrop-filter:backdrop-blur-xs pointer-events-auto absolute inset-0 z-50 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0`, t.class)
-      }, unref(n), {
+        class: unref(uiSwitchXt)(`bg-black/10 dark:bg-black/60 supports-backdrop-filter:backdrop-blur-xs pointer-events-auto absolute inset-0 z-50 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0`, propsAlias.class)
+      }, unref(uiSwitchLtResult), {
         style: {
           "-webkit-app-region": `no-drag`
         }
@@ -63652,20 +63652,20 @@ var KGe = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`, `side`, `showCloseButton`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `side`, `showCloseButton`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(pi), {
         to: `#app-window-portal`
       }, {
         default: H(() => [resolveComponent(SheetOverlay), resolveComponent(unref(ii), vueNt({
           "data-slot": `sheet-content`,
           "data-side": props.side,
-          class: unref(uiSwitchXt)(`bg-popover text-popover-foreground pointer-events-auto absolute z-50 flex flex-col gap-4 bg-clip-padding text-sm shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=top]:data-closed:slide-out-to-top-10`, n.class)
+          class: unref(uiSwitchXt)(`bg-popover text-popover-foreground pointer-events-auto absolute z-50 flex flex-col gap-4 bg-clip-padding text-sm shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=top]:data-closed:slide-out-to-top-10`, propsAlias.class)
         }, {
           ...ctx.$attrs,
-          ...unref(a)
+          ...unref(uiSwitchZResult)
         }, {
           style: {
             "-webkit-app-region": `no-drag`
@@ -63706,12 +63706,12 @@ var KGe = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(si), vueNt({
         "data-slot": `sheet-description`,
-        class: unref(uiSwitchXt)(`text-muted-foreground text-sm`, t.class)
-      }, unref(n)), {
+        class: unref(uiSwitchXt)(`text-muted-foreground text-sm`, propsAlias.class)
+      }, unref(uiSwitchLtResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -63725,10 +63725,10 @@ var KGe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `sheet-footer`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-2 p-4 mt-auto flex flex-col`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-2 p-4 mt-auto flex flex-col`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -63740,10 +63740,10 @@ var KGe = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `sheet-header`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-0.5 p-4 flex flex-col`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-0.5 p-4 flex flex-col`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -63759,12 +63759,12 @@ var KGe = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(li), vueNt({
         "data-slot": `sheet-title`,
-        class: unref(uiSwitchXt)(`text-foreground text-base font-medium cn-font-heading`, t.class)
-      }, unref(n)), {
+        class: unref(uiSwitchXt)(`text-foreground text-base font-medium cn-font-heading`, propsAlias.class)
+      }, unref(uiSwitchLtResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -76040,8 +76040,8 @@ function b0e(items, t) {
       partValue = h?.content ?? part,
       v = a(partValue);
     v && (s ? v.markerChar === c && v.markerLen >= l && /^\s*$/.test(v.rest) && (s = false, c = ``, l = 0) : (s = true, c = v.markerChar, l = v.markerLen));
-    let y = partValue;
-    if (!s && y.includes(`</`)) for (let normalizeResult of mapped) y = y.replace(normalizeResult, (e, t, n, r) => {
+    let partValueAlias = partValue;
+    if (!s && partValueAlias.includes(`</`)) for (let normalizeResult of mapped) partValueAlias = partValueAlias.replace(normalizeResult, (e, t, n, r) => {
       if (r.replace(/^[\t ]+/, ``).startsWith(`|`)) return e;
       let replaced = r.slice(0, n).replace(/^[\t ]+/, ``);
       if (replaced.length > 0) {
@@ -76052,10 +76052,10 @@ function b0e(items, t) {
       return `${t}\n\n`;
     });
     if (fallbackValue) {
-      let e = fallbackValue + y.split(`
+      let e = fallbackValue + partValueAlias.split(`
 `).join(`\n${fallbackValue}`);
       u += e;
-    } else u += y;
+    } else u += partValueAlias;
     u += m, d = n ? t + 1 : items.length;
   }
   return u;
@@ -76920,16 +76920,16 @@ var M0e = Object.defineProperty,
     },
     emits: [`copy`],
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, renderCache) => (openBlock(), createElementBlock(`blockquote`, {
         class: `blockquote`,
         dir: `auto`,
         cite: props.node.cite
       }, [resolveComponent(unref(s$), {
-        "index-key": `blockquote-${t.indexKey}`,
-        nodes: t.node.children || [],
-        "custom-id": t.customId,
-        typewriter: t.typewriter,
+        "index-key": `blockquote-${propsAlias.indexKey}`,
+        nodes: propsAlias.node.children || [],
+        "custom-id": propsAlias.customId,
+        typewriter: propsAlias.typewriter,
         onCopy: renderCache[0] ||= e => ctx.$emit(`copy`, e)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])], 8, L0e));
     }
@@ -77012,20 +77012,20 @@ var V0e = {
     },
     emits: [`copy`],
     setup(props) {
-      let t = props;
-      return (ctx, cache) => (openBlock(), createElementBlock(`dl`, V0e, [(openBlock(true), createElementBlock(Fragment, null, renderList(t.node.items, (r, i) => (openBlock(), createElementBlock(Fragment, {
+      let propsAlias = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`dl`, V0e, [(openBlock(true), createElementBlock(Fragment, null, renderList(propsAlias.node.items, (r, i) => (openBlock(), createElementBlock(Fragment, {
         key: i
       }, [createElementVNode(`dt`, H0e, [resolveComponent(unref(s$), {
-        "index-key": `definition-term-${t.indexKey}-${i}`,
+        "index-key": `definition-term-${propsAlias.indexKey}-${i}`,
         nodes: r.term,
-        "custom-id": t.customId,
-        typewriter: t.typewriter,
+        "custom-id": propsAlias.customId,
+        typewriter: propsAlias.typewriter,
         onCopy: cache[0] ||= t => ctx.$emit(`copy`, t)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])]), createElementVNode(`dd`, U0e, [resolveComponent(unref(s$), {
-        "index-key": `definition-desc-${t.indexKey}-${i}`,
+        "index-key": `definition-desc-${propsAlias.indexKey}-${i}`,
         nodes: r.definition,
-        "custom-id": t.customId,
-        typewriter: t.typewriter,
+        "custom-id": propsAlias.customId,
+        typewriter: propsAlias.typewriter,
         onCopy: cache[1] ||= t => ctx.$emit(`copy`, t)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])])], 64))), 128))]));
     }
@@ -77189,10 +77189,10 @@ var J0e = [`innerHTML`],
       htmlPolicy: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = vueX(`markstreamHtmlPolicy`, undefined),
-        computedResult = computed(() => t.htmlPolicy ?? n?.value ?? `safe`),
-        computedData = computed(() => (revision.value, TX(t.customId))),
+        computedResult = computed(() => propsAlias.htmlPolicy ?? n?.value ?? `safe`),
+        computedData = computed(() => (revision.value, TX(propsAlias.customId))),
         a = defineComponent({
           name: `DynamicRenderer`,
           props: {
@@ -77206,7 +77206,7 @@ var J0e = [`innerHTML`],
           }
         }),
         o = computed(() => {
-          let content = t.node.content;
+          let content = propsAlias.node.content;
           if (!content) return {
             mode: `html`,
             content: ``
@@ -77215,11 +77215,11 @@ var J0e = [`innerHTML`],
             mode: `html`,
             content: cX(content, computedResult.value)
           };
-          if (t.node.loading && !t.node.autoClosed) return {
+          if (propsAlias.node.loading && !propsAlias.node.autoClosed) return {
             mode: `text`,
             content: content
           };
-          if (t.node.loading && t.node.autoClosed) {
+          if (propsAlias.node.loading && propsAlias.node.autoClosed) {
             let t = PX(content, computedData.value, computedResult.value);
             if (t !== null) return {
               mode: `dynamic`,
@@ -77242,19 +77242,19 @@ var J0e = [`innerHTML`],
       return (ctx, cache) => o.value.mode === `dynamic` ? (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: normalizeClass([`html-inline-node`, {
-          "html-inline-node--loading": t.node.loading
+          "html-inline-node--loading": propsAlias.node.loading
         }])
       }, [resolveComponent(unref(a), {
         nodes: o.value.nodes
       }, null, 8, [`nodes`])], 2)) : o.value.mode === `text` ? (openBlock(), createElementBlock(`span`, {
         key: 1,
         class: normalizeClass([`html-inline-node`, {
-          "html-inline-node--loading": t.node.loading
+          "html-inline-node--loading": propsAlias.node.loading
         }])
       }, toDisplayString(o.value.content), 3)) : (openBlock(), createElementBlock(`span`, {
         key: 2,
         class: normalizeClass([`html-inline-node`, {
-          "html-inline-node--loading": t.node.loading
+          "html-inline-node--loading": propsAlias.node.loading
         }]),
         innerHTML: o.value.content
       }, null, 10, J0e));
@@ -77275,7 +77275,7 @@ var Y0e = {
       node: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = vueFt(),
         r = vueX(`markstreamTypewriter`, undefined),
         i = vueX(`markstreamTextStreamState`, undefined),
@@ -77288,7 +77288,7 @@ var Y0e = {
           let fallbackValue = n[`index-key`] ?? n.indexKey;
           return fallbackValue == null || fallbackValue === `` ? `` : String(fallbackValue);
         }),
-        c = ref(t.node.code),
+        c = ref(propsAlias.node.code),
         l = ref(``),
         counter = ref(0);
       function d() {
@@ -77300,7 +77300,7 @@ var Y0e = {
       function p() {
         l.value &&= (c.value = d(), ``);
       }
-      watch([() => t.node.code, s, computedData], ([e]) => {
+      watch([() => propsAlias.node.code, s, computedData], ([e]) => {
         let t = String(e ?? ``),
           n = d(),
           r = s.value,
@@ -77342,7 +77342,7 @@ var Z0e = [`id`],
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = ref(null),
         r = ref(null),
         i = ref({
@@ -77351,13 +77351,13 @@ var Z0e = [`id`],
           top: `0px`
         }),
         a = ref({}),
-        o = ref(t.placement ?? `top`),
+        o = ref(propsAlias.placement ?? `top`),
         s = ref(false),
         c = null;
       function l() {
         return gX(this, null, function* () {
-          if (!t.anchorEl || !n.value) return;
-          let e = [De(t.offset ?? 6), we(), re({
+          if (!propsAlias.anchorEl || !n.value) return;
+          let e = [De(propsAlias.offset ?? 6), we(), re({
               padding: 6
             }), ...(r.value ? [ue({
               element: r.value,
@@ -77368,8 +77368,8 @@ var Z0e = [`id`],
               y: c,
               placement: l,
               middlewareData: u
-            } = yield ye(t.anchorEl, n.value, {
-              placement: t.placement ?? `top`,
+            } = yield ye(propsAlias.anchorEl, n.value, {
+              placement: propsAlias.placement ?? `top`,
               middleware: e,
               strategy: `fixed`
             });
@@ -77392,24 +77392,24 @@ var Z0e = [`id`],
           }
         });
       }
-      return watch(() => t.visible, value => gX(null, null, function* () {
+      return watch(() => propsAlias.visible, value => gX(null, null, function* () {
         if (value) {
-          if (s.value = false, yield vueRt(), t.anchorEl && n.value) try {
-            let boundingClientRect = t.anchorEl.getBoundingClientRect();
+          if (s.value = false, yield vueRt(), propsAlias.anchorEl && n.value) try {
+            let boundingClientRect = propsAlias.anchorEl.getBoundingClientRect();
             yield l();
             let transform = i.value.transform;
-            if (t.originX != null && t.originY != null) {
-              let n = Math.abs(Number(t.originX) - boundingClientRect.left),
-                a = Math.abs(Number(t.originY) - boundingClientRect.top);
-              Math.hypot(n, a) > 120 ? (i.value.transform = `translate3d(${Math.round(t.originX)}px, ${Math.round(t.originY)}px, 0)`, yield vueRt(), s.value = true, yield vueRt(), i.value.transform = transform) : s.value = true;
+            if (propsAlias.originX != null && propsAlias.originY != null) {
+              let n = Math.abs(Number(propsAlias.originX) - boundingClientRect.left),
+                a = Math.abs(Number(propsAlias.originY) - boundingClientRect.top);
+              Math.hypot(n, a) > 120 ? (i.value.transform = `translate3d(${Math.round(propsAlias.originX)}px, ${Math.round(propsAlias.originY)}px, 0)`, yield vueRt(), s.value = true, yield vueRt(), i.value.transform = transform) : s.value = true;
             } else s.value = true;
-            c = te(t.anchorEl, n.value, l);
+            c = te(propsAlias.anchorEl, n.value, l);
           } catch {
-            yield l(), s.value = true, c = te(t.anchorEl, n.value, l);
+            yield l(), s.value = true, c = te(propsAlias.anchorEl, n.value, l);
           } else s.value = true;
         } else s.value = false, c &&= (c(), null);
-      })), watch([() => t.anchorEl, () => t.placement, () => t.content], () => gX(null, null, function* () {
-        t.visible && t.anchorEl && n.value && (yield vueRt(), yield l());
+      })), watch([() => propsAlias.anchorEl, () => propsAlias.placement, () => propsAlias.content], () => gX(null, null, function* () {
+        propsAlias.visible && propsAlias.anchorEl && n.value && (yield vueRt(), yield l());
       })), onMounted(() => {
         c && c();
       }), (c, l) => (openBlock(), createBlock(vueF, {
@@ -77423,7 +77423,7 @@ var Z0e = [`id`],
         appear: ``
       }, {
         default: H(() => [vueZt(createElementVNode(`div`, {
-          id: t.id,
+          id: propsAlias.id,
           ref_key: `tooltip`,
           ref: n,
           style: vueNr({
@@ -77459,8 +77459,8 @@ function JX() {
   KX &&= (clearTimeout(KX), null), qX &&= (clearTimeout(qX), null);
 }
 var YX = false;
-function XX(e, t, n = `top`, r = false, i, a) {
-  if (!e) return;
+function XX(el, t, n = `top`, r = false, i, a) {
+  if (!el) return;
   (function () {
     if (!YX && typeof document < `u`) try {
       YX = true;
@@ -77482,9 +77482,9 @@ function XX(e, t, n = `top`, r = false, i, a) {
     }
   })(), JX();
   let o = () => {
-    HX.value = `tooltip-${Date.now()}-${Math.floor(1e3 * Math.random())}`, VX.value = e, zX.value = t, BX.value = n, UX.value = i?.x ?? null, WX.value = i?.y ?? null, GX.value = typeof a == `boolean` ? a : null, RX.value = true;
+    HX.value = `tooltip-${Date.now()}-${Math.floor(1e3 * Math.random())}`, VX.value = el, zX.value = t, BX.value = n, UX.value = i?.x ?? null, WX.value = i?.y ?? null, GX.value = typeof a == `boolean` ? a : null, RX.value = true;
     try {
-      e.setAttribute(`aria-describedby`, HX.value);
+      el.setAttribute(`aria-describedby`, HX.value);
     } catch {}
   };
   r ? o() : KX = setTimeout(o, 80);
@@ -77607,20 +77607,20 @@ var $0e = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         i = ref(false),
         a = ref(false),
         o = ref(false),
         computedResult = computed(() => a.value && eventAlias.fallbackSrc ? eventAlias.fallbackSrc : eventAlias.node.src),
         computedData = computed(() => !eventAlias.lazy);
       function l() {
-        eventAlias.fallbackSrc && !o.value ? (o.value = true, a.value = true) : (a.value = true, r(`error`, eventAlias.node.src));
+        eventAlias.fallbackSrc && !o.value ? (o.value = true, a.value = true) : (a.value = true, emitAlias(`error`, eventAlias.node.src));
       }
       function u() {
-        i.value = true, a.value = false, r(`load`, computedResult.value);
+        i.value = true, a.value = false, emitAlias(`load`, computedResult.value);
       }
       function d(e) {
-        e.preventDefault(), i.value && !a.value && r(`click`, [e, computedResult.value]);
+        e.preventDefault(), i.value && !a.value && emitAlias(`click`, [e, computedResult.value]);
       }
       let {
         t: f
@@ -77750,7 +77750,7 @@ var dZ = vueCn(false),
     },
     emits: [`copy`],
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = (a2e ||= uZ().then(result => {
           dZ.value = !!result;
         }).catch(() => {
@@ -77769,7 +77769,7 @@ var dZ = vueCn(false),
           let fallbackValue = r[`index-key`] ?? r.indexKey;
           return fallbackValue == null || fallbackValue === `` ? `` : String(fallbackValue);
         }),
-        u = ref(t.node.content),
+        u = ref(propsAlias.node.content),
         d = ref(``),
         counter = ref(0);
       function p() {
@@ -77781,7 +77781,7 @@ var dZ = vueCn(false),
       function h() {
         d.value &&= (u.value = p(), ``);
       }
-      watch([() => t.node.content, l, computedData, () => o?.value], ([e]) => {
+      watch([() => propsAlias.node.content, l, computedData, () => o?.value], ([e]) => {
         let t = String(e ?? ``),
           n = p(),
           r = l.value,
@@ -77876,8 +77876,8 @@ var s2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -77899,7 +77899,7 @@ var s2e = {
       }, [r[n.type] ? (openBlock(), createBlock(vueEt(r[n.type]), {
         key: 0,
         node: n,
-        "custom-id": t.customId,
+        "custom-id": propsAlias.customId,
         "index-key": `${props.indexKey || `superscript`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`])) : (openBlock(), createElementBlock(`span`, c2e, toDisplayString(n.content || n.raw), 1))], 64))), 128))]));
     }
@@ -77921,8 +77921,8 @@ var l2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -77944,7 +77944,7 @@ var l2e = {
       }, [r[n.type] ? (openBlock(), createBlock(vueEt(r[n.type]), {
         key: 0,
         node: n,
-        "custom-id": t.customId,
+        "custom-id": propsAlias.customId,
         "index-key": `${props.indexKey || `subscript`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`])) : (openBlock(), createElementBlock(`span`, u2e, toDisplayString(n.content || n.raw), 1))], 64))), 128))]));
     }
@@ -77963,8 +77963,8 @@ var d2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -77985,7 +77985,7 @@ var d2e = {
         key: `${props.indexKey || `strong`}-${i}`,
         "index-key": `${props.indexKey || `strong`}-${i}`,
         node: n,
-        "custom-id": t.customId
+        "custom-id": propsAlias.customId
       }, null, 8, [`index-key`, `node`, `custom-id`]))), 128))]));
     }
   }), [[`__scopeId`, `data-v-af3ce037`]]);
@@ -78003,8 +78003,8 @@ var f2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -78024,7 +78024,7 @@ var f2e = {
       return (ctx, cache) => (openBlock(), createElementBlock(`del`, f2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
         key: `${props.indexKey || `strikethrough`}-${i}`,
         node: n,
-        "custom-id": t.customId,
+        "custom-id": propsAlias.customId,
         "index-key": `${props.indexKey || `strikethrough`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
@@ -78187,8 +78187,8 @@ var _2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -78208,7 +78208,7 @@ var _2e = {
       return (ctx, cache) => (openBlock(), createElementBlock(`ins`, _2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
         key: `${props.indexKey || `insert`}-${i}`,
         node: n,
-        "custom-id": t.customId,
+        "custom-id": propsAlias.customId,
         "index-key": `${props.indexKey || `insert`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
@@ -78227,8 +78227,8 @@ var v2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -78248,7 +78248,7 @@ var v2e = {
       return (ctx, cache) => (openBlock(), createElementBlock(`mark`, v2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
         key: `${props.indexKey || `highlight`}-${i}`,
         node: n,
-        "custom-id": t.customId,
+        "custom-id": propsAlias.customId,
         "index-key": `${props.indexKey || `highlight`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
@@ -78267,8 +78267,8 @@ var y2e = {
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -78288,7 +78288,7 @@ var y2e = {
       return (ctx, cache) => (openBlock(), createElementBlock(`em`, y2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
         key: `${props.indexKey || `emphasis`}-${i}`,
         node: n,
-        "custom-id": t.customId,
+        "custom-id": propsAlias.customId,
         "index-key": `${props.indexKey || `emphasis`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
@@ -78339,15 +78339,15 @@ var x2e = [`id`],
     },
     emits: [`copy`],
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         id: `fnref--${props.node.id}`,
         class: `footnote-node flex text-sm leading-relaxed border-t border-[var(--footnote-border)] pt-2`
       }, [createElementVNode(`div`, S2e, [resolveComponent(unref(s$), {
-        "index-key": `footnote-${t.indexKey}`,
-        nodes: t.node.children,
-        "custom-id": t.customId,
-        typewriter: t.typewriter,
+        "index-key": `footnote-${propsAlias.indexKey}`,
+        nodes: propsAlias.node.children,
+        "custom-id": propsAlias.customId,
+        typewriter: propsAlias.typewriter,
         onCopy: renderCache[0] ||= e => ctx.$emit(`copy`, e)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])])], 8, x2e));
     }
@@ -78376,8 +78376,8 @@ var DZ = _X(defineComponent({
       indexKey: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId),
+      let propsAlias = props,
+        n = TX(propsAlias.customId),
         r = pX({
           text: fZ,
           inline_code: IX,
@@ -78404,7 +78404,7 @@ var DZ = _X(defineComponent({
       }, props.node.attrs), {
         default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
           key: `${props.indexKey || `heading`}-${i}`,
-          "custom-id": t.customId,
+          "custom-id": propsAlias.customId,
           node: n,
           "index-key": `${props.indexKey || `heading`}-${i}`
         }, null, 8, [`custom-id`, `node`, `index-key`]))), 128))]),
@@ -78433,21 +78433,21 @@ var kZ = _X(defineComponent({
   },
   emits: [`copy`],
   setup(props) {
-    let t = props,
-      computedResult = computed(() => t.node ?? t.item),
-      computedData = computed(() => t.value == null ? {} : {
-        value: t.value
+    let propsAlias = props,
+      computedResult = computed(() => propsAlias.node ?? propsAlias.item),
+      computedData = computed(() => propsAlias.value == null ? {} : {
+        value: propsAlias.value
       });
     return (ctx, renderCache) => (openBlock(), createElementBlock(`li`, vueNt({
       class: `list-item`,
       dir: `auto`
     }, computedData.value), [resolveComponent(unref(s$), vueNt({
-      showTooltips: t.showTooltips
+      showTooltips: propsAlias.showTooltips
     }, {
-      "index-key": `list-item-${t.indexKey}`,
+      "index-key": `list-item-${propsAlias.indexKey}`,
       nodes: computedResult.value?.children ?? [],
-      "custom-id": t.customId,
-      typewriter: t.typewriter,
+      "custom-id": propsAlias.customId,
+      typewriter: propsAlias.typewriter,
       "batch-rendering": false,
       onCopy: renderCache[0] ||= t => ctx.$emit(`copy`, t)
     }), null, 16, [`index-key`, `nodes`, `custom-id`, `typewriter`])], 16));
@@ -78709,27 +78709,27 @@ var T2e = {
       htmlPolicy: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = vueX(`markstreamHtmlPolicy`, undefined),
-        computedResult = computed(() => t.htmlPolicy ?? n?.value ?? `safe`),
+        computedResult = computed(() => propsAlias.htmlPolicy ?? n?.value ?? `safe`),
         i = vueA({
           loader: () => Promise.resolve().then(() => c3e),
           suspensible: false
         }),
         computedData = computed(() => {
-          let e = oX(t.node.attrs, computedResult.value);
+          let e = oX(propsAlias.node.attrs, computedResult.value);
           if (!e) return;
           let n = aX(e);
           return Object.keys(n).length > 0 ? n : undefined;
         }),
         o = computed(() => {
-          let trimmed = String(t.node.tag || ``).trim(),
-            n = oX(t.node.attrs, computedResult.value, trimmed);
+          let trimmed = String(propsAlias.node.tag || ``).trim(),
+            n = oX(propsAlias.node.attrs, computedResult.value, trimmed);
           if (!n) return;
           let i = aX(n);
           return Object.keys(i).length > 0 ? i : undefined;
         }),
-        s = computed(() => (revision.value, TX(t.customId))),
+        s = computed(() => (revision.value, TX(propsAlias.customId))),
         c = defineComponent({
           name: `DynamicRenderer`,
           props: {
@@ -78744,14 +78744,14 @@ var T2e = {
         }),
         l = ref(null),
         u = ref(typeof window > `u`),
-        d = ref(t.node.content),
-        f = computed(() => Array.isArray(t.node.children) ? t.node.children : []),
-        p = computed(() => String(t.node.tag || `div`)),
+        d = ref(propsAlias.node.content),
+        f = computed(() => Array.isArray(propsAlias.node.children) ? propsAlias.node.children : []),
+        p = computed(() => String(propsAlias.node.tag || `div`)),
         m = computed(() => {
           let lowercased = p.value.trim().toLowerCase();
           return Yq.has(lowercased) || ZY(lowercased, computedResult.value);
         }),
-        h = computed(() => f.value.length > 0 && !!t.node.tag && !m.value),
+        h = computed(() => f.value.length > 0 && !!propsAlias.node.tag && !m.value),
         g = computed(() => {
           if (h.value) return {
             mode: `structured`
@@ -78760,7 +78760,7 @@ var T2e = {
             mode: `html`,
             content: d.value ?? ``
           };
-          let fallbackValue = d.value ?? t.node.content;
+          let fallbackValue = d.value ?? propsAlias.node.content;
           if (!fallbackValue) return {
             mode: `html`,
             content: ``
@@ -78769,11 +78769,11 @@ var T2e = {
             mode: `html`,
             content: cX(fallbackValue, computedResult.value)
           };
-          if (t.node.loading) {
+          if (propsAlias.node.loading) {
             let n = PX(fallbackValue, s.value, computedResult.value);
             return n === null ? {
               mode: `text`,
-              content: t.node.raw ?? fallbackValue
+              content: propsAlias.node.raw ?? fallbackValue
             } : {
               mode: `dynamic`,
               nodes: n
@@ -78794,10 +78794,10 @@ var T2e = {
         }),
         _ = MZ(),
         v = ref(null),
-        y = !!t.node.loading;
+        y = !!propsAlias.node.loading;
       return typeof window < `u` ? (watch(l, value => {
         var replaceResult, requestAnimationFrameResult;
-        if ((requestAnimationFrameResult = (replaceResult = v.value)?.destroy) == null || requestAnimationFrameResult.call(replaceResult), v.value = null, !y) return u.value = true, void (d.value = t.node.content);
+        if ((requestAnimationFrameResult = (replaceResult = v.value)?.destroy) == null || requestAnimationFrameResult.call(replaceResult), v.value = null, !y) return u.value = true, void (d.value = propsAlias.node.content);
         if (!value) return void (u.value = false);
         let i = _(value, {
           rootMargin: `400px`
@@ -78807,7 +78807,7 @@ var T2e = {
         });
       }, {
         immediate: true
-      }), watch(() => t.node.content, value => {
+      }), watch(() => propsAlias.node.content, value => {
         y && !u.value || (d.value = value);
       })) : u.value = true, onMounted(() => {
         var normalizeResult, payload;
@@ -78863,33 +78863,33 @@ var O2e = {
       customHtmlTags: {}
     },
     setup(props) {
-      let t = props,
-        n = TX(t.customId);
+      let propsAlias = props,
+        n = TX(propsAlias.customId);
       function r(e) {
         return e.type === `text` && String(e.content ?? ``).trim() === ``;
       }
       function i(e) {
         return String(e.content ?? ``);
       }
-      let computedResult = computed(() => t.node.children.filter(item => !r(item))),
+      let computedResult = computed(() => propsAlias.node.children.filter(item => !r(item))),
         computedData = computed(() => computedResult.value.length > 0 && computedResult.value.every(item => item.type === `image` || function (e) {
           let t = function (e) {
             return e.type === `link` && Array.isArray(e.children) ? e.children.filter(e => !r(e)) : [];
           }(e);
           return t.length === 1 && t[0]?.type === `image`;
         }(item))),
-        s = computed(() => new Set(nJ(t.customHtmlTags))),
+        s = computed(() => new Set(nJ(propsAlias.customHtmlTags))),
         c = computed(() => {
-          if (!computedData.value || computedResult.value.length <= 1) return t.node.children;
+          if (!computedData.value || computedResult.value.length <= 1) return propsAlias.node.children;
           let emptyItems = [];
-          for (let n = 0; n < t.node.children.length; n++) {
-            let i = t.node.children[n];
+          for (let n = 0; n < propsAlias.node.children.length; n++) {
+            let i = propsAlias.node.children[n];
             if (!r(i)) {
               emptyItems.push(i);
               continue;
             }
             let a = emptyItems.length > 0,
-              o = t.node.children.slice(n + 1).some(item => !r(item));
+              o = propsAlias.node.children.slice(n + 1).some(item => !r(item));
             a && o && emptyItems.push(mX(pX({}, i), {
               content: ` `,
               raw: ` `
@@ -78900,9 +78900,9 @@ var O2e = {
       function l(e, n) {
         return {
           node: e,
-          "index-key": `${t.indexKey}-${n}`,
-          "custom-id": t.customId,
-          "custom-html-tags": t.customHtmlTags
+          "index-key": `${propsAlias.indexKey}-${n}`,
+          "custom-id": propsAlias.customId,
+          "custom-html-tags": propsAlias.customHtmlTags
         };
       }
       let u = pX({
@@ -78969,9 +78969,9 @@ var k2e = [`aria-busy`, `aria-label`, `data-language`],
       node: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         computedResult = computed(() => {
-          let e = String(t.node?.language ?? ``);
+          let e = String(propsAlias.node?.language ?? ``);
           return String(String(e).split(/\s+/g)[0] ?? ``).toLowerCase().replace(/[^\w-]/g, ``) || `plaintext`;
         }),
         computedData = computed(() => `language-${computedResult.value}`),
@@ -79076,7 +79076,7 @@ var j2e = {
         type: `button`,
         class: `table-node__resize-handle`,
         "aria-label": `Resize columns ${r + 1} and ${r + 2}`,
-        onPointerdown: e => function (e, t) {
+        onPointerdown: el => function (e, t) {
           if (t.button !== 0) return;
           let n = function () {
               let e = i.value?.querySelectorAll(`thead th`);
@@ -79091,7 +79091,7 @@ var j2e = {
             nextStartWidth: s,
             widths: n
           }, a.value = n, window.addEventListener(`pointermove`, l), window.addEventListener(`pointerup`, u), window.addEventListener(`pointercancel`, u));
-        }(r, e)
+        }(r, el)
       }, null, 40, P2e)) : createCommentVNode(``, true)], 2))), 128))])]), createElementVNode(`tbody`, null, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedData.value, (e, n) => (openBlock(), createElementBlock(`tr`, {
         key: `row-${n}`
       }, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.cells, (e, r) => (openBlock(), createElementBlock(`td`, {
@@ -79155,9 +79155,9 @@ var L2e = {
       customId: {}
     },
     setup(props) {
-      let t = props,
-        computedResult = computed(() => `vmr-container vmr-container-${t.node.name}`),
-        r = TX(t.customId),
+      let propsAlias = props,
+        computedResult = computed(() => `vmr-container vmr-container-${propsAlias.node.name}`),
+        r = TX(propsAlias.customId),
         i = pX({
           text: fZ,
           paragraph: PZ,
@@ -79185,7 +79185,7 @@ var L2e = {
       }, props.node.attrs), [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, r) => {
         return openBlock(), createBlock(vueEt((a = n.type, i[a] || FallbackComponent)), {
           key: `${props.indexKey || `vmr-container`}-${r}`,
-          "custom-id": t.customId,
+          "custom-id": propsAlias.customId,
           node: n,
           "index-key": `${props.indexKey || `vmr-container`}-${r}`
         }, null, 8, [`custom-id`, `node`, `index-key`]);
@@ -80513,12 +80513,12 @@ function jQ(e) {
 function x4e(e) {
   return e ? `${e.fontStyle || `normal`} ${e.fontWeight || `400`} ${e.fontSize || `16px`} ${e.fontFamily || `sans-serif`}` : ``;
 }
-function MQ(e, t, n = `pre-wrap`) {
-  if (!e || !t || typeof window > `u`) return null;
+function MQ(el, t, n = `pre-wrap`) {
+  if (!el || !t || typeof window > `u`) return null;
   let computedStyle = window.getComputedStyle(t),
-    offsetHeight = e.offsetHeight,
+    offsetHeight = el.offsetHeight,
     a = DQ(computedStyle.lineHeight, 1.5 * DQ(computedStyle.fontSize, 16)),
-    o = e.getBoundingClientRect().width,
+    o = el.getBoundingClientRect().width,
     s = t.getBoundingClientRect().width;
   return {
     font: x4e(computedStyle),
@@ -80990,7 +80990,7 @@ var M4e = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         i = ref(false),
         a = ref(null),
         o = ref(null);
@@ -81033,7 +81033,7 @@ var M4e = {
         type: `button`,
         class: `code-action-btn inline-flex items-center justify-center p-[var(--ms-action-btn-padding)] rounded leading-none shrink-0 cursor-pointer text-[var(--code-action-fg)] hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] active:scale-[0.96] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
         "aria-label": event.copyText ? unref(i18nTranslate)(`common.copied`) || `Copied` : unref(i18nTranslate)(`common.copy`) || `Copy`,
-        onClick: cache[0] ||= e => r(`copy`),
+        onClick: cache[0] ||= e => emitAlias(`copy`),
         onMouseenter: cache[1] ||= e => m(e),
         onFocus: cache[2] ||= e => m(e),
         onMouseleave: p,
@@ -81065,7 +81065,7 @@ var M4e = {
         type: `button`,
         class: `code-action-btn inline-flex items-center justify-center p-[var(--ms-action-btn-padding)] rounded leading-none shrink-0 cursor-pointer text-[var(--code-action-fg)] hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] active:scale-[0.96] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
         "aria-pressed": event.isCollapsed,
-        onClick: cache[3] ||= e => r(`toggleCollapse`),
+        onClick: cache[3] ||= e => emitAlias(`toggleCollapse`),
         onMouseenter: cache[4] ||= t => f(t, event.isCollapsed ? unref(i18nTranslate)(`common.expand`) || `Expand` : unref(i18nTranslate)(`common.collapse`) || `Collapse`),
         onFocus: cache[5] ||= t => f(t, event.isCollapsed ? unref(i18nTranslate)(`common.expand`) || `Expand` : unref(i18nTranslate)(`common.collapse`) || `Collapse`),
         onMouseleave: p,
@@ -81115,7 +81115,7 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
           disabled: h.value,
-          onClick: cache[8] ||= e => r(`decreaseFont`)
+          onClick: cache[8] ||= e => emitAlias(`decreaseFont`)
         }, [cache[17] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
@@ -81135,7 +81135,7 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
           disabled: g.value,
-          onClick: cache[9] ||= e => r(`resetFont`)
+          onClick: cache[9] ||= e => emitAlias(`resetFont`)
         }, [cache[18] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
@@ -81158,7 +81158,7 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
           disabled: _.value,
-          onClick: cache[10] ||= e => r(`increaseFont`)
+          onClick: cache[10] ||= e => emitAlias(`increaseFont`)
         }, [cache[19] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
@@ -81179,7 +81179,7 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] transition-colors`,
           onClick: cache[11] ||= e => {
-            r(`toggleExpand`, e), i.value = false;
+            emitAlias(`toggleExpand`, e), i.value = false;
           }
         }, [event.isExpanded ? (openBlock(), createElementBlock(`svg`, K4e, [...(cache[20] ||= [createElementVNode(`path`, {
           fill: `none`,
@@ -81201,7 +81201,7 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] transition-colors`,
           onClick: cache[12] ||= e => {
-            r(`preview`), i.value = false;
+            emitAlias(`preview`), i.value = false;
           }
         }, [cache[22] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
@@ -81326,7 +81326,7 @@ var M4e = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = tZ(),
@@ -81482,7 +81482,7 @@ var M4e = {
       function pe() {
         return gX(this, null, function* () {
           try {
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(eventAlias.node.code)), o.value = true, r(`copy`, eventAlias.node.code), setTimeout(() => {
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(eventAlias.node.code)), o.value = true, emitAlias(`copy`, eventAlias.node.code), setTimeout(() => {
               o.value = false;
             }, 1e3);
           } catch (e) {
@@ -81521,7 +81521,7 @@ var M4e = {
         if (!E.value) return;
         let lowercased = (a.value || eventAlias.node.language).toLowerCase(),
           t = lowercased === `html` ? `HTML Preview` : `SVG Preview`;
-        r(`previewCode`, {
+        emitAlias(`previewCode`, {
           type: lowercased === `html` ? `text/html` : `image/svg+xml`,
           content: eventAlias.node.code,
           title: t
@@ -81868,7 +81868,7 @@ var n3e = defineComponent({
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         i = ref(),
         a = ref(null),
         o = ref(null),
@@ -82255,8 +82255,8 @@ var n3e = defineComponent({
       function Dt(e) {
         return e?.firstElementChild;
       }
-      function Ot(e, t) {
-        return e ? e.matches?.call(e, t) ? e : e.querySelector(t) : null;
+      function Ot(el, t) {
+        return el ? el.matches?.call(el, t) ? el : el.querySelector(t) : null;
       }
       function kt() {
         if (!le.value) return void (_.value = 0);
@@ -82553,24 +82553,24 @@ var n3e = defineComponent({
         let n = Oe.get(e);
         n && (n.destroy(), Oe.delete(e)), fn(e);
       }
-      function an(e, t) {
+      function an(e, el) {
         let n = false;
-        if (t) {
+        if (el) {
           let r = je.get(e);
-          je.set(e, t), r !== t && (n = true);
+          je.set(e, el), r !== el && (n = true);
         } else je.delete(e) && (n = true);
-        if (n && Qt(), t || fn(e), !Xe.value || !_e || !me.value && Ke.value && !l.value && Oe.size >= 640 && (function () {
+        if (n && Qt(), el || fn(e), !Xe.value || !_e || !me.value && Ke.value && !l.value && Oe.size >= 640 && (function () {
           if (!l.value) {
             l.value = true;
             for (let normalizeResult of Oe.values()) normalizeResult.destroy();
             if (Oe.clear(), d) for (let normalizeResult of Ae.values()) window.clearTimeout(normalizeResult);
             Ae.clear(), en();
           }
-        }(), !Xe.value || !_e)) return rn(e), void (t && nn(e, true));
+        }(), !Xe.value || !_e)) return rn(e), void (el && nn(e, true));
         if (e < P.value && !me.value || De.value.has(e)) return rn(e), void nn(e, true);
-        if (!t) return void rn(e);
+        if (!el) return void rn(e);
         rn(e);
-        let r = _e(t, {
+        let r = _e(el, {
           rootMargin: `400px`
         });
         if (!r) return;
@@ -83093,21 +83093,21 @@ var n3e = defineComponent({
         return r || vn[String(e.type)] || FallbackComponent;
       }
       function An(e) {
-        r(`click`, e);
+        emitAlias(`click`, e);
       }
       function jn(e) {
         var normalizeResult;
-        (normalizeResult = e.target) != null && normalizeResult.closest(`[data-node-index]`) && r(`mouseover`, e);
+        (normalizeResult = e.target) != null && normalizeResult.closest(`[data-node-index]`) && emitAlias(`mouseover`, e);
       }
       function Mn(e) {
         var normalizeResult;
-        (normalizeResult = e.target) != null && normalizeResult.closest(`[data-node-index]`) && r(`mouseout`, e);
+        (normalizeResult = e.target) != null && normalizeResult.closest(`[data-node-index]`) && emitAlias(`mouseout`, e);
       }
       function Nn(e) {
-        r(`mouseover`, e);
+        emitAlias(`mouseover`, e);
       }
       function Pn(e) {
-        r(`mouseout`, e);
+        emitAlias(`mouseout`, e);
       }
       return (ctx, cache) => computedResult.value ? (openBlock(true), createElementBlock(Fragment, {
         key: 0
@@ -83124,8 +83124,8 @@ var n3e = defineComponent({
         onClick: An,
         onMouseover: Nn,
         onMouseout: Pn,
-        onCopy: cache[0] ||= e => r(`copy`, e),
-        onHandleArtifactClick: cache[1] ||= e => r(`handleArtifactClick`, e)
+        onCopy: cache[0] ||= e => emitAlias(`copy`, e),
+        onHandleArtifactClick: cache[1] ||= e => emitAlias(`handleArtifactClick`, e)
       }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`]))), 128)) : (openBlock(), createElementBlock(`div`, {
         key: 1,
         ref_key: `containerRef`,
@@ -83252,8 +83252,8 @@ var n3e = defineComponent({
         }, e.bindings, {
           "custom-id": eventAlias.customId,
           "is-dark": eventAlias.isDark,
-          onCopy: cache[4] ||= e => r(`copy`, e),
-          onHandleArtifactClick: cache[5] ||= e => r(`handleArtifactClick`, e)
+          onCopy: cache[4] ||= e => emitAlias(`copy`, e),
+          onHandleArtifactClick: cache[5] ||= e => emitAlias(`handleArtifactClick`, e)
         }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`])) : (openBlock(), createBlock(playerR, {
           key: 0,
           name: `typewriter`,
@@ -83268,8 +83268,8 @@ var n3e = defineComponent({
           }, e.bindings, {
             "custom-id": eventAlias.customId,
             "is-dark": eventAlias.isDark,
-            onCopy: cache[2] ||= e => r(`copy`, e),
-            onHandleArtifactClick: cache[3] ||= e => r(`handleArtifactClick`, e)
+            onCopy: cache[2] ||= e => emitAlias(`copy`, e),
+            onHandleArtifactClick: cache[3] ||= e => emitAlias(`handleArtifactClick`, e)
           }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`]))]),
           _: 2
         }, 1024))], 512)))], 8, s3e);
@@ -83371,7 +83371,7 @@ var c3e = Object.freeze(Object.defineProperty({
     }) {
       var replaceResult;
       let itemsAlias = items,
-        i = emit,
+        emitAlias = emit,
         computedResult = computed(() => {
           if (itemsAlias.node.title && itemsAlias.node.title.trim().length) return itemsAlias.node.title;
           let fallbackValue = itemsAlias.node.kind || `note`;
@@ -83443,7 +83443,7 @@ var c3e = Object.freeze(Object.defineProperty({
         nodes: itemsAlias.node.children,
         "custom-id": itemsAlias.customId,
         typewriter: itemsAlias.typewriter,
-        onCopy: renderCache[0] ||= e => i(`copy`, e)
+        onCopy: renderCache[0] ||= e => emitAlias(`copy`, e)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])], 8, h3e), [[playerW, !o.value]])], 2));
     }
   }), [[`__scopeId`, `data-v-a3a8afce`]]);
@@ -83759,10 +83759,10 @@ vueA(() => preloadT(() => import(`./placeholder.js`), __vite__mapDeps([23, 19, 1
 function A$(e) {
   return j$(new DOMParser().parseFromString(e, `text/html`).body).trim();
 }
-function j$(e) {
-  if (e.nodeType === Node.TEXT_NODE) return e.textContent ?? ``;
-  if (e.nodeType !== Node.ELEMENT_NODE) return ``;
-  let t = e,
+function j$(el) {
+  if (el.nodeType === Node.TEXT_NODE) return el.textContent ?? ``;
+  if (el.nodeType !== Node.ELEMENT_NODE) return ``;
+  let t = el,
     lowercased = t.tagName.toLowerCase(),
     joined = Array.from(t.childNodes).map(j$).join(``);
   switch (lowercased) {
@@ -83945,13 +83945,13 @@ var A3e = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
       return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: props.open,
-        "onUpdate:open": renderCache[0] ||= e => n(`update:open`, e)
+        "onUpdate:open": renderCache[0] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `w-[620px] max-w-[calc(100vw-32px)] gap-0 overflow-hidden p-0 sm:max-w-none`
@@ -84010,7 +84010,7 @@ var A3e = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         a = ref(),
         {
           t: o
@@ -84037,13 +84037,13 @@ var A3e = {
         }
       }
       function d(e, t = undefined) {
-        document.execCommand(e, false, t), a.value?.focus(), r(`update:modelValue`, a.value?.innerHTML || ``), requestAnimationFrame(u);
+        document.execCommand(e, false, t), a.value?.focus(), emitAlias(`update:modelValue`, a.value?.innerHTML || ``), requestAnimationFrame(u);
       }
       function f() {
-        r(`update:modelValue`, a.value?.innerHTML || ``), u();
+        emitAlias(`update:modelValue`, a.value?.innerHTML || ``), u();
       }
       function p() {
-        s.value = false, r(`update:modelValue`, a.value?.innerHTML || ``), c.value.clear(), l.value = ``;
+        s.value = false, emitAlias(`update:modelValue`, a.value?.innerHTML || ``), c.value.clear(), l.value = ``;
       }
       function m() {
         s.value = true, u();
@@ -84218,7 +84218,7 @@ var A3e = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit;
+      let emitAlias = emit;
       return (ctx, renderCache) => (openBlock(), createBlock(DateTimePickerField, {
         "model-value": props.modelValue,
         label: props.label,
@@ -84228,7 +84228,7 @@ var A3e = {
         "end-boundary": props.endBoundary,
         align: props.align,
         "trigger-class": `!h-8 !w-[156px]`,
-        "onUpdate:modelValue": renderCache[0] ||= e => n(`update:modelValue`, e)
+        "onUpdate:modelValue": renderCache[0] ||= e => emitAlias(`update:modelValue`, e)
       }, null, 8, [`model-value`, `label`, `end-boundary`, `align`]));
     }
   }),
@@ -85658,7 +85658,7 @@ var _6e = {
           captureGrowthObservation: o
         } = growthTelT(),
         eventAlias = event,
-        c = emit,
+        emitAlias = emit,
         l = ref(`daily`),
         u = ref(`concise`),
         computedResult = computed(() => [{
@@ -86946,7 +86946,7 @@ var _6e = {
         }))), await Promise.all(count);
       }
       function Hi() {
-        ti.value = false, ni.value = false, c(`navigate`, `history`);
+        ti.value = false, ni.value = false, emitAlias(`navigate`, `history`);
       }
       function Ui() {
         ti.value = false, ni.value = true;
@@ -90142,8 +90142,8 @@ var E0 = new class {
     _indexable: false
   }
 }, [Dit, Oit, jit]);
-function Mit(e) {
-  return !e || g1(e.size) || g1(e.family) ? null : (e.style ? e.style + ` ` : ``) + (e.weight ? e.weight + ` ` : ``) + e.size + `px ` + e.family;
+function Mit(el) {
+  return !el || g1(el.size) || g1(el.family) ? null : (el.style ? el.style + ` ` : ``) + (el.weight ? el.weight + ` ` : ``) + el.size + `px ` + el.family;
 }
 function D0(e, t, items, r, i) {
   let a = t[i];
@@ -90320,18 +90320,18 @@ function B0(e) {
   let t = R0(e);
   return t.width = t.left + t.right, t.height = t.top + t.bottom, t;
 }
-function V0(e, t) {
-  e ||= {}, t ||= E0.font;
-  let withDefaultValueResult = withDefaultValue(e.size, t.size);
+function V0(el, t) {
+  el ||= {}, t ||= E0.font;
+  let withDefaultValueResult = withDefaultValue(el.size, t.size);
   typeof withDefaultValueResult == `string` && (withDefaultValueResult = parseInt(withDefaultValueResult, 10));
-  let withDefaultValueData = withDefaultValue(e.style, t.style);
+  let withDefaultValueData = withDefaultValue(el.style, t.style);
   withDefaultValueData && !(`` + withDefaultValueData).match(Rit) && (console.warn(`Invalid font style specified: "` + withDefaultValueData + `"`), withDefaultValueData = undefined);
   let i = {
-    family: withDefaultValue(e.family, t.family),
-    lineHeight: zit(withDefaultValue(e.lineHeight, t.lineHeight), withDefaultValueResult),
+    family: withDefaultValue(el.family, t.family),
+    lineHeight: zit(withDefaultValue(el.lineHeight, t.lineHeight), withDefaultValueResult),
     size: withDefaultValueResult,
     style: withDefaultValueData,
-    weight: withDefaultValue(e.weight, t.weight),
+    weight: withDefaultValue(el.weight, t.weight),
     string: ``
   };
   return i.string = Mit(i), i;
@@ -90576,7 +90576,7 @@ function i2(e, t, n) {
   return r.width = r.left + r.right, r.height = r.top + r.bottom, r;
 }
 var $it = (e, t, n) => (e > 0 || t > 0) && (!n || !n.shadowRoot);
-function eat(event, t) {
+function eat(event, el) {
   let touches = event.touches,
     r = touches && touches.length ? touches[0] : event,
     {
@@ -90587,7 +90587,7 @@ function eat(event, t) {
     trimStartResult,
     c;
   if ($it(i, a, event.target)) trimStartResult = i, c = a;else {
-    let boundingClientRect = t.getBoundingClientRect();
+    let boundingClientRect = el.getBoundingClientRect();
     trimStartResult = r.clientX - boundingClientRect.left, c = r.clientY - boundingClientRect.top, o = true;
   }
   return {
@@ -92270,14 +92270,14 @@ var Fat = {
     }
   }
 };
-function Iat(e, t, items, r) {
+function Iat(el, t, items, r) {
   let {
       controller: i,
       data: a,
       _sorted: o
-    } = e,
+    } = el,
     iScale = i._cachedMeta.iScale,
-    c = e.dataset && e.dataset.options ? e.dataset.options.spanGaps : null;
+    c = el.dataset && el.dataset.options ? el.dataset.options.spanGaps : null;
   if (iScale && t === iScale.axis && t !== `r` && o && a.length) {
     let o = iScale._reversePixels ? bit : r0;
     if (!r) {
@@ -92288,7 +92288,7 @@ function Iat(e, t, items, r) {
           } = i._cachedMeta,
           {
             _parsed: n
-          } = e,
+          } = el,
           index = n.slice(0, r.lo + 1).reverse().findIndex(item => !g1(item[t.axis]));
         r.lo -= Math.max(0, index);
         let indexResult = n.slice(r.hi).findIndex(item => !g1(item[t.axis]));
@@ -92770,11 +92770,11 @@ var K2 = {
     pointerout: `mouseout`
   },
   Y2 = e => e === null || e === ``;
-function Xat(e, t) {
-  let n = e.style,
-    attribute = e.getAttribute(`height`),
-    attributeResult = e.getAttribute(`width`);
-  if (e[J2] = {
+function Xat(el, t) {
+  let n = el.style,
+    attribute = el.getAttribute(`height`),
+    attributeResult = el.getAttribute(`width`);
+  if (el[J2] = {
     initial: {
       height: attribute,
       width: attributeResult,
@@ -92785,16 +92785,16 @@ function Xat(e, t) {
       }
     }
   }, n.display = n.display || `block`, n.boxSizing = n.boxSizing || `border-box`, Y2(attributeResult)) {
-    let t = c2(e, `width`);
-    t !== undefined && (e.width = t);
+    let t = c2(el, `width`);
+    t !== undefined && (el.width = t);
   }
   if (Y2(attribute)) {
-    if (e.style.height === ``) e.height = e.width / (t || 2);else {
-      let t = c2(e, `height`);
-      t !== undefined && (e.height = t);
+    if (el.style.height === ``) el.height = el.width / (t || 2);else {
+      let t = c2(el, `height`);
+      t !== undefined && (el.height = t);
     }
   }
-  return e;
+  return el;
 }
 var X2 = rat ? {
   passive: true
@@ -96020,8 +96020,8 @@ function pst(e, t, n) {
     type: `tooltip`
   });
 }
-function Q4(e, t) {
-  let n = t && t.dataset && t.dataset.tooltip && t.dataset.tooltip.callbacks;
+function Q4(e, el) {
+  let n = el && el.dataset && el.dataset.tooltip && el.dataset.tooltip.callbacks;
   return n ? e.override(n) : e;
 }
 var $4 = {
@@ -96040,11 +96040,11 @@ var $4 = {
   afterTitle: h1,
   beforeBody: h1,
   beforeLabel: h1,
-  label(e) {
-    if (this && this.options && this.options.mode === `dataset`) return e.label + `: ` + e.formattedValue || e.formattedValue;
-    let fallbackValue = e.dataset.label || ``;
+  label(el) {
+    if (this && this.options && this.options.mode === `dataset`) return el.label + `: ` + el.formattedValue || el.formattedValue;
+    let fallbackValue = el.dataset.label || ``;
     fallbackValue && (fallbackValue += `: `);
-    let formattedValue = e.formattedValue;
+    let formattedValue = el.formattedValue;
     return g1(formattedValue) || (fallbackValue += formattedValue), fallbackValue;
   },
   labelColor(label) {
@@ -97885,7 +97885,7 @@ var Gst = E3(`bar`, jat),
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
@@ -97895,11 +97895,11 @@ var Gst = E3(`bar`, jat),
         "value-format": `iso`,
         align: `start`,
         "trigger-class": `h-8 w-[206px]`,
-        "onUpdate:modelValue": renderCache[0] ||= e => n(`update:modelValue`, e)
+        "onUpdate:modelValue": renderCache[0] ||= e => emitAlias(`update:modelValue`, e)
       }, null, 8, [`model-value`, `label`]));
     }
   }),
-  k3 = c(uiSwitchMt((event, t) => {
+  k3 = c(uiSwitchMt((event, el) => {
     window.setImmediate || (window.setImmediate = function () {
       return window.msSetImmediate || window.webkitSetImmediate || window.mozSetImmediate || window.oSetImmediate || function () {
         if (!window.postMessage || !window.addEventListener) return null;
@@ -98365,7 +98365,7 @@ var Gst = E3(`bar`, jat),
         if (o) for (var innerHTML in o) window.clearImmediate(o[innerHTML]);
       }, typeof define == `function` && define.amd ? (e.WordCloud = s, define(`wordcloud`, [], function () {
         return s;
-      })) : t !== undefined && t.exports ? t.exports = s : e.WordCloud = s;
+      })) : el !== undefined && el.exports ? el.exports = s : e.WordCloud = s;
     }(event);
   })(), 1),
   Kst = [`0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`],
@@ -98430,8 +98430,8 @@ var M3 = {
       let {
           t: i18nTranslate
         } = vueN(),
-        r = props,
-        i = emit,
+        propsAlias = props,
+        emitAlias = emit,
         a = [`--word-cloud-green`, `--word-cloud-blue`, `--word-cloud-amber`, `--word-cloud-purple`, `--word-cloud-rose`],
         o = {
           "--word-cloud-green": `#059669`,
@@ -98550,7 +98550,7 @@ var M3 = {
             }, e.style.cursor = `pointer`) : (h.value = null, e.style.cursor = `default`);
           },
           click: e => {
-            e && i(`select`, e[0]);
+            e && emitAlias(`select`, e[0]);
           }
         });
       }
@@ -98571,21 +98571,21 @@ var M3 = {
       async function j() {
         m.value = true;
         try {
-          let e = T(r.records),
+          let e = T(propsAlias.records),
             create = await M3.create({
-              rangeStart: r.rangeStart,
-              rangeEnd: r.rangeEnd,
-              recordCount: r.records.length,
+              rangeStart: propsAlias.rangeStart,
+              rangeEnd: propsAlias.rangeEnd,
+              recordCount: propsAlias.records.length,
               words: e
             });
           d.value = [create, ...d.value], f.value = create.id;
         } catch {
           let e = {
             id: `local-${Date.now()}`,
-            rangeStart: r.rangeStart,
-            rangeEnd: r.rangeEnd,
-            recordCount: r.records.length,
-            words: T(r.records),
+            rangeStart: propsAlias.rangeStart,
+            rangeEnd: propsAlias.rangeEnd,
+            recordCount: propsAlias.records.length,
+            words: T(propsAlias.records),
             createdAt: new Date().toISOString()
           };
           d.value = [e, ...d.value], f.value = e.id;
@@ -98594,17 +98594,17 @@ var M3 = {
         }
         await k();
       }
-      watch(() => r.open, value => {
+      watch(() => propsAlias.open, value => {
         value ? A() : (k3.default.stop(), h.value = null);
-      }), watch(() => r.generateSignal, () => {
-        r.open && j();
+      }), watch(() => propsAlias.generateSignal, () => {
+        propsAlias.open && j();
       }), watch(f, () => {
-        r.open && k();
+        propsAlias.open && k();
       });
       let setTimeoutResult = null;
       return onBeforeMount(() => {
         setTimeoutResult = new MutationObserver(() => {
-          r.open && k();
+          propsAlias.open && k();
         }), setTimeoutResult.observe(document.documentElement, {
           attributes: true,
           attributeFilter: [`class`]
@@ -98613,7 +98613,7 @@ var M3 = {
         setTimeoutResult?.disconnect(), k3.default.stop();
       }), (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: props.open,
-        "onUpdate:open": renderCache[4] ||= e => i(`update:open`, e)
+        "onUpdate:open": renderCache[4] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `sm:max-w-3xl`
@@ -98661,7 +98661,7 @@ var M3 = {
             disabled: m.value,
             "data-credit-feature": `word_cloud`,
             "data-credit-action": `entry`,
-            onClick: renderCache[1] ||= e => i(`request-generate`)
+            onClick: renderCache[1] ||= e => emitAlias(`request-generate`)
           }, {
             default: H(() => [m.value ? (openBlock(), createBlock(unref(beautifier), {
               key: 0,
@@ -98703,7 +98703,7 @@ var M3 = {
             class: `h-8 gap-1.5 bg-green-600 px-4 text-xs font-semibold text-white hover:bg-green-700`,
             "data-credit-feature": `word_cloud`,
             "data-credit-action": `entry`,
-            onClick: renderCache[3] ||= e => i(`request-generate`)
+            onClick: renderCache[3] ||= e => emitAlias(`request-generate`)
           }, {
             default: H(() => [resolveComponent(unref(beautifierG), {
               size: 13
@@ -99172,7 +99172,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
       emit: emit
     }) {
       let itemsAlias = items,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -99257,7 +99257,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
           }];
         });
       function T(e, t) {
-        (e !== itemsAlias.start || t !== itemsAlias.end) && r(`change`, {
+        (e !== itemsAlias.start || t !== itemsAlias.end) && emitAlias(`change`, {
           start: e,
           end: t
         });
@@ -99944,7 +99944,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
           t: i18nTranslate
         } = vueN(),
         eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         a = {
           key: `word_cloud`,
           label: `词云`,
@@ -99978,7 +99978,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
         if (m.value) {
           u.value = true, d.value = ``;
           try {
-            await pointsT.consumeWordCloud(), counter.value = await pointsT.getCreditsBalance(), i(`update:open`, false), i(`confirmed`);
+            await pointsT.consumeWordCloud(), counter.value = await pointsT.getCreditsBalance(), emitAlias(`update:open`, false), emitAlias(`confirmed`);
           } catch (e) {
             (e instanceof Error ? e.code : undefined) === `INSUFFICIENT_BALANCE` ? (d.value = i18nTranslate(`timeline.wordCloudInsufficientBalance`), pointsT.getCreditsBalance().then(result => {
               counter.value = result;
@@ -99992,7 +99992,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
         value && g();
       }), (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: event.open,
-        "onUpdate:open": renderCache[2] ||= e => i(`update:open`, e)
+        "onUpdate:open": renderCache[2] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `!max-w-[460px] max-h-[calc(100vh-48px)] flex flex-col`
@@ -100036,7 +100036,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
               size: `sm`,
               variant: `outline`,
               class: `h-8 text-xs`,
-              onClick: renderCache[1] ||= e => i(`update:open`, false)
+              onClick: renderCache[1] ||= e => emitAlias(`update:open`, false)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.cancel`)), 1)]),
               _: 1
@@ -101276,15 +101276,15 @@ var Ylt = {
         counter.value = e, be.value === `error` && Ee.value === `INSUFFICIENT_BALANCE` && Se.value && Ve.value && (Ee.value = ``, De.value = ``, be.value = `selected`);
       }
       let ot = ref(false),
-        st = uiSwitchIt(`xiaohei_timeline_chat_providers`, [`deepseek`]);
-      st.value = st.value.filter(item => item === `deepseek` || item === `chatgpt`), st.value.length === 0 && (st.value = [`deepseek`]);
+        uiSwitchItResult = uiSwitchIt(`xiaohei_timeline_chat_providers`, [`deepseek`]);
+      uiSwitchItResult.value = uiSwitchItResult.value.filter(item => item === `deepseek` || item === `chatgpt`), uiSwitchItResult.value.length === 0 && (uiSwitchItResult.value = [`deepseek`]);
       let ct = uiSwitchIt(`xiaohei_reuse_deepseek_timeline_session`, false),
         lt = ref(new Date().toISOString()),
         dt = ref(new Date().toISOString()),
         ft = ref(false);
       function mt(e) {
-        let t = st.value.indexOf(e);
-        t >= 0 ? st.value.length > 1 && st.value.splice(t, 1) : st.value.push(e);
+        let t = uiSwitchItResult.value.indexOf(e);
+        t >= 0 ? uiSwitchItResult.value.length > 1 && uiSwitchItResult.value.splice(t, 1) : uiSwitchItResult.value.push(e);
       }
       function ht() {
         let date = new Date(),
@@ -101324,7 +101324,7 @@ var Ylt = {
                 language: i.value
               };
             ot.value = false;
-            let c = Array.from(new Set(st.value.length > 0 ? st.value : [`deepseek`]));
+            let c = Array.from(new Set(uiSwitchItResult.value.length > 0 ? uiSwitchItResult.value : [`deepseek`]));
             await Promise.all(c.map(item => item === `chatgpt` ? _H.open(s) : hH.open({
               ...s,
               reuseSession: ct.value
@@ -101955,11 +101955,11 @@ var Ylt = {
             tooltip: {
               filter: e => e.raw !== null && e.raw !== undefined,
               callbacks: {
-                label: e => {
-                  let t = e.raw,
-                    label = e.label,
+                label: el => {
+                  let t = el.raw,
+                    label = el.label,
                     r = Number((t / 60).toFixed(1)),
-                    reduced = e.dataset.data.filter(item => item != null).reduce((acc, cur) => acc + cur, 0),
+                    reduced = el.dataset.data.filter(item => item != null).reduce((acc, cur) => acc + cur, 0),
                     a = reduced > 0 ? Math.round(t / reduced * 100) : 0;
                   return `${label}: ${r < 0.1 ? `${t}min` : `${r}h`} (${a}%)`;
                 }
@@ -103500,19 +103500,19 @@ var Ylt = {
               "onUpdate:modelValue": renderCache[64] ||= e => dt.value = e
             }, null, 8, [`modelValue`])]), createElementVNode(`div`, Rpt, [createElementVNode(`label`, zpt, toDisplayString(unref(i18nTranslate)(`timeline.chatSelectAi`)), 1), createElementVNode(`div`, Bpt, [createElementVNode(`button`, {
               type: `button`,
-              class: normalizeClass([`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(st).includes(`deepseek`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
+              class: normalizeClass([`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(uiSwitchItResult).includes(`deepseek`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
               onClick: renderCache[65] ||= e => mt(`deepseek`)
             }, [resolveComponent(unref(Checkbox), {
-              "model-value": unref(st).includes(`deepseek`),
+              "model-value": unref(uiSwitchItResult).includes(`deepseek`),
               class: `pointer-events-none`
             }, null, 8, [`model-value`]), renderCache[85] ||= createElementVNode(`span`, null, `DeepSeek`, -1)], 2), createElementVNode(`button`, {
               type: `button`,
-              class: normalizeClass([`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(st).includes(`chatgpt`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
+              class: normalizeClass([`inline-flex items-center gap-1.5 whitespace-nowrap px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(uiSwitchItResult).includes(`chatgpt`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
               onClick: renderCache[66] ||= e => mt(`chatgpt`)
             }, [resolveComponent(unref(Checkbox), {
-              "model-value": unref(st).includes(`chatgpt`),
+              "model-value": unref(uiSwitchItResult).includes(`chatgpt`),
               class: `pointer-events-none`
-            }, null, 8, [`model-value`]), renderCache[86] ||= createElementVNode(`span`, null, `ChatGPT`, -1)], 2)])]), unref(st).includes(`deepseek`) ? (openBlock(), createElementBlock(`label`, {
+            }, null, 8, [`model-value`]), renderCache[86] ||= createElementVNode(`span`, null, `ChatGPT`, -1)], 2)])]), unref(uiSwitchItResult).includes(`deepseek`) ? (openBlock(), createElementBlock(`label`, {
               key: 0,
               class: normalizeClass([`group flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2.5 transition-all`, unref(ct) ? `border-primary/35 bg-primary/[0.045] shadow-[0_1px_2px_rgba(0,0,0,0.02)]` : `border-black/7 bg-black/[0.012] hover:border-primary/20 hover:bg-primary/[0.02]`])
             }, [resolveComponent(unref(Checkbox), {
@@ -103685,18 +103685,18 @@ function nmt(e, t, n, r) {
     a = n.cssText ? emt(n) : tmt(n, r);
   return document.createTextNode(`${i}{${a}}`);
 }
-function g6(e, t, n, r) {
+function g6(e, el, n, r) {
   let computedStyle = window.getComputedStyle(e, n),
     propertyValue = computedStyle.getPropertyValue(`content`);
   if (propertyValue === `` || propertyValue === `none`) return;
   let o = qpt();
   try {
-    t.className = `${t.className} ${o}`;
+    el.className = `${el.className} ${o}`;
   } catch {
     return;
   }
   let element = document.createElement(`style`);
-  element.appendChild(nmt(o, n, computedStyle, r)), t.appendChild(element);
+  element.appendChild(nmt(o, n, computedStyle, r)), el.appendChild(element);
 }
 function rmt(e, t, n) {
   g6(e, t, `:before`, n), g6(e, t, `:after`, n);
@@ -103796,24 +103796,24 @@ async function dmt(e, t) {
 }
 var fmt = e => e.tagName != null && e.tagName.toUpperCase() === `SLOT`,
   T6 = e => e.tagName != null && e.tagName.toUpperCase() === `SVG`;
-async function pmt(e, t, n) {
-  if (T6(t)) return t;
+async function pmt(e, el, n) {
+  if (T6(el)) return el;
   let emptyItems = [];
   return emptyItems = fmt(e) && e.assignedNodes ? c6(e.assignedNodes()) : h6(e, HTMLIFrameElement) && e.contentDocument?.body ? c6(e.contentDocument.body.childNodes) : c6((e.shadowRoot ?? e).childNodes), emptyItems.length === 0 || h6(e, HTMLVideoElement) || (await emptyItems.reduce((acc, cur) => acc.then(() => E6(cur, n)).then(result => {
-    result && t.appendChild(result);
-  }), Promise.resolve())), t;
+    result && el.appendChild(result);
+  }), Promise.resolve())), el;
 }
-function mmt(e, t, n) {
-  let r = t.style;
+function mmt(e, el, n) {
+  let r = el.style;
   if (!r) return;
   let computedStyle = window.getComputedStyle(e);
   computedStyle.cssText ? (r.cssText = computedStyle.cssText, r.transformOrigin = computedStyle.transformOrigin) : u6(n).forEach(item => {
     let propertyValue = computedStyle.getPropertyValue(item);
-    item === `font-size` && propertyValue.endsWith(`px`) && (propertyValue = `${Math.floor(parseFloat(propertyValue.substring(0, propertyValue.length - 2))) - 0.1}px`), h6(e, HTMLIFrameElement) && item === `display` && propertyValue === `inline` && (propertyValue = `block`), item === `d` && t.getAttribute(`d`) && (propertyValue = `path(${t.getAttribute(`d`)})`), r.setProperty(item, propertyValue, computedStyle.getPropertyPriority(item));
+    item === `font-size` && propertyValue.endsWith(`px`) && (propertyValue = `${Math.floor(parseFloat(propertyValue.substring(0, propertyValue.length - 2))) - 0.1}px`), h6(e, HTMLIFrameElement) && item === `display` && propertyValue === `inline` && (propertyValue = `block`), item === `d` && el.getAttribute(`d`) && (propertyValue = `path(${el.getAttribute(`d`)})`), r.setProperty(item, propertyValue, computedStyle.getPropertyPriority(item));
   });
 }
-function hmt(state, t) {
-  h6(state, HTMLTextAreaElement) && (t.innerHTML = state.value), h6(state, HTMLInputElement) && t.setAttribute(`value`, state.value);
+function hmt(state, el) {
+  h6(state, HTMLTextAreaElement) && (el.innerHTML = state.value), h6(state, HTMLInputElement) && el.setAttribute(`value`, state.value);
 }
 function gmt(state, t) {
   if (h6(state, HTMLSelectElement)) {
@@ -103825,14 +103825,14 @@ function gmt(state, t) {
 function _mt(e, t, n) {
   return h6(t, Element) && (mmt(e, t, n), rmt(e, t, n), hmt(e, t), gmt(e, t)), t;
 }
-async function vmt(e, t) {
-  let n = e.querySelectorAll ? e.querySelectorAll(`use`) : [];
-  if (n.length === 0) return e;
+async function vmt(el, t) {
+  let n = el.querySelectorAll ? el.querySelectorAll(`use`) : [];
+  if (n.length === 0) return el;
   let r = {};
   for (let i = 0; i < n.length; i++) {
     let attribute = n[i].getAttribute(`xlink:href`);
     if (attribute) {
-      let selector = e.querySelector(attribute),
+      let selector = el.querySelector(attribute),
         selectorResult = document.querySelector(attribute);
       !selector && selectorResult && !r[attribute] && (r[attribute] = await E6(selectorResult, t, true));
     }
@@ -103845,9 +103845,9 @@ async function vmt(e, t) {
     let elementNSResult = document.createElementNS(t, `defs`);
     elementNS.appendChild(elementNSResult);
     for (let e = 0; e < valueList.length; e++) elementNSResult.appendChild(valueList[e]);
-    e.appendChild(elementNS);
+    el.appendChild(elementNS);
   }
-  return e;
+  return el;
 }
 async function E6(e, items, n) {
   return !n && items.filter && !items.filter(e) ? null : Promise.resolve(e).then(result => dmt(result, items)).then(result => pmt(e, result, items)).then(n => _mt(e, n, items)).then(e => vmt(e, items));
@@ -103891,11 +103891,11 @@ async function k6(e, t, n) {
   let r = wmt(e, n);
   return Smt(r).reduce((acc, cur) => acc.then(result => Cmt(result, cur, t, n)), Promise.resolve(r));
 }
-async function A6(e, t, n) {
-  let r = t.style?.getPropertyValue(e);
+async function A6(e, el, n) {
+  let r = el.style?.getPropertyValue(e);
   if (r) {
     let i = await k6(r, null, n);
-    return t.style.setProperty(e, i, t.style.getPropertyPriority(e)), true;
+    return el.style.setProperty(e, i, el.style.getPropertyPriority(e)), true;
   }
   return false;
 }
@@ -103926,12 +103926,12 @@ async function Dmt(e, t) {
 async function j6(e, t) {
   h6(e, Element) && (await Tmt(e, t), await Emt(e, t), await Dmt(e, t));
 }
-function Omt(e, t) {
+function Omt(e, el) {
   let {
     style: n
   } = e;
-  t.backgroundColor && (n.backgroundColor = t.backgroundColor), t.width && (n.width = `${t.width}px`), t.height && (n.height = `${t.height}px`);
-  let r = t.style;
+  el.backgroundColor && (n.backgroundColor = el.backgroundColor), el.width && (n.width = `${el.width}px`), el.height && (n.height = `${el.height}px`);
+  let r = el.style;
   return r != null && Object.keys(r).forEach(item => {
     n[item] = r[item];
   }), e;
@@ -104030,7 +104030,7 @@ async function jmt(e, t) {
 function I6(text) {
   return text.trim().replace(/["']/g, ``);
 }
-function Mmt(e) {
+function Mmt(el) {
   let t = new Set();
   function n(e) {
     (e.style.fontFamily || getComputedStyle(e).fontFamily).split(`,`).forEach(item => {
@@ -104039,7 +104039,7 @@ function Mmt(e) {
       item instanceof HTMLElement && n(item);
     });
   }
-  return n(e), t;
+  return n(el), t;
 }
 async function Nmt(e, t) {
   let n = await jmt(e, t),
@@ -104050,12 +104050,12 @@ async function Nmt(e, t) {
   }))).join(`
 `);
 }
-async function Pmt(e, t) {
-  let n = t.fontEmbedCSS == null ? t.skipFonts ? null : await Nmt(e, t) : t.fontEmbedCSS;
+async function Pmt(el, t) {
+  let n = t.fontEmbedCSS == null ? t.skipFonts ? null : await Nmt(el, t) : t.fontEmbedCSS;
   if (n) {
     let element = document.createElement(`style`),
       textNode = document.createTextNode(n);
-    element.appendChild(textNode), e.firstChild ? e.insertBefore(element, e.firstChild) : e.appendChild(element);
+    element.appendChild(textNode), el.firstChild ? el.insertBefore(element, el.firstChild) : el.appendChild(element);
   }
 }
 async function Fmt(e, t = {}) {
@@ -104288,7 +104288,7 @@ var zmt = {
       emit: emit
     }) {
       let textAlias = text,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -104322,14 +104322,14 @@ var zmt = {
       }, null, 4)]), createElementVNode(`span`, null, toDisplayString(text.progressText), 1)])) : createCommentVNode(``, true)], 64)) : (openBlock(), createElementBlock(`div`, fht, [createElementVNode(`p`, pht, toDisplayString(text.loading ? unref(i18nTranslate)(`leaderboard.loading`) : unref(i18nTranslate)(`leaderboard.notRankedTitle`)), 1), text.loading ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, mht, toDisplayString(text.emptyText), 1))]))]), createElementVNode(`div`, hht, [createElementVNode(`div`, ght, [createElementVNode(`button`, {
         type: `button`,
         class: `lb-hero-friend`,
-        onClick: renderCache[0] ||= e => r(`addFriend`)
+        onClick: renderCache[0] ||= e => emitAlias(`addFriend`)
       }, [resolveComponent(unref(tc), {
         size: 13
       }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`leaderboard.addFriend`)) + ` `, 1), (text.friendRequestCount ?? 0) > 0 ? (openBlock(), createElementBlock(`span`, _ht, toDisplayString((text.friendRequestCount ?? 0) > 99 ? `99+` : text.friendRequestCount), 1)) : createCommentVNode(``, true)]), createElementVNode(`button`, {
         type: `button`,
         class: `lb-hero-share`,
         disabled: !text.me,
-        onClick: renderCache[1] ||= e => r(`share`)
+        onClick: renderCache[1] ||= e => emitAlias(`share`)
       }, [resolveComponent(unref(Ds), {
         size: 13
       }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`leaderboard.share`)), 1)], 8, vht)])])]));
@@ -104371,14 +104371,14 @@ var zmt = {
       items: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         {
           t: n
         } = vueN(),
-        computedResult = computed(() => [2, 1, 3].map(item => t.items.find(t => t.rank === item)).filter(item => !!item)),
+        computedResult = computed(() => [2, 1, 3].map(item => propsAlias.items.find(t => t.rank === item)).filter(item => !!item)),
         computedData = computed(() => {
-          let found = t.items.find(item => item.rank === 1),
-            n = t.items.find(item => item.rank === 2);
+          let found = propsAlias.items.find(item => item.rank === 1),
+            n = propsAlias.items.find(item => item.rank === 2);
           return found && n ? found.recordCount - n.recordCount : null;
         });
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
@@ -104574,7 +104574,7 @@ var zmt = {
     setup(props, {
       emit: emit
     }) {
-      let n = emit,
+      let emitAlias = emit,
         {
           t: r
         } = vueN();
@@ -104584,12 +104584,12 @@ var zmt = {
       }), createElementVNode(`p`, Zht, toDisplayString(props.message), 1), createElementVNode(`button`, {
         type: `button`,
         class: `lb-celebrate-action`,
-        onClick: renderCache[0] ||= e => n(`share`)
+        onClick: renderCache[0] ||= e => emitAlias(`share`)
       }, toDisplayString(unref(r)(`leaderboard.celebrate.action`)), 1), createElementVNode(`button`, {
         type: `button`,
         class: `lb-celebrate-close`,
         "aria-label": unref(r)(`leaderboard.celebrate.dismiss`),
-        onClick: renderCache[1] ||= e => n(`dismiss`)
+        onClick: renderCache[1] ||= e => emitAlias(`dismiss`)
       }, [resolveComponent(unref(lucideT), {
         size: 13
       })], 8, Qht)]));
@@ -105502,7 +105502,7 @@ var rgt = {
         {
           t: i18nTranslate
         } = vueN(),
-        a = emit;
+        emitAlias = emit;
       function o(e) {
         if (!e) return ``;
         let date = new Date(e.replace(` `, `T`));
@@ -105832,7 +105832,7 @@ var rgt = {
       }, {
         immediate: true
       }), watch([computedResult, b, fe], ([e, t, n]) => {
-        a(`state-change`, {
+        emitAlias(`state-change`, {
           enabled: e,
           leaving: t,
           canGenerateImage: n,
@@ -106619,7 +106619,7 @@ var D_t = {
           full: `keyboardHeatmap.layoutOptionFull`
         },
         eventAlias = event,
-        o = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -106657,10 +106657,10 @@ var D_t = {
         E = computed(() => T_t(_, computedData.value, computedResult.value)),
         D = computed(() => [E.value.navigation, E.value.numpad].filter(item => item !== null)),
         O = computed(() => {
-          let e = i18nTranslate(r[_][computedData.value]);
+          let i18nTranslateResult = i18nTranslate(r[_][computedData.value]);
           return S.value === `auto` ? i18nTranslate(`keyboardHeatmap.layoutAutoName`, {
-            name: e
-          }) : e;
+            name: i18nTranslateResult
+          }) : i18nTranslateResult;
         }),
         k = computed(() => {
           let e = [16.4, ...(E.value.navigation ? [3.2] : []), ...(E.value.numpad ? [4.3] : [])],
@@ -106762,7 +106762,7 @@ var D_t = {
       })]), createElementVNode(`div`, M_t, [createElementVNode(`p`, N_t, toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.disabledTitle`)), 1), createElementVNode(`p`, P_t, toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.disabledDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
-        onClick: renderCache[0] ||= e => o(`navigate`, `settings-keyboard-heatmap`)
+        onClick: renderCache[0] ||= e => emitAlias(`navigate`, `settings-keyboard-heatmap`)
       }, {
         default: H(() => [resolveComponent(unref(motivatorE)), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.openSettings`)), 1)]),
         _: 1
@@ -106771,7 +106771,7 @@ var D_t = {
       }, [u.value?.enabled && (u.value.status === `error` || u.value.status === `revoked`) ? vueZt((openBlock(), createElementBlock(`div`, F_t, [createElementVNode(`span`, null, toDisplayString(u.value.errorMessage || unref(i18nTranslate)(`keyboardHeatmap.trackingError`)), 1), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
-        onClick: renderCache[1] ||= e => o(`navigate`, `settings-keyboard-heatmap`)
+        onClick: renderCache[1] ||= e => emitAlias(`navigate`, `settings-keyboard-heatmap`)
       }, {
         default: H(() => [resolveComponent(unref(motivatorE)), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.openSettings`)), 1)]),
         _: 1
@@ -106780,7 +106780,7 @@ var D_t = {
       })]), createElementVNode(`div`, R_t, [createElementVNode(`p`, z_t, toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.emptyTitle`)), 1), createElementVNode(`p`, B_t, toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.emptyDesc`)), 1)])])) : createCommentVNode(``, true), u.value && !u.value.enabled ? (openBlock(), createElementBlock(`div`, V_t, [createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.historyOnly`)), 1), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
-        onClick: renderCache[2] ||= e => o(`navigate`, `settings-keyboard-heatmap`)
+        onClick: renderCache[2] ||= e => emitAlias(`navigate`, `settings-keyboard-heatmap`)
       }, {
         default: H(() => [resolveComponent(unref(motivatorE)), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`keyboardHeatmap.openSettings`)), 1)]),
         _: 1
@@ -107036,8 +107036,8 @@ var D_t = {
       expose: expose,
       emit: emit
     }) {
-      let r = props,
-        i = emit;
+      let propsAlias = props,
+        emitAlias = emit;
       function a() {
         let e = {
           span: `recent`,
@@ -107154,7 +107154,7 @@ var D_t = {
       function oe(e) {
         m.value = m.value === e ? null : e;
       }
-      watch([s, c, u], () => void ne()), watch(() => r.refreshKey, () => void ne()), watch([s, c, l], () => {
+      watch([s, c, u], () => void ne()), watch(() => propsAlias.refreshKey, () => void ne()), watch([s, c, l], () => {
         localStorage.setItem(k8, JSON.stringify({
           span: s.value,
           colorBy: c.value,
@@ -107385,7 +107385,7 @@ var D_t = {
         key: 0,
         type: `button`,
         class: `h-7 rounded-md bg-black/[0.03] px-2.5 text-xs text-[#666] transition-colors hover:bg-black/[0.06]`,
-        onClick: renderCache[2] ||= e => i(`navigate`, `app-usage`)
+        onClick: renderCache[2] ||= e => emitAlias(`navigate`, `app-usage`)
       }, toDisplayString(unref(i18nTranslate)(`appBarcode.openAppUsage`)), 1)) : createCommentVNode(``, true)]))]), d.value && se.value ? (openBlock(), createBlock(BarcodeTooltip, {
         key: 1,
         result: d.value,
@@ -107752,7 +107752,7 @@ var myt = [`aria-label`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         a = ref(null),
         o = ref(null),
         counter = ref(0),
@@ -107793,14 +107793,14 @@ var myt = [`aria-label`],
         if (!t) return;
         let boundingClientRect = t.getBoundingClientRect(),
           r = iyt(computedResult.value, e.clientX - boundingClientRect.left, e.clientY - boundingClientRect.top);
-        c.value = r, i(`hover`, r ? {
+        c.value = r, emitAlias(`hover`, r ? {
           ...r,
           clientX: e.clientX,
           clientY: e.clientY
         } : null);
       }
       function v() {
-        c.value = null, i(`hover`, null);
+        c.value = null, emitAlias(`hover`, null);
       }
       function y(e) {
         return u && cancelAnimationFrame(u), u = 0, count = Math.max(e, window.devicePixelRatio || 1), h(), () => {
@@ -108013,7 +108013,7 @@ var myt = [`aria-label`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: o,
@@ -108282,7 +108282,7 @@ var myt = [`aria-label`],
       })]), createElementVNode(`div`, byt, [createElementVNode(`p`, xyt, toDisplayString(unref(i18nTranslate)(`screenHeatmap.appUsageOffTitle`)), 1), createElementVNode(`p`, Syt, toDisplayString(unref(i18nTranslate)(`screenHeatmap.appUsageOffDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
-        onClick: renderCache[0] ||= e => i(`navigate`, `settings-screen-heatmap`)
+        onClick: renderCache[0] ||= e => emitAlias(`navigate`, `settings-screen-heatmap`)
       }, {
         default: H(() => [resolveComponent(unref(motivatorE)), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`screenHeatmap.openSettings`)), 1)]),
         _: 1
@@ -108306,7 +108306,7 @@ var myt = [`aria-label`],
         size: `sm`,
         variant: `outline`,
         class: `h-7 text-xs`,
-        onClick: renderCache[1] ||= e => i(`navigate`, `settings-screen-heatmap`)
+        onClick: renderCache[1] ||= e => emitAlias(`navigate`, `settings-screen-heatmap`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`screenHeatmap.openSettings`)), 1)]),
         _: 1
@@ -108901,7 +108901,7 @@ var txt = [`tabindex`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           t: a
         } = vueN(),
@@ -109272,7 +109272,7 @@ var txt = [`tabindex`],
           y: g,
           col: _,
           row: b
-        }), i(`hover`, {
+        }), emitAlias(`hover`, {
           display: t,
           x: h,
           y: g,
@@ -109282,7 +109282,7 @@ var txt = [`tabindex`],
         });
       }
       function be() {
-        v && cancelAnimationFrame(v), v = 0, setTimeoutResult = null, p.value && (p.value = null, i(`hover`, null));
+        v && cancelAnimationFrame(v), v = 0, setTimeoutResult = null, p.value && (p.value = null, emitAlias(`hover`, null));
       }
       watch(w, be);
       function xe(e) {
@@ -109533,7 +109533,7 @@ var txt = [`tabindex`],
       emit: emit
     }) {
       let eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -109662,16 +109662,16 @@ var txt = [`tabindex`],
         });
       }
       function pe(e) {
-        let t = i18nTranslate(`screenHeatmap.zones.${I8(e.x, e.y)}`);
-        return t.charAt(0).toLocaleUpperCase() + t.slice(1);
+        let i18nTranslateResult = i18nTranslate(`screenHeatmap.zones.${I8(e.x, e.y)}`);
+        return i18nTranslateResult.charAt(0).toLocaleUpperCase() + i18nTranslateResult.slice(1);
       }
       let me = computed(() => (_.value?.displays ?? []).map((item, t) => {
         let n = [fe(t)];
         return ae.value && item.isPrimary && item.connected && n.push(i18nTranslate(`screenHeatmap.primary`)), item.connected || n.push(i18nTranslate(`screenHeatmap.disconnected`)), ae.value && le.value > 0 && n.push(`${Math.round((ce.value[t]?.total ?? 0) / le.value * 100)}%`), n.join(` · `);
       }));
       function he(e) {
-        let t = i18nTranslate(`screenHeatmap.zones.${e}`);
-        return t.charAt(0).toLocaleUpperCase() + t.slice(1);
+        let i18nTranslateResult = i18nTranslate(`screenHeatmap.zones.${e}`);
+        return i18nTranslateResult.charAt(0).toLocaleUpperCase() + i18nTranslateResult.slice(1);
       }
       let ge = computed(() => _.value ? ext(_.value) : []),
         _e = computed(() => {
@@ -109816,7 +109816,7 @@ var txt = [`tabindex`],
       })]), createElementVNode(`div`, Fxt, [createElementVNode(`p`, Ixt, toDisplayString(unref(i18nTranslate)(`mouseHeatmap.appUsageOffTitle`)), 1), createElementVNode(`p`, Lxt, toDisplayString(unref(i18nTranslate)(`mouseHeatmap.appUsageOffDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
-        onClick: renderCache[1] ||= e => i(`navigate`, `settings-app-usage-tracking`)
+        onClick: renderCache[1] ||= e => emitAlias(`navigate`, `settings-app-usage-tracking`)
       }, {
         default: H(() => [resolveComponent(unref(motivatorE)), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`mouseHeatmap.openSettings`)), 1)]),
         _: 1
@@ -109826,7 +109826,7 @@ var txt = [`tabindex`],
         key: 0,
         size: `sm`,
         variant: `outline`,
-        onClick: renderCache[2] ||= e => i(`navigate`, `settings-app-usage-tracking`)
+        onClick: renderCache[2] ||= e => emitAlias(`navigate`, `settings-app-usage-tracking`)
       }, {
         default: H(() => [resolveComponent(unref(motivatorE)), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`mouseHeatmap.openSettings`)), 1)]),
         _: 1
@@ -109992,7 +109992,7 @@ var gSt = {
       emit: emit
     }) {
       let textAlias = text,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -110095,7 +110095,7 @@ var gSt = {
       return (state, renderCache) => computedResult.value.length > 0 ? (openBlock(), createElementBlock(`section`, gSt, [createElementVNode(`div`, _St, [createElementVNode(`div`, vSt, [createElementVNode(`h2`, ySt, toDisplayString(unref(i18nTranslate)(`heatMap.rhythm.chartTitle`)), 1), createElementVNode(`span`, bSt, toDisplayString(computedData.value), 1)]), createElementVNode(`div`, xSt, [createElementVNode(`button`, {
         type: `button`,
         class: `flex items-center gap-0.5 text-xs text-[#999] transition-colors hover:text-[#555]`,
-        onClick: renderCache[0] ||= e => r(`navigate`, `year`)
+        onClick: renderCache[0] ||= e => emitAlias(`navigate`, `year`)
       }, [createTextVNode(toDisplayString(unref(i18nTranslate)(`heatMap.rhythm.viewBadges`)) + ` `, 1), resolveComponent(unref(popoverA), {
         size: 12
       })]), resolveComponent(unref(ToggleGroup), {
@@ -110284,7 +110284,7 @@ var gSt = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -110394,7 +110394,7 @@ var gSt = {
       }
       function te() {
         let e = O.value;
-        e && e.level !== 0 && e.unlockedLabel && (j(o.value), r(`generate-badge`, {
+        e && e.level !== 0 && e.unlockedLabel && (j(o.value), emitAlias(`generate-badge`, {
           name: `${e.name} ${i18nTranslate(`heatMap.yearHighlights.levelTag`, {
             level: e.level
           })}`,
@@ -110561,7 +110561,7 @@ var gSt = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -110622,7 +110622,7 @@ var gSt = {
         ref: o,
         class: `badge-share-dialog`,
         onClick: h,
-        onClose: renderCache[0] ||= e => r(`close`)
+        onClose: renderCache[0] ||= e => emitAlias(`close`)
       }, [createElementVNode(`header`, ECt, [createElementVNode(`div`, null, [createElementVNode(`h2`, null, toDisplayString(unref(i18nTranslate)(`heatMap.yearHighlights.shareAchievement`)), 1), createElementVNode(`p`, null, toDisplayString(event.badge.name) + ` · ` + toDisplayString(event.year), 1)]), createElementVNode(`button`, {
         type: `button`,
         "aria-label": unref(i18nTranslate)(`common.close`),
@@ -110886,7 +110886,7 @@ var gSt = {
           locale: a
         } = vueN(),
         eventAlias = event,
-        s = emit,
+        emitAlias = emit,
         c = ref(null),
         l = ref({
           enabled: false,
@@ -110984,7 +110984,7 @@ var gSt = {
           E.value = `heatmap`, D.value = `year`;
           return;
         }
-        s(`navigate`, e);
+        emitAlias(`navigate`, e);
       }
       watch(() => eventAlias.initialView, value => {
         value && (D.value = value);
@@ -111352,12 +111352,12 @@ var gSt = {
           n = {},
           requestAnimationFrameResult = [],
           a = [`backgroundColor`, `borderRadius`, `padding`, `boxShadow`, `position`, `width`];
-        function o(e, t) {
+        function o(el, t) {
           let n = {};
           Object.keys(t).forEach(item => {
-            n[item] = e.style[item], e.style[item] = t[item];
+            n[item] = el.style[item], el.style[item] = t[item];
           }), requestAnimationFrameResult.push({
-            element: e,
+            element: el,
             styles: n
           });
         }
@@ -111599,25 +111599,25 @@ var gSt = {
       }, [D.value === `keyboard` ? (openBlock(), createBlock(KeyboardHeatmapPanel, {
         key: 0,
         "refresh-key": event.refreshKey,
-        onNavigate: renderCache[1] ||= e => s(`navigate`, e)
+        onNavigate: renderCache[1] ||= e => emitAlias(`navigate`, e)
       }, null, 8, [`refresh-key`])) : D.value === `barcode` ? (openBlock(), createBlock(HeatMapBarcodePanel, {
         key: 1,
         ref_key: `barcodePanelRef`,
         ref: we,
         "refresh-key": event.refreshKey,
-        onNavigate: renderCache[2] ||= e => s(`navigate`, e)
+        onNavigate: renderCache[2] ||= e => emitAlias(`navigate`, e)
       }, null, 8, [`refresh-key`])) : D.value === `screen` ? (openBlock(), createBlock(ScreenHeatmapPanel, {
         key: 2,
         ref_key: `screenPanelRef`,
         ref: Te,
         "refresh-key": event.refreshKey,
-        onNavigate: renderCache[3] ||= e => s(`navigate`, e)
+        onNavigate: renderCache[3] ||= e => emitAlias(`navigate`, e)
       }, null, 8, [`refresh-key`])) : D.value === `mouse` ? (openBlock(), createBlock(MouseHeatmapPanel, {
         key: 3,
         ref_key: `mousePanelRef`,
         ref: Ee,
         "refresh-key": event.refreshKey,
-        onNavigate: renderCache[4] ||= e => s(`navigate`, e)
+        onNavigate: renderCache[4] ||= e => emitAlias(`navigate`, e)
       }, null, 8, [`refresh-key`])) : (openBlock(), createElementBlock(Fragment, {
         key: 4
       }, [createElementVNode(`section`, qCt, [createElementVNode(`div`, JCt, [createElementVNode(`div`, YCt, [createElementVNode(`div`, XCt, [createElementVNode(`span`, ZCt, toDisplayString(Be.value.totalRecords), 1), createElementVNode(`span`, QCt, toDisplayString(unref(i18nTranslate)(`heatMap.recordCount`)), 1)]), createElementVNode(`div`, $Ct, [createElementVNode(`span`, ewt, toDisplayString(Be.value.focusLabel), 1), createElementVNode(`span`, twt, toDisplayString(unref(i18nTranslate)(`heatMap.focusHours`)), 1)]), createElementVNode(`div`, nwt, [createElementVNode(`span`, rwt, toDisplayString(Be.value.activeDays), 1), createElementVNode(`span`, iwt, toDisplayString(unref(i18nTranslate)(`heatMap.activeDays`)), 1)]), createElementVNode(`div`, awt, [createElementVNode(`span`, owt, toDisplayString(Be.value.avgRecords), 1), createElementVNode(`span`, swt, toDisplayString(unref(i18nTranslate)(`heatMap.avgRecords`)), 1)])]), createElementVNode(`div`, cwt, [createElementVNode(`div`, lwt, [resolveComponent(playerR, {
@@ -112309,7 +112309,7 @@ var gSt = {
         }
       });
       let textAlias = text,
-        u = emit,
+        emitAlias = emit,
         d = ref(false),
         f = ref(false),
         p = ref([]),
@@ -112686,7 +112686,7 @@ var gSt = {
         let e = _.value?.appName;
         e && (trackActionEvent(`feature_map_usage_click`, {
           entry: `app_detail_screen_heatmap`
-        }), v.value = false, Hvt(e), u(`navigate`, `heat-map-screen`));
+        }), v.value = false, Hvt(e), emitAlias(`navigate`, `heat-map-screen`));
       }
       async function Me(e) {
         if (S.value === e.id) {
@@ -113038,9 +113038,9 @@ var nOt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
+      let propsAlias = props,
         r = vueLt(props, `open`),
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -113080,7 +113080,7 @@ var nOt = {
       async function T() {
         c.value = true, l.value = ``;
         try {
-          let [e, t] = await Promise.all([vm.shareState(n.reportId), Y_.listFriends()]);
+          let [e, t] = await Promise.all([vm.shareState(propsAlias.reportId), Y_.listFriends()]);
           o.value = e, s.value = t;
         } catch (e) {
           l.value = _5(i18nTranslate, e, `reportCc.share.loadFailed`);
@@ -113104,7 +113104,7 @@ var nOt = {
           try {
             let e = d.value.size,
               t = await vm.send({
-                reportId: n.reportId,
+                reportId: propsAlias.reportId,
                 recipientUserIds: [...d.value],
                 note: f.value.trim()
               });
@@ -113114,7 +113114,7 @@ var nOt = {
               recentUserIds: [...new Set([...d.value, ...o.value.recentUserIds])]
             }, d.value = new Set(), f.value = ``, alertN(i18nTranslate(`reportCc.share.sent`, {
               count: e
-            })), i(`changed`, o.value);
+            })), emitAlias(`changed`, o.value);
           } catch (e) {
             m.value = _5(i18nTranslate, e, `reportCc.share.sendFailed`);
           } finally {
@@ -113134,7 +113134,7 @@ var nOt = {
             await vm.withdraw(docId, e.person.userId), o.value = {
               ...o.value,
               recipients: o.value.recipients.filter(item => item.person.userId !== e.person.userId)
-            }, i(`changed`, o.value);
+            }, emitAlias(`changed`, o.value);
           } catch (e) {
             _.value = _5(i18nTranslate, e, `reportCc.share.removeFailed`);
           } finally {
@@ -113151,7 +113151,7 @@ var nOt = {
               ...o.value,
               docId: null,
               recipients: []
-            }, v.value = false, alertN(i18nTranslate(`reportCc.share.stopped`)), i(`changed`, o.value);
+            }, v.value = false, alertN(i18nTranslate(`reportCc.share.stopped`)), emitAlias(`changed`, o.value);
           } catch (e) {
             _.value = _5(i18nTranslate, e, `reportCc.share.stopFailed`), v.value = false;
           } finally {
@@ -113611,7 +113611,7 @@ var jOt = {
     }) {
       let eventAlias = event,
         r = vueLt(event, `open`),
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: s
@@ -113757,7 +113757,7 @@ var jOt = {
       }
       let counter = ref(1),
         fe = ref(``),
-        pe = uiSwitchIt(`xiaohei_cc_summary_mode`, `chat`),
+        uiSwitchItResult = uiSwitchIt(`xiaohei_cc_summary_mode`, `chat`),
         me = uiSwitchIt(`xiaohei_chat_providers`, [`deepseek`]),
         he = ref(false),
         ge = ref(``);
@@ -113784,7 +113784,7 @@ var jOt = {
         value && (counter.value = 1, l.value = computedResult.value?.type ?? `daily`, ge.value = ``, y.value = null, k.value = null, j.value = ``, ee.value = null, ve());
       });
       let ye = computed(() => !k.value && !m.value && T.value !== null),
-        be = computed(() => !he.value && !k.value && eventAlias.items.length > 0 && !m.value && T.value !== null && fe.value.length <= S5 && (pe.value === `direct` || me.value.length > 0));
+        be = computed(() => !he.value && !k.value && eventAlias.items.length > 0 && !m.value && T.value !== null && fe.value.length <= S5 && (uiSwitchItResult.value === `direct` || me.value.length > 0));
       async function xe() {
         let e = computedResult.value,
           t = T.value;
@@ -113807,11 +113807,11 @@ var jOt = {
             customInstruction: [t.customInstruction?.trim(), trimmed].filter(Boolean).join(`
 
 `),
-            mode: pe.value,
-            chatProviders: pe.value === `chat` ? [...me.value] : undefined,
+            mode: uiSwitchItResult.value,
+            chatProviders: uiSwitchItResult.value === `chat` ? [...me.value] : undefined,
             language: s.value
           });
-          alertN(pe.value === `direct` ? i18nTranslate(`reportCc.summary.directStarted`) : i18nTranslate(`reportCc.summary.chatStarted`)), i(`generated`, summary.reportId), r.value = false;
+          alertN(uiSwitchItResult.value === `direct` ? i18nTranslate(`reportCc.summary.directStarted`) : i18nTranslate(`reportCc.summary.chatStarted`)), emitAlias(`generated`, summary.reportId), r.value = false;
         } catch (e) {
           ge.value = _5(i18nTranslate, e, `reportCc.summary.generateFailed`);
         } finally {
@@ -114024,13 +114024,13 @@ var jOt = {
             key: e,
             role: `radio`,
             tabindex: `0`,
-            "aria-checked": unref(pe) === e,
-            class: normalizeClass([`cursor-pointer rounded-[10px] border px-4 py-3 transition-colors`, unref(pe) === e ? `border-primary bg-primary/[0.03] ring-1 ring-primary/20` : `border-black/[0.08] hover:border-black/15 dark:border-white/10`]),
-            onClick: t => pe.value = e,
-            onKeydown: playerT(withDirectives(t => pe.value = e, [`prevent`]), [`enter`])
+            "aria-checked": unref(uiSwitchItResult) === e,
+            class: normalizeClass([`cursor-pointer rounded-[10px] border px-4 py-3 transition-colors`, unref(uiSwitchItResult) === e ? `border-primary bg-primary/[0.03] ring-1 ring-primary/20` : `border-black/[0.08] hover:border-black/15 dark:border-white/10`]),
+            onClick: t => uiSwitchItResult.value = e,
+            onKeydown: playerT(withDirectives(t => uiSwitchItResult.value = e, [`prevent`]), [`enter`])
           }, [createElementVNode(`div`, Mkt, [createElementVNode(`span`, {
-            class: normalizeClass([`flex size-3.5 shrink-0 items-center justify-center rounded-full border`, unref(pe) === e ? `border-primary` : `border-black/25 dark:border-white/30`])
-          }, [unref(pe) === e ? (openBlock(), createElementBlock(`span`, Nkt)) : createCommentVNode(``, true)], 2), createElementVNode(`span`, Pkt, toDisplayString(e === `chat` ? unref(i18nTranslate)(`generateReport.chatOutput`) : unref(i18nTranslate)(`generateReport.directOutput`)), 1)]), createElementVNode(`p`, Fkt, toDisplayString(e === `chat` ? unref(i18nTranslate)(`generateReport.chatOutputDesc`) : unref(i18nTranslate)(`reportCc.summary.directHint`)), 1), e === `chat` && unref(pe) === `chat` ? (openBlock(), createElementBlock(`div`, Ikt, [(openBlock(), createElementBlock(Fragment, null, renderList([`deepseek`, `chatgpt`], e => createElementVNode(`button`, {
+            class: normalizeClass([`flex size-3.5 shrink-0 items-center justify-center rounded-full border`, unref(uiSwitchItResult) === e ? `border-primary` : `border-black/25 dark:border-white/30`])
+          }, [unref(uiSwitchItResult) === e ? (openBlock(), createElementBlock(`span`, Nkt)) : createCommentVNode(``, true)], 2), createElementVNode(`span`, Pkt, toDisplayString(e === `chat` ? unref(i18nTranslate)(`generateReport.chatOutput`) : unref(i18nTranslate)(`generateReport.directOutput`)), 1)]), createElementVNode(`p`, Fkt, toDisplayString(e === `chat` ? unref(i18nTranslate)(`generateReport.chatOutputDesc`) : unref(i18nTranslate)(`reportCc.summary.directHint`)), 1), e === `chat` && unref(uiSwitchItResult) === `chat` ? (openBlock(), createElementBlock(`div`, Ikt, [(openBlock(), createElementBlock(Fragment, null, renderList([`deepseek`, `chatgpt`], e => createElementVNode(`button`, {
             key: e,
             type: `button`,
             class: normalizeClass([`inline-flex items-center gap-1.5 text-xs transition-colors`, unref(me).includes(e) ? `text-(--foreground)` : `text-[#999] hover:text-(--foreground)`]),
@@ -114696,7 +114696,7 @@ var jOt = {
     }) {
       let itemsAlias = items,
         r = vueLt(items, `open`),
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -114714,13 +114714,13 @@ var jOt = {
         try {
           let detail = await vm.detail(e);
           if (t !== p) return;
-          if (o.value = detail, c.value = `ready`, i(`loaded`, detail), s.value = itemsAlias.localExists ?? null, itemsAlias.mode === `sent` && itemsAlias.localExists === undefined && detail.clientReportId) {
+          if (o.value = detail, c.value = `ready`, emitAlias(`loaded`, detail), s.value = itemsAlias.localExists ?? null, itemsAlias.mode === `sent` && itemsAlias.localExists === undefined && detail.clientReportId) {
             let e = await vm.localExists([detail.clientReportId]).catch(() => ({}));
             t === p && (s.value = e[detail.clientReportId] ?? null);
           }
         } catch (n) {
           if (t !== p) return;
-          o.value = null, g5(n) === `DOC_NOT_FOUND` ? (c.value = `notFound`, i(`gone`, e)) : (c.value = `error`, l.value = _5(i18nTranslate, n, `reportCc.detailFailed`));
+          o.value = null, g5(n) === `DOC_NOT_FOUND` ? (c.value = `notFound`, emitAlias(`gone`, e)) : (c.value = `error`, l.value = _5(i18nTranslate, n, `reportCc.detailFailed`));
         }
       }
       watch(() => [r.value, itemsAlias.docId], ([e, t]) => {
@@ -114734,7 +114734,7 @@ var jOt = {
             o.value && (o.value = {
               ...o.value,
               social: e
-            }, i(`social`, o.value.docId, e));
+            }, emitAlias(`social`, o.value.docId, e));
           }
         }),
         computedData = computed(() => itemsAlias.mode === `sent`),
@@ -114791,7 +114791,7 @@ var jOt = {
           await reportApi.updateContent(e.clientReportId, trimmed), o.value?.docId === e.docId && (o.value = {
             ...o.value,
             content: trimmed
-          }), D(), alertN(i18nTranslate(`reportCc.editSaved`)), i(`edited`);
+          }), D(), alertN(i18nTranslate(`reportCc.editSaved`)), emitAlias(`edited`);
         } catch {
           alertT(i18nTranslate(`reportCc.editLocalMissing`));
         } finally {
@@ -114911,7 +114911,7 @@ var jOt = {
                 _: 1
               })) : createCommentVNode(``, true), resolveComponent(unref(DropdownMenuItemT), {
                 class: `gap-2 text-xs`,
-                onSelect: renderCache[1] ||= e => b(() => i(`manage`, o.value))
+                onSelect: renderCache[1] ||= e => b(() => emitAlias(`manage`, o.value))
               }, {
                 default: H(() => [resolveComponent(unref(ec), {
                   size: 13,
@@ -114920,7 +114920,7 @@ var jOt = {
                 _: 1
               }), resolveComponent(unref(DropdownMenuSeparatorComponent)), resolveComponent(unref(DropdownMenuItemT), {
                 class: `gap-2 text-xs text-destructive focus:text-destructive`,
-                onSelect: renderCache[2] ||= e => i(`stop`, o.value)
+                onSelect: renderCache[2] ||= e => emitAlias(`stop`, o.value)
               }, {
                 default: H(() => [resolveComponent(unref(uiSwitchWt), {
                   size: 13
@@ -114937,7 +114937,7 @@ var jOt = {
             variant: `ghost`,
             disabled: !items.hasPrev || u.value,
             title: unref(i18nTranslate)(`reportCc.prev`),
-            onClick: renderCache[3] ||= e => i(`prev`)
+            onClick: renderCache[3] ||= e => emitAlias(`prev`)
           }, {
             default: H(() => [resolveComponent(unref(i18nU), {
               size: 16,
@@ -114949,7 +114949,7 @@ var jOt = {
             variant: `ghost`,
             disabled: !items.hasNext || u.value,
             title: unref(i18nTranslate)(`reportCc.next`),
-            onClick: renderCache[4] ||= e => i(`next`)
+            onClick: renderCache[4] ||= e => emitAlias(`next`)
           }, {
             default: H(() => [resolveComponent(unref(popoverA), {
               size: 16,
@@ -115121,7 +115121,7 @@ var jOt = {
       emit: emit
     }) {
       let textAlias = text,
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -115293,14 +115293,14 @@ var jOt = {
         });
       }
       function _e() {
-        D(b.value), i(`changed`);
+        D(b.value), emitAlias(`changed`);
       }
       async function ve() {
         let e = de.value;
         if (e && !pe.value) {
           pe.value = true;
           try {
-            await vm.withdraw(e.docId), se(e.docId), ne.value === e.docId && (M.value = false), alertN(i18nTranslate(`reportCc.removeShare.done`)), i(`changed`), s(), fe.value = false;
+            await vm.withdraw(e.docId), se(e.docId), ne.value === e.docId && (M.value = false), alertN(i18nTranslate(`reportCc.removeShare.done`)), emitAlias(`changed`), s(), fe.value = false;
           } catch (e) {
             alertT(_5(i18nTranslate, e, `reportCc.removeShare.failed`));
           } finally {
@@ -115358,7 +115358,7 @@ var jOt = {
         count.length && (Oe.value = count, De.value = true);
       }
       function je(e) {
-        Se(), M.value = false, i(`generated`, e);
+        Se(), M.value = false, emitAlias(`generated`, e);
       }
       let Me = ref(false);
       return onBeforeMount(() => {
@@ -115648,7 +115648,7 @@ var jOt = {
         size: `sm`,
         variant: `outline`,
         class: `mt-4 gap-1 text-xs`,
-        onClick: renderCache[6] ||= e => i(`goMine`)
+        onClick: renderCache[6] ||= e => emitAlias(`goMine`)
       }, {
         default: H(() => [resolveComponent(unref(uo), {
           size: 12
@@ -115680,7 +115680,7 @@ var jOt = {
         onGone: se,
         onManage: renderCache[13] ||= e => e.clientReportId && ge(e.clientReportId, e.title),
         onStop: renderCache[14] ||= e => he(e.docId, e.title),
-        onEdited: renderCache[15] ||= e => i(`changed`)
+        onEdited: renderCache[15] ||= e => emitAlias(`changed`)
       }, null, 8, [`open`, `doc-id`, `mode`, `has-prev`, `has-next`, `local-exists`]), ue.value ? (openBlock(), createBlock(ReportCcShareDialog, {
         key: 0,
         open: le.value,
@@ -116085,7 +116085,7 @@ var oMt = {
           captureGrowthObservation: a
         } = growthTelT(),
         itemsAlias = items,
-        c = emit,
+        emitAlias = emit,
         {
           reports: l,
           total: u,
@@ -116208,28 +116208,28 @@ var oMt = {
         return t === 0 ? 7 : t;
       }
       function M(e) {
-        let t = popoverO(popoverD());
+        let popoverOResult = popoverO(popoverD());
         if (A.value = e, e === `thisWeek`) {
-          let e = te(t),
-            subtract = t.subtract({
+          let e = te(popoverOResult),
+            subtract = popoverOResult.subtract({
               days: e - 1
             });
-          O.value = ee(subtract), k.value = ee(t);
+          O.value = ee(subtract), k.value = ee(popoverOResult);
         } else if (e === `thisMonth`) {
-          let e = t.set({
+          let e = popoverOResult.set({
             day: 1
           });
-          O.value = ee(e), k.value = ee(t);
+          O.value = ee(e), k.value = ee(popoverOResult);
         } else if (e === `last7`) {
-          let subtract = t.subtract({
+          let subtract = popoverOResult.subtract({
             days: 6
           });
-          O.value = ee(subtract), k.value = ee(t);
+          O.value = ee(subtract), k.value = ee(popoverOResult);
         } else if (e === `last30`) {
-          let subtract = t.subtract({
+          let subtract = popoverOResult.subtract({
             days: 29
           });
-          O.value = ee(subtract), k.value = ee(t);
+          O.value = ee(subtract), k.value = ee(popoverOResult);
         }
       }
       function ne() {
@@ -116671,7 +116671,7 @@ var oMt = {
       }
       watch(kt, vn);
       function yn() {
-        Et.value = false, xe.value = false, c(`recharge`);
+        Et.value = false, xe.value = false, emitAlias(`recharge`);
       }
       async function bn() {
         if (Dt.value && !Ft.value) {
@@ -117485,12 +117485,12 @@ var oMt = {
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, cache) => (openBlock(), createBlock(unref(AvatarFallback), vueNt({
         "data-slot": `avatar-fallback`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -117509,10 +117509,10 @@ var oMt = {
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(AvatarImage), vueNt({
         "data-slot": `avatar-image`
-      }, t, {
+      }, propsAlias, {
         class: `rounded-full aspect-square size-full object-cover`
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
@@ -117614,7 +117614,7 @@ var oMt = {
           t: i18nTranslate,
           locale: r
         } = vueN(),
-        i = emit,
+        emitAlias = emit,
         {
           notifications: a,
           isLoading: o,
@@ -117682,7 +117682,7 @@ var oMt = {
             n.protocol === `xiaohei-bot:` && n.hostname === `conversation` && (normalizeResult = decodeURIComponent(n.pathname.slice(1)));
           }
         } catch {}
-        i(`open-conversation`, {
+        emitAlias(`open-conversation`, {
           conversationId: normalizeResult,
           notificationId: e.id
         });
@@ -117697,7 +117697,7 @@ var oMt = {
         class: `shrink-0`,
         "aria-label": unref(i18nTranslate)(`botUi.back`),
         title: unref(i18nTranslate)(`botUi.back`),
-        onClick: renderCache[0] ||= e => i(`close`)
+        onClick: renderCache[0] ||= e => emitAlias(`close`)
       }, {
         default: H(() => [resolveComponent(unref(fa), {
           size: 18,
@@ -118202,19 +118202,19 @@ var OPt = {
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(t)(`xiaoheiBot.consultation.older`)), 1)]),
             _: 1
-          }, 8, [`disabled`])) : createCommentVNode(``, true), createElementVNode(`div`, WPt, [(openBlock(true), createElementBlock(Fragment, null, renderList(c.value.messages, e => (openBlock(), createElementBlock(`article`, {
-            key: e.id,
+          }, 8, [`disabled`])) : createCommentVNode(``, true), createElementVNode(`div`, WPt, [(openBlock(true), createElementBlock(Fragment, null, renderList(c.value.messages, row => (openBlock(), createElementBlock(`article`, {
+            key: row.id,
             class: normalizeClass([`consultation-turn`, {
-              "consultation-turn--owner": e.authorBotId === c.value.consultation.ownerBotId
+              "consultation-turn--owner": row.authorBotId === c.value.consultation.ownerBotId
             }])
-          }, [createElementVNode(`span`, GPt, [E(e.authorBotId) ? (openBlock(), createElementBlock(`img`, {
+          }, [createElementVNode(`span`, GPt, [E(row.authorBotId) ? (openBlock(), createElementBlock(`img`, {
             key: 0,
-            src: E(e.authorBotId),
+            src: E(row.authorBotId),
             alt: ``
-          }, null, 8, KPt)) : (openBlock(), createElementBlock(`span`, qPt, toDisplayString(e.authorName.slice(0, 1)), 1))]), createElementVNode(`div`, JPt, [createElementVNode(`div`, YPt, toDisplayString(e.authorName), 1), e.content && e.content !== e.errorMessage || !unref(N5)(e) ? (openBlock(), createElementBlock(`div`, XPt, [e.content ? (openBlock(), createBlock(MarkdownRenderer, {
+          }, null, 8, KPt)) : (openBlock(), createElementBlock(`span`, qPt, toDisplayString(row.authorName.slice(0, 1)), 1))]), createElementVNode(`div`, JPt, [createElementVNode(`div`, YPt, toDisplayString(row.authorName), 1), row.content && row.content !== row.errorMessage || !unref(N5)(row) ? (openBlock(), createElementBlock(`div`, XPt, [row.content ? (openBlock(), createBlock(MarkdownRenderer, {
             key: 0,
-            content: e.content
-          }, null, 8, [`content`])) : (openBlock(), createElementBlock(`span`, ZPt, toDisplayString(unref(t)([`pending`, `streaming`].includes(e.status) ? `xiaoheiBot.consultation.responding` : `xiaoheiBot.consultation.noMessages`)), 1))])) : createCommentVNode(``, true), unref(N5)(e) ? (openBlock(), createElementBlock(`div`, QPt, toDisplayString(unref(P5)(e, unref(t))), 1)) : createCommentVNode(``, true), createElementVNode(`time`, $Pt, toDisplayString(D(e.createdAt)), 1)])], 2))), 128)), c.value.consultation.error && !c.value.messages.some(item => item.status === `failed`) ? (openBlock(), createElementBlock(`p`, eFt, toDisplayString(unref(P5)({
+            content: row.content
+          }, null, 8, [`content`])) : (openBlock(), createElementBlock(`span`, ZPt, toDisplayString(unref(t)([`pending`, `streaming`].includes(row.status) ? `xiaoheiBot.consultation.responding` : `xiaoheiBot.consultation.noMessages`)), 1))])) : createCommentVNode(``, true), unref(N5)(row) ? (openBlock(), createElementBlock(`div`, QPt, toDisplayString(unref(P5)(row, unref(t))), 1)) : createCommentVNode(``, true), createElementVNode(`time`, $Pt, toDisplayString(D(row.createdAt)), 1)])], 2))), 128)), c.value.consultation.error && !c.value.messages.some(item => item.status === `failed`) ? (openBlock(), createElementBlock(`p`, eFt, toDisplayString(unref(P5)({
             status: `failed`,
             errorMessage: c.value.consultation.error
           }, unref(t))), 1)) : createCommentVNode(``, true)]), computedData.value ? (openBlock(), createElementBlock(`div`, tFt, [resolveComponent(unref(beautifier), {
@@ -118227,19 +118227,19 @@ var OPt = {
           }, [!u.value && !s.value.length ? (openBlock(), createElementBlock(`div`, NPt, [createElementVNode(`span`, PPt, [resolveComponent(unref(Yo), {
             size: 21,
             "stroke-width": 1.5
-          })]), createElementVNode(`p`, null, toDisplayString(unref(t)(`xiaoheiBot.consultation.empty`)), 1)])) : createCommentVNode(``, true), (openBlock(true), createElementBlock(Fragment, null, renderList(s.value, e => (openBlock(), createElementBlock(`button`, {
-            key: e.id,
+          })]), createElementVNode(`p`, null, toDisplayString(unref(t)(`xiaoheiBot.consultation.empty`)), 1)])) : createCommentVNode(``, true), (openBlock(true), createElementBlock(Fragment, null, renderList(s.value, row => (openBlock(), createElementBlock(`button`, {
+            key: row.id,
             type: `button`,
             class: `flex w-full items-center gap-3 rounded-xl border border-border/60 p-4 text-left transition-colors hover:border-primary/20 hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/15`,
-            onClick: t => k(e.id)
+            onClick: t => k(row.id)
           }, [resolveComponent(unref(Yo), {
             size: 18,
             class: `shrink-0 text-primary/70`
-          }), createElementVNode(`span`, IPt, [createElementVNode(`strong`, LPt, toDisplayString(e.ownerName) + ` → ` + toDisplayString(e.targetName), 1), createElementVNode(`span`, RPt, toDisplayString(e.question), 1), createElementVNode(`time`, zPt, toDisplayString(D(e.createdAt)), 1)]), resolveComponent(unref(Badge), {
+          }), createElementVNode(`span`, IPt, [createElementVNode(`strong`, LPt, toDisplayString(row.ownerName) + ` → ` + toDisplayString(row.targetName), 1), createElementVNode(`span`, RPt, toDisplayString(row.question), 1), createElementVNode(`time`, zPt, toDisplayString(D(row.createdAt)), 1)]), resolveComponent(unref(Badge), {
             variant: `secondary`,
             class: `shrink-0`
           }, {
-            default: H(() => [createTextVNode(toDisplayString(unref(t)(`xiaoheiBot.consultation.${e.status}`)), 1)]),
+            default: H(() => [createTextVNode(toDisplayString(unref(t)(`xiaoheiBot.consultation.${row.status}`)), 1)]),
             _: 2
           }, 1024), resolveComponent(unref(popoverA), {
             size: 14,
@@ -118565,11 +118565,11 @@ var OPt = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `input-group`,
         role: `group`,
-        class: normalizeClass(unref(uiSwitchXt)(`border-input dark:bg-input/30 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-disabled:bg-input/50 dark:has-disabled:bg-input/80 h-8 rounded-lg border transition-colors in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-3 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 has-[>[data-align=block-start]]:[&>input]:pb-3 has-[>[data-align=inline-end]]:[&>input]:pr-1.5 has-[>[data-align=inline-start]]:[&>input]:pl-1.5 group/input-group relative flex w-full min-w-0 items-center outline-none has-[>textarea]:h-auto`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`border-input dark:bg-input/30 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-disabled:bg-input/50 dark:has-disabled:bg-input/80 h-8 rounded-lg border transition-colors in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-3 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 has-[>[data-align=block-start]]:[&>input]:pb-3 has-[>[data-align=inline-end]]:[&>input]:pr-1.5 has-[>[data-align=inline-start]]:[&>input]:pl-1.5 group/input-group relative flex w-full min-w-0 items-center outline-none has-[>textarea]:h-auto`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -118610,10 +118610,10 @@ var OPt = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(Input), {
         "data-slot": `input-group-control`,
-        class: normalizeClass(unref(uiSwitchXt)(`rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent flex-1`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent flex-1`, propsAlias.class))
       }, null, 8, [`class`]));
     }
   }),
@@ -118688,10 +118688,10 @@ var Item = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-actions`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-2 flex items-center`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-2 flex items-center`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -118703,10 +118703,10 @@ var Item = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-content`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-1 group-data-[size=xs]/item:gap-0 flex flex-1 flex-col [&+[data-slot=item-content]]:flex-none`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-1 group-data-[size=xs]/item:gap-0 flex flex-1 flex-col [&+[data-slot=item-content]]:flex-none`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -118718,10 +118718,10 @@ var Item = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`p`, {
         "data-slot": `item-description`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-left text-sm leading-normal group-data-[size=xs]/item:text-xs line-clamp-2 font-normal [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-left text-sm leading-normal group-data-[size=xs]/item:text-xs line-clamp-2 font-normal [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -118733,11 +118733,11 @@ var Item = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `list`,
         "data-slot": `item-group`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2 group/item-group flex w-full flex-col`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2 group/item-group flex w-full flex-col`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -118751,13 +118751,13 @@ var Item = defineComponent({
       variant: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-media`,
-        "data-variant": t.variant,
+        "data-variant": propsAlias.variant,
         class: normalizeClass(unref(uiSwitchXt)(unref(CFt)({
           variant: props.variant
-        }), t.class))
+        }), propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 10, xFt));
     }
   }),
@@ -118769,10 +118769,10 @@ var Item = defineComponent({
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-title`,
-        class: normalizeClass(unref(uiSwitchXt)(`gap-2 text-sm leading-snug font-medium underline-offset-4 cn-font-heading line-clamp-1 flex w-fit items-center`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`gap-2 text-sm leading-snug font-medium underline-offset-4 cn-font-heading line-clamp-1 flex w-fit items-center`, propsAlias.class))
       }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
@@ -119374,10 +119374,10 @@ var Command = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r),
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias),
         o = ref(new Map()),
         s = ref(new Map()),
         {
@@ -119418,8 +119418,8 @@ var Command = defineComponent({
         filterState: l
       }), (e, t) => (openBlock(), createBlock(unref(ListboxRoot), vueNt({
         "data-slot": `command`
-      }, unref(a), {
-        class: unref(uiSwitchXt)(`bg-popover text-popover-foreground rounded-xl! p-1 flex size-full flex-col overflow-hidden`, n.class)
+      }, unref(uiSwitchZResult), {
+        class: unref(uiSwitchXt)(`bg-popover text-popover-foreground rounded-xl! p-1 flex size-full flex-col overflow-hidden`, propsAlias.class)
       }), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -119459,11 +119459,11 @@ var Command = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = uiSwitchZ(n, emit);
-      return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), vueTr(vueV(unref(r))), {
+      let propsAlias = props,
+        uiSwitchZResult = uiSwitchZ(propsAlias, emit);
+      return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), vueTr(vueV(unref(uiSwitchZResult))), {
         default: H(r => [resolveComponent(unref(dialogI), {
-          class: normalizeClass(unref(uiSwitchXt)(`rounded-xl! top-1/3 translate-y-0 overflow-hidden p-0`, n.class)),
+          class: normalizeClass(unref(uiSwitchXt)(`rounded-xl! top-1/3 translate-y-0 overflow-hidden p-0`, propsAlias.class)),
           "show-close-button": props.showCloseButton
         }, {
           default: H(() => [resolveComponent(unref(dialogN), {
@@ -119499,8 +119499,8 @@ var Command = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`),
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
         {
           filterState: r
         } = K5(),
@@ -119508,8 +119508,8 @@ var Command = defineComponent({
       return (ctx, cache) => computedResult.value ? (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         key: 0,
         "data-slot": `command-empty`
-      }, unref(n), {
-        class: unref(uiSwitchXt)(`py-6 text-center text-sm`, t.class)
+      }, unref(uiSwitchLtResult), {
+        class: unref(uiSwitchXt)(`py-6 text-center text-sm`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -119529,24 +119529,24 @@ var Command = defineComponent({
       heading: {}
     },
     setup(props) {
-      let t = props,
-        n = uiSwitchLt(t, `class`),
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
         {
           allGroups: r,
           filterState: i
         } = K5(),
-        a = uiSwitchI(),
-        computedResult = computed(() => !i.search || i.filtered.groups.has(a));
+        uiSwitchIResult = uiSwitchI(),
+        computedResult = computed(() => !i.search || i.filtered.groups.has(uiSwitchIResult));
       return JFt({
-        id: a
+        id: uiSwitchIResult
       }), onBeforeMount(() => {
-        r.value.has(a) || r.value.set(a, new Set());
+        r.value.has(uiSwitchIResult) || r.value.set(uiSwitchIResult, new Set());
       }), onUnmounted(() => {
-        r.value.delete(a);
-      }), (r, i) => (openBlock(), createBlock(unref(ListboxGroup), vueNt(unref(n), {
-        id: unref(a),
+        r.value.delete(uiSwitchIResult);
+      }), (r, i) => (openBlock(), createBlock(unref(ListboxGroup), vueNt(unref(uiSwitchLtResult), {
+        id: unref(uiSwitchIResult),
         "data-slot": `command-group`,
-        class: unref(uiSwitchXt)(`text-foreground **:[[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium`, t.class),
+        class: unref(uiSwitchXt)(`text-foreground **:[[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium`, propsAlias.class),
         hidden: !computedResult.value || undefined
       }), {
         default: H(() => [props.heading ? (openBlock(), createBlock(unref(ListboxGroupLabel), {
@@ -119585,9 +119585,9 @@ var Command = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r),
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult),
         {
           filterState: a
         } = K5();
@@ -119595,14 +119595,14 @@ var Command = defineComponent({
         class: `bg-input/30 border-input/30 h-8! rounded-lg! shadow-none! *:data-[slot=input-group-addon]:pl-2!`
       }, {
         default: H(() => [resolveComponent(unref(ListboxFilter), vueNt({
-          ...unref(i),
+          ...unref(uiSwitchBResult),
           ...ctx.$attrs
         }, {
           modelValue: unref(a).search,
           "onUpdate:modelValue": cache[0] ||= e => unref(a).search = e,
           "data-slot": `command-input`,
           "auto-focus": ``,
-          class: unref(uiSwitchXt)(`w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50`, t.class)
+          class: unref(uiSwitchXt)(`w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50`, propsAlias.class)
         }), null, 16, [`modelValue`, `class`]), resolveComponent(unref(InputGroupAddon), null, {
           default: H(() => [resolveComponent(unref(Cs), {
             class: `size-4 shrink-0 opacity-50`
@@ -119632,11 +119632,11 @@ var Command = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r),
-        o = uiSwitchI(),
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias),
+        uiSwitchIResult = uiSwitchI(),
         {
           filterState: s,
           allItems: c,
@@ -119645,7 +119645,7 @@ var Command = defineComponent({
         d = qFt(),
         computedResult = computed(() => {
           if (s.search) {
-            let e = s.filtered.items.get(o);
+            let e = s.filtered.items.get(uiSwitchIResult);
             return e === undefined || e > 0;
           }
           return true;
@@ -119654,19 +119654,19 @@ var Command = defineComponent({
         m = k(p);
       return onBeforeMount(() => {
         if (!(m.value instanceof HTMLElement)) return;
-        c.value.set(o, m.value.textContent ?? n.value?.toString() ?? ``);
+        c.value.set(uiSwitchIResult, m.value.textContent ?? propsAlias.value?.toString() ?? ``);
         let e = d?.id;
-        e && (l.value.has(e) ? l.value.get(e)?.add(o) : l.value.set(e, new Set([o])));
+        e && (l.value.has(e) ? l.value.get(e)?.add(uiSwitchIResult) : l.value.set(e, new Set([uiSwitchIResult])));
       }), onUnmounted(() => {
-        c.value.delete(o);
+        c.value.delete(uiSwitchIResult);
       }), (e, renderCache) => computedResult.value ? (openBlock(), createBlock(unref(ListboxItem), vueNt({
         key: 0
-      }, unref(a), {
-        id: unref(o),
+      }, unref(uiSwitchZResult), {
+        id: unref(uiSwitchIResult),
         ref_key: `itemRef`,
         ref: p,
         "data-slot": `command-item`,
-        class: unref(uiSwitchXt)(`data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! [&_svg:not([class*=size-])]:size-4 group/command-item data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class),
+        class: unref(uiSwitchXt)(`data-selected:bg-muted data-selected:text-foreground data-selected:*:[svg]:text-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none in-data-[slot=dialog-content]:rounded-lg! [&_svg:not([class*=size-])]:size-4 group/command-item data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class),
         onSelect: renderCache[0] ||= e => {
           e.defaultPrevented || (unref(s).search = ``);
         }
@@ -119693,13 +119693,13 @@ var Command = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(ListboxContent), vueNt({
         "data-slot": `command-list`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`no-scrollbar max-h-72 scroll-py-1 outline-none overflow-x-hidden overflow-y-auto`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`no-scrollbar max-h-72 scroll-py-1 outline-none overflow-x-hidden overflow-y-auto`, propsAlias.class)
       }), {
         default: H(() => [createElementVNode(`div`, WFt, [withCtx(ctx.$slots, `default`)])]),
         _: 3
@@ -119809,15 +119809,15 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           t: i18nTranslate,
           locale: i
         } = vueN(),
-        a = props,
-        o = emit,
-        s = qB(computed(() => !!a.contact)),
+        propsAlias = props,
+        emitAlias = emit,
+        s = qB(computed(() => !!propsAlias.contact)),
         c = ref(``),
         l = ref(``),
         u = ref(``),
         d = ref(false),
         computedResult = computed(() => {
-          let date = new Date(a.binding?.boundAt ?? ``);
+          let date = new Date(propsAlias.binding?.boundAt ?? ``);
           return Number.isNaN(date.getTime()) ? `—` : new Intl.DateTimeFormat(i.value, {
             month: `short`,
             day: `numeric`,
@@ -119825,29 +119825,29 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             minute: `2-digit`
           }).format(date);
         }),
-        computedData = computed(() => a.login && [`wait`, `scaned`, `need_verifycode`].includes(a.login.status)),
-        m = computed(() => Math.max(0, Math.ceil(((a.login?.expiresAt || 0) - a.now) / 1e3))),
-        h = computed(() => a.login?.status === `expired` || computedData.value && m.value === 0),
-        g = computed(() => a.binding && !computedData.value && a.login?.status !== `error` && a.login?.status !== `expired`),
-        _ = computed(() => h.value ? i18nTranslate(`botUi.qrExpired`) : a.login?.status === `scaned` ? i18nTranslate(`botUi.qrScanned`) : a.login?.status === `need_verifycode` ? i18nTranslate(`botUi.verifyHint`) : a.login?.status === `error` ? i18nTranslate(`botUi.bindingIncomplete`) : i18nTranslate(`botUi.scanHint`));
-      watch(() => a.contact?.id, () => {
+        computedData = computed(() => propsAlias.login && [`wait`, `scaned`, `need_verifycode`].includes(propsAlias.login.status)),
+        m = computed(() => Math.max(0, Math.ceil(((propsAlias.login?.expiresAt || 0) - propsAlias.now) / 1e3))),
+        h = computed(() => propsAlias.login?.status === `expired` || computedData.value && m.value === 0),
+        g = computed(() => propsAlias.binding && !computedData.value && propsAlias.login?.status !== `error` && propsAlias.login?.status !== `expired`),
+        _ = computed(() => h.value ? i18nTranslate(`botUi.qrExpired`) : propsAlias.login?.status === `scaned` ? i18nTranslate(`botUi.qrScanned`) : propsAlias.login?.status === `need_verifycode` ? i18nTranslate(`botUi.verifyHint`) : propsAlias.login?.status === `error` ? i18nTranslate(`botUi.bindingIncomplete`) : i18nTranslate(`botUi.scanHint`));
+      watch(() => propsAlias.contact?.id, () => {
         d.value = false, u.value = ``;
       });
       let setIntervalResult = null;
-      watch(() => a.contact?.id, value => {
+      watch(() => propsAlias.contact?.id, value => {
         setIntervalResult = value ? n() : null;
       }, {
         flush: `sync`
       });
       function y() {
         let setIntervalResultAlias = setIntervalResult;
-        setIntervalResult = null, a.contact?.id && setIntervalResultAlias?.(`bot_view_loaded`, {
+        setIntervalResult = null, propsAlias.contact?.id && setIntervalResultAlias?.(`bot_view_loaded`, {
           panel: `wechat`,
-          entity_id: a.contact.id,
+          entity_id: propsAlias.contact.id,
           interaction: `explicit_open`
         });
       }
-      return watch(() => a.login?.qrContent, async (value, t, n) => {
+      return watch(() => propsAlias.login?.qrContent, async (value, t, n) => {
         let i = false;
         if (n(() => {
           i = true;
@@ -119863,7 +119863,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
         }
       }), (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: !!props.contact,
-        "onUpdate:open": renderCache[8] ||= e => !e && o(`close`)
+        "onUpdate:open": renderCache[8] ||= e => !e && emitAlias(`close`)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           onOpenAutoFocus: y,
@@ -119940,14 +119940,14 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           }), createElementVNode(`span`, null, toDisplayString(h.value ? unref(i18nTranslate)(`botUi.qrExpired`) : unref(i18nTranslate)(`botUi.qrWaiting`)), 1), resolveComponent(unref(uiSwitchR), {
             variant: `outline`,
             size: `sm`,
-            onClick: renderCache[0] ||= e => o(`begin`)
+            onClick: renderCache[0] ||= e => emitAlias(`begin`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(h.value ? unref(i18nTranslate)(`botUi.qrRefresh`) : unref(i18nTranslate)(`botUi.qrGet`)), 1)]),
             _: 1
           })]))]), createElementVNode(`div`, fIt, toDisplayString(props.busy ? unref(i18nTranslate)(`botUi.qrGetting`) : _.value), 1), props.login?.status === `need_verifycode` && !h.value ? (openBlock(), createElementBlock(`form`, {
             key: 0,
             class: `flex w-full gap-2`,
-            onSubmit: renderCache[2] ||= withDirectives(e => o(`verify`, u.value), [`prevent`])
+            onSubmit: renderCache[2] ||= withDirectives(e => emitAlias(`verify`, u.value), [`prevent`])
           }, [resolveComponent(unref(Input), {
             modelValue: u.value,
             "onUpdate:modelValue": renderCache[1] ||= e => u.value = e,
@@ -119969,7 +119969,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             variant: `link`,
             size: `sm`,
             class: `h-auto p-0 text-xs`,
-            onClick: renderCache[3] ||= e => o(`begin`)
+            onClick: renderCache[3] ||= e => emitAlias(`begin`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.qrRefresh`)), 1)]),
             _: 1
@@ -119986,7 +119986,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             variant: `destructive`,
             disabled: props.busy,
             onClick: renderCache[5] ||= e => {
-              o(`unbind`), d.value = false;
+              emitAlias(`unbind`), d.value = false;
             }
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.unbind`)), 1)]),
@@ -120003,7 +120003,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             _: 1
           }, 8, [`disabled`]), resolveComponent(unref(uiSwitchR), {
             disabled: props.busy,
-            onClick: renderCache[7] ||= t => props.binding?.status === `expired` ? o(`begin`) : o(`reconnect`)
+            onClick: renderCache[7] ||= t => props.binding?.status === `expired` ? emitAlias(`begin`) : emitAlias(`reconnect`)
           }, {
             default: H(() => [resolveComponent(unref(gs), {
               size: 14
@@ -120096,10 +120096,10 @@ var bIt = {
       }
     },
     setup(props) {
-      let t = props,
-        computedResult = computed(() => Y5(t.originKey ?? ``, t.origin)),
+      let propsAlias = props,
+        computedResult = computed(() => Y5(propsAlias.originKey ?? ``, propsAlias.origin)),
         computedData = computed(() => computedResult.value === `mobile` || computedResult.value === `miniprogram`),
-        i = computed(() => X5(t.originKey ?? ``, t.synced, t.origin)),
+        i = computed(() => X5(propsAlias.originKey ?? ``, propsAlias.synced, propsAlias.origin)),
         a = computed(() => i.value || computedData.value);
       return (ctx, cache) => (openBlock(), createElementBlock(`span`, {
         class: normalizeClass([`avatar-frame`, [a.value ? `avatar-frame--badged` : null, a.value ? `avatar-frame--${props.badgeSize ?? `sm`}` : null]])
@@ -120676,13 +120676,13 @@ var bIt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(StepperRoot), vueNt({
-        class: unref(uiSwitchXt)(`flex gap-2`, n.class)
-      }, unref(a)), {
+        class: unref(uiSwitchXt)(`flex gap-2`, propsAlias.class)
+      }, unref(uiSwitchZResult)), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`class`]));
@@ -120700,11 +120700,11 @@ var bIt = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
-      return (ctx, cache) => (openBlock(), createBlock(unref(StepperIndicator), vueNt(unref(i), {
-        class: unref(uiSwitchXt)(`inline-flex items-center justify-center rounded-full text-muted-foreground/50 w-8 h-8`, `group-data-[disabled]:text-muted-foreground group-data-[disabled]:opacity-50`, `group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground`, `group-data-[state=completed]:bg-accent group-data-[state=completed]:text-accent-foreground`, t.class)
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperIndicator), vueNt(unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`inline-flex items-center justify-center rounded-full text-muted-foreground/50 w-8 h-8`, `group-data-[disabled]:text-muted-foreground group-data-[disabled]:opacity-50`, `group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground`, `group-data-[state=completed]:bg-accent group-data-[state=completed]:text-accent-foreground`, propsAlias.class)
       }), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
@@ -120730,11 +120730,11 @@ var bIt = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
-      return (ctx, cache) => (openBlock(), createBlock(unref(StepperItem), vueNt(unref(i), {
-        class: unref(uiSwitchXt)(`flex items-center gap-2 group data-[disabled]:pointer-events-none`, t.class)
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperItem), vueNt(unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`flex items-center gap-2 group data-[disabled]:pointer-events-none`, propsAlias.class)
       }), {
         default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
@@ -120753,11 +120753,11 @@ var bIt = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
-      return (ctx, cache) => (openBlock(), createBlock(unref(StepperTitle), vueNt(unref(i), {
-        class: unref(uiSwitchXt)(`text-md font-semibold whitespace-nowrap`, t.class)
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperTitle), vueNt(unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`text-md font-semibold whitespace-nowrap`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -120776,11 +120776,11 @@ var bIt = {
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
-      return (ctx, cache) => (openBlock(), createBlock(unref(StepperTrigger), vueNt(unref(i), {
-        class: unref(uiSwitchXt)(`p-1 flex flex-col items-center text-center gap-1 rounded-md`, t.class)
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperTrigger), vueNt(unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`p-1 flex flex-col items-center text-center gap-1 rounded-md`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -122254,8 +122254,8 @@ var bIt = {
             });
         }
       }
-      let s = props,
-        c = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         l = ref([]),
         u = ref(null),
         d = ref([]),
@@ -122284,7 +122284,7 @@ var bIt = {
         m.value = true;
         try {
           let schedules = await window.electronAPI.xiaoheiBot.listSchedules({
-            conversationId: s.conversationId
+            conversationId: propsAlias.conversationId
           });
           if (i !== v) return;
           if (!schedules.ok) throw Error(schedules.error.message);
@@ -122310,8 +122310,8 @@ var bIt = {
       }
       function S(e) {
         h.value = ``, g.value = ``, d.value = [], f.value = false, u.value = e ? JSON.parse(JSON.stringify(e)) : {
-          botId: s.botId,
-          conversationId: s.conversationId,
+          botId: propsAlias.botId,
+          conversationId: propsAlias.conversationId,
           name: ``,
           instruction: ``,
           enabled: true,
@@ -122408,7 +122408,7 @@ var bIt = {
           u.value = null, _.value = false;
         }));
       }
-      watch(() => s.conversationId, () => {
+      watch(() => propsAlias.conversationId, () => {
         ++v, u.value = null, d.value = [], l.value = [], h.value = ``, g.value = ``, _.value = false, x();
       }, {
         immediate: true
@@ -122436,7 +122436,7 @@ var bIt = {
               size: `icon-sm`,
               class: `ml-auto`,
               "aria-label": unref(i18nTranslate)(`botUi.closeSchedules`),
-              onClick: renderCache[0] ||= e => c(`close`)
+              onClick: renderCache[0] ||= e => emitAlias(`close`)
             }, {
               default: H(() => [resolveComponent(unref(lucideT), {
                 size: 16
@@ -122859,17 +122859,17 @@ var bIt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
+      let propsAlias = props,
         r = vueLt(props, `open`),
-        i = emit,
+        emitAlias = emit,
         a = ref(`overview`),
         {
           t: i18nTranslate
         } = vueN(),
-        computedResult = computed(() => i18nTranslate(`xiaoheiBot.responseStyles.${n.card.template.responseStyle}.label`)),
-        computedData = computed(() => n.card.template.tags.join(i18nTranslate(`roleShare.tagSeparator`))),
-        l = computed(() => [computedResult.value, ...n.card.template.tags].join(` · `)),
-        u = computed(() => n.card.template.description.split(/\n\s*\n/)[0]);
+        computedResult = computed(() => i18nTranslate(`xiaoheiBot.responseStyles.${propsAlias.card.template.responseStyle}.label`)),
+        computedData = computed(() => propsAlias.card.template.tags.join(i18nTranslate(`roleShare.tagSeparator`))),
+        l = computed(() => [computedResult.value, ...propsAlias.card.template.tags].join(` · `)),
+        u = computed(() => propsAlias.card.template.description.split(/\n\s*\n/)[0]);
       return watch(r, () => {
         a.value = `overview`;
       }), (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
@@ -122992,7 +122992,7 @@ var bIt = {
             size: `sm`,
             class: `shrink-0 bg-foreground text-background hover:bg-foreground/90`,
             disabled: props.busy,
-            onClick: renderCache[3] ||= e => i(`add`)
+            onClick: renderCache[3] ||= e => emitAlias(`add`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(props.busy ? unref(i18nTranslate)(`roleShare.adding`) : unref(i18nTranslate)(`roleShare.addBot`)), 1)]),
             _: 1
@@ -123000,7 +123000,7 @@ var bIt = {
             key: 2,
             size: `sm`,
             class: `shrink-0 bg-foreground text-background hover:bg-foreground/90`,
-            onClick: renderCache[4] ||= e => i(`copy`)
+            onClick: renderCache[4] ||= e => emitAlias(`copy`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(props.copied ? unref(i18nTranslate)(`roleShare.copied`) : unref(i18nTranslate)(`roleShare.copyLink`)), 1)]),
             _: 1
@@ -123125,15 +123125,15 @@ var Lzt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
-        computedResult = computed(() => n.items.filter(item => item.kind === `tool` && item.toolName === `xiaohei_create_role_share` && item.status === `completed`).map(item => t7(item.output)).find(Boolean)),
+        computedResult = computed(() => propsAlias.items.filter(item => item.kind === `tool` && item.toolName === `xiaohei_create_role_share` && item.status === `completed`).map(item => t7(item.output)).find(Boolean)),
         o = ref(false),
-        computedData = computed(() => n.items.some(item => item.toolName === `xiaohei_create_role_share` && item.status === `running`)),
-        c = computed(() => n.items.some(item => item.toolName === `xiaohei_create_role_share` && item.status === `failed`)),
+        computedData = computed(() => propsAlias.items.some(item => item.toolName === `xiaohei_create_role_share` && item.status === `running`)),
+        c = computed(() => propsAlias.items.some(item => item.toolName === `xiaohei_create_role_share` && item.status === `failed`)),
         l = ref(false),
         u = ref(``);
       async function d() {
@@ -123149,7 +123149,7 @@ var Lzt = {
         variant: `outline`,
         size: `sm`,
         disabled: props.retryDisabled,
-        onClick: renderCache[0] ||= e => r(`retry`)
+        onClick: renderCache[0] ||= e => emitAlias(`retry`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.regenerate`)), 1)]),
         _: 1
@@ -123315,7 +123315,7 @@ var Lzt = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -123526,7 +123526,7 @@ var Lzt = {
         variant: `ghost`,
         size: `icon-sm`,
         "aria-label": unref(i18nTranslate)(`common.close`),
-        onClick: renderCache[0] ||= e => r(`close`)
+        onClick: renderCache[0] ||= e => emitAlias(`close`)
       }, {
         default: H(() => [resolveComponent(unref(lucideT), {
           size: 16
@@ -123677,7 +123677,7 @@ var Lzt = {
         key: 3,
         type: `button`,
         class: `open-full`,
-        onClick: renderCache[11] ||= e => r(`openTodo`, p.value.id)
+        onClick: renderCache[11] ||= e => emitAlias(`openTodo`, p.value.id)
       }, [createTextVNode(toDisplayString(unref(i18nTranslate)(`botTodos.openInTodos`)), 1), resolveComponent(unref(heatRangeL), {
         size: 13
       })]))]), createElementVNode(`footer`, MBt, [m.value ? (openBlock(), createElementBlock(Fragment, {
@@ -123976,8 +123976,8 @@ var PBt = [`aria-label`],
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i,
           messages: a,
@@ -124042,7 +124042,7 @@ var PBt = [`aria-label`],
         t || (d.value = true);
         try {
           let consultationDetail = await window.electronAPI.xiaoheiBot.consultationDetail({
-            id: n.id,
+            id: propsAlias.id,
             beforeSeq: e ? u.value?.beforeSeq ?? undefined : undefined
           });
           if (r !== g) return;
@@ -124062,7 +124062,7 @@ var PBt = [`aria-label`],
           r === g && (d.value = false);
         }
       }
-      return watch(() => n.id, () => {
+      return watch(() => propsAlias.id, () => {
         g++, u.value = null, f.value = ``, h.value = true, C();
       }, {
         immediate: true
@@ -124106,7 +124106,7 @@ var PBt = [`aria-label`],
         size: `icon-sm`,
         class: `shrink-0`,
         "aria-label": unref(i)(`app.close`),
-        onClick: renderCache[0] ||= e => r(`close`)
+        onClick: renderCache[0] ||= e => emitAlias(`close`)
       }, {
         default: H(() => [resolveComponent(unref(lucideT), {
           size: 16
@@ -124292,7 +124292,7 @@ var PBt = [`aria-label`],
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           t: i,
           messages: a,
@@ -124444,7 +124444,7 @@ var PBt = [`aria-label`],
         class: `side-topic-collapse-button`,
         title: unref(i)(`xiaoheiBot.sideTopic.collapse`),
         "aria-label": unref(i)(`xiaoheiBot.sideTopic.collapse`),
-        onClick: renderCache[0] ||= e => r(`close`)
+        onClick: renderCache[0] ||= e => emitAlias(`close`)
       }, {
         default: H(() => [resolveComponent(unref(Va), {
           size: 17
@@ -124558,7 +124558,7 @@ var PBt = [`aria-label`],
     }) {
       let eventAlias = event,
         computedResult = computed(() => eventAlias.anchor?.querySelector(`.composer`) ?? undefined),
-        i = emit,
+        emitAlias = emit,
         {
           t: a
         } = vueN(),
@@ -124604,7 +124604,7 @@ var PBt = [`aria-label`],
         }];
       return (ctx, renderCache) => (openBlock(), createBlock(unref(DropdownMenuTriggerR), {
         open: event.open,
-        "onUpdate:open": renderCache[1] ||= e => i(`update:open`, e)
+        "onUpdate:open": renderCache[1] ||= e => emitAlias(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(DropdownMenuTriggerT), {
           "as-child": ``
@@ -124628,7 +124628,7 @@ var PBt = [`aria-label`],
           "align-flip": false,
           "collision-padding": 12,
           class: `xiaohei-bot-portal w-[320px] max-w-[calc(100vw-24px)] max-h-[min(420px,var(--reka-dropdown-menu-content-available-height))] overflow-y-auto rounded-xl p-1.5`,
-          onCloseAutoFocus: renderCache[0] ||= withDirectives(e => i(`close`), [`prevent`])
+          onCloseAutoFocus: renderCache[0] ||= withDirectives(e => emitAlias(`close`), [`prevent`])
         }, {
           default: H(() => [(openBlock(), createElementBlock(Fragment, null, renderList(o, (e, t) => (openBlock(), createElementBlock(Fragment, {
             key: e.key
@@ -124642,7 +124642,7 @@ var PBt = [`aria-label`],
           }, 1024), (openBlock(true), createElementBlock(Fragment, null, renderList(e.items, e => (openBlock(), createBlock(unref(DropdownMenuItemT), {
             key: e.key,
             class: `quick-command-item`,
-            onSelect: t => i(`select`, unref(a)(`xiaoheiBot.quickCommands.${e.key}.prompt`))
+            onSelect: t => emitAlias(`select`, unref(a)(`xiaoheiBot.quickCommands.${e.key}.prompt`))
           }, {
             default: H(() => [createElementVNode(`span`, BVt, [(openBlock(), createBlock(vueEt(e.icon), {
               size: 15,
@@ -124919,10 +124919,10 @@ var ContextMenu = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuRoot), vueNt({
         "data-slot": `context-menu`
-      }, unref(n)), {
+      }, unref(uiSwitchZResult)), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -124978,18 +124978,18 @@ var ContextMenu = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuPortal), null, {
         default: H(() => [resolveComponent(unref(ContextMenuContent), vueNt({
           "data-slot": `context-menu-content`
         }, {
           ...ctx.$attrs,
-          ...unref(a)
+          ...unref(uiSwitchZResult)
         }, {
-          class: unref(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-36 rounded-lg p-1 shadow-md ring-1 duration-100 cn-menu-translucent z-50 max-h-(--reka-context-menu-content-available-height) origin-(--reka-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto`, n.class)
+          class: unref(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-36 rounded-lg p-1 shadow-md ring-1 duration-100 cn-menu-translucent z-50 max-h-(--reka-context-menu-content-available-height) origin-(--reka-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto`, propsAlias.class)
         }), {
           default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
@@ -125007,10 +125007,10 @@ var ContextMenu = defineComponent({
       as: {}
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuGroup), vueNt({
         "data-slot": `context-menu-group`
-      }, t), {
+      }, propsAlias), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
@@ -125041,16 +125041,16 @@ var ContextMenu = defineComponent({
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
-        i = uiSwitchLt(n, `class`),
-        a = uiSwitchZ(i, r);
+      let propsAlias = props,
+        emitAlias = emit,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuItem), vueNt({
         "data-slot": `context-menu-item`,
         "data-inset": props.inset ? `` : undefined,
         "data-variant": props.variant
-      }, unref(a), {
-        class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive focus:*:[svg]:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 group/context-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class)
+      }, unref(uiSwitchZResult), {
+        class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive focus:*:[svg]:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 group/context-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -125072,13 +125072,13 @@ var ContextMenu = defineComponent({
       }
     },
     setup(props) {
-      let t = props,
-        r = uiSwitchLt(t, `class`),
-        i = uiSwitchB(r);
+      let propsAlias = props,
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuTrigger), vueNt({
         "data-slot": `context-menu-trigger`
-      }, unref(i), {
-        class: unref(uiSwitchXt)(`select-none`, t.class)
+      }, unref(uiSwitchBResult), {
+        class: unref(uiSwitchXt)(`select-none`, propsAlias.class)
       }), {
         default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
@@ -125181,7 +125181,7 @@ var _Ht = [`src`],
       fallbackColor: {}
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = ref(),
         r = ref(false),
         i = Ee(),
@@ -125190,9 +125190,9 @@ var _Ht = [`src`],
           keyTimes: `0;0.08;0.82;0.9;1`
         },
         computedResult = computed(() => ({
-          "--avatar-accent": t.src === href ? `#408574` : n.value || gHt(t.fallbackColor)
+          "--avatar-accent": propsAlias.src === href ? `#408574` : n.value || gHt(propsAlias.fallbackColor)
         }));
-      return watch(() => [t.stage, t.collapsed], ([e, t], value, i) => {
+      return watch(() => [propsAlias.stage, propsAlias.collapsed], ([e, t], value, i) => {
         if (!e || e === `done`) {
           r.value = false;
           return;
@@ -125209,7 +125209,7 @@ var _Ht = [`src`],
         i(() => cancelAnimationFrame(o));
       }, {
         immediate: true
-      }), watch(() => [t.src, !!t.stage], async ([e, t], value, i) => {
+      }), watch(() => [propsAlias.src, !!propsAlias.stage], async ([e, t], value, i) => {
         let a = false;
         if (i(() => {
           a = true;
@@ -127649,9 +127649,9 @@ var FWt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
+      let propsAlias = props,
         r = vueLt(props, `open`),
-        i = emit,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -127665,16 +127665,16 @@ var FWt = {
         s = ref(``),
         c = ref(``);
       function l() {
-        let template = n.card.template;
+        let template = propsAlias.card.template;
         o.name = template.name, o.description = template.description, o.responseStyle = template.responseStyle, o.tags = [...template.tags], o.keep = template.schedules.map(() => true), s.value = ``, c.value = ``;
       }
-      watch(() => n.card.id, l, {
+      watch(() => propsAlias.card.id, l, {
         immediate: true
       }), watch(r, value => {
         value && l();
       });
       let computedResult = computed(() => o.name.trim().length > 0),
-        computedData = computed(() => n.card.template.avatar),
+        computedData = computed(() => propsAlias.card.template.avatar),
         f = computed(() => i18nTranslate(`xiaoheiBot.responseStyles.${o.responseStyle}.description`));
       function p() {
         let trimmed = s.value.trim();
@@ -127696,7 +127696,7 @@ var FWt = {
         o.tags = o.tags.filter(item => item !== e);
       }
       function h() {
-        computedResult.value && !n.busy && (p(), i(`add`, {
+        computedResult.value && !propsAlias.busy && (p(), emitAlias(`add`, {
           name: o.name.trim(),
           description: o.description,
           responseStyle: o.responseStyle,
@@ -128052,11 +128052,11 @@ var FWt = {
       }
     },
     setup(props) {
-      let t = props;
+      let propsAlias = props;
       return (ctx, cache) => (openBlock(), createBlock(unref(beautifier), {
         role: `status`,
         "aria-label": `Loading`,
-        class: normalizeClass(unref(uiSwitchXt)(`size-4 animate-spin`, t.class))
+        class: normalizeClass(unref(uiSwitchXt)(`size-4 animate-spin`, propsAlias.class))
       }, null, 8, [`class`]));
     }
   }),
@@ -128122,7 +128122,7 @@ var FWt = {
     }),
     emits: [`update:open`],
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = vueLt(props, `open`),
         {
           t: r
@@ -128157,7 +128157,7 @@ var FWt = {
         s.value = true;
         try {
           let memories = await window.electronAPI.xiaoheiBot.listMemories({
-            botId: t.botId
+            botId: propsAlias.botId
           });
           if (e !== g) return;
           if (!memories.ok) {
@@ -128178,7 +128178,7 @@ var FWt = {
       }
       async function S() {
         if (c.value || !f.value.trim()) return;
-        let botId = t.botId;
+        let botId = propsAlias.botId;
         c.value = true, l.value = ``;
         try {
           let saveMemory = await window.electronAPI.xiaoheiBot.saveMemory({
@@ -128188,14 +128188,14 @@ var FWt = {
             content: f.value.trim(),
             category: d.value?.category ?? `context`
           });
-          if (botId !== t.botId || !n.value) return;
+          if (botId !== propsAlias.botId || !n.value) return;
           if (!saveMemory.ok) {
             l.value = saveMemory.error.message;
             return;
           }
           u.value = false, await b();
         } catch (n) {
-          botId === t.botId && (l.value = n instanceof Error ? n.message : String(n));
+          botId === propsAlias.botId && (l.value = n instanceof Error ? n.message : String(n));
         } finally {
           c.value = false;
         }
@@ -128203,7 +128203,7 @@ var FWt = {
       async function C() {
         if (c.value || !p.value) return;
         let e = p.value,
-          botId = t.botId;
+          botId = propsAlias.botId;
         c.value = true, l.value = ``;
         try {
           let deleteMemory = await window.electronAPI.xiaoheiBot.deleteMemory({
@@ -128211,14 +128211,14 @@ var FWt = {
             id: e.id,
             expectedRevision: e.revision
           });
-          if (botId !== t.botId || !n.value) return;
+          if (botId !== propsAlias.botId || !n.value) return;
           if (!deleteMemory.ok) {
             p.value = null, l.value = deleteMemory.error.message, await b();
             return;
           }
           p.value = null, d.value?.id === e.id && (u.value = false), await b();
         } catch (e) {
-          botId === t.botId && (p.value = null, l.value = e instanceof Error ? e.message : String(e));
+          botId === propsAlias.botId && (p.value = null, l.value = e instanceof Error ? e.message : String(e));
         } finally {
           c.value = false;
         }
@@ -128228,7 +128228,7 @@ var FWt = {
           c.value = true, l.value = ``;
           try {
             let retryMemoryExtraction = await window.electronAPI.xiaoheiBot.retryMemoryExtraction({
-              botId: t.botId
+              botId: propsAlias.botId
             });
             retryMemoryExtraction.ok ? await b() : l.value = retryMemoryExtraction.error.message;
           } catch (e) {
@@ -128238,13 +128238,13 @@ var FWt = {
           }
         }
       }
-      watch([n, () => t.botId], () => {
+      watch([n, () => propsAlias.botId], () => {
         g++, o.value = null, u.value = false, d.value = null, p.value = null, l.value = ``, s.value = false, n.value && b();
       }, {
         immediate: true
       });
       let onMemoriesChanged = window.electronAPI.xiaoheiBot.onMemoriesChanged?.(e => {
-        n.value && e.botId === t.botId && b();
+        n.value && e.botId === propsAlias.botId && b();
       });
       return onMounted(() => {
         g++, onMemoriesChanged?.();
@@ -128378,22 +128378,22 @@ var FWt = {
             class: `flex flex-col gap-2`,
             role: `list`,
             "aria-label": unref(r)(`xiaoheiBot.memory.title`)
-          }, [(openBlock(true), createElementBlock(Fragment, null, renderList(_.value, e => (openBlock(), createElementBlock(`article`, {
-            key: e.id,
+          }, [(openBlock(true), createElementBlock(Fragment, null, renderList(_.value, row => (openBlock(), createElementBlock(`article`, {
+            key: row.id,
             class: `memory-card`,
             role: `listitem`,
-            "data-memory-id": e.id
-          }, [createElementVNode(`p`, RGt, toDisplayString(e.content), 1), createElementVNode(`div`, zGt, [createElementVNode(`div`, BGt, [resolveComponent(unref(Badge), {
+            "data-memory-id": row.id
+          }, [createElementVNode(`p`, RGt, toDisplayString(row.content), 1), createElementVNode(`div`, zGt, [createElementVNode(`div`, BGt, [resolveComponent(unref(Badge), {
             variant: `secondary`
           }, {
-            default: H(() => [createTextVNode(toDisplayString(unref(r)(`xiaoheiBot.memory.sources.${e.source}`)), 1)]),
+            default: H(() => [createTextVNode(toDisplayString(unref(r)(`xiaoheiBot.memory.sources.${row.source}`)), 1)]),
             _: 2
-          }, 1024), createElementVNode(`span`, null, toDisplayString(y(e.updatedAt)), 1)]), createElementVNode(`div`, VGt, [resolveComponent(unref(uiSwitchR), {
+          }, 1024), createElementVNode(`span`, null, toDisplayString(y(row.updatedAt)), 1)]), createElementVNode(`div`, VGt, [resolveComponent(unref(uiSwitchR), {
             variant: `ghost`,
             size: `icon-xs`,
             disabled: c.value,
             "aria-label": unref(r)(`xiaoheiBot.memory.edit`),
-            onClick: t => x(e)
+            onClick: t => x(row)
           }, {
             default: H(() => [resolveComponent(unref(uiSwitchOt))]),
             _: 1
@@ -128402,7 +128402,7 @@ var FWt = {
             size: `icon-xs`,
             disabled: c.value,
             "aria-label": unref(r)(`xiaoheiBot.memory.delete`),
-            onClick: t => p.value = e
+            onClick: t => p.value = row
           }, {
             default: H(() => [resolveComponent(unref(uiSwitchWt))]),
             _: 1
@@ -130896,14 +130896,14 @@ var Oqt = {
         }), resolveComponent(unref(CardContent), {
           class: `flex flex-col gap-2`
         }, {
-          default: H(() => [unref(d).length ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, Pqt, toDisplayString(unref(t)(`xiaoheiBot.sharedWorkspace.noHistory`)), 1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(d), e => (openBlock(), createElementBlock(`div`, {
-            key: e.id,
+          default: H(() => [unref(d).length ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, Pqt, toDisplayString(unref(t)(`xiaoheiBot.sharedWorkspace.noHistory`)), 1)), (openBlock(true), createElementBlock(Fragment, null, renderList(unref(d), row => (openBlock(), createElementBlock(`div`, {
+            key: row.id,
             class: `flex flex-wrap items-center justify-between gap-2 text-sm`
-          }, [createElementVNode(`span`, null, toDisplayString(new Date(e.createdAt).toLocaleString()) + ` · ` + toDisplayString(e.actor === `user` ? unref(t)(`xiaoheiBot.sharedWorkspace.user`) : e.actor === `external` ? unref(t)(`xiaoheiBot.sharedWorkspace.external`) : unref(t)(`xiaoheiBot.sharedWorkspace.bot`)), 1), resolveComponent(unref(uiSwitchR), {
+          }, [createElementVNode(`span`, null, toDisplayString(new Date(row.createdAt).toLocaleString()) + ` · ` + toDisplayString(row.actor === `user` ? unref(t)(`xiaoheiBot.sharedWorkspace.user`) : row.actor === `external` ? unref(t)(`xiaoheiBot.sharedWorkspace.external`) : unref(t)(`xiaoheiBot.sharedWorkspace.bot`)), 1), resolveComponent(unref(uiSwitchR), {
             variant: `outline`,
             size: `xs`,
             disabled: unref(c) || unref(a),
-            onClick: t => unref(b)(e.id)
+            onClick: t => unref(b)(row.id)
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(t)(`xiaoheiBot.sharedWorkspace.restore`)), 1)]),
             _: 1
@@ -133693,26 +133693,26 @@ function zJt(event, t) {
       }
     };
   }
-  async function v(e) {
-    let t = r.value[e];
+  async function v(el) {
+    let t = r.value[el];
     if (!h.value.hasMore || t?.loading) return;
     let g = d,
       v = m.value[0]?.seq,
       y = computedData.value < 50 && t?.hasMore && t.nextBeforeSeq !== null,
-      b = s.value === e ? a.value : null,
+      b = s.value === el ? a.value : null,
       fallbackValue = b?.scrollHeight ?? 0,
       S = b?.scrollTop ?? 0,
       C = b ? [...b.querySelectorAll(`[data-message-id]`)].find(item => item.getBoundingClientRect().bottom > b.getBoundingClientRect().top) : undefined,
       w = C?.dataset.messageId,
       T = C && b ? C.getBoundingClientRect().top - b.getBoundingClientRect().top : null,
       E = !!b;
-    c.value = false, _(e, {
+    c.value = false, _(el, {
       loading: true
     });
     try {
       if (y) {
         let messages = await window.electronAPI.xiaoheiBot.listMessages({
-          conversationId: e,
+          conversationId: el,
           beforeSeq: t.nextBeforeSeq
         });
         if (!messages.ok) {
@@ -133724,16 +133724,16 @@ function zJt(event, t) {
           let t = n(normalizeResult);
           a.set(t.id, t);
         }
-        for (let normalizeResult of i.value[e] ?? []) a.set(normalizeResult.id, normalizeResult);
+        for (let normalizeResult of i.value[el] ?? []) a.set(normalizeResult.id, normalizeResult);
         i.value = {
           ...i.value,
-          [e]: [...a.values()].sort((left, right) => left.seq - right.seq)
-        }, _(e, {
+          [el]: [...a.values()].sort((left, right) => left.seq - right.seq)
+        }, _(el, {
           hasMore: messages.data.hasMore,
           nextBeforeSeq: messages.data.nextBeforeSeq
         });
       }
-      if (g === d && s.value === e) {
+      if (g === d && s.value === el) {
         let e = computedResult.value,
           index = e.findIndex(item => item.seq === v);
         l.value = e[Math.max(0, index - 50)]?.seq ?? null;
@@ -133741,9 +133741,9 @@ function zJt(event, t) {
     } catch (e) {
       o.value = e instanceof Error ? e.message : String(e);
     } finally {
-      if (_(e, {
+      if (_(el, {
         loading: false
-      }), E && b && g === d && s.value === e && a.value === b) {
+      }), E && b && g === d && s.value === el && a.value === b) {
         if (await vueRt(), g !== d || a.value !== b) return;
         let e = w ? [...b.querySelectorAll(`[data-message-id]`)].find(item => item.dataset.messageId === w) : undefined;
         if (e && T !== null) {
@@ -136723,13 +136723,13 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
       let {
           vBotFunnel: r
         } = km(),
-        i = props,
-        a = emit,
+        propsAlias = props,
+        emitAlias = emit,
         {
           isOpen: o,
           close: s
         } = am(`bot`),
-        c = ZJt(() => i.active && !o.value, () => i.active);
+        c = ZJt(() => propsAlias.active && !o.value, () => propsAlias.active);
       EPt(c), expose({
         openSharedRole: c.openSharedRole,
         attachLocalFiles: e => c.importLocalAttachmentPaths(e),
@@ -136737,7 +136737,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
           let notificationConversation = await c.openNotificationConversation(e);
           return notificationConversation && s(), notificationConversation;
         },
-        isNotificationConversationVisible: e => i.active && !o.value && c.selectedContactId.value === e
+        isNotificationConversationVisible: e => propsAlias.active && !o.value && c.selectedContactId.value === e
       });
       let {
         t: l,
@@ -136751,7 +136751,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
         stopContactPanelResize: _,
         handleContactPanelResizeKey: v
       } = c;
-      watch(d, value => a(`contact-panel-width-change`, value), {
+      watch(d, value => emitAlias(`contact-panel-width-change`, value), {
         immediate: true
       });
       function y(e) {
@@ -136770,17 +136770,17 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
           "xiaohei-bot-page--resizing": unref(u)
         }]),
         style: vueNr({
-          gridTemplateColumns: i.contactPanelTarget ? `minmax(0, 1fr)` : `${unref(d)}px minmax(0, 1fr)`
+          gridTemplateColumns: propsAlias.contactPanelTarget ? `minmax(0, 1fr)` : `${unref(d)}px minmax(0, 1fr)`
         })
       }, [(openBlock(), createBlock(vueF, {
         defer: ``,
-        to: i.contactPanelTarget || `body`,
-        disabled: !i.contactPanelTarget
+        to: propsAlias.contactPanelTarget || `body`,
+        disabled: !propsAlias.contactPanelTarget
       }, [vueZt(createElementVNode(`div`, {
         class: normalizeClass([`xiaohei-bot-page contact-panel-workspace`, {
-          "contact-panel-workspace--docked": i.contactPanelTarget
+          "contact-panel-workspace--docked": propsAlias.contactPanelTarget
         }])
-      }, [resolveComponent(XiaoheiBotContactPanel)], 2), [[playerW, i.active]])], 8, [`to`, `disabled`])), !i.contactPanelTarget || !i.sidebarCollapsed ? (openBlock(), createElementBlock(`div`, {
+      }, [resolveComponent(XiaoheiBotContactPanel)], 2), [[playerW, propsAlias.active]])], 8, [`to`, `disabled`])), !propsAlias.contactPanelTarget || !propsAlias.sidebarCollapsed ? (openBlock(), createElementBlock(`div`, {
         key: 0,
         ref: y,
         class: `contact-panel__resizer`,
@@ -136793,7 +136793,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
         "aria-valuemax": unref(m),
         "aria-valuenow": unref(d),
         style: vueNr({
-          left: i.contactPanelTarget ? `0px` : `${unref(d) - 6}px`
+          left: propsAlias.contactPanelTarget ? `0px` : `${unref(d) - 6}px`
         }),
         onPointerdown: renderCache[1] ||= withDirectives((...e) => unref(h) && unref(h)(...e), [`prevent`]),
         onPointermove: renderCache[2] ||= (...e) => unref(g) && unref(g)(...e),
@@ -136804,13 +136804,13 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
       }, null, 44, QJt)) : createCommentVNode(``, true), createElementVNode(`div`, $Jt, [createElementVNode(`div`, eYt, [unref(o) ? (openBlock(), createBlock(XiaoheiBotNotifications, {
         key: 0,
         onClose: unref(s),
-        onOpenConversation: renderCache[7] ||= e => a(`open-bot-conversation`, e)
+        onOpenConversation: renderCache[7] ||= e => emitAlias(`open-bot-conversation`, e)
       }, null, 8, [`onClose`])) : createCommentVNode(``, true), vueZt(resolveComponent(XiaoheiBotConversationPanel, {
-        active: i.active && !unref(o),
-        onOpenTodo: renderCache[8] ||= e => a(`open-todo`, e)
+        active: propsAlias.active && !unref(o),
+        onOpenTodo: renderCache[8] ||= e => emitAlias(`open-todo`, e)
       }, null, 8, [`active`]), [[playerW, !unref(o)]])])])], 6)), [[unref(r), {
         event: `bot_module_view`,
-        eligible: i.active,
+        eligible: propsAlias.active,
         entry: `module`
       }]]), resolveComponent(XiaoheiBotCapabilityTutorial), resolveComponent(XiaoheiBotConversationLogDialog), resolveComponent(XiaoheiBotProfileDrawer), resolveComponent(XiaoheiBotConfirmationDialogs), resolveComponent(XiaoheiBotCreationDialogs), resolveComponent(XiaoheiBotCommonRolesDialog), resolveComponent(XiaoheiBotSettingsDialog), resolveComponent(XiaoheiBotProviderDialogs), resolveComponent(XiaoheiBotAvatarEditorDialog), resolveComponent(XiaoheiBotConsultationsDialog), resolveComponent(XiaoheiBotImagePreviewDialog)], 64));
     }
@@ -136934,7 +136934,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
           captureGrowthObservation: n
         } = growthTelT(),
         eventAlias = event,
-        i = emit,
+        emitAlias = emit,
         {
           locale: a,
           t: i18nTranslate
@@ -136971,7 +136971,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
         trackActionEvent(`tool_card_click`, {
           entry: `toolbox`,
           tool: e.slug
-        }), i(`open`, e);
+        }), emitAlias(`open`, e);
       }
       onMounted(() => {
         m?.removeEventListener(`scroll`, h), m = null;
@@ -137063,7 +137063,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
       }), createElementVNode(`strong`, dYt, toDisplayString(unref(i18nTranslate)(`toolboxNative.couldNotConnectToTheToolbox`)), 1), createElementVNode(`span`, null, toDisplayString(event.error), 1), createElementVNode(`button`, {
         type: `button`,
         class: `mt-1 inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-xs text-foreground hover:bg-muted`,
-        onClick: renderCache[4] ||= e => i(`reload`)
+        onClick: renderCache[4] ||= e => emitAlias(`reload`)
       }, [resolveComponent(unref(gs), {
         size: 14
       }), createTextVNode(toDisplayString(unref(i18nTranslate)(`toolboxNative.reload`)), 1)])])) : computedData.value.length === 0 ? (openBlock(), createElementBlock(`div`, fYt, [resolveComponent(unref(Cs), {
@@ -137458,7 +137458,7 @@ var KYt = {
       emit: emit
     }) {
       let itemsAlias = items,
-        r = emit,
+        emitAlias = emit,
         {
           locale: i,
           t: i18nTranslate,
@@ -137468,7 +137468,7 @@ var KYt = {
           markSeen: c
         } = fm(),
         l = () => LYt(i18nTranslate);
-      Ui(e => r(`navigate`, e));
+      Ui(e => emitAlias(`navigate`, e));
       function u(e) {
         return e.filter(item => item.slug !== `voice-synthesis` && item.slug !== `knowledge-graph`);
       }
@@ -137501,7 +137501,7 @@ var KYt = {
         computedData = computed(() => B7(x.value)),
         k = computed(() => !x.value || ![`active`, `testing`].includes(x.value.status) ? null : computedData.value?.component || null),
         A = computed(() => computedData.value?.capabilities?.externalOpen === `markdown` ? itemsAlias.markdownOpenRequest : computedData.value?.capabilities?.externalOpen === `milestone` ? itemsAlias.milestoneOpenRequest : null);
-      watch(x, value => r(`workspaceActiveChange`, !!value), {
+      watch(x, value => emitAlias(`workspaceActiveChange`, !!value), {
         immediate: true
       });
       function j() {
@@ -137524,7 +137524,7 @@ var KYt = {
         let toolOpenRequest = itemsAlias.toolOpenRequest;
         if (!toolOpenRequest) return;
         let found = p.value.find(item => item.slug === toolOpenRequest.slug);
-        found && (r(`toolOpenRequestHandled`, toolOpenRequest.requestId), x.value?.slug !== found.slug && (x.value && C.value?.requestClose && !(await C.value.requestClose()) || (C.value = null, oe(found))));
+        found && (emitAlias(`toolOpenRequestHandled`, toolOpenRequest.requestId), x.value?.slug !== found.slug && (x.value && C.value?.requestClose && !(await C.value.requestClose()) || (C.value = null, oe(found))));
       }
       async function ne() {
         let fallbackValue = i?.value || `zh-CN`,
@@ -137654,8 +137654,8 @@ var KYt = {
         onBack: ce,
         onRecharge: ue,
         onBalanceUpdated: le,
-        onOpenTodo: renderCache[0] ||= e => r(`openTodo`, e),
-        onOpenRequestHandled: renderCache[1] ||= e => r(`milestoneOpenRequestHandled`, e)
+        onOpenTodo: renderCache[0] ||= e => emitAlias(`openTodo`, e),
+        onOpenRequestHandled: renderCache[1] ||= e => emitAlias(`milestoneOpenRequestHandled`, e)
       }, null, 40, [`tool`, `user`, `credits-balance`, `credits-policy`, `active`, `open-request`])) : createCommentVNode(``, true) : (openBlock(), createElementBlock(`main`, qYt, [createElementVNode(`section`, JYt, [createElementVNode(`div`, YYt, [createElementVNode(`span`, XYt, [resolveComponent(unref(beautifierG), {
         size: 14
       }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`toolboxNative.usefulToolCollection`)), 1)]), createElementVNode(`h1`, ZYt, toDisplayString(unref(i18nTranslate)(`toolboxNative.findTheToolYouNeed`)), 1), createElementVNode(`p`, QYt, toDisplayString(unref(i18nTranslate)(`toolboxNative.fileProcessingKnowledgeOrganizationContentGenerationAndMoreUsefulToolsAreOnTheWay`)), 1)]), _.value ? (openBlock(), createElementBlock(`button`, {
@@ -137710,8 +137710,8 @@ var rXt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         i = ref(true),
         a = null;
       function o() {
@@ -137719,7 +137719,7 @@ var rXt = {
       }
       function s() {
         a = window.setTimeout(() => {
-          if (a = null, !n.active) {
+          if (a = null, !propsAlias.active) {
             if (X7()) {
               s();
               return;
@@ -137728,25 +137728,25 @@ var rXt = {
           }
         }, iXt);
       }
-      return watch(() => n.active, value => {
+      return watch(() => propsAlias.active, value => {
         if (o(), value) {
           i.value = true;
           return;
         }
         s();
       }), watch(i, value => {
-        value || r(`workspaceActiveChange`, false);
+        value || emitAlias(`workspaceActiveChange`, false);
       }), onMounted(o), (e, renderCache) => (openBlock(), createElementBlock(`div`, rXt, [i.value ? (openBlock(), createBlock(ToolboxNativeApp, {
         key: 0,
-        active: n.active,
-        "markdown-open-request": n.markdownOpenRequest,
-        "milestone-open-request": n.milestoneOpenRequest,
-        "tool-open-request": n.toolOpenRequest,
-        onOpenTodo: renderCache[0] ||= e => r(`openTodo`, e),
-        onMilestoneOpenRequestHandled: renderCache[1] ||= e => r(`milestoneOpenRequestHandled`, e),
-        onToolOpenRequestHandled: renderCache[2] ||= e => r(`toolOpenRequestHandled`, e),
-        onWorkspaceActiveChange: renderCache[3] ||= e => r(`workspaceActiveChange`, e),
-        onNavigate: renderCache[4] ||= e => r(`navigate`, e)
+        active: propsAlias.active,
+        "markdown-open-request": propsAlias.markdownOpenRequest,
+        "milestone-open-request": propsAlias.milestoneOpenRequest,
+        "tool-open-request": propsAlias.toolOpenRequest,
+        onOpenTodo: renderCache[0] ||= e => emitAlias(`openTodo`, e),
+        onMilestoneOpenRequestHandled: renderCache[1] ||= e => emitAlias(`milestoneOpenRequestHandled`, e),
+        onToolOpenRequestHandled: renderCache[2] ||= e => emitAlias(`toolOpenRequestHandled`, e),
+        onWorkspaceActiveChange: renderCache[3] ||= e => emitAlias(`workspaceActiveChange`, e),
+        onNavigate: renderCache[4] ||= e => emitAlias(`navigate`, e)
       }, null, 8, [`active`, `markdown-open-request`, `milestone-open-request`, `tool-open-request`])) : createCommentVNode(``, true)]));
     }
   });
@@ -138441,7 +138441,7 @@ var zXt = {
           n = `${date.getFullYear()}.${O(date.getMonth() + 1)}.${O(date.getDate())}`,
           i = gW(e, date),
           o = f.value,
-          s = i18nTranslate(`profile.insights.unitDays`),
+          i18nTranslateResult = i18nTranslate(`profile.insights.unitDays`),
           m,
           setIntervalResult,
           g = n,
@@ -138464,7 +138464,7 @@ var zXt = {
           }), g = `${n.year}.${O(n.monthNumber)}`, _ = [{
             label: i18nTranslate(`profile.share.statActiveDays`),
             value: te(n.activeDays),
-            unit: s
+            unit: i18nTranslateResult
           }, {
             label: i18nTranslate(`profile.share.statRecords`),
             value: te(n.records),
@@ -138491,7 +138491,7 @@ var zXt = {
           }) : i18nTranslate(`profile.share.headlineCardPlain`)), _ = [{
             label: i18nTranslate(`profile.insights.activeDays`),
             value: te(i.activeDays),
-            unit: s
+            unit: i18nTranslateResult
           }, {
             label: i18nTranslate(`profile.insights.reports`),
             value: te(i.reports.total),
@@ -138499,7 +138499,7 @@ var zXt = {
           }, ae(i.savedMinutes, i18nTranslate(`profile.insights.timeSaved`)), {
             label: i18nTranslate(`profile.insights.longestStreak`),
             value: te(i.longestStreak),
-            unit: s
+            unit: i18nTranslateResult
           }], v = yW(e, l9, date);
           let filtered = v.cells.filter(item => item.level >= 0);
           setTimeoutResult = i18nTranslate(`profile.insights.recentWeeks`, {
@@ -139858,7 +139858,7 @@ var aQt = {
       emit: emit
     }) {
       let eventAlias = event,
-        r = emit,
+        emitAlias = emit,
         {
           notifications: i,
           unreadCount: a,
@@ -139928,7 +139928,7 @@ var aQt = {
         C.value !== `all` && !items.includes(C.value) && (C.value = `all`);
       });
       function N() {
-        r(`update:open`, false);
+        emitAlias(`update:open`, false);
       }
       function re(e) {
         switch (e) {
@@ -139950,8 +139950,8 @@ var aQt = {
       }
       function ie(e) {
         let t = `notification.type.${e}`,
-          n = i18nTranslate(t);
-        return n === t ? i18nTranslate(`notification.type.system`) : n;
+          i18nTranslateResult = i18nTranslate(t);
+        return i18nTranslateResult === t ? i18nTranslate(`notification.type.system`) : i18nTranslateResult;
       }
       function ae(e) {
         switch (e) {
@@ -139992,11 +139992,11 @@ var aQt = {
         m.value = true;
       }
       function le() {
-        p.value = false, N(), r(`open-update`);
+        p.value = false, N(), emitAlias(`open-update`);
       }
       function ue() {
         let e = S.value;
-        e && (p.value = false, N(), r(`open-share-card`, e));
+        e && (p.value = false, N(), emitAlias(`open-share-card`, e));
       }
       async function de() {
         if (_.value) return;
@@ -140009,7 +140009,7 @@ var aQt = {
             v.value = i18nTranslate(`notification.todoLinkUnavailable`);
             return;
           }
-          p.value = false, N(), r(`open-todo`, t);
+          p.value = false, N(), emitAlias(`open-todo`, t);
         } catch {
           computedResult.value?.id === e && (v.value = i18nTranslate(`notification.todoLinkUnavailable`));
         } finally {
@@ -140018,7 +140018,7 @@ var aQt = {
       }
       function fe() {
         let e = b.value;
-        e && (p.value = false, N(), r(`open-report-cc`, e));
+        e && (p.value = false, N(), emitAlias(`open-report-cc`, e));
       }
       function pe() {
         c(), m.value = false;
@@ -140654,8 +140654,8 @@ var LQt = {
     setup(props, {
       emit: emit
     }) {
-      let n = props,
-        r = emit,
+      let propsAlias = props,
+        emitAlias = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -140674,7 +140674,7 @@ var LQt = {
         _ = ref(``),
         setIntervalResult = null,
         computedResult = computed(() => Math.max(0, Math.ceil((p.value - f.value) / 1e3))),
-        computedData = computed(() => n.state.recoveryMode === `legacyPhrase`),
+        computedData = computed(() => propsAlias.state.recoveryMode === `legacyPhrase`),
         x = computed(() => m.value?.steps[h.value] ?? []),
         S = computed(() => u.value || computedResult.value > 0 ? true : o.value === `unlock` ? s.value.length === 0 : computedData.value || !m.value ? true : h.value < 3 ? false : !_.value || c.value.length < 6 || c.value !== l.value);
       function C() {
@@ -140706,7 +140706,7 @@ var LQt = {
       }
       async function k() {
         try {
-          r(`state-changed`, await ZR.getState());
+          emitAlias(`state-changed`, await ZR.getState());
         } catch {}
       }
       async function A() {
@@ -140735,12 +140735,12 @@ var LQt = {
           u.value = true;
           try {
             if (o.value === `unlock`) {
-              r(`state-changed`, await ZR.unlock({
+              emitAlias(`state-changed`, await ZR.unlock({
                 password: s.value
               })), s.value = ``;
               return;
             }
-            m.value && r(`state-changed`, await ZR.resetPasswordWithRecovery({
+            m.value && emitAlias(`state-changed`, await ZR.resetPasswordWithRecovery({
               verificationToken: _.value,
               newPassword: c.value
             })), C();
@@ -140760,8 +140760,8 @@ var LQt = {
       function te() {
         window.electronAPI.close();
       }
-      return watch(() => n.state.retryAfterSeconds, () => {
-        f.value = Date.now(), p.value = f.value + n.state.retryAfterSeconds * 1e3;
+      return watch(() => propsAlias.state.retryAfterSeconds, () => {
+        f.value = Date.now(), p.value = f.value + propsAlias.state.retryAfterSeconds * 1e3;
       }, {
         immediate: true
       }), onBeforeMount(() => {
@@ -142203,7 +142203,7 @@ var V$t = {
       }
     },
     setup(props) {
-      let t = props,
+      let propsAlias = props,
         n = `todo-ball-${We().replace(/:/g, ``)}`,
         r = [{
           y: 53,
@@ -142215,7 +142215,7 @@ var V$t = {
           y: 87,
           lineWidth: 20
         }],
-        computedResult = computed(() => Math.max(0, Math.min(r.length, Math.round(t.checkedRows))));
+        computedResult = computed(() => Math.max(0, Math.min(r.length, Math.round(propsAlias.checkedRows))));
       return (ctx, renderCache) => (openBlock(), createElementBlock(`svg`, u1t, [createElementVNode(`defs`, null, [createElementVNode(`linearGradient`, {
         id: `${n}-cover`,
         x1: `0`,
