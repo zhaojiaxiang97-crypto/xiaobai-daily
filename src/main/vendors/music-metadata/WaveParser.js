@@ -1,10 +1,10 @@
 import { createRequire as __nodeCreateRequire } from "node:module";
 __nodeCreateRequire(import.meta.url);
-import { i as __toESM } from "./lib/rolldown-runtime.js";
-import { A as require_src, E as Uint8ArrayType, P as EndOfStreamError, S as UINT32_LE, g as StringType, o as makeUnexpectedFileContentError, t as BasicParser, v as UINT16_LE } from "./vendors/music-metadata/BasicParser.js";
-import { i as FourCcToken, o as fromBuffer } from "./vendors/music-metadata/APEv2Parser.js";
-import { c as stripNulls } from "./vendors/music-metadata/Util.js";
-import { t as ID3v2Parser } from "./vendors/music-metadata/ID3v2Parser.js";
+import { i as __toESM } from "../../lib/rolldown-runtime.js";
+import { A as require_src, E as Uint8ArrayType, P as EndOfStreamError, S as UINT32_LE, g as StringType, o as makeUnexpectedFileContentError, t as BasicParser, v as UINT16_LE } from "./BasicParser.js";
+import { i as FourCcToken, o as fromBuffer } from "./APEv2Parser.js";
+import { c as stripNulls } from "./Util.js";
+import { t as ID3v2Parser } from "./ID3v2Parser.js";
 //#region node_modules/music-metadata/lib/riff/RiffChunk.js
 var import_src = /* @__PURE__ */ __toESM(require_src(), 1);
 /**
