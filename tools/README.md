@@ -26,6 +26,7 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | `--only=forms` | `const x = await obj.getY()`→`y`、`new Cls()`→`cls`、`ref([])`→`items`/`ref(null)`→`target` | 低 |
 | `--only=callbacks` | `.then(x=>)`→`result`、`.catch(x=>)`→`err`、`.map(x=>)`→`item`、`.reduce((a,b)=>`→`acc,cur`、`.sort((a,b)=>`→`left,right` | 低 |
 | `--only=byfunc` | 参数按**函数名名词**命名（`openTodo(x)`→`todo`）、`const x = 语义名`→取右侧名、`.parse()`→`parsed`、`.join()`→`joined` | 中（必须过全局黑名单） |
+| `--only=more` | `const x = getSettings()`→`settings`、`a \|\| b`→取语义侧名、`[]`→`items`、`()=>{}`→`handler`、对象字面量按属性推断（`ok/error/data`→`result`、`title/status`→`record`、`url/method`→`request`） | 低 |
 | 不带 `--only` | 依次执行以上全部 | — |
 
 统一入口：`node tools/deobf.cjs [--only=...] [--dry]`（遍历 `src/**/*.js`）
@@ -59,6 +60,7 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | forms（await/new/ref） | 351 | 450 |
 | callbacks（回调位置） | 818 | 1630 |
 | byfunc（函数名词/别名/方法结果） | 3176 | 1706 |
+| more（调用结果/logical/容器字面量） | 1193 | 1743 |
 | final（void 0 / !0 / 转义） | 3008 / 12612 / 89 文件 | 同左（全库） |
 
 ## 尚未安全的操作

@@ -20,7 +20,7 @@ const GLOBALS = new Set(['window','document','globalThis','global','process','co
 const COMPRESSED = /^[a-zA-Z]$|^[a-zA-Z][0-9]$|^[a-z]{2}$|^_0x[0-9a-f]+$/;
 const IDENT = /^[A-Za-z_$][\w$]*$/;
 
-const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, byfunc: 0, files: 0 };
+const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, byfunc: 0, more: 0, files: 0 };
 
 // ---- 参数画像 ----
 function inferParam(paramName, fnPath) {
@@ -204,6 +204,69 @@ function applyByFunc(ast) {
   return n;
 }
 
+// ---- 调用结果 / logical / 容器字面量命名 ----
+const DEVERB_CALL = /^(get|load|fetch|read|resolve|create|build|make|generate|compute|parse|format|normalize|find|query|list|select|extract|open|init|handle|process|update|delete|remove|add|run|start|stop|register|sync|analyze|capture|execute|render|watch|observe|track|merge|split|validate|verify|assert|ensure|apply|check|toggle|serialize|deserialize|encode|decode|sanitize|escape|persist|restore|migrate|reset|clear|flush|poll|schedule|dispatch|record|notify|broadcast|emit)([A-Z]\w*)$/;
+function nameFromCalleeLocal(callee) {
+  let fn = null;
+  if (t.isIdentifier(callee)) fn = callee.name;
+  else if (t.isMemberExpression(callee) && !callee.computed && t.isIdentifier(callee.property)) fn = callee.property.name;
+  if (!fn || COMPRESSED.test(fn)) return null;
+  const m = fn.match(DEVERB_CALL);
+  if (m && m[2].length >= 4) return m[2][0].toLowerCase() + m[2].slice(1);
+  if (fn.length >= 8 && !GLOBALS.has(fn)) return fn;
+  return null;
+}
+function nameFromObjectLocal(init) {
+  const keys = new Set();
+  for (const pr of init.properties) {
+    if (t.isObjectProperty(pr) && !pr.computed) {
+      if (t.isIdentifier(pr.key)) keys.add(pr.key.name);
+      else if (t.isStringLiteral(pr.key)) keys.add(pr.key.value);
+    }
+  }
+  const has = (...ks) => ks.some(k => keys.has(k));
+  if (has('ok','error','data') || has('code','message')) return 'result';
+  if (has('title','status','priority') || has('title','description')) return 'record';
+  if (has('url','method','body') || (has('headers') && has('status'))) return 'request';
+  if (has('id','name') && keys.size <= 4) return 'entity';
+  if (keys.size >= 3) return 'options';
+  return null;
+}
+function applyMore(ast) {
+  let n = 0;
+  traverse(ast, {
+    VariableDeclarator(pp) {
+      const { id, init } = pp.node;
+      if (!t.isIdentifier(id) || !COMPRESSED.test(id.name) || !init) return;
+      let cands = null;
+      if (t.isCallExpression(init) || t.isOptionalCallExpression(init)) {
+        const nm = nameFromCalleeLocal(init.callee);
+        if (nm) cands = [nm, nm + 'Result'];
+      } else if (t.isLogicalExpression(init) && (init.operator === '||' || init.operator === '??')) {
+        for (const side of [init.left, init.right]) {
+          if (t.isIdentifier(side) && !COMPRESSED.test(side.name) && side.name.length >= 4) { cands = [side.name + 'Value', side.name]; break; }
+        }
+        if (!cands) cands = ['fallbackValue'];
+      } else if (t.isArrayExpression(init)) {
+        cands = init.elements.length ? ['items'] : ['emptyItems'];
+      } else if (t.isArrowFunctionExpression(init)) {
+        cands = ['handler'];
+      } else if (t.isObjectExpression(init)) {
+        const nm = nameFromObjectLocal(init);
+        if (nm) cands = [nm];
+      }
+      if (!cands) return;
+      for (const cand of cands) {
+        if (!cand || GLOBALS.has(cand) || KEYWORDS.has(cand) || GENERIC.has(cand)) continue;
+        if (!/^[a-z][A-Za-z0-9]{2,28}$/.test(cand)) continue;
+        if (pp.scope.hasBinding(cand)) continue;
+        try { pp.scope.rename(id.name, cand); stats.more++; n++; break; } catch {}
+      }
+    },
+  });
+  return n;
+}
+
 function processFile(file) {
   let src;
   try { src = fs.readFileSync(file, 'utf8'); } catch { return; }
@@ -279,6 +342,8 @@ function processFile(file) {
   if (!only || only === 'callbacks') { n += applyCallbacks(ast); }
   // 7) 名词/别名/方法结果命名
   if (!only || only === 'byfunc') { n += applyByFunc(ast); }
+  // 8) 调用结果 / logical / 容器字面量
+  if (!only || only === 'more') { n += applyMore(ast); }
 
   if (n > 0 && !dry) {
     fs.writeFileSync(file, generate(ast, { compact: false, comments: true, jsescOption: { minimal: true } }).code);
