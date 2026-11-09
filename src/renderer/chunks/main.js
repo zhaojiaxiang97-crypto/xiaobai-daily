@@ -24594,7 +24594,7 @@ var lre = [`title`],
     }),
     [[`__scopeId`, `data-v-a0bffcba`]],
   ),
-  mie = new URL(`xiaohei-login.png`, import.meta.url).href,
+  mie = new URL(`../assets/xiaohei-login.png`, import.meta.url).href,
   hie = {
     class: `desktop-login`,
   },
@@ -27246,7 +27246,7 @@ var Sh = {
       );
     },
   }),
-  cg = new URL(`logo.png`, import.meta.url).href,
+  cg = new URL(`../assets/logo.png`, import.meta.url).href,
   lg = `1.8.3`;
 function ug(e) {
   try {
@@ -48110,8 +48110,8 @@ async function Mb(e, t) {
   );
 }
 var Nb = {
-    ready: new URL(`default-ready.webp`, import.meta.url).href,
-    completed: new URL(`default-completed.webp`, import.meta.url).href,
+    ready: new URL(`../assets/default-ready.webp`, import.meta.url).href,
+    completed: new URL(`../assets/default-completed.webp`, import.meta.url).href,
   },
   Pb = Ie({
     ...Nb,
@@ -71245,8 +71245,8 @@ var Uw = {
       );
     },
   });
-(`` + new URL(`../invite-credits-banner.png`, import.meta.url).href,
-  `` + new URL(`../invite-credits-banner-dark.png`, import.meta.url).href);
+(`` + new URL(`../assets/invite-credits-banner.png`, import.meta.url).href,
+  `` + new URL(`../assets/invite-credits-banner-dark.png`, import.meta.url).href);
 var EO = defineComponent({
     __name: `Empty`,
     props: {
@@ -72570,7 +72570,7 @@ var EO = defineComponent({
                     {
                       src:
                         `` +
-                        new URL(`../invite-credits-banner.png`, import.meta.url)
+                        new URL(`../assets/invite-credits-banner.png`, import.meta.url)
                           .href,
                       alt: ``,
                       class: `absolute inset-0 -z-10 size-full object-contain object-right dark:hidden`,
@@ -92587,9 +92587,9 @@ var gV = {
       );
     },
   }),
-  pCe = new URL(`doubao-logo.png`, import.meta.url).href,
+  pCe = new URL(`../assets/doubao-logo.png`, import.meta.url).href,
   mCe = `data:image/png;base64,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`,
-  hCe = new URL(`deepseek-logo.png`, import.meta.url).href;
+  hCe = new URL(`../assets/deepseek-logo.png`, import.meta.url).href;
 function EV(e) {
   if (e.ok) return e.data;
   throw Error(e.error.message);
@@ -126210,16 +126210,16 @@ function SGe(e, t) {
     caret: s.length + u.length,
   };
 }
-var CGe = new URL(`streak.webp`, import.meta.url).href,
-  wGe = new URL(`focus.webp`, import.meta.url).href,
-  TGe = new URL(`records.webp`, import.meta.url).href,
-  EGe = new URL(`keyboard.webp`, import.meta.url).href,
-  DGe = new URL(`night.webp`, import.meta.url).href,
-  OGe = new URL(`early.webp`, import.meta.url).href,
-  kGe = new URL(`active.webp`, import.meta.url).href,
-  AGe = new URL(`reports.webp`, import.meta.url).href,
-  jGe = new URL(`peak.webp`, import.meta.url).href,
-  MGe = new URL(`focus-total.webp`, import.meta.url).href;
+var CGe = new URL(`../assets/streak.webp`, import.meta.url).href,
+  wGe = new URL(`../assets/focus.webp`, import.meta.url).href,
+  TGe = new URL(`../assets/records.webp`, import.meta.url).href,
+  EGe = new URL(`../assets/keyboard.webp`, import.meta.url).href,
+  DGe = new URL(`../assets/night.webp`, import.meta.url).href,
+  OGe = new URL(`../assets/early.webp`, import.meta.url).href,
+  kGe = new URL(`../assets/active.webp`, import.meta.url).href,
+  AGe = new URL(`../assets/reports.webp`, import.meta.url).href,
+  jGe = new URL(`../assets/peak.webp`, import.meta.url).href,
+  MGe = new URL(`../assets/focus-total.webp`, import.meta.url).href;
 function WU(e, t) {
   return e < 1e4
     ? String(e)
@@ -128854,8 +128854,8 @@ var KGe = {
     }),
     [[`__scopeId`, `data-v-e874d044`]],
   ),
-  wW = new URL(`default-writing.webp`, import.meta.url).href,
-  TW = new URL(`default-completed.webp`, import.meta.url).href,
+  wW = new URL(`../assets/default-writing.webp`, import.meta.url).href,
+  TW = new URL(`../assets/default-completed.webp`, import.meta.url).href,
   Nqe = [`src`, `alt`],
   Pqe = {
     key: 0,
@@ -183889,7 +183889,7 @@ function R3(e) {
 function hct(e) {
   return (L3.find((t) => e < t.endHour) ?? L3[L3.length - 1]).period;
 }
-var z3 = new URL(`default-journal.webp`, import.meta.url).href,
+var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
   gct = [`aria-label`, `aria-busy`],
   _ct = [`src`],
   B3 = null,
@@ -194582,7 +194582,7 @@ async function Lmt(e, t = {}) {
   return (await Imt(e, t)).toDataURL();
 }
 var L6 = {
-    heatmap: new URL(`default-heatmap.webp`, import.meta.url).href,
+    heatmap: new URL(`../assets/default-heatmap.webp`, import.meta.url).href,
     leaderboard: new URL(
       `default-leaderboard-cup.webp`,
       import.meta.url,
@@ -234884,7 +234884,7 @@ var bIt = {
     }),
     [[`__scopeId`, `data-v-8f77b8e0`]],
   ),
-  ZLt = new URL(`bot-recharge-xiaohei.png`, import.meta.url).href,
+  ZLt = new URL(`../assets/bot-recharge-xiaohei.png`, import.meta.url).href,
   QLt = {
     class: `recharge-copy`,
   },
@@ -235630,7 +235630,7 @@ var bIt = {
     }),
     [[`__scopeId`, `data-v-42829643`]],
   ),
-  Q5 = new URL(`composer-default-resting-v5.webp`, import.meta.url)
+  Q5 = new URL(`../assets/composer-default-resting-v5.webp`, import.meta.url)
     .href,
   gRt = [`aria-label`, `aria-busy`],
   _Rt = [`src`],
