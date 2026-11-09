@@ -6,7 +6,7 @@
   "author": {
     "name": "上海听悟智能科技有限公司"
   },
-  "main": "dist-electron/main.js",
+  "main": "src/main/main.js",
   "type": "module",
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",

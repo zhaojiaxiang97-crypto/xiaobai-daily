@@ -1,10 +1,12 @@
 # 文件名含义索引
 
 本仓库是构建产物形态的源码（原工程为 Vue3 + Electron + rolldown/vite 打包，
-发布即 asar）。文件名带 8 位内容哈希（如 `auth.service-DlN4Zn4h.js`）——
+发布即 asar）。文件名带 8 位内容哈希（如 `auth.service.js`）——
 哈希是 vite 按内容自动生成的，与用途无关。
 
-## dist-electron/（主进程）
+## src/main/（主进程）
+
+（文件已从 dist-electron/ 重组：服务→services/、预加载→preload/、音频→vendors/music-metadata/）
 
 | 文件 | 含义 |
 |------|------|
@@ -29,7 +31,9 @@
 | `clipboard-picker-preload.cjs` / `screenshot-tool-preload.cjs` / `keyboard-sound-audio-preload.cjs` / `todo-floating-preload.cjs` / `wooden-fish-preload.cjs` / `work-motivator-preload.cjs` | 各独立小窗口（剪贴板选择器/截图工具/键盘音/待办浮球/木鱼/工作激励）的预加载脚本 |
 | `APEv2Parser/FlacParser/ID3v2Parser/MP4Parser/MatroskaParser/OggParser/WavPackParser/WaveParser/...-*.js` | music-metadata 库的音频元数据解析器（音频转写前读时长/格式用），按格式拆分的 chunk |
 
-## dist/assets/（渲染进程/前端）
+## src/renderer/（渲染进程/前端）
+
+（文件已从 dist/assets/ 重组：UI→ui/、页面→pages/、语言→i18n/、富文本块→blocks/、功能→chunks/、图标→ui/icons/）
 
 | 文件 | 含义 |
 |------|------|

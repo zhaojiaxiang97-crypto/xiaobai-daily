@@ -33,7 +33,7 @@ RES_DIR="$OUT/extract/小白日报.app/Contents/Resources"
 # 组装打包目录：源码 + node_modules（asar 头需要 node_modules 条目指向 unpacked）
 PACK_DIR="$OUT/packdir"
 mkdir -p "$PACK_DIR"
-tar cf - -C "$SRC_DIR" dist dist-electron package.json | tar xf - -C "$PACK_DIR"
+tar cf - -C "$SRC_DIR" src package.json | tar xf - -C "$PACK_DIR"
 tar xzf "$OUT/assets/app-unpacked.tar.gz" -C "$OUT" app.asar.unpacked
 cp -R "$OUT/app.asar.unpacked/node_modules" "$PACK_DIR/node_modules"
 node --input-type=module -e "

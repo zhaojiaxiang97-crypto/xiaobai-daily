@@ -98,6 +98,34 @@ src/
 > 反推依据：组件 `__name` 标记、仓储/服务命名边界、rolldown chunk 划分。
 > 原始 .vue/.ts 源文件未随发布存在，本仓库的语义化 JS 即可读源码形态。
 
+## 当前仓库结构（已按工程语义重组）
+
+```
+xiaobai-daily/
+├── src/
+│   ├── main/                 # 主进程（Electron main）
+│   │   ├── main.js           # 入口
+│   │   ├── services/         # 业务服务（auth/settings/telemetry/…）
+│   │   ├── preload/          # 渲染桥接脚本（*.cjs）
+│   │   ├── lib/              # rolldown 运行时/类型/语言
+│   │   └── vendors/music-metadata/  # 音频解析器族
+│   └── renderer/            # 渲染进程（Vue3）
+│       ├── index.html        # 主窗口入口
+│       ├── keyboard-sound-audio.html / screenshot-tool.html / clipboard-picker.html / work-motivator.html  # 独立小窗口
+│       ├── components → ui/ # UI 基础组件（Switch/Popover/…）
+│       │   └── icons/        # 图标集（lucide）
+│       ├── pages/            # 页面级组件（编辑器/3D/回放/…）
+│       ├── i18n/             # 语言包（en-US-main/player）
+│       ├── blocks/           # 富文本块（math/mermaid/…）
+│       ├── chunks/           # 功能模块（业务功能 chunk）
+│       ├── styles/           # 样式
+│       ├── vendors/          # OrbitControls/Barcode3D
+│       └── assets/           # 图像（webp/png）
+├── package.json              # main: src/main/main.js
+├── build.sh                  # 一键构建
+└── docs/
+```
+
 ## asar 结构（构建产物）
 
 ```
