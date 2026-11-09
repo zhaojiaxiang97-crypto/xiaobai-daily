@@ -40,8 +40,8 @@ var b = {
         for (let e of j) e();
       }), (t, a) => (i(), r(`div`, {
         class: `fixed inset-0 p-3`,
-        onMouseenter: a[4] ||= t => e(toast).hover(!0),
-        onMouseleave: a[5] ||= t => e(toast).hover(!1)
+        onMouseenter: a[4] ||= t => e(toast).hover(true),
+        onMouseleave: a[5] ||= t => e(toast).hover(false)
       }, [A.value ? (i(), r(`div`, b, [f(`button`, {
         type: `button`,
         class: `flex min-h-0 flex-1 items-center justify-center bg-zinc-100 px-3 pt-3 dark:bg-zinc-800`,
@@ -75,7 +75,7 @@ var b = {
         onClick: a[3] ||= t => e(toast).action(`close`)
       }, [o(e(m), {
         size: 13
-      })], 8, O)])])])) : d(``, !0)], 32));
+      })], 8, O)])])])) : d(``, true)], 32));
     }
   });
 export { k as default };

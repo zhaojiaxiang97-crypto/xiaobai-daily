@@ -1,19 +1,344 @@
-import{$n as e,An as t,Cn as n,S as r,St as i,Wt as a,bn as o,c as s,gt as c,j as l,n as u,nr as d,ot as f,rr as p,ut as m,v as h,y as g}from"../chunks/vue-i18n.runtime.js";import"../chunks/main.js";import{E as _,a as v,b as y,c as b,d as x,f as S,g as C,h as w,i as T,m as E,o as D,p as O,s as k,v as A}from"./OrbitControls.js";import{a as j,i as M,n as N,o as P,r as F,t as ee}from"./three-stage.js";var I=class{uniforms={uTime:{value:1e7},uGrow:{value:500}};startedAt=0;endsAt=0;constructor(e){this.uniforms.uGrow.value=e}start(e,t){if(!e){this.uniforms.uTime.value=1e7,this.endsAt=0;return}this.startedAt=performance.now(),this.endsAt=t+this.uniforms.uGrow.value,this.uniforms.uTime.value=0}step(e){if(!this.endsAt)return!1;let t=Number.isFinite(e)?e-this.startedAt:1/0;return t>=this.endsAt?(this.uniforms.uTime.value=1e7,this.endsAt=0,!1):(this.uniforms.uTime.value=Math.max(0,t),!0)}},L=class{fullPending=!1;meshes;constructor(e){this.meshes=e}markAll(){this.fullPending=!0;for(let e of this.meshes)e.instanceColor&&(e.instanceColor.clearUpdateRanges(),e.instanceColor.needsUpdate=!0)}markOne(e,t){!e.instanceColor||t<0||(this.fullPending||e.instanceColor.addUpdateRange(t*3,3),e.instanceColor.needsUpdate=!0)}frameStarted(){this.fullPending=!1}},R=288,z=R/2,B=3.2,V=.35,H=.12,U=.3,W=.3,G=.78,K=.28,te=-.03,ne=.12,q=520,re=700,J=260;function ie(e){return e>62?{rowPitch:1.6,trackDepth:1.6,buildingDepth:1.45,leftLabelSpace:14}:{rowPitch:6,trackDepth:4.2,buildingDepth:3.4,leftLabelSpace:28}}function ae(e){let t=new A;return t.onBeforeCompile=t=>{t.uniforms.uTime=e.uniforms.uTime,t.uniforms.uGrow=e.uniforms.uGrow,t.vertexShader=t.vertexShader.replace(`#include <common>`,`#include <common>
+import { $n as e, An as t, Cn as n, S as r, St as i, Wt as a, bn as o, c as s, gt as c, j as l, n as u, nr as d, ot as f, rr as p, ut as m, v as h, y as g } from "../chunks/vue-i18n.runtime.js";
+import "../chunks/main.js";
+import { E as _, a as v, b as y, c as b, d as x, f as S, g as C, h as w, i as T, m as E, o as D, p as O, s as k, v as A } from "./OrbitControls.js";
+import { a as j, i as M, n as N, o as P, r as F, t as ee } from "./three-stage.js";
+var I = class {
+    uniforms = {
+      uTime: {
+        value: 1e7
+      },
+      uGrow: {
+        value: 500
+      }
+    };
+    startedAt = 0;
+    endsAt = 0;
+    constructor(e) {
+      this.uniforms.uGrow.value = e;
+    }
+    start(e, t) {
+      if (!e) {
+        this.uniforms.uTime.value = 1e7, this.endsAt = 0;
+        return;
+      }
+      this.startedAt = performance.now(), this.endsAt = t + this.uniforms.uGrow.value, this.uniforms.uTime.value = 0;
+    }
+    step(e) {
+      if (!this.endsAt) return false;
+      let t = Number.isFinite(e) ? e - this.startedAt : 1 / 0;
+      return t >= this.endsAt ? (this.uniforms.uTime.value = 1e7, this.endsAt = 0, false) : (this.uniforms.uTime.value = Math.max(0, t), true);
+    }
+  },
+  L = class {
+    fullPending = false;
+    meshes;
+    constructor(e) {
+      this.meshes = e;
+    }
+    markAll() {
+      this.fullPending = true;
+      for (let e of this.meshes) e.instanceColor && (e.instanceColor.clearUpdateRanges(), e.instanceColor.needsUpdate = true);
+    }
+    markOne(e, t) {
+      !e.instanceColor || t < 0 || (this.fullPending || e.instanceColor.addUpdateRange(t * 3, 3), e.instanceColor.needsUpdate = true);
+    }
+    frameStarted() {
+      this.fullPending = false;
+    }
+  },
+  R = 288,
+  z = R / 2,
+  B = 3.2,
+  V = .35,
+  H = .12,
+  U = .3,
+  W = .3,
+  G = .78,
+  K = .28,
+  te = -.03,
+  ne = .12,
+  q = 520,
+  re = 700,
+  J = 260;
+function ie(e) {
+  return e > 62 ? {
+    rowPitch: 1.6,
+    trackDepth: 1.6,
+    buildingDepth: 1.45,
+    leftLabelSpace: 14
+  } : {
+    rowPitch: 6,
+    trackDepth: 4.2,
+    buildingDepth: 3.4,
+    leftLabelSpace: 28
+  };
+}
+function ae(e) {
+  let t = new A();
+  return t.onBeforeCompile = t => {
+    t.uniforms.uTime = e.uniforms.uTime, t.uniforms.uGrow = e.uniforms.uGrow, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute float aHeight;
 attribute float aDelay;
 attribute float aDim;
 uniform float uTime;
-uniform float uGrow;`).replace(`#include <begin_vertex>`,`#include <begin_vertex>
+uniform float uGrow;`).replace(`#include <begin_vertex>`, `#include <begin_vertex>
 float barcodeGrowth = clamp((uTime - aDelay) / uGrow, 0.0, 1.0);
 barcodeGrowth = 1.0 - pow(1.0 - barcodeGrowth, 3.0);
-transformed.y *= max(aHeight * mix(1.0, ${W.toFixed(2)}, aDim) * barcodeGrowth, 0.001);`)},t.customProgramCacheKey=()=>`barcode-city-building`,t}var oe=class{root=new S;framing;labels;set;layout;heights;dims;dimAttribute;clock=new I(q);maxDelay;buildingGeometry;buildingMaterial;buildings;trackGeometry;trackMaterial=new A;tracks;colorSync;baseColors=[];groundColor=new k;hoverColor=new k;scratchColor=new k;hitBox=new T;hitPoint=new _;hovered=-1;constructor(e,t){this.set=F(e),this.layout=ie(this.set.dayCount);let{blocks:n}=this.set,r=n.length;this.heights=new Float32Array(r),this.dims=new Float32Array(r);let i=new Float32Array(r),a=new w,o=new _,s=new y,c=new _;this.buildingGeometry=new v(1,1,1).translate(0,.5,0),this.buildingGeometry.setAttribute(`aHeight`,new O(this.heights,1)),this.buildingGeometry.setAttribute(`aDelay`,new O(i,1)),this.dimAttribute=new O(this.dims,1),this.buildingGeometry.setAttribute(`aDim`,this.dimAttribute),this.buildingMaterial=ae(this.clock),this.buildings=new E(this.buildingGeometry,this.buildingMaterial,r),this.buildings.instanceColor=new O(new Float32Array(r*3),3),this.buildings.frustumCulled=!1;let l=0,u=4;n.forEach((e,t)=>{let n=Math.max(U,e.end-e.start-H),r=P(e)?V:B*M(e);this.heights[t]=r,u=Math.max(u,r),i[t]=j(e,this.set.dayCount,re,J),l=Math.max(l,i[t]),o.set((e.start+e.end)/2-z,0,this.rowZ(e.dayIndex)),c.set(n,1,this.layout.buildingDepth),a.compose(o,s,c),this.buildings.setMatrixAt(t,a)}),this.buildings.instanceMatrix.needsUpdate=!0,this.maxDelay=l,this.trackGeometry=new v(1,1,1).translate(0,-.5,0),this.tracks=new E(this.trackGeometry,this.trackMaterial,this.set.dayCount);for(let e=0;e<this.set.dayCount;e+=1)o.set(0,te,this.rowZ(e)),c.set(R+1,ne,this.layout.trackDepth),a.compose(o,s,c),this.tracks.setMatrixAt(e,a);this.tracks.instanceMatrix.needsUpdate=!0,this.root.add(this.tracks,this.buildings),this.colorSync=new L([this.buildings]);let d=this.set.dayCount*this.layout.rowPitch/2,f=-z-this.layout.leftLabelSpace,p=z+1,m=-d,h=d+8,g=[];for(let e of[f,p])for(let t of[0,u])for(let n of[m,h])g.push(new _(e,t,n));this.framing={target:new _((f+p)/2,u*.2,(m+h)/2),corners:g,homeView:{polar:.98,azimuth:.22},topView:{polar:0,azimuth:0},limits:{minPolar:0,maxPolar:1.36,azimuthRange:Math.PI/3}},this.labels=this.buildLabels(t,d)}rowZ(e){return(e-(this.set.dayCount-1)/2)*this.layout.rowPitch}buildLabels(e,t){let n=[];for(let e=0;e<=24;e+=3)n.push({key:`hour-${e}`,text:`${e}:00`,kind:`hour`,position:new _(e/24*R-z,0,t+4)});let r=-z-3;if(this.set.dayCount>62)for(let t of e.monthMarks)n.push({key:`month-${t.dayIndex}`,text:t.label,kind:`side`,position:new _(r,0,this.rowZ(t.dayIndex))});else e.dayLabels.forEach((e,t)=>{e&&n.push({key:`day-${t}`,text:e,kind:`side`,position:new _(r,0,this.rowZ(t))})});return n}paint(e){let t=this.baseColors[e];t&&(this.scratchColor.copy(t),this.dims[e]&&this.scratchColor.lerp(this.groundColor,G),e===this.hovered&&this.scratchColor.lerp(this.hoverColor,K),this.buildings.setColorAt(e,this.scratchColor))}paintAll(){for(let e=0;e<this.baseColors.length;e+=1)this.paint(e);this.colorSync.markAll()}setColors(e,t){this.baseColors=this.set.blocks.map(n=>new k(N(n,e,t))),this.groundColor.set(t.ground),this.hoverColor.set(t.textPrimary),this.trackMaterial.color.set(t.ground),this.paintAll()}setHighlight(e){this.set.blocks.forEach((t,n)=>{this.dims[n]=e&&!e.has(t.value)?1:0}),this.dimAttribute.needsUpdate=!0,this.paintAll()}setHovered(e){if(e===this.hovered)return;let t=this.hovered;this.hovered=e,this.paint(t),this.paint(e),this.colorSync.markOne(this.buildings,t),this.colorSync.markOne(this.buildings,e)}startGrowth(e){this.clock.start(e,this.maxDelay)}stepGrowth(e){return this.colorSync.frameStarted(),this.clock.step(e)}pick(e){let{blocks:t,dayOffsets:n,dayCount:r}=this.set;if(t.length===0)return null;let i=this.framing.corners.reduce((e,t)=>Math.max(e,t.y),0),{origin:a,direction:o}=e,s=0,c=1e7;if(Math.abs(o.y)>1e-9){let e=-a.y/o.y,t=(i-a.y)/o.y;if(s=Math.max(0,Math.min(e,t)),c=Math.max(e,t),c<s)return null}else if(a.y<0||a.y>i)return null;let l=a.z+o.z*s,u=a.z+o.z*c,d=this.rowZ(0),f=this.layout.rowPitch,p=Math.max(0,Math.floor((Math.min(l,u)-d)/f)-1),m=Math.min(r-1,Math.ceil((Math.max(l,u)-d)/f)+1),h=this.layout.buildingDepth/2,g=-1,_=1/0,v=0;for(let r=p;r<=m;r+=1){let i=this.rowZ(r);for(let o=n[r];o<n[r+1];o+=1){let n=t[o],r=Math.max(U,n.end-n.start-H)/2,s=(n.start+n.end)/2-z,c=this.heights[o]*(this.dims[o]?W:1);if(this.hitBox.min.set(s-r,0,i-h),this.hitBox.max.set(s+r,c,i+h),!e.intersectBox(this.hitBox,this.hitPoint))continue;let l=this.hitPoint.distanceToSquared(a);l<_&&(_=l,g=o,v=this.hitPoint.x)}}if(g<0)return null;let y=t[g],b=Math.min(y.end-1,Math.max(y.start,Math.floor(v+z)));return{blockIndex:g,dayIndex:y.dayIndex,bucket:b}}dispose(){this.buildings.dispose(),this.tracks.dispose(),this.buildingGeometry.dispose(),this.trackGeometry.dispose(),this.buildingMaterial.dispose(),this.trackMaterial.dispose()}},Y=288,X=Math.PI*2,Z=24,Q=3,se=2.4,ce=1.2,le=.3,ue=.78,de=.28,fe=2.6,pe=.78,me=160,he=600,ge=1e3,_e=-.05,ve=.4,$=[{maxSpan:4,segments:1},{maxSpan:24,segments:4},{maxSpan:96,segments:12},{maxSpan:1/0,segments:32}];function ye(e){let t=[],n=[],r=[],i=(e,r,i,a,o,s)=>(t.push(e,r,i),n.push(a,o,s),t.length/3-1),a=[],o=[],s=[],c=[],l=[],u=[];for(let t=0;t<=e;t+=1){let n=t/e;a.push(i(n,1,0,0,1,0)),o.push(i(n,1,1,0,1,0)),s.push(i(n,0,1,0,0,1)),c.push(i(n,1,1,0,0,1)),l.push(i(n,0,0,0,0,-1)),u.push(i(n,1,0,0,0,-1))}for(let t=0;t<e;t+=1){let e=t+1;r.push(a[t],a[e],o[e],a[t],o[e],o[t]),r.push(s[t],c[t],c[e],s[t],c[e],s[e]),r.push(l[t],u[e],u[t],l[t],l[e],u[e])}let d=i(0,0,0,-1,0,0),f=i(0,1,0,-1,0,0),p=i(0,1,1,-1,0,0),m=i(0,0,1,-1,0,0);r.push(d,f,p,d,p,m);let h=i(1,0,0,1,0,0),g=i(1,0,1,1,0,0),_=i(1,1,1,1,0,0),v=i(1,1,0,1,0,0);r.push(h,g,_,h,_,v);let y=new D;return y.setAttribute(`position`,new x(t,3)),y.setAttribute(`normal`,new x(n,3)),y.setIndex(r),y}function be(e){let t=new A;return t.onBeforeCompile=t=>{t.uniforms.uTime=e.uniforms.uTime,t.uniforms.uGrow=e.uniforms.uGrow,t.vertexShader=t.vertexShader.replace(`#include <common>`,`#include <common>
+transformed.y *= max(aHeight * mix(1.0, ${W.toFixed(2)}, aDim) * barcodeGrowth, 0.001);`);
+  }, t.customProgramCacheKey = () => `barcode-city-building`, t;
+}
+var oe = class {
+    root = new S();
+    framing;
+    labels;
+    set;
+    layout;
+    heights;
+    dims;
+    dimAttribute;
+    clock = new I(q);
+    maxDelay;
+    buildingGeometry;
+    buildingMaterial;
+    buildings;
+    trackGeometry;
+    trackMaterial = new A();
+    tracks;
+    colorSync;
+    baseColors = [];
+    groundColor = new k();
+    hoverColor = new k();
+    scratchColor = new k();
+    hitBox = new T();
+    hitPoint = new _();
+    hovered = -1;
+    constructor(e, t) {
+      this.set = F(e), this.layout = ie(this.set.dayCount);
+      let {
+          blocks: n
+        } = this.set,
+        r = n.length;
+      this.heights = new Float32Array(r), this.dims = new Float32Array(r);
+      let i = new Float32Array(r),
+        a = new w(),
+        o = new _(),
+        s = new y(),
+        c = new _();
+      this.buildingGeometry = new v(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new O(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new O(i, 1)), this.dimAttribute = new O(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new E(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new O(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
+      let l = 0,
+        u = 4;
+      n.forEach((e, t) => {
+        let n = Math.max(U, e.end - e.start - H),
+          r = P(e) ? V : B * M(e);
+        this.heights[t] = r, u = Math.max(u, r), i[t] = j(e, this.set.dayCount, re, J), l = Math.max(l, i[t]), o.set((e.start + e.end) / 2 - z, 0, this.rowZ(e.dayIndex)), c.set(n, 1, this.layout.buildingDepth), a.compose(o, s, c), this.buildings.setMatrixAt(t, a);
+      }), this.buildings.instanceMatrix.needsUpdate = true, this.maxDelay = l, this.trackGeometry = new v(1, 1, 1).translate(0, -.5, 0), this.tracks = new E(this.trackGeometry, this.trackMaterial, this.set.dayCount);
+      for (let e = 0; e < this.set.dayCount; e += 1) o.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), a.compose(o, s, c), this.tracks.setMatrixAt(e, a);
+      this.tracks.instanceMatrix.needsUpdate = true, this.root.add(this.tracks, this.buildings), this.colorSync = new L([this.buildings]);
+      let d = this.set.dayCount * this.layout.rowPitch / 2,
+        f = -z - this.layout.leftLabelSpace,
+        p = z + 1,
+        m = -d,
+        h = d + 8,
+        g = [];
+      for (let e of [f, p]) for (let t of [0, u]) for (let n of [m, h]) g.push(new _(e, t, n));
+      this.framing = {
+        target: new _((f + p) / 2, u * .2, (m + h) / 2),
+        corners: g,
+        homeView: {
+          polar: .98,
+          azimuth: .22
+        },
+        topView: {
+          polar: 0,
+          azimuth: 0
+        },
+        limits: {
+          minPolar: 0,
+          maxPolar: 1.36,
+          azimuthRange: Math.PI / 3
+        }
+      }, this.labels = this.buildLabels(t, d);
+    }
+    rowZ(e) {
+      return (e - (this.set.dayCount - 1) / 2) * this.layout.rowPitch;
+    }
+    buildLabels(e, t) {
+      let n = [];
+      for (let e = 0; e <= 24; e += 3) n.push({
+        key: `hour-${e}`,
+        text: `${e}:00`,
+        kind: `hour`,
+        position: new _(e / 24 * R - z, 0, t + 4)
+      });
+      let r = -z - 3;
+      if (this.set.dayCount > 62) for (let t of e.monthMarks) n.push({
+        key: `month-${t.dayIndex}`,
+        text: t.label,
+        kind: `side`,
+        position: new _(r, 0, this.rowZ(t.dayIndex))
+      });else e.dayLabels.forEach((e, t) => {
+        e && n.push({
+          key: `day-${t}`,
+          text: e,
+          kind: `side`,
+          position: new _(r, 0, this.rowZ(t))
+        });
+      });
+      return n;
+    }
+    paint(e) {
+      let t = this.baseColors[e];
+      t && (this.scratchColor.copy(t), this.dims[e] && this.scratchColor.lerp(this.groundColor, G), e === this.hovered && this.scratchColor.lerp(this.hoverColor, K), this.buildings.setColorAt(e, this.scratchColor));
+    }
+    paintAll() {
+      for (let e = 0; e < this.baseColors.length; e += 1) this.paint(e);
+      this.colorSync.markAll();
+    }
+    setColors(e, t) {
+      this.baseColors = this.set.blocks.map(n => new k(N(n, e, t))), this.groundColor.set(t.ground), this.hoverColor.set(t.textPrimary), this.trackMaterial.color.set(t.ground), this.paintAll();
+    }
+    setHighlight(e) {
+      this.set.blocks.forEach((t, n) => {
+        this.dims[n] = e && !e.has(t.value) ? 1 : 0;
+      }), this.dimAttribute.needsUpdate = true, this.paintAll();
+    }
+    setHovered(e) {
+      if (e === this.hovered) return;
+      let t = this.hovered;
+      this.hovered = e, this.paint(t), this.paint(e), this.colorSync.markOne(this.buildings, t), this.colorSync.markOne(this.buildings, e);
+    }
+    startGrowth(e) {
+      this.clock.start(e, this.maxDelay);
+    }
+    stepGrowth(e) {
+      return this.colorSync.frameStarted(), this.clock.step(e);
+    }
+    pick(e) {
+      let {
+        blocks: t,
+        dayOffsets: n,
+        dayCount: r
+      } = this.set;
+      if (t.length === 0) return null;
+      let i = this.framing.corners.reduce((e, t) => Math.max(e, t.y), 0),
+        {
+          origin: a,
+          direction: o
+        } = e,
+        s = 0,
+        c = 1e7;
+      if (Math.abs(o.y) > 1e-9) {
+        let e = -a.y / o.y,
+          t = (i - a.y) / o.y;
+        if (s = Math.max(0, Math.min(e, t)), c = Math.max(e, t), c < s) return null;
+      } else if (a.y < 0 || a.y > i) return null;
+      let l = a.z + o.z * s,
+        u = a.z + o.z * c,
+        d = this.rowZ(0),
+        f = this.layout.rowPitch,
+        p = Math.max(0, Math.floor((Math.min(l, u) - d) / f) - 1),
+        m = Math.min(r - 1, Math.ceil((Math.max(l, u) - d) / f) + 1),
+        h = this.layout.buildingDepth / 2,
+        g = -1,
+        _ = 1 / 0,
+        v = 0;
+      for (let r = p; r <= m; r += 1) {
+        let i = this.rowZ(r);
+        for (let o = n[r]; o < n[r + 1]; o += 1) {
+          let n = t[o],
+            r = Math.max(U, n.end - n.start - H) / 2,
+            s = (n.start + n.end) / 2 - z,
+            c = this.heights[o] * (this.dims[o] ? W : 1);
+          if (this.hitBox.min.set(s - r, 0, i - h), this.hitBox.max.set(s + r, c, i + h), !e.intersectBox(this.hitBox, this.hitPoint)) continue;
+          let l = this.hitPoint.distanceToSquared(a);
+          l < _ && (_ = l, g = o, v = this.hitPoint.x);
+        }
+      }
+      if (g < 0) return null;
+      let y = t[g],
+        b = Math.min(y.end - 1, Math.max(y.start, Math.floor(v + z)));
+      return {
+        blockIndex: g,
+        dayIndex: y.dayIndex,
+        bucket: b
+      };
+    }
+    dispose() {
+      this.buildings.dispose(), this.tracks.dispose(), this.buildingGeometry.dispose(), this.trackGeometry.dispose(), this.buildingMaterial.dispose(), this.trackMaterial.dispose();
+    }
+  },
+  Y = 288,
+  X = Math.PI * 2,
+  Z = 24,
+  Q = 3,
+  se = 2.4,
+  ce = 1.2,
+  le = .3,
+  ue = .78,
+  de = .28,
+  fe = 2.6,
+  pe = .78,
+  me = 160,
+  he = 600,
+  ge = 1e3,
+  _e = -.05,
+  ve = .4,
+  $ = [{
+    maxSpan: 4,
+    segments: 1
+  }, {
+    maxSpan: 24,
+    segments: 4
+  }, {
+    maxSpan: 96,
+    segments: 12
+  }, {
+    maxSpan: 1 / 0,
+    segments: 32
+  }];
+function ye(e) {
+  let t = [],
+    n = [],
+    r = [],
+    i = (e, r, i, a, o, s) => (t.push(e, r, i), n.push(a, o, s), t.length / 3 - 1),
+    a = [],
+    o = [],
+    s = [],
+    c = [],
+    l = [],
+    u = [];
+  for (let t = 0; t <= e; t += 1) {
+    let n = t / e;
+    a.push(i(n, 1, 0, 0, 1, 0)), o.push(i(n, 1, 1, 0, 1, 0)), s.push(i(n, 0, 1, 0, 0, 1)), c.push(i(n, 1, 1, 0, 0, 1)), l.push(i(n, 0, 0, 0, 0, -1)), u.push(i(n, 1, 0, 0, 0, -1));
+  }
+  for (let t = 0; t < e; t += 1) {
+    let e = t + 1;
+    r.push(a[t], a[e], o[e], a[t], o[e], o[t]), r.push(s[t], c[t], c[e], s[t], c[e], s[e]), r.push(l[t], u[e], u[t], l[t], l[e], u[e]);
+  }
+  let d = i(0, 0, 0, -1, 0, 0),
+    f = i(0, 1, 0, -1, 0, 0),
+    p = i(0, 1, 1, -1, 0, 0),
+    m = i(0, 0, 1, -1, 0, 0);
+  r.push(d, f, p, d, p, m);
+  let h = i(1, 0, 0, 1, 0, 0),
+    g = i(1, 0, 1, 1, 0, 0),
+    _ = i(1, 1, 1, 1, 0, 0),
+    v = i(1, 1, 0, 1, 0, 0);
+  r.push(h, g, _, h, _, v);
+  let y = new D();
+  return y.setAttribute(`position`, new x(t, 3)), y.setAttribute(`normal`, new x(n, 3)), y.setIndex(r), y;
+}
+function be(e) {
+  let t = new A();
+  return t.onBeforeCompile = t => {
+    t.uniforms.uTime = e.uniforms.uTime, t.uniforms.uGrow = e.uniforms.uGrow, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute vec2 aArc;
 attribute vec2 aRadius;
 attribute vec2 aLayer;
 attribute float aDelay;
 attribute float aDim;
 uniform float uTime;
-uniform float uGrow;`).replace(`#include <beginnormal_vertex>`,`
+uniform float uGrow;`).replace(`#include <beginnormal_vertex>`, `
 float barcodeGrowth = clamp((uTime - aDelay) / uGrow, 0.0, 1.0);
 barcodeGrowth = 1.0 - pow(1.0 - barcodeGrowth, 3.0);
 float barcodeTheta = aArc.x + (aArc.y - aArc.x) * barcodeGrowth * position.x;
@@ -21,5 +346,458 @@ float barcodeOuter = mix(aRadius.x, aRadius.y, mix(1.0, ${le.toFixed(2)}, aDim))
 float barcodeRadius = mix(aRadius.x, barcodeOuter, position.z);
 vec3 barcodeRadial = vec3(sin(barcodeTheta), 0.0, -cos(barcodeTheta));
 vec3 barcodeTangent = vec3(cos(barcodeTheta), 0.0, sin(barcodeTheta));
-vec3 objectNormal = barcodeTangent * normal.x + vec3(0.0, normal.y, 0.0) + barcodeRadial * normal.z;`).replace(`#include <begin_vertex>`,`
-vec3 transformed = barcodeRadial * barcodeRadius + vec3(0.0, aLayer.x + position.y * aLayer.y, 0.0);`)},t.customProgramCacheKey=()=>`barcode-tower-arc`,t}var xe=class{root=new S;framing;labels;set;layout;outerRadii;tierOf;instanceOf;cellBlocks;tiers=[];material;clock=new I(he);maxDelay;maxRadius;baseGeometry;baseMaterial=new A;colorSync;dimmed;baseColors=[];groundColor=new k;hoverColor=new k;scratchColor=new k;hovered=-1;constructor(e,t){this.set=F(e);let{blocks:n,dayCount:r}=this.set,i=r>62,a=i?me/Math.max(1,r):fe;this.layout={layerPitch:a,layerHeight:i?a:a*pe},this.outerRadii=new Float32Array(n.length),this.tierOf=new Uint8Array(n.length),this.instanceOf=new Int32Array(n.length),this.dimmed=new Uint8Array(n.length),this.cellBlocks=new Int32Array(r*Y).fill(-1);let o=$.map(()=>0),s=29;n.forEach((e,t)=>{let n=P(e)?ce:Q+se*M(e);this.outerRadii[t]=Z+n,s=Math.max(s,this.outerRadii[t]);let r=e.end-e.start,i=$.findIndex(e=>r<=e.maxSpan);this.tierOf[t]=i,this.instanceOf[t]=o[i],o[i]+=1,this.cellBlocks.fill(t,e.dayIndex*Y+e.start,e.dayIndex*Y+e.end)}),this.maxRadius=s,this.material=be(this.clock);let c=0;$.forEach((e,t)=>{let i=o[t];if(i===0)return;let a=ye(e.segments),s=new Float32Array(i*2),l=new Float32Array(i*2),u=new Float32Array(i*2),d=new Float32Array(i),f=new Float32Array(i),p=new Int32Array(i);n.forEach((e,n)=>{if(this.tierOf[n]!==t)return;let i=this.instanceOf[n];p[i]=n,s[i*2]=e.start/Y*X,s[i*2+1]=e.end/Y*X,l[i*2]=Z,l[i*2+1]=this.outerRadii[n],u[i*2]=this.layerBottom(e.dayIndex),u[i*2+1]=this.layout.layerHeight,d[i]=j(e,r,ge,0),c=Math.max(c,d[i])}),a.setAttribute(`aArc`,new O(s,2)),a.setAttribute(`aRadius`,new O(l,2)),a.setAttribute(`aLayer`,new O(u,2)),a.setAttribute(`aDelay`,new O(d,1));let m=new O(f,1);a.setAttribute(`aDim`,m);let h=new E(a,this.material,i);h.instanceColor=new O(new Float32Array(i*3),3),h.frustumCulled=!1,this.tiers[t]={mesh:h,geometry:a,blockIndexes:p,dims:f,dimAttribute:m},this.root.add(h)}),this.maxDelay=c,this.colorSync=new L(this.tiers.filter(Boolean).map(e=>e.mesh)),this.baseGeometry=new b(s+4,s+4,ve,96);let l=new C(this.baseGeometry,this.baseMaterial);l.position.y=_e-ve/2,this.root.add(l);let u=this.layerBottom(Math.max(0,r-1))+this.layout.layerHeight,d=s+12,f=[];for(let e of[-d,d])for(let t of[0,u])for(let n of[-d,d])f.push(new _(e,t,n));this.framing={target:new _(0,u*.45,0),corners:f,homeView:{polar:1.12,azimuth:.38},topView:{polar:0,azimuth:0},limits:{minPolar:0,maxPolar:1.48,azimuthRange:null}},this.labels=this.buildLabels(t,u)}layerBottom(e){return e*this.layout.layerPitch}buildLabels(e,t){let n=[],r=this.maxRadius+6;for(let e=0;e<24;e+=3){let i=e/24*X,a=new _(Math.sin(i),0,-Math.cos(i));n.push({key:`hour-${e}`,text:`${e}:00`,kind:`hour`,position:a.clone().multiplyScalar(r).setY(t+.5),facing:a})}let i=new _(-1,0,0),a=e=>new _(-(this.maxRadius+3),this.layerBottom(e)+this.layout.layerHeight/2,0);if(this.set.dayCount>62)for(let t of e.monthMarks)n.push({key:`month-${t.dayIndex}`,text:t.label,kind:`side`,position:a(t.dayIndex),facing:i});else e.dayLabels.forEach((e,t)=>{e&&n.push({key:`day-${t}`,text:e,kind:`side`,position:a(t),facing:i})});return n}paint(e){let t=this.baseColors[e],n=this.tiers[this.tierOf[e]];t&&n&&(this.scratchColor.copy(t),this.dimmed[e]&&this.scratchColor.lerp(this.groundColor,ue),e===this.hovered&&this.scratchColor.lerp(this.hoverColor,de),n.mesh.setColorAt(this.instanceOf[e],this.scratchColor))}paintAll(){for(let e=0;e<this.baseColors.length;e+=1)this.paint(e);this.colorSync.markAll()}setColors(e,t){this.baseColors=this.set.blocks.map(n=>new k(N(n,e,t))),this.groundColor.set(t.ground),this.hoverColor.set(t.textPrimary),this.baseMaterial.color.set(t.ground),this.paintAll()}setHighlight(e){this.set.blocks.forEach((t,n)=>{let r=e&&!e.has(t.value)?1:0;this.dimmed[n]=r;let i=this.tiers[this.tierOf[n]];i&&(i.dims[this.instanceOf[n]]=r)});for(let e of this.tiers)e&&(e.dimAttribute.needsUpdate=!0);this.paintAll()}setHovered(e){if(e===this.hovered)return;let t=this.hovered;this.hovered=e;for(let n of[t,e]){if(n<0)continue;this.paint(n);let e=this.tiers[this.tierOf[n]];e&&this.colorSync.markOne(e.mesh,this.instanceOf[n])}}startGrowth(e){this.clock.start(e,this.maxDelay)}stepGrowth(e){return this.colorSync.frameStarted(),this.clock.step(e)}pick(e){let{dayCount:t}=this.set,{origin:n,direction:r}=e,i=r.x*r.x+r.z*r.z,a=2*(n.x*r.x+n.z*r.z),o=n.x*n.x+n.z*n.z-this.maxRadius*this.maxRadius,s=0,c=1e7;if(i>1e-12){let e=a*a-4*i*o;if(e<0)return null;let t=Math.sqrt(e);if(s=Math.max(0,(-a-t)/(2*i)),c=(-a+t)/(2*i),c<s)return null}else if(o>0)return null;let l=1/0,u=-1,d=0;for(let e=0;e<t;e+=1){let t=this.layerBottom(e),a=t+this.layout.layerHeight,o=s,f=c;if(Math.abs(r.y)>1e-9){let e=(t-n.y)/r.y,i=(a-n.y)/r.y;o=Math.max(o,Math.min(e,i)),f=Math.min(f,Math.max(e,i))}else if(n.y<t||n.y>a)continue;if(f<o||o>=l)continue;let p=Math.sqrt(i)*(f-o),m=Math.min(64,Math.max(2,Math.ceil(p/.5)));for(let t=0;t<=m;t+=1){let i=o+(f-o)*t/m;if(i>=l)break;let a=n.x+r.x*i,s=n.z+r.z*i,c=Math.hypot(a,s);if(c<Z)continue;let p=Math.atan2(a,-s);p<0&&(p+=X);let h=Math.min(Y-1,Math.floor(p/X*Y)),g=this.cellBlocks[e*Y+h];if(!(g<0)&&!(c>(this.dimmed[g]?Z+(this.outerRadii[g]-Z)*le:this.outerRadii[g]))){l=i,u=g,d=h;break}}}return u<0?null:{blockIndex:u,dayIndex:this.set.blocks[u].dayIndex,bucket:d}}dispose(){for(let e of this.tiers)e&&(e.mesh.dispose(),e.geometry.dispose());this.material.dispose(),this.baseGeometry.dispose(),this.baseMaterial.dispose()}},Se=[`aria-label`],Ce={class:`pointer-events-none absolute inset-0`},we={class:`absolute right-2 top-2 flex gap-1`,"data-share-exclude":``},Te={class:`mt-1.5 text-right text-xs leading-none text-[#bbb] dark:text-muted-foreground/70`,"data-share-exclude":``},Ee=14,De=18,Oe=14,ke=.3,Ae=4,je=260,Me=l({__name:`Barcode3D`,props:{result:{},colors:{},theme:{},shape:{},label:{},highlight:{},dayLabels:{},monthMarks:{}},emits:[`hover`,`unavailable`,`select`],setup(l,{expose:v,emit:y}){let b=l,x=y,{t:S}=u(),C=o(null),w=o(null),T=o(!1),E=n([]),D=[],O=h(()=>b.shape===`tower`?500:b.result.days.length>62?480:420),k=null,A=null,j=null,M=!1,N=0,P=null,F=-1,I=!1,L=null,R=null,z=typeof window.matchMedia==`function`&&window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,B=new _;function V(e,t){D[t]=e instanceof HTMLElement?e:null}function H(){return b.highlight?new Set(b.highlight):null}function U(e){if(!k)return;A&&(k.scene.remove(A.root),A.dispose());let t={dayLabels:b.dayLabels,monthMarks:b.monthMarks};A=b.shape===`tower`?new xe(b.result,t):new oe(b.result,t),A.setColors(b.colors,b.theme),A.setHighlight(H()),k.scene.add(A.root),k.setFraming(A.framing),F=-1,D.length=0,E.value=A.labels,A.startGrowth(e&&!z)}function W(){let e=C.value;if(!k||!e)return;let t=e.clientWidth,n=e.clientHeight,r=1/0;for(let e=E.value.length-1;e>=0;--e){let i=E.value[e],a=D[e];if(!i||!a)continue;let o=k.project(i.position,t,n),s=o.visible;s&&i.kind===`side`&&(Math.abs(r-o.y)<Oe?s=!1:r=o.y);let c=1;i.facing&&(B.copy(k.camera.position).sub(i.position),B.dot(i.facing)<0&&(c=ke)),a.style.visibility=s?`visible`:`hidden`,a.style.opacity=String(c),a.style.transform=`translate(${o.x}px, ${o.y}px) translate(${i.kind===`side`?`-100%`:`-50%`}, -50%)`}}function G(e){e?(I=!0,x(`hover`,e)):I&&(I=!1,x(`hover`,null))}function K(e){A&&e!==F&&(F=e,A.setHovered(e),k?.requestRender())}function te(){N=0;let e=P;if(!e||!k||!A||T.value)return;let t=A.pick(k.rayFromEvent(e));K(t?.blockIndex??-1),G(t?{dayIndex:t.dayIndex,bucket:t.bucket,clientX:e.clientX,clientY:e.clientY}:null)}function ne(e){T.value||(P=e,N||=requestAnimationFrame(te))}function q(){P=null,N&&cancelAnimationFrame(N),N=0,K(-1),G(null)}function re(e){T.value=!0,L={x:e.clientX,y:e.clientY},q()}function J(){T.value=!1}function ie(e){if(!L||!k||!A)return;let t=Math.hypot(e.clientX-L.x,e.clientY-L.y);if(L=null,t>Ae)return;let n=A.pick(k.rayFromEvent(e));R&&clearTimeout(R),R=null,!(!n||e.detail>1)&&(R=setTimeout(()=>{R=null,x(`select`,n.dayIndex)},je))}function ae(){R&&clearTimeout(R),R=null,Z()}function Y(e){k&&(k.controls.enableZoom=e.ctrlKey||e.metaKey)}function X(){let e=C.value;k&&e&&k.resize(e.clientWidth,e.clientHeight)&&(M?k.refit():(M=!0,k.flyIn(!z)))}function Z(){k?.resetHome(!0)}function Q(e){k?.flyToView(e)}async function se(e){return k?k.freezeForExport(e):null}return v({freezeForExport:se}),a(()=>b.result,()=>{k&&(q(),U(!0),k.resetHome(!0))}),a([()=>b.colors,()=>b.theme],()=>{A?.setColors(b.colors,b.theme),k?.requestRender()}),a(()=>b.highlight,()=>{A?.setHighlight(H()),k?.requestRender()}),m(()=>{let e=w.value,t=C.value;if(e&&t){if(k=ee.create(e,b.shape===`tower`?De:Ee,{onFrame:e=>A?.stepGrowth(e)??!1,onRendered:W}),!k){x(`unavailable`);return}U(!0),t.addEventListener(`wheel`,Y,{capture:!0,passive:!0}),window.addEventListener(`pointerup`,J),window.addEventListener(`pointercancel`,J),j=new ResizeObserver(X),j.observe(t)}}),f(()=>{N&&cancelAnimationFrame(N),N=0,R&&clearTimeout(R),R=null,j?.disconnect(),j=null,C.value?.removeEventListener(`wheel`,Y,{capture:!0}),window.removeEventListener(`pointerup`,J),window.removeEventListener(`pointercancel`,J),I&&x(`hover`,null),A?.dispose(),A=null,k?.dispose(),k=null}),(n,a)=>(c(),r(`div`,null,[g(`div`,{ref_key:`containerRef`,ref:C,class:`relative select-none overflow-hidden`,style:d({height:`${O.value}px`})},[g(`canvas`,{ref_key:`canvasRef`,ref:w,class:e([`block h-full w-full`,T.value?`cursor-grabbing`:`cursor-grab`]),role:`img`,"aria-label":l.label,onPointermove:ne,onPointerleave:q,onPointerdown:re,onClick:ie,onDblclick:ae},null,42,Se),g(`div`,Ce,[(c(!0),r(s,null,i(E.value,(t,n)=>(c(),r(`span`,{key:t.key,ref_for:!0,ref:e=>V(e,n),class:e([`absolute left-0 top-0 whitespace-nowrap text-xs leading-none`,t.kind===`hour`?`text-[#bbb] dark:text-muted-foreground/70`:`font-medium text-[#888] dark:text-muted-foreground`]),style:{visibility:`hidden`}},p(t.text),3))),128))]),g(`div`,we,[g(`button`,{type:`button`,class:`h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,onClick:a[0]||=e=>Q(`home`)},p(t(S)(`appBarcode.viewTilt`)),1),g(`button`,{type:`button`,class:`h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,onClick:a[1]||=e=>Q(`top`)},p(t(S)(`appBarcode.viewTop`)),1)])],4),g(`p`,Te,p(t(S)(`todayWork.heatmap3dHint`)),1)]))}});export{Me as default};
+vec3 objectNormal = barcodeTangent * normal.x + vec3(0.0, normal.y, 0.0) + barcodeRadial * normal.z;`).replace(`#include <begin_vertex>`, `
+vec3 transformed = barcodeRadial * barcodeRadius + vec3(0.0, aLayer.x + position.y * aLayer.y, 0.0);`);
+  }, t.customProgramCacheKey = () => `barcode-tower-arc`, t;
+}
+var xe = class {
+    root = new S();
+    framing;
+    labels;
+    set;
+    layout;
+    outerRadii;
+    tierOf;
+    instanceOf;
+    cellBlocks;
+    tiers = [];
+    material;
+    clock = new I(he);
+    maxDelay;
+    maxRadius;
+    baseGeometry;
+    baseMaterial = new A();
+    colorSync;
+    dimmed;
+    baseColors = [];
+    groundColor = new k();
+    hoverColor = new k();
+    scratchColor = new k();
+    hovered = -1;
+    constructor(e, t) {
+      this.set = F(e);
+      let {
+          blocks: n,
+          dayCount: r
+        } = this.set,
+        i = r > 62,
+        a = i ? me / Math.max(1, r) : fe;
+      this.layout = {
+        layerPitch: a,
+        layerHeight: i ? a : a * pe
+      }, this.outerRadii = new Float32Array(n.length), this.tierOf = new Uint8Array(n.length), this.instanceOf = new Int32Array(n.length), this.dimmed = new Uint8Array(n.length), this.cellBlocks = new Int32Array(r * Y).fill(-1);
+      let o = $.map(() => 0),
+        s = 29;
+      n.forEach((e, t) => {
+        let n = P(e) ? ce : Q + se * M(e);
+        this.outerRadii[t] = Z + n, s = Math.max(s, this.outerRadii[t]);
+        let r = e.end - e.start,
+          i = $.findIndex(e => r <= e.maxSpan);
+        this.tierOf[t] = i, this.instanceOf[t] = o[i], o[i] += 1, this.cellBlocks.fill(t, e.dayIndex * Y + e.start, e.dayIndex * Y + e.end);
+      }), this.maxRadius = s, this.material = be(this.clock);
+      let c = 0;
+      $.forEach((e, t) => {
+        let i = o[t];
+        if (i === 0) return;
+        let a = ye(e.segments),
+          s = new Float32Array(i * 2),
+          l = new Float32Array(i * 2),
+          u = new Float32Array(i * 2),
+          d = new Float32Array(i),
+          f = new Float32Array(i),
+          p = new Int32Array(i);
+        n.forEach((e, n) => {
+          if (this.tierOf[n] !== t) return;
+          let i = this.instanceOf[n];
+          p[i] = n, s[i * 2] = e.start / Y * X, s[i * 2 + 1] = e.end / Y * X, l[i * 2] = Z, l[i * 2 + 1] = this.outerRadii[n], u[i * 2] = this.layerBottom(e.dayIndex), u[i * 2 + 1] = this.layout.layerHeight, d[i] = j(e, r, ge, 0), c = Math.max(c, d[i]);
+        }), a.setAttribute(`aArc`, new O(s, 2)), a.setAttribute(`aRadius`, new O(l, 2)), a.setAttribute(`aLayer`, new O(u, 2)), a.setAttribute(`aDelay`, new O(d, 1));
+        let m = new O(f, 1);
+        a.setAttribute(`aDim`, m);
+        let h = new E(a, this.material, i);
+        h.instanceColor = new O(new Float32Array(i * 3), 3), h.frustumCulled = false, this.tiers[t] = {
+          mesh: h,
+          geometry: a,
+          blockIndexes: p,
+          dims: f,
+          dimAttribute: m
+        }, this.root.add(h);
+      }), this.maxDelay = c, this.colorSync = new L(this.tiers.filter(Boolean).map(e => e.mesh)), this.baseGeometry = new b(s + 4, s + 4, ve, 96);
+      let l = new C(this.baseGeometry, this.baseMaterial);
+      l.position.y = _e - ve / 2, this.root.add(l);
+      let u = this.layerBottom(Math.max(0, r - 1)) + this.layout.layerHeight,
+        d = s + 12,
+        f = [];
+      for (let e of [-d, d]) for (let t of [0, u]) for (let n of [-d, d]) f.push(new _(e, t, n));
+      this.framing = {
+        target: new _(0, u * .45, 0),
+        corners: f,
+        homeView: {
+          polar: 1.12,
+          azimuth: .38
+        },
+        topView: {
+          polar: 0,
+          azimuth: 0
+        },
+        limits: {
+          minPolar: 0,
+          maxPolar: 1.48,
+          azimuthRange: null
+        }
+      }, this.labels = this.buildLabels(t, u);
+    }
+    layerBottom(e) {
+      return e * this.layout.layerPitch;
+    }
+    buildLabels(e, t) {
+      let n = [],
+        r = this.maxRadius + 6;
+      for (let e = 0; e < 24; e += 3) {
+        let i = e / 24 * X,
+          a = new _(Math.sin(i), 0, -Math.cos(i));
+        n.push({
+          key: `hour-${e}`,
+          text: `${e}:00`,
+          kind: `hour`,
+          position: a.clone().multiplyScalar(r).setY(t + .5),
+          facing: a
+        });
+      }
+      let i = new _(-1, 0, 0),
+        a = e => new _(-(this.maxRadius + 3), this.layerBottom(e) + this.layout.layerHeight / 2, 0);
+      if (this.set.dayCount > 62) for (let t of e.monthMarks) n.push({
+        key: `month-${t.dayIndex}`,
+        text: t.label,
+        kind: `side`,
+        position: a(t.dayIndex),
+        facing: i
+      });else e.dayLabels.forEach((e, t) => {
+        e && n.push({
+          key: `day-${t}`,
+          text: e,
+          kind: `side`,
+          position: a(t),
+          facing: i
+        });
+      });
+      return n;
+    }
+    paint(e) {
+      let t = this.baseColors[e],
+        n = this.tiers[this.tierOf[e]];
+      t && n && (this.scratchColor.copy(t), this.dimmed[e] && this.scratchColor.lerp(this.groundColor, ue), e === this.hovered && this.scratchColor.lerp(this.hoverColor, de), n.mesh.setColorAt(this.instanceOf[e], this.scratchColor));
+    }
+    paintAll() {
+      for (let e = 0; e < this.baseColors.length; e += 1) this.paint(e);
+      this.colorSync.markAll();
+    }
+    setColors(e, t) {
+      this.baseColors = this.set.blocks.map(n => new k(N(n, e, t))), this.groundColor.set(t.ground), this.hoverColor.set(t.textPrimary), this.baseMaterial.color.set(t.ground), this.paintAll();
+    }
+    setHighlight(e) {
+      this.set.blocks.forEach((t, n) => {
+        let r = e && !e.has(t.value) ? 1 : 0;
+        this.dimmed[n] = r;
+        let i = this.tiers[this.tierOf[n]];
+        i && (i.dims[this.instanceOf[n]] = r);
+      });
+      for (let e of this.tiers) e && (e.dimAttribute.needsUpdate = true);
+      this.paintAll();
+    }
+    setHovered(e) {
+      if (e === this.hovered) return;
+      let t = this.hovered;
+      this.hovered = e;
+      for (let n of [t, e]) {
+        if (n < 0) continue;
+        this.paint(n);
+        let e = this.tiers[this.tierOf[n]];
+        e && this.colorSync.markOne(e.mesh, this.instanceOf[n]);
+      }
+    }
+    startGrowth(e) {
+      this.clock.start(e, this.maxDelay);
+    }
+    stepGrowth(e) {
+      return this.colorSync.frameStarted(), this.clock.step(e);
+    }
+    pick(e) {
+      let {
+          dayCount: t
+        } = this.set,
+        {
+          origin: n,
+          direction: r
+        } = e,
+        i = r.x * r.x + r.z * r.z,
+        a = 2 * (n.x * r.x + n.z * r.z),
+        o = n.x * n.x + n.z * n.z - this.maxRadius * this.maxRadius,
+        s = 0,
+        c = 1e7;
+      if (i > 1e-12) {
+        let e = a * a - 4 * i * o;
+        if (e < 0) return null;
+        let t = Math.sqrt(e);
+        if (s = Math.max(0, (-a - t) / (2 * i)), c = (-a + t) / (2 * i), c < s) return null;
+      } else if (o > 0) return null;
+      let l = 1 / 0,
+        u = -1,
+        d = 0;
+      for (let e = 0; e < t; e += 1) {
+        let t = this.layerBottom(e),
+          a = t + this.layout.layerHeight,
+          o = s,
+          f = c;
+        if (Math.abs(r.y) > 1e-9) {
+          let e = (t - n.y) / r.y,
+            i = (a - n.y) / r.y;
+          o = Math.max(o, Math.min(e, i)), f = Math.min(f, Math.max(e, i));
+        } else if (n.y < t || n.y > a) continue;
+        if (f < o || o >= l) continue;
+        let p = Math.sqrt(i) * (f - o),
+          m = Math.min(64, Math.max(2, Math.ceil(p / .5)));
+        for (let t = 0; t <= m; t += 1) {
+          let i = o + (f - o) * t / m;
+          if (i >= l) break;
+          let a = n.x + r.x * i,
+            s = n.z + r.z * i,
+            c = Math.hypot(a, s);
+          if (c < Z) continue;
+          let p = Math.atan2(a, -s);
+          p < 0 && (p += X);
+          let h = Math.min(Y - 1, Math.floor(p / X * Y)),
+            g = this.cellBlocks[e * Y + h];
+          if (!(g < 0) && !(c > (this.dimmed[g] ? Z + (this.outerRadii[g] - Z) * le : this.outerRadii[g]))) {
+            l = i, u = g, d = h;
+            break;
+          }
+        }
+      }
+      return u < 0 ? null : {
+        blockIndex: u,
+        dayIndex: this.set.blocks[u].dayIndex,
+        bucket: d
+      };
+    }
+    dispose() {
+      for (let e of this.tiers) e && (e.mesh.dispose(), e.geometry.dispose());
+      this.material.dispose(), this.baseGeometry.dispose(), this.baseMaterial.dispose();
+    }
+  },
+  Se = [`aria-label`],
+  Ce = {
+    class: `pointer-events-none absolute inset-0`
+  },
+  we = {
+    class: `absolute right-2 top-2 flex gap-1`,
+    "data-share-exclude": ``
+  },
+  Te = {
+    class: `mt-1.5 text-right text-xs leading-none text-[#bbb] dark:text-muted-foreground/70`,
+    "data-share-exclude": ``
+  },
+  Ee = 14,
+  De = 18,
+  Oe = 14,
+  ke = .3,
+  Ae = 4,
+  je = 260,
+  Me = l({
+    __name: `Barcode3D`,
+    props: {
+      result: {},
+      colors: {},
+      theme: {},
+      shape: {},
+      label: {},
+      highlight: {},
+      dayLabels: {},
+      monthMarks: {}
+    },
+    emits: [`hover`, `unavailable`, `select`],
+    setup(l, {
+      expose: v,
+      emit: y
+    }) {
+      let b = l,
+        x = y,
+        {
+          t: S
+        } = u(),
+        C = o(null),
+        w = o(null),
+        T = o(false),
+        E = n([]),
+        D = [],
+        O = h(() => b.shape === `tower` ? 500 : b.result.days.length > 62 ? 480 : 420),
+        k = null,
+        A = null,
+        j = null,
+        M = false,
+        N = 0,
+        P = null,
+        F = -1,
+        I = false,
+        L = null,
+        R = null,
+        z = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
+        B = new _();
+      function V(e, t) {
+        D[t] = e instanceof HTMLElement ? e : null;
+      }
+      function H() {
+        return b.highlight ? new Set(b.highlight) : null;
+      }
+      function U(e) {
+        if (!k) return;
+        A && (k.scene.remove(A.root), A.dispose());
+        let t = {
+          dayLabels: b.dayLabels,
+          monthMarks: b.monthMarks
+        };
+        A = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), A.setColors(b.colors, b.theme), A.setHighlight(H()), k.scene.add(A.root), k.setFraming(A.framing), F = -1, D.length = 0, E.value = A.labels, A.startGrowth(e && !z);
+      }
+      function W() {
+        let e = C.value;
+        if (!k || !e) return;
+        let t = e.clientWidth,
+          n = e.clientHeight,
+          r = 1 / 0;
+        for (let e = E.value.length - 1; e >= 0; --e) {
+          let i = E.value[e],
+            a = D[e];
+          if (!i || !a) continue;
+          let o = k.project(i.position, t, n),
+            s = o.visible;
+          s && i.kind === `side` && (Math.abs(r - o.y) < Oe ? s = false : r = o.y);
+          let c = 1;
+          i.facing && (B.copy(k.camera.position).sub(i.position), B.dot(i.facing) < 0 && (c = ke)), a.style.visibility = s ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
+        }
+      }
+      function G(e) {
+        e ? (I = true, x(`hover`, e)) : I && (I = false, x(`hover`, null));
+      }
+      function K(e) {
+        A && e !== F && (F = e, A.setHovered(e), k?.requestRender());
+      }
+      function te() {
+        N = 0;
+        let e = P;
+        if (!e || !k || !A || T.value) return;
+        let t = A.pick(k.rayFromEvent(e));
+        K(t?.blockIndex ?? -1), G(t ? {
+          dayIndex: t.dayIndex,
+          bucket: t.bucket,
+          clientX: e.clientX,
+          clientY: e.clientY
+        } : null);
+      }
+      function ne(e) {
+        T.value || (P = e, N ||= requestAnimationFrame(te));
+      }
+      function q() {
+        P = null, N && cancelAnimationFrame(N), N = 0, K(-1), G(null);
+      }
+      function re(e) {
+        T.value = true, L = {
+          x: e.clientX,
+          y: e.clientY
+        }, q();
+      }
+      function J() {
+        T.value = false;
+      }
+      function ie(e) {
+        if (!L || !k || !A) return;
+        let t = Math.hypot(e.clientX - L.x, e.clientY - L.y);
+        if (L = null, t > Ae) return;
+        let n = A.pick(k.rayFromEvent(e));
+        R && clearTimeout(R), R = null, !(!n || e.detail > 1) && (R = setTimeout(() => {
+          R = null, x(`select`, n.dayIndex);
+        }, je));
+      }
+      function ae() {
+        R && clearTimeout(R), R = null, Z();
+      }
+      function Y(e) {
+        k && (k.controls.enableZoom = e.ctrlKey || e.metaKey);
+      }
+      function X() {
+        let e = C.value;
+        k && e && k.resize(e.clientWidth, e.clientHeight) && (M ? k.refit() : (M = true, k.flyIn(!z)));
+      }
+      function Z() {
+        k?.resetHome(true);
+      }
+      function Q(e) {
+        k?.flyToView(e);
+      }
+      async function se(e) {
+        return k ? k.freezeForExport(e) : null;
+      }
+      return v({
+        freezeForExport: se
+      }), a(() => b.result, () => {
+        k && (q(), U(true), k.resetHome(true));
+      }), a([() => b.colors, () => b.theme], () => {
+        A?.setColors(b.colors, b.theme), k?.requestRender();
+      }), a(() => b.highlight, () => {
+        A?.setHighlight(H()), k?.requestRender();
+      }), m(() => {
+        let e = w.value,
+          t = C.value;
+        if (e && t) {
+          if (k = ee.create(e, b.shape === `tower` ? De : Ee, {
+            onFrame: e => A?.stepGrowth(e) ?? false,
+            onRendered: W
+          }), !k) {
+            x(`unavailable`);
+            return;
+          }
+          U(true), t.addEventListener(`wheel`, Y, {
+            capture: true,
+            passive: true
+          }), window.addEventListener(`pointerup`, J), window.addEventListener(`pointercancel`, J), j = new ResizeObserver(X), j.observe(t);
+        }
+      }), f(() => {
+        N && cancelAnimationFrame(N), N = 0, R && clearTimeout(R), R = null, j?.disconnect(), j = null, C.value?.removeEventListener(`wheel`, Y, {
+          capture: true
+        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), A?.dispose(), A = null, k?.dispose(), k = null;
+      }), (n, a) => (c(), r(`div`, null, [g(`div`, {
+        ref_key: `containerRef`,
+        ref: C,
+        class: `relative select-none overflow-hidden`,
+        style: d({
+          height: `${O.value}px`
+        })
+      }, [g(`canvas`, {
+        ref_key: `canvasRef`,
+        ref: w,
+        class: e([`block h-full w-full`, T.value ? `cursor-grabbing` : `cursor-grab`]),
+        role: `img`,
+        "aria-label": l.label,
+        onPointermove: ne,
+        onPointerleave: q,
+        onPointerdown: re,
+        onClick: ie,
+        onDblclick: ae
+      }, null, 42, Se), g(`div`, Ce, [(c(true), r(s, null, i(E.value, (t, n) => (c(), r(`span`, {
+        key: t.key,
+        ref_for: true,
+        ref: e => V(e, n),
+        class: e([`absolute left-0 top-0 whitespace-nowrap text-xs leading-none`, t.kind === `hour` ? `text-[#bbb] dark:text-muted-foreground/70` : `font-medium text-[#888] dark:text-muted-foreground`]),
+        style: {
+          visibility: `hidden`
+        }
+      }, p(t.text), 3))), 128))]), g(`div`, we, [g(`button`, {
+        type: `button`,
+        class: `h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
+        onClick: a[0] ||= e => Q(`home`)
+      }, p(t(S)(`appBarcode.viewTilt`)), 1), g(`button`, {
+        type: `button`,
+        class: `h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
+        onClick: a[1] ||= e => Q(`top`)
+      }, p(t(S)(`appBarcode.viewTop`)), 1)])], 4), g(`p`, Te, p(t(S)(`todayWork.heatmap3dHint`)), 1)]));
+    }
+  });
+export { Me as default };

@@ -62,35 +62,35 @@ function x(event) {
     x = [],
     S = [],
     C = t(0),
-    w = t(!1),
-    T = t(!1);
+    w = t(false),
+    T = t(false);
   async function E() {
     try {
-      w.value = !0, C.value = await u.getCreditsBalance();
+      w.value = true, C.value = await u.getCreditsBalance();
     } catch {
       C.value = 0;
     } finally {
-      w.value = !1;
+      w.value = false;
     }
   }
   let D = t(null),
-    O = t(!1),
+    O = t(false),
     k = t(``),
     A = t(null),
-    j = t(!1);
+    j = t(false);
   async function M() {
     if (g.value) try {
       A.value = await window.electronAPI.checkAccessibility();
     } catch {
       A.value = {
-        required: !0,
-        granted: !1
+        required: true,
+        granted: false
       };
     }
   }
   async function N() {
     if (g.value) {
-      O.value = !0, k.value = ``;
+      O.value = true, k.value = ``;
       try {
         D.value = await f.getMacStatus();
         let e = D.value.items.find(e => e.key === `accessibility`);
@@ -101,7 +101,7 @@ function x(event) {
       } catch (e) {
         k.value = e instanceof Error ? e.message : s(`settings.permissionCheck.loadFailed`);
       } finally {
-        O.value = !1;
+        O.value = false;
       }
     }
   }
@@ -109,18 +109,18 @@ function x(event) {
     if (g.value) try {
       let e = await window.electronAPI.requestAccessibility();
       A.value = {
-        required: !0,
+        required: true,
         granted: e
       }, N();
     } catch {
       A.value = {
-        required: !0,
-        granted: !1
+        required: true,
+        granted: false
       };
     }
   }
   function F() {
-    g.value && (j.value = !0, N());
+    g.value && (j.value = true, N());
   }
   let I = t(null),
     L = a(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
@@ -182,7 +182,7 @@ function T(e) {
   o(w, e);
 }
 function E() {
-  return e(w, () => void 0);
+  return e(w, () => undefined);
 }
 var D = [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`];
 function O() {
@@ -199,7 +199,7 @@ function O() {
   return i(() => {
     _.value && (m.getStatus().then(e => {
       u.value = e;
-    }).catch(() => void 0), d = m.onStatusChanged(e => {
+    }).catch(() => undefined), d = m.onStatusChanged(e => {
       u.value = e;
     }));
   }), n(() => {

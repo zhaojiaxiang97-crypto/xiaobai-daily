@@ -325,38 +325,38 @@ var b = {
         tn = S === `darwin`,
         C = d(null),
         w = d(`history`),
-        T = d(!1),
+        T = d(false),
         E = d([]),
-        nn = d(!0),
-        rn = d(!1),
-        an = d(!1),
+        nn = d(true),
+        rn = d(false),
+        an = d(false),
         on = d(null),
         D = d(``),
         O = d([]),
-        sn = d(!0),
+        sn = d(true),
         k = d(``),
         cn = d(null),
-        A = d(!1),
+        A = d(false),
         j = d(``),
         M = d(``),
         ln = d(null),
         N = d(null),
         P = null,
         un = null,
-        F = d(!1),
+        F = d(false),
         I = d(null),
         L = d(``),
         R = d(``),
-        z = d(!1),
+        z = d(false),
         B = d(``),
         dn = d(null),
         V = d(null),
-        H = !1,
+        H = false,
         fn = 0,
         U = null,
         W = null,
         pn = null,
-        G = g(() => C.value?.enabled === !0),
+        G = g(() => C.value?.enabled === true),
         mn = g(() => Le(C.value?.effectiveShortcut || ``, S)),
         hn = g(() => !C.value?.shortcut),
         gn = g({
@@ -380,35 +380,35 @@ var b = {
                 title: x(`ConfirmEnableTitle`),
                 lines: [x(`ConfirmEnableDesc`)],
                 action: x(`ConfirmEnableAction`),
-                danger: !1
+                danger: false
               };
             case `enable-timeline`:
               return {
                 title: x(`ConfirmTimelineTitle`),
                 lines: [x(`ConfirmTimelineDesc1`), x(`ConfirmTimelineDesc2`), x(`ConfirmTimelineDesc3`)],
                 action: x(`ConfirmTimelineAction`),
-                danger: !0
+                danger: true
               };
             case `clear-history`:
               return {
                 title: x(`ConfirmClearTitle`),
                 lines: [x(`ConfirmClearDesc`)],
                 action: x(`ConfirmClearAction`),
-                danger: !0
+                danger: true
               };
             case `delete-phrase`:
               return {
                 title: x(`ConfirmDeletePhraseTitle`),
                 lines: [x(`ConfirmDeletePhraseDesc`)],
                 action: x(`ConfirmDeleteAction`),
-                danger: !0
+                danger: true
               };
             default:
               return {
                 title: ``,
                 lines: [],
                 action: ``,
-                danger: !1
+                danger: false
               };
           }
         }),
@@ -425,11 +425,11 @@ var b = {
       function K(e) {
         return e instanceof Error && e.message ? e.message : x(`OperationFailed`);
       }
-      function q(e, t = !1) {
+      function q(e, t = false) {
         t ? Ae(e) : ke(e);
       }
       function J(e) {
-        return P?.(!1), N.value = e, new Promise(e => {
+        return P?.(false), N.value = e, new Promise(e => {
           P = e;
         });
       }
@@ -441,18 +441,18 @@ var b = {
         try {
           C.value = await b.getState();
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       async function X(e) {
-        if (T.value) return !1;
-        T.value = !0;
+        if (T.value) return false;
+        T.value = true;
         try {
-          return C.value = await b.updateSettings(e), !0;
+          return C.value = await b.updateSettings(e), true;
         } catch (e) {
-          return q(K(e), !0), await Y(), !1;
+          return q(K(e), true), await Y(), false;
         } finally {
-          T.value = !1;
+          T.value = false;
         }
       }
       async function Sn() {
@@ -472,11 +472,11 @@ var b = {
       async function Z(e = {}) {
         if (e.append && (rn.value || !an.value || !on.value)) return;
         let t = ++fn;
-        e.append ? rn.value = !0 : e.silent || (nn.value = !0);
+        e.append ? rn.value = true : e.silent || (nn.value = true);
         try {
           let n = e.append ? $t : Math.min(100, Math.max($t, e.silent ? E.value.length : $t)),
             r = await b.listHistory({
-              keyword: D.value.trim() || void 0,
+              keyword: D.value.trim() || undefined,
               cursor: e.append ? on.value : null,
               pageSize: n
             });
@@ -487,18 +487,18 @@ var b = {
           } else E.value = r.items;
           an.value = r.hasMore, on.value = r.nextCursor;
         } catch (e) {
-          t === fn && q(K(e), !0);
+          t === fn && q(K(e), true);
         } finally {
-          e.append && (rn.value = !1), t === fn && (nn.value = !1);
+          e.append && (rn.value = false), t === fn && (nn.value = false);
         }
       }
       async function Q() {
         try {
           O.value = await b.listPhrases();
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         } finally {
-          sn.value = !1;
+          sn.value = false;
         }
       }
       function wn(e) {
@@ -510,46 +510,46 @@ var b = {
         try {
           await b.copyHistory(e.id), wn(`history:${e.id}`);
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       async function En(e) {
         try {
           await b.pinHistory(e.id, !e.isPinned), await Promise.all([Z({
-            silent: !0
+            silent: true
           }), Y()]);
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       async function Dn(e) {
         try {
           await b.deleteHistory(e.id), E.value = E.value.filter(t => t.id !== e.id), Y();
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       async function On() {
         if (await J(`clear-history`)) try {
           await b.clearHistory(), await Promise.all([Z({
-            silent: !0
+            silent: true
           }), Y()]);
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       async function kn(e) {
         try {
           await b.copyPhrase(e.id), e.useCount += 1, wn(`phrase:${e.id}`);
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       function An(e) {
-        I.value = e?.id ?? null, L.value = e?.title ?? ``, R.value = e?.content ?? ``, B.value = ``, F.value = !0, ae(() => dn.value?.focus());
+        I.value = e?.id ?? null, L.value = e?.title ?? ``, R.value = e?.content ?? ``, B.value = ``, F.value = true, ae(() => dn.value?.focus());
       }
       function jn() {
-        z.value || (F.value = !1);
+        z.value || (F.value = false);
       }
       async function Mn() {
         if (!z.value) {
@@ -557,7 +557,7 @@ var b = {
             B.value = x(`PhraseContentRequired`);
             return;
           }
-          z.value = !0, B.value = ``;
+          z.value = true, B.value = ``;
           try {
             await b.savePhrase({
               ...(I.value ? {
@@ -565,11 +565,11 @@ var b = {
               } : {}),
               title: L.value,
               content: R.value
-            }), F.value = !1, await Promise.all([Q(), Y()]);
+            }), F.value = false, await Promise.all([Q(), Y()]);
           } catch (e) {
             B.value = K(e);
           } finally {
-            z.value = !1;
+            z.value = false;
           }
         }
       }
@@ -583,11 +583,11 @@ var b = {
         if (un = null, t && n) try {
           await b.deletePhrase(n.id), O.value = O.value.filter(e => e.id !== n.id), Y();
         } catch (e) {
-          q(K(e), !0);
+          q(K(e), true);
         }
       }
       function Fn(e, t) {
-        V.value = e.id, H = !1, t.dataTransfer?.setData(`text/plain`, e.id), t.dataTransfer && (t.dataTransfer.effectAllowed = `move`);
+        V.value = e.id, H = false, t.dataTransfer?.setData(`text/plain`, e.id), t.dataTransfer && (t.dataTransfer.effectAllowed = `move`);
       }
       function In(e, event) {
         let n = V.value;
@@ -597,34 +597,34 @@ var b = {
           a = r.findIndex(t => t.id === e.id);
         if (i < 0 || a < 0) return;
         let [o] = r.splice(i, 1);
-        r.splice(a, 0, o), O.value = r, H = !0;
+        r.splice(a, 0, o), O.value = r, H = true;
       }
       async function Ln() {
         let e = H;
-        if (V.value = null, H = !1, e) try {
+        if (V.value = null, H = false, e) try {
           O.value = await b.reorderPhrases(O.value.map(e => e.id));
         } catch (e) {
-          q(K(e), !0), await Q();
+          q(K(e), true), await Q();
         }
       }
       async function Rn() {
         if (!(!G.value || T.value || A.value)) {
           try {
-            await b.setShortcutEditing(!0);
+            await b.setShortcutEditing(true);
           } catch (e) {
-            q(K(e), !0);
+            q(K(e), true);
             return;
           }
-          j.value = ``, M.value = ``, A.value = !0, ae(() => ln.value?.focus());
+          j.value = ``, M.value = ``, A.value = true, ae(() => ln.value?.focus());
         }
       }
       async function $() {
         if (A.value) {
-          A.value = !1, j.value = ``;
+          A.value = false, j.value = ``;
           try {
-            await b.setShortcutEditing(!1);
+            await b.setShortcutEditing(false);
           } catch (e) {
-            q(K(e), !0);
+            q(K(e), true);
           }
         }
       }
@@ -647,9 +647,9 @@ var b = {
           M.value = x(`ShortcutInvalid`);
           return;
         }
-        A.value = !1, j.value = ``, M.value = ``;
+        A.value = false, j.value = ``, M.value = ``;
         try {
-          await b.setShortcutEditing(!1);
+          await b.setShortcutEditing(false);
         } catch {}
         (await X({
           shortcut: a === C.value?.defaultShortcut ? `` : a
@@ -667,7 +667,7 @@ var b = {
           r = new Intl.DateTimeFormat(y.value, {
             hour: `2-digit`,
             minute: `2-digit`,
-            hour12: !1
+            hour12: false
           }).format(t),
           i = new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
         if (t.getTime() >= i) return r;
@@ -681,14 +681,14 @@ var b = {
           day: `2-digit`,
           hour: `2-digit`,
           minute: `2-digit`,
-          hour12: !1
+          hour12: false
         }).format(t);
       }
       function Hn(event) {
         if (w.value !== `history`) return;
         let t = event.currentTarget;
         t.scrollHeight - t.scrollTop - t.clientHeight <= en && Z({
-          append: !0
+          append: true
         });
       }
       return te(D, () => {
@@ -696,7 +696,7 @@ var b = {
           U = null, cn.value?.scrollTo({
             top: 0
           }), Z({
-            silent: !0
+            silent: true
           });
         }, 220);
       }), te(() => ue.active, e => {
@@ -705,16 +705,16 @@ var b = {
           return;
         }
         Y(), Z({
-          silent: !0
+          silent: true
         }), Q();
       }), oe(() => {
         pn = b.onChanged(e => {
           ue.active && (e.reasons.includes(`history`) && Z({
-            silent: !0
+            silent: true
           }), e.reasons.includes(`phrases`) && !F.value && !V.value && Q(), Y());
         }), Y(), Z(), Q();
       }), ie(() => {
-        $(), P?.(!1), P = null, pn?.();
+        $(), P?.(false), P = null, pn?.();
         for (let e of [U, W]) e !== null && window.clearTimeout(e);
       }), (te, d) => (p(), c(`div`, {
         ref_key: `scrollRef`,
@@ -747,7 +747,7 @@ var b = {
         onClick: Rn,
         onKeydown: zn,
         onBlur: $
-      }, h(A.value ? j.value || x(`ShortcutPress`) : mn.value), 43, tt), hn.value ? _(``, !0) : (p(), u(o(n), {
+      }, h(A.value ? j.value || x(`ShortcutPress`) : mn.value), 43, tt), hn.value ? _(``, true) : (p(), u(o(n), {
         key: 0,
         variant: `ghost`,
         size: `sm`,
@@ -757,8 +757,8 @@ var b = {
       }, {
         default: l(() => [s(h(x(`ShortcutReset`)), 1)]),
         _: 1
-      }, 8, [`disabled`]))])]), v(`div`, nt, [v(`div`, rt, [v(`strong`, it, [s(h(x(`TimelineTitle`)) + ` `, 1), C.value?.syncToTimeline ? (p(), c(`span`, at, h(x(`TimelineCloudBadge`)), 1)) : _(``, !0)]), v(`small`, ot, h(x(`TimelineDesc`)), 1)]), m(o(r), {
-        "model-value": C.value?.syncToTimeline === !0,
+      }, 8, [`disabled`]))])]), v(`div`, nt, [v(`div`, rt, [v(`strong`, it, [s(h(x(`TimelineTitle`)) + ` `, 1), C.value?.syncToTimeline ? (p(), c(`span`, at, h(x(`TimelineCloudBadge`)), 1)) : _(``, true)]), v(`small`, ot, h(x(`TimelineDesc`)), 1)]), m(o(r), {
+        "model-value": C.value?.syncToTimeline === true,
         "aria-label": x(`TimelineTitle`),
         disabled: !C.value || T.value,
         "onUpdate:modelValue": Cn
@@ -769,7 +769,7 @@ var b = {
         disabled: !C.value || T.value,
         label: x(`RetentionTitle`),
         compact: ``
-      }, null, 8, [`modelValue`, `options`, `disabled`, `label`])])])], 8, We), v(`section`, ft, [v(`header`, pt, [v(`div`, mt, [(p(!0), c(f, null, ee(bn.value, state => (p(), c(`button`, {
+      }, null, 8, [`modelValue`, `options`, `disabled`, `label`])])])], 8, We), v(`section`, ft, [v(`header`, pt, [v(`div`, mt, [(p(true), c(f, null, ee(bn.value, state => (p(), c(`button`, {
         key: state.value,
         type: `button`,
         role: `tab`,
@@ -796,7 +796,7 @@ var b = {
         onClick: d[3] ||= e => D.value = ``
       }, [m(o(de), {
         size: 13
-      })], 40, yt)) : _(``, !0)]), m(o(n), {
+      })], 40, yt)) : _(``, true)]), m(o(n), {
         variant: `outline`,
         size: `sm`,
         class: `shrink-0 text-xs`,
@@ -824,7 +824,7 @@ var b = {
         size: 20
       }), s(h(x(`Loading`)), 1)])) : E.value.length === 0 ? (p(), c(`div`, St, [m(o(me), {
         size: 26
-      }), v(`strong`, Ct, h(yn.value), 1), D.value.trim() ? _(``, !0) : (p(), c(`small`, wt, h(G.value ? x(`HistoryEmptyDesc`) : x(`HistoryDisabledDesc`)), 1))])) : (p(), c(`div`, Tt, [(p(!0), c(f, null, ee(E.value, e => (p(), c(`article`, {
+      }), v(`strong`, Ct, h(yn.value), 1), D.value.trim() ? _(``, true) : (p(), c(`small`, wt, h(G.value ? x(`HistoryEmptyDesc`) : x(`HistoryDisabledDesc`)), 1))])) : (p(), c(`div`, Tt, [(p(true), c(f, null, ee(E.value, e => (p(), c(`article`, {
         key: e.id,
         class: a([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, e.isPinned ? `bg-primary/[0.04]` : ``])
       }, [v(`button`, {
@@ -836,13 +836,13 @@ var b = {
         key: 0,
         size: 11,
         class: `text-primary`
-      })) : _(``, !0), v(`span`, null, h(x(`Characters`, {
+      })) : _(``, true), v(`span`, null, h(x(`Characters`, {
         n: e.characterCount.toLocaleString()
       })), 1), d[12] ||= v(`i`, {
         class: `not-italic`
       }, `·`, -1), e.copyCount > 1 ? (p(), c(`span`, kt, h(x(`CopyCount`, {
         n: e.copyCount
-      })), 1)) : _(``, !0), e.copyCount > 1 ? (p(), c(`i`, At, `·`)) : _(``, !0), v(`time`, {
+      })), 1)) : _(``, true), e.copyCount > 1 ? (p(), c(`i`, At, `·`)) : _(``, true), v(`time`, {
         datetime: e.copiedAt
       }, h(Vn(e.copiedAt)), 9, jt)])], 8, Et), v(`div`, Mt, [m(o(n), {
         variant: `ghost`,
@@ -891,14 +891,14 @@ var b = {
       }, 8, [`title`, `aria-label`, `onClick`])])], 2))), 128)), rn.value ? (p(), c(`div`, Nt, [m(o(he), {
         class: `animate-spin`,
         size: 15
-      }), s(h(x(`LoadingMore`)), 1)])) : _(``, !0)]))], 64)) : (p(), c(f, {
+      }), s(h(x(`LoadingMore`)), 1)])) : _(``, true)]))], 64)) : (p(), c(f, {
         key: 1
       }, [sn.value ? (p(), c(`div`, Pt, [m(o(he), {
         class: `animate-spin`,
         size: 20
       }), s(h(x(`Loading`)), 1)])) : O.value.length === 0 ? (p(), c(`div`, Ft, [m(o(me), {
         size: 26
-      }), v(`strong`, It, h(x(`PhrasesEmpty`)), 1), v(`small`, Lt, h(x(`PhrasesEmptyDesc`)), 1)])) : (p(), c(`div`, Rt, [(p(!0), c(f, null, ee(O.value, e => (p(), c(`article`, {
+      }), v(`strong`, It, h(x(`PhrasesEmpty`)), 1), v(`small`, Lt, h(x(`PhrasesEmptyDesc`)), 1)])) : (p(), c(`div`, Rt, [(p(true), c(f, null, ee(O.value, e => (p(), c(`article`, {
         key: e.id,
         class: a([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, V.value === e.id ? `opacity-50` : ``]),
         onDragover: t => In(e, t),
@@ -917,7 +917,7 @@ var b = {
         class: `flex min-w-0 flex-1 flex-col gap-1 px-1 py-2 text-left`,
         title: x(`Copy`),
         onClick: t => kn(e)
-      }, [e.title ? (p(), c(`strong`, Ht, h(e.title), 1)) : _(``, !0), v(`p`, {
+      }, [e.title ? (p(), c(`strong`, Ht, h(e.title), 1)) : _(``, true), v(`p`, {
         class: a([`line-clamp-3 whitespace-pre-wrap break-words text-[13px] leading-relaxed`, e.title ? `text-muted-foreground` : ``])
       }, h(e.content), 3), v(`span`, Ut, [v(`span`, null, h(x(`Characters`, {
         n: e.content.length.toLocaleString()
@@ -927,7 +927,7 @@ var b = {
         class: `not-italic`
       }, `·`, -1), v(`span`, null, h(x(`UseCount`, {
         n: e.useCount
-      })), 1)], 64)) : _(``, !0)])], 8, Vt), v(`div`, Wt, [m(o(n), {
+      })), 1)], 64)) : _(``, true)])], 8, Vt), v(`div`, Wt, [m(o(n), {
         variant: `ghost`,
         size: `icon-sm`,
         class: a(k.value === `phrase:${e.id}` ? `text-primary` : `text-muted-foreground`),
@@ -999,7 +999,7 @@ var b = {
             maxlength: o(Fe),
             placeholder: x(`PhraseContentPlaceholder`),
             onKeydown: Nn
-          }, null, 40, Yt), [[se, R.value]])]), B.value ? (p(), c(`p`, Xt, h(B.value), 1)) : _(``, !0), m(o(xe), {
+          }, null, 40, Yt), [[se, R.value]])]), B.value ? (p(), c(`p`, Xt, h(B.value), 1)) : _(``, true), m(o(xe), {
             class: `items-center sm:justify-between`
           }, {
             default: l(() => [v(`small`, Zt, h(x(`PhraseSaveHint`, {
@@ -1019,7 +1019,7 @@ var b = {
                 key: 0,
                 class: `animate-spin`,
                 size: 14
-              })) : _(``, !0), s(h(x(`Save`)), 1)]),
+              })) : _(``, true), s(h(x(`Save`)), 1)]),
               _: 1
             }, 8, [`disabled`])])]),
             _: 1
@@ -1030,7 +1030,7 @@ var b = {
       }, 8, [`open`]), m(o(we), {
         open: !!N.value,
         "onUpdate:open": d[11] ||= e => {
-          e || xn(!1);
+          e || xn(false);
         }
       }, {
         default: l(() => [m(o(Ce), null, {
@@ -1041,7 +1041,7 @@ var b = {
             }), m(o(Te), {
               class: `flex flex-col gap-1.5`
             }, {
-              default: l(() => [(p(!0), c(f, null, ee(vn.value.lines, e => (p(), c(`span`, {
+              default: l(() => [(p(true), c(f, null, ee(vn.value.lines, e => (p(), c(`span`, {
                 key: e
               }, h(e), 1))), 128))]),
               _: 1
@@ -1050,13 +1050,13 @@ var b = {
           }), m(o(De), null, {
             default: l(() => [m(o(n), {
               variant: `outline`,
-              onClick: d[9] ||= e => xn(!1)
+              onClick: d[9] ||= e => xn(false)
             }, {
               default: l(() => [s(h(x(`Cancel`)), 1)]),
               _: 1
             }), m(o(n), {
               variant: vn.value.danger ? `destructive` : `default`,
-              onClick: d[10] ||= e => xn(!0)
+              onClick: d[10] ||= e => xn(true)
             }, {
               default: l(() => [s(h(vn.value.action), 1)]),
               _: 1
@@ -1094,10 +1094,10 @@ var b = {
         tool: n.tool,
         user: n.user,
         "credits-balance": n.creditsBalance,
-        "voice-tool": !1,
-        "show-history": !1,
+        "voice-tool": false,
+        "show-history": false,
         "local-tool": ``,
-        "show-balance": !1,
+        "show-balance": false,
         onBack: t[0] ||= e => r(`back`),
         onRecharge: t[1] ||= e => r(`recharge`)
       }, null, 8, [`tool`, `user`, `credits-balance`]), m(x, {

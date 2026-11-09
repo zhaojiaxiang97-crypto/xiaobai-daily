@@ -73,7 +73,7 @@ var S = {
         multiple: ``,
         accept: `image/jpeg,image/png,image/webp,image/bmp,image/tiff,image/gif,image/heic,image/heif,.heic,.heif`,
         onChange: N
-      }, null, 544), g(`div`, S, [(c(!0), r(s, null, i(d.items, (i, o) => (c(), r(`article`, {
+      }, null, 544), g(`div`, S, [(c(true), r(s, null, i(d.items, (i, o) => (c(), r(`article`, {
         key: i.id,
         class: t([`grid h-[78px] w-[250px] min-w-0 shrink-0 grid-cols-[48px_minmax(0,1fr)_26px] items-center gap-2 rounded-[10px] border bg-card p-[7px]`, i.error ? `border-destructive/45` : `border-border`])
       }, [g(`div`, C, [i.previewFailed ? (c(), a(n(e), {
@@ -84,11 +84,11 @@ var S = {
         class: `size-full object-cover`,
         src: i.previewUrl,
         alt: i.name,
-        onError: e => i.previewFailed = !0
+        onError: e => i.previewFailed = true
       }, null, 40, w)), g(`span`, T, f(o + 1), 1), i.uploading ? (c(), r(`span`, E, [u(n(y), {
         size: 18,
         class: `animate-spin`
-      })])) : h(``, !0)]), g(`div`, D, [g(`strong`, O, f(i.name), 1), i.error ? (c(), r(`span`, k, f(i.error), 1)) : (c(), r(`span`, A, f(i.uploading ? n(p)(`toolboxNative.uploading`) : b(i.size)), 1))]), g(`button`, {
+      })])) : h(``, true)]), g(`div`, D, [g(`strong`, O, f(i.name), 1), i.error ? (c(), r(`span`, k, f(i.error), 1)) : (c(), r(`span`, A, f(i.uploading ? n(p)(`toolboxNative.uploading`) : b(i.size)), 1))]), g(`button`, {
         type: `button`,
         class: `inline-flex size-[26px] items-center justify-center rounded-[7px] text-muted-foreground transition-colors hover:bg-muted hover:text-destructive`,
         "aria-label": n(p)(`toolboxNative.removeReferenceImage`),
@@ -102,14 +102,14 @@ var S = {
         hint: `${n(p)(`toolboxNative.jpgPngWebpAndMoreMaximumPerImage`)} ${d.maxMb}MB`,
         onSelect: l[0] ||= e => m.value?.click(),
         onDrop: d.addFiles
-      }, null, 8, [`title`, `hint`, `onDrop`])) : h(``, !0)]), d.error ? (c(), r(`p`, M, f(d.error), 1)) : h(``, !0)], 64));
+      }, null, 8, [`title`, `hint`, `onDrop`])) : h(``, true)]), d.error ? (c(), r(`p`, M, f(d.error), 1)) : h(``, true)], 64));
     }
   });
 function P() {
   return typeof crypto.randomUUID == `function` ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 function F(e) {
-  return new Set([`image/jpeg`, `image/png`, `image/webp`, `image/bmp`, `image/x-ms-bmp`, `image/tiff`, `image/gif`, `image/heic`, `image/heif`]).has(e.type.toLocaleLowerCase()) ? !0 : /\.(jpe?g|png|webp|bmp|tiff?|gif|heic|heif)$/i.test(e.name);
+  return new Set([`image/jpeg`, `image/png`, `image/webp`, `image/bmp`, `image/x-ms-bmp`, `image/tiff`, `image/gif`, `image/heic`, `image/heif`]).has(e.type.toLocaleLowerCase()) ? true : /\.(jpe?g|png|webp|bmp|tiff?|gif|heic|heif)$/i.test(e.name);
 }
 function I(e) {
   let t = o([]),
@@ -120,7 +120,7 @@ function I(e) {
     s = p(() => t.value.some(e => e.error || !e.token));
   async function c(t) {
     if (!e.user.value) return;
-    t.uploading = !0, t.error = ``;
+    t.uploading = true, t.error = ``;
     let n = new FormData();
     n.append(`file`, t.file, t.name);
     let i = new AbortController();
@@ -138,7 +138,7 @@ function I(e) {
       if (i.signal.aborted) return;
       t.error = n instanceof DOMException && n.name === `AbortError` ? e.t(`toolboxNative.uploadTimedOutRemoveTheFileAndTryAgain`) : n instanceof Error ? e.translateRemoteText(n.message) : e.t(`toolboxNative.uploadFailed`);
     } finally {
-      r.delete(t.id), t.uploading = !1;
+      r.delete(t.id), t.uploading = false;
     }
   }
   async function l(items) {
@@ -175,9 +175,9 @@ function I(e) {
         name: i.name,
         size: i.size,
         previewUrl: URL.createObjectURL(i),
-        previewFailed: !1,
+        previewFailed: false,
         token: ``,
-        uploading: !0,
+        uploading: true,
         error: ``
       });
       t.value.push(r), o.push(r);

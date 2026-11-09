@@ -5,13 +5,13 @@ function a() {
   let {
       user: a
     } = i(),
-    o = !0,
+    o = true,
     s = 0;
   t(() => {
-    o = !0;
+    o = true;
   });
   let c = () => {
-    o = !1, s += 1;
+    o = false, s += 1;
   };
   e(c), n(c);
   function l() {

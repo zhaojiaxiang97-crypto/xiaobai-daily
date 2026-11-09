@@ -40,11 +40,11 @@ var h = [`disabled`],
     }) {
       let x = s,
         S = b,
-        C = a(!1),
+        C = a(false),
         w = u(() => x.layout === `column` ? `min-h-24 flex-col items-center justify-center gap-1.5 px-4 py-5 text-center` : `min-h-[60px] items-center gap-3 px-3.5 py-3 text-left`),
         T = u(() => C.value ? `border-primary bg-primary/10` : x.selected ? `border-primary/40 bg-primary/[0.05] hover:border-primary hover:bg-primary/[0.08]` : `border-primary/35 bg-primary/[0.03] hover:border-primary hover:bg-primary/[0.07]`);
       function E(e) {
-        C.value = !1, !x.disabled && S(`drop`, Array.from(e.dataTransfer?.files || []));
+        C.value = false, !x.disabled && S(`drop`, Array.from(e.dataTransfer?.files || []));
       }
       return (a, u) => (o(), i(`button`, {
         type: `button`,
@@ -53,13 +53,13 @@ var h = [`disabled`],
         onClick: u[0] ||= e => S(`select`),
         onDragenter: u[1] ||= p(e => C.value = !s.disabled, [`prevent`]),
         onDragover: u[2] ||= p(e => C.value = !s.disabled, [`prevent`]),
-        onDragleave: u[3] ||= p(e => C.value = !1, [`prevent`]),
+        onDragleave: u[3] ||= p(e => C.value = false, [`prevent`]),
         onDrop: p(E, [`prevent`])
       }, [f(`span`, g, [r(a.$slots, `icon`, {}, () => [c(n(m), {
         size: 18
       })])]), f(`span`, {
         class: t([`min-w-0`, s.layout === `column` ? `` : `flex-1`])
-      }, [f(`strong`, _, l(s.title), 1), s.hint ? (o(), i(`small`, v, l(s.hint), 1)) : d(``, !0)], 2), s.note ? (o(), i(`em`, y, l(s.note), 1)) : d(``, !0)], 42, h));
+      }, [f(`strong`, _, l(s.title), 1), s.hint ? (o(), i(`small`, v, l(s.hint), 1)) : d(``, true)], 2), s.note ? (o(), i(`em`, y, l(s.note), 1)) : d(``, true)], 42, h));
     }
   });
 export { b as t };

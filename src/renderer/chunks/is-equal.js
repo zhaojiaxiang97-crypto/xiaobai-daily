@@ -28,7 +28,7 @@ var r = function () {
     compare(e, t) {
       let r = typeof e,
         i = typeof t;
-      return r === `string` && i === `string` ? n(e, t) : r === `number` && i === `number` ? e - t : n(this.serialize(e, !0), this.serialize(t, !0));
+      return r === `string` && i === `string` ? n(e, t) : r === `number` && i === `number` ? e - t : n(this.serialize(e, true), this.serialize(t, true));
     }
     serialize(e, t) {
       if (e === null) return `null`;
@@ -48,7 +48,7 @@ var r = function () {
       let t = Object.prototype.toString.call(e);
       if (t !== `[object Object]`) return this.serializeBuiltInType(t.length < 10 ? `unknown:${t}` : t.slice(8, -1), e);
       let r = e.constructor,
-        i = r === Object || r === void 0 ? `` : r.name;
+        i = r === Object || r === undefined ? `` : r.name;
       if (i !== `` && globalThis[i] === r) return this.serializeBuiltInType(i, e);
       if (`toJSON` in e && typeof e.toJSON == `function`) {
         let t = e.toJSON();
@@ -73,13 +73,13 @@ var r = function () {
         r = `${e}{`;
       for (let e = 0; e < n.length; e++) {
         let [t, i] = n[e];
-        r += `${this.serialize(t, !0)}:${this.serialize(i)}`, e < n.length - 1 && (r += `,`);
+        r += `${this.serialize(t, true)}:${this.serialize(i)}`, e < n.length - 1 && (r += `,`);
       }
       return r + `}`;
     }
     $object(e) {
       let t = this.#e.get(e);
-      return t === void 0 && (this.#e.set(e, `#${this.#e.size}`), t = this.serializeObject(e), this.#e.set(e, t)), t;
+      return t === undefined && (this.#e.set(e, `#${this.#e.size}`), t = this.serializeObject(e), this.#e.set(e, t)), t;
     }
     $function(e) {
       let t = Function.prototype.toString.call(e);

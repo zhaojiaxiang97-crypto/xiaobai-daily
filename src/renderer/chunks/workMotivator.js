@@ -38,14 +38,14 @@ function je(e, t, n) {
   for (let n = 0; n < e; n++) u.push({
     x: c + E / 2,
     power: t + e - 1 - n,
-    decimal: !1
+    decimal: false
   }), c += o;
   let d = null;
   t && (d = c, c += D);
   for (let e = 0; e < t; e++) u.push({
     x: c + E / 2,
     power: t - 1 - e,
-    decimal: !0
+    decimal: true
   }), c += o;
   return {
     cellWidth: s,
@@ -72,7 +72,7 @@ var k = .5,
       this.stopAll(), this.reels = items.map(e => ({
         ...e,
         index: 0,
-        continuous: !1,
+        continuous: false,
         animation: null
       }));
       for (let e of this.reels) e.index = this.digitAt(t, e.power), this.place(e, e.index);
@@ -101,7 +101,7 @@ var k = .5,
       e.strip.style.transform = this.offset(t);
     }
     startContinuous(e, t) {
-      e.animation?.cancel(), e.continuous = !0;
+      e.animation?.cancel(), e.continuous = true;
       let n = this.baseUnits / 10 ** e.power % 10;
       e.animation = e.strip.animate([{
         transform: this.offset(n)
@@ -114,7 +114,7 @@ var k = .5,
       });
     }
     stopContinuous(e, t) {
-      e.continuous = !1, e.animation?.cancel(), e.animation = null, e.index = t, this.place(e, t);
+      e.continuous = false, e.animation?.cancel(), e.animation = null, e.index = t, this.place(e, t);
     }
     stepTo(e, t, n) {
       if (t === e.index && !e.animation) return;
@@ -148,7 +148,7 @@ var k = .5,
         i = Math.max(0, (r - this.baseUnits) / this.unitsPerMs - (performance.now() - this.baseTime));
       this.carryTimer = window.setTimeout(() => {
         this.carryTimer = null;
-        for (let t of e) this.stepTo(t, this.digitAt(r, t.power), !0);
+        for (let t of e) this.stepTo(t, this.digitAt(r, t.power), true);
         this.scheduleCarry();
       }, i);
     }
@@ -157,7 +157,7 @@ var k = .5,
     }
     stopAll() {
       this.clearCarryTimer();
-      for (let e of this.reels) e.animation?.cancel(), e.animation = null, e.continuous = !1;
+      for (let e of this.reels) e.animation?.cancel(), e.animation = null, e.continuous = false;
     }
   },
   Ne = {
@@ -236,64 +236,64 @@ var k = .5,
           turns: 1,
           durationMs: 1100,
           ringCount: 0,
-          pop: !1,
-          shake: !1,
+          pop: false,
+          shake: false,
           text: `none`,
           sparks: 0
         }, {
           turns: 2,
           durationMs: 1300,
           ringCount: 1,
-          pop: !1,
-          shake: !1,
+          pop: false,
+          shake: false,
           text: `none`,
           sparks: 0
         }, {
           turns: 2,
           durationMs: 1400,
           ringCount: 1,
-          pop: !0,
-          shake: !1,
+          pop: true,
+          shake: false,
           text: `burst`,
           sparks: 0
         }, {
           turns: 3,
           durationMs: 1600,
           ringCount: 2,
-          pop: !0,
-          shake: !1,
+          pop: true,
+          shake: false,
           text: `burst`,
           sparks: 8
         }, {
           turns: 3,
           durationMs: 1800,
           ringCount: 2,
-          pop: !0,
-          shake: !0,
+          pop: true,
+          shake: true,
           text: `burst`,
           sparks: 12
         }, {
           turns: 4,
           durationMs: 2100,
           ringCount: 3,
-          pop: !0,
-          shake: !0,
+          pop: true,
+          shake: true,
           text: `milestone`,
           sparks: 18
         }],
         E = c(null),
         D = c(Date.now()),
         O = n(null),
-        k = c(!1),
-        A = c(!1),
-        j = c(!1),
+        k = c(false),
+        A = c(false),
+        j = c(false),
         M = n(null),
         N = c(null),
         st = c(null),
         P = c(null),
         F = window.matchMedia(`(prefers-reduced-motion: reduce)`),
         I = new Me(50),
-        L = !1,
+        L = false,
         R = null,
         z = null,
         B = ``,
@@ -304,7 +304,7 @@ var k = .5,
         H = null,
         U = 0,
         dt = 0,
-        W = !1,
+        W = false,
         G = g(() => E.value?.decimals ?? 3),
         ft = g(() => {
           if (!E.value) return 3;
@@ -388,7 +388,7 @@ var k = .5,
       function Z() {
         if (!E.value) return;
         let e = Date.now();
-        D.value = e, O.value = xe(E.value, e), k.value && It(), Q(!1), Ft();
+        D.value = e, O.value = xe(E.value, e), k.value && It(), Q(false), Ft();
       }
       function Ft() {
         let e = O.value,
@@ -427,7 +427,7 @@ var k = .5,
         e.length === cells.length && (I.attach(cells.map((t, n) => ({
           strip: e[n],
           power: t.power
-        })), J.value), L = !0, B = ``, Q(!0));
+        })), J.value), L = true, B = ``, Q(true));
       }
       function zt(e) {
         let t = E.value;
@@ -487,13 +487,13 @@ var k = .5,
         P.value && (P.value.style.transform = ``);
       }
       function Ut() {
-        k.value = !0, It();
+        k.value = true, It();
       }
       function Wt() {
-        k.value = !1, Ht();
+        k.value = false, Ht();
       }
       function Gt(event) {
-        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (H = event.pointerId, U = event.screenX, dt = event.screenY, W = !1, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
+        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (H = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
           screenX: event.screenX,
           screenY: event.screenY
         })));
@@ -504,7 +504,7 @@ var k = .5,
             $(e);
             return;
           }
-          !W && Math.hypot(e.screenX - U, e.screenY - dt) >= it && (W = !0, A.value = !E.value?.locked, Ht()), W && workMotivatorAPI?.dragMove({
+          !W && Math.hypot(e.screenX - U, e.screenY - dt) >= it && (W = true, A.value = !E.value?.locked, Ht()), W && workMotivatorAPI?.dragMove({
             screenX: e.screenX,
             screenY: e.screenY
           });
@@ -513,7 +513,7 @@ var k = .5,
       function $(event) {
         if (H === null || event && H !== event.pointerId) return;
         let t = H;
-        H = null, A.value = !1, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
+        H = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
       }
       function qt(e) {
         Vt(e), Kt(e);
@@ -542,21 +542,21 @@ var k = .5,
         });
       }
       function $t() {
-        document.visibilityState === `visible` && (Z(), Q(!0));
+        document.visibilityState === `visible` && (Z(), Q(true));
       }
       function en() {
         $(null);
       }
       return o(pt, () => {
         Rt();
-      }), o(q, () => Q(!0)), o(() => E.value?.earnedRange, () => Q(!0)), re(async () => {
+      }), o(q, () => Q(true)), o(() => E.value?.earnedRange, () => Q(true)), re(async () => {
         document.documentElement.classList.add(`work-motivator-renderer`), document.body.classList.add(`work-motivator-renderer`), ut = workMotivatorAPI?.onWindowState(Pt) ?? null;
         try {
           let e = await workMotivatorAPI?.getWindowState();
           e?.ok && Pt(e.data);
         } catch {}
         await Rt(), Bt(), requestAnimationFrame(() => {
-          j.value = !0;
+          j.value = true;
         }), window.addEventListener(`blur`, en), document.addEventListener(`visibilitychange`, $t);
       }), te(() => {
         ut?.(), R !== null && window.clearTimeout(R), z !== null && window.clearTimeout(z), window.removeEventListener(`blur`, en), document.removeEventListener(`visibilitychange`, $t), I.dispose();
@@ -594,7 +594,7 @@ var k = .5,
         class: `wm-led wm-label-led`
       }, null, -1), r(m(_t.value), 1)]), v(`span`, Ve, m(yt.value), 1)]), v(`div`, {
         class: e([`wm-window`, M.value ? {
-          "is-celebrating": !0,
+          "is-celebrating": true,
           "has-ring": M.value.setting.ringCount > 0,
           "has-pop": M.value.setting.pop && !M.value.setting.shake,
           "has-shake": M.value.setting.shake
@@ -609,7 +609,7 @@ var k = .5,
           left: `${K.value.currencyX}px`,
           width: `${K.value.currencyWidth}px`
         })
-      }, m(E.value.currency), 7), (u(!0), i(l, null, a(K.value.cells, (n, r) => (u(), i(`span`, {
+      }, m(E.value.currency), 7), (u(true), i(l, null, a(K.value.cells, (n, r) => (u(), i(`span`, {
         key: `${pt.value}-${n.power}`,
         class: e([`wm-reel`, {
           "is-decimal": n.decimal,
@@ -629,12 +629,12 @@ var k = .5,
         style: p({
           fontSize: mt.value
         })
-      }, [(u(!0), i(l, null, a(t(x), (e, n) => (u(), i(`span`, {
+      }, [(u(true), i(l, null, a(t(x), (e, n) => (u(), i(`span`, {
         key: n,
         style: p({
           height: `${t(34)}px`
         })
-      }, m(e), 5))), 128))], 4)], 4)], 6))), 128)), K.value.dotX === null ? _(``, !0) : (u(), i(`i`, {
+      }, m(e), 5))), 128))], 4)], 4)], 6))), 128)), K.value.dotX === null ? _(``, true) : (u(), i(`i`, {
         key: 0,
         class: e([`wm-dot`, {
           "is-covered": q.value
@@ -656,7 +656,7 @@ var k = .5,
         style: p({
           top: `${jt.value - 4}px`
         })
-      }, m(M.value.text), 7)) : _(``, !0), (u(!0), i(l, null, a(M.value.sparks, t => (u(), i(`i`, {
+      }, m(M.value.text), 7)) : _(``, true), (u(true), i(l, null, a(M.value.sparks, t => (u(), i(`i`, {
         key: `spark-${M.value.id}-${t.id}`,
         class: e([`wm-spark`, {
           "is-accent": t.accent
@@ -669,7 +669,7 @@ var k = .5,
           "--wm-spark-y": `${t.dy}px`,
           animationDelay: `${t.delay}ms`
         })
-      }, null, 6))), 128))], 64)) : _(``, !0), v(`div`, {
+      }, null, 6))), 128))], 64)) : _(``, true), v(`div`, {
         class: `wm-groove wm-collapsed-only`,
         title: Tt.value
       }, [v(`i`, {
@@ -747,11 +747,11 @@ var k = .5,
       }, [f(t(oe), {
         size: 13,
         "stroke-width": 2
-      })], 8, tt)], 2)], 34)) : _(``, !0)], 6));
+      })], 8, tt)], 2)], 34)) : _(``, true)], 6));
     }
   }), [[`__scopeId`, `data-v-9b077951`]]),
   N = h({
-    legacy: !1,
+    legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
     messages: {
@@ -762,7 +762,7 @@ var k = .5,
         toolboxNative: b
       }
     },
-    missingWarn: !1,
-    fallbackWarn: !1
+    missingWarn: false,
+    fallbackWarn: false
   });
 y(M).use(N).mount(`#app`);

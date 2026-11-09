@@ -3072,8 +3072,8 @@ function readConfig() {
     };
     return {
       version: CONFIG_VERSION,
-      customDataDir: typeof parsed.customDataDir === "string" && path.isAbsolute(parsed.customDataDir) ? path.resolve(parsed.customDataDir) : void 0,
-      lastMigrationError: typeof parsed.lastMigrationError === "string" ? parsed.lastMigrationError : void 0
+      customDataDir: typeof parsed.customDataDir === "string" && path.isAbsolute(parsed.customDataDir) ? path.resolve(parsed.customDataDir) : undefined,
+      lastMigrationError: typeof parsed.lastMigrationError === "string" ? parsed.lastMigrationError : undefined
     };
   } catch {
     return {
@@ -3204,7 +3204,7 @@ function migrateDatabaseStorage(customDataDir) {
     validateCopiedDatabases(targetDataDir, databaseFiles);
     writeConfig({
       version: CONFIG_VERSION,
-      customDataDir: normalizedCustomDataDir || void 0
+      customDataDir: normalizedCustomDataDir || undefined
     });
     for (const filename of databaseFiles) try {
       unlinkSync(path.join(sourceDataDir, filename));
@@ -3923,7 +3923,7 @@ var makeIssue = params => {
     ...issueData,
     path: fullPath
   };
-  if (issueData.message !== void 0) return {
+  if (issueData.message !== undefined) return {
     ...issueData,
     path: fullPath,
     message: issueData.message
@@ -3946,7 +3946,7 @@ function addIssueToContext(ctx, issueData) {
     issueData,
     data: ctx.data,
     path: ctx.path,
-    errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, overrideMap, overrideMap === errorMap ? void 0 : errorMap].filter(x => !!x)
+    errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, overrideMap, overrideMap === errorMap ? undefined : errorMap].filter(x => !!x)
   });
   ctx.common.issues.push(issue);
 }
@@ -4374,7 +4374,7 @@ var ZodType = class {
     return ZodReadonly.create(this);
   }
   isOptional() {
-    return this.safeParse(void 0).success;
+    return this.safeParse(undefined).success;
   }
   isNullable() {
     return this.safeParse(null).success;
@@ -4454,7 +4454,7 @@ var ZodString = class ZodString extends ZodType {
       return INVALID;
     }
     const status = new ParseStatus();
-    let ctx = void 0;
+    let ctx = undefined;
     for (const check of this._def.checks) if (check.kind === "min") {
       if (input.data.length < check.value) {
         ctx = this._getOrReturnCtx(input, ctx);
@@ -5034,7 +5034,7 @@ var ZodNumber = class ZodNumber extends ZodType {
       });
       return INVALID;
     }
-    let ctx = void 0;
+    let ctx = undefined;
     const status = new ParseStatus();
     for (const check of this._def.checks) if (check.kind === "int") {
       if (!util.isInteger(input.data)) {
@@ -5240,7 +5240,7 @@ var ZodBigInt = class ZodBigInt extends ZodType {
       return this._getInvalidInput(input);
     }
     if (this._getType(input) !== ZodParsedType.bigint) return this._getInvalidInput(input);
-    let ctx = void 0;
+    let ctx = undefined;
     const status = new ParseStatus();
     for (const check of this._def.checks) if (check.kind === "min") {
       if (check.inclusive ? input.data < check.value : input.data <= check.value) {
@@ -5423,7 +5423,7 @@ var ZodDate = class ZodDate extends ZodType {
       return INVALID;
     }
     const status = new ParseStatus();
-    let ctx = void 0;
+    let ctx = undefined;
     for (const check of this._def.checks) if (check.kind === "min") {
       if (input.data.getTime() < check.value) {
         ctx = this._getOrReturnCtx(input, ctx);
@@ -5647,8 +5647,8 @@ var ZodArray = class ZodArray extends ZodType {
       if (tooBig || tooSmall) {
         addIssueToContext(ctx, {
           code: tooBig ? ZodIssueCode.too_big : ZodIssueCode.too_small,
-          minimum: tooSmall ? def.exactLength.value : void 0,
-          maximum: tooBig ? def.exactLength.value : void 0,
+          minimum: tooSmall ? def.exactLength.value : undefined,
+          maximum: tooBig ? def.exactLength.value : undefined,
           type: "array",
           inclusive: true,
           exact: true,
@@ -5870,7 +5870,7 @@ var ZodObject = class ZodObject extends ZodType {
     return new ZodObject({
       ...this._def,
       unknownKeys: "strict",
-      ...(message !== void 0 ? {
+      ...(message !== undefined ? {
         errorMap: (issue, ctx) => {
           const defaultError = this._def.errorMap?.(issue, ctx).message ?? ctx.defaultError;
           if (issue.code === "unrecognized_keys") return {
@@ -6044,7 +6044,7 @@ var ZodUnion = class extends ZodType {
         ctx: childCtx
       };
     })).then(handleResults);else {
-      let dirty = void 0;
+      let dirty = undefined;
       const issues = [];
       for (const option of options) {
         const childCtx = {
@@ -6090,7 +6090,7 @@ ZodUnion.create = (types, params) => {
   });
 };
 var getDiscriminator = type => {
-  if (type instanceof ZodLazy) return getDiscriminator(type.schema);else if (type instanceof ZodEffects) return getDiscriminator(type.innerType());else if (type instanceof ZodLiteral) return [type.value];else if (type instanceof ZodEnum) return type.options;else if (type instanceof ZodNativeEnum) return util.objectValues(type.enum);else if (type instanceof ZodDefault) return getDiscriminator(type._def.innerType);else if (type instanceof ZodUndefined) return [void 0];else if (type instanceof ZodNull) return [null];else if (type instanceof ZodOptional) return [void 0, ...getDiscriminator(type.unwrap())];else if (type instanceof ZodNullable) return [null, ...getDiscriminator(type.unwrap())];else if (type instanceof ZodBranded) return getDiscriminator(type.unwrap());else if (type instanceof ZodReadonly) return getDiscriminator(type.unwrap());else if (type instanceof ZodCatch) return getDiscriminator(type._def.innerType);else return [];
+  if (type instanceof ZodLazy) return getDiscriminator(type.schema);else if (type instanceof ZodEffects) return getDiscriminator(type.innerType());else if (type instanceof ZodLiteral) return [type.value];else if (type instanceof ZodEnum) return type.options;else if (type instanceof ZodNativeEnum) return util.objectValues(type.enum);else if (type instanceof ZodDefault) return getDiscriminator(type._def.innerType);else if (type instanceof ZodUndefined) return [undefined];else if (type instanceof ZodNull) return [null];else if (type instanceof ZodOptional) return [undefined, ...getDiscriminator(type.unwrap())];else if (type instanceof ZodNullable) return [null, ...getDiscriminator(type.unwrap())];else if (type instanceof ZodBranded) return getDiscriminator(type.unwrap());else if (type instanceof ZodReadonly) return getDiscriminator(type.unwrap());else if (type instanceof ZodCatch) return getDiscriminator(type._def.innerType);else return [];
 };
 var ZodDiscriminatedUnion = class ZodDiscriminatedUnion extends ZodType {
   _parse(input) {
@@ -6943,7 +6943,7 @@ ZodEffects.createWithPreprocess = (preprocess, schema, params) => {
 };
 var ZodOptional = class extends ZodType {
   _parse(input) {
-    if (this._getType(input) === ZodParsedType.undefined) return OK(void 0);
+    if (this._getType(input) === ZodParsedType.undefined) return OK(undefined);
     return this._def.innerType._parse(input);
   }
   unwrap() {
@@ -12291,9 +12291,9 @@ function normalizeSettings(input) {
     enableRecordingBoxSync: typeof input.enableRecordingBoxSync === "boolean" ? input.enableRecordingBoxSync : fallback.enableRecordingBoxSync,
     enableAgentSessionImport: typeof input.enableAgentSessionImport === "boolean" ? input.enableAgentSessionImport : fallback.enableAgentSessionImport,
     agentSessionImportConsentAt: readString(input.agentSessionImportConsentAt, fallback.agentSessionImportConsentAt),
-    agentSessionImportPeriods: input.agentSessionImportPeriods === void 0 ? fallback.agentSessionImportPeriods : normalizeAgentSessionImportPeriods(input.agentSessionImportPeriods),
-    agentSessionImportIntervalMinutes: input.agentSessionImportIntervalMinutes === void 0 ? fallback.agentSessionImportIntervalMinutes : normalizeAgentSessionImportInterval(input.agentSessionImportIntervalMinutes),
-    agentSessionImportProviders: input.agentSessionImportProviders === void 0 ? fallback.agentSessionImportProviders : normalizeAgentSessionProviderIds(input.agentSessionImportProviders),
+    agentSessionImportPeriods: input.agentSessionImportPeriods === undefined ? fallback.agentSessionImportPeriods : normalizeAgentSessionImportPeriods(input.agentSessionImportPeriods),
+    agentSessionImportIntervalMinutes: input.agentSessionImportIntervalMinutes === undefined ? fallback.agentSessionImportIntervalMinutes : normalizeAgentSessionImportInterval(input.agentSessionImportIntervalMinutes),
+    agentSessionImportProviders: input.agentSessionImportProviders === undefined ? fallback.agentSessionImportProviders : normalizeAgentSessionProviderIds(input.agentSessionImportProviders),
     miniProgramSyncBackfillDone: typeof input.miniProgramSyncBackfillDone === "boolean" ? input.miniProgramSyncBackfillDone : fallback.miniProgramSyncBackfillDone,
     miniProgramSyncBackfillCursor: readString(input.miniProgramSyncBackfillCursor, fallback.miniProgramSyncBackfillCursor),
     miniProgramSyncChangeCursor: readString(input.miniProgramSyncChangeCursor, fallback.miniProgramSyncChangeCursor),
@@ -12338,13 +12338,13 @@ var SettingsRepository = class {
       }
     }
     const normalized = normalizeSettings(settings);
-    if (settings.screenshotAiMode === void 0 || settings.reportAiMode === void 0) getDatabase().prepare(`INSERT OR IGNORE INTO settings (key, value, updated_at)
+    if (settings.screenshotAiMode === undefined || settings.reportAiMode === undefined) getDatabase().prepare(`INSERT OR IGNORE INTO settings (key, value, updated_at)
         VALUES ('screenshotAiMode', ?, ?), ('reportAiMode', ?, ?)`).run(JSON.stringify(normalized.screenshotAiMode), (/* @__PURE__ */new Date()).toISOString(), JSON.stringify(normalized.reportAiMode), (/* @__PURE__ */new Date()).toISOString());
     if (typeof settings.screenshotIntervalSeconds === "number" && settings.screenshotIntervalSeconds !== normalized.screenshotIntervalSeconds) getDatabase().prepare(`UPDATE settings SET value = ?, updated_at = ?
         WHERE key = 'screenshotIntervalSeconds'`).run(JSON.stringify(normalized.screenshotIntervalSeconds), (/* @__PURE__ */new Date()).toISOString());
     if (typeof settings.autoDailyReportModel === "string" && settings.autoDailyReportModel !== normalized.autoDailyReportModel) getDatabase().prepare(`UPDATE settings SET value = ?, updated_at = ?
         WHERE key = 'autoDailyReportModel'`).run(JSON.stringify(normalized.autoDailyReportModel), (/* @__PURE__ */new Date()).toISOString());
-    if (settings.autoReportTasks === void 0) {
+    if (settings.autoReportTasks === undefined) {
       normalized.autoReportTasks = [createLegacyAutoReportTask(normalized)];
       getDatabase().prepare(`INSERT OR IGNORE INTO settings (key, value, updated_at)
         VALUES ('autoReportTasks', ?, ?)`).run(JSON.stringify(normalized.autoReportTasks), (/* @__PURE__ */new Date()).toISOString());
@@ -12367,7 +12367,7 @@ var SettingsRepository = class {
     try {
       for (const [key, value] of Object.entries(input)) {
         if (!settingKeys.has(key)) continue;
-        if (value === void 0) continue;
+        if (value === undefined) continue;
         statement.run(key, serializeSetting(key, normalizeSettingValue(key, value)), now);
       }
       database.exec("COMMIT");

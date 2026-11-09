@@ -50,20 +50,20 @@ var x = p(`save-all`, [[`path`, {
       },
       localTool: {
         type: Boolean,
-        default: !1
+        default: false
       },
       showBalance: {
         type: Boolean,
-        default: !0
+        default: true
       },
       showHistory: {
         type: Boolean,
-        default: !0
+        default: true
       },
       historyLabel: {},
       whiteboardTool: {
         type: Boolean,
-        default: !1
+        default: false
       }
     },
     emits: [`back`, `history`, `voiceLibrary`, `voiceActivity`, `recharge`, `whiteboardOpen`, `whiteboardSave`, `whiteboardSaveAs`],
@@ -75,7 +75,7 @@ var x = p(`save-all`, [[`path`, {
         {
           t: R
         } = y(),
-        z = u(() => I.localTool || I.tool.price > 0 ? !I.localTool : Object.values(I.tool.priceOptions || {}).some(e => Number(e) > 0) || Object.values(I.tool.characterPriceOptions || {}).some(e => Number(e) > 0) ? !0 : Object.values(I.tool.tokenRateOptions || {}).some(e => Number(e?.withVideo) > 0 || Number(e?.withoutVideo) > 0)),
+        z = u(() => I.localTool || I.tool.price > 0 ? !I.localTool : Object.values(I.tool.priceOptions || {}).some(e => Number(e) > 0) || Object.values(I.tool.characterPriceOptions || {}).some(e => Number(e) > 0) ? true : Object.values(I.tool.tokenRateOptions || {}).some(e => Number(e?.withVideo) > 0 || Number(e?.withoutVideo) > 0)),
         B = `${F} hover:bg-muted hover:text-foreground`,
         V = `${F} hover:bg-primary/10`;
       return (u, p) => (o(), i(`header`, S, [f(`div`, C, [f(`button`, {
@@ -112,7 +112,7 @@ var x = p(`save-all`, [[`path`, {
         onClick: p[3] ||= e => L(`whiteboardSaveAs`)
       }, [c(n(x), {
         size: 15
-      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveAsShort`)), 1)], 8, k)], 64)) : d(``, !0), s.voiceTool ? (o(), i(a, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveAsShort`)), 1)], 8, k)], 64)) : d(``, true), s.voiceTool ? (o(), i(a, {
         key: 1
       }, [f(`button`, {
         type: `button`,
@@ -139,7 +139,7 @@ var x = p(`save-all`, [[`path`, {
         onClick: p[6] ||= e => L(`history`)
       }, [c(n(m), {
         size: 15
-      }), f(`span`, null, l(s.historyLabel || n(R)(`toolboxNative.generationHistory`)), 1)], 8, M)) : d(``, !0), s.user && s.showBalance && z.value ? (o(), i(`button`, {
+      }), f(`span`, null, l(s.historyLabel || n(R)(`toolboxNative.generationHistory`)), 1)], 8, M)) : d(``, true), s.user && s.showBalance && z.value ? (o(), i(`button`, {
         key: 3,
         type: `button`,
         class: t(V),
@@ -149,7 +149,7 @@ var x = p(`save-all`, [[`path`, {
         size: 15
       }), f(`span`, null, l(n(R)(`toolboxNative.balance`)), 1), f(`strong`, P, l(s.creditsBalance.toLocaleString()), 1), c(n(e), {
         size: 13
-      })], 8, N)) : d(``, !0)])]));
+      })], 8, N)) : d(``, true)])]));
     }
   });
 export { I as t };

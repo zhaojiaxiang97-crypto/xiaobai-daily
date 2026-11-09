@@ -13,7 +13,7 @@ var h = [`src`],
         y = r(``),
         b = r(document.hasFocus()),
         x = r(``),
-        S = !1,
+        S = false,
         C = null,
         w = [];
       async function T(e) {
@@ -25,7 +25,7 @@ var h = [`src`],
         requestAnimationFrame(() => requestAnimationFrame(() => v.painted()));
       }
       function D(event) {
-        event.button === 0 && (S = !0, event.currentTarget.setPointerCapture(event.pointerId), v.dragStart({
+        event.button === 0 && (S = true, event.currentTarget.setPointerCapture(event.pointerId), v.dragStart({
           screenX: event.screenX,
           screenY: event.screenY
         }));
@@ -37,7 +37,7 @@ var h = [`src`],
         });
       }
       function k() {
-        S && (S = !1, v.dragEnd());
+        S && (S = false, v.dragEnd());
       }
       function A(event) {
         event.preventDefault(), event.deltaY !== 0 && v.zoom({
@@ -64,9 +64,9 @@ var h = [`src`],
         }), window.screenshotToolAPI.onTheme(({
           dark: e
         }) => m(e))), window.addEventListener(`keydown`, j), window.addEventListener(`focus`, () => {
-          b.value = !0;
+          b.value = true;
         }), window.addEventListener(`blur`, () => {
-          b.value = !1;
+          b.value = false;
         }), window.screenshotToolAPI.ready();
       }), s(() => {
         for (let e of w) e();
@@ -92,7 +92,7 @@ var h = [`src`],
         draggable: `false`,
         class: `pointer-events-none block h-full w-full select-none`,
         onLoad: E
-      }, null, 40, h)) : d(``, !0), x.value ? (i(), n(`span`, g, c(x.value), 1)) : d(``, !0)], 2)], 36));
+      }, null, 40, h)) : d(``, true), x.value ? (i(), n(`span`, g, c(x.value), 1)) : d(``, true)], 2)], 36));
     }
   });
 export { v as default };

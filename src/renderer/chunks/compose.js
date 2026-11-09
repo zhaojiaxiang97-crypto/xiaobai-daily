@@ -180,8 +180,8 @@ function S(e, t, n, r) {
         let i = Math.max(r, e.kind === `highlighter` ? e.size * 2 : e.size),
           points = e.points;
         if (points.length === 2) return Math.hypot(t - points[0], n - points[1]) <= i;
-        for (let e = 2; e < points.length; e += 2) if (x(t, n, points[e - 2], points[e - 1], points[e], points[e + 1]) <= i) return !0;
-        return !1;
+        for (let e = 2; e < points.length; e += 2) if (x(t, n, points[e - 2], points[e - 1], points[e], points[e + 1]) <= i) return true;
+        return false;
       }
   }
 }
@@ -352,7 +352,7 @@ function j(e, t, n, r, o) {
   let m = Math.max(2, t.size),
     h = i(Math.max(1, Math.ceil(f / m)), Math.max(1, Math.ceil(p / m))),
     g = a(h);
-  g.imageSmoothingEnabled = !0, g.imageSmoothingQuality = `medium`, g.drawImage(n, c, l, f, p, 0, 0, h.width, h.height), e.save(), e.imageSmoothingEnabled = !1, e.drawImage(h, 0, 0, h.width, h.height, c, l, h.width * m, h.height * m), e.restore();
+  g.imageSmoothingEnabled = true, g.imageSmoothingQuality = `medium`, g.drawImage(n, c, l, f, p, 0, 0, h.width, h.height), e.save(), e.imageSmoothingEnabled = false, e.drawImage(h, 0, 0, h.width, h.height, c, l, h.width * m, h.height * m), e.restore();
 }
 function M(e, t, n) {
   for (let r of t) r.kind === `mosaic` && r.id !== n.hiddenId && j(e, r, n.source, n.sourceWidth, n.sourceHeight);
@@ -389,7 +389,7 @@ function L(e, t) {
   } = e;
   if (n < 24 || r < 24) return null;
   let i = a(e, {
-      willReadFrequently: !0
+      willReadFrequently: true
     }).getImageData(0, 0, n, r).data,
     o = [i[0], i[1], i[2]];
   if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(e => I(i, e, o))) return null;
@@ -397,12 +397,12 @@ function L(e, t) {
     c = Math.max(1, Math.floor(r / 1200)),
     l = e => {
       let t = e * n * 4;
-      for (let e = 0; e < n; e += s) if (!I(i, t + e * 4, o)) return !1;
-      return !0;
+      for (let e = 0; e < n; e += s) if (!I(i, t + e * 4, o)) return false;
+      return true;
     },
     u = e => {
-      for (let t = 0; t < r; t += c) if (!I(i, (t * n + e) * 4, o)) return !1;
-      return !0;
+      for (let t = 0; t < r; t += c) if (!I(i, (t * n + e) * 4, o)) return false;
+      return true;
     },
     f = Math.floor(r * P),
     p = Math.floor(n * P),
@@ -517,7 +517,7 @@ function H(e, t, n, r) {
     c = Math.max(o.width / t.width, o.height / t.height) * 1.25,
     l = t.width * c,
     u = t.height * c;
-  s.filter = `blur(${Math.max(4, Math.round(Math.max(o.width, o.height) * .05))}px) saturate(1.15)`, s.drawImage(t, (o.width - l) / 2, (o.height - u) / 2, l, u), e.save(), e.imageSmoothingEnabled = !0, e.imageSmoothingQuality = `high`, e.drawImage(o, 0, 0, n, r), e.fillStyle = `rgba(255,255,255,0.12)`, e.fillRect(0, 0, n, r), e.restore();
+  s.filter = `blur(${Math.max(4, Math.round(Math.max(o.width, o.height) * .05))}px) saturate(1.15)`, s.drawImage(t, (o.width - l) / 2, (o.height - u) / 2, l, u), e.save(), e.imageSmoothingEnabled = true, e.imageSmoothingQuality = `high`, e.drawImage(o, 0, 0, n, r), e.fillStyle = `rgba(255,255,255,0.12)`, e.fillRect(0, 0, n, r), e.restore();
 }
 var U = null;
 function W(fn) {
@@ -611,7 +611,7 @@ function q(e, t, n, r = 1, event) {
       e.drawImage(event.canvas, 0, 0);
     } else G(e, t, n, r);
   }
-  e.scale(r, r), e.imageSmoothingEnabled = !0, e.imageSmoothingQuality = `high`;
+  e.scale(r, r), e.imageSmoothingEnabled = true, e.imageSmoothingQuality = `high`;
   let d = Math.max(1, t.scale);
   e.save(), e.beginPath(), e.roundRect(n.window.x, n.window.y, n.window.width, n.window.height, n.radius), e.clip(), K(e, c, n, d);
   let {

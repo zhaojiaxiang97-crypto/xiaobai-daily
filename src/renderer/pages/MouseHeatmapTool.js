@@ -183,7 +183,7 @@ var k = {
           enableMouseHeatmap: N
         } = E(`toolbox`),
         P = g(() => b.value || j.value),
-        F = g(() => C.value && !k.value ? m(`settings.mouseHeatmapRunning`) : void 0),
+        F = g(() => C.value && !k.value ? m(`settings.mouseHeatmapRunning`) : undefined),
         I = g(() => C.value && k.value);
       return (r, o) => (d(), c(O, {
         tool: l.tool,
@@ -215,10 +215,10 @@ var k = {
           "range-picker-target": `#${J}`,
           embedded: ``,
           onNavigate: t(S)
-        }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, !0)])) : (d(), c(H, {
+        }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, true)])) : (d(), c(H, {
           key: 1,
           "enable-disabled": P.value,
-          onEnable: o[2] ||= e => t(M)(!0)
+          onEnable: o[2] ||= e => t(M)(true)
         }, null, 8, [`enable-disabled`])), p(T, {
           open: t(A),
           "onUpdate:open": o[3] ||= e => u(A) ? A.value = e : null,
@@ -237,7 +237,7 @@ var k = {
           _: 1
         })])]),
         key: `0`
-      } : void 0]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `status-text`, `onToggle`]));
+      } : undefined]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `status-text`, `onToggle`]));
     }
   });
 export { Y as default };

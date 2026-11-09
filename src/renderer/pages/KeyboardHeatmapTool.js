@@ -215,7 +215,7 @@ var M = y(`hash`, [[`line`, {
       return (u, _) => (d(), a(`section`, N, [v(`div`, P, [v(`div`, F, [(d(), a(l, null, o(T, (e, t) => v(`div`, {
         key: t,
         class: `flex gap-1`
-      }, [(d(!0), a(l, null, o(e, (e, t) => (d(), a(`span`, {
+      }, [(d(true), a(l, null, o(e, (e, t) => (d(), a(`span`, {
         key: t,
         class: `flex h-7 min-w-0 items-center justify-center overflow-hidden rounded-[5px] border border-border/70 text-[10px] leading-none text-foreground/70`,
         style: m({
@@ -315,7 +315,7 @@ var M = y(`hash`, [[`line`, {
         description: t(m)(`toolboxNative.keyboardHeatmapToolIntro`),
         enabled: V.value,
         "toggle-disabled": H.value,
-        "status-text": V.value && t(N)?.running ? t(m)(`settings.keyboardHeatmapRunning`) : void 0,
+        "status-text": V.value && t(N)?.running ? t(m)(`settings.keyboardHeatmapRunning`) : undefined,
         "requires-accessibility": ``,
         onToggle: t(R),
         onBack: o[3] ||= e => f(`back`)
@@ -339,10 +339,10 @@ var M = y(`hash`, [[`line`, {
           "range-picker-target": `#${$}`,
           "hide-tracking-error": ``,
           onNavigate: t(M)
-        }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, !0)])) : (d(), c(K, {
+        }, null, 8, [`range-picker-target`, `onNavigate`])) : _(``, true)])) : (d(), c(K, {
           key: 1,
           "enable-disabled": H.value,
-          onEnable: o[1] ||= e => t(R)(!0)
+          onEnable: o[1] ||= e => t(R)(true)
         }, null, 8, [`enable-disabled`])), p(k, {
           open: t(F),
           "onUpdate:open": o[2] ||= e => u(F) ? F.value = e : null,
@@ -352,7 +352,7 @@ var M = y(`hash`, [[`line`, {
         _: 2
       }, [G.value ? {
         name: `notes`,
-        fn: s(() => [W.value ? (d(), a(`p`, q, h(W.value), 1)) : _(``, !0), t(x) ? _(``, !0) : (d(), a(`p`, J, h(t(m)(`settings.keyboardHeatmapLoginRequired`)), 1)), U.value ? (d(), a(`div`, Y, [v(`span`, null, h(t(N)?.errorMessage || t(m)(`settings.keyboardHeatmapFailed`)), 1), p(t(e), {
+        fn: s(() => [W.value ? (d(), a(`p`, q, h(W.value), 1)) : _(``, true), t(x) ? _(``, true) : (d(), a(`p`, J, h(t(m)(`settings.keyboardHeatmapLoginRequired`)), 1)), U.value ? (d(), a(`div`, Y, [v(`span`, null, h(t(N)?.errorMessage || t(m)(`settings.keyboardHeatmapFailed`)), 1), p(t(e), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 shrink-0 text-xs`,
@@ -361,9 +361,9 @@ var M = y(`hash`, [[`line`, {
         }, {
           default: s(() => [i(h(t(m)(`common.retry`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`])])) : _(``, !0)]),
+        }, 8, [`disabled`, `onClick`])])) : _(``, true)]),
         key: `0`
-      } : void 0]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `status-text`, `onToggle`]));
+      } : undefined]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `status-text`, `onToggle`]));
     }
   });
 export { te as default };

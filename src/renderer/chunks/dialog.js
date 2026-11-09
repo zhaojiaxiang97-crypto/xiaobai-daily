@@ -7,19 +7,19 @@ var D = h({
     props: {
       to: {
         type: null,
-        required: !1
+        required: false
       },
       disabled: {
         type: Boolean,
-        required: !1
+        required: false
       },
       defer: {
         type: Boolean,
-        required: !1
+        required: false
       },
       forceMount: {
         type: Boolean,
-        required: !1
+        required: false
       }
     },
     setup(e) {
@@ -90,7 +90,7 @@ var D = h({
     }
   }),
   A = h({
-    inheritAttrs: !1,
+    inheritAttrs: false,
     __name: `DialogContent`,
     props: {
       forceMount: {
@@ -111,7 +111,7 @@ var D = h({
       },
       showCloseButton: {
         type: Boolean,
-        default: !0
+        default: true
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
@@ -153,7 +153,7 @@ var D = h({
               _: 1
             })]),
             _: 1
-          })) : y(``, !0)]),
+          })) : y(``, true)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
@@ -168,7 +168,7 @@ var D = h({
       },
       showCloseButton: {
         type: Boolean,
-        default: !1
+        default: false
       }
     },
     setup(e) {
@@ -187,7 +187,7 @@ var D = h({
           _: 1
         })]),
         _: 1
-      })) : y(``, !0)], 2));
+      })) : y(``, true)], 2));
     }
   }),
   M = h({

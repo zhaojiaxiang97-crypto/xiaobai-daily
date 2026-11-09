@@ -23,7 +23,7 @@ var S = {
       }
     }, {
       modelValue: {
-        required: !0
+        required: true
       },
       modelModifiers: {}
     }),
@@ -52,9 +52,9 @@ var S = {
         }, 8, [`class`, `aria-label`]), f(t(v), {
           position: `popper`,
           align: `start`,
-          class: e(options.compact ? `min-w-[220px] max-w-[300px]` : void 0)
+          class: e(options.compact ? `min-w-[220px] max-w-[300px]` : undefined)
         }, {
-          default: s(() => [(u(!0), a(l, null, o(options.options, r => (u(), c(t(x), {
+          default: s(() => [(u(true), a(l, null, o(options.options, r => (u(), c(t(x), {
             key: r.value,
             value: r.value,
             disabled: r.disabled,
@@ -66,7 +66,7 @@ var S = {
             name: `extra`,
             fn: s(() => [g(`small`, S, p(r.description), 1)]),
             key: `0`
-          } : void 0]), 1032, [`value`, `disabled`, `class`]))), 128))]),
+          } : undefined]), 1032, [`value`, `disabled`, `class`]))), 128))]),
           _: 1
         }, 8, [`class`])]),
         _: 1

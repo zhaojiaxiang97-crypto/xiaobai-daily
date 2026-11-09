@@ -88,7 +88,7 @@ var ce = {
         T = o(``),
         E = o(null),
         D = o(0),
-        O = o(!1),
+        O = o(false),
         k = o(``),
         A = o(null),
         j = o(null),
@@ -121,11 +121,11 @@ var ce = {
           })];
           return e.kind === `history` ? (e.count > 1 && t.push(b(`CopyCount`, {
             n: e.count
-          })), e.copiedAt && t.push(K(e.copiedAt, !0))) : e.count > 0 && t.push(b(`UseCount`, {
+          })), e.copiedAt && t.push(K(e.copiedAt, true))) : e.count > 0 && t.push(b(`UseCount`, {
             n: e.count
           })), t.join(` · `);
         });
-      function K(e, t = !1) {
+      function K(e, t = false) {
         if (!e) return ``;
         let n = new Date(e);
         if (Number.isNaN(n.getTime())) return ``;
@@ -133,7 +133,7 @@ var ce = {
           i = new Intl.DateTimeFormat(y.value, {
             hour: `2-digit`,
             minute: `2-digit`,
-            hour12: !1
+            hour12: false
           }).format(n),
           a = new Date(r.getFullYear(), r.getMonth(), r.getDate()).getTime();
         return n.getTime() >= a ? i : n.getTime() >= a - 864e5 ? t ? `${b(`Yesterday`)} ${i}` : b(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
@@ -145,7 +145,7 @@ var ce = {
           ...(t ? {
             hour: `2-digit`,
             minute: `2-digit`,
-            hour12: !1
+            hour12: false
           } : {})
         }).format(n);
       }
@@ -175,7 +175,7 @@ var ce = {
         }, 60);
       }
       function Ie(e) {
-        x.value = e.history, S.value = e.phrases, C.value = e.shortcut, y.value = e.language === `en-US` ? `en-US` : `zh-CN`, document.documentElement.lang = y.value, document.title = v(`toolboxNative.clipboardAssistantToolName`), document.documentElement.classList.toggle(`dark`, e.dark), T.value = ``, E.value = null, D.value = 0, O.value = !1, k.value = ``, P.clear(), N.value = null, e.tab ? w.value = e.tab : w.value === `phrases` && e.phrases.length === 0 && (w.value = `history`), u(() => {
+        x.value = e.history, S.value = e.phrases, C.value = e.shortcut, y.value = e.language === `en-US` ? `en-US` : `zh-CN`, document.documentElement.lang = y.value, document.title = v(`toolboxNative.clipboardAssistantToolName`), document.documentElement.classList.toggle(`dark`, e.dark), T.value = ``, E.value = null, D.value = 0, O.value = false, k.value = ``, P.clear(), N.value = null, e.tab ? w.value = e.tab : w.value === `phrases` && e.phrases.length === 0 && (w.value = `history`), u(() => {
           j.value?.scrollTo({
             top: 0
           }), A.value?.focus(), q();
@@ -200,7 +200,7 @@ var ce = {
       }
       async function X(e) {
         if (e && clipboardPickerAPI && !O.value) {
-          O.value = !0;
+          O.value = true;
           try {
             let t = await clipboardPickerAPI.copy({
               kind: e.kind,
@@ -210,7 +210,7 @@ var ce = {
           } catch {
             J(b(`CopyFailed`));
           } finally {
-            O.value = !1;
+            O.value = false;
           }
         }
       }
@@ -294,7 +294,7 @@ var ce = {
         autocomplete: `off`,
         spellcheck: `false`,
         placeholder: w.value === `history` ? b(`SearchHistory`) : b(`SearchPhrases`)
-      }, null, 8, ue), [[ae, T.value]]), C.value ? (c(), r(`kbd`, de, l(t(se)(C.value, t(g))), 1)) : p(``, !0)]), m(`div`, fe, [m(`button`, {
+      }, null, 8, ue), [[ae, T.value]]), C.value ? (c(), r(`kbd`, de, l(t(se)(C.value, t(g))), 1)) : p(``, true)]), m(`div`, fe, [m(`button`, {
         type: `button`,
         role: `tab`,
         "aria-selected": w.value === `history`,
@@ -320,7 +320,7 @@ var ce = {
         ref: j,
         class: `picker__list`,
         role: `listbox`
-      }, [H.value.length === 0 ? (c(), r(`p`, _e, l(Me.value), 1)) : p(``, !0), (c(!0), r(s, null, i(H.value, (t, n) => (c(), r(`button`, {
+      }, [H.value.length === 0 ? (c(), r(`p`, _e, l(Me.value), 1)) : p(``, true), (c(true), r(s, null, i(H.value, (t, n) => (c(), r(`button`, {
         key: `${t.kind}:${t.id}`,
         type: `button`,
         role: `option`,
@@ -332,31 +332,31 @@ var ce = {
         onMousedown: o[5] ||= h(() => {}, [`prevent`]),
         onMousemove: e => D.value = n,
         onClick: e => X(t)
-      }, [m(`span`, ye, l(n < 9 ? n + 1 : ``), 1), m(`span`, be, [t.title ? (c(), r(`strong`, xe, l(t.title), 1)) : p(``, !0), m(`span`, null, l(t.preview), 1)]), m(`span`, Se, [t.isPinned ? (c(), r(`svg`, Ce, [...(o[7] ||= [m(`path`, {
+      }, [m(`span`, ye, l(n < 9 ? n + 1 : ``), 1), m(`span`, be, [t.title ? (c(), r(`strong`, xe, l(t.title), 1)) : p(``, true), m(`span`, null, l(t.preview), 1)]), m(`span`, Se, [t.isPinned ? (c(), r(`svg`, Ce, [...(o[7] ||= [m(`path`, {
         d: `M12 17v5`
       }, null, -1), m(`path`, {
         d: `M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z`
-      }, null, -1)])])) : p(``, !0), t.copiedAt ? (c(), r(`time`, {
+      }, null, -1)])])) : p(``, true), t.copiedAt ? (c(), r(`time`, {
         key: 1,
         datetime: t.copiedAt
-      }, l(K(t.copiedAt)), 9, we)) : p(``, !0)])], 42, ve))), 128))], 512), m(`aside`, {
+      }, l(K(t.copiedAt)), 9, we)) : p(``, true)])], 42, ve))), 128))], 512), m(`aside`, {
         class: `picker__preview`,
         "aria-label": b(`PreviewLabel`)
       }, [U.value ? (c(), r(s, {
         key: 0
-      }, [G.value ? (c(), r(`strong`, Ee, l(G.value), 1)) : p(``, !0), m(`div`, {
+      }, [G.value ? (c(), r(`strong`, Ee, l(G.value), 1)) : p(``, true), m(`div`, {
         ref_key: `previewBodyRef`,
         ref: M,
         class: `picker__preview-body`
       }, l(Pe.value), 513), W.value?.truncated ? (c(), r(`p`, De, l(b(`PreviewTruncated`, {
         n: t(oe).toLocaleString()
-      })), 1)) : p(``, !0), m(`p`, Oe, l(Fe.value), 1)], 64)) : (c(), r(`p`, ke, l(b(`PreviewEmpty`)), 1))], 8, Te)]), m(`footer`, Ae, [k.value ? (c(), r(`p`, je, l(k.value), 1)) : (c(), r(s, {
+      })), 1)) : p(``, true), m(`p`, Oe, l(Fe.value), 1)], 64)) : (c(), r(`p`, ke, l(b(`PreviewEmpty`)), 1))], 8, Te)]), m(`footer`, Ae, [k.value ? (c(), r(`p`, je, l(k.value), 1)) : (c(), r(s, {
         key: 1
       }, [m(`span`, null, [o[8] ||= m(`kbd`, null, `↑↓`, -1), n(l(b(`HintSelect`)), 1)]), m(`span`, null, [o[9] ||= m(`kbd`, null, `Enter`, -1), n(l(b(`HintCopy`)), 1)]), m(`span`, null, [m(`kbd`, null, l(Ne.value), 1), n(l(b(`HintQuick`)), 1)]), m(`span`, null, [o[10] ||= m(`kbd`, null, `Esc`, -1), n(l(b(`HintClose`)), 1)])], 64))])], 2));
     }
   }), [[`__scopeId`, `data-v-784c69ae`]]),
   x = d({
-    legacy: !1,
+    legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
     messages: {
@@ -367,7 +367,7 @@ var ce = {
         toolboxNative: v
       }
     },
-    missingWarn: !1,
-    fallbackWarn: !1
+    missingWarn: false,
+    fallbackWarn: false
   });
 _(b).use(x).mount(`#app`);

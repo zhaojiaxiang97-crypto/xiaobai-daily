@@ -63,14 +63,14 @@ var X = F(`arrow-up-right`, [[`path`, {
     key: `1pmjb7`
   }]]);
 function ge(e) {
-  let t = M(() => e.start.value ? !!e.isDateDisabled(e.start.value) : !1),
-    n = M(() => e.end.value ? !!e.isDateDisabled(e.end.value) : !1),
+  let t = M(() => e.start.value ? !!e.isDateDisabled(e.start.value) : false),
+    n = M(() => e.end.value ? !!e.isDateDisabled(e.end.value) : false),
     r = M(() => !!(t.value || n.value || e.start.value && e.end.value && B(e.end.value, e.start.value))),
-    i = t => e.start.value ? U(e.start.value, t) : !1,
-    a = t => e.end.value ? U(e.end.value, t) : !1,
-    o = t => e.start.value && U(e.start.value, t) || e.end.value && U(e.end.value, t) ? !0 : e.end.value && e.start.value ? q(t, e.start.value, e.end.value) : !1,
+    i = t => e.start.value ? U(e.start.value, t) : false,
+    a = t => e.end.value ? U(e.end.value, t) : false,
+    o = t => e.start.value && U(e.start.value, t) || e.end.value && U(e.end.value, t) ? true : e.end.value && e.start.value ? q(t, e.start.value, e.end.value) : false,
     s = t => {
-      if (e.isDateDisabled(t)) return !0;
+      if (e.isDateDisabled(t)) return true;
       if (e.maximumDays?.value) {
         if (e.start.value && e.end.value) {
           if (e.fixedDate.value) {
@@ -86,7 +86,7 @@ function ge(e) {
               return !q(t, i, a);
             }
           }
-          return !1;
+          return false;
         }
         if (e.start.value) {
           let n = e.start.value.add({
@@ -98,7 +98,7 @@ function ge(e) {
           return !q(t, r, n);
         }
       }
-      return !1;
+      return false;
     },
     c = t => !!e.isDateHighlightable?.(t),
     l = M(() => {
@@ -126,13 +126,13 @@ function ge(e) {
           })
         };
       }
-      return le(n, r, e.allowNonContiguousRanges.value ? () => !1 : e.isDateUnavailable, s, e.isDateHighlightable) ? {
+      return le(n, r, e.allowNonContiguousRanges.value ? () => false : e.isDateUnavailable, s, e.isDateHighlightable) ? {
         start: n,
         end: r
       } : null;
     }),
-    u = e => !l.value || !l.value.start ? !1 : U(l.value.start, e),
-    d = e => !l.value || !l.value.end ? !1 : U(l.value.end, e),
+    u = e => !l.value || !l.value.start ? false : U(l.value.start, e),
+    d = e => !l.value || !l.value.end ? false : U(l.value.end, e),
     f = M(() => !!(e.start.value || e.end.value)),
     p = M(() => !!(e.start.value && e.isDateDisabled(e.start.value))),
     m = M(() => !!(e.end.value && e.isDateDisabled(e.end.value)));
@@ -150,7 +150,7 @@ function ge(e) {
     isSelectedDisabled: M(() => {
       let t = !!e.start.value,
         n = !!e.end.value;
-      return !t && !n ? !1 : t && n ? p.value && m.value : t && p.value || n && m.value;
+      return !t && !n ? false : t && n ? p.value && m.value : t && p.value || n && m.value;
     }),
     selectedFocusableDate: M(() => {
       if (e.start.value && !p.value) return e.start.value;
@@ -182,138 +182,138 @@ var _e = {
     props: {
       defaultPlaceholder: {
         type: null,
-        required: !1
+        required: false
       },
       defaultValue: {
         type: Object,
-        required: !1,
+        required: false,
         default: () => ({
-          start: void 0,
-          end: void 0
+          start: undefined,
+          end: undefined
         })
       },
       modelValue: {
         type: [Object, null],
-        required: !1
+        required: false
       },
       placeholder: {
         type: null,
-        required: !1,
-        default: void 0
+        required: false,
+        default: undefined
       },
       allowNonContiguousRanges: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       pagedNavigation: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       preventDeselect: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       maximumDays: {
         type: Number,
-        required: !1,
-        default: void 0
+        required: false,
+        default: undefined
       },
       weekStartsOn: {
         type: Number,
-        required: !1
+        required: false
       },
       weekdayFormat: {
         type: String,
-        required: !1,
+        required: false,
         default: `narrow`
       },
       calendarLabel: {
         type: String,
-        required: !1
+        required: false
       },
       fixedWeeks: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       maxValue: {
         type: null,
-        required: !1
+        required: false
       },
       minValue: {
         type: null,
-        required: !1
+        required: false
       },
       locale: {
         type: String,
-        required: !1
+        required: false
       },
       numberOfMonths: {
         type: Number,
-        required: !1,
+        required: false,
         default: 1
       },
       disabled: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       readonly: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       initialFocus: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       isDateDisabled: {
         type: Function,
-        required: !1,
-        default: void 0
+        required: false,
+        default: undefined
       },
       isDateUnavailable: {
         type: Function,
-        required: !1,
-        default: void 0
+        required: false,
+        default: undefined
       },
       isDateHighlightable: {
         type: Function,
-        required: !1,
-        default: void 0
+        required: false,
+        default: undefined
       },
       dir: {
         type: String,
-        required: !1
+        required: false
       },
       nextPage: {
         type: Function,
-        required: !1
+        required: false
       },
       prevPage: {
         type: Function,
-        required: !1
+        required: false
       },
       disableDaysOutsideCurrentView: {
         type: Boolean,
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       fixedDate: {
         type: String,
-        required: !1
+        required: false
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `div`
       }
     },
@@ -356,17 +356,17 @@ var _e = {
         H = M(() => o.weekStartsOn ?? de(V.value)),
         le = S(),
         U = S(),
-        W = S(!1),
+        W = S(false),
         G = r(o, `modelValue`, s, {
           defaultValue: o.defaultValue ?? {
-            start: void 0,
-            end: void 0
+            start: undefined,
+            end: undefined
           },
-          passive: o.modelValue === void 0
+          passive: o.modelValue === undefined
         }),
         K = e => e ?? {
-          start: void 0,
-          end: void 0
+          start: undefined,
+          end: undefined
         },
         q = M(() => K(G.value)),
         J = S(K(G.value));
@@ -382,7 +382,7 @@ var _e = {
         X = S(K(G.value).end),
         Z = r(o, `placeholder`, s, {
           defaultValue: o.defaultPlaceholder ?? pe.copy(),
-          passive: o.placeholder === void 0
+          passive: o.placeholder === undefined
         });
       function he(e) {
         Z.value = e.copy();
@@ -451,7 +451,7 @@ var _e = {
       }), y([Y, X], ([e, t]) => {
         let n = G.value;
         if (!(n && n.start && n.end && e && t && z(n.start, e) && z(n.end, t))) {
-          if (W.value = !0, t && e) {
+          if (W.value = true, t && e) {
             let n = B(t, e) ? {
               start: t.copy(),
               end: e.copy()
@@ -462,16 +462,16 @@ var _e = {
             G.value = {
               start: n.start,
               end: n.end
-            }, W.value = !1, J.value = {
+            }, W.value = false, J.value = {
               start: n.start.copy(),
               end: n.end.copy()
             };
           } else G.value = e ? {
             start: e.copy(),
-            end: void 0
+            end: undefined
           } : {
             start: t?.copy(),
-            end: void 0
+            end: undefined
           };
         }
       });
@@ -537,9 +537,9 @@ var _e = {
         as: e.as,
         "as-child": e.asChild,
         "aria-label": d(Q),
-        "data-readonly": d(l) ? `` : void 0,
-        "data-disabled": d(c) ? `` : void 0,
-        "data-invalid": d(Ne) ? `` : void 0,
+        "data-readonly": d(l) ? `` : undefined,
+        "data-disabled": d(c) ? `` : undefined,
+        "data-invalid": d(Ne) ? `` : undefined,
         dir: d(R)
       }, {
         default: b(() => [P(`div`, _e, [P(`div`, ve, k(d(Q)), 1)]), p(e.$slots, `default`, {
@@ -560,15 +560,15 @@ var _e = {
     props: {
       date: {
         type: null,
-        required: !0
+        required: true
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `td`
       }
     },
@@ -578,9 +578,9 @@ var _e = {
         as: e.as,
         "as-child": e.asChild,
         role: `gridcell`,
-        "aria-selected": d(t).isSelected(e.date) ? !0 : void 0,
+        "aria-selected": d(t).isSelected(e.date) ? true : undefined,
         "aria-disabled": d(t).isDateDisabled(e.date) || d(t).isDateUnavailable?.(e.date) || d(t).disableDaysOutsideCurrentView.value,
-        "data-disabled": d(t).isDateDisabled(e.date) || d(t).disableDaysOutsideCurrentView.value ? `` : void 0
+        "data-disabled": d(t).isDateDisabled(e.date) || d(t).disableDaysOutsideCurrentView.value ? `` : undefined
       }, {
         default: b(() => [p(e.$slots, `default`)]),
         _: 3
@@ -592,19 +592,19 @@ var _e = {
     props: {
       day: {
         type: null,
-        required: !0
+        required: true
       },
       month: {
         type: null,
-        required: !0
+        required: true
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `div`
       }
     },
@@ -622,25 +622,25 @@ var _e = {
           day: `numeric`,
           year: `numeric`
         })),
-        l = M(() => r.isDateUnavailable?.(n.day) ?? !1),
+        l = M(() => r.isDateUnavailable?.(n.day) ?? false),
         u = M(() => r.isSelected(n.day)),
         f = M(() => r.isSelectionStart(n.day)),
         m = M(() => r.isSelectionEnd(n.day)),
         g = M(() => r.isHighlightedStart(n.day)),
         _ = M(() => r.isHighlightedEnd(n.day)),
-        v = M(() => r.highlightedRange.value ? Y(n.day, r.highlightedRange.value.start, r.highlightedRange.value.end) : !1),
+        v = M(() => r.highlightedRange.value ? Y(n.day, r.highlightedRange.value.start, r.highlightedRange.value.end) : false),
         y = M(() => r.allowNonContiguousRanges.value),
         S = M(() => J(n.day, I())),
         C = M(() => !L(n.day, n.month)),
         T = M(() => r.isOutsideVisibleView(n.day)),
         E = M(() => r.isDateDisabled(n.day) || r.disableDaysOutsideCurrentView.value && C.value),
         D = M(() => n.day.day.toLocaleString(r.locale.value)),
-        O = M(() => C.value || E.value ? !1 : !r.disabled.value && r.isPlaceholderFocusable.value && U(n.day, r.placeholder.value) ? !0 : !r.disabled.value && r.selectedFocusableDate.value && !r.isPlaceholderFocusable.value ? U(n.day, r.selectedFocusableDate.value) : !r.disabled.value && (!r.hasSelectedDate.value || r.isSelectedDisabled.value) && !r.isPlaceholderFocusable.value ? r.firstFocusableDate.value && U(n.day, r.firstFocusableDate.value) : !1);
+        O = M(() => C.value || E.value ? false : !r.disabled.value && r.isPlaceholderFocusable.value && U(n.day, r.placeholder.value) ? true : !r.disabled.value && r.selectedFocusableDate.value && !r.isPlaceholderFocusable.value ? U(n.day, r.selectedFocusableDate.value) : !r.disabled.value && (!r.hasSelectedDate.value || r.isSelectedDisabled.value) && !r.isPlaceholderFocusable.value ? r.firstFocusableDate.value && U(n.day, r.firstFocusableDate.value) : false);
       function j(event, t) {
         if (!r.readonly.value && !(r.isDateDisabled(t) || r.isDateUnavailable?.(t))) {
           if (r.startValue.value && r.highlightedRange.value === null) {
             if (U(t, r.startValue.value) && !r.preventDeselect.value && !r.endValue.value) {
-              r.startValue.value = void 0, r.onPlaceholderChange(t), r.lastPressedDateValue.value = t.copy();
+              r.startValue.value = undefined, r.onPlaceholderChange(t), r.lastPressedDateValue.value = t.copy();
               return;
             }
             if (!r.endValue.value) {
@@ -649,10 +649,10 @@ var _e = {
             }
           }
           if (r.lastPressedDateValue.value = t.copy(), r.startValue.value && r.endValue.value && U(r.startValue.value, r.endValue.value) && U(r.startValue.value, t) && !r.preventDeselect.value) {
-            r.startValue.value = void 0, r.endValue.value = void 0, r.onPlaceholderChange(t);
+            r.startValue.value = undefined, r.endValue.value = undefined, r.onPlaceholderChange(t);
             return;
           }
-          r.startValue.value ? r.endValue.value ? r.endValue.value && r.startValue.value && (r.fixedDate.value ? r.fixedDate.value === `start` ? t.compare(r.startValue.value) < 0 ? r.startValue.value = t.copy() : r.endValue.value = t.copy() : r.fixedDate.value === `end` && (t.compare(r.endValue.value) > 0 ? r.endValue.value = t.copy() : r.startValue.value = t.copy()) : (r.endValue.value = void 0, r.startValue.value = t.copy())) : r.endValue.value = t.copy() : r.startValue.value = t.copy();
+          r.startValue.value ? r.endValue.value ? r.endValue.value && r.startValue.value && (r.fixedDate.value ? r.fixedDate.value === `start` ? t.compare(r.startValue.value) < 0 ? r.startValue.value = t.copy() : r.endValue.value = t.copy() : r.fixedDate.value === `end` && (t.compare(r.endValue.value) > 0 ? r.endValue.value = t.copy() : r.startValue.value = t.copy()) : (r.endValue.value = undefined, r.startValue.value = t.copy())) : r.endValue.value = t.copy() : r.startValue.value = t.copy();
         }
       }
       function ee(e) {
@@ -714,22 +714,22 @@ var _e = {
         role: `button`,
         "aria-label": c.value,
         "data-reka-calendar-cell-trigger": ``,
-        "aria-pressed": u.value && (y.value || !l.value) ? !0 : void 0,
-        "aria-disabled": E.value || l.value ? !0 : void 0,
-        "data-highlighted": v.value && (y.value || !l.value) ? `` : void 0,
-        "data-selection-start": f.value ? !0 : void 0,
-        "data-selection-end": m.value ? !0 : void 0,
-        "data-highlighted-start": g.value ? !0 : void 0,
-        "data-highlighted-end": _.value ? !0 : void 0,
-        "data-selected": u.value && (y.value || !l.value) ? !0 : void 0,
-        "data-outside-visible-view": T.value ? `` : void 0,
+        "aria-pressed": u.value && (y.value || !l.value) ? true : undefined,
+        "aria-disabled": E.value || l.value ? true : undefined,
+        "data-highlighted": v.value && (y.value || !l.value) ? `` : undefined,
+        "data-selection-start": f.value ? true : undefined,
+        "data-selection-end": m.value ? true : undefined,
+        "data-highlighted-start": g.value ? true : undefined,
+        "data-highlighted-end": _.value ? true : undefined,
+        "data-selected": u.value && (y.value || !l.value) ? true : undefined,
+        "data-outside-visible-view": T.value ? `` : undefined,
         "data-value": e.day.toString(),
-        "data-disabled": E.value ? `` : void 0,
-        "data-unavailable": l.value ? `` : void 0,
-        "data-today": S.value ? `` : void 0,
-        "data-outside-view": C.value ? `` : void 0,
-        "data-focused": O.value ? `` : void 0,
-        tabindex: O.value ? 0 : C.value || E.value ? void 0 : -1,
+        "data-disabled": E.value ? `` : undefined,
+        "data-unavailable": l.value ? `` : undefined,
+        "data-today": S.value ? `` : undefined,
+        "data-outside-view": C.value ? `` : undefined,
+        "data-focused": O.value ? `` : undefined,
+        tabindex: O.value ? 0 : C.value || E.value ? undefined : -1,
         onClick: ee,
         onFocusin: N,
         onMouseenter: N,
@@ -758,19 +758,19 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `table`
       }
     },
     setup(e) {
       let t = e,
         n = Q(),
-        r = M(() => n.disabled.value ? !0 : void 0),
-        a = M(() => n.readonly.value ? !0 : void 0);
+        r = M(() => n.disabled.value ? true : undefined),
+        a = M(() => n.readonly.value ? true : undefined);
       return (e, o) => (w(), x(d(i), O(t, {
         tabindex: `-1`,
         role: `application`,
@@ -778,7 +778,7 @@ var _e = {
         "aria-disabled": r.value,
         "data-readonly": a.value && ``,
         "data-disabled": r.value && ``,
-        onMouseleave: o[0] ||= e => d(n).focusedValue.value = void 0
+        onMouseleave: o[0] ||= e => d(n).focusedValue.value = undefined
       }), {
         default: b(() => [p(e.$slots, `default`)]),
         _: 3
@@ -790,11 +790,11 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `tbody`
       }
     },
@@ -811,11 +811,11 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `thead`
       }
     },
@@ -834,11 +834,11 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `tr`
       }
     },
@@ -855,11 +855,11 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `th`
       }
     },
@@ -876,11 +876,11 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `div`
       }
     },
@@ -897,11 +897,11 @@ var _e = {
     props: {
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `div`
       }
     },
@@ -909,7 +909,7 @@ var _e = {
       let t = e,
         n = Q();
       return (e, r) => (w(), x(d(i), O(t, {
-        "data-disabled": d(n).disabled.value ? `` : void 0
+        "data-disabled": d(n).disabled.value ? `` : undefined
       }), {
         default: b(() => [p(e.$slots, `default`, {
           headingValue: d(n).headingValue.value
@@ -923,15 +923,15 @@ var _e = {
     props: {
       nextPage: {
         type: Function,
-        required: !1
+        required: false
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `button`
       }
     },
@@ -946,9 +946,9 @@ var _e = {
         as: t.as,
         "as-child": t.asChild,
         "aria-label": `Next page`,
-        type: t.as === `button` ? `button` : void 0,
-        "aria-disabled": n.value || void 0,
-        "data-disabled": n.value || void 0,
+        type: t.as === `button` ? `button` : undefined,
+        "aria-disabled": n.value || undefined,
+        "data-disabled": n.value || undefined,
         disabled: n.value,
         onClick: a
       }, {
@@ -964,15 +964,15 @@ var _e = {
     props: {
       prevPage: {
         type: Function,
-        required: !1
+        required: false
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1,
+        required: false,
         default: `button`
       }
     },
@@ -987,9 +987,9 @@ var _e = {
         as: t.as,
         "as-child": t.asChild,
         "aria-label": `Previous page`,
-        type: t.as === `button` ? `button` : void 0,
-        "aria-disabled": n.value || void 0,
-        "data-disabled": n.value || void 0,
+        type: t.as === `button` ? `button` : undefined,
+        "aria-disabled": n.value || undefined,
+        "data-disabled": n.value || undefined,
         disabled: n.value,
         onClick: a
       }, {
@@ -1088,12 +1088,12 @@ var _e = {
         }) => [E(d(He), null, {
           default: b(() => [E(d(Ue)), P(`div`, Me, [E(d(Ge)), E(d(We))])]),
           _: 1
-        }), P(`div`, Ne, [(w(!0), g(C, null, _(e, e => (w(), x(d(Le), {
+        }), P(`div`, Ne, [(w(true), g(C, null, _(e, e => (w(), x(d(Le), {
           key: e.value.toString()
         }, {
           default: b(() => [E(d(ze), null, {
             default: b(() => [E(d(Be), null, {
-              default: b(() => [(w(!0), g(C, null, _(t, e => (w(), x(d(Ve), {
+              default: b(() => [(w(true), g(C, null, _(t, e => (w(), x(d(Ve), {
                 key: e
               }, {
                 default: b(() => [h(k(e), 1)]),
@@ -1103,11 +1103,11 @@ var _e = {
             }, 1024)]),
             _: 2
           }, 1024), E(d(Re), null, {
-            default: b(() => [(w(!0), g(C, null, _(e.rows, (t, n) => (w(), x(d(Be), {
+            default: b(() => [(w(true), g(C, null, _(e.rows, (t, n) => (w(), x(d(Be), {
               key: `weekDate-${n}`,
               class: `mt-2 w-full`
             }, {
-              default: b(() => [(w(!0), g(C, null, _(t, t => (w(), x(d(Fe), {
+              default: b(() => [(w(true), g(C, null, _(t, t => (w(), x(d(Fe), {
                 key: t.toString(),
                 date: t
               }, {
@@ -1467,7 +1467,7 @@ var Ze = [`aria-label`, `title`],
           t: i,
           locale: a
         } = D(),
-        o = S(!1),
+        o = S(false),
         s = S(null);
       function c(e) {
         let t = e.detail.originalEvent.target;
@@ -1478,13 +1478,13 @@ var Ze = [`aria-label`, `title`],
       }
       function p(text) {
         let [t, n, r] = text.split(`-`).map(Number);
-        return t && n && r ? new pe(t, n, r) : void 0;
+        return t && n && r ? new pe(t, n, r) : undefined;
       }
       let m = e => `${e.year}-${String(e.month).padStart(2, `0`)}-${String(e.day).padStart(2, `0`)}`,
         v = R(I()),
         T = f({
-          start: void 0,
-          end: void 0
+          start: undefined,
+          end: undefined
         }),
         O = M(() => Xe(n.start, n.end));
       function A(text) {
@@ -1503,10 +1503,10 @@ var Ze = [`aria-label`, `title`],
         T.value = e, e.start && e.end && (r(`change`, {
           start: m(e.start),
           end: m(e.end)
-        }), o.value = !1);
+        }), o.value = false);
       }
       function F(e) {
-        r(`change`, Ye(e)), o.value = !1;
+        r(`change`, Ye(e)), o.value = false;
       }
       return (e, t) => (w(), x(d(G), {
         open: o.value,
@@ -1524,7 +1524,7 @@ var Ze = [`aria-label`, `title`],
             title: ee.value
           }, [E(d(Z), {
             size: 13
-          }), O.value ? (w(), g(`span`, Qe, k(d(i)(`heatMap.rangePresets.${O.value}`)), 1)) : N(``, !0), P(`span`, {
+          }), O.value ? (w(), g(`span`, Qe, k(d(i)(`heatMap.rangePresets.${O.value}`)), 1)) : N(``, true), P(`span`, {
             class: u([`tabular-nums`, {
               "text-[#aaa]": O.value
             }])
@@ -1541,7 +1541,7 @@ var Ze = [`aria-label`, `title`],
           onInteractOutside: c,
           onOpenAutoFocus: l
         }, {
-          default: b(() => [P(`div`, $e, [P(`div`, et, [(w(!0), g(C, null, _(d(qe), e => (w(), g(`button`, {
+          default: b(() => [P(`div`, $e, [P(`div`, et, [(w(true), g(C, null, _(d(qe), e => (w(), g(`button`, {
             key: e,
             type: `button`,
             class: u([`flex h-7 items-center justify-between gap-1 rounded-md px-2 text-left text-xs transition-colors hover:bg-black/[0.04]`, O.value === e ? `font-medium text-[#111]` : `text-[#666]`]),
@@ -1550,7 +1550,7 @@ var Ze = [`aria-label`, `title`],
             key: 0,
             size: 13,
             class: `shrink-0 text-primary`
-          })) : N(``, !0)], 10, tt))), 128))]), P(`div`, nt, [E(d(Pe), {
+          })) : N(``, true)], 10, tt))), 128))]), P(`div`, nt, [E(d(Pe), {
             "model-value": T.value,
             locale: d(a),
             "max-value": d(v),

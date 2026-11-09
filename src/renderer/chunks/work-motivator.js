@@ -239,7 +239,7 @@ var ne = fn => {
       ...i,
       path: a
     };
-  if (i.message !== void 0) return {
+  if (i.message !== undefined) return {
     ...i,
     path: a,
     message: i.message
@@ -262,7 +262,7 @@ function d(e, t) {
       issueData: t,
       data: e.data,
       path: e.path,
-      errorMaps: [e.common.contextualErrorMap, e.schemaErrorMap, n, n === u ? void 0 : u].filter(e => !!e)
+      errorMaps: [e.common.contextualErrorMap, e.schemaErrorMap, n, n === u ? undefined : u].filter(e => !!e)
     });
   e.common.issues.push(r);
 }
@@ -307,7 +307,7 @@ var f = class e {
           value: i
         } = r;
         if (t.status === `aborted` || i.status === `aborted`) return p;
-        t.status === `dirty` && state.dirty(), i.status === `dirty` && state.dirty(), t.value !== `__proto__` && (i.value !== void 0 || r.alwaysSet) && (n[t.value] = i.value);
+        t.status === `dirty` && state.dirty(), i.status === `dirty` && state.dirty(), t.value !== `__proto__` && (i.value !== undefined || r.alwaysSet) && (n[t.value] = i.value);
       }
       return {
         status: state.value,
@@ -346,12 +346,12 @@ var v = class {
   },
   oe = (e, state) => {
     if (h(state)) return {
-      success: !0,
+      success: true,
       data: state.value
     };
     if (!e.common.issues.length) throw Error(`Validation failed but no issues detected.`);
     return {
-      success: !1,
+      success: false,
       get error() {
         if (this._error) return this._error;
         let t = new l(e.common.issues);
@@ -378,7 +378,7 @@ function y(e) {
       } = e;
       return event.code === `invalid_enum_value` ? {
         message: a ?? i.defaultError
-      } : i.data === void 0 ? {
+      } : i.data === undefined ? {
         message: a ?? r ?? i.defaultError
       } : event.code === `invalid_type` ? {
         message: a ?? n ?? i.defaultError
@@ -437,7 +437,7 @@ var b = class {
       let n = {
         common: {
           issues: [],
-          async: t?.async ?? !1,
+          async: t?.async ?? false,
           contextualErrorMap: t?.errorMap
         },
         path: t?.path || [],
@@ -476,9 +476,9 @@ var b = class {
           issues: t.common.issues
         };
       } catch (e) {
-        e?.message?.toLowerCase()?.includes(`encountered`) && (this[`~standard`].async = !0), t.common = {
+        e?.message?.toLowerCase()?.includes(`encountered`) && (this[`~standard`].async = true), t.common = {
           issues: [],
-          async: !0
+          async: true
         };
       }
       return this._parseAsync({
@@ -501,7 +501,7 @@ var b = class {
           common: {
             issues: [],
             contextualErrorMap: t?.errorMap,
-            async: !0
+            async: true
           },
           path: t?.path || [],
           schemaErrorMap: this._def.errorMap,
@@ -517,7 +517,7 @@ var b = class {
       return oe(n, await (g(r) ? r : Promise.resolve(r)));
     }
     refine(fn, t) {
-      let n = e => typeof t == `string` || t === void 0 ? {
+      let n = e => typeof t == `string` || t === undefined ? {
         message: t
       } : typeof t == `function` ? t(e) : t;
       return this._refinement((t, r) => {
@@ -526,11 +526,11 @@ var b = class {
             code: c.custom,
             ...n(t)
           });
-        return typeof Promise < `u` && i instanceof Promise ? i.then(e => e ? !0 : (a(), !1)) : i ? !0 : (a(), !1);
+        return typeof Promise < `u` && i instanceof Promise ? i.then(e => e ? true : (a(), false)) : i ? true : (a(), false);
       });
     }
     refinement(fn, t) {
-      return this._refinement((n, r) => fn(n) ? !0 : (r.addIssue(typeof t == `function` ? t(n, r) : t), !1));
+      return this._refinement((n, r) => fn(n) ? true : (r.addIssue(typeof t == `function` ? t(n, r) : t), false));
     }
     _refinement(e) {
       return new V({
@@ -623,7 +623,7 @@ var b = class {
       return K.create(this);
     }
     isOptional() {
-      return this.safeParse(void 0).success;
+      return this.safeParse(undefined).success;
     }
     isNullable() {
       return this.safeParse(null).success;
@@ -665,15 +665,15 @@ function Oe(e, t) {
   return !((t !== `v4` && t || !_e.test(e)) && (t !== `v6` && t || !ye.test(e)));
 }
 function ke(text, t) {
-  if (!fe.test(text)) return !1;
+  if (!fe.test(text)) return false;
   try {
     let [n] = text.split(`.`);
-    if (!n) return !1;
+    if (!n) return false;
     let r = n.replace(/-/g, `+`).replace(/_/g, `/`).padEnd(n.length + (4 - n.length % 4) % 4, `=`),
       i = JSON.parse(atob(r));
     return !(typeof i != `object` || !i || `typ` in i && i?.typ !== `JWT` || !i.alg || t && i.alg !== t);
   } catch {
-    return !1;
+    return false;
   }
 }
 function Ae(e, t) {
@@ -695,15 +695,15 @@ var x = class e extends b {
       code: c.too_small,
       minimum: r.value,
       type: `string`,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       message: r.message
     }), t.dirty());else if (r.kind === `max`) e.data.length > r.value && (n = this._getOrReturnCtx(e, n), d(n, {
       code: c.too_big,
       maximum: r.value,
       type: `string`,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       message: r.message
     }), t.dirty());else if (r.kind === `length`) {
       let i = e.data.length > r.value,
@@ -712,15 +712,15 @@ var x = class e extends b {
         code: c.too_big,
         maximum: r.value,
         type: `string`,
-        inclusive: !0,
-        exact: !0,
+        inclusive: true,
+        exact: true,
         message: r.message
       }) : a && d(n, {
         code: c.too_small,
         minimum: r.value,
         type: `string`,
-        inclusive: !0,
-        exact: !0,
+        inclusive: true,
+        exact: true,
         message: r.message
       }), t.dirty());
     } else if (r.kind === `email`) me.test(e.data) || (n = this._getOrReturnCtx(e, n), d(n, {
@@ -919,14 +919,14 @@ var x = class e extends b {
     return typeof e == `string` ? this._addCheck({
       kind: `datetime`,
       precision: null,
-      offset: !1,
-      local: !1,
+      offset: false,
+      local: false,
       message: e
     }) : this._addCheck({
       kind: `datetime`,
-      precision: e?.precision === void 0 ? null : e?.precision,
-      offset: e?.offset ?? !1,
-      local: e?.local ?? !1,
+      precision: e?.precision === undefined ? null : e?.precision,
+      offset: e?.offset ?? false,
+      local: e?.local ?? false,
       ..._.errToObj(e?.message)
     });
   }
@@ -943,7 +943,7 @@ var x = class e extends b {
       message: e
     }) : this._addCheck({
       kind: `time`,
-      precision: e?.precision === void 0 ? null : e?.precision,
+      precision: e?.precision === undefined ? null : e?.precision,
       ..._.errToObj(e?.message)
     });
   }
@@ -1092,7 +1092,7 @@ var x = class e extends b {
 x.create = e => new x({
   checks: [],
   typeName: q.ZodString,
-  coerce: e?.coerce ?? !1,
+  coerce: e?.coerce ?? false,
   ...y(e)
 });
 function je(e, t) {
@@ -1126,14 +1126,14 @@ var Me = class e extends b {
       minimum: r.value,
       type: `number`,
       inclusive: r.inclusive,
-      exact: !1,
+      exact: false,
       message: r.message
     }), n.dirty()) : r.kind === `max` ? (r.inclusive ? e.data > r.value : e.data >= r.value) && (t = this._getOrReturnCtx(e, t), d(t, {
       code: c.too_big,
       maximum: r.value,
       type: `number`,
       inclusive: r.inclusive,
-      exact: !1,
+      exact: false,
       message: r.message
     }), n.dirty()) : r.kind === `multipleOf` ? je(e.data, r.value) !== 0 && (t = this._getOrReturnCtx(e, t), d(t, {
       code: c.not_multiple_of,
@@ -1149,16 +1149,16 @@ var Me = class e extends b {
     };
   }
   gte(e, t) {
-    return this.setLimit(`min`, e, !0, _.toString(t));
+    return this.setLimit(`min`, e, true, _.toString(t));
   }
   gt(e, t) {
-    return this.setLimit(`min`, e, !1, _.toString(t));
+    return this.setLimit(`min`, e, false, _.toString(t));
   }
   lte(e, t) {
-    return this.setLimit(`max`, e, !0, _.toString(t));
+    return this.setLimit(`max`, e, true, _.toString(t));
   }
   lt(e, t) {
-    return this.setLimit(`max`, e, !1, _.toString(t));
+    return this.setLimit(`max`, e, false, _.toString(t));
   }
   setLimit(t, n, r, i) {
     return new e({
@@ -1187,7 +1187,7 @@ var Me = class e extends b {
     return this._addCheck({
       kind: `min`,
       value: 0,
-      inclusive: !1,
+      inclusive: false,
       message: _.toString(e)
     });
   }
@@ -1195,7 +1195,7 @@ var Me = class e extends b {
     return this._addCheck({
       kind: `max`,
       value: 0,
-      inclusive: !1,
+      inclusive: false,
       message: _.toString(e)
     });
   }
@@ -1203,7 +1203,7 @@ var Me = class e extends b {
     return this._addCheck({
       kind: `max`,
       value: 0,
-      inclusive: !0,
+      inclusive: true,
       message: _.toString(e)
     });
   }
@@ -1211,7 +1211,7 @@ var Me = class e extends b {
     return this._addCheck({
       kind: `min`,
       value: 0,
-      inclusive: !0,
+      inclusive: true,
       message: _.toString(e)
     });
   }
@@ -1231,12 +1231,12 @@ var Me = class e extends b {
   safe(e) {
     return this._addCheck({
       kind: `min`,
-      inclusive: !0,
+      inclusive: true,
       value: -(2 ** 53 - 1),
       message: _.toString(e)
     })._addCheck({
       kind: `max`,
-      inclusive: !0,
+      inclusive: true,
       value: 2 ** 53 - 1,
       message: _.toString(e)
     });
@@ -1257,14 +1257,14 @@ var Me = class e extends b {
   get isFinite() {
     let e = null,
       t = null;
-    for (let n of this._def.checks) if (n.kind === `finite` || n.kind === `int` || n.kind === `multipleOf`) return !0;else n.kind === `min` ? (t === null || n.value > t) && (t = n.value) : n.kind === `max` && (e === null || n.value < e) && (e = n.value);
+    for (let n of this._def.checks) if (n.kind === `finite` || n.kind === `int` || n.kind === `multipleOf`) return true;else n.kind === `min` ? (t === null || n.value > t) && (t = n.value) : n.kind === `max` && (e === null || n.value < e) && (e = n.value);
     return Number.isFinite(t) && Number.isFinite(e);
   }
 };
 Me.create = e => new Me({
   checks: [],
   typeName: q.ZodNumber,
-  coerce: e?.coerce || !1,
+  coerce: e?.coerce || false,
   ...y(e)
 });
 var Ne = class e extends b {
@@ -1311,16 +1311,16 @@ var Ne = class e extends b {
     }), p;
   }
   gte(e, t) {
-    return this.setLimit(`min`, e, !0, _.toString(t));
+    return this.setLimit(`min`, e, true, _.toString(t));
   }
   gt(e, t) {
-    return this.setLimit(`min`, e, !1, _.toString(t));
+    return this.setLimit(`min`, e, false, _.toString(t));
   }
   lte(e, t) {
-    return this.setLimit(`max`, e, !0, _.toString(t));
+    return this.setLimit(`max`, e, true, _.toString(t));
   }
   lt(e, t) {
-    return this.setLimit(`max`, e, !1, _.toString(t));
+    return this.setLimit(`max`, e, false, _.toString(t));
   }
   setLimit(t, n, r, i) {
     return new e({
@@ -1343,7 +1343,7 @@ var Ne = class e extends b {
     return this._addCheck({
       kind: `min`,
       value: BigInt(0),
-      inclusive: !1,
+      inclusive: false,
       message: _.toString(e)
     });
   }
@@ -1351,7 +1351,7 @@ var Ne = class e extends b {
     return this._addCheck({
       kind: `max`,
       value: BigInt(0),
-      inclusive: !1,
+      inclusive: false,
       message: _.toString(e)
     });
   }
@@ -1359,7 +1359,7 @@ var Ne = class e extends b {
     return this._addCheck({
       kind: `max`,
       value: BigInt(0),
-      inclusive: !0,
+      inclusive: true,
       message: _.toString(e)
     });
   }
@@ -1367,7 +1367,7 @@ var Ne = class e extends b {
     return this._addCheck({
       kind: `min`,
       value: BigInt(0),
-      inclusive: !0,
+      inclusive: true,
       message: _.toString(e)
     });
   }
@@ -1392,7 +1392,7 @@ var Ne = class e extends b {
 Ne.create = e => new Ne({
   checks: [],
   typeName: q.ZodBigInt,
-  coerce: e?.coerce ?? !1,
+  coerce: e?.coerce ?? false,
   ...y(e)
 });
 var Pe = class extends b {
@@ -1410,7 +1410,7 @@ var Pe = class extends b {
 };
 Pe.create = e => new Pe({
   typeName: q.ZodBoolean,
-  coerce: e?.coerce || !1,
+  coerce: e?.coerce || false,
   ...y(e)
 });
 var Fe = class e extends b {
@@ -1431,15 +1431,15 @@ var Fe = class e extends b {
     for (let r of this._def.checks) r.kind === `min` ? e.data.getTime() < r.value && (n = this._getOrReturnCtx(e, n), d(n, {
       code: c.too_small,
       message: r.message,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       minimum: r.value,
       type: `date`
     }), t.dirty()) : r.kind === `max` ? e.data.getTime() > r.value && (n = this._getOrReturnCtx(e, n), d(n, {
       code: c.too_big,
       message: r.message,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       maximum: r.value,
       type: `date`
     }), t.dirty()) : i.assertNever(r);
@@ -1481,7 +1481,7 @@ var Fe = class e extends b {
 };
 Fe.create = e => new Fe({
   checks: [],
-  coerce: e?.coerce || !1,
+  coerce: e?.coerce || false,
   typeName: q.ZodDate,
   ...y(e)
 });
@@ -1538,7 +1538,7 @@ C.create = e => new C({
 });
 var Le = class extends b {
   constructor() {
-    super(...arguments), this._any = !0;
+    super(...arguments), this._any = true;
   }
   _parse(e) {
     return m(e.data);
@@ -1550,7 +1550,7 @@ Le.create = e => new Le({
 });
 var w = class extends b {
   constructor() {
-    super(...arguments), this._unknown = !0;
+    super(...arguments), this._unknown = true;
   }
   _parse(e) {
     return m(e.data);
@@ -1608,11 +1608,11 @@ var E = class e extends b {
         i = t.data.length < _def.exactLength.value;
       (e || i) && (d(t, {
         code: e ? c.too_big : c.too_small,
-        minimum: i ? _def.exactLength.value : void 0,
-        maximum: e ? _def.exactLength.value : void 0,
+        minimum: i ? _def.exactLength.value : undefined,
+        maximum: e ? _def.exactLength.value : undefined,
         type: `array`,
-        inclusive: !0,
-        exact: !0,
+        inclusive: true,
+        exact: true,
         message: _def.exactLength.message
       }), n.dirty());
     }
@@ -1620,15 +1620,15 @@ var E = class e extends b {
       code: c.too_small,
       minimum: _def.minLength.value,
       type: `array`,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       message: _def.minLength.message
     }), n.dirty()), _def.maxLength !== null && t.data.length > _def.maxLength.value && (d(t, {
       code: c.too_big,
       maximum: _def.maxLength.value,
       type: `array`,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       message: _def.maxLength.message
     }), n.dirty()), t.common.async) return Promise.all([...t.data].map((e, n) => _def.type._parseAsync(new v(t, e, t.path, n)))).then(e => f.mergeArray(n, e));
     let i = [...t.data].map((e, n) => _def.type._parseSync(new v(t, e, t.path, n)));
@@ -1788,7 +1788,7 @@ var O = class e extends b {
     return _.errToObj, new e({
       ...this._def,
       unknownKeys: `strict`,
-      ...(t === void 0 ? {} : {
+      ...(t === undefined ? {} : {
         errorMap: (event, n) => {
           let r = this._def.errorMap?.(event, n).message ?? n.defaultError;
           return event.code === `unrecognized_keys` ? {
@@ -1981,7 +1981,7 @@ k.create = (e, t) => new k({
   typeName: q.ZodUnion,
   ...y(t)
 });
-var A = options => options instanceof I ? A(options.schema) : options instanceof V ? A(options.innerType()) : options instanceof L ? [options.value] : options instanceof R ? options.options : options instanceof z ? i.objectValues(options.enum) : options instanceof W ? A(options._def.innerType) : options instanceof S ? [void 0] : options instanceof C ? [null] : options instanceof H ? [void 0, ...A(options.unwrap())] : options instanceof U ? [null, ...A(options.unwrap())] : options instanceof We || options instanceof K ? A(options.unwrap()) : options instanceof G ? A(options._def.innerType) : [],
+var A = options => options instanceof I ? A(options.schema) : options instanceof V ? A(options.innerType()) : options instanceof L ? [options.value] : options instanceof R ? options.options : options instanceof z ? i.objectValues(options.enum) : options instanceof W ? A(options._def.innerType) : options instanceof S ? [undefined] : options instanceof C ? [null] : options instanceof H ? [undefined, ...A(options.unwrap())] : options instanceof U ? [null, ...A(options.unwrap())] : options instanceof We || options instanceof K ? A(options.unwrap()) : options instanceof G ? A(options._def.innerType) : [],
   ze = class e extends b {
     _parse(e) {
       let {
@@ -2041,7 +2041,7 @@ function j(e, t) {
   let n = s(e),
     r = s(t);
   if (e === t) return {
-    valid: !0,
+    valid: true,
     data: e
   };
   if (n === o.object && r === o.object) {
@@ -2054,18 +2054,18 @@ function j(e, t) {
     for (let n of r) {
       let r = j(e[n], t[n]);
       if (!r.valid) return {
-        valid: !1
+        valid: false
       };
       a[n] = r.data;
     }
     return {
-      valid: !0,
+      valid: true,
       data: a
     };
   }
   if (n === o.array && r === o.array) {
     if (e.length !== t.length) return {
-      valid: !1
+      valid: false
     };
     let n = [];
     for (let r = 0; r < e.length; r++) {
@@ -2073,20 +2073,20 @@ function j(e, t) {
         a = t[r],
         o = j(i, a);
       if (!o.valid) return {
-        valid: !1
+        valid: false
       };
       n.push(o.data);
     }
     return {
-      valid: !0,
+      valid: true,
       data: n
     };
   }
   return n === o.date && r === o.date && +e == +t ? {
-    valid: !0,
+    valid: true,
     data: e
   } : {
-    valid: !1
+    valid: false
   };
 }
 var M = class extends b {
@@ -2144,15 +2144,15 @@ var N = class e extends b {
     if (n.data.length < this._def.items.length) return d(n, {
       code: c.too_small,
       minimum: this._def.items.length,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       type: `array`
     }), p;
     !this._def.rest && n.data.length > this._def.items.length && (d(n, {
       code: c.too_big,
       maximum: this._def.items.length,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       type: `array`
     }), t.dirty());
     let r = [...n.data].map((e, t) => {
@@ -2299,15 +2299,15 @@ var F = class e extends b {
       code: c.too_small,
       minimum: _def.minSize.value,
       type: `set`,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       message: _def.minSize.message
     }), t.dirty()), _def.maxSize !== null && n.data.size > _def.maxSize.value && (d(n, {
       code: c.too_big,
       maximum: _def.maxSize.value,
       type: `set`,
-      inclusive: !0,
-      exact: !1,
+      inclusive: true,
+      exact: false,
       message: _def.maxSize.message
     }), t.dirty());
     let valueType = this._def.valueType;
@@ -2598,7 +2598,7 @@ var B = class extends b {
     let {
       ctx: t
     } = this._processInputParams(e);
-    return t.parsedType !== o.promise && t.common.async === !1 ? (d(t, {
+    return t.parsedType !== o.promise && t.common.async === false ? (d(t, {
       code: c.invalid_type,
       expected: o.promise,
       received: t.parsedType
@@ -2662,7 +2662,7 @@ var V = class extends b {
         if (t instanceof Promise) throw Error(`Async refinement encountered during synchronous parse operation. Use .parseAsync instead.`);
         return e;
       };
-      if (n.common.async === !1) {
+      if (n.common.async === false) {
         let r = this._def.schema._parseSync({
           data: n.data,
           path: n.path,
@@ -2683,7 +2683,7 @@ var V = class extends b {
       }))));
     }
     if (r.type === `transform`) {
-      if (n.common.async === !1) {
+      if (n.common.async === false) {
         let e = this._def.schema._parseSync({
           data: n.data,
           path: n.path,
@@ -2725,7 +2725,7 @@ V.create = (e, t, n) => new V({
 });
 var H = class extends b {
   _parse(e) {
-    return this._getType(e) === o.undefined ? m(void 0) : this._def.innerType._parse(e);
+    return this._getType(e) === o.undefined ? m(undefined) : this._def.innerType._parse(e);
   }
   unwrap() {
     return this._def.innerType;
@@ -2956,10 +2956,10 @@ var $e = create().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
       for (; t.some(t => t.id === e);) e += `-`;
       t.unshift({
         id: e,
-        enabled: !0,
+        enabled: true,
         type: `record`,
         days: [0, 1, 2, 3, 4, 5, 6],
-        allDay: !0,
+        allDay: true,
         start: `00:00`,
         end: `00:00`
       });
@@ -2971,7 +2971,7 @@ var $e = create().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
     };
   }),
   nt = {
-    enabled: !1,
+    enabled: false,
     mode: `selected`,
     rules: []
   },
@@ -2993,7 +2993,7 @@ function X(e, t) {
   return ot(e, t).includes(t.getDay());
 }
 function st(items, t = new Date()) {
-  if (!items.enabled) return !0;
+  if (!items.enabled) return true;
   let n = items.rules.filter(options => options.enabled),
     r = n.some(e => e.type === `record`),
     i = t.getHours() * 60 + t.getMinutes(),
@@ -3038,7 +3038,7 @@ var ht = {
     decimals: 3,
     startTime: `09:00`,
     endTime: `18:00`,
-    lunchEnabled: !0,
+    lunchEnabled: true,
     lunchStart: `12:00`,
     lunchEnd: `13:00`,
     weekPattern: `double`,
@@ -3050,19 +3050,19 @@ var ht = {
     countdowns: [],
     wishes: [],
     activeWishId: ``,
-    expanded: !0,
-    alwaysOnTop: !0,
+    expanded: true,
+    alwaysOnTop: true,
     opacity: 100,
     size: `medium`,
     finish: `graphite`,
     earnedRange: `today`,
-    locked: !1,
-    clickThrough: !1,
-    amountHidden: !1,
+    locked: false,
+    clickThrough: false,
+    amountHidden: false,
     hideShortcut: ``,
-    celebrate: !0,
+    celebrate: true,
     celebrateAmount: 50,
-    notifyOffWork: !0
+    notifyOffWork: true
   },
   gt = /^([01]\d|2[0-3]):[0-5]\d$/,
   _t = /^\d{4}-\d{2}-\d{2}$/;

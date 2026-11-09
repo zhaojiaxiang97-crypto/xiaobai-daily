@@ -38,7 +38,7 @@ function a(t, n, r) {
     schemaVersion: 1,
     occurredAt: new Date().toISOString(),
     page: e,
-    elementId: typeof r?.elementId == `string` ? r.elementId : void 0,
+    elementId: typeof r?.elementId == `string` ? r.elementId : undefined,
     props: r,
     ts: Date.now()
   };
@@ -79,8 +79,8 @@ function s(i = `today-work`) {
       tag: t.tagName.toLowerCase(),
       elementId: t.dataset.track || t.id || null
     });
-  }, document.addEventListener(`click`, t, !0), n = () => a(`lifecycle`, `focus`), r = () => a(`lifecycle`, `blur`), window.addEventListener(`focus`, n), window.addEventListener(`blur`, r), o(e), () => {
-    t && document.removeEventListener(`click`, t, !0), n && window.removeEventListener(`focus`, n), r && window.removeEventListener(`blur`, r), t = null, n = null, r = null;
+  }, document.addEventListener(`click`, t, true), n = () => a(`lifecycle`, `focus`), r = () => a(`lifecycle`, `blur`), window.addEventListener(`focus`, n), window.addEventListener(`blur`, r), o(e), () => {
+    t && document.removeEventListener(`click`, t, true), n && window.removeEventListener(`focus`, n), r && window.removeEventListener(`blur`, r), t = null, n = null, r = null;
   };
 }
 export { s as n, a as r, o as t };

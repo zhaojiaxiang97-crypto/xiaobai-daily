@@ -161,11 +161,11 @@ var ge = g(`file-headphone`, [[`path`, {
         Q = p(() => B.value.enableMechanicalKeyboardSound && H.value?.status === `error`);
       function $(e) {
         Fe(e, {
-          alwaysPreview: !0
+          alwaysPreview: true
         });
       }
       function ze(e) {
-        e.repeat || B.value.enableMechanicalKeyboardSound || ue.preview(B.value.mechanicalKeyboardSwitchType).catch(() => void 0);
+        e.repeat || B.value.enableMechanicalKeyboardSound || ue.preview(B.value.mechanicalKeyboardSwitchType).catch(() => undefined);
       }
       return ne(() => R.active, e => {
         e && Oe();
@@ -180,7 +180,7 @@ var ge = g(`file-headphone`, [[`path`, {
         onToggle: n(Me),
         onBack: u[4] ||= e => Te(`back`)
       }, ee({
-        default: a(() => [h(`section`, b, [h(`header`, x, [h(`strong`, S, f(n(z)(`settings.mechanicalKeyboardSwitchType`)), 1), h(`small`, C, f(n(z)(`toolboxNative.keyboardSoundTypesHint`)), 1)]), h(`div`, w, [(l(!0), i(s, null, te(Re.value, state => (l(), i(`div`, {
+        default: a(() => [h(`section`, b, [h(`header`, x, [h(`strong`, S, f(n(z)(`settings.mechanicalKeyboardSwitchType`)), 1), h(`small`, C, f(n(z)(`toolboxNative.keyboardSoundTypesHint`)), 1)]), h(`div`, w, [(l(true), i(s, null, te(Re.value, state => (l(), i(`div`, {
           key: state.value,
           class: `relative`
         }, [h(`button`, {
@@ -193,7 +193,7 @@ var ge = g(`file-headphone`, [[`path`, {
           key: 0,
           size: 13,
           class: `shrink-0 text-primary`
-        })) : m(``, !0)]), h(`small`, O, f(state.description), 1)], 10, T), h(`button`, {
+        })) : m(``, true)]), h(`small`, O, f(state.description), 1)], 10, T), h(`button`, {
           type: `button`,
           class: `absolute top-1/2 right-2 inline-flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground`,
           "aria-label": `${n(z)(`settings.keyboardSoundCustomPreview`)} ${state.name}`,
@@ -207,7 +207,7 @@ var ge = g(`file-headphone`, [[`path`, {
           class: t([`inline-flex size-8 shrink-0 items-center justify-center rounded-lg`, Z.value ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
         }, [d(n(ge), {
           size: 16
-        })], 2), h(`div`, A, [h(`strong`, j, [r(f(n(z)(`toolboxNative.keyboardSoundCustomTitle`)) + ` `, 1), Z.value && n(K) ? (l(), i(`span`, M, f(n(z)(`toolboxNative.keyboardSoundInUse`)), 1)) : m(``, !0)]), n(K) ? (l(), i(`small`, {
+        })], 2), h(`div`, A, [h(`strong`, j, [r(f(n(z)(`toolboxNative.keyboardSoundCustomTitle`)) + ` `, 1), Z.value && n(K) ? (l(), i(`span`, M, f(n(z)(`toolboxNative.keyboardSoundInUse`)), 1)) : m(``, true)]), n(K) ? (l(), i(`small`, {
           key: 0,
           class: `mt-0.5 block truncate text-[11px] text-muted-foreground`,
           title: n(K).fileName
@@ -224,7 +224,7 @@ var ge = g(`file-headphone`, [[`path`, {
         }, {
           default: a(() => [r(f(n(z)(`settings.keyboardSoundCustomPreview`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`]), Z.value ? m(``, !0) : (l(), o(n(e), {
+        }, 8, [`disabled`, `onClick`]), Z.value ? m(``, true) : (l(), o(n(e), {
           key: 0,
           size: `sm`,
           variant: `outline`,
@@ -234,7 +234,7 @@ var ge = g(`file-headphone`, [[`path`, {
         }, {
           default: a(() => [r(f(n(z)(`toolboxNative.keyboardSoundCustomUse`)), 1)]),
           _: 1
-        }, 8, [`disabled`]))], 64)) : m(``, !0), d(n(e), {
+        }, 8, [`disabled`]))], 64)) : m(``, true), d(n(e), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 px-2.5 text-xs`,
@@ -249,11 +249,11 @@ var ge = g(`file-headphone`, [[`path`, {
           variant: `ghost`,
           class: `h-7 px-2 text-xs text-destructive hover:text-destructive`,
           disabled: n(q),
-          onClick: u[1] ||= e => J.value = !0
+          onClick: u[1] ||= e => J.value = true
         }, {
           default: a(() => [r(f(n(z)(`settings.keyboardSoundCustomDelete`)), 1)]),
           _: 1
-        }, 8, [`disabled`])) : m(``, !0)])], 2)]), h(`section`, _e, [h(`div`, ve, [h(`strong`, ye, [d(n(oe), {
+        }, 8, [`disabled`])) : m(``, true)])], 2)]), h(`section`, _e, [h(`div`, ve, [h(`strong`, ye, [d(n(oe), {
           size: 15,
           class: `text-muted-foreground`
         }), r(f(n(z)(`settings.mechanicalKeyboardVolume`)), 1)]), d(n(se), {
@@ -281,7 +281,7 @@ var ge = g(`file-headphone`, [[`path`, {
         _: 2
       }, [Q.value || n(_) && !n(B).enableMechanicalKeyboardSound ? {
         name: `notes`,
-        fn: a(() => [n(_) && !n(B).enableMechanicalKeyboardSound ? (l(), i(`p`, v, f(n(z)(`settings.mechanicalKeyboardWindowsNote`)), 1)) : m(``, !0), Q.value ? (l(), i(`div`, y, [h(`span`, null, f(n(H)?.errorMessage || n(z)(`settings.mechanicalKeyboardSoundFailed`)), 1), d(n(e), {
+        fn: a(() => [n(_) && !n(B).enableMechanicalKeyboardSound ? (l(), i(`p`, v, f(n(z)(`settings.mechanicalKeyboardWindowsNote`)), 1)) : m(``, true), Q.value ? (l(), i(`div`, y, [h(`span`, null, f(n(H)?.errorMessage || n(z)(`settings.mechanicalKeyboardSoundFailed`)), 1), d(n(e), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 shrink-0 text-xs`,
@@ -290,9 +290,9 @@ var ge = g(`file-headphone`, [[`path`, {
         }, {
           default: a(() => [r(f(n(z)(`common.retry`)), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`])])) : m(``, !0)]),
+        }, 8, [`disabled`, `onClick`])])) : m(``, true)]),
         key: `0`
-      } : void 0]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `onToggle`]));
+      } : undefined]), 1032, [`tool`, `user`, `credits-balance`, `description`, `enabled`, `toggle-disabled`, `onToggle`]));
     }
   });
 export { R as default };

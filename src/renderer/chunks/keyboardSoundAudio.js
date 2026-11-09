@@ -5,7 +5,7 @@ var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
     id: `custom-sound-pack-1582707445334`,
     name: `CherryMX Blue - ABS keycaps`,
     key_define_type: `single`,
-    includes_numpad: !1,
+    includes_numpad: false,
     sound: `sound.ogg`,
     defines: {
       1: [1754, 184],
@@ -129,7 +129,7 @@ var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
     id: `custom-sound-pack-1582707445334`,
     name: `CherryMX Red - ABS keycaps`,
     key_define_type: `single`,
-    includes_numpad: !1,
+    includes_numpad: false,
     sound: `sound.ogg`,
     defines: {
       1: [2464, 170],
@@ -253,7 +253,7 @@ var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
     id: `custom-sound-pack-1582656695035`,
     name: `CherryMX Brown - ABS keycaps`,
     key_define_type: `single`,
-    includes_numpad: !1,
+    includes_numpad: false,
     sound: `sound.ogg`,
     defines: {
       1: [1402, 170],
@@ -377,7 +377,7 @@ var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
     id: `custom-sound-pack-1582654366773`,
     name: `CherryMX Black - ABS keycaps`,
     key_define_type: `single`,
-    includes_numpad: !1,
+    includes_numpad: false,
     sound: `sound.ogg`,
     defines: {
       1: [2926, 125],
@@ -752,13 +752,13 @@ var k = class {
   loadingPack = null;
   loadingType = null;
   activeVoices = [];
-  enabled = !1;
+  enabled = false;
   switchType = `blue`;
   volume = 60;
   lastSegmentIndex = -1;
   customScope = `guest`;
   async configure(options) {
-    if (options.customScope !== void 0 && options.customScope !== this.customScope && (this.customScope = options.customScope, this.invalidateCustomSound()), this.enabled = options.enabled, this.switchType = options.switchType, this.volume = Math.max(0, Math.min(100, Math.round(options.volume))), this.applyVolume(), this.enabled) {
+    if (options.customScope !== undefined && options.customScope !== this.customScope && (this.customScope = options.customScope, this.invalidateCustomSound()), this.enabled = options.enabled, this.switchType = options.switchType, this.volume = Math.max(0, Math.min(100, Math.round(options.volume))), this.applyVolume(), this.enabled) {
       let e = this.getContext();
       await Promise.all([e.state === `suspended` ? e.resume() : Promise.resolve(), this.loadPack(this.switchType)]);
     }
@@ -774,7 +774,7 @@ var k = class {
     return n.state === `suspended` && (await n.resume()), this.playFromPack(t), Math.round(t.segments[0].durationSeconds * 1e3);
   }
   async isCustomSoundAvailable() {
-    return (await this.loadPack(`custom`)).usesFallback !== !0;
+    return (await this.loadPack(`custom`)).usesFallback !== true;
   }
   invalidateCustomSound() {
     this.loadedPack?.type === `custom` && (this.loadedPack = null), this.loadingType === `custom` && (this.loadingPack = null, this.loadingType = null);
@@ -791,11 +791,11 @@ var k = class {
   }
   playKey() {
     if (!(!this.enabled || this.volume <= 0)) {
-      if (this.context && this.context.state !== `running` && this.context.state !== `closed` && this.context.resume().catch(() => void 0), this.loadedPack?.type === this.switchType) {
+      if (this.context && this.context.state !== `running` && this.context.state !== `closed` && this.context.resume().catch(() => undefined), this.loadedPack?.type === this.switchType) {
         this.playFromPack(this.loadedPack);
         return;
       }
-      this.loadPack(this.switchType).catch(() => void 0);
+      this.loadPack(this.switchType).catch(() => undefined);
     }
   }
   getContext() {
@@ -848,7 +848,7 @@ var k = class {
     return {
       ...(await this.loadRecordedPack(`blue`)),
       type: `custom`,
-      usesFallback: !0
+      usesFallback: true
     };
   }
   async createCustomPack(e) {
@@ -872,9 +872,9 @@ var k = class {
       o = r.length,
       s = -1;
     for (let e = 0; e < r.length; e += 1) {
-      let t = !1;
+      let t = false;
       for (let n = 0; n < r.numberOfChannels; n += 1) if (Math.abs(r.getChannelData(n)[e]) >= a) {
-        t = !0;
+        t = true;
         break;
       }
       t && (o = Math.min(o, e), s = e);
@@ -938,7 +938,7 @@ function A(e) {
 }
 var keyboardSoundAudioAPI = window.keyboardSoundAudioAPI,
   M = e({
-    legacy: !1,
+    legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
     messages: {
@@ -973,11 +973,11 @@ async function F(e) {
   if (e.type === `configure`) {
     try {
       await N.configure(e.payload), P(e.requestId, {
-        ok: !0
+        ok: true
       });
     } catch (t) {
       P(e.requestId, {
-        ok: !1,
+        ok: false,
         message: t instanceof Error ? t.message : `configure failed`
       });
     }
@@ -986,11 +986,11 @@ async function F(e) {
   if (e.type === `preview`) {
     try {
       await N.preview(e.switchType), P(e.requestId, {
-        ok: !0
+        ok: true
       });
     } catch (t) {
       P(e.requestId, {
-        ok: !1,
+        ok: false,
         message: t instanceof Error ? t.message : `preview failed`
       });
     }
@@ -1000,12 +1000,12 @@ async function F(e) {
     try {
       let t = await N.previewCustomCandidate(e.data);
       P(e.requestId, {
-        ok: !0,
+        ok: true,
         processedDurationMs: t
       });
     } catch (t) {
       P(e.requestId, {
-        ok: !1,
+        ok: false,
         message: t instanceof Error ? t.message : `preview custom failed`
       });
     }
@@ -1014,12 +1014,12 @@ async function F(e) {
   if (e.type === `probeCustom`) try {
     let t = await N.isCustomSoundAvailable();
     P(e.requestId, {
-      ok: !0,
+      ok: true,
       customAvailable: t
     });
   } catch (t) {
     P(e.requestId, {
-      ok: !1,
+      ok: false,
       message: t instanceof Error ? t.message : `probe custom failed`
     });
   }

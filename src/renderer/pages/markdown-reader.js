@@ -132,24 +132,24 @@ var ut = L(`corner-up-left`, [[`path`, {
     props: {
       modelValue: {
         type: [Boolean, String],
-        required: !1,
-        default: !1
+        required: false,
+        default: false
       },
       disabled: {
         type: Boolean,
-        required: !1
+        required: false
       },
       textValue: {
         type: String,
-        required: !1
+        required: false
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1
+        required: false
       }
     },
     emits: [`select`, `update:modelValue`],
@@ -169,7 +169,7 @@ var ut = L(`corner-up-left`, [[`path`, {
         "aria-checked": d(n)(d(f)) ? `mixed` : d(f),
         "data-state": d(t)(d(f)),
         onSelect: r[0] ||= async e => {
-          c(`select`, e), d(n)(d(f)) ? f.value = !0 : f.value = !d(f);
+          c(`select`, e), d(n)(d(f)) ? f.value = true : f.value = !d(f);
         }
       }), {
         default: y(() => [p(e.$slots, `default`, {
@@ -184,23 +184,23 @@ var ut = L(`corner-up-left`, [[`path`, {
     props: {
       modelValue: {
         type: [Boolean, String],
-        required: !1
+        required: false
       },
       disabled: {
         type: Boolean,
-        required: !1
+        required: false
       },
       textValue: {
         type: String,
-        required: !1
+        required: false
       },
       asChild: {
         type: Boolean,
-        required: !1
+        required: false
       },
       as: {
         type: null,
-        required: !1
+        required: false
       }
     },
     emits: [`select`, `update:modelValue`],
@@ -286,11 +286,11 @@ var ut = L(`corner-up-left`, [[`path`, {
       },
       active: {
         type: Boolean,
-        default: !1
+        default: false
       },
       disabled: {
         type: Boolean,
-        default: !1
+        default: false
       },
       size: {
         default: `sm`
@@ -313,7 +313,7 @@ var ut = L(`corner-up-left`, [[`path`, {
             type: `button`,
             class: u([`inline-flex shrink-0 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 disabled:pointer-events-none disabled:opacity-40`, [n.size === `xs` ? `size-6` : `size-7`, n.active ? `bg-primary text-primary-foreground` : `text-muted-foreground hover:bg-black/5 hover:text-foreground dark:hover:bg-white/10`]]),
             "aria-label": n.label,
-            "aria-pressed": n.active || void 0,
+            "aria-pressed": n.active || undefined,
             disabled: n.disabled,
             onMousedown: t[0] ||= I(() => {}, [`prevent`]),
             onClick: t[1] ||= e => r(`click`, e)
@@ -329,7 +329,7 @@ var ut = L(`corner-up-left`, [[`path`, {
           }, {
             default: y(() => [h(A(n.shortcut), 1)]),
             _: 1
-          })) : N(``, !0)]),
+          })) : N(``, true)]),
           _: 1
         }, 8, [`side`])]),
         _: 3
@@ -686,7 +686,7 @@ var Rt = 6e4,
       lineComments: [`#`],
       blockComments: [],
       quotes: [`'`, `"`],
-      tripleQuotes: !0
+      tripleQuotes: true
     },
     shell: {
       keywords: Vt,
@@ -694,9 +694,9 @@ var Rt = 6e4,
       lineComments: [`#`],
       blockComments: [],
       quotes: [`'`, `"`],
-      shellVariables: !0,
-      hashNeedsBoundary: !0,
-      apostropheInWords: !0
+      shellVariables: true,
+      hashNeedsBoundary: true,
+      apostropheInWords: true
     },
     sql: {
       keywords: Z,
@@ -704,7 +704,7 @@ var Rt = 6e4,
       lineComments: [`--`],
       blockComments: [[`/*`, `*/`]],
       quotes: [`'`, `"`, "`"],
-      caseInsensitive: !0
+      caseInsensitive: true
     },
     json: {
       keywords: new Set(),
@@ -712,7 +712,7 @@ var Rt = 6e4,
       lineComments: [`//`],
       blockComments: [[`/*`, `*/`]],
       quotes: [`"`],
-      jsonKeys: !0
+      jsonKeys: true
     },
     css: {
       keywords: Ut,
@@ -725,7 +725,7 @@ var Rt = 6e4,
       literals: X,
       ...Wt,
       quotes: [`'`, `"`, "`"],
-      apostropheInWords: !0
+      apostropheInWords: true
     },
     ruby: {
       keywords: Ht,
@@ -733,7 +733,7 @@ var Rt = 6e4,
       lineComments: [`#`],
       blockComments: [],
       quotes: [`'`, `"`],
-      apostropheInWords: !0
+      apostropheInWords: true
     }
   },
   Kt = {
@@ -1059,7 +1059,7 @@ function gn(text, t) {
   return n;
 }
 function _n(text) {
-  return gn(text, (e, t) => /^\s{0,3}(?:>\s?)*\s{0,3}#{1,6}(?:\s|$)/.test(e) || /<h[1-6][\s>]/i.test(e) || e.trim() && t !== void 0 && /^\s{0,3}(?:>\s?)*\s{0,3}(?:=+|-{2,})\s*$/.test(t) ? 0 : null);
+  return gn(text, (e, t) => /^\s{0,3}(?:>\s?)*\s{0,3}#{1,6}(?:\s|$)/.test(e) || /<h[1-6][\s>]/i.test(e) || e.trim() && t !== undefined && /^\s{0,3}(?:>\s?)*\s{0,3}(?:=+|-{2,})\s*$/.test(t) ? 0 : null);
 }
 var vn = /^(\s*(?:>\s?)*\s*(?:[-*+]|\d+[.)])\s+\[)([ xX])\]/;
 function yn(e) {
@@ -1125,8 +1125,8 @@ function Cn(el, t, n) {
     i = me.sanitize(r, {
       ALLOWED_TAGS: tn,
       ALLOWED_ATTR: nn,
-      ALLOW_DATA_ATTR: !1,
-      ALLOW_UNKNOWN_PROTOCOLS: !1
+      ALLOW_DATA_ATTR: false,
+      ALLOW_UNKNOWN_PROTOCOLS: false
     }),
     a = new DOMParser().parseFromString(`<body>${String(i)}</body>`, `text/html`),
     body = a.body,
@@ -1171,18 +1171,18 @@ function Cn(el, t, n) {
 }
 var wn = class {
   softParser = new $e({
-    gfm: !0,
-    breaks: !0
+    gfm: true,
+    breaks: true
   });
   strictParser = new $e({
-    gfm: !0,
-    breaks: !1
+    gfm: true,
+    breaks: false
   });
   cache = new Map();
   render(items, t) {
     let n = t.softBreaks ? this.softParser : this.strictParser,
       r = n.lexer(items),
-      i = `${+!!t.softBreaks}\u0001${t.copyLabel}\u0001${JSON.stringify(r.links || {})}\u0001`,
+      i = `${+!!t.softBreaks}null${t.copyLabel}null${JSON.stringify(r.links || {})}null`,
       a = fn(items),
       o = new cn(),
       s = new Map(),
@@ -1371,10 +1371,10 @@ body { margin: 0; background: #fff; }
           start: 0,
           end: 0
         }),
-        te = S(!1),
+        te = S(false),
         w = null,
         E = null,
-        D = !1,
+        D = false,
         O = M(() => fn(r.modelValue)),
         k = M(() => O.value.length),
         j = M(() => pn(O.value, b.value.start)),
@@ -1392,17 +1392,17 @@ body { margin: 0; background: #fff; }
             i = 0;
           for (let [a, o] of e.entries()) o.start < i || o.end > modelValue.length || (o.start > i && n.push({
             text: modelValue.slice(i, o.start),
-            mark: !1,
-            current: !1
+            mark: false,
+            current: false
           }), n.push({
             text: modelValue.slice(o.start, o.end),
-            mark: !0,
+            mark: true,
             current: a === r.findCurrent
           }), i = o.end);
           return n.push({
-            text: `${modelValue.slice(i)}\u200b`,
-            mark: !1,
-            current: !1
+            text: `${modelValue.slice(i)}null`,
+            mark: false,
+            current: false
           }), n;
         }),
         se = M(() => {
@@ -1515,10 +1515,10 @@ body { margin: 0; background: #fff; }
         e.isComposing || pe();
       }
       function z() {
-        te.value = !1, pe();
+        te.value = false, pe();
       }
       function he() {
-        te.value && (te.value = !1, pe());
+        te.value && (te.value = false, pe());
       }
       function ge(e) {
         let t = o.value;
@@ -1532,7 +1532,7 @@ body { margin: 0; background: #fff; }
       }
       function _e(e) {
         let t = o.value;
-        t && e && (t.focus(), t.setSelectionRange(e.start, e.end), (e.replacement ? document.execCommand(`insertText`, !1, e.replacement) : e.start === e.end || document.execCommand(`delete`, !1)) || t.setRangeText(e.replacement, e.start, e.end, `end`), i(`update:modelValue`, t.value), t.setSelectionRange(e.selectionStart, e.selectionEnd), le());
+        t && e && (t.focus(), t.setSelectionRange(e.start, e.end), (e.replacement ? document.execCommand(`insertText`, false, e.replacement) : e.start === e.end || document.execCommand(`delete`, false)) || t.setRangeText(e.replacement, e.start, e.end, `end`), i(`update:modelValue`, t.value), t.setSelectionRange(e.selectionStart, e.selectionEnd), le());
       }
       function ve(e) {
         if (!o.value) return;
@@ -1543,18 +1543,18 @@ body { margin: 0; background: #fff; }
         if (e.isComposing || e.keyCode === 229) return;
         let t = e.metaKey || e.ctrlKey;
         if (e.key === `Escape`) {
-          D = !0;
+          D = true;
           return;
         }
         if (e.key === `Tab` && !t && !e.altKey) {
           if (D) {
-            D = !1;
+            D = false;
             return;
           }
           e.preventDefault(), _e(Pt(ce(), e.shiftKey));
           return;
         }
-        if (D = !1, e.key === `Enter` && !t && !e.shiftKey && !e.altKey) {
+        if (D = false, e.key === `Enter` && !t && !e.shiftKey && !e.altKey) {
           let t = Ft(ce());
           t && (e.preventDefault(), _e(t));
           return;
@@ -1591,7 +1591,7 @@ body { margin: 0; background: #fff; }
         for (let e of Array.from(t.children)) u.push(e.offsetTop);
         t.replaceChildren(), c.value = u;
       }
-      function Se(e = !1) {
+      function Se(e = false) {
         w !== null && (window.clearTimeout(w), w = null), w = window.setTimeout(() => {
           w = null, xe();
         }, e ? 0 : 150);
@@ -1632,14 +1632,14 @@ body { margin: 0; background: #fff; }
         if (!t) return;
         let n = O.value[Math.min(Math.max(0, e), O.value.length - 1)] ?? 0;
         t.focus({
-          preventScroll: !0
+          preventScroll: true
         }), t.setSelectionRange(n, n), le(), (r.lineNumbers || r.measureLines) && xe(), Te(Math.max(0, we(e) - Q - 12));
       }
-      function H(e, t, n = !0) {
+      function H(e, t, n = true) {
         let r = o.value;
         if (!r) return;
         n && r.focus({
-          preventScroll: !0
+          preventScroll: true
         }), r.setSelectionRange(e, t), le();
         let i = pn(O.value, e),
           a = we(i) - r.clientHeight / 3;
@@ -1652,9 +1652,9 @@ body { margin: 0; background: #fff; }
         ge(text), Se(text.split(`
 `).length !== (t ?? ``).split(`
 `).length);
-      }), v(() => [r.lineNumbers, r.measureLines], () => ie(() => Se(!0))), ae(() => {
+      }), v(() => [r.lineNumbers, r.measureLines], () => ie(() => Se(true))), ae(() => {
         let e = o.value;
-        e && (e.value = r.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(!0)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(!0)), Se(!0);
+        e && (e.value = r.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
       }), re(() => {
         E?.disconnect(), document.removeEventListener(`selectionchange`, De), w !== null && window.clearTimeout(w);
       }), t({
@@ -1670,9 +1670,9 @@ body { margin: 0; background: #fff; }
         class: `mx-2 mt-2 flex shrink-0 flex-wrap items-center gap-0.5 rounded-md border border-black/8 bg-black/[0.02] p-1 dark:border-white/10 dark:bg-white/[0.03]`,
         role: `toolbar`,
         "aria-label": d(a)(`toolboxNative.markdownFormattingTools`)
-      }, [(T(!0), g(C, null, _(se.value, (e, t) => (T(), g(C, {
+      }, [(T(true), g(C, null, _(se.value, (e, t) => (T(), g(C, {
         key: t
-      }, [t > 0 ? (T(), g(`span`, jn)) : N(``, !0), (T(!0), g(C, null, _(e, e => (T(), x(wt, {
+      }, [t > 0 ? (T(), g(`span`, jn)) : N(``, true), (T(true), g(C, null, _(e, e => (T(), x(wt, {
         key: e.key,
         size: `xs`,
         label: e.label,
@@ -1694,26 +1694,26 @@ body { margin: 0; background: #fff; }
           width: oe.value
         }),
         "aria-hidden": `true`
-      }, [(T(!0), g(C, null, _(L.value, e => (T(), g(`span`, {
+      }, [(T(true), g(C, null, _(L.value, e => (T(), g(`span`, {
         key: e.line,
         class: u([`absolute right-2 flex h-[24.5px] items-center`, e.line === j.value ? `text-foreground` : ``]),
         style: ne({
           top: `${e.top}px`
         })
-      }, A(e.line + 1), 7))), 128))], 4)) : N(``, !0), P(`div`, Nn, [I.value.length ? (T(), g(`div`, Pn, [P(`div`, {
+      }, A(e.line + 1), 7))), 128))], 4)) : N(``, true), P(`div`, Nn, [I.value.length ? (T(), g(`div`, Pn, [P(`div`, {
         class: `whitespace-pre-wrap pb-24 pr-6 pl-[var(--editor-pad-left)] pt-5 text-sm leading-[1.75] text-transparent [overflow-wrap:break-word] [tab-size:2]`,
         style: ne({
           width: ee.value,
           transform: `translateY(${-l.value}px)`
         })
-      }, [(T(!0), g(C, null, _(I.value, (e, t) => (T(), g(C, {
+      }, [(T(true), g(C, null, _(I.value, (e, t) => (T(), g(C, {
         key: t
       }, [e.mark ? (T(), g(`mark`, {
         key: 0,
         class: u([`rounded-[2px] text-transparent`, e.current ? `bg-orange-400/45` : `bg-yellow-300/45`])
       }, A(e.text), 3)) : (T(), g(C, {
         key: 1
-      }, [h(A(e.text), 1)], 64))], 64))), 128))], 4)])) : N(``, !0), P(`textarea`, {
+      }, [h(A(e.text), 1)], 64))], 64))), 128))], 4)])) : N(``, true), P(`textarea`, {
         ref_key: `textareaRef`,
         ref: o,
         spellcheck: `false`,
@@ -1721,7 +1721,7 @@ body { margin: 0; background: #fff; }
         placeholder: d(a)(`toolboxNative.markdownEditorPlaceholder`),
         "aria-label": d(a)(`toolboxNative.markdownEditorLabel`),
         onInput: me,
-        onCompositionstart: t[0] ||= e => te.value = !0,
+        onCompositionstart: t[0] ||= e => te.value = true,
         onCompositionend: z,
         onBlur: he,
         onKeydown: B,
@@ -1773,23 +1773,23 @@ body { margin: 0; background: #fff; }
           user: a
         } = Re(),
         o = S(G),
-        c = !0,
+        c = true,
         l = 0;
       async function u() {
         let e = ++l;
         if (a.value?.token) try {
           let t = await window.electronAPI.growth.summary(),
-            n = t?.available ? t.pet.mediaSlots?.timeline?.url : void 0,
+            n = t?.available ? t.pet.mediaSlots?.timeline?.url : undefined,
             r = n ? await et(n, G) : G;
           c && e === l && (o.value = r);
         } catch {}
       }
       return v(() => a.value?.token, () => void u(), {
-        immediate: !0
+        immediate: true
       }), ae(() => {
-        c = !0;
+        c = true;
       }), O(() => {
-        c = !1;
+        c = false;
       }), (e, t) => (T(), g(`div`, Rn, [P(`div`, zn, [P(`img`, {
         src: o.value,
         alt: ``,
@@ -1846,7 +1846,7 @@ body { margin: 0; background: #fff; }
           t: a
         } = ue(),
         o = S(null),
-        s = !1;
+        s = false;
       function c() {
         o.value && i(`update:query`, o.value.value);
       }
@@ -1857,7 +1857,7 @@ body { margin: 0; background: #fff; }
         s = e;
       }
       function p() {
-        s = !1, c();
+        s = false, c();
       }
       v(() => r.query, e => {
         let t = o.value;
@@ -1886,9 +1886,9 @@ body { margin: 0; background: #fff; }
         placeholder: d(a)(`toolboxNative.markdownFindPlaceholder`),
         "aria-label": d(a)(`toolboxNative.markdownFindPlaceholder`),
         onInput: l,
-        onCompositionstart: t[0] ||= e => f(!0),
+        onCompositionstart: t[0] ||= e => f(true),
         onCompositionend: p,
-        onBlur: t[1] ||= e => f(!1),
+        onBlur: t[1] ||= e => f(false),
         onKeydown: m
       }, null, 40, qn), P(`span`, {
         class: u([`min-w-9 shrink-0 text-right text-xs tabular-nums`, r.query && !r.hasMatches ? `text-destructive` : `text-muted-foreground`])
@@ -1944,7 +1944,7 @@ function Qn(e, t) {
   }).then(e => e.dataUrl);
   if (i.catch(() => Yn.delete(n)), Yn.size >= Xn) {
     let e = Yn.keys().next().value;
-    e !== void 0 && Yn.delete(e);
+    e !== undefined && Yn.delete(e);
   }
   return Yn.set(n, i), i;
 }
@@ -1952,7 +1952,7 @@ var $ = new Map();
 function $n(e, t, n) {
   if ($.set(Zn(e, t), n), $.size > Xn) {
     let e = $.keys().next().value;
-    e !== void 0 && $.delete(e);
+    e !== undefined && $.delete(e);
   }
 }
 function er(e, t) {
@@ -2024,8 +2024,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       async function p(e) {
         let t = e.closest(`.markdown-code-shell`)?.querySelector(`code`)?.textContent || ``;
         try {
-          await navigator.clipboard.writeText(t), f(e, !0), window.clearTimeout(c.get(e)), c.set(e, window.setTimeout(() => {
-            c.delete(e), f(e, !1);
+          await navigator.clipboard.writeText(t), f(e, true), window.clearTimeout(c.get(e)), c.set(e, window.setTimeout(() => {
+            c.delete(e), f(e, false);
           }, 1200));
         } catch {
           W(a(`toolboxNative.markdownCodeCopyFailed`));
@@ -2070,8 +2070,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         let t = e.target;
         if (!t.matches(`input.markdown-task-checkbox[data-task-index]`)) return;
         let n = t.closest(`[data-block-index]`),
-          a = (n ? r.blocks[Number(n.dataset.blockIndex)] : void 0)?.taskPositions[Number(t.dataset.taskIndex)];
-        if (a === void 0) {
+          a = (n ? r.blocks[Number(n.dataset.blockIndex)] : undefined)?.taskPositions[Number(t.dataset.taskIndex)];
+        if (a === undefined) {
           t.checked = !t.checked;
           return;
         }
@@ -2093,12 +2093,12 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         e.key === `Escape` && (e.stopPropagation(), s.value = null);
       }
       return v(s, e => {
-        e ? window.addEventListener(`keydown`, w, !0) : window.removeEventListener(`keydown`, w, !0);
+        e ? window.addEventListener(`keydown`, w, true) : window.removeEventListener(`keydown`, w, true);
       }), v(() => [r.blocks, r.epoch], u, {
         flush: `post`,
-        immediate: !0
+        immediate: true
       }), re(() => {
-        window.removeEventListener(`keydown`, w, !0);
+        window.removeEventListener(`keydown`, w, true);
         for (let e of c.values()) window.clearTimeout(e);
       }), t({
         root: () => o.value,
@@ -2109,7 +2109,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         class: `markdown-reader-rendered text-[15px] leading-[1.8] text-[#1a1a1a] dark:text-foreground`,
         onClick: h,
         onChange: ee
-      }, [(T(!0), g(C, null, _(r.blocks, (e, t) => (T(), g(`div`, {
+      }, [(T(true), g(C, null, _(r.blocks, (e, t) => (T(), g(`div`, {
         key: `${r.epoch}:${e.key}`,
         class: `markdown-block`,
         "data-block-index": t,
@@ -2136,7 +2136,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         onClick: t[1] ||= I(e => s.value = null, [`stop`])
       }, [D(d(R), {
         size: 18
-      })], 8, ar)], 8, rr)) : N(``, !0)]))], 64));
+      })], 8, ar)], 8, rr)) : N(``, true)]))], 64));
     }
   }), [[`__scopeId`, `data-v-d17fed93`]]),
   sr = {
@@ -2253,7 +2253,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
             value: `outline`,
             class: `text-xs`
           }, {
-            default: y(() => [h(A(d(a)(`toolboxNative.documentOutline`)) + ` `, 1), n.headings.length ? (T(), g(`span`, cr, A(n.headings.length), 1)) : N(``, !0)]),
+            default: y(() => [h(A(d(a)(`toolboxNative.documentOutline`)) + ` `, 1), n.headings.length ? (T(), g(`span`, cr, A(n.headings.length), 1)) : N(``, true)]),
             _: 1
           })]),
           _: 1
@@ -2278,7 +2278,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         onClick: t[3] ||= e => o.value = ``
       }, [D(d(R), {
         size: 13
-      })], 8, fr)) : N(``, !0)])]), P(`div`, pr, [(T(!0), g(C, null, _(l.value, e => (T(), g(`div`, {
+      })], 8, fr)) : N(``, true)])]), P(`div`, pr, [(T(true), g(C, null, _(l.value, e => (T(), g(`div`, {
         key: e.filePath,
         class: u([`group relative mt-0.5 rounded-lg transition-colors`, n.currentPath === e.filePath ? `bg-[var(--app-sidebar-nav-active-background)]` : `hover:bg-[var(--app-sidebar-nav-hover-background)]`])
       }, [P(`button`, {
@@ -2299,7 +2299,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         onClick: t => m(e, t)
       }, [D(d(R), {
         size: 13
-      })], 8, vr)], 2))), 128)), l.value.length === 0 ? (T(), g(`p`, yr, A(o.value ? d(a)(`toolboxNative.markdownNoSearchResults`) : d(a)(`toolboxNative.noRecentMarkdownDocuments`)), 1)) : N(``, !0)]), P(`p`, br, [D(d(st), {
+      })], 8, vr)], 2))), 128)), l.value.length === 0 ? (T(), g(`p`, yr, A(o.value ? d(a)(`toolboxNative.markdownNoSearchResults`) : d(a)(`toolboxNative.noRecentMarkdownDocuments`)), 1)) : N(``, true)]), P(`p`, br, [D(d(st), {
         size: 13,
         class: `shrink-0`
       }), h(A(d(a)(`toolboxNative.markdownLocalPrivacyNote`)), 1)])], 64)) : (T(), g(`nav`, {
@@ -2308,7 +2308,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         ref: s,
         class: `min-h-0 flex-1 overflow-y-auto overscroll-contain px-2 pb-3 pt-2`,
         "aria-label": d(a)(`toolboxNative.documentOutline`)
-      }, [(T(!0), g(C, null, _(n.headings, e => (T(), g(`button`, {
+      }, [(T(true), g(C, null, _(n.headings, e => (T(), g(`button`, {
         key: e.id,
         type: `button`,
         class: u([`block w-full truncate rounded-md py-1.5 pr-2 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30`, n.activeHeadingId === e.id ? `bg-[var(--app-sidebar-nav-active-background)] font-medium text-foreground` : `text-muted-foreground hover:bg-[var(--app-sidebar-nav-hover-background)] hover:text-foreground`]),
@@ -2316,9 +2316,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
           paddingLeft: `${10 + Math.max(0, e.level - f.value) * 14}px`
         }),
         title: e.text,
-        "aria-current": n.activeHeadingId === e.id ? `location` : void 0,
+        "aria-current": n.activeHeadingId === e.id ? `location` : undefined,
         onClick: t => r(`selectHeading`, e)
-      }, A(e.text || d(a)(`toolboxNative.markdownUntitledHeading`)), 15, Sr))), 128)), n.headings.length === 0 ? (T(), g(`p`, Cr, A(d(a)(`toolboxNative.markdownOutlineEmpty`)), 1)) : N(``, !0)], 8, xr))]));
+      }, A(e.text || d(a)(`toolboxNative.markdownUntitledHeading`)), 15, Sr))), 128)), n.headings.length === 0 ? (T(), g(`p`, Cr, A(d(a)(`toolboxNative.markdownOutlineEmpty`)), 1)) : N(``, true)], 8, xr))]));
     }
   }),
   Tr = 2e3;
@@ -2331,14 +2331,14 @@ function Er() {
   } : null;
 }
 function Dr(el) {
-  let t = S(!1),
+  let t = S(false),
     n = S(``),
     r = S(0),
     i = S(0),
     a = [],
     o = [],
     s = f([]),
-    c = !1,
+    c = false,
     l = M(() => i.value ? `${r.value + 1}/${i.value}` : `0/0`);
   function u() {
     let e = Er();
@@ -2359,7 +2359,7 @@ function Dr(el) {
     }
     return n;
   }
-  function p(t = !0) {
+  function p(t = true) {
     if (!i.value) {
       u();
       return;
@@ -2379,7 +2379,7 @@ function Dr(el) {
     let n = o[r.value];
     t && n && el.selectSource(n.start, n.end);
   }
-  function m(t = !1) {
+  function m(t = false) {
     let l = n.value.toLocaleLowerCase(),
       f = el.previewRoot();
     if (c = !!f, a = [], o = [], !l) {
@@ -2400,13 +2400,13 @@ function Dr(el) {
     i.value && (r.value = (r.value + e + i.value) % i.value, p());
   }
   function g(e) {
-    t.value = !0, e && (n.value = e), m();
+    t.value = true, e && (n.value = e), m();
   }
   function _() {
-    t.value = !1, u(), a = [], o = [], s.value = [];
+    t.value = false, u(), a = [], o = [], s.value = [];
   }
   function ee() {
-    t.value && m(!0);
+    t.value && m(true);
   }
   return {
     open: t,
@@ -2541,7 +2541,7 @@ var Or = {
         O = oe(at()),
         k = S(O.mode),
         j = S(null),
-        F = S(!1),
+        F = S(false),
         I = S(``),
         se = S(``),
         L = S([]),
@@ -2551,17 +2551,17 @@ var Or = {
         }),
         fe = S(0),
         me = S(``),
-        z = S(!1),
-        ge = S(!1),
-        ye = S(!1),
-        Ce = S(!1),
+        z = S(false),
+        ge = S(false),
+        ye = S(false),
+        Ce = S(false),
         V = S(null),
         H = S([]),
-        Oe = S(!1),
+        Oe = S(false),
         ke = S(1200),
-        U = S(!1),
-        Le = S(!1),
-        Re = S(!1),
+        U = S(false),
+        Le = S(false),
+        Re = S(false),
         Be = S(`discard`),
         Ve = S(null),
         He = S(null),
@@ -2587,7 +2587,7 @@ var Or = {
         At = null,
         jt = null,
         Mt = 0,
-        Nt = !1,
+        Nt = false,
         Pt = M(() => c?.value || `zh-CN`),
         Ft = M(() => I.value !== se.value),
         Lt = M(() => de.value.headings),
@@ -2641,7 +2641,7 @@ var Or = {
           previewRoot: () => Z.value === `edit` ? null : Xe.value?.root() ?? null,
           previewScroller: () => G.value,
           sourceText: () => I.value,
-          selectSource: (e, t) => K.value?.selectRange(e, t, !1)
+          selectSource: (e, t) => K.value?.selectRange(e, t, false)
         });
       function cn(e, t) {
         return e instanceof it && o[e.code] ? l(`toolboxNative.${o[e.code]}`) : l(t);
@@ -2670,25 +2670,25 @@ var Or = {
       }
       function dn() {
         ct += 1, st === null && (st = window.setTimeout(() => {
-          st = null, ct > 0 && (ye.value = !0);
+          st = null, ct > 0 && (ye.value = true);
         }, 150));
       }
       function fn() {
-        ct = Math.max(0, ct - 1), !(ct > 0) && (st !== null && (window.clearTimeout(st), st = null), ye.value = !1);
+        ct = Math.max(0, ct - 1), !(ct > 0) && (st !== null && (window.clearTimeout(st), st = null), ye.value = false);
       }
       function pn() {
-        Ce.value = !0, lt !== null && window.clearTimeout(lt), lt = window.setTimeout(() => {
-          lt = null, Ce.value = !1;
+        Ce.value = true, lt !== null && window.clearTimeout(lt), lt = window.setTimeout(() => {
+          lt = null, Ce.value = false;
         }, 2e3);
       }
       function mn(e) {
-        return kt?.(`cancel`), Be.value = e, Re.value = !0, new Promise(e => {
+        return kt?.(`cancel`), Be.value = e, Re.value = true, new Promise(e => {
           kt = e;
         });
       }
       function hn(e) {
         let t = kt;
-        kt = null, Re.value = !1, t?.(e);
+        kt = null, Re.value = false, t?.(e);
       }
       function gn(e) {
         e.preventDefault(), ie(() => document.querySelector(`[data-confirm-primary]`)?.focus());
@@ -2697,7 +2697,7 @@ var Or = {
         !e && kt ? hn(`cancel`) : Re.value = e;
       }
       async function vn() {
-        if (!Ft.value) return !0;
+        if (!Ft.value) return true;
         let e = await mn(`discard`);
         return e === `save` ? (await Q()) && !Ft.value : e === `discard`;
       }
@@ -2721,7 +2721,7 @@ var Or = {
       }
       function Sn(e, t = {}) {
         let n = j.value?.filePath === e.filePath;
-        j.value = e, I.value = e.content, se.value = e.content, F.value = !0, V.value = null, Je.lastPath = e.filePath, tr(e.filePath), fe.value += 1, ln(), n || q.watch(e.filePath).catch(() => void 0), t.keepScroll || xn(), Cn();
+        j.value = e, I.value = e.content, se.value = e.content, F.value = true, V.value = null, Je.lastPath = e.filePath, tr(e.filePath), fe.value += 1, ln(), n || q.watch(e.filePath).catch(() => undefined), t.keepScroll || xn(), Cn();
       }
       async function Cn() {
         try {
@@ -2729,20 +2729,20 @@ var Or = {
         } catch {}
       }
       function On(e) {
-        r.active !== !1 && I.value.trim() && de.value.blocks.length && e(`tool_action_success`, {
+        r.active !== false && I.value.trim() && de.value.blocks.length && e(`tool_action_success`, {
           action: `markdown_opened`
         });
       }
       async function kn(e, t, n = {}) {
         let r = p();
-        if (!n.skipConfirm && !(await vn())) return !1;
+        if (!n.skipConfirm && !(await vn())) return false;
         let i = ++Mt;
         dn();
         try {
           let t = await e();
-          return i === Mt && (n.keepHistory || (H.value = []), Sn(t), X.value || (U.value = !1), await ie(), On(r), !0);
+          return i === Mt && (n.keepHistory || (H.value = []), Sn(t), X.value || (U.value = false), await ie(), On(r), true);
         } catch (e) {
-          return i === Mt && W(cn(e, t)), !1;
+          return i === Mt && W(cn(e, t)), false;
         } finally {
           fn();
         }
@@ -2763,61 +2763,61 @@ var Or = {
         }
         let t = e;
         await kn(() => q.read(t), `toolboxNative.markdownOpenFailed`, {
-          skipConfirm: !0
+          skipConfirm: true
         });
       }
       async function jn(e) {
         if (e.filePath === j.value?.filePath) {
-          U.value = !1;
+          U.value = false;
           return;
         }
         e.exists && ((await kn(() => q.read(e.filePath), `toolboxNative.markdownOpenFailed`)) || (await Cn()));
       }
       async function Mn(e) {
-        Ze(e.requestId) || (Ke(e.requestId), Nt = !0, await kn(() => q.read(e.filePath), `toolboxNative.markdownOpenFailed`));
+        Ze(e.requestId) || (Ke(e.requestId), Nt = true, await kn(() => q.read(e.filePath), `toolboxNative.markdownOpenFailed`));
       }
       async function Nn() {
-        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = !0, V.value = null, H.value = [], Je.lastPath = null, fe.value += 1, ln(), q.watch(null).catch(() => void 0), k.value === `preview` && (k.value = Vt.value ? `split` : `edit`), X.value || (U.value = !1), await ie(), K.value?.focus());
+        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = true, V.value = null, H.value = [], Je.lastPath = null, fe.value += 1, ln(), q.watch(null).catch(() => undefined), k.value === `preview` && (k.value = Vt.value ? `split` : `edit`), X.value || (U.value = false), await ie(), K.value?.focus());
       }
       async function Pn() {
-        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = !1, V.value = null, H.value = [], Je.lastPath = null, ln(), nn(), q.watch(null).catch(() => void 0));
+        (await vn()) && (Mt += 1, j.value = null, I.value = ``, se.value = ``, F.value = false, V.value = null, H.value = [], Je.lastPath = null, ln(), nn(), q.watch(null).catch(() => undefined));
       }
       function Fn() {
         return j.value ? j.value.name : `${(Lt.value[0]?.text || I.value.split(`
 `).map(e => e.replace(/^#+\s*/, ``).trim()).find(Boolean) || ``).replace(/[\\/:*?"<>|]/g, `-`).slice(0, 60).trim() || l(`toolboxNative.untitledMarkdownDocument`)}.md`;
       }
-      async function Q(e = !1) {
-        if (z.value) return !1;
+      async function Q(e = false) {
+        if (z.value) return false;
         let t = j.value;
         if (!t) return await In();
-        if (!Ft.value && !e) return !0;
-        z.value = !0;
+        if (!Ft.value && !e) return true;
+        z.value = true;
         let n = I.value;
         try {
           return j.value = await q.save({
             filePath: t.filePath,
             content: n,
-            expectedModifiedAt: e ? void 0 : t.modifiedAt,
+            expectedModifiedAt: e ? undefined : t.modifiedAt,
             force: e,
             lineEnding: t.lineEnding,
             hasBom: t.hasBom
-          }), se.value = n, V.value = null, pn(), !0;
+          }), se.value = n, V.value = null, pn(), true;
         } catch (e) {
           if (e instanceof it && e.code === `FILE_CHANGED`) {
-            z.value = !1;
+            z.value = false;
             let e = await mn(`conflict`);
-            return e === `overwrite` ? await Q(!0) : (e === `reload` && (await Rn({
-              skipConfirm: !0
-            })), !1);
+            return e === `overwrite` ? await Q(true) : (e === `reload` && (await Rn({
+              skipConfirm: true
+            })), false);
           }
-          return W(cn(e, `toolboxNative.markdownSaveFailed`)), !1;
+          return W(cn(e, `toolboxNative.markdownSaveFailed`)), false;
         } finally {
-          z.value = !1;
+          z.value = false;
         }
       }
       async function In() {
-        if (z.value) return !1;
-        z.value = !0;
+        if (z.value) return false;
+        z.value = true;
         let e = I.value,
           t = j.value;
         try {
@@ -2832,13 +2832,13 @@ var Or = {
               filterName: l(`toolboxNative.markdownFileFilterName`)
             }
           });
-          return n.cancelled || !n.document ? !1 : (j.value = n.document, se.value = e, F.value = !0, V.value = null, Je.lastPath = n.document.filePath, t?.filePath !== n.document.filePath && (fe.value += 1, ln(), q.watch(n.document.filePath).catch(() => void 0)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
+          return n.cancelled || !n.document ? false : (j.value = n.document, se.value = e, F.value = true, V.value = null, Je.lastPath = n.document.filePath, t?.filePath !== n.document.filePath && (fe.value += 1, ln(), q.watch(n.document.filePath).catch(() => undefined)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
             name: n.document.name
-          })), !0);
+          })), true);
         } catch (e) {
-          return W(cn(e, `toolboxNative.markdownSaveFailed`)), !1;
+          return W(cn(e, `toolboxNative.markdownSaveFailed`)), false;
         } finally {
-          z.value = !1;
+          z.value = false;
         }
       }
       async function Rn(e = {}) {
@@ -2849,11 +2849,11 @@ var Or = {
         dn();
         try {
           let e = await q.read(t.filePath, {
-            touch: !1
+            touch: false
           });
           if (r !== Mt) return;
           Sn(e, {
-            keepScroll: !0
+            keepScroll: true
           }), bn(n);
         } catch (e) {
           r === Mt && W(cn(e, `toolboxNative.markdownReloadFailed`));
@@ -2878,7 +2878,7 @@ var Or = {
         let t = yn();
         try {
           let n = await q.read(e.filePath, {
-            touch: !1
+            touch: false
           });
           if (j.value?.filePath !== e.filePath) return;
           if (Ft.value) {
@@ -2886,7 +2886,7 @@ var Or = {
             return;
           }
           Sn(n, {
-            keepScroll: !0
+            keepScroll: true
           }), bn(t), Date.now() - Ot > 1e4 && (Ot = Date.now(), Ie(l(`toolboxNative.markdownExternalReloaded`)));
         } catch {
           V.value = `deleted`;
@@ -2956,7 +2956,7 @@ var Or = {
           });
           return s = n.anchor, n.document;
         }, `toolboxNative.markdownLinkedOpenFailed`, {
-          keepHistory: !0
+          keepHistory: true
         })) && (H.value = [...H.value.slice(-19), o], s)) {
           let e = s;
           await ie(), window.requestAnimationFrame(() => qn(e));
@@ -2965,9 +2965,9 @@ var Or = {
       async function Kn() {
         let e = H.value.at(-1);
         e && (await kn(() => q.read(e.filePath, {
-          touch: !1
+          touch: false
         }), `toolboxNative.markdownOpenFailed`, {
-          keepHistory: !0
+          keepHistory: true
         })) && (H.value = H.value.slice(0, -1), bn(e.scroll));
       }
       function qn(e) {
@@ -2990,7 +2990,7 @@ var Or = {
         _t = e.id, me.value = e.id, $n(), Z.value !== `edit` && Xe.value?.root()?.querySelector(`#${CSS.escape(e.id)}`)?.scrollIntoView({
           behavior: `smooth`,
           block: `start`
-        }), Z.value !== `preview` && K.value?.revealLine(e.line), X.value || (U.value = !1);
+        }), Z.value !== `preview` && K.value?.revealLine(e.line), X.value || (U.value = false);
       }
       function Zn() {
         if (mt = null, _t !== null) {
@@ -3031,9 +3031,9 @@ var Or = {
         }, e);
       }
       function er(e) {
-        return yt && yt !== e ? !1 : (yt = e, bt !== null && window.clearTimeout(bt), bt = window.setTimeout(() => {
+        return yt && yt !== e ? false : (yt = e, bt !== null && window.clearTimeout(bt), bt = window.setTimeout(() => {
           bt = null, yt = null;
-        }, 150), !0);
+        }, 150), true);
       }
       function nr() {
         if (J) return J;
@@ -3139,14 +3139,14 @@ var Or = {
         r <= n || (O.splitRatio = Math.min(r, Math.max(n, (e - t.left) / t.width)));
       }
       function pr(e) {
-        e.button === 0 && (e.preventDefault(), Le.value = !0, e.currentTarget.setPointerCapture(e.pointerId), fr(e.clientX));
+        e.button === 0 && (e.preventDefault(), Le.value = true, e.currentTarget.setPointerCapture(e.pointerId), fr(e.clientX));
       }
       function mr(e) {
         Le.value && fr(e.clientX);
       }
       function hr(e) {
         if (!Le.value) return;
-        Le.value = !1;
+        Le.value = false;
         let t = e.currentTarget;
         t.hasPointerCapture(e.pointerId) && t.releasePointerCapture(e.pointerId), J = null;
       }
@@ -3193,7 +3193,7 @@ var Or = {
       }
       async function xr(e) {
         if (!ge.value) {
-          ge.value = !0;
+          ge.value = true;
           try {
             let t = vr(),
               n = Dn(await _r(), t, Pt.value),
@@ -3213,7 +3213,7 @@ var Or = {
           } catch (e) {
             W(cn(e, `toolboxNative.markdownExportFailed`));
           } finally {
-            ge.value = !1;
+            ge.value = false;
           }
         }
       }
@@ -3225,23 +3225,23 @@ var Or = {
         let e = K.value?.element(),
           t = (e && document.activeElement === e ? e.value.slice(e.selectionStart, e.selectionEnd) : window.getSelection()?.toString() || ``).trim();
         tn(t && !t.includes(`
-`) && t.length <= 80 ? t : void 0), $e.value?.focus();
+`) && t.length <= 80 ? t : undefined), $e.value?.focus();
       }
       function Tr(e) {
         return !!e.dataTransfer?.types.includes(`Files`);
       }
       function Er(e) {
-        Tr(e) && (e.preventDefault(), Dt += 1, Oe.value = !0);
+        Tr(e) && (e.preventDefault(), Dt += 1, Oe.value = true);
       }
       function ni(e) {
         Tr(e) && (e.preventDefault(), e.dataTransfer && (e.dataTransfer.dropEffect = `copy`));
       }
       function ri(e) {
-        Tr(e) && (Dt = Math.max(0, Dt - 1), Dt === 0 && (Oe.value = !1));
+        Tr(e) && (Dt = Math.max(0, Dt - 1), Dt === 0 && (Oe.value = false));
       }
       async function ii(e) {
         if (!Tr(e)) return;
-        e.preventDefault(), Dt = 0, Oe.value = !1;
+        e.preventDefault(), Dt = 0, Oe.value = false;
         let t = Array.from(e.dataTransfer?.files || []).find(e => a.includes(Un(e.name)));
         if (!t) {
           W(l(`toolboxNative.markdownDropUnsupported`));
@@ -3255,7 +3255,7 @@ var Or = {
         await kn(() => q.openDropped(n), `toolboxNative.markdownOpenFailed`);
       }
       function ai() {
-        return r.active !== !1 && !!Ve.value?.offsetParent && !Re.value;
+        return r.active !== false && !!Ve.value?.offsetParent && !Re.value;
       }
       function oi(e) {
         if (e.isComposing || e.keyCode === 229 || e.defaultPrevented || !ai()) return;
@@ -3264,7 +3264,7 @@ var Or = {
             nn();
             return;
           }
-          U.value &&= !1;
+          U.value &&= false;
           return;
         }
         if (e.altKey && e.key === `ArrowLeft` && H.value.length) {
@@ -3293,7 +3293,7 @@ var Or = {
           });
         }, 200);
       }, {
-        deep: !0
+        deep: true
       }), v(de, () => {
         J = null, $(), Yt.value && (xt !== null && window.clearTimeout(xt), xt = window.setTimeout(() => {
           xt = null, an();
@@ -3312,11 +3312,11 @@ var Or = {
       }), v(Z, () => {
         J = null, $();
       }), v(X, e => {
-        e && (U.value = !1);
+        e && (U.value = false);
       }), v(() => r.openRequest, e => {
         e && Mn(e);
       }, {
-        immediate: !0
+        immediate: true
       }), ae(() => {
         if (window.addEventListener(`keydown`, oi), jt = q.onFileChanged(Hn), At = rt({
           hasUnsavedChanges: () => Ft.value,
@@ -3327,9 +3327,9 @@ var Or = {
         }), Et.observe(Ve.value)), Cn(), !Nt && !F.value && Je.lastPath) {
           let lastPath = Je.lastPath;
           kn(() => q.read(lastPath, {
-            touch: !1
+            touch: false
           }), `toolboxNative.markdownOpenFailed`, {
-            skipConfirm: !0
+            skipConfirm: true
           }).then(e => {
             e || (Je.lastPath = null);
           });
@@ -3339,7 +3339,7 @@ var Or = {
         for (let e of [et, st, lt, bt, xt]) e !== null && window.clearTimeout(e);
         ci !== null && (window.clearTimeout(ci), tt({
           ...O
-        })), mt !== null && window.cancelAnimationFrame(mt), nn(), kt?.(`cancel`), kt = null, q.watch(null).catch(() => void 0);
+        })), mt !== null && window.cancelAnimationFrame(mt), nn(), kt?.(`cancel`), kt = null, q.watch(null).catch(() => undefined);
       }), (e, t) => (T(), x(d(De), {
         "delay-duration": 300
       }, {
@@ -3355,8 +3355,8 @@ var Or = {
           tool: r.tool,
           user: r.user,
           "credits-balance": r.creditsBalance,
-          "voice-tool": !1,
-          "show-history": !1,
+          "voice-tool": false,
+          "show-history": false,
           onBack: t[16] ||= e => i(`back`),
           onRecharge: t[17] ||= e => i(`recharge`)
         }, {
@@ -3376,9 +3376,9 @@ var Or = {
           }, 8, [`label`, `shortcut`]), !F.value || !Y.value ? (T(), g(`span`, {
             key: 0,
             class: u([`ml-1 shrink-0 truncate text-sm font-medium text-muted-foreground`, F.value ? `max-w-[160px]` : ``])
-          }, A(r.tool.name), 3)) : N(``, !0), F.value ? (T(), g(C, {
+          }, A(r.tool.name), 3)) : N(``, true), F.value ? (T(), g(C, {
             key: 1
-          }, [Y.value ? N(``, !0) : (T(), g(`span`, kr, `/`)), H.value.length ? (T(), x(wt, {
+          }, [Y.value ? N(``, true) : (T(), g(`span`, kr, `/`)), H.value.length ? (T(), x(wt, {
             key: 1,
             label: d(l)(`toolboxNative.markdownBackToDocument`, {
               name: H.value[H.value.length - 1].name
@@ -3390,12 +3390,12 @@ var Or = {
               size: 15
             })]),
             _: 1
-          }, 8, [`label`])) : N(``, !0), P(`strong`, {
+          }, 8, [`label`])) : N(``, true), P(`strong`, {
             class: `min-w-0 truncate text-sm font-medium text-foreground`,
             title: j.value?.filePath || d(l)(`toolboxNative.markdownNewDocumentHint`)
           }, A(Rt.value), 9, Ar), Ft.value ? (T(), g(`span`, jr, [t[33] ||= P(`span`, {
             class: `size-1.5 rounded-full bg-amber-500`
-          }, null, -1), h(A(d(l)(`toolboxNative.markdownUnsaved`)), 1)])) : Ce.value ? (T(), g(`span`, Mr, A(d(l)(`toolboxNative.markdownSaved`)), 1)) : N(``, !0)], 64)) : N(``, !0)])]),
+          }, null, -1), h(A(d(l)(`toolboxNative.markdownUnsaved`)), 1)])) : Ce.value ? (T(), g(`span`, Mr, A(d(l)(`toolboxNative.markdownSaved`)), 1)) : N(``, true)], 64)) : N(``, true)])]),
           actions: y(() => [F.value ? (T(), x(d(nt), {
             key: 0,
             "model-value": Z.value,
@@ -3405,7 +3405,7 @@ var Or = {
               class: `group-data-horizontal/tabs:h-7`,
               "aria-label": d(l)(`toolboxNative.markdownViewMode`)
             }, {
-              default: y(() => [(T(!0), g(C, null, _(Gt.value, state => (T(), x(d(qe), {
+              default: y(() => [(T(true), g(C, null, _(Gt.value, state => (T(), x(d(qe), {
                 key: state.value,
                 value: state.value,
                 class: `gap-1 px-2 text-xs`,
@@ -3413,13 +3413,13 @@ var Or = {
               }, {
                 default: y(() => [(T(), x(m(state.icon), {
                   size: 13
-                })), Y.value ? N(``, !0) : (T(), g(`span`, Nr, A(state.label), 1))]),
+                })), Y.value ? N(``, true) : (T(), g(`span`, Nr, A(state.label), 1))]),
                 _: 2
               }, 1032, [`value`, `title`]))), 128))]),
               _: 1
             }, 8, [`aria-label`])]),
             _: 1
-          }, 8, [`model-value`])) : N(``, !0), D(d(we), null, {
+          }, 8, [`model-value`])) : N(``, true), D(d(we), null, {
             default: y(() => [P(`div`, Pr, [P(`button`, {
               type: `button`,
               class: u([`inline-flex items-center gap-1.5 rounded-l-lg pl-2.5 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06]`, Y.value ? `pr-2` : `pr-2.5`]),
@@ -3427,7 +3427,7 @@ var Or = {
               onClick: An
             }, [D(d(ce), {
               size: 14
-            }), Y.value ? N(``, !0) : (T(), g(`span`, Ir, A(d(l)(`toolboxNative.openDocument`)), 1))], 10, Fr), t[34] ||= P(`span`, {
+            }), Y.value ? N(``, true) : (T(), g(`span`, Ir, A(d(l)(`toolboxNative.openDocument`)), 1))], 10, Fr), t[34] ||= P(`span`, {
               class: `my-1.5 w-px bg-border`,
               "aria-hidden": `true`
             }, null, -1), D(d(Te), {
@@ -3474,7 +3474,7 @@ var Or = {
               }, {
                 default: y(() => [h(A(d(l)(`toolboxNative.markdownRecentFiles`)), 1)]),
                 _: 1
-              }), (T(!0), g(C, null, _(Wt.value, e => (T(), x(d(B), {
+              }), (T(true), g(C, null, _(Wt.value, e => (T(), x(d(B), {
                 key: e.filePath,
                 class: `text-xs`,
                 title: e.filePath,
@@ -3484,7 +3484,7 @@ var Or = {
                   size: 14
                 }), P(`span`, Rr, A(e.name), 1), P(`span`, zr, A(e.folder), 1)]),
                 _: 2
-              }, 1032, [`title`, `onSelect`]))), 128))], 64)) : N(``, !0)]),
+              }, 1032, [`title`, `onSelect`]))), 128))], 64)) : N(``, true)]),
               _: 1
             })]),
             _: 1
@@ -3505,7 +3505,7 @@ var Or = {
             })) : (T(), x(d(le), {
               key: 1,
               size: 14
-            })), Y.value ? N(``, !0) : (T(), g(`span`, Br, A(d(l)(`toolboxNative.saveDocument`)), 1))]),
+            })), Y.value ? N(``, true) : (T(), g(`span`, Br, A(d(l)(`toolboxNative.saveDocument`)), 1))]),
             _: 1
           }, 8, [`class`, `disabled`, `title`]), D(d(we), null, {
             default: y(() => [D(d(Te), {
@@ -3636,7 +3636,7 @@ var Or = {
               _: 1
             })]),
             _: 1
-          })], 64)) : N(``, !0)]),
+          })], 64)) : N(``, true)]),
           _: 1
         }, 8, [`tool`, `user`, `credits-balance`]), P(`div`, Vr, [zt.value ? (T(), g(`div`, {
           key: 0,
@@ -3651,11 +3651,11 @@ var Or = {
           onOpenRecent: jn,
           onRemoveRecent: zn,
           onSelectHeading: Xn
-        }, null, 8, [`tab`, `recent-files`, `current-path`, `headings`, `active-heading-id`])], 2)) : N(``, !0), !X.value && U.value ? (T(), g(`div`, {
+        }, null, 8, [`tab`, `recent-files`, `current-path`, `headings`, `active-heading-id`])], 2)) : N(``, true), !X.value && U.value ? (T(), g(`div`, {
           key: 1,
           class: `absolute inset-0 z-20`,
-          onClick: t[19] ||= e => U.value = !1
-        })) : N(``, !0), P(`main`, Hr, [V.value ? (T(), g(`div`, Ur, [P(`span`, Wr, A(d(l)(V.value === `deleted` ? `toolboxNative.markdownExternalDeleted` : `toolboxNative.markdownExternalModified`, {
+          onClick: t[19] ||= e => U.value = false
+        })) : N(``, true), P(`main`, Hr, [V.value ? (T(), g(`div`, Ur, [P(`span`, Wr, A(d(l)(V.value === `deleted` ? `toolboxNative.markdownExternalDeleted` : `toolboxNative.markdownExternalModified`, {
           name: Rt.value
         })), 1), V.value === `modified` ? (T(), g(C, {
           key: 0
@@ -3664,7 +3664,7 @@ var Or = {
           variant: `outline`,
           class: `h-7 bg-background text-xs`,
           onClick: t[20] ||= e => Rn({
-            skipConfirm: !0
+            skipConfirm: true
           })
         }, {
           default: y(() => [h(A(d(l)(`toolboxNative.markdownLoadExternalVersion`)), 1)]),
@@ -3695,7 +3695,7 @@ var Or = {
         }, {
           default: y(() => [h(A(d(l)(`toolboxNative.markdownDismiss`)), 1)]),
           _: 1
-        })], 64))])) : N(``, !0), d(Yt) && F.value ? (T(), x(Jn, {
+        })], 64))])) : N(``, true), d(Yt) && F.value ? (T(), x(Jn, {
           key: 1,
           ref_key: `findBarRef`,
           ref: $e,
@@ -3707,22 +3707,22 @@ var Or = {
           onNext: d(on),
           onPrevious: d(sn),
           onClose: d(nn)
-        }, null, 8, [`query`, `summary`, `has-matches`, `onNext`, `onPrevious`, `onClose`])) : N(``, !0), F.value ? (T(), g(`div`, {
+        }, null, 8, [`query`, `summary`, `has-matches`, `onNext`, `onPrevious`, `onClose`])) : N(``, true), F.value ? (T(), g(`div`, {
           key: 3,
           ref_key: `panesRef`,
           ref: He,
           class: u([`grid min-h-0 flex-1 overflow-hidden`, Le.value ? `cursor-col-resize select-none [&_*]:!cursor-col-resize` : ``]),
           style: ne(Kt.value)
-        }, [Z.value === `preview` ? N(``, !0) : (T(), x(Ln, {
+        }, [Z.value === `preview` ? N(``, true) : (T(), x(Ln, {
           key: 0,
           ref_key: `editorRef`,
           ref: K,
           modelValue: I.value,
           "onUpdate:modelValue": t[25] ||= e => I.value = e,
           "line-numbers": O.lineNumbers,
-          "measure-lines": !0,
+          "measure-lines": true,
           "modifier-label": d(b),
-          "find-matches": d(Yt) && Z.value === `edit` ? d(en) : void 0,
+          "find-matches": d(Yt) && Z.value === `edit` ? d(en) : undefined,
           "find-current": d($t),
           onScroll: ar,
           onWheelPassive: cr,
@@ -3744,7 +3744,7 @@ var Or = {
           onPointercancel: hr,
           onDblclick: t[26] ||= e => O.splitRatio = d(.5),
           onKeydown: gr
-        }, null, 42, Gr)) : N(``, !0), Z.value === `edit` ? N(``, !0) : (T(), g(`section`, {
+        }, null, 42, Gr)) : N(``, true), Z.value === `edit` ? N(``, true) : (T(), g(`section`, {
           key: 2,
           ref_key: `previewScrollRef`,
           ref: G,
@@ -3764,7 +3764,7 @@ var Or = {
           epoch: fe.value,
           onToggleTask: Sr,
           onOpenLink: Wn
-        }, null, 8, [`blocks`, `document-path`, `epoch`]), de.value.blocks.length ? N(``, !0) : (T(), g(`p`, Kr, A(d(l)(`toolboxNative.markdownPreviewEmpty`)), 1))], 2)], 544))], 6)) : (T(), x(Gn, {
+        }, null, 8, [`blocks`, `document-path`, `epoch`]), de.value.blocks.length ? N(``, true) : (T(), g(`p`, Kr, A(d(l)(`toolboxNative.markdownPreviewEmpty`)), 1))], 2)], 544))], 6)) : (T(), x(Gn, {
           key: 2,
           "modifier-label": d(b),
           onOpen: An,
@@ -3773,10 +3773,10 @@ var Or = {
           count: Ht.value.toLocaleString(Pt.value)
         })), 1), P(`span`, null, A(d(l)(`toolboxNative.markdownCharacterCount`, {
           count: Ut.value.toLocaleString(Pt.value)
-        })), 1)])) : N(``, !0), ye.value || ge.value ? (T(), g(`div`, Jr, [D(d(_e), {
+        })), 1)])) : N(``, true), ye.value || ge.value ? (T(), g(`div`, Jr, [D(d(_e), {
           size: 22,
           class: `animate-spin`
-        }), P(`span`, null, A(d(l)(ge.value ? `toolboxNative.markdownExporting` : `toolboxNative.loadingMarkdownDocument`)), 1)])) : N(``, !0)]), Oe.value ? (T(), g(`div`, Yr, A(d(l)(`toolboxNative.markdownDropToOpen`)), 1)) : N(``, !0)]), D(d(je), {
+        }), P(`span`, null, A(d(l)(ge.value ? `toolboxNative.markdownExporting` : `toolboxNative.loadingMarkdownDocument`)), 1)])) : N(``, true)]), Oe.value ? (T(), g(`div`, Yr, A(d(l)(`toolboxNative.markdownDropToOpen`)), 1)) : N(``, true)]), D(d(je), {
           open: Re.value,
           "onUpdate:open": _n
         }, {
@@ -3872,7 +3872,7 @@ var Or = {
         i = n,
         a = S(null);
       async function o() {
-        return (await a.value?.requestClose()) ?? !0;
+        return (await a.value?.requestClose()) ?? true;
       }
       return t({
         requestClose: o

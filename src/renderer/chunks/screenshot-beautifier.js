@@ -99,7 +99,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
     max: 100
   },
   y = {
-    enabled: !0,
+    enabled: true,
     backgroundKind: `blur`,
     backgroundColor: `#f4f4f5`,
     backgroundImage: ``,
@@ -110,7 +110,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
     shadow: 45,
     frame: `none`,
     ratio: `auto`,
-    balance: !0
+    balance: true
   },
   b = [{
     id: `Soft`,

@@ -89,10 +89,10 @@ var E = {
         tool: B.tool,
         user: B.user,
         "credits-balance": B.creditsBalance,
-        "voice-tool": !1,
+        "voice-tool": false,
         "local-tool": ``,
-        "show-history": !1,
-        "show-balance": !1,
+        "show-history": false,
+        "show-balance": false,
         onBack: f[0] ||= e => V(`back`)
       }, null, 8, [`tool`, `user`, `credits-balance`]), v(`div`, D, [v(`section`, O, [v(`div`, k, [v(`span`, {
         class: n([`inline-flex size-12 shrink-0 items-center justify-center rounded-xl transition-colors`, B.enabled ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
@@ -119,7 +119,7 @@ var E = {
       }, {
         default: l(() => [o(m(r(H)(`toolboxNative.desktopWidgetsGrantAccess`)), 1)]),
         _: 1
-      }, 8, [`onClick`])])) : _(``, !0)])) : _(``, !0)]), i(c.$slots, `default`), v(`p`, R, [p(r(b), {
+      }, 8, [`onClick`])])) : _(``, true)])) : _(``, true)]), i(c.$slots, `default`), v(`p`, R, [p(r(b), {
         size: 13,
         class: `mt-0.5 shrink-0`
       }), o(m(B.footnote || r(H)(`toolboxNative.desktopWidgetsSyncNote`)), 1)])])]));

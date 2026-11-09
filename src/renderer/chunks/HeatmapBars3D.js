@@ -92,7 +92,7 @@ var _e = class e extends ie {
       hint: {},
       clickable: {
         type: Boolean,
-        default: !1
+        default: false
       }
     },
     emits: [`unavailable`, `cell-hover`, `cell-click`],
@@ -114,7 +114,7 @@ var _e = class e extends ie {
         E = o([]),
         D = o([]),
         O = o(null),
-        k = o(!1),
+        k = o(false),
         He = h(() => Math.max(1, ...x.rows.map(e => e.cells.length))),
         Ue = h(() => Math.max(3, He.value * .125)),
         We = h(() => x.rows.some(e => e.label)),
@@ -125,7 +125,7 @@ var _e = class e extends ie {
           let e = A[O.value.index];
           return e ? X(e)?.tooltip ?? `` : ``;
         }),
-        qe = o(!1),
+        qe = o(false),
         Je = h(() => {
           if (!O.value) return {};
           let e = w.value?.clientWidth ?? 0;
@@ -168,13 +168,13 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         V = [],
         ot = [],
         H = -1,
-        U = !1,
+        U = false,
         W = null,
         G = 0,
         st = 0,
-        K = !1,
-        q = !1,
-        ct = !1,
+        K = false,
+        q = false,
+        ct = false,
         J = null,
         lt = null,
         ut = null,
@@ -255,7 +255,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let e = document.createElement(`canvas`);
         e.width = 1, e.height = 1;
         let t = e.getContext(`2d`, {
-          willReadFrequently: !0
+          willReadFrequently: true
         });
         if (!t) {
           V = Re.map(() => new y(1483594));
@@ -290,21 +290,21 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }
       function jt(e, t) {
         let n = A[e],
-          r = n ? (ot[n.row] ?? V)[kt(X(n)?.value ?? 0, t)] : void 0;
+          r = n ? (ot[n.row] ?? V)[kt(X(n)?.value ?? 0, t)] : undefined;
         R && r && R.setColorAt(e, e === H ? nt.copy(r).lerp(tt, .28) : r);
       }
       function Mt() {
         if (!R) return;
         let e = At();
         for (let t = 0; t < A.length; t++) jt(t, e);
-        R.instanceColor && (R.instanceColor.needsUpdate = !0);
+        R.instanceColor && (R.instanceColor.needsUpdate = true);
       }
       function Nt(e) {
         if (e === H) return;
         let t = H;
         if (H = e, !R) return;
         let n = At();
-        jt(t, n), jt(e, n), R.instanceColor && (R.instanceColor.needsUpdate = !0), $();
+        jt(t, n), jt(e, n), R.instanceColor && (R.instanceColor.needsUpdate = true), $();
       }
       function Pt() {
         R && (j.remove(R), R.geometry.dispose(), R.dispose(), R = null, B = null);
@@ -319,9 +319,9 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           });
         }), it = new Float32Array(A.length).fill(S), at = new Float32Array(A.length).fill(S), z = new Float32Array(A.length).fill(S), H = -1, O.value = null, !A.length) return;
         let e = Ye.clone();
-        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, A.length), R.frustumCulled = !1, A.forEach((e, t) => {
+        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, A.length), R.frustumCulled = false, A.forEach((e, t) => {
           Qe.makeTranslation(_t(e.column), 0, vt(e.row)), R?.setMatrixAt(t, Qe);
-        }), R.instanceMatrix.needsUpdate = !0, j.add(R);
+        }), R.instanceMatrix.needsUpdate = true, j.add(R);
       }
       function It() {
         let e = At(),
@@ -329,7 +329,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         A.forEach((n, r) => {
           let i = X(n)?.value ?? 0;
           it[r] = z[r] ?? S, at[r] = i > 0 ? Ce + i / e * (t - Ce) : S;
-        }), Mt(), st = performance.now(), K = !0, $();
+        }), Mt(), st = performance.now(), K = true, $();
       }
       function Lt(e) {
         let t = Math.min(1, Math.max(0, (e - st) / we)),
@@ -338,7 +338,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           let t = it[e] ?? S;
           z[e] = t + ((at[e] ?? S) - t) * n;
         }
-        return B && (B.needsUpdate = !0), t < 1;
+        return B && (B.needsUpdate = true), t < 1;
       }
       function Rt(e) {
         N.copy(M), N.aspect = e, N.far = 1e5, N.updateProjectionMatrix();
@@ -376,7 +376,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let t = St(),
           n = Bt(M.aspect),
           r = t.clone().addScaledVector(rt, n);
-        L.minDistance = n * .35, L.maxDistance = n * 1.8, M.far = Math.max(600, n * 3), M.updateProjectionMatrix(), q = !1, ct = !0, e ? J = {
+        L.minDistance = n * .35, L.maxDistance = n * 1.8, M.far = Math.max(600, n * 3), M.updateProjectionMatrix(), q = false, ct = true, e ? J = {
           fromPosition: M.position.clone(),
           toPosition: r,
           fromTarget: L.target.clone(),
@@ -385,7 +385,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         } : (J = null, L.target.copy(t), M.position.copy(r), L.update()), $();
       }
       function Ut(e) {
-        if (!J || !L) return !1;
+        if (!J || !L) return false;
         let t = Math.min(1, Math.max(0, (e - J.startedAt) / Te)),
           n = 1 - (1 - t) ** 3;
         return M.position.lerpVectors(J.fromPosition, J.toPosition, n), L.target.lerpVectors(J.fromTarget, J.toTarget, n), t >= 1 && (J = null), t < 1;
@@ -400,7 +400,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       let Gt = {
         x: 0,
         y: 0,
-        visible: !1
+        visible: false
       };
       function Kt() {
         let e = T.value;
@@ -431,10 +431,10 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }
       function Jt() {
         let e = w.value;
-        if (!I || !e) return !1;
+        if (!I || !e) return false;
         let clientWidth = e.clientWidth,
           clientHeight = e.clientHeight;
-        return !clientWidth || !clientHeight ? !1 : (I.setPixelRatio(Math.min(window.devicePixelRatio, 2)), I.setSize(clientWidth, clientHeight, !1), M.aspect = clientWidth / clientHeight, M.updateProjectionMatrix(), !0);
+        return !clientWidth || !clientHeight ? false : (I.setPixelRatio(Math.min(window.devicePixelRatio, 2)), I.setSize(clientWidth, clientHeight, false), M.aspect = clientWidth / clientHeight, M.updateProjectionMatrix(), true);
       }
       function Yt(e) {
         let t = w.value;
@@ -442,13 +442,13 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         Tt(t.clientWidth);
         let n = Vt(t.clientWidth);
         if (Math.abs(n - Ve.value) > 1) {
-          Ve.value = n, e && (q = !1);
+          Ve.value = n, e && (q = false);
           return;
         }
-        Jt() && (q && !e ? $() : Ht(!1));
+        Jt() && (q && !e ? $() : Ht(false));
       }
       function Xt() {
-        Yt(!1);
+        Yt(false);
       }
       async function Zt(e) {
         let t = T.value;
@@ -485,7 +485,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function $t(e) {
         let t = A[e],
           n = t ? X(t) : null,
-          r = t ? x.rows[t.row] : void 0;
+          r = t ? x.rows[t.row] : undefined;
         return t && n && r ? {
           rowKey: r.key,
           cellKey: n.key
@@ -504,19 +504,19 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         qe.value = x.clickable && t >= 0 && (X(A[t])?.value ?? 0) > 0, r ? (C(`cell-hover`, {
           ...r,
           event: event
-        }), U = !0) : U &&= (C(`cell-hover`, null), !1), Nt(t);
+        }), U = true) : U &&= (C(`cell-hover`, null), false), Nt(t);
       }
       function tn() {
-        O.value = null, qe.value = !1, U &&= (C(`cell-hover`, null), !1), Nt(-1);
+        O.value = null, qe.value = false, U &&= (C(`cell-hover`, null), false), Nt(-1);
       }
       function nn(event) {
-        k.value = !0, W = {
+        k.value = true, W = {
           x: event.clientX,
           y: event.clientY
         }, tn();
       }
       function rn() {
-        k.value = !1;
+        k.value = false;
       }
       function an(event) {
         if (!W) return;
@@ -550,7 +550,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         ln = h(() => x.rows.map(state => state.cells.map(e => e?.value ?? ``).join(`,`)).join(`|`)),
         un = h(() => x.rows.map(e => e.color ?? ``).join(`|`));
       return i([cn, ln, un], ([e, t], [n, r]) => {
-        I && (Ot(), e !== n && (Ft(), Yt(!0)), e !== n || t !== r ? It() : (Mt(), $()));
+        I && (Ot(), e !== n && (Ft(), Yt(true)), e !== n || t !== r ? It() : (Mt(), $()));
       }), m(() => {
         let e = T.value,
           t = w.value;
@@ -558,28 +558,28 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           try {
             I = new le({
               canvas: e,
-              alpha: !0,
+              alpha: true,
               antialias: window.devicePixelRatio < 2,
               powerPreference: `low-power`,
-              failIfMajorPerformanceCaveat: !0
+              failIfMajorPerformanceCaveat: true
             });
           } catch {
             C(`unavailable`);
             return;
           }
-          I.setClearColor(0, 0), e.addEventListener(`webglcontextrestored`, $), L = new fe(M, e), L.enableDamping = !0, L.dampingFactor = .12, L.enablePan = !1, L.enableZoom = !1, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
-            q = !0, J = null;
+          I.setClearColor(0, 0), e.addEventListener(`webglcontextrestored`, $), L = new fe(M, e), L.enableDamping = true, L.dampingFactor = .12, L.enablePan = false, L.enableZoom = false, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
+            q = true, J = null;
           }), Dt(), Ot(), Ft(), It(), t.addEventListener(`wheel`, on, {
-            capture: !0,
-            passive: !0
+            capture: true,
+            passive: true
           }), window.addEventListener(`pointerup`, rn), window.addEventListener(`pointercancel`, rn), lt = new ResizeObserver(Xt), lt.observe(t), ut = new MutationObserver(sn), ut.observe(document.documentElement, {
-            attributes: !0,
+            attributes: true,
             attributeFilter: [`class`]
           });
         }
       }), f(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
-          capture: !0
+          capture: true
         }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), A = [], Ye.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
       }), (i, o) => (c(), n(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
@@ -594,13 +594,13 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         class: e([`block h-full w-full`, k.value ? `cursor-grabbing` : `cursor-grab`]),
         style: d(qe.value && !k.value ? {
           cursor: `pointer`
-        } : void 0),
+        } : undefined),
         onPointermove: en,
         onPointerleave: tn,
         onPointerdown: nn,
         onClick: an,
-        onDblclick: o[0] ||= e => Ht(!0)
-      }, null, 38), We.value ? (c(!0), n(s, {
+        onDblclick: o[0] ||= e => Ht(true)
+      }, null, 38), We.value ? (c(true), n(s, {
         key: 0
       }, r(l.rows, (event, t) => a((c(), n(`div`, {
         key: event.key,
@@ -609,7 +609,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           left: `${E.value[t]?.x ?? 0}px`,
           top: `${E.value[t]?.y ?? 0}px`
         })
-      }, [g(`span`, ve, p(event.label), 1), event.summary ? (c(), n(`div`, ye, p(event.summary), 1)) : ee(``, !0)], 4)), [[te, E.value[t]?.visible]])), 128)) : ee(``, !0), (c(!0), n(s, null, r(l.columnLabels, (e, t) => a((c(), n(`span`, {
+      }, [g(`span`, ve, p(event.label), 1), event.summary ? (c(), n(`div`, ye, p(event.summary), 1)) : ee(``, true)], 4)), [[te, E.value[t]?.visible]])), 128)) : ee(``, true), (c(true), n(s, null, r(l.columnLabels, (e, t) => a((c(), n(`span`, {
         key: `${e.index}-${e.text}`,
         class: `pointer-events-none absolute -translate-x-1/2 -translate-y-1/2 text-xs text-[#bbb] leading-none whitespace-nowrap dark:text-muted-foreground/70`,
         style: d({
@@ -620,7 +620,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         key: 1,
         class: `pointer-events-none absolute z-10 whitespace-nowrap rounded-md bg-[#1f2328]/90 px-2 py-1 text-xs text-white shadow-sm dark:bg-black/80`,
         style: d(Je.value)
-      }, p(Ke.value), 5)) : ee(``, !0)], 4), g(`p`, {
+      }, p(Ke.value), 5)) : ee(``, true)], 4), g(`p`, {
         ref_key: `hintRef`,
         ref: Be,
         class: `mt-1.5 text-right text-xs text-[#bbb] leading-none dark:text-muted-foreground/70`

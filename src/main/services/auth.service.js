@@ -27,7 +27,7 @@ function commonRoleProfile(role) {
     description: `${role.description}\n\n${role.instructions}`,
     tags: role.tags,
     responseStyle: role.responseStyle,
-    avatar: role.avatar || void 0,
+    avatar: role.avatar || undefined,
     avatarColor: role.avatarColor,
     avatarShape: "rounded"
   };
@@ -135,7 +135,7 @@ function stableSerialize$1(value) {
   if (typeof value === "string" || typeof value === "boolean") return JSON.stringify(value);
   if (typeof value === "number") return Number.isFinite(value) ? JSON.stringify(value) : "null";
   if (Array.isArray(value)) return `[${value.map(item => stableSerialize$1(item)).join(",")}]`;
-  if (typeof value === "object") return `{${Object.entries(value).filter(([, item]) => item !== void 0 && typeof item !== "function").sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${stableSerialize$1(item)}`).join(",")}}`;
+  if (typeof value === "object") return `{${Object.entries(value).filter(([, item]) => item !== undefined && typeof item !== "function").sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${stableSerialize$1(item)}`).join(",")}}`;
   return JSON.stringify(String(value));
 }
 function safeEmbeddedJson(serialized) {
@@ -237,11 +237,11 @@ function replaceSharedText(root, relative, content, expectedRevision) {
     writeFileSync(descriptor, content, "utf8");
     fsyncSync(descriptor);
     closeSync(descriptor);
-    descriptor = void 0;
+    descriptor = undefined;
     if (readSharedText(root, relative, 0, 1048576).revision !== expectedRevision) throw new Error("文件已被修改，请重新读取并合并后再保存；你的草稿已保留");
     renameSync(temporary, target);
   } finally {
-    if (descriptor !== void 0) closeSync(descriptor);
+    if (descriptor !== undefined) closeSync(descriptor);
     if (existsSync(temporary)) unlinkSync(temporary);
   }
   return readSharedText(root, relative, 0, SHARED_TEXT_LIMIT);
@@ -457,7 +457,7 @@ var BotSharedWorkspaceStore = class {
 function botSharedWorkspaceStore(expectedAccountId) {
   const connection = getOpenDatabaseConnection(),
     accountId = getActiveUserId() ?? 0;
-  if (!connection || (connection.ownerUserId ?? 0) !== accountId || expectedAccountId !== void 0 && expectedAccountId !== accountId) throw new Error(appText("botSharedWorkspace.accountSwitched"));
+  if (!connection || (connection.ownerUserId ?? 0) !== accountId || expectedAccountId !== undefined && expectedAccountId !== accountId) throw new Error(appText("botSharedWorkspace.accountSwitched"));
   const defaultRoot = path.join(app.getPath("documents"), "超能伙伴", "公共空间", `账号-${accountId}`);
   const legacyRoot = path.join(app.getPath("documents"), "小白 Bot", "公共空间", `账号-${accountId}`);
   const stored = connection.database.prepare("SELECT root FROM xiaohei_bot_shared_workspace WHERE id = 1").get();
@@ -652,7 +652,7 @@ function introduceDefaultListRole(conversationId) {
   if (!link || !bot) return;
   db.exec("SAVEPOINT default_role_introduce");
   try {
-    const message = db.prepare("SELECT 1 FROM xiaohei_bot_messages WHERE conversation_id = ? LIMIT 1").get(conversationId) || db.prepare("SELECT 1 FROM xiaohei_bot_events WHERE conversation_id = ? AND aggregate_type = 'message' LIMIT 1").get(conversationId) ? void 0 : xiaoheiBotRepository.createMessage({
+    const message = db.prepare("SELECT 1 FROM xiaohei_bot_messages WHERE conversation_id = ? LIMIT 1").get(conversationId) || db.prepare("SELECT 1 FROM xiaohei_bot_events WHERE conversation_id = ? AND aggregate_type = 'message' LIMIT 1").get(conversationId) ? undefined : xiaoheiBotRepository.createMessage({
       conversationId,
       authorType: "bot",
       authorBotId: bot.id,
@@ -678,7 +678,7 @@ var HISTORY_MAX_CHARACTERS = 48e3;
 var HISTORY_MESSAGE_CHARACTERS = 4e3;
 var compare = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 var historyHash = value => sha256Text(stableSerialize$1(value));
-var embeddedJson = value => stableSerialize$1(value).replace(/[<>&\u2028\u2029]/gu, character => `\\u${character.charCodeAt(0).toString(16).padStart(4, "0")}`);
+var embeddedJson = value => stableSerialize$1(value).replace(/[<>&\u2028\u2029]/gu, character => `null${character.charCodeAt(0).toString(16).padStart(4, "0")}`);
 /** Fair, deterministic source budgets. Only complete rounds are dropped; clipped
 * message bodies are explicitly marked. JSON escaping counts toward the budget. */
 function limitHistorySources(sources, maxCharacters = HISTORY_MAX_CHARACTERS, roundLimit = 10) {
@@ -693,14 +693,14 @@ function limitHistorySources(sources, maxCharacters = HISTORY_MAX_CHARACTERS, ro
       rounds: [],
       omittedRounds: source.windowRoundCount
     };
-    if (historyUpdateMessage(void 0, result, roundLimit).content.length > quota) continue;
+    if (historyUpdateMessage(undefined, result, roundLimit).content.length > quota) continue;
     for (const round of [...source.rounds].reverse()) {
       let candidate = {
         ...result,
         rounds: [round, ...result.rounds],
         omittedRounds: result.omittedRounds - 1
       };
-      if (historyUpdateMessage(void 0, candidate, roundLimit).content.length > quota) {
+      if (historyUpdateMessage(undefined, candidate, roundLimit).content.length > quota) {
         if (result.rounds.length) break;
         let low = 0,
           high = HISTORY_MESSAGE_CHARACTERS;
@@ -720,7 +720,7 @@ function limitHistorySources(sources, maxCharacters = HISTORY_MAX_CHARACTERS, ro
             rounds: [shortened],
             omittedRounds: result.omittedRounds - 1
           };
-          if (historyUpdateMessage(void 0, candidate, roundLimit).content.length <= quota) {
+          if (historyUpdateMessage(undefined, candidate, roundLimit).content.length <= quota) {
             clipped = candidate;
             low = length + 1;
           } else high = length - 1;
@@ -1214,7 +1214,7 @@ var saveMemorySchema = objectType({
   expectedRevision: numberType().int().positive().optional(),
   content: memoryContentSchema,
   category: memoryCategorySchema
-}).strict().refine(value => !value.id || value.expectedRevision !== void 0, "修改记忆需要提供原版本");
+}).strict().refine(value => !value.id || value.expectedRevision !== undefined, "修改记忆需要提供原版本");
 var deleteMemorySchema = objectType({
   botId: identifier,
   id: identifier,
@@ -1988,8 +1988,8 @@ var require_errors = /* @__PURE__ */__commonJSMin((exports, module) => {
     constructor(message, code, data) {
       super(message);
       this.name = "HTTPParserError";
-      this.code = code ? `HPE_${code}` : void 0;
-      this.data = data ? data.toString() : void 0;
+      this.code = code ? `HPE_${code}` : undefined;
+      this.data = data ? data.toString() : undefined;
     }
     static [Symbol.hasInstance](instance) {
       return instance && instance[kHTTPParserError] === true;
@@ -2161,7 +2161,7 @@ var require_constants$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   */
   function getHeaderNameAsBuffer(header) {
     let buffer = wellknownHeaderNameBuffers[header];
-    if (buffer === void 0) buffer = Buffer.from(header);
+    if (buffer === undefined) buffer = Buffer.from(header);
     return buffer;
   }
   for (let i = 0; i < wellknownHeaderNames.length; ++i) {
@@ -2199,7 +2199,7 @@ var require_tree = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {number} index
     */
     constructor(key, value, index) {
-      if (index === void 0 || index >= key.length) throw new TypeError("Unreachable");
+      if (index === undefined || index >= key.length) throw new TypeError("Unreachable");
       if ((this.code = key.charCodeAt(index)) > 127) throw new TypeError("key must be ascii string");
       if (key.length !== ++index) this.middle = new TstNode(key, value, index);else this.value = value;
     }
@@ -2575,11 +2575,11 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @returns {Record<string, string | string[]>}
   */
   function parseHeaders(headers, obj) {
-    if (obj === void 0) obj = {};
+    if (obj === undefined) obj = {};
     for (let i = 0; i < headers.length; i += 2) {
       const key = headerNameToString(headers[i]);
       let val = obj[key];
-      if (val !== void 0) {
+      if (val !== undefined) {
         if (!Object.hasOwn(obj, key)) {
           const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(x => x.toString("latin1")) : headers[i + 1].toString("latin1");
           if (key === "__proto__") Object.defineProperty(obj, key, {
@@ -2652,7 +2652,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (typeof handler.onRequestStart === "function") return;
     if (typeof handler.onConnect !== "function") throw new InvalidArgumentError("invalid onConnect method");
     if (typeof handler.onError !== "function") throw new InvalidArgumentError("invalid onError method");
-    if (typeof handler.onBodySent !== "function" && handler.onBodySent !== void 0) throw new InvalidArgumentError("invalid onBodySent method");
+    if (typeof handler.onBodySent !== "function" && handler.onBodySent !== undefined) throw new InvalidArgumentError("invalid onBodySent method");
     if (upgrade || method === "CONNECT") {
       if (typeof handler.onUpgrade !== "function") throw new InvalidArgumentError("invalid onUpgrade method");
     } else {
@@ -3240,7 +3240,7 @@ var require_request$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       typeOfService
     }, handler) {
       if (typeof path !== "string") throw new InvalidArgumentError("path must be a string");else if (path[0] !== "/" && !(path.startsWith("http://") || path.startsWith("https://")) && method !== "CONNECT") throw new InvalidArgumentError("path must be an absolute URL or start with a slash");else if (invalidPathRegex.test(path)) throw new InvalidArgumentError("invalid request path");
-      if (typeof method !== "string") throw new InvalidArgumentError("method must be a string");else if (normalizedMethodRecords[method] === void 0 && !isValidHTTPToken(method)) throw new InvalidArgumentError("invalid request method");
+      if (typeof method !== "string") throw new InvalidArgumentError("method must be a string");else if (normalizedMethodRecords[method] === undefined && !isValidHTTPToken(method)) throw new InvalidArgumentError("invalid request method");
       if (upgrade && typeof upgrade !== "string") throw new InvalidArgumentError("upgrade must be a string");
       if (upgrade && !isValidHeaderValue(upgrade)) throw new InvalidArgumentError("invalid upgrade header");
       if (headersTimeout != null && (!Number.isFinite(headersTimeout) || headersTimeout < 0)) throw new InvalidArgumentError("invalid headersTimeout");
@@ -3434,11 +3434,11 @@ var require_request$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   };
   function processHeader(request, key, val) {
-    if (val && typeof val === "object" && !Array.isArray(val)) throw new InvalidArgumentError(`invalid ${key} header`);else if (val === void 0) return;
+    if (val && typeof val === "object" && !Array.isArray(val)) throw new InvalidArgumentError(`invalid ${key} header`);else if (val === undefined) return;
     let headerName = headerNameLowerCasedRecord[key];
-    if (headerName === void 0) {
+    if (headerName === undefined) {
       headerName = key.toLowerCase();
-      if (headerNameLowerCasedRecord[headerName] === void 0 && !isValidHTTPToken(headerName)) throw new InvalidArgumentError("invalid header key");
+      if (headerNameLowerCasedRecord[headerName] === undefined && !isValidHTTPToken(headerName)) throw new InvalidArgumentError("invalid header key");
     }
     if (Array.isArray(val)) {
       const arr = [];
@@ -3720,7 +3720,7 @@ var require_dispatcher_base = /* @__PURE__ */__commonJSMin((exports, module) => 
       return this[kClosed];
     }
     close(callback) {
-      if (callback === void 0) return new Promise((resolve, reject) => {
+      if (callback === undefined) return new Promise((resolve, reject) => {
         this.close((err, data) => {
           return err ? reject(err) : resolve(data);
         });
@@ -3750,7 +3750,7 @@ var require_dispatcher_base = /* @__PURE__ */__commonJSMin((exports, module) => 
         callback = err;
         err = null;
       }
-      if (callback === void 0) return new Promise((resolve, reject) => {
+      if (callback === undefined) return new Promise((resolve, reject) => {
         this.destroy(err, (err, data) => {
           return err ? reject(err) : resolve(data);
         });
@@ -3805,7 +3805,7 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
       this._sessionRegistry = new FinalizationRegistry(key => {
         if (this._sessionCache.size < this._maxCachedSessions) return;
         const ref = this._sessionCache.get(key);
-        if (ref !== void 0 && ref.deref() === void 0) this._sessionCache.delete(key);
+        if (ref !== undefined && ref.deref() === undefined) this._sessionCache.delete(key);
       });
     }
     get(sessionKey) {
@@ -3815,7 +3815,7 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
     set(sessionKey, session) {
       if (this._maxCachedSessions === 0) return;
       if (this._sessionCache.has(sessionKey)) this._sessionCache.delete(sessionKey);else if (this._sessionCache.size >= this._maxCachedSessions) {
-        for (const [key, ref] of this._sessionCache) if (ref.deref() === void 0) {
+        for (const [key, ref] of this._sessionCache) if (ref.deref() === undefined) {
           this._sessionCache.delete(key);
           return;
         }
@@ -3887,7 +3887,7 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
         if (useH2c === true) socket.alpnProtocol = "h2";
       }
       if (options.keepAlive == null || options.keepAlive) {
-        const keepAliveInitialDelay = options.keepAliveInitialDelay === void 0 ? 6e4 : options.keepAliveInitialDelay;
+        const keepAliveInitialDelay = options.keepAliveInitialDelay === undefined ? 6e4 : options.keepAliveInitialDelay;
         socket.setKeepAlive(true, keepAliveInitialDelay);
       }
       const clearConnectTimeout = util.setupConnectTimeout(new WeakRef(socket), {
@@ -3936,7 +3936,7 @@ var require_constants$3 = /* @__PURE__ */__commonJSMin(exports => {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.SPECIAL_HEADERS = exports.MINOR = exports.MAJOR = exports.HTAB_SP_VCHAR_OBS_TEXT = exports.QUOTED_STRING = exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS = exports.TOKEN = exports.HEX = exports.URL_CHAR = exports.USERINFO_CHARS = exports.MARK = exports.ALPHANUM = exports.NUM = exports.HEX_MAP = exports.NUM_MAP = exports.ALPHA = exports.STATUSES_HTTP = exports.H_METHOD_MAP = exports.METHOD_MAP = exports.METHODS_RTSP = exports.METHODS_ICE = exports.METHODS_HTTP = exports.HEADER_STATE = exports.FINISH = exports.STATUSES = exports.METHODS = exports.LENIENT_FLAGS = exports.FLAGS = exports.TYPE = exports.ERROR = void 0;
+  exports.SPECIAL_HEADERS = exports.MINOR = exports.MAJOR = exports.HTAB_SP_VCHAR_OBS_TEXT = exports.QUOTED_STRING = exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS = exports.TOKEN = exports.HEX = exports.URL_CHAR = exports.USERINFO_CHARS = exports.MARK = exports.ALPHANUM = exports.NUM = exports.HEX_MAP = exports.NUM_MAP = exports.ALPHA = exports.STATUSES_HTTP = exports.H_METHOD_MAP = exports.METHOD_MAP = exports.METHODS_RTSP = exports.METHODS_ICE = exports.METHODS_HTTP = exports.HEADER_STATE = exports.FINISH = exports.STATUSES = exports.METHODS = exports.LENIENT_FLAGS = exports.FLAGS = exports.TYPE = exports.ERROR = undefined;
   var utils_1 = require_utils();
   exports.ERROR = {
     OK: 0,
@@ -4225,12 +4225,12 @@ var require_constants$3 = /* @__PURE__ */__commonJSMin(exports => {
   exports.URL_CHAR = ["!", "\"", "$", "%", "&", "'", "(", ")", "*", "+", ",", "-", ".", "/", ":", ";", "<", "=", ">", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}", "~"].concat(exports.ALPHANUM);
   exports.HEX = exports.NUM.concat(["a", "b", "c", "d", "e", "f", "A", "B", "C", "D", "E", "F"]);
   exports.TOKEN = ["!", "#", "$", "%", "&", "'", "*", "+", "-", ".", "^", "_", "`", "|", "~"].concat(exports.ALPHANUM);
-  exports.HEADER_CHARS = ["	"];
+  exports.HEADER_CHARS = ["\t"];
   for (let i = 32; i <= 255; i++) if (i !== 127) exports.HEADER_CHARS.push(i);
   exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS.filter(c => c !== 44);
-  exports.QUOTED_STRING = ["	", " "];
+  exports.QUOTED_STRING = ["\t", " "];
   for (let i = 33; i <= 255; i++) if (i !== 34 && i !== 92) exports.QUOTED_STRING.push(i);
-  exports.HTAB_SP_VCHAR_OBS_TEXT = ["	", " "];
+  exports.HTAB_SP_VCHAR_OBS_TEXT = ["\t", " "];
   for (let i = 33; i <= 126; i++) exports.HTAB_SP_VCHAR_OBS_TEXT.push(i);
   for (let i = 128; i <= 255; i++) exports.HTAB_SP_VCHAR_OBS_TEXT.push(i);
   exports.MAJOR = exports.NUM_MAP;
@@ -4378,9 +4378,9 @@ var require_global$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     return globalThis[globalOrigin];
   }
   function setGlobalOrigin(newOrigin) {
-    if (newOrigin === void 0) {
+    if (newOrigin === undefined) {
       Object.defineProperty(globalThis, globalOrigin, {
-        value: void 0,
+        value: undefined,
         writable: true,
         enumerable: false,
         configurable: false
@@ -4553,7 +4553,7 @@ var require_infra = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function serializeJavascriptValueToJSONString(value) {
     const result = JSON.stringify(value);
-    if (result === void 0) throw new TypeError("Value is not JSON serializable");
+    if (result === undefined) throw new TypeError("Value is not JSON serializable");
     assert$29(typeof result === "string");
     return result;
   }
@@ -5158,7 +5158,7 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
       const method = typeof Iterable === "function" ? Iterable() : V?.[Symbol.iterator]?.();
       const seq = [];
       let index = 0;
-      if (method === void 0 || typeof method.next !== "function") throw webidl.errors.exception({
+      if (method === undefined || typeof method.next !== "function") throw webidl.errors.exception({
         header: prefix,
         message: `${argument} is not iterable.`
       });
@@ -5228,9 +5228,9 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
           });
         }
         let value = dictionary?.[key];
-        const hasDefault = defaultValue !== void 0;
-        if (hasDefault && value === void 0) value = defaultValue();
-        if (required || hasDefault || value !== void 0) {
+        const hasDefault = defaultValue !== undefined;
+        if (hasDefault && value === undefined) value = defaultValue();
+        if (required || hasDefault || value !== undefined) {
           value = converter(value, prefix, `${argument}.${key}`);
           if (options.allowedValues && !options.allowedValues.includes(value)) throw webidl.errors.exception({
             header: prefix,
@@ -5560,7 +5560,7 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {string} potentialValue
   */
   function isValidHeaderValue(potentialValue) {
-    return (potentialValue[0] === "	" || potentialValue[0] === " " || potentialValue[potentialValue.length - 1] === "	" || potentialValue[potentialValue.length - 1] === " " || potentialValue.includes("\n") || potentialValue.includes("\r") || potentialValue.includes("\0")) === false;
+    return (potentialValue[0] === "\t" || potentialValue[0] === " " || potentialValue[potentialValue.length - 1] === "\t" || potentialValue[potentialValue.length - 1] === " " || potentialValue.includes("\n") || potentialValue.includes("\r") || potentialValue.includes("\0")) === false;
   }
   /**
   * Parse a referrer policy from a Referrer-Policy header
@@ -5606,7 +5606,7 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function appendRequestOriginHeader(request) {
     let serializedOrigin = request.origin;
-    if (serializedOrigin === "client" || serializedOrigin === void 0) return;
+    if (serializedOrigin === "client" || serializedOrigin === undefined) return;
     if (request.responseTainting === "cors" || request.mode === "websocket") request.headersList.append("origin", serializedOrigin, true);else if (request.method !== "GET" && request.method !== "HEAD") {
       switch (request.referrerPolicy) {
         case "no-referrer":
@@ -5859,7 +5859,7 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
         const index = this.#index;
         const values = kInternalIterator(this.#target);
         if (index >= values.length) return {
-          value: void 0,
+          value: undefined,
           done: true
         };
         const {
@@ -6074,19 +6074,19 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
     const position = {
       position: 5
     };
-    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "	" || char === " ", data, position);
+    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "\t" || char === " ", data, position);
     if (data.charCodeAt(position.position) !== 61) return "failure";
     position.position++;
-    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "	" || char === " ", data, position);
+    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "\t" || char === " ", data, position);
     const rangeStart = collectASequenceOfCodePoints(char => {
       const code = char.charCodeAt(0);
       return code >= 48 && code <= 57;
     }, data, position);
     const rangeStartValue = rangeStart.length ? Number(rangeStart) : null;
-    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "	" || char === " ", data, position);
+    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "\t" || char === " ", data, position);
     if (data.charCodeAt(position.position) !== 45) return "failure";
     position.position++;
-    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "	" || char === " ", data, position);
+    if (allowWhitespace) collectASequenceOfCodePoints(char => char === "\t" || char === " ", data, position);
     const rangeEnd = collectASequenceOfCodePoints(char => {
       const code = char.charCodeAt(0);
       return code >= 48 && code <= 57;
@@ -6305,22 +6305,22 @@ var require_formdata = /* @__PURE__ */__commonJSMin((exports, module) => {
   var nodeUtil$2 = __require("node:util");
   var FormData = class FormData {
     #state = [];
-    constructor(form = void 0) {
+    constructor(form = undefined) {
       webidl.util.markAsUncloneable(this);
-      if (form !== void 0) throw webidl.errors.conversionFailed({
+      if (form !== undefined) throw webidl.errors.conversionFailed({
         prefix: "FormData constructor",
         argument: "Argument 1",
         types: ["undefined"]
       });
     }
-    append(name, value, filename = void 0) {
+    append(name, value, filename = undefined) {
       webidl.brandCheck(this, FormData);
       const prefix = "FormData.append";
       webidl.argumentLengthCheck(arguments, 2, prefix);
       name = webidl.converters.USVString(name);
       if (arguments.length === 3 || webidl.is.Blob(value)) {
         value = webidl.converters.Blob(value, prefix, "value");
-        if (filename !== void 0) filename = webidl.converters.USVString(filename);
+        if (filename !== undefined) filename = webidl.converters.USVString(filename);
       } else value = webidl.converters.USVString(value);
       const entry = makeEntry(name, value, filename);
       this.#state.push(entry);
@@ -6351,14 +6351,14 @@ var require_formdata = /* @__PURE__ */__commonJSMin((exports, module) => {
       name = webidl.converters.USVString(name);
       return this.#state.findIndex(entry => entry.name === name) !== -1;
     }
-    set(name, value, filename = void 0) {
+    set(name, value, filename = undefined) {
       webidl.brandCheck(this, FormData);
       const prefix = "FormData.set";
       webidl.argumentLengthCheck(arguments, 2, prefix);
       name = webidl.converters.USVString(name);
       if (arguments.length === 3 || webidl.is.Blob(value)) {
         value = webidl.converters.Blob(value, prefix, "value");
-        if (filename !== void 0) filename = webidl.converters.USVString(filename);
+        if (filename !== undefined) filename = webidl.converters.USVString(filename);
       } else value = webidl.converters.USVString(value);
       const entry = makeEntry(name, value, filename);
       const idx = this.#state.findIndex(entry => entry.name === name);
@@ -6423,7 +6423,7 @@ var require_formdata = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (!webidl.is.File(value)) value = new File([value], "blob", {
         type: value.type
       });
-      if (filename !== void 0) {
+      if (filename !== undefined) {
         /** @type {FilePropertyBag} */
         const options = {
           type: value.type,
@@ -6496,7 +6496,7 @@ var require_formdata_parser = /* @__PURE__ */__commonJSMin((exports, module) => 
   function multipartFormDataParser(input, mimeType) {
     assert$25(mimeType !== "failure" && mimeType.essence === "multipart/form-data");
     const boundaryString = mimeType.parameters.get("boundary");
-    if (boundaryString === void 0) throw parsingError("missing boundary in content-type header");
+    if (boundaryString === undefined) throw parsingError("missing boundary in content-type header");
     const boundary = Buffer.from(`--${boundaryString}`, "utf8");
     const entryList = [];
     const position = {
@@ -7094,7 +7094,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
   var kSocketUsed = Symbol("kSocketUsed");
   var extractBody;
   function lazyllhttp() {
-    const llhttpWasmData = process.env.JEST_WORKER_ID ? require_llhttp_wasm() : void 0;
+    const llhttpWasmData = process.env.JEST_WORKER_ID ? require_llhttp_wasm() : undefined;
     let mod;
     let useWasmSIMD = true;
     if (process.arch === "ppc64") {
@@ -8990,11 +8990,11 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
       pingInterval,
       webSocket
     } = {}) {
-      if (keepAlive !== void 0) throw new InvalidArgumentError("unsupported keepAlive, use pipelining=0 instead");
-      if (socketTimeout !== void 0) throw new InvalidArgumentError("unsupported socketTimeout, use headersTimeout & bodyTimeout instead");
-      if (requestTimeout !== void 0) throw new InvalidArgumentError("unsupported requestTimeout, use headersTimeout & bodyTimeout instead");
-      if (idleTimeout !== void 0) throw new InvalidArgumentError("unsupported idleTimeout, use keepAliveTimeout instead");
-      if (maxKeepAliveTimeout !== void 0) throw new InvalidArgumentError("unsupported maxKeepAliveTimeout, use keepAliveMaxTimeout instead");
+      if (keepAlive !== undefined) throw new InvalidArgumentError("unsupported keepAlive, use pipelining=0 instead");
+      if (socketTimeout !== undefined) throw new InvalidArgumentError("unsupported socketTimeout, use headersTimeout & bodyTimeout instead");
+      if (requestTimeout !== undefined) throw new InvalidArgumentError("unsupported requestTimeout, use headersTimeout & bodyTimeout instead");
+      if (idleTimeout !== undefined) throw new InvalidArgumentError("unsupported idleTimeout, use keepAliveTimeout instead");
+      if (maxKeepAliveTimeout !== undefined) throw new InvalidArgumentError("unsupported maxKeepAliveTimeout, use keepAliveMaxTimeout instead");
       if (maxHeaderSize != null) {
         if (!Number.isInteger(maxHeaderSize) || maxHeaderSize < 1) throw new InvalidArgumentError("invalid maxHeaderSize");
       } else maxHeaderSize = getDefaultNodeMaxHeaderSize();
@@ -9029,7 +9029,7 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
         ...(typeof autoSelectFamily === "boolean" ? {
           autoSelectFamily,
           autoSelectFamilyAttemptTimeout
-        } : void 0),
+        } : undefined),
         ...connect
       });else {
         const customConnect = connect;
@@ -9355,7 +9355,7 @@ var require_fixed_queue = /* @__PURE__ */__commonJSMin((exports, module) => {
     /** @type {number} */
     top = 0;
     /** @type {Array<T|undefined>} */
-    list = new Array(kSize).fill(void 0);
+    list = new Array(kSize).fill(undefined);
     /** @type {T|null} */
     next = null;
     /** @returns {boolean} */
@@ -9377,8 +9377,8 @@ var require_fixed_queue = /* @__PURE__ */__commonJSMin((exports, module) => {
     /** @returns {T|null} */
     shift() {
       const nextItem = this.list[this.bottom];
-      if (nextItem === void 0) return null;
-      this.list[this.bottom] = void 0;
+      if (nextItem === undefined) return null;
+      this.list[this.bottom] = undefined;
       this.bottom = this.bottom + 1 & kMask;
       return nextItem;
     }
@@ -9638,7 +9638,7 @@ var require_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
         ...(typeof autoSelectFamily === "boolean" ? {
           autoSelectFamily,
           autoSelectFamilyAttemptTimeout
-        } : void 0),
+        } : undefined),
         ...connect
       });
       super(options);
@@ -9653,7 +9653,7 @@ var require_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
       };
       this[kOptions].interceptors = options.interceptors ? {
         ...options.interceptors
-      } : void 0;
+      } : undefined;
       this[kFactory] = factory;
       this.on("connect", (origin, targets) => {
         if (clientTtl != null && clientTtl > 0) for (const target of targets) Object.assign(target, {
@@ -9749,7 +9749,7 @@ var require_balanced_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
       };
       this[kOptions].interceptors = opts.interceptors ? {
         ...opts.interceptors
-      } : void 0;
+      } : undefined;
       this[kIndex] = -1;
       this[kCurrentWeight] = 0;
       this[kMaxWeightPerServer] = this[kOptions].maxWeightPerServer || 100;
@@ -9877,7 +9877,7 @@ var require_round_robin_pool = /* @__PURE__ */__commonJSMin((exports, module) =>
         ...(typeof autoSelectFamily === "boolean" ? {
           autoSelectFamily,
           autoSelectFamilyAttemptTimeout
-        } : void 0),
+        } : undefined),
         ...connect
       });
       super();
@@ -9892,7 +9892,7 @@ var require_round_robin_pool = /* @__PURE__ */__commonJSMin((exports, module) =>
       };
       this[kOptions].interceptors = options.interceptors ? {
         ...options.interceptors
-      } : void 0;
+      } : undefined;
       this[kFactory] = factory;
       this[kIndex] = -1;
       this.on("connect", (origin, targets) => {
@@ -11099,7 +11099,7 @@ var require_env_http_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module
       this.#noProxyEntries = noProxyEntries;
     }
     get #noProxyChanged() {
-      if (this.#opts.noProxy !== void 0) return false;
+      if (this.#opts.noProxy !== undefined) return false;
       return this.#noProxyValue !== this.#noProxyEnv;
     }
     get #noProxyEnv() {
@@ -12131,7 +12131,7 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   };
   function request(opts, callback) {
-    if (callback === void 0) return new Promise((resolve, reject) => {
+    if (callback === undefined) return new Promise((resolve, reject) => {
       request.call(this, opts, (err, data) => {
         return err ? reject(err) : resolve(data);
       });
@@ -12302,7 +12302,7 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
       });
       res.on("drain", resume);
       this.res = res;
-      return (res.writableNeedDrain !== void 0 ? res.writableNeedDrain : res._writableState?.needDrain) !== true;
+      return (res.writableNeedDrain !== undefined ? res.writableNeedDrain : res._writableState?.needDrain) !== true;
     }
     onData(chunk) {
       const {
@@ -12346,7 +12346,7 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   };
   function stream(opts, factory, callback) {
-    if (callback === void 0) return new Promise((resolve, reject) => {
+    if (callback === undefined) return new Promise((resolve, reject) => {
       stream.call(this, opts, factory, (err, data) => {
         return err ? reject(err) : resolve(data);
       });
@@ -12672,7 +12672,7 @@ var require_api_upgrade = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   };
   function upgrade(opts, callback) {
-    if (callback === void 0) return new Promise((resolve, reject) => {
+    if (callback === undefined) return new Promise((resolve, reject) => {
       upgrade.call(this, opts, (err, data) => {
         return err ? reject(err) : resolve(data);
       });
@@ -12775,7 +12775,7 @@ var require_api_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   };
   function connect(opts, callback) {
-    if (callback === void 0) return new Promise((resolve, reject) => {
+    if (callback === undefined) return new Promise((resolve, reject) => {
       connect.call(this, opts, (err, data) => {
         return err ? reject(err) : resolve(data);
       });
@@ -13337,8 +13337,8 @@ var require_mock_interceptor = /* @__PURE__ */__commonJSMin((exports, module) =>
       }
       const replyParameters = {
         statusCode: replyOptionsCallbackOrStatusCode,
-        data: arguments[1] === void 0 ? "" : arguments[1],
-        responseOptions: arguments[2] === void 0 ? {} : arguments[2]
+        data: arguments[1] === undefined ? "" : arguments[1],
+        responseOptions: arguments[2] === undefined ? {} : arguments[2]
       };
       this.validateReplyParameters(replyParameters);
       const dispatchData = this.createMockScopeDispatchData(replyParameters);
@@ -13530,7 +13530,7 @@ var require_mock_call_history = /* @__PURE__ */__commonJSMin((exports, module) =
       };
       let result = "";
       this.toMap().forEach((value, key) => {
-        if (typeof value === "string" || value === void 0 || value === null) result = `${result}${key}${options.betweenKeyValueSeparator}${value}${options.betweenPairSeparator}`;
+        if (typeof value === "string" || value === undefined || value === null) result = `${result}${key}${options.betweenKeyValueSeparator}${value}${options.betweenPairSeparator}`;
         if (typeof value === "object" && value !== null || Array.isArray(value)) result = `${result}${key}${options.betweenKeyValueSeparator}${JSON.stringify(value)}${options.betweenPairSeparator}`;
       });
       return result.slice(0, -1);
@@ -13836,13 +13836,13 @@ var require_mock_agent = /* @__PURE__ */__commonJSMin((exports, module) => {
       return this[kMockAgentMockCallHistoryInstance];
     }
     clearCallHistory() {
-      if (this[kMockAgentMockCallHistoryInstance] !== void 0) this[kMockAgentMockCallHistoryInstance].clear();
+      if (this[kMockAgentMockCallHistoryInstance] !== undefined) this[kMockAgentMockCallHistoryInstance].clear();
     }
     get isMockActive() {
       return this[kIsMockActive];
     }
     [kMockAgentRegisterCallHistory]() {
-      if (this[kMockAgentMockCallHistoryInstance] === void 0) this[kMockAgentMockCallHistoryInstance] = new MockCallHistory();
+      if (this[kMockAgentMockCallHistoryInstance] === undefined) this[kMockAgentMockCallHistoryInstance] = new MockCallHistory();
     }
     [kMockAgentAddCallHistoryLog](opts) {
       if (this[kMockAgentIsCallHistoryEnabled]) {
@@ -13989,7 +13989,7 @@ var require_snapshot_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
       for (let i = 0; i < headers.length; i += 2) {
         const key = headers[i];
         const value = headers[i + 1];
-        if (key && value !== void 0) {
+        if (key && value !== undefined) {
           const keyStr = Buffer.isBuffer(key) ? key.toString() : key;
           const valueStr = Buffer.isBuffer(value) ? value.toString() : value;
           normalizedHeaders[keyStr.toLowerCase()] = valueStr;
@@ -14299,7 +14299,7 @@ var require_snapshot_recorder = /* @__PURE__ */__commonJSMin((exports, module) =
       if (this.isUrlExcluded(requestOpts)) return;
       const hash = createRequestHash(formatRequestKey(requestOpts, this.#headerFilters, this.matchOptions));
       const snapshot = this.#snapshots.get(hash);
-      if (!snapshot) return void 0;
+      if (!snapshot) return undefined;
       const currentCallCount = snapshot.callCount || 0;
       const responseIndex = Math.min(currentCallCount, snapshot.responses.length - 1);
       snapshot.callCount = currentCallCount + 1;
@@ -14758,7 +14758,7 @@ var require_global = /* @__PURE__ */__commonJSMin((exports, module) => {
     InvalidArgumentError
   } = require_errors();
   var Agent = require_agent();
-  if (getGlobalDispatcher() === void 0) setGlobalDispatcher(new Agent());
+  if (getGlobalDispatcher() === undefined) setGlobalDispatcher(new Agent());
   function setGlobalDispatcher(agent) {
     if (!agent || typeof agent.dispatch !== "function") throw new InvalidArgumentError("Argument agent must implement Agent");
     Object.defineProperty(globalThis, globalDispatcher, {
@@ -15030,7 +15030,7 @@ var require_response_error = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     onResponseEnd(controller, trailers) {
       if (this.#statusCode >= 400) {
-        this.#body += this.#decoder?.decode(void 0, {
+        this.#body += this.#decoder?.decode(undefined, {
           stream: false
         }) ?? "";
         if (this.#checkContentType("application/json")) try {
@@ -15563,7 +15563,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function markInvalidCacheControlDirective(directives, key) {
     let invalidDirectives = directives[kInvalidCacheControlDirectives];
-    if (invalidDirectives === void 0) {
+    if (invalidDirectives === undefined) {
       invalidDirectives = /* @__PURE__ */new Set();
       Object.defineProperty(directives, kInvalidCacheControlDirectives, {
         value: invalidDirectives
@@ -15599,7 +15599,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     const headerName = key.toLowerCase();
     const current = headers[headerName];
     const values = Array.isArray(val) ? val : [val];
-    if (current === void 0) headers[headerName] = Array.isArray(val) ? val.slice() : val;else if (Array.isArray(current)) current.push(...values);else headers[headerName] = [current, ...values];
+    if (current === undefined) headers[headerName] = Array.isArray(val) ? val.slice() : val;else if (Array.isArray(current)) current.push(...values);else headers[headerName] = [current, ...values];
   }
   /**
   * @param {Record<string, string[] | string>}
@@ -15624,7 +15624,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   function assertCacheKey(key) {
     if (typeof key !== "object") throw new TypeError(`expected key to be object, got ${typeof key}`);
     for (const property of ["origin", "method", "path"]) if (typeof key[property] !== "string") throw new TypeError(`expected key.${property} to be string, got ${typeof key[property]}`);
-    if (key.headers !== void 0 && typeof key.headers !== "object") throw new TypeError(`expected headers to be object, got ${typeof key}`);
+    if (key.headers !== undefined && typeof key.headers !== "object") throw new TypeError(`expected headers to be object, got ${typeof key}`);
   }
   /**
   * @param {any} value
@@ -15634,8 +15634,8 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     for (const property of ["statusCode", "cachedAt", "staleAt", "deleteAt"]) if (typeof value[property] !== "number") throw new TypeError(`expected value.${property} to be number, got ${typeof value[property]}`);
     if (typeof value.statusMessage !== "string") throw new TypeError(`expected value.statusMessage to be string, got ${typeof value.statusMessage}`);
     if (value.headers != null && typeof value.headers !== "object") throw new TypeError(`expected value.rawHeaders to be object, got ${typeof value.headers}`);
-    if (value.vary !== void 0 && typeof value.vary !== "object") throw new TypeError(`expected value.vary to be object, got ${typeof value.vary}`);
-    if (value.etag !== void 0 && typeof value.etag !== "string") throw new TypeError(`expected value.etag to be string, got ${typeof value.etag}`);
+    if (value.vary !== undefined && typeof value.vary !== "object") throw new TypeError(`expected value.vary to be object, got ${typeof value.vary}`);
+    if (value.etag !== undefined && typeof value.etag !== "string") throw new TypeError(`expected value.etag to be string, got ${typeof value.etag}`);
   }
   /**
   * @see https://www.rfc-editor.org/rfc/rfc9111.html#name-cache-control
@@ -15670,7 +15670,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
         value = trimOWSStart(rawValue);
       } else key = trimOWS(directive);
       const malformedRestrictiveDirectiveName = getMalformedRestrictiveDirectiveName(key);
-      if (malformedRestrictiveDirectiveName !== void 0) {
+      if (malformedRestrictiveDirectiveName !== undefined) {
         output[malformedRestrictiveDirectiveName] = true;
         continue;
       }
@@ -15683,7 +15683,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
         case "stale-if-error":
           {
             if (fromMalformedQuote || invalidNumericDirectives.has(key)) continue;
-            if (value === void 0 || keyHasTrailingWhitespace || valueHasLeadingWhitespace) {
+            if (value === undefined || keyHasTrailingWhitespace || valueHasLeadingWhitespace) {
               delete output[key];
               invalidNumericDirectives.add(key);
               markInvalidCacheControlDirective(output, key);
@@ -15708,7 +15708,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
             output[key] = true;
             break;
           }
-          if (value !== void 0 && value.length === 0) {
+          if (value !== undefined && value.length === 0) {
             output[key] = true;
             break;
           }
@@ -15767,7 +15767,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
         case "must-understand":
         case "only-if-cached":
           if (fromMalformedQuote || invalidNoArgumentDirectives.has(key)) continue;
-          if (value !== void 0) {
+          if (value !== undefined) {
             delete output[key];
             invalidNoArgumentDirectives.add(key);
             continue;
@@ -15828,7 +15828,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @returns {boolean}
   */
   function isInvalidOrWildcardVaryHeader(varyHeader) {
-    return hasVaryStar(varyHeader) || parseVaryHeader(varyHeader, {}) === void 0;
+    return hasVaryStar(varyHeader) || parseVaryHeader(varyHeader, {}) === undefined;
   }
   /**
   * Note: this deviates from the spec a little. Empty etags ("", W/"") are valid,
@@ -15918,7 +15918,7 @@ var require_date = /* @__PURE__ */__commonJSMin((exports, module) => {
   function makeDate(year, monthIdx, day, hour, minute, second, weekday) {
     const result = new Date(Date.UTC(year, monthIdx, day, hour, minute, second));
     if (year >= 0 && year <= 99) result.setUTCFullYear(year);
-    return result.getUTCFullYear() === year && result.getUTCMonth() === monthIdx && result.getUTCDate() === day && result.getUTCHours() === hour && result.getUTCMinutes() === minute && result.getUTCSeconds() === second && result.getUTCDay() === weekday ? result : void 0;
+    return result.getUTCFullYear() === year && result.getUTCMonth() === monthIdx && result.getUTCDate() === day && result.getUTCHours() === hour && result.getUTCMinutes() === minute && result.getUTCSeconds() === second && result.getUTCDay() === weekday ? result : undefined;
   }
   /**
   * @see https://httpwg.org/specs/rfc9110.html#preferred.date.format
@@ -16241,11 +16241,11 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   }
   function deleteLocationTargets(store, cacheKey, headerValue) {
-    if (headerValue === void 0) return;
+    if (headerValue === undefined) return;
     const values = Array.isArray(headerValue) ? headerValue : [headerValue];
     for (let i = 0; i < values.length; i++) {
       const path = getSameOriginPath(cacheKey, values[i]);
-      if (path !== void 0) deleteCachedUri(store, cacheKey, path);
+      if (path !== undefined) deleteCachedUri(store, cacheKey, path);
     }
   }
   function invalidateUnsafeRequest(store, cacheKey, resHeaders) {
@@ -16301,7 +16301,7 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     onRequestStart(controller, context) {
       this.#writeStream?.destroy();
-      this.#writeStream = void 0;
+      this.#writeStream = undefined;
       this.#handler.onRequestStart?.(controller, context);
     }
     onRequestUpgrade(controller, statusCode, headers, socket) {
@@ -16336,12 +16336,12 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         return downstreamOnHeaders();
       }
       const now = Date.now();
-      const resAge = Object.hasOwn(resHeaders, "age") ? getAge(resHeaders.age) : void 0;
-      if (resAge !== void 0 && resAge >= MAX_RESPONSE_AGE) {
+      const resAge = Object.hasOwn(resHeaders, "age") ? getAge(resHeaders.age) : undefined;
+      if (resAge !== undefined && resAge >= MAX_RESPONSE_AGE) {
         deleteCachedValueIfNotModified(statusCode, this.#store, this.#cacheKey);
         return downstreamOnHeaders();
       }
-      const resDate = Object.hasOwn(resHeaders, "date") ? getDate(resHeaders.date) : void 0;
+      const resDate = Object.hasOwn(resHeaders, "date") ? getDate(resHeaders.date) : undefined;
       if (resDate === null) {
         deleteCachedValueIfNotModified(statusCode, this.#store, this.#cacheKey);
         return downstreamOnHeaders();
@@ -16349,8 +16349,8 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       const apparentAge = resDate ? Math.max(0, now - resDate.getTime()) : 0;
       const currentAge = Math.max(apparentAge, resAge ?? 0);
       const staleAt = determineStaleAt(this.#cacheType, now, resAge, resHeaders, resDate, cacheControlDirectives) ?? this.#cacheByDefault;
-      if (staleAt === void 0 || currentAge >= staleAt) {
-        if (cacheControlHeader || staleAt !== void 0) deleteCachedValueIfNotModified(statusCode, this.#store, this.#cacheKey);
+      if (staleAt === undefined || currentAge >= staleAt) {
+        if (cacheControlHeader || staleAt !== undefined) deleteCachedValueIfNotModified(statusCode, this.#store, this.#cacheKey);
         return downstreamOnHeaders();
       }
       const baseTime = now - currentAge;
@@ -16404,12 +16404,12 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
               }
             };
             this.#writeStream.on("error", function () {
-              handler.#writeStream = void 0;
+              handler.#writeStream = undefined;
               handler.#store.delete(handler.#cacheKey);
             }).on("drain", () => {
               streamCachedBody();
             }).on("close", function () {
-              if (handler.#writeStream === this) handler.#writeStream = void 0;
+              if (handler.#writeStream === this) handler.#writeStream = undefined;
             });
             streamCachedBody();
           } else if (typeof cachedValue.body.on === "function") {
@@ -16419,14 +16419,14 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
             }).on("end", () => {
               this.#writeStream.end();
             }).on("error", () => {
-              this.#writeStream = void 0;
+              this.#writeStream = undefined;
               this.#store.delete(this.#cacheKey);
             });
             this.#writeStream.on("error", function () {
-              handler.#writeStream = void 0;
+              handler.#writeStream = undefined;
               handler.#store.delete(handler.#cacheKey);
             }).on("close", function () {
-              if (handler.#writeStream === this) handler.#writeStream = void 0;
+              if (handler.#writeStream === this) handler.#writeStream = undefined;
             });
           }
         };
@@ -16440,10 +16440,10 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         this.#writeStream = this.#store.createWriteStream(this.#cacheKey, value);
         if (!this.#writeStream) return downstreamOnHeaders();
         this.#writeStream.on("drain", () => controller.resume()).on("error", function () {
-          handler.#writeStream = void 0;
+          handler.#writeStream = undefined;
           handler.#store.delete(handler.#cacheKey);
         }).on("close", function () {
-          if (handler.#writeStream === this) handler.#writeStream = void 0;
+          if (handler.#writeStream === this) handler.#writeStream = undefined;
           controller.resume();
         });
         downstreamOnHeaders();
@@ -16459,7 +16459,7 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     onResponseError(controller, err) {
       this.#writeStream?.destroy(err);
-      this.#writeStream = void 0;
+      this.#writeStream = undefined;
       this.#handler.onResponseError?.(controller, err);
     }
   };
@@ -16497,7 +16497,7 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
   function canCacheResponse(cacheType, method, statusCode, resHeaders, cacheControlDirectives, reqHeaders) {
     if (!arrayIncludes(util.safeHTTPMethods, method)) return false;
     if (statusCode < 200 || arrayIncludes(NOT_UNDERSTOOD_STATUS_CODES, statusCode)) return false;
-    if (!arrayIncludes(HEURISTICALLY_CACHEABLE_STATUS_CODES, statusCode) && !resHeaders.expires && !cacheControlDirectives.public && cacheControlDirectives["max-age"] === void 0 && !(cacheControlDirectives.private && cacheType === "private") && !(cacheControlDirectives["s-maxage"] !== void 0 && cacheType === "shared")) return false;
+    if (!arrayIncludes(HEURISTICALLY_CACHEABLE_STATUS_CODES, statusCode) && !resHeaders.expires && !cacheControlDirectives.public && cacheControlDirectives["max-age"] === undefined && !(cacheControlDirectives.private && cacheType === "private") && !(cacheControlDirectives["s-maxage"] !== undefined && cacheType === "shared")) return false;
     if (cacheControlDirectives["no-store"]) return false;
     if (cacheType === "shared" && (cacheControlDirectives.private === true || Object.hasOwn(resHeaders, "set-cookie"))) return false;
     if (resHeaders.vary && hasVaryStar(resHeaders.vary)) return false;
@@ -16551,11 +16551,11 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (cacheType === "shared") {
       if (hasInvalidCacheControlDirective(cacheControlDirectives, "s-maxage")) return 0;
       const sMaxAge = cacheControlDirectives["s-maxage"];
-      if (sMaxAge !== void 0) return sMaxAge * 1e3;
+      if (sMaxAge !== undefined) return sMaxAge * 1e3;
     }
     if (hasInvalidCacheControlDirective(cacheControlDirectives, "max-age")) return 0;
     const maxAge = cacheControlDirectives["max-age"];
-    if (maxAge !== void 0) return maxAge * 1e3;
+    if (maxAge !== undefined) return maxAge * 1e3;
     if (Object.hasOwn(resHeaders, "expires")) {
       if (typeof resHeaders.expires !== "string") return 0;
       const expiresDate = parseHttpDate(resHeaders.expires);
@@ -16564,7 +16564,7 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (responseDate) {
         if (responseDate >= expiresDate) return 0;
         const freshnessLifetime = expiresDate.getTime() - responseDate.getTime();
-        if (age !== void 0 && age >= freshnessLifetime) return 0;
+        if (age !== undefined && age >= freshnessLifetime) return 0;
         return freshnessLifetime;
       }
       return expiresDate.getTime() - now;
@@ -16658,15 +16658,15 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
       super();
       if (opts) {
         if (typeof opts !== "object") throw new TypeError("MemoryCacheStore options must be an object");
-        if (opts.maxCount !== void 0) {
+        if (opts.maxCount !== undefined) {
           if (typeof opts.maxCount !== "number" || !Number.isInteger(opts.maxCount) || opts.maxCount < 0) throw new TypeError("MemoryCacheStore options.maxCount must be a non-negative integer");
           this.#maxCount = opts.maxCount;
         }
-        if (opts.maxSize !== void 0) {
+        if (opts.maxSize !== undefined) {
           if (typeof opts.maxSize !== "number" || !Number.isInteger(opts.maxSize) || opts.maxSize < 0) throw new TypeError("MemoryCacheStore options.maxSize must be a non-negative integer");
           this.#maxSize = opts.maxSize;
         }
-        if (opts.maxEntrySize !== void 0) {
+        if (opts.maxEntrySize !== undefined) {
           if (typeof opts.maxEntrySize !== "number" || !Number.isInteger(opts.maxEntrySize) || opts.maxEntrySize < 0) throw new TypeError("MemoryCacheStore options.maxEntrySize must be a non-negative integer");
           this.#maxEntrySize = opts.maxEntrySize;
         }
@@ -16696,12 +16696,12 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
       const now = Date.now();
       const entries = this.#entries.get(topLevelKey);
       const entry = entries ? findEntry(key, entries, now) : null;
-      return entry == null ? void 0 : {
+      return entry == null ? undefined : {
         statusMessage: entry.statusMessage,
         statusCode: entry.statusCode,
         headers: entry.headers,
         body: entry.body,
-        vary: entry.vary ? entry.vary : void 0,
+        vary: entry.vary ? entry.vary : undefined,
         etag: entry.etag,
         cacheControlDirectives: entry.cacheControlDirectives,
         cachedAt: entry.cachedAt,
@@ -16920,7 +16920,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {string} name
   */
   function assertCacheOrigins(origins, name) {
-    if (origins === void 0) return;
+    if (origins === undefined) return;
     if (!Array.isArray(origins)) throw new TypeError(`expected ${name} to be an array or undefined, got ${typeof origins}`);
     for (let i = 0; i < origins.length; i++) {
       const origin = origins[i];
@@ -16970,7 +16970,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @returns {boolean}
   */
   function staleResponseRequiresRevalidation(result, cacheType) {
-    return result.cacheControlDirectives?.["must-revalidate"] === true || cacheType === "shared" && (result.cacheControlDirectives?.["proxy-revalidate"] === true || result.cacheControlDirectives?.["s-maxage"] !== void 0);
+    return result.cacheControlDirectives?.["must-revalidate"] === true || cacheType === "shared" && (result.cacheControlDirectives?.["proxy-revalidate"] === true || result.cacheControlDirectives?.["s-maxage"] !== undefined);
   }
   /**
   * @param {import('../../types/cache-interceptor.d.ts').default.CacheOptions['type']} cacheType
@@ -16985,7 +16985,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     return cacheControlDirectives["no-store"] === true || cacheType === "shared" && cacheControlDirectives.private === true;
   }
   function revalidationResponseUpdatesCacheControl(headers) {
-    return headers["cache-control"] !== void 0;
+    return headers["cache-control"] !== undefined;
   }
   function deleteCachedValue(store, cacheKey) {
     try {
@@ -17133,7 +17133,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     const now = Date.now();
     if (now > result.deleteAt) return dispatch(opts, new CacheHandler(globalOpts, cacheKey, handler));
     const age = Math.round((now - result.cachedAt) / 1e3);
-    const requestMaxAgeExpired = reqCacheControl?.["max-age"] !== void 0 && age >= reqCacheControl["max-age"];
+    const requestMaxAgeExpired = reqCacheControl?.["max-age"] !== undefined && age >= reqCacheControl["max-age"];
     const stale = requestMaxAgeExpired || isStale(result, reqCacheControl, globalOpts.type);
     const revalidate = requestMaxAgeExpired || needsRevalidation(result, reqCacheControl, opts);
     if (stale || revalidate) {
@@ -17190,9 +17190,9 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     const {
       store = new MemoryCacheStore(),
       methods = ["GET"],
-      cacheByDefault = void 0,
+      cacheByDefault = undefined,
       type = "shared",
-      origins = void 0
+      origins = undefined
     } = opts;
     if (typeof opts !== "object" || opts === null) throw new TypeError(`expected type of opts to be an Object, got ${opts === null ? "null" : typeof opts}`);
     assertCacheStore(store, "opts.store");
@@ -17214,7 +17214,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     return dispatch => {
       return (opts, handler) => {
         if (!opts.origin || arrayIncludes(safeMethodsToNotCache, opts.method)) return dispatch(opts, handler);
-        if (origins !== void 0) {
+        if (origins !== undefined) {
           const requestOrigin = opts.origin.toString().toLowerCase();
           let isAllowed = false;
           for (let i = 0; i < origins.length; i++) {
@@ -17237,7 +17237,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         };
         const reqCacheControl = opts.headers?.["cache-control"] ? parseCacheControlHeader(opts.headers["cache-control"]) : hasPragmaNoCache(opts.headers) ? {
           "no-cache": true
-        } : void 0;
+        } : undefined;
         if (reqCacheControl?.["no-store"]) return dispatch(opts, handler);
         /**
         * @type {import('../../types/cache-interceptor.d.ts').default.CacheKey}
@@ -17573,7 +17573,7 @@ var require_decompress = /* @__PURE__ */__commonJSMin((exports, module) => {
     */
     #cleanupDecompressors() {
       this.#decompressors.length = 0;
-      this.#finalDecompressor = void 0;
+      this.#finalDecompressor = undefined;
     }
     onRequestStart(controller, context) {
       this.#controller.target = controller;
@@ -18174,12 +18174,12 @@ var require_sqlite_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
     constructor(opts) {
       if (opts) {
         if (typeof opts !== "object") throw new TypeError("SqliteCacheStore options must be an object");
-        if (opts.maxEntrySize !== void 0) {
+        if (opts.maxEntrySize !== undefined) {
           if (typeof opts.maxEntrySize !== "number" || !Number.isInteger(opts.maxEntrySize) || opts.maxEntrySize < 0) throw new TypeError("SqliteCacheStore options.maxEntrySize must be a non-negative integer");
           if (opts.maxEntrySize > MAX_ENTRY_SIZE) throw new TypeError("SqliteCacheStore options.maxEntrySize must be less than 2gb");
           this.#maxEntrySize = opts.maxEntrySize;
         }
-        if (opts.maxCount !== void 0) {
+        if (opts.maxCount !== undefined) {
           if (typeof opts.maxCount !== "number" || !Number.isInteger(opts.maxCount) || opts.maxCount < 0) throw new TypeError("SqliteCacheStore options.maxCount must be a non-negative integer");
           this.#maxCount = opts.maxCount;
         }
@@ -18289,17 +18289,17 @@ var require_sqlite_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
       assertCacheKey(key);
       const value = this.#findValue(key);
       return value ? {
-        body: value.body ? Buffer.from(value.body.buffer, value.body.byteOffset, value.body.byteLength) : void 0,
+        body: value.body ? Buffer.from(value.body.buffer, value.body.byteOffset, value.body.byteLength) : undefined,
         statusCode: value.statusCode,
         statusMessage: value.statusMessage,
-        headers: value.headers ? JSON.parse(value.headers) : void 0,
-        etag: value.etag ? value.etag : void 0,
-        vary: value.vary ? JSON.parse(value.vary) : void 0,
-        cacheControlDirectives: value.cacheControlDirectives ? JSON.parse(value.cacheControlDirectives) : void 0,
+        headers: value.headers ? JSON.parse(value.headers) : undefined,
+        etag: value.etag ? value.etag : undefined,
+        vary: value.vary ? JSON.parse(value.vary) : undefined,
+        cacheControlDirectives: value.cacheControlDirectives ? JSON.parse(value.cacheControlDirectives) : undefined,
         cachedAt: value.cachedAt,
         staleAt: value.staleAt,
         deleteAt: value.deleteAt
-      } : void 0;
+      } : undefined;
     }
     /**
     * @param {import('../../types/cache-interceptor.d.ts').default.CacheKey} key
@@ -18700,12 +18700,12 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {HeadersInit|Symbol} [init]
     * @returns
     */
-    constructor(init = void 0) {
+    constructor(init = undefined) {
       webidl.util.markAsUncloneable(this);
       if (init === kConstruct) return;
       this.#headersList = new HeadersList();
       this.#guard = "none";
-      if (init !== void 0) {
+      if (init !== undefined) {
         init = webidl.converters.HeadersInit(init, "Headers constructor", "init");
         fill(this, init);
       }
@@ -18912,7 +18912,7 @@ var require_response = /* @__PURE__ */__commonJSMin((exports, module) => {
     static error() {
       return fromInnerResponse(makeNetworkError(), "immutable");
     }
-    static json(data, init = void 0) {
+    static json(data, init = undefined) {
       webidl.argumentLengthCheck(arguments, 1, "Response.json");
       if (init !== null) init = webidl.converters.ResponseInit(init);
       const body = extractBody(textEncoder.encode(serializeJavascriptValueToJSONString(data)));
@@ -18942,7 +18942,7 @@ var require_response = /* @__PURE__ */__commonJSMin((exports, module) => {
       responseObject.#state.headersList.append("location", value, true);
       return responseObject;
     }
-    constructor(body = null, init = void 0) {
+    constructor(body = null, init = undefined) {
       webidl.util.markAsUncloneable(this);
       if (body === kConstruct) return;
       if (body !== null) body = webidl.converters.BodyInit(body, "Response", "body");
@@ -19310,16 +19310,16 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
     return abort;
     function abort() {
       const ac = acRef.deref();
-      if (ac !== void 0) {
+      if (ac !== undefined) {
         requestFinalizer.unregister(abort);
         this.removeEventListener("abort", abort);
         ac.abort(this.reason);
         const controllerList = dependentControllerMap.get(ac.signal);
-        if (controllerList !== void 0) {
+        if (controllerList !== undefined) {
           if (controllerList.size !== 0) {
             for (const ref of controllerList) {
               const ctrl = ref.deref();
-              if (ctrl !== void 0) ctrl.abort(this.reason);
+              if (ctrl !== undefined) ctrl.abort(this.reason);
             }
             controllerList.clear();
           }
@@ -19337,7 +19337,7 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
     /** @type {Headers} */
     #headers;
     #state;
-    constructor(input, init = void 0) {
+    constructor(input, init = undefined) {
       webidl.util.markAsUncloneable(this);
       if (input === kConstruct) return;
       webidl.argumentLengthCheck(arguments, 1, "Request constructor");
@@ -19404,7 +19404,7 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
         request.url = request.urlList[request.urlList.length - 1];
         request.urlList = [request.url];
       }
-      if (init.referrer !== void 0) {
+      if (init.referrer !== undefined) {
         const referrer = init.referrer;
         if (referrer === "") request.referrer = "no-referrer";else {
           let parsedReferrer;
@@ -19418,24 +19418,24 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
           if (parsedReferrer.protocol === "about:" && parsedReferrer.hostname === "client" || origin && !sameOrigin(parsedReferrer, environmentSettingsObject.settingsObject.baseUrl)) request.referrer = "client";else request.referrer = parsedReferrer;
         }
       }
-      if (init.referrerPolicy !== void 0) request.referrerPolicy = init.referrerPolicy;
+      if (init.referrerPolicy !== undefined) request.referrerPolicy = init.referrerPolicy;
       let mode;
-      if (init.mode !== void 0) mode = init.mode;else mode = fallbackMode;
+      if (init.mode !== undefined) mode = init.mode;else mode = fallbackMode;
       if (mode === "navigate") throw webidl.errors.exception({
         header: "Request constructor",
         message: "invalid request mode navigate."
       });
       if (mode != null) request.mode = mode;
-      if (init.credentials !== void 0) request.credentials = init.credentials;
-      if (init.cache !== void 0) request.cache = init.cache;
+      if (init.credentials !== undefined) request.credentials = init.credentials;
+      if (init.cache !== undefined) request.cache = init.cache;
       if (request.cache === "only-if-cached" && request.mode !== "same-origin") throw new TypeError("'only-if-cached' can be set only with 'same-origin' mode");
-      if (init.redirect !== void 0) request.redirect = init.redirect;
+      if (init.redirect !== undefined) request.redirect = init.redirect;
       if (init.integrity != null) request.integrity = String(init.integrity);
-      if (init.keepalive !== void 0) request.keepalive = Boolean(init.keepalive);
-      if (init.method !== void 0) {
+      if (init.keepalive !== undefined) request.keepalive = Boolean(init.keepalive);
+      if (init.method !== undefined) {
         let method = init.method;
         const mayBeNormalized = normalizedMethodRecords[method];
-        if (mayBeNormalized !== void 0) request.method = mayBeNormalized;else {
+        if (mayBeNormalized !== undefined) request.method = mayBeNormalized;else {
           if (!isValidHTTPToken(method)) throw new TypeError(`'${method}' is not a valid HTTP method.`);
           const upperCase = method.toUpperCase();
           if (forbiddenMethodsSet.has(upperCase)) throw new TypeError(`'${method}' HTTP method is unsupported.`);
@@ -19449,7 +19449,7 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
           patchMethodWarning = true;
         }
       }
-      if (init.signal !== void 0) signal = init.signal;
+      if (init.signal !== undefined) signal = init.signal;
       this.#state = request;
       const ac = new AbortController();
       this.#signal = ac.signal;
@@ -19475,7 +19475,7 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (initHasKey) {
         /** @type {HeadersList} */
         const headersList = getHeadersList(this.#headers);
-        const headers = init.headers !== void 0 ? init.headers : new HeadersList(headersList);
+        const headers = init.headers !== undefined ? init.headers : new HeadersList(headersList);
         headersList.clear();
         if (headers instanceof HeadersList) {
           for (const {
@@ -19593,7 +19593,7 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       const ac = new AbortController();
       if (this.signal.aborted) ac.abort(this.signal.reason);else {
         let list = dependentControllerMap.get(this.signal);
-        if (list === void 0) {
+        if (list === undefined) {
           list = /* @__PURE__ */new Set();
           dependentControllerMap.set(this.signal, list);
         }
@@ -19719,7 +19719,7 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       preventNoCacheCacheControlHeaderModification: init.preventNoCacheCacheControlHeaderModification ?? false,
       done: init.done ?? false,
       timingAllowFailed: init.timingAllowFailed ?? false,
-      useURLCredentials: init.useURLCredentials ?? void 0,
+      useURLCredentials: init.useURLCredentials ?? undefined,
       traversableForUserPrompts: init.traversableForUserPrompts ?? "client",
       urlList: init.urlList,
       url: init.urlList[0],
@@ -20161,7 +20161,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
   function handleFetchDone(response) {
     finalizeAndReportTiming(response, "fetch");
   }
-  function fetch(input, init = void 0) {
+  function fetch(input, init = undefined) {
     webidl.argumentLengthCheck(arguments, 1, "globalThis.fetch");
     let p = createDeferredPromise();
     let requestObject;
@@ -20479,7 +20479,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     if ((request.responseTainting === "opaque" || response.type === "opaque") && crossOriginResourcePolicyCheck(request.origin, request.client, request.destination, actualResponse) === "blocked") return makeNetworkError("blocked");
     if (redirectStatusSet.has(actualResponse.status)) {
-      if (request.redirect !== "manual") fetchParams.controller.connection.destroy(void 0, false);
+      if (request.redirect !== "manual") fetchParams.controller.connection.destroy(undefined, false);
       if (request.redirect === "error") response = makeNetworkError("unexpected redirect");else if (request.redirect === "manual") response = actualResponse;else if (request.redirect === "follow") response = await httpRedirectFetch(fetchParams, response);else assert$5(false);
     }
     response.timingInfo = timingInfo;
@@ -20563,7 +20563,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (includeCredentials) {
       if (!httpRequest.headersList.contains("authorization", true)) {
         let authorizationValue = null;
-        if (hasAuthenticationEntry(httpRequest) && (httpRequest.useURLCredentials === void 0 || !includesCredentials(requestCurrentURL(httpRequest)))) {} else if (includesCredentials(requestCurrentURL(httpRequest)) && isAuthenticationFetch) {
+        if (hasAuthenticationEntry(httpRequest) && (httpRequest.useURLCredentials === undefined || !includesCredentials(requestCurrentURL(httpRequest)))) {} else if (includesCredentials(requestCurrentURL(httpRequest)) && isAuthenticationFetch) {
           const {
             username,
             password
@@ -20584,12 +20584,12 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     response.urlList = [...httpRequest.urlList];
     if (httpRequest.headersList.contains("range", true)) response.rangeRequested = true;
     response.requestIncludesCredentials = includeCredentials;
-    if (response.status === 401 && httpRequest.responseTainting !== "cors" && includeCredentials && (request.useURLCredentials !== void 0 || isTraversableNavigable(request.traversableForUserPrompts))) {
+    if (response.status === 401 && httpRequest.responseTainting !== "cors" && includeCredentials && (request.useURLCredentials !== undefined || isTraversableNavigable(request.traversableForUserPrompts))) {
       if (request.body != null) {
         if (request.body.source == null) return response;
         request.body = safelyExtractBody(request.body.source)[0];
       }
-      if (request.useURLCredentials === void 0 || isAuthenticationFetch) {
+      if (request.useURLCredentials === undefined || isAuthenticationFetch) {
         if (isCancelled(fetchParams)) return makeAppropriateNetworkError(fetchParams);
         return response;
       }
@@ -20711,14 +20711,14 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
             value
           } = await fetchParams.controller.next();
           if (isAborted(fetchParams)) break;
-          bytes = done ? void 0 : value;
+          bytes = done ? undefined : value;
         } catch (err) {
-          if (fetchParams.controller.ended && !timingInfo.encodedBodySize) bytes = void 0;else {
+          if (fetchParams.controller.ended && !timingInfo.encodedBodySize) bytes = undefined;else {
             bytes = err;
             isFailure = true;
           }
         }
-        if (bytes === void 0) {
+        if (bytes === undefined) {
           readableStreamClose(fetchParams.controller.controller);
           finalizeResponse(fetchParams, response);
           return;
@@ -20742,7 +20742,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
         response.aborted = true;
         if (isReadable(stream)) fetchParams.controller.controller.error(fetchParams.controller.serializedAbortReason);
       } else if (isReadable(stream)) fetchParams.controller.controller.error(new TypeError("terminated", {
-        cause: isErrorLike(reason) ? reason : void 0
+        cause: isErrorLike(reason) ? reason : undefined
       }));
       fetchParams.controller.connection.destroy();
     }
@@ -20762,7 +20762,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
         body: agent.isMockActive ? request.body && (request.body.source || request.body.stream) : body,
         headers: request.headersList.entries,
         maxRedirections: 0,
-        upgrade: request.mode === "websocket" ? "websocket" : void 0
+        upgrade: request.mode === "websocket" ? "websocket" : undefined
       }, {
         body: null,
         abort: null,
@@ -20770,7 +20770,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
           const {
             connection
           } = fetchParams.controller;
-          timingInfo.finalConnectionTimingInfo = clampAndCoarsenConnectionTimingInfo(void 0, timingInfo.postRedirectStartTime, fetchParams.crossOriginIsolatedCapability);
+          timingInfo.finalConnectionTimingInfo = clampAndCoarsenConnectionTimingInfo(undefined, timingInfo.postRedirectStartTime, fetchParams.crossOriginIsolatedCapability);
           if (connection.destroyed) abort(new DOMException("The operation was aborted.", "AbortError"));else {
             fetchParams.controller.on("terminated", abort);
             this.abort = connection.abort = abort;
@@ -21002,10 +21002,10 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (p.length === 0) return;
       return p[0];
     }
-    async matchAll(request = void 0, options = {}) {
+    async matchAll(request = undefined, options = {}) {
       webidl.brandCheck(this, Cache);
       const prefix = "Cache.matchAll";
-      if (request !== void 0) request = webidl.converters.RequestInfo(request);
+      if (request !== undefined) request = webidl.converters.RequestInfo(request);
       options = webidl.converters.CacheQueryOptions(options, prefix, "options");
       return this.#internalMatchAll(request, options);
     }
@@ -21023,7 +21023,7 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
       const responsePromises = [];
       const requestList = [];
       for (let request of requests) {
-        if (request === void 0) throw webidl.errors.conversionFailed({
+        if (request === undefined) throw webidl.errors.conversionFailed({
           prefix,
           argument: "Argument 1",
           types: ["undefined is not allowed"]
@@ -21097,7 +21097,7 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
         errorData = e;
       }
       queueMicrotask(() => {
-        if (errorData === null) cacheJobPromise.resolve(void 0);else cacheJobPromise.reject(errorData);
+        if (errorData === null) cacheJobPromise.resolve(undefined);else cacheJobPromise.reject(errorData);
       });
       return cacheJobPromise.promise;
     }
@@ -21131,7 +21131,7 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
       });
       const clonedResponse = cloneResponse(innerResponse);
       const bodyReadPromise = createDeferredPromise();
-      if (innerResponse.body != null) readAllBytes(innerResponse.body.stream.getReader(), bodyReadPromise.resolve, bodyReadPromise.reject);else bodyReadPromise.resolve(void 0);
+      if (innerResponse.body != null) readAllBytes(innerResponse.body.stream.getReader(), bodyReadPromise.resolve, bodyReadPromise.reject);else bodyReadPromise.resolve(undefined);
       /** @type {CacheBatchOperation[]} */
       const operations = [];
       /** @type {CacheBatchOperation} */
@@ -21200,13 +21200,13 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {import('../../../types/cache').CacheQueryOptions} options
     * @returns {Promise<readonly Request[]>}
     */
-    async keys(request = void 0, options = {}) {
+    async keys(request = undefined, options = {}) {
       webidl.brandCheck(this, Cache);
       const prefix = "Cache.keys";
-      if (request !== void 0) request = webidl.converters.RequestInfo(request);
+      if (request !== undefined) request = webidl.converters.RequestInfo(request);
       options = webidl.converters.CacheQueryOptions(options, prefix, "options");
       let r = null;
-      if (request !== void 0) {
+      if (request !== undefined) {
         if (webidl.is.Request(request)) {
           r = getRequestState(request);
           if (r.method !== "GET" && !options.ignoreMethod) return [];
@@ -21214,14 +21214,14 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       const promise = createDeferredPromise();
       const requests = [];
-      if (request === void 0) for (const requestResponse of this.#relevantRequestResponseList) requests.push(requestResponse[0]);else {
+      if (request === undefined) for (const requestResponse of this.#relevantRequestResponseList) requests.push(requestResponse[0]);else {
         const requestResponses = this.#queryCache(r, options);
         for (const requestResponse of requestResponses) requests.push(requestResponse[0]);
       }
       queueMicrotask(() => {
         const requestList = [];
         for (const request of requests) {
-          const requestObject = fromInnerRequest(request, void 0, new AbortController().signal, "immutable");
+          const requestObject = fromInnerRequest(request, undefined, new AbortController().signal, "immutable");
           requestList.push(requestObject);
         }
         promise.resolve(Object.freeze(requestList));
@@ -21337,14 +21337,14 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     #internalMatchAll(request, options, maxResponses = Infinity) {
       let r = null;
-      if (request !== void 0) {
+      if (request !== undefined) {
         if (webidl.is.Request(request)) {
           r = getRequestState(request);
           if (r.method !== "GET" && !options.ignoreMethod) return [];
         } else if (typeof request === "string") r = getRequestState(new Request(request));
       }
       const responses = [];
-      if (request === void 0) for (const requestResponse of this.#relevantRequestResponseList) responses.push(requestResponse[1]);else {
+      if (request === undefined) for (const requestResponse of this.#relevantRequestResponseList) responses.push(requestResponse[1]);else {
         const requestResponses = this.#queryCache(r, options);
         for (const requestResponse of requestResponses) responses.push(requestResponse[1]);
       }
@@ -21428,7 +21428,7 @@ var require_cachestorage = /* @__PURE__ */__commonJSMin((exports, module) => {
         if (this.#caches.has(options.cacheName)) return await new Cache(kConstruct, this.#caches.get(options.cacheName)).match(request, options);
       } else for (const cacheList of this.#caches.values()) {
         const response = await new Cache(kConstruct, cacheList).match(request, options);
-        if (response !== void 0) return response;
+        if (response !== undefined) return response;
       }
     }
     /**
@@ -23121,7 +23121,7 @@ var require_receiver = /* @__PURE__ */__commonJSMin((exports, module) => {
       /** @type {number|undefined} */
       let code;
       if (data.length >= 2) code = data.readUInt16BE(0);
-      if (code !== void 0 && !isValidStatusCode(code)) return {
+      if (code !== undefined && !isValidStatusCode(code)) return {
         code: 1002,
         reason: "Invalid status code",
         error: true
@@ -23454,11 +23454,11 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {number|undefined} code
     * @param {string|undefined} reason
     */
-    close(code = void 0, reason = void 0) {
+    close(code = undefined, reason = undefined) {
       webidl.brandCheck(this, WebSocket);
       const prefix = "WebSocket.close";
-      if (code !== void 0) code = webidl.converters["unsigned short"](code, prefix, "code", webidl.attributes.Clamp);
-      if (reason !== void 0) reason = webidl.converters.USVString(reason);
+      if (code !== undefined) code = webidl.converters["unsigned short"](code, prefix, "code", webidl.attributes.Clamp);
+      if (reason !== undefined) reason = webidl.converters.USVString(reason);
       code ??= null;
       reason ??= "";
       closeWebSocketConnection(this.#handler, code, reason, true);
@@ -23671,7 +23671,7 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
     static ping(ws, buffer) {
       if (Buffer.isBuffer(buffer)) {
         if (buffer.length > 125) throw new TypeError("A PING frame cannot have a body larger than 125 bytes.");
-      } else if (buffer !== void 0) throw new TypeError("Expected buffer payload");
+      } else if (buffer !== undefined) throw new TypeError("Expected buffer payload");
       const readyState = ws.#handler.readyState;
       if (isEstablished(readyState) && !isClosing(readyState) && !isClosed(readyState)) {
         const frame = new WebsocketFrameSend(buffer);
@@ -23773,7 +23773,7 @@ var require_websocketerror = /* @__PURE__ */__commonJSMin((exports, module) => {
         return "";
       }
     }
-    if (new Test().reason !== void 0) return DOMException;
+    if (new Test().reason !== undefined) return DOMException;
     return new Proxy(DOMException, {
       construct(target, args, newTarget) {
         const instance = Reflect.construct(target, args, target);
@@ -23785,7 +23785,7 @@ var require_websocketerror = /* @__PURE__ */__commonJSMin((exports, module) => {
   var WebSocketError = class WebSocketError extends createInheritableDOMException() {
     #closeCode;
     #reason;
-    constructor(message = "", init = void 0) {
+    constructor(message = "", init = undefined) {
       message = webidl.converters.DOMString(message, "WebSocketError", "message");
       super(message, "WebSocketError");
       if (init === kConstruct) return;else if (init !== null) init = webidl.converters.WebSocketCloseInfo(init);
@@ -23921,7 +23921,7 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
     };
     /** @type {import('../receiver').ByteParser} */
     #parser;
-    constructor(url, options = void 0) {
+    constructor(url, options = undefined) {
       if (!emittedExperimentalWarning) {
         process.emitWarning("WebSocketStream is experimental! Expect it to change at any time.", {
           code: "UNDICI-WSS"
@@ -23970,7 +23970,7 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
     get closed() {
       return this.#closedPromise.promise;
     }
-    close(closeInfo = void 0) {
+    close(closeInfo = undefined) {
       if (closeInfo !== null) closeInfo = webidl.converters.WebSocketCloseInfo(closeInfo);
       const code = closeInfo.closeCode ?? null;
       const reason = closeInfo.reason;
@@ -23998,7 +23998,7 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
       if (!this.#handler.closeState.has(sentCloseFrameState.SENT) && !this.#handler.closeState.has(sentCloseFrameState.RECEIVED)) {
         const frame = new WebsocketFrameSend(data);
         this.#handler.socket.write(frame.createFrame(opcode), () => {
-          promise.resolve(void 0);
+          promise.resolve(undefined);
         });
       }
       return promise.promise;
@@ -24242,10 +24242,10 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
     lineChunkIndex = 0;
     linePos = 0;
     event = {
-      data: void 0,
-      event: void 0,
-      id: void 0,
-      retry: void 0
+      data: undefined,
+      event: undefined,
+      id: undefined,
+      retry: undefined
     };
     /**
     * @param {object} options
@@ -24326,7 +24326,7 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
       }
       if (isFieldName(line, fieldLength, DATA)) {
         const value = line.toString("utf8", valueStart);
-        if (event.data === void 0) event.data = value;else event.data += `\n${value}`;
+        if (event.data === undefined) event.data = value;else event.data += `\n${value}`;
         return;
       }
       if (isFieldName(line, fieldLength, RETRY)) {
@@ -24347,8 +24347,8 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
     */
     processEvent(event) {
       if (event.retry && isASCIINumber(event.retry)) this.state.reconnectionTime = parseInt(event.retry, 10);
-      if (event.id !== void 0 && isValidLastEventId(event.id)) this.state.lastEventId = event.id;
-      if (event.data !== void 0) this.push({
+      if (event.id !== undefined && isValidLastEventId(event.id)) this.state.lastEventId = event.id;
+      if (event.data !== undefined) this.push({
         type: event.event || "message",
         options: {
           data: event.data,
@@ -24358,13 +24358,13 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
       });
     }
     clearEvent() {
-      this.event.data = void 0;
-      this.event.event = void 0;
-      this.event.id = void 0;
-      this.event.retry = void 0;
+      this.event.data = undefined;
+      this.event.event = undefined;
+      this.event.id = undefined;
+      this.event.retry = undefined;
     }
     hasPendingEvent() {
-      return this.event.data !== void 0 || this.event.event !== void 0 || this.event.id !== void 0 || this.event.retry !== void 0;
+      return this.event.data !== undefined || this.event.event !== undefined || this.event.id !== undefined || this.event.retry !== undefined;
     }
     hasCurrentByte() {
       return this.chunkIndex < this.chunks.length && this.pos < this.chunks[this.chunkIndex].length;
@@ -24448,12 +24448,12 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
       const first = this.peekBufferedByte(0);
       const second = this.peekBufferedByte(1);
       const third = this.peekBufferedByte(2);
-      if (second === void 0) {
+      if (second === undefined) {
         if (first === BOM[0]) return true;
         this.checkBOM = false;
         return true;
       }
-      if (third === void 0) {
+      if (third === undefined) {
         if (first === BOM[0] && second === BOM[1]) return true;
         this.checkBOM = false;
         return false;
@@ -24924,7 +24924,7 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
   module.exports.setGlobalDispatcher = setGlobalDispatcher;
   module.exports.getGlobalDispatcher = getGlobalDispatcher;
   var fetchImpl = require_fetch().fetch;
-  var currentFilename = typeof __filename !== "undefined" ? __filename : void 0;
+  var currentFilename = typeof __filename !== "undefined" ? __filename : undefined;
   function appendFetchStackTrace(err, filename) {
     if (!err || typeof err !== "object") return;
     const stack = typeof err.stack === "string" ? err.stack : "";
@@ -24936,7 +24936,7 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
     const captureLines = capture.stack.split("\n").slice(1).join("\n");
     err.stack = stack ? `${stack}\n${captureLines}` : capture.stack;
   }
-  module.exports.fetch = function fetch(init, options = void 0) {
+  module.exports.fetch = function fetch(init, options = undefined) {
     return fetchImpl(init, options).catch(err => {
       if (currentFilename) appendFetchStackTrace(err, currentFilename);else if (err && typeof err === "object") Error.captureStackTrace(err, module.exports.fetch);
       throw err;
@@ -25091,7 +25091,7 @@ function isConnectFailure(error, signal) {
 }
 function isReplayable(input, init) {
   const body = init?.body;
-  return (body === void 0 || body === null || typeof body === "string" || body instanceof URLSearchParams || body instanceof ArrayBuffer || ArrayBuffer.isView(body)) && (typeof input === "string" || input instanceof URL || !input.body);
+  return (body === undefined || body === null || typeof body === "string" || body instanceof URLSearchParams || body instanceof ArrayBuffer || ArrayBuffer.isView(body)) && (typeof input === "string" || input instanceof URL || !input.body);
 }
 /** 最近一次「自动」模式请求实际走的路径，用于设置页测试时告诉用户。 */
 function getLastNetworkRoute(url) {
@@ -25101,7 +25101,7 @@ async function fetchViaProxy(input, init, proxy) {
   const key = JSON.stringify([proxy.url, proxy.username || "", proxy.password || ""]);
   let agent = agents.get(key);
   if (!agent) {
-    const token = proxy.username ? `Basic ${Buffer.from(`${proxy.username}:${proxy.password || ""}`).toString("base64")}` : void 0;
+    const token = proxy.username ? `Basic ${Buffer.from(`${proxy.username}:${proxy.password || ""}`).toString("base64")}` : undefined;
     agent = new import_undici.ProxyAgent({
       uri: proxy.url,
       ...(token ? {
@@ -25438,7 +25438,7 @@ function parseImport(raw, name) {
 }
 function interpolate(value) {
   return value.replace(/\$\{(?:env:)?([A-Za-z_][A-Za-z0-9_]*)\}/g, (_, key) => {
-    if (process.env[key] === void 0) throw new Error(appText("botMcp.envMissing", {
+    if (process.env[key] === undefined) throw new Error(appText("botMcp.envMissing", {
       key
     }));
     return process.env[key];
@@ -25495,7 +25495,7 @@ var xiaoheiBotMcpService = {
   config(userId, rawName) {
     const name = nameSchema.parse(rawName);
     const servers = read(userId).servers;
-    const config = Object.hasOwn(servers, name) ? servers[name] : void 0;
+    const config = Object.hasOwn(servers, name) ? servers[name] : undefined;
     if (!config || config.disabled) throw new Error(appText("botMcp.serverDisabled"));
     const resolved = JSON.parse(JSON.stringify(config), (_key, value) => typeof value === "string" ? interpolate(value) : value);
     if (resolved.cwd && !path.isAbsolute(resolved.cwd)) throw new Error(appText("botMcp.cwdAbsolute"));
@@ -26313,10 +26313,7 @@ html,body{margin:0;height:100%;overflow:hidden;font:12px system-ui,-apple-system
 window.render=function(tabs){var r=document.getElementById('t');r.textContent='';
 tabs.forEach(function(t){var d=document.createElement('div');d.className='tab'+(t.active?' on':'');d.title=t.title;
 var n=document.createElement('a');n.className='n';n.href='https://${TAB_ORIGIN}/switch/'+t.id;n.textContent=t.title;
-var x=document.createElement('a');x.className='x';x.href='https://${TAB_ORIGIN}/close/'+t.id;x.textContent='\\u00d7';
-d.appendChild(n);d.appendChild(x);r.appendChild(d);if(t.active)d.scrollIntoView({inline:'nearest',block:'nearest'});});};
-document.addEventListener('wheel',function(e){var r=document.getElementById('t');r.scrollLeft+=e.deltaY||e.deltaX;e.preventDefault();},{passive:false});
-<\/script>`;
+var x=document.createElement('a');x.className='x';x.href='https://${TAB_ORIGIN}null`;
 function webUrl(raw) {
   if (!raw) throw new Error("请提供完整网页地址。");
   const url = new URL(raw);
@@ -26481,7 +26478,7 @@ var XiaoheiBotBrowserService = class {
         const url = new URL(target);
         if (url.hostname !== TAB_ORIGIN) return;
         const [, action, id] = url.pathname.split("/");
-        const page = id ? this.pages.get(id) : void 0;
+        const page = id ? this.pages.get(id) : undefined;
         if (!page || page.win !== win) return;
         if (action === "switch") this.activate(page);else if (action === "close") this.closeTab(page, true);
       } catch {}
@@ -26497,7 +26494,7 @@ var XiaoheiBotBrowserService = class {
   create(scope) {
     if (!scope.active()) throw new Error("当前浏览器任务已结束。");
     const existing = this.windows.get(scope.runtimeKey);
-    const win = existing && !existing.window.isDestroyed() ? existing : void 0;
+    const win = existing && !existing.window.isDestroyed() ? existing : undefined;
     const mine = win?.tabs ?? [];
     if (win && mine.length >= MAX_TABS_PER_RUNTIME) {
       const victim = mine.filter(tab => tab.id !== win.active).sort((a, b) => a.lastUsed - b.lastUsed)[0] ?? mine[0];
@@ -26644,7 +26641,7 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "list") return {
       pages: mine().map(p => this.info(p))
     };
-    let page = input.pageId ? this.pages.get(input.pageId) : void 0;
+    let page = input.pageId ? this.pages.get(input.pageId) : undefined;
     if (page && page.owner !== scope.runtimeKey) throw new Error("不能操作其他任务的浏览器页面。");
     if (input.pageId && !page) throw new Error("页面不存在，请先查询页面列表。");
     if (input.action === "open") {
@@ -26883,7 +26880,7 @@ var XiaoheiBotBrowserService = class {
         clickCount: 1
       });
     } else if (input.action === "type") {
-      if (input.text === void 0) throw new Error("需要 text。");
+      if (input.text === undefined) throw new Error("需要 text。");
       await cdp.DOM.focus({
         backendNodeId
       });
@@ -27293,7 +27290,7 @@ function mapFeaturePricingItem(item, fallbackKey, fallbackLabel, policy) {
   const outputYuan = Number(item.outputYuan ?? 0);
   const inputPriceYuanPerM = Number(item.inputPriceYuanPerM ?? 0);
   const outputPriceYuanPerM = Number(item.outputPriceYuanPerM ?? 0);
-  const minBalance = item.minBalance === void 0 ? void 0 : Number(item.minBalance);
+  const minBalance = item.minBalance === undefined ? undefined : Number(item.minBalance);
   return {
     key: String(item.key ?? fallbackKey),
     label: String(item.label ?? fallbackLabel),
@@ -27308,7 +27305,7 @@ function mapFeaturePricingItem(item, fallbackKey, fallbackLabel, policy) {
     inputPriceCreditsPerM: creditsFromYuan(inputPriceYuanPerM, policy),
     outputPriceCreditsPerM: creditsFromYuan(outputPriceYuanPerM, policy),
     minBalance,
-    minCredits: minBalance === void 0 ? void 0 : creditsFromYuan(minBalance, policy)
+    minCredits: minBalance === undefined ? undefined : creditsFromYuan(minBalance, policy)
   };
 }
 async function getPointsBalance() {
@@ -27782,7 +27779,7 @@ async function requestTodoApi(action, body = {}, timeoutMs = 0, isAttachment = f
   const localResult = localTodoAction(action, body);
   if (localResult !== null) return localResult;
   const token = requireToken();
-  const lang = currentLanguage(typeof body.language === "string" ? body.language : typeof body.lang === "string" ? body.lang : void 0);
+  const lang = currentLanguage(typeof body.language === "string" ? body.language : typeof body.lang === "string" ? body.lang : undefined);
   const controller = timeoutMs > 0 ? new AbortController() : null;
   const timer = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
   const url = `${API_BASE}/todos.php?action=${encodeURIComponent(action)}`;
@@ -27811,7 +27808,7 @@ async function requestTodoApi(action, body = {}, timeoutMs = 0, isAttachment = f
     const data = parseTodoApiResponse(res, responseText, action, lang, isAttachment);
     businessCode = data.error?.code;
     businessMessage = data.error?.message;
-    if (!res.ok || !data.ok || data.data === void 0) throw Object.assign(new Error(data.error?.message || todoActionFallbackMessage(action, res.status, lang, isAttachment)), {
+    if (!res.ok || !data.ok || data.data === undefined) throw Object.assign(new Error(data.error?.message || todoActionFallbackMessage(action, res.status, lang, isAttachment)), {
       code: data.error?.code
     });
     return data.data;
@@ -27825,7 +27822,7 @@ async function requestTodoApi(action, body = {}, timeoutMs = 0, isAttachment = f
       options: typeof requestBody.options === "object" && requestBody.options !== null ? {
         taskRange: requestBody.options.taskRange,
         assigneeScope: requestBody.options.assigneeScope
-      } : void 0
+      } : undefined
     } : requestBody;
     await reportApiRequestException({
       source: "main",
@@ -27873,7 +27870,7 @@ async function requestTodoMultipartApi(action, form) {
     const data = parseTodoApiResponse(res, responseText, action, lang, true);
     businessCode = data.error?.code;
     businessMessage = data.error?.message;
-    if (!res.ok || !data.ok || data.data === void 0) throw new Error(data.error?.message || todoActionFallbackMessage(action, res.status, lang, true));
+    if (!res.ok || !data.ok || data.data === undefined) throw new Error(data.error?.message || todoActionFallbackMessage(action, res.status, lang, true));
     if (action === "upload-attachment") observeTodoAttachmentSuccess(data.data, eventActor);
     return data.data;
   } catch (error) {
@@ -27934,7 +27931,7 @@ async function uploadTodoAttachmentBuffer(todoId, buffer, originalName, mimeType
 }
 function getTimelineRecords(date = toLocalDateString()) {
   const range = getDayRange$2(date);
-  return workRecordRepository.listByRange(range.startedAt, range.endedAt, void 0, 500).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime());
+  return workRecordRepository.listByRange(range.startedAt, range.endedAt, undefined, 500).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime());
 }
 function toAutoCompletionTimelineRecord(record) {
   return {
@@ -27949,7 +27946,7 @@ function toAutoCompletionTimelineRecord(record) {
 function getTodoAutoCompletionTimelineRecords(timelineHours = 0) {
   const now = /* @__PURE__ */new Date();
   const rangeStart = timelineHours > 0 ? /* @__PURE__ */new Date(now.getTime() - timelineHours * 60 * 60 * 1e3) : new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return workRecordRepository.listByRange(rangeStart.toISOString(), now.toISOString(), void 0, -1).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime()).map(toAutoCompletionTimelineRecord);
+  return workRecordRepository.listByRange(rangeStart.toISOString(), now.toISOString(), undefined, -1).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime()).map(toAutoCompletionTimelineRecord);
 }
 async function listTodos(filters = {}) {
   const data = await requestTodoApi("list", {
@@ -29071,7 +29068,7 @@ function readConversationHistory(database, scope, input) {
   if (!access) throw new Error("当前 Bot 无权读取这段会话历史");
   const where = ["m.conversation_id = ?", "m.seq > ?", "m.seq <= ?", "m.status = 'complete'", "m.withdrawn_at IS NULL", "NOT EXISTS (SELECT 1 FROM xiaohei_bot_memory_exclusions e WHERE e.bot_id = ? AND e.message_id = m.id)"];
   const params = [scope.conversationId, access.joinedSeq, access.throughSeq, scope.botId];
-  for (const [value, condition] of [[input.message_id, "m.id = ?"], [input.before_seq, "m.seq < ?"], [input.after_seq, "m.seq > ?"], [input.keyword, "instr(lower(m.content), lower(?)) > 0"], [input.start_time && new Date(input.start_time).toISOString(), "m.created_at >= ?"], [input.end_time && new Date(input.end_time).toISOString(), "m.created_at <= ?"]]) if (value !== void 0) {
+  for (const [value, condition] of [[input.message_id, "m.id = ?"], [input.before_seq, "m.seq < ?"], [input.after_seq, "m.seq > ?"], [input.keyword, "instr(lower(m.content), lower(?)) > 0"], [input.start_time && new Date(input.start_time).toISOString(), "m.created_at >= ?"], [input.end_time && new Date(input.end_time).toISOString(), "m.created_at <= ?"]]) if (value !== undefined) {
     where.push(condition);
     params.push(value);
   }
@@ -29414,23 +29411,23 @@ var BadgeRepository = class {
   updateStats(userId, partial) {
     const fields = [];
     const values = [];
-    if (partial.totalUseSeconds !== void 0) {
+    if (partial.totalUseSeconds !== undefined) {
       fields.push("total_use_seconds = ?");
       values.push(partial.totalUseSeconds);
     }
-    if (partial.totalScreenshots !== void 0) {
+    if (partial.totalScreenshots !== undefined) {
       fields.push("total_screenshots = ?");
       values.push(partial.totalScreenshots);
     }
-    if (partial.currentStreak !== void 0) {
+    if (partial.currentStreak !== undefined) {
       fields.push("current_streak = ?");
       values.push(partial.currentStreak);
     }
-    if (partial.maxStreak !== void 0) {
+    if (partial.maxStreak !== undefined) {
       fields.push("max_streak = ?");
       values.push(partial.maxStreak);
     }
-    if (partial.lastActiveDate !== void 0) {
+    if (partial.lastActiveDate !== undefined) {
       fields.push("last_active_date = ?");
       values.push(partial.lastActiveDate);
     }
@@ -29783,7 +29780,7 @@ function fill(template, params) {
   let missing = false;
   const text = template.replace(/\{(\w+)\}/g, (_, name) => {
     const value = params[name];
-    if (value === void 0 || value === "") {
+    if (value === undefined || value === "") {
       missing = true;
       return "";
     }
@@ -29926,10 +29923,10 @@ function composeWorkOverview(input) {
   const pct1 = Math.round(category1?.percentage ?? 0);
   const pct2 = Math.round(category2?.percentage ?? 0);
   const pct3 = Math.round(category3?.percentage ?? 0);
-  const cat1 = isNamed(category1?.category) ? localizeCategory(category1.category, lang) : void 0;
-  const cat2 = isNamed(category2?.category) ? localizeCategory(category2.category, lang) : void 0;
-  const cat3 = isNamed(category3?.category) ? localizeCategory(category3.category, lang) : void 0;
-  const topCategories = cat1 && cat2 && cat3 ? en ? `${cat1}, ${cat2}, and ${cat3}` : `${cat1}、${cat2}和${cat3}` : void 0;
+  const cat1 = isNamed(category1?.category) ? localizeCategory(category1.category, lang) : undefined;
+  const cat2 = isNamed(category2?.category) ? localizeCategory(category2.category, lang) : undefined;
+  const cat3 = isNamed(category3?.category) ? localizeCategory(category3.category, lang) : undefined;
+  const topCategories = cat1 && cat2 && cat3 ? en ? `${cat1}, ${cat2}, and ${cat3}` : `${cat1}、${cat2}和${cat3}` : undefined;
   const morningCategories = /* @__PURE__ */new Map();
   const afternoonCategories = /* @__PURE__ */new Map();
   for (const record of records) {
@@ -29948,7 +29945,7 @@ function composeWorkOverview(input) {
   const timeParams = {
     first,
     last,
-    count: count >= 2 ? count : void 0,
+    count: count >= 2 ? count : undefined,
     category: cat1
   };
   if (justStarted) add("lead", "justStarted", "time", 5, timeParams, ["time", "content", "ongoing"]);else if (isLight) add("lead", "light", "rhythm", 6, {
@@ -30025,9 +30022,9 @@ function composeWorkOverview(input) {
     add("clause", "topShare", "content", 2, {
       category: cat1,
       pct: pct1,
-      catDuration: category1.minutes > 0 ? formatMinutes(category1.minutes, en) : void 0,
-      category2: hasSecond ? cat2 : void 0,
-      pct2: hasSecond ? pct2 : void 0
+      catDuration: category1.minutes > 0 ? formatMinutes(category1.minutes, en) : undefined,
+      category2: hasSecond ? cat2 : undefined,
+      pct2: hasSecond ? pct2 : undefined
     });
   }
   if (shiftParams) add("clause", "shift", "content", 2.5, shiftParams);
@@ -30039,7 +30036,7 @@ function composeWorkOverview(input) {
       app: apps.top.name,
       appDuration: formatMinutes(apps.top.activeSec / 60, en),
       appPct: Math.round(topShare * 100),
-      mainApp: topShare >= .5 ? apps.top.name : void 0
+      mainApp: topShare >= .5 ? apps.top.name : undefined
     });
     if (apps.top && apps.second && apps.second.activeSec / apps.activeSec >= .15) add("clause", "topTwo", "app", 1.5, {
       app: apps.top.name,
@@ -30090,17 +30087,17 @@ function composeWorkOverview(input) {
     const backspacePct = Math.round(keyboard.backspace / keyboard.presses * 100);
     add("clause", "keyboard", "input", 2, {
       keys: formatCount(keyboard.presses, en),
-      backspacePct: keyboard.presses >= 1e3 && backspacePct >= 1 ? backspacePct : void 0
+      backspacePct: keyboard.presses >= 1e3 && backspacePct >= 1 ? backspacePct : undefined
     });
   }
   const mouse = extras?.mouse;
   if (mouse && mouse.clicks >= 200) add("clause", "mouse", "input", 1.5, {
     clicks: formatCount(mouse.clicks, en),
-    scrolls: mouse.scrolls >= 100 ? formatCount(mouse.scrolls, en) : void 0
+    scrolls: mouse.scrolls >= 100 ? formatCount(mouse.scrolls, en) : undefined
   });
   add("clause", "total", "total", isLight ? 3 : 1, {
-    count: count >= 2 ? count : void 0,
-    focusDuration: focusMinutes >= 1 ? formatMinutes(focusMinutes, en) : void 0
+    count: count >= 2 ? count : undefined,
+    focusDuration: focusMinutes >= 1 ? formatMinutes(focusMinutes, en) : undefined
   });
   if (isHighIntensity && (switchRate === null || switchRate < 25)) add("closing", "highFocus", "closing", 1, {});
   if (isFragmented || !isHighIntensity && switchRate !== null && switchRate >= 40) add("closing", "fragmented", "closing", 1, {});
@@ -30391,7 +30388,7 @@ var LeaderboardService = class {
     if (!settingsRepository.getSettings().enableLeaderboard) throw new Error(appText("leaderboardPraise.consentRequired"));
     const today = toDateString$1(/* @__PURE__ */new Date());
     await this.syncDateNow(input.date);
-    if (input.date !== today && (input.period ?? "day") !== "day") await this.syncDateNow(today).catch(() => void 0);
+    if (input.date !== today && (input.period ?? "day") !== "day") await this.syncDateNow(today).catch(() => undefined);
     return this.fetchDaily(input);
   }
   /** 每天 9 点后发一次昨日战报：先补传昨天的最终条数，再读取昨天的全站日榜。 */
@@ -30485,7 +30482,7 @@ var LeaderboardService = class {
     } = getDayRange$1(dateText);
     return {
       date: dateText,
-      recordCount: workRecordRepository.listByRange(start.toISOString(), end.toISOString(), void 0, 5e5, {
+      recordCount: workRecordRepository.listByRange(start.toISOString(), end.toISOString(), undefined, 5e5, {
         excludeSummary: true
       }).filter(record => {
         if (record.source === "clipboard") return false;
@@ -30501,7 +30498,7 @@ var LeaderboardService = class {
     const earliestDate = toDateString$1(new Date(earliest));
     const rangeStart = getDayRange$1(earliestDate).start;
     const rangeEnd = getDayRange$1(today).end;
-    const records = workRecordRepository.listByRange(rangeStart.toISOString(), rangeEnd.toISOString(), void 0, 5e5, {
+    const records = workRecordRepository.listByRange(rangeStart.toISOString(), rangeEnd.toISOString(), undefined, 5e5, {
       excludeSummary: true
     });
     const counts = /* @__PURE__ */new Map();
@@ -30974,14 +30971,14 @@ function buildHourlyCounts(records, dayStart, dayEnd) {
 /** 概览里应用相关的说法：主力应用、最长连续使用、最常往返的两个应用、切换频率 */
 function collectOverviewAppSignals(startedAt, endedAt, lang) {
   const items = appUsageService.getSummary(startedAt, endedAt).filter(item => item.activeDurationSec > 0).sort((a, b) => b.activeDurationSec - a.activeDurationSec);
-  if (items.length === 0) return void 0;
+  if (items.length === 0) return undefined;
   const displayName = name => localizeCommonAppName(name, lang);
   const activeByName = new Map(items.map(item => [item.appName.trim().toLocaleLowerCase(), item.activeDurationSec]));
   const activeOf = name => activeByName.get(name.trim().toLocaleLowerCase()) ?? 0;
   const pairs = /* @__PURE__ */new Map();
   for (const flow of appUsageService.getFlows(startedAt, endedAt).switches) {
     const [a, b] = activeOf(flow.fromAppName) >= activeOf(flow.toAppName) ? [flow.fromAppName, flow.toAppName] : [flow.toAppName, flow.fromAppName];
-    const key = `${a.trim().toLocaleLowerCase()}\u0000${b.trim().toLocaleLowerCase()}`;
+    const key = `${a.trim().toLocaleLowerCase()}null${b.trim().toLocaleLowerCase()}`;
     const pair = pairs.get(key) ?? {
       a,
       b,
@@ -31029,7 +31026,7 @@ function countRecordStreak(date) {
     streak += 1;
     cursor.setDate(cursor.getDate() - 1);
   }
-  return streak < STREAK_LOOKBACK_DAYS ? streak : void 0;
+  return streak < STREAK_LOOKBACK_DAYS ? streak : undefined;
 }
 function buildDailySummary(date, records, lang, extras) {
   const dayStart = parseDateText(date);
@@ -31189,7 +31186,7 @@ var WorkRecordService = class {
     const previous = workRecordRepository.findById(id);
     workRecordRepository.update(id, category, summary, details, startedAt, endedAt);
     if (previous) {
-      const changed = previous.summary !== summary || previous.category !== category || startedAt !== void 0 && previous.startedAt !== startedAt || endedAt !== void 0 && previous.endedAt !== endedAt || details !== void 0 && JSON.stringify(previous.details) !== JSON.stringify(details);
+      const changed = previous.summary !== summary || previous.category !== category || startedAt !== undefined && previous.startedAt !== startedAt || endedAt !== undefined && previous.endedAt !== endedAt || details !== undefined && JSON.stringify(previous.details) !== JSON.stringify(details);
       if (previous.source === "text" && summary.trim() && changed) trackEvent({
         type: "action",
         name: "record_update_success",
@@ -31207,10 +31204,10 @@ var WorkRecordService = class {
   getDailySummary(date) {
     const lang = settingsRepository.getSettings().language || "zh-CN";
     const range = getDayRange(date);
-    const records = this.listByRange(range.startedAt, range.endedAt, void 0, void 0, {
+    const records = this.listByRange(range.startedAt, range.endedAt, undefined, undefined, {
       excludeSummary: true
     });
-    return buildDailySummary(date, records, lang, records.length > 0 && date === toDateString(/* @__PURE__ */new Date()) ? this.collectOverviewExtras(date, range) : void 0);
+    return buildDailySummary(date, records, lang, records.length > 0 && date === toDateString(/* @__PURE__ */new Date()) ? this.collectOverviewExtras(date, range) : undefined);
   }
   /** 各项数据分别读取，任何一项失败都只是少一类说法，不影响概览本身 */
   collectOverviewExtras(date, range) {
@@ -31257,7 +31254,7 @@ var WorkRecordService = class {
   getDailySnapshot(date) {
     const lang = settingsRepository.getSettings().language || "zh-CN";
     const range = getDayRange(date);
-    const records = this.listByRange(range.startedAt, range.endedAt, void 0, void 0, {
+    const records = this.listByRange(range.startedAt, range.endedAt, undefined, undefined, {
       excludeSummary: true
     });
     return {
@@ -31273,7 +31270,7 @@ var WorkRecordService = class {
     const groupedRecords = new Map(dates.map(date => [date, []]));
     const rangeStart = getDayRange(startDate);
     const rangeEnd = getDayRange(endDate);
-    const records = this.listByRange(rangeStart.startedAt, rangeEnd.endedAt, void 0, 5e5, {
+    const records = this.listByRange(rangeStart.startedAt, rangeEnd.endedAt, undefined, 5e5, {
       excludeSummary: true
     });
     const firstDate = parseDateText(startDate);
@@ -31518,7 +31515,7 @@ function stableSerialize(value) {
   if (typeof value === "string" || typeof value === "boolean") return JSON.stringify(value);
   if (typeof value === "number") return Number.isFinite(value) ? JSON.stringify(value) : "null";
   if (Array.isArray(value)) return `[${value.map(stableSerialize).join(",")}]`;
-  if (typeof value === "object") return `{${Object.entries(value).filter(([, item]) => item !== void 0 && typeof item !== "function").sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${stableSerialize(item)}`).join(",")}}`;
+  if (typeof value === "object") return `{${Object.entries(value).filter(([, item]) => item !== undefined && typeof item !== "function").sort(([left], [right]) => left.localeCompare(right)).map(([key, item]) => `${JSON.stringify(key)}:${stableSerialize(item)}`).join(",")}}`;
   return JSON.stringify(String(value));
 }
 function digest(value) {
@@ -31636,7 +31633,7 @@ function apiError(message, data = null) {
 }
 var XiaoheiDataToolService = class {
   getTimelineApi(params) {
-    const source = timelineToolSchema.shape.source.safeParse(params.source || void 0);
+    const source = timelineToolSchema.shape.source.safeParse(params.source || undefined);
     if (!source.success) return apiError("source 记录来源无效");
     const startDate = params.startDate || todayText();
     const endDate = params.endDate || startDate;
@@ -31646,7 +31643,7 @@ var XiaoheiDataToolService = class {
     return {
       code: 0,
       message: "success",
-      data: workRecordRepository.listByRange(range.startedAt, range.endedAt, params.keyword?.trim() || void 0, void 0, {
+      data: workRecordRepository.listByRange(range.startedAt, range.endedAt, params.keyword?.trim() || undefined, undefined, {
         source: source.data
       }).map(toTimelineRecordResponse)
     };
@@ -31696,7 +31693,7 @@ var XiaoheiDataToolService = class {
       message: "success",
       data: reportRepository.list({
         type,
-        query: params.keyword?.trim() || void 0,
+        query: params.keyword?.trim() || undefined,
         startDate,
         endDate,
         limit: 200,
@@ -31884,7 +31881,7 @@ var XiaoheiDataToolService = class {
     assertDateTime(endDate, "end_date");
     assertOrderedRange(startDate, endDate);
     const range = getRange(startDate, endDate);
-    const keyword = parsed.keyword?.trim() || void 0;
+    const keyword = parsed.keyword?.trim() || undefined;
     const limit = parsed.limit ?? TIMELINE_DEFAULT_LIMIT;
     const scope = digest({
       startDate,
@@ -31947,7 +31944,7 @@ var XiaoheiDataToolService = class {
     assertDateOnly(endDate, "end_date");
     assertOrderedRange(startDate, endDate);
     const type = parsed.type ?? "all";
-    const keyword = parsed.keyword?.trim() || void 0;
+    const keyword = parsed.keyword?.trim() || undefined;
     const contentMode = parsed.content_mode ?? "summary";
     const maximumLimit = contentMode === "full" ? REPORT_FULL_MAX_LIMIT : REPORT_MAX_LIMIT;
     const defaultLimit = contentMode === "full" ? REPORT_FULL_DEFAULT_LIMIT : REPORT_DEFAULT_LIMIT;
@@ -32457,7 +32454,7 @@ var XiaoheiBotAgentRuntimeService = class {
     const userId = getActiveUserId() ?? 0;
     const connection = getOpenDatabaseConnection();
     if (!connection || (connection.ownerUserId ?? 0) !== userId) throw new Error(appText("botRuntime.accountNotReady"));
-    if (expectedAccountId !== void 0 && expectedAccountId !== userId) throw new Error(appText("botRuntime.accountSwitchedReopenMcp"));
+    if (expectedAccountId !== undefined && expectedAccountId !== userId) throw new Error(appText("botRuntime.accountSwitchedReopenMcp"));
     return {
       userId,
       generation: connection.generation
@@ -33012,7 +33009,7 @@ var XiaoheiBotAgentRuntimeService = class {
       const externalUrl = notice.type === "auth_url" ? notice.url : notice.type === "device_code" ? notice.verificationUri : null;
       if (externalUrl) try {
         const url = new URL(externalUrl);
-        if (url.protocol === "https:") shell.openExternal(url.toString()).catch(() => void 0);
+        if (url.protocol === "https:") shell.openExternal(url.toString()).catch(() => undefined);
       } catch {}
       this.broadcast({
         type: "provider-auth-notice",
@@ -33091,7 +33088,7 @@ var XiaoheiBotAgentRuntimeService = class {
       });
     };
     const pending = this.pendingRuns.get(message.requestId);
-    const requestIsActive = () => pending !== void 0 && this.child === child && this.pendingRuns.get(message.requestId) === pending && pending.runtimeKey === message.runtimeKey && pending.botId === message.botId && pending.conversationId === message.conversationId;
+    const requestIsActive = () => pending !== undefined && this.child === child && this.pendingRuns.get(message.requestId) === pending && pending.runtimeKey === message.runtimeKey && pending.botId === message.botId && pending.conversationId === message.conversationId;
     try {
       if (!pending || !requestIsActive()) throw new XiaoheiDataToolError("ACCESS_DENIED", "对应的 Bot 请求已经结束");
       const connection = getOpenDatabaseConnection();
@@ -33449,7 +33446,7 @@ function parseWechatMentions(text, conversation) {
   for (const name of ["所有人", "所有成员", "全体成员", "everyone", "all"]) targets.set(name, everyone);
   const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const names = [...targets.keys()].sort((a, b) => b.length - a.length).map(name => name === "all" ? "[aA][lL][lL]" : name === "everyone" ? "[eE][vV][eE][rR][yY][oO][nN][eE]" : escape(name));
-  const pattern = new RegExp(`\`\`\`[^]*?(?:\`\`\`|\$)|~~~[^]*?(?:~~~|\$)|\`+[^\`\\n]*\`+|^ *>[^\\n]*|(?:https?:\\/\\/|www\\.)[^\\s<>]+|\\\\[@＠]|[@＠][ \\t\\u200b\\u200c\\u200d\\ufeff]*(${names.join("|")})`, "gmu");
+  const pattern = new RegExp(`null${names.join("|")})`, "gmu");
   const seen = /* @__PURE__ */new Set();
   let previousMentionEnd = -1;
   return {
@@ -33776,7 +33773,7 @@ var XiaoheiBotCloudService = class {
     }, async () => {
       const generation = getOpenDatabaseConnection()?.generation;
       const token = authRepository.getSession()?.token;
-      if (generation === void 0 || !token || this.syncPromise) return false;
+      if (generation === undefined || !token || this.syncPromise) return false;
       const state = await this.synchronize(true);
       return getOpenDatabaseConnection()?.generation === generation && authRepository.getSession()?.token === token && state.lastSyncedAt !== null;
     });
@@ -33784,7 +33781,7 @@ var XiaoheiBotCloudService = class {
   stop() {
     this.timer?.();
     this.timer = null;
-    this.onChanged = void 0;
+    this.onChanged = undefined;
   }
   defaultAvatars = [];
   defaultAvatarsEtag = "";
@@ -33916,7 +33913,7 @@ var XiaoheiBotCloudService = class {
       const defaultModel = defaultProvider ? {
         providerId: defaultProvider.id,
         modelId: defaultModelId
-      } : void 0;
+      } : undefined;
       xiaoheiBotRepository.syncBuiltinCatalog(providers.map(provider => ({
         ...provider,
         baseUrl: gatewayBaseUrl
@@ -33971,7 +33968,7 @@ function parseReceptionDecision(text, candidates) {
     const parsed = JSON.parse(text.slice(opening + 26, payloadEnd));
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
     const record = parsed;
-    if (record.scope !== void 0 && record.scope !== "all" && record.scope !== "selected") return null;
+    if (record.scope !== undefined && record.scope !== "all" && record.scope !== "selected") return null;
     const scope = record.scope === "all" ? "all" : "selected";
     const eligible = eligibleReceptionCandidates(candidates);
     const rawIds = scope === "all" ? eligible.map(candidate => candidate.botId) : Array.isArray(record.botIds) ? record.botIds : [record.botId];
@@ -34169,7 +34166,7 @@ var XiaoheiBotService = class {
         attachments: [],
         mentions: [],
         deliveryMode: "normal"
-      }, void 0, {
+      }, undefined, {
         runId: scheduleRunId,
         isCurrent: () => getOpenDatabaseConnection()?.generation === connection.generation
       });
@@ -34334,7 +34331,7 @@ var XiaoheiBotService = class {
       purge: async (conversationId, targetId) => {
         const userId = getActiveUserId() ?? 0;
         const key = this.runtimeKey(targetId, conversationId);
-        await this.sessionRunTails.get(key)?.catch(() => void 0);
+        await this.sessionRunTails.get(key)?.catch(() => undefined);
         xiaoheiBotAgentRuntimeService.disposeSession(key);
         await rm(path.join(app.getPath("userData"), "xiaohei-bot", `user_${userId}`, "sessions", conversationId), {
           recursive: true,
@@ -34371,7 +34368,7 @@ var XiaoheiBotService = class {
       console.warn("[XiaoheiBot] 恢复预设角色失败:", error);
     }
     const shouldResumeQueuedRuns = await this.recoverUserStateOnce(userId);
-    xiaoheiBotAgentRuntimeService.start().catch(() => void 0);
+    xiaoheiBotAgentRuntimeService.start().catch(() => undefined);
     const [cloud, defaultAvatars] = await Promise.all([xiaoheiBotCloudService.synchronize(), xiaoheiBotCloudService.listDefaultAvatars().catch(() => [])]);
     if (getOpenDatabaseConnection()?.generation !== generation) throw new Error(appText("botMain.accountSwitched"));
     if ((getActiveUserId() ?? 0) !== userId) throw new Error(appText("botMain.accountSwitchedReopenBot"));
@@ -34391,7 +34388,7 @@ var XiaoheiBotService = class {
       this.resumeQueuedRoutingJobs(queuedRoutingJobs);
       this.resumeQueuedAgentRuns(new Set(queuedRoutingJobs.map(job => job.triggerMessageId)));
     }
-    const messagePages = Object.fromEntries(conversations.map(conversation => [conversation.id, xiaoheiBotRepository.listDisplayMessages(conversation.id, void 0, DISPLAY_MESSAGE_PAGE_SIZE)]));
+    const messagePages = Object.fromEntries(conversations.map(conversation => [conversation.id, xiaoheiBotRepository.listDisplayMessages(conversation.id, undefined, DISPLAY_MESSAGE_PAGE_SIZE)]));
     return {
       bots: xiaoheiBotRepository.listBots(),
       conversations,
@@ -35123,7 +35120,7 @@ var XiaoheiBotService = class {
       const userProfile = getUserProfileContext().profile;
       message = xiaoheiBotRepository.createMessage({
         id: source?.messageId || input.taskId || randomUUID(),
-        originMessageId: input.action === "capability_tutorial" ? `capability-tutorial:${input.taskId}` : input.action === "share_role" ? roleShareOrigin(source?.messageId || input.taskId || randomUUID(), source?.source) : scheduled ? `schedule:${scheduled.runId}` : source ? `${source.source}:${source.client === "miniprogram" ? "mp:" : ""}${source.messageId}` : isSummaryQuickCommand ? `quick-summary:${input.taskId || randomUUID()}` : void 0,
+        originMessageId: input.action === "capability_tutorial" ? `capability-tutorial:${input.taskId}` : input.action === "share_role" ? roleShareOrigin(source?.messageId || input.taskId || randomUUID(), source?.source) : scheduled ? `schedule:${scheduled.runId}` : source ? `${source.source}:${source.client === "miniprogram" ? "mp:" : ""}${source.messageId}` : isSummaryQuickCommand ? `quick-summary:${input.taskId || randomUUID()}` : undefined,
         conversationId: conversation.id,
         authorType: "user",
         authorName: source?.source === "wechat" ? appText("botMain.meViaWechat") : source?.source === "mobile" ? source.client === "miniprogram" ? appText("botMain.meViaMiniProgram") : appText("botMain.meViaApp") : userProfile?.preferredName.trim() || appText("botMain.me"),
@@ -35299,7 +35296,7 @@ var XiaoheiBotService = class {
       conversations: xiaoheiBotRepository.listConversations(),
       mobileSync
     });
-    if (initialConversationId) for (const message of xiaoheiBotRepository.listDisplayMessages(initialConversationId, void 0, 1).messages) this.emit({
+    if (initialConversationId) for (const message of xiaoheiBotRepository.listDisplayMessages(initialConversationId, undefined, 1).messages) this.emit({
       type: "message-completed",
       message
     });
@@ -35327,7 +35324,7 @@ var XiaoheiBotService = class {
     xiaoheiBotRepository.saveMemberHandoffs(conversation.id, handoffs, actor ? {
       botId: actor.id,
       sourceConversationId: source?.conversationId ?? conversation.id
-    } : void 0);
+    } : undefined);
     return handoffs.map(item => {
       const bot = xiaoheiBotRepository.getBot(item.botId);
       const content = [appText("botMain.handoffTo", {
@@ -35543,7 +35540,7 @@ var XiaoheiBotService = class {
       }
     }).map(attachment => rm(attachment.localPath, {
       force: true
-    }).catch(() => void 0)));
+    }).catch(() => undefined)));
   }
   async reconcileLegacyAssets(userId) {
     const records = xiaoheiBotRepository.listAttachmentsNeedingAssetReconciliation();
@@ -35609,7 +35606,7 @@ var XiaoheiBotService = class {
   }
   buildGroupRoutingCandidates(conversation, viewerBotId, beforeSeq) {
     const visibleAfterSeq = conversation.members.find(member => member.botId === viewerBotId)?.joinedMessageSeq;
-    const messages = visibleAfterSeq === void 0 ? [] : xiaoheiBotRepository.listMessages(conversation.id, MAX_ROUTING_HISTORY_MESSAGES, beforeSeq).filter(message => message.seq > visibleAfterSeq && !message.withdrawnAt && !message.id.startsWith("reception-ack-") && !message.id.startsWith("reception-handoff-"));
+    const messages = visibleAfterSeq === undefined ? [] : xiaoheiBotRepository.listMessages(conversation.id, MAX_ROUTING_HISTORY_MESSAGES, beforeSeq).filter(message => message.seq > visibleAfterSeq && !message.withdrawnAt && !message.id.startsWith("reception-ack-") && !message.id.startsWith("reception-handoff-"));
     const messagesById = new Map(messages.map(message => [message.id, message]));
     const recentTasks = /* @__PURE__ */new Map();
     for (const response of [...messages].reverse()) {
@@ -35617,7 +35614,7 @@ var XiaoheiBotService = class {
       const tasks = recentTasks.get(response.authorBotId) ?? [];
       if (tasks.length >= MAX_ROUTING_TASKS_PER_BOT) continue;
       const request = messagesById.get(response.replyToMessageId) ?? xiaoheiBotRepository.getMessage(response.replyToMessageId);
-      if (!request || request.withdrawnAt || request.status !== "complete" || visibleAfterSeq === void 0 || request.seq <= visibleAfterSeq) continue;
+      if (!request || request.withdrawnAt || request.status !== "complete" || visibleAfterSeq === undefined || request.seq <= visibleAfterSeq) continue;
       tasks.push({
         request: this.routingMessageSummary(request),
         outcome: response.status === "complete" ? this.routingMessageSummary(response) : response.status === "cancelled" ? `任务已停止；${this.routingMessageSummary(response)}` : `任务执行失败；${this.routingMessageSummary(response)}`,
@@ -35652,7 +35649,7 @@ var XiaoheiBotService = class {
   }
   buildGroupRoutingContext(trigger, conversation, viewerBotId) {
     const joinedSeq = conversation.members.find(member => member.botId === viewerBotId)?.joinedMessageSeq;
-    const messages = joinedSeq === void 0 ? [] : xiaoheiBotRepository.listMessages(conversation.id, MAX_ROUTING_HISTORY_MESSAGES, trigger.seq).filter(message => message.seq > joinedSeq && !message.withdrawnAt && !message.id.startsWith("reception-ack-") && !message.id.startsWith("reception-handoff-"));
+    const messages = joinedSeq === undefined ? [] : xiaoheiBotRepository.listMessages(conversation.id, MAX_ROUTING_HISTORY_MESSAGES, trigger.seq).filter(message => message.seq > joinedSeq && !message.withdrawnAt && !message.id.startsWith("reception-ack-") && !message.id.startsWith("reception-handoff-"));
     const latestUser = [...messages].reverse().find(message => message.authorType === "user" && message.status === "complete");
     const previousResponderBotIds = [...new Set(messages.filter(message => message.authorType === "bot" && message.status === "complete" && message.authorBotId && message.replyToMessageId === latestUser?.id).map(message => message.authorBotId))];
     return {
@@ -35847,7 +35844,7 @@ var XiaoheiBotService = class {
       await rm(sessionDir, {
         recursive: true,
         force: true
-      }).catch(() => void 0);
+      }).catch(() => undefined);
     }
   }
   queueReceptionWorker(trigger, bot, routeOrder, eventType, createPlaceholder = true) {
@@ -36176,14 +36173,14 @@ var XiaoheiBotService = class {
         const historyConnection = getOpenDatabaseConnection();
         if (!historyConnection || (historyConnection.ownerUserId ?? 0) !== (getActiveUserId() ?? 0)) throw new Error(appText("botMain.accountSwitched"));
         const isSideTopic = Boolean(conversation.parentConversationId);
-        const crossConversationHistory = botConsultationService.isInternal(conversation.id) || isSideTopic ? void 0 : bindBotHistoryView(historyConnection.database, {
+        const crossConversationHistory = botConsultationService.isInternal(conversation.id) || isSideTopic ? undefined : bindBotHistoryView(historyConnection.database, {
           runId: run.id,
           botId,
           destinationConversationId: conversation.id,
           ownerUserId: historyConnection.ownerUserId ?? 0,
           contextWindow: model.contextWindow
         });
-        const memoryView = botConsultationService.isInternal(conversation.id) ? void 0 : new BotMemoryRepository(historyConnection.database).bindView(run.id, botId, historyConnection.ownerUserId ?? 0);
+        const memoryView = botConsultationService.isInternal(conversation.id) ? undefined : new BotMemoryRepository(historyConnection.database).bindView(run.id, botId, historyConnection.ownerUserId ?? 0);
         const timelineSummarySnapshot = botConsultationService.isInternal(conversation.id) || isSideTopic ? null : bindBotTimelineSummarySnapshot(historyConnection.database, {
           runId: run.id,
           botId,
@@ -36789,7 +36786,7 @@ var XiaoheiBotService = class {
         if (agentInputDirectory) await rm(agentInputDirectory, {
           recursive: true,
           force: true
-        }).catch(() => void 0);
+        }).catch(() => undefined);
         this.activeRuns.delete(requestId);
         this.startMemory();
       }
@@ -36956,7 +36953,7 @@ var XiaoheiBotService = class {
           messages: source.rounds.reduce((count, round) => count + round.messages.length, 0),
           truncatedMessages: source.rounds.reduce((count, round) => count + round.messages.filter(message => message.truncated).length, 0)
         }))
-      } : void 0,
+      } : undefined,
       identityVersion: request.identityVersion,
       permissionMode: request.permissionMode,
       model: {
@@ -36976,7 +36973,7 @@ var XiaoheiBotService = class {
       if (event.type === "process-item-delta") return;
       if ((event.type === "process-item-created" || event.type === "process-item-updated") && (event.item.status === "running" || event.item.status === "streaming")) return;
     }
-    const item = event.type === "process-item-created" || event.type === "process-item-updated" ? event.item : event.type === "process-item-delta" ? processItems.find(candidate => candidate.id === event.itemId) : void 0;
+    const item = event.type === "process-item-created" || event.type === "process-item-updated" ? event.item : event.type === "process-item-delta" ? processItems.find(candidate => candidate.id === event.itemId) : undefined;
     const kind = item?.kind === "thinking" ? "thinking" : item?.kind === "text" ? "text" : item?.kind === "tool" ? "tool-output" : "runtime";
     const chunkSeq = (this.diagnosticChunkSequences.get(runId) ?? 0) + 1;
     this.diagnosticChunkSequences.set(runId, chunkSeq);
@@ -37209,7 +37206,7 @@ var XiaoheiBotService = class {
             await rm(directoryPath, {
               recursive: true,
               force: true
-            }).catch(() => void 0);
+            }).catch(() => undefined);
             throw new Error(appText("botMain.attachmentPrepareFailed", {
               name: attachment.name,
               error: error instanceof Error ? error.message : String(error)
@@ -37225,7 +37222,7 @@ var XiaoheiBotService = class {
     await rm(directoryPath, {
       recursive: true,
       force: true
-    }).catch(() => void 0);
+    }).catch(() => undefined);
     return {
       directoryPath: null,
       byMessageId
@@ -37471,7 +37468,7 @@ var XiaoheiBotService = class {
     }
     const eventConversationId = "conversationId" in event ? event.conversationId : "message" in event ? event.message.conversationId : "conversation" in event ? event.conversation.id : "stats" in event ? event.stats.conversationId : null;
     if (eventConversationId && botConsultationService.isInternal(eventConversationId)) return;
-    const sequencedEvent = event.ledgerSeq !== void 0 || LEDGER_NEUTRAL_EVENT_TYPES.has(event.type) ? event : {
+    const sequencedEvent = event.ledgerSeq !== undefined || LEDGER_NEUTRAL_EVENT_TYPES.has(event.type) ? event : {
       ...event,
       ledgerSeq: xiaoheiBotEventLogRepository.latestGlobalSeq()
     };
@@ -37628,7 +37625,7 @@ var XiaoheiBotService = class {
     };
   }
   assertBotIdle(botId) {
-    if ([...this.activeRuns.values()].some(run => run.botId === botId) || xiaoheiBotRepository.listQueuedAgentRuns().some(run => run.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(void 0, botId).length > 0) throw new Error(appText("botMain.botBusyConfig"));
+    if ([...this.activeRuns.values()].some(run => run.botId === botId) || xiaoheiBotRepository.listQueuedAgentRuns().some(run => run.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(undefined, botId).length > 0) throw new Error(appText("botMain.botBusyConfig"));
   }
   assertBotConversationIdle(botId, conversationId) {
     if ([...this.activeRuns.values()].some(run => run.botId === botId && run.conversationId === conversationId) || xiaoheiBotRepository.listQueuedAgentRuns(conversationId).some(run => run.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(conversationId, botId).length > 0) throw new Error(appText("botMain.botBusyRemove"));
@@ -37645,9 +37642,9 @@ var XiaoheiBotService = class {
     const current = new Promise(resolve => {
       releaseCurrent = resolve;
     });
-    const tail = previous.catch(() => void 0).then(() => current);
+    const tail = previous.catch(() => undefined).then(() => current);
     this.sessionRunTails.set(runtimeKey, tail);
-    await previous.catch(() => void 0);
+    await previous.catch(() => undefined);
     try {
       return await operation();
     } finally {
@@ -37696,7 +37693,7 @@ async function postBotSyncStatus(action, body, expectedToken, timeoutMs = 3e4) {
     }),
     signal: AbortSignal.timeout(timeoutMs)
   });
-  await response.arrayBuffer().catch(() => void 0);
+  await response.arrayBuffer().catch(() => undefined);
   return response.status;
 }
 async function postBotSyncOk(action, body, expectedToken, timeoutMs = 3e4) {
@@ -37812,11 +37809,11 @@ var XiaoheiBotSyncService = class {
   stop() {
     this.generation += 1;
     if (this.timer) clearTimeout(this.timer);
-    this.timer = void 0;
+    this.timer = undefined;
     this.running = false;
     this.activeToken = null;
     this.runtimeUnsub?.();
-    this.runtimeUnsub = void 0;
+    this.runtimeUnsub = undefined;
     this.pendingGroupSync.clear();
     this.pendingBotSync.clear();
     this.pendingRemoteGroupImports.clear();
@@ -37877,8 +37874,8 @@ var XiaoheiBotSyncService = class {
   cloudJobTriggerMessageId(trigger) {
     if (trigger.originMessageId?.startsWith("mobile:")) return trigger.id;
     const db = this.db();
-    if (!db) return void 0;
-    return db.prepare("SELECT 1 FROM xiaohei_mobile_inbox WHERE cloud_message_id = ? LIMIT 1").get(trigger.id) ? trigger.id : void 0;
+    if (!db) return undefined;
+    return db.prepare("SELECT 1 FROM xiaohei_mobile_inbox WHERE cloud_message_id = ? LIMIT 1").get(trigger.id) ? trigger.id : undefined;
   }
   /** 手机（App、小程序）创建的群：和手机创建的 Bot 一样，总是同步，电脑端不能关闭。 */
   isMobileCloudGroup(localConversationId) {
@@ -38196,7 +38193,7 @@ var XiaoheiBotSyncService = class {
     if (!this.catalogProvisioning) this.catalogProvisioning = (async () => {
       await provisionDefaultListRolesForSync(xiaoheiBotCloudService.getState().defaultModel);
       if (!this.isCurrent(gen)) return;
-      await this.post("bots.bootstrapDefaults", {}).catch(() => void 0);
+      await this.post("bots.bootstrapDefaults", {}).catch(() => undefined);
       if (!this.isCurrent(gen)) return;
       this.catalogProvisioned = true;
     })().finally(() => {
@@ -38210,7 +38207,7 @@ var XiaoheiBotSyncService = class {
       return;
     }
     this.running = true;
-    this.timer = void 0;
+    this.timer = undefined;
     this.lastTickStartedAt = Date.now();
     const gen = this.generation;
     let hadWork = false;
@@ -38356,7 +38353,7 @@ var XiaoheiBotSyncService = class {
     const link = db.prepare("SELECT role_id, sort_order FROM xiaohei_bot_default_role_links WHERE bot_id = ?").get(localBotId);
     if (link?.role_id) return {
       default_role_id: link.role_id,
-      catalog_sort_order: link.sort_order ?? void 0
+      catalog_sort_order: link.sort_order ?? undefined
     };
     return {};
   }
@@ -38379,7 +38376,7 @@ var XiaoheiBotSyncService = class {
       }
     }
     if (defaultRoleId) {
-      await provisionDefaultListRolesForSync(xiaoheiBotCloudService.getState().defaultModel).catch(() => void 0);
+      await provisionDefaultListRolesForSync(xiaoheiBotCloudService.getState().defaultModel).catch(() => undefined);
       if (!this.isCurrent(this.generation)) return;
       const linked = db.prepare("SELECT bot_id FROM xiaohei_bot_default_role_links WHERE role_id = ?").get(defaultRoleId);
       if (linked?.bot_id) {
@@ -38424,11 +38421,11 @@ var XiaoheiBotSyncService = class {
     if (existing) {
       if (existing.cloud_origin !== "catalog" && (payload.origin === "mobile" || payload.origin === "desktop") && existing.cloud_origin !== payload.origin) {
         db.prepare("UPDATE xiaohei_mobile_bindings SET cloud_origin = ? WHERE cloud_bot_id = ?").run(payload.origin, cloudBotId);
-        xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+        xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
       }
       if (cloudClient) {
         const result = db.prepare("UPDATE xiaohei_mobile_bindings SET cloud_client = ? WHERE cloud_bot_id = ? AND (cloud_client IS NULL OR cloud_client <> ?)").run(cloudClient, cloudBotId, cloudClient);
-        if (Number(result.changes) > 0) xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+        if (Number(result.changes) > 0) xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
       }
       if (existing.cloud_origin !== "catalog" && payload.origin === "mobile" && !db.prepare("SELECT 1 FROM xiaohei_mobile_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?").get(existing.bot_id)) this.persistMobileSyncPref("bot", existing.bot_id, true);
       this.applyRemoteProfile(existing.bot_id, cloudBotId, payload, updateProfile);
@@ -38466,7 +38463,7 @@ var XiaoheiBotSyncService = class {
       modelId,
       permissionMode: xiaoheiBotRepository.getSettings().permissionMode === "full" ? "full" : "default",
       responseStyle: this.cloudResponseStyle(payload.response_style),
-      avatar: typeof payload.avatar_url === "string" ? payload.avatar_url : void 0
+      avatar: typeof payload.avatar_url === "string" ? payload.avatar_url : undefined
     });
     if (!this.isCurrent(gen)) return;
     const cloudConversationId = String(payload.conversation_id ?? "");
@@ -38479,7 +38476,7 @@ var XiaoheiBotSyncService = class {
       cloudClient
     });
     this.persistMobileSyncPref("bot", created.bot.id, true);
-    xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+    xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
     await this.post("desktop.ready", {
       cloudBotId,
       deviceId: this.deviceId(),
@@ -38488,13 +38485,13 @@ var XiaoheiBotSyncService = class {
   }
   /** 云端资料的头像里，本机能直接使用的：https 地址或内联图片。 */
   usableAvatar(value) {
-    if (typeof value !== "string") return void 0;
+    if (typeof value !== "string") return undefined;
     const text = value.trim();
-    return /^https:\/\//i.test(text) || /^data:image\//i.test(text) ? text : void 0;
+    return /^https:\/\//i.test(text) || /^data:image\//i.test(text) ? text : undefined;
   }
   /** 本机头像里，能传到云端的：https 地址或不超过约 750KB（base64 100 万字符）的内联图片；过大的头像只保留在本机。 */
   syncableAvatar(value) {
-    if (!value) return void 0;
+    if (!value) return undefined;
     if (/^https:\/\/.{1,1000}$/i.test(value)) return value;
     if (/^data:image\//i.test(value) && value.length <= 1e6) return value;
   }
@@ -38524,7 +38521,7 @@ var XiaoheiBotSyncService = class {
     const cloudText = (typeof payload.instructions === "string" && payload.instructions.trim() ? payload.instructions : String(payload.role_summary ?? "")).trim();
     const localText = bot.description.trim();
     const description = takes("instructions", "role_summary") && cloudText && cloudText !== localText && cloudText !== `你是${bot.name}。${localText}` ? cloudText : bot.description;
-    const avatar = (takes("avatar_url") ? this.usableAvatar(payload.avatar_url) : void 0) ?? bot.avatar;
+    const avatar = (takes("avatar_url") ? this.usableAvatar(payload.avatar_url) : undefined) ?? bot.avatar;
     const responseStyle = takes("response_style") && typeof payload.response_style === "string" ? this.cloudResponseStyle(payload.response_style) : bot.responseStyle ?? "natural";
     const tags = takes("tags") && Array.isArray(payload.tags) ? payload.tags.map(String).filter(Boolean) : bot.tags;
     if (name !== bot.name || description !== bot.description || avatar !== bot.avatar || responseStyle !== bot.responseStyle || JSON.stringify(tags) !== JSON.stringify(bot.tags)) {
@@ -38619,7 +38616,7 @@ var XiaoheiBotSyncService = class {
         device_id: this.deviceId(),
         tags,
         tags_merge: true
-      }).catch(() => void 0);
+      }).catch(() => undefined);
     }
     if (!this.isCurrent(gen)) return;
     db.prepare("INSERT OR REPLACE INTO xiaohei_mobile_sync_state(key, value) VALUES (?, ?)").run("tags_merged_v1", "1");
@@ -38902,7 +38899,7 @@ var XiaoheiBotSyncService = class {
     } finally {
       this.applyingRemoteDelete = false;
     }
-    xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+    xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
   }
   /** 别的端（App、小程序）把这个 Bot 删除了：本机也删除（软删除，历史消息和日志保留，与手动删除一致）。 */
   async applyRemoteBotDelete(cloudBotId) {
@@ -38921,7 +38918,7 @@ var XiaoheiBotSyncService = class {
     } finally {
       this.applyingRemoteDelete = false;
     }
-    xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+    xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
   }
   cloudResponseStyle(value) {
     return value === "direct" || value === "warm" || value === "professional" || value === "lively" || value === "coach" ? value : "natural";
@@ -38940,21 +38937,21 @@ var XiaoheiBotSyncService = class {
     if (!db) return false;
     const group = db.prepare(`SELECT conversation_id FROM xiaohei_mobile_group_bindings
       WHERE status = 'active' AND cloud_conversation_id = ? LIMIT 1`).get(cloudConversationId);
-    const direct = group ? void 0 : db.prepare(`SELECT conversation_id, bot_id FROM xiaohei_mobile_bindings
+    const direct = group ? undefined : db.prepare(`SELECT conversation_id, bot_id FROM xiaohei_mobile_bindings
       WHERE status = 'active' AND (cloud_conversation_id = ? OR cloud_bot_id = ?) LIMIT 1`).get(cloudConversationId, String(payload.bot_id ?? ""));
     const localConversationId = group?.conversation_id ?? direct?.conversation_id;
     if (!localConversationId) throw new Error("云端消息对应的本地会话尚未就绪");
-    const meta = payload.content_meta && typeof payload.content_meta === "object" ? payload.content_meta : void 0;
-    const localBotOf = cloudBotId => typeof cloudBotId === "string" && cloudBotId ? db.prepare("SELECT bot_id FROM xiaohei_mobile_bindings WHERE status = 'active' AND cloud_bot_id = ? LIMIT 1").get(cloudBotId)?.bot_id : void 0;
-    const authorBotId = role === "assistant" ? localBotOf(meta?.author_bot_id) ?? localBotOf(payload.bot_id) ?? direct?.bot_id : void 0;
-    const bot = authorBotId ? xiaoheiBotRepository.getBot(authorBotId) : void 0;
+    const meta = payload.content_meta && typeof payload.content_meta === "object" ? payload.content_meta : undefined;
+    const localBotOf = cloudBotId => typeof cloudBotId === "string" && cloudBotId ? db.prepare("SELECT bot_id FROM xiaohei_mobile_bindings WHERE status = 'active' AND cloud_bot_id = ? LIMIT 1").get(cloudBotId)?.bot_id : undefined;
+    const authorBotId = role === "assistant" ? localBotOf(meta?.author_bot_id) ?? localBotOf(payload.bot_id) ?? direct?.bot_id : undefined;
+    const bot = authorBotId ? xiaoheiBotRepository.getBot(authorBotId) : undefined;
     const fromMiniProgram = meta?.client === "miniprogram";
-    const triggerId = typeof meta?.trigger_message_id === "string" && xiaoheiBotRepository.getMessage(meta.trigger_message_id) ? meta.trigger_message_id : void 0;
+    const triggerId = typeof meta?.trigger_message_id === "string" && xiaoheiBotRepository.getMessage(meta.trigger_message_id) ? meta.trigger_message_id : undefined;
     const message = xiaoheiBotRepository.createMessage({
       id: messageId,
       conversationId: localConversationId,
       authorType: role === "user" ? "user" : "bot",
-      authorBotId: role === "assistant" ? authorBotId : void 0,
+      authorBotId: role === "assistant" ? authorBotId : undefined,
       authorName: role === "user" ? fromMiniProgram ? appText("botMain.meViaMiniProgram") : appText("botMain.meViaApp") : bot?.name ?? appText("botSync.defaultBotName"),
       content,
       status: "complete",
@@ -38976,7 +38973,7 @@ var XiaoheiBotSyncService = class {
     if (!db || !cloudConversationId) return;
     const group = db.prepare(`SELECT conversation_id FROM xiaohei_mobile_group_bindings
       WHERE status = 'active' AND cloud_conversation_id = ? LIMIT 1`).get(cloudConversationId);
-    const direct = group ? void 0 : db.prepare(`SELECT conversation_id FROM xiaohei_mobile_bindings
+    const direct = group ? undefined : db.prepare(`SELECT conversation_id FROM xiaohei_mobile_bindings
       WHERE status = 'active' AND cloud_conversation_id = ? LIMIT 1`).get(cloudConversationId);
     const localConversationId = group?.conversation_id ?? direct?.conversation_id;
     if (!localConversationId) return;
@@ -39050,7 +39047,7 @@ var XiaoheiBotSyncService = class {
           }, {
             messageId: triggerId,
             source: "mobile",
-            client: job.client === "miniprogram" ? "miniprogram" : void 0,
+            client: job.client === "miniprogram" ? "miniprogram" : undefined,
             isCurrent: () => this.isCurrent(gen)
           });
         } catch {
@@ -39129,7 +39126,7 @@ var XiaoheiBotSyncService = class {
       db.prepare(`INSERT INTO xiaohei_mobile_group_bindings(id, cloud_conversation_id, conversation_id, anchor_cloud_bot_id, status, bound_at, cloud_origin, cloud_client)
          VALUES (?, ?, ?, ?, 'active', ?, ?, ?)`).run(randomUUID(), cloudConversationId, created.id, anchorCloud, (/* @__PURE__ */new Date()).toISOString(), cloudOrigin, cloudClient);
       if (!mobileLocalId && !desktopLocalId) this.lastClaimAt = 0;
-      xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+      xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
     } catch (error) {
       console.error("[XiaoheiBot] 导入手机群聊失败:", error);
     }
@@ -39150,8 +39147,8 @@ var XiaoheiBotSyncService = class {
     let avatarShape = group.avatarShape;
     if ("avatar_url" in payload) {
       const next = String(payload.avatar_url ?? "").trim();
-      avatar = next || void 0;
-      avatarShape = next ? group.avatarShape ?? "circle" : void 0;
+      avatar = next || undefined;
+      avatarShape = next ? group.avatarShape ?? "circle" : undefined;
     }
     if (name === group.title && description === (group.description ?? "") && avatar === group.avatar) return;
     try {
@@ -39165,7 +39162,7 @@ var XiaoheiBotSyncService = class {
         avatarColor: group.avatarColor,
         avatarShape
       });
-      xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+      xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
     } catch {}
   }
   async importCloudGroupMembers(payload) {
@@ -39238,7 +39235,7 @@ var XiaoheiBotSyncService = class {
     }
     for (const member of [...group.members]) if (!desiredIds.includes(member.botId) && !isProtectedXiaoheiBot(member.botId) && this.shouldMaintainCloudBinding(member.botId)) group = xiaoheiBotService.removeGroupMember(group.id, member.botId);
     this.pendingRemoteGroupUpdates.delete(cloudConversationId);
-    xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+    xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
   }
   resolveCloudSession(localConversationId) {
     const db = this.db();
@@ -39281,7 +39278,7 @@ var XiaoheiBotSyncService = class {
       response_style: bot.responseStyle ?? "natural",
       sync_mode: useFullSync ? "full" : "pipe",
       ...catalog,
-      mobile_local_id: catalog.system_bot_key === "xiaohei" ? "xiaohei" : catalog.default_role_id ? `role-${catalog.default_role_id}` : void 0
+      mobile_local_id: catalog.system_bot_key === "xiaohei" ? "xiaohei" : catalog.default_role_id ? `role-${catalog.default_role_id}` : undefined
     });
     const cloudBotId = data?.bot?.id;
     const cloudConversationId = data?.conversation?.id;
@@ -39558,7 +39555,7 @@ var XiaoheiBotSyncService = class {
         originsChanged = true;
       }
     }
-    if (originsChanged && this.isCurrent(gen)) xiaoheiBotService.notifyManagementDirectoryChanged(void 0, this.getMobileSyncSnapshot());
+    if (originsChanged && this.isCurrent(gen)) xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
   }
   async recoverBoundMessages() {
     const db = this.db();
@@ -39679,8 +39676,8 @@ var XiaoheiBotSyncService = class {
         continue;
       }
       const trigger = message.causalRootMessageId ? xiaoheiBotRepository.getMessage(message.causalRootMessageId) : null;
-      const cloudJobTriggerId = trigger ? this.cloudJobTriggerMessageId(trigger) : void 0;
-      const inbox = cloudJobTriggerId ? db.prepare("SELECT payload_json FROM xiaohei_mobile_inbox WHERE cloud_message_id = ? LIMIT 1").get(cloudJobTriggerId) : void 0;
+      const cloudJobTriggerId = trigger ? this.cloudJobTriggerMessageId(trigger) : undefined;
+      const inbox = cloudJobTriggerId ? db.prepare("SELECT payload_json FROM xiaohei_mobile_inbox WHERE cloud_message_id = ? LIMIT 1").get(cloudJobTriggerId) : undefined;
       const claimedJob = inbox ? JSON.parse(inbox.payload_json).job : null;
       const shareCard = message.processItems?.filter(item => item.toolName === "xiaohei_create_role_share" && item.status === "completed").map(item => parseRoleShareCard(item.output)).find(card => card != null);
       items.push({

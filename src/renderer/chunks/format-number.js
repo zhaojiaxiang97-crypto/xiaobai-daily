@@ -201,7 +201,7 @@ function C(e, t, r) {
     if (f(e, c)) {
       let t = `${c.getFullYear()}-${c.getMonth()}`,
         n = o.get(t);
-      n === void 0 && (n = _(e, c), o.set(t, n)), s += a * n;
+      n === undefined && (n = _(e, c), o.set(t, n)), s += a * n;
     }
     c = u(c, 1);
   }
@@ -225,7 +225,7 @@ function E(e, t) {
   for (let t = r; t.getTime() < i.getTime(); t = u(t, 1)) {
     if (!f(e, t)) continue;
     let n = c.get(t.getMonth());
-    n === void 0 && (n = _(e, t), c.set(t.getMonth(), n)), l += n * o, d = Math.max(d, n * s);
+    n === undefined && (n = _(e, t), c.set(t.getMonth(), n)), l += n * o, d = Math.max(d, n * s);
   }
   return l + d;
 }
@@ -286,7 +286,7 @@ function M(e, t, n, r = 2) {
   });
   return `${e.currency}${i}`;
 }
-function N(fn, t, n = !0) {
+function N(fn, t, n = true) {
   let r = Math.max(0, Math.ceil(t / j)),
     i = Math.floor(r / 1440),
     a = Math.floor(r % 1440 / 60),
@@ -337,7 +337,7 @@ function L(e) {
 }
 function R(fn, t) {
   return t.ratio >= 1 ? fn(`WishDone`) : t.remainingWorkMs === null ? `` : fn(`WishRemaining`, {
-    time: N(fn, t.remainingWorkMs, !1)
+    time: N(fn, t.remainingWorkMs, false)
   });
 }
 function z(fn, t) {

@@ -3,7 +3,7 @@ import { t as e } from "./vue-i18n.runtime.js";
 import { n as t, o as n, t as r } from "../i18n/en-US-player.js";
 import { t as i } from "./preload-helper.js";
 var a = e({
-  legacy: !1,
+  legacy: false,
   locale: `zh-CN`,
   fallbackLocale: `zh-CN`,
   messages: {
@@ -14,8 +14,8 @@ var a = e({
       toolboxNative: r
     }
   },
-  missingWarn: !1,
-  fallbackWarn: !1
+  missingWarn: false,
+  fallbackWarn: false
 });
 function o(e, t = {}) {
   return a.global.t(`toolboxNative.screenshot${e}`, t);

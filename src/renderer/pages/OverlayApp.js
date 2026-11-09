@@ -52,12 +52,12 @@ var Se = {
           height: window.innerHeight
         }),
         M = s(320),
-        N = s(!1),
-        P = s(!1),
+        N = s(false),
+        P = s(false),
         F = s(``),
         I = null,
         L = null,
-        R = !1,
+        R = false,
         z = null,
         B = null,
         V = 0,
@@ -206,7 +206,7 @@ var Se = {
           i = Math.round(b * r);
         e.width !== i && (e.width = i, e.height = i);
         let a = g(e);
-        a.imageSmoothingEnabled = !1, a.fillStyle = `#000`, a.fillRect(0, 0, i, i);
+        a.imageSmoothingEnabled = false, a.fillStyle = `#000`, a.fillRect(0, 0, i, i);
         let o = b / Pe * U.value,
           s = n.x * U.value,
           ee = n.y * W.value;
@@ -272,7 +272,7 @@ var Se = {
       }
       function $e(event) {
         if (!w.value || N.value || event.button !== 0) return;
-        P.value = !0;
+        P.value = true;
         let t = Q(event);
         if (A.value = t, event.currentTarget.setPointerCapture(event.pointerId), D.value === `selected` && O.value) {
           let e = Je(t);
@@ -288,8 +288,8 @@ var Se = {
             };
             return;
           }
-          R = !0;
-        } else R = !1;
+          R = true;
+        } else R = false;
         D.value = `pending`, L = t, Y();
       }
       function et(event) {
@@ -306,7 +306,7 @@ var Se = {
           case `resizing`:
             O.value && (O.value.width < v || O.value.height < v) && z && (O.value = z), D.value = `selected`;
         }
-        L = null, z = null, B = null, R = !1, Y();
+        L = null, z = null, B = null, R = false, Y();
       }
       function tt(e) {
         D.value === `selected` && O.value && q(O.value, Q(e)) && $(`beautify`);
@@ -390,7 +390,7 @@ var Se = {
           n = O.value,
           r = T.value;
         if (t && n && r && !N.value) {
-          N.value = !0;
+          N.value = true;
           try {
             let i = st(n),
               a;
@@ -419,12 +419,12 @@ var Se = {
           } catch (e) {
             console.warn(`[截图美化] 完成截图失败:`, e);
           } finally {
-            N.value = !1;
+            N.value = false;
           }
         }
       }
       function ct() {
-        w.value = null, I = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = !1, P.value = !1, F.value = ``;
+        w.value = null, I = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
         let e = T.value;
         e && (e.width = 1, e.height = 1), Y();
       }
@@ -491,7 +491,7 @@ var Se = {
         key: 0,
         class: `pointer-events-none absolute rounded-md bg-black/75 px-2 py-0.5 text-[11px] font-medium tabular-nums text-white`,
         style: u(Ve.value)
-      }, d(Be.value), 5)) : p(``, !0), D.value === `idle` && !P.value ? (c(), r(`div`, Se, d(e(_)(`OverlayHint`)), 1)) : p(``, !0), a(m(`div`, {
+      }, d(Be.value), 5)) : p(``, true), D.value === `idle` && !P.value ? (c(), r(`div`, Se, d(e(_)(`OverlayHint`)), 1)) : p(``, true), a(m(`div`, {
         class: `pointer-events-none absolute overflow-hidden rounded-lg border border-white/80 bg-black/80 text-[11px] text-white shadow-xl`,
         style: u([Ue.value, {
           width: `${b}px`
@@ -509,7 +509,7 @@ var Se = {
         style: u({
           background: K.value.color
         })
-      }, null, 4), n(d(K.value.color.toUpperCase()), 1)]), m(`span`, Te, d(e(_)(`OverlayCopyColorHint`)), 1)])], 4), [[ae, ze.value]]), F.value ? (c(), r(`div`, Ee, d(F.value), 1)) : p(``, !0), a(m(`div`, {
+      }, null, 4), n(d(K.value.color.toUpperCase()), 1)]), m(`span`, Te, d(e(_)(`OverlayCopyColorHint`)), 1)])], 4), [[ae, ze.value]]), F.value ? (c(), r(`div`, Ee, d(F.value), 1)) : p(``, true), a(m(`div`, {
         ref_key: `toolbarRef`,
         ref: E,
         class: `absolute flex h-10 items-center gap-0.5 rounded-xl border border-black/10 bg-white px-1 text-zinc-700 shadow-[0_8px_28px_rgb(0_0_0/0.28)] dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-200`,
@@ -573,7 +573,7 @@ var Se = {
       })) : (c(), o(e(le), {
         key: 1,
         size: 15
-      })), n(d(We.value), 1)], 8, Me)], 36), [[ae, Re.value]])], 64)) : p(``, !0)], 36));
+      })), n(d(We.value), 1)], 8, Me)], 36), [[ae, Re.value]])], 64)) : p(``, true)], 36));
     }
   });
 export { C as default };

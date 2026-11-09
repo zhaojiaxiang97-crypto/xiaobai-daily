@@ -54,4 +54,5 @@ echo "[6/6] Ad-hoc 签名"
 codesign --force --deep --sign - "$OUT/extract/小白日报.app" >/dev/null 2>&1
 
 echo "构建完成: $OUT/extract/小白日报.app"
+"$(dirname "$0")/tools/selfcheck.sh" "$OUT/extract/小白日报.app" || true
 echo "启动前清实例锁: pkill -9 -f '小白日报'; pkill -9 -f '小黑日报助手'"

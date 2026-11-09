@@ -4994,8 +4994,8 @@ function Ee(e) {
 var De = [`work`, `student`],
   A = {
     recordingSchedule: ce,
-    autoStart: !0,
-    networkProxyEnabled: !1,
+    autoStart: true,
+    networkProxyEnabled: false,
     networkProxyMode: `system`,
     networkProxyUrl: ``,
     networkProxyUsername: ``,
@@ -5003,15 +5003,15 @@ var De = [`work`, `student`],
     networkProxyLastTestStatus: `none`,
     networkProxyLastTestHost: ``,
     networkProxyLastTestAt: ``,
-    enableSystemNotifications: !0,
+    enableSystemNotifications: true,
     screenshotIntervalSeconds: 120,
-    autoPause: !0,
+    autoPause: true,
     idleMinutes: 4,
     aiMode: `default`,
     screenshotAiMode: `default`,
     reportAiMode: `default`,
-    enableAiWorkOverview: !0,
-    enableTimelineSummary: !0,
+    enableAiWorkOverview: true,
+    enableTimelineSummary: true,
     timelineSummaryRecordCount: 50,
     subscriptionScreenshotProviderId: ``,
     subscriptionScreenshotModelId: ``,
@@ -5054,49 +5054,49 @@ var De = [`work`, `student`],
     websiteBrowserApps: [],
     screenshotExcludeApps: [],
     screenshotExcludeAllowApps: [],
-    screenshotSkipUnchanged: !0,
-    captureDebugSaveImages: !1,
-    pipelineLogEnabled: !1,
+    screenshotSkipUnchanged: true,
+    captureDebugSaveImages: false,
+    pipelineLogEnabled: false,
     enabledDisplayIds: [],
     knownDisplayIds: [],
     knownDisplayProfiles: [],
-    displayEnableRepairDone: !1,
+    displayEnableRepairDone: false,
     deviceId: ``,
-    showWoodenFish: !0,
+    showWoodenFish: true,
     woodenFishMode: `global`,
-    woodenFishMuted: !1,
-    woodenFishHasSavedPosition: !1,
+    woodenFishMuted: false,
+    woodenFishHasSavedPosition: false,
     woodenFishAnchorX: -1,
     woodenFishAnchorY: -1,
-    showWorkMotivator: !1,
+    showWorkMotivator: false,
     workMotivatorConfig: se,
-    workMotivatorHasSavedPosition: !1,
+    workMotivatorHasSavedPosition: false,
     workMotivatorX: -1,
     workMotivatorY: -1,
-    enableMechanicalKeyboardSound: !1,
-    enableKeyboardHeatmap: !1,
+    enableMechanicalKeyboardSound: false,
+    enableKeyboardHeatmap: false,
     keyboardHeatmapConsentRevision: 0,
-    enableMouseHeatmap: !1,
+    enableMouseHeatmap: false,
     mouseHeatmapConsentRevision: 0,
     mechanicalKeyboardSwitchType: `blue`,
     mechanicalKeyboardVolume: 60,
-    enableEnterKeyListener: !1,
-    enableCaptureShortcut: !1,
+    enableEnterKeyListener: false,
+    enableCaptureShortcut: false,
     captureShortcut: ``,
-    enableClipboardAssistant: !1,
+    enableClipboardAssistant: false,
     clipboardAssistantShortcut: ``,
-    clipboardSyncToTimeline: !1,
+    clipboardSyncToTimeline: false,
     clipboardHistoryRetentionDays: 0,
-    enableScreenshotBeautifier: !1,
+    enableScreenshotBeautifier: false,
     screenshotBeautifierShortcut: ``,
     screenshotBeautifierAfterCapture: `editor`,
-    screenshotBeautifierAutoCopy: !0,
+    screenshotBeautifierAutoCopy: true,
     screenshotBeautifierStyle: oe,
     screenshotBeautifierPresets: [],
     screenshotBeautifierSaveDirectory: ``,
     screenshotBeautifierHistoryLimit: 50,
     enterKeyComponentConsentRevision: 0,
-    enterKeyLegacyMigrationHandled: !0,
+    enterKeyLegacyMigrationHandled: true,
     enterKeyRecordIntervalSeconds: 5,
     language: `zh-CN`,
     themeMode: `system`,
@@ -5104,17 +5104,17 @@ var De = [`work`, `student`],
     usageModeChangedAt: ``,
     usageModeGuideSeenUserId: 0,
     usageModePreviousTemplateId: ``,
-    showDockIcon: !0,
-    enableRecording: !0,
-    enableAppUsageTracking: !0,
-    enableAppWindowContext: !1,
-    enableBrowserDomainTracking: !1,
-    enableScreenHeatmap: !0,
-    enableMacActivityEvidence: !0,
-    enableMacAccessibilityEvents: !1,
-    enableLayeredActivitySummaries: !0,
+    showDockIcon: true,
+    enableRecording: true,
+    enableAppUsageTracking: true,
+    enableAppWindowContext: false,
+    enableBrowserDomainTracking: false,
+    enableScreenHeatmap: true,
+    enableMacActivityEvidence: true,
+    enableMacAccessibilityEvents: false,
+    enableLayeredActivitySummaries: true,
     appUsageContextRetentionDays: 30,
-    enableAutoDailyReport: !1,
+    enableAutoDailyReport: false,
     autoReportTasks: [],
     autoReportTaskRuns: {},
     autoReportEnabledAt: ``,
@@ -5124,61 +5124,61 @@ var De = [`work`, `student`],
     autoDailyReportGenerationMode: `chat`,
     autoDailyReportModel: `default`,
     autoDailyReportChatProvider: `deepseek`,
-    autoShareDailyReport: !1,
+    autoShareDailyReport: false,
     autoShareDailyRecipients: [],
     autoShareDailyNote: ``,
     deepseekReportSessionId: ``,
     deepseekTimelineSessionId: ``,
     lastSelectedTemplateId: ``,
-    enableScreenshotPreserve: !1,
+    enableScreenshotPreserve: false,
     screenshotPreservePath: ``,
-    enableUserProfileInScreenshot: !0,
+    enableUserProfileInScreenshot: true,
     screenshotHistoryCount: 0,
-    enableModelCategoryRecognition: !0,
-    enableScheduledReport: !1,
+    enableModelCategoryRecognition: true,
+    enableScheduledReport: false,
     scheduledReportUrl: ``,
     scheduledReportIntervalMinutes: 5,
-    scheduledReportRedactTimelineSummary: !1,
-    scheduledReportIncludeKeyboard: !0,
-    scheduledReportIncludeMouse: !0,
-    scheduledReportIncludeScreen: !0,
-    enableLeaderboard: !1,
+    scheduledReportRedactTimelineSummary: false,
+    scheduledReportIncludeKeyboard: true,
+    scheduledReportIncludeMouse: true,
+    scheduledReportIncludeScreen: true,
+    enableLeaderboard: false,
     leaderboardConsentAt: ``,
-    leaderboardBackfillDone: !1,
-    leaderboardProfileVisible: !1,
+    leaderboardBackfillDone: false,
+    leaderboardProfileVisible: false,
     leaderboardLastSyncedAt: ``,
-    leaderboardDailyDigest: !0,
+    leaderboardDailyDigest: true,
     leaderboardDigestDate: ``,
-    enableMiniProgramSync: !1,
-    enableRecordingBoxSync: !0,
-    enableAgentSessionImport: !1,
+    enableMiniProgramSync: false,
+    enableRecordingBoxSync: true,
+    enableAgentSessionImport: false,
     agentSessionImportConsentAt: ``,
     agentSessionImportPeriods: [],
     agentSessionImportIntervalMinutes: 3,
     agentSessionImportProviders: [...b],
-    miniProgramSyncBackfillDone: !1,
+    miniProgramSyncBackfillDone: false,
     miniProgramSyncBackfillCursor: ``,
     miniProgramSyncChangeCursor: ``,
-    miniProgramSyncLocalFactsDone: !1,
+    miniProgramSyncLocalFactsDone: false,
     miniProgramSyncUserId: 0,
     miniProgramSyncReconcileAt: ``,
     miniProgramSyncCategoryHoursFrom: ``,
-    enableLobsterService: !0,
+    enableLobsterService: true,
     lobsterBindMode: `lan`,
     promptPreferenceOnboardingUserId: 0,
-    recordingAuthorizationPending: !1,
+    recordingAuthorizationPending: false,
     webAccountRotationStrategy: `sequential`,
-    showWebAccountWindow: !1,
-    enableTodoAutoCompletion: !1,
+    showWebAccountWindow: false,
+    enableTodoAutoCompletion: false,
     todoAutoCompletionIntervalMinutes: 30,
     todoAutoCompletionTimelineHours: 0,
     todoAutoCompletionTaskRange: `today`,
     todoAutoCompletionAssigneeScope: `assignedToMe`,
     todoAutoCompletionRule: ``,
     todoAutoCompletionLastProcessedAt: ``,
-    enableTodoFloating: !1,
-    todoFloatingHoverExpand: !0,
-    todoFloatingHasSavedPosition: !1,
+    enableTodoFloating: false,
+    todoFloatingHoverExpand: true,
+    todoFloatingHasSavedPosition: false,
     todoFloatingAnchorX: -1,
     todoFloatingAnchorY: -1
   };
@@ -5257,9 +5257,9 @@ z.addEventListener(`change`, () => {
 var U = r({
     ...A
   }),
-  W = r(!1),
-  G = r(!1),
-  K = r(!1),
+  W = r(false),
+  G = r(false),
+  K = r(false),
   q = r(null),
   J = r(null),
   Y = null,
@@ -5277,15 +5277,15 @@ function Pe() {
         ...A,
         ...e
       }, H(U.value.themeMode), L(U.value.usageMode);
-    })), W.value = !0, q.value = null, Y = v.get().then(e => {
+    })), W.value = true, q.value = null, Y = v.get().then(e => {
       U.value = {
         ...A,
         ...e
-      }, H(U.value.themeMode), L(U.value.usageMode), U.value.language && U.value.language !== l.global.locale.value && s(U.value.language), K.value = !0;
+      }, H(U.value.themeMode), L(U.value.usageMode), U.value.language && U.value.language !== l.global.locale.value && s(U.value.language), K.value = true;
     }).catch(t => {
       q.value = Z(t, e(`composables.settings.loadFailed`));
     }).finally(() => {
-      K.value = !0, W.value = !1, Y = null;
+      K.value = true, W.value = false, Y = null;
     }), Y);
   }
   async function n(t, n = {}) {
@@ -5293,22 +5293,22 @@ function Pe() {
     U.value = {
       ...U.value,
       ...t
-    }, t.themeMode !== void 0 && H(t.themeMode), G.value = !0, q.value = null;
+    }, t.themeMode !== undefined && H(t.themeMode), G.value = true, q.value = null;
     try {
       let e = await v.update(t);
       return U.value = {
         ...A,
         ...e,
         ...t
-      }, n.silent || (J.value = Date.now()), !0;
+      }, n.silent || (J.value = Date.now()), true;
     } catch (n) {
-      return U.value = r, t.themeMode !== void 0 && H(r.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), !1;
+      return U.value = r, t.themeMode !== undefined && H(r.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), false;
     } finally {
-      G.value = !1;
+      G.value = false;
     }
   }
   async function r(t) {
-    G.value = !0, q.value = null;
+    G.value = true, q.value = null;
     try {
       let e = await v.switchUsageMode(t);
       return U.value = {
@@ -5318,7 +5318,7 @@ function Pe() {
     } catch (t) {
       return q.value = Z(t, e(`composables.settings.saveFailed`)), null;
     } finally {
-      G.value = !1;
+      G.value = false;
     }
   }
   return {
@@ -5343,21 +5343,21 @@ function Fe() {
       Q.value = await window.electronAPI.checkAccessibility();
     } catch {
       Q.value = {
-        required: !0,
-        granted: !1
+        required: true,
+        granted: false
       };
     }
   }
   async function t() {
     if ($()) try {
       Q.value = {
-        required: !0,
+        required: true,
         granted: await window.electronAPI.requestAccessibility()
       };
     } catch {
       Q.value = {
-        required: !0,
-        granted: !1
+        required: true,
+        granted: false
       };
     }
   }

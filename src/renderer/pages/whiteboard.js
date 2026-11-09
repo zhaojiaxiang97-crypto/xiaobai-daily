@@ -297,9 +297,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
           async openBoard() {
             let e = await Pe.openWhiteboard(tn?.value === `en-US` ? `en-US` : `zh-CN`);
             return e.cancelled || !e.content ? {
-              canceled: !0
+              canceled: true
             } : {
-              canceled: !1,
+              canceled: false,
               imageDataUrl: e.content,
               fileName: e.fileName,
               filePath: e.filePath
@@ -316,7 +316,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
                 kind: t ? `png` : `whiteboard`,
                 suggestedName: o,
                 data: n,
-                filePath: options?.filePath || void 0,
+                filePath: options?.filePath || undefined,
                 locale: tn?.value === `en-US` ? `en-US` : `zh-CN`
               });
             return {
@@ -385,7 +385,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         return gn();
       }
       function D(e, t) {
-        let n = !1;
+        let n = false;
         for (let r = 0, i = t.length - 1; r < t.length; i = r++) {
           let a = t[r],
             o = t[i];
@@ -864,7 +864,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         if (e.kind === `text`) {
           let i = Rn(Dn(e), r),
             a = e => e.x >= i.left && e.x <= i.right && e.y >= i.top && e.y <= i.bottom;
-          if (a(t) || a(n)) return !0;
+          if (a(t) || a(n)) return true;
           let o = [{
             x: i.left,
             y: i.top
@@ -882,19 +882,19 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
         let i = Nn(e);
         if (i.length === 1) return xn(i[0], t, n) <= r + e.width / 2;
-        for (let a = 1; a < i.length; a += 1) if (wn(i[a - 1], i[a], t, n) <= r + e.width / 2) return !0;
-        return !1;
+        for (let a = 1; a < i.length; a += 1) if (wn(i[a - 1], i[a], t, n) <= r + e.width / 2) return true;
+        return false;
       }
       function Fn(e, t) {
         let n = Nn(e),
           r = In(t);
-        if (!Ln(Rn(In(n), e.width / 2), r)) return !1;
-        if (n.some(n => On(e, n) && D(n, t))) return !0;
+        if (!Ln(Rn(In(n), e.width / 2), r)) return false;
+        if (n.some(n => On(e, n) && D(n, t))) return true;
         for (let r = 1; r < n.length; r += 1) {
           let i = vn(n[r - 1], n[r], .5);
-          for (let a = 0; a < t.length; a += 1) if (wn(n[r - 1], n[r], t[a], t[(a + 1) % t.length]) <= e.width / 2 && On(e, i)) return !0;
+          for (let a = 0; a < t.length; a += 1) if (wn(n[r - 1], n[r], t[a], t[(a + 1) % t.length]) <= e.width / 2 && On(e, i)) return true;
         }
-        return !1;
+        return false;
       }
       function In(items) {
         let t = 1 / 0,
@@ -980,7 +980,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           id: e.id,
           name: e.name,
           backgroundImage: e.backgroundImage ? {
-            present: !0,
+            present: true,
             x: e.backgroundImage.x || 0,
             y: e.backgroundImage.y || 0,
             width: e.backgroundImage.width || 0,
@@ -1011,21 +1011,21 @@ var Fe = C(`circle-dashed`, [[`path`, {
           y: 0
         }),
         F = se({
-          visible: !1,
-          down: !1,
+          visible: false,
+          down: false,
           x: 0,
           y: 0
         }),
         I = m(null),
-        er = m(!1),
+        er = m(false),
         L = m([]),
-        tr = m(!1),
-        nr = m(!1),
+        tr = m(false),
+        nr = m(false),
         rr = m(null),
         R = m(null),
         ir = m(null),
         z = se({
-          open: !1,
+          open: false,
           value: ``,
           x: 0,
           y: 0,
@@ -1038,21 +1038,21 @@ var Fe = C(`circle-dashed`, [[`path`, {
           bottom: `99px`,
           transform: `none`
         }),
-        sr = m(!1),
-        cr = m(!1),
+        sr = m(false),
+        cr = m(false),
         lr = m(null),
         ur = m(`white`),
-        dr = m(!1),
-        fr = m(!1),
-        V = m(!0),
+        dr = m(false),
+        fr = m(false),
+        V = m(true),
         H = se({}),
         U = se({}),
         W = se({
-          drawing: !1,
+          drawing: false,
           mode: null,
           last: null,
           start: null,
-          historyRecorded: !1,
+          historyRecorded: false,
           basePan: null,
           baseStrokes: null,
           dragIds: null,
@@ -1180,7 +1180,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       function Mr() {
         let e = !!z.value.trim();
-        return !e && !jr() ? !1 : e || Un() !== Wn;
+        return !e && !jr() ? false : e || Un() !== Wn;
       }
       function Nr(e) {
         if (!e) return null;
@@ -1230,7 +1230,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         (e || z.open) && (e && X(), Xr(), O.value.strokes = [], O.value.backgroundImage = null, R.value = null, jr() || (Wn = Un()), Z(), J(), Y(T(`ClearedUndoAvailable`)));
       }
       function Z() {
-        I.value = null, er.value = !1, L.value = [], tr.value = !1, J();
+        I.value = null, er.value = false, L.value = [], tr.value = false, J();
       }
       function zr() {
         z.open && $(), j.value = null, B.value = null, R.value = null, Z(), ir.value = null;
@@ -1267,7 +1267,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         or.left = `${Math.round(c)}px`, or.bottom = `${Math.round((r?.bottom ?? window.innerHeight) - n.top + 9)}px`;
       }
       function Hr() {
-        V.value = !V.value, !V.value && (B.value = null, fr.value = !1);
+        V.value = !V.value, !V.value && (B.value = null, fr.value = false);
       }
       function Ur(e) {
         B.value === `pen` ? Xn.value = e : B.value === `eraser` ? Zn.value = e : Qn.value = e;
@@ -1286,7 +1286,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: items.includes(`left`) ? r.right : r.left,
             y: items.includes(`top`) ? r.bottom : r.top
           },
-          historyRecorded: !1
+          historyRecorded: false
         }, event.currentTarget.setPointerCapture(event.pointerId);
       }
       function Gr(e) {
@@ -1298,7 +1298,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: t.corner.includes(`left`) ? Math.min(n.x, t.fixedPoint.x - r) : Math.max(n.x, t.fixedPoint.x + r),
             y: t.corner.includes(`top`) ? Math.min(n.y, t.fixedPoint.y - r) : Math.max(n.y, t.fixedPoint.y + r)
           };
-        t.historyRecorded ||= (X(), !0);
+        t.historyRecorded ||= (X(), true);
         let a = {
             left: Math.min(t.fixedPoint.x, i.x),
             right: Math.max(t.fixedPoint.x, i.x),
@@ -1344,13 +1344,13 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
       }
       function qr(e) {
-        ar.value = null, z.open = !0, z.value = ``, z.x = e.x, z.y = e.y, z.fontSize = Qn.value, ae(() => {
+        ar.value = null, z.open = true, z.value = ``, z.x = e.x, z.y = e.y, z.fontSize = Qn.value, ae(() => {
           requestAnimationFrame(() => Gn.value?.focus());
         });
       }
       function Jr(e) {
         let t = En(e);
-        ar.value = e.id, z.open = !0, z.value = e.text, z.x = t.x, z.y = t.y, z.fontSize = e.fontSize, M.value = e.color, J(), ae(() => {
+        ar.value = e.id, z.open = true, z.value = e.text, z.x = t.x, z.y = t.y, z.fontSize = e.fontSize, M.value = e.color, J(), ae(() => {
           requestAnimationFrame(() => {
             Gn.value?.focus(), Gn.value?.setSelectionRange(z.value.length, z.value.length);
           });
@@ -1362,7 +1362,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         t && (event.preventDefault(), event.stopPropagation(), Jr(t));
       }
       function Xr() {
-        yr = null, z.open = !1, z.value = ``, ar.value = null, J();
+        yr = null, z.open = false, z.value = ``, ar.value = null, J();
       }
       function $() {
         if (!z.open) return;
@@ -1373,7 +1373,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           },
           fontSize = z.fontSize,
           r = ar.value;
-        yr = null, z.open = !1, z.value = ``, ar.value = null, (e || r) && (X(), r ? O.value.strokes = O.value.strokes.flatMap(i => i.id === r ? e ? [{
+        yr = null, z.open = false, z.value = ``, ar.value = null, (e || r) && (X(), r ? O.value.strokes = O.value.strokes.flatMap(i => i.id === r ? e ? [{
           ...i,
           text: e,
           color: M.value,
@@ -1515,7 +1515,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       function oi(e) {
         let t = Nn(e);
-        if (!t.length) return !1;
+        if (!t.length) return false;
         let n = Math.max(4, e.width * 2),
           r = Rn(In(t), n),
           i = Math.max(1, r.right - r.left),
@@ -1524,13 +1524,13 @@ var Fe = C(`circle-dashed`, [[`path`, {
           s = document.createElement(`canvas`);
         s.width = Math.max(1, Math.ceil(i * o)), s.height = Math.max(1, Math.ceil(a * o));
         let c = s.getContext(`2d`, {
-          willReadFrequently: !0
+          willReadFrequently: true
         });
         c.setTransform(o, 0, 0, o, -r.left * o, -r.top * o), ai(c, e);
         let l = c.getImageData(0, 0, s.width, s.height).data,
           u = 0;
-        for (let e = 3; e < l.length; e += 4) if (l[e] > 12 && ++u >= 2) return !0;
-        return !1;
+        for (let e = 3; e < l.length; e += 4) if (l[e] > 12 && ++u >= 2) return true;
+        return false;
       }
       function si(e = A.value) {
         if (!e || !k.value) return null;
@@ -1559,7 +1559,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           (!z.open || e.id !== ar.value) && ai(t, e);
         }), t.restore()), I.value?.length > 1 && (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), t.strokeStyle = `#2f7dff`, t.lineWidth = 1.25 / N.value, t.setLineDash([6 / N.value, 5 / N.value]), t.beginPath(), t.moveTo(I.value[0].x, I.value[0].y), I.value.slice(1).forEach(e => t.lineTo(e.x, e.y)), er.value && t.lineTo(I.value[0].x, I.value[0].y), t.stroke(), t.restore());
       }
-      function li(items, t = !1) {
+      function li(items, t = false) {
         let n = A.value;
         if (!n) return null;
         let r = document.createElement(`canvas`);
@@ -1570,7 +1570,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       function ui(e, t) {
         return {
-          background: li(e, !0),
+          background: li(e, true),
           selected: li(t)
         };
       }
@@ -1590,7 +1590,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           return {
             ...i,
             clips: [...(i.clips || []), {
-              include: !1,
+              include: false,
               polygon: o
             }]
           };
@@ -1602,10 +1602,10 @@ var Fe = C(`circle-dashed`, [[`path`, {
           $();
           return;
         }
-        A.value.setPointerCapture(event.pointerId), F.down = !0, F.visible = event.pointerType !== `touch`;
+        A.value.setPointerCapture(event.pointerId), F.down = true, F.visible = event.pointerType !== `touch`;
         let t = ii(event),
           n = ri(event);
-        if (W.drawing = !0, W.last = n, W.start = n, W.historyRecorded = !1, event.ctrlKey) {
+        if (W.drawing = true, W.last = n, W.start = n, W.historyRecorded = false, event.ctrlKey) {
           W.mode = `pan`, W.start = t, W.basePan = {
             x: P.x,
             y: P.y
@@ -1620,15 +1620,15 @@ var Fe = C(`circle-dashed`, [[`path`, {
               y: 0
             };
             let t = W.baseStrokes.filter(e => _r.has(e.id));
-            gr = ui(W.baseStrokes.filter(e => !_r.has(e.id)), t), nr.value = !0;
-          } else W.mode = `lasso`, I.value = [n], er.value = !1, L.value = [];
+            gr = ui(W.baseStrokes.filter(e => !_r.has(e.id)), t), nr.value = true;
+          } else W.mode = `lasso`, I.value = [n], er.value = false, L.value = [];
           J();
           return;
         }
         if (j.value === `text`) {
           let t = ti(n);
           if (t) W.mode = `move-text`, W.baseStrokes = E(O.value.strokes), W.dragIds = [t.id], ir.value = t.id;else {
-            W.drawing = !1, W.mode = null, F.down = !1;
+            W.drawing = false, W.mode = null, F.down = false;
             try {
               A.value.releasePointerCapture(event.pointerId);
             } catch {}
@@ -1637,7 +1637,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           return;
         }
         if (![`pen`, `shape`, `eraser`].includes(j.value)) {
-          W.drawing = !1, W.mode = null, F.down = !1;
+          W.drawing = false, W.mode = null, F.down = false;
           try {
             A.value.releasePointerCapture(event.pointerId);
           } catch {}
@@ -1650,7 +1650,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             return;
           }
         }
-        if (X(), W.historyRecorded = !0, j.value === `pen`) W.mode = `pen`, O.value.strokes.push({
+        if (X(), W.historyRecorded = true, j.value === `pen`) W.mode = `pen`, O.value.strokes.push({
           id: mn(),
           kind: `pen`,
           color: M.value,
@@ -1694,7 +1694,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: n.x - W.start.x,
             y: n.y - W.start.y
           };
-          !W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = !0), W.historyRecorded && Math.hypot(n.x - W.last.x, n.y - W.last.y) >= .75 / N.value && (vr = e, L.value = [...W.dragIds], I.value = W.originalSelection.map(t => ({
+          !W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded && Math.hypot(n.x - W.last.x, n.y - W.last.y) >= .75 / N.value && (vr = e, L.value = [...W.dragIds], I.value = W.originalSelection.map(t => ({
             x: t.x + e.x,
             y: t.y + e.y
           })), W.last = n, J());
@@ -1703,7 +1703,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: n.x - W.start.x,
             y: n.y - W.start.y
           };
-          if (!W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = !0), W.historyRecorded) {
+          if (!W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded) {
             let t = W.dragIds[0];
             O.value.strokes = W.baseStrokes.map(n => t === n.id ? {
               ...n,
@@ -1724,7 +1724,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
         if (W.mode === `lasso`) {
           let e = Bn(I.value || [], Math.max(1.25, 2 / N.value));
-          e.length >= 3 ? (I.value = e, er.value = !0, L.value = O.value.strokes.filter(t => Fn(t, e)).map(e => e.id), L.value.length || Y(T(`SelectionEmpty`))) : Z();
+          e.length >= 3 ? (I.value = e, er.value = true, L.value = O.value.strokes.filter(t => Fn(t, e)).map(e => e.id), L.value.length || Y(T(`SelectionEmpty`))) : Z();
         }
         mode === `move-selection` && W.historyRecorded && W.baseStrokes && _r && (O.value.strokes = W.baseStrokes.map(e => _r.has(e.id) ? {
           ...e,
@@ -1732,10 +1732,10 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: (e.offset?.x || 0) + vr.x,
             y: (e.offset?.y || 0) + vr.y
           }
-        } : e), Z()), W.drawing = !1, W.mode = null, W.baseStrokes = null, W.dragIds = null, W.originalSelection = null, gr = null, _r = null, vr = {
+        } : e), Z()), W.drawing = false, W.mode = null, W.baseStrokes = null, W.dragIds = null, W.originalSelection = null, gr = null, _r = null, vr = {
           x: 0,
           y: 0
-        }, nr.value = !1, rr.value = null, F.down = !1, mode === `eraser` && (O.value.strokes = O.value.strokes.filter(oi)), [`pen`, `shape`, `eraser`].includes(mode) || [`move-selection`, `move-text`, `move-shape`].includes(mode) && W.historyRecorded, J();
+        }, nr.value = false, rr.value = null, F.down = false, mode === `eraser` && (O.value.strokes = O.value.strokes.filter(oi)), [`pen`, `shape`, `eraser`].includes(mode) || [`move-selection`, `move-text`, `move-shape`].includes(mode) && W.historyRecorded, J();
         try {
           A.value.releasePointerCapture(e.pointerId);
         } catch {}
@@ -1744,7 +1744,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         F.visible = e.pointerType !== `touch`, pi(e);
       }
       function gi() {
-        W.drawing || (F.visible = !1), nr.value || (tr.value = !1), W.mode !== `move-text` && (ir.value = null);
+        W.drawing || (F.visible = false), nr.value || (tr.value = false), W.mode !== `move-text` && (ir.value = null);
       }
       function _i(e, t = null) {
         let n = Math.max(.05, Math.min(2, Number(e.toFixed(2))));
@@ -1788,7 +1788,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         let n = hn(1);
         n.name = String(e.fileName || T(`UntitledBoard`)).replace(/\.png$/i, ``), n.backgroundImage = {
           dataUrl: e.imageDataUrl,
-          fitStage: !1,
+          fitStage: false,
           x: 0,
           y: 0,
           width: t.naturalWidth,
@@ -1796,7 +1796,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }, Hn.value = {
           pages: [n],
           pageIndex: 0
-        }, R.value = null, lr.value = e.filePath || null, ur.value = `board`, dr.value = !0;
+        }, R.value = null, lr.value = e.filePath || null, ur.value = `board`, dr.value = true;
         let r = k.value?.clientWidth || t.naturalWidth,
           i = k.value?.clientHeight || t.naturalHeight,
           a = Math.max(.05, Math.min(1, (r - 48) / t.naturalWidth, (i - 48) / t.naturalHeight));
@@ -1874,7 +1874,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           });
           return a?.canceled ? `cancelled` : (a?.filePath && i && r(`tool_action_success`, {
             action: `whiteboard_saved`
-          }), t === `image` && (lr.value = a.filePath || n || null, ur.value = e), Wn = Un(), sr.value = !1, Y(a.type === `image` ? T(`ImageSaved`) : T(`ProjectSaved`)), `saved`);
+          }), t === `image` && (lr.value = a.filePath || n || null, ur.value = e), Wn = Un(), sr.value = false, Y(a.type === `image` ? T(`ImageSaved`) : T(`ProjectSaved`)), `saved`);
         } catch {
           return Y(T(`SaveFailed`)), `failed`;
         }
@@ -1887,44 +1887,44 @@ var Fe = C(`circle-dashed`, [[`path`, {
         return G = null, n(`saved`), t;
       }
       function Ei() {
-        if (sr.value = !1, !G) return;
+        if (sr.value = false, !G) return;
         let e = G;
         G = null, e(`cancelled`);
       }
       function Di() {
-        Xr(), Hn.value = gn(), R.value = null, Wn = Un(), lr.value = null, ur.value = `white`, dr.value = !1, Object.keys(H).forEach(e => delete H[e]), Object.keys(U).forEach(e => delete U[e]), Z(), Ar(), J();
+        Xr(), Hn.value = gn(), R.value = null, Wn = Un(), lr.value = null, ur.value = `white`, dr.value = false, Object.keys(H).forEach(e => delete H[e]), Object.keys(U).forEach(e => delete U[e]), Z(), Ar(), J();
       }
       async function Oi() {
         if ($(), lr.value) {
           let e = await wi(dr.value ? `board` : ur.value, `image`, lr.value);
           return e === `saved` && Di(), e;
         }
-        return sr.value = !0, await new Promise(e => {
+        return sr.value = true, await new Promise(e => {
           G = e;
         });
       }
       function ki(e) {
         let t = xr;
-        xr = null, cr.value = !1, t?.(e);
+        xr = null, cr.value = false, t?.(e);
       }
       async function Ai() {
-        if (cr.value = !1, (await Oi()) === `saved`) {
-          ki(!0);
+        if (cr.value = false, (await Oi()) === `saved`) {
+          ki(true);
           return;
         }
-        xr && (cr.value = !0);
+        xr && (cr.value = true);
       }
       function ji() {
-        Di(), ki(!0);
+        Di(), ki(true);
       }
       function Mi() {
-        ki(!1);
+        ki(false);
       }
       function Ni(e) {
-        cr.value = e, !e && xr && ki(!1);
+        cr.value = e, !e && xr && ki(false);
       }
       async function Pi() {
-        return $(), !Mr() || (xr && ki(!1), cr.value = !0, await new Promise(e => {
+        return $(), !Mr() || (xr && ki(false), cr.value = true, await new Promise(e => {
           xr = e;
         }));
       }
@@ -1932,7 +1932,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         let t = event.composedPath?.().find(e => e instanceof HTMLInputElement || e instanceof HTMLTextAreaElement || e?.isContentEditable) || event.target;
         if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t?.isContentEditable) return;
         if (event.key === `Escape` && V.value) {
-          B.value = null, fr.value = !1, V.value = !1;
+          B.value = null, fr.value = false, V.value = false;
           return;
         }
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === `z`) {
@@ -1954,13 +1954,13 @@ var Fe = C(`circle-dashed`, [[`path`, {
       oe(() => {
         Wn = Un(), pr = new ResizeObserver(J), pr.observe(k.value), window.addEventListener(`keydown`, Fi), window.addEventListener(`resize`, Vr), window.addEventListener(`beforeunload`, Ar), ae(J);
       }), ie(() => {
-        xr && ki(!1), G &&= (G(`cancelled`), null), pr?.disconnect(), window.removeEventListener(`keydown`, Fi), window.removeEventListener(`resize`, Vr), window.removeEventListener(`beforeunload`, Ar), hr && cancelAnimationFrame(hr), Ar();
+        xr && ki(false), G &&= (G(`cancelled`), null), pr?.disconnect(), window.removeEventListener(`keydown`, Fi), window.removeEventListener(`resize`, Vr), window.removeEventListener(`beforeunload`, Ar), hr && cancelAnimationFrame(hr), Ar();
       });
       async function Ii() {
         return $(), lr.value ? Mr() ? wi(dr.value ? `board` : ur.value, `image`, lr.value) : (Y(T(`AlreadySaved`)), `saved`) : (Li(), `pending`);
       }
       async function Li() {
-        return $(), dr.value ? wi(`board`, `image`, null) : (sr.value = !0, `pending`);
+        return $(), dr.value ? wi(`board`, `image`, null) : (sr.value = true, `pending`);
       }
       return C({
         requestClose: Pi,
@@ -2004,7 +2004,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         onKeydown: ei,
         onBlur: $,
         onPointerdown: r[2] ||= S(() => {}, [`stop`])
-      }, null, 44, Ke)), [[ce, z.value]]) : b(``, !0), z.open ? (h(), d(`div`, {
+      }, null, 44, Ke)), [[ce, z.value]]) : b(``, true), z.open ? (h(), d(`div`, {
         key: 1,
         class: `pointer-events-none absolute z-[17]`,
         style: _(Er.value),
@@ -2018,7 +2018,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         onPointermove: S(Qr, [`prevent`, `stop`]),
         onPointerup: S($r, [`prevent`, `stop`]),
         onPointercancel: S($r, [`prevent`, `stop`])
-      }, null, 42, Je)), 64))], 12, qe)) : b(``, !0), Or.value && j.value === `shape` ? (h(), d(`div`, {
+      }, null, 42, Je)), 64))], 12, qe)) : b(``, true), Or.value && j.value === `shape` ? (h(), d(`div`, {
         key: 2,
         class: `pointer-events-none absolute z-[17] border border-dashed border-primary`,
         style: _(kr.value),
@@ -2030,7 +2030,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         onPointermove: S(Gr, [`prevent`, `stop`]),
         onPointerup: S(Kr, [`prevent`, `stop`]),
         onPointercancel: S(Kr, [`prevent`, `stop`])
-      }, null, 42, Ye)), 64))], 4)) : b(``, !0), F.visible && (j.value === `pen` || j.value === `eraser`) ? (h(), d(`div`, {
+      }, null, 42, Ye)), 64))], 4)) : b(``, true), F.visible && (j.value === `pen` || j.value === `eraser`) ? (h(), d(`div`, {
         key: 3,
         class: `pointer-events-none absolute z-[12] size-0 text-gray-800 will-change-[left,top] dark:text-gray-100`,
         style: _({
@@ -2059,7 +2059,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         })
       }, [g(c(Le), {
         size: `62%`
-      })], 6))], 4)) : b(``, !0), !O.value.strokes.length && !O.value.backgroundImage && !z.open ? (h(), d(`div`, Xe, [r[15] ||= x(`div`, {
+      })], 6))], 4)) : b(``, true), !O.value.strokes.length && !O.value.backgroundImage && !z.open ? (h(), d(`div`, Xe, [r[15] ||= x(`div`, {
         class: `relative mb-2 h-[37px] w-[50px]`
       }, [x(`span`, {
         class: `absolute left-[5px] top-2.5 block h-[3px] w-[38px] -rotate-[9deg] rounded-full bg-muted-foreground/35`
@@ -2067,12 +2067,12 @@ var Fe = C(`circle-dashed`, [[`path`, {
         class: `absolute left-0 top-[19px] block h-[3px] w-[45px] rotate-[5deg] rounded-full bg-muted-foreground/35`
       }), x(`span`, {
         class: `absolute left-[11px] top-7 block h-[3px] w-[29px] -rotate-3 rounded-full bg-muted-foreground/35`
-      })], -1), x(`strong`, Ze, v(T(`StartDrawing`)), 1), x(`p`, Qe, v(T(`StartDrawingDescription`)), 1)])) : b(``, !0)], 44, Ge), B.value === `pen` || B.value === `eraser` || B.value === `text` ? (h(), d(`aside`, {
+      })], -1), x(`strong`, Ze, v(T(`StartDrawing`)), 1), x(`p`, Qe, v(T(`StartDrawingDescription`)), 1)])) : b(``, true)], 44, Ge), B.value === `pen` || B.value === `eraser` || B.value === `text` ? (h(), d(`aside`, {
         key: 0,
         class: `absolute z-[32] flex min-h-[42px] min-w-[130px] items-center rounded-[10px] border border-border bg-card p-1 shadow-[0_8px_24px_rgb(20_28_23/0.10)] animate-in fade-in-0 slide-in-from-bottom-1`,
         style: _(or),
         "aria-label": B.value === `pen` ? T(`PenSize`) : B.value === `eraser` ? T(`EraserSize`) : T(`Text`)
-      }, [x(`div`, et, [(h(!0), d(ne, null, f(Cr.value, state => (h(), d(`button`, {
+      }, [x(`div`, et, [(h(true), d(ne, null, f(Cr.value, state => (h(), d(`button`, {
         key: state.value,
         type: `button`,
         class: s([`flex h-8 w-[38px] items-center justify-center rounded-[7px] border transition-colors`, wr.value === state.value ? `border-primary/20 bg-primary/10` : `border-transparent hover:bg-muted`]),
@@ -2084,12 +2084,12 @@ var Fe = C(`circle-dashed`, [[`path`, {
           width: `${state.previewSize}px`,
           height: `${state.previewSize}px`
         })
-      }, null, 4)])], 10, tt))), 128))])], 12, $e)) : b(``, !0), B.value === `shape` ? (h(), d(`aside`, {
+      }, null, 4)])], 10, tt))), 128))])], 12, $e)) : b(``, true), B.value === `shape` ? (h(), d(`aside`, {
         key: 1,
         class: `absolute z-[32] w-[326px] max-w-[calc(100%-20px)] rounded-[10px] border border-border bg-card p-1 shadow-[0_8px_24px_rgb(20_28_23/0.10)] animate-in fade-in-0 slide-in-from-bottom-1`,
         style: _(or),
         "aria-label": T(`ChooseShape`)
-      }, [x(`div`, it, [(h(!0), d(ne, null, f(Sr.value, ([e, t, n]) => (h(), d(`button`, {
+      }, [x(`div`, it, [(h(true), d(ne, null, f(Sr.value, ([e, t, n]) => (h(), d(`button`, {
         key: e,
         type: `button`,
         class: s([`grid h-8 w-full place-items-center rounded-[7px] border transition-colors`, $n.value === e ? `border-primary/20 bg-primary/10 text-primary` : `border-transparent text-muted-foreground hover:bg-muted hover:text-primary`]),
@@ -2097,7 +2097,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         onClick: t => $n.value = e
       }, [(h(), te(l(n), {
         size: 20
-      }))], 10, at))), 128))])], 12, rt)) : b(``, !0), g(le, {
+      }))], 10, at))), 128))])], 12, rt)) : b(``, true), g(le, {
         "enter-active-class": `origin-left transition duration-200 ease-[cubic-bezier(.22,1,.36,1)]`,
         "leave-active-class": `origin-left transition duration-200 ease-[cubic-bezier(.22,1,.36,1)]`,
         "enter-from-class": `-translate-x-4 scale-x-[.96] opacity-0`,
@@ -2136,7 +2136,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           class: s([`relative grid size-[17px] place-items-center rounded-full border transition-transform hover:scale-110`, [e === `#ffffff` ? `border-[#cfd4d1] dark:border-[#69716c]` : `border-transparent`, M.value === e ? `outline-2 outline-offset-1 hover:scale-100` : ``, M.value === e && (e === `#ffffff` || e === `#171717`) ? `dark:!outline-white` : ``]]),
           style: _({
             backgroundColor: e,
-            outlineColor: M.value === e ? e === `#ffffff` ? `#171717` : e : void 0
+            outlineColor: M.value === e ? e === `#ffffff` ? `#171717` : e : undefined
           }),
           "aria-label": T(`ChooseColor`, {
             color: e
@@ -2195,7 +2195,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         })], 10, vt)]), r[18] ||= x(`div`, {
           class: `mx-[5px] h-[22px] w-px shrink-0 bg-border`
         }, null, -1), x(`div`, yt, [x(`button`, {
-          class: s(q(!1)),
+          class: s(q(false)),
           type: `button`,
           title: `${T(`Undo`)} Ctrl+Z`,
           "aria-label": T(`Undo`),
@@ -2206,7 +2206,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }, [g(c(he), {
           size: 18
         })], 10, bt), x(`button`, {
-          class: s(q(!1)),
+          class: s(q(false)),
           type: `button`,
           title: T(`ClearBoard`),
           "aria-label": T(`ClearBoard`),
@@ -2217,7 +2217,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           size: 18
         })], 10, xt), L.value.length ? (h(), d(`button`, {
           key: 0,
-          class: s(q(!1)),
+          class: s(q(false)),
           type: `button`,
           title: `${T(`DeleteSelected`)} Delete`,
           "aria-label": T(`DeleteSelected`),
@@ -2226,7 +2226,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           }
         }, [g(c(o), {
           size: 18
-        })], 10, St)) : b(``, !0), x(`button`, {
+        })], 10, St)) : b(``, true), x(`button`, {
           class: s(q(fr.value)),
           type: `button`,
           title: T(`Help`),
@@ -2236,7 +2236,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           }
         }, [g(c(fe), {
           size: 18
-        })], 10, Ct)])], 8, ot)) : b(``, !0)]),
+        })], 10, Ct)])], 8, ot)) : b(``, true)]),
         _: 1
       }), x(`button`, {
         class: `absolute bottom-2.5 left-3 z-[24] grid size-[46px] place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_8px_20px_rgb(22_163_74/0.26)] transition-[transform,background-color] hover:-translate-x-px hover:bg-primary/90 active:scale-[.96]`,
@@ -2304,7 +2304,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }, `+`, -1), g(c(w), null, {
         default: p(() => [...(r[27] ||= [u(`Z`, -1)])]),
         _: 1
-      })])])])])) : b(``, !0), g(c(ve), {
+      })])])])])) : b(``, true), g(c(ve), {
         open: sr.value,
         "onUpdate:open": r[14] ||= e => {
           e || Ei();
@@ -2410,7 +2410,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         i = n,
         a = m(null);
       async function o() {
-        return (await a.value?.requestClose()) ?? !0;
+        return (await a.value?.requestClose()) ?? true;
       }
       return t({
         requestClose: o
@@ -2418,10 +2418,10 @@ var Fe = C(`circle-dashed`, [[`path`, {
         tool: r.tool,
         user: r.user,
         "credits-balance": r.creditsBalance,
-        "voice-tool": !1,
+        "voice-tool": false,
         "local-tool": ``,
         "whiteboard-tool": ``,
-        "show-history": !1,
+        "show-history": false,
         onBack: t[0] ||= e => i(`back`),
         onRecharge: t[1] ||= e => i(`recharge`),
         onWhiteboardOpen: t[2] ||= e => a.value?.openBoard(),

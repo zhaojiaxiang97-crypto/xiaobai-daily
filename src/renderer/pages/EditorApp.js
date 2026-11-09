@@ -85,17 +85,17 @@ var He = I(`grid-3x3`, [[`rect`, {
       let r = e,
         i = n,
         editor = window.screenshotToolAPI.editor,
-        o = S(!1),
+        o = S(false),
         s = S(``),
         l = S(``),
-        u = S(!1),
-        d = S(!1),
+        u = S(false),
+        d = S(false),
         p = 0,
         m = null;
       async function _() {
         if (!r.supported || o.value || !r.sessionId) return;
         let e = ++p;
-        o.value = !0, l.value = ``;
+        o.value = true, l.value = ``;
         try {
           let t = await editor.ocr({
             id: r.sessionId
@@ -105,26 +105,26 @@ var He = I(`grid-3x3`, [[`rect`, {
             l.value = t.error.message;
             return;
           }
-          s.value = t.data.text, u.value = !0;
+          s.value = t.data.text, u.value = true;
         } catch (t) {
           e === p && (l.value = t instanceof Error ? t.message : String(t));
         } finally {
-          e === p && (o.value = !1);
+          e === p && (o.value = false);
         }
       }
       async function T() {
         if (s.value) try {
-          await navigator.clipboard.writeText(s.value), d.value = !0, i(`toast`, G(`OcrCopied`)), m !== null && window.clearTimeout(m), m = window.setTimeout(() => {
-            d.value = !1, m = null;
+          await navigator.clipboard.writeText(s.value), d.value = true, i(`toast`, G(`OcrCopied`)), m !== null && window.clearTimeout(m), m = window.setTimeout(() => {
+            d.value = false, m = null;
           }, 1400);
         } catch {
           i(`toast`, G(`ActionFailed`));
         }
       }
       return v(() => r.sessionId, () => {
-        p += 1, o.value = !1, s.value = ``, l.value = ``, u.value = !1, r.autoRun && _();
+        p += 1, o.value = false, s.value = ``, l.value = ``, u.value = false, r.autoRun && _();
       }, {
-        immediate: !0
+        immediate: true
       }), t({
         run: _
       }), (t, n) => (w(), g(`div`, K, [N(`p`, Ke, k(e.supported ? f(G)(`OcrHint`) : f(G)(`OcrUnsupported`)), 1), e.supported ? (w(), x(f(c), {
@@ -144,7 +144,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           size: 14
         })), h(` ` + k(o.value ? f(G)(`OcrRunning`) : u.value ? f(G)(`OcrRerun`) : f(G)(`OcrRun`)), 1)]),
         _: 1
-      }, 8, [`disabled`])) : M(``, !0), l.value ? (w(), g(`p`, qe, k(l.value), 1)) : M(``, !0), u.value && !l.value ? (w(), g(C, {
+      }, 8, [`disabled`])) : M(``, true), l.value ? (w(), g(`p`, qe, k(l.value), 1)) : M(``, true), u.value && !l.value ? (w(), g(C, {
         key: 2
       }, [s.value ? (w(), g(C, {
         key: 1
@@ -166,7 +166,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           size: 14
         })), h(k(f(G)(`OcrCopy`)), 1)]),
         _: 1
-      })], 64)) : (w(), g(`p`, Je, k(f(G)(`OcrEmpty`)), 1))], 64)) : M(``, !0)]));
+      })], 64)) : (w(), g(`p`, Je, k(f(G)(`OcrEmpty`)), 1))], 64)) : M(``, true)]));
     }
   }),
   q = {
@@ -371,7 +371,7 @@ var He = I(`grid-3x3`, [[`rect`, {
     }) {
       let i = result,
         a = r,
-        o = S(!1),
+        o = S(false),
         s = S(``),
         c = S(null),
         u = {
@@ -393,10 +393,10 @@ var He = I(`grid-3x3`, [[`rect`, {
           id: `builtin:${el.id}`,
           name: G(`Preset${el.id}`),
           style: el.style,
-          builtin: !0
+          builtin: true
         })), ...i.presets.map(e => ({
           ...e,
-          builtin: !1
+          builtin: false
         }))]);
       function T(e) {
         a(`update:style`, {
@@ -404,7 +404,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           ...e
         });
       }
-      let O = S(!1),
+      let O = S(false),
         A = S(``),
         F = S([]),
         te = S(``);
@@ -429,23 +429,23 @@ var He = I(`grid-3x3`, [[`rect`, {
       v(() => i.backgroundLibrary, e => {
         F.value = [...e], re();
       }, {
-        immediate: !0
+        immediate: true
       }), v(() => i.current.backgroundImageSource, () => re());
       async function I(e) {
         if (!O.value) {
-          O.value = !0, A.value = ``;
+          O.value = true, A.value = ``;
           try {
             await ne(e);
           } catch (e) {
             A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
           } finally {
-            O.value = !1;
+            O.value = false;
           }
         }
       }
       async function ae() {
         if (!O.value) {
-          O.value = !0, A.value = ``;
+          O.value = true, A.value = ``;
           try {
             let e = await window.screenshotToolAPI.editor.backgrounds(`system`);
             if (!e.ok) throw Error(e.error.message);
@@ -453,13 +453,13 @@ var He = I(`grid-3x3`, [[`rect`, {
           } catch (e) {
             A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
           } finally {
-            O.value = !1;
+            O.value = false;
           }
         }
       }
       async function R() {
         if (!O.value) {
-          O.value = !0, A.value = ``;
+          O.value = true, A.value = ``;
           try {
             let e = await window.screenshotToolAPI.editor.backgrounds(`custom`);
             if (!e.ok) throw Error(e.error.message);
@@ -468,7 +468,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           } catch (e) {
             A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
           } finally {
-            O.value = !1;
+            O.value = false;
           }
         }
       }
@@ -521,14 +521,14 @@ var He = I(`grid-3x3`, [[`rect`, {
         });
       }
       function ve() {
-        s.value = ``, o.value = !0, ee(() => c.value?.focus());
+        s.value = ``, o.value = true, ee(() => c.value?.focus());
       }
       function ye() {
         let e = s.value.trim();
-        e && (a(`savePreset`, e), o.value = !1);
+        e && (a(`savePreset`, e), o.value = false);
       }
       function be(event) {
-        event.stopPropagation(), event.key === `Enter` && !event.isComposing ? (event.preventDefault(), ye()) : event.key === `Escape` && (event.preventDefault(), o.value = !1);
+        event.stopPropagation(), event.key === `Enter` && !event.isComposing ? (event.preventDefault(), ye()) : event.key === `Escape` && (event.preventDefault(), o.value = false);
       }
       return (r, i) => (w(), g(`div`, q, [N(`div`, J, [N(`div`, Xe, [N(`strong`, Ze, k(f(G)(`StyleEnabled`)), 1), N(`small`, Qe, k(f(G)(`StyleEnabledDesc`)), 1)]), E(f(l), {
         "model-value": result.current.enabled,
@@ -545,7 +545,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         onClick: ve
       }, [E(f(n), {
         size: 12
-      }), h(k(f(G)(`PresetSave`)), 1)])) : M(``, !0)]), o.value ? (w(), g(`div`, et, [b(N(`input`, {
+      }), h(k(f(G)(`PresetSave`)), 1)])) : M(``, true)]), o.value ? (w(), g(`div`, et, [b(N(`input`, {
         ref_key: `presetInput`,
         ref: c,
         "onUpdate:modelValue": i[1] ||= e => s.value = e,
@@ -565,10 +565,10 @@ var He = I(`grid-3x3`, [[`rect`, {
         type: `button`,
         class: `inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted`,
         title: f(G)(`Cancel`),
-        onClick: i[2] ||= e => o.value = !1
+        onClick: i[2] ||= e => o.value = false
       }, [E(f(L), {
         size: 14
-      })], 8, rt)])) : M(``, !0), N(`div`, it, [(w(!0), g(C, null, _(y.value, el => (w(), g(`div`, {
+      })], 8, rt)])) : M(``, true), N(`div`, it, [(w(true), g(C, null, _(y.value, el => (w(), g(`div`, {
         key: el.id,
         class: `group relative`
       }, [N(`button`, {
@@ -577,15 +577,15 @@ var He = I(`grid-3x3`, [[`rect`, {
         title: el.name,
         onClick: t => a(`update:style`, {
           ...el.style,
-          enabled: !0
+          enabled: true
         })
       }, [N(`span`, ot, [N(`span`, {
         class: `absolute inset-0`,
         style: D(he(el.style))
-      }, null, 4), N(`span`, st, [el.style.frame === `none` ? M(``, !0) : (w(), g(`span`, {
+      }, null, 4), N(`span`, st, [el.style.frame === `none` ? M(``, true) : (w(), g(`span`, {
         key: 0,
         class: d([`absolute inset-x-0 top-0 h-1.5 rounded-t-[3px]`, el.style.frame.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200 dark:bg-zinc-300`])
-      }, null, 2))])]), N(`span`, ct, k(el.name), 1)], 10, at), el.builtin ? M(``, !0) : (w(), g(`button`, {
+      }, null, 2))])]), N(`span`, ct, k(el.name), 1)], 10, at), el.builtin ? M(``, true) : (w(), g(`button`, {
         key: 0,
         type: `button`,
         class: `absolute -right-1 -top-1 hidden size-4 items-center justify-center rounded-full bg-zinc-700 text-white group-hover:inline-flex`,
@@ -593,7 +593,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         onClick: t => a(`deletePreset`, el.id)
       }, [E(f(L), {
         size: 10
-      })], 8, lt))]))), 128))])]), N(`section`, Z, [N(`span`, ut, k(f(G)(`Background`)), 1), N(`div`, dt, [(w(!0), g(C, null, _(f(pe), e => (w(), g(`button`, {
+      })], 8, lt))]))), 128))])]), N(`section`, Z, [N(`span`, ut, k(f(G)(`Background`)), 1), N(`div`, dt, [(w(true), g(C, null, _(f(pe), e => (w(), g(`button`, {
         key: e,
         type: `button`,
         class: d([`h-7 rounded-md text-xs transition-colors`, result.current.backgroundKind === e ? `bg-background font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
@@ -612,7 +612,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         onClick: R
       }, [E(f(e), {
         size: 14
-      }), h(` ` + k(f(G)(`BackgroundChooseImage`)), 1)], 8, ht), O.value && !F.value.length && !result.current.backgroundImage ? (w(), g(`div`, gt, k(f(G)(`BackgroundLoading`)), 1)) : F.value.length ? (w(), g(`div`, _t, [(w(!0), g(C, null, _(F.value, e => (w(), g(`button`, {
+      }), h(` ` + k(f(G)(`BackgroundChooseImage`)), 1)], 8, ht), O.value && !F.value.length && !result.current.backgroundImage ? (w(), g(`div`, gt, k(f(G)(`BackgroundLoading`)), 1)) : F.value.length ? (w(), g(`div`, _t, [(w(true), g(C, null, _(F.value, e => (w(), g(`button`, {
         key: e.id,
         type: `button`,
         class: d([`relative h-12 overflow-hidden rounded-md border border-border disabled:opacity-50`, te.value === e.id ? `ring-2 ring-primary` : ``]),
@@ -624,7 +624,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         alt: e.name,
         loading: `lazy`,
         class: `size-full object-cover`
-      }, null, 8, yt)], 10, vt))), 128))])) : M(``, !0), !O.value && !F.value.length && !result.current.backgroundImage ? (w(), g(`p`, bt, k(f(G)(`BackgroundImageEmptyHint`)), 1)) : M(``, !0), O.value ? M(``, !0) : (w(), g(`p`, xt, k(f(G)(`BackgroundImageDesc`)), 1)), A.value ? (w(), g(`p`, St, k(A.value), 1)) : M(``, !0)])) : result.current.backgroundKind === `solid` ? (w(), g(`div`, Ct, [(w(!0), g(C, null, _(f(B), e => (w(), g(`button`, {
+      }, null, 8, yt)], 10, vt))), 128))])) : M(``, true), !O.value && !F.value.length && !result.current.backgroundImage ? (w(), g(`p`, bt, k(f(G)(`BackgroundImageEmptyHint`)), 1)) : M(``, true), O.value ? M(``, true) : (w(), g(`p`, xt, k(f(G)(`BackgroundImageDesc`)), 1)), A.value ? (w(), g(`p`, St, k(A.value), 1)) : M(``, true)])) : result.current.backgroundKind === `solid` ? (w(), g(`div`, Ct, [(w(true), g(C, null, _(f(B), e => (w(), g(`button`, {
         key: e,
         type: `button`,
         class: d([`size-7 rounded-md border border-black/10 dark:border-white/15`, result.current.backgroundColor === e ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
@@ -642,7 +642,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           borderStyle: `solid`
         } : {}),
         title: f(G)(`CustomColor`)
-      }, [m.value ? M(``, !0) : (w(), x(f(n), {
+      }, [m.value ? M(``, true) : (w(), x(f(n), {
         key: 0,
         size: 13
       })), N(`input`, {
@@ -650,7 +650,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         class: `absolute inset-0 cursor-pointer opacity-0`,
         value: result.current.backgroundColor,
         onInput: _e
-      }, null, 40, Et)], 14, Tt)])) : result.current.backgroundKind === `gradient` ? (w(), g(`div`, Dt, [(w(!0), g(C, null, _(f(fe), e => (w(), g(`button`, {
+      }, null, 40, Et)], 14, Tt)])) : result.current.backgroundKind === `gradient` ? (w(), g(`div`, Dt, [(w(true), g(C, null, _(f(fe), e => (w(), g(`button`, {
         key: e.id,
         type: `button`,
         class: d([`size-7 rounded-md border border-black/10 dark:border-white/15`, result.current.gradientId === e.id ? `ring-2 ring-primary ring-offset-1 ring-offset-background` : ``]),
@@ -693,7 +693,7 @@ var He = I(`grid-3x3`, [[`rect`, {
             shadow: t
           });
         }
-      }, null, 8, [`model-value`, `min`, `max`])])]), N(`section`, Ut, [N(`span`, Wt, k(f(G)(`Frame`)), 1), N(`div`, Gt, [(w(!0), g(C, null, _(f(oe), text => (w(), g(`button`, {
+      }, null, 8, [`model-value`, `min`, `max`])])]), N(`section`, Ut, [N(`span`, Wt, k(f(G)(`Frame`)), 1), N(`div`, Gt, [(w(true), g(C, null, _(f(oe), text => (w(), g(`button`, {
         key: text,
         type: `button`,
         class: d([`flex flex-col items-center gap-1 rounded-lg p-1 transition-colors hover:bg-muted`, result.current.frame === text ? `bg-primary/[0.07] ring-1 ring-primary/50` : ``]),
@@ -701,7 +701,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         onClick: t => T({
           frame: text
         })
-      }, [N(`span`, qt, [text === `none` ? M(``, !0) : (w(), g(`span`, {
+      }, [N(`span`, qt, [text === `none` ? M(``, true) : (w(), g(`span`, {
         key: 0,
         class: d([`absolute inset-x-0 top-0 flex h-2 items-center gap-[2px] px-[3px]`, text.endsWith(`dark`) ? `bg-zinc-700` : `bg-zinc-200`])
       }, [i[7] ||= N(`i`, {
@@ -713,7 +713,7 @@ var He = I(`grid-3x3`, [[`rect`, {
       }, null, -1), text.startsWith(`browser`) ? (w(), g(`i`, {
         key: 0,
         class: d([`ml-[2px] h-[3px] flex-1 rounded-full`, text.endsWith(`dark`) ? `bg-zinc-500` : `bg-white`])
-      }, null, 2)) : M(``, !0)], 2))]), N(`span`, Jt, k(f(G)(p[text])), 1)], 10, Kt))), 128))])]), N(`section`, Yt, [N(`span`, Xt, k(f(G)(`Ratio`)), 1), N(`div`, Zt, [(w(!0), g(C, null, _(f(de), e => (w(), g(`button`, {
+      }, null, 2)) : M(``, true)], 2))]), N(`span`, Jt, k(f(G)(p[text])), 1)], 10, Kt))), 128))])]), N(`section`, Yt, [N(`span`, Xt, k(f(G)(`Ratio`)), 1), N(`div`, Zt, [(w(true), g(C, null, _(f(de), e => (w(), g(`button`, {
         key: e,
         type: `button`,
         class: d([`h-7 rounded-md text-[11px] tabular-nums transition-colors`, result.current.ratio === e ? `bg-background font-semibold text-foreground shadow-[0_1px_3px_rgb(0_0_0/0.08)]` : `text-muted-foreground hover:text-foreground`]),
@@ -820,16 +820,16 @@ function pn(e) {
   function C() {
     F();
     let e = c.value.at(-1);
-    e !== void 0 && (l.value = [_(), ...l.value].slice(0, fn), c.value = c.value.slice(0, -1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
+    e !== undefined && (l.value = [_(), ...l.value].slice(0, fn), c.value = c.value.slice(0, -1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
   }
   function w() {
     F();
     let e = l.value[0];
-    e !== void 0 && (c.value = [...c.value, _()].slice(-100), l.value = l.value.slice(1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
+    e !== undefined && (c.value = [...c.value, _()].slice(-100), l.value = l.value.slice(1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
   }
   function T() {
     let e = r.value;
-    return e ? (y(t.value.filter(t => t.id !== e)), r.value = null, !0) : !1;
+    return e ? (y(t.value.filter(t => t.id !== e)), r.value = null, true) : false;
   }
   function E(e) {
     F(), a.value = e, e !== `select` && (r.value = null);
@@ -916,7 +916,7 @@ function pn(e) {
       handle: m,
       original: f.value,
       before: _()
-    }, !0;
+    }, true;
     if (a.value === `select`) {
       let e = k(c, l);
       return A(e), e && (u = {
@@ -926,11 +926,11 @@ function pn(e) {
         startY: c.y,
         original: e,
         before: _()
-      }), !0;
+      }), true;
     }
     if (a.value === `text`) {
       let e = k(c, l);
-      if (e?.kind === `text`) return A(e), N(e), !0;
+      if (e?.kind === `text`) return A(e), N(e), true;
       let n = ln(`text`, s.value, p),
         a = {
           id: dn(),
@@ -941,7 +941,7 @@ function pn(e) {
           y: c.y - n * .65,
           text: ``
         };
-      return d = _(), t.value = [...t.value, a], r.value = a.id, i.value = a.id, !0;
+      return d = _(), t.value = [...t.value, a], r.value = a.id, i.value = a.id, true;
     }
     if (a.value === `number`) {
       let e = {
@@ -953,7 +953,7 @@ function pn(e) {
         y: c.y,
         value: M()
       };
-      return y([...t.value, e]), r.value = e.id, !0;
+      return y([...t.value, e]), r.value = e.id, true;
     }
     let h = a.value,
       g = {
@@ -985,7 +985,7 @@ function pn(e) {
       annotation: v,
       startX: c.x,
       startY: c.y
-    }, !0;
+    }, true;
   }
   function re(e, t) {
     let r = u;
@@ -1030,7 +1030,7 @@ function pn(e) {
     } : {
       x: r.original.x1,
       y: r.original.y1
-    }, e, r.original.kind, !0)), b(r.id, we(r.original, r.handle, i.x, i.y));
+    }, e, r.original.kind, true)), b(r.id, we(r.original, r.handle, i.x, i.y));
   }
   function I() {
     let i = u;
@@ -1056,7 +1056,7 @@ function pn(e) {
     n?.kind === `text` && N(n);
   }
   function ie() {
-    return n.value ? (n.value = null, u = null, !0) : !1;
+    return n.value ? (n.value = null, u = null, true) : false;
   }
   function ae() {
     return u !== null;
@@ -1176,7 +1176,7 @@ var mn = {
           height: 0
         }),
         B = S(null),
-        pe = S(!1),
+        pe = S(false),
         V = S(0),
         we = S(-1),
         H = S(``),
@@ -1184,8 +1184,8 @@ var mn = {
         W = j(() => Math.max(1, l.value?.scale ?? 1)),
         K = pn(() => W.value),
         Ke = De(),
-        qe = !1,
-        Je = !1,
+        qe = false,
+        Je = false,
         q = null,
         J = null,
         Xe = 0,
@@ -1316,7 +1316,7 @@ var mn = {
       }
       function dt() {
         if (!qe && T.value && I.value.balance) {
-          qe = !0;
+          qe = true;
           try {
             P.value = Se(T.value, W.value);
           } catch {
@@ -1446,7 +1446,7 @@ var mn = {
         if (!result.ok) throw Error(result.error.message);
         return result.data;
       }
-      async function Dt(e, t = !1) {
+      async function Dt(e, t = false) {
         await Tt(`copy`, async (r, i) => {
           Et(await editor.copy({
             id: i,
@@ -1504,7 +1504,7 @@ var mn = {
       }
       async function Nt(e) {
         if (!pe.value) {
-          pe.value = !0;
+          pe.value = true;
           try {
             L.value = Et(await editor.savePreset({
               name: e,
@@ -1515,7 +1515,7 @@ var mn = {
               reason: ut(e)
             }));
           } finally {
-            pe.value = !1;
+            pe.value = false;
           }
         }
       }
@@ -1541,11 +1541,11 @@ var mn = {
           return;
         }
         if (e.key === `Enter`) {
-          e.preventDefault(), Dt(!0);
+          e.preventDefault(), Dt(true);
           return;
         }
         if (r && n === `c`) {
-          e.preventDefault(), Dt(!1);
+          e.preventDefault(), Dt(false);
           return;
         }
         if (r && n === `s`) {
@@ -1584,17 +1584,17 @@ var mn = {
           }));
           return;
         }
-        Je = !0, Ne(T.value), T.value = t, l.value = el, I.value = {
+        Je = true, Ne(T.value), T.value = t, l.value = el, I.value = {
           ...el.style
-        }, L.value = el.presets, oe.value = el.backgroundLibrary ?? [], P.value = null, qe = !1, Ke.key = ``, dt(), K.load(el.annotations), K.setTool(el.annotations.length > 0 ? `select` : K.tool.value), se.value = It(t), z.value = el.runOcr ? `text` : `style`, U.value = null, await ee(), Je = !1, V.value = 0, we.value = -1, ft(), el.autoCopy && Dt(!1, !0);
+        }, L.value = el.presets, oe.value = el.backgroundLibrary ?? [], P.value = null, qe = false, Ke.key = ``, dt(), K.load(el.annotations), K.setTool(el.annotations.length > 0 ? `select` : K.tool.value), se.value = It(t), z.value = el.runOcr ? `text` : `style`, U.value = null, await ee(), Je = false, V.value = 0, we.value = -1, ft(), el.autoCopy && Dt(false, true);
       }
       function Rt() {
-        K.finishTextEditing(), $(), l.value = null, Ne(T.value), T.value = null, P.value = null, qe = !1, Ke.key = ``, Ne(Ke.canvas), Ke.canvas = null, K.load([]), se.value = ``, U.value = null;
+        K.finishTextEditing(), $(), l.value = null, Ne(T.value), T.value = null, P.value = null, qe = false, Ke.key = ``, Ne(Ke.canvas), Ke.canvas = null, K.load([]), se.value = ``, U.value = null;
       }
       return v(I, () => {
         dt(), !Je && (V.value += 1, jt(), Q());
       }, {
-        deep: !0
+        deep: true
       }), v(() => [I.value.backgroundKind, I.value.backgroundImage, I.value.backgroundImageSource], () => {
         Je || $();
       }), v(() => K.annotations.value, () => {
@@ -1624,7 +1624,7 @@ var mn = {
       }, [N(`div`, hn, [E(f(ce), {
         size: 15,
         class: `text-primary`
-      }), h(k(f(G)(`EditorTitle`)), 1)]), N(`div`, gn, [(w(!0), g(C, null, _(ot.value, e => (w(), g(`button`, {
+      }), h(k(f(G)(`EditorTitle`)), 1)]), N(`div`, gn, [(w(true), g(C, null, _(ot.value, e => (w(), g(`button`, {
         key: e.tool,
         type: `button`,
         class: d([`inline-flex size-8 items-center justify-center rounded-lg transition-colors`, f(K).tool.value === e.tool ? `bg-primary/12 text-primary` : `text-foreground/75 hover:bg-black/[0.05] dark:hover:bg-white/10`]),
@@ -1637,7 +1637,7 @@ var mn = {
         size: 16
       }))], 42, _n))), 128)), t[19] ||= N(`span`, {
         class: `mx-1.5 h-5 w-px bg-border`
-      }, null, -1), (w(!0), g(C, null, _(f(sn), e => (w(), g(`button`, {
+      }, null, -1), (w(true), g(C, null, _(f(sn), e => (w(), g(`button`, {
         key: e,
         type: `button`,
         class: `inline-flex size-6 items-center justify-center rounded-full`,
@@ -1743,7 +1743,7 @@ var mn = {
         onInput: t[10] ||= e => f(K).updateEditingText(e.target.value),
         onKeydown: xt,
         onBlur: St
-      }, null, 44, Tn)) : M(``, !0)], 4)) : (w(), g(`div`, En, [E(f(R), {
+      }, null, 44, Tn)) : M(``, true)], 4)) : (w(), g(`div`, En, [E(f(R), {
         size: 16,
         class: `animate-spin`
       }), h(k(f(G)(`EditorLoading`)), 1)])), E(te, {
@@ -1757,7 +1757,7 @@ var mn = {
           type: `button`,
           class: `font-semibold text-emerald-300 hover:underline dark:text-emerald-700`,
           onClick: t[11] ||= e => U.value.action.run()
-        }, k(U.value.action.label), 1)) : M(``, !0)])) : M(``, !0)]),
+        }, k(U.value.action.label), 1)) : M(``, true)])) : M(``, true)]),
         _: 1
       })], 512), N(`footer`, On, [N(`div`, kn, [we.value === V.value && !B.value ? (w(), x(f(ie), {
         key: 0,
@@ -1767,7 +1767,7 @@ var mn = {
         key: 1,
         size: 14,
         class: `shrink-0 animate-spin`
-      })) : M(``, !0), N(`span`, An, k(rt.value), 1), it.value ? (w(), g(`span`, jn, `· ` + k(it.value), 1)) : M(``, !0)]), N(`div`, Mn, [E(f(c), {
+      })) : M(``, true), N(`span`, An, k(rt.value), 1), it.value ? (w(), g(`span`, jn, `· ` + k(it.value), 1)) : M(``, true)]), N(`div`, Mn, [E(f(c), {
         variant: `ghost`,
         size: `sm`,
         class: `text-xs`,
@@ -1800,7 +1800,7 @@ var mn = {
         class: `rounded-r-none text-xs`,
         disabled: !l.value || B.value !== null,
         title: `${f(ct)}S`,
-        onClick: t[12] ||= e => Ot(!1)
+        onClick: t[12] ||= e => Ot(false)
       }, {
         default: y(() => [B.value === `save` ? (w(), x(f(R), {
           key: 0,
@@ -1834,13 +1834,13 @@ var mn = {
         }, {
           default: y(() => [E(f(ve), {
             class: `text-xs`,
-            onSelect: t[13] ||= e => Ot(!1)
+            onSelect: t[13] ||= e => Ot(false)
           }, {
             default: y(() => [h(k(f(G)(`ActionSaveToFolder`)), 1)]),
             _: 1
           }), E(f(ve), {
             class: `text-xs`,
-            onSelect: t[14] ||= e => Ot(!0)
+            onSelect: t[14] ||= e => Ot(true)
           }, {
             default: y(() => [h(k(f(G)(`ActionSaveAs`)), 1)]),
             _: 1
@@ -1853,7 +1853,7 @@ var mn = {
         class: `min-w-24 text-xs`,
         disabled: !l.value || B.value !== null,
         title: f(G)(`ActionCopyHint`),
-        onClick: t[15] ||= e => Dt(!0)
+        onClick: t[15] ||= e => Dt(true)
       }, {
         default: y(() => [B.value === `copy` ? (w(), x(f(R), {
           key: 0,
@@ -1891,7 +1891,7 @@ var mn = {
         supported: l.value.ocrSupported,
         "auto-run": l.value.runOcr,
         onToast: Z
-      }, null, 8, [`session-id`, `supported`, `auto-run`])), [[ne, z.value === `text`]]) : M(``, !0)])])])]));
+      }, null, 8, [`session-id`, `supported`, `auto-run`])), [[ne, z.value === `text`]]) : M(``, true)])])])]));
     }
   });
 export { zn as default };
