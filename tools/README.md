@@ -73,6 +73,24 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 `max`/`min`/`url`/`api`/`err`/`msg`/`row`/`col`… 约 150 个），否则会把有意义的
 短名也改掉。放宽后全库可新增命名约 1176 处（byfunc 620 为最多）。
 
+## import 别名语义化（前端专属）
+
+前端主 bundle 的 42 条 `import { A as e, At as t … } from "./xxx.js"` 中，325 个别名
+有 **303 个是 ≤2 字符**。它们不是局部变量，而是模块级绑定（`binding.kind === 'module'`），
+遮蔽了大量短名。
+
+做法：
+1. 用 `Program` scope 的 `bindings` 取 `kind === 'module'` 的绑定，按
+   `referencePaths.length` 排优先级（只处理引用 ≥100 的）
+2. 从 `binding.path` 反查 `ImportSpecifier.imported` 得到原导出名，从
+   `ImportDeclaration.source` 得到来源模块
+3. 命名 = **来源缩写 + 导出名**（`vue` + `N` → `vueN`；`dialog` + `T` → `dialogT`；
+   `Switch` + `R` → `uiSwitchR`），个别已知语义直接命名（`H` → `withCtx`）
+4. 必须过 `GLOBALS` 黑名单与 `hasBinding` 检查
+
+实测效果：`H(n.$slots, 'default')` → `withCtx(n.$slots, 'default')`；
+`unref(je)(...)` → `unref(uiSwitchXt)(...)`。表项与缩写表需人工维护，不宜自动化过度。
+
 ## 尚未安全的操作
 
 - **组件级物理拆分**：实测顶层 9986 声明零重复，但一条 `var` 逗号链常含多个组件；
