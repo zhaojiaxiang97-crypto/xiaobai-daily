@@ -16,10 +16,11 @@ const ROOT = path.resolve(__dirname, '..', 'src');
 
 const KEYWORDS = new Set(['debugger','default','class','function','delete','new','in','do','if','else','for','while','switch','case','break','continue','return','throw','try','catch','finally','var','let','const','typeof','instanceof','of','this','super','extends','implements','interface','package','private','protected','public','static','yield','await','enum','export','import','with','void','null','true','false','async','arguments','eval','window','document','globalThis','require','module','exports']);
 const GENERIC = new Set(['value','target','currentTarget','data','type','name','length','size','width','height','left','right','top','bottom','x','y','z','key','code','style','items','children','parent','toString','then','call','apply','bind','id','url','status','text','json','error','message','result','count','index','start','end','map','filter','find','slice','push','pop','shift','unshift','splice','concat','join','split','replace','trim','includes','indexOf','forEach','some','every','reduce','sort','reverse','test','exec','match','matchAll','search','charAt','charCodeAt','at','raw','constructor','prototype']);
+const GLOBALS = new Set(['window','document','globalThis','global','process','console','module','exports','require','__dirname','__filename','undefined','NaN','Infinity','self','top','parent','frames','location','navigator','history','screen','localStorage','sessionStorage','indexedDB','fetch','XMLHttpRequest','WebSocket','Worker','Element','Node','Event','CustomEvent','Promise','Symbol','Proxy','Reflect','Map','Set','WeakMap','WeakSet','Array','Object','String','Number','Boolean','Date','RegExp','Error','JSON','Math','Intl','Buffer','setTimeout','setInterval','clearTimeout','clearInterval','requestAnimationFrame','queueMicrotask','structuredClone','atob','btoa','crypto','performance','electron','ipcMain','ipcRenderer','shell','dialog','Menu','Tray','BrowserWindow','webContents','nativeImage','clipboard','protocol','net','systemPreferences','contextBridge','webFrame','MessageChannel','MessagePort','BroadcastChannel','AbortController','AbortSignal','URL','URLSearchParams','FormData','Blob','File','FileReader','TextEncoder','TextDecoder','EventTarget','ResizeObserver','IntersectionObserver','MutationObserver','HTMLElement','SVGElement','Image','Audio','Video','Storage','Cache']);
 const COMPRESSED = /^[a-zA-Z]$|^[a-zA-Z][0-9]$|^[a-z]{2}$|^_0x[0-9a-f]+$/;
 const IDENT = /^[A-Za-z_$][\w$]*$/;
 
-const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, files: 0 };
+const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, byfunc: 0, files: 0 };
 
 // ---- 参数画像 ----
 function inferParam(paramName, fnPath) {
@@ -137,6 +138,72 @@ function applyForms(ast) {
   return n;
 }
 
+// ---- 名词/别名/方法结果命名 ----
+const VERBS = /^(get|set|load|save|fetch|read|write|resolve|create|build|make|generate|compute|parse|format|normalize|find|query|list|select|extract|open|close|init|handle|process|update|delete|remove|add|run|start|stop|emit|register|sync|upload|download|analyze|capture|execute|post|put|patch|render|mount|unmount|watch|observe|track|merge|split|validate|verify|assert|ensure|apply|check|is|has|should|on|can|will|to|from|with|use|bind|unbind|toggle|show|hide|push|pop|insert|append|prepend|serialize|deserialize|encode|decode|encrypt|decrypt|copy|move|rename|link|unlink|exists|count|sum|calc|calculate|estimate|dedupe|dedup|redact|sanitize|escape|unescape|mask|unmask|persist|restore|backup|migrate|seed|reset|clear|flush|drain|poll|schedule|queue|dispatch|record|log|warn|error|debug|trace|notify|broadcast|relay|forward|proxy)/;
+const METHOD_RESULT = {
+  parse: ['parsed'], stringify: ['serialized'], join: ['joined'], split: ['parts'],
+  trim: ['trimmed'], toLowerCase: ['lowercased'], toUpperCase: ['uppercased'],
+  slice: ['part'], substring: ['part'], replace: ['replaced'], replaceAll: ['replaced'],
+  filter: ['filtered'], map: ['mapped'], reduce: ['reduced'], find: ['found'],
+  concat: ['combined'], toISOString: ['isoString'], keys: ['keyList'],
+  values: ['valueList'], entries: ['entryList'], toString: ['text'],
+};
+function nounsFromFuncName(fn) {
+  if (!fn || fn.length < 6) return [];
+  let rest = fn, changed = true;
+  while (changed) {
+    changed = false;
+    const m = rest.match(VERBS);
+    if (m && m[0].length < rest.length) { rest = rest.slice(m[0].length); changed = true; }
+  }
+  if (!rest || rest.length < 3) return [];
+  return rest.split(/(?=[A-Z])/).map(w => w.toLowerCase()).filter(w => w.length >= 3);
+}
+function applyByFunc(ast) {
+  let n = 0;
+  traverse(ast, {
+    Function(pp) {
+      const fnName = (pp.node.id && pp.node.id.name) || (t.isIdentifier(pp.node.key) ? pp.node.key.name : null) || (pp.node.key && t.isStringLiteral(pp.node.key) ? pp.node.key.value : null);
+      if (!fnName) return;
+      const nouns = nounsFromFuncName(fnName);
+      if (!nouns.length) return;
+      pp.node.params.forEach((pr, idx) => {
+        if (!t.isIdentifier(pr) || !COMPRESSED.test(pr.name)) return;
+        const noun = nouns[Math.min(idx, nouns.length - 1)];
+        if (!noun) return;
+        for (const cand of [noun, noun + 'Value', noun + 'Input']) {
+          if (GLOBALS.has(cand) || KEYWORDS.has(cand)) continue;
+          if (!/^[a-z][A-Za-z0-9]{2,28}$/.test(cand)) continue;
+          if (pp.scope.hasBinding(cand)) continue;
+          try { pp.scope.rename(pr.name, cand); stats.byfunc++; n++; break; } catch {}
+        }
+      });
+    },
+    VariableDeclarator(pp) {
+      const { id, init } = pp.node;
+      if (!t.isIdentifier(id) || !COMPRESSED.test(id.name) || !init) return;
+      let cands = null;
+      if (t.isIdentifier(init) && init.name !== id.name && !COMPRESSED.test(init.name) && init.name.length >= 4) {
+        cands = [init.name, init.name + 'Alias'];
+      } else if (t.isCallExpression(init) || t.isOptionalCallExpression(init)) {
+        const callee = init.callee;
+        if (t.isMemberExpression(callee) && !callee.computed && t.isIdentifier(callee.property)) {
+          const mkey = callee.property.name;
+          if (Object.prototype.hasOwnProperty.call(METHOD_RESULT, mkey)) cands = METHOD_RESULT[mkey];
+        }
+      }
+      if (!cands) return;
+      for (const cand of cands) {
+        if (GLOBALS.has(cand) || KEYWORDS.has(cand)) continue;
+        if (!/^[a-z][A-Za-z0-9]{2,28}$/.test(cand)) continue;
+        if (pp.scope.hasBinding(cand)) continue;
+        try { pp.scope.rename(id.name, cand); stats.byfunc++; n++; break; } catch {}
+      }
+    },
+  });
+  return n;
+}
+
 function processFile(file) {
   let src;
   try { src = fs.readFileSync(file, 'utf8'); } catch { return; }
@@ -210,6 +277,8 @@ function processFile(file) {
   if (!only || only === 'forms') { n += applyForms(ast); }
   // 6) 回调位置命名
   if (!only || only === 'callbacks') { n += applyCallbacks(ast); }
+  // 7) 名词/别名/方法结果命名
+  if (!only || only === 'byfunc') { n += applyByFunc(ast); }
 
   if (n > 0 && !dry) {
     fs.writeFileSync(file, generate(ast, { compact: false, comments: true, jsescOption: { minimal: true } }).code);

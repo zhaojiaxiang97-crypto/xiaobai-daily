@@ -25,6 +25,7 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | `--only=final` | `void 0`→`undefined`、`!0/!1`→`true/false`、字符串 `\x`/`\u` 转义还原 | 低 |
 | `--only=forms` | `const x = await obj.getY()`→`y`、`new Cls()`→`cls`、`ref([])`→`items`/`ref(null)`→`target` | 低 |
 | `--only=callbacks` | `.then(x=>)`→`result`、`.catch(x=>)`→`err`、`.map(x=>)`→`item`、`.reduce((a,b)=>`→`acc,cur`、`.sort((a,b)=>`→`left,right` | 低 |
+| `--only=byfunc` | 参数按**函数名名词**命名（`openTodo(x)`→`todo`）、`const x = 语义名`→取右侧名、`.parse()`→`parsed`、`.join()`→`joined` | 中（必须过全局黑名单） |
 | 不带 `--only` | 依次执行以上全部 | — |
 
 统一入口：`node tools/deobf.cjs [--only=...] [--dry]`（遍历 `src/**/*.js`）
@@ -33,6 +34,14 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 
 1. **保留字**：prop 名 `debugger`/`default`/`class` 等不能直接当变量名——必须先过滤
    完整关键字表，否则生成 `const debugger = ...` 直接 SyntaxError。
+1b. **全局内置对象（最严重）**：函数名含 `Window` 时名词规则会生成 `window` 形参，
+   遮蔽全局 `window` 引发 `Cannot access 'window' before initialization`（TDZ），
+   页面白屏。必须维护独立的 `GLOBALS` 黑名单（window/document/process/console/
+   require/electron/ipcMain/BrowserWindow/Promise/Map/Set/URL/…），它**不等于**
+   关键字表。已知库/框架名也应纳入。
+1c. **原型链陷阱**：`MAP[callee.property.name]` 当键名是 `toString`/`toLocaleString`
+   时会命中 `Object.prototype` 上的同名方法并返回函数对象。映射表查询必须用
+   `Object.prototype.hasOwnProperty.call(MAP, key)` 或 `Object.create(null)`。
 2. **原型/方法名**：`map`/`filter`/`value`/`data` 这类通用词若用作变量名，会与后续
    属性访问混淆，纳入黑名单。
 3. **正则内的 `\x`/`\u`**：属性扫描会命中正则字面量（`/[\x00-\x1f]/`），这些是
@@ -49,6 +58,7 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | locals（prop 形态） | 28 | 616 |
 | forms（await/new/ref） | 351 | 450 |
 | callbacks（回调位置） | 818 | 1630 |
+| byfunc（函数名词/别名/方法结果） | 3176 | 1706 |
 | final（void 0 / !0 / 转义） | 3008 / 12612 / 89 文件 | 同左（全库） |
 
 ## 尚未安全的操作
