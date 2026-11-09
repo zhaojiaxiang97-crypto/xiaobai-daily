@@ -98,6 +98,21 @@ screenshot-beautifier→beautifier、en-US-player→player 等）。
 实测效果：`H(n.$slots, 'default')` → `withCtx(n.$slots, 'default')`；
 `unref(je)(...)` → `unref(uiSwitchXt)(...)`。表项与缩写表需人工维护，不宜自动化过度。
 
+## 模式化命名（前端 Vue 结构）
+
+前端压缩代码里有三类高频**结构化模式**，可整体识别命名，覆盖量远超逐变量推断：
+
+1. **i18n translate**：`const { t: X, locale: Y } = vueN()` —— `X` 恒为翻译函数，
+   命名 `translate`（判据：X 在作用域内被当作函数调用）。同一文件的多个组件 setup
+   会重复出现该模式。
+2. **组件变量**：`X = defineComponent({ __name: 'SelectItem' })`（可能被
+   `_export_sfc` 包裹）—— 按 `__name` 命名（`SelectItem`/`SelectItemComponent`）。
+   Vue 组件的 `__name` 是可靠的语义源。
+3. **渲染缓存**：`X[N] ||= ...`（NumericLiteral 下标 + `||=`）—— Vue 编译产物
+   的 patch cache，命名 `cache`。
+
+这三类在本项目共 2315 个候选、实际应用 765 个（其余因作用域冲突跳过）。
+
 ## 尚未安全的操作
 
 - **组件级物理拆分**：实测顶层 9986 声明零重复，但一条 `var` 逗号链常含多个组件；
