@@ -74,8 +74,8 @@ function ie(e) {
   };
 }
 function ae(e) {
-  let t = new OrbitControlsV();
-  return t.onBeforeCompile = t => {
+  let orbitControlsV = new OrbitControlsV();
+  return orbitControlsV.onBeforeCompile = t => {
     t.uniforms.uTime = e.uniforms.uTime, t.uniforms.uGrow = e.uniforms.uGrow, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute float aHeight;
 attribute float aDelay;
@@ -85,7 +85,7 @@ uniform float uGrow;`).replace(`#include <begin_vertex>`, `#include <begin_verte
 float barcodeGrowth = clamp((uTime - aDelay) / uGrow, 0.0, 1.0);
 barcodeGrowth = 1.0 - pow(1.0 - barcodeGrowth, 3.0);
 transformed.y *= max(aHeight * mix(1.0, ${W.toFixed(2)}, aDim) * barcodeGrowth, 0.001);`);
-  }, t.customProgramCacheKey = () => `barcode-city-building`, t;
+  }, orbitControlsV.customProgramCacheKey = () => `barcode-city-building`, orbitControlsV;
 }
 var oe = class {
     root = new OrbitControlsF();
@@ -120,9 +120,9 @@ var oe = class {
         r = n.length;
       this.heights = new Float32Array(r), this.dims = new Float32Array(r);
       let float32Array = new Float32Array(r),
-        a = new OrbitControlsH(),
-        o = new OrbitControlsE(),
-        s = new OrbitControlsB(),
+        orbitControlsH = new OrbitControlsH(),
+        orbitControlsE = new OrbitControlsE(),
+        orbitControlsB = new OrbitControlsB(),
         c = new OrbitControlsE();
       this.buildingGeometry = new OrbitControlsA(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new OrbitControlsP(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new OrbitControlsP(float32Array, 1)), this.dimAttribute = new OrbitControlsP(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new OrbitControlsM(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new OrbitControlsP(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
       let l = 0,
@@ -130,9 +130,9 @@ var oe = class {
       n.forEach((item, t) => {
         let n = Math.max(U, item.end - item.start - H),
           r = threestageO(item) ? V : B * threestageI(item);
-        this.heights[t] = r, u = Math.max(u, r), float32Array[t] = threestageA(item, this.set.dayCount, re, J), l = Math.max(l, float32Array[t]), o.set((item.start + item.end) / 2 - z, 0, this.rowZ(item.dayIndex)), c.set(n, 1, this.layout.buildingDepth), a.compose(o, s, c), this.buildings.setMatrixAt(t, a);
+        this.heights[t] = r, u = Math.max(u, r), float32Array[t] = threestageA(item, this.set.dayCount, re, J), l = Math.max(l, float32Array[t]), orbitControlsE.set((item.start + item.end) / 2 - z, 0, this.rowZ(item.dayIndex)), c.set(n, 1, this.layout.buildingDepth), orbitControlsH.compose(orbitControlsE, orbitControlsB, c), this.buildings.setMatrixAt(t, orbitControlsH);
       }), this.buildings.instanceMatrix.needsUpdate = true, this.maxDelay = l, this.trackGeometry = new OrbitControlsA(1, 1, 1).translate(0, -.5, 0), this.tracks = new OrbitControlsM(this.trackGeometry, this.trackMaterial, this.set.dayCount);
-      for (let e = 0; e < this.set.dayCount; e += 1) o.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), a.compose(o, s, c), this.tracks.setMatrixAt(e, a);
+      for (let e = 0; e < this.set.dayCount; e += 1) orbitControlsE.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), orbitControlsH.compose(orbitControlsE, orbitControlsB, c), this.tracks.setMatrixAt(e, orbitControlsH);
       this.tracks.instanceMatrix.needsUpdate = true, this.root.add(this.tracks, this.buildings), this.colorSync = new L([this.buildings]);
       let d = this.set.dayCount * this.layout.rowPitch / 2,
         f = -z - this.layout.leftLabelSpace,
@@ -325,12 +325,12 @@ function ye(e) {
     _ = handler(1, 1, 1, 1, 0, 0),
     v = handler(1, 1, 0, 1, 0, 0);
   count.push(h, g, _, h, _, v);
-  let y = new OrbitControlsO();
-  return y.setAttribute(`position`, new OrbitControlsD(emptyItems, 3)), y.setAttribute(`normal`, new OrbitControlsD(n, 3)), y.setIndex(count), y;
+  let orbitControlsO = new OrbitControlsO();
+  return orbitControlsO.setAttribute(`position`, new OrbitControlsD(emptyItems, 3)), orbitControlsO.setAttribute(`normal`, new OrbitControlsD(n, 3)), orbitControlsO.setIndex(count), orbitControlsO;
 }
 function be(e) {
-  let t = new OrbitControlsV();
-  return t.onBeforeCompile = t => {
+  let orbitControlsV = new OrbitControlsV();
+  return orbitControlsV.onBeforeCompile = t => {
     t.uniforms.uTime = e.uniforms.uTime, t.uniforms.uGrow = e.uniforms.uGrow, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute vec2 aArc;
 attribute vec2 aRadius;
@@ -348,7 +348,7 @@ vec3 barcodeRadial = vec3(sin(barcodeTheta), 0.0, -cos(barcodeTheta));
 vec3 barcodeTangent = vec3(cos(barcodeTheta), 0.0, sin(barcodeTheta));
 vec3 objectNormal = barcodeTangent * normal.x + vec3(0.0, normal.y, 0.0) + barcodeRadial * normal.z;`).replace(`#include <begin_vertex>`, `
 vec3 transformed = barcodeRadial * barcodeRadius + vec3(0.0, aLayer.x + position.y * aLayer.y, 0.0);`);
-  }, t.customProgramCacheKey = () => `barcode-tower-arc`, t;
+  }, orbitControlsV.customProgramCacheKey = () => `barcode-tower-arc`, orbitControlsV;
 }
 var xe = class {
     root = new OrbitControlsF();
@@ -411,19 +411,19 @@ var xe = class {
           let i = this.instanceOf[n];
           int32Array[i] = n, float32Array[i * 2] = e.start / Y * X, float32Array[i * 2 + 1] = e.end / Y * X, l[i * 2] = Z, l[i * 2 + 1] = this.outerRadii[n], u[i * 2] = this.layerBottom(e.dayIndex), u[i * 2 + 1] = this.layout.layerHeight, d[i] = threestageA(e, r, ge, 0), c = Math.max(c, d[i]);
         }), a.setAttribute(`aArc`, new OrbitControlsP(float32Array, 2)), a.setAttribute(`aRadius`, new OrbitControlsP(l, 2)), a.setAttribute(`aLayer`, new OrbitControlsP(u, 2)), a.setAttribute(`aDelay`, new OrbitControlsP(d, 1));
-        let m = new OrbitControlsP(f, 1);
-        a.setAttribute(`aDim`, m);
-        let h = new OrbitControlsM(a, this.material, i);
-        h.instanceColor = new OrbitControlsP(new Float32Array(i * 3), 3), h.frustumCulled = false, this.tiers[t] = {
-          mesh: h,
+        let orbitControlsP = new OrbitControlsP(f, 1);
+        a.setAttribute(`aDim`, orbitControlsP);
+        let orbitControlsM = new OrbitControlsM(a, this.material, i);
+        orbitControlsM.instanceColor = new OrbitControlsP(new Float32Array(i * 3), 3), orbitControlsM.frustumCulled = false, this.tiers[t] = {
+          mesh: orbitControlsM,
           geometry: a,
           blockIndexes: int32Array,
           dims: f,
-          dimAttribute: m
-        }, this.root.add(h);
+          dimAttribute: orbitControlsP
+        }, this.root.add(orbitControlsM);
       }), this.maxDelay = c, this.colorSync = new L(this.tiers.filter(Boolean).map(item => item.mesh)), this.baseGeometry = new OrbitControlsC(s + 4, s + 4, ve, 96);
-      let l = new OrbitControlsG(this.baseGeometry, this.baseMaterial);
-      l.position.y = _e - ve / 2, this.root.add(l);
+      let orbitControlsG = new OrbitControlsG(this.baseGeometry, this.baseMaterial);
+      orbitControlsG.position.y = _e - ve / 2, this.root.add(orbitControlsG);
       let u = this.layerBottom(Math.max(0, r - 1)) + this.layout.layerHeight,
         d = s + 12,
         emptyItems = [];
@@ -454,30 +454,30 @@ var xe = class {
         r = this.maxRadius + 6;
       for (let e = 0; e < 24; e += 3) {
         let i = e / 24 * X,
-          a = new OrbitControlsE(Math.sin(i), 0, -Math.cos(i));
+          orbitControlsE = new OrbitControlsE(Math.sin(i), 0, -Math.cos(i));
         emptyItems.push({
           key: `hour-${e}`,
           text: `${e}:00`,
           kind: `hour`,
-          position: a.clone().multiplyScalar(r).setY(labelsValue + .5),
-          facing: a
+          position: orbitControlsE.clone().multiplyScalar(r).setY(labelsValue + .5),
+          facing: orbitControlsE
         });
       }
-      let i = new OrbitControlsE(-1, 0, 0),
+      let orbitControlsE = new OrbitControlsE(-1, 0, 0),
         handler = e => new OrbitControlsE(-(this.maxRadius + 3), this.layerBottom(e) + this.layout.layerHeight / 2, 0);
       if (this.set.dayCount > 62) for (let count of labels.monthMarks) emptyItems.push({
         key: `month-${count.dayIndex}`,
         text: count.label,
         kind: `side`,
         position: handler(count.dayIndex),
-        facing: i
+        facing: orbitControlsE
       });else labels.dayLabels.forEach((item, t) => {
         item && emptyItems.push({
           key: `day-${t}`,
           text: item,
           kind: `side`,
           position: handler(t),
-          facing: i
+          facing: orbitControlsE
         });
       });
       return emptyItems;
@@ -641,7 +641,7 @@ var xe = class {
         payload = null,
         R = null,
         z = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
-        B = new OrbitControlsE();
+        orbitControlsE = new OrbitControlsE();
       function V(e, t) {
         emptyItems[t] = e instanceof HTMLElement ? e : null;
       }
@@ -671,7 +671,7 @@ var xe = class {
             visible = o.visible;
           visible && i.kind === `side` && (Math.abs(r - o.y) < Oe ? visible = false : r = o.y);
           let c = 1;
-          i.facing && (B.copy(k.camera.position).sub(i.position), B.dot(i.facing) < 0 && (c = ke)), a.style.visibility = visible ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
+          i.facing && (orbitControlsE.copy(k.camera.position).sub(i.position), orbitControlsE.dot(i.facing) < 0 && (c = ke)), a.style.visibility = visible ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
         }
       }
       function G(e) {

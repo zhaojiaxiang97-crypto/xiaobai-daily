@@ -1038,12 +1038,12 @@ function pn(e) {
       if (i.type === `draw`) {
         let i = n.value;
         if (n.value = null, !i) return;
-        let a = composeS(i),
+        let composeSResult = composeS(i),
           o = e();
-        if (i.kind !== `pen` && i.kind !== `highlighter` && (i.kind === `arrow` || i.kind === `line` ? Math.hypot(a.width, a.height) < 4 * o : a.width < 3 * o || a.height < 3 * o)) return;
+        if (i.kind !== `pen` && i.kind !== `highlighter` && (i.kind === `arrow` || i.kind === `line` ? Math.hypot(composeSResult.width, composeSResult.height) < 4 * o : composeSResult.width < 3 * o || composeSResult.height < 3 * o)) return;
         let s = i.kind === `rect` || i.kind === `ellipse` || i.kind === `mosaic` ? {
           ...i,
-          ...a
+          ...composeSResult
         } : i;
         y([...t.value, s]), r.value = s.id;
         return;
@@ -1183,7 +1183,7 @@ var mn = {
         U = vueBn(null),
         W = vueV(() => Math.max(1, l.value?.scale ?? 1)),
         K = pn(() => W.value),
-        Ke = composeN(),
+        composeNResult = composeN(),
         qe = false,
         Je = false,
         q = null,
@@ -1340,8 +1340,8 @@ var mn = {
           o = Math.max(1, Math.round(t.width * a)),
           s = Math.max(1, Math.round(t.height * a));
         (e.width !== o || e.height !== s) && (e.width = o, e.height = s);
-        let c = composeP(e);
-        c.setTransform(1, 0, 0, 1, 0, 0), composeI(c, {
+        let composePResult = composeP(e);
+        composePResult.setTransform(1, 0, 0, 1, 0, 0), composeI(composePResult, {
           source: n,
           scale: W.value,
           style: I.value,
@@ -1349,16 +1349,16 @@ var mn = {
           balance: P.value,
           onBackgroundLoaded: Q,
           hiddenAnnotationId: K.editingTextId.value
-        }, t, a, Ke), pt(c, a);
+        }, t, a, composeNResult), pt(composePResult, a);
       }
       function pt(e, t) {
         let n = Y.value,
           r = K.selected.value;
         if (!n || !r || K.editingTextId.value === r.id) return;
         let handler = e => e * $e.value,
-          a = composeS(r),
+          composeSResult = composeS(r),
           o = handler(4);
-        e.save(), e.setTransform(t, 0, 0, t, n.origin.x * t, n.origin.y * t), e.setLineDash([handler(4), handler(3)]), e.lineWidth = handler(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
+        e.save(), e.setTransform(t, 0, 0, t, n.origin.x * t, n.origin.y * t), e.setLineDash([handler(4), handler(3)]), e.lineWidth = handler(1), e.strokeStyle = `#10b981`, e.strokeRect(composeSResult.x - o, composeSResult.y - o, composeSResult.width + o * 2, composeSResult.height + o * 2), e.setLineDash([]);
         for (let t of composeC(r)) e.beginPath(), e.arc(t.x, t.y, handler(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = handler(1.5), e.stroke();
         e.restore();
       }
@@ -1535,7 +1535,7 @@ var mn = {
         let t = e.target;
         if (t && (t.tagName === `INPUT` || t.tagName === `TEXTAREA` || t.isContentEditable)) return;
         let lowercased = e.key.toLowerCase(),
-          r = screenshotToolI(e);
+          screenshotToolIResult = screenshotToolI(e);
         if (e.key === `Escape`) {
           e.preventDefault(), K.cancelDraft() ? Q() : K.selectedId.value ? (K.select(null), Q()) : Mt();
           return;
@@ -1544,19 +1544,19 @@ var mn = {
           e.preventDefault(), Dt(true);
           return;
         }
-        if (r && lowercased === `c`) {
+        if (screenshotToolIResult && lowercased === `c`) {
           e.preventDefault(), Dt(false);
           return;
         }
-        if (r && lowercased === `s`) {
+        if (screenshotToolIResult && lowercased === `s`) {
           e.preventDefault(), Ot(e.shiftKey);
           return;
         }
-        if (r && lowercased === `z`) {
+        if (screenshotToolIResult && lowercased === `z`) {
           e.preventDefault(), e.shiftKey ? K.redo() : K.undo(), Q();
           return;
         }
-        if (r && lowercased === `y`) {
+        if (screenshotToolIResult && lowercased === `y`) {
           e.preventDefault(), K.redo(), Q();
           return;
         }
@@ -1564,14 +1564,14 @@ var mn = {
           e.preventDefault(), K.deleteSelected(), Q();
           return;
         }
-        !r && !e.altKey && !e.ctrlKey && !e.metaKey && options[lowercased] && (e.preventDefault(), Ct(options[lowercased]));
+        !screenshotToolIResult && !e.altKey && !e.ctrlKey && !e.metaKey && options[lowercased] && (e.preventDefault(), Ct(options[lowercased]));
       }
       function It(e) {
         let t = Math.min(1, 96 / Math.max(e.width, e.height)),
-          n = composeM(e.width * t, e.height * t);
-        composeP(n).drawImage(e, 0, 0, n.width, n.height);
-        let toDataURL = n.toDataURL(`image/jpeg`, .7);
-        return composeV(n), toDataURL;
+          composeMResult = composeM(e.width * t, e.height * t);
+        composeP(composeMResult).drawImage(e, 0, 0, composeMResult.width, composeMResult.height);
+        let toDataURL = composeMResult.toDataURL(`image/jpeg`, .7);
+        return composeV(composeMResult), toDataURL;
       }
       async function Lt(el) {
         $(), screenshotToolN(el);
@@ -1586,10 +1586,10 @@ var mn = {
         }
         Je = true, composeV(T.value), T.value = t, l.value = el, I.value = {
           ...el.style
-        }, L.value = el.presets, oe.value = el.backgroundLibrary ?? [], P.value = null, qe = false, Ke.key = ``, dt(), K.load(el.annotations), K.setTool(el.annotations.length > 0 ? `select` : K.tool.value), se.value = It(t), z.value = el.runOcr ? `text` : `style`, U.value = null, await vueRt(), Je = false, V.value = 0, we.value = -1, ft(), el.autoCopy && Dt(false, true);
+        }, L.value = el.presets, oe.value = el.backgroundLibrary ?? [], P.value = null, qe = false, composeNResult.key = ``, dt(), K.load(el.annotations), K.setTool(el.annotations.length > 0 ? `select` : K.tool.value), se.value = It(t), z.value = el.runOcr ? `text` : `style`, U.value = null, await vueRt(), Je = false, V.value = 0, we.value = -1, ft(), el.autoCopy && Dt(false, true);
       }
       function Rt() {
-        K.finishTextEditing(), $(), l.value = null, composeV(T.value), T.value = null, P.value = null, qe = false, Ke.key = ``, composeV(Ke.canvas), Ke.canvas = null, K.load([]), se.value = ``, U.value = null;
+        K.finishTextEditing(), $(), l.value = null, composeV(T.value), T.value = null, P.value = null, qe = false, composeNResult.key = ``, composeV(composeNResult.canvas), composeNResult.canvas = null, K.load([]), se.value = ``, U.value = null;
       }
       return vueWt(I, () => {
         dt(), !Je && (V.value += 1, jt(), Q());

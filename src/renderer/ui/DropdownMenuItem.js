@@ -46,10 +46,10 @@ var g = lucideR(`list-ordered`, [[`path`, {
       emit: emit
     }) {
       let propsAlias = props,
-        d = uiSwitchU(emit);
+        uiSwitchUResult = uiSwitchU(emit);
       return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DropdownMenuTriggerO), vueTr(vueV({
         ...propsAlias,
-        ...vueAn(d)
+        ...vueAn(uiSwitchUResult)
       })), {
         default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
@@ -79,13 +79,13 @@ var g = lucideR(`list-ordered`, [[`path`, {
     },
     setup(props) {
       let propsAlias = props,
-        s = uiSwitchLt(propsAlias, `inset`, `variant`, `class`),
-        d = uiSwitchB(s);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `inset`, `variant`, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(_), vueNt({
         "data-slot": `dropdown-menu-item`,
         "data-inset": props.inset ? `` : undefined,
         "data-variant": props.variant
-      }, vueAn(d), {
+      }, vueAn(uiSwitchBResult), {
         class: vueAn(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 group/dropdown-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),

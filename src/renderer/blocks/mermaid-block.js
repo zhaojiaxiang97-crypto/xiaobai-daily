@@ -230,7 +230,7 @@ var defineProperty = Object.defineProperty,
       emit: emit
     }) {
       let propsAlias = props,
-        _ = emit,
+        emitAlias = emit,
         Oe = {
           USE_PROFILES: {
             svg: true
@@ -763,7 +763,7 @@ var defineProperty = Object.defineProperty,
                   this.defaultPrevented = true;
                 }
               };
-            if (_(`copy`, t), t.defaultPrevented) return;
+            if (emitAlias(`copy`, t), t.defaultPrevented) return;
             typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(e)), lt.value = true, setTimeout(() => {
               lt.value = false;
             }, 1e3);
@@ -787,7 +787,7 @@ var defineProperty = Object.defineProperty,
             svgElement: e,
             svgString: toStringResult
           };
-        _(`export`, n), n.defaultPrevented || function (e, t = null) {
+        emitAlias(`export`, n), n.defaultPrevented || function (e, t = null) {
           y(this, null, function* () {
             try {
               let n = t ?? new XMLSerializer().serializeToString(e),
@@ -822,7 +822,7 @@ var defineProperty = Object.defineProperty,
             svgElement: e,
             svgString: e ? new XMLSerializer().serializeToString(e) : null
           };
-        _(`openModal`, t), t.defaultPrevented || function () {
+        emitAlias(`openModal`, t), t.defaultPrevented || function () {
           if (X.value = true, typeof document < `u`) try {
             document.body.style.overflow = `hidden`;
           } catch {}
@@ -850,7 +850,7 @@ var defineProperty = Object.defineProperty,
             this.defaultPrevented = true;
           }
         };
-        _(`toggleMode`, e, t), t.defaultPrevented || bn(e);
+        emitAlias(`toggleMode`, e, t), t.defaultPrevented || bn(e);
       }
       function bn(e) {
         return y(this, null, function* () {

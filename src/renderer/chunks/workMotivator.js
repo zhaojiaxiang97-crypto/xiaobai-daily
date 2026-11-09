@@ -220,7 +220,7 @@ var k = .5,
   it = 4,
   at = 3e5,
   ot = 45,
-  M = pluginvueexporthelperT(vueJ({
+  pluginvueexporthelperTResult = pluginvueexporthelperT(vueJ({
     __name: `WorkMotivatorApp`,
     setup(props) {
       let workMotivatorAPI = window.workMotivatorAPI,
@@ -308,8 +308,8 @@ var k = .5,
         G = vueV(() => E.value?.decimals ?? 3),
         ft = vueV(() => {
           if (!E.value) return 3;
-          let e = formatNumV(E.value, new Date());
-          return Math.min(7, Math.max(3, String(Math.floor(e)).length));
+          let numV = formatNumV(E.value, new Date());
+          return Math.min(7, Math.max(3, String(Math.floor(numV)).length));
         }),
         K = vueV(() => je(ft.value, G.value, E.value?.currency ?? `¥`)),
         pt = vueV(() => `${ft.value}-${G.value}-${K.value.cellWidth.toFixed(2)}`),
@@ -329,8 +329,8 @@ var k = .5,
         Ct = vueV(() => formatNumT(new Date(D.value))),
         Y = vueV(() => {
           if (!E.value || !O.value) return null;
-          let e = formatNumF(E.value);
-          return e ? formatNumH(E.value, e, O.value) : null;
+          let numF = formatNumF(E.value);
+          return numF ? formatNumH(E.value, numF, O.value) : null;
         }),
         wt = vueV(() => Y.value ? formatNumD(handler, Y.value) : ``),
         X = vueV(() => {
@@ -765,4 +765,4 @@ var k = .5,
     missingWarn: false,
     fallbackWarn: false
   });
-playerO(M).use(N).mount(`#app`);
+playerO(pluginvueexporthelperTResult).use(N).mount(`#app`);

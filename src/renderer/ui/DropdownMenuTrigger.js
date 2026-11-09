@@ -77,7 +77,7 @@ function le() {
     });
   }), e;
 }
-var ue = uiSwitchSt(le),
+var uiSwitchStResult = uiSwitchSt(le),
   [Z, de] = uiSwitchYt([`MenuRoot`, `MenuSub`], `MenuContext`),
   [Q, fe] = uiSwitchYt(`MenuRoot`),
   pe = vueJ({
@@ -109,13 +109,13 @@ var ue = uiSwitchSt(le),
           dir: a
         } = vueDn(propsAlias),
         o = CollectionR(a),
-        s = uiSwitchAt(propsAlias, `open`, emitAlias),
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `open`, emitAlias),
         c = vueBn(),
-        l = ue();
+        uiSwitchStResultResult = uiSwitchStResult();
       return de({
-        open: s,
+        open: uiSwitchAtResult,
         onOpenChange: e => {
-          s.value = e;
+          uiSwitchAtResult.value = e;
         },
         content: c,
         onContentChange: e => {
@@ -123,9 +123,9 @@ var ue = uiSwitchSt(le),
         }
       }), fe({
         onClose: () => {
-          s.value = false;
+          uiSwitchAtResult.value = false;
         },
-        isUsingKeyboardRef: l,
+        isUsingKeyboardRef: uiSwitchStResultResult,
         dir: o,
         modal: i
       }), (e, t) => (vueGt(), vueB(vueAn(PopperContentA), null, {
@@ -664,13 +664,13 @@ var ue = uiSwitchSt(le),
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        a = uiSwitchZ(propsAlias, emitAlias),
+        uiSwitchZResult = uiSwitchZ(propsAlias, emitAlias),
         o = Z(),
         {
           forwardRef: s,
           currentElement: c
         } = uiSwitchV();
-      return uiSwitchL(c), (e, t) => (vueGt(), vueB(ge, vueNt(vueAn(a), {
+      return uiSwitchL(c), (e, t) => (vueGt(), vueB(ge, vueNt(vueAn(uiSwitchZResult), {
         ref: vueAn(s),
         "trap-focus": vueAn(o).open.value,
         "disable-outside-pointer-events": vueAn(o).open.value,
@@ -779,9 +779,9 @@ var ue = uiSwitchSt(le),
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit),
+      let uiSwitchZResult = uiSwitchZ(props, emit),
         r = Z();
-      return (ctx, renderCache) => (vueGt(), vueB(ge, vueNt(vueAn(n), {
+      return (ctx, renderCache) => (vueGt(), vueB(ge, vueNt(vueAn(uiSwitchZResult), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,
         "disable-outside-scroll": false,
@@ -892,7 +892,7 @@ var ue = uiSwitchSt(le),
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit),
+      let uiSwitchZResult = uiSwitchZ(props, emit),
         r = Z(),
         i = Q();
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitchN), {
@@ -902,7 +902,7 @@ var ue = uiSwitchSt(le),
           key: 0
         }, {
           ...ctx.$attrs,
-          ...vueAn(n)
+          ...vueAn(uiSwitchZResult)
         })), {
           default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
@@ -910,7 +910,7 @@ var ue = uiSwitchSt(le),
           key: 1
         }, {
           ...ctx.$attrs,
-          ...vueAn(n)
+          ...vueAn(uiSwitchZResult)
         })), {
           default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
@@ -977,7 +977,7 @@ var ue = uiSwitchSt(le),
       let propsAlias = props,
         emitAlias = emit;
       uiSwitchV();
-      let i = uiSwitchAt(propsAlias, `open`, emitAlias, {
+      let uiSwitchAtResult = uiSwitchAt(propsAlias, `open`, emitAlias, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         }),
@@ -988,12 +988,12 @@ var ue = uiSwitchSt(le),
         } = vueDn(propsAlias),
         c = CollectionR(s);
       return Ce({
-        open: i,
+        open: uiSwitchAtResult,
         onOpenChange: e => {
-          i.value = e;
+          uiSwitchAtResult.value = e;
         },
         onOpenToggle: () => {
-          i.value = !i.value;
+          uiSwitchAtResult.value = !uiSwitchAtResult.value;
         },
         triggerId: ``,
         triggerElement: a,
@@ -1001,13 +1001,13 @@ var ue = uiSwitchSt(le),
         modal: o,
         dir: c
       }), (e, t) => (vueGt(), vueB(vueAn(pe), {
-        open: vueAn(i),
-        "onUpdate:open": t[0] ||= e => vueFn(i) ? i.value = e : null,
+        open: vueAn(uiSwitchAtResult),
+        "onUpdate:open": t[0] ||= e => vueFn(uiSwitchAtResult) ? uiSwitchAtResult.value = e : null,
         dir: vueAn(c),
         modal: vueAn(o)
       }, {
         default: vueYt(() => [vueCt(e.$slots, `default`, {
-          open: vueAn(i)
+          open: vueAn(uiSwitchAtResult)
         })]),
         _: 3
       }, 8, [`open`, `dir`, `modal`]));
@@ -1113,7 +1113,7 @@ var ue = uiSwitchSt(le),
     setup(event, {
       emit: emit
     }) {
-      let n = uiSwitchZ(event, emit);
+      let uiSwitchZResult = uiSwitchZ(event, emit);
       uiSwitchV();
       let i = Se(),
         a = vueBn(false);
@@ -1122,7 +1122,7 @@ var ue = uiSwitchSt(le),
           i.triggerElement.value?.focus();
         }, 0), a.value = false, e.preventDefault());
       }
-      return i.contentId ||= uiSwitchI(undefined, `reka-dropdown-menu-content`), (e, t) => (vueGt(), vueB(vueAn($), vueNt(vueAn(n), {
+      return i.contentId ||= uiSwitchI(undefined, `reka-dropdown-menu-content`), (e, t) => (vueGt(), vueB(vueAn($), vueNt(vueAn(uiSwitchZResult), {
         id: vueAn(i).contentId,
         "aria-labelledby": vueAn(i)?.triggerId,
         style: {
@@ -1247,10 +1247,10 @@ var ue = uiSwitchSt(le),
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(we), vueNt({
         "data-slot": `dropdown-menu`
-      }, vueAn(n)), {
+      }, vueAn(uiSwitchZResult)), {
         default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
@@ -1317,14 +1317,14 @@ var ue = uiSwitchSt(le),
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = uiSwitchLt(propsAlias, `class`),
-        a = uiSwitchZ(i, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Ee), null, {
         default: vueYt(() => [vueK(vueAn(Te), vueNt({
           "data-slot": `dropdown-menu-content`
         }, {
           ...ctx.$attrs,
-          ...vueAn(a)
+          ...vueAn(uiSwitchZResult)
         }, {
           class: vueAn(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-32 rounded-lg p-1 shadow-md ring-1 duration-100 cn-menu-translucent z-50 max-h-(--reka-dropdown-menu-content-available-height) w-(--reka-dropdown-menu-trigger-width) origin-(--reka-dropdown-menu-content-transform-origin) overflow-x-hidden overflow-y-auto data-[state=closed]:overflow-hidden`, propsAlias.class),
           style: {
@@ -1351,10 +1351,10 @@ var ue = uiSwitchSt(le),
       as: {}
     },
     setup(props) {
-      let n = uiSwitchB(props);
+      let uiSwitchBResult = uiSwitchB(props);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(De), vueNt({
         "data-slot": `dropdown-menu-trigger`
-      }, vueAn(n)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16));

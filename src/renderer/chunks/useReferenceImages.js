@@ -126,14 +126,14 @@ function I(e) {
     let abortController = new AbortController();
     r.set(t.id, abortController);
     try {
-      let r = await mainHt(`reference-upload.php`, {
+      let mainHtData = await mainHt(`reference-upload.php`, {
         method: `POST`,
         csrfToken: e.user.value.csrfToken,
         body: formData,
         signal: abortController.signal,
         timeoutMs: 12e4
       });
-      abortController.signal.aborted || (t.token = r.token);
+      abortController.signal.aborted || (t.token = mainHtData.token);
     } catch (n) {
       if (abortController.signal.aborted) return;
       t.error = n instanceof DOMException && n.name === `AbortError` ? e.t(`toolboxNative.uploadTimedOutRemoveTheFileAndTryAgain`) : n instanceof Error ? e.translateRemoteText(n.message) : e.t(`toolboxNative.uploadFailed`);

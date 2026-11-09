@@ -316,17 +316,17 @@ var U = [`PageUp`, `PageDown`],
           forwardRef: O,
           currentElement: j
         } = uiSwitchV(),
-        P = uiSwitchH(j),
+        uiSwitchHResult = uiSwitchH(j),
         {
           CollectionSlot: F
         } = CollectionT({
           isProvider: true
         }),
-        L = uiSwitchAt(eventAlias, `modelValue`, emitAlias, {
+        uiSwitchAtResult = uiSwitchAt(eventAlias, `modelValue`, emitAlias, {
           defaultValue: eventAlias.defaultValue,
           passive: eventAlias.modelValue === undefined
         }),
-        R = vueV(() => Array.isArray(L.value) ? [...L.value] : []),
+        R = vueV(() => Array.isArray(uiSwitchAtResult.value) ? [...uiSwitchAtResult.value] : []),
         B = vueBn(0),
         G = vueBn(R.value);
       function K(e) {
@@ -346,17 +346,17 @@ var U = [`PageUp`, `PageDown`],
       }) {
         let r = V(h.value),
           a = H(Math.round((e - l.value) / h.value) * h.value + l.value, r),
-          o = uiSwitchBt(a, l.value, u.value),
-          s = N(R.value, o, t);
+          uiSwitchBtResult = uiSwitchBt(a, l.value, u.value),
+          s = N(R.value, uiSwitchBtResult, t);
         if (z(s, g.value * h.value)) {
-          B.value = s.indexOf(o);
-          let e = String(s) !== String(L.value);
-          e && n && emitAlias(`valueCommit`, s), e && ($.value[B.value]?.focus(), L.value = s);
+          B.value = s.indexOf(uiSwitchBtResult);
+          let e = String(s) !== String(uiSwitchAtResult.value);
+          e && n && emitAlias(`valueCommit`, s), e && ($.value[B.value]?.focus(), uiSwitchAtResult.value = s);
         }
       }
       let $ = vueBn([]);
       return Z({
-        modelValue: L,
+        modelValue: uiSwitchAtResult,
         currentModelValue: R,
         valueIndexToChangeRef: B,
         thumbElements: $,
@@ -400,11 +400,11 @@ var U = [`PageUp`, `PageDown`],
           }
         }), {
           default: vueYt(() => [vueCt(e.$slots, `default`, {
-            modelValue: vueAn(L)
-          }), vueAn(P) && e.name ? (vueGt(), vueB(vueAn(a), {
+            modelValue: vueAn(uiSwitchAtResult)
+          }), vueAn(uiSwitchHResult) && e.name ? (vueGt(), vueB(vueAn(a), {
             key: 0,
             type: `number`,
-            value: vueAn(L),
+            value: vueAn(uiSwitchAtResult),
             name: e.name,
             required: e.required,
             disabled: vueAn(C),
@@ -528,7 +528,7 @@ var U = [`PageUp`, `PageDown`],
         h = CollectionN(c),
         g = vueV(() => h[a.size].value),
         _ = vueV(() => i.thumbAlignment.value === `overflow` || !g.value ? 0 : L(g.value, p.value, a.direction.value)),
-        b = uiSwitch();
+        uiSwitchResult = uiSwitch();
       return vueUt(() => {
         i.thumbElements.value.push(c.value);
       }), vueMt(() => {
@@ -552,7 +552,7 @@ var U = [`PageUp`, `PageDown`],
             transform: `var(--reka-slider-thumb-transform)`,
             position: `absolute`,
             [vueAn(a).startEdge.value]: `calc(${p.value}% + ${_.value}px)`,
-            display: !vueAn(b) && u.value === undefined ? `none` : undefined
+            display: !vueAn(uiSwitchResult) && u.value === undefined ? `none` : undefined
           },
           onFocus: t[0] ||= () => {
             vueAn(i).valueIndexToChangeRef.value = e.index;
@@ -660,13 +660,13 @@ var U = [`PageUp`, `PageDown`],
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = uiSwitchLt(propsAlias, `class`),
-        a = uiSwitchZ(i, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Q), vueNt({
         "data-slot": `slider`,
         "data-vertical": propsAlias.orientation === `vertical` ? `` : undefined,
         class: vueAn(uiSwitchXt)(`data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col`, propsAlias.class)
-      }, vueAn(a)), {
+      }, vueAn(uiSwitchZResult)), {
         default: vueYt(({
           modelValue: e
         }) => [vueK(vueAn(ie), {

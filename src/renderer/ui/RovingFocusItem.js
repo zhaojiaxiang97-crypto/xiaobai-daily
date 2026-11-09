@@ -35,8 +35,8 @@ var y = vueJ({
   setup(props) {
     let propsAlias = props,
       b = RovingFocusGroupN(),
-      x = uiSwitchI(),
-      S = vueV(() => propsAlias.tabStopId || x),
+      uiSwitchIResult = uiSwitchI(),
+      S = vueV(() => propsAlias.tabStopId || uiSwitchIResult),
       C = vueV(() => b.currentTabStopId.value === S.value),
       {
         getItems: w,

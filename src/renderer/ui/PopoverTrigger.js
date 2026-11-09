@@ -1768,10 +1768,10 @@ function sr() {
   };
 }
 function cr(e) {
-  let t = uiSwitchK({
+  let uiSwitchKResult = uiSwitchK({
     locale: vueBn(`en`)
   });
-  return w(() => e?.value || t.locale?.value || `en`);
+  return w(() => e?.value || uiSwitchKResult.locale?.value || `en`);
 }
 function lr(e) {
   function t(t) {
@@ -2017,7 +2017,7 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
         {
           modal: i
         } = vueDn(propsAlias),
-        a = uiSwitchAt(propsAlias, `open`, emitAlias, {
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `open`, emitAlias, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         });
@@ -2025,19 +2025,19 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
         contentId: ``,
         triggerId: ``,
         modal: i,
-        open: a,
+        open: uiSwitchAtResult,
         onOpenChange: e => {
-          a.value = e;
+          uiSwitchAtResult.value = e;
         },
         onOpenToggle: () => {
-          a.value = !a.value;
+          uiSwitchAtResult.value = !uiSwitchAtResult.value;
         },
         triggerElement: vueBn(),
         hasCustomAnchor: vueBn(false)
       }), (e, t) => (vueGt(), vueB(vueAn(PopperContentA), null, {
         default: vueYt(() => [vueCt(e.$slots, `default`, {
-          open: vueAn(a),
-          close: () => a.value = false
+          open: vueAn(uiSwitchAtResult),
+          close: () => uiSwitchAtResult.value = false
         })]),
         _: 3
       }));
@@ -2149,7 +2149,7 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        s = uiSwitchB(uiSwitchLt(propsAlias, `trapFocus`, `disableOutsidePointerEvents`)),
+        uiSwitchBResult = uiSwitchB(uiSwitchLt(propsAlias, `trapFocus`, `disableOutsidePointerEvents`)),
         {
           forwardRef: c
         } = uiSwitchV(),
@@ -2170,7 +2170,7 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
           onFocusOutside: renderCache[3] ||= e => emitAlias(`focusOutside`, e),
           onDismiss: renderCache[4] ||= e => vueAn(l).onOpenChange(false)
         }, {
-          default: vueYt(() => [vueK(vueAn(PopperContentN), vueNt(vueAn(s), {
+          default: vueYt(() => [vueK(vueAn(PopperContentN), vueNt(vueAn(uiSwitchBResult), {
             id: vueAn(l).contentId,
             ref: vueAn(c),
             "data-state": vueAn(l).open.value ? `open` : `closed`,
@@ -2298,12 +2298,12 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
         a = $(),
         c = vueBn(false);
       uiSwitchW(true);
-      let l = uiSwitchZ(propsAlias, emitAlias),
+      let uiSwitchZResult = uiSwitchZ(propsAlias, emitAlias),
         {
           forwardRef: u,
           currentElement: d
         } = uiSwitchV();
-      return uiSwitchL(d), (e, event) => (vueGt(), vueB(_r, vueNt(vueAn(l), {
+      return uiSwitchL(d), (e, event) => (vueGt(), vueB(_r, vueNt(vueAn(uiSwitchZResult), {
         ref: vueAn(u),
         "trap-focus": vueAn(a).open.value,
         "disable-outside-pointer-events": ``,
@@ -2429,8 +2429,8 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
         i = $(),
         a = vueBn(false),
         o = vueBn(false),
-        s = uiSwitchZ(eventAlias, emitAlias);
-      return (ctx, renderCache) => (vueGt(), vueB(_r, vueNt(vueAn(s), {
+        uiSwitchZResult = uiSwitchZ(eventAlias, emitAlias);
+      return (ctx, renderCache) => (vueGt(), vueB(_r, vueNt(vueAn(uiSwitchZResult), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,
         onCloseAutoFocus: renderCache[0] ||= e => {
@@ -2554,7 +2554,7 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       let propsAlias = props,
         emitAlias = emit,
         s = $(),
-        c = uiSwitchZ(propsAlias, emitAlias),
+        uiSwitchZResult = uiSwitchZ(propsAlias, emitAlias),
         {
           forwardRef: l
         } = uiSwitchV();
@@ -2563,14 +2563,14 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }, {
         default: vueYt(() => [vueAn(s).modal.value ? (vueGt(), vueB(vr, vueNt({
           key: 0
-        }, vueAn(c), {
+        }, vueAn(uiSwitchZResult), {
           ref: vueAn(l)
         }), {
           default: vueYt(() => [vueCt(e.$slots, `default`)]),
           _: 3
         }, 16)) : (vueGt(), vueB(yr, vueNt({
           key: 1
-        }, vueAn(c), {
+        }, vueAn(uiSwitchZResult), {
           ref: vueAn(l)
         }), {
           default: vueYt(() => [vueCt(e.$slots, `default`)]),
@@ -2669,10 +2669,10 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(gr), vueNt({
         "data-slot": `popover`
-      }, vueAn(n)), {
+      }, vueAn(uiSwitchZResult)), {
         default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
@@ -2740,14 +2740,14 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = uiSwitchLt(propsAlias, `class`),
-        a = uiSwitchZ(i, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(xr), null, {
         default: vueYt(() => [vueK(vueAn(br), vueNt({
           "data-slot": `popover-content`
         }, {
           ...ctx.$attrs,
-          ...vueAn(a)
+          ...vueAn(uiSwitchZResult)
         }, {
           class: vueAn(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, propsAlias.class)
         }), {

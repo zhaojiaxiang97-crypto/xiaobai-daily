@@ -1,15 +1,15 @@
 import { $n as vueN, An as vueAn, S as vueS, St as vueSt, Wt as vueWt, Zt as vueZt, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, n as u, nr as vueNr, ot as vueOt, rr as vueRr, ut as vueUt, v as vueV, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
 import { w as playerW } from "../i18n/en-US-player.js";
 import { C as OrbitControlsC, E as OrbitControlsE, S as OrbitControlsS, T as OrbitControlsT, a as OrbitControlsA, h as OrbitControlsH, i as OrbitControlsI, l as OrbitControlsL, m as OrbitControlsM, n as OrbitControlsN, p as OrbitControlsP, r as OrbitControlsR, s as y, t as fe, u as OrbitControlsU, v as OrbitControlsV, x as OrbitControlsX, y as OrbitControlsY } from "../vendors/OrbitControls.js";
-var b = new OrbitControlsE();
+var orbitControlsE = new OrbitControlsE();
 function x(e, t, n, r, i, a) {
   let o = 2 * Math.PI * i / 4,
     s = Math.max(a - 2 * i, 0),
     c = Math.PI / 4;
-  b.copy(t), b[r] = 0, b.normalize();
+  orbitControlsE.copy(t), orbitControlsE[r] = 0, orbitControlsE.normalize();
   let l = .5 * o / (o + s),
-    u = 1 - b.angleTo(e) / c;
-  return Math.sign(b[n]) === 1 ? u * l : s / (o + s) + l + l * (1 - u);
+    u = 1 - orbitControlsE.angleTo(e) / c;
+  return Math.sign(orbitControlsE[n]) === 1 ? u * l : s / (o + s) + l + l * (1 - u);
 }
 var _e = class e extends OrbitControlsA {
     constructor(e = 1, t = 1, n = 1, r = 2, i = .1) {
@@ -135,12 +135,12 @@ var _e = class e extends OrbitControlsA {
             transform: O.value.y < 40 ? `translate(-50%, 16px)` : `translate(-50%, calc(-100% - 10px))`
           };
         }),
-        j = new OrbitControlsC(),
-        M = new OrbitControlsY(14, 1, .5, 600),
+        orbitControlsC = new OrbitControlsC(),
+        orbitControlsY = new OrbitControlsY(14, 1, .5, 600),
         N = new OrbitControlsY(),
         translate = new _e(be, 1, be, Se, xe).translate(0, .5, 0),
-        P = new OrbitControlsV();
-      P.onBeforeCompile = e => {
+        orbitControlsV = new OrbitControlsV();
+      orbitControlsV.onBeforeCompile = e => {
         e.vertexShader = e.vertexShader.replace(`#include <common>`, `#include <common>
 attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include <beginnormal_vertex>
       float barShapeHeight = max(barHeight, ${(xe * 2).toFixed(3)});
@@ -148,12 +148,12 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       objectNormal.y /= max(barSquash, 0.001);`).replace(`#include <begin_vertex>`, `#include <begin_vertex>
       transformed.y += step(0.5, position.y) * (barShapeHeight - 1.0);
       transformed.y *= barSquash;`);
-      }, P.customProgramCacheKey = () => `heatmap-rounded-bar`;
-      let Xe = new OrbitControlsX(),
-        Ze = new OrbitControlsT(),
+      }, orbitControlsV.customProgramCacheKey = () => `heatmap-rounded-bar`;
+      let orbitControlsX = new OrbitControlsX(),
+        orbitControlsT = new OrbitControlsT(),
         F = new OrbitControlsE(),
-        Qe = new OrbitControlsH(),
-        $e = new OrbitControlsI(),
+        orbitControlsH = new OrbitControlsH(),
+        orbitControlsI = new OrbitControlsI(),
         et = new OrbitControlsE(),
         tt = new y(),
         nt = new y(),
@@ -183,11 +183,11 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         ft = .45,
         pt = .3,
         mt = .55;
-      j.add(new OrbitControlsR(16777215, .34 * Math.PI));
-      let ht = new OrbitControlsL(16777215, .74 * Math.PI);
-      ht.position.set(.35, 1, .55);
+      orbitControlsC.add(new OrbitControlsR(16777215, .34 * Math.PI));
+      let orbitControlsL = new OrbitControlsL(16777215, .74 * Math.PI);
+      orbitControlsL.position.set(.35, 1, .55);
       let gt = new OrbitControlsL(16777215, .2 * Math.PI);
-      gt.position.set(-1, .25, -.4), j.add(ht, gt);
+      gt.position.set(-1, .25, -.4), orbitControlsC.add(orbitControlsL, gt);
       function X(e) {
         return propsAlias.rows[e.row]?.cells[e.column] ?? null;
       }
@@ -307,7 +307,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         jt(t, n), jt(e, n), R.instanceColor && (R.instanceColor.needsUpdate = true), $();
       }
       function Pt() {
-        R && (j.remove(R), R.geometry.dispose(), R.dispose(), R = null, B = null);
+        R && (orbitControlsC.remove(R), R.geometry.dispose(), R.dispose(), R = null, B = null);
       }
       function Ft() {
         if (Pt(), emptyItems = [], propsAlias.rows.forEach((item, t) => {
@@ -319,9 +319,9 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           });
         }), float32Array = new Float32Array(emptyItems.length).fill(S), at = new Float32Array(emptyItems.length).fill(S), z = new Float32Array(emptyItems.length).fill(S), H = -1, O.value = null, !emptyItems.length) return;
         let e = translate.clone();
-        B = new OrbitControlsP(z, 1), B.setUsage(OrbitControlsU), e.setAttribute(`barHeight`, B), R = new OrbitControlsM(e, P, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
-          Qe.makeTranslation(_t(item.column), 0, vt(item.row)), R?.setMatrixAt(t, Qe);
-        }), R.instanceMatrix.needsUpdate = true, j.add(R);
+        B = new OrbitControlsP(z, 1), B.setUsage(OrbitControlsU), e.setAttribute(`barHeight`, B), R = new OrbitControlsM(e, orbitControlsV, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
+          orbitControlsH.makeTranslation(_t(item.column), 0, vt(item.row)), R?.setMatrixAt(t, orbitControlsH);
+        }), R.instanceMatrix.needsUpdate = true, orbitControlsC.add(R);
       }
       function It() {
         let e = At(),
@@ -341,7 +341,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         return B && (B.needsUpdate = true), t < 1;
       }
       function Rt(e) {
-        N.copy(M), N.aspect = e, N.far = 1e5, N.updateProjectionMatrix();
+        N.copy(orbitControlsY), N.aspect = e, N.far = 1e5, N.updateProjectionMatrix();
       }
       function zt(e, t) {
         N.position.copy(e).addScaledVector(setFromSphericalCoords, t), N.lookAt(e), N.updateMatrixWorld();
@@ -374,24 +374,24 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function Ht(e) {
         if (!L) return;
         let t = St(),
-          n = Bt(M.aspect),
+          n = Bt(orbitControlsY.aspect),
           scaledVector = t.clone().addScaledVector(setFromSphericalCoords, n);
-        L.minDistance = n * .35, L.maxDistance = n * 1.8, M.far = Math.max(600, n * 3), M.updateProjectionMatrix(), q = false, ct = true, e ? J = {
-          fromPosition: M.position.clone(),
+        L.minDistance = n * .35, L.maxDistance = n * 1.8, orbitControlsY.far = Math.max(600, n * 3), orbitControlsY.updateProjectionMatrix(), q = false, ct = true, e ? J = {
+          fromPosition: orbitControlsY.position.clone(),
           toPosition: scaledVector,
           fromTarget: L.target.clone(),
           toTarget: t,
           startedAt: performance.now()
-        } : (J = null, L.target.copy(t), M.position.copy(scaledVector), L.update()), $();
+        } : (J = null, L.target.copy(t), orbitControlsY.position.copy(scaledVector), L.update()), $();
       }
       function Ut(e) {
         if (!J || !L) return false;
         let t = Math.min(1, Math.max(0, (e - J.startedAt) / Te)),
           n = 1 - (1 - t) ** 3;
-        return M.position.lerpVectors(J.fromPosition, J.toPosition, n), L.target.lerpVectors(J.fromTarget, J.toTarget, n), t >= 1 && (J = null), t < 1;
+        return orbitControlsY.position.lerpVectors(J.fromPosition, J.toPosition, n), L.target.lerpVectors(J.fromTarget, J.toTarget, n), t >= 1 && (J = null), t < 1;
       }
       function Wt(e, t, n, r, i) {
-        return F.set(e, t, n).project(M), {
+        return F.set(e, t, n).project(orbitControlsY), {
           x: (F.x + 1) / 2 * r,
           y: (1 - F.y) / 2 * i,
           visible: F.z < 1 && Math.abs(F.x) <= 1.02 && Math.abs(F.y) <= 1.02
@@ -424,7 +424,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function qt(e) {
         if (G = 0, !I || !L) return;
         let t = Ut(e);
-        K && (K = Lt(e), t ||= K), L.update(), I.render(j, M), Kt(), t && $();
+        K && (K = Lt(e), t ||= K), L.update(), I.render(orbitControlsC, orbitControlsY), Kt(), t && $();
       }
       function $() {
         I && ct && !G && (G = requestAnimationFrame(qt));
@@ -434,7 +434,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         if (!I || !e) return false;
         let clientWidth = e.clientWidth,
           clientHeight = e.clientHeight;
-        return !clientWidth || !clientHeight ? false : (I.setPixelRatio(Math.min(window.devicePixelRatio, 2)), I.setSize(clientWidth, clientHeight, false), M.aspect = clientWidth / clientHeight, M.updateProjectionMatrix(), true);
+        return !clientWidth || !clientHeight ? false : (I.setPixelRatio(Math.min(window.devicePixelRatio, 2)), I.setSize(clientWidth, clientHeight, false), orbitControlsY.aspect = clientWidth / clientHeight, orbitControlsY.updateProjectionMatrix(), true);
       }
       function Yt(e) {
         let t = w.value;
@@ -453,9 +453,9 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       async function Zt(e) {
         let t = T.value;
         if (!I || !t || !ct) return null;
-        K &&= Lt(1 / 0), Ut(1 / 0), L?.update(), I.setPixelRatio(e), I.render(j, M);
+        K &&= Lt(1 / 0), Ut(1 / 0), L?.update(), I.setPixelRatio(e), I.render(orbitControlsC, orbitControlsY);
         let toDataURL = t.toDataURL(`image/png`);
-        Jt(), I.render(j, M), Kt();
+        Jt(), I.render(orbitControlsC, orbitControlsY), Kt();
         let image = new Image();
         image.className = `block h-full w-full`, image.src = toDataURL, await image.decode(), t.style.display = `none`, t.after(image);
         let i = Be.value;
@@ -470,15 +470,15 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let t = T.value;
         if (!t || !emptyItems.length) return -1;
         let boundingClientRect = t.getBoundingClientRect();
-        Ze.set((event.clientX - boundingClientRect.left) / boundingClientRect.width * 2 - 1, -((event.clientY - boundingClientRect.top) / boundingClientRect.height) * 2 + 1), Xe.setFromCamera(Ze, M);
+        orbitControlsT.set((event.clientX - boundingClientRect.left) / boundingClientRect.width * 2 - 1, -((event.clientY - boundingClientRect.top) / boundingClientRect.height) * 2 + 1), orbitControlsX.setFromCamera(orbitControlsT, orbitControlsY);
         let r = be / 2,
           i = -1,
           a = 1 / 0;
         return emptyItems.forEach((item, t) => {
           let n = _t(item.column),
             o = vt(item.row);
-          if ($e.min.set(n - r, 0, o - r), $e.max.set(n + r, z[t] ?? S, o + r), !Xe.ray.intersectBox($e, et)) return;
-          let distanceToSquared = et.distanceToSquared(Xe.ray.origin);
+          if (orbitControlsI.min.set(n - r, 0, o - r), orbitControlsI.max.set(n + r, z[t] ?? S, o + r), !orbitControlsX.ray.intersectBox(orbitControlsI, et)) return;
+          let distanceToSquared = et.distanceToSquared(orbitControlsX.ray.origin);
           distanceToSquared < a && (a = distanceToSquared, i = t);
         }), i;
       }
@@ -567,7 +567,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             emitAlias(`unavailable`);
             return;
           }
-          I.setClearColor(0, 0), e.addEventListener(`webglcontextrestored`, $), L = new fe(M, e), L.enableDamping = true, L.dampingFactor = .12, L.enablePan = false, L.enableZoom = false, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
+          I.setClearColor(0, 0), e.addEventListener(`webglcontextrestored`, $), L = new fe(orbitControlsY, e), L.enableDamping = true, L.dampingFactor = .12, L.enablePan = false, L.enableZoom = false, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
             q = true, J = null;
           }), Dt(), Ot(), Ft(), It(), t.addEventListener(`wheel`, on, {
             capture: true,
@@ -580,7 +580,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }), vueOt(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
           capture: true
-        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && emitAlias(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
+        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && emitAlias(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), orbitControlsV.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
       }), (i, renderCache) => (vueGt(), vueS(`div`, null, [vueY(`div`, {
         ref_key: `containerRef`,
         ref: w,

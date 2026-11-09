@@ -17,8 +17,8 @@ var toolSchema = objectType({
 }).strict().refine(value => Object.keys(value).some(item => item !== "request_quote"), {
   message: "至少提供一个要更新的资料字段"
 });
-async function executeBotUserProfileTool(bot, context) {
-  const parsed = toolSchema.safeParse(bot);
+async function executeBotUserProfileTool(botValue, context) {
+  const parsed = toolSchema.safeParse(botValue);
   if (!parsed.success) throw new XiaoheiDataToolError("INVALID_ARGUMENT", parsed.error.issues.map(issue => issue.message).join("；"));
   context.assertActive();
   const connection = getOpenDatabaseConnection();

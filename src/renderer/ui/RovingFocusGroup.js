@@ -24,10 +24,10 @@ function y(event, t, n) {
   if (!(t === `vertical` && [`ArrowLeft`, `ArrowRight`].includes(r)) && !(t === `horizontal` && [`ArrowUp`, `ArrowDown`].includes(r))) return options[r];
 }
 function b(e, t = false) {
-  let r = uiSwitchVt();
-  for (let i of e) if (i === r || (i.focus({
+  let uiSwitchVtResult = uiSwitchVt();
+  for (let i of e) if (i === uiSwitchVtResult || (i.focus({
     preventScroll: t
-  }), uiSwitchVt() !== r)) return;
+  }), uiSwitchVt() !== uiSwitchVtResult)) return;
 }
 function x(items, t) {
   return items.map((item, r) => items[(t + r) % items.length]);
@@ -77,17 +77,17 @@ var [S, C] = uiSwitchYt(`RovingFocusGroup`),
       expose: expose,
       emit: emit
     }) {
-      let _ = props,
+      let propsAlias = props,
         emitAlias = emit,
         {
           loop: y,
           orientation: x,
           dir: S
-        } = vueDn(_),
+        } = vueDn(propsAlias),
         w = CollectionR(S),
-        T = uiSwitchAt(_, `currentTabStopId`, emitAlias, {
-          defaultValue: _.defaultCurrentTabStopId,
-          passive: _.currentTabStopId === undefined
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `currentTabStopId`, emitAlias, {
+          defaultValue: propsAlias.defaultCurrentTabStopId,
+          passive: propsAlias.currentTabStopId === undefined
         }),
         E = vueBn(false),
         D = vueBn(false),
@@ -104,7 +104,7 @@ var [S, C] = uiSwitchYt(`RovingFocusGroup`),
           let customEvent = new CustomEvent(h, g);
           if (event.currentTarget.dispatchEvent(customEvent), emitAlias(`entryFocus`, customEvent), !customEvent.defaultPrevented) {
             let filtered = k().map(item => item.ref).filter(item => item.dataset.disabled !== ``);
-            b([filtered.find(item => item.getAttribute(`data-active`) === ``), filtered.find(item => item.getAttribute(`data-highlighted`) === ``), filtered.find(item => item.id === T.value), ...filtered].filter(Boolean), _.preventScrollOnEntryFocus);
+            b([filtered.find(item => item.getAttribute(`data-active`) === ``), filtered.find(item => item.getAttribute(`data-highlighted`) === ``), filtered.find(item => item.id === uiSwitchAtResult.value), ...filtered].filter(Boolean), propsAlias.preventScrollOnEntryFocus);
           }
         }
         D.value = false;
@@ -120,9 +120,9 @@ var [S, C] = uiSwitchYt(`RovingFocusGroup`),
         loop: y,
         dir: w,
         orientation: x,
-        currentTabStopId: T,
+        currentTabStopId: uiSwitchAtResult,
         onItemFocus: e => {
-          T.value = e;
+          uiSwitchAtResult.value = e;
         },
         onItemShiftTab: () => {
           E.value = true;

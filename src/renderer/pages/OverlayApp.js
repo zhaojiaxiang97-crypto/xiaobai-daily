@@ -189,12 +189,12 @@ var Se = {
             height: r
           } = j.value;
         (e.width !== Math.round(n * fallbackValue) || e.height !== Math.round(r * fallbackValue)) && (e.width = Math.round(n * fallbackValue), e.height = Math.round(r * fallbackValue));
-        let i = composeP(e);
-        if (i.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), i.clearRect(0, 0, n, r), !w.value) return;
+        let composePResult = composeP(e);
+        if (composePResult.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), composePResult.clearRect(0, 0, n, r), !w.value) return;
         let a = G.value;
-        if (i.fillStyle = `rgba(0,0,0,0.42)`, i.beginPath(), i.rect(0, 0, n, r), a && a.width > 0 && a.height > 0 && i.rect(a.x, a.y, a.width, a.height), i.fill(`evenodd`), !(!a || a.width <= 0 || a.height <= 0) && (i.strokeStyle = `#10b981`, i.lineWidth = O.value ? 1.5 : 2, i.strokeRect(a.x + .5, a.y + .5, Math.max(0, a.width - 1), Math.max(0, a.height - 1)), D.value === `selected` || D.value === `moving` || D.value === `resizing`)) {
+        if (composePResult.fillStyle = `rgba(0,0,0,0.42)`, composePResult.beginPath(), composePResult.rect(0, 0, n, r), a && a.width > 0 && a.height > 0 && composePResult.rect(a.x, a.y, a.width, a.height), composePResult.fill(`evenodd`), !(!a || a.width <= 0 || a.height <= 0) && (composePResult.strokeStyle = `#10b981`, composePResult.lineWidth = O.value ? 1.5 : 2, composePResult.strokeRect(a.x + .5, a.y + .5, Math.max(0, a.width - 1), Math.max(0, a.height - 1)), D.value === `selected` || D.value === `moving` || D.value === `resizing`)) {
           let e = [[a.x, a.y], [a.x + a.width / 2, a.y], [a.x + a.width, a.y], [a.x, a.y + a.height / 2], [a.x + a.width, a.y + a.height / 2], [a.x, a.y + a.height], [a.x + a.width / 2, a.y + a.height], [a.x + a.width, a.y + a.height]];
-          for (let [t, n] of e) i.fillStyle = `#ffffff`, i.strokeStyle = `#10b981`, i.lineWidth = 1.5, i.beginPath(), i.arc(t, n, 4, 0, Math.PI * 2), i.fill(), i.stroke();
+          for (let [t, n] of e) composePResult.fillStyle = `#ffffff`, composePResult.strokeStyle = `#10b981`, composePResult.lineWidth = 1.5, composePResult.beginPath(), composePResult.arc(t, n, 4, 0, Math.PI * 2), composePResult.fill(), composePResult.stroke();
         }
       }
       function Ze() {
@@ -205,12 +205,12 @@ var Se = {
         let fallbackValue = window.devicePixelRatio || 1,
           i = Math.round(b * fallbackValue);
         e.width !== i && (e.width = i, e.height = i);
-        let a = composeP(e);
-        a.imageSmoothingEnabled = false, a.fillStyle = `#000`, a.fillRect(0, 0, i, i);
+        let composePResult = composeP(e);
+        composePResult.imageSmoothingEnabled = false, composePResult.fillStyle = `#000`, composePResult.fillRect(0, 0, i, i);
         let o = b / Pe * U.value,
           s = n.x * U.value,
           ee = n.y * W.value;
-        a.drawImage(t, s - o / 2, ee - o / 2, o, o, 0, 0, i, i), a.strokeStyle = `rgba(16,185,129,0.9)`, a.lineWidth = Math.max(1, fallbackValue), a.beginPath(), a.moveTo(i / 2, 0), a.lineTo(i / 2, i), a.moveTo(0, i / 2), a.lineTo(i, i / 2), a.stroke();
+        composePResult.drawImage(t, s - o / 2, ee - o / 2, o, o, 0, 0, i, i), composePResult.strokeStyle = `rgba(16,185,129,0.9)`, composePResult.lineWidth = Math.max(1, fallbackValue), composePResult.beginPath(), composePResult.moveTo(i / 2, 0), composePResult.lineTo(i / 2, i), composePResult.moveTo(0, i / 2), composePResult.lineTo(i, i / 2), composePResult.stroke();
       }
       function X(e) {
         let t = O.value !== null;
@@ -395,18 +395,18 @@ var Se = {
             let i = st(n),
               png;
             if (e === `beautify` && t.afterCapture === `copy`) {
-              let e = composeH(r, i.x, i.y, i.width, i.height);
+              let composeHResult = composeH(r, i.x, i.y, i.width, i.height);
               try {
-                let n = t.style.enabled && t.style.balance ? composeA(e, t.scale) : null;
+                let n = t.style.enabled && t.style.balance ? composeA(composeHResult, t.scale) : null;
                 png = (await composeR({
-                  source: e,
+                  source: composeHResult,
                   scale: t.scale,
                   style: t.style,
                   annotations: [],
                   balance: n
                 })).png;
               } finally {
-                composeV(e);
+                composeV(composeHResult);
               }
             }
             let finish = await overlay.finish({
@@ -436,8 +436,8 @@ var Se = {
         let t = T.value;
         if (t) {
           t.width = e.width, t.height = e.height;
-          let n = composeF(e.bitmap, e.width, e.height);
-          composeP(t).putImageData(n, 0, 0), data = n.data;
+          let composeFResult = composeF(e.bitmap, e.width, e.height);
+          composeP(t).putImageData(composeFResult, 0, 0), data = composeFResult.data;
         }
         e.cursor && (A.value = {
           ...e.cursor

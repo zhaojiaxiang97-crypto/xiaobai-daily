@@ -50,10 +50,10 @@ var D = vueJ({
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(DialogTitleO), vueNt({
         "data-slot": `dialog`
-      }, vueAn(n)), {
+      }, vueAn(uiSwitchZResult)), {
         default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
@@ -75,10 +75,10 @@ var D = vueJ({
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(DialogTitleN), vueNt({
         "data-slot": `dialog-overlay`
-      }, vueAn(r), {
+      }, vueAn(uiSwitchLtResult), {
         class: vueAn(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 pointer-events-auto bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50`, propsAlias.class),
         style: {
           "-webkit-app-region": `no-drag`
@@ -120,8 +120,8 @@ var D = vueJ({
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        d = uiSwitchLt(propsAlias, `class`, `overlayClass`, `showCloseButton`),
-        h = uiSwitchZ(d, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `overlayClass`, `showCloseButton`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(D), null, {
         default: vueYt(() => [vueK(k, {
           class: vueN(propsAlias.overlayClass)
@@ -129,7 +129,7 @@ var D = vueJ({
           "data-slot": `dialog-content`
         }, {
           ...ctx.$attrs,
-          ...vueAn(h)
+          ...vueAn(uiSwitchZResult)
         }, {
           class: vueAn(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none`, propsAlias.class),
           style: {
@@ -218,11 +218,11 @@ var D = vueJ({
     },
     setup(props) {
       let propsAlias = props,
-        a = uiSwitchLt(propsAlias, `class`),
-        o = uiSwitchB(a);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(DialogTitleT), vueNt({
         "data-slot": `dialog-title`
-      }, vueAn(o), {
+      }, vueAn(uiSwitchBResult), {
         class: vueAn(uiSwitchXt)(`text-base leading-none font-medium cn-font-heading`, propsAlias.class)
       }), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),

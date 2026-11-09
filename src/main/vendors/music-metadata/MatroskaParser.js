@@ -765,8 +765,8 @@ var EbmlIterator = class {
     return uint8Array;
   }
 };
-function readUIntBE(int, intValue) {
-  return Number(readUIntBeAsBigInt(int, intValue));
+function readUIntBE(intInput, intValue) {
+  return Number(readUIntBeAsBigInt(intInput, intValue));
 }
 /**
 * Reeds an unsigned integer from a big endian buffer of length `len`
@@ -774,11 +774,11 @@ function readUIntBE(int, intValue) {
 * @param len Number of bytes
 * @private
 */
-function readUIntBeAsBigInt(int, big) {
+function readUIntBeAsBigInt(intValue, bigValue) {
   const normalizedNumber = /* @__PURE__ */new Uint8Array(8);
-  const cleanNumber = int.subarray(0, big);
+  const cleanNumber = intValue.subarray(0, bigValue);
   try {
-    normalizedNumber.set(cleanNumber, 8 - big);
+    normalizedNumber.set(cleanNumber, 8 - bigValue);
     return UINT64_BE.get(normalizedNumber, 0);
   } catch (_error) {
     return BigInt(-1);

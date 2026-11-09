@@ -2459,7 +2459,7 @@ var hc = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}
 function _c() {
   return typeof navigator < `u` && gc.test(navigator.userAgent);
 }
-function vc(e) {
+function vc(fn) {
   let flag = vueBn(false),
     n = vueBn(true),
     r = vueBn(false),
@@ -2472,7 +2472,7 @@ function vc(e) {
   }
   function s(n) {
     vueRt(() => {
-      flag.value = false, e?.(n);
+      flag.value = false, fn?.(n);
     });
   }
   return {
@@ -2592,8 +2592,8 @@ var DialogTrigger = defineComponent({
 function Tc(items, t, n) {
   return items === undefined ? false : Array.isArray(items) ? items.some(item => Ec(item, t, n)) : Ec(items, t, n);
 }
-function Ec(e, t, n) {
-  return e === undefined || t === undefined ? false : typeof e == `string` ? e === t : typeof n == `function` ? n(e, t) : typeof n == `string` ? e?.[n] === t?.[n] : isequalT(e, t);
+function Ec(e, t, fn) {
+  return e === undefined || t === undefined ? false : typeof e == `string` ? e === t : typeof fn == `function` ? fn(e, t) : typeof fn == `string` ? e?.[fn] === t?.[fn] : isequalT(e, t);
 }
 var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
   [kc, Ac] = uiSwitchYt(`ListboxHighlightScroll`),
@@ -2924,7 +2924,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
           CollectionSlot: t
         } = collectionT(),
         n = Dc(),
-        r = uiSwitchUt(false, 10);
+        uiSwitchUtResult = uiSwitchUt(false, 10);
       return (ctx, cache) => (openBlock(), createBlock(unref(t), null, {
         default: vueYt(() => [resolveComponent(unref(uiSwitchJ), {
           role: `listbox`,
@@ -2934,9 +2934,9 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
           "aria-orientation": unref(n).orientation.value,
           "aria-multiselectable": !!unref(n).multiple.value,
           "data-orientation": unref(n).orientation.value,
-          onMousedown: cache[0] ||= withDirectives(e => r.value = true, [`left`]),
+          onMousedown: cache[0] ||= withDirectives(e => uiSwitchUtResult.value = true, [`left`]),
           onFocus: cache[1] ||= e => {
-            unref(r) || unref(n).onEnter(e);
+            unref(uiSwitchUtResult) || unref(n).onEnter(e);
           },
           onKeydown: [cache[2] ||= playerT(e => {
             (unref(n).orientation.value !== `vertical` || e.key !== `ArrowLeft` && e.key !== `ArrowRight`) && (unref(n).orientation.value !== `horizontal` || e.key !== `ArrowUp` && e.key !== `ArrowDown`) && (e.preventDefault(), unref(n).focusable.value && unref(n).onKeydownNavigation(e));
@@ -3183,10 +3183,10 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
     }
   });
 function Vc(state) {
-  let t = uiSwitchK({
+  let uiSwitchKResult = uiSwitchK({
     nonce: vueBn()
   });
-  return computed(() => state?.value || t.nonce?.value);
+  return computed(() => state?.value || uiSwitchKResult.nonce?.value);
 }
 var [Hc, Uc] = uiSwitchYt(`AvatarRoot`),
   AvatarRoot = defineComponent({
@@ -3236,12 +3236,12 @@ var [Hc, Uc] = uiSwitchYt(`AvatarRoot`),
         n = Hc();
       uiSwitchV();
       let r = vueBn(propsAlias.delayMs === undefined);
-      return vueGt(e => {
+      return vueGt(fn => {
         if (propsAlias.delayMs && N) {
           let n = window.setTimeout(() => {
             r.value = true;
           }, propsAlias.delayMs);
-          e(() => {
+          fn(() => {
             window.clearTimeout(n);
           });
         }
@@ -3270,13 +3270,13 @@ function qc(state, {
       flag.value && (o.value = e);
     };
   return onBeforeMount(() => {
-    flag.value = true, vueGt(r => {
+    flag.value = true, vueGt(fn => {
       let i = computedResult.value;
       if (!i) return;
       o.value = Kc(i, state.value);
       let c = handler(`loaded`),
         l = handler(`error`);
-      i.addEventListener(`load`, c), i.addEventListener(`error`, l), t?.value && (i.referrerPolicy = t.value), typeof n?.value == `string` && (i.crossOrigin = n.value), r(() => {
+      i.addEventListener(`load`, c), i.addEventListener(`error`, l), t?.value && (i.referrerPolicy = t.value), typeof n?.value == `string` && (i.crossOrigin = n.value), fn(() => {
         i.removeEventListener(`load`, c), i.removeEventListener(`error`, l);
       });
     });
@@ -3524,13 +3524,13 @@ var AvatarImage = defineComponent({
           defaultValue: y.value,
           passive: itemsAlias.modelValue === undefined
         }),
-        j = popoverG({
+        popoverGResult = popoverG({
           defaultPlaceholder: itemsAlias.placeholder,
           defaultValue: uiSwitchAtResult.value,
           locale: itemsAlias.locale
         }),
         ee = uiSwitchAt(itemsAlias, `placeholder`, emitAlias, {
-          defaultValue: itemsAlias.defaultPlaceholder ?? j.copy(),
+          defaultValue: itemsAlias.defaultPlaceholder ?? popoverGResult.copy(),
           passive: itemsAlias.placeholder === undefined
         });
       function te(e) {
@@ -4581,10 +4581,10 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       emit: emit
     }) {
       let propsAlias = props,
-        r = uiSwitchU(emit);
+        uiSwitchUResult = uiSwitchU(emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(DropdownMenuTriggerO), vueTr(vueV({
         ...propsAlias,
-        ...unref(r)
+        ...unref(uiSwitchUResult)
       })), {
         default: vueYt(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -4730,11 +4730,11 @@ var ContextMenuTrigger = defineComponent({
     setup(props) {
       let propsAlias = props;
       uiSwitchV();
-      let n = popoverI();
+      let popoverIResult = popoverI();
       return vueAt(() => {
-        n.hasCustomAnchor.value = true;
+        popoverIResult.hasCustomAnchor.value = true;
       }), onUnmounted(() => {
-        n.hasCustomAnchor.value = false;
+        popoverIResult.hasCustomAnchor.value = false;
       }), (e, n) => (openBlock(), createBlock(unref(PopperContentI), vueTr(vueV(propsAlias)), {
         default: vueYt(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -4782,10 +4782,10 @@ var ContextMenuTrigger = defineComponent({
       emit: emit
     }) {
       let propsAlias = props,
-        r = uiSwitchU(emit);
+        uiSwitchUResult = uiSwitchU(emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(MenuRadioGroup), vueTr(vueV({
         ...propsAlias,
-        ...unref(r)
+        ...unref(uiSwitchUResult)
       })), {
         default: vueYt(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -5571,8 +5571,8 @@ function du(e, t, n = `ltr`) {
     o = t.content - t.viewport,
     s = a - r,
     c = n === `ltr` ? [0, o] : [o * -1, 0],
-    l = uiSwitchBt(e, c[0], c[1]);
-  return su([0, o], [0, s])(l);
+    uiSwitchBtResult = uiSwitchBt(e, c[0], c[1]);
+  return su([0, o], [0, s])(uiSwitchBtResult);
 }
 function fu(e) {
   return e ? Number.parseInt(e, 10) : 0;
@@ -5743,21 +5743,21 @@ var ScrollAreaScrollbarX = defineComponent({
         a(`POINTER_LEAVE`);
       }
       let u = ae(() => a(`SCROLL_END`), 100);
-      return vueGt(e => {
+      return vueGt(fn => {
         if (i.value === `glimpse`) {
           let n = window.setTimeout(a, t.scrollHideDelay.value, `HIDE`);
-          e(() => {
+          fn(() => {
             window.clearTimeout(n);
           });
         }
-      }), vueGt(e => {
+      }), vueGt(fn => {
         if (i.value === `idle`) {
           let n = window.setTimeout(a, t.scrollHideDelay.value, `HIDE`);
-          e(() => {
+          fn(() => {
             window.clearTimeout(n);
           });
         }
-      }), vueGt(e => {
+      }), vueGt(fn => {
         let r = t.viewport.value,
           i = n.isHorizontal.value ? `scrollLeft` : `scrollTop`;
         if (r) {
@@ -5766,7 +5766,7 @@ var ScrollAreaScrollbarX = defineComponent({
               let e = r[i];
               t !== e && (a(`SCROLL`), u()), t = e;
             };
-          r.addEventListener(`scroll`, handler), e(() => {
+          r.addEventListener(`scroll`, handler), fn(() => {
             r.removeEventListener(`scroll`, handler);
           });
         }
@@ -5870,16 +5870,16 @@ var ScrollAreaScrollbarX = defineComponent({
           }
         }),
         computedResult = computed(() => i.value !== `hidden`);
-      vueGt(e => {
+      vueGt(fn => {
         if (i.value === `idle`) {
           let n = window.setTimeout(a, t.scrollHideDelay.value, `HIDE`);
-          e(() => {
+          fn(() => {
             window.clearTimeout(n);
           });
         }
       });
       let c = ae(() => a(`SCROLL_END`), 100);
-      return vueGt(e => {
+      return vueGt(fn => {
         let r = t.viewport.value,
           i = n.isHorizontal.value ? `scrollLeft` : `scrollTop`;
         if (r) {
@@ -5888,7 +5888,7 @@ var ScrollAreaScrollbarX = defineComponent({
               let e = r[i];
               t !== e && (a(`SCROLL`), c()), t = e;
             };
-          r.addEventListener(`scroll`, handler), e(() => {
+          r.addEventListener(`scroll`, handler), fn(() => {
             r.removeEventListener(`scroll`, handler);
           });
         }
@@ -6316,8 +6316,8 @@ var ScrollAreaScrollbarX = defineComponent({
 function Mu(items, t, n) {
   return items === undefined ? false : Array.isArray(items) ? items.some(item => Nu(item, t, n)) : Nu(items, t, n);
 }
-function Nu(e, t, n) {
-  return e === undefined || t === undefined ? false : typeof e == `string` ? e === t : typeof n == `function` ? n(e, t) : typeof n == `string` ? e?.[n] === t?.[n] : isequalT(e, t);
+function Nu(e, t, fn) {
+  return e === undefined || t === undefined ? false : typeof e == `string` ? e === t : typeof fn == `function` ? fn(e, t) : typeof fn == `string` ? e?.[fn] === t?.[fn] : isequalT(e, t);
 }
 function Pu(count) {
   return count == null || count === `` || Array.isArray(count) && count.length === 0;
@@ -6983,8 +6983,8 @@ var Fu = [`value`],
               s = boundingClientRect.width + a,
               c = Math.max(s, boundingClientRectResult.width),
               u = window.innerWidth - 10,
-              d = uiSwitchBt(i, 10, Math.max(10, u - c));
-            state.value.style.minWidth = `${s}px`, state.value.style.left = `${d}px`;
+              uiSwitchBtResult = uiSwitchBt(i, 10, Math.max(10, u - c));
+            state.value.style.minWidth = `${s}px`, state.value.style.left = `${uiSwitchBtResult}px`;
           } else {
             let r = boundingClientRectResult.right - o.right,
               i = window.innerWidth - boundingClientRectData.right - r,
@@ -6992,8 +6992,8 @@ var Fu = [`value`],
               s = boundingClientRect.width + a,
               c = Math.max(s, boundingClientRectResult.width),
               u = window.innerWidth - 10,
-              d = uiSwitchBt(i, 10, Math.max(10, u - c));
-            state.value.style.minWidth = `${s}px`, state.value.style.right = `${d}px`;
+              uiSwitchBtResult = uiSwitchBt(i, 10, Math.max(10, u - c));
+            state.value.style.minWidth = `${s}px`, state.value.style.right = `${uiSwitchBtResult}px`;
           }
           let mapped = i().map(item => item.ref),
             u = window.innerHeight - 20,
@@ -7209,10 +7209,10 @@ var Fu = [`value`],
       function u() {
         setTimeoutResult &&= (clearTimeout(setTimeoutResult), undefined);
       }
-      return watch(computedResult, (value, t, n) => {
+      return watch(computedResult, (value, t, fn) => {
         u(), setTimeoutResult = setTimeout(() => {
           c.value = computedResult.value, setTimeoutResult = undefined;
-        }), n(u);
+        }), fn(u);
       }), onUnmounted(u), (e, t) => computedResult.value || c.value || o.value?.present ? (openBlock(), createBlock(unref(uiSwitchN), {
         key: 0,
         ref_key: `presenceRef`,
@@ -7600,14 +7600,14 @@ var Fu = [`value`],
           currentElement: i
         } = uiSwitchV(),
         flag = vueBn(false);
-      return vueGt(e => {
+      return vueGt(fn => {
         if (t.viewport?.value && t.isPositioned?.value) {
           let n = t.viewport.value;
           function r() {
             let e = n.scrollHeight - n.clientHeight;
             flag.value = Math.ceil(n.scrollTop) < e;
           }
-          r(), n.addEventListener(`scroll`, r), e(() => n.removeEventListener(`scroll`, r));
+          r(), n.addEventListener(`scroll`, r), fn(() => n.removeEventListener(`scroll`, r));
         }
       }), watch(i, () => {
         i.value && n?.onScrollButtonChange(i.value);
@@ -7647,13 +7647,13 @@ var Fu = [`value`],
           currentElement: i
         } = uiSwitchV(),
         flag = vueBn(false);
-      return vueGt(e => {
+      return vueGt(fn => {
         if (t.viewport?.value && t.isPositioned?.value) {
           let n = t.viewport.value;
           function r() {
             flag.value = n.scrollTop > 0;
           }
-          r(), n.addEventListener(`scroll`, r), e(() => n.removeEventListener(`scroll`, r));
+          r(), n.addEventListener(`scroll`, r), fn(() => n.removeEventListener(`scroll`, r));
         }
       }), watch(i, () => {
         i.value && n?.onScrollButtonChange(i.value);
@@ -8945,12 +8945,12 @@ function Kd(e) {
 var qd = {
   exec: () => null
 };
-function Jd(e) {
+function Jd(fn) {
   let emptyItems = [];
   return n => {
     let r = Math.max(0, Math.min(3, n - 1)),
       i = emptyItems[r];
-    return i || (i = e(r), emptyItems[r] = i), i;
+    return i || (i = fn(r), emptyItems[r] = i), i;
   };
 }
 function Yd(e, t = ``) {
@@ -10736,11 +10736,11 @@ var np = {
     count(e, t = 1) {
       ep && (tp[e] += t);
     },
-    time(e, t) {
-      if (!ep) return t();
+    time(e, fn) {
+      if (!ep) return fn();
       let n = performance.now();
       try {
-        return t();
+        return fn();
       } finally {
         tp[e] += performance.now() - n;
       }
@@ -12381,7 +12381,7 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
       id: e,
       dismiss: true
     })))) : this.toasts.forEach(item => {
-      this.subscribers.forEach(t => t({
+      this.subscribers.forEach(fn => fn({
         id: item.id,
         dismiss: true
       }));
@@ -12416,17 +12416,17 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
       type: `loading`,
       message: e
     });
-    promise = (e, t) => {
+    promise = (fn, t) => {
       if (!t) return;
       let replaceResult;
       t.loading !== undefined && (replaceResult = this.create({
         ...t,
-        promise: e,
+        promise: fn,
         type: `loading`,
         message: t.loading,
         description: typeof t.description == `function` ? undefined : t.description
       }));
-      let r = Promise.resolve(e instanceof Function ? e() : e),
+      let r = Promise.resolve(fn instanceof Function ? fn() : fn),
         i = replaceResult !== undefined,
         a,
         o = r.then(async response => {
@@ -14879,13 +14879,13 @@ var lre = [`title`],
             return;
           }
           try {
-            let t = useAuthI(await window.electronAPI.auth.browserPoll());
+            let useAuthIResult = useAuthI(await window.electronAPI.auth.browserPoll());
             if (d || e !== c) return;
-            if (t.status === `complete`) {
-              a.value = `finishing`, o.value = ``, t.isNewUser && emitAlias(`registered`, t.result), await i();
+            if (useAuthIResult.status === `complete`) {
+              a.value = `finishing`, o.value = ``, useAuthIResult.isNewUser && emitAlias(`registered`, useAuthIResult.result), await i();
               return;
             }
-            if (t.status === `expired`) {
+            if (useAuthIResult.status === `expired`) {
               a.value = `idle`, o.value = i18nTranslate(`login.browser.expired`);
               return;
             }
@@ -14901,9 +14901,9 @@ var lre = [`title`],
         let e = ++c;
         a.value = `opening`, o.value = ``;
         try {
-          let t = useAuthI(await window.electronAPI.auth.browserStart());
+          let useAuthIResult = useAuthI(await window.electronAPI.auth.browserStart());
           if (d || e !== c) return;
-          l = t.expiresAt, u = t.intervalMs, a.value = `waiting`, f(e);
+          l = useAuthIResult.expiresAt, u = useAuthIResult.intervalMs, a.value = `waiting`, f(e);
         } catch (t) {
           if (d || e !== c) return;
           a.value = `idle`, o.value = t instanceof Error ? t.message : i18nTranslate(`login.browser.retry`);
@@ -17875,7 +17875,7 @@ var soe = {
       function s() {
         a.value || (a.value = true, localStorage.setItem(a_, `1`));
       }
-      watch(() => [propsAlias.container, propsAlias.ready, a.value], ([e, t, n], value, i) => {
+      watch(() => [propsAlias.container, propsAlias.ready, a.value], ([e, t, n], value, fn) => {
         if (o.value = false, !e || !t || n) return;
         let a = true,
           c = () => {
@@ -17890,7 +17890,7 @@ var soe = {
           }, yoe);
         e.addEventListener(`scroll`, l, {
           passive: true
-        }), resizeObserver.observe(e), i(() => {
+        }), resizeObserver.observe(e), fn(() => {
           clearTimeout(d), resizeObserver.disconnect(), e.removeEventListener(`scroll`, l);
         });
       }, {
@@ -20283,14 +20283,14 @@ var Y_ = {
 function Z_(e) {
   return e === `high` ? `text-[#ef4444]` : e === `medium` ? `text-[#f59e0b]` : `text-[#3b82f6]`;
 }
-function Q_(e, t) {
-  return e(t === `high` ? `todo.priority.highShort` : t === `medium` ? `todo.priority.mediumShort` : `todo.priority.lowShort`);
+function Q_(fn, t) {
+  return fn(t === `high` ? `todo.priority.highShort` : t === `medium` ? `todo.priority.mediumShort` : `todo.priority.lowShort`);
 }
-function $_(e, t) {
-  return e(t === `high` ? `todo.priority.highFull` : t === `medium` ? `todo.priority.mediumFull` : `todo.priority.lowFull`);
+function $_(fn, t) {
+  return fn(t === `high` ? `todo.priority.highFull` : t === `medium` ? `todo.priority.mediumFull` : `todo.priority.lowFull`);
 }
-function ev(e, t) {
-  return e(t === `todo` ? `todo.status.todo` : t === `in-progress` ? `todo.status.inProgress` : t === `done` ? `todo.status.done` : `todo.status.overdue`);
+function ev(fn, t) {
+  return fn(t === `todo` ? `todo.status.todo` : t === `in-progress` ? `todo.status.inProgress` : t === `done` ? `todo.status.done` : `todo.status.overdue`);
 }
 function tv(e) {
   return e === `in-progress` ? `bg-[#fef3c7] text-[#d97706] hover:bg-[#fde68a]` : e === `done` ? `bg-[#dcfce7] text-[#16a34a] hover:bg-[#bbf7d0]` : e === `overdue` ? `bg-[#fee2e2] text-[#ef4444] hover:bg-[#fecaca]` : `bg-[#f3f4f6] text-[#6b7280] hover:bg-[#e5e7eb]`;
@@ -20400,21 +20400,21 @@ function yv(e) {
 function bv(e) {
   return new Date(e.getFullYear(), e.getMonth(), e.getDate()).getTime();
 }
-function xv(e, t, n) {
+function xv(e, t, fn) {
   let r = _v(e);
   if (Number.isNaN(r.getTime())) return e;
   let i = t - r.getTime();
-  if (i < 6e4) return n(`todo.activity.time.justNow`);
+  if (i < 6e4) return fn(`todo.activity.time.justNow`);
   let a = Math.floor(i / 6e4);
-  if (a < 60) return n(`todo.activity.time.minutesAgo`, {
+  if (a < 60) return fn(`todo.activity.time.minutesAgo`, {
     count: a
   });
   let date = new Date(t);
-  if (bv(r) === bv(date)) return n(`todo.activity.time.hoursAgo`, {
+  if (bv(r) === bv(date)) return fn(`todo.activity.time.hoursAgo`, {
     count: Math.floor(a / 60)
   });
   let s = new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1);
-  if (bv(r) === s.getTime()) return n(`todo.activity.time.yesterday`, {
+  if (bv(r) === s.getTime()) return fn(`todo.activity.time.yesterday`, {
     time: yv(r)
   });
   let c = `${vv(r.getMonth() + 1)}-${vv(r.getDate())} ${yv(r)}`;
@@ -24956,12 +24956,12 @@ async function tme(items, t = {}) {
     timeoutMs: t.timeoutMs
   });
   if (!t.signal) return _y(await r);
-  let promise = new Promise((e, n) => {
+  let promise = new Promise((e, fn) => {
     if (t.signal?.aborted) {
-      n(new DOMException(`The operation was aborted`, `AbortError`));
+      fn(new DOMException(`The operation was aborted`, `AbortError`));
       return;
     }
-    t.signal?.addEventListener(`abort`, () => n(new DOMException(`The operation was aborted`, `AbortError`)), {
+    t.signal?.addEventListener(`abort`, () => fn(new DOMException(`The operation was aborted`, `AbortError`)), {
       once: true
     });
   });
@@ -25145,17 +25145,17 @@ var wy = {
         attachmentId: deleteValue
       });
     },
-    async uploadFile(file, fileValue, items, fileInput, i) {
+    async uploadFile(file, fileValue, items, fileInput, fn) {
       let attachmentInit = await this.attachmentInit(file, fileValue, items);
       try {
         for (let t = 0; t < attachmentInit.partCount; t += 1) {
-          if (i?.()) throw Cy();
+          if (fn?.()) throw Cy();
           let o = t * attachmentInit.partSize,
             s = Math.min(items.size, o + attachmentInit.partSize),
             arrayBuffer = await items.slice(o, s).arrayBuffer();
           await yy((await this.attachmentPartUrl(file, attachmentInit.token, t + 1)).url, arrayBuffer, items.type || `application/octet-stream`, 3e5), fileInput(Math.round((t + 1) / attachmentInit.partCount * 100));
         }
-        if (i?.()) throw Cy();
+        if (fn?.()) throw Cy();
         return await this.attachmentComplete(file, attachmentInit.token);
       } catch (t) {
         throw await this.attachmentAbort(file, attachmentInit.token).catch(() => undefined), t;
@@ -27618,16 +27618,16 @@ function Db(e, t, n, r = Date.now()) {
   let filtered = Eb(t, n, r).filter(item => item <= e);
   return filtered.length ? filtered[filtered.length - 1] : null;
 }
-async function Ob(event, t) {
+async function Ob(event, fn) {
   if (event.preventDefault(), event.stopPropagation(), typeof window.electronAPI?.showImageContextMenu == `function`) try {
     let {
       action: n
     } = await window.electronAPI.showImageContextMenu({
       x: event.clientX,
       y: event.clientY,
-      canDownload: !!t
+      canDownload: !!fn
     });
-    n === `download` && t?.();
+    n === `download` && fn?.();
   } catch {}
 }
 function kb(e, t) {
@@ -35180,12 +35180,12 @@ var Qge = {
     count.applyMask = function (e, t) {
       let r = t.size;
       for (let i = 0; i < r; i++) for (let a = 0; a < r; a++) t.isReserved(a, i) || t.xor(a, i, n(e, a, i));
-    }, count.getBestMask = function (t, n) {
+    }, count.getBestMask = function (t, fn) {
       let r = Object.keys(count.Patterns).length,
         i = 0,
         a = 1 / 0;
       for (let o = 0; o < r; o++) {
-        n(o), count.applyMask(o, t);
+        fn(o), count.applyMask(o, t);
         let r = count.getPenaltyN1(t) + count.getPenaltyN2(t) + count.getPenaltyN3(t) + count.getPenaltyN4(t);
         count.applyMask(o, t), r < a && (a = r, i = o);
       }
@@ -35968,7 +35968,7 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
       }
       return i;
     }
-    count.render = function (e, r, a) {
+    count.render = function (e, r, fn) {
       let optionsResult = t.getOptions(r),
         s = e.modules.size,
         c = e.modules.data,
@@ -35978,10 +35978,10 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
         f = `viewBox="0 0 ` + l + ` ` + l + `"`,
         p = `<svg xmlns="http://www.w3.org/2000/svg" ` + (optionsResult.width ? `width="` + optionsResult.width + `" height="` + optionsResult.width + `" ` : ``) + f + ` shape-rendering="crispEdges">` + u + d + `</svg>
 `;
-      return typeof a == `function` && a(null, p), p;
+      return typeof fn == `function` && fn(null, p), p;
     };
   }),
-  Lw = uiSwitchFt(uiSwitchMt(e => {
+  uiSwitchFtResult = uiSwitchFt(uiSwitchMt(fn => {
     var uiSwitchMtResultResult = uiSwitchMtResult(),
       n = Nw(),
       r = Fw(),
@@ -36011,7 +36011,7 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
         o(e);
       }
     }
-    e.create = n.create, e.toCanvas = a.bind(null, r.render), e.toDataURL = a.bind(null, r.renderToDataURL), e.toString = a.bind(null, function (e, t, n) {
+    fn.create = n.create, fn.toCanvas = a.bind(null, r.render), fn.toDataURL = a.bind(null, r.renderToDataURL), fn.toString = a.bind(null, function (e, t, n) {
       return i.render(e, n);
     });
   })(), 1),
@@ -36056,7 +36056,7 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
         }
         r.value = true;
         try {
-          let e = await (0, Lw.toDataURL)(trimmed, {
+          let e = await (0, uiSwitchFtResult.toDataURL)(trimmed, {
             width: t,
             margin: 1,
             errorCorrectionLevel: `M`,
@@ -40799,7 +40799,7 @@ var Empty = defineComponent({
           passive: true,
           defaultValue: eventAlias.defaultPlaceholder ?? popoverO(popoverD())
         }),
-        o = popoverL(eventAlias.locale ?? `en`),
+        popoverLResult = popoverL(eventAlias.locale ?? `en`),
         computedResult = computed(() => eventAlias.yearRange ?? xn({
           start: eventAlias?.minValue ?? (vueTn(eventAlias.placeholder) ?? eventAlias.defaultPlaceholder ?? popoverO(popoverD())).cycle(`year`, -100),
           end: eventAlias?.maxValue ?? (vueTn(eventAlias.placeholder) ?? eventAlias.defaultPlaceholder ?? popoverO(popoverD())).cycle(`year`, 10)
@@ -40810,7 +40810,7 @@ var Empty = defineComponent({
       return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(c), null, {
         default: vueYt(({
           date: e
-        }) => [createElementVNode(`div`, EN, [createElementVNode(`div`, DN, [createElementVNode(`div`, ON, toDisplayString(unref(o).custom(unref(popoverB)(e), {
+        }) => [createElementVNode(`div`, EN, [createElementVNode(`div`, DN, [createElementVNode(`div`, ON, toDisplayString(unref(popoverLResult).custom(unref(popoverB)(e), {
           month: `short`
         })), 1), resolveComponent(unref(NativeSelect), {
           class: `text-xs h-8 pr-6 pl-2 text-transparent relative`,
@@ -40827,7 +40827,7 @@ var Empty = defineComponent({
             value: t.month,
             selected: e.month === t.month
           }, {
-            default: vueYt(() => [createTextVNode(toDisplayString(unref(o).custom(unref(popoverB)(t), {
+            default: vueYt(() => [createTextVNode(toDisplayString(unref(popoverLResult).custom(unref(popoverB)(t), {
               month: `short`
             })), 1)]),
             _: 2
@@ -40838,7 +40838,7 @@ var Empty = defineComponent({
       }), resolveComponent(unref(u), null, {
         default: vueYt(({
           date: e
-        }) => [createElementVNode(`div`, kN, [createElementVNode(`div`, AN, [createElementVNode(`div`, jN, toDisplayString(unref(o).custom(unref(popoverB)(e), {
+        }) => [createElementVNode(`div`, kN, [createElementVNode(`div`, AN, [createElementVNode(`div`, jN, toDisplayString(unref(popoverLResult).custom(unref(popoverB)(e), {
           year: `numeric`
         })), 1), resolveComponent(unref(NativeSelect), {
           class: `text-xs h-8 pr-6 pl-2 text-transparent relative`,
@@ -40853,7 +40853,7 @@ var Empty = defineComponent({
             value: t.year,
             selected: e.year === t.year
           }, {
-            default: vueYt(() => [createTextVNode(toDisplayString(unref(o).custom(unref(popoverB)(t), {
+            default: vueYt(() => [createTextVNode(toDisplayString(unref(popoverLResult).custom(unref(popoverB)(t), {
               year: `numeric`
             })), 1)]),
             _: 2
@@ -40890,9 +40890,9 @@ var Empty = defineComponent({
             date: i
           }, null, 8, [`date`])])) : event.layout === `month-only` ? (openBlock(), createElementBlock(`div`, PN, [resolveComponent(unref(l), {
             date: i
-          }, null, 8, [`date`]), createTextVNode(` ` + toDisplayString(unref(o).custom(unref(popoverB)(i), {
+          }, null, 8, [`date`]), createTextVNode(` ` + toDisplayString(unref(popoverLResult).custom(unref(popoverB)(i), {
             year: `numeric`
-          })), 1)])) : event.layout === `year-only` ? (openBlock(), createElementBlock(`div`, FN, [createTextVNode(toDisplayString(unref(o).custom(unref(popoverB)(i), {
+          })), 1)])) : event.layout === `year-only` ? (openBlock(), createElementBlock(`div`, FN, [createTextVNode(toDisplayString(unref(popoverLResult).custom(unref(popoverB)(i), {
             month: `short`
           })) + ` `, 1), resolveComponent(unref(d), {
             date: i
@@ -41926,17 +41926,17 @@ var Empty = defineComponent({
           if (!i.value.enableRecording) return i18nTranslate(`settings.recordingSchedule.autoRecordingOff`);
           if (!computedResult.value.enabled) return ``;
           let e = Zn(computedResult.value, m.value),
-            t = motivatorF(computedResult.value, m.value),
-            a = t ? new Intl.DateTimeFormat(r.value, {
+            motivatorFResult = motivatorF(computedResult.value, m.value),
+            a = motivatorFResult ? new Intl.DateTimeFormat(r.value, {
               month: `numeric`,
               day: `numeric`,
               hour: `2-digit`,
               minute: `2-digit`,
               hour12: false
-            }).format(t) : ``;
-          return e ? t ? i18nTranslate(`settings.recordingSchedule.allowedUntil`, {
+            }).format(motivatorFResult) : ``;
+          return e ? motivatorFResult ? i18nTranslate(`settings.recordingSchedule.allowedUntil`, {
             time: a
-          }) : i18nTranslate(`settings.recordingSchedule.allowed`) : t ? i18nTranslate(`settings.recordingSchedule.pausedUntil`, {
+          }) : i18nTranslate(`settings.recordingSchedule.allowed`) : motivatorFResult ? i18nTranslate(`settings.recordingSchedule.pausedUntil`, {
             time: a
           }) : i18nTranslate(`settings.recordingSchedule.paused`);
         }),
@@ -42515,14 +42515,14 @@ function VF() {
       jF.value = false;
     }
   }
-  async function n(t, n) {
+  async function n(t, fn) {
     let r = ++RF,
       count;
     MF.value = true, PF.value = t, OF.value = null, kF.value = null, IF.value = null;
     try {
       let a = await Promise.race([EF.testModels({
         trigger: t,
-        purpose: n
+        purpose: fn
       }), new Promise((t, n) => {
         count = setTimeout(() => n(Error(i18nTranslate(`settings.modelTest.timeout`))), zF);
       })]);
@@ -46425,13 +46425,13 @@ var YB = {
       watch([m, h, p, d], () => {
         if (!d.value) for (let normalizeResult of [`screenshot`, `report`]) x(normalizeResult).includes(g.value[normalizeResult]) || (g.value[normalizeResult] = `default`);
       });
-      async function S(e) {
+      async function S(fn) {
         let t = i;
         d.value = true, f.value = ``;
         try {
           let providerCatalog = await window.electronAPI.xiaoheiBot.listProviderCatalog();
           if (!providerCatalog.ok) throw Error(providerCatalog.error.message);
-          p.value = providerCatalog.data, await vueRt(), l.value && t === i && e?.(`settings_view_loaded`, {
+          p.value = providerCatalog.data, await vueRt(), l.value && t === i && fn?.(`settings_view_loaded`, {
             panel: `model_connection`,
             interaction: `explicit_open`
           });
@@ -49898,7 +49898,7 @@ var zEe = {
     weekly: [`lastWeek`, `thisWeek`, `lastNDays`, `lastRecordedWeek`, `sinceLast`],
     monthly: [`lastMonth`, `thisMonth`, `lastNDays`, `lastRecordedMonth`, `sinceLast`]
   },
-  eOe = motivatorS({
+  motivatorSResult = motivatorS({
     kind: motivatorY([`today`, `yesterday`, `previousWorkday`, `lastRecordedDay`, `sinceLast`, `fillMissing`, `customTime`, `lastHours`, `thisWeek`, `lastWeek`, `lastNDays`, `lastRecordedWeek`, `thisMonth`, `lastMonth`, `lastRecordedMonth`]),
     days: motivatorX().int().min(2).max(62).default(7),
     untilYesterday: motivator().default(false),
@@ -49907,7 +49907,7 @@ var zEe = {
     endTime: RV.default(`06:00`),
     hours: motivatorX().int().min(1).max(72).default(24)
   }),
-  tOe = motivatorV(`mode`, [motivatorS({
+  motivatorVResult = motivatorV(`mode`, [motivatorS({
     mode: motivatorB(`week`),
     days: zV.min(1)
   }), motivatorS({
@@ -49930,8 +49930,8 @@ var zEe = {
     name: motivatorC().max(40).default(``),
     enabled: motivator(),
     type: motivatorY([`daily`, `weekly`, `monthly`]),
-    range: eOe,
-    repeat: tOe,
+    range: motivatorSResult,
+    repeat: motivatorVResult,
     time: RV,
     catchUp: motivator().default(true),
     templateId: motivatorC().max(100).default(``),
@@ -56300,10 +56300,10 @@ function KH() {
     {
       t: i18nTranslate
     } = vueN();
-  async function n(e, t) {
+  async function n(fn, t) {
     HH.value = true, WH.value = null, UH.value = null;
     try {
-      return UH.value = await e(), UH.value.ok && alertN(UH.value.message), UH.value;
+      return UH.value = await fn(), UH.value.ok && alertN(UH.value.message), UH.value;
     } catch (e) {
       return WH.value = GH(e, t), alertT(WH.value), null;
     } finally {
@@ -61991,10 +61991,10 @@ function FGe(e) {
     peakRecords: trimStartResult
   };
 }
-function GU(e, t, n) {
+function GU(e, fn, n) {
   let r = (e, r) => {
       let i = e === `hours` ? NGe(r) : WU(Math.floor(r), n);
-      return t(`heatMap.yearHighlights.units.${e}`, {
+      return fn(`heatMap.yearHighlights.units.${e}`, {
         count: i
       });
     },
@@ -62010,17 +62010,17 @@ function GU(e, t, n) {
         l = n.targets[s],
         u = l === undefined ? 0 : l - o,
         fallbackValue = n.hint ?? ``;
-      return !n.hint && !a && (fallbackValue = l === undefined ? t(`heatMap.yearHighlights.maxLevelHint`) : t(`heatMap.yearHighlights.nextLevelHint`, {
+      return !n.hint && !a && (fallbackValue = l === undefined ? fn(`heatMap.yearHighlights.maxLevelHint`) : fn(`heatMap.yearHighlights.nextLevelHint`, {
         level: s + 1,
         value: r(n.unit, n.unit === `hours` ? Math.ceil(u * 10) / 10 : Math.ceil(u))
       })), {
         id: n.id,
-        name: t(`${i}.name`),
-        sub: n.status ?? t(`${i}.sub`, {
+        name: fn(`${i}.name`),
+        sub: n.status ?? fn(`${i}.sub`, {
           value: r(n.unit, o)
         }),
-        desc: t(`${i}.desc`),
-        rule: t(`${i}.rule`),
+        desc: fn(`${i}.desc`),
+        rule: fn(`${i}.rule`),
         image: n.image,
         level: s,
         segments: mapped,
@@ -62031,18 +62031,18 @@ function GU(e, t, n) {
           percent: Math.floor(mapped[t] * 100)
         })),
         hint: fallbackValue,
-        unlockedLabel: s === 0 ? undefined : n.peakDate ? t(`heatMap.yearHighlights.unlockedOn`, {
+        unlockedLabel: s === 0 ? undefined : n.peakDate ? fn(`heatMap.yearHighlights.unlockedOn`, {
           date: n.peakDate
-        }) : t(`heatMap.yearHighlights.unlockedThisYear`, {
+        }) : fn(`heatMap.yearHighlights.unlockedThisYear`, {
           year: e.year
         }),
         pending: a
       };
     },
     a = FGe(e.summaries),
-    o = e.keyboard ? undefined : t(e.keyboardFailed ? `heatMap.yearHighlights.achievementKeyboardUnavailable` : `heatMap.yearHighlights.achievementKeyboardLoading`),
-    s = e.keyboardFailed ? t(`heatMap.yearHighlights.achievementKeyboardRetryHint`) : e.keyboard?.enabled === false ? t(`heatMap.yearHighlights.achievementKeyboardEnableHint`) : undefined,
-    c = e.reportCount === null ? t(e.reportCountFailed ? `heatMap.yearHighlights.reportCountUnavailable` : `heatMap.yearHighlights.reportCountLoading`) : undefined;
+    o = e.keyboard ? undefined : fn(e.keyboardFailed ? `heatMap.yearHighlights.achievementKeyboardUnavailable` : `heatMap.yearHighlights.achievementKeyboardLoading`),
+    s = e.keyboardFailed ? fn(`heatMap.yearHighlights.achievementKeyboardRetryHint`) : e.keyboard?.enabled === false ? fn(`heatMap.yearHighlights.achievementKeyboardEnableHint`) : undefined,
+    c = e.reportCount === null ? fn(e.reportCountFailed ? `heatMap.yearHighlights.reportCountUnavailable` : `heatMap.yearHighlights.reportCountLoading`) : undefined;
   return [{
     id: `streak`,
     image: CGe,
@@ -62095,7 +62095,7 @@ function GU(e, t, n) {
     targets: [10, 50, 150],
     unit: `reports`,
     status: c,
-    hint: e.reportCountFailed ? t(`heatMap.yearHighlights.reportCountRetryHint`) : undefined
+    hint: e.reportCountFailed ? fn(`heatMap.yearHighlights.reportCountRetryHint`) : undefined
   }, {
     id: `peak`,
     image: jGe,
@@ -64938,7 +64938,7 @@ var FG = GJe,
     parse: () => FG
   }),
   LG = QW(XW({
-    "../../node_modules/.pnpm/punycode.js@2.3.1/node_modules/punycode.js/punycode.js": (items, t) => {
+    "../../node_modules/.pnpm/punycode.js@2.3.1/node_modules/punycode.js/punycode.js": (items, fn) => {
       let n = 2147483647,
         r = /^xn--/,
         i = /[^\0-\x7F]/,
@@ -65046,7 +65046,7 @@ var FG = GJe,
           }
           return emptyItems.join(``);
         };
-      t.exports = {
+      fn.exports = {
         version: `2.3.1`,
         ucs2: {
           decode: f,
@@ -76271,7 +76271,7 @@ function x0e(items, t) {
   }
   return b;
 }
-function UY(text, t, n = {}) {
+function UY(text, fn, n = {}) {
   let r = !!n.final,
     replaced = (text ?? ``).toString().replace(/([^\\])\r(ight|ho)/g, `$1\\r$2`).replace(/([^\\])\n(abla|eq|ot|exists)/g, `$1\\n$2`);
   if (r || (replaced.endsWith(`- *`) && (replaced = replaced.replace(/- \*$/, `- \\*`)), /(?:^|\n)\s*-\s*$/.test(replaced) ? replaced = replaced.replace(/(?:^|\n)\s*-\s*$/, e => e.startsWith(`
@@ -76299,7 +76299,7 @@ function UY(text, t, n = {}) {
     let preTransformTokens = n.preTransformTokens,
       postTransformTokens = n.postTransformTokens;
     if (typeof preTransformTokens == `function` || typeof postTransformTokens == `function`) {
-      let parsed = t.parse(replaced, {
+      let parsed = fn.parse(replaced, {
           __markstreamFinal: r
         }),
         parsedValue = typeof preTransformTokens == `function` && preTransformTokens(parsed) || parsed;
@@ -76307,7 +76307,7 @@ function UY(text, t, n = {}) {
     }
     return a;
   }
-  let parsed = t.parse(replaced, {
+  let parsed = fn.parse(replaced, {
     __markstreamFinal: r
   });
   if (!parsed || !Array.isArray(parsed)) return [];
@@ -76315,12 +76315,12 @@ function UY(text, t, n = {}) {
     postTransformTokens = n.postTransformTokens,
     parsedAlias = parsed;
   preTransformTokens && typeof preTransformTokens == `function` && (parsedAlias = preTransformTokens(parsedAlias) || parsedAlias);
-  let u = t,
+  let u = fn,
     fallbackValue = n.validateLink ?? u.options?.validateLink ?? (typeof u.validateLink == `function` ? u.validateLink : undefined),
     f = {
       ...n,
       validateLink: fallbackValue,
-      __markdownIt: t,
+      __markdownIt: fn,
       __sourceMarkdown: replaced,
       __customHtmlBlockCursor: 0
     },
@@ -76333,7 +76333,7 @@ function UY(text, t, n = {}) {
       p = t && typeof n == `string` ? WY(postTransformTokensResult) : postTransformTokensResult;
     }
   }
-  if (p = g0e(p, r, replaced), p = HY(p, replaced, t, n, r)[0], p = f0e(p, t, n, r), r) {
+  if (p = g0e(p, r, replaced), p = HY(p, replaced, fn, n, r)[0], p = f0e(p, fn, n, r), r) {
     let weakSet = new WeakSet(),
       t = n => {
         if (!n || typeof n != `object` || weakSet.has(n)) return;
@@ -76884,7 +76884,7 @@ var M0e = Object.defineProperty,
   },
   mX = (e, t) => defineProperties(e, getOwnPropertyDescriptors(t)),
   hX = (e, t, n) => fX(e, typeof t == `symbol` ? t : t + ``, n),
-  gX = (state, t, n) => new Promise((r, i) => {
+  gX = (state, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -76899,7 +76899,7 @@ var M0e = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(state, t)).next());
   }),
   L0e = [`cite`],
@@ -78500,7 +78500,7 @@ AZ.install = e => {
   e.component(AZ.__name, AZ);
 };
 var jZ = Symbol(`ViewportPriority`);
-function w2e(e, event) {
+function w2e(fn, event) {
   let n = typeof window < `u` && typeof document < `u`,
     r = typeof event == `boolean` ? vueBn(event) : event,
     i = n ? window.requestIdleCallback ?? (e => window.setTimeout(() => e({
@@ -78577,7 +78577,7 @@ function w2e(e, event) {
       if (typeof IntersectionObserver > `u`) return null;
       let i = function (t, n) {
         return {
-          root: e?.(t ?? null) ?? null,
+          root: fn?.(t ?? null) ?? null,
           rootMargin: n?.rootMargin ?? `300px`,
           threshold: n?.threshold ?? 0
         };
@@ -78619,7 +78619,7 @@ function MZ() {
     replaceResult = null,
     r = new Set(),
     count = null,
-    a = typeof window < `u` ? window.requestIdleCallback ?? (e => window.setTimeout(() => e({
+    a = typeof window < `u` ? window.requestIdleCallback ?? (fn => window.setTimeout(() => fn({
       didTimeout: true,
       timeRemaining: () => 0
     }), 16)) : null,
@@ -78656,7 +78656,7 @@ function MZ() {
         timeout: 1200
       }));
     };
-  return e => {
+  return fn => {
     let i = vueBn(false),
       a,
       o = false,
@@ -78667,9 +78667,9 @@ function MZ() {
       }),
       d = () => {
         try {
-          replaceResult?.unobserve(e);
+          replaceResult?.unobserve(fn);
         } catch {}
-        weakMap.delete(e), r.delete(e), r.size || s();
+        weakMap.delete(fn), r.delete(fn), r.size || s();
       },
       fallbackValue = replaceResult || (typeof window > `u` || typeof IntersectionObserver > `u` ? null : (replaceResult = new IntersectionObserver(e => {
         for (let normalizeResult of e) (normalizeResult.isIntersecting || normalizeResult.intersectionRatio > 0) && c(normalizeResult.target);
@@ -78678,10 +78678,10 @@ function MZ() {
         rootMargin: `300px`,
         threshold: 0
       }), replaceResult));
-    return fallbackValue ? (weakMap.set(e, {
+    return fallbackValue ? (weakMap.set(fn, {
       resolve: a,
       visible: i
-    }), fallbackValue.observe(e), r.add(e), l(), {
+    }), fallbackValue.observe(fn), r.add(fn), l(), {
       isVisible: i,
       whenVisible: promise,
       destroy: d
@@ -83565,27 +83565,27 @@ function b3e(event, t = true, n = 2e3, r) {
       let e = Error(`Worker busy`);
       return e.name = `WorkerBusy`, e.code = `WORKER_BUSY`, e.busy = true, e.inFlight = y$.size, e.max = x$, Promise.reject(e);
     }
-    return new Promise((e, a) => {
+    return new Promise((e, fn) => {
       if (r?.aborted) {
         let e = Error(`Aborted`);
-        e.name = `AbortError`, a(e);
+        e.name = `AbortError`, fn(e);
         return;
       }
       let part = Math.random().toString(36).slice(2),
         c = globalThis.setTimeout(() => {
           y$.delete(part);
           let e = Error(`Worker render timed out`);
-          e.name = `WorkerTimeout`, e.code = `WORKER_TIMEOUT`, a(e), C$();
+          e.name = `WorkerTimeout`, e.code = `WORKER_TIMEOUT`, fn(e), C$();
         }, n);
       r && r.addEventListener(`abort`, () => {
         globalThis.clearTimeout(c), y$.has(part) && y$.delete(part);
         let e = Error(`Aborted`);
-        e.name = `AbortError`, a(e), C$();
+        e.name = `AbortError`, fn(e), C$();
       }, {
         once: true
       });
       let l = e,
-        u = a;
+        u = fn;
       y$.set(part, {
         resolve: e => {
           l(e);
@@ -83611,11 +83611,11 @@ function x3e(e, t = true, n) {
 }
 var S3e = `WORKER_BUSY`;
 function C3e(e = 2e3, t) {
-  return y$.size < x$ ? Promise.resolve() : new Promise((n, r) => {
+  return y$.size < x$ ? Promise.resolve() : new Promise((fn, r) => {
     let count,
       a = false,
       o = () => {
-        a || (a = true, count && globalThis.clearTimeout(count), S$.delete(o), n());
+        a || (a = true, count && globalThis.clearTimeout(count), S$.delete(o), fn());
       };
     if (S$.add(o), count = globalThis.setTimeout(() => {
       if (a) return;
@@ -83690,7 +83690,7 @@ function k$(event, t, n = 1400) {
     let e = Error(`Worker busy`);
     return e.name = `WorkerBusy`, e.code = T3e, e.inFlight = D$.size, e.max = O$, Promise.reject(e);
   }
-  return new Promise((i, a) => {
+  return new Promise((fn, a) => {
     let part = Math.random().toString(36).slice(2),
       trimStartResult,
       c = false,
@@ -83699,7 +83699,7 @@ function k$(event, t, n = 1400) {
       };
     D$.set(part, {
       resolve: e => {
-        l(), i(e);
+        l(), fn(e);
       },
       reject: e => {
         l(), a(e);
@@ -86710,12 +86710,12 @@ var _6e = {
         Yr = vueBn(false),
         Xr = vueBn(false),
         Zr = vueBn(`chat`),
-        Qr = uiSwitchIt(`xiaohei_chat_providers`, [`deepseek`]);
-      Qr.value = Qr.value.filter(item => item === `deepseek` || item === `chatgpt`), Qr.value.length === 0 && (Qr.value = [`deepseek`]);
+        uiSwitchItResult = uiSwitchIt(`xiaohei_chat_providers`, [`deepseek`]);
+      uiSwitchItResult.value = uiSwitchItResult.value.filter(item => item === `deepseek` || item === `chatgpt`), uiSwitchItResult.value.length === 0 && (uiSwitchItResult.value = [`deepseek`]);
       let $r = uiSwitchIt(`xiaohei_reuse_deepseek_report_session`, false);
       function ei(e) {
-        let t = Qr.value.indexOf(e);
-        t > -1 ? Qr.value.splice(t, 1) : Qr.value.push(e);
+        let t = uiSwitchItResult.value.indexOf(e);
+        t > -1 ? uiSwitchItResult.value.splice(t, 1) : uiSwitchItResult.value.push(e);
       }
       let ti = vueBn(false),
         ni = vueBn(false),
@@ -86932,15 +86932,15 @@ var _6e = {
             language: i.value
           };
         Bi?.();
-        let c = Qr.value.length ? [...Qr.value] : [`deepseek`];
+        let c = uiSwitchItResult.value.length ? [...uiSwitchItResult.value] : [`deepseek`];
         Bi = reportApi.onStatusChanged(e => {
           e.status === `completed` && c.some(item => e.model === `chat-${item}`) && e.type === s.type && e.templateId === s.templateId && e.startDate === s.startDate && e.endDate === s.endDate && (Bi?.(), Bi = null, Hi());
         });
         let count = [];
-        Qr.value.includes(`deepseek`) && count.push(hH.open({
+        uiSwitchItResult.value.includes(`deepseek`) && count.push(hH.open({
           ...s,
           reuseSession: $r.value
-        })), Qr.value.includes(`chatgpt`) && count.push(_H.open(s)), count.length === 0 && (Qr.value = [`deepseek`], count.push(hH.open({
+        })), uiSwitchItResult.value.includes(`chatgpt`) && count.push(_H.open(s)), count.length === 0 && (uiSwitchItResult.value = [`deepseek`], count.push(hH.open({
           ...s,
           reuseSession: $r.value
         }))), await Promise.all(count);
@@ -88132,19 +88132,19 @@ var _6e = {
             class: normalizeClass([`w-5 h-5 rounded-full border flex items-center justify-center shrink-0`, Zr.value === `chat` ? `border-primary bg-primary` : `border-black/20`])
           }, [Zr.value === `chat` ? (openBlock(), createElementBlock(`div`, Det)) : createCommentVNode(``, true)], 2)]), createElementVNode(`p`, Oet, toDisplayString(unref(i18nTranslate)(`generateReport.chatOutputDesc`)), 1)])], 2), Zr.value === `chat` ? (openBlock(), createElementBlock(`div`, ket, [createElementVNode(`p`, Aet, toDisplayString(unref(i18nTranslate)(`generateReport.chatProviderLabel`)), 1), createElementVNode(`div`, jet, [createElementVNode(`button`, {
             type: `button`,
-            class: normalizeClass([`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(Qr).includes(`deepseek`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
+            class: normalizeClass([`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(uiSwitchItResult).includes(`deepseek`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
             onClick: renderCache[44] ||= e => ei(`deepseek`)
           }, [resolveComponent(unref(Checkbox), {
-            "model-value": unref(Qr).includes(`deepseek`),
+            "model-value": unref(uiSwitchItResult).includes(`deepseek`),
             class: `pointer-events-none`
           }, null, 8, [`model-value`]), createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`generateReport.chatProviderDeepseek`)), 1)], 2), createElementVNode(`button`, {
             type: `button`,
-            class: normalizeClass([`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(Qr).includes(`chatgpt`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
+            class: normalizeClass([`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all cursor-pointer`, unref(uiSwitchItResult).includes(`chatgpt`) ? `border-primary bg-primary/[0.06] text-primary` : `border-black/8 bg-white text-(--foreground) hover:border-black/15`]),
             onClick: renderCache[45] ||= e => ei(`chatgpt`)
           }, [resolveComponent(unref(Checkbox), {
-            "model-value": unref(Qr).includes(`chatgpt`),
+            "model-value": unref(uiSwitchItResult).includes(`chatgpt`),
             class: `pointer-events-none`
-          }, null, 8, [`model-value`]), createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`generateReport.chatProviderChatgpt`)), 1)], 2)]), unref(Qr).includes(`deepseek`) ? (openBlock(), createElementBlock(`label`, {
+          }, null, 8, [`model-value`]), createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`generateReport.chatProviderChatgpt`)), 1)], 2)]), unref(uiSwitchItResult).includes(`deepseek`) ? (openBlock(), createElementBlock(`label`, {
             key: 0,
             class: normalizeClass([`group flex cursor-pointer items-start gap-2.5 rounded-xl border px-3 py-2.5 transition-all`, unref($r) ? `border-primary/35 bg-primary/[0.045] shadow-[0_1px_2px_rgba(0,0,0,0.02)]` : `border-black/7 bg-black/[0.012] hover:border-primary/20 hover:bg-primary/[0.02]`])
           }, [resolveComponent(unref(Checkbox), {
@@ -89087,7 +89087,7 @@ function Hrt(count) {
     a: t === 9 ? Q$[count[7]] << 4 | Q$[count[8]] : 255
   })), replaceResult;
 }
-var Urt = (e, t) => e < 255 ? t(e) : ``;
+var Urt = (e, fn) => e < 255 ? fn(e) : ``;
 function Wrt(e) {
   var t = Vrt(e) ? zrt : Brt;
   return e ? `#` + t(e.r) + t(e.g) + t(e.b) + Urt(e.a, t) : undefined;
@@ -89123,8 +89123,8 @@ function n1(e) {
     setTimeoutResult;
   return i !== a && (setTimeoutResult = i - a, c = o > 0.5 ? setTimeoutResult / (2 - i - a) : setTimeoutResult / (i + a), trimStartResult = Jrt(t, n, r, setTimeoutResult, i), trimStartResult = trimStartResult * 60 + 0.5), [trimStartResult | 0, c || 0, o];
 }
-function r1(e, t, n, r) {
-  return (Array.isArray(t) ? e(t[0], t[1], t[2]) : e(t, n, r)).map(Y$);
+function r1(fn, t, n, r) {
+  return (Array.isArray(t) ? fn(t[0], t[1], t[2]) : fn(t, n, r)).map(Y$);
 }
 function i1(e, t, n) {
   return r1(t1, e, t, n);
@@ -89733,12 +89733,12 @@ function yit(e) {
 function t0(e, t, n, r = 1e-6) {
   return e >= Math.min(t, n) - r && e <= Math.max(t, n) + r;
 }
-function n0(count, t, n) {
-  n ||= n => count[n] < t;
+function n0(count, t, fn) {
+  fn ||= n => count[n] < t;
   let r = count.length - 1,
     i = 0,
     a;
-  for (; r - i > 1;) a = i + r >> 1, n(a) ? i = a : r = a;
+  for (; r - i > 1;) a = i + r >> 1, fn(a) ? i = a : r = a;
   return {
     lo: i,
     hi: r
@@ -89797,8 +89797,8 @@ function o0(count) {
   return t.size === count.length ? count : Array.from(t);
 }
 var s0 = function () {
-  return typeof window > `u` ? function (e) {
-    return e();
+  return typeof window > `u` ? function (fn) {
+    return fn();
   } : window.requestAnimationFrame;
 }();
 function c0(e, t) {
@@ -90450,9 +90450,9 @@ function K0(e, t = {
 }
 var Hit = (e, t) => e ? e + M1(t) : t,
   q0 = (e, t) => isPlainObject(t) && e !== `adapters` && (Object.getPrototypeOf(t) === null || t.constructor === Object);
-function J0(e, t, n) {
+function J0(e, t, fn) {
   if (Object.prototype.hasOwnProperty.call(e, t) || t === `constructor`) return e[t];
-  let r = n();
+  let r = fn();
   return e[t] = r, r;
 }
 function Uit(e, t, n) {
@@ -90465,7 +90465,7 @@ function Uit(e, t, n) {
     s = r[t];
   return P1(s) && o.isScriptable(t) && (s = Wit(t, s, e, n)), _1(s) && s.length && (s = Git(t, s, e, o.isIndexable)), q0(t, s) && (s = G0(s, i, a && a[t], o)), s;
 }
-function Wit(e, t, n, r) {
+function Wit(e, fn, n, r) {
   let {
     _proxy: i,
     _context: a,
@@ -90474,17 +90474,17 @@ function Wit(e, t, n, r) {
   } = n;
   if (s.has(e)) throw Error(`Recursion detected: ` + Array.from(s).join(`->`) + `->` + e);
   s.add(e);
-  let c = t(a, o || r);
+  let c = fn(a, o || r);
   return s.delete(e), q0(e, c) && (c = X0(i._scopes, i, e, c)), c;
 }
-function Git(e, items, n, r) {
+function Git(e, items, n, fn) {
   let {
     _proxy: i,
     _context: a,
     _subProxy: o,
     _descriptors: s
   } = n;
-  if (a.index !== undefined && r(e)) return items[a.index % items.length];
+  if (a.index !== undefined && fn(e)) return items[a.index % items.length];
   if (isPlainObject(items[0])) {
     let itemsAlias = items,
       filtered = i._scopes.filter(item => item !== itemsAlias);
@@ -90496,8 +90496,8 @@ function Git(e, items, n, r) {
   }
   return items;
 }
-function Y0(e, t, n) {
-  return P1(e) ? e(t, n) : e;
+function Y0(fn, t, n) {
+  return P1(fn) ? fn(t, n) : fn;
 }
 var Kit = (e, t) => e === true ? t : typeof e == `string` ? j1(t, e) : undefined;
 function qit(e, t, n, r, i) {
@@ -92314,7 +92314,7 @@ function Iat(el, t, items, r) {
     hi: a.length - 1
   };
 }
-function N2(e, t, n, r, i) {
+function N2(e, t, n, fn, i) {
   let sortedVisibleDatasetMetas = e.getSortedVisibleDatasetMetas(),
     o = n[t];
   for (let e = 0, n = sortedVisibleDatasetMetas.length; e < n; ++e) {
@@ -92328,7 +92328,7 @@ function N2(e, t, n, r, i) {
       } = Iat(sortedVisibleDatasetMetas[e], t, o, i);
     for (let e = c; e <= l; ++e) {
       let t = s[e];
-      t.skip || r(t, n, e);
+      t.skip || fn(t, n, e);
     }
   }
 }
@@ -92822,24 +92822,24 @@ function $at(e, t) {
 function Z2(e, t) {
   for (let replaceResult of e) if (replaceResult === t || replaceResult.contains(t)) return true;
 }
-function eot(e, t, n) {
+function eot(e, t, fn) {
   let canvas = e.canvas,
     mutationObserver = new MutationObserver(e => {
       let t = false;
       for (let replaceResult of e) t ||= Z2(replaceResult.addedNodes, canvas), t &&= !Z2(replaceResult.removedNodes, canvas);
-      t && n();
+      t && fn();
     });
   return mutationObserver.observe(document, {
     childList: true,
     subtree: true
   }), mutationObserver;
 }
-function tot(e, t, n) {
+function tot(e, t, fn) {
   let canvas = e.canvas,
     mutationObserver = new MutationObserver(e => {
       let t = false;
       for (let replaceResult of e) t ||= Z2(replaceResult.removedNodes, canvas), t &&= !Z2(replaceResult.addedNodes, canvas);
-      t && n();
+      t && fn();
     });
   return mutationObserver.observe(document, {
     childList: true,
@@ -92860,13 +92860,13 @@ function registerResizeListener(resize, listener) {
 function rot(e) {
   Q2.delete(e), Q2.size || window.removeEventListener(`resize`, e4);
 }
-function iot(e, t, n) {
+function iot(e, t, fn) {
   let canvas = e.canvas,
     i = canvas && t2(canvas);
   if (!i) return;
   let a = c0((e, t) => {
       let clientWidth = i.clientWidth;
-      n(e, t), clientWidth < i.clientWidth && n();
+      fn(e, t), clientWidth < i.clientWidth && fn();
     }, window),
     resizeObserver = new ResizeObserver(e => {
       let t = e[0],
@@ -92879,10 +92879,10 @@ function iot(e, t, n) {
 function t4(e, t, n) {
   n && n.disconnect(), t === `resize` && rot(e);
 }
-function aot(e, t, n) {
+function aot(e, t, fn) {
   let canvas = e.canvas,
     i = c0(t => {
-      e.ctx !== null && n($at(t, e));
+      e.ctx !== null && fn($at(t, e));
     }, e);
   return Zat(canvas, t, i), i;
 }
@@ -94188,9 +94188,9 @@ function Pot(e) {
 }
 var v4 = new Map(),
   y4 = new Set();
-function b4(e, t) {
+function b4(e, fn) {
   let n = v4.get(e);
-  return n || (n = t(), v4.set(e, n), y4.add(n)), n;
+  return n || (n = fn(), v4.set(e, n), y4.add(n)), n;
 }
 var x4 = (e, t, n) => {
     let r = j1(t, n);
@@ -94615,17 +94615,17 @@ var k4 = class {
       item._idx = t;
     }), this.notifyPlugins(`afterLayout`);
   }
-  _updateDatasets(e) {
+  _updateDatasets(fn) {
     if (this.notifyPlugins(`beforeDatasetsUpdate`, {
-      mode: e,
+      mode: fn,
       cancelable: true
     }) !== false) {
       for (let e = 0, t = this.data.datasets.length; e < t; ++e) this.getDatasetMeta(e).controller.configure();
-      for (let t = 0, n = this.data.datasets.length; t < n; ++t) this._updateDataset(t, P1(e) ? e({
+      for (let t = 0, n = this.data.datasets.length; t < n; ++t) this._updateDataset(t, P1(fn) ? fn({
         datasetIndex: t
-      }) : e);
+      }) : fn);
       this.notifyPlugins(`afterDatasetsUpdate`, {
-        mode: e
+        mode: fn
       });
     }
   }
@@ -98719,10 +98719,10 @@ var M3 = {
 function N3(e, t) {
   return `${e}:${t}`;
 }
-function act(event, t, items, r) {
-  let sourceLabelWidth = r.sourceLabelWidth,
-    a = Math.max(sourceLabelWidth + r.nodeWidth + 80, r.width - r.targetLabelWidth - r.nodeWidth),
-    o = a + r.nodeWidth + r.targetLabelWidth,
+function act(event, t, items, fn) {
+  let sourceLabelWidth = fn.sourceLabelWidth,
+    a = Math.max(sourceLabelWidth + fn.nodeWidth + 80, fn.width - fn.targetLabelWidth - fn.nodeWidth),
+    o = a + fn.nodeWidth + fn.targetLabelWidth,
     s = new Set(event.map(item => item.id)),
     c = new Set(t.map(item => item.id)),
     filtered = items.filter(item => item.value > 0 && s.has(item.source) && c.has(item.target)),
@@ -98736,15 +98736,15 @@ function act(event, t, items, r) {
     nodes: [],
     links: [],
     width: o,
-    height: r.minHeight,
+    height: fn.minHeight,
     sourceX: sourceLabelWidth,
     targetX: a
   };
   let h = Math.max(f.length, p.length),
-    g = Math.max(r.minHeight, h * r.rowHeight),
-    _ = r.minRowSpacing / 2,
-    v = Math.max(1, r.minRowSpacing - r.nodeGap),
-    y = (e, t, n) => e.reduce((acc, cur) => acc + Math.max((t.get(cur.id) ?? 0) * n, v), 0) + Math.max(0, e.length - 1) * r.nodeGap,
+    g = Math.max(fn.minHeight, h * fn.rowHeight),
+    _ = fn.minRowSpacing / 2,
+    v = Math.max(1, fn.minRowSpacing - fn.nodeGap),
+    y = (e, t, n) => e.reduce((acc, cur) => acc + Math.max((t.get(cur.id) ?? 0) * n, v), 0) + Math.max(0, e.length - 1) * fn.nodeGap,
     b = 0,
     x = g / reduced;
   for (let e = 0; e < 32; e += 1) {
@@ -98754,7 +98754,7 @@ function act(event, t, items, r) {
   let S = b,
     C = (e, t, n, i) => {
       let mapped = e.map(item => Math.max((t.get(item.id) ?? 0) * S, v)),
-        o = mapped.reduce((acc, cur) => acc + cur, 0) + Math.max(0, e.length - 1) * r.nodeGap,
+        o = mapped.reduce((acc, cur) => acc + cur, 0) + Math.max(0, e.length - 1) * fn.nodeGap,
         s = e.length > 1 ? (g - o) / (e.length - 1) : 0,
         c = _ + (e.length > 1 ? 0 : (g - o) / 2);
       return e.map((item, o) => {
@@ -98770,7 +98770,7 @@ function act(event, t, items, r) {
             y: c + (d - u) / 2,
             height: u
           };
-        return c += d + r.nodeGap + s, f;
+        return c += d + fn.nodeGap + s, f;
       });
     },
     w = C(f, u, `source`, sourceLabelWidth),
@@ -98799,7 +98799,7 @@ function act(event, t, items, r) {
     let n = A.get(e);
     n && (n.targetY = t);
   });
-  let ee = sourceLabelWidth + r.nodeWidth,
+  let ee = sourceLabelWidth + fn.nodeWidth,
     te = a,
     M = (ee + te) / 2,
     mapped = filtered.map(item => {
@@ -99050,12 +99050,12 @@ var oct = {
     afternoon: `appUsage.periodAfternoon`,
     evening: `appUsage.periodEvening`
   };
-function R3(e) {
+function R3(fn) {
   return L3.map(({
     period: t
   }) => ({
     id: t,
-    label: e(mct[t]),
+    label: fn(mct[t]),
     neutral: true
   }));
 }
@@ -100226,7 +100226,7 @@ function n6(items, t) {
     } else r(a, o, item.category, t);
   }), emptyItems.sort((left, right) => left.start - right.start || left.end - right.end);
 }
-function r6(e, t, n) {
+function r6(e, t, fn) {
   let requestAnimationFrameResult = null,
     count = null;
   for (let a of e) {
@@ -100234,11 +100234,11 @@ function r6(e, t, n) {
       let e = a.start - requestAnimationFrameResult;
       if (e > 0 && e <= t) {
         let t = requestAnimationFrameResult + e / 2;
-        n(count.category, count.recordIndex, requestAnimationFrameResult, t), n(a.category, a.recordIndex, t, a.start);
+        fn(count.category, count.recordIndex, requestAnimationFrameResult, t), fn(a.category, a.recordIndex, t, a.start);
       }
     }
     let e = requestAnimationFrameResult === null ? a.start : Math.max(a.start, requestAnimationFrameResult);
-    n(a.category, a.recordIndex, e, a.end), (requestAnimationFrameResult === null || a.end >= requestAnimationFrameResult) && (requestAnimationFrameResult = a.end, count = a);
+    fn(a.category, a.recordIndex, e, a.end), (requestAnimationFrameResult === null || a.end >= requestAnimationFrameResult) && (requestAnimationFrameResult = a.end, count = a);
   }
 }
 function qlt(e, t = {}) {
@@ -100275,9 +100275,9 @@ function qlt(e, t = {}) {
     })).sort((left, right) => right.percentage - left.percentage)
   };
 }
-function i6(e, t, n) {
+function i6(e, t, fn) {
   if (t <= e) {
-    n(new Date(e).getHours(), 0);
+    fn(new Date(e).getHours(), 0);
     return;
   }
   let r = e;
@@ -100286,7 +100286,7 @@ function i6(e, t, n) {
       hours = date.getHours();
     date.setMinutes(60, 0, 0);
     let a = Math.min(t, date.getTime());
-    n(hours, a - r), r = a;
+    fn(hours, a - r), r = a;
   }
 }
 function Jlt(items, t = {}) {
@@ -103650,11 +103650,11 @@ function Zpt(e) {
   (e.width > p6 || e.height > p6) && (e.width > p6 && e.height > p6 ? e.width > e.height ? (e.height *= p6 / e.width, e.width = p6) : (e.width *= p6 / e.height, e.height = p6) : e.width > p6 ? (e.height *= p6 / e.width, e.width = p6) : (e.width *= p6 / e.height, e.height = p6));
 }
 function m6(e) {
-  return new Promise((t, n) => {
+  return new Promise((fn, n) => {
     let image = new Image();
     image.onload = () => {
       image.decode().then(() => {
-        requestAnimationFrame(() => t(image));
+        requestAnimationFrame(() => fn(image));
       });
     }, image.onerror = n, image.crossOrigin = `anonymous`, image.decoding = `async`, image.src = e;
   });
@@ -103732,8 +103732,8 @@ function b6(e) {
 function x6(e, t) {
   return `data:${t};base64,${e}`;
 }
-async function S6(e, t, n) {
-  let r = await fetch(e, t);
+async function S6(fn, t, n) {
+  let r = await fetch(fn, t);
   if (r.status === 404) throw Error(`Resource "${r.url}" not found`);
   let i = await r.blob();
   return new Promise((e, t) => {
@@ -103863,12 +103863,12 @@ function Smt(e) {
   let emptyItems = [];
   return e.replace(D6, (e, n, r) => (emptyItems.push(r), e)), emptyItems.filter(item => !b6(item));
 }
-async function Cmt(e, t, n, r, i) {
+async function Cmt(e, t, n, r, fn) {
   try {
     let a = n ? Kpt(t, n) : t,
       o = y6(t),
       trimStartResult;
-    return trimStartResult = i ? x6(await i(a), o) : await w6(a, o, r), e.replace(xmt(t), `$1${trimStartResult}$3`);
+    return trimStartResult = fn ? x6(await fn(a), o) : await w6(a, o, r), e.replace(xmt(t), `$1${trimStartResult}$3`);
   } catch {}
   return e;
 }
@@ -103907,16 +103907,16 @@ async function Emt(e, t) {
   if ((!n || b6(e.src)) && (!h6(e, SVGImageElement) || b6(e.href.baseVal))) return;
   let r = n ? e.src : e.href.baseVal,
     i = await w6(r, y6(r), t);
-  await new Promise((r, a) => {
-    e.onload = r, e.onerror = t.onImageErrorHandler ? (...e) => {
+  await new Promise((fn, a) => {
+    e.onload = fn, e.onerror = t.onImageErrorHandler ? (...e) => {
       try {
-        r(t.onImageErrorHandler(...e));
+        fn(t.onImageErrorHandler(...e));
       } catch (e) {
         a(e);
       }
     } : a;
     let o = e;
-    o.decode &&= r, o.loading === `lazy` && (o.loading = `eager`), n ? (e.srcset = ``, e.src = i) : e.href.baseVal = i;
+    o.decode &&= fn, o.loading === `lazy` && (o.loading = `eager`), n ? (e.srcset = ``, e.src = i) : e.href.baseVal = i;
   });
 }
 async function Dmt(e, t) {
@@ -104617,7 +104617,7 @@ async function U6(e) {
   }
 }
 function W6(e) {
-  let t = Lw.create(e, {
+  let t = uiSwitchFtResult.create(e, {
     errorCorrectionLevel: `M`
   });
   return {
@@ -106327,10 +106327,10 @@ var x_t = {
     minKeys: 1,
     minPresses: 10
   };
-function E8(e, t, n) {
+function E8(e, fn, n) {
   let r = 0,
     i = 0;
-  for (let [n, a] of e) a <= 0 || !t(n) || (r += 1, i += a);
+  for (let [n, a] of e) a <= 0 || !fn(n) || (r += 1, i += a);
   return r >= n.minKeys && i >= n.minPresses;
 }
 function C_t(e, t) {
@@ -108050,9 +108050,9 @@ var myt = [`aria-label`],
       function j(e) {
         if (e.start === g.value && e.end === _.value) return;
         g.value = e.start, _.value = e.end;
-        let t = heatRangeI(e.start, e.end);
-        t && localStorage.setItem(L8, t), trackActionEvent(`feature_map_heat_click`, {
-          entry: `screen_range_${t ?? `custom`}`
+        let heatRangeIResult = heatRangeI(e.start, e.end);
+        heatRangeIResult && localStorage.setItem(L8, heatRangeIResult), trackActionEvent(`feature_map_heat_click`, {
+          entry: `screen_range_${heatRangeIResult ?? `custom`}`
         });
       }
       let ee = computed(() => {
@@ -108103,8 +108103,8 @@ var myt = [`aria-label`],
         t !== undefined && value !== t && te(true);
       }), onBeforeMount(() => {
         d();
-        let e = heatRangeA(h());
-        g.value = e.start, _.value = e.end, finallyResult = setInterval(() => {
+        let heatRangeAResult = heatRangeA(h());
+        g.value = heatRangeAResult.start, _.value = heatRangeAResult.end, finallyResult = setInterval(() => {
           document.visibilityState !== `visible` || _.value < Xg(new Date()) || te(true);
         }, ubt);
       }), onUnmounted(() => {
@@ -110572,9 +110572,9 @@ var gSt = {
         l = vueBn(false),
         u = vueBn(``);
       function d(e) {
-        return new Promise((t, n) => {
+        return new Promise((fn, n) => {
           let image = new Image();
-          image.onload = () => t(image), image.onerror = n, image.src = e;
+          image.onload = () => fn(image), image.onerror = n, image.src = e;
         });
       }
       function f(e, t, n, r, i, a = 600) {
@@ -112895,8 +112895,8 @@ var gSt = {
 function u5(e) {
   return e ? e.name || e.remark || e.nickname || `?` : ``;
 }
-function d5(e, t) {
-  return e(t === `weekly` ? `history.weekly` : t === `monthly` ? `history.monthly` : `history.daily`);
+function d5(fn, t) {
+  return fn(t === `weekly` ? `history.weekly` : t === `monthly` ? `history.monthly` : `history.daily`);
 }
 var f5 = {
   daily: `text-emerald-600 bg-emerald-500/10`,
@@ -112929,7 +112929,7 @@ function g5(event) {
 function tOt(e, t) {
   return e instanceof Error && e.message ? e.message : t;
 }
-function _5(e, t, n) {
+function _5(fn, t, n) {
   let r = g5(t),
     i = {
       NOT_FRIEND: `reportCc.error.notFriend`,
@@ -112938,7 +112938,7 @@ function _5(e, t, n) {
       RATE_LIMITED: `reportCc.error.rateLimited`,
       CONTENT_TOO_LARGE: `reportCc.error.contentTooLarge`
     };
-  return i[r] ? e(i[r]) : tOt(t, e(n));
+  return i[r] ? fn(i[r]) : tOt(t, fn(n));
 }
 var nOt = {
     class: `shrink-0 px-6 pb-4 pt-5 pr-12`
@@ -117819,11 +117819,11 @@ function N5(e) {
   return `xiaoheiBot.notice.${[[/应用退出|客户端重启|运行服务已停止|process.*exit|interrupted/i, `interrupted`], [/积分不足，请充值后继续使用|\bINSUFFICIENT_CREDITS\b/i, `credits`], [/402|quota|余额不足|配额|insufficient.*(?:balance|credit)/i, `quota`], [/尚未连接|凭据|api.?key|401|unauthorized|authentication|登录|token.*expired|not connected|credential|log ?in|sign ?in/i, `authentication`], [/未.*配置.*模型|没有配置模型|model.*not.*configured/i, `modelConfiguration`], [/403|permission|权限|EACCES|EPERM/i, `permission`], [/429|rate.?limit|限流|too many requests/i, `rateLimit`], [/timeout|timed out|超时/i, `timeout`], [/fetch|network|ECONN|ENOTFOUND|网络|连接失败|断网/i, `network`], [/没有.*正文|空.*回复|empty.*response|no final answer/i, `empty`], [/context.*(?:length|window)|too many tokens|上下文.*(?:超|长)/i, `context`], [/SQLITE|ENOSPC|磁盘|保存失败/i, `storage`], [/附件|文件|文件夹|ENOENT|attachment|\bfiles?\b|folder/i, `attachment`], [/维护|不可用|not found|50[0234]|运行服务|模型.*失败|maintenance|unavailable/i, `unavailable`]].find(([e]) => e.test(fallbackValue))?.[1] ?? `unknown`}`;
 }
 var DPt = /^(?:当前模型繁忙|模型服务暂时不可用)（/;
-function P5(e, t) {
+function P5(e, fn) {
   let n = N5(e);
   if (!n) return ``;
   let fallbackValue = e.errorMessage?.trim() ?? ``;
-  return e.status === `failed` && DPt.test(fallbackValue) ? fallbackValue : t(n);
+  return e.status === `failed` && DPt.test(fallbackValue) ? fallbackValue : fn(n);
 }
 var OPt = {
     class: `relative`
@@ -119651,10 +119651,10 @@ var Command = defineComponent({
           return true;
         }),
         p = vueBn(),
-        m = uiSwitchY(p);
+        uiSwitchYResult = uiSwitchY(p);
       return onBeforeMount(() => {
-        if (!(m.value instanceof HTMLElement)) return;
-        c.value.set(uiSwitchIResult, m.value.textContent ?? propsAlias.value?.toString() ?? ``);
+        if (!(uiSwitchYResult.value instanceof HTMLElement)) return;
+        c.value.set(uiSwitchIResult, uiSwitchYResult.value.textContent ?? propsAlias.value?.toString() ?? ``);
         let e = d?.id;
         e && (l.value.has(e) ? l.value.get(e)?.add(uiSwitchIResult) : l.value.set(e, new Set([uiSwitchIResult])));
       }), onUnmounted(() => {
@@ -119847,12 +119847,12 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           interaction: `explicit_open`
         });
       }
-      return watch(() => propsAlias.login?.qrContent, async (value, t, n) => {
+      return watch(() => propsAlias.login?.qrContent, async (value, t, fn) => {
         let i = false;
-        if (n(() => {
+        if (fn(() => {
           i = true;
         }), c.value = ``, l.value = ``, u.value = ``, value) try {
-          let toDataURL = await Lw.toDataURL(value, {
+          let toDataURL = await uiSwitchFtResult.toDataURL(value, {
             width: 224,
             margin: 2,
             errorCorrectionLevel: `M`
@@ -122329,11 +122329,11 @@ var bIt = {
         let fallbackValue = u.value.rule[e] ?? [];
         u.value.rule[e] = fallbackValue.includes(t) ? fallbackValue.filter(item => item !== t) : [...fallbackValue, t].sort((left, right) => left - right);
       }
-      async function w(e) {
+      async function w(fn) {
         if (!p.value) {
           p.value = true, h.value = ``, g.value = ``;
           try {
-            await e(), await x();
+            await fn(), await x();
           } catch (e) {
             h.value = e instanceof Error ? e.message : i18nTranslate(`botUi.operationFailed`);
           } finally {
@@ -125192,7 +125192,7 @@ var _Ht = [`src`],
         computedResult = computed(() => ({
           "--avatar-accent": propsAlias.src === href ? `#408574` : n.value || gHt(propsAlias.fallbackColor)
         }));
-      return watch(() => [propsAlias.stage, propsAlias.collapsed], ([e, t], value, i) => {
+      return watch(() => [propsAlias.stage, propsAlias.collapsed], ([e, t], value, fn) => {
         if (!e || e === `done`) {
           r.value = false;
           return;
@@ -125206,12 +125206,12 @@ var _Ht = [`src`],
           return;
         }
         let o = requestAnimationFrame(a);
-        i(() => cancelAnimationFrame(o));
+        fn(() => cancelAnimationFrame(o));
       }, {
         immediate: true
-      }), watch(() => [propsAlias.src, !!propsAlias.stage], async ([e, t], value, i) => {
+      }), watch(() => [propsAlias.src, !!propsAlias.stage], async ([e, t], value, fn) => {
         let a = false;
-        if (i(() => {
+        if (fn(() => {
           a = true;
         }), n.value = undefined, !t || e === href) return;
         let o = await hHt(e);
@@ -125930,7 +125930,7 @@ var kHt = {
       function Et(e) {
         return h.value.find(item => item.botId === e)?.avatarColor ?? C.value.members?.find(t => t.id === e)?.avatarColor;
       }
-      let Dt = emit,
+      let emitAlias = emit,
         Ot = vueBn(false),
         kt = vueBn(false),
         At = vueBn(null),
@@ -126859,7 +126859,7 @@ var kHt = {
             "conversation-id": unref(C).id,
             onClose: renderCache[34] ||= e => Ot.value = false,
             onOpenTodo: renderCache[35] ||= e => {
-              Ot.value = false, Dt(`openTodo`, e);
+              Ot.value = false, emitAlias(`openTodo`, e);
             }
           }, null, 8, [`conversation-id`])]),
           _: 1
@@ -127229,7 +127229,7 @@ var kHt = {
     }
   }), [[`__scopeId`, `data-v-08e14cdb`]]),
   S7 = `__all__`;
-function PWt(e, t) {
+function PWt(e, fn) {
   let {
       captureGrowthObservation: n
     } = growthTelT(),
@@ -127280,18 +127280,18 @@ function PWt(e, t) {
     if (!(s.value || a.value)) {
       s.value = n.id, o.value = ``, ++u;
       try {
-        let configuredModel = t.getConfiguredModel(t.firstConfiguredModelRef()),
+        let configuredModel = fn.getConfiguredModel(fn.firstConfiguredModelRef()),
           addCommonRole = await window.electronAPI.xiaoheiBot.addCommonRole({
             roleId: n.id,
             providerId: configuredModel?.provider.id,
             modelId: configuredModel?.model.id,
-            thinkingLevel: t.defaultThinkingLevelFor(configuredModel?.model),
+            thinkingLevel: fn.defaultThinkingLevelFor(configuredModel?.model),
             permissionMode: e.permissionMode.value
           });
         if (!addCommonRole.ok) throw Error(addCommonRole.error.message);
         m7(`bot_common_role_select`, {
           role_id: n.id
-        }), await t.reload(), e.selectedContactId.value = addCommonRole.data.conversation.id, m7(`bot_common_role_added`, {
+        }), await fn.reload(), e.selectedContactId.value = addCommonRole.data.conversation.id, m7(`bot_common_role_added`, {
           role_id: n.id
         }), l.value = null, r.value = false;
       } catch (e) {
@@ -127304,7 +127304,7 @@ function PWt(e, t) {
   let g,
     _ = false;
   async function v() {
-    if (!t.isPageActive() || document.hidden || _ || a.value || s.value) return false;
+    if (!fn.isPageActive() || document.hidden || _ || a.value || s.value) return false;
     _ = true;
     let e = u;
     try {
@@ -127316,11 +127316,11 @@ function PWt(e, t) {
       _ = false;
     }
   }
-  return watch(t.isPageActive, value => {
+  return watch(fn.isPageActive, value => {
     value && v();
   }), onBeforeMount(() => {
     g = useAuthA(`bot_common_roles`, v, {
-      active: t.isPageActive
+      active: fn.isPageActive
     });
   }), onUnmounted(() => {
     g?.();
@@ -129937,7 +129937,7 @@ var FWt = {
       };
     }
   }), [[`__scopeId`, `data-v-4b7020f5`]]);
-function iqt(e, state, n) {
+function iqt(e, state, fn) {
   let {
       t: i18nTranslate
     } = vueN(),
@@ -129962,7 +129962,7 @@ function iqt(e, state, n) {
     if (!l.value) {
       l.value = true, u.value = ``;
       try {
-        (await n(e)) || (u.value = i18nTranslate(`xiaoheiBot.settings.general.historySaveError`));
+        (await fn(e)) || (u.value = i18nTranslate(`xiaoheiBot.settings.general.historySaveError`));
       } catch {
         u.value = i18nTranslate(`xiaoheiBot.settings.general.historySaveError`);
       } finally {
@@ -130555,11 +130555,11 @@ function Dqt() {
   function S() {
     T7.delete(p()), o.value = false, s.value = ``, n.value = ``;
   }
-  async function C(e, i) {
+  async function C(fn, i) {
     if (!r.value && t.value) {
       r.value = true, n.value = ``, ++h;
       try {
-        let t = await e();
+        let t = await fn();
         if (g) return;
         if (!t.ok) {
           n.value = t.error.message;
@@ -132046,12 +132046,12 @@ function jJt(event) {
       count: items.length
     });
   }
-  async function E(n) {
+  async function E(fn) {
     if (u.value || event.isSending.value || event.draftRestoring.value) return a.value = i18nTranslate(`botUi.attachmentProcessing`), true;
     u.value = true;
     let r = event.selectedContactId.value;
     try {
-      let t = await n();
+      let t = await fn();
       return d || event.selectedContactId.value !== r ? true : t.ok ? (T(t.data.map(item => {
         let file = new File([item.data], item.name, {
           type: item.mimeType
@@ -134365,7 +134365,7 @@ function UJt() {
     conversationStats: vueBn({})
   };
 }
-function WJt(e) {
+function WJt(fn) {
   let {
       user: t
     } = useAuthT(),
@@ -134384,7 +134384,7 @@ function WJt(e) {
     count,
     p = false,
     m = Promise.resolve(),
-    computedResult = computed(() => i.value && e.active()),
+    computedResult = computed(() => i.value && fn.active()),
     computedData = computed(() => [`queued`, `running`].includes(r.value?.taskStatus ?? `idle`)),
     _ = computed(() => !!r.value?.visitedSteps.includes(5));
   async function v(e, i = false) {
@@ -134427,7 +134427,7 @@ function WJt(e) {
     }
   }
   async function S(t = false) {
-    if (!e.ready()) return;
+    if (!fn.ready()) return;
     c.value = true, o.value = ``;
     let n = l;
     try {
@@ -134493,7 +134493,7 @@ function WJt(e) {
     l++, u++, r.value = null, i.value = false, s.value = false, c.value = false, d = false, counter.value = 1, o.value = ``;
   }, {
     flush: `sync`
-  }), watch([() => t.value?.userId, e.ready, e.active], async ([t, n, r]) => {
+  }), watch([() => t.value?.userId, fn.ready, fn.active], async ([t, n, r]) => {
     if (!r) {
       d = false;
       return;
@@ -134504,7 +134504,7 @@ function WJt(e) {
       o = await v(e => window.electronAPI.xiaoheiBot.getTutorial({
         accountId: e
       }), true);
-    a === l && (c.value = false, o && e.active() && e.ready() && !o.completedAt && !o.dontShowAgain && (i.value = true, await b(o.step)));
+    a === l && (c.value = false, o && fn.active() && fn.ready() && !o.completedAt && !o.dontShowAgain && (i.value = true, await b(o.step)));
   }, {
     immediate: true
   }), watch([computedResult, computedData], ([e, t]) => {
@@ -134934,12 +134934,12 @@ function KJt() {
     computedData = computed(() => n.value.bindings.find(item => item.botId === computedResult.value)),
     f = computed(() => n.value.login?.botId === computedResult.value ? n.value.login : null),
     p = computed(() => new Set(n.value.bindings.map(item => item.botId)));
-  async function m(t) {
+  async function m(fn) {
     if (i.value) return;
     let r = ++s;
     i.value = true, a.value = ``;
     try {
-      let e = await t();
+      let e = await fn();
       if (r !== s) return;
       if (!e.ok) throw Error(e.error.message);
       n.value = e.data;
@@ -135018,9 +135018,9 @@ function KJt() {
 }
 var qJt = 320;
 function N7() {
-  return new Promise(e => {
+  return new Promise(fn => {
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => e());
+      requestAnimationFrame(() => fn());
     });
   });
 }
@@ -137102,114 +137102,114 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
 function I7(e) {
   return IYt.has(e) ? toolSettingsA.value : e !== `mouse-heatmap` || toolSettingsS.value;
 }
-function L7(e, t, n, r, i) {
+function L7(fn, t, n, r, i) {
   return {
     slug: t,
-    name: e(`toolboxNative.${i}Name`),
-    description: e(`toolboxNative.${i}Description`),
+    name: fn(`toolboxNative.${i}Name`),
+    description: fn(`toolboxNative.${i}Description`),
     category: `widgets`,
     icon: n,
     logoUrl: null,
     accentColor: `#16a34a`,
     price: 0,
-    priceUnit: e(`toolboxNative.freeTool`),
+    priceUnit: fn(`toolboxNative.freeTool`),
     inputHint: ``,
     exampleText: ``,
     status: `active`,
     generatorType: r
   };
 }
-function LYt(e) {
+function LYt(fn) {
   return {
     slug: `markdown-reader`,
-    name: e(`toolboxNative.markdownReader`),
-    description: e(`toolboxNative.markdownReaderDescription`),
+    name: fn(`toolboxNative.markdownReader`),
+    description: fn(`toolboxNative.markdownReaderDescription`),
     category: `document`,
     icon: `square-m`,
     logoUrl: null,
     accentColor: `#16a34a`,
     price: 0,
-    priceUnit: e(`toolboxNative.freeTool`),
-    inputHint: e(`toolboxNative.markdownReaderInputHint`),
+    priceUnit: fn(`toolboxNative.freeTool`),
+    inputHint: fn(`toolboxNative.markdownReaderInputHint`),
     exampleText: ``,
     status: `active`,
     generatorType: `markdown-reader`
   };
 }
-function RYt(e) {
+function RYt(fn) {
   return [{
     slug: `local-pdf-compressor`,
-    name: e(`toolboxNative.pdfCompressToolName`),
-    description: e(`toolboxNative.pdfCompressToolDescription`),
+    name: fn(`toolboxNative.pdfCompressToolName`),
+    description: fn(`toolboxNative.pdfCompressToolDescription`),
     category: `productivity`,
     icon: `file-down`,
     logoUrl: null,
     accentColor: `#ef4444`,
     price: 0,
-    priceUnit: e(`toolboxNative.freeTool`),
+    priceUnit: fn(`toolboxNative.freeTool`),
     inputHint: ``,
     exampleText: ``,
     status: `active`,
     generatorType: `pdf-compress`
   }, {
     slug: `local-image-compressor`,
-    name: e(`toolboxNative.imageCompressToolName`),
-    description: e(`toolboxNative.imageCompressToolDescription`),
+    name: fn(`toolboxNative.imageCompressToolName`),
+    description: fn(`toolboxNative.imageCompressToolDescription`),
     category: `productivity`,
     icon: `image-down`,
     logoUrl: null,
     accentColor: `#16a34a`,
     price: 0,
-    priceUnit: e(`toolboxNative.freeTool`),
+    priceUnit: fn(`toolboxNative.freeTool`),
     inputHint: ``,
     exampleText: ``,
     status: `active`,
     generatorType: `image-compress`
   }, {
     slug: `multi-platform-publisher`,
-    name: e(`toolboxNative.multiPlatformPublisherToolName`),
-    description: e(`toolboxNative.multiPlatformPublisherToolDescription`),
+    name: fn(`toolboxNative.multiPlatformPublisherToolName`),
+    description: fn(`toolboxNative.multiPlatformPublisherToolDescription`),
     category: `productivity`,
     icon: `send`,
     logoUrl: null,
     accentColor: `#16a34a`,
     price: 0.1,
-    priceUnit: e(`toolboxNative.publisherPriceUnit`),
+    priceUnit: fn(`toolboxNative.publisherPriceUnit`),
     inputHint: ``,
     exampleText: ``,
     status: `active`,
     generatorType: `multi-platform-publisher`
   }, {
     slug: `clipboard-assistant`,
-    name: e(`toolboxNative.clipboardAssistantToolName`),
-    description: e(`toolboxNative.clipboardAssistantToolDescription`),
+    name: fn(`toolboxNative.clipboardAssistantToolName`),
+    description: fn(`toolboxNative.clipboardAssistantToolDescription`),
     category: `productivity`,
     icon: `clipboard-list`,
     logoUrl: null,
     accentColor: `#16a34a`,
     price: 0,
-    priceUnit: e(`toolboxNative.freeTool`),
+    priceUnit: fn(`toolboxNative.freeTool`),
     inputHint: ``,
     exampleText: ``,
     status: `active`,
     generatorType: `clipboard-assistant`
   }, {
     slug: `screenshot-beautifier`,
-    name: e(`toolboxNative.screenshotToolName`),
-    description: e(`toolboxNative.screenshotToolDescription`),
+    name: fn(`toolboxNative.screenshotToolName`),
+    description: fn(`toolboxNative.screenshotToolDescription`),
     category: `productivity`,
     icon: `camera`,
     logoUrl: null,
     accentColor: `#16a34a`,
     price: 0,
-    priceUnit: e(`toolboxNative.freeTool`),
+    priceUnit: fn(`toolboxNative.freeTool`),
     inputHint: ``,
     exampleText: ``,
     status: `active`,
     generatorType: `screenshot-beautifier`
-  }, L7(e, `work-motivator`, `hand-coins`, `work-motivator`, `workMotivatorTool`), L7(e, `wooden-fish`, `wooden-fish`, `wooden-fish`, `woodenFishTool`), L7(e, `keyboard-sound`, `keyboard-music`, `keyboard-sound`, `keyboardSoundTool`), L7(e, `keyboard-heatmap`, `keyboard`, `keyboard-heatmap`, `keyboardHeatmapTool`), L7(e, `mouse-heatmap`, `mouse-pointer-click`, `mouse-heatmap`, `mouseHeatmapTool`)].filter(item => I7(item.slug));
+  }, L7(fn, `work-motivator`, `hand-coins`, `work-motivator`, `workMotivatorTool`), L7(fn, `wooden-fish`, `wooden-fish`, `wooden-fish`, `woodenFishTool`), L7(fn, `keyboard-sound`, `keyboard-music`, `keyboard-sound`, `keyboardSoundTool`), L7(fn, `keyboard-heatmap`, `keyboard`, `keyboard-heatmap`, `keyboardHeatmapTool`), L7(fn, `mouse-heatmap`, `mouse-pointer-click`, `mouse-heatmap`, `mouseHeatmapTool`)].filter(item => I7(item.slug));
 }
-function R7(items, t, n) {
+function R7(items, t, fn) {
   let index = items.findIndex(item => item.slug === t.slug),
     i = index < 0 ? [...items] : items.map((item, n) => n === index ? {
       ...t,
@@ -137219,7 +137219,7 @@ function R7(items, t, n) {
       status: `active`,
       generatorType: `markdown-reader`
     } : item),
-    a = RYt(n),
+    a = RYt(fn),
     o = new Map(a.map(item => [item.slug, item])),
     s = new Set(i.map(item => item.slug)),
     filtered = [...i.map(item => {
@@ -137229,31 +137229,31 @@ function R7(items, t, n) {
         ...item,
         ...(P7.has(item.slug) ? {
           price: 0,
-          priceUnit: n(`toolboxNative.freeTool`)
+          priceUnit: fn(`toolboxNative.freeTool`)
         } : {}),
         generatorType: t.generatorType
       } : P7.has(item.slug) ? {
         ...item,
         price: 0,
-        priceUnit: n(`toolboxNative.freeTool`)
+        priceUnit: fn(`toolboxNative.freeTool`)
       } : item;
     }), ...a.filter(item => !s.has(item.slug))].filter(item => I7(item.slug));
   return [...F7.flatMap(item => filtered.filter(t => t.slug === item)), ...filtered.filter(item => !F7.includes(item.slug))];
 }
-function z7(e, t) {
+function z7(e, fn) {
   let n = [...e];
   return n.some(item => item.id === `all`) || n.unshift({
     id: `all`,
-    label: t(`toolboxNative.allTools`)
+    label: fn(`toolboxNative.allTools`)
   }), n.some(item => item.id === `document`) || n.push({
     id: `document`,
-    label: t(`toolboxNative.documentsCategory`)
+    label: fn(`toolboxNative.documentsCategory`)
   }), n.some(item => item.id === `productivity`) || n.push({
     id: `productivity`,
-    label: t(`toolboxNative.productivityCategory`)
+    label: fn(`toolboxNative.productivityCategory`)
   }), n.some(item => item.id === `widgets`) || n.push({
     id: `widgets`,
-    label: t(`toolboxNative.widgetsCategory`)
+    label: fn(`toolboxNative.widgetsCategory`)
   }), n;
 }
 var zYt = {
@@ -137772,13 +137772,13 @@ var Q7 = {
   r9 = vueBn(false),
   i9 = vueBn([]),
   onUnlockedResult = null;
-function oXt(e, t) {
+function oXt(e, fn) {
   return {
-    bronze: t(`composables.badges.bronze`),
-    silver: t(`composables.badges.silver`),
-    gold: t(`composables.badges.gold`),
-    diamond: t(`composables.badges.diamond`),
-    crown: t(`composables.badges.crown`)
+    bronze: fn(`composables.badges.bronze`),
+    silver: fn(`composables.badges.silver`),
+    gold: fn(`composables.badges.gold`),
+    diamond: fn(`composables.badges.diamond`),
+    crown: fn(`composables.badges.crown`)
   }[e] ?? e;
 }
 function sXt(e) {
@@ -139396,7 +139396,7 @@ function b9() {
     return 0;
   }
 }
-function x9(e) {
+function x9(fn) {
   let {
       t: i18nTranslate,
       tm: n,
@@ -139455,7 +139455,7 @@ function x9(e) {
     i.value = n, a.value = r, localStorage.setItem(g9, String(n)), localStorage.setItem(_9, JSON.stringify({
       date: v9(),
       count: r
-    })), e() || KZt(), p(f(n, c));
+    })), fn() || KZt(), p(f(n, c));
   }
   return {
     knockCount: i,
@@ -139918,12 +139918,12 @@ var aQt = {
       }
       watch(() => eventAlias.open, value => {
         value && (M(), u().catch(() => {}));
-      }), watch(C, M), watch(E, (text, value, n) => {
+      }), watch(C, M), watch(E, (text, value, fn) => {
         let r = setTimeout(() => {
           let toLocaleLowerCase = text.trim().toLocaleLowerCase();
           toLocaleLowerCase !== D.value && (D.value = toLocaleLowerCase, M());
         }, FQt);
-        n(() => clearTimeout(r));
+        fn(() => clearTimeout(r));
       }), watch(k, items => {
         C.value !== `all` && !items.includes(C.value) && (C.value = `all`);
       });
@@ -141399,14 +141399,14 @@ var V$t = {
         }
       }
       let Jt = false,
-        Yt = null;
+        data = null;
       async function Xt() {
         if (!(!se.value || ce.value || !te.value || computedData.value || Jt)) {
           Jt = true;
           try {
             let consumeSharedRole = await window.electronAPI.xiaoheiBot.consumeSharedRole();
-            if (consumeSharedRole.ok && consumeSharedRole.data && (Yt = consumeSharedRole.data), !Yt || (vn(`xiaohei-bot`), u.value = true, ke.value = false, await vueRt(), !L.value)) return;
-            await L.value.openSharedRole(Yt), Yt = null;
+            if (consumeSharedRole.ok && consumeSharedRole.data && (data = consumeSharedRole.data), !data || (vn(`xiaohei-bot`), u.value = true, ke.value = false, await vueRt(), !L.value)) return;
+            await L.value.openSharedRole(data), data = null;
           } catch (e) {
             alertT(e instanceof Error ? e.message : i18nTranslate(`appShell.sharedRoleOpenFailed`));
           } finally {

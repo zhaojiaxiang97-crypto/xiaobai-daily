@@ -118,7 +118,7 @@ var ge = lucideR(`file-headphone`, [[`path`, {
       emit: emit
     }) {
       let propsAlias = props,
-        Te = emit,
+        emitAlias = emit,
         {
           t: translate
         } = i18nT(),
@@ -178,7 +178,7 @@ var ge = lucideR(`file-headphone`, [[`path`, {
         "toggle-disabled": vueAn(V) || vueAn(U) || vueAn(Ee),
         "requires-accessibility": ``,
         onToggle: vueAn(Me),
-        onBack: renderCache[4] ||= e => Te(`back`)
+        onBack: renderCache[4] ||= e => emitAlias(`back`)
       }, vueE({
         default: vueYt(() => [vueY(`section`, b, [vueY(`header`, x, [vueY(`strong`, S, vueRr(vueAn(translate)(`settings.mechanicalKeyboardSwitchType`)), 1), vueY(`small`, C, vueRr(vueAn(translate)(`toolboxNative.keyboardSoundTypesHint`)), 1)]), vueY(`div`, w, [(vueGt(true), vueS(vueC, null, vueSt(Re.value, state => (vueGt(), vueS(`div`, {
           key: state.value,

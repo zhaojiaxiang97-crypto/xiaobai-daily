@@ -3,14 +3,14 @@ import { An as vueAn, Ct as vueCt, Dn as vueDn, Et as vueEt, Gt as vueGt, Nt as 
 import { E as playerE } from "../i18n/en-US-player.js";
 import { a as PopperContentA, i as PopperContentI, n as PopperContentN, r as PopperContentR } from "./PopperContent.js";
 function U(event, el) {
-  let n = uiSwitchUt(false, 300);
+  let uiSwitchUtResult = uiSwitchUt(false, 300);
   uiSwitchDt(() => {
-    n.value = false;
+    uiSwitchUtResult.value = false;
   });
   let r = vueBn(null),
-    i = uiSwitchOt();
+    uiSwitchOtResult = uiSwitchOt();
   function a() {
-    r.value = null, n.value = false;
+    r.value = null, uiSwitchUtResult.value = false;
   }
   function o(e, t) {
     if (!t) return;
@@ -22,7 +22,7 @@ function U(event, el) {
       o = G(a, W(a, i.getBoundingClientRect()), 1),
       s = K(t.getBoundingClientRect()),
       c = J([...o, ...s]);
-    r.value = c, n.value = true;
+    r.value = c, uiSwitchUtResult.value = true;
   }
   return vueGt(fn => {
     if (event.value && el.value) {
@@ -44,13 +44,13 @@ function U(event, el) {
           fallbackValue = event.value?.contains(o) || el.value?.contains(o),
           l = !q(s, r.value),
           u = !!o.closest(`[data-grace-area-trigger]`);
-        fallbackValue ? a() : (l || u) && (a(), i.trigger());
+        fallbackValue ? a() : (l || u) && (a(), uiSwitchOtResult.trigger());
       };
       event.value?.ownerDocument.addEventListener(`pointermove`, handler), n(() => event.value?.ownerDocument.removeEventListener(`pointermove`, handler));
     }
   }), {
-    isPointerInTransit: n,
-    onPointerExit: i.on
+    isPointerInTransit: uiSwitchUtResult,
+    onPointerExit: uiSwitchOtResult.on
   };
 }
 function W(e, t) {
@@ -354,13 +354,13 @@ var se = {
     },
     setup(props) {
       let propsAlias = props,
-        n = uiSwitchI(undefined, `reka-menu-group`);
+        uiSwitchIResult = uiSwitchI(undefined, `reka-menu-group`);
       return ge({
-        id: n
+        id: uiSwitchIResult
       }), (e, r) => (A(), vueB(vueAn(uiSwitchJ), N({
         role: `group`
       }, propsAlias, {
-        "aria-labelledby": vueAn(n)
+        "aria-labelledby": vueAn(uiSwitchIResult)
       }), {
         default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
@@ -599,36 +599,36 @@ var se = {
         c = I(() => propsAlias.disabled ?? i.disabled.value),
         u = I(() => propsAlias.delayDuration ?? i.delayDuration.value),
         d = I(() => propsAlias.ignoreNonKeyboardFocus ?? i.ignoreNonKeyboardFocus.value),
-        f = uiSwitchAt(propsAlias, `open`, emitAlias, {
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `open`, emitAlias, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         });
-      vueWt(f, e => {
+      vueWt(uiSwitchAtResult, e => {
         i.onClose && (e ? (i.onOpen(), document.dispatchEvent(new CustomEvent(X))) : i.onClose());
       });
       let p = vueBn(false),
         m = vueBn(),
-        g = I(() => f.value ? p.value ? `delayed-open` : `instant-open` : `closed`),
+        g = I(() => uiSwitchAtResult.value ? p.value ? `delayed-open` : `instant-open` : `closed`),
         {
           start: _,
           stop: v
         } = uiSwitchMt(() => {
-          p.value = true, f.value = true;
+          p.value = true, uiSwitchAtResult.value = true;
         }, u, {
           immediate: false
         });
       function y() {
-        v(), p.value = false, f.value = true;
+        v(), p.value = false, uiSwitchAtResult.value = true;
       }
       function b() {
-        v(), f.value = false;
+        v(), uiSwitchAtResult.value = false;
       }
       function C() {
         _();
       }
       return we({
         contentId: ``,
-        open: f,
+        open: uiSwitchAtResult,
         stateAttribute: g,
         trigger: m,
         onTriggerChange(trigger) {
@@ -648,7 +648,7 @@ var se = {
         ignoreNonKeyboardFocus: d
       }), (e, t) => (A(), vueB(vueAn(PopperContentA), null, {
         default: vueYt(() => [vueCt(e.$slots, `default`, {
-          open: vueAn(f)
+          open: vueAn(uiSwitchAtResult)
         })]),
         _: 3
       }));
@@ -860,7 +860,7 @@ var se = {
       }
     },
     setup(props) {
-      let n = uiSwitchB(props),
+      let uiSwitchBResult = uiSwitchB(props),
         {
           forwardRef: r,
           currentElement: i
@@ -878,7 +878,7 @@ var se = {
         o();
       }), (e, t) => (A(), vueB(Q, N({
         ref: vueAn(r)
-      }, vueAn(n)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
       }, 16));
@@ -959,7 +959,7 @@ var se = {
       let propsAlias = props,
         emitAlias = emit,
         a = Z(),
-        o = uiSwitchZ(propsAlias, emitAlias),
+        uiSwitchZResult = uiSwitchZ(propsAlias, emitAlias),
         {
           forwardRef: c
         } = uiSwitchV();
@@ -968,7 +968,7 @@ var se = {
       }, {
         default: vueYt(() => [(A(), vueB(vueEt(vueAn(a).disableHoverableContent.value ? Q : Ee), N({
           ref: vueAn(c)
-        }, vueAn(o)), {
+        }, vueAn(uiSwitchZResult)), {
           default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
           _: 3
         }, 16))]),
@@ -1103,12 +1103,12 @@ var se = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`, `inset`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `inset`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (A(), vueB(vueAn(be), N({
         "data-slot": `dropdown-menu-label`,
         "data-inset": props.inset ? `` : undefined
-      }, vueAn(i), {
+      }, vueAn(uiSwitchBResult), {
         class: vueAn(uiSwitchXt)(`text-muted-foreground px-1.5 py-1 text-xs font-medium data-inset:pl-7`, propsAlias.class)
       }), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
@@ -1143,10 +1143,10 @@ var se = {
     setup(props, {
       emit: emit
     }) {
-      let n = uiSwitchZ(props, emit);
+      let uiSwitchZResult = uiSwitchZ(props, emit);
       return (ctx, renderCache) => (A(), vueB(vueAn(Te), N({
         "data-slot": `tooltip`
-      }, vueAn(n)), {
+      }, vueAn(uiSwitchZResult)), {
         default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
@@ -1195,13 +1195,13 @@ var se = {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = uiSwitchLt(propsAlias, `class`, `hideArrow`),
-        a = uiSwitchZ(i, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `hideArrow`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (A(), vueB(vueAn($), null, {
         default: vueYt(() => [vueK(vueAn(De), N({
           "data-slot": `tooltip-content`
         }, {
-          ...vueAn(a),
+          ...vueAn(uiSwitchZResult),
           ...ctx.$attrs
         }, {
           class: vueAn(uiSwitchXt)(`data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-[state=delayed-open]:animate-in data-[state=delayed-open]:fade-in-0 data-[state=delayed-open]:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs has-data-[slot=kbd]:pr-1.5 **:data-[slot=kbd]:relative **:data-[slot=kbd]:isolate **:data-[slot=kbd]:z-50 **:data-[slot=kbd]:rounded-sm bg-foreground text-background z-50 w-fit max-w-xs origin-(--reka-tooltip-content-transform-origin)`, propsAlias.class)

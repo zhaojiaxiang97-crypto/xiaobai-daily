@@ -70,7 +70,7 @@ var ce = {
     class: `picker__error`,
     role: `alert`
   },
-  b = pluginvueexporthelperT(vueJ({
+  pluginvueexporthelperTResult = pluginvueexporthelperT(vueJ({
     __name: `ClipboardPickerApp`,
     setup(props) {
       let clipboardPickerAPI = window.clipboardPickerAPI,
@@ -370,4 +370,4 @@ var ce = {
     missingWarn: false,
     fallbackWarn: false
   });
-playerO(b).use(x).mount(`#app`);
+playerO(pluginvueexporthelperTResult).use(x).mount(`#app`);

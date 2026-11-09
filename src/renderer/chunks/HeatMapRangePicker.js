@@ -352,12 +352,12 @@ var _e = {
           currentElement: L
         } = uiSwitchA(),
         R = CollectionR(j),
-        V = popoverS(N),
-        H = M(() => propsAlias.weekStartsOn ?? popoverP(V.value)),
+        popoverSResult = popoverS(N),
+        H = M(() => propsAlias.weekStartsOn ?? popoverP(popoverSResult.value)),
         le = vueBn(),
         U = vueBn(),
         W = vueBn(false),
-        G = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias, {
           defaultValue: propsAlias.defaultValue ?? {
             start: undefined,
             end: undefined
@@ -368,20 +368,20 @@ var _e = {
           start: undefined,
           end: undefined
         },
-        q = M(() => handler(G.value)),
-        J = vueBn(handler(G.value));
+        q = M(() => handler(uiSwitchAtResult.value)),
+        J = vueBn(handler(uiSwitchAtResult.value));
       vueWt(J, e => {
         emitAlias(`update:validModelValue`, e);
       });
-      let pe = popoverG({
+      let popoverGResult = popoverG({
           defaultPlaceholder: propsAlias.placeholder,
-          defaultValue: handler(G.value).start,
+          defaultValue: handler(uiSwitchAtResult.value).start,
           locale: propsAlias.locale
         }),
-        Y = vueBn(handler(G.value).start),
-        X = vueBn(handler(G.value).end),
+        Y = vueBn(handler(uiSwitchAtResult.value).start),
+        X = vueBn(handler(uiSwitchAtResult.value).end),
         Z = uiSwitchAt(propsAlias, `placeholder`, emitAlias, {
-          defaultValue: propsAlias.defaultPlaceholder ?? pe.copy(),
+          defaultValue: propsAlias.defaultPlaceholder ?? popoverGResult.copy(),
           passive: propsAlias.placeholder === undefined
         });
       function he(e) {
@@ -403,7 +403,7 @@ var _e = {
           isPlaceholderFocusable: je,
           firstFocusableDate: Me
         } = oe({
-          locale: V,
+          locale: popoverSResult,
           placeholder: Z,
           weekStartsOn: H,
           fixedWeeks: g,
@@ -443,13 +443,13 @@ var _e = {
           fixedDate: ie,
           maximumDays: ae
         });
-      vueWt(G, e => {
+      vueWt(uiSwitchAtResult, e => {
         let t = handler(e);
         !t.start && !Y.value || t.start && Y.value && popoverT(t.start, Y.value) || (Y.value = t.start?.copy?.()), !t.end && !X.value || t.end && X.value && popoverT(t.end, X.value) || (X.value = t.end?.copy?.());
       }), vueWt(Y, e => {
         e && !popoverT(e, Z.value) && he(e), emitAlias(`update:startValue`, e);
       }), vueWt([Y, X], ([e, t]) => {
-        let n = G.value;
+        let n = uiSwitchAtResult.value;
         if (!(n && n.start && n.end && e && t && popoverT(n.start, e) && popoverT(n.end, t))) {
           if (W.value = true, t && e) {
             let n = popover(t, e) ? {
@@ -459,14 +459,14 @@ var _e = {
               start: e.copy(),
               end: t.copy()
             };
-            G.value = {
+            uiSwitchAtResult.value = {
               start: n.start,
               end: n.end
             }, W.value = false, J.value = {
               start: n.start.copy(),
               end: n.end.copy()
             };
-          } else G.value = e ? {
+          } else uiSwitchAtResult.value = e ? {
             start: e.copy(),
             end: undefined
           } : {
@@ -475,9 +475,9 @@ var _e = {
           };
         }
       });
-      let Ge = popoverC();
+      let popoverCResult = popoverC();
       return uiSwitchQ(L, `keydown`, event => {
-        event.key === Ge.ESCAPE && W.value && (Y.value = J.value.start?.copy(), X.value = J.value.end?.copy());
+        event.key === popoverCResult.ESCAPE && W.value && (Y.value = J.value.start?.copy(), X.value = J.value.end?.copy());
       }), ye({
         isDateUnavailable: Se,
         isDateHighlightable: Fe,
@@ -515,7 +515,7 @@ var _e = {
         prevPage: ke,
         parentElement: L,
         onPlaceholderChange: he,
-        locale: V,
+        locale: popoverSResult,
         dir: R,
         isHighlightedStart: ze,
         isHighlightedEnd: Be,
@@ -547,7 +547,7 @@ var _e = {
           grid: vueAn(Te),
           weekDays: vueAn(Ee),
           weekStartsOn: H.value,
-          locale: vueAn(V),
+          locale: vueAn(popoverSResult),
           fixedWeeks: vueAn(g),
           modelValue: q.value
         })]),
@@ -611,7 +611,7 @@ var _e = {
     setup(props) {
       let propsAlias = props,
         r = Q(),
-        a = popoverC(),
+        popoverCResult = popoverC(),
         {
           primitiveElement: o,
           currentElement: s
@@ -662,25 +662,25 @@ var _e = {
         E.value || r.isDateUnavailable?.(propsAlias.day) || (r.focusedValue.value = propsAlias.day.copy());
       }
       function P(event) {
-        if (E.value || (event.code === a.ENTER || event.code === a.SPACE_CODE) && (event.ctrlKey || event.metaKey || event.altKey)) return;
+        if (E.value || (event.code === popoverCResult.ENTER || event.code === popoverCResult.SPACE_CODE) && (event.ctrlKey || event.metaKey || event.altKey)) return;
         event.preventDefault(), event.stopPropagation();
         let t = r.parentElement.value,
           i = r.dir.value === `rtl` ? -1 : 1;
         switch (event.code) {
-          case a.ARROW_RIGHT:
+          case popoverCResult.ARROW_RIGHT:
             o(propsAlias.day, i);
             break;
-          case a.ARROW_LEFT:
+          case popoverCResult.ARROW_LEFT:
             o(propsAlias.day, -i);
             break;
-          case a.ARROW_UP:
+          case popoverCResult.ARROW_UP:
             o(propsAlias.day, -7);
             break;
-          case a.ARROW_DOWN:
+          case popoverCResult.ARROW_DOWN:
             o(propsAlias.day, 7);
             break;
-          case a.ENTER:
-          case a.SPACE_CODE:
+          case popoverCResult.ENTER:
+          case popoverCResult.SPACE_CODE:
             j(event, propsAlias.day);
         }
         function o(e, n) {
@@ -1076,12 +1076,12 @@ var _e = {
     }) {
       let stateAlias = state,
         emitAlias = emit,
-        i = uiSwitchLt(stateAlias, `class`),
-        o = uiSwitchZ(i, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(stateAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(be), vueNt({
         "data-slot": `range-calendar`,
         class: vueAn(uiSwitchXt)(`p-3`, stateAlias.class)
-      }, vueAn(o)), {
+      }, vueAn(uiSwitchZResult)), {
         default: vueYt(({
           grid: e,
           weekDays: t
@@ -1141,12 +1141,12 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(xe), vueNt({
         "data-slot": `range-calendar-cell`,
         class: vueAn(uiSwitchXt)(`relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-accent first:[&:has([data-selected])]:rounded-l-md last:[&:has([data-selected])]:rounded-r-md [&:has([data-selected][data-selection-end])]:rounded-r-md [&:has([data-selected][data-selection-start])]:rounded-l-md`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -1169,14 +1169,14 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Se), vueNt({
         "data-slot": `range-calendar-trigger`,
         class: vueAn(uiSwitchXt)(vueAn(uiSwitchN)({
           variant: `ghost`
         }), `h-8 w-8 p-0 font-normal data-[selected]:opacity-100`, `[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground`, `data-[selection-start]:bg-primary data-[selection-start]:text-primary-foreground data-[selection-start]:hover:bg-primary data-[selection-start]:hover:text-primary-foreground data-[selection-start]:focus:bg-primary data-[selection-start]:focus:text-primary-foreground`, `data-[selection-end]:bg-primary data-[selection-end]:text-primary-foreground data-[selection-end]:hover:bg-primary data-[selection-end]:hover:text-primary-foreground data-[selection-end]:focus:bg-primary data-[selection-end]:focus:text-primary-foreground`, `data-[outside-view]:text-muted-foreground`, `data-[disabled]:text-muted-foreground data-[disabled]:opacity-50`, `data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -1195,12 +1195,12 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Ce), vueNt({
         "data-slot": `range-calendar-grid`,
         class: vueAn(uiSwitchXt)(`w-full border-collapse space-x-1`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -1255,12 +1255,12 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Ee), vueNt({
         "data-slot": `range-calendar-grid-row`,
         class: vueAn(uiSwitchXt)(`flex`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -1279,12 +1279,12 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(De), vueNt({
         "data-slot": `range-calendar-head-cell`,
         class: vueAn(uiSwitchXt)(`w-8 rounded-md text-[0.8rem] font-normal text-muted-foreground`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -1303,12 +1303,12 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Oe), vueNt({
         "data-slot": `range-calendar-header`,
         class: vueAn(uiSwitchXt)(`flex justify-center pt-1 relative items-center w-full`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
@@ -1327,12 +1327,12 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(ke), vueNt({
         "data-slot": `range-calendar-heading`,
         class: vueAn(uiSwitchXt)(`text-sm font-medium`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(({
           headingValue: t
         }) => [vueCt(ctx.$slots, `default`, {
@@ -1358,14 +1358,14 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(Ae), vueNt({
         "data-slot": `range-calendar-next-button`,
         class: vueAn(uiSwitchXt)(vueAn(uiSwitchN)({
           variant: `outline`
         }), `absolute right-1`, `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`, {}, () => [vueK(vueAn(popoverA), {
           class: `size-4`
         })])]),
@@ -1389,14 +1389,14 @@ var _e = {
     },
     setup(props) {
       let propsAlias = props,
-        r = uiSwitchLt(propsAlias, `class`),
-        i = uiSwitchB(r);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(je), vueNt({
         "data-slot": `range-calendar-prev-button`,
         class: vueAn(uiSwitchXt)(vueAn(uiSwitchN)({
           variant: `outline`
         }), `absolute left-1`, `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, propsAlias.class)
-      }, vueAn(i)), {
+      }, vueAn(uiSwitchBResult)), {
         default: vueYt(() => [vueCt(ctx.$slots, `default`, {}, () => [vueK(vueAn(i18nU), {
           class: `size-4`
         })])]),
@@ -1481,7 +1481,7 @@ var Ze = [`aria-label`, `title`],
         return t && n && r ? new popoverX(t, n, r) : undefined;
       }
       let handler = e => `${e.year}-${String(e.month).padStart(2, `0`)}-${String(e.day).padStart(2, `0`)}`,
-        v = popoverO(popoverD()),
+        popoverOResult = popoverO(popoverD()),
         T = vueCn({
           start: undefined,
           end: undefined
@@ -1553,7 +1553,7 @@ var Ze = [`aria-label`, `title`],
           })) : vueX(``, true)], 10, tt))), 128))]), vueY(`div`, nt, [vueK(vueAn(Pe), {
             "model-value": T.value,
             locale: vueAn(a),
-            "max-value": vueAn(v),
+            "max-value": vueAn(popoverOResult),
             "number-of-months": 1,
             "fixed-weeks": ``,
             "onUpdate:modelValue": te

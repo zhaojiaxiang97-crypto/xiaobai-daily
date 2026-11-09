@@ -2823,12 +2823,12 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {T} obj
   * @returns {T}
   */
-  function removeAllListeners(all) {
-    if (all[kListeners] != null) {
-      for (const [name, listener] of all[kListeners]) all.removeListener(name, listener);
-      all[kListeners] = null;
+  function removeAllListeners(allValue) {
+    if (allValue[kListeners] != null) {
+      for (const [name, listener] of allValue[kListeners]) allValue.removeListener(name, listener);
+      allValue[kListeners] = null;
     }
-    return all;
+    return allValue;
   }
   /**
   * @param {import ('../dispatcher/client')} client
@@ -26314,9 +26314,9 @@ window.render=function(tabs){var r=document.getElementById('t');r.textContent=''
 tabs.forEach(function(t){var d=document.createElement('div');d.className='tab'+(t.active?' on':'');d.title=t.title;
 var n=document.createElement('a');n.className='n';n.href='https://${TAB_ORIGIN}/switch/'+t.id;n.textContent=t.title;
 var x=document.createElement('a');x.className='x';x.href='https://${TAB_ORIGIN}null`;
-function webUrl(web) {
-  if (!web) throw new Error("请提供完整网页地址。");
-  const url = new URL(web);
+function webUrl(webValue) {
+  if (!webValue) throw new Error("请提供完整网页地址。");
+  const url = new URL(webValue);
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) throw new Error("仅支持不含账号密码的 HTTP/HTTPS 网页地址。");
   return url.href;
 }
@@ -35683,15 +35683,15 @@ var XiaoheiBotService = class {
       }))
     }), "</group_routing_request>"].join("\n");
   }
-  async askReceptionistForRoute(ask, trigger, conversation, receptionist, candidates, routeEpoch) {
-    const runtimeKey = `${this.runtimeKey(receptionist.id, conversation.id)}:routing:${ask.id}`;
+  async askReceptionistForRoute(askValue, trigger, conversation, receptionist, candidates, routeEpoch) {
+    const runtimeKey = `${this.runtimeKey(receptionist.id, conversation.id)}:routing:${askValue.id}`;
     const userId = getActiveUserId() ?? 0;
     const rootDir = path.join(app.getPath("userData"), "xiaohei-bot", `user_${userId}`);
-    const sessionDir = path.join(rootDir, "routing-sessions", ask.id);
+    const sessionDir = path.join(rootDir, "routing-sessions", askValue.id);
     let processItems = [];
     try {
       this.assertConversationRouteActive(conversation.id, routeEpoch);
-      botTaskTelemetry.start(botObservationTaskId(trigger), receptionist.id, xiaoheiBotRepository.getProvider(receptionist.providerId || ""), ask.id);
+      botTaskTelemetry.start(botObservationTaskId(trigger), receptionist.id, xiaoheiBotRepository.getProvider(receptionist.providerId || ""), askValue.id);
       await this.refreshModelCatalog();
       this.assertConversationRouteActive(conversation.id, routeEpoch);
       receptionist = xiaoheiBotRepository.getBot(receptionist.id) ?? receptionist;
@@ -35707,7 +35707,7 @@ var XiaoheiBotService = class {
         actorType: "system",
         actorId: receptionist.id,
         aggregateType: "routing-job",
-        aggregateId: ask.id,
+        aggregateId: askValue.id,
         correlationId: trigger.id,
         causationEventId: trigger.originEventId ?? null,
         branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35720,7 +35720,7 @@ var XiaoheiBotService = class {
         }
       });
       const request = {
-        requestId: ask.id,
+        requestId: askValue.id,
         requestEventId: requestEvent.eventId,
         purpose: "group-routing",
         deliveryMode: "normal",
@@ -35740,15 +35740,15 @@ var XiaoheiBotService = class {
         prompt: this.buildReceptionRoutingPrompt(trigger, conversation, receptionist.id),
         images: []
       };
-      this.activeRuns.set(ask.id, {
-        requestId: ask.id,
+      this.activeRuns.set(askValue.id, {
+        requestId: askValue.id,
         runtimeKey,
         conversationId: conversation.id,
         botId: receptionist.id,
         purpose: "group-routing"
       });
       const result = await xiaoheiBotAgentRuntimeService.run(request, event => {
-        this.queueDiagnosticEvent(conversation.id, ask.id, null, event, processItems);
+        this.queueDiagnosticEvent(conversation.id, askValue.id, null, event, processItems);
         if (event.type === "process-item-created" || event.type === "process-item-updated") {
           const index = processItems.findIndex(item => item.id === event.item.id);
           if (index >= 0) processItems.splice(index, 1, event.item);else processItems.push(event.item);
@@ -35771,7 +35771,7 @@ var XiaoheiBotService = class {
           actorType: "runtime",
           actorId: receptionist.id,
           aggregateType: "routing-job",
-          aggregateId: ask.id,
+          aggregateId: askValue.id,
           correlationId: trigger.id,
           causationEventId: request.requestEventId,
           branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35797,7 +35797,7 @@ var XiaoheiBotService = class {
         actorType: "runtime",
         actorId: receptionist.id,
         aggregateType: "routing-job",
-        aggregateId: ask.id,
+        aggregateId: askValue.id,
         correlationId: trigger.id,
         causationEventId: request.requestEventId,
         branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35825,7 +35825,7 @@ var XiaoheiBotService = class {
         actorType: "runtime",
         actorId: receptionist.id,
         aggregateType: "routing-job",
-        aggregateId: ask.id,
+        aggregateId: askValue.id,
         correlationId: trigger.id,
         causationEventId: trigger.originEventId ?? null,
         branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35838,8 +35838,8 @@ var XiaoheiBotService = class {
         errorMessage
       };
     } finally {
-      this.finishDiagnosticEvents(ask.id);
-      this.activeRuns.delete(ask.id);
+      this.finishDiagnosticEvents(askValue.id);
+      this.activeRuns.delete(askValue.id);
       xiaoheiBotAgentRuntimeService.disposeSession(runtimeKey);
       await rm(sessionDir, {
         recursive: true,
@@ -38984,9 +38984,9 @@ var XiaoheiBotSyncService = class {
     } catch {}
     xiaoheiBotService.abortConversation(localConversationId);
   }
-  async processJob(jobValue, job) {
+  async processJob(jobValue, jobInput) {
     const db = this.db();
-    if (!db || job !== this.generation) return;
+    if (!db || jobInput !== this.generation) return;
     const groupBinding = db.prepare("SELECT conversation_id FROM xiaohei_mobile_group_bindings WHERE cloud_conversation_id = ? AND status = ?").get(jobValue.conversation_id, "active");
     const binding = db.prepare("SELECT bot_id, conversation_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ?").get(jobValue.bot_id);
     const localConversationId = groupBinding?.conversation_id ?? binding?.conversation_id;

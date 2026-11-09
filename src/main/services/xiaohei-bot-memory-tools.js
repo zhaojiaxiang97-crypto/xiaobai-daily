@@ -26,8 +26,8 @@ var toolSchema = objectType({
     message: "保存需要内容、类别和用户原文证据"
   });
 });
-async function executeBotMemoryTool(bot, context) {
-  const parsed = toolSchema.safeParse(bot);
+async function executeBotMemoryTool(botValue, context) {
+  const parsed = toolSchema.safeParse(botValue);
   if (!parsed.success) throw new XiaoheiDataToolError("INVALID_ARGUMENT", parsed.error.issues.map(issue => issue.message).join("；"));
   context.assertActive();
   const connection = getOpenDatabaseConnection();

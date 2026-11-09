@@ -158,22 +158,22 @@ var ut = lucideR(`corner-up-left`, [[`path`, {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        l = uiSwitchLt(propsAlias, [`modelValue`]),
-        u = uiSwitchB(l),
-        f = uiSwitchAt(propsAlias, `modelValue`, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, [`modelValue`]),
+        uiSwitchBResult = uiSwitchB(uiSwitchLtResult),
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `modelValue`, emitAlias);
       return TooltipTriggerC({
-        modelValue: f
+        modelValue: uiSwitchAtResult
       }), (e, renderCache) => (vueGt(), vueB(DropdownMenuTriggerO, vueNt({
         role: `menuitemcheckbox`
-      }, vueAn(u), {
-        "aria-checked": vueAn(uiSwitchT)(vueAn(f)) ? `mixed` : vueAn(f),
-        "data-state": vueAn(uiSwitchC)(vueAn(f)),
+      }, vueAn(uiSwitchBResult), {
+        "aria-checked": vueAn(uiSwitchT)(vueAn(uiSwitchAtResult)) ? `mixed` : vueAn(uiSwitchAtResult),
+        "data-state": vueAn(uiSwitchC)(vueAn(uiSwitchAtResult)),
         onSelect: renderCache[0] ||= async e => {
-          emitAlias(`select`, e), vueAn(uiSwitchT)(vueAn(f)) ? f.value = true : f.value = !vueAn(f);
+          emitAlias(`select`, e), vueAn(uiSwitchT)(vueAn(uiSwitchAtResult)) ? uiSwitchAtResult.value = true : uiSwitchAtResult.value = !vueAn(uiSwitchAtResult);
         }
       }), {
         default: vueYt(() => [vueCt(e.$slots, `default`, {
-          modelValue: vueAn(f)
+          modelValue: vueAn(uiSwitchAtResult)
         })]),
         _: 3
       }, 16, [`aria-checked`, `data-state`]));
@@ -208,10 +208,10 @@ var ut = lucideR(`corner-up-left`, [[`path`, {
       emit: emit
     }) {
       let propsAlias = props,
-        a = uiSwitchU(emit);
+        uiSwitchUResult = uiSwitchU(emit);
       return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(yt), vueTr(vueV({
         ...propsAlias,
-        ...vueAn(a)
+        ...vueAn(uiSwitchUResult)
       })), {
         default: vueYt(() => [vueCt(e.$slots, `default`)]),
         _: 3
@@ -246,11 +246,11 @@ var ut = lucideR(`corner-up-left`, [[`path`, {
     }) {
       let propsAlias = props,
         emitAlias = emit,
-        i = uiSwitchLt(propsAlias, `class`),
-        a = uiSwitchZ(i, emitAlias);
+        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
+        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
       return (ctx, renderCache) => (vueGt(), vueB(vueAn(bt), vueNt({
         "data-slot": `dropdown-menu-checkbox-item`
-      }, vueAn(a), {
+      }, vueAn(uiSwitchZResult), {
         class: vueAn(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
       }), {
         default: vueYt(() => [vueY(`span`, xt, [vueK(vueAn(TooltipTriggerO), null, {
@@ -1971,7 +1971,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
   rr = [`aria-label`],
   ir = [`src`, `alt`],
   ar = [`aria-label`],
-  or = pluginvueexporthelperT(vueJ({
+  pluginvueexporthelperTResult = pluginvueexporthelperT(vueJ({
     __name: `MarkdownReaderRenderer`,
     props: {
       blocks: {},
@@ -3756,7 +3756,7 @@ var Or = {
           onKeydown: cr
         }, [vueY(`div`, {
           class: vueN([`min-h-full w-full pb-20 pt-9`, Z.value === `split` ? `px-7` : `mx-auto max-w-[820px] px-10`])
-        }, [vueK(or, {
+        }, [vueK(pluginvueexporthelperTResult, {
           ref_key: `rendererRef`,
           ref: Xe,
           blocks: de.value.blocks,

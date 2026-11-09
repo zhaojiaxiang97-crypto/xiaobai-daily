@@ -483,8 +483,8 @@ var Ke = {
   Ct = .32,
   wt = .8;
 function Tt(e) {
-  let t = new OrbitControlsV();
-  return t.onBeforeCompile = t => {
+  let orbitControlsV = new OrbitControlsV();
+  return orbitControlsV.onBeforeCompile = t => {
     t.uniforms.uPlayhead = e.uPlayhead, t.uniforms.uGround = e.uGround, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute vec2 aSpan;
 attribute float aKind;
@@ -500,7 +500,7 @@ vReplayFuture = 1.0 - replayStarted;`), t.fragmentShader = t.fragmentShader.repl
 uniform vec3 uGround;
 varying float vReplayFuture;`).replace(`#include <color_fragment>`, `#include <color_fragment>
 diffuseColor.rgb = mix(diffuseColor.rgb, uGround, vReplayFuture * ${yt.toFixed(2)});`);
-  }, t.customProgramCacheKey = () => `day-replay-building`, t;
+  }, orbitControlsV.customProgramCacheKey = () => `day-replay-building`, orbitControlsV;
 }
 var Et = class {
     root = new OrbitControlsF();
@@ -538,22 +538,22 @@ var Et = class {
       let a = this.blocks.length,
         float32Array = new Float32Array(a * 2),
         s = new Float32Array(a),
-        c = new OrbitControlsH(),
-        l = new OrbitControlsE(),
-        u = new OrbitControlsB(),
+        orbitControlsH = new OrbitControlsH(),
+        orbitControlsE = new OrbitControlsE(),
+        orbitControlsB = new OrbitControlsB(),
         d = new OrbitControlsE();
       this.buildingGeometry = new OrbitControlsA(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new OrbitControlsP(float32Array, 2)), this.buildingGeometry.setAttribute(`aKind`, new OrbitControlsP(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new OrbitControlsM(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new OrbitControlsP(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
       let f = 6;
       this.blocks.forEach((item, t) => {
-        float32Array[t * 2] = item.start, float32Array[t * 2 + 1] = item.end, s[t] = +!threestageO(item), threestageO(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), l.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
+        float32Array[t * 2] = item.start, float32Array[t * 2 + 1] = item.end, s[t] = +!threestageO(item), threestageO(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), orbitControlsE.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), orbitControlsH.compose(orbitControlsE, orbitControlsB, d), this.buildings.setMatrixAt(t, orbitControlsH);
       }), this.buildings.instanceMatrix.needsUpdate = true, this.maxHeight = f, this.trackGeometry = new OrbitControlsA(n * 2 + 2, xt, 14).translate(0, -.2 / 2, 0);
-      let p = new OrbitControlsG(this.trackGeometry, this.trackMaterial);
-      p.position.y = bt, this.beamGeometry = new OrbitControlsA(X, 1, 16).translate(0, .5, 0), this.beamMaterial = new OrbitControls({
+      let orbitControlsG = new OrbitControlsG(this.trackGeometry, this.trackMaterial);
+      orbitControlsG.position.y = bt, this.beamGeometry = new OrbitControlsA(X, 1, 16).translate(0, .5, 0), this.beamMaterial = new OrbitControls({
         color: St,
         transparent: true,
         opacity: Ct,
         depthWrite: false
-      }), this.beam = new OrbitControlsG(this.beamGeometry, this.beamMaterial), this.beam.scale.y = f * 1.25, this.beam.renderOrder = 1, this.root.add(p, this.buildings, this.beam);
+      }), this.beam = new OrbitControlsG(this.beamGeometry, this.beamMaterial), this.beam.scale.y = f * 1.25, this.beam.renderOrder = 1, this.root.add(orbitControlsG, this.buildings, this.beam);
       let emptyItems = [];
       for (let count of [-n - 2, n + 2]) for (let t of [0, f]) for (let total of [-7, 13]) emptyItems.push(new OrbitControlsE(count, t, total));
       this.framing = {
@@ -581,9 +581,9 @@ var Et = class {
       return this.bucketToX(minute / 5);
     }
     setColors(colors, colorsValue) {
-      let n = new OrbitControlsS();
+      let orbitControlsS = new OrbitControlsS();
       this.blocks.forEach((item, i) => {
-        this.buildings.setColorAt(i, n.set(threestageN(item, colors, colorsValue)));
+        this.buildings.setColorAt(i, orbitControlsS.set(threestageN(item, colors, colorsValue)));
       }), this.buildings.instanceColor && (this.buildings.instanceColor.needsUpdate = true), this.uniforms.uGround.value.set(colorsValue.ground), this.trackMaterial.color.set(colorsValue.ground);
     }
     setPlayhead(playhead) {
@@ -669,7 +669,7 @@ var Et = class {
         O = false,
         payload = null,
         ee = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
-        te = new OrbitControlsE(),
+        orbitControlsE = new OrbitControlsE(),
         ne = new OrbitControlsE();
       function re(e, t) {
         emptyItems[t] = e instanceof HTMLElement ? e : null;
@@ -692,7 +692,7 @@ var Et = class {
         _.value.forEach((item, a) => {
           ne.set(i.minuteToX(item * 60), 0, 10), ae(emptyItems[a] ?? null, t.project(ne, clientWidth, clientHeight));
         });
-        let a = t.project(C.anchorAt(propsAlias.minute, te), clientWidth, clientHeight);
+        let a = t.project(C.anchorAt(propsAlias.minute, orbitControlsE), clientWidth, clientHeight);
         ae(h.value, {
           ...a,
           visible: a.visible && !!propsAlias.currentLabel
@@ -1659,7 +1659,7 @@ async function vr(e, t, n) {
       }
     },
     y = Ve(r.durationMs, i.speed),
-    b = new OrbitControlsE(),
+    orbitControlsE = new OrbitControlsE(),
     x = new OrbitControlsE(),
     S = null,
     C = -1 / 0,
@@ -1697,7 +1697,7 @@ async function vr(e, t, n) {
         fastForward: t >= 900 && i < y && ln(r, a),
         record: S,
         label: t >= 900 ? w : ``,
-        labelPoint: f.project(p.anchorAt(a, b), u.width, u.height),
+        labelPoint: f.project(p.anchorAt(a, orbitControlsE), u.width, u.height),
         hourPoints: p.hourMarks.map(item => ({
           text: `${item}:00`,
           point: f.project(x.set(p.minuteToX(item * 60), 0, 10), u.width, u.height)
@@ -1980,7 +1980,7 @@ var Sr = [`aria-label`],
   },
   fi = 1600,
   pi = 700,
-  mi = pluginvueexporthelperT(vueJ({
+  pluginvueexporthelperTResult = pluginvueexporthelperT(vueJ({
     __name: `DayReplayPlayer`,
     props: {
       date: {},
@@ -2401,4 +2401,4 @@ var Sr = [`aria-label`],
       }, vueRr(vueAn(D)(`dayReplay.exportCancel`)), 1)])])])) : vueX(``, true)], 8, Sr)]));
     }
   }), [[`__scopeId`, `data-v-499495b2`]]);
-export { mi as default };
+export { pluginvueexporthelperTResult as default };

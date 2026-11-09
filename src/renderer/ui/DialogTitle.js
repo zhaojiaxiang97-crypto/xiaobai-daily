@@ -32,7 +32,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
       emit: emit
     }) {
       let propsAlias = props,
-        r = uiSwitchAt(propsAlias, `open`, emit, {
+        uiSwitchAtResult = uiSwitchAt(propsAlias, `open`, emit, {
           defaultValue: propsAlias.defaultOpen,
           passive: propsAlias.open === undefined
         }),
@@ -43,17 +43,17 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
           unmountOnHide: c
         } = vueDn(propsAlias);
       return j({
-        open: r,
+        open: uiSwitchAtResult,
         modal: o,
         unmountOnHide: c,
         openModal: () => {
-          r.value = true;
+          uiSwitchAtResult.value = true;
         },
         onOpenChange: e => {
-          r.value = e;
+          uiSwitchAtResult.value = e;
         },
         onOpenToggle: () => {
-          r.value = !r.value;
+          uiSwitchAtResult.value = !uiSwitchAtResult.value;
         },
         contentId: ``,
         titleId: ``,
@@ -61,8 +61,8 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
         triggerElement: i,
         contentElement: a
       }), (e, t) => vueCt(e.$slots, `default`, {
-        open: vueAn(r),
-        close: () => r.value = false
+        open: vueAn(uiSwitchAtResult),
+        close: () => uiSwitchAtResult.value = false
       });
     }
   }),
@@ -202,7 +202,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
       let eventAlias = event,
         emitAlias = emit,
         s = A(),
-        c = uiSwitchU(emitAlias),
+        uiSwitchUResult = uiSwitchU(emitAlias),
         {
           forwardRef: l,
           currentElement: u
@@ -220,7 +220,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
         !e && t && s.triggerElement.value?.focus();
       }), (e, t) => (vueGt(), vueB(P, vueNt({
         ...f.value,
-        ...vueAn(c)
+        ...vueAn(uiSwitchUResult)
       }, {
         ref: vueAn(l),
         present: e.present,
@@ -276,7 +276,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
       emit: emit
     }) {
       let eventAlias = event,
-        r = uiSwitchU(emit);
+        uiSwitchUResult = uiSwitchU(emit);
       uiSwitchV();
       let o = A(),
         s = vueBn(false),
@@ -292,7 +292,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
         !e && t && (s.value || o.triggerElement.value?.focus(), s.value = false, c.value = false);
       }), (e, t) => (vueGt(), vueB(P, vueNt({
         ...l.value,
-        ...vueAn(r)
+        ...vueAn(uiSwitchUResult)
       }, {
         present: e.present,
         "trap-focus": false,
@@ -339,7 +339,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
       let propsAlias = props,
         emitAlias = emit,
         s = A(),
-        c = uiSwitchU(emitAlias),
+        uiSwitchUResult = uiSwitchU(emitAlias),
         {
           forwardRef: l
         } = uiSwitchV();
@@ -355,7 +355,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
           present: vueAn(s).unmountOnHide.value || t
         }, {
           ...propsAlias,
-          ...vueAn(c),
+          ...vueAn(uiSwitchUResult),
           ...ctx.$attrs
         }), {
           default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
@@ -366,7 +366,7 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
           present: vueAn(s).unmountOnHide.value || t
         }, {
           ...propsAlias,
-          ...vueAn(c),
+          ...vueAn(uiSwitchUResult),
           ...ctx.$attrs
         }), {
           default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
@@ -421,8 +421,8 @@ var [A, j] = uiSwitchYt(`DialogRoot`),
     setup(props) {
       let propsAlias = props,
         n = A(),
-        r = uiSwitchW(propsAlias.present);
-      return vueWt(() => propsAlias.present, e => r.value = e), uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(uiSwitchJ), {
+        uiSwitchWResult = uiSwitchW(propsAlias.present);
+      return vueWt(() => propsAlias.present, e => uiSwitchWResult.value = e), uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(uiSwitchJ), {
         as: e.as,
         "as-child": e.asChild,
         "data-state": vueAn(n).open.value ? `open` : `closed`,
