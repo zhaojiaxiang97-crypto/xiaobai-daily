@@ -73,20 +73,20 @@ function aa(event) {
     c = () => {
       i = 0;
       let e = new Map();
-      for (let n of r) {
-        if (!n.isConnected) {
-          r.delete(n);
+      for (let replaceResult of r) {
+        if (!replaceResult.isConnected) {
+          r.delete(replaceResult);
           continue;
         }
-        let fallbackValue = n.dataset.creditError || ``,
-          creditInsufficient = n.dataset.creditInsufficient,
-          o = creditInsufficient === `credits` || creditInsufficient === `quota` ? creditInsufficient : ia(n.textContent);
-        if (!(document.visibilityState !== `hidden` && n.getClientRects().length > 0 && !n.closest(`[hidden], [inert], [aria-hidden="true"], [data-state="closed"]`) && getComputedStyle(n).visibility !== `hidden`) || !t.has(fallbackValue) || !o) continue;
+        let fallbackValue = replaceResult.dataset.creditError || ``,
+          creditInsufficient = replaceResult.dataset.creditInsufficient,
+          o = creditInsufficient === `credits` || creditInsufficient === `quota` ? creditInsufficient : ia(replaceResult.textContent);
+        if (!(document.visibilityState !== `hidden` && replaceResult.getClientRects().length > 0 && !replaceResult.closest(`[hidden], [inert], [aria-hidden="true"], [data-state="closed"]`) && getComputedStyle(replaceResult).visibility !== `hidden`) || !t.has(fallbackValue) || !o) continue;
         let s = `${fallbackValue}:${o}`;
         e.set(s, {
           feature_key: fallbackValue,
           error_kind: o,
-          trigger: n.dataset.creditTrigger === `automatic` ? `automatic` : n.dataset.creditTrigger === `manual` ? `manual` : `unknown`
+          trigger: replaceResult.dataset.creditTrigger === `automatic` ? `automatic` : replaceResult.dataset.creditTrigger === `manual` ? `manual` : `unknown`
         });
       }
       for (let [t, r] of e) n.has(t) || handler(`credit_insufficient_view`, r);
@@ -99,7 +99,7 @@ function aa(event) {
       document.visibilityState === `hidden` && n.clear(), l();
     },
     mutationObserver = new MutationObserver(e => {
-      for (let t of e) t.addedNodes.forEach(s), t.type === `attributes` && t.target instanceof HTMLElement && t.target.hasAttribute(`data-credit-error`) && r.add(t.target);
+      for (let normalizeResult of e) normalizeResult.addedNodes.forEach(s), normalizeResult.type === `attributes` && normalizeResult.target instanceof HTMLElement && normalizeResult.target.hasAttribute(`data-credit-error`) && r.add(normalizeResult.target);
       l();
     });
   return s(document.documentElement), mutationObserver.observe(document.documentElement, {
@@ -5804,13 +5804,13 @@ var hu = defineComponent({
         {
           forwardRef: n
         } = E(),
-        r,
+        requestAnimationFrameResult,
         flag = ref(false);
       function a() {
-        window.clearTimeout(r), flag.value = true;
+        window.clearTimeout(requestAnimationFrameResult), flag.value = true;
       }
       function o() {
-        r = window.setTimeout(() => {
+        requestAnimationFrameResult = window.setTimeout(() => {
           flag.value = false;
         }, t.scrollHideDelay.value);
       }
@@ -5819,7 +5819,7 @@ var hu = defineComponent({
         e && (e.addEventListener(`pointerenter`, a), e.addEventListener(`pointerleave`, o));
       }), onUnmounted(() => {
         let e = t.scrollArea.value;
-        e && (window.clearTimeout(r), e.removeEventListener(`pointerenter`, a), e.removeEventListener(`pointerleave`, o));
+        e && (window.clearTimeout(requestAnimationFrameResult), e.removeEventListener(`pointerenter`, a), e.removeEventListener(`pointerleave`, o));
       }), (e, t) => (openBlock(), createBlock(unref(h), {
         present: e.forceMount || flag.value
       }, {
@@ -7205,13 +7205,13 @@ var Fu = [`value`],
       let o = ref(),
         computedResult = computed(() => n.forceMount || i.open.value),
         c = ref(computedResult.value),
-        l;
+        setTimeoutResult;
       function u() {
-        l &&= (clearTimeout(l), undefined);
+        setTimeoutResult &&= (clearTimeout(setTimeoutResult), undefined);
       }
       return watch(computedResult, (value, t, n) => {
-        u(), l = setTimeout(() => {
-          c.value = computedResult.value, l = undefined;
+        u(), setTimeoutResult = setTimeout(() => {
+          c.value = computedResult.value, setTimeoutResult = undefined;
         }), n(u);
       }), onUnmounted(u), (e, t) => computedResult.value || c.value || o.value?.present ? (openBlock(), createBlock(unref(h), {
         key: 0,
@@ -8283,11 +8283,11 @@ var Fu = [`value`],
           forwardRef: s,
           currentElement: c
         } = E(),
-        l = null;
+        setTimeoutResult = null;
       return onBeforeMount(() => {
-        l = c.value, l && t.totalStepperItems.value.add(l);
+        setTimeoutResult = c.value, setTimeoutResult && t.totalStepperItems.value.add(setTimeoutResult);
       }), onUnmounted(() => {
-        l &&= (t.totalStepperItems.value.delete(l), null);
+        setTimeoutResult &&= (t.totalStepperItems.value.delete(setTimeoutResult), null);
       }), (e, r) => (openBlock(), createBlock(unref(fe), {
         ref: unref(s),
         type: e.as === `button` ? `button` : undefined,
@@ -8902,26 +8902,26 @@ function trackActionEvent(action, event) {
 }
 function Ud(e, t = 0.5) {
   let n = ref(null),
-    r,
-    i,
+    requestAnimationFrameResult,
+    count,
     a = false;
   return onBeforeMount(() => {
     let o = n.value;
-    o && typeof IntersectionObserver < `u` && (r = new IntersectionObserver(items => {
+    o && typeof IntersectionObserver < `u` && (requestAnimationFrameResult = new IntersectionObserver(items => {
       if (!items.some(item => item.isIntersecting && item.intersectionRatio >= t)) {
-        clearTimeout(i);
+        clearTimeout(count);
         return;
       }
-      a || (i = setTimeout(() => {
+      a || (count = setTimeout(() => {
         a || (a = true, Ot(`action`, e, {
           entry: `surface`
-        }), r?.disconnect());
+        }), requestAnimationFrameResult?.disconnect());
       }, 500));
     }, {
       threshold: t > 0 ? [0, t] : [0]
-    }), r.observe(o));
+    }), requestAnimationFrameResult.observe(o));
   }), onUnmounted(() => {
-    clearTimeout(i), r?.disconnect();
+    clearTimeout(count), requestAnimationFrameResult?.disconnect();
   }), n;
 }
 function Wd() {
@@ -9244,10 +9244,10 @@ function Lee(items, t) {
 function Ree(e, t = 0) {
   let n = t,
     r = ``;
-  for (let t of e) if (t === `	`) {
+  for (let normalizeResult of e) if (normalizeResult === `	`) {
     let e = 4 - n % 4;
     r += ` `.repeat(e), n += e;
-  } else r += t, n++;
+  } else r += normalizeResult, n++;
   return r;
 }
 function Uf(e, t, n, r, i) {
@@ -9498,37 +9498,37 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
         let s = i.items.at(-1);
         if (s) s.raw = s.raw.trimEnd(), s.text = s.text.trimEnd();else return;
         i.raw = i.raw.trimEnd();
-        for (let e of i.items) if (this.lexer.state.top = false, e.tokens = this.lexer.blockTokens(e.text, []), !i.loose) {
-          let filtered = e.tokens.filter(item => item.type === `space`);
+        for (let normalizeResult of i.items) if (this.lexer.state.top = false, normalizeResult.tokens = this.lexer.blockTokens(normalizeResult.text, []), !i.loose) {
+          let filtered = normalizeResult.tokens.filter(item => item.type === `space`);
           i.loose = filtered.length > 0 && filtered.some(item => this.rules.other.anyLine.test(item.raw));
         }
-        for (let e of i.items) {
-          let t = e.tokens[0];
-          if (e.task && (t?.type === `text` || t?.type === `paragraph`)) {
-            e.text = e.text.replace(this.rules.other.listReplaceTask, ``), t.raw = t.raw.replace(this.rules.other.listReplaceTask, ``), t.text = t.text.replace(this.rules.other.listReplaceTask, ``);
+        for (let normalizeResult of i.items) {
+          let t = normalizeResult.tokens[0];
+          if (normalizeResult.task && (t?.type === `text` || t?.type === `paragraph`)) {
+            normalizeResult.text = normalizeResult.text.replace(this.rules.other.listReplaceTask, ``), t.raw = t.raw.replace(this.rules.other.listReplaceTask, ``), t.text = t.text.replace(this.rules.other.listReplaceTask, ``);
             for (let e = this.lexer.inlineQueue.length - 1; e >= 0; e--) if (this.rules.other.listIsTask.test(this.lexer.inlineQueue[e].src)) {
               this.lexer.inlineQueue[e].src = this.lexer.inlineQueue[e].src.replace(this.rules.other.listReplaceTask, ``);
               break;
             }
-            let n = this.rules.other.listTaskCheckbox.exec(e.raw);
+            let n = this.rules.other.listTaskCheckbox.exec(normalizeResult.raw);
             if (n) {
               let t = {
                 type: `checkbox`,
                 raw: n[0] + ` `,
                 checked: n[0] !== `[ ]`
               };
-              e.checked = t.checked, i.loose ? e.tokens[0] && [`paragraph`, `text`].includes(e.tokens[0].type) && `tokens` in e.tokens[0] && e.tokens[0].tokens ? (e.tokens[0].raw = t.raw + e.tokens[0].raw, e.tokens[0].text = t.raw + e.tokens[0].text, e.tokens[0].tokens.unshift(t)) : e.tokens.unshift({
+              normalizeResult.checked = t.checked, i.loose ? normalizeResult.tokens[0] && [`paragraph`, `text`].includes(normalizeResult.tokens[0].type) && `tokens` in normalizeResult.tokens[0] && normalizeResult.tokens[0].tokens ? (normalizeResult.tokens[0].raw = t.raw + normalizeResult.tokens[0].raw, normalizeResult.tokens[0].text = t.raw + normalizeResult.tokens[0].text, normalizeResult.tokens[0].tokens.unshift(t)) : normalizeResult.tokens.unshift({
                 type: `paragraph`,
                 raw: t.raw,
                 text: t.raw,
                 tokens: [t]
-              }) : e.tokens.unshift(t);
+              }) : normalizeResult.tokens.unshift(t);
             }
-          } else e.task &&= false;
+          } else normalizeResult.task &&= false;
         }
-        if (i.loose) for (let e of i.items) {
-          e.loose = true;
-          for (let t of e.tokens) t.type === `text` && (t.type = `paragraph`);
+        if (i.loose) for (let normalizeResult of i.items) {
+          normalizeResult.loose = true;
+          for (let t of normalizeResult.tokens) t.type === `text` && (t.type = `paragraph`);
         }
         return i;
       }
@@ -9578,14 +9578,14 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
           rows: []
         };
       if (n.length === parts.length) {
-        for (let e of parts) this.rules.other.tableAlignRight.test(e) ? a.align.push(`right`) : this.rules.other.tableAlignCenter.test(e) ? a.align.push(`center`) : this.rules.other.tableAlignLeft.test(e) ? a.align.push(`left`) : a.align.push(null);
+        for (let normalizeResult of parts) this.rules.other.tableAlignRight.test(normalizeResult) ? a.align.push(`right`) : this.rules.other.tableAlignCenter.test(normalizeResult) ? a.align.push(`center`) : this.rules.other.tableAlignLeft.test(normalizeResult) ? a.align.push(`left`) : a.align.push(null);
         for (let e = 0; e < n.length; e++) a.header.push({
           text: n[e],
           tokens: this.lexer.inline(n[e]),
           header: true,
           align: a.align[e]
         });
-        for (let e of i) a.rows.push(zf(e, a.header.length).map((item, t) => ({
+        for (let normalizeResult of i) a.rows.push(zf(normalizeResult, a.header.length).map((item, t) => ({
           text: item,
           tokens: this.lexer.inline(item),
           header: false,
@@ -9680,20 +9680,20 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
       }
     }
     reflink(reflink, reflinkValue) {
-      let n;
-      if ((n = this.rules.inline.reflink.exec(reflink)) || (n = this.rules.inline.nolink.exec(reflink))) {
-        let r = n[0].charAt(0) === `!` ? 2 : 1;
-        if (!this.options.pedantic && Wf(reflink, n[1], r, this.rules)) return;
-        let i = reflinkValue[Hf((n[2] || n[1]).replace(this.rules.other.multipleSpaceGlobal, ` `))];
+      let replaceResult;
+      if ((replaceResult = this.rules.inline.reflink.exec(reflink)) || (replaceResult = this.rules.inline.nolink.exec(reflink))) {
+        let r = replaceResult[0].charAt(0) === `!` ? 2 : 1;
+        if (!this.options.pedantic && Wf(reflink, replaceResult[1], r, this.rules)) return;
+        let i = reflinkValue[Hf((replaceResult[2] || replaceResult[1]).replace(this.rules.other.multipleSpaceGlobal, ` `))];
         if (!i) {
-          let e = n[0].charAt(0);
+          let e = replaceResult[0].charAt(0);
           return {
             type: `text`,
             raw: e,
             text: e
           };
         }
-        return Uf(n, i, n[0], this.lexer, this.rules);
+        return Uf(replaceResult, i, replaceResult[0], this.lexer, this.rules);
       }
     }
     emStrong(items, strong, n = ``) {
@@ -9767,12 +9767,12 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
       let r = this.rules.inline.delLDelim.exec(items);
       if (r && (!r[1] || !n || this.rules.inline.punctuation.exec(n))) {
         let n = [...r[0]].length - 1,
-          i,
+          count,
           a,
           o = n,
           delRDelim = this.rules.inline.delRDelim;
         for (delRDelim.lastIndex = 0, t = t.slice(-1 * items.length + n); (r = delRDelim.exec(t)) !== null;) {
-          if (i = r[1] || r[2] || r[3] || r[4] || r[5] || r[6], !i || (a = [...i].length, a !== n)) continue;
+          if (count = r[1] || r[2] || r[3] || r[4] || r[5] || r[6], !count || (a = [...count].length, a !== n)) continue;
           if (r[3] || r[4]) {
             o += a;
             continue;
@@ -9794,35 +9794,35 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
     autolink(autolink) {
       let t = this.rules.inline.autolink.exec(autolink);
       if (t) {
-        let e, n;
-        return t[2] === `@` ? (e = t[1], n = `mailto:` + e) : (e = t[1], n = e), {
+        let normalizeResult, replaceResult;
+        return t[2] === `@` ? (normalizeResult = t[1], replaceResult = `mailto:` + normalizeResult) : (normalizeResult = t[1], replaceResult = normalizeResult), {
           type: `link`,
           raw: t[0],
-          text: e,
-          href: n,
+          text: normalizeResult,
+          href: replaceResult,
           autolink: true,
           tokens: [{
             type: `text`,
-            raw: e,
-            text: e
+            raw: normalizeResult,
+            text: normalizeResult
           }]
         };
       }
     }
     url(e) {
-      let t;
-      if (t = this.rules.inline.url.exec(e)) {
-        let e, n;
-        if (t[2] === `@`) e = t[0], n = `mailto:` + e;else {
-          let r;
-          do r = t[0], t[0] = this.rules.inline._backpedal.exec(t[0])?.[0] ?? ``; while (r !== t[0]);
-          e = t[0], n = t[1] === `www.` ? `http://` + t[0] : t[0];
+      let normalizeResult;
+      if (normalizeResult = this.rules.inline.url.exec(e)) {
+        let e, replaceResult;
+        if (normalizeResult[2] === `@`) e = normalizeResult[0], replaceResult = `mailto:` + e;else {
+          let requestAnimationFrameResult;
+          do requestAnimationFrameResult = normalizeResult[0], normalizeResult[0] = this.rules.inline._backpedal.exec(normalizeResult[0])?.[0] ?? ``; while (requestAnimationFrameResult !== normalizeResult[0]);
+          e = normalizeResult[0], replaceResult = normalizeResult[1] === `www.` ? `http://` + normalizeResult[0] : normalizeResult[0];
         }
         return {
           type: `link`,
-          raw: t[0],
+          raw: normalizeResult[0],
           text: e,
-          href: n,
+          href: replaceResult,
           autolink: true,
           tokens: [{
             type: `text`,
@@ -9894,96 +9894,96 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
           this.infiniteLoopError(items.charCodeAt(0));
           break;
         }
-        let i;
-        if (this.options.extensions?.block?.some(n => (i = n.call({
+        let count;
+        if (this.options.extensions?.block?.some(n => (count = n.call({
           lexer: this
-        }, items, t)) ? (items = items.substring(i.raw.length), t.push(i), true) : false)) continue;
-        if (i = this.tokenizer.space(items)) {
-          items = items.substring(i.raw.length);
+        }, items, t)) ? (items = items.substring(count.raw.length), t.push(count), true) : false)) continue;
+        if (count = this.tokenizer.space(items)) {
+          items = items.substring(count.raw.length);
           let n = t.at(-1);
-          i.raw.length === 1 && n !== undefined ? n.raw += `
-` : t.push(i);
+          count.raw.length === 1 && n !== undefined ? n.raw += `
+` : t.push(count);
           continue;
         }
-        if (i = this.tokenizer.code(items)) {
-          items = items.substring(i.raw.length);
-          let n = t.at(-1);
-          n?.type === `paragraph` || n?.type === `text` ? (n.raw += (n.raw.endsWith(`
-`) ? `` : `
-`) + i.raw, n.text += `
-` + i.text, this.inlineQueue.at(-1).src = n.text) : t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.fences(items)) {
-          items = items.substring(i.raw.length), t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.heading(items)) {
-          items = items.substring(i.raw.length), t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.hr(items)) {
-          items = items.substring(i.raw.length), t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.blockquote(items)) {
-          items = items.substring(i.raw.length), t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.list(items)) {
-          items = items.substring(i.raw.length), t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.html(items)) {
-          items = items.substring(i.raw.length), t.push(i);
-          continue;
-        }
-        if (i = this.tokenizer.def(items)) {
-          items = items.substring(i.raw.length);
+        if (count = this.tokenizer.code(items)) {
+          items = items.substring(count.raw.length);
           let n = t.at(-1);
           n?.type === `paragraph` || n?.type === `text` ? (n.raw += (n.raw.endsWith(`
 `) ? `` : `
-`) + i.raw, n.text += `
-` + i.raw, this.inlineQueue.at(-1).src = n.text) : this.tokens.links[i.tag] || (this.tokens.links[i.tag] = {
-            href: i.href,
-            title: i.title
-          }, t.push(i));
+`) + count.raw, n.text += `
+` + count.text, this.inlineQueue.at(-1).src = n.text) : t.push(count);
           continue;
         }
-        if (i = this.tokenizer.table(items)) {
-          items = items.substring(i.raw.length), t.push(i);
+        if (count = this.tokenizer.fences(items)) {
+          items = items.substring(count.raw.length), t.push(count);
           continue;
         }
-        if (i = this.tokenizer.lheading(items)) {
-          items = items.substring(i.raw.length), t.push(i);
+        if (count = this.tokenizer.heading(items)) {
+          items = items.substring(count.raw.length), t.push(count);
+          continue;
+        }
+        if (count = this.tokenizer.hr(items)) {
+          items = items.substring(count.raw.length), t.push(count);
+          continue;
+        }
+        if (count = this.tokenizer.blockquote(items)) {
+          items = items.substring(count.raw.length), t.push(count);
+          continue;
+        }
+        if (count = this.tokenizer.list(items)) {
+          items = items.substring(count.raw.length), t.push(count);
+          continue;
+        }
+        if (count = this.tokenizer.html(items)) {
+          items = items.substring(count.raw.length), t.push(count);
+          continue;
+        }
+        if (count = this.tokenizer.def(items)) {
+          items = items.substring(count.raw.length);
+          let n = t.at(-1);
+          n?.type === `paragraph` || n?.type === `text` ? (n.raw += (n.raw.endsWith(`
+`) ? `` : `
+`) + count.raw, n.text += `
+` + count.raw, this.inlineQueue.at(-1).src = n.text) : this.tokens.links[count.tag] || (this.tokens.links[count.tag] = {
+            href: count.href,
+            title: count.title
+          }, t.push(count));
+          continue;
+        }
+        if (count = this.tokenizer.table(items)) {
+          items = items.substring(count.raw.length), t.push(count);
+          continue;
+        }
+        if (count = this.tokenizer.lheading(items)) {
+          items = items.substring(count.raw.length), t.push(count);
           continue;
         }
         let itemsAlias = items;
         if (this.options.extensions?.startBlock) {
           let t = 1 / 0,
             part = items.slice(1),
-            r;
+            requestAnimationFrameResult;
           this.options.extensions.startBlock.forEach(item => {
-            r = item.call({
+            requestAnimationFrameResult = item.call({
               lexer: this
-            }, part), typeof r == `number` && r >= 0 && (t = Math.min(t, r));
+            }, part), typeof requestAnimationFrameResult == `number` && requestAnimationFrameResult >= 0 && (t = Math.min(t, requestAnimationFrameResult));
           }), t < 1 / 0 && t >= 0 && (itemsAlias = items.substring(0, t + 1));
         }
-        if (this.state.top && (i = this.tokenizer.paragraph(itemsAlias))) {
+        if (this.state.top && (count = this.tokenizer.paragraph(itemsAlias))) {
           let r = t.at(-1);
           n && r?.type === `paragraph` ? (r.raw += (r.raw.endsWith(`
 `) ? `` : `
-`) + i.raw, r.text += `
-` + i.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = r.text) : t.push(i), n = itemsAlias.length !== items.length, items = items.substring(i.raw.length);
+`) + count.raw, r.text += `
+` + count.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = r.text) : t.push(count), n = itemsAlias.length !== items.length, items = items.substring(count.raw.length);
           continue;
         }
-        if (i = this.tokenizer.text(items)) {
-          items = items.substring(i.raw.length);
+        if (count = this.tokenizer.text(items)) {
+          items = items.substring(count.raw.length);
           let n = t.at(-1);
           n?.type === `text` ? (n.raw += (n.raw.endsWith(`
 `) ? `` : `
-`) + i.raw, n.text += `
-` + i.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = n.text) : t.push(i);
+`) + count.raw, n.text += `
+` + count.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = n.text) : t.push(count);
           continue;
         }
         if (items) {
@@ -10002,9 +10002,9 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
     linkInText(items) {
       if (!items.includes(`[`)) return false;
       let link = this.tokenizer.rules.inline.link;
-      for (let n of items.matchAll(this.tokenizer.rules.inline.blockSkip)) if (link.test(n[0]) && items.charAt(n.index - 1) !== `!`) return true;
-      for (let t of items.matchAll(this.tokenizer.rules.inline.reflinkSearch)) {
-        let e = t[0],
+      for (let replaceResult of items.matchAll(this.tokenizer.rules.inline.blockSkip)) if (link.test(replaceResult[0]) && items.charAt(replaceResult.index - 1) !== `!`) return true;
+      for (let normalizeResult of items.matchAll(this.tokenizer.rules.inline.reflinkSearch)) {
+        let e = normalizeResult[0],
           lastIndexOf = e.lastIndexOf(`[`);
         if (e.charAt(0) !== `!` && Object.hasOwn(this.tokens.links, Hf(e.slice(lastIndexOf + 1, -1))) && !(lastIndexOf > 1 && this.linkInText(e.slice(1, lastIndexOf - 1)))) return true;
       }
@@ -10091,11 +10091,11 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
         if (this.options.extensions?.startInline) {
           let t = 1 / 0,
             part = items.slice(1),
-            r;
+            requestAnimationFrameResult;
           this.options.extensions.startInline.forEach(item => {
-            r = item.call({
+            requestAnimationFrameResult = item.call({
               lexer: this
-            }, part), typeof r == `number` && r >= 0 && (t = Math.min(t, r));
+            }, part), typeof requestAnimationFrameResult == `number` && requestAnimationFrameResult >= 0 && (t = Math.min(t, requestAnimationFrameResult));
           }), t < 1 / 0 && t >= 0 && (s = items.substring(0, t + 1));
         }
         if (o = this.tokenizer.inlineText(s)) {
@@ -10510,23 +10510,23 @@ ${e}</tr>
     }
     walkTokens(walk, tokens) {
       let emptyItems = [];
-      for (let r of walk) switch (emptyItems = emptyItems.concat(tokens.call(this, r)), r.type) {
+      for (let requestAnimationFrameResult of walk) switch (emptyItems = emptyItems.concat(tokens.call(this, requestAnimationFrameResult)), requestAnimationFrameResult.type) {
         case `table`:
           {
-            let e = r;
+            let e = requestAnimationFrameResult;
             for (let r of e.header) emptyItems = emptyItems.concat(this.walkTokens(r.tokens, tokens));
-            for (let r of e.rows) for (let e of r) emptyItems = emptyItems.concat(this.walkTokens(e.tokens, tokens));
+            for (let r of e.rows) for (let normalizeResult of r) emptyItems = emptyItems.concat(this.walkTokens(normalizeResult.tokens, tokens));
             break;
           }
         case `list`:
           {
-            let e = r;
+            let e = requestAnimationFrameResult;
             emptyItems = emptyItems.concat(this.walkTokens(e.items, tokens));
             break;
           }
         default:
           {
-            let e = r;
+            let e = requestAnimationFrameResult;
             this.defaults.extensions?.childTokens?.[e.type] ? this.defaults.extensions.childTokens[e.type].forEach(item => {
               let i = e[item].flat(1 / 0);
               emptyItems = emptyItems.concat(this.walkTokens(i, tokens));
@@ -10561,10 +10561,10 @@ ${e}</tr>
           `childTokens` in e && e.childTokens && (fallbackValue.childTokens[e.name] = e.childTokens);
         }), n.extensions = fallbackValue), item.renderer) {
           let t = this.defaults.renderer || new qf(this.defaults);
-          for (let n in item.renderer) {
-            if (!(n in t)) throw Error(`renderer '${n}' does not exist`);
-            if ([`options`, `parser`].includes(n)) continue;
-            let r = n,
+          for (let replaceResult in item.renderer) {
+            if (!(replaceResult in t)) throw Error(`renderer '${replaceResult}' does not exist`);
+            if ([`options`, `parser`].includes(replaceResult)) continue;
+            let r = replaceResult,
               i = item.renderer[r],
               a = t[r];
             t[r] = (...e) => {
@@ -10576,10 +10576,10 @@ ${e}</tr>
         }
         if (item.tokenizer) {
           let t = this.defaults.tokenizer || new Gf(this.defaults);
-          for (let n in item.tokenizer) {
-            if (!(n in t)) throw Error(`tokenizer '${n}' does not exist`);
-            if ([`options`, `rules`, `lexer`].includes(n)) continue;
-            let r = n,
+          for (let replaceResult in item.tokenizer) {
+            if (!(replaceResult in t)) throw Error(`tokenizer '${replaceResult}' does not exist`);
+            if ([`options`, `rules`, `lexer`].includes(replaceResult)) continue;
+            let r = replaceResult,
               i = item.tokenizer[r],
               a = t[r];
             t[r] = (...e) => {
@@ -10591,14 +10591,14 @@ ${e}</tr>
         }
         if (item.hooks) {
           let t = this.defaults.hooks || new Xf();
-          for (let n in item.hooks) {
-            if (!(n in t)) throw Error(`hook '${n}' does not exist`);
-            if ([`options`, `block`].includes(n)) continue;
-            let r = n,
+          for (let replaceResult in item.hooks) {
+            if (!(replaceResult in t)) throw Error(`hook '${replaceResult}' does not exist`);
+            if ([`options`, `block`].includes(replaceResult)) continue;
+            let r = replaceResult,
               i = item.hooks[r],
               a = t[r];
-            t[r] = Xf.passThroughHooks.has(n) ? e => {
-              if (this.defaults.async && Xf.passThroughHooksRespectAsync.has(n)) return (async () => {
+            t[r] = Xf.passThroughHooks.has(replaceResult) ? e => {
+              if (this.defaults.async && Xf.passThroughHooksRespectAsync.has(replaceResult)) return (async () => {
                 let n = await i.call(t, e);
                 return a.call(t, n);
               })();
@@ -10717,7 +10717,7 @@ var ep = (() => {
     longTaskMs: 0
   };
 ep && (typeof PerformanceObserver < `u` && PerformanceObserver.supportedEntryTypes?.includes(`longtask`) && new PerformanceObserver(e => {
-  for (let t of e.getEntries()) tp.longTasks += 1, tp.longTaskMs += t.duration;
+  for (let normalizeResult of e.getEntries()) tp.longTasks += 1, tp.longTaskMs += normalizeResult.duration;
 }).observe({
   type: `longtask`,
   buffered: false
@@ -10728,7 +10728,7 @@ ep && (typeof PerformanceObserver < `u` && PerformanceObserver.supportedEntryTyp
       markdownMs: Math.round(tp.markdownMs),
       longTaskMs: Math.round(tp.longTaskMs)
     });
-    for (let e of Object.keys(tp)) tp[e] = 0;
+    for (let normalizeResult of Object.keys(tp)) tp[normalizeResult] = 0;
   }
 }, 1e3));
 var np = {
@@ -10814,10 +10814,10 @@ var Vee = [`innerHTML`],
         let treeWalker = e.createTreeWalker(e.body, NodeFilter.SHOW_TEXT),
           emptyItems = [];
         for (; treeWalker.nextNode();) emptyItems.push(treeWalker.currentNode);
-        for (let n of emptyItems) {
-          let parentElement = n.parentElement;
+        for (let replaceResult of emptyItems) {
+          let parentElement = replaceResult.parentElement;
           if (!parentElement || parentElement.closest(`a, code, pre, [${sp}]`)) continue;
-          let fallbackValue = n.textContent ?? ``,
+          let fallbackValue = replaceResult.textContent ?? ``,
             documentFragment = e.createDocumentFragment(),
             o = 0,
             c = false;
@@ -10826,7 +10826,7 @@ var Vee = [`innerHTML`],
               l = n.index ?? 0;
             t.has(r) && (documentFragment.append(e.createTextNode(fallbackValue.slice(o, l))), documentFragment.append(s(e, r)), o = l + n[0].length, c = true);
           }
-          c && (documentFragment.append(e.createTextNode(fallbackValue.slice(o))), n.replaceWith(documentFragment));
+          c && (documentFragment.append(e.createTextNode(fallbackValue.slice(o))), replaceResult.replaceWith(documentFragment));
         }
       }
       function l(e, t) {
@@ -10842,18 +10842,18 @@ var Vee = [`innerHTML`],
       }
       function u(e, t) {
         let n = Array.from(e.body.querySelectorAll(`[${sp}]`));
-        for (let r of n) {
-          let fallbackValue = r.getAttribute(sp) ?? ``,
+        for (let requestAnimationFrameResult of n) {
+          let fallbackValue = requestAnimationFrameResult.getAttribute(sp) ?? ``,
             i = t.get(fallbackValue);
           if (!i) {
-            r.replaceWith(e.createTextNode(ap(fallbackValue)));
+            requestAnimationFrameResult.replaceWith(e.createTextNode(ap(fallbackValue)));
             continue;
           }
-          if (r.closest(`a, code, pre`)) {
-            r.replaceWith(e.createTextNode(`@${i.name}`));
+          if (requestAnimationFrameResult.closest(`a, code, pre`)) {
+            requestAnimationFrameResult.replaceWith(e.createTextNode(`@${i.name}`));
             continue;
           }
-          r.replaceWith(l(e, i));
+          requestAnimationFrameResult.replaceWith(l(e, i));
         }
       }
       function d(e, t) {
@@ -10861,9 +10861,9 @@ var Vee = [`innerHTML`],
           o = new Map();
         if (eventAlias.openLocalLinks) {
           let fromString = new DOMParser().parseFromString(e, `text/html`);
-          for (let e of Array.from(fromString.body.querySelectorAll(`code, p, li`))) {
-            if (e.closest(`a`) || e.children.length > 0) continue;
-            let n = (e.textContent ?? ``).split(`
+          for (let normalizeResult of Array.from(fromString.body.querySelectorAll(`code, p, li`))) {
+            if (normalizeResult.closest(`a`) || normalizeResult.children.length > 0) continue;
+            let n = (normalizeResult.textContent ?? ``).split(`
 `),
               filtered = n.map(text => text.trim()).filter(Boolean);
             if (!filtered.length || !filtered.every(text => (/^(?:file:\/\/|[a-zA-Z]:[\\/]|\/(?!\/)|~\/|\.{1,2}[\\/])/i.test(text) || !/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(text) && !text.startsWith(`#`) && !text.startsWith(`//`) && (/\.[a-zA-Z0-9]{1,10}$/.test(text) || /[\\/]/.test(text))) && !/[\r\t<>|*?"`]/.test(text) && !/\s(?:--?\w|&&|;)/.test(text))) continue;
@@ -10881,13 +10881,13 @@ var Vee = [`innerHTML`],
               let element = fromString.createElement(`a`);
               element.setAttribute(`href`, trimmed), element.textContent = trimmed, documentFragment.append(element, fromString.createTextNode(r.slice(a + trimmed.length)));
             }
-            e.replaceChildren(documentFragment);
+            normalizeResult.replaceChildren(documentFragment);
           }
-          for (let e of Array.from(fromString.body.querySelectorAll(`a[href]`))) {
-            let fallbackValue = e.getAttribute(`href`)?.trim() ?? ``;
+          for (let normalizeResult of Array.from(fromString.body.querySelectorAll(`a[href]`))) {
+            let fallbackValue = normalizeResult.getAttribute(`href`)?.trim() ?? ``;
             if (!/^(?:file:\/\/|[a-zA-Z]:[\\/]|\/(?!\/)|~\/|\.{1,2}\/)/.test(fallbackValue) && (/^[a-zA-Z][a-zA-Z\d+.-]*:/.test(fallbackValue) || fallbackValue.startsWith(`//`) || fallbackValue.startsWith(`#`) || !/\.[a-zA-Z0-9]{1,10}$/.test(fallbackValue) && !/[\\/]/.test(fallbackValue))) continue;
             let n = `https://xiaohei-local.invalid/${crypto.randomUUID()}`;
-            o.set(n, fallbackValue), e.setAttribute(`href`, n);
+            o.set(n, fallbackValue), normalizeResult.setAttribute(`href`, n);
           }
           e = fromString.body.innerHTML;
         }
@@ -10898,26 +10898,26 @@ var Vee = [`innerHTML`],
             ALLOW_UNKNOWN_PROTOCOLS: false
           }),
           fromString = new DOMParser().parseFromString(String(sanitize), `text/html`);
-        for (let e of Array.from(fromString.body.querySelectorAll(`a`))) {
-          let fallbackValue = e.getAttribute(`href`) ?? ``,
+        for (let normalizeResult of Array.from(fromString.body.querySelectorAll(`a`))) {
+          let fallbackValue = normalizeResult.getAttribute(`href`) ?? ``,
             n = o.get(fallbackValue);
           if (n) {
             let element = fromString.createElement(`span`);
-            element.setAttribute(`data-local-candidate`, n), element.append(...Array.from(e.childNodes)), e.replaceWith(element);
+            element.setAttribute(`data-local-candidate`, n), element.append(...Array.from(normalizeResult.childNodes)), normalizeResult.replaceWith(element);
             continue;
           }
           if (!a(fallbackValue)) {
-            e.removeAttribute(`href`);
+            normalizeResult.removeAttribute(`href`);
             continue;
           }
-          e.setAttribute(`target`, `_blank`), e.setAttribute(`rel`, `noreferrer noopener`);
+          normalizeResult.setAttribute(`target`, `_blank`), normalizeResult.setAttribute(`rel`, `noreferrer noopener`);
         }
-        for (let e of Array.from(fromString.body.querySelectorAll(`td`))) {
-          let fallbackValue = e.textContent?.trim() ?? ``,
+        for (let normalizeResult of Array.from(fromString.body.querySelectorAll(`td`))) {
+          let fallbackValue = normalizeResult.textContent?.trim() ?? ``,
             n = Array.from(fallbackValue);
           if (n.length !== 10 || n.some(item => item !== `🟩` && item !== `▫`)) continue;
           let r = n.filter(item => item === `🟩`).length;
-          e.textContent = `${`█`.repeat(r)}${`░`.repeat(10 - r)}`;
+          normalizeResult.textContent = `${`█`.repeat(r)}${`░`.repeat(10 - r)}`;
         }
         return c(fromString, r), u(fromString, r), fromString.body.innerHTML;
       }
@@ -10959,19 +10959,19 @@ var Vee = [`innerHTML`],
           strike: `del`
         })) {
           let r = Array.from(fromString.body.querySelectorAll(e));
-          for (let e of r) {
+          for (let normalizeResult of r) {
             let element = fromString.createElement(n);
-            element.innerHTML = e.innerHTML, e.replaceWith(element);
+            element.innerHTML = normalizeResult.innerHTML, normalizeResult.replaceWith(element);
           }
         }
         let treeWalker = fromString.createTreeWalker(fromString.body, NodeFilter.SHOW_TEXT),
           emptyItems = [];
         for (; treeWalker.nextNode();) emptyItems.push(treeWalker.currentNode);
-        for (let e of emptyItems) {
-          let parentElement = e.parentElement;
+        for (let normalizeResult of emptyItems) {
+          let parentElement = normalizeResult.parentElement;
           if (parentElement && parentElement.tagName.toLowerCase() === `body`) {
             let element = fromString.createElement(`p`);
-            element.textContent = e.textContent, e.replaceWith(element);
+            element.textContent = normalizeResult.textContent, normalizeResult.replaceWith(element);
           }
         }
         return fromString.body.innerHTML;
@@ -11048,35 +11048,35 @@ var Vee = [`innerHTML`],
             });
             if (o !== E) return;
             if (!replyPaths.ok) throw Error(replyPaths.error.message);
-            for (let t of replyPaths.data) t.exists && t.resolvedPath && e.set(t.path, {
-              path: t.resolvedPath,
-              isDirectory: t.isDirectory === true
+            for (let normalizeResult of replyPaths.data) normalizeResult.exists && normalizeResult.resolvedPath && e.set(normalizeResult.path, {
+              path: normalizeResult.resolvedPath,
+              isDirectory: normalizeResult.isDirectory === true
             });
           }
-          for (let t of c) {
-            let n = e.get(t.dataset.localCandidate ?? ``);
+          for (let normalizeResult of c) {
+            let n = e.get(normalizeResult.dataset.localCandidate ?? ``);
             if (!n) continue;
             let path = n.path,
               element = fromString.createElement(`a`);
             element.setAttribute(`href`, `#`), element.setAttribute(`data-local-path`, path), element.className = `markdown-local-file`, element.setAttribute(`aria-label`, path);
             let elementResult = fromString.createElement(`span`);
-            elementResult.className = `markdown-path-icon ${n.isDirectory ? `markdown-path-icon--folder` : `markdown-path-icon--file`}`, elementResult.setAttribute(`aria-hidden`, `true`), element.append(elementResult), element.append(...Array.from(t.childNodes)), t.replaceWith(element);
+            elementResult.className = `markdown-path-icon ${n.isDirectory ? `markdown-path-icon--folder` : `markdown-path-icon--file`}`, elementResult.setAttribute(`aria-hidden`, `true`), element.append(elementResult), element.append(...Array.from(normalizeResult.childNodes)), normalizeResult.replaceWith(element);
           }
-          for (let e of Array.from(fromString.body.querySelectorAll(`code`))) {
-            let t = e.parentElement?.matches(`a[data-local-path]`),
-              n = e.querySelector(`a[data-local-path]`) && Array.from(e.childNodes).every(item => item.nodeType === Node.TEXT_NODE ? !item.textContent?.trim() : item instanceof Element && item.matches(`a[data-local-path]`));
+          for (let normalizeResult of Array.from(fromString.body.querySelectorAll(`code`))) {
+            let t = normalizeResult.parentElement?.matches(`a[data-local-path]`),
+              n = normalizeResult.querySelector(`a[data-local-path]`) && Array.from(normalizeResult.childNodes).every(item => item.nodeType === Node.TEXT_NODE ? !item.textContent?.trim() : item instanceof Element && item.matches(`a[data-local-path]`));
             if (!t && !n) continue;
-            let r = e.parentElement?.tagName === `PRE` ? e.parentElement : null;
+            let r = normalizeResult.parentElement?.tagName === `PRE` ? normalizeResult.parentElement : null;
             if (r) {
-              if (!Array.from(r.childNodes).every(item => item === e || item.nodeType === Node.TEXT_NODE && !item.textContent?.trim())) continue;
+              if (!Array.from(r.childNodes).every(item => item === normalizeResult || item.nodeType === Node.TEXT_NODE && !item.textContent?.trim())) continue;
               let element = fromString.createElement(`p`),
-                n = Array.from(e.childNodes);
+                n = Array.from(normalizeResult.childNodes);
               for (let e of n) if (e.nodeType === Node.TEXT_NODE) {
                 let r = (e.textContent?.match(/\n/g) ?? []).length;
                 if (element.childNodes.length && e !== n[n.length - 1]) for (let e = 0; e < r; e++) element.append(fromString.createElement(`br`));
               } else element.append(e);
               r.replaceWith(element);
-            } else e.replaceWith(...Array.from(e.childNodes));
+            } else normalizeResult.replaceWith(...Array.from(normalizeResult.childNodes));
           }
           o === E && (T.value = fromString.body.innerHTML);
         } catch (e) {
@@ -12418,8 +12418,8 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
     });
     promise = (e, t) => {
       if (!t) return;
-      let n;
-      t.loading !== undefined && (n = this.create({
+      let replaceResult;
+      t.loading !== undefined && (replaceResult = this.create({
         ...t,
         promise: e,
         type: `loading`,
@@ -12427,11 +12427,11 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
         description: typeof t.description == `function` ? undefined : t.description
       }));
       let r = Promise.resolve(e instanceof Function ? e() : e),
-        i = n !== undefined,
+        i = replaceResult !== undefined,
         a,
         o = r.then(async err => {
           if (a = [`resolve`, err], Pe(err)) i = false, this.create({
-            id: n,
+            id: replaceResult,
             type: `default`,
             message: err
           });else if (Gte(err) && !err.ok) {
@@ -12440,10 +12440,10 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
               a = typeof t.description == `function` ? await t.description(`HTTP error! status: ${err.status}`) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
-                id: n || ``
+                id: replaceResult || ``
               };
             this.create({
-              id: n,
+              id: replaceResult,
               type: `error`,
               description: a,
               ...o
@@ -12454,10 +12454,10 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
               a = typeof t.description == `function` ? await t.description(err) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
-                id: n || ``
+                id: replaceResult || ``
               };
             this.create({
-              id: n,
+              id: replaceResult,
               type: `error`,
               description: a,
               ...o
@@ -12468,10 +12468,10 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
               a = typeof t.description == `function` ? await t.description(err) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
-                id: n || ``
+                id: replaceResult || ``
               };
             this.create({
-              id: n,
+              id: replaceResult,
               type: `success`,
               description: a,
               ...o
@@ -12484,22 +12484,22 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
               a = typeof t.description == `function` ? await t.description(e) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
-                id: n || ``
+                id: replaceResult || ``
               };
             this.create({
-              id: n,
+              id: replaceResult,
               type: `error`,
               description: a,
               ...o
             });
           }
         }).finally(() => {
-          i && (this.dismiss(n), n = undefined), t.finally?.();
+          i && (this.dismiss(replaceResult), replaceResult = undefined), t.finally?.();
         }),
         s = () => new Promise((e, t) => o.then(() => a[0] === `reject` ? t(a[1]) : e(a[1])).catch(t));
-      return typeof n != `string` && typeof n != `number` ? {
+      return typeof replaceResult != `string` && typeof replaceResult != `number` ? {
         unwrap: s
-      } : Object.assign(n, {
+      } : Object.assign(replaceResult, {
         unwrap: s
       });
     };
@@ -12843,8 +12843,8 @@ var Jte = {
         h = 0,
         g = false,
         _ = false,
-        v,
-        y,
+        setIntervalResult,
+        setTimeoutResult,
         computedData = computed(() => !textAlias.userId || !c.value ? [] : (c.value.campaigns ?? (c.value.campaign ? [c.value.campaign] : [])).filter(left => Date.parse(left.endsAt) > counter.value).sort((e, right) => (e.sortOrder ?? 0) - (right.sortOrder ?? 0) || e.id - right.id)),
         x = e => `${textAlias.userId}:${e}:${c.value?.serverDate}`,
         S = computed(() => computedData.value.filter(item => !p.value.includes(x(item.id)))),
@@ -12868,7 +12868,7 @@ var Jte = {
         return typeof e.externalRewardCredits == `number` ? Math.max(0, Math.trunc(e.externalRewardCredits)) : 0;
       }
       function O(e, t) {
-        clearTimeout(y), y = setTimeout(() => {
+        clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
           counter.value = e, O(e + 864e5, 864e5), ee();
         }, Math.min(Math.max(0, t) + 50, 2147483647));
       }
@@ -12937,7 +12937,7 @@ var Jte = {
         document.visibilityState !== `hidden` && ee();
       }
       return watch(() => textAlias.userId, () => {
-        h++, g = false, u.value = null, c.value = null, flag.value = false, clearTimeout(y), f.value = null, p.value = [];
+        h++, g = false, u.value = null, c.value = null, flag.value = false, clearTimeout(setTimeoutResult), f.value = null, p.value = [];
         try {
           let item = localStorage.getItem(`credit-campaign-dismissed:${textAlias.userId}`);
           item && (p.value = item.startsWith(`[`) ? JSON.parse(item).filter(item => typeof item == `string`) : [item]);
@@ -12952,9 +12952,9 @@ var Jte = {
       }), watch(() => textAlias.refreshKey, () => {
         ee();
       }), onBeforeMount(() => {
-        _ = true, ee(), v = Ni(`credit_campaign`, async () => g || computedResult.value || !_ ? false : ee()), window.addEventListener(`focus`, N), window.addEventListener(`online`, N), document.addEventListener(`visibilitychange`, N);
+        _ = true, ee(), setIntervalResult = Ni(`credit_campaign`, async () => g || computedResult.value || !_ ? false : ee()), window.addEventListener(`focus`, N), window.addEventListener(`online`, N), document.addEventListener(`visibilitychange`, N);
       }), onUnmounted(() => {
-        _ = false, h++, v?.(), clearTimeout(y), window.removeEventListener(`focus`, N), window.removeEventListener(`online`, N), document.removeEventListener(`visibilitychange`, N);
+        _ = false, h++, setIntervalResult?.(), clearTimeout(setTimeoutResult), window.removeEventListener(`focus`, N), window.removeEventListener(`online`, N), document.removeEventListener(`visibilitychange`, N);
       }), (e, t) => textAlias.variant === `profile` && computedData.value.length ? (openBlock(), createElementBlock(`div`, Jte, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedData.value, e => (openBlock(), createElementBlock(`section`, {
         key: e.id,
         "data-campaign-id": e.id,
@@ -13576,7 +13576,7 @@ var Jp = ref([]),
   $p = null,
   em = 0,
   tm = false,
-  nm = null;
+  onChangedResult = null;
 function rm(e) {
   if (!e) return 0;
   let parsed = Date.parse(e);
@@ -13599,7 +13599,7 @@ function am(e = `assistant`) {
     computedData = computed(() => computedResult.value.filter(item => !item.isRead).length),
     r = e === `bot` ? ere : Xp;
   async function i() {
-    tm || (tm = true, !nm && window.electronAPI?.notifications?.onChanged && (nm = window.electronAPI.notifications.onChanged(() => {
+    tm || (tm = true, !onChangedResult && window.electronAPI?.notifications?.onChanged && (onChangedResult = window.electronAPI.notifications.onChanged(() => {
       Qp || c().catch(() => {});
     })), await o(), Zp = Ni(`notifications`, async () => {
       if (Qp) return false;
@@ -13610,18 +13610,18 @@ function am(e = `assistant`) {
     }));
   }
   function a() {
-    Zp &&= (Zp(), null), nm?.(), nm = null, tm = false;
+    Zp &&= (Zp(), null), onChangedResult?.(), onChangedResult = null, tm = false;
   }
   async function o() {
     if (Qp) return Qp;
     Qp = (async () => {
-      let e;
+      let normalizeResult;
       try {
-        e = await Up.sync(), em = Date.now(), e && Qne(e.templateMarketMaxId);
+        normalizeResult = await Up.sync(), em = Date.now(), normalizeResult && Qne(normalizeResult.templateMarketMaxId);
       } catch (e) {
         console.warn(`[useNotifications] 同步失败:`, e);
       }
-      return await c(), e;
+      return await c(), normalizeResult;
     })();
     try {
       return await Qp;
@@ -13661,7 +13661,7 @@ function am(e = `assistant`) {
     }
   }
   async function u() {
-    for (let e of computedResult.value.filter(item => !item.isRead)) await l(e.id);
+    for (let normalizeResult of computedResult.value.filter(item => !item.isRead)) await l(normalizeResult.id);
   }
   function d() {
     r.value = !r.value, e === `bot` && r.value && (Xp.value = false);
@@ -14009,15 +14009,15 @@ function cre() {
     let {
         isLoggedIn: e
       } = Li(),
-      t = null;
+      normalizeResult = null;
     watch(e, value => {
-      if (Cm = value, t && clearInterval(t), t = null, !value) {
+      if (Cm = value, normalizeResult && clearInterval(normalizeResult), normalizeResult = null, !value) {
         state.value = {
           ...ym
         };
         return;
       }
-      Tm(), t = setInterval(() => {
+      Tm(), normalizeResult = setInterval(() => {
         Tm();
       }, ire);
     }, {
@@ -14074,17 +14074,17 @@ function km() {
       mounted(o, state) {
         let c = state.value,
           l = false,
-          u,
+          setTimeoutResult,
           d = ``,
           f = () => {
-            clearTimeout(u);
+            clearTimeout(setTimeoutResult);
             let t = e.value?.userId,
               includes = [`bot_task_success_visible`, `bot_first_content_visible`].includes(c.event),
               r = new Intl.DateTimeFormat(`en-CA`, {
                 timeZone: `Asia/Shanghai`
               }).format(new Date()),
               o = `${t}:${c.event}:${c.requestId || ``}${includes ? `` : `:` + r}`;
-            c.event === `bot_module_view` && (!i() || c.eligible === false) && (d = ``), t && l && i() && c.eligible !== false && d !== o && (![`bot_task_success_visible`, `bot_first_content_visible`].includes(c.event) || c.requestId) && (u = setTimeout(() => {
+            c.event === `bot_module_view` && (!i() || c.eligible === false) && (d = ``), t && l && i() && c.eligible !== false && d !== o && (![`bot_task_success_visible`, `bot_first_content_visible`].includes(c.event) || c.requestId) && (setTimeoutResult = setTimeout(() => {
               if (!i() || !l || e.value?.userId !== t || c.eligible === false) return;
               d = o;
               let fallbackValue = (c.requestId ? Dm.get(c.requestId) : undefined) ?? (c.acceptedAt ? Date.parse(c.acceptedAt) : NaN),
@@ -14123,7 +14123,7 @@ function km() {
         intersectionObserver.observe(o), t.add(f), r.set(o, e => {
           c = e, f();
         }), n.set(o, () => {
-          clearTimeout(u), intersectionObserver.disconnect(), t.delete(f), r.delete(o);
+          clearTimeout(setTimeoutResult), intersectionObserver.disconnect(), t.delete(f), r.delete(o);
         });
       },
       updated(e, state) {
@@ -14456,7 +14456,7 @@ var lre = [`title`],
         e !== computedData.value && Te(e === `bot` ? `xiaohei-bot` : se.value);
       }
       let me,
-        he,
+        pointerId,
         ge = false,
         _e = 0;
       async function ve(e = false) {
@@ -14478,7 +14478,7 @@ var lre = [`title`],
           _.value = e;
         }).catch(() => {});
         let e = new Map();
-        he = electronAPI?.xiaoheiBot?.onEvent?.(t => {
+        pointerId = electronAPI?.xiaoheiBot?.onEvent?.(t => {
           if (t.type === `unread-conversations` || t.type === `directory-updated`) {
             _e++, ue.value = new Set(t.type === `unread-conversations` ? t.conversationIds : t.conversations.filter(item => item.unreadCount > 0 && !item.sidebarHiddenAt && !item.archivedAt).map(e => e.id));
             return;
@@ -14500,7 +14500,7 @@ var lre = [`title`],
           e = null;
         }
       }), onUnmounted(() => {
-        ge = true, me?.(), he?.();
+        ge = true, me?.(), pointerId?.();
       });
       let ye = computed(() => [{
           id: `today-work`,
@@ -14867,7 +14867,7 @@ var lre = [`title`],
         } = Li(),
         a = ref(`idle`),
         o = ref(``),
-        s,
+        trimStartResult,
         c = 0,
         l = 0,
         u = 3e3,
@@ -14893,7 +14893,7 @@ var lre = [`title`],
           } catch (e) {
             o.value = e instanceof Error ? e.message : r(`login.browser.retry`);
           }
-          !d && e === c && (s = setTimeout(() => void f(e), u));
+          !d && e === c && (trimStartResult = setTimeout(() => void f(e), u));
         }
       }
       async function p() {
@@ -14910,7 +14910,7 @@ var lre = [`title`],
         }
       }
       async function m() {
-        Pi(await window.electronAPI.auth.browserCancel()).success && (++c, clearTimeout(s), a.value = `idle`, o.value = ``);
+        Pi(await window.electronAPI.auth.browserCancel()).success && (++c, clearTimeout(trimStartResult), a.value = `idle`, o.value = ``);
       }
       async function h() {
         try {
@@ -14925,7 +14925,7 @@ var lre = [`title`],
       return onBeforeMount(() => {
         localStorage.removeItem(`xiaohei_remembered_login`);
       }), onUnmounted(() => {
-        d = true, ++c, clearTimeout(s), window.electronAPI.auth.browserCancel();
+        d = true, ++c, clearTimeout(trimStartResult), window.electronAPI.auth.browserCancel();
       }), (e, t) => (openBlock(), createElementBlock(`section`, hie, [createElementVNode(`main`, gie, [createElementVNode(`img`, {
         class: `login-mascot`,
         src: unref(mie),
@@ -15117,16 +15117,16 @@ var Die = {
         computedData = computed(() => computedResult.value ? n.credits?.grantedCredits ?? 0 : 0),
         d = [3e3, 8e3],
         f = 0,
-        p = null,
+        setTimeoutResult = null,
         m = ref(false);
       watch(() => [n.newRegistration, n.creditsLoading, computedResult.value], ([e, t, n]) => {
-        !e || t || n || p || f >= d.length || (m.value = true, p = setTimeout(() => {
-          p = null, m.value = false, f += 1, r(`retryCredits`);
+        !e || t || n || setTimeoutResult || f >= d.length || (m.value = true, setTimeoutResult = setTimeout(() => {
+          setTimeoutResult = null, m.value = false, f += 1, r(`retryCredits`);
         }, d[f]));
       }, {
         immediate: true
       }), onUnmounted(() => {
-        p && clearTimeout(p);
+        setTimeoutResult && clearTimeout(setTimeoutResult);
       });
       let h = [{
           id: `screen`,
@@ -16855,7 +16855,7 @@ var Oae = [`data-kind`],
         } = it(),
         n = ref(`hidden`),
         r = ref(null),
-        i,
+        count,
         a = false;
       async function o() {
         if (!(a || document.hidden)) {
@@ -16883,11 +16883,11 @@ var Oae = [`data-kind`],
         document.hidden || o();
       }
       return onBeforeMount(() => {
-        o(), i = setInterval(() => {
+        o(), count = setInterval(() => {
           o();
         }, Nae), document.addEventListener(`visibilitychange`, c);
       }), onUnmounted(() => {
-        clearInterval(i), document.removeEventListener(`visibilitychange`, c);
+        clearInterval(count), document.removeEventListener(`visibilitychange`, c);
       }), (e, i) => n.value === `hidden` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`button`, {
         key: 0,
         type: `button`,
@@ -17003,7 +17003,7 @@ function Mg(e, t, n, event) {
     });
   }), a.values.length > 0 && emptyItems.push(a), e.colorBy === `app`) {
     let t = 0;
-    for (let n of e.days) for (let e of n.cells) e === -2 && (t += 1);
+    for (let replaceResult of e.days) for (let normalizeResult of replaceResult.cells) normalizeResult === -2 && (t += 1);
     t > 0 && emptyItems.push({
       id: `idle`,
       kind: `idle`,
@@ -17030,7 +17030,7 @@ function Rae(e, t, n) {
 }
 function Ng(items) {
   let emptyItems = [],
-    n = [],
+    replaceResult = [],
     r = 0,
     i = 0,
     a = null;
@@ -17039,7 +17039,7 @@ function Ng(items) {
     r += 1, i += item.activeSec;
     let c = Lae(item.cells, items.bucketMinutes),
       l = Rae(item.cells, items.days[s + 1]?.cells, items.bucketMinutes);
-    c !== null && emptyItems.push(c), l !== null && (n.push(l), (!a || l >= a.minute) && (a = {
+    c !== null && emptyItems.push(c), l !== null && (replaceResult.push(l), (!a || l >= a.minute) && (a = {
       date: item.date,
       minute: l
     }));
@@ -17051,7 +17051,7 @@ function Ng(items) {
     activeDays: r,
     avgActiveSec: r > 0 ? Math.round(i / r) : 0,
     avgFirstMinute: o(emptyItems),
-    avgLastMinute: o(n),
+    avgLastMinute: o(replaceResult),
     latest: a,
     top: c && reduced > 0 ? {
       name: c.name,
@@ -17185,15 +17185,15 @@ function Kae(e, t, n) {
     m = Gae(n, bucketRange);
   e.font = `11px ${t.fontFamily}`, e.fillStyle = r.textMuted, e.textBaseline = `middle`;
   let h = n.axis === `top` ? n.top - 10 : f + 11;
-  for (let t of m) {
-    let r = d(t * Wg);
-    e.textAlign = r <= n.left + 1 ? `left` : r >= n.left + n.plotWidth - 1 ? `right` : `center`, e.fillText(Ug(t), r, h);
+  for (let normalizeResult of m) {
+    let r = d(normalizeResult * Wg);
+    e.textAlign = r <= n.left + 1 ? `left` : r >= n.left + n.plotWidth - 1 ? `right` : `center`, e.fillText(Ug(normalizeResult), r, h);
   }
   if (e.fillStyle = r.track, n.dense) e.fillRect(n.left, n.top, n.plotWidth, f - n.top);else for (let t = 0; t < n.dayCount; t += 1) e.beginPath(), e.roundRect(n.left, u(t), n.plotWidth, n.rowHeight, p), e.fill();
   e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath();
   let g = bucketRange ? m.filter(item => item * Wg > fallbackValue && item * Wg < s) : [6, 12, 18];
-  for (let t of g) {
-    let r = Math.round(d(t * Wg)) + 0.5;
+  for (let normalizeResult of g) {
+    let r = Math.round(d(normalizeResult * Wg)) + 0.5;
     e.moveTo(r, n.top), e.lineTo(r, f);
   }
   if (e.stroke(), i.days.forEach((item, i) => {
@@ -17201,12 +17201,12 @@ function Kae(e, t, n) {
       c = Ag(item.cells);
     if (c.length !== 0) {
       p > 0 && (e.save(), e.beginPath(), e.roundRect(n.left, a, n.plotWidth, n.rowHeight, p), e.clip());
-      for (let r of c) {
-        let i = Math.max(r.start, fallbackValue),
-          c = Math.min(r.end, s);
+      for (let requestAnimationFrameResult of c) {
+        let i = Math.max(requestAnimationFrameResult.start, fallbackValue),
+          c = Math.min(requestAnimationFrameResult.end, s);
         if (c <= i) continue;
         let l = d(i);
-        e.globalAlpha = Hg(r.value, t), e.fillStyle = Vg(r.value, t), e.fillRect(l, a, d(c) - l, n.rowHeight);
+        e.globalAlpha = Hg(requestAnimationFrameResult.value, t), e.fillStyle = Vg(requestAnimationFrameResult.value, t), e.fillRect(l, a, d(c) - l, n.rowHeight);
       }
       e.globalAlpha = 1, p > 0 && e.restore();
     }
@@ -17214,9 +17214,9 @@ function Kae(e, t, n) {
     item && (e.fillStyle = a === t.emphasizedDay ? r.textSecondary : r.textMuted, e.fillText(item, n.left - 10, u(a) + n.rowHeight / 2));
   }), n.dense && t.monthMarks) {
     e.textBaseline = `top`, e.strokeStyle = r.grid;
-    for (let i of t.monthMarks) {
-      let t = u(i.dayIndex);
-      i.dayIndex > 0 && (e.beginPath(), e.moveTo(n.left - 6, Math.round(t) + 0.5), e.lineTo(n.left, Math.round(t) + 0.5), e.stroke()), e.fillStyle = r.textMuted, e.fillText(i.label, n.left - 10, t + 1);
+    for (let count of t.monthMarks) {
+      let t = u(count.dayIndex);
+      count.dayIndex > 0 && (e.beginPath(), e.moveTo(n.left - 6, Math.round(t) + 0.5), e.lineTo(n.left, Math.round(t) + 0.5), e.stroke()), e.fillStyle = r.textMuted, e.fillText(count.label, n.left - 10, t + 1);
     }
     e.textBaseline = `middle`;
   }
@@ -17242,14 +17242,14 @@ function qae(e, t, n) {
     s = e => n.innerRadius + (e + 1) * n.ringWidth - n.ringGap / 2;
   if (e.fillStyle = r.track, n.ringGap === 0) Gg(e, n.cx, n.cy, n.innerRadius, n.outerRadius, 0, zg);else for (let t = 0; t < n.dayCount; t += 1) Gg(e, n.cx, n.cy, o(t), s(t), 0, zg);
   e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath();
-  for (let t of [0, 6, 12, 18]) {
-    let r = -Math.PI / 2 + t / 24 * zg;
+  for (let normalizeResult of [0, 6, 12, 18]) {
+    let r = -Math.PI / 2 + normalizeResult / 24 * zg;
     e.moveTo(n.cx + Math.cos(r) * n.innerRadius, n.cy + Math.sin(r) * n.innerRadius), e.lineTo(n.cx + Math.cos(r) * n.outerRadius, n.cy + Math.sin(r) * n.outerRadius);
   }
   e.stroke(), i.days.forEach((item, state) => {
     let c = o(state),
       l = s(state);
-    if (!(l <= c)) for (let i of Ag(item.cells)) e.globalAlpha = Hg(i.value, t), e.fillStyle = Vg(i.value, t), Gg(e, n.cx, n.cy, c, l, a(i.start), a(i.end));
+    if (!(l <= c)) for (let count of Ag(item.cells)) e.globalAlpha = Hg(count.value, t), e.fillStyle = Vg(count.value, t), Gg(e, n.cx, n.cy, c, l, a(count.start), a(count.end));
   }), e.globalAlpha = 1, e.font = `11px ${t.fontFamily}`, e.fillStyle = r.textMuted, e.textAlign = `center`, e.textBaseline = `middle`, e.strokeStyle = r.grid;
   for (let t = 0; t < 24; t += 3) {
     let r = -Math.PI / 2 + t / 24 * zg,
@@ -17348,9 +17348,9 @@ var Jae = [`aria-label`],
         o = ref(null),
         counter = ref(0),
         c = ref(null),
-        l = null,
+        setTimeoutResult = null,
         u = 0,
-        d = null,
+        count = null,
         computedResult = computed(() => Uae(eventAlias.layout, counter.value, eventAlias.result.days.length, eventAlias.compact)),
         computedData = computed(() => eventAlias.highlight ? new Set(eventAlias.highlight) : null);
       function m() {
@@ -17359,7 +17359,7 @@ var Jae = [`aria-label`],
           t = a.value;
         if (!e || !t || counter.value <= 0) return;
         let n = computedResult.value,
-          fallbackValue = d ?? (window.devicePixelRatio || 1);
+          fallbackValue = count ?? (window.devicePixelRatio || 1);
         e.width = Math.max(1, Math.round(n.width * fallbackValue)), e.height = Math.max(1, Math.round(n.height * fallbackValue));
         let context = e.getContext(`2d`);
         context && (context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.clearRect(0, 0, n.width, n.height), Kg(context, {
@@ -17405,20 +17405,20 @@ var Jae = [`aria-label`],
         a && eventAlias.result.days[a.dayIndex]?.activeSec && i(`select`, a.dayIndex);
       }
       function y(e) {
-        return u && cancelAnimationFrame(u), d = Math.max(e, window.devicePixelRatio || 1), c.value = null, m(), () => {
-          d = null, m();
+        return u && cancelAnimationFrame(u), count = Math.max(e, window.devicePixelRatio || 1), c.value = null, m(), () => {
+          count = null, m();
         };
       }
       return t({
         prepareExport: y
       }), onBeforeMount(() => {
         let e = a.value;
-        e && (counter.value = Math.floor(e.clientWidth), l = new ResizeObserver(e => {
+        e && (counter.value = Math.floor(e.clientWidth), setTimeoutResult = new ResizeObserver(e => {
           let t = Math.floor(e[0]?.contentRect.width ?? 0);
           t !== counter.value && (counter.value = t);
-        }), l.observe(e), h());
+        }), setTimeoutResult.observe(e), h());
       }), onMounted(() => {
-        l?.disconnect(), l = null, u && cancelAnimationFrame(u), u = 0;
+        setTimeoutResult?.disconnect(), setTimeoutResult = null, u && cancelAnimationFrame(u), u = 0;
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         ref_key: `containerRef`,
         ref: a,
@@ -17689,16 +17689,16 @@ function r_(event, t) {
 }
 function i_() {
   let e = ref(document.documentElement.classList.contains(`dark`)),
-    t = null;
+    normalizeResult = null;
   return onBeforeMount(() => {
-    t = new MutationObserver(() => {
+    normalizeResult = new MutationObserver(() => {
       e.value = document.documentElement.classList.contains(`dark`);
-    }), t.observe(document.documentElement, {
+    }), normalizeResult.observe(document.documentElement, {
       attributes: true,
       attributeFilter: [`class`]
     });
   }), onMounted(() => {
-    t?.disconnect(), t = null;
+    normalizeResult?.disconnect(), normalizeResult = null;
   }), e;
 }
 var soe = {
@@ -17757,7 +17757,7 @@ var soe = {
         f = ref(null),
         p = ref(_()),
         m = ref(null),
-        h = null,
+        setIntervalResult = null,
         g = 0;
       function _() {
         let date = new Date();
@@ -17800,11 +17800,11 @@ var soe = {
         return e.kind === `idle` ? s(`appBarcode.idle`) : e.name;
       }
       return watch(() => itemsAlias.refreshKey, () => void v()), onBeforeMount(() => {
-        v(), h = setInterval(() => {
+        v(), setIntervalResult = setInterval(() => {
           document.hidden || v();
         }, goe);
       }), onUnmounted(() => {
-        h && clearInterval(h), h = null;
+        setIntervalResult && clearInterval(setIntervalResult), setIntervalResult = null;
       }), (e, t) => f.value && computedData.value ? (openBlock(), createElementBlock(`section`, soe, [createElementVNode(`div`, coe, [createElementVNode(`div`, loe, [createElementVNode(`h2`, uoe, toDisplayString(unref(s)(`appBarcode.todayTitle`)), 1), createElementVNode(`span`, doe, toDisplayString(S.value), 1)]), createElementVNode(`div`, foe, [createElementVNode(`button`, {
         type: `button`,
         class: `flex items-center gap-1 text-xs text-[#555] transition-colors hover:text-[#111] dark:text-foreground/80 dark:hover:text-foreground`,
@@ -18038,7 +18038,7 @@ async function Toe(e) {
 var Eoe = 250;
 function m_() {
   let e = ref(null),
-    t = null,
+    normalizeResult = null,
     computedResult = computed(() => e.value ? p_(e.value) : ``);
   function r(r) {
     let a = p_(r);
@@ -18046,20 +18046,20 @@ function m_() {
       i();
       return;
     }
-    if (t && t.key === a && Date.now() - t.at < Eoe) {
-      t = null;
+    if (normalizeResult && normalizeResult.key === a && Date.now() - normalizeResult.at < Eoe) {
+      normalizeResult = null;
       return;
     }
     e.value = r;
   }
   function i() {
-    e.value && (t = {
+    e.value && (normalizeResult = {
       key: p_(e.value),
       at: Date.now()
     }), e.value = null;
   }
   function a() {
-    e.value = null, t = null;
+    e.value = null, normalizeResult = null;
   }
   function o(e) {
     return computedResult.value === e;
@@ -18206,7 +18206,7 @@ var koe = {
         u = ref({}),
         d = ref(false),
         f = ref(false),
-        p = null,
+        setTimeoutResult = null,
         m = ref(v_),
         h = ref(y_),
         g = ref(null),
@@ -18257,7 +18257,7 @@ var koe = {
         }
       }
       watch(computedResult, value => {
-        if (p && clearTimeout(p), p = null, f.value = false, u.value = {}, m.value = v_, h.value = y_, !value) {
+        if (setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = null, f.value = false, u.value = {}, m.value = v_, h.value = y_, !value) {
           d.value = false, S += 1, s.value = false;
           return;
         }
@@ -18279,7 +18279,7 @@ var koe = {
           l.value = {};
         });
       }), onMounted(() => {
-        window.removeEventListener(`scroll`, b, true), window.removeEventListener(`resize`, b), w?.(), p && clearTimeout(p), S += 1;
+        window.removeEventListener(`scroll`, b, true), window.removeEventListener(`resize`, b), w?.(), setTimeoutResult && clearTimeout(setTimeoutResult), S += 1;
       });
       let T = [`text`, `audio`, `recording_box`];
       function E(e) {
@@ -18364,8 +18364,8 @@ var koe = {
         });
       }
       function ue(e) {
-        e || (d.value = false, f.value = true, p && clearTimeout(p), p = setTimeout(() => {
-          p = null, r(`close`);
+        e || (d.value = false, f.value = true, setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
+          setTimeoutResult = null, r(`close`);
         }, Qoe));
       }
       function de(e) {
@@ -18801,9 +18801,9 @@ function rse(e) {
 }
 function L_(e) {
   if (e.enableAiWorkOverview === false) return null;
-  for (let t of [`report`, `screenshot`]) {
-    let n = R_(e, t);
-    if (n === `local` || n === `custom` || n === `subscription`) return t;
+  for (let normalizeResult of [`report`, `screenshot`]) {
+    let n = R_(e, normalizeResult);
+    if (n === `local` || n === `custom` || n === `subscription`) return normalizeResult;
   }
   return null;
 }
@@ -19153,14 +19153,14 @@ var ase = {
         w = ref(null),
         T = ref(false),
         E = ref(true),
-        D = null,
+        setTimeoutResult = null,
         O = null,
-        k = null,
+        finallyResult = null,
         A = false,
         j = ref(null),
         ee = 0,
         te = null,
-        M = null,
+        onStatusChangedResult = null,
         ne = null,
         N = ref(false),
         re = ref(null),
@@ -19385,20 +19385,20 @@ var ase = {
       }
       async function qe(e = false) {
         let t = n();
-        if (k) {
-          await k, e && A && !l.value && t(`insight_view_loaded`, {
+        if (finallyResult) {
+          await finallyResult, e && A && !l.value && t(`insight_view_loaded`, {
             panel: `today_overview`
           });
           return;
         }
         let r = ++ee;
-        return k = Promise.all([u(ye(new Date())).then(() => {
+        return finallyResult = Promise.all([u(ye(new Date())).then(() => {
           e && A && r === ee && !l.value && t(`insight_view_loaded`, {
             panel: `today_overview`
           }), Je(r);
         }), Ve(), p(), We()]).then(() => undefined).finally(() => {
-          k = null, Ue();
-        }), k;
+          finallyResult = null, Ue();
+        }), finallyResult;
       }
       async function Je(e) {
         let date = s.value.date;
@@ -19421,7 +19421,7 @@ var ase = {
         document.visibilityState === `visible` && qe();
       }
       function Qe() {
-        T.value = true, D && clearTimeout(D), D = setTimeout(() => {
+        T.value = true, setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
           T.value = false;
         }, 700);
       }
@@ -19446,13 +19446,13 @@ var ase = {
       }), watch(() => ise(_.value), () => {
         ++ee, j.value = null, E.value || Je(ee);
       }), onBeforeMount(async () => {
-        A = true, window.addEventListener(`focus`, Xe), document.addEventListener(`visibilitychange`, Ze), te = l_.onChanged(Ye), M = hm.onStatusChanged(e => {
+        A = true, window.addEventListener(`focus`, Xe), document.addEventListener(`visibilitychange`, Ze), te = l_.onChanged(Ye), onStatusChangedResult = hm.onStatusChanged(e => {
           e.status === `completed` && e.content.trim() && (N.value = false);
         }), await v(), A && (await qe(true), A && (E.value = false, await We(), window.electronAPI?.badges?.triggerEvent?.(`page_visit`, {
           page: `today_work`
         }), await g(), ve()));
       }), onUnmounted(() => {
-        A = false, ++ee, te?.(), M?.(), ne && clearTimeout(ne), window.removeEventListener(`focus`, Xe), document.removeEventListener(`visibilitychange`, Ze), He(), D &&= (clearTimeout(D), null), _e &&= (clearInterval(_e), null);
+        A = false, ++ee, te?.(), onStatusChangedResult?.(), ne && clearTimeout(ne), window.removeEventListener(`focus`, Xe), document.removeEventListener(`visibilitychange`, Ze), He(), setTimeoutResult &&= (clearTimeout(setTimeoutResult), null), _e &&= (clearInterval(_e), null);
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         ref_key: `scrollContainer`,
         ref: C,
@@ -19630,16 +19630,16 @@ var ase = {
           captureGrowthObservation: n
         } = Ri(),
         r = ref(false),
-        i = null;
+        count = null;
       function a() {
-        i = n();
+        count = n();
       }
       function o(e) {
-        e || (i = null);
+        e || (count = null);
       }
       function s() {
-        let e = i;
-        i = null, r.value && !t.disabled && e?.(t.eventName, {
+        let e = count;
+        count = null, r.value && !t.disabled && e?.(t.eventName, {
           ...t.eventProps,
           ...(t.panel ? {
             panel: t.panel
@@ -20426,13 +20426,13 @@ function Sv(e) {
 }
 function Cv() {
   let e = ref(Date.now()),
-    t = null;
+    normalizeResult = null;
   return onBeforeMount(() => {
-    t = setInterval(() => {
+    normalizeResult = setInterval(() => {
       e.value = Date.now();
     }, 3e4);
   }), onMounted(() => {
-    t && clearInterval(t);
+    normalizeResult && clearInterval(normalizeResult);
   }), e;
 }
 var ple = defineComponent({
@@ -20894,8 +20894,8 @@ var Ole = [`innerHTML`],
         le = ref(0),
         ue = -1,
         de = 0,
-        fe = null,
-        pe = null,
+        setIntervalResult = null,
+        setTimeoutResult = null,
         me = computed(() => j.value.trim().length > 0 && !M.value),
         he = computed(() => j.value.length > 1800),
         ge = computed(() => {
@@ -21007,12 +21007,12 @@ var Ole = [`innerHTML`],
         de++, v.value = [], x.value = [], y.value = false, S.value = false, k.value = false, counter.value = 0, T.value = [], A.value = new Set(), j.value = ``, te.value = [], ee.value = null, ne.value = ``, O.value = ``, ae.value = null, Fe(), _.value = `comment`;
       }
       function Te() {
-        Ee(), fe = setInterval(() => {
+        Ee(), setIntervalResult = setInterval(() => {
           Se();
         }, Nue), window.addEventListener(`focus`, Se);
       }
       function Ee() {
-        fe && clearInterval(fe), fe = null, window.removeEventListener(`focus`, Se);
+        setIntervalResult && clearInterval(setIntervalResult), setIntervalResult = null, window.removeEventListener(`focus`, Se);
       }
       watch(() => [eventAlias.open, eventAlias.todoId], ([e, t]) => {
         e && t ? (we(), xe(), Te()) : Ee();
@@ -21021,7 +21021,7 @@ var Ole = [`innerHTML`],
       }), watch(_, () => {
         O.value = ``, (_.value === `comment` || !k.value) && xe();
       }), onMounted(() => {
-        Ee(), pe && clearTimeout(pe);
+        Ee(), setTimeoutResult && clearTimeout(setTimeoutResult);
       });
       function De() {
         let e = re.value;
@@ -21031,7 +21031,7 @@ var Ole = [`innerHTML`],
         ee.value = e, ut(() => re.value?.focus());
       }
       function ke(e) {
-        ae.value = e, pe && clearTimeout(pe), pe = setTimeout(() => {
+        ae.value = e, setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
           ae.value = null;
         }, 2200), ut(() => document.getElementById(`todo-comment-${e}`)?.scrollIntoView({
           block: `nearest`,
@@ -22011,8 +22011,8 @@ function wde(e, t) {
       let t = Uv(e);
       t < n && (n = t), t > r && (r = t);
     };
-  for (let n of e) i(n.barStart), i(n.barEnd), i(n.completed), t.includeLifecycle && (i(n.created), i(n.updated));
-  for (let e of t.extraPoints ?? []) i(e);
+  for (let replaceResult of e) i(replaceResult.barStart), i(replaceResult.barEnd), i(replaceResult.completed), t.includeLifecycle && (i(replaceResult.created), i(replaceResult.updated));
+  for (let normalizeResult of t.extraPoints ?? []) i(normalizeResult);
   n -= 2, r += 2;
   let a = (e, n) => t.zoom === `month` ? {
       startDay: zv(e),
@@ -22039,18 +22039,18 @@ function Tde(e, t) {
 }
 function Ede(e, t) {
   let emptyItems = [],
-    r = null;
-  for (let t of e) {
-    let e = Vv(t.at);
-    e !== null && t.to !== `overdue` && (t.to === `in-progress` ? r === null && (r = e) : r !== null && (e > r && emptyItems.push({
-      start: r,
+    requestAnimationFrameResult = null;
+  for (let normalizeResult of e) {
+    let e = Vv(normalizeResult.at);
+    e !== null && normalizeResult.to !== `overdue` && (normalizeResult.to === `in-progress` ? requestAnimationFrameResult === null && (requestAnimationFrameResult = e) : requestAnimationFrameResult !== null && (e > requestAnimationFrameResult && emptyItems.push({
+      start: requestAnimationFrameResult,
       end: e
-    }), r = null));
+    }), requestAnimationFrameResult = null));
   }
-  if (r !== null) {
+  if (requestAnimationFrameResult !== null) {
     let e = t.status === `done` ? t.completed ?? t.now : t.now;
-    e > r && emptyItems.push({
-      start: r,
+    e > requestAnimationFrameResult && emptyItems.push({
+      start: requestAnimationFrameResult,
       end: e
     });
   }
@@ -22058,8 +22058,8 @@ function Ede(e, t) {
 }
 function Kv(e, t) {
   let n = new Set();
-  for (let r of e) {
-    let e = Vv(r.from);
+  for (let requestAnimationFrameResult of e) {
+    let e = Vv(requestAnimationFrameResult.from);
     e !== null && e !== t && n.add(e);
   }
   return [...n].sort((left, right) => left - right);
@@ -22293,9 +22293,9 @@ var Dde = [`data-drag-mode`],
             let activitySummary = await Y_.activitySummary(part.map(item => item.id)),
               t = new Map(activitySummary.map(item => [item.todoId, item])),
               r = new Map(E.value);
-            for (let e of part) r.set(e.id, {
-              signature: k(e),
-              data: t.get(e.id) ?? A(e.id)
+            for (let normalizeResult of part) r.set(normalizeResult.id, {
+              signature: k(normalizeResult),
+              data: t.get(normalizeResult.id) ?? A(normalizeResult.id)
             });
             E.value = r;
           } catch {
@@ -23557,13 +23557,13 @@ function Vfe(items, t) {
           columns: e
         })), o = [], c = [];
       };
-    for (let e of a) {
-      o.length && e.top >= s && l();
-      let index = c.findIndex(item => item <= e.top);
-      index < 0 ? (index = c.length, c.push(e.bottom)) : c[index] = e.bottom, o.push({
-        ...e,
+    for (let normalizeResult of a) {
+      o.length && normalizeResult.top >= s && l();
+      let index = c.findIndex(item => item <= normalizeResult.top);
+      index < 0 ? (index = c.length, c.push(normalizeResult.bottom)) : c[index] = normalizeResult.bottom, o.push({
+        ...normalizeResult,
         column: index
-      }), s = o.length === 1 ? e.bottom : Math.max(s, e.bottom);
+      }), s = o.length === 1 ? normalizeResult.bottom : Math.max(s, normalizeResult.bottom);
     }
     l();
   }
@@ -23585,9 +23585,9 @@ function Hfe(items, t) {
       };
     }).filter(item => item.startIndex <= 6 && item.endIndex >= 0 && item.startIndex <= item.endIndex).sort((e, right) => e.startIndex - right.startIndex || right.endIndex - right.startIndex - (e.endIndex - e.startIndex) || e.task.id - right.task.id),
     emptyItems = [];
-  for (let e of r) {
-    let index = emptyItems.findIndex(item => item < e.startIndex);
-    index < 0 ? (index = emptyItems.length, emptyItems.push(e.endIndex)) : emptyItems[index] = e.endIndex, e.row = index;
+  for (let normalizeResult of r) {
+    let index = emptyItems.findIndex(item => item < normalizeResult.startIndex);
+    index < 0 ? (index = emptyItems.length, emptyItems.push(normalizeResult.endIndex)) : emptyItems[index] = normalizeResult.endIndex, normalizeResult.row = index;
   }
   return r;
 }
@@ -23670,15 +23670,15 @@ var Kfe = {
         computedData = computed(() => {
           let e = eventAlias.startDay + 42 - 1,
             t = new Map();
-          for (let r of eventAlias.tasks) {
-            if (r.dueDateMissing) continue;
-            let i = ny(r);
+          for (let requestAnimationFrameResult of eventAlias.tasks) {
+            if (requestAnimationFrameResult.dueDateMissing) continue;
+            let i = ny(requestAnimationFrameResult);
             if (!i) continue;
             let a = Uv(i.due);
             if (a < eventAlias.startDay || a > e) continue;
             let fallbackValue = t.get(a) ?? [];
             fallbackValue.push({
-              task: r,
+              task: requestAnimationFrameResult,
               schedule: i,
               dueDay: a
             }), t.set(a, fallbackValue);
@@ -23750,8 +23750,8 @@ var Kfe = {
         c.value !== null && (u.value = null), c.value = null, l.value = null;
       }
       function O(e) {
-        for (let t of computedData.value.values()) {
-          let found = t.find(item => item.task.id === e);
+        for (let normalizeResult of computedData.value.values()) {
+          let found = normalizeResult.find(item => item.task.id === e);
           if (found) return found;
         }
         return null;
@@ -24712,7 +24712,7 @@ var Kfe = {
           q3: [],
           q4: []
         };
-        for (let t of eventAlias.tasks) t.status !== `done` && e[Wfe(t, c.value)].push(t);
+        for (let normalizeResult of eventAlias.tasks) normalizeResult.status !== `done` && e[Wfe(normalizeResult, c.value)].push(normalizeResult);
         return a.map(item => ({
           id: item,
           title: i(`todo.matrix.${item}`),
@@ -24927,14 +24927,14 @@ function _y(result) {
   return result.data;
 }
 async function tme(items, t = {}) {
-  let n;
-  if (typeof t.body == `string`) n = {
+  let replaceResult;
+  if (typeof t.body == `string`) replaceResult = {
     type: `json`,
     value: t.body
   };else if (t.body instanceof FormData) {
     let emptyItems = [],
-      r = [];
-    for (let [n, i] of t.body.entries()) i instanceof File ? r.push({
+      requestAnimationFrameResult = [];
+    for (let [n, i] of t.body.entries()) i instanceof File ? requestAnimationFrameResult.push({
       fieldName: n,
       name: i.name,
       mimeType: i.type || `application/octet-stream`,
@@ -24943,16 +24943,16 @@ async function tme(items, t = {}) {
       name: n,
       value: i
     });
-    n = {
+    replaceResult = {
       type: `multipart`,
       fields: emptyItems,
-      files: r
+      files: requestAnimationFrameResult
     };
   } else if (t.body !== undefined && t.body !== null) throw Error(`当前请求内容无法发送到工具箱服务`);
   let r = window.electronAPI.toolbox.request({
     path: items,
     method: t.method === `POST` ? `POST` : `GET`,
-    body: n,
+    body: replaceResult,
     timeoutMs: t.timeoutMs
   });
   if (!t.signal) return _y(await r);
@@ -25035,17 +25035,17 @@ var wy = {
     },
     async listAll(all) {
       let emptyItems = [],
-        n;
+        replaceResult;
       for (let r = 0; r < ame; r += 1) {
         let r = await this.list({
           ...all,
-          cursor: n
+          cursor: replaceResult
         });
         if (emptyItems.push(...r.items), !r.hasMore || !r.nextCursor) return {
           items: emptyItems,
           truncated: false
         };
-        n = r.nextCursor;
+        replaceResult = r.nextCursor;
       }
       return {
         items: emptyItems,
@@ -25237,13 +25237,13 @@ function gme(e, t) {
 }
 function My(e, t, n) {
   let emptyItems = [];
-  for (let i of e) {
-    let part = i.date.slice(0, 7),
+  for (let count of e) {
+    let part = count.date.slice(0, 7),
       a = emptyItems[emptyItems.length - 1];
-    a && a.key === `${n}-${part}` ? a.items.push(i) : emptyItems.push({
+    a && a.key === `${n}-${part}` ? a.items.push(count) : emptyItems.push({
       key: `${n}-${part}`,
-      label: dme(i.date, t),
-      items: [i]
+      label: dme(count.date, t),
+      items: [count]
     });
   }
   return emptyItems;
@@ -25400,7 +25400,7 @@ function Ome(state, t) {
     i = ref(false),
     a = ref(``),
     o = 0,
-    s;
+    trimStartResult;
   async function c(t = r.value.page, s = false) {
     let c = state.value?.token;
     if (!c) return false;
@@ -25426,9 +25426,9 @@ function Ome(state, t) {
       totalPages: 1
     }, i.value = false, a.value = ``, c(1);
   }), watch(t, () => void c()), onBeforeMount(() => {
-    c(1), window.addEventListener(`focus`, l), document.addEventListener(`visibilitychange`, l), s = Ni(`invite_rewards`, () => c(r.value.page, true));
+    c(1), window.addEventListener(`focus`, l), document.addEventListener(`visibilitychange`, l), trimStartResult = Ni(`invite_rewards`, () => c(r.value.page, true));
   }), onUnmounted(() => {
-    o++, s?.(), window.removeEventListener(`focus`, l), document.removeEventListener(`visibilitychange`, l);
+    o++, trimStartResult?.(), window.removeEventListener(`focus`, l), document.removeEventListener(`visibilitychange`, l);
   }), {
     status: n,
     friends: r,
@@ -25740,7 +25740,7 @@ var kme = {
         k = ref(null),
         A = ref(null),
         j = 0,
-        ee,
+        setTimeoutResult,
         computedResult = computed(() => s.value?.email?.trim().toLowerCase() ?? ``),
         computedData = computed(() => l.value.trim().toLowerCase()),
         ne = computed(() => a.test(computedData.value)),
@@ -25927,7 +25927,7 @@ var kme = {
         }
       }
       function ye(e) {
-        C.value = e, clearTimeout(ee), ee = setTimeout(() => {
+        C.value = e, clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
           C.value = null;
         }, 2400);
       }
@@ -27316,13 +27316,13 @@ function parseClockTimeString(clock, time) {
   pb.lastIndex = time;
   let n = pb.exec(clock)?.groups;
   if (!n) return null;
-  let r, i;
-  n.enHour === undefined ? n.colonHour === undefined ? (r = parseChineseNumeral(n.pointHour), i = n.half ? 30 : n.quarter ? 15 : n.threeQuarters ? 45 : n.pointMinute ? parseChineseNumeral(n.pointMinute) : 0) : (r = Number(n.colonHour), i = Number(n.colonMinute)) : (r = Number(n.enHour), i = n.enMinute ? Number(n.enMinute) : 0);
+  let requestAnimationFrameResult, count;
+  n.enHour === undefined ? n.colonHour === undefined ? (requestAnimationFrameResult = parseChineseNumeral(n.pointHour), count = n.half ? 30 : n.quarter ? 15 : n.threeQuarters ? 45 : n.pointMinute ? parseChineseNumeral(n.pointMinute) : 0) : (requestAnimationFrameResult = Number(n.colonHour), count = Number(n.colonMinute)) : (requestAnimationFrameResult = Number(n.enHour), count = n.enMinute ? Number(n.enMinute) : 0);
   let a = n.meridiem?.toLowerCase();
-  return r === null || i === null || r > 24 || i > 59 || a && (r > 12 || r === 0) ? null : {
+  return requestAnimationFrameResult === null || count === null || requestAnimationFrameResult > 24 || count > 59 || a && (requestAnimationFrameResult > 12 || requestAnimationFrameResult === 0) ? null : {
     time: {
-      minutes: Math.min(r * 60 + i, 1439),
-      explicit: !!a || r >= 13 || r === 0 || /^0\d$/.test(n.colonHour ?? ``),
+      minutes: Math.min(requestAnimationFrameResult * 60 + count, 1439),
+      explicit: !!a || requestAnimationFrameResult >= 13 || requestAnimationFrameResult === 0 || /^0\d$/.test(n.colonHour ?? ``),
       chineseHourOnly: n.pointHour !== undefined && !/\d/.test(n.pointHour) && !n.half && !n.quarter && !n.threeQuarters && !n.pointMinute,
       meridiem: a
     },
@@ -27389,48 +27389,48 @@ function Wge(e, t, n) {
   let c = gb(vb, e, s ? _b(e, fallbackValue) : fallbackValue);
   c && (a = c.match[1], fallbackValue = c.end);
   let l = s || c ? _b(e, fallbackValue) : fallbackValue,
-    u = null,
-    d = null,
+    setTimeoutResult = null,
+    count = null,
     f = gb(Vge, e, l),
     p = f ? parseChineseNumeral(f.match[1]) : null,
     m = f ? parseChineseNumeral(f.match[2]) : null;
-  if (f && p !== null && m !== null && p <= 24 && m <= 24) u = hb({
+  if (f && p !== null && m !== null && p <= 24 && m <= 24) setTimeoutResult = hb({
     minutes: p * 60,
     explicit: p >= 13,
     chineseHourOnly: false
-  }, a), d = hb({
+  }, a), count = hb({
     minutes: m * 60,
     explicit: m >= 13,
     chineseHourOnly: false
   }, a), fallbackValue = f.end;else {
     let clockTimeString = parseClockTimeString(e, l);
     if (clockTimeString && (!clockTimeString.time.chineseHourOnly || s || a)) {
-      u = hb(clockTimeString.time, a), fallbackValue = clockTimeString.end;
+      setTimeoutResult = hb(clockTimeString.time, a), fallbackValue = clockTimeString.end;
       let n = gb(yb, e, fallbackValue);
       if (n) {
         let t = gb(vb, e, n.end),
           clockTimeStringResult = parseClockTimeString(e, t ? t.end : n.end);
-        clockTimeStringResult && (d = hb(clockTimeStringResult.time, t?.match[1] ?? a), fallbackValue = clockTimeStringResult.end);
+        clockTimeStringResult && (count = hb(clockTimeStringResult.time, t?.match[1] ?? a), fallbackValue = clockTimeStringResult.end);
       }
     }
   }
-  if (!s && !a && u === null) return null;
-  let h = d === null ? gb(Uge, e, fallbackValue) : null;
+  if (!s && !a && setTimeoutResult === null) return null;
+  let h = count === null ? gb(Uge, e, fallbackValue) : null;
   return h && (fallbackValue = h.end), {
     start: t,
     end: fallbackValue,
     day: s,
     endDay: null,
     period: a,
-    startMinutes: u,
-    endMinutes: d,
+    startMinutes: setTimeoutResult,
+    endMinutes: count,
     deadline: !!(r || h)
   };
 }
 function bb(e, t, n) {
-  for (let r of Lge) {
-    let i = gb(r.re, e, t),
-      a = i && r.read(i.match, n);
+  for (let requestAnimationFrameResult of Lge) {
+    let i = gb(requestAnimationFrameResult.re, e, t),
+      a = i && requestAnimationFrameResult.read(i.match, n);
     if (i && a) return {
       ...a,
       end: i.end
@@ -27448,13 +27448,13 @@ function Gge(e, t) {
     };
     if (Sb(r, t) || r.start > 0 && /[\da-z.]/i.test(e[r.start - 1])) continue;
     let [, i, a, o, s, c, l] = n,
-      u = null;
-    if (o) u = 30;else if (i !== undefined) {
+      setTimeoutResult = null;
+    if (o) setTimeoutResult = 30;else if (i !== undefined) {
       let chineseNumeral = parseChineseNumeral(i);
-      chineseNumeral !== null && (u = Math.round((chineseNumeral + (a ? 0.5 : 0)) * 60));
-    } else s === undefined ? c === undefined ? l !== undefined && (u = Number(l)) : u = Math.round(Number(c) * 60) : u = parseChineseNumeral(s);
-    if (u && u > 0 && u <= 10080) return {
-      minutes: u,
+      chineseNumeral !== null && (setTimeoutResult = Math.round((chineseNumeral + (a ? 0.5 : 0)) * 60));
+    } else s === undefined ? c === undefined ? l !== undefined && (setTimeoutResult = Number(l)) : setTimeoutResult = Math.round(Number(c) * 60) : setTimeoutResult = parseChineseNumeral(s);
+    if (setTimeoutResult && setTimeoutResult > 0 && setTimeoutResult <= 10080) return {
+      minutes: setTimeoutResult,
       span: r
     };
   }
@@ -27466,8 +27466,8 @@ function Sb(e, items) {
 function Cb(items, text, n) {
   let lowercased = items.slice(text).toLowerCase(),
     i = ``;
-  for (let e of n) {
-    let trimmed = e.trim();
+  for (let normalizeResult of n) {
+    let trimmed = normalizeResult.trim();
     !trimmed || trimmed.length <= i.length || !lowercased.startsWith(trimmed.toLowerCase()) || /[\w.]$/.test(trimmed) && /^[\w.]/.test(lowercased.slice(trimmed.length)) || (i = trimmed);
   }
   return i ? items.slice(text, text + i.length) : ``;
@@ -27490,7 +27490,7 @@ var wb = /[!！](高|中|低|high|medium|low|h|m|l|1|2|3)(?:优先级|优)?(?=$|
 function qge(items, t) {
   let n = ``,
     r = 0;
-  for (let i of [...t].sort((left, right) => left.start - right.start)) n += `${items.slice(r, i.start)} `, r = Math.max(r, i.end);
+  for (let count of [...t].sort((left, right) => left.start - right.start)) n += `${items.slice(r, count.start)} `, r = Math.max(r, count.end);
   return n += items.slice(r), n.replace(/\s+/g, ` `).replace(/\s+([，,。、;；:：])/g, `$1`).replace(/^[，,。、;；:：\s]+|[，,、;；:：\s]+$/g, ``);
 }
 function Tb(text, t) {
@@ -27550,48 +27550,48 @@ function Tb(text, t) {
   }
   if (!r.has(`schedule`)) {
     let e = ab(t.now, 0),
-      r = null;
-    for (let t = 0; t < replaced.length && !r; t++) {
+      requestAnimationFrameResult = null;
+    for (let t = 0; t < replaced.length && !requestAnimationFrameResult; t++) {
       if (Sb({
         start: t,
         end: t + 1
       }, emptyItems)) continue;
       let a = Wge(replaced, t, e);
-      a && !Sb(a, emptyItems) && (r = a);
+      a && !Sb(a, emptyItems) && (requestAnimationFrameResult = a);
     }
-    let o = Gge(replaced, r ? [...emptyItems, r] : emptyItems),
-      s = [],
+    let o = Gge(replaced, requestAnimationFrameResult ? [...emptyItems, requestAnimationFrameResult] : emptyItems),
+      trimStartResult = [],
       c = null,
       l = ob(t.dayStart ?? `09:30`),
       u = ob(t.dayEnd ?? `18:30`),
       d = false;
-    if (r) {
+    if (requestAnimationFrameResult) {
       let a = t.now.getHours() * 60 + t.now.getMinutes(),
-        f = r.period ? zge[r.period] : undefined,
-        fallbackValue = r.startMinutes ?? f?.[0] ?? l,
-        m = r.endMinutes ?? (r.startMinutes === null ? f?.[1] ?? u : null),
-        h = r.day;
-      h ||= ab(e, +((r.startMinutes ?? m ?? fallbackValue) <= a));
+        f = requestAnimationFrameResult.period ? zge[requestAnimationFrameResult.period] : undefined,
+        fallbackValue = requestAnimationFrameResult.startMinutes ?? f?.[0] ?? l,
+        m = requestAnimationFrameResult.endMinutes ?? (requestAnimationFrameResult.startMinutes === null ? f?.[1] ?? u : null),
+        h = requestAnimationFrameResult.day;
+      h ||= ab(e, +((requestAnimationFrameResult.startMinutes ?? m ?? fallbackValue) <= a));
       let g = rb(h);
-      if (r.endDay) c = {
+      if (requestAnimationFrameResult.endDay) c = {
         start: `${g}T${ib(l)}`,
-        end: `${rb(r.endDay)}T${ib(u)}`
-      };else if (r.deadline && t.defaultStart) {
-        let e = `${g}T${ib(Math.min(r.startMinutes ?? m ?? u, 1439))}`;
+        end: `${rb(requestAnimationFrameResult.endDay)}T${ib(u)}`
+      };else if (requestAnimationFrameResult.deadline && t.defaultStart) {
+        let e = `${g}T${ib(Math.min(requestAnimationFrameResult.startMinutes ?? m ?? u, 1439))}`;
         c = e > t.defaultStart ? {
           start: t.defaultStart,
           end: e
         } : null;
       }
-      c ||= (o && r.endMinutes === null ? (m = fallbackValue + o.minutes, d = true) : m === null ? m = fallbackValue + 60 : m <= fallbackValue && (m += 1440), fallbackValue = Math.min(fallbackValue, 1439), {
+      c ||= (o && requestAnimationFrameResult.endMinutes === null ? (m = fallbackValue + o.minutes, d = true) : m === null ? m = fallbackValue + 60 : m <= fallbackValue && (m += 1440), fallbackValue = Math.min(fallbackValue, 1439), {
         start: `${g}T${ib(fallbackValue)}`,
         end: sb(g, m)
-      }), s.push(replaced.slice(r.start, r.end).trim()), emptyItems.push(r);
+      }), trimStartResult.push(replaced.slice(requestAnimationFrameResult.start, requestAnimationFrameResult.end).trim()), emptyItems.push(requestAnimationFrameResult);
     } else o && t.defaultStart && (c = {
       start: t.defaultStart,
       end: sb(t.defaultStart.slice(0, 10), ob(t.defaultStart.slice(11, 16)) + o.minutes)
     }, d = true);
-    o && d && (s.push(replaced.slice(o.span.start, o.span.end)), emptyItems.push(o.span)), record.schedule = c, record.scheduleText = s.join(` `);
+    o && d && (trimStartResult.push(replaced.slice(o.span.start, o.span.end)), emptyItems.push(o.span)), record.schedule = c, record.scheduleText = trimStartResult.join(` `);
   }
   return record.title = qge(replaced, emptyItems), record;
 }
@@ -28958,10 +28958,10 @@ var Qge = {
         {
           captureGrowthObservation: f
         } = Ri(),
-        p = null;
+        setTimeoutResult = null;
       function m(e) {
-        let t = new Set(p?.kinds ?? []);
-        t.add(e), p = {
+        let t = new Set(setTimeoutResult?.kinds ?? []);
+        t.add(e), setTimeoutResult = {
           observe: f(),
           kinds: t
         };
@@ -29218,7 +29218,7 @@ var Qge = {
         cr = null,
         lr = null,
         ur = null,
-        fr = null,
+        onStateChangedResult = null,
         pr = null,
         mr = 0,
         hr = 0,
@@ -29786,9 +29786,9 @@ var Qge = {
       function Sa(e) {
         let t = e?.assignees?.length ? e.assignees : e?.assignee ? [e.assignee] : [],
           n = new Map();
-        for (let e of t) {
-          if (!e?.email) continue;
-          let t = ca(e),
+        for (let normalizeResult of t) {
+          if (!normalizeResult?.email) continue;
+          let t = ca(normalizeResult),
             r = t.userId > 0 ? `id:${t.userId}` : `email:${t.email.toLowerCase()}`;
           n.has(r) || n.set(r, t);
         }
@@ -29797,9 +29797,9 @@ var Qge = {
       function Ca(e) {
         let fallbackValue = e?.followers ?? [],
           n = new Map();
-        for (let e of fallbackValue) {
-          if (!e?.email) continue;
-          let t = ca(e),
+        for (let normalizeResult of fallbackValue) {
+          if (!normalizeResult?.email) continue;
+          let t = ca(normalizeResult),
             r = t.userId > 0 ? `id:${t.userId}` : `email:${t.email.toLowerCase()}`;
           n.has(r) || n.set(r, t);
         }
@@ -30086,19 +30086,19 @@ var Qge = {
         let t = io(),
           n = new Map(),
           r = false;
-        for (let i of e) {
-          let e = null;
+        for (let count of e) {
+          let normalizeResult = null;
           for (let r = 0; r < aw; r += 1) {
             let r = await Y_.list({
               ...t,
-              cursor: e,
-              conditions: [...(t.conditions ?? []), ...i]
+              cursor: normalizeResult,
+              conditions: [...(t.conditions ?? []), ...count]
             });
             if (r.tasks.map(Ql).forEach(item => {
               n.has(item.id) || n.set(item.id, item);
-            }), e = r.hasMore ? r.nextCursor : null, !e) break;
+            }), normalizeResult = r.hasMore ? r.nextCursor : null, !normalizeResult) break;
           }
-          e && (r = true);
+          normalizeResult && (r = true);
         }
         return {
           tasks: [...n.values()],
@@ -30114,7 +30114,7 @@ var Qge = {
       }
       async function yo(e = {}) {
         let t = !!e.append,
-          n = t ? null : p;
+          n = t ? null : setTimeoutResult;
         if (t && (Nn.value || Pn.value || !vr.value || !_r.value)) return;
         let r = t ? mr : ++mr;
         t ? Pn.value = true : (Nn.value = true, _r.value = null, vr.value = false), Xn.value = ``, Zn.value = ``;
@@ -30132,8 +30132,8 @@ var Qge = {
             a = await Y_.list(i);
           if (r !== mr) return;
           let mapped = a.tasks.map(Ql);
-          if (t ? co(mapped) : gr.value = go(mapped), vr.value = a.hasMore, _r.value = a.nextCursor, n && n === p) {
-            p = null;
+          if (t ? co(mapped) : gr.value = go(mapped), vr.value = a.hasMore, _r.value = a.nextCursor, n && n === setTimeoutResult) {
+            setTimeoutResult = null;
             let e = i.scope === `assignedToMe` && ([`todo`, `in-progress`, `overdue`].includes(i.status ?? ``) || i.conditions?.some(state => state.field === `status` && state.operator === `isNot` && state.value === `done`));
             n.kinds.has(`filter`) && e && n.observe(`todo_query_success`, {
               query_kind: `own_unfinished`,
@@ -30937,13 +30937,13 @@ var Qge = {
         if (!(!t.length || dt.value || lt.value)) {
           e.preventDefault(), dt.value = `clipboard`, ct.value = ``;
           try {
-            let e = [];
+            let normalizeResult = [];
             try {
-              e = await Y_.prepareDroppedAttachmentFiles(t);
+              normalizeResult = await Y_.prepareDroppedAttachmentFiles(t);
             } catch {
-              e = [];
+              normalizeResult = [];
             }
-            e.length || (e = [await Y_.readPendingClipboardAttachment()]), Dl(e);
+            normalizeResult.length || (normalizeResult = [await Y_.readPendingClipboardAttachment()]), Dl(normalizeResult);
           } catch (e) {
             ct.value = e instanceof Error ? e.message : o(`todo.error.attachmentUploadFailed`);
           } finally {
@@ -31254,9 +31254,9 @@ var Qge = {
           };
           v();
           let y = [...ot.value];
-          for (let e of y) {
-            let uploadPendingAttachment = await Y_.uploadPendingAttachment(_.id, e.token);
-            st.value = uploadPendingAttachment.task, ot.value = ot.value.filter(item => item.token !== e.token), v();
+          for (let normalizeResult of y) {
+            let uploadPendingAttachment = await Y_.uploadPendingAttachment(_.id, normalizeResult.token);
+            st.value = uploadPendingAttachment.task, ot.value = ot.value.filter(item => item.token !== normalizeResult.token), v();
           }
           g && trackActionEvent(`feature_map_todo_result`, {
             entry: `todo_page`
@@ -31605,18 +31605,18 @@ var Qge = {
         let n = Array.from(e.dataTransfer?.files ?? []);
         if (n.length === 0) return;
         Fn.value = true, In.value = `file`, Zn.value = ``;
-        let r = [];
+        let requestAnimationFrameResult = [];
         try {
-          r = await Y_.prepareDroppedAttachmentFiles(n);
-          for (let e of r) {
-            let uploadPendingAttachment = await Y_.uploadPendingAttachment(t.id, e.token);
+          requestAnimationFrameResult = await Y_.prepareDroppedAttachmentFiles(n);
+          for (let normalizeResult of requestAnimationFrameResult) {
+            let uploadPendingAttachment = await Y_.uploadPendingAttachment(t.id, normalizeResult.token);
             uploadPendingAttachment.task && to(uploadPendingAttachment.task);
           }
           Lu();
         } catch (e) {
           Zn.value = e instanceof Error ? e.message : o(`todo.error.attachmentUploadFailed`);
         } finally {
-          await Promise.all(r.map(({
+          await Promise.all(requestAnimationFrameResult.map(({
             token: e
           }) => Y_.clearPendingAttachment(e).catch(() => {}))), Fn.value = false, In.value = null;
         }
@@ -32133,7 +32133,7 @@ var Qge = {
         refresh: vf
       } = Iy();
       return onBeforeMount(async () => {
-        vf(), fr = hy.onStateChanged(e => {
+        vf(), onStateChangedResult = hy.onStateChanged(e => {
           ie.value = e;
         }), pr = window.electronAPI.todos.onChanged(() => {
           Fo();
@@ -32143,7 +32143,7 @@ var Qge = {
       }), watch(() => eventAlias.openTaskRequest?.requestId, () => {
         eventAlias.openTaskRequest && xo(eventAlias.openTaskRequest);
       }), onUnmounted(() => {
-        rr && clearTimeout(rr), ir && clearTimeout(ir), or && clearTimeout(or), sr && clearTimeout(sr), cr?.(), lr && clearTimeout(lr), ur && clearTimeout(ur), fr?.(), pr?.(), wl(), Gd();
+        rr && clearTimeout(rr), ir && clearTimeout(ir), or && clearTimeout(or), sr && clearTimeout(sr), cr?.(), lr && clearTimeout(lr), ur && clearTimeout(ur), onStateChangedResult?.(), pr?.(), wl(), Gd();
       }), (e, t) => (openBlock(), createElementBlock(`div`, {
         class: `todo-page todo-theme-scope relative flex h-full min-h-0 flex-col overflow-hidden p-6 px-7`,
         onClick: Go
@@ -34970,7 +34970,7 @@ var Qge = {
     };
   }),
   dw = m(e => {
-    var t,
+    var normalizeResult,
       n = [0, 26, 44, 70, 100, 134, 172, 196, 242, 292, 346, 404, 466, 532, 581, 655, 733, 815, 901, 991, 1085, 1156, 1258, 1364, 1474, 1588, 1706, 1828, 1921, 2051, 2185, 2323, 2465, 2611, 2761, 2876, 3034, 3196, 3362, 3532, 3706];
     e.getSymbolSize = function (e) {
       if (!e) throw Error(`"version" cannot be null or undefined`);
@@ -34984,11 +34984,11 @@ var Qge = {
       return t;
     }, e.setToSJISFunction = function (e) {
       if (typeof e != `function`) throw Error(`"toSJISFunc" is not a valid function.`);
-      t = e;
+      normalizeResult = e;
     }, e.isKanjiModeEnabled = function () {
-      return t !== undefined;
+      return normalizeResult !== undefined;
     }, e.toSJIS = function (e) {
-      return t(e);
+      return normalizeResult(e);
     };
   }),
   fw = m(e => {
@@ -35121,12 +35121,12 @@ var Qge = {
         i = 0,
         a = 0,
         o = null,
-        s = null;
+        trimStartResult = null;
       for (let c = 0; c < n; c++) {
-        i = a = 0, o = s = null;
+        i = a = 0, o = trimStartResult = null;
         for (let l = 0; l < n; l++) {
           let n = e.get(c, l);
-          n === o ? i++ : (i >= 5 && (r += t.N1 + (i - 5)), o = n, i = 1), n = e.get(l, c), n === s ? a++ : (a >= 5 && (r += t.N1 + (a - 5)), s = n, a = 1);
+          n === o ? i++ : (i >= 5 && (r += t.N1 + (i - 5)), o = n, i = 1), n = e.get(l, c), n === trimStartResult ? a++ : (a >= 5 && (r += t.N1 + (a - 5)), trimStartResult = n, a = 1);
         }
         i >= 5 && (r += t.N1 + (i - 5)), a >= 5 && (r += t.N1 + (a - 5));
       }
@@ -35407,14 +35407,14 @@ var Qge = {
           return Math.floor(c / 8);
       }
     }, items.getBestVersionForData = function (e, t) {
-      let n,
+      let replaceResult,
         i = r.from(t, r.M);
       if (Array.isArray(e)) {
         if (e.length > 1) return d(e, i);
         if (e.length === 0) return 1;
-        n = e[0];
-      } else n = e;
-      return c(n.mode, n.getLength(), i);
+        replaceResult = e[0];
+      } else replaceResult = e;
+      return c(replaceResult.mode, replaceResult.getLength(), i);
     }, items.getEncodedBits = function (e) {
       if (!a.isValid(e) || e < 7) throw Error(`Invalid QR Code version`);
       let n = e << 12;
@@ -35446,10 +35446,10 @@ var Qge = {
     }, r.prototype.getBitsLength = function () {
       return r.getBitsLength(this.data.length);
     }, r.prototype.write = function (e) {
-      let t, n, r;
-      for (t = 0; t + 3 <= this.data.length; t += 3) n = this.data.substr(t, 3), r = parseInt(n, 10), e.put(r, 10);
-      let i = this.data.length - t;
-      i > 0 && (n = this.data.substr(t), r = parseInt(n, 10), e.put(r, i * 3 + 1));
+      let normalizeResult, replaceResult, requestAnimationFrameResult;
+      for (normalizeResult = 0; normalizeResult + 3 <= this.data.length; normalizeResult += 3) replaceResult = this.data.substr(normalizeResult, 3), requestAnimationFrameResult = parseInt(replaceResult, 10), e.put(requestAnimationFrameResult, 10);
+      let i = this.data.length - normalizeResult;
+      i > 0 && (replaceResult = this.data.substr(normalizeResult), requestAnimationFrameResult = parseInt(replaceResult, 10), e.put(requestAnimationFrameResult, i * 3 + 1));
     }, t.exports = r;
   }),
   Ow = m((e, t) => {
@@ -35537,8 +35537,8 @@ Make sure your charset is UTF-8`);
         make: function (e) {
           var priorityQueue = n.PriorityQueue,
             r = {},
-            i;
-          for (i in e ||= {}, priorityQueue) priorityQueue.hasOwnProperty(i) && (r[i] = priorityQueue[i]);
+            count;
+          for (count in e ||= {}, priorityQueue) priorityQueue.hasOwnProperty(count) && (r[count] = priorityQueue[count]);
           return r.queue = [], r.sorter = e.sorter || priorityQueue.default_sorter, r;
         },
         default_sorter: function (e, t) {
@@ -35575,21 +35575,21 @@ Make sure your charset is UTF-8`);
     }
     function u(e, t, n) {
       let emptyItems = [],
-        i;
-      for (; (i = e.exec(n)) !== null;) emptyItems.push({
-        data: i[0],
-        index: i.index,
+        count;
+      for (; (count = e.exec(n)) !== null;) emptyItems.push({
+        data: count[0],
+        index: count.index,
         mode: t,
-        length: i[0].length
+        length: count[0].length
       });
       return emptyItems;
     }
     function d(options) {
       let n = u(o.NUMERIC, t.NUMERIC, options),
         r = u(o.ALPHANUMERIC, t.ALPHANUMERIC, options),
-        i,
+        count,
         a;
-      return s.isKanjiModeEnabled() ? (i = u(o.BYTE, t.BYTE, options), a = u(o.KANJI, t.KANJI, options)) : (i = u(o.BYTE_KANJI, t.BYTE, options), a = []), n.concat(r, i, a).sort(function (item, right) {
+      return s.isKanjiModeEnabled() ? (count = u(o.BYTE, t.BYTE, options), a = u(o.KANJI, t.KANJI, options)) : (count = u(o.BYTE_KANJI, t.BYTE, options), a = []), n.concat(r, count, a).sort(function (item, right) {
         return item.index - right.index;
       }).map(function (e) {
         return {
@@ -35757,10 +35757,10 @@ Make sure your charset is UTF-8`);
     function _(e, t) {
       let n = e.size,
         encodedBits = u.getEncodedBits(t),
-        i,
+        count,
         a,
         o;
-      for (let t = 0; t < 18; t++) i = Math.floor(t / 3), a = t % 3 + n - 8 - 3, o = (encodedBits >> t & 1) == 1, e.set(i, a, o, true), e.set(a, i, o, true);
+      for (let t = 0; t < 18; t++) count = Math.floor(t / 3), a = t % 3 + n - 8 - 3, o = (encodedBits >> t & 1) == 1, e.set(count, a, o, true), e.set(a, count, o, true);
     }
     function v(e, t, n) {
       let r = e.size,
@@ -35819,10 +35819,10 @@ Make sure your charset is UTF-8`);
       }
       let b = new Uint8Array(symbolTotalCodewords),
         x = 0,
-        S,
+        count,
         C;
-      for (S = 0; S < v; S++) for (C = 0; C < blocksCount; C++) S < g[C].length && (b[x++] = g[C][S]);
-      for (S = 0; S < p; S++) for (C = 0; C < blocksCount; C++) b[x++] = _[C][S];
+      for (count = 0; count < v; count++) for (C = 0; C < blocksCount; C++) count < g[C].length && (b[x++] = g[C][count]);
+      for (count = 0; count < p; count++) for (C = 0; C < blocksCount; C++) b[x++] = _[C][count];
       return b;
     }
     function S(e, n, r, a) {
@@ -41861,13 +41861,13 @@ var EO = defineComponent({
         }),
         p = ref(``),
         m = ref(new Date()),
-        h;
+        setIntervalResult;
       onBeforeMount(() => {
-        h = setInterval(() => {
+        setIntervalResult = setInterval(() => {
           m.value = new Date();
         }, 1e3);
       }), onUnmounted(() => {
-        h && clearInterval(h);
+        setIntervalResult && clearInterval(setIntervalResult);
       });
       let g = [{
           value: 1,
@@ -42517,14 +42517,14 @@ function VF() {
   }
   async function n(t, n) {
     let r = ++RF,
-      i;
+      count;
     MF.value = true, PF.value = t, OF.value = null, kF.value = null, IF.value = null;
     try {
       let a = await Promise.race([EF.testModels({
         trigger: t,
         purpose: n
       }), new Promise((t, n) => {
-        i = setTimeout(() => n(Error(e(`settings.modelTest.timeout`))), zF);
+        count = setTimeout(() => n(Error(e(`settings.modelTest.timeout`))), zF);
       })]);
       return r === RF ? (OF.value = a, !a.deduplicated && (a.status === `partial_failed` || a.status === `failed`) && (NF.value = true, EF.diagnoseModelTest(a).then(result => {
         r === RF && (kF.value = result);
@@ -42541,7 +42541,7 @@ function VF() {
     } catch (t) {
       return r === RF && (IF.value = BF(t, e(`composables.ai.testFailed`))), null;
     } finally {
-      i && clearTimeout(i), r === RF && (MF.value = false);
+      count && clearTimeout(count), r === RF && (MF.value = false);
     }
   }
   function r() {
@@ -42607,7 +42607,7 @@ function GF() {
     t = ref(null),
     n = ref(false),
     r = ref(null),
-    i = null;
+    count = null;
   async function a() {
     try {
       t.value = await UF.getStatus(), r.value = null;
@@ -42616,12 +42616,12 @@ function GF() {
     }
   }
   function o() {
-    i ||= setInterval(() => {
+    count ||= setInterval(() => {
       a();
     }, 2e3);
   }
   function s() {
-    i &&= (clearInterval(i), null);
+    count &&= (clearInterval(count), null);
   }
   async function c() {
     n.value = true;
@@ -44220,8 +44220,8 @@ function $L(text) {
 function eR(text) {
   let t = new Set(),
     emptyItems = [];
-  for (let r of text) {
-    let e = $L(r),
+  for (let requestAnimationFrameResult of text) {
+    let e = $L(requestAnimationFrameResult),
       lowercased = e.toLowerCase();
     e && !t.has(lowercased) && (t.add(lowercased), emptyItems.push(e));
   }
@@ -45991,13 +45991,13 @@ var ZR = {
     }
   });
 function qB(event) {
-  let t = null;
+  let normalizeResult = null;
   return watch(event, value => {
-    value && (t = document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    value && (normalizeResult = document.activeElement instanceof HTMLElement ? document.activeElement : null);
   }, {
     flush: `sync`
   }), e => {
-    let n = t;
+    let n = normalizeResult;
     n?.isConnected && (e.preventDefault(), ut(() => {
       n.isConnected && n.getClientRects().length && !n.closest(`[inert], [aria-hidden="true"]`) && n.focus({
         preventScroll: true
@@ -46017,21 +46017,21 @@ function JB(result) {
     s = ref(null),
     c = ref(null),
     l = ref(``),
-    u = null,
-    d = null,
+    setTimeoutResult = null,
+    count = null,
     f = false,
     p = false,
     xiaoheiBot = window.electronAPI.xiaoheiBot,
     h = xiaoheiBot.onEvent(e => {
       if (e.type === `provider-catalog-updated` && (n.value = e.catalog), a.value && `providerId` in e && e.providerId === o.value) {
         if (e.type === `provider-auth-notice` || e.type === `provider-auth-prompt`) {
-          if (u && u !== e.authRequestId) return;
-          if (u = e.authRequestId, f) {
+          if (setTimeoutResult && setTimeoutResult !== e.authRequestId) return;
+          if (setTimeoutResult = e.authRequestId, f) {
             b();
             return;
           }
-          e.type === `provider-auth-notice` ? s.value = e.notice : (d = e.promptId, c.value = e.prompt, l.value = ``);
-        } else e.type === `provider-auth-prompt-cancelled` && d === e.promptId && (d = null, c.value = null, l.value = ``);
+          e.type === `provider-auth-notice` ? s.value = e.notice : (count = e.promptId, c.value = e.prompt, l.value = ``);
+        } else e.type === `provider-auth-prompt-cancelled` && count === e.promptId && (count = null, c.value = null, l.value = ``);
       }
     });
   async function g() {
@@ -46059,7 +46059,7 @@ function JB(result) {
       } catch (e) {
         f || (i.value = e instanceof Error ? e.message : String(e));
       } finally {
-        a.value = false, o.value = null, u = null, d = null, c.value = null, s.value = null, l.value = ``, p && h();
+        a.value = false, o.value = null, setTimeoutResult = null, count = null, c.value = null, s.value = null, l.value = ``, p && h();
       }
     }
   }
@@ -46080,23 +46080,23 @@ function JB(result) {
     }
   }
   async function y(e) {
-    if (!u || !d) return;
-    let t = d;
+    if (!setTimeoutResult || !count) return;
+    let t = count;
     try {
       let respondProviderAuth = await xiaoheiBot.respondProviderAuth({
-        authRequestId: u,
+        authRequestId: setTimeoutResult,
         promptId: t,
         value: e
       });
       if (!respondProviderAuth.ok) throw Error(respondProviderAuth.error.message);
-      d === t && (d = null, c.value = null, l.value = ``);
+      count === t && (count = null, c.value = null, l.value = ``);
     } catch (e) {
       i.value = e instanceof Error ? e.message : String(e);
     }
   }
   async function b() {
-    f = true, u && (await xiaoheiBot.cancelProviderAuth({
-      authRequestId: u
+    f = true, setTimeoutResult && (await xiaoheiBot.cancelProviderAuth({
+      authRequestId: setTimeoutResult
     }).catch(() => undefined));
   }
   return watch(result, value => {
@@ -46423,7 +46423,7 @@ var YB = {
         return Tr.filter(item => item === "default" || fallbackValue.includes(item));
       }
       watch([m, h, p, d], () => {
-        if (!d.value) for (let e of [`screenshot`, `report`]) x(e).includes(g.value[e]) || (g.value[e] = `default`);
+        if (!d.value) for (let normalizeResult of [`screenshot`, `report`]) x(normalizeResult).includes(g.value[normalizeResult]) || (g.value[normalizeResult] = `default`);
       });
       async function S(e) {
         let t = i;
@@ -46469,12 +46469,12 @@ var YB = {
           [F_(purpose)]: `subscription`
         })) && (l.value = false);
       }
-      let T;
+      let onEventResult;
       return onBeforeMount(() => {
-        T = window.electronAPI.xiaoheiBot.onEvent(e => {
+        onEventResult = window.electronAPI.xiaoheiBot.onEvent(e => {
           e.type === `provider-catalog-updated` && (p.value = e.catalog);
         });
-      }), onUnmounted(() => T?.()), (e, r) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(ui), {
+      }), onUnmounted(() => onEventResult?.()), (e, r) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(ui), {
         open: l.value,
         "onUpdate:open": r[2] ||= e => l.value = e
       }, {
@@ -48679,7 +48679,7 @@ var PV = {
         y = ref(false),
         b = ref(false),
         x = ref(``),
-        S = null;
+        count = null;
       watch(() => itemsAlias.open, value => {
         value && (_.value = false, y.value = false, f.value = ``, o(itemsAlias.language).then(() => {
           let fallbackValue = a.value.find(item => item.id === itemsAlias.currentTemplateId) ?? a.value.find(item => item.isRecommended) ?? a.value[0];
@@ -48688,9 +48688,9 @@ var PV = {
       });
       let computedResult = computed(() => {
           let e = new Map();
-          for (let t of a.value) e.has(t.category.id) || e.set(t.category.id, {
-            ...t.category,
-            name: t.category.id === -1 ? n(`settings.promptTemplate.myTemplates`) : t.category.name
+          for (let normalizeResult of a.value) e.has(normalizeResult.category.id) || e.set(normalizeResult.category.id, {
+            ...normalizeResult.category,
+            name: normalizeResult.category.id === -1 ? n(`settings.promptTemplate.myTemplates`) : normalizeResult.category.name
           });
           return e.has(-1) || e.set(-1, {
             id: -1,
@@ -48808,12 +48808,12 @@ var PV = {
         let fallbackValue = e || E.value?.id;
         if (!fallbackValue) return;
         let found = a.value.find(item => item.id === fallbackValue);
-        found && !found.isBuiltin && (S = fallbackValue, x.value = found.name, b.value = true);
+        found && !found.isBuiltin && (count = fallbackValue, x.value = found.name, b.value = true);
       }
       async function re() {
-        if (!S) return;
-        let e = await l(S);
-        b.value = false, S = null, x.value = ``, e && (computedData.value.length > 0 ? O(computedData.value[0].id) : (p.value = ``, m.value = ``, h.value = ``, g.value = ``));
+        if (!count) return;
+        let e = await l(count);
+        b.value = false, count = null, x.value = ``, e && (computedData.value.length > 0 ? O(computedData.value[0].id) : (p.value = ``, m.value = ``, h.value = ``, g.value = ``));
       }
       return (t, r) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(ui), {
         open: items.open,
@@ -49369,8 +49369,8 @@ var zEe = {
       function M(e) {
         let t = new Set(),
           emptyItems = [];
-        for (let r of e.split(/[,，、;；\n]+/)) {
-          let trimmed = r.replace(/\s+/g, ` `).trim();
+        for (let requestAnimationFrameResult of e.split(/[,，、;；\n]+/)) {
+          let trimmed = requestAnimationFrameResult.replace(/\s+/g, ` `).trim();
           if (!trimmed) continue;
           let toLocaleLowerCase = trimmed.toLocaleLowerCase();
           t.has(toLocaleLowerCase) || (t.add(toLocaleLowerCase), emptyItems.push(trimmed));
@@ -50379,7 +50379,7 @@ function COe(e) {
 function fH(options) {
   if (options.mode === `month`) return `monthly`;
   if (options.mode === `alternate`) return `bigSmall`;
-  for (let t of [`everyDay`, `weekdays`, `sixDays`]) if (SOe(options.days, dH[t])) return t;
+  for (let normalizeResult of [`everyDay`, `weekdays`, `sixDays`]) if (SOe(options.days, dH[normalizeResult])) return normalizeResult;
   return `custom`;
 }
 function pH() {
@@ -52179,7 +52179,7 @@ var BOe = {
         h = ref(false),
         g = ref(null),
         _ = ref(new Date()),
-        v,
+        setIntervalResult,
         computedResult = computed(() => r.value.autoReportTasks ?? []),
         computedData = computed(() => r.value.autoReportTaskRuns ?? {}),
         x = computed(() => computedResult.value.filter(item => item.enabled).length),
@@ -52280,11 +52280,11 @@ var BOe = {
         } catch {}
       }
       return onBeforeMount(() => {
-        v = setInterval(() => {
+        setIntervalResult = setInterval(() => {
           _.value = new Date();
         }, 3e4), M();
       }), onUnmounted(() => {
-        v && clearInterval(v);
+        setIntervalResult && clearInterval(setIntervalResult);
       }), l(() => {
         _.value = new Date(), M();
       }), (e, o) => (openBlock(), createElementBlock(`div`, BAe, [createElementVNode(`div`, VAe, [createElementVNode(`div`, HAe, [createElementVNode(`div`, UAe, [createElementVNode(`p`, WAe, toDisplayString(unref(t)(`settings.autoReport.title`)), 1), resolveComponent(H_, {
@@ -53870,7 +53870,7 @@ All business endpoints use this response envelope:
         o = ref(false),
         s = ref(true),
         c = ref(`lan`),
-        l = null,
+        setTimeoutResult = null,
         u = 0,
         d = ref(false),
         f = ref([]),
@@ -53975,9 +53975,9 @@ All business endpoints use this response envelope:
         } catch (e) {
           console.error(`获取 Lobster 服务地址失败:`, e);
         }
-        await A(), l = setInterval(k, 1e4);
+        await A(), setTimeoutResult = setInterval(k, 1e4);
       }), onUnmounted(() => {
-        u++, l &&= (clearInterval(l), null);
+        u++, setTimeoutResult &&= (clearInterval(setTimeoutResult), null);
       }), (e, t) => (openBlock(), createElementBlock(`div`, FNe, [createElementVNode(`div`, INe, [resolveComponent(unref(ks), {
         size: 16,
         "stroke-width": 1.5,
@@ -54805,9 +54805,9 @@ var PH = {
           ...keyboard,
           keys: T(keyboard.keys, 5)
         });
-        for (let n of [`mouse`, `screen`]) {
-          let r = e[n];
-          r && (t[n] = {
+        for (let replaceResult of [`mouse`, `screen`]) {
+          let r = e[replaceResult];
+          r && (t[replaceResult] = {
             ...r,
             ...(r.apps ? {
               apps: T(r.apps, 3)
@@ -56612,12 +56612,12 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
         o = computed(() => new Set(n.value)),
         s = computed(() => {
           let emptyItems = [];
-          for (let t of qH) {
-            if (!computedResult.value.has(t.id)) continue;
+          for (let normalizeResult of qH) {
+            if (!computedResult.value.has(normalizeResult.id)) continue;
             let n = emptyItems[emptyItems.length - 1];
-            n?.section === t.section ? n.ids.push(t.id) : emptyItems.push({
-              section: t.section,
-              ids: [t.id]
+            n?.section === normalizeResult.section ? n.ids.push(normalizeResult.id) : emptyItems.push({
+              section: normalizeResult.section,
+              ids: [normalizeResult.id]
             });
           }
           return emptyItems;
@@ -57941,12 +57941,12 @@ var DRe = {
         w = ref(false),
         T = ref(false),
         E = ref(false),
-        D = null;
+        setTimeoutResult = null;
       onBeforeMount(() => {
-        D = VH.onFullBackupProgress(e => {
+        setTimeoutResult = VH.onFullBackupProgress(e => {
           b.value = e;
         });
-      }), onMounted(() => D?.());
+      }), onMounted(() => setTimeoutResult?.());
       let O = [`skip`, `merge`, `replace`],
         k = ref(false),
         A = ref(false),
@@ -58913,21 +58913,21 @@ function TU() {
   async function S() {
     if (g.value || s.value) return;
     v += 1, g.value = true;
-    let t = null;
+    let normalizeResult = null;
     try {
       let customFile = await bU.selectCustomFile();
       if (!customFile) return;
-      t = customFile.token;
+      normalizeResult = customFile.token;
       let previewCustomCandidate = await SU.previewCustomCandidate(customFile.data),
         commitCustomFile = await bU.commitCustomFile(customFile.token, previewCustomCandidate);
-      if (t = null, h.value = commitCustomFile, SU.invalidateCustomSound(), !(await r({
+      if (normalizeResult = null, h.value = commitCustomFile, SU.invalidateCustomSound(), !(await r({
         mechanicalKeyboardSwitchType: `custom`
       }))) throw Error(e(`settings.keyboardSoundCustomImportFailed`));
       await b({
         switchType: `custom`
       }), Oi(e(`settings.keyboardSoundCustomImported`));
     } catch (n) {
-      t && (await bU.discardCustomFile(t).catch(() => undefined)), Ai(n instanceof Error ? n.message : e(`settings.keyboardSoundCustomImportFailed`));
+      normalizeResult && (await bU.discardCustomFile(normalizeResult).catch(() => undefined)), Ai(n instanceof Error ? n.message : e(`settings.keyboardSoundCustomImportFailed`));
     } finally {
       g.value = false;
     }
@@ -61017,15 +61017,15 @@ var RU = {
           p.value = false;
         }
       }
-      let y;
+      let setTimeoutResult;
       return onBeforeMount(() => {
         window.electronAPI.getAppVersion().then(result => {
           s.value = result, c.value = !!result;
-        }), y = window.electronAPI.updater.onStatus(e => {
+        }), setTimeoutResult = window.electronAPI.updater.onStatus(e => {
           u.value = e.message, e.status === `available` && i(e.version), (e.status === `not-available` || e.status === `error`) && (e.status === `not-available` && a(), l.value = false);
         });
       }), onUnmounted(() => {
-        y?.();
+        setTimeoutResult?.();
       }), (e, n) => (openBlock(), createBlock(YM, {
         id: `about`
       }, {
@@ -61342,20 +61342,20 @@ var RU = {
       let computedResult = computed(() => a.value ? i(`settings.status.loading`) : o.value ? o.value : ``),
         _ = computed(() => o.value ? `text-destructive` : `text-[#999]`),
         v = ref(false),
-        y = null;
+        setTimeoutResult = null;
       watch(s, () => {
-        s.value && (v.value = true, y && clearTimeout(y), y = setTimeout(() => {
+        s.value && (v.value = true, setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
           v.value = false;
         }, 5e3));
       });
       let b = ref(null),
         x = ref(`general`),
-        S = null,
+        count = null,
         C = null;
       function w() {
         C = null;
         let e = b.value,
-          t = S;
+          t = count;
         if (!e || !t) return;
         if (t.scrollTop + t.clientHeight >= t.scrollHeight - 2) {
           x.value = WM.at(-1)?.id ?? `about`;
@@ -61363,9 +61363,9 @@ var RU = {
         }
         let n = t.getBoundingClientRect().top + 48,
           fallbackValue = WM[0]?.id ?? `general`;
-        for (let t of WM) {
-          let selector = e.querySelector(`#settings-${t.id}`);
-          selector && selector.getBoundingClientRect().top <= n && (fallbackValue = t.id);
+        for (let normalizeResult of WM) {
+          let selector = e.querySelector(`#settings-${normalizeResult.id}`);
+          selector && selector.getBoundingClientRect().top <= n && (fallbackValue = normalizeResult.id);
         }
         x.value = fallbackValue;
       }
@@ -61383,7 +61383,7 @@ var RU = {
         emptyItems.forEach(clearTimeout), emptyItems = [];
       }
       function k(e) {
-        let t = S;
+        let t = count;
         if (!t) return true;
         let boundingClientRect = e.getBoundingClientRect(),
           boundingClientRectResult = t.getBoundingClientRect();
@@ -61414,14 +61414,14 @@ var RU = {
         value && ut(() => A(value));
       }), onBeforeMount(() => {
         ut(() => {
-          S = b.value?.closest(`.content-body`) ?? null, S?.addEventListener(`scroll`, T, {
+          count = b.value?.closest(`.content-body`) ?? null, count?.addEventListener(`scroll`, T, {
             passive: true
           }), w(), n.focusTarget && A(n.focusTarget);
         }), window.electronAPI?.badges?.triggerEvent?.(`page_visit`, {
           page: `settings`
         }), h();
       }), onUnmounted(() => {
-        y && clearTimeout(y), O(), S?.removeEventListener(`scroll`, T), C !== null && window.cancelAnimationFrame(C);
+        setTimeoutResult && clearTimeout(setTimeoutResult), O(), count?.removeEventListener(`scroll`, T), C !== null && window.cancelAnimationFrame(C);
       }), (e, t) => (openBlock(), createElementBlock(`div`, {
         ref_key: `settingsRoot`,
         ref: b,
@@ -61609,9 +61609,9 @@ function GWe(e) {
 }
 function BU(e) {
   let t = new Map();
-  for (let n of e) {
-    if (typeof n.type != `string`) continue;
-    let e = GWe(n.type),
+  for (let replaceResult of e) {
+    if (typeof replaceResult.type != `string`) continue;
+    let e = GWe(replaceResult.type),
       fallbackValue = t.get(e) ?? {
         key: e,
         count: 0,
@@ -61619,7 +61619,7 @@ function BU(e) {
         credit: 0,
         types: []
       };
-    fallbackValue.count += n.count, fallbackValue[n.direction] += n.amount, fallbackValue.types.includes(n.type) || fallbackValue.types.push(n.type), t.set(e, fallbackValue);
+    fallbackValue.count += replaceResult.count, fallbackValue[replaceResult.direction] += replaceResult.amount, fallbackValue.types.includes(replaceResult.type) || fallbackValue.types.push(replaceResult.type), t.set(e, fallbackValue);
   }
   return [...t.values()].sort((left, right) => right.debit + right.credit - (left.debit + left.credit) || right.count - left.count);
 }
@@ -61740,11 +61740,11 @@ var KWe = [`title`],
       }
       let computedResult = computed(() => BU(f.value?.breakdown ?? []));
       function x(e) {
-        for (let t of [`profile.ledgerMethods.${e}`, `profile.ledgerTypes.${e}`, `profile.usageRecordTypes.${e}`]) if (i(t)) return r(t);
+        for (let normalizeResult of [`profile.ledgerMethods.${e}`, `profile.ledgerTypes.${e}`, `profile.usageRecordTypes.${e}`]) if (i(normalizeResult)) return r(normalizeResult);
         return e;
       }
       function S(e, t) {
-        for (let t of [`profile.ledgerTypes.${e}`, `profile.usageRecordTypes.${e}`]) if (i(t)) return r(t);
+        for (let normalizeResult of [`profile.ledgerTypes.${e}`, `profile.usageRecordTypes.${e}`]) if (i(normalizeResult)) return r(normalizeResult);
         return t || r(`profile.ledgerAdjustment`);
       }
       async function C(e = 1) {
@@ -61764,7 +61764,7 @@ var KWe = [`title`],
             types: u.value.flatMap(item => [...(d.get(item) ?? [])])
           });
           if (a === h && n.value) {
-            for (let e of BU(creditLedger.breakdown ?? [])) d.set(e.key, new Set([...(d.get(e.key) ?? []), ...e.types]));
+            for (let normalizeResult of BU(creditLedger.breakdown ?? [])) d.set(normalizeResult.key, new Set([...(d.get(normalizeResult.key) ?? []), ...normalizeResult.types]));
             f.value = creditLedger, i(`account_view_loaded`, {
               panel: `credit_ledger`
             });
@@ -61917,10 +61917,10 @@ function bGe(e) {
 function xGe(e, t) {
   let n = t,
     r = ``;
-  for (let t of e) {
-    let e = HU(t);
+  for (let normalizeResult of e) {
+    let e = HU(normalizeResult);
     if (e > n) break;
-    n -= e, r += t;
+    n -= e, r += normalizeResult;
   }
   return r;
 }
@@ -61966,7 +61966,7 @@ function NGe(e) {
 function PGe(e) {
   let t = 0,
     n = 0;
-  for (let r of e) r.totalRecords > 0 ? (n += 1, t = Math.max(t, n)) : n = 0;
+  for (let requestAnimationFrameResult of e) requestAnimationFrameResult.totalRecords > 0 ? (n += 1, t = Math.max(t, n)) : n = 0;
   return t;
 }
 function FGe(e) {
@@ -61976,10 +61976,10 @@ function FGe(e) {
     i = 0,
     a = 0,
     o = null,
-    s = null;
+    trimStartResult = null;
   for (let c of e) {
     let fallbackValue = c.totalRecords ?? 0;
-    a += fallbackValue, fallbackValue > 0 && (t += 1), c.hourlyCounts.slice(0, 6).some(item => item > 0) && (n += 1), c.hourlyCounts.slice(6, 8).some(item => item > 0) && (r += 1), i += c.focusMinutes, (!o || c.focusMinutes > o.focusMinutes) && (o = c), (!s || fallbackValue > (s.totalRecords ?? 0)) && (s = c);
+    a += fallbackValue, fallbackValue > 0 && (t += 1), c.hourlyCounts.slice(0, 6).some(item => item > 0) && (n += 1), c.hourlyCounts.slice(6, 8).some(item => item > 0) && (r += 1), i += c.focusMinutes, (!o || c.focusMinutes > o.focusMinutes) && (o = c), (!trimStartResult || fallbackValue > (trimStartResult.totalRecords ?? 0)) && (trimStartResult = c);
   }
   return {
     activeDays: t,
@@ -61988,7 +61988,7 @@ function FGe(e) {
     focusMinutes: i,
     totalRecords: a,
     peakFocus: o,
-    peakRecords: s
+    peakRecords: trimStartResult
   };
 }
 function GU(e, t, n) {
@@ -62116,13 +62116,13 @@ async function KU(e) {
       startDate: `${e}-01-01`,
       endDate: `${e}-12-31`
     }),
-    n = null;
+    replaceResult = null;
   try {
-    n = (await OU.getState()).enabled;
+    replaceResult = (await OU.getState()).enabled;
   } catch {}
   return {
     presses: t.totalPresses,
-    enabled: n
+    enabled: replaceResult
   };
 }
 async function qU(e) {
@@ -62228,7 +62228,7 @@ function pW(e, t = () => true) {
     monthly: 0,
     total: 0
   };
-  for (let r of e.reports) t(r.date) && (n[r.type] += r.count, n.total += r.count);
+  for (let requestAnimationFrameResult of e.reports) t(requestAnimationFrameResult.date) && (n[requestAnimationFrameResult.type] += requestAnimationFrameResult.count, n.total += requestAnimationFrameResult.count);
   return n;
 }
 function mW(e) {
@@ -62237,10 +62237,10 @@ function mW(e) {
 function hW(e) {
   let t = 0,
     n = 0,
-    r = null;
-  for (let i of e) {
-    let e = UGe(i);
-    n = r && cW(lW(r, 1)) === i ? n + 1 : 1, t = Math.max(t, n), r = e;
+    requestAnimationFrameResult = null;
+  for (let count of e) {
+    let e = UGe(count);
+    n = requestAnimationFrameResult && cW(lW(requestAnimationFrameResult, 1)) === count ? n + 1 : 1, t = Math.max(t, n), requestAnimationFrameResult = e;
   }
   return t;
 }
@@ -62267,10 +62267,10 @@ function _W(text, t) {
     i = `${t}-`,
     filtered = text.days.filter(item => item.date.startsWith(i) && item.records > 0),
     o = pW(text, e => e.startsWith(i)),
-    s = null;
-  for (let e of filtered) (!s || e.records > s.records) && (s = {
-    date: e.date,
-    records: e.records
+    trimStartResult = null;
+  for (let normalizeResult of filtered) (!trimStartResult || normalizeResult.records > trimStartResult.records) && (trimStartResult = {
+    date: normalizeResult.date,
+    records: normalizeResult.records
   });
   return {
     month: t,
@@ -62281,7 +62281,7 @@ function _W(text, t) {
     reports: o,
     savedMinutes: mW(o),
     longestStreak: hW(filtered.map(item => item.date)),
-    peakDay: s
+    peakDay: trimStartResult
   };
 }
 function WGe(e, t) {
@@ -62350,7 +62350,7 @@ function GGe(e, text, n = new Date()) {
 }
 function bW(e, t) {
   let n = 0;
-  for (let r of t) e >= r && (n = r);
+  for (let requestAnimationFrameResult of t) e >= requestAnimationFrameResult && (n = requestAnimationFrameResult);
   return n;
 }
 function xW(e) {
@@ -63787,9 +63787,9 @@ function WW() {
   let {
       t: e
     } = it(),
-    t = null,
-    n = null,
-    r = null,
+    normalizeResult = null,
+    replaceResult = null,
+    requestAnimationFrameResult = null,
     i = false,
     a = false;
   async function o() {
@@ -63873,10 +63873,10 @@ function WW() {
     }
   }
   return onBeforeMount(async () => {
-    a = false, r = setInterval(() => void o(), 3e3);
+    a = false, requestAnimationFrameResult = setInterval(() => void o(), 3e3);
     let e = VW,
       i = HW;
-    t ||= hm.onStatusChanged(s), n ||= hm.onStreamChunk(c);
+    normalizeResult ||= hm.onStatusChanged(s), replaceResult ||= hm.onStreamChunk(c);
     try {
       let t = await hm.list({});
       if (a || VW !== e || HW !== i) return;
@@ -63887,7 +63887,7 @@ function WW() {
       }
     } catch {}
   }), onUnmounted(() => {
-    a = true, r && clearInterval(r), r = null, t &&= (t(), null), n &&= (n(), null);
+    a = true, requestAnimationFrameResult && clearInterval(requestAnimationFrameResult), requestAnimationFrameResult = null, normalizeResult &&= (normalizeResult(), null), replaceResult &&= (replaceResult(), null);
   }), {
     currentReport: NW,
     reports: PW,
@@ -64018,15 +64018,15 @@ function nJe(items) {
     let a = e.bMarks[t] + e.tShift[t],
       o = e.eMarks[t];
     if (a + 4 > o || e.src.charCodeAt(a) !== 91 || e.src.charCodeAt(a + 1) !== 94) return false;
-    let s;
-    for (s = a + 2; s < o; s++) {
-      if (e.src.charCodeAt(s) === 32) return false;
-      if (e.src.charCodeAt(s) === 93) break;
+    let trimStartResult;
+    for (trimStartResult = a + 2; trimStartResult < o; trimStartResult++) {
+      if (e.src.charCodeAt(trimStartResult) === 32) return false;
+      if (e.src.charCodeAt(trimStartResult) === 93) break;
     }
-    if (s === a + 2 || s + 1 >= o || e.src.charCodeAt(++s) !== 58) return false;
+    if (trimStartResult === a + 2 || trimStartResult + 1 >= o || e.src.charCodeAt(++trimStartResult) !== 58) return false;
     if (i) return true;
-    s++, e.env.footnotes || (e.env.footnotes = {}), e.env.footnotes.refs || (e.env.footnotes.refs = {});
-    let part = e.src.slice(a + 2, s - 2);
+    trimStartResult++, e.env.footnotes || (e.env.footnotes = {}), e.env.footnotes.refs || (e.env.footnotes.refs = {});
+    let part = e.src.slice(a + 2, trimStartResult - 2);
     e.env.footnotes.refs[`:${part}`] = -1;
     let l = new e.Token(`footnote_reference_open`, ``, 1);
     l.meta = {
@@ -64036,15 +64036,15 @@ function nJe(items) {
       d = e.tShift[t],
       f = e.sCount[t],
       parentType = e.parentType,
-      m = s,
-      h = e.sCount[t] + s - (e.bMarks[t] + e.tShift[t]),
+      m = trimStartResult,
+      h = e.sCount[t] + trimStartResult - (e.bMarks[t] + e.tShift[t]),
       g = h;
-    for (; s < o;) {
-      let charCodeAt = e.src.charCodeAt(s);
+    for (; trimStartResult < o;) {
+      let charCodeAt = e.src.charCodeAt(trimStartResult);
       if (isSpace(charCodeAt)) charCodeAt === 9 ? g += 4 - g % 4 : g++;else break;
-      s++;
+      trimStartResult++;
     }
-    e.tShift[t] = s - m, e.sCount[t] = g - h, e.bMarks[t] = m, e.blkIndent += 4, e.parentType = `footnote`, e.sCount[t] < e.blkIndent && (e.sCount[t] += e.blkIndent), e.md.block.tokenize(e, t, r, true), e.parentType = parentType, e.blkIndent -= 4, e.tShift[t] = d, e.sCount[t] = f, e.bMarks[t] = u;
+    e.tShift[t] = trimStartResult - m, e.sCount[t] = g - h, e.bMarks[t] = m, e.blkIndent += 4, e.parentType = `footnote`, e.sCount[t] < e.blkIndent && (e.sCount[t] += e.blkIndent), e.md.block.tokenize(e, t, r, true), e.parentType = parentType, e.blkIndent -= 4, e.tShift[t] = d, e.sCount[t] = f, e.bMarks[t] = u;
     let _ = new e.Token(`footnote_reference_close`, ``, -1);
     return _.level = --e.level, e.tokens.push(_), true;
   }
@@ -64074,41 +64074,41 @@ function nJe(items) {
     let posMax = e.posMax,
       r = e.pos;
     if (r + 3 > posMax || !e.env.footnotes || !e.env.footnotes.refs || e.src.charCodeAt(r) !== 91 || e.src.charCodeAt(r + 1) !== 94) return false;
-    let i;
-    for (i = r + 2; i < posMax; i++) {
-      if (e.src.charCodeAt(i) === 32 || e.src.charCodeAt(i) === 10) return false;
-      if (e.src.charCodeAt(i) === 93) break;
+    let count;
+    for (count = r + 2; count < posMax; count++) {
+      if (e.src.charCodeAt(count) === 32 || e.src.charCodeAt(count) === 10) return false;
+      if (e.src.charCodeAt(count) === 93) break;
     }
-    if (i === r + 2 || i >= posMax) return false;
-    i++;
-    let part = e.src.slice(r + 2, i - 1);
+    if (count === r + 2 || count >= posMax) return false;
+    count++;
+    let part = e.src.slice(r + 2, count - 1);
     if (e.env.footnotes.refs[`:${part}`] === undefined) return false;
     if (!t) {
       e.env.footnotes.list || (e.env.footnotes.list = []);
-      let t;
-      e.env.footnotes.refs[`:${part}`] < 0 ? (t = e.env.footnotes.list.length, e.env.footnotes.list[t] = {
+      let normalizeResult;
+      e.env.footnotes.refs[`:${part}`] < 0 ? (normalizeResult = e.env.footnotes.list.length, e.env.footnotes.list[normalizeResult] = {
         label: part,
         count: 0
-      }, e.env.footnotes.refs[`:${part}`] = t) : t = e.env.footnotes.refs[`:${part}`];
-      let n = e.env.footnotes.list[t].count;
-      e.env.footnotes.list[t].count++;
+      }, e.env.footnotes.refs[`:${part}`] = normalizeResult) : normalizeResult = e.env.footnotes.refs[`:${part}`];
+      let n = e.env.footnotes.list[normalizeResult].count;
+      e.env.footnotes.list[normalizeResult].count++;
       let r = e.push(`footnote_ref`, ``, 0);
       r.meta = {
-        id: t,
+        id: normalizeResult,
         subId: n,
         label: part
       };
     }
-    return e.pos = i, e.posMax = posMax, true;
+    return e.pos = count, e.posMax = posMax, true;
   }
   function o(e) {
-    let t,
-      n,
-      r,
+    let normalizeResult,
+      replaceResult,
+      requestAnimationFrameResult,
       i = false,
       a = {};
     if (!e.env.footnotes || (e.tokens = e.tokens.filter(function (item) {
-      return item.type === `footnote_reference_open` ? (i = true, n = [], r = item.meta.label, false) : item.type === `footnote_reference_close` ? (i = false, a[`:` + r] = n, false) : (i && n.push(item), !i);
+      return item.type === `footnote_reference_open` ? (i = true, replaceResult = [], requestAnimationFrameResult = item.meta.label, false) : item.type === `footnote_reference_close` ? (i = false, a[`:` + requestAnimationFrameResult] = replaceResult, false) : (i && replaceResult.push(item), !i);
     }), !e.env.footnotes.list)) return;
     let list = e.env.footnotes.list;
     e.tokens.push(new e.Token(`footnote_block_open`, ``, 1));
@@ -64118,17 +64118,17 @@ function nJe(items) {
         id: n,
         label: list[n].label
       }, e.tokens.push(r), list[n].tokens) {
-        t = [];
+        normalizeResult = [];
         let r = new e.Token(`paragraph_open`, `p`, 1);
-        r.block = true, t.push(r);
+        r.block = true, normalizeResult.push(r);
         let i = new e.Token(`inline`, ``, 0);
-        i.children = list[n].tokens, i.content = list[n].content, t.push(i);
+        i.children = list[n].tokens, i.content = list[n].content, normalizeResult.push(i);
         let a = new e.Token(`paragraph_close`, `p`, -1);
-        a.block = true, t.push(a);
-      } else list[n].label && (t = a[`:${list[n].label}`]);
-      t && (e.tokens = e.tokens.concat(t));
-      let i;
-      i = e.tokens[e.tokens.length - 1].type === `paragraph_close` ? e.tokens.pop() : null;
+        a.block = true, normalizeResult.push(a);
+      } else list[n].label && (normalizeResult = a[`:${list[n].label}`]);
+      normalizeResult && (e.tokens = e.tokens.concat(normalizeResult));
+      let count;
+      count = e.tokens[e.tokens.length - 1].type === `paragraph_close` ? e.tokens.pop() : null;
       let s = list[n].count > 0 ? list[n].count : 1;
       for (let t = 0; t < s; t++) {
         let r = new e.Token(`footnote_anchor`, ``, 0);
@@ -64138,7 +64138,7 @@ function nJe(items) {
           label: list[n].label
         }, e.tokens.push(r);
       }
-      i && e.tokens.push(i), e.tokens.push(new e.Token(`footnote_close`, ``, -1));
+      count && e.tokens.push(count), e.tokens.push(new e.Token(`footnote_close`, ``, -1));
     }
     e.tokens.push(new e.Token(`footnote_block_close`, ``, -1));
   }
@@ -64174,20 +64174,20 @@ function rJe(items) {
     return e.pos += scanDelims.length, true;
   }
   function n(e, t) {
-    let n,
+    let replaceResult,
       emptyItems = [],
       i = t.length;
     for (let a = 0; a < i; a++) {
       let i = t[a];
       if (i.marker !== 43 || i.end === -1) continue;
       let o = t[i.end];
-      n = e.tokens[i.token], n.type = `ins_open`, n.tag = `ins`, n.nesting = 1, n.markup = `++`, n.content = ``, n = e.tokens[o.token], n.type = `ins_close`, n.tag = `ins`, n.nesting = -1, n.markup = `++`, n.content = ``, e.tokens[o.token - 1].type === `text` && e.tokens[o.token - 1].content === `+` && emptyItems.push(o.token - 1);
+      replaceResult = e.tokens[i.token], replaceResult.type = `ins_open`, replaceResult.tag = `ins`, replaceResult.nesting = 1, replaceResult.markup = `++`, replaceResult.content = ``, replaceResult = e.tokens[o.token], replaceResult.type = `ins_close`, replaceResult.tag = `ins`, replaceResult.nesting = -1, replaceResult.markup = `++`, replaceResult.content = ``, e.tokens[o.token - 1].type === `text` && e.tokens[o.token - 1].content === `+` && emptyItems.push(o.token - 1);
     }
     for (; emptyItems.length;) {
       let t = emptyItems.pop(),
         i = t + 1;
       for (; i < e.tokens.length && e.tokens[i].type === `ins_close`;) i++;
-      i--, t !== i && (n = e.tokens[i], e.tokens[i] = e.tokens[t], e.tokens[t] = n);
+      i--, t !== i && (replaceResult = e.tokens[i], e.tokens[i] = e.tokens[t], e.tokens[t] = replaceResult);
     }
   }
   items.inline.ruler.before(`emphasis`, `ins`, t), items.inline.ruler2.before(`emphasis`, `ins`, function (e) {
@@ -64247,10 +64247,10 @@ function iJe(items) {
     }
   }
   items.inline.ruler.before(`emphasis`, `mark`, t), items.inline.ruler2.before(`emphasis`, `mark`, function (e) {
-    let t,
+    let normalizeResult,
       tokens_meta = e.tokens_meta,
       i = (e.tokens_meta || []).length;
-    for (n(e, e.delimiters), t = 0; t < i; t++) tokens_meta[t] && tokens_meta[t].delimiters && n(e, tokens_meta[t].delimiters);
+    for (n(e, e.delimiters), normalizeResult = 0; normalizeResult < i; normalizeResult++) tokens_meta[normalizeResult] && tokens_meta[normalizeResult].delimiters && n(e, tokens_meta[normalizeResult].delimiters);
   });
 }
 var aJe = /\\([ \\!"#$%&'()*+,./:;<=>?@[\]^_`{|}~-])/g;
@@ -64531,14 +64531,14 @@ mG.prototype.add = function (e, t) {
   return this.__opts__ = sG(this.__opts__, e), this;
 }, mG.prototype.test = function (items) {
   if (this.__text_cache__ = items, this.__index__ = -1, !items.length) return false;
-  let t, n, r, i, a, o, s, c, l;
+  let normalizeResult, replaceResult, requestAnimationFrameResult, count, a, o, trimStartResult, c, setTimeoutResult;
   if (this.re.schema_test.test(items)) {
-    for (s = this.re.schema_search, s.lastIndex = 0; (t = s.exec(items)) !== null;) if (i = this.testSchemaAt(items, t[2], s.lastIndex), i) {
-      this.__schema__ = t[2], this.__index__ = t.index + t[1].length, this.__last_index__ = t.index + t[0].length + i;
+    for (trimStartResult = this.re.schema_search, trimStartResult.lastIndex = 0; (normalizeResult = trimStartResult.exec(items)) !== null;) if (count = this.testSchemaAt(items, normalizeResult[2], trimStartResult.lastIndex), count) {
+      this.__schema__ = normalizeResult[2], this.__index__ = normalizeResult.index + normalizeResult[1].length, this.__last_index__ = normalizeResult.index + normalizeResult[0].length + count;
       break;
     }
   }
-  return this.__opts__.fuzzyLink && this.__compiled__[`http:`] && (c = items.search(this.re.host_fuzzy_test), c >= 0 && (this.__index__ < 0 || c < this.__index__) && (n = items.match(this.__opts__.fuzzyIP ? this.re.link_fuzzy : this.re.link_no_ip_fuzzy)) !== null && (a = n.index + n[1].length, (this.__index__ < 0 || a < this.__index__) && (this.__schema__ = ``, this.__index__ = a, this.__last_index__ = n.index + n[0].length))), this.__opts__.fuzzyEmail && this.__compiled__[`mailto:`] && (l = items.indexOf(`@`), l >= 0 && (r = items.match(this.re.email_fuzzy)) !== null && (a = r.index + r[1].length, o = r.index + r[0].length, (this.__index__ < 0 || a < this.__index__ || a === this.__index__ && o > this.__last_index__) && (this.__schema__ = `mailto:`, this.__index__ = a, this.__last_index__ = o))), this.__index__ >= 0;
+  return this.__opts__.fuzzyLink && this.__compiled__[`http:`] && (c = items.search(this.re.host_fuzzy_test), c >= 0 && (this.__index__ < 0 || c < this.__index__) && (replaceResult = items.match(this.__opts__.fuzzyIP ? this.re.link_fuzzy : this.re.link_no_ip_fuzzy)) !== null && (a = replaceResult.index + replaceResult[1].length, (this.__index__ < 0 || a < this.__index__) && (this.__schema__ = ``, this.__index__ = a, this.__last_index__ = replaceResult.index + replaceResult[0].length))), this.__opts__.fuzzyEmail && this.__compiled__[`mailto:`] && (setTimeoutResult = items.indexOf(`@`), setTimeoutResult >= 0 && (requestAnimationFrameResult = items.match(this.re.email_fuzzy)) !== null && (a = requestAnimationFrameResult.index + requestAnimationFrameResult[1].length, o = requestAnimationFrameResult.index + requestAnimationFrameResult[0].length, (this.__index__ < 0 || a < this.__index__ || a === this.__index__ && o > this.__last_index__) && (this.__schema__ = `mailto:`, this.__index__ = a, this.__last_index__ = o))), this.__index__ >= 0;
 }, mG.prototype.pretest = function (e) {
   return this.re.pretest.test(e);
 }, mG.prototype.testSchemaAt = function (e, text, n) {
@@ -64650,8 +64650,8 @@ var PJe = class {
     return this.addToNumericResult(stateValue, n, numeric, 10), -1;
   }
   emitNumericEntity(numeric, entity) {
-    var n;
-    if (this.consumed <= entity) return (n = this.errors) == null || n.absenceOfDigitsInNumericCharacterReference(this.consumed), 0;
+    var replaceResult;
+    if (this.consumed <= entity) return (replaceResult = this.errors) == null || replaceResult.absenceOfDigitsInNumericCharacterReference(this.consumed), 0;
     if (numeric === gG.SEMI) this.consumed += 1;else if (this.decodeMode === bG.Strict) return 0;
     return this.emitCodePoint(kJe(this.result), this.consumed), this.errors && (numeric !== gG.SEMI && this.errors.missingSemicolonAfterCharacterReference(), this.errors.validateNumericCharacterReference(this.result)), this.consumed;
   }
@@ -64672,13 +64672,13 @@ var PJe = class {
     return -1;
   }
   emitNotTerminatedNamedEntity() {
-    var e;
+    var normalizeResult;
     let {
         result: t,
         decodeTree: n
       } = this,
       r = (n[t] & _G.VALUE_LENGTH) >> 14;
-    return this.emitNamedEntityData(t, r, this.consumed), (e = this.errors) == null || e.missingSemicolonAfterCharacterReference(), this.consumed;
+    return this.emitNamedEntityData(t, r, this.consumed), (normalizeResult = this.errors) == null || normalizeResult.missingSemicolonAfterCharacterReference(), this.consumed;
   }
   emitNamedEntityData(named, entity, data) {
     let {
@@ -64687,7 +64687,7 @@ var PJe = class {
     return this.emitCodePoint(entity === 1 ? r[named] & ~_G.VALUE_LENGTH : r[named + 1], data), entity === 3 && this.emitCodePoint(r[named + 2], data), data;
   }
   end() {
-    var e;
+    var normalizeResult;
     switch (this.state) {
       case yG.NamedEntity:
         return this.result !== 0 && (this.decodeMode !== bG.Attribute || this.result === this.treeIndex) ? this.emitNotTerminatedNamedEntity() : 0;
@@ -64696,7 +64696,7 @@ var PJe = class {
       case yG.NumericHex:
         return this.emitNumericEntity(0, 3);
       case yG.NumericStart:
-        return (e = this.errors) == null || e.absenceOfDigitsInNumericCharacterReference(this.consumed), 0;
+        return (normalizeResult = this.errors) == null || normalizeResult.absenceOfDigitsInNumericCharacterReference(this.consumed), 0;
       case yG.EntityStart:
         return 0;
     }
@@ -64884,21 +64884,21 @@ function GJe(e, t) {
   return n.parse(e, t), n;
 }
 kG.prototype.parse = function (items, t) {
-  let n,
-    r,
-    i,
+  let replaceResult,
+    requestAnimationFrameResult,
+    count,
     itemsAlias = items;
   if (itemsAlias = itemsAlias.trim(), !t && items.split(`#`).length === 1) {
     let e = HJe.exec(itemsAlias);
     if (e) return this.pathname = e[1], e[2] && (this.search = e[2]), this;
   }
   let o = BJe.exec(itemsAlias);
-  if (o && (o = o[0], n = o.toLowerCase(), this.protocol = o, itemsAlias = itemsAlias.substr(o.length)), (t || o || itemsAlias.match(/^\/\/[^@\/]+@[^@\/]+/)) && (i = itemsAlias.substr(0, 2) === `//`, i && !(o && NG[o]) && (itemsAlias = itemsAlias.substr(2), this.slashes = true)), !NG[o] && (i || o && !PG[o])) {
+  if (o && (o = o[0], replaceResult = o.toLowerCase(), this.protocol = o, itemsAlias = itemsAlias.substr(o.length)), (t || o || itemsAlias.match(/^\/\/[^@\/]+@[^@\/]+/)) && (count = itemsAlias.substr(0, 2) === `//`, count && !(o && NG[o]) && (itemsAlias = itemsAlias.substr(2), this.slashes = true)), !NG[o] && (count || o && !PG[o])) {
     let e = -1;
-    for (let t = 0; t < jG.length; t++) r = itemsAlias.indexOf(jG[t]), r !== -1 && (e === -1 || r < e) && (e = r);
-    let t, n;
-    n = e === -1 ? itemsAlias.lastIndexOf(`@`) : itemsAlias.lastIndexOf(`@`, e), n !== -1 && (t = itemsAlias.slice(0, n), itemsAlias = itemsAlias.slice(n + 1), this.auth = t), e = -1;
-    for (let t = 0; t < AG.length; t++) r = itemsAlias.indexOf(AG[t]), r !== -1 && (e === -1 || r < e) && (e = r);
+    for (let t = 0; t < jG.length; t++) requestAnimationFrameResult = itemsAlias.indexOf(jG[t]), requestAnimationFrameResult !== -1 && (e === -1 || requestAnimationFrameResult < e) && (e = requestAnimationFrameResult);
+    let normalizeResult, n;
+    n = e === -1 ? itemsAlias.lastIndexOf(`@`) : itemsAlias.lastIndexOf(`@`, e), n !== -1 && (normalizeResult = itemsAlias.slice(0, n), itemsAlias = itemsAlias.slice(n + 1), this.auth = normalizeResult), e = -1;
+    for (let t = 0; t < AG.length; t++) requestAnimationFrameResult = itemsAlias.indexOf(AG[t]), requestAnimationFrameResult !== -1 && (e === -1 || requestAnimationFrameResult < e) && (e = requestAnimationFrameResult);
     e === -1 && (e = itemsAlias.length), itemsAlias[e - 1] === `:` && e--;
     let part = itemsAlias.slice(0, e);
     itemsAlias = itemsAlias.slice(e), this.parseHost(part), this.hostname = this.hostname || ``;
@@ -64925,7 +64925,7 @@ kG.prototype.parse = function (items, t) {
   let s = itemsAlias.indexOf(`#`);
   s !== -1 && (this.hash = itemsAlias.substr(s), itemsAlias = itemsAlias.slice(0, s));
   let c = itemsAlias.indexOf(`?`);
-  return c !== -1 && (this.search = itemsAlias.substr(c), itemsAlias = itemsAlias.slice(0, c)), itemsAlias && (this.pathname = itemsAlias), PG[n] && this.hostname && !this.pathname && (this.pathname = ``), this;
+  return c !== -1 && (this.search = itemsAlias.substr(c), itemsAlias = itemsAlias.slice(0, c)), itemsAlias && (this.pathname = itemsAlias), PG[replaceResult] && this.hostname && !this.pathname && (this.pathname = ``), this;
 }, kG.prototype.parseHost = function (e) {
   let t = VJe.exec(e);
   t && (t = t[0], t !== `:` && (this.port = t.substr(1)), e = e.substr(0, e.length - t.length)), e && (this.hostname = e);
@@ -65023,15 +65023,15 @@ var FG = GJe,
             i = 128,
             a = 0,
             o = 72;
-          for (let n of e) n < 128 && emptyItems.push(fromCharCode(n));
+          for (let replaceResult of e) replaceResult < 128 && emptyItems.push(fromCharCode(replaceResult));
           let u = emptyItems.length,
             d = u;
           for (u && emptyItems.push(`-`); d < r;) {
             let r = n;
-            for (let t of e) t >= i && t < r && (r = t);
+            for (let normalizeResult of e) normalizeResult >= i && normalizeResult < r && (r = normalizeResult);
             let f = d + 1;
             r - i > floor((n - a) / f) && l(`overflow`), a += (r - i) * f, i = r;
-            for (let r of e) if (r < i && ++a > n && l(`overflow`), r === i) {
+            for (let requestAnimationFrameResult of e) if (requestAnimationFrameResult < i && ++a > n && l(`overflow`), requestAnimationFrameResult === i) {
               let e = a;
               for (let n = 36;; n += 36) {
                 let r = n <= o ? 1 : n >= o + 26 ? 26 : n - o;
@@ -65246,7 +65246,7 @@ function qG(items) {
   return t;
 }
 function JG(items, t, n) {
-  let r,
+  let requestAnimationFrameResult,
     i = t,
     a = {
       ok: false,
@@ -65255,9 +65255,9 @@ function JG(items, t, n) {
     };
   if (items.charCodeAt(i) === 60) {
     for (i++; i < n;) {
-      if (r = items.charCodeAt(i), r === 10 || r === 60) return a;
-      if (r === 62) return a.pos = i + 1, a.str = items.slice(t + 1, i), a.ok = true, a;
-      if (r === 92 && i + 1 < n) {
+      if (requestAnimationFrameResult = items.charCodeAt(i), requestAnimationFrameResult === 10 || requestAnimationFrameResult === 60) return a;
+      if (requestAnimationFrameResult === 62) return a.pos = i + 1, a.str = items.slice(t + 1, i), a.ok = true, a;
+      if (requestAnimationFrameResult === 92 && i + 1 < n) {
         i += 2;
         continue;
       }
@@ -65266,14 +65266,14 @@ function JG(items, t, n) {
     return a;
   }
   let o = 0;
-  for (; i < n && (r = items.charCodeAt(i), !(r === 32 || r < 32 || r === 127));) {
-    if (r === 92 && i + 1 < n) {
+  for (; i < n && (requestAnimationFrameResult = items.charCodeAt(i), !(requestAnimationFrameResult === 32 || requestAnimationFrameResult < 32 || requestAnimationFrameResult === 127));) {
+    if (requestAnimationFrameResult === 92 && i + 1 < n) {
       if (items.charCodeAt(i + 1) === 32) break;
       i += 2;
       continue;
     }
-    if (r === 40 && (o++, o > 32)) return a;
-    if (r === 41) {
+    if (requestAnimationFrameResult === 40 && (o++, o > 32)) return a;
+    if (requestAnimationFrameResult === 41) {
       if (o === 0) break;
       o--;
     }
@@ -65325,7 +65325,7 @@ function ZG(e, t, n) {
 }
 var QG = ZG;
 function $G(items, t, n, r) {
-  let i,
+  let count,
     a = t,
     o = {
       ok: false,
@@ -65341,9 +65341,9 @@ function $G(items, t, n, r) {
     t++, a++, charCodeAt === 40 && (charCodeAt = 41), o.marker = charCodeAt;
   }
   for (; a < n;) {
-    if (i = items.charCodeAt(a), i === o.marker) return o.pos = a + 1, o.str += items.slice(t, a), o.ok = true, o;
-    if (i === 40 && o.marker === 41) return o;
-    i === 92 && a + 1 < n && a++, a++;
+    if (count = items.charCodeAt(a), count === o.marker) return o.pos = a + 1, o.str += items.slice(t, a), o.ok = true, o;
+    if (count === 40 && o.marker === 41) return o;
+    count === 92 && a + 1 < n && a++, a++;
   }
   return o.can_continue = true, o.str += items.slice(t, a), o;
 }
@@ -65438,8 +65438,8 @@ var cK = class {
   }
   attrGet(attr) {
     let attrIndex = this.attrIndex(attr),
-      n = null;
-    return attrIndex >= 0 && (n = this.attrs[attrIndex][1]), n;
+      replaceResult = null;
+    return attrIndex >= 0 && (replaceResult = this.attrs[attrIndex][1]), replaceResult;
   }
   attrJoin(attr, join) {
     let attrIndex = this.attrIndex(attr);
@@ -65514,21 +65514,21 @@ function EYe(items, t) {
     s = part.length;
   if (items.backticksScanned && (items.backticks[s] || 0) <= i) return t || (items.pending += part), items.pos += s, true;
   let c = r,
-    l;
-  for (; (l = n.indexOf("`", c)) !== -1;) {
-    for (c = l + 1; c < posMax && n.charCodeAt(c) === 96;) c++;
-    let i = c - l;
+    setTimeoutResult;
+  for (; (setTimeoutResult = n.indexOf("`", c)) !== -1;) {
+    for (c = setTimeoutResult + 1; c < posMax && n.charCodeAt(c) === 96;) c++;
+    let i = c - setTimeoutResult;
     if (i === s) {
       if (!t) {
         let t = items.push(`code_inline`, `code`, 0);
         t.markup = part;
-        let i = n.slice(r, l);
+        let i = n.slice(r, setTimeoutResult);
         i.includes(`
 `) && (i = i.replace(/\n/g, ` `)), i.length > 2 && i.charCodeAt(0) === 32 && i.charCodeAt(i.length - 1) === 32 && (i = i.slice(1, -1)), t.content = i;
       }
       return items.pos = c, true;
     }
-    items.backticks[i] = l;
+    items.backticks[i] = setTimeoutResult;
   }
   return items.backticksScanned = true, t || (items.pending += part), items.pos += s, true;
 }
@@ -65739,16 +65739,16 @@ function zYe(items, t) {
 }
 var BYe = zYe;
 function VYe(e) {
-  let t,
-    n,
+  let normalizeResult,
+    replaceResult,
     r = 0,
     tokens = e.tokens,
     a = e.tokens.length;
-  for (t = n = 0; t < a; t++) {
-    let e = tokens[t];
-    e && (e.nesting && e.nesting < 0 && r--, e.level = r, e.nesting && e.nesting > 0 && r++, e.type === `text` && t + 1 < a && tokens[t + 1]?.type === `text` ? tokens[t + 1].content = e.content + tokens[t + 1].content : (t !== n && (tokens[n] = e), n++));
+  for (normalizeResult = replaceResult = 0; normalizeResult < a; normalizeResult++) {
+    let e = tokens[normalizeResult];
+    e && (e.nesting && e.nesting < 0 && r--, e.level = r, e.nesting && e.nesting > 0 && r++, e.type === `text` && normalizeResult + 1 < a && tokens[normalizeResult + 1]?.type === `text` ? tokens[normalizeResult + 1].content = e.content + tokens[normalizeResult + 1].content : (normalizeResult !== replaceResult && (tokens[replaceResult] = e), replaceResult++));
   }
-  t !== n && (tokens.length = n);
+  normalizeResult !== replaceResult && (tokens.length = replaceResult);
 }
 var HYe = VYe,
   SK = `null`,
@@ -65795,14 +65795,14 @@ function JYe(e, t) {
 }
 var YYe = JYe;
 function XYe(items, t) {
-  let n,
-    r,
-    i,
+  let replaceResult,
+    requestAnimationFrameResult,
+    count,
     a,
     o,
-    s,
+    trimStartResult,
     c,
-    l,
+    setTimeoutResult,
     u = ``,
     d = items.pos,
     posMax = items.posMax;
@@ -65811,33 +65811,33 @@ function XYe(items, t) {
     m = QG(items, items.pos + 1, false);
   if (m < 0) return false;
   if (a = m + 1, a < posMax && items.src.charCodeAt(a) === 40) {
-    for (a++; a < posMax && (n = items.src.charCodeAt(a), n === 32 || n === 10); a++);
+    for (a++; a < posMax && (replaceResult = items.src.charCodeAt(a), replaceResult === 32 || replaceResult === 10); a++);
     if (a >= posMax) return false;
-    if (s = YG(items.src, a, items.posMax), s.ok) {
-      for (u = items.md.normalizeLink(s.str), items.md.validateLink(u) ? a = s.pos : u = ``, l = a; a < posMax && (n = items.src.charCodeAt(a), n === 32 || n === 10); a++);
-      if (s = eK(items.src, a, items.posMax), a < posMax && l !== a && s.ok) for (c = s.str, a = s.pos; a < posMax && (n = items.src.charCodeAt(a), n === 32 || n === 10); a++);else c = ``;
+    if (trimStartResult = YG(items.src, a, items.posMax), trimStartResult.ok) {
+      for (u = items.md.normalizeLink(trimStartResult.str), items.md.validateLink(u) ? a = trimStartResult.pos : u = ``, setTimeoutResult = a; a < posMax && (replaceResult = items.src.charCodeAt(a), replaceResult === 32 || replaceResult === 10); a++);
+      if (trimStartResult = eK(items.src, a, items.posMax), a < posMax && setTimeoutResult !== a && trimStartResult.ok) for (c = trimStartResult.str, a = trimStartResult.pos; a < posMax && (replaceResult = items.src.charCodeAt(a), replaceResult === 32 || replaceResult === 10); a++);else c = ``;
     }
     if (a >= posMax || items.src.charCodeAt(a) !== 41) return items.pos = d, false;
     a++;
   } else {
     if (items.env.references === undefined) return false;
-    if (a < posMax && items.src.charCodeAt(a) === 91 ? (l = a + 1, a = QG(items, a), a >= 0 ? i = items.src.slice(l, a++) : a = m + 1) : a = m + 1, i ||= items.src.slice(p, m), o = items.env.references[UG(i)], !o) return items.pos = d, false;
+    if (a < posMax && items.src.charCodeAt(a) === 91 ? (setTimeoutResult = a + 1, a = QG(items, a), a >= 0 ? count = items.src.slice(setTimeoutResult, a++) : a = m + 1) : a = m + 1, count ||= items.src.slice(p, m), o = items.env.references[UG(count)], !o) return items.pos = d, false;
     u = o.href, c = o.title;
   }
   if (!t) {
-    r = items.src.slice(p, m);
+    requestAnimationFrameResult = items.src.slice(p, m);
     let emptyItems = [];
-    items.md.inline.parse(r, items.md, items.env, emptyItems);
+    items.md.inline.parse(requestAnimationFrameResult, items.md, items.env, emptyItems);
     let n = items.push(`image`, `img`, 0);
-    n.attrs = [[`src`, u], [`alt`, ``]], n.children = emptyItems, n.content = r, c && n.attrs.push([`title`, c]);
+    n.attrs = [[`src`, u], [`alt`, ``]], n.children = emptyItems, n.content = requestAnimationFrameResult, c && n.attrs.push([`title`, c]);
   }
   return items.pos = a, items.posMax = posMax, true;
 }
 var ZYe = XYe;
 function QYe(items, t) {
-  let n,
-    r,
-    i,
+  let replaceResult,
+    requestAnimationFrameResult,
+    count,
     a,
     o = ``,
     s = ``,
@@ -65851,17 +65851,17 @@ function QYe(items, t) {
   if (p < 0) return false;
   let m = p + 1;
   if (m < posMax && items.src.charCodeAt(m) === 40) {
-    for (l = false, m++; m < posMax && (n = items.src.charCodeAt(m), n === 32 || n === 10); m++);
+    for (l = false, m++; m < posMax && (replaceResult = items.src.charCodeAt(m), replaceResult === 32 || replaceResult === 10); m++);
     if (m >= posMax) return false;
-    if (i = YG(items.src, m, items.posMax), i.ok) {
-      for (o = items.md.normalizeLink(i.str), items.md.validateLink(o) ? m = i.pos : o = ``, c = m; m < posMax && (n = items.src.charCodeAt(m), n === 32 || n === 10); m++);
-      if (i = eK(items.src, m, items.posMax), m < posMax && c !== m && i.ok) for (s = i.str, m = i.pos; m < posMax && (n = items.src.charCodeAt(m), n === 32 || n === 10); m++);
+    if (count = YG(items.src, m, items.posMax), count.ok) {
+      for (o = items.md.normalizeLink(count.str), items.md.validateLink(o) ? m = count.pos : o = ``, c = m; m < posMax && (replaceResult = items.src.charCodeAt(m), replaceResult === 32 || replaceResult === 10); m++);
+      if (count = eK(items.src, m, items.posMax), m < posMax && c !== m && count.ok) for (s = count.str, m = count.pos; m < posMax && (replaceResult = items.src.charCodeAt(m), replaceResult === 32 || replaceResult === 10); m++);
     }
     (m >= posMax || items.src.charCodeAt(m) !== 41) && (l = true), m++;
   }
   if (l) {
     if (items.env.references === undefined) return false;
-    if (m < posMax && items.src.charCodeAt(m) === 91 ? (c = m + 1, m = QG(items, m), m >= 0 ? r = items.src.slice(c, m++) : m = p + 1) : m = p + 1, r ||= items.src.slice(f, p), a = items.env.references[UG(r)], !a) return items.pos = u, false;
+    if (m < posMax && items.src.charCodeAt(m) === 91 ? (c = m + 1, m = QG(items, m), m >= 0 ? requestAnimationFrameResult = items.src.slice(c, m++) : m = p + 1) : m = p + 1, requestAnimationFrameResult ||= items.src.slice(f, p), a = items.env.references[UG(requestAnimationFrameResult)], !a) return items.pos = u, false;
     o = a.href, s = a.title;
   }
   if (!t) {
@@ -65955,9 +65955,9 @@ function sXe(items, t) {
   let a = scanDelims.length,
     fromCharCode = String.fromCharCode(charCodeAt);
   if (a < 2) return false;
-  let s;
-  a % 2 && (s = items.push(`text`, ``, 0), s.content = fromCharCode, a--);
-  for (let t = 0; t < a; t += 2) s = items.push(`text`, ``, 0), s.content = fromCharCode + fromCharCode, items.delimiters.push({
+  let trimStartResult;
+  a % 2 && (trimStartResult = items.push(`text`, ``, 0), trimStartResult.content = fromCharCode, a--);
+  for (let t = 0; t < a; t += 2) trimStartResult = items.push(`text`, ``, 0), trimStartResult.content = fromCharCode + fromCharCode, items.delimiters.push({
     marker: charCodeAt,
     length: 0,
     token: items.tokens.length - 1,
@@ -65968,20 +65968,20 @@ function sXe(items, t) {
   return items.pos += scanDelims.length, true;
 }
 function EK(e, t) {
-  let n,
+  let replaceResult,
     emptyItems = [],
     i = t.length;
   for (let a = 0; a < i; a++) {
     let i = t[a];
     if (i.marker !== 126 || i.end === -1) continue;
     let o = t[i.end];
-    n = e.tokens[i.token], n.type = `s_open`, n.tag = `s`, n.nesting = 1, n.markup = `~~`, n.content = ``, n = e.tokens[o.token], n.type = `s_close`, n.tag = `s`, n.nesting = -1, n.markup = `~~`, n.content = ``, e.tokens[o.token - 1].type === `text` && e.tokens[o.token - 1].content === `~` && emptyItems.push(o.token - 1);
+    replaceResult = e.tokens[i.token], replaceResult.type = `s_open`, replaceResult.tag = `s`, replaceResult.nesting = 1, replaceResult.markup = `~~`, replaceResult.content = ``, replaceResult = e.tokens[o.token], replaceResult.type = `s_close`, replaceResult.tag = `s`, replaceResult.nesting = -1, replaceResult.markup = `~~`, replaceResult.content = ``, e.tokens[o.token - 1].type === `text` && e.tokens[o.token - 1].content === `~` && emptyItems.push(o.token - 1);
   }
   for (; emptyItems.length;) {
     let t = emptyItems.pop(),
       i = t + 1;
     for (; i < e.tokens.length && e.tokens[i].type === `s_close`;) i++;
-    i--, t !== i && (n = e.tokens[i], e.tokens[i] = e.tokens[t], e.tokens[t] = n);
+    i--, t !== i && (replaceResult = e.tokens[i], e.tokens[i] = e.tokens[t], e.tokens[t] = replaceResult);
   }
 }
 function cXe(e) {
@@ -66079,35 +66079,35 @@ var uXe = lXe,
     enable(enable, enableValue) {
       let n = Array.isArray(enable) ? enable : [enable],
         emptyItems = [];
-      for (let e of n) {
-        let index = this.rules.findIndex(item => item.name === e);
+      for (let normalizeResult of n) {
+        let index = this.rules.findIndex(item => item.name === normalizeResult);
         if (index < 0) {
-          if (!enableValue) throw Error(`Rules manager: invalid rule name ${e}`);
+          if (!enableValue) throw Error(`Rules manager: invalid rule name ${normalizeResult}`);
           continue;
         }
-        this.rules[index].enabled || (this.rules[index].enabled = true, emptyItems.push(e));
+        this.rules[index].enabled || (this.rules[index].enabled = true, emptyItems.push(normalizeResult));
       }
       return emptyItems.length && this.invalidateCache(), emptyItems;
     }
     disable(disable, disableValue) {
       let n = Array.isArray(disable) ? disable : [disable],
         emptyItems = [];
-      for (let e of n) {
-        let index = this.rules.findIndex(item => item.name === e);
+      for (let normalizeResult of n) {
+        let index = this.rules.findIndex(item => item.name === normalizeResult);
         if (index < 0) {
-          if (!disableValue) throw Error(`Rules manager: invalid rule name ${e}`);
+          if (!disableValue) throw Error(`Rules manager: invalid rule name ${normalizeResult}`);
           continue;
         }
-        this.rules[index].enabled && (this.rules[index].enabled = false, emptyItems.push(e));
+        this.rules[index].enabled && (this.rules[index].enabled = false, emptyItems.push(normalizeResult));
       }
       return emptyItems.length && this.invalidateCache(), emptyItems;
     }
     enableOnly(options) {
       let t = new Set(options),
         n = false;
-      for (let e of this.rules) {
-        let r = t.has(e.name);
-        e.enabled !== r && (e.enabled = r, n = true);
+      for (let normalizeResult of this.rules) {
+        let r = t.has(normalizeResult.name);
+        normalizeResult.enabled !== r && (normalizeResult.enabled = r, n = true);
       }
       n && this.invalidateCache();
     }
@@ -66121,17 +66121,17 @@ var uXe = lXe,
     }
     compileCache() {
       let e = new Set([``]);
-      for (let t of this.rules) if (t.enabled && t.alt) for (let n of t.alt) e.add(n);
+      for (let normalizeResult of this.rules) if (normalizeResult.enabled && normalizeResult.alt) for (let replaceResult of normalizeResult.alt) e.add(replaceResult);
       let t = new Map(),
         n = new Map();
-      for (let r of e) {
+      for (let requestAnimationFrameResult of e) {
         let emptyItems = [],
-          i = [];
-        for (let t of this.rules) t.enabled && (r === `` || t.alt?.includes(r)) && (emptyItems.push(t.fn), i.push({
-          name: t.name,
-          fn: t.fn
+          count = [];
+        for (let normalizeResult of this.rules) normalizeResult.enabled && (requestAnimationFrameResult === `` || normalizeResult.alt?.includes(requestAnimationFrameResult)) && (emptyItems.push(normalizeResult.fn), count.push({
+          name: normalizeResult.name,
+          fn: normalizeResult.fn
         }));
-        t.set(r, emptyItems), n.set(r, i);
+        t.set(requestAnimationFrameResult, emptyItems), n.set(requestAnimationFrameResult, count);
       }
       this.cache = t, this.namedCache = n;
     }
@@ -66169,10 +66169,10 @@ var uXe = lXe,
     push(e, t, n) {
       if (this.pending && this.pushPending(), n === 0) return this.pushSimple(e, t);
       let r = new cK(e, t, n),
-        i = null;
-      return n < 0 && (this.level--, this.delimiters = this._prev_delimiters.pop()), r.level = this.level, n > 0 && (this.level++, this._prev_delimiters.push(this.delimiters), this.delimiters = [], i = {
+        count = null;
+      return n < 0 && (this.level--, this.delimiters = this._prev_delimiters.pop()), r.level = this.level, n > 0 && (this.level++, this._prev_delimiters.push(this.delimiters), this.delimiters = [], count = {
         delimiters: this.delimiters
-      }), this.pendingLevel = this.level, this.tokens.push(r), this.tokens_meta.push(i), r;
+      }), this.pendingLevel = this.level, this.tokens.push(r), this.tokens_meta.push(count), r;
     }
     scanDelims(scan, delims) {
       let {
@@ -66561,35 +66561,35 @@ var NXe = class {
     enable(enable, enableValue) {
       let n = Array.isArray(enable) ? enable : [enable],
         emptyItems = [];
-      for (let e of n) {
-        let index = this.rules.findIndex(item => item.name === e);
+      for (let normalizeResult of n) {
+        let index = this.rules.findIndex(item => item.name === normalizeResult);
         if (index < 0) {
-          if (!enableValue) throw Error(`Rules manager: invalid rule name ${e}`);
+          if (!enableValue) throw Error(`Rules manager: invalid rule name ${normalizeResult}`);
           continue;
         }
-        this.rules[index].enabled || (this.rules[index].enabled = true, emptyItems.push(e));
+        this.rules[index].enabled || (this.rules[index].enabled = true, emptyItems.push(normalizeResult));
       }
       return emptyItems.length && this.invalidateCache(), emptyItems;
     }
     disable(disable, disableValue) {
       let n = Array.isArray(disable) ? disable : [disable],
         emptyItems = [];
-      for (let e of n) {
-        let index = this.rules.findIndex(item => item.name === e);
+      for (let normalizeResult of n) {
+        let index = this.rules.findIndex(item => item.name === normalizeResult);
         if (index < 0) {
-          if (!disableValue) throw Error(`Rules manager: invalid rule name ${e}`);
+          if (!disableValue) throw Error(`Rules manager: invalid rule name ${normalizeResult}`);
           continue;
         }
-        this.rules[index].enabled && (this.rules[index].enabled = false, emptyItems.push(e));
+        this.rules[index].enabled && (this.rules[index].enabled = false, emptyItems.push(normalizeResult));
       }
       return emptyItems.length && this.invalidateCache(), emptyItems;
     }
     enableOnly(options) {
       let t = new Set(options),
         n = false;
-      for (let e of this.rules) {
-        let r = t.has(e.name);
-        e.enabled !== r && (e.enabled = r, n = true);
+      for (let normalizeResult of this.rules) {
+        let r = t.has(normalizeResult.name);
+        normalizeResult.enabled !== r && (normalizeResult.enabled = r, n = true);
       }
       n && this.invalidateCache();
     }
@@ -66613,14 +66613,14 @@ function RK(items, t, n) {
   return items.slice(0, t) + n + items.slice(t + 1);
 }
 function FXe(e, t) {
-  let n,
+  let replaceResult,
     emptyItems = [],
     fallbackValue = t.md && t.md.options && t.md.options.quotes || `“”‘’`;
   for (let t = 0; t < e.length; t++) {
     let a = e[t],
       level = e[t].level;
-    for (n = emptyItems.length - 1; n >= 0 && !(emptyItems[n].level <= level); n--);
-    if (emptyItems.length = n + 1, a.type !== `text`) continue;
+    for (replaceResult = emptyItems.length - 1; replaceResult >= 0 && !(emptyItems[replaceResult].level <= level); replaceResult--);
+    if (emptyItems.length = replaceResult + 1, a.type !== `text`) continue;
     let content = a.content,
       c = 0,
       l = content.length;
@@ -66633,13 +66633,13 @@ function FXe(e, t) {
       c = u.index + 1;
       let p = u[0] === `'`,
         m = 32;
-      if (u.index - 1 >= 0) m = content.charCodeAt(u.index - 1);else for (n = t - 1; n >= 0 && e[n].type !== `softbreak` && e[n].type !== `hardbreak`; n--) if (e[n].content) {
-        m = e[n].content.charCodeAt(e[n].content.length - 1);
+      if (u.index - 1 >= 0) m = content.charCodeAt(u.index - 1);else for (replaceResult = t - 1; replaceResult >= 0 && e[replaceResult].type !== `softbreak` && e[replaceResult].type !== `hardbreak`; replaceResult--) if (e[replaceResult].content) {
+        m = e[replaceResult].content.charCodeAt(e[replaceResult].content.length - 1);
         break;
       }
       let h = 32;
-      if (c < l) h = content.charCodeAt(c);else for (n = t + 1; n < e.length && e[n].type !== `softbreak` && e[n].type !== `hardbreak`; n++) if (e[n].content) {
-        h = e[n].content.charCodeAt(0);
+      if (c < l) h = content.charCodeAt(c);else for (replaceResult = t + 1; replaceResult < e.length && e[replaceResult].type !== `softbreak` && e[replaceResult].type !== `hardbreak`; replaceResult++) if (e[replaceResult].content) {
+        h = e[replaceResult].content.charCodeAt(0);
         break;
       }
       let g = HG(m) || zG(String.fromCharCode(m)),
@@ -66650,13 +66650,13 @@ function FXe(e, t) {
         p && (a.content = RK(a.content, u.index, LK));
         continue;
       }
-      if (f) for (n = emptyItems.length - 1; n >= 0; n--) {
-        let d = emptyItems[n];
-        if (emptyItems[n].level < level) break;
-        if (d.single === p && emptyItems[n].level === level) {
-          d = emptyItems[n];
-          let o, f;
-          p ? (o = fallbackValue[2] || `‘`, f = fallbackValue[3] || `’`) : (o = fallbackValue[0] || `“`, f = fallbackValue[1] || `”`), a.content = RK(a.content, u.index, f), e[d.token].content = RK(e[d.token].content, d.pos, o), c += f.length - 1, d.token === t && (c += o.length - 1), content = a.content, l = content.length, emptyItems.length = n;
+      if (f) for (replaceResult = emptyItems.length - 1; replaceResult >= 0; replaceResult--) {
+        let d = emptyItems[replaceResult];
+        if (emptyItems[replaceResult].level < level) break;
+        if (d.single === p && emptyItems[replaceResult].level === level) {
+          d = emptyItems[replaceResult];
+          let o, count;
+          p ? (o = fallbackValue[2] || `‘`, count = fallbackValue[3] || `’`) : (o = fallbackValue[0] || `“`, count = fallbackValue[1] || `”`), a.content = RK(a.content, u.index, count), e[d.token].content = RK(e[d.token].content, d.pos, o), c += count.length - 1, d.token === t && (c += o.length - 1), content = a.content, l = content.length, emptyItems.length = replaceResult;
           continue OUTER;
         }
       }
@@ -66714,51 +66714,51 @@ function zXe(items, t, n, r) {
   if (r) return true;
   let emptyItems = [],
     m = [],
-    h = [],
+    setIntervalResult = [],
     g = [],
     _ = items.md.block.ruler.getRulesForState(items, `blockquote`),
     parentType = items.parentType;
   items.parentType = `blockquote`;
   let y = false,
-    b;
-  for (b = t; b < n; b++) {
-    let t = sCount[b] < items.blkIndent;
-    if (u = bMarks[b] + tShift[b], d = eMarks[b], u >= d) break;
+    count;
+  for (count = t; count < n; count++) {
+    let t = sCount[count] < items.blkIndent;
+    if (u = bMarks[count] + tShift[count], d = eMarks[count], u >= d) break;
     if (i.charCodeAt(u++) === 62 && !t) {
-      let e = sCount[b] + 1,
-        t,
-        n;
-      i.charCodeAt(u) === 32 ? (u++, e++, n = false, t = true) : i.charCodeAt(u) === 9 ? (t = true, (bsCount[b] + e) % 4 == 3 ? (u++, e++, n = false) : n = true) : t = false;
+      let e = sCount[count] + 1,
+        normalizeResult,
+        replaceResult;
+      i.charCodeAt(u) === 32 ? (u++, e++, replaceResult = false, normalizeResult = true) : i.charCodeAt(u) === 9 ? (normalizeResult = true, (bsCount[count] + e) % 4 == 3 ? (u++, e++, replaceResult = false) : replaceResult = true) : normalizeResult = false;
       let r = e;
-      for (emptyItems.push(bMarks[b]), bMarks[b] = u; u < d;) {
+      for (emptyItems.push(bMarks[count]), bMarks[count] = u; u < d;) {
         let charCodeAt = i.charCodeAt(u);
-        if (RXe(charCodeAt)) charCodeAt === 9 ? r += 4 - (r + bsCount[b] + +!!n) % 4 : r++;else break;
+        if (RXe(charCodeAt)) charCodeAt === 9 ? r += 4 - (r + bsCount[count] + +!!replaceResult) % 4 : r++;else break;
         u++;
       }
-      y = u >= d, m.push(bsCount[b]), bsCount[b] = sCount[b] + 1 + +!!t, h.push(sCount[b]), sCount[b] = r - e, g.push(tShift[b]), tShift[b] = u - bMarks[b];
+      y = u >= d, m.push(bsCount[count]), bsCount[count] = sCount[count] + 1 + +!!normalizeResult, setIntervalResult.push(sCount[count]), sCount[count] = r - e, g.push(tShift[count]), tShift[count] = u - bMarks[count];
       continue;
     }
     if (y) break;
     let r = false;
-    for (let t = 0, i = _.length; t < i; t++) if (_[t](items, b, n, true)) {
+    for (let t = 0, i = _.length; t < i; t++) if (_[t](items, count, n, true)) {
       r = true;
       break;
     }
     if (r) {
-      items.lineMax = b, items.blkIndent !== 0 && (emptyItems.push(bMarks[b]), m.push(bsCount[b]), g.push(tShift[b]), h.push(sCount[b]), sCount[b] -= items.blkIndent);
+      items.lineMax = count, items.blkIndent !== 0 && (emptyItems.push(bMarks[count]), m.push(bsCount[count]), g.push(tShift[count]), setIntervalResult.push(sCount[count]), sCount[count] -= items.blkIndent);
       break;
     }
-    emptyItems.push(bMarks[b]), m.push(bsCount[b]), g.push(tShift[b]), h.push(sCount[b]), sCount[b] = -1;
+    emptyItems.push(bMarks[count]), m.push(bsCount[count]), g.push(tShift[count]), setIntervalResult.push(sCount[count]), sCount[count] = -1;
   }
   let blkIndent = items.blkIndent;
   items.blkIndent = 0;
   let S = items.push(`blockquote_open`, `blockquote`, 1);
   S.markup = `>`;
   let C = [t, 0];
-  S.map = C, items.md.block.tokenize(items, t, b);
+  S.map = C, items.md.block.tokenize(items, t, count);
   let w = items.push(`blockquote_close`, `blockquote`, -1);
   w.markup = `>`, items.lineMax = lineMax, items.parentType = parentType, C[1] = items.line;
-  for (let e = 0; e < g.length; e++) bMarks[e + t] = emptyItems[e], tShift[e + t] = g[e], sCount[e + t] = h[e], bsCount[e + t] = m[e];
+  for (let e = 0; e < g.length; e++) bMarks[e + t] = emptyItems[e], tShift[e + t] = g[e], sCount[e + t] = setIntervalResult[e], bsCount[e + t] = m[e];
   return items.blkIndent = blkIndent, true;
 }
 function BXe(items, t, n) {
@@ -66931,24 +66931,24 @@ function qXe(items, t, n) {
   let parentType = items.parentType;
   items.parentType = `paragraph`;
   let f = 0,
-    p,
+    setTimeoutResult,
     m = t + 1;
   for (; m < n; m++) {
     let t = bMarks[m] + tShift[m],
       d = eMarks[m];
     if (t >= d) break;
     if (sCount[m] - blkIndent > 3) continue;
-    if (sCount[m] >= blkIndent && (p = i.charCodeAt(t), p === 45 || p === 61)) {
+    if (sCount[m] >= blkIndent && (setTimeoutResult = i.charCodeAt(t), setTimeoutResult === 45 || setTimeoutResult === 61)) {
       let e = t + 1,
         n = e;
-      for (; e < d && i.charCodeAt(e) === p;) e++;
+      for (; e < d && i.charCodeAt(e) === setTimeoutResult;) e++;
       for (n = e; e < d;) {
         let charCodeAt = i.charCodeAt(e);
         if (charCodeAt !== 9 && charCodeAt !== 32) break;
         e++;
       }
       if (e >= d) {
-        f = p === 61 ? 1 : 2;
+        f = setTimeoutResult === 61 ? 1 : 2;
         break;
       }
       if (n - t > 1) continue;
@@ -66962,7 +66962,7 @@ function qXe(items, t, n) {
     if (h) break;
   }
   if (!f) return false;
-  let h;
+  let setIntervalResult;
   if (m === t + 1) {
     let e = bMarks[t] + tShift[t],
       n = eMarks[t];
@@ -66971,14 +66971,14 @@ function qXe(items, t, n) {
       if (charCodeAt !== 9 && charCodeAt !== 32) break;
       n--;
     }
-    h = i.slice(e, n);
-  } else h = items.getLines(t, m, blkIndent, false).trim();
+    setIntervalResult = i.slice(e, n);
+  } else setIntervalResult = items.getLines(t, m, blkIndent, false).trim();
   items.line = m + 1;
-  let g = p === 61 ? `=` : `-`,
+  let g = setTimeoutResult === 61 ? `=` : `-`,
     _ = items.push(`heading_open`, GK[f], 1);
   _.markup = g, _.map = [t, items.line];
   let v = items.push(`inline`, ``, 0);
-  v.content = h, v.map = [t, items.line - 1], v.children = [];
+  v.content = setIntervalResult, v.map = [t, items.line - 1], v.children = [];
   let y = items.push(`heading_close`, GK[f], -1);
   return y.markup = g, items.parentType = parentType, true;
 }
@@ -67050,7 +67050,7 @@ function XXe(e, t) {
   }
 }
 function ZXe(items, t, n, r) {
-  let i,
+  let count,
     a,
     o = 0,
     s = t,
@@ -67058,7 +67058,7 @@ function ZXe(items, t, n, r) {
   if (items.sCount[s] - items.blkIndent >= 4 || items.listIndent >= 0 && items.sCount[s] - items.listIndent >= 4 && items.sCount[s] < items.blkIndent) return false;
   let l = false;
   r && items.parentType === `paragraph` && items.sCount[s] >= items.blkIndent && (l = true);
-  let u,
+  let setTimeoutResult,
     d,
     f,
     p = items.src,
@@ -67071,16 +67071,16 @@ function ZXe(items, t, n, r) {
   if (y >= eMarks[s]) return false;
   let charCodeAt = p.charCodeAt(y);
   if (charCodeAt >= 48 && charCodeAt <= 57) {
-    if (f = JK(items, s), f < 0 || (u = true, o = y, d = JXe(items, s, f), l && d !== 1)) return false;
+    if (f = JK(items, s), f < 0 || (setTimeoutResult = true, o = y, d = JXe(items, s, f), l && d !== 1)) return false;
   } else if (charCodeAt === 42 || charCodeAt === 45 || charCodeAt === 43) {
     if (f = qK(items, s), f < 0) return false;
-    u = false;
+    setTimeoutResult = false;
   } else return false;
   if (l && items.skipSpaces(f) >= eMarks[s]) return false;
   if (r) return true;
   let charCodeAtResult = p.charCodeAt(f - 1),
     fromCharCode = String.fromCharCode(charCodeAtResult);
-  if (u) {
+  if (setTimeoutResult) {
     let t = items.push(`ordered_list_open`, `ol`, 1);
     d !== undefined && d !== 1 && (t.attrs = [[`start`, String(d)]]);
   } else items.push(`bullet_list_open`, `ul`, 1);
@@ -67091,28 +67091,28 @@ function ZXe(items, t, n, r) {
     rulesForState = items.md.block.ruler.getRulesForState(items, `list`),
     parentType = items.parentType;
   for (items.parentType = `list`; s < n;) {
-    a = f, i = eMarks[s];
+    a = f, count = eMarks[s];
     let t = _[s] + f - (bMarks[s] + tShift[s]),
       r = t;
-    for (; a < i;) {
+    for (; a < count;) {
       let charCodeAtData = p.charCodeAt(a);
       if (charCodeAtData === 9) r += 4 - (r + bsCount[s]) % 4;else if (charCodeAtData === 32) r++;else break;
       a++;
     }
     let l = a,
       d;
-    d = l >= i ? 1 : r - t, d > 4 && (d = 1);
+    d = l >= count ? 1 : r - t, d > 4 && (d = 1);
     let y = t + d,
       b = items.push(`list_item_open`, `li`, 1);
     b.markup = fromCharCode;
     let C = [s, 0];
-    b.map = C, u && (b.info = f - o - 1 == 1 ? YXe[p.charCodeAt(o) - 48] : p.slice(o, f - 1));
+    b.map = C, setTimeoutResult && (b.info = f - o - 1 == 1 ? YXe[p.charCodeAt(o) - 48] : p.slice(o, f - 1));
     let tight = items.tight,
       D = items.tShift[s],
       O = items.sCount[s],
       listIndent = items.listIndent;
-    if (items.listIndent = items.blkIndent, items.blkIndent = y, items.tight = true, items.tShift[s] = l - bMarks[s], items.sCount[s] = r, l >= i && items.isEmpty(s + 1) ? items.line = Math.min(items.line + 2, n) : items.md.block.tokenize(items, s, n, true), (!items.tight || w) && (c = false), w = items.line - s > 1 && items.isEmpty(items.line - 1), items.blkIndent = items.listIndent, items.listIndent = listIndent, items.tShift[s] = D, items.sCount[s] = O, items.tight = tight, items.push(`list_item_close`, `li`, -1).markup = fromCharCode, s = items.line, C[1] = s, s >= n || items.sCount[s] < items.blkIndent || items.sCount[s] - items.blkIndent >= 4) break;
-    if (!u) {
+    if (items.listIndent = items.blkIndent, items.blkIndent = y, items.tight = true, items.tShift[s] = l - bMarks[s], items.sCount[s] = r, l >= count && items.isEmpty(s + 1) ? items.line = Math.min(items.line + 2, n) : items.md.block.tokenize(items, s, n, true), (!items.tight || w) && (c = false), w = items.line - s > 1 && items.isEmpty(items.line - 1), items.blkIndent = items.listIndent, items.listIndent = listIndent, items.tShift[s] = D, items.sCount[s] = O, items.tight = tight, items.push(`list_item_close`, `li`, -1).markup = fromCharCode, s = items.line, C[1] = s, s >= n || items.sCount[s] < items.blkIndent || items.sCount[s] - items.blkIndent >= 4) break;
+    if (!setTimeoutResult) {
       let e = bMarks[s] + tShift[s],
         t = eMarks[s];
       if (e < t && p.charCodeAt(e) === charCodeAtResult) {
@@ -67146,13 +67146,13 @@ function ZXe(items, t, n, r) {
       break;
     }
     if (A) break;
-    if (u) {
+    if (setTimeoutResult) {
       if (f = JK(items, s), f < 0) break;
       o = bMarks[s] + tShift[s];
     } else if (f = qK(items, s), f < 0) break;
     if (charCodeAtResult !== p.charCodeAt(f - 1)) break;
   }
-  return u ? items.push(`ordered_list_close`, `ol`, -1).markup = fromCharCode : items.push(`bullet_list_close`, `ul`, -1).markup = fromCharCode, C[1] = s, items.line = s, items.parentType = parentType, c && XXe(items, T), true;
+  return setTimeoutResult ? items.push(`ordered_list_close`, `ol`, -1).markup = fromCharCode : items.push(`bullet_list_close`, `ul`, -1).markup = fromCharCode, C[1] = s, items.line = s, items.parentType = parentType, c && XXe(items, T), true;
 }
 function YK(e) {
   return e === 9 || e === 32;
@@ -67384,7 +67384,7 @@ function nZe(items, t, n, r) {
     r.content = parts[t].trim(), r.children = [], items.push(`th_close`, `th`, -1);
   }
   items.push(`tr_close`, `tr`, -1), items.push(`thead_close`, `thead`, -1);
-  let v,
+  let setIntervalResult,
     y = 0;
   for (i = t + 2; i < n && !(items.sCount[i] < items.blkIndent); i++) {
     let r = false;
@@ -67395,7 +67395,7 @@ function nZe(items, t, n, r) {
     if (r || (c = QK(items, i).trim(), !c) || items.sCount[i] - items.blkIndent >= 4 || (parts = $K(c), parts.length && parts[0] === `` && parts.shift(), parts.length && parts[parts.length - 1] === `` && parts.pop(), y += d - parts.length, y > eZe)) break;
     if (i === t + 2) {
       let n = items.push(`tbody_open`, `tbody`, 1);
-      n.map = v = [t + 2, 0];
+      n.map = setIntervalResult = [t + 2, 0];
     }
     let a = items.push(`tr_open`, `tr`, 1);
     a.map = [i, i + 1];
@@ -67407,7 +67407,7 @@ function nZe(items, t, n, r) {
     }
     items.push(`tr_close`, `tr`, -1);
   }
-  return v && (items.push(`tbody_close`, `tbody`, -1), v[1] = i), items.push(`table_close`, `table`, -1), h[1] = i, items.parentType = parentType, items.line = i, true;
+  return setIntervalResult && (items.push(`tbody_close`, `tbody`, -1), setIntervalResult[1] = i), items.push(`table_close`, `table`, -1), h[1] = i, items.parentType = parentType, items.line = i, true;
 }
 var rZe = class {
   _rules = [];
@@ -67499,25 +67499,25 @@ var rZe = class {
   enableOnly(options) {
     let t = new Set(options),
       n = false;
-    for (let e of this._rules) {
-      let r = t.has(e.name);
-      e.enabled !== r && (e.enabled = r, n = true);
+    for (let normalizeResult of this._rules) {
+      let r = t.has(normalizeResult.name);
+      normalizeResult.enabled !== r && (normalizeResult.enabled = r, n = true);
     }
     n && this.invalidateCache();
   }
   compileCache() {
     let e = new Set([``]);
-    for (let t of this._rules) if (t.enabled) for (let n of t.alt) e.add(n);
+    for (let normalizeResult of this._rules) if (normalizeResult.enabled) for (let replaceResult of normalizeResult.alt) e.add(replaceResult);
     let t = Object.create(null),
       n = Object.create(null);
-    for (let r of e) {
+    for (let requestAnimationFrameResult of e) {
       let emptyItems = [],
-        i = [];
-      for (let t of this._rules) t.enabled && (r === `` || t.alt.includes(r)) && (emptyItems.push(t.fn), i.push({
-        name: t.name,
-        fn: t.fn
+        count = [];
+      for (let normalizeResult of this._rules) normalizeResult.enabled && (requestAnimationFrameResult === `` || normalizeResult.alt.includes(requestAnimationFrameResult)) && (emptyItems.push(normalizeResult.fn), count.push({
+        name: normalizeResult.name,
+        fn: normalizeResult.fn
       }));
-      t[r] = emptyItems, n[r] = i;
+      t[requestAnimationFrameResult] = emptyItems, n[requestAnimationFrameResult] = count;
     }
     this.cache = t, this.namedCache = n;
   }
@@ -68157,11 +68157,11 @@ var SZe = class {
         renderInputValue = renderInput ?? {},
         rules = this.rules,
         o = optionsResult.xhtmlOut === true,
-        s,
+        trimStartResult,
         c,
-        l,
+        setTimeoutResult,
         u,
-        d,
+        count,
         f,
         p = ``,
         m = ``,
@@ -68195,14 +68195,14 @@ var SZe = class {
         if (_ === `inline`) {
           let fallbackValue = n.children || [];
           if (fallbackValue.length === 1) {
-            h ||= (s = rules.text, c = rules.text_special, l = rules.softbreak, u = rules.hardbreak, d = rules.html_inline, f = rules.code_inline, p = optionsResult.xhtmlOut ? `<br />
+            h ||= (trimStartResult = rules.text, c = rules.text_special, setTimeoutResult = rules.softbreak, u = rules.hardbreak, count = rules.html_inline, f = rules.code_inline, p = optionsResult.xhtmlOut ? `<br />
 ` : `<br>
 `, m = optionsResult.breaks ? p : `
 `, true);
             let t = fallbackValue[0];
             switch (t.type) {
               case `text`:
-                if (s === Sq.text) {
+                if (trimStartResult === Sq.text) {
                   g += sq(t.content);
                   continue;
                 }
@@ -68214,7 +68214,7 @@ var SZe = class {
                 }
                 break;
               case `softbreak`:
-                if (l === Sq.softbreak) {
+                if (setTimeoutResult === Sq.softbreak) {
                   g += m;
                   continue;
                 }
@@ -68226,7 +68226,7 @@ var SZe = class {
                 }
                 break;
               case `html_inline`:
-                if (d === Sq.html_inline) {
+                if (count === Sq.html_inline) {
                   g += t.content;
                   continue;
                 }
@@ -68433,10 +68433,10 @@ var SZe = class {
     mergeOptions(options) {
       let normalizedBase = this.normalizedBase;
       if (!options || options.highlight === normalizedBase.highlight && options.langPrefix === normalizedBase.langPrefix && options.xhtmlOut === normalizedBase.xhtmlOut && options.breaks === normalizedBase.breaks) return normalizedBase;
-      let n = null,
-        r = () => (n ||= {
+      let replaceResult = null,
+        r = () => (replaceResult ||= {
           ...normalizedBase
-        }, n);
+        }, replaceResult);
       if (hasOwnProperty.call(options, `highlight`) && options.highlight !== normalizedBase.highlight && (r().highlight = options.highlight), hasOwnProperty.call(options, `langPrefix`)) {
         let langPrefix = options.langPrefix;
         langPrefix !== normalizedBase.langPrefix && (r().langPrefix = langPrefix);
@@ -68449,7 +68449,7 @@ var SZe = class {
         let breaks = options.breaks;
         breaks !== normalizedBase.breaks && (r().breaks = breaks);
       }
-      return n || normalizedBase;
+      return replaceResult || normalizedBase;
     }
     buildNormalizedBase() {
       return Object.freeze({
@@ -68652,7 +68652,7 @@ function Eq(items, t, n = true) {
     s = 0,
     c = 0,
     l = 0,
-    u = null;
+    setTimeoutResult = null;
   function d(e) {
     e <= o || (emptyItems.push({
       start: o,
@@ -68677,7 +68677,7 @@ function Eq(items, t, n = true) {
         let n = t;
         for (; n < r && items[n] === i;) n++;
         let a = n - t;
-        a >= 3 && (u ? u.marker === i && a >= u.length && (u = null) : u = {
+        a >= 3 && (setTimeoutResult ? setTimeoutResult.marker === i && a >= setTimeoutResult.length && (setTimeoutResult = null) : setTimeoutResult = {
           marker: i,
           length: a
         });
@@ -68686,7 +68686,7 @@ function Eq(items, t, n = true) {
     let p = o - n;
     i += p, a += 1, s += 1, f ? (c = 0, l = 0) : (c += 1, l += p);
     let m = f;
-    if ((i >= t.maxChunkChars || a >= t.maxChunkLines) && !u) {
+    if ((i >= t.maxChunkChars || a >= t.maxChunkLines) && !setTimeoutResult) {
       if (m) d(o);else {
         let e = Math.max(10, Math.floor(t.maxChunkLines * 0.5)),
           n = Math.max(t.maxChunkChars, 8e3);
@@ -68912,7 +68912,7 @@ function PZe(e, t, n) {
 }
 function FZe(items, t) {
   if (!t || items.length === 0) return false;
-  let n = null;
+  let replaceResult = null;
   for (let t = 0; t < items.length;) {
     let r = items.indexOf(`
 `, t);
@@ -68927,14 +68927,14 @@ function FZe(items, t) {
       let t = i;
       for (; t < r && items[t] === a;) t++;
       let o = t - i;
-      o >= 3 && (n ? n.marker === a && o >= n.length && (n = null) : n = {
+      o >= 3 && (replaceResult ? replaceResult.marker === a && o >= replaceResult.length && (replaceResult = null) : replaceResult = {
         marker: a,
         length: o
       });
     }
     t = r === items.length ? items.length : r + 1;
   }
-  return n !== null;
+  return replaceResult !== null;
 }
 function IZe(e, t) {
   if (e.length === 0 || e.charCodeAt(e.length - 1) !== 10) return false;
@@ -69142,7 +69142,7 @@ function RZe(e, t, n = {}, r = {}) {
     mode: `full`,
     ...r
   });
-  for (let e of t) i.feed(e), i.flushAvailable(n);
+  for (let normalizeResult of t) i.feed(normalizeResult), i.flushAvailable(n);
   return i.flushForce(n);
 }
 async function zZe(e, t, n = {}, r = {}) {
@@ -69150,7 +69150,7 @@ async function zZe(e, t, n = {}, r = {}) {
     mode: `full`,
     ...r
   });
-  for await (let e of t) i.feed(e), i.flushAvailable(n);
+  for await (let normalizeResult of t) i.feed(normalizeResult), i.flushAvailable(n);
   return i.flushForce(n);
 }
 function BZe(e, t, n, r = {}, i = {}) {
@@ -69160,7 +69160,7 @@ function BZe(e, t, n, r = {}, i = {}) {
     retainTokens: false,
     onChunkTokens: n
   });
-  for (let e of t) a.feed(e), a.flushAvailable(r);
+  for (let normalizeResult of t) a.feed(normalizeResult), a.flushAvailable(r);
   return a.flushForce(r), a.stats();
 }
 async function VZe(e, t, n, r = {}, i = {}) {
@@ -69170,7 +69170,7 @@ async function VZe(e, t, n, r = {}, i = {}) {
     retainTokens: false,
     onChunkTokens: n
   });
-  for await (let e of t) a.feed(e), a.flushAvailable(r);
+  for await (let normalizeResult of t) a.feed(normalizeResult), a.flushAvailable(r);
   return a.flushForce(r), a.stats();
 }
 function Lq(options, t, n) {
@@ -69257,10 +69257,10 @@ var UZe = class {
           h = options.options?.streamChunkFenceAware ?? true,
           g = options.options?.streamSkipCacheAboveChars ?? this.DEFAULT_SKIP_CACHE_CHARS,
           _ = options.options?.streamSkipCacheAboveLines ?? this.DEFAULT_SKIP_CACHE_LINES,
-          v,
+          setIntervalResult,
           y = e.length >= g;
-        if (!y && _ !== undefined && (v = qG(e), y = v >= _), y) {
-          let fullDocument = this.parseFullDocument(e, fallbackValue, options, v, false);
+        if (!y && _ !== undefined && (setIntervalResult = qG(e), y = setIntervalResult >= _), y) {
+          let fullDocument = this.parseFullDocument(e, fallbackValue, options, setIntervalResult, false);
           return this.stats.total += 1, this.stats.fullParses += 1, this.stats.lastMode = `full`, sK(fallbackValue, {
             area: `stream`,
             path: `stream-full`,
@@ -69270,14 +69270,14 @@ var UZe = class {
         }
         if (s) {
           let r = (e, t, n) => e < t ? t : e > n ? n : e;
-          v === undefined && (v = qG(e));
-          let i = m && !p ? jq(e.length, v, options.options) : null,
+          setIntervalResult === undefined && (setIntervalResult = qG(e));
+          let i = m && !p ? jq(e.length, setIntervalResult, options.options) : null,
             s = i?.maxChunkChars ?? (c ? r(Math.ceil(e.length / l), 8e3, 64e3) : u ?? 1e4),
-            g = i?.maxChunkLines ?? (c ? r(Math.ceil(v / l), 150, 700) : d ?? 200),
+            g = i?.maxChunkLines ?? (c ? r(Math.ceil(setIntervalResult / l), 150, 700) : d ?? 200),
             _ = i?.maxChunks ?? (c ? r(Math.ceil(e.length / 64e3), l, 32) : f),
             y = e.length > 0 && e.charCodeAt(e.length - 1) === 10,
             b = o && e.length >= this.IMPLICIT_STREAM_CHUNK_MIN_CHARS && i?.strategy !== `plain`;
-          if ((a || b) && (e.length >= s * 2 || v >= g * 2) && y) {
+          if ((a || b) && (e.length >= s * 2 || setIntervalResult >= g * 2) && y) {
             let r = Tq(options, e, fallbackValue, {
               maxChunkChars: s,
               maxChunkLines: g,
@@ -69288,9 +69288,9 @@ var UZe = class {
               src: e,
               tokens: r,
               env: fallbackValue,
-              lineCount: v,
+              lineCount: setIntervalResult,
               lastSegment: undefined
-            }, this.updateCacheLineCount(this.cache, v), this.stats.total += 1, this.stats.chunkedParses = (this.stats.chunkedParses || 0) + 1, this.stats.lastMode = `chunked`, sK(fallbackValue, {
+            }, this.updateCacheLineCount(this.cache, setIntervalResult), this.stats.total += 1, this.stats.chunkedParses = (this.stats.chunkedParses || 0) + 1, this.stats.lastMode = `chunked`, sK(fallbackValue, {
               area: `stream`,
               path: `stream-chunked`,
               chunked: true,
@@ -69298,14 +69298,14 @@ var UZe = class {
             }), r;
           }
         }
-        let fullDocument = this.parseFullDocument(e, fallbackValue, options, v);
-        return v = fullDocument.lineCount, this.cache = {
+        let fullDocument = this.parseFullDocument(e, fallbackValue, options, setIntervalResult);
+        return setIntervalResult = fullDocument.lineCount, this.cache = {
           src: e,
           tokens: fullDocument.tokens,
           env: fallbackValue,
-          lineCount: v,
+          lineCount: setIntervalResult,
           lastSegment: undefined
-        }, this.updateCacheLineCount(this.cache, v), this.stats.total += 1, this.stats.fullParses += 1, this.stats.lastMode = `full`, sK(fallbackValue, {
+        }, this.updateCacheLineCount(this.cache, setIntervalResult), this.stats.total += 1, this.stats.fullParses += 1, this.stats.lastMode = `full`, sK(fallbackValue, {
           area: `stream`,
           path: `stream-full`,
           reason: `initial-parse`,
@@ -69434,8 +69434,8 @@ var UZe = class {
           }
           return false;
         }
-        let d = null,
-          f = () => (d === null && (d = qG(appendedSegment)), d),
+        let count = null,
+          f = () => (count === null && (count = qG(appendedSegment)), count),
           canDirectlyParseAppend = this.canDirectlyParseAppend(cache),
           m = canDirectlyParseAppend && this.shouldUseUnboundedAppend(e, cache, appendedSegment),
           h = false;
@@ -69517,7 +69517,7 @@ var UZe = class {
           }
           o > 0 && t.splice(0, o), t.length > 0 && this.appendTokens(cache.tokens, t);
         }
-        if (cache.src = e, cache.lineCount = t + (d ?? qG(appendedSegment)), cache.tokens.length > g) {
+        if (cache.src = e, cache.lineCount = t + (count ?? qG(appendedSegment)), cache.tokens.length > g) {
           let lastSegment = this.getLastSegment(cache.tokens.slice(g), e);
           cache.lastSegment = lastSegment ? {
             tokenStart: g + lastSegment.tokenStart,
@@ -69821,20 +69821,20 @@ var UZe = class {
         c = list.src.length - merge.srcOffset;
       if (s < this.MIN_LIST_LINES_FOR_MERGE && c < this.MIN_LIST_CHARS_FOR_MERGE) return null;
       let l = mergeInput.type === `bullet_list_open` ? `bullet_list_close` : `ordered_list_close`,
-        u;
+        setTimeoutResult;
       try {
-        u = this.core.parse(mergeValue, tail, append).tokens;
+        setTimeoutResult = this.core.parse(mergeValue, tail, append).tokens;
       } catch {
         return null;
       }
-      if (!this.isSingleTopLevelContainer(u, mergeInput.type, l, mergeInput.markup)) return null;
-      let part = u.slice(1, -1);
+      if (!this.isSingleTopLevelContainer(setTimeoutResult, mergeInput.type, l, mergeInput.markup)) return null;
+      let part = setTimeoutResult.slice(1, -1);
       if (part.length === 0) return null;
       let fallbackValue = list.lineCount ?? qG(list.src);
       fallbackValue > 0 && this.shiftTokenLines(part, fallbackValue);
       let listParagraphMode = this.getListParagraphMode(list.tokens, merge.tokenStart, list.tokens.length, mergeInput.level),
-        listParagraphModeResult = this.getListParagraphMode(u, 0, u.length, 0);
-      return (listParagraphMode === `loose` || listParagraphModeResult === `loose` || this.endsWithBlankLine(list.src) || (u[0]?.map?.[0] ?? 0) > 0) && (this.setListParagraphVisibility(list.tokens, merge.tokenStart, list.tokens.length, mergeInput.level, false), this.setListParagraphVisibility(part, 0, part.length, mergeInput.level, false)), list.tokens.splice(list.tokens.length - 1, 0, ...part), list.src = tryValue, list.env = tail, list.lineCount = qG(tryValue), mergeInput.map && (mergeInput.map[1] = this.getDocLineCount(tryValue)), list.lastSegment = {
+        listParagraphModeResult = this.getListParagraphMode(setTimeoutResult, 0, setTimeoutResult.length, 0);
+      return (listParagraphMode === `loose` || listParagraphModeResult === `loose` || this.endsWithBlankLine(list.src) || (setTimeoutResult[0]?.map?.[0] ?? 0) > 0) && (this.setListParagraphVisibility(list.tokens, merge.tokenStart, list.tokens.length, mergeInput.level, false), this.setListParagraphVisibility(part, 0, part.length, mergeInput.level, false)), list.tokens.splice(list.tokens.length - 1, 0, ...part), list.src = tryValue, list.env = tail, list.lineCount = qG(tryValue), mergeInput.map && (mergeInput.map[1] = this.getDocLineCount(tryValue)), list.lastSegment = {
         tokenStart: merge.tokenStart,
         tokenEnd: list.tokens.length,
         lineStart: merge.lineStart,
@@ -69850,17 +69850,17 @@ var UZe = class {
       let tableHeaderContext = this.getTableHeaderContext(table.src.slice(merge.srcOffset));
       if (!tableHeaderContext) return null;
       let u = `${tableHeaderContext}${mergeValue}`,
-        d;
+        count;
       try {
-        d = this.core.parse(u, tail, append).tokens;
+        count = this.core.parse(u, tail, append).tokens;
       } catch {
         return null;
       }
-      if (!this.isSingleTopLevelContainer(d, `table_open`, `table_close`) || (d[0]?.map?.[1] ?? -1) !== this.getDocLineCount(u)) return null;
-      let tableBodySection = this.getTableBodySection(d, 0, d.length, 0),
+      if (!this.isSingleTopLevelContainer(count, `table_open`, `table_close`) || (count[0]?.map?.[1] ?? -1) !== this.getDocLineCount(u)) return null;
+      let tableBodySection = this.getTableBodySection(count, 0, count.length, 0),
         tableBodySectionResult = this.getTableBodySection(table.tokens, merge.tokenStart, table.tokens.length, mergeInput.level);
       if (!tableBodySection || !tableBodySectionResult || tableBodySection.tbodyOpenIndex < 0 || tableBodySection.tbodyCloseIndex < 0) return null;
-      let m = tableBodySectionResult.tbodyOpenIndex >= 0 ? d.slice(tableBodySection.tbodyOpenIndex + 1, tableBodySection.tbodyCloseIndex) : d.slice(tableBodySection.tbodyOpenIndex, tableBodySection.tbodyCloseIndex + 1);
+      let m = tableBodySectionResult.tbodyOpenIndex >= 0 ? count.slice(tableBodySection.tbodyOpenIndex + 1, tableBodySection.tbodyCloseIndex) : count.slice(tableBodySection.tbodyOpenIndex, tableBodySection.tbodyCloseIndex + 1);
       if (m.length === 0) return null;
       let h = merge.lineEnd - 2;
       h !== 0 && this.shiftTokenLines(m, h);
@@ -70050,31 +70050,31 @@ function WZe(e, options) {
       autoUnboundedThresholdLines: 8e4
     },
     r = `default`,
-    i;
-  !options && typeof e != `string` ? (i = e, r = `default`) : typeof e == `string` && (r = e, i = options);
+    count;
+  !options && typeof e != `string` ? (count = e, r = `default`) : typeof e == `string` && (r = e, count = options);
   let a = Vq[r];
   if (!a) throw Error(`Wrong \`markdown-it\` preset "${r}", check name`);
   if (a?.options && (n = {
     ...n,
     ...a.options
-  }), i && (n = {
+  }), count && (n = {
     ...n,
-    ...i
+    ...count
   }), typeof n.quotes == `string`) {
     let quotes = n.quotes;
     quotes.length >= 4 ? n.quotes = [quotes[0], quotes[1], quotes[2], quotes[3]] : n.quotes = [`“`, `”`, `‘`, `’`];
   }
-  let o = Hq(a?.options, i, [`fullChunkSizeChars`, `fullChunkSizeLines`, `fullChunkMaxChunks`]),
-    s = Hq(a?.options, i, [`streamChunkSizeChars`, `streamChunkSizeLines`, `streamChunkMaxChunks`]),
-    c = Uq(a?.options, i, `fullChunkedFallback`),
-    l = Uq(a?.options, i, `streamChunkedFallback`),
+  let o = Hq(a?.options, count, [`fullChunkSizeChars`, `fullChunkSizeLines`, `fullChunkMaxChunks`]),
+    s = Hq(a?.options, count, [`streamChunkSizeChars`, `streamChunkSizeLines`, `streamChunkMaxChunks`]),
+    c = Uq(a?.options, count, `fullChunkedFallback`),
+    l = Uq(a?.options, count, `streamChunkedFallback`),
     u = new lZe(),
     d = null,
     f = () => (d ||= new SZe(n), d),
-    p = null,
-    m = () => (p ||= new UZe(u), p),
-    h = null,
-    g = () => (h ||= new hG(), h),
+    setTimeoutResult = null,
+    m = () => (setTimeoutResult ||= new UZe(u), setTimeoutResult),
+    setIntervalResult = null,
+    g = () => (setIntervalResult ||= new hG(), setIntervalResult),
     _ = {
       core: u,
       block: u.block,
@@ -70104,7 +70104,7 @@ function WZe(e, options) {
         return this.options = {
           ...this.options,
           ...e
-        }, (e.fullChunkSizeChars !== undefined || e.fullChunkSizeLines !== undefined || e.fullChunkMaxChunks !== undefined) && (o = true, this.__explicitFullChunkConfig = true), (e.streamChunkSizeChars !== undefined || e.streamChunkSizeLines !== undefined || e.streamChunkMaxChunks !== undefined) && (s = true, this.__explicitStreamChunkConfig = true), Object.prototype.hasOwnProperty.call(e, `fullChunkedFallback`) && (c = true, this.__explicitFullChunkFallbackSetting = true), Object.prototype.hasOwnProperty.call(e, `streamChunkedFallback`) && (l = true, this.__explicitStreamChunkFallbackSetting = true), d && d.set(e), typeof e.stream == `boolean` && (this.stream.enabled = e.stream, p && (p.reset(), p.resetStats())), this;
+        }, (e.fullChunkSizeChars !== undefined || e.fullChunkSizeLines !== undefined || e.fullChunkMaxChunks !== undefined) && (o = true, this.__explicitFullChunkConfig = true), (e.streamChunkSizeChars !== undefined || e.streamChunkSizeLines !== undefined || e.streamChunkMaxChunks !== undefined) && (s = true, this.__explicitStreamChunkConfig = true), Object.prototype.hasOwnProperty.call(e, `fullChunkedFallback`) && (c = true, this.__explicitFullChunkFallbackSetting = true), Object.prototype.hasOwnProperty.call(e, `streamChunkedFallback`) && (l = true, this.__explicitStreamChunkFallbackSetting = true), d && d.set(e), typeof e.stream == `boolean` && (this.stream.enabled = e.stream, setTimeoutResult && (setTimeoutResult.reset(), setTimeoutResult.resetStats())), this;
       },
       configure(configure) {
         let t = typeof configure == `string` ? Vq[configure] : configure;
@@ -70119,9 +70119,9 @@ function WZe(e, options) {
         let n = Array.isArray(enable) ? enable : [enable],
           r = [this.core?.ruler, this.block?.ruler, this.inline?.ruler, this.inline?.ruler2],
           i = 0;
-        for (let e of r) {
-          if (!e) continue;
-          let t = e.enable(n, true);
+        for (let normalizeResult of r) {
+          if (!normalizeResult) continue;
+          let t = normalizeResult.enable(n, true);
           i += t.length;
         }
         if (!enableValue && i < n.length) throw Error(`Rules manager: invalid rule name in list`);
@@ -70131,9 +70131,9 @@ function WZe(e, options) {
         let n = Array.isArray(disable) ? disable : [disable],
           r = [this.core?.ruler, this.block?.ruler, this.inline?.ruler, this.inline?.ruler2],
           i = 0;
-        for (let e of r) {
-          if (!e) continue;
-          let t = e.disable(n, true);
+        for (let normalizeResult of r) {
+          if (!normalizeResult) continue;
+          let t = normalizeResult.disable(n, true);
           i += t.length;
         }
         if (!disableValue && i < n.length) throw Error(`Rules manager: invalid rule name in list`);
@@ -70175,7 +70175,7 @@ function WZe(e, options) {
       },
       parse(e, t = {}) {
         if (typeof e != `string`) throw TypeError(`Input data should be a String`);
-        let n;
+        let replaceResult;
         if (!this.stream.enabled && !this.options.fullChunkedFallback) {
           let r = Rq(this, e.length);
           if (r === `yes`) return sK(t, {
@@ -70184,11 +70184,11 @@ function WZe(e, options) {
             unbounded: true,
             reason: `char-threshold`
           }), zq(this, e, t);
-          r === `need-lines` && (n = qG(e));
+          r === `need-lines` && (replaceResult = qG(e));
         }
         if (!this.stream.enabled) {
           let r = e.length,
-            fallbackValue = n ?? qG(e),
+            fallbackValue = replaceResult ?? qG(e),
             a = this.options.autoTuneChunks !== false,
             s = o,
             l = !c,
@@ -70229,7 +70229,7 @@ function WZe(e, options) {
               });
             }
           }
-          if (n !== undefined && Lq(this, r, fallbackValue)) return sK(t, {
+          if (replaceResult !== undefined && Lq(this, r, fallbackValue)) return sK(t, {
             area: `parse`,
             path: `auto-unbounded`,
             unbounded: true,
@@ -70269,10 +70269,10 @@ function WZe(e, options) {
       m().reset();
     },
     peek() {
-      return p ? p.peek() : [];
+      return setTimeoutResult ? setTimeoutResult.peek() : [];
     },
     stats() {
-      return p ? p.getStats() : {
+      return setTimeoutResult ? setTimeoutResult.getStats() : {
         total: 0,
         cacheHits: 0,
         appendHits: 0,
@@ -70285,7 +70285,7 @@ function WZe(e, options) {
       };
     },
     resetStats() {
-      p && p.resetStats();
+      setTimeoutResult && setTimeoutResult.resetStats();
     }
   }, r === `zero` && a?.components) {
     let components = a.components;
@@ -70308,23 +70308,23 @@ function KZe(items, t, n) {
     c = n.validate || r,
     l = n.render || i;
   function u(e, n, r, i) {
-    let l,
+    let setTimeoutResult,
       u = false,
       d = e.bMarks[n] + e.tShift[n],
       f = e.eMarks[n];
     if (charCodeAt !== e.src.charCodeAt(d)) return false;
-    for (l = d + 1; l <= f && fallbackValue[(l - d) % s] === e.src[l]; l++);
-    let p = Math.floor((l - d) / s);
+    for (setTimeoutResult = d + 1; setTimeoutResult <= f && fallbackValue[(setTimeoutResult - d) % s] === e.src[setTimeoutResult]; setTimeoutResult++);
+    let p = Math.floor((setTimeoutResult - d) / s);
     if (p < 3) return false;
-    l -= (l - d) % s;
-    let part = e.src.slice(d, l),
-      h = e.src.slice(l, f);
+    setTimeoutResult -= (setTimeoutResult - d) % s;
+    let part = e.src.slice(d, setTimeoutResult),
+      h = e.src.slice(setTimeoutResult, f);
     if (!c(h, part)) return false;
     if (i) return true;
     let g = n;
     for (; g++, !(g >= r || (d = e.bMarks[g] + e.tShift[g], f = e.eMarks[g], d < f && e.sCount[g] < e.blkIndent));) if (charCodeAt === e.src.charCodeAt(d) && !(e.sCount[g] - e.blkIndent >= 4)) {
-      for (l = d + 1; l <= f && fallbackValue[(l - d) % s] === e.src[l]; l++);
-      if (!(Math.floor((l - d) / s) < p) && (l -= (l - d) % s, l = e.skipSpaces(l), !(l < f))) {
+      for (setTimeoutResult = d + 1; setTimeoutResult <= f && fallbackValue[(setTimeoutResult - d) % s] === e.src[setTimeoutResult]; setTimeoutResult++);
+      if (!(Math.floor((setTimeoutResult - d) / s) < p) && (setTimeoutResult -= (setTimeoutResult - d) % s, setTimeoutResult = e.skipSpaces(setTimeoutResult), !(setTimeoutResult < f))) {
         u = true;
         break;
       }
@@ -70335,7 +70335,7 @@ function KZe(items, t, n) {
     let y = e.push(`container_` + t + `_open`, `div`, 1);
     y.markup = part, y.block = true, y.info = h, y.map = [n, g], e.md.block.tokenize(e, n + 1, g);
     let b = e.push(`container_` + t + `_close`, `div`, -1);
-    return b.markup = e.src.slice(d, l), b.block = true, e.parentType = _, e.lineMax = lineMax, e.line = g + +!!u, true;
+    return b.markup = e.src.slice(d, setTimeoutResult), b.block = true, e.parentType = _, e.lineMax = lineMax, e.line = g + +!!u, true;
   }
   items.block.ruler.before(`fence`, `container_` + t, u, {
     alt: [`paragraph`, `reference`, `blockquote`, `list`]
@@ -70373,13 +70373,13 @@ function qZe(items) {
   }
   i.trim() && emptyItems.push(i.trim());
   let s = {};
-  for (let e of emptyItems) {
-    if (!e) continue;
+  for (let normalizeResult of emptyItems) {
+    if (!normalizeResult) continue;
     let t = false,
       n = false,
       r = -1;
-    for (let i = 0; i < e.length; i++) {
-      let a = e[i];
+    for (let i = 0; i < normalizeResult.length; i++) {
+      let a = normalizeResult[i];
       if (a === `\\`) {
         i++;
         continue;
@@ -70398,8 +70398,8 @@ function qZe(items) {
       }
     }
     if (r === -1) return null;
-    let i = e.slice(0, r).trim(),
-      a = e.slice(r + 1).trim();
+    let i = normalizeResult.slice(0, r).trim(),
+      a = normalizeResult.slice(r + 1).trim();
     if (!i) return null;
     let o = i;
     if (o.startsWith(`"`) && o.endsWith(`"`) || o.startsWith(`'`) && o.endsWith(`'`)) try {
@@ -70436,12 +70436,12 @@ function JZe(text) {
     let l = c[1];
     if (!l.trim()) return false;
     let trimmed = part.slice(c[0].length).trim(),
-      d,
+      count,
       f,
       p = trimmed.indexOf(`{`),
       m = p >= 0 ? trimmed.slice(p).trimStart() : undefined;
-    if (p === -1) d = trimmed || undefined;else {
-      if (d = trimmed.slice(0, p).trim() || undefined, m?.startsWith(`{`)) {
+    if (p === -1) count = trimmed || undefined;else {
+      if (count = trimmed.slice(0, p).trim() || undefined, m?.startsWith(`{`)) {
         let e = 0,
           t = -1;
         for (let n = 0; n < m.length; n++) if (m[n] === `{` ? e++ : m[n] === `}` && e--, e === 0) {
@@ -70450,7 +70450,7 @@ function JZe(text) {
         }
         t > 0 && (f = m.slice(0, t));
       }
-      f || (d = trimmed || undefined);
+      f || (count = trimmed || undefined);
     }
     if (r) return true;
     let h = !!i.env.__markstreamFinal,
@@ -70470,7 +70470,7 @@ function JZe(text) {
     if (v.attrSet(`class`, `vmr-container vmr-container-${l}`), v.meta = {
       ...(v.meta ?? {}),
       unclosed: !_ && !h
-    }, d && v.attrSet(`data-args`, d), f) try {
+    }, count && v.attrSet(`data-args`, count), f) try {
       let parsed = JSON.parse(f);
       for (let [t, n] of Object.entries(parsed)) {
         let e = typeof n == `object` && !!n;
@@ -70500,8 +70500,8 @@ function JZe(text) {
 `);
       let t = i.tokens[i.tokens.length - 1];
       t && (t.raw = joined);
-      let n = [];
-      i.md.block.parse(joined, i.md, i.env, n), i.tokens.push(...n);
+      let replaceResult = [];
+      i.md.block.parse(joined, i.md, i.env, replaceResult), i.tokens.push(...replaceResult);
     }
     return _ && i.push(`vmr_container_close`, `div`, -1), i.line = _ ? g + 1 : g, true;
   }, {
@@ -70527,9 +70527,9 @@ var Wq = [`area`, `base`, `br`, `col`, `embed`, `hr`, `img`, `input`, `link`, `m
   Yq = new Set(tQe);
 function oQe(e) {
   let t = ``;
-  for (let n of e) {
-    let charCodeAt = n.charCodeAt(0);
-    charCodeAt <= 31 || charCodeAt === 127 || /\s/u.test(n) || (t += n);
+  for (let replaceResult of e) {
+    let charCodeAt = replaceResult.charCodeAt(0);
+    charCodeAt <= 31 || charCodeAt === 127 || /\s/u.test(replaceResult) || (t += replaceResult);
   }
   return t;
 }
@@ -70564,11 +70564,11 @@ function Qq(e) {
 function $q(e) {
   let emptyItems = [],
     n = /\s([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g,
-    r;
-  for (; (r = n.exec(e)) !== null;) {
-    let e = r[1];
+    requestAnimationFrameResult;
+  for (; (requestAnimationFrameResult = n.exec(e)) !== null;) {
+    let e = requestAnimationFrameResult[1];
     if (!e) continue;
-    let fallbackValue = r[2] || r[3] || r[4] || ``;
+    let fallbackValue = requestAnimationFrameResult[2] || requestAnimationFrameResult[3] || requestAnimationFrameResult[4] || ``;
     emptyItems.push([e, fallbackValue]);
   }
   return emptyItems;
@@ -70594,8 +70594,8 @@ function nJ(e) {
   if (!e || e.length === 0) return [];
   let t = new Set(),
     emptyItems = [];
-  for (let r of e) {
-    let e = tJ(r);
+  for (let requestAnimationFrameResult of e) {
+    let e = tJ(requestAnimationFrameResult);
     e && !t.has(e) && (t.add(e), emptyItems.push(e));
   }
   return emptyItems;
@@ -70603,7 +70603,7 @@ function nJ(e) {
 function cQe(...e) {
   let t = new Set(),
     emptyItems = [];
-  for (let r of e) for (let e of nJ(r)) t.has(e) || (t.add(e), emptyItems.push(e));
+  for (let requestAnimationFrameResult of e) for (let normalizeResult of nJ(requestAnimationFrameResult)) t.has(normalizeResult) || (t.add(normalizeResult), emptyItems.push(normalizeResult));
   return emptyItems;
 }
 function lQe(e) {
@@ -70674,9 +70674,9 @@ function gQe(e, t) {
 }
 function _Qe(e, t) {
   let n = 0;
-  for (let r of e) {
-    if (!r || r.type !== `html_inline`) continue;
-    let e = String(r.content ?? ``),
+  for (let requestAnimationFrameResult of e) {
+    if (!requestAnimationFrameResult || requestAnimationFrameResult.type !== `html_inline`) continue;
+    let e = String(requestAnimationFrameResult.content ?? ``),
       i = cJ(e);
     if (i === t) {
       if (lJ(e)) {
@@ -70712,10 +70712,10 @@ function dJ(e, t, n = 0) {
 function vQe(e, t) {
   let regExp = new RegExp(String.raw`<\s*(\/?)\s*${Zq(t)}(?=[\s>/])[^>]*>`, `gi`),
     r = 0,
-    i;
-  for (; (i = regExp.exec(e)) !== null;) {
-    let fallbackValue = i[0] ?? ``,
-      t = !!i[1],
+    count;
+  for (; (count = regExp.exec(e)) !== null;) {
+    let fallbackValue = count[0] ?? ``,
+      t = !!count[1],
       n = !t && /\/\s*>$/.test(fallbackValue);
     if (t) {
       r > 0 && r--;
@@ -70734,8 +70734,8 @@ function yQe(e) {
 }
 function bQe(e) {
   let t = new Set(fQe);
-  if (e && Array.isArray(e)) for (let n of e) {
-    let trimmed = String(n ?? ``).trim();
+  if (e && Array.isArray(e)) for (let replaceResult of e) {
+    let trimmed = String(replaceResult ?? ``).trim();
     if (!trimmed) continue;
     let r = trimmed.match(/^[<\s/]*([A-Z][\w-]*)/i);
     r && t.add(r[1].toLowerCase());
@@ -70744,26 +70744,26 @@ function bQe(e) {
 }
 function pJ(e, t) {
   if (t.has(e)) return true;
-  for (let n of t) if (n.startsWith(e)) return true;
+  for (let replaceResult of t) if (replaceResult.startsWith(e)) return true;
   return false;
 }
 function xQe(items, t) {
-  let n = null;
-  for (let r of items.matchAll(pQe)) {
-    let fallbackValue = r.index ?? -1;
+  let replaceResult = null;
+  for (let requestAnimationFrameResult of items.matchAll(pQe)) {
+    let fallbackValue = requestAnimationFrameResult.index ?? -1;
     if (fallbackValue < 0) continue;
-    let lowercased = (r[1] ?? ``).toLowerCase();
-    pJ(lowercased, t) && Qq(items.slice(fallbackValue)) === -1 && (!n || fallbackValue < n.index) && (n = {
+    let lowercased = (requestAnimationFrameResult[1] ?? ``).toLowerCase();
+    pJ(lowercased, t) && Qq(items.slice(fallbackValue)) === -1 && (!replaceResult || fallbackValue < replaceResult.index) && (replaceResult = {
       index: fallbackValue,
       tag: lowercased,
       closing: false
     });
   }
-  for (let r of items.matchAll(mQe)) {
-    let fallbackValue = r.index ?? -1;
+  for (let requestAnimationFrameResult of items.matchAll(mQe)) {
+    let fallbackValue = requestAnimationFrameResult.index ?? -1;
     if (fallbackValue < 0) continue;
-    let lowercased = (r[1] ?? ``).toLowerCase();
-    pJ(lowercased, t) && Qq(items.slice(fallbackValue)) === -1 && (!n || fallbackValue < n.index) && (n = {
+    let lowercased = (requestAnimationFrameResult[1] ?? ``).toLowerCase();
+    pJ(lowercased, t) && Qq(items.slice(fallbackValue)) === -1 && (!replaceResult || fallbackValue < replaceResult.index) && (replaceResult = {
       index: fallbackValue,
       tag: lowercased,
       closing: true
@@ -70772,7 +70772,7 @@ function xQe(items, t) {
   let r = /<\/\s*$/.exec(items);
   if (r && typeof r.index == `number`) {
     let t = r.index;
-    !items.slice(t).includes(`>`) && (!n || t < n.index) && (n = {
+    !items.slice(t).includes(`>`) && (!replaceResult || t < replaceResult.index) && (replaceResult = {
       index: t,
       tag: ``,
       closing: true
@@ -70782,13 +70782,13 @@ function xQe(items, t) {
   if (i && typeof i.index == `number`) {
     let t = i.index,
       part = items.slice(t);
-    !part.startsWith(`</`) && !part.includes(`>`) && (!n || t < n.index) && (n = {
+    !part.startsWith(`</`) && !part.includes(`>`) && (!replaceResult || t < replaceResult.index) && (replaceResult = {
       index: t,
       tag: ``,
       closing: false
     });
   }
-  return n;
+  return replaceResult;
 }
 function SQe(e, t) {
   let n = e;
@@ -70803,8 +70803,8 @@ function CQe(items, t) {
     children: items
   };
   let emptyItems = [],
-    r = null,
-    i = null;
+    requestAnimationFrameResult = null,
+    count = null;
   function a(e, t) {
     e && (t ? emptyItems.push(SQe(t, e)) : emptyItems.push({
       type: `text`,
@@ -70850,36 +70850,36 @@ function CQe(items, t) {
       return;
     }
     let part = e.slice(0, a.index);
-    part && o(part, n), r = {
+    part && o(part, n), requestAnimationFrameResult = {
       tag: a.tag,
       buffer: e.slice(a.index),
       closing: a.closing
-    }, i = r.buffer;
+    }, count = requestAnimationFrameResult.buffer;
   }
   for (let a of items) {
-    if (r) {
-      r.buffer += fJ(a), i = r.buffer;
-      let e = Qq(r.buffer);
+    if (requestAnimationFrameResult) {
+      requestAnimationFrameResult.buffer += fJ(a), count = requestAnimationFrameResult.buffer;
+      let e = Qq(requestAnimationFrameResult.buffer);
       if (e === -1) continue;
-      let part = r.buffer.slice(0, e + 1),
-        o = r.buffer.slice(e + 1);
+      let part = requestAnimationFrameResult.buffer.slice(0, e + 1),
+        o = requestAnimationFrameResult.buffer.slice(e + 1);
       emptyItems.push({
         type: `html_inline`,
         tag: ``,
         content: part,
         raw: part
-      }), r = null, i = null, o && s(o);
+      }), requestAnimationFrameResult = null, count = null, o && s(o);
       continue;
     }
     if (a.type === `html_inline`) {
       let e = fJ(a),
         lowercased = (e.match(sJ)?.[1] ?? ``).toLowerCase();
       if (lowercased && t.has(lowercased) && Qq(e) === -1) {
-        r = {
+        requestAnimationFrameResult = {
           tag: lowercased,
           buffer: e,
           closing: /^<\s*\//.test(e)
-        }, i = r.buffer;
+        }, count = requestAnimationFrameResult.buffer;
         continue;
       }
     }
@@ -70896,15 +70896,15 @@ function CQe(items, t) {
   }
   return {
     children: emptyItems,
-    pendingBuffer: i ?? undefined
+    pendingBuffer: count ?? undefined
   };
 }
 function wQe(e, t = {}) {
   let n = bQe(t.customHtmlTags),
     r = new Set([`a`, `span`, `strong`, `em`, `b`, `i`, `u`]),
     i = new Set();
-  if (t.customHtmlTags?.length) for (let e of t.customHtmlTags) {
-    let t = tJ(e);
+  if (t.customHtmlTags?.length) for (let normalizeResult of t.customHtmlTags) {
+    let t = tJ(normalizeResult);
     t && (i.add(t), r.add(t));
   }
   let a = e => i.has(e) || !n.has(e) || oJ.has(e),
@@ -70919,8 +70919,8 @@ function wQe(e, t = {}) {
     };
   e.core.ruler.after(`inline`, `fix_html_inline_streaming`, e => {
     let fallbackValue = e.tokens ?? [];
-    for (let e of fallbackValue) {
-      let t = e;
+    for (let normalizeResult of fallbackValue) {
+      let t = normalizeResult;
       if (t.type !== `inline` || !Array.isArray(t.children)) continue;
       let r = String(t.content ?? ``),
         i = t.children.length ? t.children : r.includes(`<`) ? [{
@@ -71081,9 +71081,9 @@ function wQe(e, t = {}) {
         }
         if (n.type !== `inline`) continue;
         let c = Array.isArray(n.children) ? n.children : [];
-        for (let t of i) if ((c.length ? _Qe(c, t) : r(t).test(s) && !a(t).test(s) ? 1 : 0) > 0) {
+        for (let normalizeResult of i) if ((c.length ? _Qe(c, normalizeResult) : r(normalizeResult).test(s) && !a(normalizeResult).test(s) ? 1 : 0) > 0) {
           o.push({
-            tag: t,
+            tag: normalizeResult,
             index: e
           });
           break;
@@ -71150,10 +71150,10 @@ function wQe(e, t = {}) {
         n.type = `inline`;
         let a = [],
           o = /\s([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g,
-          s;
-        for (; (s = o.exec(n.content || ``)) !== null;) {
-          let e = s[1],
-            t = s[2] || s[3] || s[4] || ``;
+          trimStartResult;
+        for (; (trimStartResult = o.exec(n.content || ``)) !== null;) {
+          let e = trimStartResult[1],
+            t = trimStartResult[2] || trimStartResult[3] || trimStartResult[4] || ``;
           a.push([e, t]);
         }
         let c = String(n.content ?? ``),
@@ -71390,8 +71390,8 @@ function BQe(e, t) {
 }
 function SJ(items, t) {
   let n = -1;
-  for (let r of t) {
-    let t = items.indexOf(r);
+  for (let requestAnimationFrameResult of t) {
+    let t = items.indexOf(requestAnimationFrameResult);
     t !== -1 && (n === -1 || t < n) && (n = t);
   }
   return n;
@@ -72060,7 +72060,7 @@ var o$e = a$e,
   };
 function _$e(e) {
   let t = ``;
-  for (let n of e) t += g$e[n] ?? n;
+  for (let replaceResult of e) t += g$e[replaceResult] ?? replaceResult;
   return t;
 }
 function kJ(e) {
@@ -72129,13 +72129,13 @@ function IJ(e) {
 }
 function LJ(e) {
   let t = /(^|[^\\])(__|\*\*)/g,
-    n,
-    r = null;
-  for (; (n = t.exec(e)) !== null;) r = {
-    marker: n[2],
-    index: n.index + (n[1]?.length ?? 0)
+    replaceResult,
+    requestAnimationFrameResult = null;
+  for (; (replaceResult = t.exec(e)) !== null;) requestAnimationFrameResult = {
+    marker: replaceResult[2],
+    index: replaceResult.index + (replaceResult[1]?.length ?? 0)
   };
-  return r;
+  return requestAnimationFrameResult;
 }
 function RJ(e, t) {
   let fallbackValue = t?.commands ?? AJ,
@@ -72195,7 +72195,7 @@ function D$e(e) {
   return emptyItems;
 }
 function BJ(e, t) {
-  for (let n of e) if (t >= n[0] && t < n[1]) return n;
+  for (let replaceResult of e) if (t >= replaceResult[0] && t < replaceResult[1]) return replaceResult;
   return null;
 }
 function O$e(e) {
@@ -72739,8 +72739,8 @@ function JJ(items, t, n, r) {
 }
 function L$e(text, items) {
   let emptyItems = [],
-    r = [],
-    i = [],
+    requestAnimationFrameResult = [],
+    count = [],
     a = [],
     parts = text.split(I$e),
     s = Math.max(0, parts.length - 1),
@@ -72750,22 +72750,22 @@ function L$e(text, items) {
       if (!F$e.some(item => t.startsWith(item))) {
         if (t.startsWith(`-`)) {
           let part = t.slice(1);
-          i.push(!c && part.startsWith(` `) ? ` ${part}` : part);
+          count.push(!c && part.startsWith(` `) ? ` ${part}` : part);
         } else if (t.startsWith(`+`)) {
           let part = t.slice(1);
           a.push(!c && part.startsWith(` `) ? ` ${part}` : part);
         } else {
-          JJ(emptyItems, r, i, a);
+          JJ(emptyItems, requestAnimationFrameResult, count, a);
           let e = c && t.startsWith(` `) ? t.slice(1) : t;
-          emptyItems.push(e), r.push(e);
+          emptyItems.push(e), requestAnimationFrameResult.push(e);
         }
       }
     };
   for (let e = 0; e < s; e++) l(parts[e] ?? ``);
-  return items && s < parts.length && l(parts[parts.length - 1] ?? ``), (items || i.length > 0 && a.length > 0) && JJ(emptyItems, r, i, a), {
+  return items && s < parts.length && l(parts[parts.length - 1] ?? ``), (items || count.length > 0 && a.length > 0) && JJ(emptyItems, requestAnimationFrameResult, count, a), {
     original: emptyItems.join(`
 `),
-    updated: r.join(`
+    updated: requestAnimationFrameResult.join(`
 `)
   };
 }
@@ -72906,19 +72906,19 @@ function aY(e) {
         raw: n
       });
     };
-  for (let r of e) if (r) {
-    if (r.type === `reference` || r.type === `footnote_reference`) {
-      n(String(r.raw ?? ``));
+  for (let requestAnimationFrameResult of e) if (requestAnimationFrameResult) {
+    if (requestAnimationFrameResult.type === `reference` || requestAnimationFrameResult.type === `footnote_reference`) {
+      n(String(requestAnimationFrameResult.raw ?? ``));
       continue;
     }
-    if (`children` in r && Array.isArray(r.children)) {
+    if (`children` in requestAnimationFrameResult && Array.isArray(requestAnimationFrameResult.children)) {
       emptyItems.push({
-        ...r,
-        children: aY(r.children)
+        ...requestAnimationFrameResult,
+        children: aY(requestAnimationFrameResult.children)
       });
       continue;
     }
-    emptyItems.push(r);
+    emptyItems.push(requestAnimationFrameResult);
   }
   return emptyItems;
 }
@@ -73038,10 +73038,10 @@ function W$e(e, t, n, r, i, a, o) {
   }
   let emptyItems = [],
     y = /\s([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g,
-    b;
-  for (; (b = y.exec(s)) !== null;) {
-    let e = b[1],
-      t = b[2] || b[3] || b[4] || ``;
+    count;
+  for (; (count = y.exec(s)) !== null;) {
+    let e = count[1],
+      t = count[2] || count[3] || count[4] || ``;
     emptyItems.push([e, t]);
   }
   return l?.has(c) ? [{
@@ -73066,18 +73066,18 @@ function W$e(e, t, n, r, i, a, o) {
 }
 function sY(e, t = false) {
   let fallbackValue = e.attrs ?? [],
-    r = null;
-  if ((!fallbackValue || fallbackValue.length === 0) && Array.isArray(e.children)) for (let t of e.children) {
-    let attrs = t.attrs;
+    requestAnimationFrameResult = null;
+  if ((!fallbackValue || fallbackValue.length === 0) && Array.isArray(e.children)) for (let normalizeResult of e.children) {
+    let attrs = normalizeResult.attrs;
     if (Array.isArray(attrs) && attrs.length > 0) {
-      fallbackValue = attrs, r = t;
+      fallbackValue = attrs, requestAnimationFrameResult = normalizeResult;
       break;
     }
   }
   let i = String(fallbackValue.find(item => item[0] === `src`)?.[1] ?? ``),
     a = fallbackValue.find(item => item[0] === `alt`)?.[1],
     o = ``;
-  a != null && String(a).length > 0 ? o = String(a) : r?.content != null && String(r.content).length > 0 ? o = String(r.content) : Array.isArray(r?.children) && r.children[0]?.content ? o = String(r.children[0].content) : Array.isArray(e.children) && e.children[0]?.content ? o = String(e.children[0].content) : e.content != null && String(e.content).length > 0 && (o = String(e.content));
+  a != null && String(a).length > 0 ? o = String(a) : requestAnimationFrameResult?.content != null && String(requestAnimationFrameResult.content).length > 0 ? o = String(requestAnimationFrameResult.content) : Array.isArray(requestAnimationFrameResult?.children) && requestAnimationFrameResult.children[0]?.content ? o = String(requestAnimationFrameResult.children[0].content) : Array.isArray(e.children) && e.children[0]?.content ? o = String(e.children[0].content) : e.content != null && String(e.content).length > 0 && (o = String(e.content));
   let s = fallbackValue.find(item => item[0] === `title`)?.[1] ?? null,
     c = s === null ? null : String(s),
     l = String(e.content ?? ``);
@@ -73116,9 +73116,9 @@ function K$e(e, t, n) {
 function q$e(e) {
   let emptyItems = [];
   if (!Array.isArray(e)) return emptyItems;
-  for (let n of e) {
-    let e = n?.[0];
-    e && emptyItems.push([String(e), String(n?.[1] ?? ``)]);
+  for (let replaceResult of e) {
+    let e = replaceResult?.[0];
+    e && emptyItems.push([String(e), String(replaceResult?.[1] ?? ``)]);
   }
   return emptyItems;
 }
@@ -73213,20 +73213,20 @@ function fY(e, t, n, r) {
   let emptyItems = [],
     a = ``,
     o = t + 1,
-    s = [],
+    trimStartResult = [],
     c = 1;
   for (; o < e.length;) {
     if (e[o].type === `strong_close`) {
       if (c === 1) break;
       c--;
     }
-    e[o].type === `strong_open` && c++, a += String(e[o].content ?? ``), s.push(e[o]), o++;
+    e[o].type === `strong_open` && c++, a += String(e[o].content ?? ``), trimStartResult.push(e[o]), o++;
   }
   let l = {
     ...r,
     __insideStrong: true
   };
-  return emptyItems.push(...bY(s, Z$e(n, a), undefined, l)), {
+  return emptyItems.push(...bY(trimStartResult, Z$e(n, a), undefined, l)), {
     node: {
       type: `strong`,
       children: emptyItems,
@@ -74077,7 +74077,7 @@ function bY(items, t, n, text) {
     let S = f(i);
     if (S) {
       l();
-      for (let e of S) h(e);
+      for (let normalizeResult of S) h(normalizeResult);
       s++;
       return;
     }
@@ -74309,24 +74309,24 @@ function bY(items, t, n, text) {
       if (_ && (part = part.replace(/\*+$/, ``)), part && g(part, part), _ ||= l.match(/^\*+/), !c && _) {
         let e = _[0].length;
         l = l.replace(/^\*+/, ``).replace(/\*+$/, ``);
-        let t = [];
-        if (e === 1 ? t.push({
+        let normalizeResult = [];
+        if (e === 1 ? normalizeResult.push({
           type: `em_open`,
           tag: `em`,
           nesting: 1
-        }) : e === 2 ? t.push({
+        }) : e === 2 ? normalizeResult.push({
           type: `strong_open`,
           tag: `strong`,
           nesting: 1
-        }) : e === 3 && (t.push({
+        }) : e === 3 && (normalizeResult.push({
           type: `strong_open`,
           tag: `strong`,
           nesting: 1
-        }), t.push({
+        }), normalizeResult.push({
           type: `em_open`,
           tag: `em`,
           nesting: 1
-        })), t.push({
+        })), normalizeResult.push({
           type: `link`,
           href: f,
           title: null,
@@ -74338,43 +74338,43 @@ function bY(items, t, n, text) {
           }],
           loading: m
         }), e === 1) {
-          t.push({
+          normalizeResult.push({
             type: `em_close`,
             tag: `em`,
             nesting: -1
           });
           let {
             node: e
-          } = KJ(t, 0, text);
+          } = KJ(normalizeResult, 0, text);
           h(e);
         } else if (e === 2) {
-          t.push({
+          normalizeResult.push({
             type: `strong_close`,
             tag: `strong`,
             nesting: -1
           });
           let {
             node: e
-          } = fY(t, 0, undefined, text);
+          } = fY(normalizeResult, 0, undefined, text);
           h(e);
         } else if (e === 3) {
-          t.push({
+          normalizeResult.push({
             type: `em_close`,
             tag: `em`,
             nesting: -1
-          }), t.push({
+          }), normalizeResult.push({
             type: `strong_close`,
             tag: `strong`,
             nesting: -1
           });
           let {
             node: e
-          } = fY(t, 0, undefined, text);
+          } = fY(normalizeResult, 0, undefined, text);
           h(e);
         } else {
           let {
             node: e
-          } = KJ(t, 0, text);
+          } = KJ(normalizeResult, 0, text);
           h(e);
         }
       } else text?.validateLink && !text.validateLink(f) ? g(l, l) : p({
@@ -74487,30 +74487,30 @@ function xY(e, items, n) {
     emptyItems = [],
     a = items + 1;
   for (; a < e.length && e[a].type !== `bullet_list_close` && e[a].type !== `ordered_list_close`;) if (e[a].type === `list_item_open`) {
-    let t = [],
+    let normalizeResult = [],
       r = a + 1;
     for (; r < e.length && e[r].type !== `list_item_close`;) if (e[r].type === `paragraph_open`) {
       let i = e[r + 1],
         a = e[r - 1];
-      O1e(i), D1e(i), t.push({
+      O1e(i), D1e(i), normalizeResult.push({
         type: `paragraph`,
         children: bY(i.children || [], String(i.content ?? ``), a, n),
         raw: String(i.content ?? ``)
       }), r += 3;
     } else if (e[r].type === `blockquote_open`) {
       let [i, a] = CY(e, r, n);
-      t.push(i), r = a;
+      normalizeResult.push(i), r = a;
     } else if (e[r].type === `bullet_list_open` || e[r].type === `ordered_list_open`) {
       let [i, a] = xY(e, r, n);
-      t.push(i), r = a;
+      normalizeResult.push(i), r = a;
     } else {
       let i = AY(e, r, n, SY);
-      i ? (t.push(i[0]), r = i[1]) : r += 1;
+      i ? (normalizeResult.push(i[0]), r = i[1]) : r += 1;
     }
     emptyItems.push({
       type: `list_item`,
-      children: t,
-      raw: t.map(item => item.raw).join(``)
+      children: normalizeResult,
+      raw: normalizeResult.map(item => item.raw).join(``)
     }), a = r + 1;
   } else a += 1;
   return [{
@@ -74848,9 +74848,9 @@ function B1e(e) {
 }
 function V1e(e) {
   if (!e) return `left`;
-  for (let t of e) {
-    if (!t) continue;
-    let [e, n] = t;
+  for (let normalizeResult of e) {
+    if (!normalizeResult) continue;
+    let [e, n] = normalizeResult;
     if (!n) continue;
     let lowercased = String(n).trim().toLowerCase();
     if (e === `style`) {
@@ -74862,18 +74862,18 @@ function V1e(e) {
 }
 function H1e(e, items, n) {
   let r = items + 1,
-    i = null,
+    count = null,
     emptyItems = [],
     o = false;
   for (; r < e.length && e[r].type !== `table_close`;) if (e[r].type === `thead_open`) o = true, r++;else if (e[r].type === `thead_close`) o = false, r++;else if (e[r].type === `tbody_open` || e[r].type === `tbody_close`) r++;else if (e[r].type === `tr_open`) {
-    let t = [],
+    let normalizeResult = [],
       s = r + 1;
     for (; s < e.length && e[s].type !== `tr_close`;) if (e[s].type === `th_open` || e[s].type === `td_open`) {
       let r = e[s].type === `th_open`,
         i = e[s + 1],
         a = String(i.content ?? ``),
         c = V1e(e[s].attrs);
-      t.push({
+      normalizeResult.push({
         type: `table_cell`,
         header: r || o,
         children: bY(i.children || [], a, undefined, n),
@@ -74883,21 +74883,21 @@ function H1e(e, items, n) {
     } else s++;
     let c = {
       type: `table_row`,
-      cells: t,
-      raw: t.map(item => item.raw).join(`|`)
+      cells: normalizeResult,
+      raw: normalizeResult.map(item => item.raw).join(`|`)
     };
-    o ? i = c : emptyItems.push(c), r = s + 1;
+    o ? count = c : emptyItems.push(c), r = s + 1;
   } else r++;
-  return i ||= {
+  return count ||= {
     type: `table_row`,
     cells: [],
     raw: ``
   }, [{
     type: `table`,
-    header: i,
+    header: count,
     rows: emptyItems,
     loading: e[items].loading ?? false,
-    raw: [i, ...emptyItems].map(item => item.raw).join(`
+    raw: [count, ...emptyItems].map(item => item.raw).join(`
 `)
   }, r + 1];
 }
@@ -75144,11 +75144,11 @@ function kY(text, t, n) {
           u !== -1 && (h = fallbackValue !== -1 && u < fallbackValue ? l.slice(u + 1, fallbackValue) : l.slice(u + 1)), fallbackValue === -1 && (h = q1e(h, i));
           let emptyItems = [],
             _ = /\s([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'>]+)))?/g,
-            v;
-          for (; (v = _.exec(d)) !== null;) {
-            let e = v[1];
+            setIntervalResult;
+          for (; (setIntervalResult = _.exec(d)) !== null;) {
+            let e = setIntervalResult[1];
             if (!e || e.toLowerCase() === i) continue;
-            let t = v[2] || v[3] || v[4] || ``;
+            let t = setIntervalResult[2] || setIntervalResult[3] || setIntervalResult[4] || ``;
             emptyItems.push([e, t]);
           }
           let y = !n?.final && !f && p == null;
@@ -75236,7 +75236,7 @@ function MY(e) {
   let t = e?.customHtmlTags;
   if (!Array.isArray(t) || t.length === 0) return qq;
   let n = new Set(qq);
-  for (let e of nJ(t)) e && n.add(e);
+  for (let normalizeResult of nJ(t)) normalizeResult && n.add(normalizeResult);
   return n;
 }
 function e0e(e) {
@@ -75416,8 +75416,8 @@ function s0e(e) {
 function zY(e, t) {
   let regExp = new RegExp(String.raw`<\s*\/\s*${Zq(t)}(?=\s|>)`, `gi`),
     r = -1,
-    i;
-  for (; (i = regExp.exec(e)) !== null;) r = i.index;
+    count;
+  for (; (count = regExp.exec(e)) !== null;) r = count.index;
   return r;
 }
 function BY(e, t) {
@@ -75704,11 +75704,11 @@ function _0e(items) {
         },
         l = 0,
         parts = e.split(/\r?\n/);
-      for (let e of parts) {
+      for (let normalizeResult of parts) {
         let a = l,
-          o = l + e.length;
+          o = l + normalizeResult.length;
         if (t < a) break;
-        let s = c(e);
+        let s = c(normalizeResult);
         if (s) {
           let markerChar = s.markerChar,
             markerLen = s.markerLen;
@@ -76041,7 +76041,7 @@ function b0e(items, t) {
       v = a(_);
     v && (s ? v.markerChar === c && v.markerLen >= l && /^\s*$/.test(v.rest) && (s = false, c = ``, l = 0) : (s = true, c = v.markerChar, l = v.markerLen));
     let y = _;
-    if (!s && y.includes(`</`)) for (let e of mapped) y = y.replace(e, (e, t, n, r) => {
+    if (!s && y.includes(`</`)) for (let normalizeResult of mapped) y = y.replace(normalizeResult, (e, t, n, r) => {
       if (r.replace(/^[\t ]+/, ``).startsWith(`|`)) return e;
       let replaced = r.slice(0, n).replace(/^[\t ]+/, ``);
       if (replaced.length > 0) {
@@ -76288,8 +76288,8 @@ function UY(text, t, n = {}) {
 ` : ``) : /\n[[(]\n*$/.test(replaced) && (replaced = replaced.replace(/(\n\[|\n\()+\n*$/g, `
 `))), n.customHtmlTags?.length && replaced.includes(`<`)) {
     let e = nJ(n.customHtmlTags);
-    if (e.length && (replaced = v0e(replaced, e), replaced = y0e(replaced, e), replaced = x0e(replaced, e), replaced = b0e(replaced, e), replaced.includes(`</`))) for (let t of e) {
-      let regExp = new RegExp(String.raw`(^[\t ]*<\s*\/\s*${t}\s*>[\t ]*)(\r?\n)(?![\t ]*\r?\n|$)`, `gim`);
+    if (e.length && (replaced = v0e(replaced, e), replaced = y0e(replaced, e), replaced = x0e(replaced, e), replaced = b0e(replaced, e), replaced.includes(`</`))) for (let normalizeResult of e) {
+      let regExp = new RegExp(String.raw`(^[\t ]*<\s*\/\s*${normalizeResult}\s*>[\t ]*)(\r?\n)(?![\t ]*\r?\n|$)`, `gim`);
       replaced = replaced.replace(regExp, `$1$2$2`);
     }
   }
@@ -76338,12 +76338,12 @@ function UY(text, t, n = {}) {
       t = n => {
         if (!n || typeof n != `object` || weakSet.has(n)) return;
         if (weakSet.add(n), Array.isArray(n)) {
-          for (let e of n) t(e);
+          for (let normalizeResult of n) t(normalizeResult);
           return;
         }
         let r = n;
         r.type === `html_block` && r.loading === true && (r.loading = false);
-        for (let e of Object.values(r)) t(e);
+        for (let normalizeResult of Object.values(r)) t(normalizeResult);
       };
     t(p);
   }
@@ -76592,22 +76592,22 @@ function O0e(items) {
       });
     } else {
       let e = trimmed.indexOf(` `),
-        n,
+        replaceResult,
         r = ``;
-      e === -1 ? n = endsWith ? trimmed.slice(0, -1).trim() : trimmed.trim() : (n = trimmed.slice(0, e).trim(), r = trimmed.slice(e + 1));
+      e === -1 ? replaceResult = endsWith ? trimmed.slice(0, -1).trim() : trimmed.trim() : (replaceResult = trimmed.slice(0, e).trim(), r = trimmed.slice(e + 1));
       let i = {};
       if (r) {
         let e = /([^\s=]+)(?:=(?:"([^"]*)"|'([^']*)'|(\S*)))?/g,
-          t;
-        for (; (t = e.exec(r)) !== null;) {
-          let e = t[1],
-            fallbackValue = t[2] ?? t[3] ?? t[4] ?? ``;
+          normalizeResult;
+        for (; (normalizeResult = e.exec(r)) !== null;) {
+          let e = normalizeResult[1],
+            fallbackValue = normalizeResult[2] ?? normalizeResult[3] ?? normalizeResult[4] ?? ``;
           e && !e.endsWith(`/`) && (i[e] = fallbackValue);
         }
       }
       emptyItems.push({
-        type: endsWith || Kq.has(n.toLowerCase()) ? `self_closing` : `tag_open`,
-        tagName: n,
+        type: endsWith || Kq.has(replaceResult.toLowerCase()) ? `self_closing` : `tag_open`,
+        tagName: replaceResult,
         attrs: i
       });
     }
@@ -76681,10 +76681,10 @@ function k0e(items) {
     let d = {};
     if (u) {
       let e = /([^\s=]+)(?:=(?:"([^"]*)"|'([^']*)'|(\S*)))?/g,
-        t;
-      for (; (t = e.exec(u)) !== null;) {
-        let e = t[1],
-          fallbackValue = t[2] ?? t[3] ?? t[4] ?? ``;
+        normalizeResult;
+      for (; (normalizeResult = e.exec(u)) !== null;) {
+        let e = normalizeResult[1],
+          fallbackValue = normalizeResult[2] ?? normalizeResult[3] ?? normalizeResult[4] ?? ``;
         e && !e.endsWith(`/`) && (d[e] = fallbackValue);
       }
     }
@@ -76706,8 +76706,8 @@ function A0e(e) {
 function j0e(items, t) {
   if (!items || !items.includes(`<`) || !t || Object.keys(t).length === 0) return false;
   GY.lastIndex = 0;
-  let n;
-  for (; (n = GY.exec(items)) !== null;) if (rX(n[1], t)) return true;
+  let replaceResult;
+  for (; (replaceResult = GY.exec(items)) !== null;) if (rX(replaceResult[1], t)) return true;
   return false;
 }
 function cX(e, t = `safe`) {
@@ -76715,46 +76715,46 @@ function cX(e, t = `safe`) {
   if (t === `escape`) return JY(e);
   let n = k0e(e),
     emptyItems = [],
-    i = [],
+    count = [],
     a = 0;
-  for (let e of n) {
-    if (e.type === `text`) {
-      a === 0 && i.push(JY(e.content ?? ``));
+  for (let normalizeResult of n) {
+    if (normalizeResult.type === `text`) {
+      a === 0 && count.push(JY(normalizeResult.content ?? ``));
       continue;
     }
-    let n = XY(e.tagName);
+    let n = XY(normalizeResult.tagName);
     if (!n) continue;
     if (QY(n, t)) {
-      e.type === `tag_open` ? a += 1 : e.type === `tag_close` && a > 0 && --a;
+      normalizeResult.type === `tag_open` ? a += 1 : normalizeResult.type === `tag_close` && a > 0 && --a;
       continue;
     }
     if (a > 0) continue;
     if (t === `safe` && ZY(n, t)) {
-      i.push(A0e(e));
+      count.push(A0e(normalizeResult));
       continue;
     }
-    if (e.type === `self_closing`) {
-      i.push(`<${n}${$Y(nX(e.attrs ?? {}, t, n))}>`);
+    if (normalizeResult.type === `self_closing`) {
+      count.push(`<${n}${$Y(nX(normalizeResult.attrs ?? {}, t, n))}>`);
       continue;
     }
-    if (e.type === `tag_open`) {
-      i.push(`<${n}${$Y(nX(e.attrs ?? {}, t, n))}>`), Kq.has(n) || emptyItems.push(n);
+    if (normalizeResult.type === `tag_open`) {
+      count.push(`<${n}${$Y(nX(normalizeResult.attrs ?? {}, t, n))}>`), Kq.has(n) || emptyItems.push(n);
       continue;
     }
     let lastIndexOf = emptyItems.lastIndexOf(n);
     if (lastIndexOf === -1) continue;
     for (; emptyItems.length > lastIndexOf + 1;) {
       let e = emptyItems.pop();
-      e && i.push(`</${e}>`);
+      e && count.push(`</${e}>`);
     }
     let s = emptyItems.pop();
-    s && i.push(`</${s}>`);
+    s && count.push(`</${s}>`);
   }
   for (; emptyItems.length > 0;) {
     let e = emptyItems.pop();
-    e && i.push(`</${e}>`);
+    e && count.push(`</${e}>`);
   }
-  return i.join(``);
+  return count.join(``);
 }
 var lX = [];
 function uX(e = `editor-${Date.now()}`, t = {}) {
@@ -76762,27 +76762,27 @@ function uX(e = `editor-${Date.now()}`, t = {}) {
     r = {
       "common.copy": `Copy`
     },
-    i;
-  if (typeof t.i18n == `function`) i = t.i18n;else if (t.i18n && typeof t.i18n == `object`) {
+    count;
+  if (typeof t.i18n == `function`) count = t.i18n;else if (t.i18n && typeof t.i18n == `object`) {
     let i18n = t.i18n;
-    i = t => i18n[t] ?? r[t] ?? t;
-  } else i = e => r[e] ?? e;
-  if (Array.isArray(t.plugin)) for (let e of t.plugin) {
-    let t = e;
+    count = t => i18n[t] ?? r[t] ?? t;
+  } else count = e => r[e] ?? e;
+  if (Array.isArray(t.plugin)) for (let normalizeResult of t.plugin) {
+    let t = normalizeResult;
     if (Array.isArray(t)) {
       let [e, ...r] = t;
       typeof e == `function` && n.use(e, ...r);
     } else typeof t == `function` && n.use(t);
   }
-  if (Array.isArray(t.apply)) for (let e of t.apply) try {
-    e(n);
+  if (Array.isArray(t.apply)) for (let normalizeResult of t.apply) try {
+    normalizeResult(n);
   } catch (e) {
     console.error(`[getMarkdown] apply function threw an error`, e);
   }
-  if (lX.length) for (let e of lX) if (Array.isArray(e)) {
-    let [t, ...r] = e;
+  if (lX.length) for (let normalizeResult of lX) if (Array.isArray(normalizeResult)) {
+    let [t, ...r] = normalizeResult;
     typeof t == `function` && n.use(t, ...r);
-  } else typeof e == `function` && n.use(e);
+  } else typeof normalizeResult == `function` && n.use(normalizeResult);
   n.use(sJe), n.use(uJe), n.use(iJe);
   let fallbackValue = $W.default ?? $W;
   n.use(fallbackValue), n.use(rJe), n.use(nJe), n.core.ruler.after(`block`, `mark_fence_closed`, items => {
@@ -76790,11 +76790,11 @@ function uX(e = `editor-${Date.now()}`, t = {}) {
       n = itemsAlias.src,
       r = !!itemsAlias.env?.__markstreamFinal,
       parts = n.split(/\r?\n/);
-    for (let e of itemsAlias.tokens) {
-      if (e.type !== `fence` || !e.map || !e.markup) continue;
-      let t = e.map[0],
-        n = e.map[1],
-        markup = e.markup,
+    for (let normalizeResult of itemsAlias.tokens) {
+      if (normalizeResult.type !== `fence` || !normalizeResult.map || !normalizeResult.markup) continue;
+      let t = normalizeResult.map[0],
+        n = normalizeResult.map[1],
+        markup = normalizeResult.markup,
         o = markup[0],
         s = markup.length,
         c = parts[Math.max(0, n - 1)] ?? ``,
@@ -76805,7 +76805,7 @@ function uX(e = `editor-${Date.now()}`, t = {}) {
       let d = l + u;
       for (; d < c.length && (c[d] === ` ` || c[d] === `	`);) d++;
       let f = r ? true : n > t + 1 && u >= s && d === c.length,
-        p = e;
+        p = normalizeResult;
       p.meta = p.meta ?? {}, p.meta.unclosed = !f, p.meta.closed = !!f;
     }
   }), n.inline.ruler.before(`sub`, `wave`, (e, t) => {
@@ -76831,7 +76831,7 @@ function uX(e = `editor-${Date.now()}`, t = {}) {
     return `<div class="code-block" data-code="${s}" data-lang="${c}" id="${`editor-${e}-${n}-${c}`}">
       <div class="code-header">
         <span class="code-lang">${c.toUpperCase()}</span>
-        <button class="copy-button" data-code="${s}">${i(`common.copy`)}</button>
+        <button class="copy-button" data-code="${s}">${count(`common.copy`)}</button>
       </div>
       <div class="code-editor"></div>
     </div>`;
@@ -77176,9 +77176,9 @@ function PX(e, t, n = `safe`) {
       return a;
     }(O0e(e), t, n);
   } catch (e) {
-    return r = e, DX && console.error(`Failed to parse HTML to VNodes:`, r), null;
+    return requestAnimationFrameResult = e, DX && console.error(`Failed to parse HTML to VNodes:`, requestAnimationFrameResult), null;
   }
-  var r;
+  var requestAnimationFrameResult;
 }
 var J0e = [`innerHTML`],
   FX = _X(defineComponent({
@@ -78095,7 +78095,7 @@ var p2e = [`href`, `title`, `aria-label`, `aria-hidden`, `target`, `rel`],
           let e = eventAlias.node?.attrs;
           if (!e || typeof e != `object`) return {};
           let n = {};
-          if (Array.isArray(e)) for (let t of e) Array.isArray(t) && t[0] && (n[String(t[0])] = String(t[1] ?? ``));else for (let [t, r] of Object.entries(e)) t && r != null && false !== r && (n[t] = true === r ? `` : String(r));
+          if (Array.isArray(e)) for (let normalizeResult of e) Array.isArray(normalizeResult) && normalizeResult[0] && (n[String(normalizeResult[0])] = String(normalizeResult[1] ?? ``));else for (let [t, r] of Object.entries(e)) t && r != null && false !== r && (n[t] = true === r ? `` : String(r));
           return kX(n);
         }),
         l = computed(() => pX(pX({}, s), c.value)),
@@ -78509,21 +78509,21 @@ function w2e(e, event) {
     }), 16)) : null,
     a = n ? window.cancelIdleCallback ?? (e => window.clearTimeout(e)) : null,
     o = null,
-    s = null,
+    trimStartResult = null,
     c = new Map(),
     l = new Set(),
-    u = null;
+    setTimeoutResult = null;
   function d() {
     if (!c.size) {
       try {
         o?.disconnect();
       } catch {}
-      o = null, s = null, l.size || function () {
-        if (u != null) {
+      o = null, trimStartResult = null, l.size || function () {
+        if (setTimeoutResult != null) {
           try {
-            a?.(u);
+            a?.(setTimeoutResult);
           } catch {}
-          u = null;
+          setTimeoutResult = null;
         }
       }();
     }
@@ -78544,8 +78544,8 @@ function w2e(e, event) {
     }
   }
   function p() {
-    i && u == null && l.size && (u = i(() => {
-      u = null;
+    i && setTimeoutResult == null && l.size && (setTimeoutResult = i(() => {
+      setTimeoutResult = null;
       let e = l.values().next().value;
       e && (l.delete(e), f(e), l.size && p());
     }, {
@@ -78582,19 +78582,19 @@ function w2e(e, event) {
           threshold: n?.threshold ?? 0
         };
       }(t, r);
-      if (o && (l = i, (a = s) && a.root === l.root && a.rootMargin === l.rootMargin && a.threshold === l.threshold)) return o;
+      if (o && (l = i, (a = trimStartResult) && a.root === l.root && a.rootMargin === l.rootMargin && a.threshold === l.threshold)) return o;
       var a, l;
       if (o) try {
         o.disconnect();
       } catch {}
       o = new IntersectionObserver(e => {
-        for (let t of e) (t.isIntersecting || t.intersectionRatio > 0) && f(t.target);
+        for (let normalizeResult of e) (normalizeResult.isIntersecting || normalizeResult.intersectionRatio > 0) && f(normalizeResult.target);
       }, {
         root: i.root,
         rootMargin: i.rootMargin,
         threshold: i.threshold
-      }), s = i;
-      for (let e of c.keys()) o.observe(e);
+      }), trimStartResult = i;
+      for (let normalizeResult of c.keys()) o.observe(normalizeResult);
       return o;
     }(t, i);
     return _ ? (c.set(t, {
@@ -78616,20 +78616,20 @@ function MZ() {
   let e = Ye(jZ, undefined);
   if (e) return e;
   let weakMap = new WeakMap(),
-    n = null,
+    replaceResult = null,
     r = new Set(),
-    i = null,
+    count = null,
     a = typeof window < `u` ? window.requestIdleCallback ?? (e => window.setTimeout(() => e({
       didTimeout: true,
       timeRemaining: () => 0
     }), 16)) : null,
     o = typeof window < `u` ? window.cancelIdleCallback ?? (e => window.clearTimeout(e)) : null,
     s = () => {
-      if (i != null) {
+      if (count != null) {
         try {
-          o?.(i);
+          o?.(count);
         } catch {}
-        i = null;
+        count = null;
       }
     },
     c = e => {
@@ -78642,14 +78642,14 @@ function MZ() {
           } catch {}
         }
         try {
-          n?.unobserve(e);
+          replaceResult?.unobserve(e);
         } catch {}
         weakMap.delete(e), r.delete(e), r.size || s();
       }
     },
     l = () => {
-      a && i == null && r.size && (i = a(() => {
-        i = null;
+      a && count == null && r.size && (count = a(() => {
+        count = null;
         let e = r.values().next().value;
         e && (r.delete(e), c(e), r.size && l());
       }, {
@@ -78667,17 +78667,17 @@ function MZ() {
       }),
       d = () => {
         try {
-          n?.unobserve(e);
+          replaceResult?.unobserve(e);
         } catch {}
         weakMap.delete(e), r.delete(e), r.size || s();
       },
-      fallbackValue = n || (typeof window > `u` || typeof IntersectionObserver > `u` ? null : (n = new IntersectionObserver(e => {
-        for (let t of e) (t.isIntersecting || t.intersectionRatio > 0) && c(t.target);
+      fallbackValue = replaceResult || (typeof window > `u` || typeof IntersectionObserver > `u` ? null : (replaceResult = new IntersectionObserver(e => {
+        for (let normalizeResult of e) (normalizeResult.isIntersecting || normalizeResult.intersectionRatio > 0) && c(normalizeResult.target);
       }, {
         root: null,
         rootMargin: `300px`,
         threshold: 0
-      }), n));
+      }), replaceResult));
     return fallbackValue ? (weakMap.set(e, {
       resolve: a,
       visible: i
@@ -78796,8 +78796,8 @@ var T2e = {
         v = ref(null),
         y = !!t.node.loading;
       return typeof window < `u` ? (watch(l, value => {
-        var n, r;
-        if ((r = (n = v.value)?.destroy) == null || r.call(n), v.value = null, !y) return u.value = true, void (d.value = t.node.content);
+        var replaceResult, requestAnimationFrameResult;
+        if ((requestAnimationFrameResult = (replaceResult = v.value)?.destroy) == null || requestAnimationFrameResult.call(replaceResult), v.value = null, !y) return u.value = true, void (d.value = t.node.content);
         if (!value) return void (u.value = false);
         let i = _(value, {
           rootMargin: `400px`
@@ -78810,8 +78810,8 @@ var T2e = {
       }), watch(() => t.node.content, value => {
         y && !u.value || (d.value = value);
       })) : u.value = true, onMounted(() => {
-        var e, t;
-        (t = (e = v.value)?.destroy) == null || t.call(e), v.value = null;
+        var normalizeResult, t;
+        (t = (normalizeResult = v.value)?.destroy) == null || t.call(normalizeResult), v.value = null;
       }), (t, n) => (openBlock(), createBlock(Be(h.value ? p.value : `div`), ot({
         ref_key: `htmlRef`,
         ref: l,
@@ -79026,8 +79026,8 @@ var j2e = {
     setup(event) {
       let eventAlias = event,
         computedResult = computed(() => {
-          var e;
-          return (e = eventAlias.node.loading) != null && e;
+          var normalizeResult;
+          return (normalizeResult = eventAlias.node.loading) != null && normalizeResult;
         }),
         computedData = computed(() => eventAlias.node.rows ?? []),
         i = ref(null),
@@ -79264,22 +79264,22 @@ var JZ = new Set(`，.．.！.：.；.？.、.。.・.）.〕.〉.》.」.』.�
 function J2e(e) {
   if (QZ(e)) return true;
   let t = false;
-  for (let n of e) if (ZZ.has(n)) t = true;else if (!t || !HZ.test(n)) return false;
+  for (let replaceResult of e) if (ZZ.has(replaceResult)) t = true;else if (!t || !HZ.test(replaceResult)) return false;
   return t;
 }
 function Y2e(e) {
-  for (let t of e) if (!JZ.has(t) && !ZZ.has(t)) return false;
+  for (let normalizeResult of e) if (!JZ.has(normalizeResult) && !ZZ.has(normalizeResult)) return false;
   return e.length > 0;
 }
 function X2e(e) {
   if (QZ(e)) return true;
-  for (let t of e) if (!YZ.has(t) && !XZ.has(t) && !HZ.test(t)) return false;
+  for (let normalizeResult of e) if (!YZ.has(normalizeResult) && !XZ.has(normalizeResult) && !HZ.test(normalizeResult)) return false;
   return e.length > 0;
 }
 function QZ(e) {
   let t = false;
-  for (let n of e) if (n !== `\\` && !HZ.test(n)) {
-    if (!(YZ.has(n) || ZZ.has(n) || XZ.has(n))) return false;
+  for (let replaceResult of e) if (replaceResult !== `\\` && !HZ.test(replaceResult)) {
+    if (!(YZ.has(replaceResult) || ZZ.has(replaceResult) || XZ.has(replaceResult))) return false;
     t = true;
   }
   return t;
@@ -79383,15 +79383,15 @@ function i4e(e, t, n, r) {
     s = n,
     c = false,
     l = 0;
-  for (let u of e) {
-    let e = t4e(u, r),
+  for (let setTimeoutResult of e) {
+    let e = t4e(setTimeoutResult, r),
       d = e === `text` && t;
     a === null || e !== a || d !== c ? (a !== null && emptyItems.push({
       text: iQ(o),
       isWordLike: c,
       kind: a,
       start: s
-    }), a = e, o = [u], s = n + l, c = d, l += u.length) : (o.push(u), l += u.length);
+    }), a = e, o = [setTimeoutResult], s = n + l, c = d, l += setTimeoutResult.length) : (o.push(setTimeoutResult), l += setTimeoutResult.length);
   }
   return a !== null && emptyItems.push({
     text: iQ(o),
@@ -79415,48 +79415,48 @@ var c4e = new Set([`:`, `-`, `/`, `×`, `,`, `.`, `+`, `–`, `—`]),
   oQ = /^[A-Za-z0-9_]+[,:;]*$/,
   sQ = /[,:;]+$/;
 function cQ(e) {
-  for (let t of e) if (UZ.test(t)) return true;
+  for (let normalizeResult of e) if (UZ.test(normalizeResult)) return true;
   return false;
 }
 function lQ(e) {
   if (e.length === 0) return false;
-  for (let t of e) if (!UZ.test(t) && !c4e.has(t)) return false;
+  for (let normalizeResult of e) if (!UZ.test(normalizeResult) && !c4e.has(normalizeResult)) return false;
   return true;
 }
 function uQ(e, items, n) {
-  var r;
+  var requestAnimationFrameResult;
   let i = (VZ === null && (VZ = new Intl.Segmenter(undefined, {
       granularity: `word`
     })), VZ),
     a = 0,
     emptyItems = [],
-    s = [],
+    trimStartResult = [],
     c = [],
-    l = [],
+    setTimeoutResult = [],
     u = [],
-    d = [],
+    count = [],
     f = [],
     p = [],
     m = [],
-    h = [],
+    setIntervalResult = [],
     g = [],
     _ = [];
-  for (let v of i.segment(e)) for (let e of i4e(v.segment, (r = v.isWordLike) != null && r, v.index, n)) {
+  for (let v of i.segment(e)) for (let normalizeResult of i4e(v.segment, (requestAnimationFrameResult = v.isWordLike) != null && requestAnimationFrameResult, v.index, n)) {
     let n = function () {
-        d[C] !== null && (s[C] = [tQ(emptyItems, d, f, C)], d[C] = null), s[C].push(e.text), c[C] = c[C] || e.isWordLike, p[C] = p[C] || v, m[C] = m[C] || y, h[C] = x, g[C] = S, _[C] = nQ(m[C], b);
+        count[C] !== null && (trimStartResult[C] = [tQ(emptyItems, count, f, C)], count[C] = null), trimStartResult[C].push(normalizeResult.text), c[C] = c[C] || normalizeResult.isWordLike, p[C] = p[C] || v, m[C] = m[C] || y, setIntervalResult[C] = x, g[C] = S, _[C] = nQ(m[C], b);
       },
-      r = e.kind === `text`,
-      i = Q2e(e.text, e.isWordLike, e.kind),
-      v = KZ(e.text),
-      y = WZ(e.text),
-      b = eQ(e.text),
-      x = rQ(e.text),
-      S = $2e(e.text),
+      r = normalizeResult.kind === `text`,
+      i = Q2e(normalizeResult.text, normalizeResult.isWordLike, normalizeResult.kind),
+      v = KZ(normalizeResult.text),
+      y = WZ(normalizeResult.text),
+      b = eQ(normalizeResult.text),
+      x = rQ(normalizeResult.text),
+      S = $2e(normalizeResult.text),
       C = a - 1;
-    items.carryCJKAfterClosingQuote && r && a > 0 && l[C] === `text` && v && p[C] && h[C] || r && a > 0 && l[C] === `text` && Y2e(e.text) && p[C] || r && a > 0 && l[C] === `text` && g[C] ? n() : r && a > 0 && l[C] === `text` && e.isWordLike && y && _[C] ? (n(), c[C] = true) : i !== null && a > 0 && l[C] === `text` && d[C] === i ? f[C] = (f[C] ?? 1) + 1 : r && !e.isWordLike && a > 0 && l[C] === `text` && (J2e(e.text) || e.text === `-` && c[C]) ? n() : (emptyItems[a] = e.text, s[a] = [e.text], c[a] = e.isWordLike, l[a] = e.kind, u[a] = e.start, d[a] = i, f[a] = i === null ? 0 : 1, p[a] = v, m[a] = y, h[a] = x, g[a] = S, _[a] = nQ(y, b), a++);
+    items.carryCJKAfterClosingQuote && r && a > 0 && setTimeoutResult[C] === `text` && v && p[C] && setIntervalResult[C] || r && a > 0 && setTimeoutResult[C] === `text` && Y2e(normalizeResult.text) && p[C] || r && a > 0 && setTimeoutResult[C] === `text` && g[C] ? n() : r && a > 0 && setTimeoutResult[C] === `text` && normalizeResult.isWordLike && y && _[C] ? (n(), c[C] = true) : i !== null && a > 0 && setTimeoutResult[C] === `text` && count[C] === i ? f[C] = (f[C] ?? 1) + 1 : r && !normalizeResult.isWordLike && a > 0 && setTimeoutResult[C] === `text` && (J2e(normalizeResult.text) || normalizeResult.text === `-` && c[C]) ? n() : (emptyItems[a] = normalizeResult.text, trimStartResult[a] = [normalizeResult.text], c[a] = normalizeResult.isWordLike, setTimeoutResult[a] = normalizeResult.kind, u[a] = normalizeResult.start, count[a] = i, f[a] = i === null ? 0 : 1, p[a] = v, m[a] = y, setIntervalResult[a] = x, g[a] = S, _[a] = nQ(y, b), a++);
   }
-  for (let e = 0; e < a; e++) d[e] === null ? emptyItems[e] = iQ(s[e]) : emptyItems[e] = tQ(emptyItems, d, f, e);
-  for (let e = 1; e < a; e++) l[e] === `text` && !c[e] && QZ(emptyItems[e]) && l[e - 1] === `text` && (emptyItems[e - 1] += emptyItems[e], c[e - 1] = c[e - 1] || c[e], emptyItems[e] = ``);
+  for (let e = 0; e < a; e++) count[e] === null ? emptyItems[e] = iQ(trimStartResult[e]) : emptyItems[e] = tQ(emptyItems, count, f, e);
+  for (let e = 1; e < a; e++) setTimeoutResult[e] === `text` && !c[e] && QZ(emptyItems[e]) && setTimeoutResult[e - 1] === `text` && (emptyItems[e - 1] += emptyItems[e], c[e - 1] = c[e - 1] || c[e], emptyItems[e] = ``);
   let v = Array.from({
       length: a
     }, () => null),
@@ -79464,7 +79464,7 @@ function uQ(e, items, n) {
   for (let e = a - 1; e >= 0; e--) {
     let t = emptyItems[e];
     if (t.length !== 0) {
-      if (l[e] === `text` && !c[e] && X2e(t) && y >= 0 && l[y] === `text`) {
+      if (setTimeoutResult[e] === `text` && !c[e] && X2e(t) && y >= 0 && setTimeoutResult[y] === `text`) {
         let fallbackValue = v[y] ?? [];
         fallbackValue.push(t), v[y] = fallbackValue, u[y] = u[e], emptyItems[e] = ``;
         continue;
@@ -79479,9 +79479,9 @@ function uQ(e, items, n) {
   let b = 0;
   for (let e = 0; e < a; e++) {
     let t = emptyItems[e];
-    t.length !== 0 && (b !== e && (emptyItems[b] = t, c[b] = c[e], l[b] = l[e], u[b] = u[e]), b++);
+    t.length !== 0 && (b !== e && (emptyItems[b] = t, c[b] = c[e], setTimeoutResult[b] = setTimeoutResult[e], u[b] = u[e]), b++);
   }
-  emptyItems.length = b, c.length = b, l.length = b, u.length = b;
+  emptyItems.length = b, c.length = b, setTimeoutResult.length = b, u.length = b;
   let x = function (e) {
     let part = e.texts.slice(),
       n = e.isWordLike.slice(),
@@ -79500,8 +79500,8 @@ function uQ(e, items, n) {
       starts: i
     };
   }(function (e) {
-    let t = [],
-      n = [],
+    let normalizeResult = [],
+      replaceResult = [],
       r = [],
       i = [];
     for (let a = 0; a < e.len; a++) {
@@ -79516,21 +79516,21 @@ function uQ(e, items, n) {
           let t = e.texts[l];
           s.push(t), c = sQ.test(t), l++;
         }
-        t.push(iQ(s)), n.push(true), r.push(`text`), i.push(e.starts[a]), a = l - 1;
+        normalizeResult.push(iQ(s)), replaceResult.push(true), r.push(`text`), i.push(e.starts[a]), a = l - 1;
         continue;
       }
-      t.push(o), n.push(c), r.push(s), i.push(e.starts[a]);
+      normalizeResult.push(o), replaceResult.push(c), r.push(s), i.push(e.starts[a]);
     }
     return {
-      len: t.length,
-      texts: t,
-      isWordLike: n,
+      len: normalizeResult.length,
+      texts: normalizeResult,
+      isWordLike: replaceResult,
       kinds: r,
       starts: i
     };
   }(function (e) {
-    let t = [],
-      n = [],
+    let normalizeResult = [],
+      replaceResult = [],
       r = [],
       i = [];
     for (let a = 0; a < e.len; a++) {
@@ -79548,23 +79548,23 @@ function uQ(e, items, n) {
           for (let c = 0; c < parts.length; c++) {
             let l = parts[c],
               u = c < parts.length - 1 ? `${l}-` : l;
-            t.push(u), n.push(true), r.push(`text`), i.push(e.starts[a] + o), o += u.length;
+            normalizeResult.push(u), replaceResult.push(true), r.push(`text`), i.push(e.starts[a] + o), o += u.length;
           }
           continue;
         }
       }
-      t.push(o), n.push(e.isWordLike[a]), r.push(e.kinds[a]), i.push(e.starts[a]);
+      normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), r.push(e.kinds[a]), i.push(e.starts[a]);
     }
     return {
-      len: t.length,
-      texts: t,
-      isWordLike: n,
+      len: normalizeResult.length,
+      texts: normalizeResult,
+      isWordLike: replaceResult,
       kinds: r,
       starts: i
     };
   }(function (e) {
-    let t = [],
-      n = [],
+    let normalizeResult = [],
+      replaceResult = [],
       r = [],
       i = [];
     for (let a = 0; a < e.len; a++) {
@@ -79574,38 +79574,38 @@ function uQ(e, items, n) {
         let s = [o],
           c = a + 1;
         for (; c < e.len && e.kinds[c] === `text` && lQ(e.texts[c]);) s.push(e.texts[c]), c++;
-        t.push(iQ(s)), n.push(true), r.push(`text`), i.push(e.starts[a]), a = c - 1;
+        normalizeResult.push(iQ(s)), replaceResult.push(true), r.push(`text`), i.push(e.starts[a]), a = c - 1;
         continue;
       }
-      t.push(o), n.push(e.isWordLike[a]), r.push(s), i.push(e.starts[a]);
+      normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), r.push(s), i.push(e.starts[a]);
     }
     return {
-      len: t.length,
-      texts: t,
-      isWordLike: n,
+      len: normalizeResult.length,
+      texts: normalizeResult,
+      isWordLike: replaceResult,
       kinds: r,
       starts: i
     };
   }(function (e) {
-    let t = [],
-      n = [],
+    let normalizeResult = [],
+      replaceResult = [],
       r = [],
       i = [];
     for (let a = 0; a < e.len; a++) {
       let o = e.texts[a];
-      if (t.push(o), n.push(e.isWordLike[a]), r.push(e.kinds[a]), i.push(e.starts[a]), !s4e(o)) continue;
+      if (normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), r.push(e.kinds[a]), i.push(e.starts[a]), !s4e(o)) continue;
       let s = a + 1;
       if (s >= e.len || aQ(e.kinds[s])) continue;
       let c = [],
         l = e.starts[s],
         u = s;
       for (; u < e.len && !aQ(e.kinds[u]);) c.push(e.texts[u]), u++;
-      c.length > 0 && (t.push(iQ(c)), n.push(true), r.push(`text`), i.push(l), a = u - 1);
+      c.length > 0 && (normalizeResult.push(iQ(c)), replaceResult.push(true), r.push(`text`), i.push(l), a = u - 1);
     }
     return {
-      len: t.length,
-      texts: t,
-      isWordLike: n,
+      len: normalizeResult.length,
+      texts: normalizeResult,
+      isWordLike: replaceResult,
       kinds: r,
       starts: i
     };
@@ -79638,8 +79638,8 @@ function uQ(e, items, n) {
       starts: i
     };
   }(function (e) {
-    let t = [],
-      n = [],
+    let normalizeResult = [],
+      replaceResult = [],
       r = [],
       i = [],
       a = 0;
@@ -79654,7 +79654,7 @@ function uQ(e, items, n) {
         for (a++; a < e.len && e.kinds[a] === `glue`;) u.push(e.texts[a]), a++;
         let f = iQ(u);
         if (!(a < e.len && e.kinds[a] === `text`)) {
-          t.push(f), n.push(false), r.push(`glue`), i.push(d);
+          normalizeResult.push(f), replaceResult.push(false), r.push(`glue`), i.push(d);
           continue;
         }
         o[0] = f, o.push(e.texts[a]), s = e.isWordLike[a], c = `text`, l = d, a++;
@@ -79665,12 +79665,12 @@ function uQ(e, items, n) {
         let n = iQ(t);
         a < e.len && e.kinds[a] === `text` ? (o.push(n, e.texts[a]), s ||= e.isWordLike[a], a++) : o.push(n);
       }
-      t.push(iQ(o)), n.push(s), r.push(c), i.push(l);
+      normalizeResult.push(iQ(o)), replaceResult.push(s), r.push(c), i.push(l);
     }
     return {
-      len: t.length,
-      texts: t,
-      isWordLike: n,
+      len: normalizeResult.length,
+      texts: normalizeResult,
+      isWordLike: replaceResult,
       kinds: r,
       starts: i
     };
@@ -79678,7 +79678,7 @@ function uQ(e, items, n) {
     len: b,
     texts: emptyItems,
     isWordLike: c,
-    kinds: l,
+    kinds: setTimeoutResult,
     starts: u
   })))))));
   for (let e = 0; e < x.len - 1; e++) {
@@ -79758,7 +79758,7 @@ function bQ(e, t, n) {
     return t.emojiCount === undefined && (t.emojiCount = function (e) {
       let t = 0,
         n = yQ();
-      for (let r of n.segment(e)) f4e(r.segment) && t++;
+      for (let requestAnimationFrameResult of n.segment(e)) f4e(requestAnimationFrameResult.segment) && t++;
       return t;
     }(e)), t.emojiCount;
   }(e, t) * n;
@@ -79843,31 +79843,31 @@ function xQ(e, t, n) {
 var SQ = null;
 function h4e(e, t) {
   let emptyItems = [],
-    r = [],
+    requestAnimationFrameResult = [],
     i = 0,
     a = false,
     o = false,
     s = false;
   function c() {
-    r.length !== 0 && (emptyItems.push({
-      text: r.length === 1 ? r[0] : r.join(``),
+    requestAnimationFrameResult.length !== 0 && (emptyItems.push({
+      text: requestAnimationFrameResult.length === 1 ? requestAnimationFrameResult[0] : requestAnimationFrameResult.join(``),
       start: i
-    }), r = [], a = false, o = false, s = false);
+    }), requestAnimationFrameResult = [], a = false, o = false, s = false);
   }
   function l(e, t, n) {
-    r = [e], i = t, a = n, o = rQ(e), s = YZ.has(e);
+    requestAnimationFrameResult = [e], i = t, a = n, o = rQ(e), s = YZ.has(e);
   }
   function u(e, t) {
-    r.push(e), a ||= t;
+    requestAnimationFrameResult.push(e), a ||= t;
     let n = rQ(e);
     o = e.length === 1 && ZZ.has(e) && o || n, s = false;
   }
-  for (let n of (SQ === null && (SQ = new Intl.Segmenter(undefined, {
+  for (let replaceResult of (SQ === null && (SQ = new Intl.Segmenter(undefined, {
     granularity: `grapheme`
   })), SQ).segment(e)) {
-    let segment = n.segment,
+    let segment = replaceResult.segment,
       i = KZ(segment);
-    r.length === 0 ? l(segment, n.index, i) : s || JZ.has(segment) || ZZ.has(segment) || t.carryCJKAfterClosingQuote && i && o ? u(segment, i) : a || i ? (c(), l(segment, n.index, i)) : u(segment, i);
+    requestAnimationFrameResult.length === 0 ? l(segment, replaceResult.index, i) : s || JZ.has(segment) || ZZ.has(segment) || t.carryCJKAfterClosingQuote && i && o ? u(segment, i) : a || i ? (c(), l(segment, replaceResult.index, i)) : u(segment, i);
   }
   return c(), emptyItems;
 }
@@ -79925,8 +79925,8 @@ function _4e(items, t, n, r) {
           return hQ.set(e, n), n;
         }(e, r) : 0
       };
-    }(t, (s = items.normalized, d4e.test(s)));
-  var s;
+    }(t, (trimStartResult = items.normalized, d4e.test(trimStartResult)));
+  var trimStartResult;
   let c = bQ(`-`, _Q(`-`, a), o),
     l = 8 * bQ(` `, _Q(` `, a), o);
   if (items.len === 0) return {
@@ -79942,9 +79942,9 @@ function _4e(items, t, n, r) {
     chunks: []
   };
   let emptyItems = [],
-    d = [],
+    count = [],
     f = [],
-    p = [],
+    setTimeoutResult = [],
     m = items.chunks.length <= 1,
     h = n ? [] : null,
     g = [],
@@ -79953,7 +79953,7 @@ function _4e(items, t, n, r) {
       length: items.len
     });
   function y(e, t, n, r, i, a, o) {
-    i !== `text` && i !== `space` && i !== `zero-width-break` && (m = false), emptyItems.push(t), d.push(n), f.push(r), p.push(i), h?.push(a), g.push(o), _ !== null && _.push(e);
+    i !== `text` && i !== `space` && i !== `zero-width-break` && (m = false), emptyItems.push(t), count.push(n), f.push(r), setTimeoutResult.push(i), h?.push(a), g.push(o), _ !== null && _.push(e);
   }
   function b(e, t, n, r, s) {
     let c = _Q(e, a),
@@ -79966,36 +79966,36 @@ function _4e(items, t, n, r) {
         if (t.breakableFitAdvances !== undefined) return t.breakableFitAdvances;
         let a = yQ(),
           o = [];
-        for (let t of a.segment(e)) o.push(t.segment);
+        for (let normalizeResult of a.segment(e)) o.push(normalizeResult.segment);
         if (o.length <= 1) return t.breakableFitAdvances = null, t.breakableFitAdvances;
         if (i === `sum-graphemes`) {
-          let e = [];
+          let normalizeResult = [];
           for (let t of o) {
             let i = _Q(t, n);
-            e.push(bQ(t, i, r));
+            normalizeResult.push(bQ(t, i, r));
           }
-          return t.breakableFitAdvances = e, t.breakableFitAdvances;
+          return t.breakableFitAdvances = normalizeResult, t.breakableFitAdvances;
         }
         if (i === `pair-context` || o.length > 96) {
-          let e = [],
+          let normalizeResult = [],
             i = null,
             a = 0;
           for (let t of o) {
             let o = bQ(t, _Q(t, n), r);
-            if (i === null) e.push(o);else {
+            if (i === null) normalizeResult.push(o);else {
               let o = i + t,
                 s = _Q(o, n);
-              e.push(bQ(o, s, r) - a);
+              normalizeResult.push(bQ(o, s, r) - a);
             }
             i = t, a = o;
           }
-          return t.breakableFitAdvances = e, t.breakableFitAdvances;
+          return t.breakableFitAdvances = normalizeResult, t.breakableFitAdvances;
         }
         let s = [],
           c = ``,
           l = 0;
-        for (let e of o) {
-          c += e;
+        for (let normalizeResult of o) {
+          c += normalizeResult;
           let t = bQ(c, _Q(c, n), r);
           s.push(t - l), l = t;
         }
@@ -80036,19 +80036,19 @@ function _4e(items, t, n, r) {
     b(n, s, l, o, true);
   }
   let x = function (e, t, n) {
-      let r = [];
+      let requestAnimationFrameResult = [];
       for (let i = 0; i < e.length; i++) {
         let a = e[i],
           o = a.startSegmentIndex < t.length ? t[a.startSegmentIndex] : n,
           s = a.endSegmentIndex < t.length ? t[a.endSegmentIndex] : n,
           c = a.consumedEndSegmentIndex < t.length ? t[a.consumedEndSegmentIndex] : n;
-        r.push({
+        requestAnimationFrameResult.push({
           startSegmentIndex: o,
           endSegmentIndex: s,
           consumedEndSegmentIndex: c
         });
       }
-      return r;
+      return requestAnimationFrameResult;
     }(items.chunks, v, emptyItems.length),
     S = h === null ? null : function (e, t) {
       let n = function (e) {
@@ -80097,9 +80097,9 @@ function _4e(items, t, n, r) {
         for (let e = 1; e < t - 1; e++) n[e] === `ES` && n[e - 1] === `EN` && n[e + 1] === `EN` && (n[e] = `EN`), n[e] !== `CS` || n[e - 1] !== `EN` && n[e - 1] !== `AN` || n[e + 1] !== n[e - 1] || (n[e] = n[e - 1]);
         for (let e = 0; e < t; e++) {
           if (n[e] !== `EN`) continue;
-          let r;
-          for (r = e - 1; r >= 0 && n[r] === `ET`; r--) n[r] = `EN`;
-          for (r = e + 1; r < t && n[r] === `ET`; r++) n[r] = `EN`;
+          let requestAnimationFrameResult;
+          for (requestAnimationFrameResult = e - 1; requestAnimationFrameResult >= 0 && n[requestAnimationFrameResult] === `ET`; requestAnimationFrameResult--) n[requestAnimationFrameResult] = `EN`;
+          for (requestAnimationFrameResult = e + 1; requestAnimationFrameResult < t && n[requestAnimationFrameResult] === `ET`; requestAnimationFrameResult++) n[requestAnimationFrameResult] = `EN`;
         }
         for (let e = 0; e < t; e++) {
           let t = n[e];
@@ -80132,9 +80132,9 @@ function _4e(items, t, n, r) {
     }(items.normalized, h);
   return _ === null ? {
     widths: emptyItems,
-    lineEndFitAdvances: d,
+    lineEndFitAdvances: count,
     lineEndPaintAdvances: f,
-    kinds: p,
+    kinds: setTimeoutResult,
     simpleLineWalkFastPath: m,
     segLevels: S,
     breakableFitAdvances: g,
@@ -80143,9 +80143,9 @@ function _4e(items, t, n, r) {
     chunks: x
   } : {
     widths: emptyItems,
-    lineEndFitAdvances: d,
+    lineEndFitAdvances: count,
     lineEndPaintAdvances: f,
-    kinds: p,
+    kinds: setTimeoutResult,
     simpleLineWalkFastPath: m,
     segLevels: S,
     breakableFitAdvances: g,
@@ -80193,16 +80193,16 @@ function v4e(e, items, n) {
       let o = r === `keep-all` ? function (e) {
         if (e.len <= 1) return e;
         let emptyItems = [],
-          n = [],
-          r = [],
-          i = [],
+          replaceResult = [],
+          requestAnimationFrameResult = [],
+          count = [],
           a = null,
           o = false,
           s = 0,
           c = false,
           l = false;
         function u() {
-          a !== null && (emptyItems.push(iQ(a)), n.push(o), r.push(`text`), i.push(s), a = null);
+          a !== null && (emptyItems.push(iQ(a)), replaceResult.push(o), requestAnimationFrameResult.push(`text`), count.push(s), a = null);
         }
         for (let d = 0; d < e.len; d++) {
           let f = e.texts[d],
@@ -80219,14 +80219,14 @@ function v4e(e, items, n) {
             u(), a = [f], o = m, s = h, c = e, l = t;
             continue;
           }
-          u(), emptyItems.push(f), n.push(m), r.push(p), i.push(h);
+          u(), emptyItems.push(f), replaceResult.push(m), requestAnimationFrameResult.push(p), count.push(h);
         }
         return u(), {
           len: emptyItems.length,
           texts: emptyItems,
-          isWordLike: n,
-          kinds: r,
-          starts: i
+          isWordLike: replaceResult,
+          kinds: requestAnimationFrameResult,
+          starts: count
         };
       }(uQ(a, t, i)) : uQ(a, t, i);
       return pX({
@@ -80252,8 +80252,8 @@ var CQ = `__MARKSTREAM_VUE_HEIGHT_ESTIMATION_EXPERIMENT__`,
   TQ = null,
   y4e = wQ.revision;
 function EQ(e) {
-  var t;
-  return e && (t = wQ.configs[e]) != null ? t : null;
+  var normalizeResult;
+  return e && (normalizeResult = wQ.configs[e]) != null ? normalizeResult : null;
 }
 function DQ(e, t) {
   let float = Number.parseFloat(String(e ?? ``));
@@ -80265,9 +80265,9 @@ function b4e(e) {
 function OQ(e) {
   if (!Array.isArray(e) || e.length === 0) return null;
   let t = ``;
-  for (let n of e) {
-    if (!b4e(n)) return null;
-    n.type === `text` ? t += String(n.content ?? ``) : n.type === `emoji` ? t += String(n.name ?? n.raw ?? ``) : n.type === `hardbreak` && (t += `
+  for (let replaceResult of e) {
+    if (!b4e(replaceResult)) return null;
+    replaceResult.type === `text` ? t += String(replaceResult.content ?? ``) : replaceResult.type === `emoji` ? t += String(replaceResult.name ?? replaceResult.raw ?? ``) : replaceResult.type === `hardbreak` && (t += `
 `);
   }
   return t.length > 0 ? t : null;
@@ -80319,9 +80319,9 @@ function kQ(e, t, n) {
               v = -1,
               y = 0,
               b = 0,
-              x = null;
+              resolvedValue = null;
             function S() {
-              v = -1, y = 0, b = 0, x = null;
+              v = -1, y = 0, b = 0, resolvedValue = null;
             }
             function C(e = g, t = _, n = m) {
               p++, m = 0, h = false, S();
@@ -80339,7 +80339,7 @@ function kQ(e, t, n) {
               if (!t) return;
               let o = e === `tab` ? 0 : r[n],
                 s = e === `tab` ? a : i[n];
-              v = n + 1, y = m - a + o, b = m - a + s, x = e;
+              v = n + 1, y = m - a + o, b = m - a + s, resolvedValue = e;
             }
             function O(e, t) {
               let n = o[e];
@@ -80350,7 +80350,7 @@ function kQ(e, t, n) {
               h && g === e && _ === n.length && (g = e + 1, _ = 0);
             }
             function k(e) {
-              if (x !== `soft-hyphen`) return false;
+              if (resolvedValue !== `soft-hyphen`) return false;
               let n = o[e];
               if (n == null) return false;
               let {
@@ -80391,11 +80391,11 @@ function kQ(e, t, n) {
                     if (m + d > f) {
                       let n = m + (e === `tab` ? 0 : r[startSegmentIndex]),
                         a = m + (e === `tab` ? d : i[startSegmentIndex]);
-                      if (x === `soft-hyphen` && u.preferEarlySoftHyphenBreak && y <= f) {
+                      if (resolvedValue === `soft-hyphen` && u.preferEarlySoftHyphenBreak && y <= f) {
                         C(v, 0, b);
                         continue;
                       }
-                      if (x === `soft-hyphen` && k(startSegmentIndex)) {
+                      if (resolvedValue === `soft-hyphen` && k(startSegmentIndex)) {
                         startSegmentIndex++;
                         continue;
                       }
@@ -80421,7 +80421,7 @@ function kQ(e, t, n) {
                     }
                     E(startSegmentIndex, d), D(e, l, startSegmentIndex, d), startSegmentIndex++;
                   } else d > t && o[startSegmentIndex] !== null ? O(startSegmentIndex, 0) : w(startSegmentIndex, d), D(e, l, startSegmentIndex, d), startSegmentIndex++;
-                } else h && (g = startSegmentIndex + 1, _ = 0, v = startSegmentIndex + 1, y = m + s, b = m + s, x = e), startSegmentIndex++;
+                } else h && (g = startSegmentIndex + 1, _ = 0, v = startSegmentIndex + 1, y = m + s, b = m + s, resolvedValue = e), startSegmentIndex++;
               }
               if (h) {
                 let e = v === d.consumedEndSegmentIndex ? b : m;
@@ -80492,8 +80492,8 @@ function AQ(e, t, n) {
     let r = Array.isArray(e.items) ? e.items : [];
     if (!r.length) return null;
     let i = Math.max(0, n.listWrapperOverhead);
-    for (let e of r) {
-      let r = AQ(e, t, n);
+    for (let normalizeResult of r) {
+      let r = AQ(normalizeResult, t, n);
       if (!r) return null;
       i += r.height;
     }
@@ -80533,8 +80533,8 @@ function NQ(e) {
   return Number.isFinite(t) && t > 0 ? t : null;
 }
 function PQ(text) {
-  for (let t of text.split(/\r?\n/)) {
-    let trimmed = t.trim();
+  for (let normalizeResult of text.split(/\r?\n/)) {
+    let trimmed = normalizeResult.trim();
     if (trimmed && !trimmed.startsWith(`%%`)) return trimmed.match(/^([A-Z][\w-]*)\b/i)?.[1]?.toLowerCase() || ``;
   }
   return ``;
@@ -80727,8 +80727,8 @@ function t$(e) {
       if (t) return t;
     }
     t.loadExtended && !JQ.has(t.id) && T4e(t);
-  }(e$(e)) || ((n = (t = KQ.get(qQ))?.fallback) ?? ``);
-  var t, n;
+  }(e$(e)) || ((replaceResult = (normalizeResult = KQ.get(qQ))?.fallback) ?? ``);
+  var normalizeResult, replaceResult;
 }
 var n$ = {
     js: `JavaScript`,
@@ -81344,8 +81344,8 @@ var M4e = {
         g = ref(null),
         _ = ref(typeof window > `u`);
       typeof window < `u` && watch(() => l.value, value => {
-        var t;
-        if ((t = g.value) == null || t.destroy(), g.value = null, !value) return void (_.value = false);
+        var normalizeResult;
+        if ((normalizeResult = g.value) == null || normalizeResult.destroy(), g.value = null, !value) return void (_.value = false);
         let n = h(value, {
           rootMargin: `400px`
         });
@@ -81399,8 +81399,8 @@ var M4e = {
       }
       function te(e) {
         if (m?.disconnect(), m = undefined, !e) return f.value = ``, void (p.value = false);
-        var t;
-        f.value = `<pre class="shiki shiki-fallback"><code>${t = e, t.replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`).replace(/"/g, `&quot;`).replace(/'/g, `&#39;`)}</code></pre>`, p.value = false;
+        var normalizeResult;
+        f.value = `<pre class="shiki shiki-fallback"><code>${normalizeResult = e, normalizeResult.replace(/&/g, `&amp;`).replace(/</g, `&lt;`).replace(/>/g, `&gt;`).replace(/"/g, `&quot;`).replace(/'/g, `&#39;`)}</code></pre>`, p.value = false;
       }
       function M() {
         f.value = ``, p.value = true;
@@ -81421,33 +81421,33 @@ var M4e = {
           }));
         });
       }
-      let re,
+      let setTimeoutResult,
         ie,
-        ae,
-        oe,
-        se = null,
+        registerHighlight,
+        undefinedOrFallback,
+        onStateChangedResult = null,
         ce = null;
       function le(e, t) {
         return gX(this, null, function* () {
-          if (!re) return;
+          if (!setTimeoutResult) return;
           let n = function (e, t = false) {
             let [n] = String(e ?? ``).split(`:`),
               fallbackValue = n?.trim().toLowerCase() ?? ``;
-            return fallbackValue && (!oe || oe.has(fallbackValue)) ? fallbackValue : `plaintext`;
+            return fallbackValue && (!undefinedOrFallback || undefinedOrFallback.has(fallbackValue)) ? fallbackValue : `plaintext`;
           }(t, !!(e && e.length));
           try {
-            yield re.updateCode(e, n);
+            yield setTimeoutResult.updateCode(e, n);
           } catch {
-            n === `plaintext` || (yield re.updateCode(e, `plaintext`));
+            n === `plaintext` || (yield setTimeoutResult.updateCode(e, `plaintext`));
           }
         });
       }
       function ue(e) {
-        if (!ae) return;
+        if (!registerHighlight) return;
         let t = Array.isArray(e) ? e.join(`\0`) : ``;
-        se !== t && (ae({
+        onStateChangedResult !== t && (registerHighlight({
           themes: e
-        }), se = t);
+        }), onStateChangedResult = t);
       }
       function de() {
         return gX(this, null, function* () {
@@ -81456,9 +81456,9 @@ var M4e = {
               if (!ie) return ce || (ce = gX(null, null, function* () {
                 try {
                   let e = yield At(() => import(`./__vite-optional-peer-dep_stream-markdown_markstream-vue-Dhgp-lRL.js`), [], import.meta.url);
-                  ie = e.createShikiStreamRenderer, ae = e.registerHighlight;
+                  ie = e.createShikiStreamRenderer, registerHighlight = e.registerHighlight;
                   let t = Array.isArray(e.defaultLanguages) ? e.defaultLanguages : undefined;
-                  oe = t ? new Set(t.map(text => text.toLowerCase())) : undefined, ue(eventAlias.themes);
+                  undefinedOrFallback = t ? new Set(t.map(text => text.toLowerCase())) : undefined, ue(eventAlias.themes);
                 } catch (e) {
                   console.warn(`[MarkdownCodeBlockNode] stream-markdown not available:`, e);
                 } finally {
@@ -81466,9 +81466,9 @@ var M4e = {
                 }
               }), ce);
             });
-          }(), u.value && d.value ? (ue(eventAlias.themes), !re && ie && (re = ie(d.value, {
+          }(), u.value && d.value ? (ue(eventAlias.themes), !setTimeoutResult && ie && (setTimeoutResult = ie(d.value, {
             theme: ee()
-          }), p.value = true), re ? false === eventAlias.stream && eventAlias.loading ? te(eventAlias.node.code) : (te(eventAlias.node.code), yield le(eventAlias.node.code, a.value), yield N()) : te(eventAlias.node.code)) : te(eventAlias.node.code)) : te(eventAlias.node.code);
+          }), p.value = true), setTimeoutResult ? false === eventAlias.stream && eventAlias.loading ? te(eventAlias.node.code) : (te(eventAlias.node.code), yield le(eventAlias.node.code, a.value), yield N()) : te(eventAlias.node.code)) : te(eventAlias.node.code)) : te(eventAlias.node.code);
         });
       }
       function fe() {
@@ -81530,8 +81530,8 @@ var M4e = {
       return onBeforeMount(() => {
         _.value ? de() : te(eventAlias.node.code);
       }), onMounted(() => {
-        var e;
-        (e = g.value) == null || e.destroy(), g.value = null, m?.disconnect(), m = undefined;
+        var normalizeResult;
+        (normalizeResult = g.value) == null || normalizeResult.destroy(), g.value = null, m?.disconnect(), m = undefined;
       }), watch(() => eventAlias.themes, () => gX(null, null, function* () {
         ue(eventAlias.themes);
       })), watch(() => eventAlias.loading, value => {
@@ -81544,9 +81544,9 @@ var M4e = {
         v.value = false !== value;
       }), watch(() => [eventAlias.node.code, eventAlias.node.language], value => gX(null, [value], function* ([e, t]) {
         let r = e$(t);
-        r !== a.value && (a.value = r), _.value && u.value && d.value ? (re || (te(e), yield de()), re && e && (false === eventAlias.stream && eventAlias.loading || (te(e), yield le(e, t), yield N()))) : te(e);
+        r !== a.value && (a.value = r), _.value && u.value && d.value ? (setTimeoutResult || (te(e), yield de()), setTimeoutResult && e && (false === eventAlias.stream && eventAlias.loading || (te(e), yield le(e, t), yield N()))) : te(e);
       })), watch(() => [eventAlias.darkTheme, eventAlias.lightTheme, eventAlias.isDark], () => gX(null, null, function* () {
-        _.value && u.value && d.value && (re || (yield de()), re?.setTheme(ee()));
+        _.value && u.value && d.value && (setTimeoutResult || (yield de()), setTimeoutResult?.setTheme(ee()));
       })), watch(() => eventAlias.node.code, () => gX(null, null, function* () {
         if (s.value || !computedResult.value || !v.value) return;
         yield ut();
@@ -82045,7 +82045,7 @@ var n3e = defineComponent({
         Ue = null,
         We = [],
         Ge = null,
-        R = null,
+        payload = null,
         Ke = computed(() => !computedResult.value && false !== eventAlias.deferNodesUntilVisible && !((eventAlias.maxLiveNodes ?? 0) <= 0) && !me.value && !(ne.value.length > 900) && ge.value),
         qe = computed(() => Ce.value && (eventAlias.maxLiveNodes ?? 0) <= 0),
         Je = ref({
@@ -82118,24 +82118,24 @@ var n3e = defineComponent({
         };
       }
       function pt() {
-        if (!R) return;
+        if (!payload) return;
         let fallbackValue = i.value?.ownerDocument?.defaultView ?? (typeof window < `u` ? window : null);
-        R.viaTimeout ? fallbackValue ? fallbackValue.clearTimeout(R.id) : clearTimeout(R.id) : ye?.(R.id), R = null;
+        payload.viaTimeout ? fallbackValue ? fallbackValue.clearTimeout(payload.id) : clearTimeout(payload.id) : ye?.(payload.id), payload = null;
       }
       function gt(e = {}) {
         if (!me.value) return;
         if (!d) return void _t(true);
         if (e.immediate) return pt(), void _t(true);
-        if (R) return;
+        if (payload) return;
         let t = () => {
-          R = null, _t();
+          payload = null, _t();
         };
-        if (ve) R = {
+        if (ve) payload = {
           id: ve(t),
           viaTimeout: false
         };else {
           let fallbackValue = i.value?.ownerDocument?.defaultView ?? (typeof window < `u` ? window : null);
-          R = {
+          payload = {
             id: fallbackValue ? fallbackValue.setTimeout(t, 16) : setTimeout(t, 16),
             viaTimeout: true
           };
@@ -82185,14 +82185,14 @@ var n3e = defineComponent({
           c = a ? 0 : s.top,
           l = a ? r?.innerHeight ?? fallbackValue.clientHeight ?? 0 : s.bottom,
           u = Ie.value,
-          d = null,
+          count = null,
           f = null;
         for (let [e, t] of u) {
           if (!t) continue;
           let boundingClientRect = t.getBoundingClientRect();
-          boundingClientRect.bottom <= c || boundingClientRect.top >= l || (d ??= e, f = e);
+          boundingClientRect.bottom <= c || boundingClientRect.top >= l || (count ??= e, f = e);
         }
-        if (d == null || f == null) {
+        if (count == null || f == null) {
           let e = i.value;
           if (!e) return;
           let o = a ? {
@@ -82212,7 +82212,7 @@ var n3e = defineComponent({
           Qe.value = vt(u, 0, Math.max(0, ne.value.length - 1));
           return;
         }
-        let p = Math.round((d + f) / 2);
+        let p = Math.round((count + f) / 2);
         !e && Math.abs(p - Qe.value) <= 1 || (Qe.value = vt(p, 0, Math.max(0, ne.value.length - 1)));
       }
       function vt(e, t, n) {
@@ -82224,7 +82224,7 @@ var n3e = defineComponent({
           count: 0
         });
       function bt() {
-        for (let e of Object.keys(yt)) delete yt[Number(e)];
+        for (let normalizeResult of Object.keys(yt)) delete yt[Number(normalizeResult)];
         $.total = 0, $.count = 0, L.value = 0, Le.value = [], Re.value = [];
       }
       function xt(e, t, n) {
@@ -82263,9 +82263,9 @@ var n3e = defineComponent({
         let fallbackValue = i.value?.clientWidth ?? 0;
         _.value = fallbackValue > 0 ? fallbackValue : 0;
       }
-      let jt = null;
+      let onStateChangedResult = null;
       function Mt() {
-        jt?.disconnect(), jt = null;
+        onStateChangedResult?.disconnect(), onStateChangedResult = null;
       }
       let Nt = Fe(() => gX(null, null, function* () {
           try {
@@ -82353,12 +82353,12 @@ var n3e = defineComponent({
         return Kt(0, vt(e.nodeIndex, 0, Math.max(0, ne.value.length - 1))) + Math.max(0, e.offsetWithinNodePx);
       }
       function Bt() {
-        if (Ue != null && (ye?.(Ue), Ue = null), d) for (let e of We) window.clearTimeout(e);
+        if (Ue != null && (ye?.(Ue), Ue = null), d) for (let normalizeResult of We) window.clearTimeout(normalizeResult);
         We = [];
       }
       function Vt(e) {
         (function (e) {
-          var t;
+          var normalizeResult;
           let fallbackValue = ze.value || it(),
             r = i.value;
           if (!fallbackValue || !r) return;
@@ -82367,7 +82367,7 @@ var n3e = defineComponent({
             s = documentValue.defaultView || (typeof window < `u` ? window : null);
           if (fallbackValue === documentValue.documentElement || fallbackValue === documentValue.body || fallbackValue === documentValue.scrollingElement) {
             let e = lt(fallbackValue, documentValue, true) + r.getBoundingClientRect().top;
-            (t = s?.scrollTo) == null || t.call(s, 0, Math.max(0, e + a));
+            (normalizeResult = s?.scrollTo) == null || normalizeResult.call(s, 0, Math.max(0, e + a));
             return;
           }
           fallbackValue.scrollTop = Y(r, fallbackValue) + a;
@@ -82394,9 +82394,9 @@ var n3e = defineComponent({
         if (He.value = {
           nodeIndex: vt(e.nodeIndex, 0, Math.max(0, ne.value.length - 1)),
           offsetWithinNodePx: Math.max(0, e.offsetWithinNodePx)
-        }, Bt(), Vt(He.value), d) for (let e of [0, 120, 280, 480]) We.push(window.setTimeout(() => {
+        }, Bt(), Vt(He.value), d) for (let normalizeResult of [0, 120, 280, 480]) We.push(window.setTimeout(() => {
           He.value && Vt(He.value);
-        }, e));
+        }, normalizeResult));
       }
       function Gt(e) {
         let t = Rt();
@@ -82562,8 +82562,8 @@ var n3e = defineComponent({
         if (n && Qt(), t || fn(e), !Xe.value || !_e || !me.value && Ke.value && !l.value && Oe.size >= 640 && (function () {
           if (!l.value) {
             l.value = true;
-            for (let e of Oe.values()) e.destroy();
-            if (Oe.clear(), d) for (let e of Ae.values()) window.clearTimeout(e);
+            for (let normalizeResult of Oe.values()) normalizeResult.destroy();
+            if (Oe.clear(), d) for (let normalizeResult of Ae.values()) window.clearTimeout(normalizeResult);
             Ae.clear(), en();
           }
         }(), !Xe.value || !_e)) return rn(e), void (t && nn(e, true));
@@ -82594,35 +82594,35 @@ var n3e = defineComponent({
             }, 1800 + t);
           Ae.set(e, n);
         }(e);
-        let i = null;
-        i = watch(() => r.isVisible.value, value => {
+        let count = null;
+        count = watch(() => r.isVisible.value, value => {
           if (value) {
-            fn(e), nn(e, true), i?.(), ke.delete(e), Oe.get(e) === r && Oe.delete(e);
+            fn(e), nn(e, true), count?.(), ke.delete(e), Oe.get(e) === r && Oe.delete(e);
             try {
               r.destroy();
             } catch {}
           }
         }, {
           immediate: true
-        }), ke.set(e, i), me.value && gt();
+        }), ke.set(e, count), me.value && gt();
       }
       watch(() => he.value, value => {
         if (!value) {
-          for (let e of Me.values()) e.disconnect();
+          for (let normalizeResult of Me.values()) normalizeResult.disconnect();
           Me.clear();
-          for (let e of q.values()) for (let t of e) window.clearTimeout(t);
+          for (let normalizeResult of q.values()) for (let t of normalizeResult) window.clearTimeout(t);
           q.clear();
         }
       }, {
         immediate: true
       });
       let on = null,
-        sn = null,
+        setTimeoutResult = null,
         cn = false,
-        ln = null,
-        un = null;
+        resolvedValue = null,
+        requestIdleCallbackResult = null;
       function dn() {
-        d && (on != null && (ye?.(on), on = null), sn != null && (window.clearTimeout(sn), sn = null), un != null && typeof window.cancelIdleCallback == `function` && (window.cancelIdleCallback(un), un = null), cn = false, ln = null);
+        d && (on != null && (ye?.(on), on = null), setTimeoutResult != null && (window.clearTimeout(setTimeoutResult), setTimeoutResult = null), requestIdleCallbackResult != null && typeof window.cancelIdleCallback == `function` && (window.cancelIdleCallback(requestIdleCallbackResult), requestIdleCallbackResult = null), cn = false, resolvedValue = null);
       }
       function fn(e) {
         if (!d) return;
@@ -82635,9 +82635,9 @@ var n3e = defineComponent({
         if (we.value >= r) return;
         let i = Math.max(1, e),
           a = e => {
-            on = null, sn = null, un = null, cn = false;
-            let fallbackValue = ln ?? i;
-            ln = null;
+            on = null, setTimeoutResult = null, requestIdleCallbackResult = null, cn = false;
+            let fallbackValue = resolvedValue ?? i;
+            resolvedValue = null;
             let a = Math.max(2, eventAlias.renderBatchBudgetMs ?? 6),
               o = e => {
                 let t = typeof performance < `u` ? performance.now() : Date.now();
@@ -82657,10 +82657,10 @@ var n3e = defineComponent({
           };
         if (!d || t.immediate) return void a();
         let o = Math.max(0, eventAlias.renderBatchDelay ?? 16);
-        if (ln = ln == null ? i : Math.max(ln, i), !cn) {
+        if (resolvedValue = resolvedValue == null ? i : Math.max(resolvedValue, i), !cn) {
           if (cn = true, !be && xe && window.requestIdleCallback) {
             let e = Math.max(0, eventAlias.renderBatchIdleTimeoutMs ?? 120);
-            un = window.requestIdleCallback(e => {
+            requestIdleCallbackResult = window.requestIdleCallback(e => {
               a(e);
             }, {
               timeout: e
@@ -82668,8 +82668,8 @@ var n3e = defineComponent({
             return;
           }
           ve && !be ? on = ve(() => {
-            o === 0 ? a() : sn = window.setTimeout(() => a(), o);
-          }) : sn = window.setTimeout(() => a(), o);
+            o === 0 ? a() : setTimeoutResult = window.setTimeout(() => a(), o);
+          }) : setTimeoutResult = window.setTimeout(() => a(), o);
         }
       }
       function mn() {
@@ -82774,9 +82774,9 @@ var n3e = defineComponent({
         immediate: true
       }), watch([() => i.value, le], () => {
         if (!le.value) return Mt(), void (_.value = 0);
-        kt(), Mt(), le.value && i.value && typeof ResizeObserver < `u` && (jt = new ResizeObserver(() => {
+        kt(), Mt(), le.value && i.value && typeof ResizeObserver < `u` && (onStateChangedResult = new ResizeObserver(() => {
           kt(), He.value && Ht();
-        }), jt.observe(i.value));
+        }), onStateChangedResult.observe(i.value));
       }, {
         immediate: true
       }), watch([le, fe], () => gX(null, null, function* () {
@@ -82847,9 +82847,9 @@ var n3e = defineComponent({
         immediate: false
       }), watch(() => Ke.value, value => {
         if (value) for (let [e, t] of je) an(e, t);else {
-          for (let e of Oe.values()) e.destroy();
+          for (let normalizeResult of Oe.values()) normalizeResult.destroy();
           Oe.clear();
-          for (let e of Array.from(Ae.keys())) fn(e);
+          for (let normalizeResult of Array.from(Ae.keys())) fn(normalizeResult);
           en();
           for (let [e, t] of je) t && nn(e, true);
         }
@@ -82916,15 +82916,15 @@ var n3e = defineComponent({
         immediate: true
       }), onMounted(() => {
         dn();
-        for (let e of Oe.values()) e.destroy();
+        for (let normalizeResult of Oe.values()) normalizeResult.destroy();
         Oe.clear();
-        for (let e of Me.values()) e.disconnect();
+        for (let normalizeResult of Me.values()) normalizeResult.disconnect();
         Me.clear();
-        for (let e of q.values()) for (let t of e) window.clearTimeout(t);
+        for (let normalizeResult of q.values()) for (let t of normalizeResult) window.clearTimeout(t);
         q.clear();
-        for (let e of ke.values()) e();
+        for (let normalizeResult of ke.values()) normalizeResult();
         ke.clear();
-        for (let e of Array.from(Ae.keys())) fn(e);
+        for (let normalizeResult of Array.from(Ae.keys())) fn(normalizeResult);
         Mt(), Bt(), dt(), pt();
       });
       let hn = Fe({
@@ -83096,12 +83096,12 @@ var n3e = defineComponent({
         r(`click`, e);
       }
       function jn(e) {
-        var t;
-        (t = e.target) != null && t.closest(`[data-node-index]`) && r(`mouseover`, e);
+        var normalizeResult;
+        (normalizeResult = e.target) != null && normalizeResult.closest(`[data-node-index]`) && r(`mouseover`, e);
       }
       function Mn(e) {
-        var t;
-        (t = e.target) != null && t.closest(`[data-node-index]`) && r(`mouseout`, e);
+        var normalizeResult;
+        (normalizeResult = e.target) != null && normalizeResult.closest(`[data-node-index]`) && r(`mouseout`, e);
       }
       function Nn(e) {
         r(`mouseover`, e);
@@ -83198,7 +83198,7 @@ var n3e = defineComponent({
           class: `node-slot`,
           "data-node-index": e.index,
           "data-node-type": e.node.type
-        }, [(i = e.index, qe.value && i >= we.value || !(!Ke.value || i < P.value || De.value.has(i)) ? (openBlock(), createElementBlock(`div`, {
+        }, [(count = e.index, qe.value && count >= we.value || !(!Ke.value || count < P.value || De.value.has(count)) ? (openBlock(), createElementBlock(`div`, {
           key: 1,
           class: `node-placeholder`,
           style: at({
@@ -83210,7 +83210,7 @@ var n3e = defineComponent({
           ref: t => function (e, t) {
             let n = q.get(e);
             if (n) {
-              for (let e of n) window.clearTimeout(e);
+              for (let normalizeResult of n) window.clearTimeout(normalizeResult);
               q.delete(e);
             }
             let r = Me.get(e);
@@ -83273,7 +83273,7 @@ var n3e = defineComponent({
           }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`]))]),
           _: 2
         }, 1024))], 512)))], 8, s3e);
-        var i;
+        var count;
       }), 128)), me.value ? (openBlock(), createElementBlock(`div`, {
         key: 1,
         class: `node-spacer`,
@@ -83369,7 +83369,7 @@ var c3e = Object.freeze(Object.defineProperty({
     setup(items, {
       emit: t
     }) {
-      var n;
+      var replaceResult;
       let itemsAlias = items,
         i = t,
         computedResult = computed(() => {
@@ -83377,7 +83377,7 @@ var c3e = Object.freeze(Object.defineProperty({
           let fallbackValue = itemsAlias.node.kind || `note`;
           return fallbackValue.charAt(0).toUpperCase() + fallbackValue.slice(1);
         }),
-        o = ref(!!itemsAlias.node.collapsible && !((n = itemsAlias.node.open) == null || n));
+        o = ref(!!itemsAlias.node.collapsible && !((replaceResult = itemsAlias.node.open) == null || replaceResult));
       function s() {
         itemsAlias.node.collapsible && (o.value = !o.value);
       }
@@ -83458,19 +83458,19 @@ function _3e() {
     if (u$) return u$;
     let e = g3e;
     if (!e) return null;
-    let t;
+    let normalizeResult;
     try {
-      t = yield e();
+      normalizeResult = yield e();
     } catch (t) {
       throw e === l$ ? Error(`Optional dependency "@terrastruct/d2" is not installed. Please install it to enable D2 diagrams.`) : t;
     }
-    return t ? (u$ = function (e) {
+    return normalizeResult ? (u$ = function (e) {
       if (!e) return e;
       if (e.D2 && typeof e.D2 == `function`) return e.D2;
       if (e.default && e.default.D2 && typeof e.default.D2 == `function`) return e.default.D2;
       let fallbackValue = e.default ?? e;
       return typeof fallbackValue == `function` ? fallbackValue : fallbackValue?.D2 && typeof fallbackValue.D2 == `function` ? fallbackValue.D2 : fallbackValue;
-    }(t), u$) : null;
+    }(normalizeResult), u$) : null;
   });
 }
 var d$ = () => At(() => import(`./__vite-optional-peer-dep_mermaid_markstream-vue-cPZl55sA.js`), [], import.meta.url),
@@ -83517,13 +83517,13 @@ function v3e() {
     if (e) return f$ = e, g$(f$), f$;
     let t = p$;
     if (!t) return null;
-    let n;
+    let replaceResult;
     try {
-      n = yield t();
+      replaceResult = yield t();
     } catch (e) {
       throw t === d$ ? Error(`Optional dependency "mermaid" is not installed. Please install it to enable mermaid diagrams.`) : e;
     }
-    return n ? (f$ = h$(n), g$(f$), f$) : null;
+    return replaceResult ? (f$ = h$(replaceResult), g$(f$), f$) : null;
   });
 }
 function _$(e) {
@@ -83542,8 +83542,8 @@ function C$() {
   if (y$.size < x$ && S$.size) {
     let e = Array.from(S$);
     S$.clear();
-    for (let t of e) try {
-      t();
+    for (let normalizeResult of e) try {
+      normalizeResult();
     } catch {}
   }
 }
@@ -83612,12 +83612,12 @@ function x3e(e, t = true, n) {
 var S3e = `WORKER_BUSY`;
 function C3e(e = 2e3, t) {
   return y$.size < x$ ? Promise.resolve() : new Promise((n, r) => {
-    let i,
+    let count,
       a = false,
       o = () => {
-        a || (a = true, i && globalThis.clearTimeout(i), S$.delete(o), n());
+        a || (a = true, count && globalThis.clearTimeout(count), S$.delete(o), n());
       };
-    if (S$.add(o), i = globalThis.setTimeout(() => {
+    if (S$.add(o), count = globalThis.setTimeout(() => {
       if (a) return;
       a = true, S$.delete(o);
       let e = Error(`Wait for worker slot timed out`);
@@ -83625,7 +83625,7 @@ function C3e(e = 2e3, t) {
     }, e), queueMicrotask(() => C$()), t) {
       let e = () => {
         if (a) return;
-        a = true, i && globalThis.clearTimeout(i), S$.delete(o);
+        a = true, count && globalThis.clearTimeout(count), S$.delete(o);
         let e = Error(`Aborted`);
         e.name = `AbortError`, r(e);
       };
@@ -83692,10 +83692,10 @@ function k$(event, t, n = 1400) {
   }
   return new Promise((i, a) => {
     let part = Math.random().toString(36).slice(2),
-      s,
+      trimStartResult,
       c = false,
       l = () => {
-        c || (c = true, s != null && globalThis.clearTimeout(s), D$.delete(part));
+        c || (c = true, trimStartResult != null && globalThis.clearTimeout(trimStartResult), D$.delete(part));
       };
     D$.set(part, {
       resolve: e => {
@@ -83715,7 +83715,7 @@ function k$(event, t, n = 1400) {
       D$.delete(part), a(e);
       return;
     }
-    s = globalThis.setTimeout(() => {
+    trimStartResult = globalThis.setTimeout(() => {
       let e = Error(`Worker call timed out`);
       e.name = `WorkerTimeout`, e.code = `WORKER_TIMEOUT`;
       let t = D$.get(part);
@@ -84025,8 +84025,8 @@ var A3e = {
         }
         let e = [`bold`, `italic`, `underline`, `strikeThrough`, `insertUnorderedList`, `insertOrderedList`],
           t = new Set();
-        for (let n of e) try {
-          document.queryCommandState(n) && t.add(n);
+        for (let replaceResult of e) try {
+          document.queryCommandState(replaceResult) && t.add(replaceResult);
         } catch {}
         c.value = t;
         try {
@@ -84059,22 +84059,22 @@ var A3e = {
           if (lowercased === `br`) return document.createElement(`br`);
           if (!n.has(lowercased)) {
             let documentFragment = document.createDocumentFragment();
-            for (let n of Array.from(t.childNodes)) {
-              let t = r(n);
+            for (let replaceResult of Array.from(t.childNodes)) {
+              let t = r(replaceResult);
               t && documentFragment.appendChild(t);
             }
             return documentFragment;
           }
           let element = document.createElement(lowercased);
-          for (let e of Array.from(t.childNodes)) {
-            let t = r(e);
+          for (let normalizeResult of Array.from(t.childNodes)) {
+            let t = r(normalizeResult);
             t && element.appendChild(t);
           }
           return element;
         }
         let documentFragment = document.createDocumentFragment();
-        for (let e of Array.from(fromString.body.childNodes)) {
-          let t = r(e);
+        for (let normalizeResult of Array.from(fromString.body.childNodes)) {
+          let t = r(normalizeResult);
           t && documentFragment.appendChild(t);
         }
         let element = document.createElement(`div`);
@@ -85746,7 +85746,7 @@ var _6e = {
         oe = ref(1),
         se = ref(1),
         ce = ref(0),
-        le = null,
+        setTimeoutResult = null,
         ue = ref({
           name: ``,
           desc: ``,
@@ -85941,7 +85941,7 @@ var _6e = {
         }
       }
       function ct() {
-        C.value && w.value === `browse` && (le && clearTimeout(le), le = setTimeout(() => {
+        C.value && w.value === `browse` && (setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
           st();
         }, 250));
       }
@@ -86451,7 +86451,7 @@ var _6e = {
         fr = ref(0),
         pr = ref(0),
         mr = ref(``),
-        hr = null,
+        setIntervalResult = null,
         gr = computed(() => {
           if ($n.value !== null) return $n.value;
           let float = parseFloat(er.value);
@@ -86570,7 +86570,7 @@ var _6e = {
         }
       }
       function wr(e) {
-        Tr(), hr = setInterval(async () => {
+        Tr(), setIntervalResult = setInterval(async () => {
           try {
             let uRLSearchParams = new URLSearchParams({
                 action: `query`,
@@ -86587,7 +86587,7 @@ var _6e = {
         }, 3e3);
       }
       function Tr() {
-        hr !== null && (clearInterval(hr), hr = null);
+        setIntervalResult !== null && (clearInterval(setIntervalResult), setIntervalResult = null);
       }
       function Dr() {
         Tr(), lr.value = false;
@@ -86661,23 +86661,23 @@ var _6e = {
           let parts = e.body.split(`
 `),
             emptyItems = [],
-            r = null;
-          for (let e of parts) {
-            let trimmed = e.trim();
+            requestAnimationFrameResult = null;
+          for (let normalizeResult of parts) {
+            let trimmed = normalizeResult.trim();
             if (/^#{1,3}\s+/.test(trimmed)) {
               let e = trimmed.replace(/^#{1,3}\s+/, ``).replace(/\[.*?\]/g, ``).trim();
-              e && (r = {
+              e && (requestAnimationFrameResult = {
                 title: e,
                 items: [],
                 contentLines: []
-              }, emptyItems.push(r));
-            } else if (r) {
+              }, emptyItems.push(requestAnimationFrameResult));
+            } else if (requestAnimationFrameResult) {
               if (/^[-*]\s+/.test(trimmed)) {
                 let e = trimmed.replace(/^[-*]\s+/, ``).replace(/\[.*?\]/g, ``).trim();
-                e && r.items.push(e);
+                e && requestAnimationFrameResult.items.push(e);
               } else if (trimmed) {
                 let e = trimmed.replace(/\[.*?\]/g, ``).trim();
-                e && r.contentLines.push(e);
+                e && requestAnimationFrameResult.contentLines.push(e);
               }
             }
           }
@@ -86888,13 +86888,13 @@ var _6e = {
             startDate: p.value,
             endDate: m.value
           }),
-          n;
+          replaceResult;
         try {
           let summary = await Og.summary({
             startedAt: e,
             endedAt: t
           });
-          summary.length > 0 && (n = summary.slice(0, 10).map(item => ({
+          summary.length > 0 && (replaceResult = summary.slice(0, 10).map(item => ({
             appName: item.appName,
             durationMinutes: Math.round(item.totalDurationSec / 60)
           })));
@@ -86928,7 +86928,7 @@ var _6e = {
             } : {}),
             memoryContent: r,
             records: emptyItems,
-            appUsageSummary: n,
+            appUsageSummary: replaceResult,
             language: i.value
           };
         Bi?.();
@@ -86936,14 +86936,14 @@ var _6e = {
         Bi = hm.onStatusChanged(e => {
           e.status === `completed` && c.some(item => e.model === `chat-${item}`) && e.type === s.type && e.templateId === s.templateId && e.startDate === s.startDate && e.endDate === s.endDate && (Bi?.(), Bi = null, Hi());
         });
-        let d = [];
-        Qr.value.includes(`deepseek`) && d.push(hH.open({
+        let count = [];
+        Qr.value.includes(`deepseek`) && count.push(hH.open({
           ...s,
           reuseSession: $r.value
-        })), Qr.value.includes(`chatgpt`) && d.push(_H.open(s)), d.length === 0 && (Qr.value = [`deepseek`], d.push(hH.open({
+        })), Qr.value.includes(`chatgpt`) && count.push(_H.open(s)), count.length === 0 && (Qr.value = [`deepseek`], count.push(hH.open({
           ...s,
           reuseSession: $r.value
-        }))), await Promise.all(d);
+        }))), await Promise.all(count);
       }
       function Hi() {
         ti.value = false, ni.value = false, c(`navigate`, `history`);
@@ -86955,7 +86955,7 @@ var _6e = {
         Ii(true);
       }
       onUnmounted(() => {
-        Bi?.(), Ei(), Tr(), le && clearTimeout(le);
+        Bi?.(), Ei(), Tr(), setTimeoutResult && clearTimeout(setTimeoutResult);
       });
       let Gi = ref(false),
         Ki = ref(false),
@@ -87003,10 +87003,10 @@ var _6e = {
         fa = computed(() => da.value === null ? `` : we(da.value)),
         pa = ref(false),
         ha = ref(``),
-        ga = null,
+        onTemplateStreamChunkResult = null,
         _a = null;
       function va() {
-        ga &&= (ga(), null), _a &&= (_a(), null), Ei();
+        onTemplateStreamChunkResult &&= (onTemplateStreamChunkResult(), null), _a &&= (_a(), null), Ei();
       }
       function ya() {
         qi.value = {
@@ -87040,7 +87040,7 @@ var _6e = {
       }
       async function Ta() {
         if (qi.value.referenceReports.trim() || qi.value.customRequirements.trim()) {
-          Gi.value = false, Ki.value = true, Ji.value = true, Yi.value = `processing`, Xi.value = ``, Zi.value = null, $i.value = null, pa.value = false, ha.value = ``, va(), Ti(), ga = EF.onTemplateStreamChunk(e => {
+          Gi.value = false, Ki.value = true, Ji.value = true, Yi.value = `processing`, Xi.value = ``, Zi.value = null, $i.value = null, pa.value = false, ha.value = ``, va(), Ti(), onTemplateStreamChunkResult = EF.onTemplateStreamChunk(e => {
             Xi.value = e.content;
           }), _a = EF.onTemplateStatusChanged(e => {
             e.status === `completed` ? (Ji.value = false, Yi.value = `completed`, e.content && (Xi.value = e.content), $i.value = e.billing ?? null, Mi.getCreditsBalance().then(result => {
@@ -87093,8 +87093,8 @@ var _6e = {
         let t = `AI ` + r(`generateReport.customTemplate`),
           parts = e.split(`
 `);
-        for (let e of parts) {
-          let n = e.trim().match(/^#\s+(.+)$/);
+        for (let normalizeResult of parts) {
+          let n = normalizeResult.trim().match(/^#\s+(.+)$/);
           if (n) {
             t = n[1].trim();
             break;
@@ -89074,18 +89074,18 @@ var Q$ = {
   Vrt = e => e1(e.r) && e1(e.g) && e1(e.b) && e1(e.a);
 function Hrt(e) {
   var t = e.length,
-    n;
-  return e[0] === `#` && (t === 4 || t === 5 ? n = {
+    replaceResult;
+  return e[0] === `#` && (t === 4 || t === 5 ? replaceResult = {
     r: 255 & Q$[e[1]] * 17,
     g: 255 & Q$[e[2]] * 17,
     b: 255 & Q$[e[3]] * 17,
     a: t === 5 ? Q$[e[4]] * 17 : 255
-  } : (t === 7 || t === 9) && (n = {
+  } : (t === 7 || t === 9) && (replaceResult = {
     r: Q$[e[1]] << 4 | Q$[e[2]],
     g: Q$[e[3]] << 4 | Q$[e[4]],
     b: Q$[e[5]] << 4 | Q$[e[6]],
     a: t === 9 ? Q$[e[7]] << 4 | Q$[e[8]] : 255
-  })), n;
+  })), replaceResult;
 }
 var Urt = (e, t) => e < 255 ? t(e) : ``;
 function Wrt(e) {
@@ -89104,8 +89104,8 @@ function Krt(e, t, n) {
 }
 function qrt(e, t, n) {
   let r = t1(e, 1, 0.5),
-    i;
-  for (t + n > 1 && (i = 1 / (t + n), t *= i, n *= i), i = 0; i < 3; i++) r[i] *= 1 - t - n, r[i] += t;
+    count;
+  for (t + n > 1 && (count = 1 / (t + n), t *= count, n *= count), count = 0; count < 3; count++) r[count] *= 1 - t - n, r[count] += t;
   return r;
 }
 function Jrt(e, t, n, r, i) {
@@ -89118,10 +89118,10 @@ function n1(e) {
     i = Math.max(t, n, r),
     a = Math.min(t, n, r),
     o = (i + a) / 2,
-    s,
+    trimStartResult,
     c,
-    l;
-  return i !== a && (l = i - a, c = o > 0.5 ? l / (2 - i - a) : l / (i + a), s = Jrt(t, n, r, l, i), s = s * 60 + 0.5), [s | 0, c || 0, o];
+    setTimeoutResult;
+  return i !== a && (setTimeoutResult = i - a, c = o > 0.5 ? setTimeoutResult / (2 - i - a) : setTimeoutResult / (i + a), trimStartResult = Jrt(t, n, r, setTimeoutResult, i), trimStartResult = trimStartResult * 60 + 0.5), [trimStartResult | 0, c || 0, o];
 }
 function r1(e, t, n, r) {
   return (Array.isArray(t) ? e(t[0], t[1], t[2]) : e(t, n, r)).map(Y$);
@@ -89141,16 +89141,16 @@ function a1(e) {
 function Zrt(e) {
   let t = Grt.exec(e),
     n = 255,
-    r;
+    requestAnimationFrameResult;
   if (!t) return;
-  t[5] !== r && (n = t[6] ? J$(+t[5]) : Y$(+t[5]));
+  t[5] !== requestAnimationFrameResult && (n = t[6] ? J$(+t[5]) : Y$(+t[5]));
   let i = a1(+t[2]),
     a = t[3] / 100,
     o = t[4] / 100;
-  return r = t[1] === `hwb` ? Yrt(i, a, o) : t[1] === `hsv` ? Xrt(i, a, o) : i1(i, a, o), {
-    r: r[0],
-    g: r[1],
-    b: r[2],
+  return requestAnimationFrameResult = t[1] === `hwb` ? Yrt(i, a, o) : t[1] === `hsv` ? Xrt(i, a, o) : i1(i, a, o), {
+    r: requestAnimationFrameResult[0],
+    g: requestAnimationFrameResult[1],
+    b: requestAnimationFrameResult[2],
     a: n
   };
 }
@@ -89349,14 +89349,14 @@ function eit() {
   let e = {},
     keyList = Object.keys(s1),
     n = Object.keys(o1),
-    r,
-    i,
+    requestAnimationFrameResult,
+    count,
     a,
     o,
-    s;
-  for (r = 0; r < keyList.length; r++) {
-    for (o = s = keyList[r], i = 0; i < n.length; i++) a = n[i], s = s.replace(a, o1[a]);
-    a = parseInt(s1[o], 16), e[s] = [a >> 16 & 255, a >> 8 & 255, a & 255];
+    trimStartResult;
+  for (requestAnimationFrameResult = 0; requestAnimationFrameResult < keyList.length; requestAnimationFrameResult++) {
+    for (o = trimStartResult = keyList[requestAnimationFrameResult], count = 0; count < n.length; count++) a = n[count], trimStartResult = trimStartResult.replace(a, o1[a]);
+    a = parseInt(s1[o], 16), e[trimStartResult] = [a >> 16 & 255, a >> 8 & 255, a & 255];
   }
   return e;
 }
@@ -89375,17 +89375,17 @@ var nit = /^rgba?\(\s*([-+.\d]+)(%)?[\s,]+([-+.e\d]+)(%)?[\s,]+([-+.e\d]+)(%)?(?
 function rit(e) {
   let t = nit.exec(e),
     n = 255,
-    r,
-    i,
+    requestAnimationFrameResult,
+    count,
     a;
   if (t) {
-    if (t[7] !== r) {
+    if (t[7] !== requestAnimationFrameResult) {
       let e = +t[7];
       n = t[8] ? J$(e) : q$(e * 255, 0, 255);
     }
-    return r = +t[1], i = +t[3], a = +t[5], r = 255 & (t[2] ? J$(r) : q$(r, 0, 255)), i = 255 & (t[4] ? J$(i) : q$(i, 0, 255)), a = 255 & (t[6] ? J$(a) : q$(a, 0, 255)), {
-      r,
-      g: i,
+    return requestAnimationFrameResult = +t[1], count = +t[3], a = +t[5], requestAnimationFrameResult = 255 & (t[2] ? J$(requestAnimationFrameResult) : q$(requestAnimationFrameResult, 0, 255)), count = 255 & (t[4] ? J$(count) : q$(count, 0, 255)), a = 255 & (t[6] ? J$(a) : q$(a, 0, 255)), {
+      r: requestAnimationFrameResult,
+      g: count,
       b: a,
       a: n
     };
@@ -89442,8 +89442,8 @@ var m1 = class e {
   constructor(constructor) {
     if (constructor instanceof e) return constructor;
     let n = typeof constructor,
-      r;
-    n === `object` ? r = p1(constructor) : n === `string` && (r = Hrt(constructor) || tit(constructor) || oit(constructor)), this._rgb = r, this._valid = !!r;
+      requestAnimationFrameResult;
+    n === `object` ? requestAnimationFrameResult = p1(constructor) : n === `string` && (requestAnimationFrameResult = Hrt(constructor) || tit(constructor) || oit(constructor)), this._rgb = requestAnimationFrameResult, this._valid = !!requestAnimationFrameResult;
   }
   get valid() {
     return this._valid;
@@ -89468,12 +89468,12 @@ var m1 = class e {
     if (e) {
       let n = this.rgb,
         r = e.rgb,
-        i,
-        a = t === i ? 0.5 : t,
+        count,
+        a = t === count ? 0.5 : t,
         o = 2 * a - 1,
         s = n.a - r.a,
         c = ((o * s === -1 ? o : (o + s) / (1 + o * s)) + 1) / 2;
-      i = 1 - c, n.r = 255 & c * n.r + i * r.r + 0.5, n.g = 255 & c * n.g + i * r.g + 0.5, n.b = 255 & c * n.b + i * r.b + 0.5, n.a = a * n.a + (1 - a) * r.a, this.rgb = n;
+      count = 1 - c, n.r = 255 & c * n.r + count * r.r + 0.5, n.g = 255 & c * n.g + count * r.g + 0.5, n.b = 255 & c * n.b + count * r.b + 0.5, n.a = a * n.a + (1 - a) * r.a, this.rgb = n;
     }
     return this;
   }
@@ -89549,15 +89549,15 @@ function C1(e, t, n) {
   if (e && typeof e.call == `function`) return e.apply(n, t);
 }
 function w1(e, t, n, r) {
-  let i, a, o;
+  let count, a, o;
   if (_1(e)) {
-    if (a = e.length, r) for (i = a - 1; i >= 0; i--) t.call(n, e[i], i);else for (i = 0; i < a; i++) t.call(n, e[i], i);
-  } else if (isPlainObject(e)) for (o = Object.keys(e), a = o.length, i = 0; i < a; i++) t.call(n, e[o[i]], o[i]);
+    if (a = e.length, r) for (count = a - 1; count >= 0; count--) t.call(n, e[count], count);else for (count = 0; count < a; count++) t.call(n, e[count], count);
+  } else if (isPlainObject(e)) for (o = Object.keys(e), a = o.length, count = 0; count < a; count++) t.call(n, e[o[count]], o[count]);
 }
 function T1(e, t) {
-  let n, r, i, a;
+  let replaceResult, requestAnimationFrameResult, count, a;
   if (!e || !t || e.length !== t.length) return false;
-  for (n = 0, r = e.length; n < r; ++n) if (i = e[n], a = t[n], i.datasetIndex !== a.datasetIndex || i.index !== a.index) return false;
+  for (replaceResult = 0, requestAnimationFrameResult = e.length; replaceResult < requestAnimationFrameResult; ++replaceResult) if (count = e[replaceResult], a = t[replaceResult], count.datasetIndex !== a.datasetIndex || count.index !== a.index) return false;
   return true;
 }
 function E1(items) {
@@ -89615,15 +89615,15 @@ function dit(text) {
   let parts = text.split(`.`),
     emptyItems = [],
     r = ``;
-  for (let e of parts) r += e, r.endsWith(`\\`) ? r = r.slice(0, -1) + `.` : (emptyItems.push(r), r = ``);
+  for (let normalizeResult of parts) r += normalizeResult, r.endsWith(`\\`) ? r = r.slice(0, -1) + `.` : (emptyItems.push(r), r = ``);
   return emptyItems;
 }
 function fit(e) {
   let t = dit(e);
   return e => {
-    for (let n of t) {
-      if (n === ``) break;
-      e &&= e[n];
+    for (let replaceResult of t) {
+      if (replaceResult === ``) break;
+      e &&= e[replaceResult];
     }
     return e;
   };
@@ -89638,7 +89638,7 @@ var N1 = e => e !== undefined,
   P1 = e => typeof e == `function`,
   F1 = (e, t) => {
     if (e.size !== t.size) return false;
-    for (let n of e) if (!t.has(n)) return false;
+    for (let replaceResult of e) if (!t.has(replaceResult)) return false;
     return true;
   };
 function pit(e) {
@@ -89682,8 +89682,8 @@ function _it(e, t) {
   return n - t <= e && n + t >= e;
 }
 function q1(e, t, n) {
-  let r, i, a;
-  for (r = 0, i = e.length; r < i; r++) a = e[r][n], isNaN(a) || (t.min = Math.min(t.min, a), t.max = Math.max(t.max, a));
+  let requestAnimationFrameResult, count, a;
+  for (requestAnimationFrameResult = 0, count = e.length; requestAnimationFrameResult < count; requestAnimationFrameResult++) a = e[requestAnimationFrameResult][n], isNaN(a) || (t.min = Math.min(t.min, a), t.max = Math.max(t.max, a));
 }
 function J1(e) {
   return I1 / 180 * e;
@@ -89811,9 +89811,9 @@ function c0(e, t) {
   };
 }
 function Cit(e, t) {
-  let n;
+  let replaceResult;
   return function (...r) {
-    return t ? (clearTimeout(n), n = setTimeout(e, t, r)) : e.apply(this, r), t;
+    return t ? (clearTimeout(replaceResult), replaceResult = setTimeout(e, t, r)) : e.apply(this, r), t;
   };
 }
 var l0 = e => e === `start` ? `left` : e === `end` ? `right` : `center`,
@@ -89974,16 +89974,16 @@ var b0 = {
   numeric(numeric, numericValue, numericInput) {
     if (numeric === 0) return `0`;
     let locale = this.chart.options.locale,
-      i,
+      count,
       a = numeric;
     if (numericInput.length > 1) {
       let t = Math.max(Math.abs(numericInput[0].value), Math.abs(numericInput[numericInput.length - 1].value));
-      (t < 1e-4 || t > 0x38d7ea4c68000) && (i = `scientific`), a = Ait(numeric, numericInput);
+      (t < 1e-4 || t > 0x38d7ea4c68000) && (count = `scientific`), a = Ait(numeric, numericInput);
     }
     let o = log10(Math.abs(a)),
       s = isNaN(o) ? 1 : Math.max(Math.min(-1 * Math.floor(o), 20), 0),
       c = {
-        notation: i,
+        notation: count,
         minimumFractionDigits: s,
         maximumFractionDigits: s
       };
@@ -90157,11 +90157,11 @@ function Nit(e, t, n, r) {
   let o = 0,
     s = n.length,
     c,
-    l,
+    setTimeoutResult,
     u,
-    d,
+    count,
     f;
-  for (c = 0; c < s; c++) if (d = n[c], d != null && !_1(d)) o = D0(e, i, a, o, d);else if (_1(d)) for (l = 0, u = d.length; l < u; l++) f = d[l], f != null && !_1(f) && (o = D0(e, i, a, o, f));
+  for (c = 0; c < s; c++) if (count = n[c], count != null && !_1(count)) o = D0(e, i, a, o, count);else if (_1(count)) for (setTimeoutResult = 0, u = count.length; setTimeoutResult < u; setTimeoutResult++) f = count[setTimeoutResult], f != null && !_1(f) && (o = D0(e, i, a, o, f));
   e.restore();
   let p = a.length / 2;
   if (p > n.length) {
@@ -90184,11 +90184,11 @@ function A0(e, t, n, r) {
 function j0(e, t, n, r, i) {
   let a,
     o,
-    s,
+    trimStartResult,
     c,
-    l,
+    setTimeoutResult,
     u,
-    d,
+    count,
     f,
     pointStyle = t.pointStyle,
     rotation = t.rotation,
@@ -90207,7 +90207,7 @@ function j0(e, t, n, r, i) {
         u = i ? i / 2 : radius, e.moveTo(n + Math.sin(g) * u, r - Math.cos(g) * radius), g += V1, e.lineTo(n + Math.sin(g) * u, r - Math.cos(g) * radius), g += V1, e.lineTo(n + Math.sin(g) * u, r - Math.cos(g) * radius), e.closePath();
         break;
       case `rectRounded`:
-        l = radius * 0.516, c = radius - l, o = Math.cos(g + B1) * c, d = Math.cos(g + B1) * (i ? i / 2 - l : c), s = Math.sin(g + B1) * c, f = Math.sin(g + B1) * (i ? i / 2 - l : c), e.arc(n - d, r - s, l, g - I1, g - z1), e.arc(n + f, r - o, l, g - z1, g), e.arc(n + d, r + s, l, g, g + z1), e.arc(n - f, r + o, l, g + z1, g + I1), e.closePath();
+        setTimeoutResult = radius * 0.516, c = radius - setTimeoutResult, o = Math.cos(g + B1) * c, count = Math.cos(g + B1) * (i ? i / 2 - setTimeoutResult : c), trimStartResult = Math.sin(g + B1) * c, f = Math.sin(g + B1) * (i ? i / 2 - setTimeoutResult : c), e.arc(n - count, r - trimStartResult, setTimeoutResult, g - I1, g - z1), e.arc(n + f, r - o, setTimeoutResult, g - z1, g), e.arc(n + count, r + trimStartResult, setTimeoutResult, g, g + z1), e.arc(n - f, r + o, setTimeoutResult, g + z1, g + I1), e.closePath();
         break;
       case `rect`:
         if (!rotation) {
@@ -90216,18 +90216,18 @@ function j0(e, t, n, r, i) {
         }
         g += B1;
       case `rectRot`:
-        d = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, s = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - d, r - s), e.lineTo(n + f, r - o), e.lineTo(n + d, r + s), e.lineTo(n - f, r + o), e.closePath();
+        count = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, trimStartResult = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - count, r - trimStartResult), e.lineTo(n + f, r - o), e.lineTo(n + count, r + trimStartResult), e.lineTo(n - f, r + o), e.closePath();
         break;
       case `crossRot`:
         g += B1;
       case `cross`:
-        d = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, s = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - d, r - s), e.lineTo(n + d, r + s), e.moveTo(n + f, r - o), e.lineTo(n - f, r + o);
+        count = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, trimStartResult = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - count, r - trimStartResult), e.lineTo(n + count, r + trimStartResult), e.moveTo(n + f, r - o), e.lineTo(n - f, r + o);
         break;
       case `star`:
-        d = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, s = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - d, r - s), e.lineTo(n + d, r + s), e.moveTo(n + f, r - o), e.lineTo(n - f, r + o), g += B1, d = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, s = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - d, r - s), e.lineTo(n + d, r + s), e.moveTo(n + f, r - o), e.lineTo(n - f, r + o);
+        count = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, trimStartResult = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - count, r - trimStartResult), e.lineTo(n + count, r + trimStartResult), e.moveTo(n + f, r - o), e.lineTo(n - f, r + o), g += B1, count = Math.cos(g) * (i ? i / 2 : radius), o = Math.cos(g) * radius, trimStartResult = Math.sin(g) * radius, f = Math.sin(g) * (i ? i / 2 : radius), e.moveTo(n - count, r - trimStartResult), e.lineTo(n + count, r + trimStartResult), e.moveTo(n + f, r - o), e.lineTo(n - f, r + o);
         break;
       case `line`:
-        o = i ? i / 2 : Math.cos(g) * radius, s = Math.sin(g) * radius, e.moveTo(n - o, r - s), e.lineTo(n + o, r + s);
+        o = i ? i / 2 : Math.cos(g) * radius, trimStartResult = Math.sin(g) * radius, e.moveTo(n - o, r - trimStartResult), e.lineTo(n + o, r + trimStartResult);
         break;
       case `dash`:
         e.moveTo(n, r), e.lineTo(n + Math.cos(g) * (i ? i / 2 : radius), r + Math.sin(g) * radius);
@@ -90269,8 +90269,8 @@ function F0(e, t, n, r, i, a = {}) {
   let o = _1(t) ? t : [t],
     s = a.strokeWidth > 0 && a.strokeColor !== ``,
     c,
-    l;
-  for (e.save(), e.font = i.string, Pit(e, a), c = 0; c < o.length; ++c) l = o[c], a.backdrop && Iit(e, a.backdrop), s && (a.strokeColor && (e.strokeStyle = a.strokeColor), g1(a.strokeWidth) || (e.lineWidth = a.strokeWidth), e.strokeText(l, n, r, a.maxWidth)), e.fillText(l, n, r, a.maxWidth), Fit(e, n, r, l, a), r += Number(i.lineHeight);
+    setTimeoutResult;
+  for (e.save(), e.font = i.string, Pit(e, a), c = 0; c < o.length; ++c) setTimeoutResult = o[c], a.backdrop && Iit(e, a.backdrop), s && (a.strokeColor && (e.strokeStyle = a.strokeColor), g1(a.strokeWidth) || (e.lineWidth = a.strokeWidth), e.strokeText(setTimeoutResult, n, r, a.maxWidth)), e.fillText(setTimeoutResult, n, r, a.maxWidth), Fit(e, n, r, setTimeoutResult, a), r += Number(i.lineHeight);
   e.restore();
 }
 function I0(e, t) {
@@ -90302,7 +90302,7 @@ function L0(e, t) {
     isPlainObjectResult = isPlainObject(t),
     i = isPlainObjectResult ? Object.keys(t) : t,
     a = isPlainObject(e) ? isPlainObjectResult ? n => withDefaultValue(e[n], e[t[n]]) : t => e[t] : () => e;
-  for (let e of i) n[e] = Bit(a(e));
+  for (let normalizeResult of i) n[normalizeResult] = Bit(a(normalizeResult));
   return n;
 }
 function R0(e) {
@@ -90340,8 +90340,8 @@ function H0(e, t, n, r) {
   let i = true,
     a,
     o,
-    s;
-  for (a = 0, o = e.length; a < o; ++a) if (s = e[a], s !== undefined && (t !== undefined && typeof s == `function` && (s = s(t), i = false), n !== undefined && _1(s) && (s = s[n % s.length], i = false), s !== undefined)) return r && !i && (r.cacheable = false), s;
+    trimStartResult;
+  for (a = 0, o = e.length; a < o; ++a) if (trimStartResult = e[a], trimStartResult !== undefined && (t !== undefined && typeof trimStartResult == `function` && (trimStartResult = trimStartResult(t), i = false), n !== undefined && _1(trimStartResult) && (trimStartResult = trimStartResult[n % trimStartResult.length], i = false), trimStartResult !== undefined)) return r && !i && (r.cacheable = false), trimStartResult;
 }
 function Vit(e, t, n) {
   let {
@@ -90531,13 +90531,13 @@ function Jit(e, t, n) {
   return _1(i) && isPlainObject(n) ? n : i || {};
 }
 function Yit(e, t, n, r) {
-  let i;
-  for (let a of t) if (i = Q0(Hit(a, e), n), i !== undefined) return q0(e, i) ? X0(n, r, e, i) : i;
+  let count;
+  for (let a of t) if (count = Q0(Hit(a, e), n), count !== undefined) return q0(e, count) ? X0(n, r, e, count) : count;
 }
 function Q0(e, t) {
-  for (let n of t) {
-    if (!n) continue;
-    let t = n[e];
+  for (let replaceResult of t) {
+    if (!replaceResult) continue;
+    let t = replaceResult[e];
     if (t !== undefined) return t;
   }
 }
@@ -90547,7 +90547,7 @@ function $0(e) {
 }
 function Xit(text) {
   let t = new Set();
-  for (let n of text) for (let e of Object.keys(n).filter(item => !item.startsWith(`_`))) t.add(e);
+  for (let replaceResult of text) for (let normalizeResult of Object.keys(replaceResult).filter(item => !item.startsWith(`_`))) t.add(normalizeResult);
   return Array.from(t);
 }
 function e2() {
@@ -90558,8 +90558,8 @@ function t2(e) {
   return parentNode && parentNode.toString() === `[object ShadowRoot]` && (parentNode = parentNode.host), parentNode;
 }
 function n2(items, t, n) {
-  let r;
-  return typeof items == `string` ? (r = parseInt(items, 10), items.indexOf(`%`) !== -1 && (r = r / 100 * t.parentNode[n])) : r = items, r;
+  let requestAnimationFrameResult;
+  return typeof items == `string` ? (requestAnimationFrameResult = parseInt(items, 10), items.indexOf(`%`) !== -1 && (requestAnimationFrameResult = requestAnimationFrameResult / 100 * t.parentNode[n])) : requestAnimationFrameResult = items, requestAnimationFrameResult;
 }
 var r2 = e => e.ownerDocument.defaultView.getComputedStyle(e, null);
 function Zit(e, t) {
@@ -90584,14 +90584,14 @@ function eat(event, t) {
       offsetY: a
     } = r,
     o = false,
-    s,
+    trimStartResult,
     c;
-  if ($it(i, a, event.target)) s = i, c = a;else {
+  if ($it(i, a, event.target)) trimStartResult = i, c = a;else {
     let boundingClientRect = t.getBoundingClientRect();
-    s = r.clientX - boundingClientRect.left, c = r.clientY - boundingClientRect.top, o = true;
+    trimStartResult = r.clientX - boundingClientRect.left, c = r.clientY - boundingClientRect.top, o = true;
   }
   return {
-    x: s,
+    x: trimStartResult,
     y: c,
     box: o
   };
@@ -90623,7 +90623,7 @@ function a2(e, t) {
   };
 }
 function tat(e, t, n) {
-  let r, i;
+  let requestAnimationFrameResult, count;
   if (t === undefined || n === undefined) {
     let a = e && t2(e);
     if (!a) t = e.clientWidth, n = e.clientHeight;else {
@@ -90631,14 +90631,14 @@ function tat(e, t, n) {
         o = r2(a),
         s = i2(o, `border`, `width`),
         c = i2(o, `padding`);
-      t = boundingClientRect.width - c.width - s.width, n = boundingClientRect.height - c.height - s.height, r = n2(o.maxWidth, a, `clientWidth`), i = n2(o.maxHeight, a, `clientHeight`);
+      t = boundingClientRect.width - c.width - s.width, n = boundingClientRect.height - c.height - s.height, requestAnimationFrameResult = n2(o.maxWidth, a, `clientWidth`), count = n2(o.maxHeight, a, `clientHeight`);
     }
   }
   return {
     width: t,
     height: n,
-    maxWidth: r || R1,
-    maxHeight: i || R1
+    maxWidth: requestAnimationFrameResult || R1,
+    maxHeight: count || R1
   };
 }
 var o2 = e => Math.round(e * 10) / 10;
@@ -90727,8 +90727,8 @@ function l2(e, t, n) {
   return e ? iat(t, n) : aat();
 }
 function u2(e, t) {
-  let n, r;
-  (t === `ltr` || t === `rtl`) && (n = e.canvas.style, r = [n.getPropertyValue(`direction`), n.getPropertyPriority(`direction`)], n.setProperty(`direction`, t, `important`), e.prevTextDirection = r);
+  let replaceResult, requestAnimationFrameResult;
+  (t === `ltr` || t === `rtl`) && (replaceResult = e.canvas.style, requestAnimationFrameResult = [replaceResult.getPropertyValue(`direction`), replaceResult.getPropertyPriority(`direction`)], replaceResult.setProperty(`direction`, t, `important`), e.prevTextDirection = requestAnimationFrameResult);
 }
 function d2(e, t) {
   t !== undefined && (delete e.prevTextDirection, e.canvas.style.setProperty(`direction`, t[0], t[1]));
@@ -90785,8 +90785,8 @@ var p2 = new class {
         let i = item.items,
           a = i.length - 1,
           o = false,
-          s;
-        for (; a >= 0; --a) s = i[a], s._active ? (s._total > item.duration && (item.duration = s._total), s.tick(e), o = true) : (i[a] = i[i.length - 1], i.pop());
+          trimStartResult;
+        for (; a >= 0; --a) trimStartResult = i[a], trimStartResult._active ? (trimStartResult._total > item.duration && (item.duration = trimStartResult._total), trimStartResult.tick(e), o = true) : (i[a] = i[i.length - 1], i.pop());
         o && (r.draw(), this._notify(r, item, e, `progress`)), i.length || (item.running = false, this._notify(r, item, e, `complete`), item.initial = false), t += i.length;
       }), this._lastDate = e, t === 0 && (this._running = false);
     }
@@ -90876,7 +90876,7 @@ var p2 = new class {
         _from = this._from,
         _loop = this._loop,
         o = this._to,
-        s;
+        trimStartResult;
       if (this._active = _from !== o && (_loop || t < _duration), !this._active) {
         this._target[_prop] = o, this._notify(true);
         return;
@@ -90885,7 +90885,7 @@ var p2 = new class {
         this._target[_prop] = _from;
         return;
       }
-      s = t / _duration % 2, s = _loop && s > 1 ? 2 - s : s, s = this._easing(Math.min(1, Math.max(0, s))), this._target[_prop] = this._fn(_from, o, s);
+      trimStartResult = t / _duration % 2, trimStartResult = _loop && trimStartResult > 1 ? 2 - trimStartResult : trimStartResult, trimStartResult = this._easing(Math.min(1, Math.max(0, trimStartResult))), this._target[_prop] = this._fn(_from, o, trimStartResult);
     }
     wait() {
       let e = this._promises ||= [];
@@ -90914,7 +90914,7 @@ var p2 = new class {
         let i = configure[item];
         if (!isPlainObject(i)) return;
         let a = {};
-        for (let e of keyList) a[e] = i[e];
+        for (let normalizeResult of keyList) a[normalizeResult] = i[normalizeResult];
         (_1(i.properties) && i.properties || [item]).forEach(e => {
           (e === item || !_properties.has(e)) && _properties.set(e, a);
         });
@@ -90935,9 +90935,9 @@ var p2 = new class {
         i = e.$animations ||= {},
         keyList = Object.keys(animations),
         o = Date.now(),
-        s;
-      for (s = keyList.length - 1; s >= 0; --s) {
-        let c = keyList[s];
+        trimStartResult;
+      for (trimStartResult = keyList.length - 1; trimStartResult >= 0; --trimStartResult) {
+        let c = keyList[trimStartResult];
         if (c.charAt(0) === `$`) continue;
         if (c === `options`) {
           emptyItems.push(...this._animateOptions(e, animations));
@@ -91013,38 +91013,38 @@ function fat(e, t, n) {
   };
 }
 function pat(e) {
-  let t, n, r, i;
-  return isPlainObject(e) ? (t = e.top, n = e.right, r = e.bottom, i = e.left) : t = n = r = i = e, {
-    top: t,
-    right: n,
-    bottom: r,
-    left: i,
+  let normalizeResult, replaceResult, requestAnimationFrameResult, count;
+  return isPlainObject(e) ? (normalizeResult = e.top, replaceResult = e.right, requestAnimationFrameResult = e.bottom, count = e.left) : normalizeResult = replaceResult = requestAnimationFrameResult = count = e, {
+    top: normalizeResult,
+    right: replaceResult,
+    bottom: requestAnimationFrameResult,
+    left: count,
     disabled: e === false
   };
 }
 function _2(e, t) {
   let emptyItems = [],
     r = e._getSortedDatasetMetas(t),
-    i,
+    count,
     a;
-  for (i = 0, a = r.length; i < a; ++i) emptyItems.push(r[i].index);
+  for (count = 0, a = r.length; count < a; ++count) emptyItems.push(r[count].index);
   return emptyItems;
 }
 function v2(e, t, n, r = {}) {
   let keys = e.keys,
     a = r.mode === `single`,
     o,
-    s,
+    trimStartResult,
     c,
-    l;
+    setTimeoutResult;
   if (t === null) return;
   let u = false;
-  for (o = 0, s = keys.length; o < s; ++o) {
+  for (o = 0, trimStartResult = keys.length; o < trimStartResult; ++o) {
     if (c = +keys[o], c === n) {
       if (u = true, r.all) continue;
       break;
     }
-    l = e.values[c], isNumericValue(l) && (a || t === 0 || sign(t) === sign(l)) && (t += l);
+    setTimeoutResult = e.values[c], isNumericValue(setTimeoutResult) && (a || t === 0 || sign(t) === sign(setTimeoutResult)) && (t += setTimeoutResult);
   }
   return !u && !r.all ? 0 : t;
 }
@@ -91058,9 +91058,9 @@ function mat(e, t) {
     keyList = Object.keys(e),
     s = Array(keyList.length),
     c,
-    l,
+    setTimeoutResult,
     u;
-  for (c = 0, l = keyList.length; c < l; ++c) u = keyList[c], s[c] = {
+  for (c = 0, setTimeoutResult = keyList.length; c < setTimeoutResult; ++c) u = keyList[c], s[c] = {
     [i]: u,
     [a]: e[u]
   };
@@ -91090,9 +91090,9 @@ function _at(e, t, n) {
   return fallbackValue[n] || (fallbackValue[n] = {});
 }
 function b2(e, t, n, r) {
-  for (let i of t.getMatchingVisibleMetas(r).reverse()) {
-    let t = e[i.index];
-    if (n && t > 0 || !n && t < 0) return i.index;
+  for (let count of t.getMatchingVisibleMetas(r).reverse()) {
+    let t = e[count.index];
+    if (n && t > 0 || !n && t < 0) return count.index;
   }
   return null;
 }
@@ -91111,7 +91111,7 @@ function x2(e, t) {
     l = o.axis,
     u = hat(a, o, r),
     d = t.length,
-    f;
+    count;
   for (let e = 0; e < d; ++e) {
     let n = t[e],
       {
@@ -91119,8 +91119,8 @@ function x2(e, t) {
         [l]: d
       } = n,
       p = n._stacks ||= {};
-    f = p[l] = _at(i, u, a), f[s] = d, f._top = b2(f, o, true, r.type), f._bottom = b2(f, o, false, r.type);
-    let fallbackValue = f._visualValues || (f._visualValues = {});
+    count = p[l] = _at(i, u, a), count[s] = d, count._top = b2(count, o, true, r.type), count._bottom = b2(count, o, false, r.type);
+    let fallbackValue = count._visualValues || (count._visualValues = {});
     fallbackValue[s] = d;
   }
 }
@@ -91155,8 +91155,8 @@ function C2(e, t) {
     r = e.vScale && e.vScale.axis;
   if (r) {
     t ||= e._parsed;
-    for (let e of t) {
-      let _stacks = e._stacks;
+    for (let normalizeResult of t) {
+      let _stacks = normalizeResult._stacks;
       if (!_stacks || _stacks[r] === undefined || _stacks[r][n] === undefined) return;
       delete _stacks[r][n], _stacks[r]._visualValues !== undefined && _stacks[r]._visualValues[n] !== undefined && delete _stacks[r]._visualValues[n];
     }
@@ -91261,16 +91261,16 @@ var w2 = e => e === `reset` || e === `none`,
         axis = i.axis,
         fallbackValue = e === 0 && t === r.length || n._sorted,
         c = e > 0 && n._parsed[e - 1],
-        l,
+        setTimeoutResult,
         u,
-        d;
-      if (this._parsing === false) n._parsed = r, n._sorted = true, d = r;else {
-        d = _1(r[e]) ? this.parseArrayData(n, r, e, t) : isPlainObject(r[e]) ? this.parseObjectData(n, r, e, t) : this.parsePrimitiveData(n, r, e, t);
+        count;
+      if (this._parsing === false) n._parsed = r, n._sorted = true, count = r;else {
+        count = _1(r[e]) ? this.parseArrayData(n, r, e, t) : isPlainObject(r[e]) ? this.parseObjectData(n, r, e, t) : this.parsePrimitiveData(n, r, e, t);
         let i = () => u[axis] === null || c && u[axis] < c[axis];
-        for (l = 0; l < t; ++l) n._parsed[l + e] = u = d[l], fallbackValue && (i() && (fallbackValue = false), c = u);
+        for (setTimeoutResult = 0; setTimeoutResult < t; ++setTimeoutResult) n._parsed[setTimeoutResult + e] = u = count[setTimeoutResult], fallbackValue && (i() && (fallbackValue = false), c = u);
         n._sorted = fallbackValue;
       }
-      a && x2(this, d);
+      a && x2(this, count);
     }
     parsePrimitiveData(primitive, data, dataValue, dataInput) {
       let {
@@ -91282,12 +91282,12 @@ var w2 = e => e === `reset` || e === `none`,
         labels = i.getLabels(),
         l = i === a,
         u = Array(dataInput),
-        d,
+        count,
         f,
-        p;
-      for (d = 0, f = dataInput; d < f; ++d) p = d + dataValue, u[d] = {
-        [axis]: l || i.parse(labels[p], p),
-        [s]: a.parse(data[p], p)
+        setTimeoutResult;
+      for (count = 0, f = dataInput; count < f; ++count) setTimeoutResult = count + dataValue, u[count] = {
+        [axis]: l || i.parse(labels[setTimeoutResult], setTimeoutResult),
+        [s]: a.parse(data[setTimeoutResult], setTimeoutResult)
       };
       return u;
     }
@@ -91297,13 +91297,13 @@ var w2 = e => e === `reset` || e === `none`,
           yScale: a
         } = array,
         o = Array(dataInput),
-        s,
+        trimStartResult,
         c,
-        l,
+        setTimeoutResult,
         u;
-      for (s = 0, c = dataInput; s < c; ++s) l = s + dataValue, u = data[l], o[s] = {
-        x: i.parse(u[0], l),
-        y: a.parse(u[1], l)
+      for (trimStartResult = 0, c = dataInput; trimStartResult < c; ++trimStartResult) setTimeoutResult = trimStartResult + dataValue, u = data[setTimeoutResult], o[trimStartResult] = {
+        x: i.parse(u[0], setTimeoutResult),
+        y: a.parse(u[1], setTimeoutResult)
       };
       return o;
     }
@@ -91317,13 +91317,13 @@ var w2 = e => e === `reset` || e === `none`,
           yAxisKey: s = `y`
         } = this._parsing,
         c = Array(dataInput),
-        l,
+        setTimeoutResult,
         u,
-        d,
+        count,
         f;
-      for (l = 0, u = dataInput; l < u; ++l) d = l + dataValue, f = data[d], c[l] = {
-        x: i.parse(j1(f, o), d),
-        y: a.parse(j1(f, s), d)
+      for (setTimeoutResult = 0, u = dataInput; setTimeoutResult < u; ++setTimeoutResult) count = setTimeoutResult + dataValue, f = data[count], c[setTimeoutResult] = {
+        x: i.parse(j1(f, o), count),
+        y: a.parse(j1(f, s), count)
       };
       return c;
     }
@@ -91365,16 +91365,16 @@ var w2 = e => e === `reset` || e === `none`,
           min: l,
           max: u
         } = gat(o),
-        d,
+        count,
         f;
       function p() {
-        f = _parsed[d];
+        f = _parsed[count];
         let t = f[o.axis];
         return !isNumericValue(f[min.axis]) || l > t || u < t;
       }
-      for (d = 0; d < a && !(!p() && (this.updateRangeFromParsed(c, min, f, s), i)); ++d);
+      for (count = 0; count < a && !(!p() && (this.updateRangeFromParsed(c, min, f, s), i)); ++count);
       if (i) {
-        for (d = a - 1; d >= 0; --d) if (!p()) {
+        for (count = a - 1; count >= 0; --count) if (!p()) {
           this.updateRangeFromParsed(c, min, f, s);
           break;
         }
@@ -91384,10 +91384,10 @@ var w2 = e => e === `reset` || e === `none`,
     getAllParsedValues(all) {
       let _parsed = this._cachedMeta._parsed,
         emptyItems = [],
-        r,
-        i,
+        requestAnimationFrameResult,
+        count,
         a;
-      for (r = 0, i = _parsed.length; r < i; ++r) a = _parsed[r][all.axis], isNumericValue(a) && emptyItems.push(a);
+      for (requestAnimationFrameResult = 0, count = _parsed.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) a = _parsed[requestAnimationFrameResult][all.axis], isNumericValue(a) && emptyItems.push(a);
       return emptyItems;
     }
     getMaxOverflow() {
@@ -91418,12 +91418,12 @@ var w2 = e => e === `reset` || e === `none`,
         o = this._drawStart || 0,
         s = this._drawCount || fallbackValue.length - o,
         drawActiveElementsOnTop = this.options.drawActiveElementsOnTop,
-        l;
-      for (_cachedMeta.dataset && _cachedMeta.dataset.draw(_ctx, chartArea, o, s), l = o; l < o + s; ++l) {
-        let t = fallbackValue[l];
+        setTimeoutResult;
+      for (_cachedMeta.dataset && _cachedMeta.dataset.draw(_ctx, chartArea, o, s), setTimeoutResult = o; setTimeoutResult < o + s; ++setTimeoutResult) {
+        let t = fallbackValue[setTimeoutResult];
         t.hidden || (t.active && drawActiveElementsOnTop ? emptyItems.push(t) : t.draw(_ctx, chartArea));
       }
-      for (l = 0; l < emptyItems.length; ++l) emptyItems[l].draw(_ctx, chartArea);
+      for (setTimeoutResult = 0; setTimeoutResult < emptyItems.length; ++setTimeoutResult) emptyItems[setTimeoutResult].draw(_ctx, chartArea);
     }
     getStyle(style, styleValue) {
       let n = styleValue ? `active` : `default`;
@@ -91431,12 +91431,12 @@ var w2 = e => e === `reset` || e === `none`,
     }
     getContext(context, contextValue, contextInput) {
       let dataset = this.getDataset(),
-        i;
+        count;
       if (context >= 0 && context < this._cachedMeta.data.length) {
         let t = this._cachedMeta.data[context];
-        i = t.$context ||= yat(this.getContext(), context, t), i.parsed = this.getParsed(context), i.raw = dataset.data[context], i.index = i.dataIndex = context;
-      } else i = this.$context ||= vat(this.chart.getContext(), this.index), i.dataset = dataset, i.index = i.datasetIndex = this.index;
-      return i.active = !!contextValue, i.mode = contextInput, i;
+        count = t.$context ||= yat(this.getContext(), context, t), count.parsed = this.getParsed(context), count.raw = dataset.data[context], count.index = count.dataIndex = context;
+      } else count = this.$context ||= vat(this.chart.getContext(), this.index), count.dataset = dataset, count.index = count.datasetIndex = this.index;
+      return count.active = !!contextValue, count.mode = contextInput, count;
     }
     resolveDatasetElementOptions(dataset) {
       return this._resolveElementOptions(this.datasetElementType.id, dataset);
@@ -91465,15 +91465,15 @@ var w2 = e => e === `reset` || e === `none`,
         a = `animation-${animations}`,
         o = _cachedDataOpts[a];
       if (o) return o;
-      let s;
+      let trimStartResult;
       if (chart.options.animation !== false) {
         let config = this.chart.config,
           datasetAnimationScopeKeys = config.datasetAnimationScopeKeys(this._type, animations),
           optionScopes = config.getOptionScopes(this.getDataset(), datasetAnimationScopeKeys);
-        s = config.createResolver(optionScopes, this.getContext(e, animationsValue, animations));
+        trimStartResult = config.createResolver(optionScopes, this.getContext(e, animationsValue, animations));
       }
-      let c = new h2(chart, s && s.animations);
-      return s && s._cacheable && (_cachedDataOpts[a] = Object.freeze(c)), c;
+      let c = new h2(chart, trimStartResult && trimStartResult.animations);
+      return trimStartResult && trimStartResult._cacheable && (_cachedDataOpts[a] = Object.freeze(c)), c;
     }
     getSharedOptions(shared) {
       if (shared.$shared) return this._sharedOptions ||= Object.assign({}, shared);
@@ -91587,15 +91587,15 @@ function Sat(e) {
   let iScale = e.iScale,
     n = xat(iScale, e.type),
     _length = iScale._length,
-    i,
+    count,
     a,
     o,
-    s,
+    trimStartResult,
     c = () => {
-      o !== 32767 && o !== -32768 && (N1(s) && (_length = Math.min(_length, Math.abs(o - s) || _length)), s = o);
+      o !== 32767 && o !== -32768 && (N1(trimStartResult) && (_length = Math.min(_length, Math.abs(o - trimStartResult) || _length)), trimStartResult = o);
     };
-  for (i = 0, a = n.length; i < a; ++i) o = iScale.getPixelForValue(n[i]), c();
-  for (s = undefined, i = 0, a = iScale.ticks.length; i < a; ++i) o = iScale.getPixelForTick(i), c();
+  for (count = 0, a = n.length; count < a; ++count) o = iScale.getPixelForValue(n[count]), c();
+  for (trimStartResult = undefined, count = 0, a = iScale.ticks.length; count < a; ++count) o = iScale.getPixelForTick(count), c();
   return _length;
 }
 function Cat(e, t, n, r) {
@@ -91647,11 +91647,11 @@ function O2(e, t, n, r) {
     labels = iScale.getLabels(),
     s = iScale === vScale,
     emptyItems = [],
-    l,
+    setTimeoutResult,
     u,
-    d,
+    count,
     f;
-  for (l = n, u = n + r; l < u; ++l) f = t[l], d = {}, d[iScale.axis] = s || iScale.parse(labels[l], l), emptyItems.push(D2(f, d, vScale, l));
+  for (setTimeoutResult = n, u = n + r; setTimeoutResult < u; ++setTimeoutResult) f = t[setTimeoutResult], count = {}, count[iScale.axis] = s || iScale.parse(labels[setTimeoutResult], setTimeoutResult), emptyItems.push(D2(f, count, vScale, setTimeoutResult));
   return emptyItems;
 }
 function k2(e) {
@@ -91661,12 +91661,12 @@ function Eat(e, t, n) {
   return e === 0 ? (t.isHorizontal() ? 1 : -1) * (t.min >= n ? 1 : -1) : sign(e);
 }
 function Dat(e) {
-  let t, n, r, i, a;
-  return e.horizontal ? (t = e.base > e.x, n = `left`, r = `right`) : (t = e.base < e.y, n = `bottom`, r = `top`), t ? (i = `end`, a = `start`) : (i = `start`, a = `end`), {
-    start: n,
-    end: r,
-    reverse: t,
-    top: i,
+  let normalizeResult, replaceResult, requestAnimationFrameResult, count, a;
+  return e.horizontal ? (normalizeResult = e.base > e.x, replaceResult = `left`, requestAnimationFrameResult = `right`) : (normalizeResult = e.base < e.y, replaceResult = `bottom`, requestAnimationFrameResult = `top`), normalizeResult ? (count = `end`, a = `start`) : (count = `start`, a = `end`), {
+    start: replaceResult,
+    end: requestAnimationFrameResult,
+    reverse: normalizeResult,
+    top: count,
     bottom: a
   };
 }
@@ -91757,11 +91757,11 @@ var jat = class extends E2 {
       c = i.axis === `x` ? o : s,
       l = a.axis === `x` ? o : s,
       emptyItems = [],
-      d,
+      count,
       f,
-      p,
+      setTimeoutResult,
       m;
-    for (d = dataValue, f = dataValue + dataInput; d < f; ++d) m = data[d], p = {}, p[i.axis] = i.parse(j1(m, c), d), emptyItems.push(D2(j1(m, l), p, a, d));
+    for (count = dataValue, f = dataValue + dataInput; count < f; ++count) m = data[count], setTimeoutResult = {}, setTimeoutResult[i.axis] = i.parse(j1(m, c), count), emptyItems.push(D2(j1(m, l), setTimeoutResult, a, count));
     return emptyItems;
   }
   updateRangeFromParsed(range, from, parsed, parsedValue) {
@@ -91845,7 +91845,7 @@ var jat = class extends E2 {
           r = found && found[e.vScale.axis];
         if (g1(r) || isNaN(r)) return true;
       };
-    for (let n of filtered) if (!(stacks !== undefined && c(n)) && ((stacked === false || emptyItems.indexOf(n.stack) === -1 || stacked === undefined && n.stack === undefined) && emptyItems.push(n.stack), n.index === e)) break;
+    for (let replaceResult of filtered) if (!(stacks !== undefined && c(replaceResult)) && ((stacked === false || emptyItems.indexOf(replaceResult.stack) === -1 || stacked === undefined && replaceResult.stack === undefined) && emptyItems.push(replaceResult.stack), replaceResult.index === e)) break;
     return emptyItems.length || emptyItems.push(undefined), emptyItems;
   }
   _getStackCount(e) {
@@ -91862,7 +91862,7 @@ var jat = class extends E2 {
   _getAxis() {
     let e = {},
       firstScaleIdForIndexAxis = this.getFirstScaleIdForIndexAxis();
-    for (let n of this.chart.data.datasets) e[withDefaultValue(this.chart.options.indexAxis === `x` ? n.xAxisID : n.yAxisID, firstScaleIdForIndexAxis)] = true;
+    for (let replaceResult of this.chart.data.datasets) e[withDefaultValue(this.chart.options.indexAxis === `x` ? replaceResult.xAxisID : replaceResult.yAxisID, firstScaleIdForIndexAxis)] = true;
     return Object.keys(e);
   }
   _getStackIndex(e, stack, index) {
@@ -91875,9 +91875,9 @@ var jat = class extends E2 {
       _cachedMeta = this._cachedMeta,
       iScale = _cachedMeta.iScale,
       emptyItems = [],
-      i,
+      count,
       a;
-    for (i = 0, a = _cachedMeta.data.length; i < a; ++i) emptyItems.push(iScale.getPixelForValue(this.getParsed(i)[iScale.axis], i));
+    for (count = 0, a = _cachedMeta.data.length; count < a; ++count) emptyItems.push(iScale.getPixelForValue(this.getParsed(count)[iScale.axis], count));
     let barThickness = options.barThickness;
     return {
       min: barThickness || Sat(_cachedMeta),
@@ -91909,16 +91909,16 @@ var jat = class extends E2 {
       u = parsed[t.axis],
       d = 0,
       f = n ? this.applyStack(t, parsed, n) : u,
-      p,
+      setTimeoutResult,
       m;
     f !== u && (d = f - u, f = u), l && (u = _custom.barStart, f = _custom.barEnd - _custom.barStart, u !== 0 && sign(u) !== sign(_custom.barEnd) && (d = 0), d += u);
     let h = !g1(i) && !l ? i : d,
       pixelForValue = t.getPixelForValue(h);
-    if (p = this.chart.getDataVisibility(e) ? t.getPixelForValue(d + f) : pixelForValue, m = p - pixelForValue, Math.abs(m) < a) {
+    if (setTimeoutResult = this.chart.getDataVisibility(e) ? t.getPixelForValue(d + f) : pixelForValue, m = setTimeoutResult - pixelForValue, Math.abs(m) < a) {
       m = Eat(m, t, fallbackValue) * a, u === fallbackValue && (pixelForValue -= m / 2);
       let pixelForDecimal = t.getPixelForDecimal(0),
         pixelForDecimalResult = t.getPixelForDecimal(1);
-      pixelForValue = Math.max(Math.min(pixelForValue, Math.max(pixelForDecimal, pixelForDecimalResult)), Math.min(pixelForDecimal, pixelForDecimalResult)), p = pixelForValue + m, n && !l && (parsed._stacks[t.axis]._visualValues[r] = t.getValueForPixel(p) - t.getValueForPixel(pixelForValue));
+      pixelForValue = Math.max(Math.min(pixelForValue, Math.max(pixelForDecimal, pixelForDecimalResult)), Math.min(pixelForDecimal, pixelForDecimalResult)), setTimeoutResult = pixelForValue + m, n && !l && (parsed._stacks[t.axis]._visualValues[r] = t.getValueForPixel(setTimeoutResult) - t.getValueForPixel(pixelForValue));
     }
     if (pixelForValue === t.getPixelForValue(fallbackValue)) {
       let e = sign(m) * t.getLineWidthForValue(fallbackValue) / 2;
@@ -91927,8 +91927,8 @@ var jat = class extends E2 {
     return {
       size: m,
       base: pixelForValue,
-      head: p,
-      center: p + m / 2
+      head: setTimeoutResult,
+      center: setTimeoutResult + m / 2
     };
   }
   _calculateBarIndexPixels(e, bar) {
@@ -91937,7 +91937,7 @@ var jat = class extends E2 {
       skipNull = options.skipNull,
       withDefaultValueResult = withDefaultValue(options.maxBarThickness, 1 / 0),
       o,
-      s,
+      trimStartResult,
       c = this._getAxisCount();
     if (bar.grouped) {
       let n = skipNull ? this._getStackCount(e) : bar.stackCount,
@@ -91945,13 +91945,13 @@ var jat = class extends E2 {
         u = this.chart.options.indexAxis === `x` ? this.getDataset().xAxisID : this.getDataset().yAxisID,
         d = this._getAxis().indexOf(withDefaultValue(u, this.getFirstScaleIdForIndexAxis())),
         f = this._getStackIndex(this.index, this._cachedMeta.stack, skipNull ? e : undefined) + d;
-      o = l.start + l.chunk * f + l.chunk / 2, s = Math.min(withDefaultValueResult, l.chunk * l.ratio);
-    } else o = scale.getPixelForValue(this.getParsed(e)[scale.axis], e), s = Math.min(withDefaultValueResult, bar.min * bar.ratio);
+      o = l.start + l.chunk * f + l.chunk / 2, trimStartResult = Math.min(withDefaultValueResult, l.chunk * l.ratio);
+    } else o = scale.getPixelForValue(this.getParsed(e)[scale.axis], e), trimStartResult = Math.min(withDefaultValueResult, bar.min * bar.ratio);
     return {
-      base: o - s / 2,
-      head: o + s / 2,
+      base: o - trimStartResult / 2,
+      head: o + trimStartResult / 2,
       center: o,
-      size: s
+      size: trimStartResult
     };
   }
   draw() {
@@ -92190,19 +92190,19 @@ var Nat = class extends E2 {
     getMaxBorderWidth(max) {
       let t = 0,
         chart = this.chart,
-        r,
-        i,
+        requestAnimationFrameResult,
+        count,
         a,
         o,
-        s;
+        trimStartResult;
       if (!max) {
-        for (r = 0, i = chart.data.datasets.length; r < i; ++r) if (chart.isDatasetVisible(r)) {
-          a = chart.getDatasetMeta(r), max = a.data, o = a.controller;
+        for (requestAnimationFrameResult = 0, count = chart.data.datasets.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) if (chart.isDatasetVisible(requestAnimationFrameResult)) {
+          a = chart.getDatasetMeta(requestAnimationFrameResult), max = a.data, o = a.controller;
           break;
         }
       }
       if (!max) return 0;
-      for (r = 0, i = max.length; r < i; ++r) s = o.resolveDataElementOptions(r), s.borderAlign !== `inner` && (t = Math.max(t, s.borderWidth || 0, s.hoverBorderWidth || 0));
+      for (requestAnimationFrameResult = 0, count = max.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) trimStartResult = o.resolveDataElementOptions(requestAnimationFrameResult), trimStartResult.borderAlign !== `inner` && (t = Math.max(t, trimStartResult.borderWidth || 0, trimStartResult.hoverBorderWidth || 0));
       return t;
     }
     getMaxOffset(max) {
@@ -92478,37 +92478,37 @@ function B2(items, t) {
 }
 function Vat(e) {
   let emptyItems = [],
-    n,
-    r,
-    i,
+    replaceResult,
+    requestAnimationFrameResult,
+    count,
     a,
     o,
-    s;
-  for (n = 0, r = (e || []).length; n < r; ++n) i = e[n], {
+    trimStartResult;
+  for (replaceResult = 0, requestAnimationFrameResult = (e || []).length; replaceResult < requestAnimationFrameResult; ++replaceResult) count = e[replaceResult], {
     position: a,
     options: {
       stack: o,
-      stackWeight: s = 1
+      stackWeight: trimStartResult = 1
     }
-  } = i, emptyItems.push({
-    index: n,
-    box: i,
+  } = count, emptyItems.push({
+    index: replaceResult,
+    box: count,
     pos: a,
-    horizontal: i.isHorizontal(),
-    weight: i.weight,
+    horizontal: count.isHorizontal(),
+    weight: count.weight,
     stack: o && a + o,
-    stackWeight: s
+    stackWeight: trimStartResult
   });
   return emptyItems;
 }
 function Hat(e) {
   let t = {};
-  for (let n of e) {
+  for (let replaceResult of e) {
     let {
       stack: e,
       pos: r,
       stackWeight: i
-    } = n;
+    } = replaceResult;
     if (!e || !L2.includes(r)) continue;
     let fallbackValue = t[e] || (t[e] = {
       count: 0,
@@ -92528,15 +92528,15 @@ function Uat(e, t) {
     } = t,
     a,
     o,
-    s;
+    trimStartResult;
   for (a = 0, o = e.length; a < o; ++a) {
-    s = e[a];
+    trimStartResult = e[a];
     let {
         fullSize: o
-      } = s.box,
-      c = n[s.stack],
-      l = c && s.stackWeight / c.weight;
-    s.horizontal ? (s.width = l ? l * r : o && t.availableWidth, s.height = i) : (s.width = r, s.height = l ? l * i : o && t.availableHeight);
+      } = trimStartResult.box,
+      c = n[trimStartResult.stack],
+      l = c && trimStartResult.stackWeight / c.weight;
+    trimStartResult.horizontal ? (trimStartResult.width = l ? l * r : o && t.availableWidth, trimStartResult.height = i) : (trimStartResult.width = r, trimStartResult.height = l ? l * i : o && t.availableHeight);
   }
   return n;
 }
@@ -92618,19 +92618,19 @@ function U2(e, t, n, r) {
   let emptyItems = [],
     a,
     o,
-    s,
+    trimStartResult,
     c,
-    l,
+    setTimeoutResult,
     u;
-  for (a = 0, o = e.length, l = 0; a < o; ++a) {
-    s = e[a], c = s.box, c.update(s.width || t.w, s.height || t.h, qat(s.horizontal, t));
+  for (a = 0, o = e.length, setTimeoutResult = 0; a < o; ++a) {
+    trimStartResult = e[a], c = trimStartResult.box, c.update(trimStartResult.width || t.w, trimStartResult.height || t.h, qat(trimStartResult.horizontal, t));
     let {
       same: o,
       other: d
-    } = Gat(t, n, s, r);
-    l |= o && emptyItems.length, u ||= d, c.fullSize || emptyItems.push(s);
+    } = Gat(t, n, trimStartResult, r);
+    setTimeoutResult |= o && emptyItems.length, u ||= d, c.fullSize || emptyItems.push(trimStartResult);
   }
-  return l && U2(emptyItems, t, n, r) || u;
+  return setTimeoutResult && U2(emptyItems, t, n, r) || u;
 }
 function W2(e, t, n, r, i) {
   e.top = n, e.left = t, e.right = t + r, e.bottom = n + i, e.width = r, e.height = i;
@@ -92641,15 +92641,15 @@ function G2(e, t, n, r) {
       x: a,
       y: o
     } = t;
-  for (let s of e) {
-    let e = s.box,
-      fallbackValue = r[s.stack] || {
+  for (let trimStartResult of e) {
+    let e = trimStartResult.box,
+      fallbackValue = r[trimStartResult.stack] || {
         count: 1,
         placed: 0,
         weight: 1
       },
-      l = s.stackWeight / fallbackValue.weight || 1;
-    if (s.horizontal) {
+      l = trimStartResult.stackWeight / fallbackValue.weight || 1;
+    if (trimStartResult.horizontal) {
       let r = t.w * l,
         a = fallbackValue.size || e.height;
       N1(fallbackValue.start) && (o = fallbackValue.start), e.fullSize ? W2(e, padding.left, o, n.outerWidth - padding.right - padding.left, a) : W2(e, t.left + fallbackValue.placed, o, r, a), fallbackValue.start = o, fallbackValue.placed += r, o = e.bottom;
@@ -92820,13 +92820,13 @@ function $at(e, t) {
   };
 }
 function Z2(e, t) {
-  for (let n of e) if (n === t || n.contains(t)) return true;
+  for (let replaceResult of e) if (replaceResult === t || replaceResult.contains(t)) return true;
 }
 function eot(e, t, n) {
   let canvas = e.canvas,
     mutationObserver = new MutationObserver(e => {
       let t = false;
-      for (let n of e) t ||= Z2(n.addedNodes, canvas), t &&= !Z2(n.removedNodes, canvas);
+      for (let replaceResult of e) t ||= Z2(replaceResult.addedNodes, canvas), t &&= !Z2(replaceResult.removedNodes, canvas);
       t && n();
     });
   return mutationObserver.observe(document, {
@@ -92838,7 +92838,7 @@ function tot(e, t, n) {
   let canvas = e.canvas,
     mutationObserver = new MutationObserver(e => {
       let t = false;
-      for (let n of e) t ||= Z2(n.removedNodes, canvas), t &&= !Z2(n.addedNodes, canvas);
+      for (let replaceResult of e) t ||= Z2(replaceResult.removedNodes, canvas), t &&= !Z2(replaceResult.addedNodes, canvas);
       t && n();
     });
   return mutationObserver.observe(document, {
@@ -92978,10 +92978,10 @@ function cot(options, t) {
   if (o > i) return fot(t, emptyItems, a, o / i), emptyItems;
   let u = uot(a, t, i);
   if (o > 0) {
-    let e,
-      n,
+    let normalizeResult,
+      replaceResult,
       r = o > 1 ? Math.round((c - s) / (o - 1)) : null;
-    for (r4(t, emptyItems, u, g1(r) ? 0 : s - r, s), e = 0, n = o - 1; e < n; e++) r4(t, emptyItems, u, a[e], a[e + 1]);
+    for (r4(t, emptyItems, u, g1(r) ? 0 : s - r, s), normalizeResult = 0, replaceResult = o - 1; normalizeResult < replaceResult; normalizeResult++) r4(t, emptyItems, u, a[normalizeResult], a[normalizeResult + 1]);
     return r4(t, emptyItems, u, c, g1(r) ? t.length : c + r), emptyItems;
   }
   return r4(t, emptyItems, u), emptyItems;
@@ -93006,9 +93006,9 @@ function uot(e, t, n) {
 }
 function dot(e) {
   let emptyItems = [],
-    n,
-    r;
-  for (n = 0, r = e.length; n < r; n++) e[n].major && emptyItems.push(n);
+    replaceResult,
+    requestAnimationFrameResult;
+  for (replaceResult = 0, requestAnimationFrameResult = e.length; replaceResult < requestAnimationFrameResult; replaceResult++) e[replaceResult].major && emptyItems.push(replaceResult);
   return emptyItems;
 }
 function fot(e, items, n, r) {
@@ -93022,18 +93022,18 @@ function r4(e, items, n, r, i) {
     o = Math.min(withDefaultValue(i, e.length), e.length),
     s = 0,
     c,
-    l,
+    setTimeoutResult,
     u;
   for (n = Math.ceil(n), i && (c = i - r, n = c / Math.floor(c / n)), u = withDefaultValueResult; u < 0;) s++, u = Math.round(withDefaultValueResult + s * n);
-  for (l = Math.max(withDefaultValueResult, 0); l < o; l++) l === u && (items.push(e[l]), s++, u = Math.round(withDefaultValueResult + s * n));
+  for (setTimeoutResult = Math.max(withDefaultValueResult, 0); setTimeoutResult < o; setTimeoutResult++) setTimeoutResult === u && (items.push(e[setTimeoutResult]), s++, u = Math.round(withDefaultValueResult + s * n));
 }
 function pot(e) {
   let t = e.length,
-    n,
-    r;
+    replaceResult,
+    requestAnimationFrameResult;
   if (t < 2) return false;
-  for (r = e[0], n = 1; n < t; ++n) if (e[n] - e[n - 1] !== r) return false;
-  return r;
+  for (requestAnimationFrameResult = e[0], replaceResult = 1; replaceResult < t; ++replaceResult) if (e[replaceResult] - e[replaceResult - 1] !== requestAnimationFrameResult) return false;
+  return requestAnimationFrameResult;
 }
 var mot = e => e === `left` ? `right` : e === `right` ? `left` : e,
   i4 = (e, t, n) => t === `top` || t === `left` ? e[t] + n : e[t] - n,
@@ -93053,16 +93053,16 @@ function hot(e, t, n) {
     _endPixel = e._endPixel,
     s = 1e-6,
     pixelForTick = e.getPixelForTick(i),
-    l;
-  if (!(n && (l = r === 1 ? Math.max(pixelForTick - _startPixel, _endPixel - pixelForTick) : t === 0 ? (e.getPixelForTick(1) - pixelForTick) / 2 : (pixelForTick - e.getPixelForTick(i - 1)) / 2, pixelForTick += i < t ? l : -l, pixelForTick < _startPixel - s || pixelForTick > _endPixel + s))) return pixelForTick;
+    setTimeoutResult;
+  if (!(n && (setTimeoutResult = r === 1 ? Math.max(pixelForTick - _startPixel, _endPixel - pixelForTick) : t === 0 ? (e.getPixelForTick(1) - pixelForTick) / 2 : (pixelForTick - e.getPixelForTick(i - 1)) / 2, pixelForTick += i < t ? setTimeoutResult : -setTimeoutResult, pixelForTick < _startPixel - s || pixelForTick > _endPixel + s))) return pixelForTick;
 }
 function got(e, t) {
   w1(e, e => {
     let n = e.gc,
       r = n.length / 2,
-      i;
+      count;
     if (r > t) {
-      for (i = 0; i < r; ++i) delete e.data[n[i]];
+      for (count = 0; count < r; ++count) delete e.data[n[count]];
       n.splice(0, r);
     }
   });
@@ -93106,30 +93106,30 @@ function bot(e, t, n, r) {
       scales: u
     } = c,
     d = 0,
-    f,
-    p,
+    count,
+    setTimeoutResult,
     m,
     h = o - i,
     g = s - a;
   if (e.isHorizontal()) {
-    if (p = u0(r, a, s), isPlainObject(n)) {
+    if (setTimeoutResult = u0(r, a, s), isPlainObject(n)) {
       let e = Object.keys(n)[0],
         r = n[e];
       m = u[e].getPixelForValue(r) + h - t;
     } else m = n === `center` ? (l.bottom + l.top) / 2 + h - t : i4(e, n, t);
-    f = s - a;
+    count = s - a;
   } else {
     if (isPlainObject(n)) {
       let e = Object.keys(n)[0],
         r = n[e];
-      p = u[e].getPixelForValue(r) - g + t;
-    } else p = n === `center` ? (l.left + l.right) / 2 - g + t : i4(e, n, t);
+      setTimeoutResult = u[e].getPixelForValue(r) - g + t;
+    } else setTimeoutResult = n === `center` ? (l.left + l.right) / 2 - g + t : i4(e, n, t);
     m = u0(r, o, i), d = n === `left` ? -z1 : z1;
   }
   return {
-    titleX: p,
+    titleX: setTimeoutResult,
     titleY: m,
-    maxWidth: f,
+    maxWidth: count,
     rotation: d
   };
 }
@@ -93223,9 +93223,9 @@ var l4 = class e extends n4 {
     }
     configure() {
       let e = this.options.reverse,
-        t,
-        n;
-      this.isHorizontal() ? (t = this.left, n = this.right) : (t = this.top, n = this.bottom, e = !e), this._startPixel = t, this._endPixel = n, this._reversePixels = e, this._length = n - t, this._alignToPixels = this.options.alignToPixels;
+        normalizeResult,
+        replaceResult;
+      this.isHorizontal() ? (normalizeResult = this.left, replaceResult = this.right) : (normalizeResult = this.top, replaceResult = this.bottom, e = !e), this._startPixel = normalizeResult, this._endPixel = replaceResult, this._reversePixels = e, this._length = replaceResult - normalizeResult, this._alignToPixels = this.options.alignToPixels;
     }
     afterUpdate() {
       C1(this.options.afterUpdate, [this]);
@@ -93263,10 +93263,10 @@ var l4 = class e extends n4 {
     }
     generateTickLabels(tick) {
       let ticks = this.options.ticks,
-        n,
-        r,
-        i;
-      for (n = 0, r = tick.length; n < r; n++) i = tick[n], i.label = C1(ticks.callback, [i.value, n, tick], this);
+        replaceResult,
+        requestAnimationFrameResult,
+        count;
+      for (replaceResult = 0, requestAnimationFrameResult = tick.length; replaceResult < requestAnimationFrameResult; replaceResult++) count = tick[replaceResult], count.label = C1(ticks.callback, [count.value, replaceResult, tick], this);
     }
     afterTickToLabelConversion() {
       C1(this.options.afterTickToLabelConversion, [this]);
@@ -93282,7 +93282,7 @@ var l4 = class e extends n4 {
         maxRotation = ticks.maxRotation,
         a = fallbackValue,
         o,
-        s,
+        trimStartResult,
         c;
       if (!this._isVisible() || !ticks.display || fallbackValue >= maxRotation || n <= 1 || !this.isHorizontal()) {
         this.labelRotation = fallbackValue;
@@ -93292,7 +93292,7 @@ var l4 = class e extends n4 {
         u = l.widest.width,
         d = l.highest.height,
         f = e0(this.chart.width - u, 0, this.maxWidth);
-      o = options.offset ? this.maxWidth / n : f / (n - 1), u + 6 > o && (o = f / (n - (options.offset ? 0.5 : 1)), s = this.maxHeight - s4(options.grid) - ticks.padding - c4(options.title, this.chart.options.font), c = Math.sqrt(u * u + d * d), a = Y1(Math.min(Math.asin(e0((l.highest.height + 6) / o, -1, 1)), Math.asin(e0(s / c, -1, 1)) - Math.asin(e0(d / c, -1, 1)))), a = Math.max(fallbackValue, Math.min(maxRotation, a))), this.labelRotation = a;
+      o = options.offset ? this.maxWidth / n : f / (n - 1), u + 6 > o && (o = f / (n - (options.offset ? 0.5 : 1)), trimStartResult = this.maxHeight - s4(options.grid) - ticks.padding - c4(options.title, this.chart.options.font), c = Math.sqrt(u * u + d * d), a = Y1(Math.min(Math.asin(e0((l.highest.height + 6) / o, -1, 1)), Math.asin(e0(trimStartResult / c, -1, 1)) - Math.asin(e0(d / c, -1, 1)))), a = Math.max(fallbackValue, Math.min(maxRotation, a))), this.labelRotation = a;
     }
     afterCalculateLabelRotation() {
       C1(this.options.afterCalculateLabelRotation, [this]);
@@ -93381,8 +93381,8 @@ var l4 = class e extends n4 {
     }
     _convertTicksToLabels(items) {
       this.beforeTickToLabelConversion(), this.generateTickLabels(items);
-      let t, n;
-      for (t = 0, n = items.length; t < n; t++) g1(items[t].label) && (items.splice(t, 1), n--, t--);
+      let normalizeResult, replaceResult;
+      for (normalizeResult = 0, replaceResult = items.length; normalizeResult < replaceResult; normalizeResult++) g1(items[normalizeResult].label) && (items.splice(normalizeResult, 1), replaceResult--, normalizeResult--);
       this.afterTickToLabelConversion();
     }
     _getLabelSizes() {
@@ -93404,22 +93404,22 @@ var l4 = class e extends n4 {
         s = Math.floor(label / a4(label, sizes)),
         c = 0,
         l = 0,
-        u,
-        d,
+        setTimeoutResult,
+        count,
         f,
         p,
         m,
-        h,
+        setIntervalResult,
         g,
         _,
         v,
         y,
         b;
-      for (u = 0; u < label; u += s) {
-        if (p = e[u].label, m = this._resolveTickFontOptions(u), r.font = h = m.string, g = i[h] = i[h] || {
+      for (setTimeoutResult = 0; setTimeoutResult < label; setTimeoutResult += s) {
+        if (p = e[setTimeoutResult].label, m = this._resolveTickFontOptions(setTimeoutResult), r.font = setIntervalResult = m.string, g = i[setIntervalResult] = i[setIntervalResult] || {
           data: {},
           gc: []
-        }, _ = m.lineHeight, v = y = 0, !g1(p) && !_1(p)) v = D0(r, g.data, g.gc, v, p), y = _;else if (_1(p)) for (d = 0, f = p.length; d < f; ++d) b = p[d], !g1(b) && !_1(b) && (v = D0(r, g.data, g.gc, v, b), y += _);
+        }, _ = m.lineHeight, v = y = 0, !g1(p) && !_1(p)) v = D0(r, g.data, g.gc, v, p), y = _;else if (_1(p)) for (count = 0, f = p.length; count < f; ++count) b = p[count], !g1(b) && !_1(b) && (v = D0(r, g.data, g.gc, v, b), y += _);
         emptyItems.push(v), o.push(y), c = Math.max(v, c), l = Math.max(y, l);
       }
       got(i, label);
@@ -93513,30 +93513,30 @@ var l4 = class e extends n4 {
         },
         g,
         _,
-        v,
-        y,
-        b,
-        x,
+        setIntervalResult,
+        setTimeoutResult,
+        count,
+        resolvedValue,
         S,
         C,
         w,
-        T,
+        onEventResult,
         E,
         D;
-      if (a === `top`) g = h(this.bottom), x = this.bottom - u, C = g - m, T = h(e.top) + m, D = e.bottom;else if (a === `bottom`) g = h(this.top), T = e.top, D = h(e.bottom) - m, x = g + m, C = this.top + u;else if (a === `left`) g = h(this.right), b = this.right - u, S = g - m, w = h(e.left) + m, E = e.right;else if (a === `right`) g = h(this.left), w = e.left, E = h(e.right) - m, b = g + m, S = this.left + u;else if (axis === `x`) {
+      if (a === `top`) g = h(this.bottom), resolvedValue = this.bottom - u, C = g - m, onEventResult = h(e.top) + m, D = e.bottom;else if (a === `bottom`) g = h(this.top), onEventResult = e.top, D = h(e.bottom) - m, resolvedValue = g + m, C = this.top + u;else if (a === `left`) g = h(this.right), count = this.right - u, S = g - m, w = h(e.left) + m, E = e.right;else if (a === `right`) g = h(this.left), w = e.left, E = h(e.right) - m, count = g + m, S = this.left + u;else if (axis === `x`) {
         if (a === `center`) g = h((e.top + e.bottom) / 2 + 0.5);else if (isPlainObject(a)) {
           let e = Object.keys(a)[0],
             t = a[e];
           g = h(this.chart.scales[e].getPixelForValue(t));
         }
-        T = e.top, D = e.bottom, x = g + m, C = x + u;
+        onEventResult = e.top, D = e.bottom, resolvedValue = g + m, C = resolvedValue + u;
       } else if (axis === `y`) {
         if (a === `center`) g = h((e.left + e.right) / 2);else if (isPlainObject(a)) {
           let e = Object.keys(a)[0],
             t = a[e];
           g = h(this.chart.scales[e].getPixelForValue(t));
         }
-        b = g - m, S = b - u, w = e.left, E = e.right;
+        count = g - m, S = count - u, w = e.left, E = e.right;
       }
       let withDefaultValueResult = withDefaultValue(options.ticks.maxTicksLimit, l),
         k = Math.max(1, Math.ceil(l / withDefaultValueResult));
@@ -93552,13 +93552,13 @@ var l4 = class e extends n4 {
           tickColor = setContextResult.tickColor,
           h = setContextResult.tickBorderDash || [],
           tickBorderDashOffset = setContextResult.tickBorderDashOffset;
-        v = hot(this, _, offset), v !== undefined && (y = O0(chart, v, lineWidth), isHorizontal ? b = S = w = E = y : x = C = T = D = y, emptyItems.push({
-          tx1: b,
-          ty1: x,
+        setIntervalResult = hot(this, _, offset), setIntervalResult !== undefined && (setTimeoutResult = O0(chart, setIntervalResult, lineWidth), isHorizontal ? count = S = w = E = setTimeoutResult : resolvedValue = C = onEventResult = D = setTimeoutResult, emptyItems.push({
+          tx1: count,
+          ty1: resolvedValue,
           tx2: S,
           ty2: C,
           x1: w,
-          y1: T,
+          y1: onEventResult,
           x2: E,
           y2: D,
           width: lineWidth,
@@ -93595,50 +93595,50 @@ var l4 = class e extends n4 {
         emptyItems = [],
         g,
         _,
-        v,
-        y,
-        b,
-        x,
+        setIntervalResult,
+        setTimeoutResult,
+        count,
+        resolvedValue,
         S,
         C,
         w,
-        T,
+        onEventResult,
         E,
         D,
         O = `middle`;
-      if (r === `top`) x = this.bottom - p, S = this._getXAxisLabelAlignment();else if (r === `bottom`) x = this.top + p, S = this._getXAxisLabelAlignment();else if (r === `left`) {
+      if (r === `top`) resolvedValue = this.bottom - p, S = this._getXAxisLabelAlignment();else if (r === `bottom`) resolvedValue = this.top + p, S = this._getXAxisLabelAlignment();else if (r === `left`) {
         let e = this._getYAxisLabelAlignment(d);
-        S = e.textAlign, b = e.x;
+        S = e.textAlign, count = e.x;
       } else if (r === `right`) {
         let e = this._getYAxisLabelAlignment(d);
-        S = e.textAlign, b = e.x;
+        S = e.textAlign, count = e.x;
       } else if (axis === `x`) {
-        if (r === `center`) x = (e.top + e.bottom) / 2 + f;else if (isPlainObject(r)) {
+        if (r === `center`) resolvedValue = (e.top + e.bottom) / 2 + f;else if (isPlainObject(r)) {
           let e = Object.keys(r)[0],
             t = r[e];
-          x = this.chart.scales[e].getPixelForValue(t) + f;
+          resolvedValue = this.chart.scales[e].getPixelForValue(t) + f;
         }
         S = this._getXAxisLabelAlignment();
       } else if (axis === `y`) {
-        if (r === `center`) b = (e.left + e.right) / 2 - f;else if (isPlainObject(r)) {
+        if (r === `center`) count = (e.left + e.right) / 2 - f;else if (isPlainObject(r)) {
           let e = Object.keys(r)[0],
             t = r[e];
-          b = this.chart.scales[e].getPixelForValue(t);
+          count = this.chart.scales[e].getPixelForValue(t);
         }
         S = this._getYAxisLabelAlignment(d).textAlign;
       }
       axis === `y` && (s === `start` ? O = `top` : s === `end` && (O = `bottom`));
       let k = this._getLabelSizes();
       for (g = 0, _ = ticks.length; g < _; ++g) {
-        v = ticks[g], y = v.label;
+        setIntervalResult = ticks[g], setTimeoutResult = setIntervalResult.label;
         let setContext = i.setContext(this.getContext(g));
-        C = this.getPixelForTick(g) + i.labelOffset, w = this._resolveTickFontOptions(g), T = w.lineHeight, E = _1(y) ? y.length : 1;
+        C = this.getPixelForTick(g) + i.labelOffset, w = this._resolveTickFontOptions(g), onEventResult = w.lineHeight, E = _1(setTimeoutResult) ? setTimeoutResult.length : 1;
         let t = E / 2,
           color = setContext.color,
           textStrokeColor = setContext.textStrokeColor,
           textStrokeWidth = setContext.textStrokeWidth,
           d = S;
-        isHorizontal ? (b = C, S === `inner` && (d = g === _ - 1 ? this.options.reverse ? `left` : `right` : g === 0 ? this.options.reverse ? `right` : `left` : `center`), D = r === `top` ? c === `near` || m !== 0 ? -E * T + T / 2 : c === `center` ? -k.highest.height / 2 - t * T + T : -k.highest.height + T / 2 : c === `near` || m !== 0 ? T / 2 : c === `center` ? k.highest.height / 2 - t * T : k.highest.height - E * T, u && (D *= -1), m !== 0 && !setContext.showLabelBackdrop && (b += T / 2 * Math.sin(m))) : (x = C, D = (1 - E) * T / 2);
+        isHorizontal ? (count = C, S === `inner` && (d = g === _ - 1 ? this.options.reverse ? `left` : `right` : g === 0 ? this.options.reverse ? `right` : `left` : `center`), D = r === `top` ? c === `near` || m !== 0 ? -E * onEventResult + onEventResult / 2 : c === `center` ? -k.highest.height / 2 - t * onEventResult + onEventResult : -k.highest.height + onEventResult / 2 : c === `near` || m !== 0 ? onEventResult / 2 : c === `center` ? k.highest.height / 2 - t * onEventResult : k.highest.height - E * onEventResult, u && (D *= -1), m !== 0 && !setContext.showLabelBackdrop && (count += onEventResult / 2 * Math.sin(m))) : (resolvedValue = C, D = (1 - E) * onEventResult / 2);
         let f;
         if (setContext.showLabelBackdrop) {
           let t = B0(setContext.backdropPadding),
@@ -93672,7 +93672,7 @@ var l4 = class e extends n4 {
           };
         }
         emptyItems.push({
-          label: y,
+          label: setTimeoutResult,
           font: w,
           textOffset: D,
           options: {
@@ -93682,7 +93682,7 @@ var l4 = class e extends n4 {
             strokeWidth: textStrokeWidth,
             textAlign: d,
             textBaseline: O,
-            translation: [b, x],
+            translation: [count, resolvedValue],
             backdrop: f
           }
         });
@@ -93711,10 +93711,10 @@ var l4 = class e extends n4 {
         o = e + i,
         s = a.widest.width,
         c,
-        l;
-      return t === `left` ? r ? (l = this.right + i, n === `near` ? c = `left` : n === `center` ? (c = `center`, l += s / 2) : (c = `right`, l += s)) : (l = this.right - o, n === `near` ? c = `right` : n === `center` ? (c = `center`, l -= s / 2) : (c = `left`, l = this.left)) : t === `right` ? r ? (l = this.left + i, n === `near` ? c = `right` : n === `center` ? (c = `center`, l -= s / 2) : (c = `left`, l -= s)) : (l = this.left + o, n === `near` ? c = `left` : n === `center` ? (c = `center`, l += s / 2) : (c = `right`, l = this.right)) : c = `right`, {
+        setTimeoutResult;
+      return t === `left` ? r ? (setTimeoutResult = this.right + i, n === `near` ? c = `left` : n === `center` ? (c = `center`, setTimeoutResult += s / 2) : (c = `right`, setTimeoutResult += s)) : (setTimeoutResult = this.right - o, n === `near` ? c = `right` : n === `center` ? (c = `center`, setTimeoutResult -= s / 2) : (c = `left`, setTimeoutResult = this.left)) : t === `right` ? r ? (setTimeoutResult = this.left + i, n === `near` ? c = `right` : n === `center` ? (c = `center`, setTimeoutResult -= s / 2) : (c = `left`, setTimeoutResult -= s)) : (setTimeoutResult = this.left + o, n === `near` ? c = `left` : n === `center` ? (c = `center`, setTimeoutResult += s / 2) : (c = `right`, setTimeoutResult = this.right)) : c = `right`, {
         textAlign: c,
-        x: l
+        x: setTimeoutResult
       };
     }
     _computeLabelArea() {
@@ -93757,13 +93757,13 @@ var l4 = class e extends n4 {
       let grid = this.options.grid,
         n = this.ctx,
         r = this._gridLineItems ||= this._computeGridLineItems(draw),
-        i,
+        count,
         a,
         o = (e, t, r) => {
           r.width && r.color && (n.save(), n.lineWidth = r.width, n.strokeStyle = r.color, n.setLineDash(r.borderDash || []), n.lineDashOffset = r.borderDashOffset, n.beginPath(), n.moveTo(e.x, e.y), n.lineTo(t.x, t.y), n.stroke(), n.restore());
         };
-      if (grid.display) for (i = 0, a = r.length; i < a; ++i) {
-        let e = r[i];
+      if (grid.display) for (count = 0, a = r.length; count < a; ++count) {
+        let e = r[count];
         grid.drawOnChartArea && o({
           x: e.x1,
           y: e.y1
@@ -93799,10 +93799,10 @@ var l4 = class e extends n4 {
       let lineWidth = r.setContext(this.getContext(0)).lineWidth,
         _borderValue = this._borderValue,
         c,
-        l,
+        setTimeoutResult,
         u,
-        d;
-      this.isHorizontal() ? (c = O0(e, this.left, a) - a / 2, l = O0(e, this.right, lineWidth) + lineWidth / 2, u = d = _borderValue) : (u = O0(e, this.top, a) - a / 2, d = O0(e, this.bottom, lineWidth) + lineWidth / 2, c = l = _borderValue), t.save(), t.lineWidth = setContext.width, t.strokeStyle = setContext.color, t.beginPath(), t.moveTo(c, u), t.lineTo(l, d), t.stroke(), t.restore();
+        count;
+      this.isHorizontal() ? (c = O0(e, this.left, a) - a / 2, setTimeoutResult = O0(e, this.right, lineWidth) + lineWidth / 2, u = count = _borderValue) : (u = O0(e, this.top, a) - a / 2, count = O0(e, this.bottom, lineWidth) + lineWidth / 2, c = setTimeoutResult = _borderValue), t.save(), t.lineWidth = setContext.width, t.strokeStyle = setContext.color, t.beginPath(), t.moveTo(c, u), t.lineTo(setTimeoutResult, count), t.stroke(), t.restore();
     }
     drawLabels(options) {
       if (!this.options.ticks.display) return;
@@ -93810,11 +93810,11 @@ var l4 = class e extends n4 {
         n = this._computeLabelArea();
       n && N0(t, n);
       let labelItems = this.getLabelItems(options);
-      for (let e of labelItems) {
-        let n = e.options,
-          font = e.font,
-          label = e.label,
-          textOffset = e.textOffset;
+      for (let normalizeResult of labelItems) {
+        let n = normalizeResult.options,
+          font = normalizeResult.font,
+          label = normalizeResult.label,
+          textOffset = normalizeResult.textOffset;
         F0(t, label, 0, textOffset, font, n);
       }
       n && P0(t);
@@ -93883,10 +93883,10 @@ var l4 = class e extends n4 {
       let sortedVisibleDatasetMetas = this.chart.getSortedVisibleDatasetMetas(),
         n = this.axis + `AxisID`,
         emptyItems = [],
-        i,
+        count,
         a;
-      for (i = 0, a = sortedVisibleDatasetMetas.length; i < a; ++i) {
-        let a = sortedVisibleDatasetMetas[i];
+      for (count = 0, a = sortedVisibleDatasetMetas.length; count < a; ++count) {
+        let a = sortedVisibleDatasetMetas[count];
         a[n] === this.id && (!matching || a.type === matching) && emptyItems.push(a);
       }
       return emptyItems;
@@ -93908,13 +93908,13 @@ var l4 = class e extends n4 {
     }
     register(register) {
       let prototypeOf = Object.getPrototypeOf(register),
-        n;
-      Cot(prototypeOf) && (n = this.register(prototypeOf));
+        replaceResult;
+      Cot(prototypeOf) && (replaceResult = this.register(prototypeOf));
       let r = this.items,
         i = register.id,
         a = this.scope + `.` + i;
       if (!i) throw Error(`class does not have id: ` + register);
-      return i in r ? a : (r[i] = register, xot(register, a, n), this.override && E0.override(register.id, register.overrides), a);
+      return i in r ? a : (r[i] = register, xot(register, a, replaceResult), this.override && E0.override(register.id, register.overrides), a);
     }
     get(e) {
       return this.items[e];
@@ -94028,10 +94028,10 @@ var d4 = new class {
     }
     _notify(e, t, n, r) {
       r ||= {};
-      for (let i of e) {
-        let plugin = i.plugin,
+      for (let count of e) {
+        let plugin = count.plugin,
           a = plugin[n];
-        if (C1(a, [t, r, i.options], plugin) === false && r.cancelable) return false;
+        if (C1(a, [t, r, count.options], plugin) === false && r.cancelable) return false;
       }
       return true;
     }
@@ -94080,13 +94080,13 @@ function Dot(options, {
 }, r, i) {
   let emptyItems = [],
     context = options.getContext();
-  for (let s of t) {
-    let t = s.id,
+  for (let trimStartResult of t) {
+    let t = trimStartResult.id,
       c = Eot(r[t], i);
     c !== null && emptyItems.push({
-      plugin: s,
+      plugin: trimStartResult,
       options: Oot(options.config, {
-        plugin: s,
+        plugin: trimStartResult,
         local: n[t]
       }, c, context)
     });
@@ -94125,8 +94125,8 @@ function jot(e) {
 }
 function m4(e, ...t) {
   if (p4(e)) return e;
-  for (let n of t) {
-    let fallbackValue = n.axis || jot(n.position) || e.length > 1 && p4(e[0].toLowerCase());
+  for (let replaceResult of t) {
+    let fallbackValue = replaceResult.axis || jot(replaceResult.position) || e.length > 1 && p4(e[0].toLowerCase());
     if (fallbackValue) return fallbackValue;
   }
   throw Error(`Cannot determine type of '${e}' axis. Please provide 'axis' or 'position' option.`);
@@ -94288,7 +94288,7 @@ var x4 = (e, t, n) => {
         let resolver = this.createResolver(named, optionsValue, o);
         s = G0(a, optionsValue, resolver);
       }
-      for (let e of options) i[e] = s[e];
+      for (let normalizeResult of options) i[normalizeResult] = s[normalizeResult];
       return i;
     }
     createResolver(resolver, resolverValue, n = [``], resolverInput) {
@@ -94314,10 +94314,10 @@ function Lot(e, t) {
     isScriptable: n,
     isIndexable: r
   } = K0(e);
-  for (let i of t) {
-    let t = n(i),
-      a = r(i),
-      o = (a || t) && e[i];
+  for (let count of t) {
+    let t = n(count),
+      a = r(count),
+      o = (a || t) && e[count];
     if (t && (P1(o) || Iot(o)) || a && _1(o)) return true;
   }
   return false;
@@ -94352,11 +94352,11 @@ var D4 = {},
   };
 function Vot(e, t, n) {
   let keyList = Object.keys(e);
-  for (let i of keyList) {
-    let r = +i;
+  for (let count of keyList) {
+    let r = +count;
     if (r >= t) {
-      let a = e[i];
-      delete e[i], (n > 0 || r > t) && (e[r + n] = a);
+      let a = e[count];
+      delete e[count], (n > 0 || r > t) && (e[r + n] = a);
     }
   }
 }
@@ -94510,13 +94510,13 @@ var k4 = class {
   buildOrUpdateControllers() {
     let emptyItems = [],
       datasets = this.data.datasets,
-      n,
-      r;
-    for (this._removeUnreferencedMetasets(), n = 0, r = datasets.length; n < r; n++) {
-      let r = datasets[n],
-        datasetMeta = this.getDatasetMeta(n),
+      replaceResult,
+      requestAnimationFrameResult;
+    for (this._removeUnreferencedMetasets(), replaceResult = 0, requestAnimationFrameResult = datasets.length; replaceResult < requestAnimationFrameResult; replaceResult++) {
+      let r = datasets[replaceResult],
+        datasetMeta = this.getDatasetMeta(replaceResult),
         fallbackValue = r.type || this.config.type;
-      if (datasetMeta.type && datasetMeta.type !== fallbackValue && (this._destroyDatasetMeta(n), datasetMeta = this.getDatasetMeta(n)), datasetMeta.type = fallbackValue, datasetMeta.indexAxis = r.indexAxis || f4(fallbackValue, this.options), datasetMeta.order = r.order || 0, datasetMeta.index = n, datasetMeta.label = `` + r.label, datasetMeta.visible = this.isDatasetVisible(n), datasetMeta.controller) datasetMeta.controller.updateIndex(n), datasetMeta.controller.linkScales();else {
+      if (datasetMeta.type && datasetMeta.type !== fallbackValue && (this._destroyDatasetMeta(replaceResult), datasetMeta = this.getDatasetMeta(replaceResult)), datasetMeta.type = fallbackValue, datasetMeta.indexAxis = r.indexAxis || f4(fallbackValue, this.options), datasetMeta.order = r.order || 0, datasetMeta.index = replaceResult, datasetMeta.label = `` + r.label, datasetMeta.visible = this.isDatasetVisible(replaceResult), datasetMeta.controller) datasetMeta.controller.updateIndex(replaceResult), datasetMeta.controller.linkScales();else {
         let controller = d4.getController(fallbackValue),
           {
             datasetElementType: r,
@@ -94525,7 +94525,7 @@ var k4 = class {
         Object.assign(controller, {
           dataElementType: d4.getElement(o),
           datasetElementType: r && d4.getElement(r)
-        }), datasetMeta.controller = new controller(this, n), emptyItems.push(datasetMeta.controller);
+        }), datasetMeta.controller = new controller(this, replaceResult), emptyItems.push(datasetMeta.controller);
       }
     }
     return this._updateMetasets(), emptyItems;
@@ -94647,7 +94647,7 @@ var k4 = class {
     })));
   }
   draw() {
-    let e;
+    let normalizeResult;
     if (this._resizeBeforeDraw) {
       let {
         width: e,
@@ -94659,17 +94659,17 @@ var k4 = class {
       cancelable: true
     }) === false) return;
     let _layers = this._layers;
-    for (e = 0; e < _layers.length && _layers[e].z <= 0; ++e) _layers[e].draw(this.chartArea);
-    for (this._drawDatasets(); e < _layers.length; ++e) _layers[e].draw(this.chartArea);
+    for (normalizeResult = 0; normalizeResult < _layers.length && _layers[normalizeResult].z <= 0; ++normalizeResult) _layers[normalizeResult].draw(this.chartArea);
+    for (this._drawDatasets(); normalizeResult < _layers.length; ++normalizeResult) _layers[normalizeResult].draw(this.chartArea);
     this.notifyPlugins(`afterDraw`);
   }
   _getSortedDatasetMetas(e) {
     let _sortedMetasets = this._sortedMetasets,
       emptyItems = [],
-      r,
-      i;
-    for (r = 0, i = _sortedMetasets.length; r < i; ++r) {
-      let i = _sortedMetasets[r];
+      requestAnimationFrameResult,
+      count;
+    for (requestAnimationFrameResult = 0, count = _sortedMetasets.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) {
+      let i = _sortedMetasets[requestAnimationFrameResult];
       (!e || i.visible) && emptyItems.push(i);
     }
     return emptyItems;
@@ -94765,8 +94765,8 @@ var k4 = class {
     t && t.controller && t.controller._destroy(), delete this._metasets[e];
   }
   _stop() {
-    let e, t;
-    for (this.stop(), p2.remove(this), e = 0, t = this.data.datasets.length; e < t; ++e) this._destroyDatasetMeta(e);
+    let normalizeResult, t;
+    for (this.stop(), p2.remove(this), normalizeResult = 0, t = this.data.datasets.length; normalizeResult < t; ++normalizeResult) this._destroyDatasetMeta(normalizeResult);
   }
   destroy() {
     this.notifyPlugins(`beforeDestroy`);
@@ -94823,11 +94823,11 @@ var k4 = class {
   }
   updateHoverStyle(hover, style, styleValue) {
     let r = styleValue ? `set` : `remove`,
-      i,
+      count,
       a,
       o,
-      s;
-    for (style === `dataset` && (i = this.getDatasetMeta(hover[0].datasetIndex), i.controller[`_` + r + `DatasetHoverStyle`]()), o = 0, s = hover.length; o < s; ++o) {
+      trimStartResult;
+    for (style === `dataset` && (count = this.getDatasetMeta(hover[0].datasetIndex), count.controller[`_` + r + `DatasetHoverStyle`]()), o = 0, trimStartResult = hover.length; o < trimStartResult; ++o) {
       a = hover[o];
       let t = a && this.getDatasetMeta(a.datasetIndex).controller;
       t && t[r + `HoverStyle`](a.element, a.datasetIndex, a.index);
@@ -95172,14 +95172,14 @@ function P4(e, t) {
       width: a,
       height: o
     } = e.getProps([`x`, `y`, `base`, `width`, `height`], t),
-    s,
+    trimStartResult,
     c,
-    l,
+    setTimeoutResult,
     u,
-    d;
-  return e.horizontal ? (d = o / 2, s = Math.min(n, i), c = Math.max(n, i), l = r - d, u = r + d) : (d = a / 2, s = n - d, c = n + d, l = Math.min(r, i), u = Math.max(r, i)), {
-    left: s,
-    top: l,
+    count;
+  return e.horizontal ? (count = o / 2, trimStartResult = Math.min(n, i), c = Math.max(n, i), setTimeoutResult = r - count, u = r + count) : (count = a / 2, trimStartResult = n - count, c = n + count, setTimeoutResult = Math.min(r, i), u = Math.max(r, i)), {
+    left: trimStartResult,
+    top: setTimeoutResult,
     right: c,
     bottom: u
   };
@@ -95368,8 +95368,8 @@ var est = class extends n4 {
           itemHeight: s
         } = R4(labels, i),
         c,
-        l;
-      t.font = r.string, this.isHorizontal() ? (c = this.maxWidth, l = this._fitRows(a, i, o, s) + 10) : (l = this.maxHeight, c = this._fitCols(a, r, o, s) + 10), this.width = Math.min(c, e.maxWidth || this.maxWidth), this.height = Math.min(l, e.maxHeight || this.maxHeight);
+        setTimeoutResult;
+      t.font = r.string, this.isHorizontal() ? (c = this.maxWidth, setTimeoutResult = this._fitRows(a, i, o, s) + 10) : (setTimeoutResult = this.maxHeight, c = this._fitCols(a, r, o, s) + 10), this.width = Math.min(c, e.maxWidth || this.maxWidth), this.height = Math.min(setTimeoutResult, e.maxHeight || this.maxHeight);
     }
     _fitRows(e, rows, rowsValue, rowsInput) {
       let {
@@ -95454,11 +95454,11 @@ var est = class extends n4 {
       if (this.isHorizontal()) {
         let i = 0,
           o = u0(n, this.left + r, this.right - this.lineWidths[i]);
-        for (let s of t) i !== s.row && (i = s.row, o = u0(n, this.left + r, this.right - this.lineWidths[i])), s.top += this.top + e + r, s.left = a.leftForLtr(a.x(o), s.width), o += s.width + r;
+        for (let trimStartResult of t) i !== trimStartResult.row && (i = trimStartResult.row, o = u0(n, this.left + r, this.right - this.lineWidths[i])), trimStartResult.top += this.top + e + r, trimStartResult.left = a.leftForLtr(a.x(o), trimStartResult.width), o += trimStartResult.width + r;
       } else {
         let i = 0,
           o = u0(n, this.top + e + r, this.bottom - this.columnSizes[i].height);
-        for (let s of t) s.col !== i && (i = s.col, o = u0(n, this.top + e + r, this.bottom - this.columnSizes[i].height)), s.top = o, s.left += this.left + r, s.left = a.leftForLtr(a.x(s.left), s.width), o += s.height + r;
+        for (let trimStartResult of t) trimStartResult.col !== i && (i = trimStartResult.col, o = u0(n, this.top + e + r, this.bottom - this.columnSizes[i].height)), trimStartResult.top = o, trimStartResult.left += this.left + r, trimStartResult.left = a.leftForLtr(a.x(trimStartResult.left), trimStartResult.width), o += trimStartResult.height + r;
       }
     }
     isHorizontal() {
@@ -95489,7 +95489,7 @@ var est = class extends n4 {
         } = a,
         u = c.size,
         d = u / 2,
-        f;
+        count;
       this.drawTitle(), r.textAlign = s.textAlign(`left`), r.textBaseline = `middle`, r.lineWidth = 0.5, r.font = c.string;
       let {
           boxWidth: p,
@@ -95532,7 +95532,7 @@ var est = class extends n4 {
         },
         isHorizontal = this.isHorizontal(),
         y = this._computeTitleHeight();
-      f = isHorizontal ? {
+      count = isHorizontal ? {
         x: u0(i, this.left + l, this.right - n[0]),
         y: this.top + l + y,
         line: 0
@@ -95547,14 +95547,14 @@ var est = class extends n4 {
         let m = r.measureText(item.text).width,
           textAlign = s.textAlign(item.textAlign ||= a.textAlign),
           x = p + d + m,
-          S = f.x,
-          C = f.y;
-        s.setWidth(this.width), isHorizontal ? u > 0 && S + x + l > this.right && (C = f.y += b, f.line++, S = f.x = u0(i, this.left + l, this.right - n[f.line])) : u > 0 && C + b > this.bottom && (S = f.x = S + t[f.line].width + l, f.line++, C = f.y = u0(i, this.top + y + l, this.bottom - t[f.line].height));
+          S = count.x,
+          C = count.y;
+        s.setWidth(this.width), isHorizontal ? u > 0 && S + x + l > this.right && (C = count.y += b, count.line++, S = count.x = u0(i, this.left + l, this.right - n[count.line])) : u > 0 && C + b > this.bottom && (S = count.x = S + t[count.line].width + l, count.line++, C = count.y = u0(i, this.top + y + l, this.bottom - t[count.line].height));
         let w = s.x(S);
-        if (g(w, C, item), S = wit(textAlign, S + p + d, isHorizontal ? S + x : this.right, e.rtl), _(s.x(S), C, item), isHorizontal) f.x += x + l;else if (typeof item.text != `string`) {
+        if (g(w, C, item), S = wit(textAlign, S + p + d, isHorizontal ? S + x : this.right, e.rtl), _(s.x(S), C, item), isHorizontal) count.x += x + l;else if (typeof item.text != `string`) {
           let lineHeight = c.lineHeight;
-          f.y += B4(item, lineHeight) + l;
-        } else f.y += b;
+          count.y += B4(item, lineHeight) + l;
+        } else count.y += b;
       }), d2(this.ctx, e.textDirection);
     }
     drawTitle() {
@@ -95568,15 +95568,15 @@ var est = class extends n4 {
         position = title.position,
         s = n.size / 2,
         c = r.top + s,
-        l,
+        setTimeoutResult,
         u = this.left,
         d = this.width;
-      if (this.isHorizontal()) d = Math.max(...this.lineWidths), l = this.top + c, u = u0(options.align, u, this.right - d);else {
+      if (this.isHorizontal()) d = Math.max(...this.lineWidths), setTimeoutResult = this.top + c, u = u0(options.align, u, this.right - d);else {
         let reduced = this.columnSizes.reduce((acc, cur) => Math.max(acc, cur.height), 0);
-        l = c + u0(options.align, this.top, this.bottom - reduced - options.labels.padding - this._computeTitleHeight());
+        setTimeoutResult = c + u0(options.align, this.top, this.bottom - reduced - options.labels.padding - this._computeTitleHeight());
       }
       let f = u0(position, u, u + d);
-      a.textAlign = i.textAlign(l0(position)), a.textBaseline = `middle`, a.strokeStyle = title.color, a.fillStyle = title.color, a.font = n.string, F0(a, title.text, f, l, n);
+      a.textAlign = i.textAlign(l0(position)), a.textBaseline = `middle`, a.strokeStyle = title.color, a.fillStyle = title.color, a.font = n.string, F0(a, title.text, f, setTimeoutResult, n);
     }
     _computeTitleHeight() {
       let title = this.options.title,
@@ -95585,9 +95585,9 @@ var est = class extends n4 {
       return title.display ? t.lineHeight + n.height : 0;
     }
     _getLegendItemAt(e, legend) {
-      let n, r, i;
+      let replaceResult, requestAnimationFrameResult, count;
       if (t0(e, this.left, this.right) && t0(legend, this.top, this.bottom)) {
-        for (i = this.legendHitBoxes, n = 0; n < i.length; ++n) if (r = i[n], t0(e, r.left, r.left + r.width) && t0(legend, r.top, r.top + r.height)) return this.legendItems[n];
+        for (count = this.legendHitBoxes, replaceResult = 0; replaceResult < count.length; ++replaceResult) if (requestAnimationFrameResult = count[replaceResult], t0(e, requestAnimationFrameResult.left, requestAnimationFrameResult.left + requestAnimationFrameResult.width) && t0(legend, requestAnimationFrameResult.top, requestAnimationFrameResult.top + requestAnimationFrameResult.height)) return this.legendItems[replaceResult];
       }
       return null;
     }
@@ -95745,10 +95745,10 @@ var entity = {
         align = a.align,
         s = 0,
         c,
-        l,
+        setTimeoutResult,
         u;
-      return this.isHorizontal() ? (l = u0(align, n, i), u = t + e, c = i - n) : (a.position === `left` ? (l = n + e, u = u0(align, r, t), s = I1 * -0.5) : (l = i - e, u = u0(align, t, r), s = I1 * 0.5), c = r - t), {
-        titleX: l,
+      return this.isHorizontal() ? (setTimeoutResult = u0(align, n, i), u = t + e, c = i - n) : (a.position === `left` ? (setTimeoutResult = n + e, u = u0(align, r, t), s = I1 * -0.5) : (setTimeoutResult = i - e, u = u0(align, t, r), s = I1 * 0.5), c = r - t), {
+        titleX: setTimeoutResult,
         titleY: u,
         maxWidth: c,
         rotation: s
@@ -95821,13 +95821,13 @@ var U4 = {
   W4 = {
     average(average) {
       if (!average.length) return false;
-      let t,
-        n,
+      let normalizeResult,
+        replaceResult,
         r = new Set(),
         i = 0,
         a = 0;
-      for (t = 0, n = average.length; t < n; ++t) {
-        let element = average[t].element;
+      for (normalizeResult = 0, replaceResult = average.length; normalizeResult < replaceResult; ++normalizeResult) {
+        let element = average[normalizeResult].element;
         if (element && element.hasValue()) {
           let tooltipPosition = element.tooltipPosition();
           r.add(tooltipPosition.x), i += tooltipPosition.y, ++a;
@@ -95845,16 +95845,16 @@ var U4 = {
         i = 1 / 0,
         a,
         o,
-        s;
+        trimStartResult;
       for (a = 0, o = nearest.length; a < o; ++a) {
         let element = nearest[a].element;
         if (element && element.hasValue()) {
           let e = vit(nearestValue, element.getCenterPoint());
-          e < i && (i = e, s = element);
+          e < i && (i = e, trimStartResult = element);
         }
       }
-      if (s) {
-        let tooltipPosition = s.tooltipPosition();
+      if (trimStartResult) {
+        let tooltipPosition = trimStartResult.tooltipPosition();
         n = tooltipPosition.x, r = tooltipPosition.y;
       }
       return {
@@ -96143,23 +96143,23 @@ var t3 = class extends n4 {
       let _active = this._active,
         n = this.chart.data,
         emptyItems = [],
-        i = [],
+        count = [],
         a = [],
         o = [],
-        s,
+        trimStartResult,
         c;
-      for (s = 0, c = _active.length; s < c; ++s) o.push(sst(this.chart, _active[s]));
+      for (trimStartResult = 0, c = _active.length; trimStartResult < c; ++trimStartResult) o.push(sst(this.chart, _active[trimStartResult]));
       return items.filter && (o = o.filter((item, r, i) => items.filter(item, r, i, n))), items.itemSort && (o = o.sort((left, right) => items.itemSort(left, right, n))), w1(o, t => {
         let n = Q4(items.callbacks, t);
-        emptyItems.push(e3(n, `labelColor`, this, t)), i.push(e3(n, `labelPointStyle`, this, t)), a.push(e3(n, `labelTextColor`, this, t));
-      }), this.labelColors = emptyItems, this.labelPointStyles = i, this.labelTextColors = a, this.dataPoints = o, o;
+        emptyItems.push(e3(n, `labelColor`, this, t)), count.push(e3(n, `labelPointStyle`, this, t)), a.push(e3(n, `labelTextColor`, this, t));
+      }), this.labelColors = emptyItems, this.labelPointStyles = count, this.labelTextColors = a, this.dataPoints = o, o;
     }
     update(update, updateValue) {
       let setContext = this.options.setContext(this.getContext()),
         _active = this._active,
-        i,
+        count,
         emptyItems = [];
-      if (!_active.length) this.opacity !== 0 && (i = {
+      if (!_active.length) this.opacity !== 0 && (count = {
         opacity: 0
       });else {
         let e = W4[setContext.position].call(this, _active, this._eventPosition);
@@ -96168,7 +96168,7 @@ var t3 = class extends n4 {
           o = Object.assign({}, e, t),
           s = J4(this.chart, setContext, o),
           c = Y4(setContext, o, s, this.chart);
-        this.xAlign = s.xAlign, this.yAlign = s.yAlign, i = {
+        this.xAlign = s.xAlign, this.yAlign = s.yAlign, count = {
           opacity: 1,
           x: c.x,
           y: c.y,
@@ -96178,7 +96178,7 @@ var t3 = class extends n4 {
           caretY: e.y
         };
       }
-      this._tooltipItems = emptyItems, this.$context = undefined, i && this._resolveAnimations().update(this, i), update && setContext.external && setContext.external.call(this, {
+      this._tooltipItems = emptyItems, this.$context = undefined, count && this._resolveAnimations().update(this, count), update && setContext.external && setContext.external.call(this, {
         chart: this.chart,
         tooltip: this,
         replay: updateValue
@@ -96211,19 +96211,19 @@ var t3 = class extends n4 {
           width: p,
           height: m
         } = position,
-        h,
+        setIntervalResult,
         g,
         _,
         v,
-        y,
-        b;
-      return i === `center` ? (y = f + m / 2, r === `left` ? (h = d, g = h - a, v = y + a, b = y - a) : (h = d + p, g = h + a, v = y - a, b = y + a), _ = h) : (g = r === `left` ? d + Math.max(s, l) + a : r === `right` ? d + p - Math.max(c, u) - a : this.caretX, i === `top` ? (v = f, y = v - a, h = g - a, _ = g + a) : (v = f + m, y = v + a, h = g + a, _ = g - a), b = v), {
-        x1: h,
+        setTimeoutResult,
+        count;
+      return i === `center` ? (setTimeoutResult = f + m / 2, r === `left` ? (setIntervalResult = d, g = setIntervalResult - a, v = setTimeoutResult + a, count = setTimeoutResult - a) : (setIntervalResult = d + p, g = setIntervalResult + a, v = setTimeoutResult - a, count = setTimeoutResult + a), _ = setIntervalResult) : (g = r === `left` ? d + Math.max(s, l) + a : r === `right` ? d + p - Math.max(c, u) - a : this.caretX, i === `top` ? (v = f, setTimeoutResult = v - a, setIntervalResult = g - a, _ = g + a) : (v = f + m, setTimeoutResult = v + a, setIntervalResult = g + a, _ = g - a), count = v), {
+        x1: setIntervalResult,
         x2: g,
         x3: _,
         y1: v,
-        y2: y,
-        y3: b
+        y2: setTimeoutResult,
+        y3: count
       };
     }
     drawTitle(draw, titleValue, titleInput) {
@@ -96231,10 +96231,10 @@ var t3 = class extends n4 {
         i = title.length,
         a,
         o,
-        s;
+        trimStartResult;
       if (i) {
         let c = l2(titleInput.rtl, this.x, this.width);
-        for (draw.x = X4(this, titleInput.titleAlign, titleInput), titleValue.textAlign = c.textAlign(titleInput.titleAlign), titleValue.textBaseline = `middle`, a = V0(titleInput.titleFont), o = titleInput.titleSpacing, titleValue.fillStyle = titleInput.titleColor, titleValue.font = a.string, s = 0; s < i; ++s) titleValue.fillText(title[s], c.x(draw.x), draw.y + a.lineHeight / 2), draw.y += a.lineHeight + o, s + 1 === i && (draw.y += titleInput.titleMarginBottom - o);
+        for (draw.x = X4(this, titleInput.titleAlign, titleInput), titleValue.textAlign = c.textAlign(titleInput.titleAlign), titleValue.textBaseline = `middle`, a = V0(titleInput.titleFont), o = titleInput.titleSpacing, titleValue.fillStyle = titleInput.titleColor, titleValue.font = a.string, trimStartResult = 0; trimStartResult < i; ++trimStartResult) titleValue.fillText(title[trimStartResult], c.x(draw.x), draw.y + a.lineHeight / 2), draw.y += a.lineHeight + o, trimStartResult + 1 === i && (draw.y += titleInput.titleMarginBottom - o);
       }
     }
     _drawColorBox(e, color, box, boxValue, boxInput) {
@@ -96302,13 +96302,13 @@ var t3 = class extends n4 {
         textAlign = p.textAlign(a),
         g,
         _,
-        v,
-        y,
-        b,
-        x,
+        setIntervalResult,
+        setTimeoutResult,
+        count,
+        resolvedValue,
         S;
-      for (body.textAlign = a, body.textBaseline = `middle`, body.font = u.string, draw.x = X4(this, textAlign, bodyValue), body.fillStyle = bodyValue.bodyColor, w1(this.beforeBody, m), f = o && textAlign !== `right` ? a === `center` ? c / 2 + l : c + 2 + l : 0, y = 0, x = r.length; y < x; ++y) {
-        for (g = r[y], _ = this.labelTextColors[y], body.fillStyle = _, w1(g.before, m), v = g.lines, o && v.length && (this._drawColorBox(body, draw, y, p, bodyValue), lineHeight = Math.max(u.lineHeight, s)), b = 0, S = v.length; b < S; ++b) m(v[b]), lineHeight = u.lineHeight;
+      for (body.textAlign = a, body.textBaseline = `middle`, body.font = u.string, draw.x = X4(this, textAlign, bodyValue), body.fillStyle = bodyValue.bodyColor, w1(this.beforeBody, m), f = o && textAlign !== `right` ? a === `center` ? c / 2 + l : c + 2 + l : 0, setTimeoutResult = 0, resolvedValue = r.length; setTimeoutResult < resolvedValue; ++setTimeoutResult) {
+        for (g = r[setTimeoutResult], _ = this.labelTextColors[setTimeoutResult], body.fillStyle = _, w1(g.before, m), setIntervalResult = g.lines, o && setIntervalResult.length && (this._drawColorBox(body, draw, setTimeoutResult, p, bodyValue), lineHeight = Math.max(u.lineHeight, s)), count = 0, S = setIntervalResult.length; count < S; ++count) m(setIntervalResult[count]), lineHeight = u.lineHeight;
         w1(g.after, m);
       }
       f = 0, lineHeight = u.lineHeight, w1(this.afterBody, m), draw.y -= i;
@@ -96644,8 +96644,8 @@ function vst(e, t) {
     v = !g1(c),
     y = (h - m) / (u + 1),
     b = G1((h - m) / p / fallbackValue) * fallbackValue,
-    x,
-    S,
+    resolvedValue,
+    count,
     C,
     w;
   if (b < 1e-14 && !g && !_) return [{
@@ -96653,14 +96653,14 @@ function vst(e, t) {
   }, {
     value: h
   }];
-  w = Math.ceil(h / b) - Math.floor(m / b), w > p && (b = G1(w * b / p / fallbackValue) * fallbackValue), g1(s) || (x = 10 ** s, b = Math.ceil(b * x) / x), r === `ticks` ? (S = Math.floor(m / b) * b, C = Math.ceil(h / b) * b) : (S = m, C = h), g && _ && i && _it((o - a) / i, b / 1e3) ? (w = Math.round(Math.min((o - a) / b, l)), b = (o - a) / w, S = a, C = o) : v ? (S = g ? a : S, C = _ ? o : C, w = c - 1, b = (C - S) / w) : (w = (C - S) / b, w = W1(w, Math.round(w), b / 1e3) ? Math.round(w) : Math.ceil(w));
-  let T = Math.max(X1(b), X1(S));
-  x = 10 ** (g1(s) ? T : s), S = Math.round(S * x) / x, C = Math.round(C * x) / x;
+  w = Math.ceil(h / b) - Math.floor(m / b), w > p && (b = G1(w * b / p / fallbackValue) * fallbackValue), g1(s) || (resolvedValue = 10 ** s, b = Math.ceil(b * resolvedValue) / resolvedValue), r === `ticks` ? (count = Math.floor(m / b) * b, C = Math.ceil(h / b) * b) : (count = m, C = h), g && _ && i && _it((o - a) / i, b / 1e3) ? (w = Math.round(Math.min((o - a) / b, l)), b = (o - a) / w, count = a, C = o) : v ? (count = g ? a : count, C = _ ? o : C, w = c - 1, b = (C - count) / w) : (w = (C - count) / b, w = W1(w, Math.round(w), b / 1e3) ? Math.round(w) : Math.ceil(w));
+  let T = Math.max(X1(b), X1(count));
+  resolvedValue = 10 ** (g1(s) ? T : s), count = Math.round(count * resolvedValue) / resolvedValue, C = Math.round(C * resolvedValue) / resolvedValue;
   let E = 0;
-  for (g && (d && S !== a ? (emptyItems.push({
+  for (g && (d && count !== a ? (emptyItems.push({
     value: a
-  }), S < a && E++, W1(Math.round((S + E * b) * x) / x, a, i3(a, y, e)) && E++) : S < a && E++); E < w; ++E) {
-    let e = Math.round((S + E * b) * x) / x;
+  }), count < a && E++, W1(Math.round((count + E * b) * resolvedValue) / resolvedValue, a, i3(a, y, e)) && E++) : count < a && E++); E < w; ++E) {
+    let e = Math.round((count + E * b) * resolvedValue) / resolvedValue;
     if (_ && e > o) break;
     emptyItems.push({
       value: e
@@ -96718,8 +96718,8 @@ var a3 = class extends l4 {
           maxTicksLimit: e,
           stepSize: t
         } = this.options.ticks,
-        n;
-      return t ? (n = Math.ceil(this.max / t) - Math.floor(this.min / t) + 1, n > 1e3 && (console.warn(`scales.${this.id}.ticks.stepSize: ${t} would result generating up to ${n} ticks. Limiting to 1000.`), n = 1e3)) : (n = this.computeTickLimit(), e ||= 11), e && (n = Math.min(e, n)), n;
+        replaceResult;
+      return t ? (replaceResult = Math.ceil(this.max / t) - Math.floor(this.min / t) + 1, replaceResult > 1e3 && (console.warn(`scales.${this.id}.ticks.stepSize: ${t} would result generating up to ${replaceResult} ticks. Limiting to 1000.`), replaceResult = 1e3)) : (replaceResult = this.computeTickLimit(), e ||= 11), e && (replaceResult = Math.min(e, replaceResult)), replaceResult;
     }
     computeTickLimit() {
       return 1 / 0;
@@ -96927,14 +96927,14 @@ function Cst(options) {
     },
     n = Object.assign({}, t),
     emptyItems = [],
-    i = [],
+    count = [],
     a = options._pointLabels.length,
     pointLabels = options.options.pointLabels,
     s = pointLabels.centerPointLabels ? I1 / a : 0;
   for (let c = 0; c < a; c++) {
     let setContext = pointLabels.setContext(options.getPointLabelContext(c));
-    i[c] = setContext.padding;
-    let pointPosition = options.getPointPosition(c, options.drawingArea + i[c], s),
+    count[c] = setContext.padding;
+    let pointPosition = options.getPointPosition(c, options.drawingArea + count[c], s),
       u = V0(setContext.font),
       d = Sst(options.ctx, u, options._pointLabels[c]);
     emptyItems[c] = d;
@@ -96942,7 +96942,7 @@ function Cst(options) {
       p = Math.round(Y1(f));
     wst(n, t, f, d3(p, pointPosition.x, d.w, 0, 180), d3(p, pointPosition.y, d.h, 90, 270));
   }
-  options.setCenterPoint(t.l - n.l, n.r - t.r, t.t - n.t, n.b - t.b), options._pointLabelItems = Dst(options, emptyItems, i);
+  options.setCenterPoint(t.l - n.l, n.r - t.r, t.t - n.t, n.b - t.b), options._pointLabelItems = Dst(options, emptyItems, count);
 }
 function wst(e, t, n, r, i) {
   let a = Math.abs(Math.sin(n)),
@@ -97009,11 +97009,11 @@ function Dst(options, t, n) {
       extra: u3(a) / 2,
       additionalAngle: o ? I1 / i : 0
     },
-    l;
+    setTimeoutResult;
   for (let a = 0; a < i; a++) {
     c.padding = n[a], c.size = t[a];
     let i = Tst(options, a, c);
-    emptyItems.push(i), s === `auto` && (i.visible = Est(i, l), i.visible && (l = i));
+    emptyItems.push(i), s === `auto` && (i.visible = Est(i, setTimeoutResult), i.visible && (setTimeoutResult = i));
   }
   return emptyItems;
 }
@@ -97252,15 +97252,15 @@ function Pst(e, t, n) {
       } = options,
       a = this._pointLabels.length,
       o,
-      s,
+      trimStartResult,
       c;
     if (options.pointLabels.display && Mst(this, a), r.display && this.ticks.forEach((state, item) => {
       if (item !== 0 || item === 0 && this.min < 0) {
-        s = this.getDistanceFromCenterForValue(state.value);
+        trimStartResult = this.getDistanceFromCenterForValue(state.value);
         let context = this.getContext(item),
           setContext = r.setContext(context),
           setContextResult = i.setContext(context);
-        Nst(this, setContext, s, a, setContextResult);
+        Nst(this, setContext, trimStartResult, a, setContextResult);
       }
     }), n.display) {
       for (e.save(), o = a - 1; o >= 0; o--) {
@@ -97269,7 +97269,7 @@ function Pst(e, t, n) {
             color: i,
             lineWidth: a
           } = setContext;
-        a && i && (e.lineWidth = a, e.strokeStyle = i, e.setLineDash(setContext.borderDash), e.lineDashOffset = setContext.borderDashOffset, s = this.getDistanceFromCenterForValue(options.reverse ? this.min : this.max), c = this.getPointPosition(o, s), e.beginPath(), e.moveTo(this.xCenter, this.yCenter), e.lineTo(c.x, c.y), e.stroke());
+        a && i && (e.lineWidth = a, e.strokeStyle = i, e.setLineDash(setContext.borderDash), e.lineDashOffset = setContext.borderDashOffset, trimStartResult = this.getDistanceFromCenterForValue(options.reverse ? this.min : this.max), c = this.getPointPosition(o, trimStartResult), e.beginPath(), e.moveTo(this.xCenter, this.yCenter), e.lineTo(c.x, c.y), e.stroke());
       }
       e.restore();
     }
@@ -97281,18 +97281,18 @@ function Pst(e, t, n) {
       ticks = options.ticks;
     if (!ticks.display) return;
     let indexAngle = this.getIndexAngle(0),
-      i,
+      count,
       a;
     e.save(), e.translate(this.xCenter, this.yCenter), e.rotate(indexAngle), e.textAlign = `center`, e.textBaseline = `middle`, this.ticks.forEach((item, o) => {
       if (o === 0 && this.min >= 0 && !options.reverse) return;
       let setContext = ticks.setContext(this.getContext(o)),
         c = V0(setContext.font);
-      if (i = this.getDistanceFromCenterForValue(this.ticks[o].value), setContext.showLabelBackdrop) {
+      if (count = this.getDistanceFromCenterForValue(this.ticks[o].value), setContext.showLabelBackdrop) {
         e.font = c.string, a = e.measureText(item.label).width, e.fillStyle = setContext.backdropColor;
         let t = B0(setContext.backdropPadding);
-        e.fillRect(-a / 2 - t.left, -i - c.size / 2 - t.top, a + t.width, c.size + t.height);
+        e.fillRect(-a / 2 - t.left, -count - c.size / 2 - t.top, a + t.width, c.size + t.height);
       }
-      F0(e, item.label, 0, -i, c, {
+      F0(e, item.label, 0, -count, c, {
         color: setContext.color,
         strokeColor: setContext.textStrokeColor,
         strokeWidth: setContext.textStrokeWidth
@@ -97395,9 +97395,9 @@ function Lst(e, t, n, r) {
   let _adapter = e._adapter,
     a = +_adapter.startOf(t[0].value, r),
     o = t[t.length - 1].value,
-    s,
+    trimStartResult,
     c;
-  for (s = a; s <= o; s = +_adapter.add(s, 1, r)) c = n[s], c >= 0 && (t[c].major = true);
+  for (trimStartResult = a; trimStartResult <= o; trimStartResult = +_adapter.add(trimStartResult, 1, r)) c = n[trimStartResult], c >= 0 && (t[c].major = true);
   return t;
 }
 function y3(e, t, n) {
@@ -97405,9 +97405,9 @@ function y3(e, t, n) {
     i = {},
     a = t.length,
     o,
-    s;
-  for (o = 0; o < a; ++o) s = t[o], i[s] = o, emptyItems.push({
-    value: s,
+    trimStartResult;
+  for (o = 0; o < a; ++o) trimStartResult = t[o], i[trimStartResult] = o, emptyItems.push({
+    value: trimStartResult,
     major: false
   });
   return a === 0 || !n ? emptyItems : Lst(e, emptyItems, i, n);
@@ -97500,9 +97500,9 @@ var b3 = class extends l4 {
   initOffsets(e = []) {
     let t = 0,
       n = 0,
-      r,
-      i;
-    this.options.offset && e.length && (r = this.getDecimalForValue(e[0]), t = e.length === 1 ? 1 - r : (this.getDecimalForValue(e[1]) - r) / 2, i = this.getDecimalForValue(e[e.length - 1]), n = e.length === 1 ? i : (i - this.getDecimalForValue(e[e.length - 2])) / 2);
+      requestAnimationFrameResult,
+      count;
+    this.options.offset && e.length && (requestAnimationFrameResult = this.getDecimalForValue(e[0]), t = e.length === 1 ? 1 - requestAnimationFrameResult : (this.getDecimalForValue(e[1]) - requestAnimationFrameResult) / 2, count = this.getDecimalForValue(e[e.length - 1]), n = e.length === 1 ? count : (count - this.getDecimalForValue(e[e.length - 2])) / 2);
     let a = e.length < 3 ? 0.5 : 0.25;
     t = e0(t, 0, a), n = e0(n, 0, a), this._offsets = {
       start: t,
@@ -97522,12 +97522,12 @@ var b3 = class extends l4 {
       c = K1(s) || s === true,
       l = {},
       u = t,
-      d,
+      count,
       f;
     if (c && (u = +_adapter.startOf(u, `isoWeek`, s)), u = +_adapter.startOf(u, c ? `day` : fallbackValue), _adapter.diff(n, t, fallbackValue) > 1e5 * withDefaultValueResult) throw Error(t + ` and ` + n + ` are too far apart with stepSize of ` + withDefaultValueResult + ` ` + fallbackValue);
     let p = options.ticks.source === `data` && this.getDataTimestamps();
-    for (d = u, f = 0; d < n; d = +_adapter.add(d, withDefaultValueResult, fallbackValue), f++) v3(l, d, p);
-    return (d === n || options.bounds === `ticks` || f === 1) && v3(l, d, p), Object.keys(l).sort(h3).map(item => +item);
+    for (count = u, f = 0; count < n; count = +_adapter.add(count, withDefaultValueResult, fallbackValue), f++) v3(l, count, p);
+    return (count === n || options.bounds === `ticks` || f === 1) && v3(l, count, p), Object.keys(l).sort(h3).map(item => +item);
   }
   getLabelForValue(label) {
     let _adapter = this._adapter,
@@ -97554,8 +97554,8 @@ var b3 = class extends l4 {
     return this._adapter.format(e, functionInput || (f ? u : l));
   }
   generateTickLabels(tick) {
-    let t, n, r;
-    for (t = 0, n = tick.length; t < n; ++t) r = tick[t], r.label = this._tickFormatFunction(r.value, t, tick);
+    let normalizeResult, replaceResult, requestAnimationFrameResult;
+    for (normalizeResult = 0, replaceResult = tick.length; normalizeResult < replaceResult; ++normalizeResult) requestAnimationFrameResult = tick[normalizeResult], requestAnimationFrameResult.label = this._tickFormatFunction(requestAnimationFrameResult.value, normalizeResult, tick);
   }
   getDecimalForValue(decimal) {
     return decimal === null ? NaN : (decimal - this.min) / (this.max - this.min);
@@ -97593,21 +97593,21 @@ var b3 = class extends l4 {
   }
   getDataTimestamps() {
     let fallbackValue = this._cache.data || [],
-      t,
-      n;
+      normalizeResult,
+      replaceResult;
     if (fallbackValue.length) return fallbackValue;
     let matchingVisibleMetas = this.getMatchingVisibleMetas();
     if (this._normalized && matchingVisibleMetas.length) return this._cache.data = matchingVisibleMetas[0].controller.getAllParsedValues(this);
-    for (t = 0, n = matchingVisibleMetas.length; t < n; ++t) fallbackValue = fallbackValue.concat(matchingVisibleMetas[t].controller.getAllParsedValues(this));
+    for (normalizeResult = 0, replaceResult = matchingVisibleMetas.length; normalizeResult < replaceResult; ++normalizeResult) fallbackValue = fallbackValue.concat(matchingVisibleMetas[normalizeResult].controller.getAllParsedValues(this));
     return this._cache.data = this.normalize(fallbackValue);
   }
   getLabelTimestamps() {
     let fallbackValue = this._cache.labels || [],
-      t,
-      n;
+      normalizeResult,
+      replaceResult;
     if (fallbackValue.length) return fallbackValue;
     let labels = this.getLabels();
-    for (t = 0, n = labels.length; t < n; ++t) fallbackValue.push(g3(this, labels[t]));
+    for (normalizeResult = 0, replaceResult = labels.length; normalizeResult < replaceResult; ++normalizeResult) fallbackValue.push(g3(this, labels[normalizeResult]));
     return this._cache.labels = this._normalized ? fallbackValue : this.normalize(fallbackValue);
   }
   normalize(items) {
@@ -97619,14 +97619,14 @@ function x3(e, t, n) {
     i = e.length - 1,
     a,
     o,
-    s,
+    trimStartResult,
     c;
   n ? (t >= e[r].pos && t <= e[i].pos && ({
     lo: r,
     hi: i
   } = r0(e, `pos`, t)), {
     pos: a,
-    time: s
+    time: trimStartResult
   } = e[r], {
     pos: o,
     time: c
@@ -97635,13 +97635,13 @@ function x3(e, t, n) {
     hi: i
   } = r0(e, `time`, t)), {
     time: a,
-    pos: s
+    pos: trimStartResult
   } = e[r], {
     time: o,
     pos: c
   } = e[i]);
   let l = o - a;
-  return l ? s + (c - s) * (t - a) / l : s;
+  return l ? trimStartResult + (c - trimStartResult) * (t - a) / l : trimStartResult;
 }
 (class extends b3 {
   static id = `timeseries`;
@@ -97660,12 +97660,12 @@ function x3(e, t, n) {
         max: n
       } = this,
       emptyItems = [],
-      i = [],
+      count = [],
       a,
       o,
-      s,
+      trimStartResult,
       c,
-      l;
+      setTimeoutResult;
     for (a = 0, o = lookup.length; a < o; ++a) c = lookup[a], c >= t && c <= n && emptyItems.push(c);
     if (emptyItems.length < 2) return [{
       time: t,
@@ -97674,11 +97674,11 @@ function x3(e, t, n) {
       time: n,
       pos: 1
     }];
-    for (a = 0, o = emptyItems.length; a < o; ++a) l = emptyItems[a + 1], s = emptyItems[a - 1], c = emptyItems[a], Math.round((l + s) / 2) !== c && i.push({
+    for (a = 0, o = emptyItems.length; a < o; ++a) setTimeoutResult = emptyItems[a + 1], trimStartResult = emptyItems[a - 1], c = emptyItems[a], Math.round((setTimeoutResult + trimStartResult) / 2) !== c && count.push({
       time: c,
       pos: a / (o - 1)
     });
-    return i;
+    return count;
   }
   _generate() {
     let e = this.min,
@@ -98051,10 +98051,10 @@ var Gst = E3(`bar`, jat),
             h = Math.min(c.maxRotation, c.minRotation),
             g,
             _,
-            v,
-            y,
-            b,
-            x,
+            setIntervalResult,
+            setTimeoutResult,
+            count,
+            resolvedValue,
             S;
           function C(e, t) {
             return `hsl(` + (Math.random() * 360).toFixed() + `,` + (Math.random() * 30 + 70).toFixed() + `%,` + (Math.random() * (t - e) + e).toFixed() + `%)`;
@@ -98075,18 +98075,18 @@ var Gst = E3(`bar`, jat),
           }
           var w;
           typeof c.fontWeight == `function` && (w = c.fontWeight);
-          var T = null;
-          typeof c.classes == `function` && (T = c.classes);
+          var onEventResult = null;
+          typeof c.classes == `function` && (onEventResult = c.classes);
           var E = false,
             emptyItems = [],
             O,
             k = function (e) {
               var t = e.currentTarget,
                 boundingClientRect = t.getBoundingClientRect(),
-                r,
+                requestAnimationFrameResult,
                 i;
-              e.touches ? (r = e.touches[0].clientX, i = e.touches[0].clientY) : (r = e.clientX, i = e.clientY);
-              var a = r - boundingClientRect.left,
+              e.touches ? (requestAnimationFrameResult = e.touches[0].clientX, i = e.touches[0].clientY) : (requestAnimationFrameResult = e.clientX, i = e.clientY);
+              var a = requestAnimationFrameResult - boundingClientRect.left,
                 o = a < 0 ? 0 : a,
                 s = i - boundingClientRect.top,
                 c = Math.floor(o * (t.width / boundingClientRect.width || 1) / gridSize),
@@ -98112,15 +98112,15 @@ var Gst = E3(`bar`, jat),
               if (ee[e]) return ee[e];
               var t = e * 8,
                 n = t,
-                r = [];
-              for (e === 0 && r.push([y[0], y[1], 0]); n--;) {
+                requestAnimationFrameResult = [];
+              for (e === 0 && requestAnimationFrameResult.push([setTimeoutResult[0], setTimeoutResult[1], 0]); n--;) {
                 var i = 1;
-                c.shape !== `circle` && (i = c.shape(n / t * 2 * Math.PI)), r.push([y[0] + e * i * Math.cos(-n / t * 2 * Math.PI), y[1] + e * i * Math.sin(-n / t * 2 * Math.PI) * c.ellipticity, n / t * 2 * Math.PI]);
+                c.shape !== `circle` && (i = c.shape(n / t * 2 * Math.PI)), requestAnimationFrameResult.push([setTimeoutResult[0] + e * i * Math.cos(-n / t * 2 * Math.PI), setTimeoutResult[1] + e * i * Math.sin(-n / t * 2 * Math.PI) * c.ellipticity, n / t * 2 * Math.PI]);
               }
-              return ee[e] = r, r;
+              return ee[e] = requestAnimationFrameResult, requestAnimationFrameResult;
             },
             M = function () {
-              return c.abortThreshold > 0 && new Date().getTime() - x > c.abortThreshold;
+              return c.abortThreshold > 0 && new Date().getTime() - resolvedValue > c.abortThreshold;
             },
             ne = function () {
               return c.rotateRatio === 0 || Math.random() > c.rotateRatio ? 0 : p === 0 ? h : m > 0 ? h + Math.floor(Math.random() * m) * p / (m - 1) : h + Math.random() * p;
@@ -98179,7 +98179,7 @@ var Gst = E3(`bar`, jat),
               for (var a = i.length; a--;) {
                 var o = e + i[a][0],
                   s = t + i[a][1];
-                if (o >= _ || s >= v || o < 0 || s < 0) {
+                if (o >= _ || s >= setIntervalResult || o < 0 || s < 0) {
                   if (!c.drawOutOfBound) return false;
                   continue;
                 }
@@ -98191,7 +98191,7 @@ var Gst = E3(`bar`, jat),
               var fontSize = r.fontSize,
                 m = S ? S(i, a, fontSize, o, s, f) : c.color,
                 h = w ? w(i, a, fontSize, f) : c.fontWeight,
-                g = T ? T(i, a, fontSize, f) : c.classes;
+                g = onEventResult ? onEventResult(i, a, fontSize, f) : c.classes;
               e.forEach(function (item) {
                 if (item.getContext) {
                   var a = item.getContext(`2d`),
@@ -98225,7 +98225,7 @@ var Gst = E3(`bar`, jat),
               });
             },
             ae = function (t, n, r, i, a) {
-              t >= _ || n >= v || t < 0 || n < 0 || (g[t][n] = false, r && e[0].getContext(`2d`).fillRect(t * gridSize, n * gridSize, f, f), E && (emptyItems[t][n] = {
+              t >= _ || n >= setIntervalResult || t < 0 || n < 0 || (g[t][n] = false, r && e[0].getContext(`2d`).fillRect(t * gridSize, n * gridSize, f, f), E && (emptyItems[t][n] = {
                 item: a,
                 dimension: i
               }));
@@ -98248,29 +98248,29 @@ var Gst = E3(`bar`, jat),
               for (var m = occupied.length; m--;) {
                 var h = t + occupied[m][0],
                   g = n + occupied[m][1];
-                h >= _ || g >= v || h < 0 || g < 0 || ae(h, g, drawMask, f, o);
+                h >= _ || g >= setIntervalResult || h < 0 || g < 0 || ae(h, g, drawMask, f, o);
               }
               drawMask && u.restore();
             },
             se = function e(t) {
-              var n, r, o;
-              Array.isArray(t) ? (n = t[0], r = t[1]) : (n = t.word, r = t.weight, o = t.attributes);
+              var replaceResult, requestAnimationFrameResult, o;
+              Array.isArray(t) ? (replaceResult = t[0], requestAnimationFrameResult = t[1]) : (replaceResult = t.word, requestAnimationFrameResult = t.weight, o = t.attributes);
               var s = ne(),
                 l = i(t),
-                u = N(n, r, s, l);
+                u = N(replaceResult, requestAnimationFrameResult, s, l);
               if (!u || M()) return false;
               if (!c.drawOutOfBound && !c.shrinkToFit) {
                 var d = u.bounds;
-                if (d[1] - d[3] + 1 > _ || d[2] - d[0] + 1 > v) return false;
+                if (d[1] - d[3] + 1 > _ || d[2] - d[0] + 1 > setIntervalResult) return false;
               }
-              for (var f = b + 1, p = function (e) {
+              for (var f = count + 1, p = function (e) {
                   var i = Math.floor(e[0] - u.gw / 2),
                     a = Math.floor(e[1] - u.gh / 2),
                     c = u.gw,
                     d = u.gh;
-                  return re(i, a, c, d, u.occupied) ? (ie(i, a, u, n, r, b - f, e[2], s, o, l), oe(i, a, c, d, u, t), true) : false;
+                  return re(i, a, c, d, u.occupied) ? (ie(i, a, u, replaceResult, requestAnimationFrameResult, count - f, e[2], s, o, l), oe(i, a, c, d, u, t), true) : false;
                 }; f--;) {
-                var m = te(b - f);
+                var m = te(count - f);
                 if (c.shuffle && (m = [].concat(m), a(m)), m.some(p)) return true;
               }
               return c.shrinkToFit ? (Array.isArray(t) ? t[1] = t[1] * 3 / 4 : t.weight = t.weight * 3 / 4, e(t)) : false;
@@ -98291,25 +98291,25 @@ var Gst = E3(`bar`, jat),
             };
           (function () {
             var t = e[0];
-            if (t.getContext) _ = Math.ceil(t.width / gridSize), v = Math.ceil(t.height / gridSize);else {
+            if (t.getContext) _ = Math.ceil(t.width / gridSize), setIntervalResult = Math.ceil(t.height / gridSize);else {
               var n = t.getBoundingClientRect();
-              _ = Math.ceil(n.width / gridSize), v = Math.ceil(n.height / gridSize);
+              _ = Math.ceil(n.width / gridSize), setIntervalResult = Math.ceil(n.height / gridSize);
             }
             if (ce(`wordcloudstart`, true)) {
-              y = c.origin ? [c.origin[0] / gridSize, c.origin[1] / gridSize] : [_ / 2, v / 2], b = Math.floor(Math.sqrt(_ * _ + v * v)), g = [];
+              setTimeoutResult = c.origin ? [c.origin[0] / gridSize, c.origin[1] / gridSize] : [_ / 2, setIntervalResult / 2], count = Math.floor(Math.sqrt(_ * _ + setIntervalResult * setIntervalResult)), g = [];
               var r, i, a;
               if (!t.getContext || c.clearCanvas) for (e.forEach(function (item) {
                 if (item.getContext) {
                   var t = item.getContext(`2d`);
-                  t.fillStyle = c.backgroundColor, t.clearRect(0, 0, _ * (gridSize + 1), v * (gridSize + 1)), t.fillRect(0, 0, _ * (gridSize + 1), v * (gridSize + 1));
+                  t.fillStyle = c.backgroundColor, t.clearRect(0, 0, _ * (gridSize + 1), setIntervalResult * (gridSize + 1)), t.fillRect(0, 0, _ * (gridSize + 1), setIntervalResult * (gridSize + 1));
                 } else item.textContent = ``, item.style.backgroundColor = c.backgroundColor, item.style.position = `relative`;
-              }), r = _; r--;) for (g[r] = [], i = v; i--;) g[r][i] = true;else {
+              }), r = _; r--;) for (g[r] = [], i = setIntervalResult; i--;) g[r][i] = true;else {
                 var l = document.createElement(`canvas`).getContext(`2d`);
                 l.fillStyle = c.backgroundColor, l.fillRect(0, 0, 1, 1);
                 var u = l.getImageData(0, 0, 1, 1).data,
-                  f = t.getContext(`2d`).getImageData(0, 0, _ * gridSize, v * gridSize).data;
+                  f = t.getContext(`2d`).getImageData(0, 0, _ * gridSize, setIntervalResult * gridSize).data;
                 r = _;
-                for (var p, m; r--;) for (g[r] = [], i = v; i--;) {
+                for (var p, m; r--;) for (g[r] = [], i = setIntervalResult; i--;) {
                   m = gridSize;
                   singleGridLoop: for (; m--;) for (p = gridSize; p--;) for (a = 4; a--;) if (f[((i * gridSize + m) * _ * gridSize + (r * gridSize + p)) * 4 + a] !== u[a]) {
                     g[r][i] = false;
@@ -98346,7 +98346,7 @@ var Gst = E3(`bar`, jat),
                   S(o[s]), ce(`wordcloudstop`, false), w(`wordcloudstart`, T), delete o[s];
                   return;
                 }
-                x = new Date().getTime();
+                resolvedValue = new Date().getTime();
                 var t = se(c.list[a]),
                   n = !ce(`wordclouddrawn`, true, {
                     item: c.list[a],
@@ -98481,19 +98481,19 @@ var M3 = {
             granularity: `word`
           }),
           emptyItems = [];
-        for (let r of text) if (r.summary) for (let e of t.segment(r.summary)) {
-          if (!e.isWordLike) continue;
-          let trimmed = e.segment.trim();
+        for (let requestAnimationFrameResult of text) if (requestAnimationFrameResult.summary) for (let normalizeResult of t.segment(requestAnimationFrameResult.summary)) {
+          if (!normalizeResult.isWordLike) continue;
+          let trimmed = normalizeResult.segment.trim();
           w(trimmed) && emptyItems.push(trimmed);
         }
         let r = new Set(Qst(emptyItems.map(item => item.toLowerCase()), c)),
           i = new Map();
-        for (let e of emptyItems) {
-          let lowercased = e.toLowerCase();
+        for (let normalizeResult of emptyItems) {
+          let lowercased = normalizeResult.toLowerCase();
           if (!r.has(lowercased)) continue;
           let n = i.get(lowercased);
           n ? n.count += 1 : i.set(lowercased, {
-            display: e,
+            display: normalizeResult,
             count: 1
           });
         }
@@ -98601,16 +98601,16 @@ var M3 = {
       }), watch(f, () => {
         r.open && k();
       });
-      let ee = null;
+      let setTimeoutResult = null;
       return onBeforeMount(() => {
-        ee = new MutationObserver(() => {
+        setTimeoutResult = new MutationObserver(() => {
           r.open && k();
-        }), ee.observe(document.documentElement, {
+        }), setTimeoutResult.observe(document.documentElement, {
           attributes: true,
           attributeFilter: [`class`]
         });
       }), onUnmounted(() => {
-        ee?.disconnect(), k3.default.stop();
+        setTimeoutResult?.disconnect(), k3.default.stop();
       }), (t, r) => (openBlock(), createBlock(unref(ui), {
         open: e.open,
         "onUpdate:open": r[4] ||= e => i(`update:open`, e)
@@ -98728,7 +98728,7 @@ function act(event, t, items, r) {
     filtered = items.filter(item => item.value > 0 && s.has(item.source) && c.has(item.target)),
     u = new Map(),
     d = new Map();
-  for (let e of filtered) u.set(e.source, (u.get(e.source) ?? 0) + e.value), d.set(e.target, (d.get(e.target) ?? 0) + e.value);
+  for (let normalizeResult of filtered) u.set(normalizeResult.source, (u.get(normalizeResult.source) ?? 0) + normalizeResult.value), d.set(normalizeResult.target, (d.get(normalizeResult.target) ?? 0) + normalizeResult.value);
   let f = event.filter(item => (u.get(item.id) ?? 0) > 0),
     p = t.filter(item => (d.get(item.id) ?? 0) > 0),
     reduced = filtered.reduce((acc, state) => acc + state.value, 0);
@@ -98784,12 +98784,12 @@ function act(event, t, items, r) {
     k = new Map(),
     A = new Map(),
     j = (e, t, n, r) => {
-      for (let i of e) {
-        let e = t(i),
+      for (let count of e) {
+        let e = t(count),
           a = E.get(e);
         if (!a) continue;
         let fallbackValue = n.get(e) ?? 0;
-        r(i, a.y + fallbackValue), n.set(e, fallbackValue + i.value * S);
+        r(count, a.y + fallbackValue), n.set(e, fallbackValue + count.value * S);
       }
     };
   j([...filtered].sort((left, right) => D(N3(`target`, left.target)) - D(N3(`target`, right.target))), e => N3(`source`, e.source), O, (e, t) => A.set(e, {
@@ -100150,9 +100150,9 @@ function Ult(e, t, n, r, i) {
   if (!i) {
     let e = a.some(item => item.field === `summary`),
       i = a.some(item => item.field === `title`);
-    if (e && (summary = X3(summary, t, n, r)), c && (i && typeof c.title == `string` && (c.title = X3(c.title, t, n, r)), e)) for (let e of [`richContent`, `preview`]) {
-      let i = c[e];
-      typeof i == `string` && (c[e] = X3(i, t, n, r));
+    if (e && (summary = X3(summary, t, n, r)), c && (i && typeof c.title == `string` && (c.title = X3(c.title, t, n, r)), e)) for (let normalizeResult of [`richContent`, `preview`]) {
+      let i = c[normalizeResult];
+      typeof i == `string` && (c[normalizeResult] = X3(i, t, n, r));
     }
     return {
       changed: true,
@@ -100168,9 +100168,9 @@ function Ult(e, t, n, r, i) {
     }
   } else {
     let index = Y3(summary, t, r).findIndex(item => item.index === i.start);
-    if (summary = Z3(summary, t, n, r, index), c) for (let i of [`richContent`, `preview`]) {
-      let o = c[i];
-      typeof o == `string` && (c[i] = o === e.summary ? summary : Z3(o, t, n, r, index));
+    if (summary = Z3(summary, t, n, r, index), c) for (let count of [`richContent`, `preview`]) {
+      let o = c[count];
+      typeof o == `string` && (c[count] = o === e.summary ? summary : Z3(o, t, n, r, index));
     }
   }
   return {
@@ -100227,18 +100227,18 @@ function n6(items, t) {
   }), emptyItems.sort((left, right) => left.start - right.start || left.end - right.end);
 }
 function r6(e, t, n) {
-  let r = null,
-    i = null;
+  let requestAnimationFrameResult = null,
+    count = null;
   for (let a of e) {
-    if (r !== null && i !== null) {
-      let e = a.start - r;
+    if (requestAnimationFrameResult !== null && count !== null) {
+      let e = a.start - requestAnimationFrameResult;
       if (e > 0 && e <= t) {
-        let t = r + e / 2;
-        n(i.category, i.recordIndex, r, t), n(a.category, a.recordIndex, t, a.start);
+        let t = requestAnimationFrameResult + e / 2;
+        n(count.category, count.recordIndex, requestAnimationFrameResult, t), n(a.category, a.recordIndex, t, a.start);
       }
     }
-    let e = r === null ? a.start : Math.max(a.start, r);
-    n(a.category, a.recordIndex, e, a.end), (r === null || a.end >= r) && (r = a.end, i = a);
+    let e = requestAnimationFrameResult === null ? a.start : Math.max(a.start, requestAnimationFrameResult);
+    n(a.category, a.recordIndex, e, a.end), (requestAnimationFrameResult === null || a.end >= requestAnimationFrameResult) && (requestAnimationFrameResult = a.end, count = a);
   }
 }
 function qlt(e, t = {}) {
@@ -100256,7 +100256,7 @@ function qlt(e, t = {}) {
     o = Math.max(1, Math.round(reduced / 6e4));
   if (reduced <= 0) {
     let e = new Map();
-    for (let t of r) e.set(t.category, (e.get(t.category) ?? 0) + 1);
+    for (let normalizeResult of r) e.set(normalizeResult.category, (e.get(normalizeResult.category) ?? 0) + 1);
     return {
       focusMinutes: o,
       categoryBreakdown: Array.from(e.entries()).map(([e, t]) => ({
@@ -100298,13 +100298,13 @@ function Jlt(items, t = {}) {
       let r = i.get(e);
       r || (r = Array(24).fill(0), i.set(e, r)), r[t] = (r[t] ?? 0) + n / 6e4;
     };
-  for (let e of r) i6(e.start, e.end, t => mapped[e.recordIndex]?.add(t));
+  for (let normalizeResult of r) i6(normalizeResult.start, normalizeResult.end, t => mapped[normalizeResult.recordIndex]?.add(t));
   let s = 0;
   if (r6(r, fallbackValue, (e, t, n, r) => {
     r <= n || (s += r - n, i6(n, r, (n, r) => {
       o(e, n, r), mapped[t]?.add(n);
     }));
-  }), s <= 0) for (let e of r) o(e.category, new Date(e.start).getHours(), 6e4 / r.length);
+  }), s <= 0) for (let normalizeResult of r) o(normalizeResult.category, new Date(normalizeResult.start).getHours(), 6e4 / r.length);
   return {
     categoryHours: i,
     recordHours: mapped
@@ -100986,7 +100986,7 @@ var Ylt = {
         {
           captureGrowthObservation: c
         } = Ri(),
-        l = null,
+        setTimeoutResult = null,
         u = 0,
         eventAlias = event,
         f = ref(new Date()),
@@ -101032,27 +101032,27 @@ var Ylt = {
         ee = ref(`all`);
       async function te(e) {
         let t = c(),
-          n;
-        if (e === `today`) n = m.value;else {
+          replaceResult;
+        if (e === `today`) replaceResult = m.value;else {
           let t = Date.now() - (e === `30m` ? 18e5 : e === `1h` ? 36e5 : 72e5);
-          n = m.value.filter(item => new Date(item.endedAt || item.startedAt).getTime() >= t);
+          replaceResult = m.value.filter(item => new Date(item.endedAt || item.startedAt).getTime() >= t);
         }
-        if (n.length === 0) {
+        if (replaceResult.length === 0) {
           Ai(r(`timeline.noRecordsToCopy`));
           return;
         }
-        let joined = n.map(item => `${D(item.endedAt || item.startedAt)}：${item.summary || ``}`).join(`
+        let joined = replaceResult.map(item => `${D(item.endedAt || item.startedAt)}：${item.summary || ``}`).join(`
 
 `);
         await navigator.clipboard.writeText(joined), t(`timeline_copy_success`, {
-          record_count: n.length,
-          output_nonempty: n.some(item => !!item.summary.trim())
+          record_count: replaceResult.length,
+          output_nonempty: replaceResult.some(item => !!item.summary.trim())
         }), j.value = e, Oi(r(`timeline.copySuccess`));
       }
       let computedData = computed(() => w(f.value)),
         ne = computed(() => w(p.value));
       function N(e) {
-        l = c();
+        setTimeoutResult = c();
         let [t, n, r] = e.start.split(`-`).map(Number),
           [i, a, o] = e.end.split(`-`).map(Number);
         f.value = new Date(t, n - 1, r), p.value = new Date(i, a - 1, o);
@@ -101189,11 +101189,11 @@ var Ylt = {
         Ne.value = true;
         let e = Se.value,
           t = be.value,
-          n = null;
+          replaceResult = null;
         try {
           let file = await q3.selectFile();
           if (!file) return;
-          Ee.value = ``, De.value = ``, n = file, e && e.token !== file.token && q3.clearFile({
+          Ee.value = ``, De.value = ``, replaceResult = file, e && e.token !== file.token && q3.clearFile({
             token: e.token
           }).catch(() => {}), Se.value = file, je.value = ``, Me.value = new Date().toISOString(), xe.value = null, ye.value = true, be.value = `loading`;
           let [i, a, o] = await Promise.all([q3.getCapability(), Mi.getCreditsBalance(), Mi.getCreditsExchangePolicy()]);
@@ -101207,7 +101207,7 @@ var Ylt = {
           if (i.provider === `bigmodel_flash` && file.durationMs > 72e5) throw new G3(`AUDIO_TOO_LONG`, r(`timeline.audioFileTooLong`));
           be.value = `selected`;
         } catch (i) {
-          Ee.value = i instanceof G3 ? i.code : `FILE_SELECT_FAILED`, De.value = i instanceof Error ? i.message : r(`timeline.audioFileSelectFailed`), e && !n && t === `selected` ? (Ai(De.value), Ee.value = ``, De.value = ``, be.value = `selected`) : (ye.value = true, be.value = `error`);
+          Ee.value = i instanceof G3 ? i.code : `FILE_SELECT_FAILED`, De.value = i instanceof Error ? i.message : r(`timeline.audioFileSelectFailed`), e && !replaceResult && t === `selected` ? (Ai(De.value), Ee.value = ``, De.value = ``, be.value = `selected`) : (ye.value = true, be.value = `error`);
         } finally {
           Ne.value = false;
         }
@@ -101781,14 +101781,14 @@ var Ylt = {
             };
           }
           let focusMinutes = Kn.value.focusMinutes,
-            t = null,
-            n = null;
+            normalizeResult = null,
+            replaceResult = null;
           for (let e of tn.value) {
             let date = new Date(e.endedAt);
-            (!t || date < t) && (t = date), (!n || date > n) && (n = date);
+            (!normalizeResult || date < normalizeResult) && (normalizeResult = date), (!replaceResult || date > replaceResult) && (replaceResult = date);
           }
           let i = Number((focusMinutes / 60).toFixed(1)),
-            a = t && n ? `${C(t.getHours())}:${C(t.getMinutes())} — ${C(n.getHours())}:${C(n.getMinutes())}` : r(`composables.workRecords.noActivePeriod`);
+            a = normalizeResult && replaceResult ? `${C(normalizeResult.getHours())}:${C(normalizeResult.getMinutes())} — ${C(replaceResult.getHours())}:${C(replaceResult.getMinutes())}` : r(`composables.workRecords.noActivePeriod`);
           return {
             totalRecords: tn.value.length,
             focusHours: i,
@@ -101968,8 +101968,8 @@ var Ylt = {
           }
         };
       async function wr() {
-        let e = l;
-        l = null;
+        let e = setTimeoutResult;
+        setTimeoutResult = null;
         let t = ++u;
         if (computedResult.value) {
           let date = new Date(f.value.getFullYear(), f.value.getMonth(), f.value.getDate()),
@@ -101987,24 +101987,24 @@ var Ylt = {
       }
       async function Tr() {
         try {
-          let e;
+          let normalizeResult;
           if (computedResult.value) {
             let date = new Date(f.value.getFullYear(), f.value.getMonth(), f.value.getDate()),
               n = new Date(p.value.getFullYear(), p.value.getMonth(), p.value.getDate() + 1);
-            e = await l_.list({
+            normalizeResult = await l_.list({
               startedAt: date.toISOString(),
               endedAt: n.toISOString(),
               keyword: y.value || undefined
             });
           } else {
             let t = T(f.value);
-            e = await l_.list({
+            normalizeResult = await l_.list({
               ...t,
               keyword: y.value || undefined
             });
           }
           let t = new Set(m.value.map(item => item.id)),
-            filtered = e.filter(item => !t.has(item.id));
+            filtered = normalizeResult.filter(item => !t.has(item.id));
           filtered.length > 0 && (m.value = [...m.value, ...filtered].sort((left, right) => new Date(right.endedAt).getTime() - new Date(left.endedAt).getTime())), computedResult.value || l_.getDailySummary({
             date: w(f.value)
           }).then(result => {
@@ -103613,9 +103613,9 @@ function c6(e) {
   for (let n = 0, r = e.length; n < r; n++) emptyItems.push(e[n]);
   return emptyItems;
 }
-var l6 = null;
+var includeStyleProperties = null;
 function u6(e = {}) {
-  return l6 || (e.includeStyleProperties ? (l6 = e.includeStyleProperties, l6) : (l6 = c6(window.getComputedStyle(document.documentElement)), l6));
+  return includeStyleProperties || (e.includeStyleProperties ? (includeStyleProperties = e.includeStyleProperties, includeStyleProperties) : (includeStyleProperties = c6(window.getComputedStyle(document.documentElement)), includeStyleProperties));
 }
 function d6(e, t) {
   let propertyValue = (e.ownerDocument.defaultView || window).getComputedStyle(e).getPropertyValue(t);
@@ -103638,12 +103638,12 @@ function f6(e, t = {}) {
   };
 }
 function Xpt() {
-  let e, t;
+  let normalizeResult, t;
   try {
     t = process;
   } catch {}
   let n = t && t.env ? t.env.devicePixelRatio : null;
-  return n && (e = parseInt(n, 10), Number.isNaN(e) && (e = 1)), e || window.devicePixelRatio || 1;
+  return n && (normalizeResult = parseInt(n, 10), Number.isNaN(normalizeResult) && (normalizeResult = 1)), normalizeResult || window.devicePixelRatio || 1;
 }
 var p6 = 16384;
 function Zpt(e) {
@@ -103759,18 +103759,18 @@ async function w6(response, t, n) {
   let r = smt(response, t, n.includeQueryParams);
   if (C6[r] != null) return C6[r];
   n.cacheBust && (response += (/\?/.test(response) ? `&` : `?`) + new Date().getTime());
-  let i;
+  let count;
   try {
-    i = x6(await S6(response, n.fetchRequestInit, ({
+    count = x6(await S6(response, n.fetchRequestInit, ({
       res: e,
       result: n
     }) => (t ||= e.headers.get(`Content-Type`) || ``, omt(n))), t);
   } catch (t) {
-    i = n.imagePlaceholder || ``;
+    count = n.imagePlaceholder || ``;
     let r = `Failed to fetch resource: ${response}`;
     t && (r = typeof t == `string` ? t : t.message), r && console.warn(r);
   }
-  return C6[r] = i, i;
+  return C6[r] = count, count;
 }
 async function cmt(e) {
   let toDataURL = e.toDataURL();
@@ -103867,8 +103867,8 @@ async function Cmt(e, t, n, r, i) {
   try {
     let a = n ? Kpt(t, n) : t,
       o = y6(t),
-      s;
-    return s = i ? x6(await i(a), o) : await w6(a, o, r), e.replace(xmt(t), `$1${s}$3`);
+      trimStartResult;
+    return trimStartResult = i ? x6(await i(a), o) : await w6(a, o, r), e.replace(xmt(t), `$1${trimStartResult}$3`);
   } catch {}
   return e;
 }
@@ -103980,7 +103980,7 @@ function F6(e) {
 }
 async function kmt(items, t) {
   let emptyItems = [],
-    r = [];
+    requestAnimationFrameResult = [];
   return items.forEach(item => {
     if (`cssRules` in item) try {
       c6(item.cssRules || []).forEach((text, i) => {
@@ -103999,18 +103999,18 @@ async function kmt(items, t) {
             })).catch(e => {
               console.error(`Error loading remote css`, e.toString());
             });
-          r.push(s);
+          requestAnimationFrameResult.push(s);
         }
       });
     } catch (i) {
       let fallbackValue = items.find(e => e.href == null) || document.styleSheets[0];
-      item.href != null && r.push(N6(item.href).then(err => P6(err, t)).then(result => F6(result).forEach(e => {
+      item.href != null && requestAnimationFrameResult.push(N6(item.href).then(err => P6(err, t)).then(result => F6(result).forEach(e => {
         fallbackValue.insertRule(e, fallbackValue.cssRules.length);
       })).catch(e => {
         console.error(`Error loading remote stylesheet`, e);
       })), console.error(`Error inlining remote css file`, i);
     }
-  }), Promise.all(r).then(() => (items.forEach(item => {
+  }), Promise.all(requestAnimationFrameResult).then(() => (items.forEach(item => {
     if (`cssRules` in item) try {
       c6(item.cssRules || []).forEach(e => {
         emptyItems.push(e);
@@ -104484,13 +104484,13 @@ var zmt = {
         computedData = computed(() => new Map(eventAlias.allItems.map(item => [item.rank, item]))),
         a = computed(() => {
           let emptyItems = [];
-          for (let n of eventAlias.items) eventAlias.showTop10Line && n.rank === 11 && emptyItems.push({
+          for (let replaceResult of eventAlias.items) eventAlias.showTop10Line && replaceResult.rank === 11 && emptyItems.push({
             kind: `divider`,
             key: `divider-top10`
           }), emptyItems.push({
             kind: `row`,
-            key: n.userKey,
-            item: n
+            key: replaceResult.userKey,
+            item: replaceResult
           });
           return emptyItems;
         });
@@ -104685,13 +104685,13 @@ function e8(e, t, n, r) {
   let fallbackValue = t.match(/[⺀-鿿豈-﫿＀-￯　-〿]|[^\s⺀-鿿豈-﫿＀-￯　-〿]+\s*|\s+/g) ?? [t],
     emptyItems = [],
     o = ``;
-  for (let t of fallbackValue) {
-    let i = o + t;
+  for (let normalizeResult of fallbackValue) {
+    let i = o + normalizeResult;
     if (e.measureText(i.trimEnd()).width <= n || !o) {
       o = i;
       continue;
     }
-    if (emptyItems.push(o.trimEnd()), o = t.trimStart(), emptyItems.length === r) break;
+    if (emptyItems.push(o.trimEnd()), o = normalizeResult.trimStart(), emptyItems.length === r) break;
   }
   return emptyItems.length < r && o && emptyItems.push(o.trimEnd()), emptyItems.length === r && emptyItems.join(``).replace(/\s+/g, ``).length < t.replace(/\s+/g, ``).length && (emptyItems[r - 1] = Q6(e, `${emptyItems[r - 1]}…`, n)), emptyItems;
 }
@@ -105119,7 +105119,7 @@ var rgt = {
         g = Ie(null),
         _ = Ie(null),
         v = ref(false),
-        y,
+        setTimeoutResult,
         b = 0,
         computedResult = computed(() => h8.find(item => item.id === o.value) ?? h8[0]),
         computedData = computed(() => i.value?.nickname?.trim() || null),
@@ -105202,9 +105202,9 @@ var rgt = {
           let e = T();
           if (e) {
             p.value && g8(p.value, computedResult.value, e);
-            for (let t of h8) {
-              let n = m.get(t.id);
-              n && g8(n, t, e, wgt);
+            for (let normalizeResult of h8) {
+              let n = m.get(normalizeResult.id);
+              n && g8(n, normalizeResult, e, wgt);
             }
           }
         });
@@ -105228,7 +105228,7 @@ var rgt = {
             if (!t) throw Error(`empty image`);
             await navigator.clipboard.write([new ClipboardItem({
               "image/png": t
-            })]), d.value = true, clearTimeout(y), y = setTimeout(() => {
+            })]), d.value = true, clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
               d.value = false;
             }, 2400), Oi(r(`leaderboard.shareDialog.copied`)), trackActionEvent(`feature_map_heat_click`, {
               entry: `leaderboard_card_copy_${o.value}`
@@ -105275,7 +105275,7 @@ var rgt = {
       }), watch([o, counter, c, l, () => textAlias.context, h, g, _], () => {
         n.value && ut(E);
       }), onMounted(() => {
-        cancelAnimationFrame(b), clearTimeout(y);
+        cancelAnimationFrame(b), clearTimeout(setTimeoutResult);
       }), (t, i) => (openBlock(), createBlock(unref(ui), {
         open: n.value,
         "onUpdate:open": i[2] ||= e => n.value = e
@@ -106447,13 +106447,13 @@ function T_t(text, t, n) {
 function E_t(event) {
   let t = [...event.functionRow, ...event.mainRows.flat(), ...(event.navigation?.keys ?? []), ...(event.numpad?.keys ?? [])],
     n = new Set();
-  for (let e of t) if (e.kind !== `spacer`) {
-    if (e.kind === `arrows`) {
+  for (let normalizeResult of t) if (normalizeResult.kind !== `spacer`) {
+    if (normalizeResult.kind === `arrows`) {
       for (let e of [`ArrowLeft`, `ArrowUp`, `ArrowDown`, `ArrowRight`]) n.add(e);
       continue;
     }
-    n.add(e.code);
-    for (let t of e.aliases ?? []) n.add(t);
+    n.add(normalizeResult.code);
+    for (let t of normalizeResult.aliases ?? []) n.add(t);
   }
   return n;
 }
@@ -106630,7 +106630,7 @@ var D_t = {
         f = ref(false),
         p = ref(``),
         m = null,
-        h = null;
+        setIntervalResult = null;
       function g(e) {
         c.value = e.start, l.value = e.end;
       }
@@ -106744,9 +106744,9 @@ var D_t = {
       }), watch(() => eventAlias.refreshKey, () => void se()), onBeforeMount(() => {
         g(Pt(`today`)), m = OU.onStateChanged(e => {
           u.value = e;
-        }), h = setInterval(() => void se(true), fvt);
+        }), setIntervalResult = setInterval(() => void se(true), fvt);
       }), onUnmounted(() => {
-        m?.(), h && clearInterval(h);
+        m?.(), setIntervalResult && clearInterval(setIntervalResult);
       }), (e, t) => (openBlock(), createElementBlock(`div`, D_t, [(openBlock(), createBlock(Qe, {
         to: eventAlias.rangePickerTarget || unref(`#heatmap-panel-actions`),
         defer: ``
@@ -107433,12 +107433,12 @@ function Yvt(items) {
     o = mapped.map(item => ({
       ...item
     }));
-  for (let e of n) o[e] = {
+  for (let normalizeResult of n) o[normalizeResult] = {
     x: a,
-    y: r - mapped[e].height,
-    width: mapped[e].width,
-    height: mapped[e].height
-  }, a += mapped[e].width + i;
+    y: r - mapped[normalizeResult].height,
+    width: mapped[normalizeResult].width,
+    height: mapped[normalizeResult].height
+  }, a += mapped[normalizeResult].width + i;
   return o;
 }
 function Xvt(e, t, n) {
@@ -107509,22 +107509,22 @@ function $vt(e, t) {
       };
     }),
     grid = e.grid;
-  for (let i of e.rects) {
-    if (t !== null && i.app !== t) continue;
-    let e = mapped[i.display];
+  for (let count of e.rects) {
+    if (t !== null && count.app !== t) continue;
+    let e = mapped[count.display];
     if (!e) continue;
     let {
         cols: a,
         rows: o,
         diff: s
       } = e,
-      c = Math.max(0, Math.min(a, Math.floor(i.x / grid * a))),
-      l = Math.max(0, Math.min(a, Math.ceil((i.x + i.width) / grid * a))),
-      u = Math.max(0, Math.min(o, Math.floor(i.y / grid * o))),
-      d = Math.max(0, Math.min(o, Math.ceil((i.y + i.height) / grid * o)));
+      c = Math.max(0, Math.min(a, Math.floor(count.x / grid * a))),
+      l = Math.max(0, Math.min(a, Math.ceil((count.x + count.width) / grid * a))),
+      u = Math.max(0, Math.min(o, Math.floor(count.y / grid * o))),
+      d = Math.max(0, Math.min(o, Math.ceil((count.y + count.height) / grid * o)));
     if (l <= c || d <= u) continue;
     let f = a + 1;
-    s[u * f + c] += i.activeMs, s[u * f + l] -= i.activeMs, s[d * f + c] -= i.activeMs, s[d * f + l] += i.activeMs;
+    s[u * f + c] += count.activeMs, s[u * f + l] -= count.activeMs, s[d * f + c] -= count.activeMs, s[d * f + l] += count.activeMs;
   }
   return mapped.map(({
     cols: e,
@@ -107559,7 +107559,7 @@ function F8(e, t, n) {
 }
 function tyt(e) {
   let emptyItems = [];
-  for (let n of e) for (let e = 0; e < n.values.length; e += 1) n.values[e] > 0 && emptyItems.push(n.values[e]);
+  for (let replaceResult of e) for (let e = 0; e < replaceResult.values.length; e += 1) replaceResult.values[e] > 0 && emptyItems.push(replaceResult.values[e]);
   let n = Float32Array.from(emptyItems).sort(),
     r = n.length > 0 ? n[n.length - 1] : 0;
   return {
@@ -107581,12 +107581,12 @@ function ryt(e, t) {
     i = 0,
     a = 0,
     o = 0;
-  for (let s of e.rects) {
-    if (t !== null && s.app !== t) continue;
-    let e = mapped[s.display];
+  for (let trimStartResult of e.rects) {
+    if (t !== null && trimStartResult.app !== t) continue;
+    let e = mapped[trimStartResult.display];
     if (!e) continue;
-    let c = s.width * s.height / (grid * grid);
-    e.activeMs += s.activeMs, e.weightedX += s.activeMs * (s.x + s.width / 2) / grid, e.weightedY += s.activeMs * (s.y + s.height / 2) / grid, i += s.activeMs, o += s.activeMs * c, c >= qvt && (a += s.activeMs);
+    let c = trimStartResult.width * trimStartResult.height / (grid * grid);
+    e.activeMs += trimStartResult.activeMs, e.weightedX += trimStartResult.activeMs * (trimStartResult.x + trimStartResult.width / 2) / grid, e.weightedY += trimStartResult.activeMs * (trimStartResult.y + trimStartResult.height / 2) / grid, i += trimStartResult.activeMs, o += trimStartResult.activeMs * c, c >= qvt && (a += trimStartResult.activeMs);
   }
   let s = t === null ? e.displays.map(item => item.activeMs) : mapped.map(item => item.activeMs),
     reduced = s.reduce((acc, cur) => acc + cur, 0),
@@ -107621,10 +107621,10 @@ function I8(e, t) {
   return n === `center` ? r === `top` ? `top` : `bottom` : r === `middle` ? n : r === `top` ? n === `left` ? `topLeft` : `topRight` : n === `left` ? `bottomLeft` : `bottomRight`;
 }
 function iyt(e, t, n) {
-  for (let r of e.frames) if (!(t < r.x || n < r.y || t > r.x + r.width || n > r.y + r.height)) return {
-    display: r.display,
-    x: (t - r.x) / r.width,
-    y: (n - r.y) / r.height
+  for (let requestAnimationFrameResult of e.frames) if (!(t < requestAnimationFrameResult.x || n < requestAnimationFrameResult.y || t > requestAnimationFrameResult.x + requestAnimationFrameResult.width || n > requestAnimationFrameResult.y + requestAnimationFrameResult.height)) return {
+    display: requestAnimationFrameResult.display,
+    x: (t - requestAnimationFrameResult.x) / requestAnimationFrameResult.width,
+    y: (n - requestAnimationFrameResult.y) / requestAnimationFrameResult.height
   };
   return null;
 }
@@ -107633,7 +107633,7 @@ function ayt(e, t, n) {
     i = t.y * e.grid,
     a = new Map(),
     o = 0;
-  for (let s of e.rects) s.display !== t.display || n !== null && s.app !== n || r < s.x || r > s.x + s.width || i < s.y || i > s.y + s.height || (o += s.activeMs, a.set(s.app, (a.get(s.app) ?? 0) + s.activeMs));
+  for (let trimStartResult of e.rects) trimStartResult.display !== t.display || n !== null && trimStartResult.app !== n || r < trimStartResult.x || r > trimStartResult.x + trimStartResult.width || i < trimStartResult.y || i > trimStartResult.y + trimStartResult.height || (o += trimStartResult.activeMs, a.set(trimStartResult.app, (a.get(trimStartResult.app) ?? 0) + trimStartResult.activeMs));
   let s = Array.from(a, ([e, t]) => ({
     app: e,
     activeMs: t
@@ -107708,24 +107708,24 @@ function pyt(e, t) {
     layout: n,
     theme: r
   } = t;
-  for (let i of n.frames) {
-    let n = Math.min(8, i.width * 0.03, i.height * 0.05);
-    e.save(), e.beginPath(), e.roundRect(i.x, i.y, i.width, i.height, n), e.fillStyle = r.screen, e.fill(), e.clip();
-    let a = t.images[i.display];
-    a && (e.imageSmoothingEnabled = true, e.imageSmoothingQuality = `high`, e.drawImage(a, i.x, i.y, i.width, i.height)), e.restore(), e.beginPath(), e.roundRect(i.x + 0.5, i.y + 0.5, i.width - 1, i.height - 1, Math.max(0, n - 0.5)), e.lineWidth = 1, e.strokeStyle = r.screenEdge, e.stroke();
-    let o = t.labels[i.display];
-    if (o && i.width > 72 && i.height > 36) {
+  for (let count of n.frames) {
+    let n = Math.min(8, count.width * 0.03, count.height * 0.05);
+    e.save(), e.beginPath(), e.roundRect(count.x, count.y, count.width, count.height, n), e.fillStyle = r.screen, e.fill(), e.clip();
+    let a = t.images[count.display];
+    a && (e.imageSmoothingEnabled = true, e.imageSmoothingQuality = `high`, e.drawImage(a, count.x, count.y, count.width, count.height)), e.restore(), e.beginPath(), e.roundRect(count.x + 0.5, count.y + 0.5, count.width - 1, count.height - 1, Math.max(0, n - 0.5)), e.lineWidth = 1, e.strokeStyle = r.screenEdge, e.stroke();
+    let o = t.labels[count.display];
+    if (o && count.width > 72 && count.height > 36) {
       e.font = `500 11px ${t.fontFamily}`;
-      let n = dyt(e, o, i.width - 32),
+      let n = dyt(e, o, count.width - 32),
         a = e.measureText(n).width,
-        s = i.x + 8,
-        c = i.y + i.height - 8 - 20;
+        s = count.x + 8,
+        c = count.y + count.height - 8 - 20;
       e.beginPath(), e.roundRect(s, c, a + 14, 20, 6), e.fillStyle = r.pillBackground, e.fill(), e.fillStyle = r.pillText, e.textBaseline = `middle`, e.textAlign = `left`, e.fillText(n, s + 7, c + 10.5);
     }
   }
-  for (let i of t.markers) {
-    let t = n.frames[i.display];
-    t && fyt(e, t.x + i.x * t.width, t.y + i.y * t.height, r);
+  for (let count of t.markers) {
+    let t = n.frames[count.display];
+    t && fyt(e, t.x + count.x * t.width, t.y + count.y * t.height, r);
   }
   let hover = t.hover,
     a = hover ? n.frames[hover.display] : null;
@@ -107757,9 +107757,9 @@ var myt = [`aria-label`],
         o = ref(null),
         counter = ref(0),
         c = ref(null),
-        l = null,
+        setTimeoutResult = null,
         u = 0,
-        d = null,
+        count = null,
         computedResult = computed(() => Xvt(eventAlias.displays, counter.value)),
         computedData = computed(() => tyt(eventAlias.grids)),
         m = computed(() => eventAlias.grids.map(item => item ? uyt(item, computedData.value, eventAlias.theme) : null));
@@ -107769,7 +107769,7 @@ var myt = [`aria-label`],
           t = a.value,
           n = computedResult.value;
         if (!e || !t || n.width <= 0 || n.height <= 0) return;
-        let fallbackValue = d ?? (window.devicePixelRatio || 1),
+        let fallbackValue = count ?? (window.devicePixelRatio || 1),
           s = Math.max(1, Math.round(n.width * fallbackValue)),
           l = Math.max(1, Math.round(n.height * fallbackValue));
         e.width !== s && (e.width = s), e.height !== l && (e.height = l);
@@ -107780,7 +107780,7 @@ var myt = [`aria-label`],
           theme: eventAlias.theme,
           labels: eventAlias.labels,
           markers: eventAlias.markers,
-          hover: d === null ? c.value : null,
+          hover: count === null ? c.value : null,
           fontFamily: getComputedStyle(t).fontFamily || `system-ui, sans-serif`
         }));
       }
@@ -107803,20 +107803,20 @@ var myt = [`aria-label`],
         c.value = null, i(`hover`, null);
       }
       function y(e) {
-        return u && cancelAnimationFrame(u), u = 0, d = Math.max(e, window.devicePixelRatio || 1), h(), () => {
-          d = null, h();
+        return u && cancelAnimationFrame(u), u = 0, count = Math.max(e, window.devicePixelRatio || 1), h(), () => {
+          count = null, h();
         };
       }
       return t({
         prepareExport: y
       }), onBeforeMount(() => {
         let e = a.value;
-        e && (counter.value = Math.floor(e.clientWidth), l = new ResizeObserver(e => {
+        e && (counter.value = Math.floor(e.clientWidth), setTimeoutResult = new ResizeObserver(e => {
           let t = Math.floor(e[0]?.contentRect.width ?? 0);
           t !== counter.value && (counter.value = t);
-        }), l.observe(e), g());
+        }), setTimeoutResult.observe(e), g());
       }), onMounted(() => {
-        l?.disconnect(), l = null, u && cancelAnimationFrame(u), u = 0;
+        setTimeoutResult?.disconnect(), setTimeoutResult = null, u && cancelAnimationFrame(u), u = 0;
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         ref_key: `containerRef`,
         ref: a,
@@ -108045,7 +108045,7 @@ var myt = [`aria-label`],
         E = ref(null),
         D = ref(null),
         O = 0,
-        k = null,
+        finallyResult = null,
         computedData = computed(() => It(g.value, _.value));
       function j(e) {
         if (e.start === g.value && e.end === _.value) return;
@@ -108104,11 +108104,11 @@ var myt = [`aria-label`],
       }), onBeforeMount(() => {
         d();
         let e = Pt(h());
-        g.value = e.start, _.value = e.end, k = setInterval(() => {
+        g.value = e.start, _.value = e.end, finallyResult = setInterval(() => {
           document.visibilityState !== `visible` || _.value < Xg(new Date()) || te(true);
         }, ubt);
       }), onUnmounted(() => {
-        k && clearInterval(k), k = null;
+        finallyResult && clearInterval(finallyResult), finallyResult = null;
       });
       let ne = computed(() => (v.value?.rects.length ?? 0) > 0),
         N = computed(() => (v.value?.displays.length ?? 0) > 1),
@@ -108581,11 +108581,11 @@ function Lbt(e, t) {
       total: 0
     })),
     i = new Set(Ebt[t]);
-  for (let t of e.layers) {
-    let e = mapped[t.display];
-    if (e && i.has(t.layer)) for (let r = 0; r + 1 < t.cells.length; r += 2) {
-      let i = t.cells[r],
-        a = t.cells[r + 1];
+  for (let normalizeResult of e.layers) {
+    let e = mapped[normalizeResult.display];
+    if (e && i.has(normalizeResult.layer)) for (let r = 0; r + 1 < normalizeResult.cells.length; r += 2) {
+      let i = normalizeResult.cells[r],
+        a = normalizeResult.cells[r + 1];
       i < 0 || i >= n || !(a > 0) || (e.values[i] += a, e.total += a);
     }
   }
@@ -108716,11 +108716,11 @@ function Hbt(e, t, n) {
 }
 function Ubt(e) {
   let t = 0;
-  for (let n of e) for (let e = 0; e < n.values.length; e += 1) n.values[e] > t && (t = n.values[e]);
+  for (let replaceResult of e) for (let e = 0; e < replaceResult.values.length; e += 1) replaceResult.values[e] > t && (t = replaceResult.values[e]);
   if (t <= 0) return 0;
   let emptyItems = [],
     r = t * 0.01;
-  for (let t of e) for (let e = 0; e < t.values.length; e += 1) t.values[e] > r && emptyItems.push(t.values[e]);
+  for (let normalizeResult of e) for (let e = 0; e < normalizeResult.values.length; e += 1) normalizeResult.values[e] > r && emptyItems.push(normalizeResult.values[e]);
   let i = Float32Array.from(emptyItems).sort();
   return i[Math.min(i.length - 1, Math.floor(Mbt * (i.length - 1)))] || t;
 }
@@ -108817,17 +108817,17 @@ function Q8(e, t) {
 }
 function Qbt(e, t) {
   let n = 0,
-    r = null,
+    requestAnimationFrameResult = null,
     i = 0;
   for (let a = 0; a < t.length && a < e.displays.length; a += 1) {
     let o = Q8(e.grid, t[a]);
-    for (let e = 0; e < o.length; e += 1) n += o[e], !(o[e] <= i) && (i = o[e], r = {
+    for (let e = 0; e < o.length; e += 1) n += o[e], !(o[e] <= i) && (i = o[e], requestAnimationFrameResult = {
       display: a,
       zone: Z8[e]
     });
   }
-  return r && n > 0 ? {
-    ...r,
+  return requestAnimationFrameResult && n > 0 ? {
+    ...requestAnimationFrameResult,
     share: i / n
   } : null;
 }
@@ -108844,9 +108844,9 @@ function ext(e) {
     right: 0,
     other: 0
   }));
-  for (let n of e.layers) {
-    let e = mapped[n.display];
-    if (e && n.layer !== `move`) for (let t = 1; t < n.cells.length; t += 2) e[n.layer] += n.cells[t];
+  for (let replaceResult of e.layers) {
+    let e = mapped[replaceResult.display];
+    if (e && replaceResult.layer !== `move`) for (let t = 1; t < replaceResult.cells.length; t += 2) e[replaceResult.layer] += replaceResult.cells[t];
   }
   return mapped;
 }
@@ -108914,13 +108914,13 @@ var txt = [`tabindex`],
         f = ref(false),
         p = ref(null),
         m = i_(),
-        h = null,
+        setIntervalResult = null,
         g = 0,
         _ = 0,
         v = 0,
-        y = null,
+        setTimeoutResult = null,
         b = `#1a1a1a`,
-        x = null,
+        resolvedValue = null,
         computedResult = computed(() => eventAlias.displays.length > 1),
         computedData = computed(() => eventAlias.displays.map((item, right) => ({
           index: right,
@@ -109040,7 +109040,7 @@ var txt = [`tabindex`],
         M = computed(() => eventAlias.mode === `grid` ? D.value.map((item, t) => Xbt(item.geometry.screen, eventAlias.raw[t], eventAlias.grid)) : []),
         ne = computed(() => {
           let e = 0;
-          for (let t of M.value) for (let n = 0; n < t.counts.length; n += 1) t.counts[n] > e && (e = t.counts[n]);
+          for (let normalizeResult of M.value) for (let n = 0; n < normalizeResult.counts.length; n += 1) normalizeResult.counts[n] > e && (e = normalizeResult.counts[n]);
           return e;
         }),
         N = computed(() => M.value.map(item => {
@@ -109117,7 +109117,7 @@ var txt = [`tabindex`],
       function ue(e, t, n) {
         let i = emptyItems[e];
         if (!i || t.width <= 0 || t.height <= 0) return;
-        let a = se(i, t.width, t.height, x ?? (window.devicePixelRatio || 1));
+        let a = se(i, t.width, t.height, resolvedValue ?? (window.devicePixelRatio || 1));
         if (!a) return;
         let o = m.value,
           {
@@ -109178,7 +109178,7 @@ var txt = [`tabindex`],
           i = D.value[e];
         if (!n || !i) return;
         let a = se(n, i.width, i.height, window.devicePixelRatio || 1),
-          o = x === null ? p.value : null;
+          o = resolvedValue === null ? p.value : null;
         if (!a || !o) return;
         l = e;
         let {
@@ -109224,7 +109224,7 @@ var txt = [`tabindex`],
         O.value[e]?.role === `side` && me(e);
       }
       function ve(e, t) {
-        t === w.value && (y = {
+        t === w.value && (setTimeoutResult = {
           clientX: e.clientX,
           clientY: e.clientY,
           index: t
@@ -109232,8 +109232,8 @@ var txt = [`tabindex`],
       }
       function ye() {
         v = 0;
-        let e = y;
-        if (y = null, !e || e.index !== w.value) return;
+        let e = setTimeoutResult;
+        if (setTimeoutResult = null, !e || e.index !== w.value) return;
         let {
             index: t,
             clientX: n,
@@ -109282,25 +109282,25 @@ var txt = [`tabindex`],
         });
       }
       function be() {
-        v && cancelAnimationFrame(v), v = 0, y = null, p.value && (p.value = null, i(`hover`, null));
+        v && cancelAnimationFrame(v), v = 0, setTimeoutResult = null, p.value && (p.value = null, i(`hover`, null));
       }
       watch(w, be);
       function xe(e) {
-        return g && cancelAnimationFrame(g), g = 0, f.value = true, x = Math.max(e, window.devicePixelRatio || 1), le(), () => {
-          f.value = false, x = null, le();
+        return g && cancelAnimationFrame(g), g = 0, f.value = true, resolvedValue = Math.max(e, window.devicePixelRatio || 1), le(), () => {
+          f.value = false, resolvedValue = null, le();
         };
       }
       return t({
         prepareExport: xe
       }), onBeforeMount(() => {
         let e = o.value;
-        e && (counter.value = Math.floor(e.clientWidth), h = new ResizeObserver(e => {
+        e && (counter.value = Math.floor(e.clientWidth), setIntervalResult = new ResizeObserver(e => {
           let t = Math.floor(e[0]?.contentRect.width ?? 0);
           t !== counter.value && (counter.value = t);
-        }), h.observe(e), fe());
+        }), setIntervalResult.observe(e), fe());
       }), onMounted(() => {
-        h?.disconnect(), h = null;
-        for (let e of [g, _, v]) e && cancelAnimationFrame(e);
+        setIntervalResult?.disconnect(), setIntervalResult = null;
+        for (let normalizeResult of [g, _, v]) normalizeResult && cancelAnimationFrame(normalizeResult);
         g = 0, _ = 0, v = 0;
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         ref_key: `containerRef`,
@@ -109563,7 +109563,7 @@ var txt = [`tabindex`],
         T = ref(null),
         E = 0,
         D = 0,
-        O = null;
+        setTimeoutResult = null;
       function k(e) {
         (e.start !== h.value || e.end !== g.value) && (h.value = e.start, g.value = e.end, trackActionEvent(`feature_map_heat_click`, {
           entry: `mouse_range_${It(e.start, e.end) ?? `custom`}`
@@ -109608,13 +109608,13 @@ var txt = [`tabindex`],
       }), watch(() => eventAlias.refreshKey, () => void j()), watch(l, (value, t) => {
         t !== undefined && value !== t && j(true);
       }), onBeforeMount(() => {
-        c(), k(Pt(`today`)), O = setInterval(() => {
+        c(), k(Pt(`today`)), setTimeoutResult = setInterval(() => {
           if (document.visibilityState !== `visible` || g.value < Xg(new Date())) return;
           let e = computedData.value <= fSt ? t5 : dSt;
           Date.now() - D < e - 500 || j(true);
         }, t5);
       }), onUnmounted(() => {
-        O && clearInterval(O), O = null;
+        setTimeoutResult && clearInterval(setTimeoutResult), setTimeoutResult = null;
       });
       function ee(e) {
         return Math.round(e).toLocaleString(o.value);
@@ -110329,10 +110329,10 @@ var gSt = {
             focusMinutes: 0,
             records: 0
           }));
-          for (let t of eventAlias.summaries) {
-            if (!t.date.startsWith(`${eventAlias.year}-`)) continue;
-            let r = e[Number(t.date.slice(5, 7)) - 1];
-            r && (r.focusMinutes += t.focusMinutes, r.records += t.totalRecords ?? 0);
+          for (let normalizeResult of eventAlias.summaries) {
+            if (!normalizeResult.date.startsWith(`${eventAlias.year}-`)) continue;
+            let r = e[Number(normalizeResult.date.slice(5, 7)) - 1];
+            r && (r.focusMinutes += normalizeResult.focusMinutes, r.records += normalizeResult.totalRecords ?? 0);
           }
           return e;
         }),
@@ -110895,10 +110895,10 @@ var gSt = {
           generatingImage: false
         }),
         u = ref(false),
-        d = null;
+        count = null;
       function f() {
-        u.value = true, d && clearTimeout(d), d = setTimeout(() => {
-          u.value = false, d = null;
+        u.value = true, count && clearTimeout(count), count = setTimeout(() => {
+          u.value = false, count = null;
         }, 700);
       }
       function p(e) {
@@ -110953,7 +110953,7 @@ var gSt = {
       let computedResult = computed(() => [i(`heatMapSlogans.0`), i(`heatMapSlogans.1`), i(`heatMapSlogans.2`), i(`heatMapSlogans.3`), i(`heatMapSlogans.4`), i(`heatMapSlogans.5`), i(`heatMapSlogans.6`), i(`heatMapSlogans.7`), i(`heatMapSlogans.8`), i(`heatMapSlogans.9`)]),
         counter = ref(0),
         w = null,
-        T = null,
+        onEventResult = null,
         E = ref(`heatmap`),
         D = ref(eventAlias.initialView ?? `range`),
         O = ref(``),
@@ -111135,13 +111135,13 @@ var gSt = {
             c = -1;
           for (; date <= i;) {
             let e = new Date(date),
-              r = [],
+              requestAnimationFrameResult = [],
               i = ``;
             for (let o = 0; o < 7; o += 1) {
               let s = h(e, o),
                 l = p(s),
                 u = s >= t && s <= n;
-              u && s.getDate() === 1 && s.getMonth() !== c && (i = Pe(s), c = s.getMonth()), r.push({
+              u && s.getDate() === 1 && s.getMonth() !== c && (i = Pe(s), c = s.getMonth()), requestAnimationFrameResult.push({
                 date: l,
                 inRange: u,
                 summary: u ? a.get(l) ?? null : null
@@ -111150,7 +111150,7 @@ var gSt = {
             emptyItems.push({
               key: p(e),
               monthLabel: i,
-              days: r
+              days: requestAnimationFrameResult
             }), date = h(date, 7);
           }
           return emptyItems;
@@ -111261,16 +111261,16 @@ var gSt = {
             r = 0,
             a = 0,
             o = null,
-            s = null;
+            trimStartResult = null;
           e.forEach(item => {
             let i = m(item.date);
-            t[i.getMonth()] += item.totalRecords, n[i.getDay()] += item.totalRecords, item.totalRecords > 0 ? (a += 1, r = Math.max(r, a)) : a = 0, (!o || item.focusMinutes > o.focusMinutes) && (o = item), (!s || item.totalRecords > s.totalRecords) && (s = item);
+            t[i.getMonth()] += item.totalRecords, n[i.getDay()] += item.totalRecords, item.totalRecords > 0 ? (a += 1, r = Math.max(r, a)) : a = 0, (!o || item.focusMinutes > o.focusMinutes) && (o = item), (!trimStartResult || item.totalRecords > trimStartResult.totalRecords) && (trimStartResult = item);
           });
           let c = t.indexOf(Math.max(...t)),
             l = n.indexOf(Math.max(...n)),
             u = Pe(new Date(computedData.value, c, 1)),
             d = o,
-            f = s;
+            f = trimStartResult;
           return [{
             label: i(`heatMap.busiestMonth`),
             value: u,
@@ -111350,20 +111350,20 @@ var gSt = {
         let e = xe.value,
           emptyItems = [],
           n = {},
-          r = [],
+          requestAnimationFrameResult = [],
           a = [`backgroundColor`, `borderRadius`, `padding`, `boxShadow`, `position`, `width`];
         function o(e, t) {
           let n = {};
           Object.keys(t).forEach(item => {
             n[item] = e.style[item], e.style[item] = t[item];
-          }), r.push({
+          }), requestAnimationFrameResult.push({
             element: e,
             styles: n
           });
         }
-        let s = null,
+        let trimStartResult = null,
           c = null,
-          l = null;
+          setTimeoutResult = null;
         try {
           let r = null;
           if (lt.value?.avatarUrl) {
@@ -111406,7 +111406,7 @@ var gSt = {
             }).replace(/\//g, `.`);
           elementResult.style.cssText = `position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:10px;color:#ccc;`, elementResult.textContent = i(`heatMap.footerText`, {
             date: replaced
-          }), e.appendChild(elementResult), emptyItems.push(elementResult), s = (await Ce.value?.freezeForExport(2)) ?? null, c = D.value === `barcode` ? (await we.value?.prepareExport(2)) ?? null : null, l = D.value === `screen` ? (await Te.value?.prepareExport(2)) ?? null : D.value === `mouse` ? (await Ee.value?.prepareExport(2)) ?? null : null;
+          }), e.appendChild(elementResult), emptyItems.push(elementResult), trimStartResult = (await Ce.value?.freezeForExport(2)) ?? null, c = D.value === `barcode` ? (await we.value?.prepareExport(2)) ?? null : null, setTimeoutResult = D.value === `screen` ? (await Te.value?.prepareExport(2)) ?? null : D.value === `mouse` ? (await Ee.value?.prepareExport(2)) ?? null : null;
           let h = await Lmt(e, {
             pixelRatio: 2,
             width: d
@@ -111426,9 +111426,9 @@ var gSt = {
         } catch (e) {
           console.error(i(`heatMap.generateHeatmap`) + ` ` + i(`errors.unknownError`) + `:`, e);
         } finally {
-          s?.(), c?.(), l?.(), emptyItems.forEach(item => {
+          trimStartResult?.(), c?.(), setTimeoutResult?.(), emptyItems.forEach(item => {
             item.parentNode && item.parentNode.removeChild(item);
-          }), r.reverse().forEach(({
+          }), requestAnimationFrameResult.reverse().forEach(({
             element: e,
             styles: t
           }) => {
@@ -111441,13 +111441,13 @@ var gSt = {
         }
       }
       return onBeforeMount(() => {
-        oe(), window.addEventListener(`focus`, ce), document.addEventListener(`visibilitychange`, ce), T = setInterval(ce, 6e4), M() || ct(), window.electronAPI?.badges?.triggerEvent?.(`page_visit`, {
+        oe(), window.addEventListener(`focus`, ce), document.addEventListener(`visibilitychange`, ce), onEventResult = setInterval(ce, 6e4), M() || ct(), window.electronAPI?.badges?.triggerEvent?.(`page_visit`, {
           page: `heat_map`
         }), w = setInterval(() => {
           counter.value = (counter.value + 1) % computedResult.value.length;
         }, 5e3);
       }), onUnmounted(() => {
-        window.removeEventListener(`focus`, ce), document.removeEventListener(`visibilitychange`, ce), T &&= (clearInterval(T), null), d &&= (clearTimeout(d), null), w &&= (clearInterval(w), null);
+        window.removeEventListener(`focus`, ce), document.removeEventListener(`visibilitychange`, ce), onEventResult &&= (clearInterval(onEventResult), null), count &&= (clearTimeout(count), null), w &&= (clearInterval(w), null);
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         ref_key: `productImpressionEl`,
         ref: r,
@@ -112352,15 +112352,15 @@ var gSt = {
       }
       function re() {
         let date = new Date(),
-          t,
+          normalizeResult,
           n = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-        if (j.value === `today`) t = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);else if (j.value === `week`) {
+        if (j.value === `today`) normalizeResult = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);else if (j.value === `week`) {
           let n = date.getDay(),
             r = n === 0 ? 6 : n - 1;
-          t = new Date(date.getFullYear(), date.getMonth(), date.getDate() - r, 0, 0, 0);
-        } else j.value === `month` ? t = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0) : (t = ee.value ? new Date(ee.value) : new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0), n = te.value ? new Date(te.value) : n);
+          normalizeResult = new Date(date.getFullYear(), date.getMonth(), date.getDate() - r, 0, 0, 0);
+        } else j.value === `month` ? normalizeResult = new Date(date.getFullYear(), date.getMonth(), 1, 0, 0, 0) : (normalizeResult = ee.value ? new Date(ee.value) : new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0), n = te.value ? new Date(te.value) : n);
         return {
-          startedAt: t.toISOString(),
+          startedAt: normalizeResult.toISOString(),
           endedAt: n.toISOString()
         };
       }
@@ -112590,10 +112590,10 @@ var gSt = {
       let De = computed(() => {
           let e = new Set(de.value.map(item => P(item.appName))),
             t = new Map();
-          for (let n of E.value.periods) {
-            let r = O.value === `active` ? n.activeDurationSec : n.activeDurationSec + n.idleDurationSec,
-              i = P(n.appName);
-            Ee(t, n.period, e.has(i) ? i : s5, r);
+          for (let replaceResult of E.value.periods) {
+            let r = O.value === `active` ? replaceResult.activeDurationSec : replaceResult.activeDurationSec + replaceResult.idleDurationSec,
+              i = P(replaceResult.appName);
+            Ee(t, replaceResult.period, e.has(i) ? i : s5, r);
           }
           return {
             sources: R3(i),
@@ -112611,17 +112611,17 @@ var gSt = {
                 };
               fallbackValue.count += n, e.set(r, fallbackValue);
             };
-          for (let e of E.value.switches) t(e.fromAppName, e.count), t(e.toAppName, e.count);
+          for (let normalizeResult of E.value.switches) t(normalizeResult.fromAppName, normalizeResult.count), t(normalizeResult.toAppName, normalizeResult.count);
           let n = Array.from(e.entries()).sort((left, right) => right[1].count - left[1].count),
             r = k.value === `all` ? n : n.slice(0, Number(k.value)),
             i = new Set(r.map(([e]) => e)),
             a = new Map();
-          for (let e of E.value.switches) {
-            let t = P(e.fromAppName),
-              n = P(e.toAppName),
+          for (let normalizeResult of E.value.switches) {
+            let t = P(normalizeResult.fromAppName),
+              n = P(normalizeResult.toAppName),
               r = i.has(t) ? t : s5,
               o = i.has(n) ? n : s5;
-            (r !== s5 || o !== s5) && Ee(a, r, o, e.count);
+            (r !== s5 || o !== s5) && Ee(a, r, o, normalizeResult.count);
           }
           let s = Array.from(a.values()).sort((state, right) => right.value - state.value),
             c = [...r.map(([e, t]) => Te(e, t.label)), Ce()];
@@ -113620,7 +113620,7 @@ var jOt = {
         l = ref(`daily`),
         computedData = computed(() => {
           let e = new Map();
-          for (let t of eventAlias.items) e.has(t.owner.userId) || e.set(t.owner.userId, t.owner);
+          for (let normalizeResult of eventAlias.items) e.has(normalizeResult.owner.userId) || e.set(normalizeResult.owner.userId, normalizeResult.owner);
           return [...e.values()];
         }),
         d = computed(() => {
@@ -114344,7 +114344,7 @@ var jOt = {
         C = ref(null),
         w = ref(null),
         T = ref(null),
-        E = null,
+        count = null,
         D = computed(() => n.value.comments),
         O = computed(() => !y.value && v.value.trim().length > 0 && v.value.length <= 1e3),
         k = computed(() => x.value || v.value.length > 800);
@@ -114375,12 +114375,12 @@ var jOt = {
       }
       async function M(e) {
         if (w.value !== e.id) {
-          w.value = e.id, E && clearTimeout(E), E = setTimeout(() => {
+          w.value = e.id, count && clearTimeout(count), count = setTimeout(() => {
             w.value = null;
           }, 3e3);
           return;
         }
-        E && clearTimeout(E), w.value = null, T.value = e.id;
+        count && clearTimeout(count), w.value = null, T.value = e.id;
         try {
           n.value = await vm.deleteComment(eventAlias.docId, e.id), S.value?.id === e.id && (S.value = null);
         } catch (e) {
@@ -114390,7 +114390,7 @@ var jOt = {
         }
       }
       return onMounted(() => {
-        E && clearTimeout(E);
+        count && clearTimeout(count);
       }), (row, t) => (openBlock(), createElementBlock(`section`, Gkt, [createElementVNode(`div`, Kkt, [createElementVNode(`div`, qkt, [createElementVNode(`button`, {
         type: `button`,
         class: normalizeClass([`inline-flex size-7 shrink-0 items-center justify-center rounded-full transition-colors disabled:cursor-wait`, n.value.liked ? `text-primary` : `text-[#999] hover:text-primary`]),
@@ -114756,10 +114756,10 @@ var jOt = {
         setTimeout(e, 0);
       }
       let x = ref(false),
-        S = null;
+        count = null;
       async function C() {
         if (o.value) try {
-          await navigator.clipboard.writeText(o.value.content), x.value = true, S && clearTimeout(S), S = setTimeout(() => {
+          await navigator.clipboard.writeText(o.value.content), x.value = true, count && clearTimeout(count), count = setTimeout(() => {
             x.value = false;
           }, 2e3);
         } catch {
@@ -115135,7 +115135,7 @@ var jOt = {
         f = ref(`all`),
         p = ref(``),
         m = ref(``),
-        h = null,
+        setIntervalResult = null,
         computedData = computed(() => [{
           value: `all`,
           label: a(`history.all`)
@@ -115150,7 +115150,7 @@ var jOt = {
           label: a(`history.monthly`)
         }]);
       watch(p, value => {
-        h && clearTimeout(h), h = setTimeout(() => {
+        setIntervalResult && clearTimeout(setIntervalResult), setIntervalResult = setTimeout(() => {
           m.value = value.trim();
         }, 350);
       }), watch([d, f, m], () => {
@@ -115214,11 +115214,11 @@ var jOt = {
         return !computedResult.value && !O(e).readAt;
       }
       let j = ref(null),
-        ee = null;
+        setTimeoutResult = null;
       async function te(e) {
         try {
           let detail = await vm.detail(e.docId);
-          await navigator.clipboard.writeText(detail.content), ae(detail), j.value = e.docId, ee && clearTimeout(ee), ee = setTimeout(() => {
+          await navigator.clipboard.writeText(detail.content), ae(detail), j.value = e.docId, setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(() => {
             j.value = null;
           }, 2e3);
         } catch (e) {
@@ -115340,14 +115340,14 @@ var jOt = {
       let we = computed(() => v.value.length > 0 && v.value.every(item => be.value.has(item.docId)));
       function Te() {
         let e = new Map(be.value);
-        if (we.value) for (let t of v.value) e.delete(t.docId);else for (let t of v.value) {
+        if (we.value) for (let normalizeResult of v.value) e.delete(normalizeResult.docId);else for (let normalizeResult of v.value) {
           if (e.size >= 60) {
             Ai(a(`reportCc.summary.tooMany`, {
               max: 60
             }));
             break;
           }
-          e.set(t.docId, xe(t));
+          e.set(normalizeResult.docId, xe(normalizeResult));
         }
         be.value = e;
       }
@@ -116157,14 +116157,14 @@ var oMt = {
       }
       let computedResult = computed(() => l.value.map(_)),
         computedData = computed(() => l.value.some(item => item.status === `pending` || item.status === `processing`)),
-        S = null;
+        count = null;
       function C() {
-        w(), S = setInterval(() => {
+        w(), count = setInterval(() => {
           f(ce());
         }, 3e3);
       }
       function w() {
-        S &&= (clearInterval(S), null);
+        count &&= (clearInterval(count), null);
       }
       watch(computedData, value => {
         value ? C() : w();
@@ -116270,14 +116270,14 @@ var oMt = {
         counter.value > oe.value && (counter.value = oe.value, f(ce()));
       });
       let fe = 0,
-        pe = null;
+        setTimeoutResult = null;
       onUnmounted(() => {
-        pe && clearTimeout(pe);
+        setTimeoutResult && clearTimeout(setTimeoutResult);
       }), watch([T, E, O, k], ([e, t], [n, r]) => {
         counter.value = 1;
         let i = a(),
           o = ++fe;
-        pe && clearTimeout(pe), pe = setTimeout(async () => {
+        setTimeoutResult && clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(async () => {
           (await f(ce(1))) && o === fe && (t.trim() && t !== r && i(`report_query_success`, {
             query_kind: `keyword`,
             result_count: u.value
@@ -116386,7 +116386,7 @@ var oMt = {
           let r = {
             ...je.value
           };
-          for (let t of mapped) docStats[t] ? r[t] = docStats[t] : delete r[t];
+          for (let normalizeResult of mapped) docStats[normalizeResult] ? r[normalizeResult] = docStats[normalizeResult] : delete r[normalizeResult];
           je.value = r;
         } catch {}
       }
@@ -116397,13 +116397,13 @@ var oMt = {
       }), watch(Te, value => {
         value === `mine` && Ie();
       });
-      let L = null;
+      let onAutoSharedResult = null;
       onBeforeMount(() => {
-        L = vm.onAutoShared(() => {
+        onAutoSharedResult = vm.onAutoShared(() => {
           Ie();
         });
       }), onUnmounted(() => {
-        L?.();
+        onAutoSharedResult?.();
       });
       function Le(e) {
         setTimeout(e, 0);
@@ -116563,11 +116563,11 @@ var oMt = {
       function Ct(e) {
         e && !be(e.status) && (bt.value = e, vt.value = true);
       }
-      let wt = null;
+      let setIntervalResult = null;
       async function Tt(e) {
         if (!bt.value) return;
         let t = bt.value;
-        vt.value = false, (await m(t, e)) && (St.value = t.id, wt && clearTimeout(wt), wt = setTimeout(() => {
+        vt.value = false, (await m(t, e)) && (St.value = t.id, setIntervalResult && clearTimeout(setIntervalResult), setIntervalResult = setTimeout(() => {
           St.value = null;
         }, 2e3));
       }
@@ -116727,7 +116727,7 @@ var oMt = {
           page: `history`
         }), Jt = window.electronAPI?.reports?.onVisualReportStreamUpdate?.(on) ?? null, f(ce(1));
       }), onUnmounted(() => {
-        lt && clearTimeout(lt), wt && clearTimeout(wt), Kt && clearTimeout(Kt), qt && clearTimeout(qt), Jt?.(), Jt = null;
+        lt && clearTimeout(lt), setIntervalResult && clearTimeout(setIntervalResult), Kt && clearTimeout(Kt), qt && clearTimeout(qt), Jt?.(), Jt = null;
       }), onUnmounted(() => {
         w();
       }), (row, t) => (openBlock(), createElementBlock(`div`, {
@@ -117651,12 +117651,12 @@ var oMt = {
       }
       let h = computed(() => {
         let emptyItems = [];
-        for (let t of computedData.value.slice(0, counter.value)) {
-          let n = m(t.createdAt),
+        for (let normalizeResult of computedData.value.slice(0, counter.value)) {
+          let n = m(normalizeResult.createdAt),
             r = emptyItems[emptyItems.length - 1];
-          r?.label === n ? r.items.push(t) : emptyItems.push({
+          r?.label === n ? r.items.push(normalizeResult) : emptyItems.push({
             label: n,
-            items: [t]
+            items: [normalizeResult]
           });
         }
         return emptyItems;
@@ -117675,15 +117675,15 @@ var oMt = {
         });
       }
       function _(e) {
-        let t;
+        let normalizeResult;
         try {
           if (e.link) {
             let n = new URL(e.link);
-            n.protocol === `xiaohei-bot:` && n.hostname === `conversation` && (t = decodeURIComponent(n.pathname.slice(1)));
+            n.protocol === `xiaohei-bot:` && n.hostname === `conversation` && (normalizeResult = decodeURIComponent(n.pathname.slice(1)));
           }
         } catch {}
         i(`open-conversation`, {
-          conversationId: t,
+          conversationId: normalizeResult,
           notificationId: e.id
         });
       }
@@ -119404,7 +119404,7 @@ var LFt = defineComponent({
           let r = c(n, l.search);
           l.filtered.items.set(t, +!!r), r && e++;
         }
-        for (let [e, t] of s.value) for (let n of t) if (l.filtered.items.get(n) > 0) {
+        for (let [e, t] of s.value) for (let replaceResult of t) if (l.filtered.items.get(replaceResult) > 0) {
           l.filtered.groups.add(e);
           break;
         }
@@ -119833,15 +119833,15 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
       watch(() => a.contact?.id, () => {
         d.value = false, u.value = ``;
       });
-      let v = null;
+      let setIntervalResult = null;
       watch(() => a.contact?.id, value => {
-        v = value ? n() : null;
+        setIntervalResult = value ? n() : null;
       }, {
         flush: `sync`
       });
       function y() {
-        let e = v;
-        v = null, a.contact?.id && e?.(`bot_view_loaded`, {
+        let e = setIntervalResult;
+        setIntervalResult = null, a.contact?.id && e?.(`bot_view_loaded`, {
           panel: `wechat`,
           entity_id: a.contact.id,
           interaction: `explicit_open`
@@ -120265,8 +120265,8 @@ var bIt = {
         } = am(`bot`),
         _e = computed(() => {
           let e = new Set();
-          for (let t of pe.value) if (!t.isRead && t.link) try {
-            let n = new URL(t.link);
+          for (let normalizeResult of pe.value) if (!normalizeResult.isRead && normalizeResult.link) try {
+            let n = new URL(normalizeResult.link);
             n.protocol === `xiaohei-bot:` && n.hostname === `conversation` && n.searchParams.get(`category`) === `confirm` && e.add(decodeURIComponent(n.pathname.slice(1)));
           } catch {}
           return e;
@@ -123038,18 +123038,18 @@ var bIt = {
     url: Un().url(),
     template: $5
   }).superRefine((e, t) => {
-    let n;
+    let replaceResult;
     try {
-      n = new URL(e.url);
+      replaceResult = new URL(e.url);
     } catch {
       return;
     }
-    (n.origin !== `https://xiaoheiribao.com` || n.username || n.password) && t.addIssue({
+    (replaceResult.origin !== `https://xiaoheiribao.com` || replaceResult.username || replaceResult.password) && t.addIssue({
       code: Jn.custom,
       path: [`url`],
       message: `分享链接必须来自小白官方网站`
     });
-    let r = n.searchParams.getAll(`id`);
+    let r = replaceResult.searchParams.getAll(`id`);
     (r.length > 1 || r.length === 1 && r[0] !== e.id) && t.addIssue({
       code: Jn.custom,
       path: [`url`],
@@ -123342,8 +123342,8 @@ var Lzt = {
         _ = 0,
         y = 0,
         b = 0,
-        x,
-        S,
+        resolvedValue,
+        count,
         computedResult = computed(() => p.value ? i(`botTodos.details`) : i(`botTodos.title`)),
         computedData = computed({
           get: () => `${g.dueDate} ${g.dueTime || `18:00`}`,
@@ -123460,9 +123460,9 @@ var Lzt = {
         let t = {
           id: e.id
         };
-        for (let n of [`title`, `description`, `dueDate`, `dueTime`, `priority`]) {
-          let r = n === `title` ? g[n].trim() : g[n];
-          r !== (e[n] ?? ``) && (t[n] = r);
+        for (let replaceResult of [`title`, `description`, `dueDate`, `dueTime`, `priority`]) {
+          let r = replaceResult === `title` ? g[replaceResult].trim() : g[replaceResult];
+          r !== (e[replaceResult] ?? ``) && (t[replaceResult] = r);
         }
         let n = text => text.split(/[,，;；\s]+/).map(item => item.trim()).filter(Boolean),
           mapped = (e.assignees ?? [e.assignee]).map(item => item.email),
@@ -123486,9 +123486,9 @@ var Lzt = {
       }), watch(o, () => {
         s.value = [], A();
       }), onBeforeMount(() => {
-        x = window.electronAPI.todos.onChanged(N), S = Ni(`todo`, async () => d.value || m.value || h.value || u.value ? false : (await A(), p.value && (await j(p.value)), !f.value));
+        resolvedValue = window.electronAPI.todos.onChanged(N), count = Ni(`todo`, async () => d.value || m.value || h.value || u.value ? false : (await A(), p.value && (await j(p.value)), !f.value));
       }), onUnmounted(() => {
-        ++y, ++b, x?.(), S?.();
+        ++y, ++b, resolvedValue?.(), count?.();
       }), (e, t) => (openBlock(), createElementBlock(`aside`, {
         class: `bot-todo-panel`,
         "aria-label": unref(i)(`botTodos.title`)
@@ -124004,24 +124004,24 @@ var PBt = [`aria-label`],
               minute: `2-digit`
             })
           }]));
-          for (let t of a.value[u.value.conversationId] ?? []) {
-            if (t.sender === `system`) continue;
-            let n = e.get(t.id);
-            if (n && ![`pending`, `streaming`].includes(n.status) && [`pending`, `streaming`].includes(t.status ?? ``)) continue;
-            let joined = t.processItems.filter(i7).map(item => item.content).join(`
+          for (let normalizeResult of a.value[u.value.conversationId] ?? []) {
+            if (normalizeResult.sender === `system`) continue;
+            let n = e.get(normalizeResult.id);
+            if (n && ![`pending`, `streaming`].includes(n.status) && [`pending`, `streaming`].includes(normalizeResult.status ?? ``)) continue;
+            let joined = normalizeResult.processItems.filter(i7).map(item => item.content).join(`
 
 `),
               i = n?.content === n?.errorMessage ? `` : n?.content ?? ``;
-            e.set(t.id, {
-              id: t.id,
-              seq: t.seq,
-              authorBotId: t.authorBotId ?? null,
-              authorName: t.authorName ?? ``,
-              status: t.status ?? `complete`,
-              errorMessage: t.errorMessage,
-              content: t.content || (joined.length >= i.length ? joined : i),
+            e.set(normalizeResult.id, {
+              id: normalizeResult.id,
+              seq: normalizeResult.seq,
+              authorBotId: normalizeResult.authorBotId ?? null,
+              authorName: normalizeResult.authorName ?? ``,
+              status: normalizeResult.status ?? `complete`,
+              errorMessage: normalizeResult.errorMessage,
+              content: normalizeResult.content || (joined.length >= i.length ? joined : i),
               createdAt: n?.createdAt ?? ``,
-              time: t.time
+              time: normalizeResult.time
             });
           }
           return [...e.values()].sort((left, right) => left.seq - right.seq);
@@ -124330,25 +124330,25 @@ var PBt = [`aria-label`],
             }),
             isUser: row.authorType === `user`
           }]));
-          for (let t of a.value[computedResult.value] ?? []) {
-            if (t.sender === `system`) continue;
-            let n = e.get(t.id);
-            if (n && ![`pending`, `streaming`].includes(n.status) && [`pending`, `streaming`].includes(t.status ?? ``)) continue;
-            let joined = t.processItems.filter(i7).map(item => item.content).join(`
+          for (let normalizeResult of a.value[computedResult.value] ?? []) {
+            if (normalizeResult.sender === `system`) continue;
+            let n = e.get(normalizeResult.id);
+            if (n && ![`pending`, `streaming`].includes(n.status) && [`pending`, `streaming`].includes(normalizeResult.status ?? ``)) continue;
+            let joined = normalizeResult.processItems.filter(i7).map(item => item.content).join(`
 
 `),
               i = n?.content === n?.errorMessage ? `` : n?.content ?? ``;
-            e.set(t.id, {
-              id: t.id,
-              seq: t.seq,
-              authorBotId: t.authorBotId ?? null,
-              authorName: t.authorName ?? ``,
-              status: t.status ?? `complete`,
-              errorMessage: t.errorMessage ?? null,
-              content: t.content || (joined.length >= i.length ? joined : i),
-              createdAt: n?.createdAt ?? t.createdAt ?? ``,
-              time: t.time,
-              isUser: t.sender === `self`
+            e.set(normalizeResult.id, {
+              id: normalizeResult.id,
+              seq: normalizeResult.seq,
+              authorBotId: normalizeResult.authorBotId ?? null,
+              authorName: normalizeResult.authorName ?? ``,
+              status: normalizeResult.status ?? `complete`,
+              errorMessage: normalizeResult.errorMessage ?? null,
+              content: normalizeResult.content || (joined.length >= i.length ? joined : i),
+              createdAt: n?.createdAt ?? normalizeResult.createdAt ?? ``,
+              time: normalizeResult.time,
+              isUser: normalizeResult.sender === `self`
             });
           }
           return [...e.values()].filter(left => left.id !== computedData.value.id).sort((e, right) => e.seq - right.seq);
@@ -125328,9 +125328,9 @@ var _Ht = [`src`],
         let fallbackValue = p.value ?? (r.value.kind === `xiaohei` && !eventAlias.message.authorBotId ? r.value : undefined);
         fallbackValue && a(fallbackValue, computedResult.value);
       }
-      let h;
+      let setIntervalResult;
       function g(e) {
-        h &&= (e.preventDefault(), c(h), undefined);
+        setIntervalResult &&= (e.preventDefault(), c(setIntervalResult), undefined);
       }
       async function _() {
         try {
@@ -125376,7 +125376,7 @@ var _Ht = [`src`],
             default: H(() => [resolveComponent(unref(g7), {
               "aria-label": `@${f.value}`,
               disabled: !computedData.value,
-              onSelect: i[1] ||= e => $e(h) ? h.value = computedData.value : h = computedData.value
+              onSelect: i[1] ||= e => $e(setIntervalResult) ? setIntervalResult.value = computedData.value : setIntervalResult = computedData.value
             }, {
               default: H(() => [resolveComponent(unref(_a)), createElementVNode(`span`, null, toDisplayString(f.value), 1)]),
               _: 1
@@ -125818,13 +125818,13 @@ var kHt = {
               second: `2-digit`,
               hourCycle: `h23`
             }),
-            s;
+            trimStartResult;
           for (let c of computedResult.value) {
             let l = new Date(c.createdAt ?? c.analyticsCreatedAt ?? ``),
               time = l.getTime();
             if (!Number.isFinite(time)) continue;
-            let d = s?.start.toDateString() === l.toDateString();
-            if (!s || !d || time - s.end >= 3e5) {
+            let d = trimStartResult?.start.toDateString() === l.toDateString();
+            if (!trimStartResult || !d || time - trimStartResult.end >= 3e5) {
               let s = l.toDateString() === t.toDateString() ? `` : l.toDateString() === date.toDateString() ? startsWith ? `昨天` : `Yesterday` : new Intl.DateTimeFormat(i, {
                 ...(l.getFullYear() === t.getFullYear() ? {} : {
                   year: `numeric`
@@ -125838,7 +125838,7 @@ var kHt = {
               });
             }
             let parsed = Date.parse(c.completedAt ?? ``);
-            s = {
+            trimStartResult = {
               start: l,
               end: Number.isFinite(parsed) ? Math.max(time, parsed) : time
             };
@@ -125909,14 +125909,14 @@ var kHt = {
       }
       let St = computed(() => {
         let e = new Map();
-        for (let t of computedResult.value) {
-          if (t.sender !== `contact`) continue;
+        for (let normalizeResult of computedResult.value) {
+          if (normalizeResult.sender !== `contact`) continue;
           let n = false,
-            r;
-          for (let e of t.processItems) (e.kind === `thinking` || e.kind === `text`) && (n = true), ae(e) && (r = e.id);
-          e.set(t.id, {
+            requestAnimationFrameResult;
+          for (let e of normalizeResult.processItems) (e.kind === `thinking` || e.kind === `text`) && (n = true), ae(e) && (requestAnimationFrameResult = e.id);
+          e.set(normalizeResult.id, {
             hasReplyText: n,
-            lastVisibleItemId: r
+            lastVisibleItemId: requestAnimationFrameResult
           });
         }
         return e;
@@ -126017,22 +126017,22 @@ var kHt = {
       }
       let en = computed(() => {
           let e = new Map();
-          for (let t of Se.value) e.set(t.id, t.analyticsCreatedAt);
+          for (let normalizeResult of Se.value) e.set(normalizeResult.id, normalizeResult.analyticsCreatedAt);
           return e;
         }),
         tn = new Map(),
         nn = computed(() => {
           let e = new Map(),
             t = new Set([`xiaohei_create_team`, `xiaohei_resume_team`, `xiaohei_handoff_members`, `xiaohei_create_bot`, `xiaohei_update_bot`, `xiaohei_create_group`, `xiaohei_update_group`, `xiaohei_add_group_members`, `xiaohei_send_group_task`]);
-          for (let n of N.value) {
+          for (let replaceResult of N.value) {
             let r = new Set();
-            for (let e of n.processItems) {
-              if (e.kind !== `tool` || e.status !== `completed` || !t.has(e.toolName ?? ``) || !e.output) continue;
-              let i = `${n.id}:${e.id}:${e.output.length}`,
+            for (let normalizeResult of replaceResult.processItems) {
+              if (normalizeResult.kind !== `tool` || normalizeResult.status !== `completed` || !t.has(normalizeResult.toolName ?? ``) || !normalizeResult.output) continue;
+              let i = `${replaceResult.id}:${normalizeResult.id}:${normalizeResult.output.length}`,
                 a = tn.get(i);
               if (a === undefined) {
                 try {
-                  let parsed = JSON.parse(e.output.split(`
+                  let parsed = JSON.parse(normalizeResult.output.split(`
 
 结构化详情：
 `)[0]),
@@ -126046,7 +126046,7 @@ var kHt = {
               }
               a && r.add(a);
             }
-            e.set(n.id, h.value.filter(item => item.id !== C.value.id && r.has(item.id)));
+            e.set(replaceResult.id, h.value.filter(item => item.id !== C.value.id && r.has(item.id)));
           }
           return e;
         }),
@@ -130019,7 +130019,7 @@ function aqt() {
     _ = computed(() => n.value.fullAccess),
     v = 0,
     y = true,
-    b;
+    count;
   async function x(e) {
     let t = await e;
     if (!t.ok) throw Error(t.error.message);
@@ -130073,13 +130073,13 @@ function aqt() {
     try {
       let a = h.value;
       if (p.value) {
-        let t;
+        let normalizeResult;
         try {
-          t = JSON.parse(a);
+          normalizeResult = JSON.parse(a);
         } catch {
           throw Error(e(`xiaoheiBot.settings.mcp.invalidJson`));
         }
-        let n = t && typeof t == `object` ? t.mcpServers : null;
+        let n = normalizeResult && typeof normalizeResult == `object` ? normalizeResult.mcpServers : null;
         if (!n || typeof n != `object` || Array.isArray(n) || Object.keys(n).length !== 1 || !Object.hasOwn(n, p.value)) throw Error(e(`xiaoheiBot.settings.mcp.editNameHint`));
       }
       let o = await x(xiaoheiBot.manageMcp({
@@ -130135,7 +130135,7 @@ function aqt() {
     }
   }
   function A(options, items) {
-    if (y && n.value.accountId === options.accountId && _.value) for (let e of n.value.servers) e.enabled && items.includes(e.name) && k(e);
+    if (y && n.value.accountId === options.accountId && _.value) for (let normalizeResult of n.value.servers) normalizeResult.enabled && items.includes(normalizeResult.name) && k(normalizeResult);
   }
   function j(options) {
     return options.enabled ? l.value.has(JSON.stringify([n.value.accountId, options.name])) ? `connecting` : options.state?.status ?? `disconnected` : `disabled`;
@@ -130145,13 +130145,13 @@ function aqt() {
       i.value = e(`xiaoheiBot.settings.mcp.restart`);
       return;
     }
-    b = xiaoheiBot.onMcpChanged(() => {
+    count = xiaoheiBot.onMcpChanged(() => {
       C();
     }), C().then(() => {
       A(n.value, n.value.servers.filter(item => !item.state || item.state.status === `disconnected`).map(e => e.name));
     });
   }), onUnmounted(() => {
-    y = false, v++, b?.(), w();
+    y = false, v++, count?.(), w();
   }), {
     t: e,
     view: n,
@@ -130605,17 +130605,17 @@ function Dqt() {
     O = () => C(() => xiaoheiBot.selectSharedWorkspace(m()), e => {
       e && (v(), o.value = false, t.value = e, y(`MEMORY.md`));
     }),
-    k,
+    finallyResult,
     A,
     j = () => {
       b();
     };
   return onBeforeMount(() => {
-    b(), k = xiaoheiBot.onSharedWorkspaceChanged?.(j), window.addEventListener(`focus`, j), A = setInterval(() => {
+    b(), finallyResult = xiaoheiBot.onSharedWorkspaceChanged?.(j), window.addEventListener(`focus`, j), A = setInterval(() => {
       document.visibilityState === `visible` && b();
     }, 5e3);
   }), onMounted(() => {
-    v(), g = true, ++h, k?.(), clearInterval(A), window.removeEventListener(`focus`, j);
+    v(), g = true, ++h, finallyResult?.(), clearInterval(A), window.removeEventListener(`focus`, j);
   }), {
     data: t,
     selected: computedResult,
@@ -131102,22 +131102,22 @@ var Oqt = {
           save: te,
           saveCount: M
         } = iqt(r, d, f),
-        ne = null;
+        setTimeoutResult = null;
       function N() {
         if (!r.value || i.value !== `models`) {
-          ne = null;
+          setTimeoutResult = null;
           return;
         }
         let selector = document.querySelector(`.bot-settings-dialog [data-model-directory]`);
         if (!o.value || !selector?.getBoundingClientRect().height) return;
-        let t = ne;
-        ne = null, t?.(`bot_view_loaded`, {
+        let t = setTimeoutResult;
+        setTimeoutResult = null, t?.(`bot_view_loaded`, {
           panel: `models`,
           interaction: `explicit_open`
         });
       }
       watch([r, i], ([e, n], [r, i]) => {
-        ne = e && n === `models` && (!r || i !== n) ? t() : null, ut(N);
+        setTimeoutResult = e && n === `models` && (!r || i !== n) ? t() : null, ut(N);
       }, {
         flush: `post`
       }), watch(o, () => {
@@ -131873,7 +131873,7 @@ function AJt(items, t) {
     u = 0,
     d = false,
     f = false,
-    p;
+    setTimeoutResult;
   function m() {
     return {
       content: items.draft.value,
@@ -131909,10 +131909,10 @@ function AJt(items, t) {
     }));
   }
   function g() {
-    clearTimeout(p), l && !items.draftRestoring.value && h(l, m());
+    clearTimeout(setTimeoutResult), l && !items.draftRestoring.value && h(l, m());
   }
   watch([items.draft, items.selectedMentions, items.pendingAttachments], () => {
-    d || items.draftRestoring.value || !l || (r.set(l, m()), s(l, r.get(l) ?? A7()), clearTimeout(p), p = setTimeout(g, 250));
+    d || items.draftRestoring.value || !l || (r.set(l, m()), s(l, r.get(l) ?? A7()), clearTimeout(setTimeoutResult), setTimeoutResult = setTimeout(g, 250));
   }, {
     deep: true,
     flush: `sync`
@@ -131944,7 +131944,7 @@ function AJt(items, t) {
   });
   function v(n, i) {
     let a = n === l && !items.draftRestoring.value ? m() : r.get(n);
-    a && j7(a) === j7(i) && (n === l && clearTimeout(p), h(n, A7(), j7(i)), s(n, A7()), n === l && (u += 1, items.draftRestoring.value = false, d = true, t.releaseAttachmentObjectUrls(items.pendingAttachments.value), items.pendingAttachments.value = [], t.resetComposerContent(), d = false));
+    a && j7(a) === j7(i) && (n === l && clearTimeout(setTimeoutResult), h(n, A7(), j7(i)), s(n, A7()), n === l && (u += 1, items.draftRestoring.value = false, d = true, t.releaseAttachmentObjectUrls(items.pendingAttachments.value), items.pendingAttachments.value = [], t.resetComposerContent(), d = false));
   }
   return onMounted(() => {
     g(), f = true, u += 1;
@@ -131972,7 +131972,7 @@ function jJt(event) {
     } = event,
     u = ref(false),
     d = false,
-    f = null,
+    count = null,
     weakMap = new WeakMap(),
     m = new Set(),
     computedResult = computed(() => c.value[s.value]),
@@ -132094,7 +132094,7 @@ function jJt(event) {
     });
   }
   function te(e) {
-    for (let t of e) URL.revokeObjectURL(t.url), m.delete(t.url);
+    for (let normalizeResult of e) URL.revokeObjectURL(normalizeResult.url), m.delete(normalizeResult.url);
   }
   function M(e) {
     let t = e.currentTarget;
@@ -132194,15 +132194,15 @@ function jJt(event) {
   async function pe(e) {
     let t = fe(e);
     if (t) try {
-      await navigator.clipboard.writeText(t), n.value = e.id, f !== null && window.clearTimeout(f), f = window.setTimeout(() => {
-        n.value = ``, f = null;
+      await navigator.clipboard.writeText(t), n.value = e.id, count !== null && window.clearTimeout(count), count = window.setTimeout(() => {
+        n.value = ``, count = null;
       }, 1400);
     } catch {
       n.value = ``;
     }
   }
   return onUnmounted(() => {
-    d = true, f !== null && window.clearTimeout(f), m.forEach(item => URL.revokeObjectURL(item)), m.clear();
+    d = true, count !== null && window.clearTimeout(count), m.forEach(item => URL.revokeObjectURL(item)), m.clear();
   }), {
     attachmentsImporting: u,
     selectFolders: O,
@@ -132321,7 +132321,7 @@ function NJt(event) {
       contactPanelWidth: n,
       isContactPanelResizing: r
     } = event,
-    i = null,
+    count = null,
     a = 0,
     o = 292;
   function s(e) {
@@ -132341,17 +132341,17 @@ function NJt(event) {
     } catch {}
   }
   function u(e) {
-    if (e.button !== 0 || i !== null) return;
+    if (e.button !== 0 || count !== null) return;
     let t = e.currentTarget;
-    i = e.pointerId, a = e.clientX, o = n.value, r.value = true, t.setPointerCapture(e.pointerId);
+    count = e.pointerId, a = e.clientX, o = n.value, r.value = true, t.setPointerCapture(e.pointerId);
   }
   function d(e) {
-    e.pointerId === i && (n.value = s(o + e.clientX - a));
+    e.pointerId === count && (n.value = s(o + e.clientX - a));
   }
   function f(e) {
-    if (i === null || e instanceof PointerEvent && e.pointerId !== i) return;
-    let n = i;
-    i = null, r.value = false;
+    if (count === null || e instanceof PointerEvent && e.pointerId !== count) return;
+    let n = count;
+    count = null, r.value = false;
     let a = t.value;
     n !== null && a?.hasPointerCapture(n) && a.releasePointerCapture(n), c();
   }
@@ -132407,7 +132407,7 @@ function PJt(items) {
     let t = v.value;
     if (!t || e.length === 0) return;
     let n = new Map(u.value.map(item => [item.eventId, item]));
-    for (let r of e) r.conversationId === t && n.set(r.eventId, r);
+    for (let requestAnimationFrameResult of e) requestAnimationFrameResult.conversationId === t && n.set(requestAnimationFrameResult.eventId, requestAnimationFrameResult);
     let r = [...n.values()].sort((left, right) => left.globalSeq - right.globalSeq);
     r.length > 1e3 ? (d.value = true, u.value = r.slice(-1e3)) : u.value = r, !y.value && u.value.length > 0 && (y.value = u.value.at(-1)?.eventId ?? ``);
   }
@@ -132659,12 +132659,12 @@ function FJt(event, t) {
       pendingAttachments: v,
       selectedMentions: y
     } = event,
-    b = null;
+    count = null;
   function x() {
-    return b?.conversationId === c.value.id && p.value.includes(b.prompt) ? `summary` : undefined;
+    return count?.conversationId === c.value.id && p.value.includes(count.prompt) ? `summary` : undefined;
   }
   watch(p, items => {
-    b && !items.includes(b.prompt) && (b = null);
+    count && !items.includes(count.prompt) && (count = null);
   }, {
     flush: `sync`
   });
@@ -132777,8 +132777,8 @@ function FJt(event, t) {
   function te() {
     let e = d.value;
     if (!e) return;
-    for (let t of Array.from(e.childNodes)) t.nodeType === Node.TEXT_NODE && t.textContent === `` && t.remove();
-    for (let t of e.querySelectorAll(`[data-composer-trailing-break]`)) (t !== e.lastChild || t.previousSibling?.nodeName !== `BR`) && t.remove();
+    for (let normalizeResult of Array.from(e.childNodes)) normalizeResult.nodeType === Node.TEXT_NODE && normalizeResult.textContent === `` && normalizeResult.remove();
+    for (let normalizeResult of e.querySelectorAll(`[data-composer-trailing-break]`)) (normalizeResult !== e.lastChild || normalizeResult.previousSibling?.nodeName !== `BR`) && normalizeResult.remove();
     if (e.textContent === `` && !e.querySelector(`[data-composer-mention-token], [data-composer-line-break]`) && e.querySelectorAll(`br`).length <= 1) {
       let t = document.activeElement === e;
       e.replaceChildren(), t && ge({
@@ -132794,34 +132794,34 @@ function FJt(event, t) {
     p.value = ee().map(item => item.markdownText).join(``);
     let emptyItems = [],
       r = new Set();
-    for (let t of Array.from(e.querySelectorAll(`[${f7}]`))) {
-      let fallbackValue = t.getAttribute(`data-composer-mention-token`) ?? ``,
+    for (let normalizeResult of Array.from(e.querySelectorAll(`[${f7}]`))) {
+      let fallbackValue = normalizeResult.getAttribute(`data-composer-mention-token`) ?? ``,
         i = w.get(fallbackValue);
       i && !r.has(fallbackValue) && (r.add(fallbackValue), emptyItems.push(i));
     }
     y.value = emptyItems;
   }
   function M(items, t) {
-    b = null;
+    count = null;
     let n = d.value;
     if (!n) return;
     n.replaceChildren(), w.clear();
     let r = new Map(t.map(item => [item.token, item])),
       i = 0;
-    for (let t of items.matchAll(new RegExp(ip.source, `g`))) {
-      n.append(document.createTextNode(items.slice(i, t.index)));
-      let a = r.get(t[1]);
-      a ? (w.set(a.token, a), n.append(he(a))) : n.append(document.createTextNode(t[0])), i = (t.index ?? 0) + t[0].length;
+    for (let normalizeResult of items.matchAll(new RegExp(ip.source, `g`))) {
+      n.append(document.createTextNode(items.slice(i, normalizeResult.index)));
+      let a = r.get(normalizeResult[1]);
+      a ? (w.set(a.token, a), n.append(he(a))) : n.append(document.createTextNode(normalizeResult[0])), i = (normalizeResult.index ?? 0) + normalizeResult[0].length;
     }
     n.append(document.createTextNode(items.slice(i))), p.value = items, y.value = [...t], ie(), ut(k);
   }
   function ne() {
-    b = null, d.value?.replaceChildren(), p.value = ``, y.value = [], w.clear(), ie(), ut(k);
+    count = null, d.value?.replaceChildren(), p.value = ``, y.value = [], w.clear(), ie(), ut(k);
   }
   function N(e) {
     te();
     let t = p.value.trim() === `/` ? `` : p.value.trimEnd();
-    M(t ? `${t}\n\n${e}` : e, t ? [...y.value] : []), e === n(`xiaoheiBot.quickCommands.summary.prompt`) && (b = {
+    M(t ? `${t}\n\n${e}` : e, t ? [...y.value] : []), e === n(`xiaoheiBot.quickCommands.summary.prompt`) && (count = {
       conversationId: c.value.id,
       prompt: e
     }), ut(() => {
@@ -132836,7 +132836,7 @@ function FJt(event, t) {
   }
   function re() {
     let e = d.value;
-    if (e) for (let t of Array.from(e.querySelectorAll(`[${f7}]`))) t.remove();
+    if (e) for (let normalizeResult of Array.from(e.querySelectorAll(`[${f7}]`))) normalizeResult.remove();
     w.clear(), te();
   }
   function ie() {
@@ -132851,8 +132851,8 @@ function FJt(event, t) {
   }
   function oe(e, t) {
     let n = 0;
-    for (let r of t) try {
-      if (e.comparePoint(r.end.node, r.end.offset) > 0) break;
+    for (let requestAnimationFrameResult of t) try {
+      if (e.comparePoint(requestAnimationFrameResult.end.node, requestAnimationFrameResult.end.offset) > 0) break;
       n += 1;
     } catch {
       break;
@@ -132977,15 +132977,15 @@ function FJt(event, t) {
       parts = e.replace(/\r\n?/g, `
 `).split(`
 `),
-      s = null;
-    for (let [e, t] of parts.entries()) if (t && (s = document.createTextNode(t), documentFragment.append(s)), e < parts.length - 1) {
+      trimStartResult = null;
+    for (let [e, t] of parts.entries()) if (t && (trimStartResult = document.createTextNode(t), documentFragment.append(trimStartResult)), e < parts.length - 1) {
       let element = document.createElement(`br`);
-      element.setAttribute(`data-composer-line-break`, ``), s = element, documentFragment.append(element);
+      element.setAttribute(`data-composer-line-break`, ``), trimStartResult = element, documentFragment.append(element);
     }
-    s && (i.insertNode(documentFragment), te(), ge(s.nodeType === Node.TEXT_NODE ? {
-      node: s,
-      offset: s.textContent?.length ?? 0
-    } : A(s, true)), k(), _e());
+    trimStartResult && (i.insertNode(documentFragment), te(), ge(trimStartResult.nodeType === Node.TEXT_NODE ? {
+      node: trimStartResult,
+      offset: trimStartResult.textContent?.length ?? 0
+    } : A(trimStartResult, true)), k(), _e());
   }
   function ye(e) {
     let t = d.value,
@@ -133720,11 +133720,11 @@ function zJt(event, t) {
           return;
         }
         let a = new Map();
-        for (let e of messages.data.messages) {
-          let t = n(e);
+        for (let normalizeResult of messages.data.messages) {
+          let t = n(normalizeResult);
           a.set(t.id, t);
         }
-        for (let t of i.value[e] ?? []) a.set(t.id, t);
+        for (let normalizeResult of i.value[e] ?? []) a.set(normalizeResult.id, normalizeResult);
         i.value = {
           ...i.value,
           [e]: [...a.values()].sort((left, right) => left.seq - right.seq)
@@ -133927,9 +133927,9 @@ function VJt(items, event) {
     let defaultModel = c.value.defaultModel,
       t = defaultModel ? k(defaultModel.providerId, defaultModel.modelId) : `xiaohei-bot-cloud/deepseek-flash`;
     if (A(t)) return t;
-    for (let e of computedResult.value) {
-      let t = e.models[0];
-      if (t) return k(e.id, t.id);
+    for (let normalizeResult of computedResult.value) {
+      let t = normalizeResult.models[0];
+      if (t) return k(normalizeResult.id, t.id);
     }
     return ``;
   }
@@ -134032,11 +134032,11 @@ function VJt(items, event) {
   }
   return watch([p, () => c.value.defaultModel], () => {
     let e = oe();
-    for (let t of [h, l]) {
-      let fallbackValue = t.modelRef.startsWith(`xiaohei-bot-cloud/`) || t.modelRef.startsWith(`xiaohei-bot-glm-cloud/`);
-      (!t.modelRef || fallbackValue) && !A(t.modelRef) && (t.modelRef = e);
-      let r = A(t.modelRef);
-      r && (t.thinkingLevel = te(t.thinkingLevel, r.model.thinkingLevels));
+    for (let normalizeResult of [h, l]) {
+      let fallbackValue = normalizeResult.modelRef.startsWith(`xiaohei-bot-cloud/`) || normalizeResult.modelRef.startsWith(`xiaohei-bot-glm-cloud/`);
+      (!normalizeResult.modelRef || fallbackValue) && !A(normalizeResult.modelRef) && (normalizeResult.modelRef = e);
+      let r = A(normalizeResult.modelRef);
+      r && (normalizeResult.thinkingLevel = te(normalizeResult.thinkingLevel, r.model.thinkingLevels));
     }
   }), watch(() => h.modelRef, () => {
     let fallbackValue = C.value?.model.thinkingLevels ?? [`off`];
@@ -134381,7 +134381,7 @@ function WJt(e) {
     l = 0,
     u = 0,
     d = false,
-    f,
+    count,
     p = false,
     m = Promise.resolve(),
     computedResult = computed(() => i.value && e.active()),
@@ -134508,7 +134508,7 @@ function WJt(e) {
   }, {
     immediate: true
   }), watch([computedResult, computedData], ([e, t]) => {
-    clearInterval(f), f = undefined, e && t && (f = setInterval(() => {
+    clearInterval(count), count = undefined, e && t && (count = setInterval(() => {
       x();
     }, 1200));
   }, {
@@ -134516,7 +134516,7 @@ function WJt(e) {
   }), watch(() => r.value?.taskStatus, (value, t) => {
     value === `success` && [`queued`, `running`].includes(t ?? ``) && counter.value === 3 && computedResult.value && b(4);
   }), et(() => {
-    l++, clearInterval(f);
+    l++, clearInterval(count);
   }), {
     state: r,
     visible: computedResult,
@@ -134929,7 +134929,7 @@ function KJt() {
     o = ref(Date.now()),
     s = 0,
     c = false,
-    l,
+    setTimeoutResult,
     computedResult = computed(() => r.value ? q5(r.value) : ``),
     computedData = computed(() => n.value.bindings.find(item => item.botId === computedResult.value)),
     f = computed(() => n.value.login?.botId === computedResult.value ? n.value.login : null),
@@ -134986,11 +134986,11 @@ function KJt() {
     } : {}).catch(() => {}), n.value.login = null;
   }
   return onBeforeMount(() => {
-    h(), l = setInterval(() => {
+    h(), setTimeoutResult = setInterval(() => {
       o.value = Date.now(), h();
     }, 1500);
   }), onMounted(() => {
-    l && clearInterval(l), _();
+    setTimeoutResult && clearInterval(setTimeoutResult), _();
   }), {
     contact: r,
     binding: computedData,
@@ -135042,7 +135042,7 @@ function YJt(e = {}) {
       },
       emptyItems = [],
       o = () => {
-        for (let e of emptyItems) e();
+        for (let normalizeResult of emptyItems) normalizeResult();
         emptyItems.length = 0;
       },
       s = window.setTimeout(i, n);
@@ -135201,7 +135201,7 @@ function ZJt(e = () => true, t = e) {
       conversationStats: ct
     } = u,
     lt = 0,
-    Y = null,
+    onEventResult = null,
     {
       startContactPanelResize: dt,
       moveContactPanelResize: ft,
@@ -135444,7 +135444,7 @@ function ZJt(e = () => true, t = e) {
           return (item.status === `pending` || item.status === `streaming`) && r?.content && (n.content = r.content), (item.status === `pending` || item.status === `streaming`) && r?.processItems.length && (n.processItems = r.processItems), n;
         }),
         c = new Map((t[a] ?? []).map(item => [item.id, item]));
-      for (let e of mapped) c.set(e.id, e);
+      for (let normalizeResult of mapped) c.set(normalizeResult.id, normalizeResult);
       r[a] = [...c.values()].sort((left, right) => left.seq - right.seq), i[a] = n[a] ?? {
         ...(options.messagePageInfo?.[a] ?? {
           hasMore: false,
@@ -135462,18 +135462,18 @@ function ZJt(e = () => true, t = e) {
     (!found || found.sidebarHiddenAt) && (f.value = nt.value.find(item => !item.sidebarHiddenAt)?.id ?? ``);
   }
   let pn = null,
-    mn = null;
+    finallyResult = null;
   function hn() {
-    return mn ||= Cn().finally(() => {
-      mn = null;
-    }), mn;
+    return finallyResult ||= Cn().finally(() => {
+      finallyResult = null;
+    }), finallyResult;
   }
   function gn() {
-    return mn ||= Cn({
+    return finallyResult ||= Cn({
       quiet: true
     }).finally(() => {
-      mn = null;
-    }), mn;
+      finallyResult = null;
+    }), finallyResult;
   }
   async function _n(e) {
     let t = n();
@@ -135560,7 +135560,7 @@ function ZJt(e = () => true, t = e) {
     np.count(`deltaFlushes`);
     let e = [...En.values()];
     En.clear();
-    for (let t of e) jn(t);
+    for (let normalizeResult of e) jn(normalizeResult);
   }
   function An(e) {
     if (np.count(`runtimeEvents`), e.type !== `process-item-delta`) {
@@ -135638,7 +135638,7 @@ function ZJt(e = () => true, t = e) {
     if (t.type === `cloud-catalog-updated`) {
       let found = t.bots.find(item => item.id === dr.value.botId);
       h.value && found && G.identityVersion === dr.value.identityVersion && (G.modelRef === dr.value.modelRef && found.providerId && found.modelId && (G.modelRef = `${found.providerId}/${found.modelId}`), G.identityVersion = found.identityVersion), w.value = t.cloud, J.value = t.providers.map(M7), st.value = Object.fromEntries(t.bots.map(item => [item.id, item]));
-      for (let e of t.conversations) ln(e);
+      for (let normalizeResult of t.conversations) ln(normalizeResult);
       return;
     }
     if (t.type === `directory-updated`) {
@@ -135693,12 +135693,12 @@ function ZJt(e = () => true, t = e) {
     rr = computed(() => {
       let e = new Map(),
         fallbackValue = at.value[f.value] ?? [];
-      for (let n of Qn.value) {
-        let found = fallbackValue.find(item => item.id === n.sourceMessageId);
+      for (let replaceResult of Qn.value) {
+        let found = fallbackValue.find(item => item.id === replaceResult.sourceMessageId);
         if (!found) continue;
         let i = fallbackValue.find(item => item.seq > found.seq && item.sender === `self`),
-          a = fallbackValue.find(item => item.seq >= found.seq && (!i || item.seq < i.seq) && item.sender === `contact` && item.authorBotId === n.ownerBotId);
-        a && e.set(a.id, [...(e.get(a.id) ?? []), n]);
+          a = fallbackValue.find(item => item.seq >= found.seq && (!i || item.seq < i.seq) && item.sender === `contact` && item.authorBotId === replaceResult.ownerBotId);
+        a && e.set(a.id, [...(e.get(a.id) ?? []), replaceResult]);
       }
       return e;
     });
@@ -135727,11 +135727,11 @@ function ZJt(e = () => true, t = e) {
   }
   let sr = computed(() => {
     let e = new Map();
-    for (let t of ir.value) {
-      let n = (at.value[t.id] ?? []).filter(item => item.sender !== `system` && (item.content.trim() || [`pending`, `streaming`, `failed`, `cancelled`].includes(item.status ?? ``))).length,
-        r = Math.max(t.replyCount, n);
-      r > 0 && e.set(t.sourceMessageId, {
-        id: t.id,
+    for (let normalizeResult of ir.value) {
+      let n = (at.value[normalizeResult.id] ?? []).filter(item => item.sender !== `system` && (item.content.trim() || [`pending`, `streaming`, `failed`, `cancelled`].includes(item.status ?? ``))).length,
+        r = Math.max(normalizeResult.replyCount, n);
+      r > 0 && e.set(normalizeResult.sourceMessageId, {
+        id: normalizeResult.id,
         replyCount: r
       });
     }
@@ -136013,12 +136013,12 @@ function ZJt(e = () => true, t = e) {
   }
   let Da = computed(() => {
       let emptyItems = [],
-        t = [],
+        normalizeResult = [],
         n = () => {
-          emptyItems.push(...Ea(t)), t = [];
+          emptyItems.push(...Ea(normalizeResult)), normalizeResult = [];
         },
         r = [...Ki.value, ...(wa.value[f.value] ?? [])].sort((left, right) => left.seq - right.seq);
-      for (let e of r) e.sender === `self` && (e.deliveryMode ?? `normal`) === `normal` && t.length > 0 && n(), t.push(e);
+      for (let e of r) e.sender === `self` && (e.deliveryMode ?? `normal`) === `normal` && normalizeResult.length > 0 && n(), normalizeResult.push(e);
       return n(), emptyItems;
     }),
     Oa = computed(() => {
@@ -136069,9 +136069,9 @@ function ZJt(e = () => true, t = e) {
     Ma = computed(() => Object.values(E.value[f.value] ?? {}).sort((left, right) => left.order - right.order)),
     Na = computed(() => {
       let e = [...Ma.value];
-      for (let t of computedData.value) e.some(item => item.botId === t.ownerBotId) || e.push({
-        botId: t.ownerBotId,
-        botName: t.ownerName,
+      for (let normalizeResult of computedData.value) e.some(item => item.botId === normalizeResult.ownerBotId) || e.push({
+        botId: normalizeResult.ownerBotId,
+        botName: normalizeResult.ownerName,
         stage: `thinking`,
         order: e.length
       });
@@ -136372,9 +136372,9 @@ function ZJt(e = () => true, t = e) {
       providerDialogOpen: ee
     }), go = Ni(`bot_default_roles`, _o, {
       active: e
-    }), window.addEventListener(`focus`, _o), window.addEventListener(`focus`, vo), window.addEventListener(`online`, vo), window.addEventListener(`online`, _o), window.addEventListener(`focus`, Sn), window.addEventListener(`blur`, vn), vn(), Y = window.electronAPI.xiaoheiBot.onEvent(An), hn(), e() && xn();
+    }), window.addEventListener(`focus`, _o), window.addEventListener(`focus`, vo), window.addEventListener(`online`, vo), window.addEventListener(`online`, _o), window.addEventListener(`focus`, Sn), window.addEventListener(`blur`, vn), vn(), onEventResult = window.electronAPI.xiaoheiBot.onEvent(An), hn(), e() && xn();
   }), onUnmounted(() => {
-    go?.(), window.removeEventListener(`focus`, _o), window.removeEventListener(`focus`, vo), window.removeEventListener(`online`, vo), window.removeEventListener(`online`, _o), window.removeEventListener(`focus`, Sn), window.removeEventListener(`blur`, vn), window.electronAPI.xiaoheiBot.setVisibleConversation(null), Y?.(), Y = null, kn();
+    go?.(), window.removeEventListener(`focus`, _o), window.removeEventListener(`focus`, vo), window.removeEventListener(`online`, vo), window.removeEventListener(`online`, _o), window.removeEventListener(`focus`, Sn), window.removeEventListener(`blur`, vn), window.electronAPI.xiaoheiBot.setVisibleConversation(null), onEventResult?.(), onEventResult = null, kn();
   }), {
     tutorial: mo,
     growthBotReady: s,
@@ -137496,7 +137496,7 @@ var KYt = {
         C = ref(null),
         w = ref(false),
         active = itemsAlias.active,
-        E = null,
+        count = null,
         computedResult = computed(() => y.value ? counter.value : Hw(_.value?.balance ?? 0, b.value)),
         computedData = computed(() => B7(x.value)),
         k = computed(() => !x.value || ![`active`, `testing`].includes(x.value.status) ? null : computedData.value?.component || null),
@@ -137631,11 +137631,11 @@ var KYt = {
         let t = value && !active;
         active = value, t && ae();
       }), onBeforeMount(() => {
-        E = Ni(`toolbox`, ae, {
+        count = Ni(`toolbox`, ae, {
           active: () => itemsAlias.active
         }), ie();
       }), onMounted(() => {
-        E?.();
+        count?.();
       }), (e, t) => (openBlock(), createElementBlock(`div`, {
         ref_key: `toolboxShellRef`,
         ref: S,
@@ -137689,7 +137689,7 @@ function X7() {
   return Array.from(Y7).some(item => item.hasUnsavedChanges());
 }
 async function nXt() {
-  for (let e of Array.from(Y7)) if (e.hasUnsavedChanges() && !(await e.confirmLeave())) return false;
+  for (let normalizeResult of Array.from(Y7)) if (normalizeResult.hasUnsavedChanges() && !(await normalizeResult.confirmLeave())) return false;
   return true;
 }
 var rXt = {
@@ -137771,7 +137771,7 @@ var Q7 = {
   n9 = ref(0),
   r9 = ref(false),
   i9 = ref([]),
-  a9 = null;
+  onUnlockedResult = null;
 function oXt(e, t) {
   return {
     bronze: t(`composables.badges.bronze`),
@@ -137813,9 +137813,9 @@ function cXt() {
   }
   let computedResult = computed(() => i9.value.length > 0);
   return onBeforeMount(() => {
-    a9 ||= Q7.onUnlocked(n), t();
+    onUnlockedResult ||= Q7.onUnlocked(n), t();
   }), onUnmounted(() => {
-    a9 &&= (a9(), null);
+    onUnlockedResult &&= (onUnlockedResult(), null);
   }), {
     badges: $7,
     categories: e9,
@@ -138116,7 +138116,7 @@ function FXt(e, t, n, r, i, a) {
     color: r.sub,
     align: `right`
   });
-  for (let t of n) r8(e, o, a - 20 + 2, 20, 20, 5, t), o += 25;
+  for (let normalizeResult of n) r8(e, o, a - 20 + 2, 20, 20, 5, normalizeResult), o += 25;
 }
 function IXt(e, t, n, r, i, a) {
   $6(e, t.medalsTitle, r, i, {
@@ -138350,7 +138350,7 @@ var zXt = {
         S = Ie(null),
         C = ref(false),
         w = Ie(new Map()),
-        T,
+        onEventResult,
         E = 0;
       function D(e = new Date()) {
         return e.getDate() <= 7 ? fW(dW(e), -1) : dW(e);
@@ -138443,18 +138443,18 @@ var zXt = {
           o = f.value,
           s = r(`profile.insights.unitDays`),
           m,
-          h,
+          setIntervalResult,
           g = n,
           _,
           v,
-          y,
-          C;
+          setTimeoutResult,
+          count;
         if (c.value === `month`) {
           let n = _W(e, l.value),
             i = j(l.value);
           m = r(`profile.share.eyebrowMonth`, {
             month: A(l.value)
-          }), h = o ? n.activeDays > 0 ? r(`profile.share.headlineMonth`, {
+          }), setIntervalResult = o ? n.activeDays > 0 ? r(`profile.share.headlineMonth`, {
             month: i,
             days: n.activeDays
           }) : r(`profile.share.headlineMonthEmpty`, {
@@ -138473,20 +138473,20 @@ var zXt = {
             label: r(`profile.share.statReports`),
             value: te(n.reports.total),
             unit: r(`profile.insights.unitReports`)
-          }, ae(n.savedMinutes, r(`profile.share.statSaved`))], v = GGe(e, l.value, date), y = r(`profile.share.monthGridTitle`, {
+          }, ae(n.savedMinutes, r(`profile.share.statSaved`))], v = GGe(e, l.value, date), setTimeoutResult = r(`profile.share.monthGridTitle`, {
             month: i
-          }), C = o && n.peakDay ? r(`profile.share.monthPeak`, {
+          }), count = o && n.peakDay ? r(`profile.share.monthPeak`, {
             date: ee(n.peakDay.date),
             count: te(n.peakDay.records)
           }) : r(`profile.share.gridCaptionPlain`);
         } else {
           c.value === `milestone` && u.value ? (m = r(`profile.share.eyebrowMilestone`, {
             date: n
-          }), h = r(u.value.type === `activeDays` ? `profile.share.headlineActiveDays` : `profile.share.headlineReports`, {
+          }), setIntervalResult = r(u.value.type === `activeDays` ? `profile.share.headlineActiveDays` : `profile.share.headlineReports`, {
             value: te(u.value.value)
           })) : (m = i.firstDate ? r(`profile.share.eyebrowCard`, {
             date: i.firstDate
-          }) : r(`profile.share.eyebrowCardPlain`), h = o && i.activeDays > 0 ? r(`profile.share.headlineCard`, {
+          }) : r(`profile.share.eyebrowCardPlain`), setIntervalResult = o && i.activeDays > 0 ? r(`profile.share.headlineCard`, {
             days: te(i.activeDays)
           }) : r(`profile.share.headlineCardPlain`)), _ = [{
             label: r(`profile.insights.activeDays`),
@@ -138502,9 +138502,9 @@ var zXt = {
             unit: s
           }], v = yW(e, l9, date);
           let filtered = v.cells.filter(item => item.level >= 0);
-          y = r(`profile.insights.recentWeeks`, {
+          setTimeoutResult = r(`profile.insights.recentWeeks`, {
             weeks: l9
-          }), C = o ? r(`profile.share.recentCaption`, {
+          }), count = o ? r(`profile.share.recentCaption`, {
             total: filtered.length,
             active: filtered.filter(item => item.records > 0).length
           }) : r(`profile.share.gridCaptionPlain`);
@@ -138521,7 +138521,7 @@ var zXt = {
         });
         return {
           eyebrow: m,
-          headline: h,
+          headline: setIntervalResult,
           dateLabel: g,
           userName: d.value && a.value?.nickname?.trim() || null,
           subtitle: (d.value ? a.value?.jobTitle?.trim() : ``) || r(`leaderboard.card.slogan`),
@@ -138530,8 +138530,8 @@ var zXt = {
           qr: p.value ? S.value : null,
           stats: o ? _ : null,
           grid: v,
-          gridTitle: y,
-          gridCaption: C,
+          gridTitle: setTimeoutResult,
+          gridCaption: count,
           medalsTitle: r(`profile.share.medalsTitle`, {
             year: YU.value?.year ?? date.getFullYear()
           }),
@@ -138551,9 +138551,9 @@ var zXt = {
           let e = oe();
           if (e) {
             v.value && s9(v.value, N.value, e);
-            for (let t of o9) {
-              let n = y.get(t.id);
-              n && s9(n, t, e, dZt);
+            for (let normalizeResult of o9) {
+              let n = y.get(normalizeResult.id);
+              n && s9(n, normalizeResult, e, dZt);
             }
           }
         });
@@ -138602,7 +138602,7 @@ var zXt = {
             if (!t) throw Error(`empty image`);
             await navigator.clipboard.write([new ClipboardItem({
               "image/png": t
-            })]), g.value = true, clearTimeout(T), T = setTimeout(() => {
+            })]), g.value = true, clearTimeout(onEventResult), onEventResult = setTimeout(() => {
               g.value = false;
             }, 2400), Oi(r(`profile.share.copied`)), trackActionEvent(`feature_map_invite_result`, {
               entry: `profile_card_copy_${c.value}`
@@ -138651,7 +138651,7 @@ var zXt = {
       }), watch([s, c, l, d, f, p, JU, ie, w, b, x, S, i], () => {
         n.value && ut(se);
       }), onMounted(() => {
-        cancelAnimationFrame(E), clearTimeout(T);
+        cancelAnimationFrame(E), clearTimeout(onEventResult);
       }), (e, t) => (openBlock(), createBlock(unref(ui), {
         open: n.value,
         "onUpdate:open": t[3] ||= e => n.value = e
@@ -138823,7 +138823,7 @@ function yZt(e, items, n, r = new Date()) {
     s = {
       ...(a ?? {})
     };
-  for (let e of filtered) s[e.id] = Math.max(s[e.id] ?? 0, e.level);
+  for (let normalizeResult of filtered) s[normalizeResult.id] = Math.max(s[normalizeResult.id] ?? 0, normalizeResult.level);
   return {
     state: {
       ...e,
@@ -138890,9 +138890,9 @@ var xZt = [`src`],
         o = ref([]),
         computedResult = computed(() => o.value[0] ?? null),
         c = false,
-        l,
+        setTimeoutResult,
         u,
-        d;
+        count;
       watch(nW, async value => {
         value && (nW.value = null, i.value && (i.value = false, await ut()), a.value = value, i.value = true);
       });
@@ -139011,7 +139011,7 @@ var xZt = [`src`],
             } catch (e) {
               console.warn(`[ShareMilestones] achievements check failed:`, e);
             }
-            for (let e of emptyItems) e.kind === `recap` && g(e);
+            for (let normalizeResult of emptyItems) normalizeResult.kind === `recap` && g(normalizeResult);
             emptyItems.length > 0 && r.value?.userId === i && (o.value = [...o.value, ...emptyItems.slice(0, AZt)]);
           } catch (e) {
             console.warn(`[ShareMilestones] check failed:`, e);
@@ -139021,15 +139021,15 @@ var xZt = [`src`],
         }
       }
       return onBeforeMount(() => {
-        l = setTimeout(() => {
+        setTimeoutResult = setTimeout(() => {
           _(false);
         }, DZt), u = setTimeout(() => {
           _(true);
-        }, OZt), d = setInterval(() => {
+        }, OZt), count = setInterval(() => {
           _(true);
         }, kZt);
       }), onUnmounted(() => {
-        clearTimeout(l), clearTimeout(u), clearInterval(d);
+        clearTimeout(setTimeoutResult), clearTimeout(u), clearInterval(count);
       }), watch(() => r.value?.userId, () => {
         o.value = [];
       }), (e, n) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(fZt, {
@@ -139121,7 +139121,7 @@ var xZt = [`src`],
         return window.matchMedia?.(`(prefers-reduced-motion: reduce)`).matches ?? false;
       }
       function c() {
-        for (let e of emptyItems) e.cancel();
+        for (let normalizeResult of emptyItems) normalizeResult.cancel();
         emptyItems = [];
         let e = r.value;
         if (e?.animate && emptyItems.push(e.animate([{
@@ -140321,8 +140321,8 @@ var LQt = {
         p = computed(() => computedResult.value[s.value] ?? null),
         m = computed(() => s.value >= computedData.value - 1);
       watch(n, value => {
-        for (let e of Object.keys(o)) delete o[e];
-        if (s.value = 0, l.value = ``, c.value = false, value) for (let t of value.questions) o[t.id] = {
+        for (let normalizeResult of Object.keys(o)) delete o[normalizeResult];
+        if (s.value = 0, l.value = ``, c.value = false, value) for (let normalizeResult of value.questions) o[normalizeResult.id] = {
           value: ``,
           values: [],
           text: ``,
@@ -140352,27 +140352,27 @@ var LQt = {
       }
       function b() {
         let e = {};
-        for (let t of computedResult.value) {
-          let n = o[t.id];
+        for (let normalizeResult of computedResult.value) {
+          let n = o[normalizeResult.id];
           if (n) {
-            if (t.type === `single`) {
+            if (normalizeResult.type === `single`) {
               if (!n.value) continue;
-              e[t.id] = h(t, n.value) && n.input.trim() ? {
+              e[normalizeResult.id] = h(normalizeResult, n.value) && n.input.trim() ? {
                 value: n.value,
                 input: n.input.trim()
               } : {
                 value: n.value
               };
-            } else if (t.type === `multi`) {
+            } else if (normalizeResult.type === `multi`) {
               if (!n.values.length) continue;
-              let r = n.values.some(item => h(t, item)) && n.input.trim();
-              e[t.id] = r ? {
+              let r = n.values.some(item => h(normalizeResult, item)) && n.input.trim();
+              e[normalizeResult.id] = r ? {
                 values: [...n.values],
                 input: n.input.trim()
               } : {
                 values: [...n.values]
               };
-            } else n.text.trim() && (e[t.id] = n.text.trim());
+            } else n.text.trim() && (e[normalizeResult.id] = n.text.trim());
           }
         }
         return e;
@@ -140672,7 +140672,7 @@ var LQt = {
         h = ref(0),
         g = ref([]),
         _ = ref(``),
-        v = null,
+        setIntervalResult = null,
         computedResult = computed(() => Math.max(0, Math.ceil((p.value - f.value) / 1e3))),
         computedData = computed(() => n.state.recoveryMode === `legacyPhrase`),
         x = computed(() => m.value?.steps[h.value] ?? []),
@@ -140765,11 +140765,11 @@ var LQt = {
       }, {
         immediate: true
       }), onBeforeMount(() => {
-        v = setInterval(() => {
+        setIntervalResult = setInterval(() => {
           f.value = Date.now();
         }, 1e3);
       }), onUnmounted(() => {
-        v && clearInterval(v);
+        setIntervalResult && clearInterval(setIntervalResult);
       }), (e, t) => (openBlock(), createElementBlock(`div`, QQt, [createElementVNode(`div`, $Qt, [createElementVNode(`div`, e$t, [unref(platform) === `darwin` ? (openBlock(), createElementBlock(Fragment, {
         key: 0
       }, [createElementVNode(`button`, {
@@ -141367,10 +141367,10 @@ var V$t = {
         xt,
         St,
         Ct,
-        wt,
+        setIntervalResult,
         Et,
         At,
-        jt,
+        onStateChangedResult,
         Mt,
         Nt,
         Pt,
@@ -141378,7 +141378,7 @@ var V$t = {
         It,
         Lt,
         Rt,
-        zt,
+        onBotAttachmentsPendingResult,
         Bt,
         Vt = false,
         Ht = Promise.resolve(),
@@ -141495,7 +141495,7 @@ var V$t = {
         }
       }
       onBeforeMount(async () => {
-        en = Dt(o.value), jt = ZR.onStateChanged(e => {
+        en = Dt(o.value), onStateChangedResult = ZR.onStateChanged(e => {
           We.value = e, Ge.value = true;
         });
         try {
@@ -141553,7 +141553,7 @@ var V$t = {
           Xt();
         }), await Xt(), Rt = window.electronAPI.growth.onBotOpenPending(() => {
           qt();
-        }), await qt(), zt = j9.onBotAttachmentsPending(() => {
+        }), await qt(), onBotAttachmentsPendingResult = j9.onBotAttachmentsPending(() => {
           $t();
         }), bt = electronAPI?.onWindowStateChanged?.(e => {
           r.value = e === `maximized`;
@@ -141561,7 +141561,7 @@ var V$t = {
           dt(e);
         }), St = window.electronAPI?.updater?.onDialogDismiss?.(() => {
           Ne(), Je.value = false;
-        }), wt = window.electronAPI?.updater?.onStateChanged?.(e => {
+        }), setIntervalResult = window.electronAPI?.updater?.onStateChanged?.(e => {
           q(e);
         }), Ct = window.electronAPI?.updater?.onStatus?.(e => {
           e.status === `available` && Me(e.version), e.status === `not-available` && Ne(), e.status === `downloading` && (Ze.value = true, Ye.value.updateFailed = false, Qe.value = Math.round(e.percent || 0)), e.status === `downloaded` && (Ze.value = false, Qe.value = 100), e.status === `error` && (Ze.value = false, Ye.value.updateFailed = true, Ye.value.failureReason = `updater_error`);
@@ -141613,7 +141613,7 @@ var V$t = {
       }, {
         immediate: true
       }), onUnmounted(() => {
-        bt?.(), xt?.(), St?.(), Ct?.(), wt?.(), Et?.(), At?.(), jt?.(), Mt?.(), Nt?.(), Pt?.(), Ft?.(), It?.(), Lt?.(), Rt?.(), zt?.(), Bt?.(), en?.(), je(), document.body.classList.remove(`desktop-window--win`, `desktop-window--maximized`);
+        bt?.(), xt?.(), St?.(), Ct?.(), setIntervalResult?.(), Et?.(), At?.(), onStateChangedResult?.(), Mt?.(), Nt?.(), Pt?.(), Ft?.(), It?.(), Lt?.(), Rt?.(), onBotAttachmentsPendingResult?.(), Bt?.(), en?.(), je(), document.body.classList.remove(`desktop-window--win`, `desktop-window--maximized`);
       });
       function on() {
         electronAPI?.maximize?.();
@@ -142653,12 +142653,12 @@ var V$t = {
         te = window.electronAPI.platform === `darwin`,
         M = new Map(),
         ne = new Map(),
-        N = null,
+        setTimeoutResult = null,
         re = null,
         ie = null,
-        ae = null,
-        oe = null,
-        se = null,
+        registerHighlight = null,
+        undefinedOrFallback = null,
+        onStateChangedResult = null,
         ce = null,
         le = 0,
         ue = ``,
@@ -142666,7 +142666,7 @@ var V$t = {
         fe = true,
         pe = 0,
         me = false,
-        he = null,
+        pointerId = null,
         ge = 0,
         _e = 0,
         ve = false,
@@ -142691,9 +142691,9 @@ var V$t = {
         }),
         Oe = computed(() => {
           let e = new Map();
-          for (let t of De.value) {
-            let n = He(t);
-            e.set(n, [...(e.get(n) ?? []), t]);
+          for (let normalizeResult of De.value) {
+            let n = He(normalizeResult);
+            e.set(n, [...(e.get(n) ?? []), normalizeResult]);
           }
           return n.filter(item => e.has(item)).map(t => ({
             id: t,
@@ -142735,7 +142735,7 @@ var V$t = {
         }]),
         Fe = computed(() => {
           let emptyItems = [];
-          for (let t of [T.value, ...C.value]) t?.email && !emptyItems.some(item => hv(item, t)) && emptyItems.push(t);
+          for (let normalizeResult of [T.value, ...C.value]) normalizeResult?.email && !emptyItems.some(item => hv(item, normalizeResult)) && emptyItems.push(normalizeResult);
           return emptyItems;
         }),
         Ie = computed(() => Fe.value.map(item => ({
@@ -142759,8 +142759,8 @@ var V$t = {
           if (!e) return ``;
           let emptyItems = [];
           e.schedule && emptyItems.push(Be(e.schedule.start, e.schedule.end));
-          for (let n of e.people) {
-            let found = Fe.value.find(item => Ke(item) === n);
+          for (let replaceResult of e.people) {
+            let found = Fe.value.find(item => Ke(item) === replaceResult);
             found && emptyItems.push(`@${Je(found)}`);
           }
           return e.project && emptyItems.push(`#${e.project}`), e.priority && emptyItems.push($_(o, e.priority)), emptyItems.length ? r(`todo.floating.quickAddRecognized`, {
@@ -142844,18 +142844,18 @@ var V$t = {
         return _.value.includes(e);
       }
       function ot(e, t) {
-        ae && clearTimeout(ae), p.value = {
+        registerHighlight && clearTimeout(registerHighlight), p.value = {
           tone: e,
           text: t
-        }, ae = setTimeout(() => {
-          ae = null, p.value = null;
+        }, registerHighlight = setTimeout(() => {
+          registerHighlight = null, p.value = null;
         }, N2t);
       }
       function st(e, t) {
         ot(`error`, e instanceof Error && e.message ? e.message : t);
       }
       function ct() {
-        N &&= (clearTimeout(N), null);
+        setTimeoutResult &&= (clearTimeout(setTimeoutResult), null);
       }
       function lt() {
         A.value = null;
@@ -143051,7 +143051,7 @@ var V$t = {
         t && (clearTimeout(t.timer), M.delete(e));
       }
       function Bt() {
-        for (let e of M.values()) clearTimeout(e.timer);
+        for (let normalizeResult of M.values()) clearTimeout(normalizeResult.timer);
         M.clear();
       }
       function Vt(e) {
@@ -143250,8 +143250,8 @@ var V$t = {
         });
       }
       function dn() {
-        ue && ue !== Re() && Ot(), s.value.hoverExpand && s.value.mode !== `panel` && he === null && (ct(), N = setTimeout(() => {
-          N = null, he === null && s.value.mode !== `panel` && hy.expand(`hover`).then(cn).catch(() => undefined);
+        ue && ue !== Re() && Ot(), s.value.hoverExpand && s.value.mode !== `panel` && pointerId === null && (ct(), setTimeoutResult = setTimeout(() => {
+          setTimeoutResult = null, pointerId === null && s.value.mode !== `panel` && hy.expand(`hover`).then(cn).catch(() => undefined);
         }, D2t));
       }
       function fn() {
@@ -143267,10 +143267,10 @@ var V$t = {
         ct(), hy.showMenu(Se.value);
       }
       function hn(e) {
-        e.button === 0 && (ct(), he = e.pointerId, ge = e.screenX, _e = e.screenY, ve = false, e.currentTarget?.setPointerCapture?.(e.pointerId), hy.dragStart(e.screenX, e.screenY), e.preventDefault());
+        e.button === 0 && (ct(), pointerId = e.pointerId, ge = e.screenX, _e = e.screenY, ve = false, e.currentTarget?.setPointerCapture?.(e.pointerId), hy.dragStart(e.screenX, e.screenY), e.preventDefault());
       }
       function gn(e) {
-        if (he === e.pointerId) {
+        if (pointerId === e.pointerId) {
           if (!(e.buttons & 1)) {
             _n(e, false);
             return;
@@ -143279,13 +143279,13 @@ var V$t = {
         }
       }
       function _n(e, t) {
-        if (he === null || e && he !== e.pointerId) return;
-        let n = he,
+        if (pointerId === null || e && pointerId !== e.pointerId) return;
+        let n = pointerId,
           r = t && !ve;
-        he = null, hy.dragEnd(), e && e.currentTarget?.releasePointerCapture?.(n), r && pn();
+        pointerId = null, hy.dragEnd(), e && e.currentTarget?.releasePointerCapture?.(n), r && pn();
       }
       function vn(e) {
-        he === e.pointerId && _n(e, true);
+        pointerId === e.pointerId && _n(e, true);
       }
       function yn(e) {
         _n(e ?? null, false);
@@ -143300,18 +143300,18 @@ var V$t = {
         e.key === `xiaohei-theme-mode` && _r(), e.key === `xiaohei-usage-mode` && ur(e.newValue);
       }
       return onBeforeMount(async () => {
-        document.documentElement.classList.add(`todo-floating-renderer`), document.body.classList.add(`todo-floating-renderer`), window.addEventListener(`storage`, Sn), j ? (window.addEventListener(`pointerup`, vn, true), window.addEventListener(`pointercancel`, yn, true), window.addEventListener(`blur`, bn)) : window.addEventListener(`keydown`, xn), se = hy.onStateChanged(cn), ce = window.electronAPI.todos.onChanged(kt), At();
+        document.documentElement.classList.add(`todo-floating-renderer`), document.body.classList.add(`todo-floating-renderer`), window.addEventListener(`storage`, Sn), j ? (window.addEventListener(`pointerup`, vn, true), window.addEventListener(`pointercancel`, yn, true), window.addEventListener(`blur`, bn)) : window.addEventListener(`keydown`, xn), onStateChangedResult = hy.onStateChanged(cn), ce = window.electronAPI.todos.onChanged(kt), At();
         try {
           cn(await hy.getState());
         } catch (e) {
           f.value = e instanceof Error ? e.message : r(`todo.floating.loadFailed`);
         }
-        j ? await Ot() : Pt(), oe = Ni(`todo`, async () => (await Ot(), !f.value), {
+        j ? await Ot() : Pt(), undefinedOrFallback = Ni(`todo`, async () => (await Ot(), !f.value), {
           background: true,
           active: () => j || computedData.value
         });
       }), onUnmounted(() => {
-        ct(), Bt(), re && clearTimeout(re), ie && clearTimeout(ie), ae && clearTimeout(ae), he !== null && hy.dragEnd(), ye !== null && cancelAnimationFrame(ye), oe?.(), se?.(), ce?.(), window.removeEventListener(`storage`, Sn), window.removeEventListener(`pointerup`, vn, true), window.removeEventListener(`pointercancel`, yn, true), window.removeEventListener(`blur`, bn), window.removeEventListener(`keydown`, xn), document.documentElement.classList.remove(`todo-floating-renderer`), document.body.classList.remove(`todo-floating-renderer`);
+        ct(), Bt(), re && clearTimeout(re), ie && clearTimeout(ie), registerHighlight && clearTimeout(registerHighlight), pointerId !== null && hy.dragEnd(), ye !== null && cancelAnimationFrame(ye), undefinedOrFallback?.(), onStateChangedResult?.(), ce?.(), window.removeEventListener(`storage`, Sn), window.removeEventListener(`pointerup`, vn, true), window.removeEventListener(`pointercancel`, yn, true), window.removeEventListener(`blur`, bn), window.removeEventListener(`keydown`, xn), document.documentElement.classList.remove(`todo-floating-renderer`), document.body.classList.remove(`todo-floating-renderer`);
       }), (e, t) => (openBlock(), createElementBlock(`div`, {
         class: normalizeClass([`todo-floating-window-root h-screen w-screen overflow-hidden bg-transparent outline-none`, {
           "todo-floating-platform-windows": ee,
@@ -143814,11 +143814,11 @@ var V$t = {
         c = ref(null),
         l = ref(false),
         u = ref(false),
-        d = null,
+        count = null,
         f = 0,
         p = 0,
         m = false,
-        h = null,
+        setIntervalResult = null,
         g = {
           width: `80px`,
           height: `68px`,
@@ -143835,13 +143835,13 @@ var V$t = {
         l.value = true, s(), fU.setInteractive(true);
       }
       function b() {
-        l.value = false, d === null && fU.setInteractive(false);
+        l.value = false, count === null && fU.setInteractive(false);
       }
       function x(e) {
-        e.button === 0 && (d = e.pointerId, f = e.screenX, p = e.screenY, m = false, e.currentTarget?.setPointerCapture?.(e.pointerId), fU.dragStart(e.screenX, e.screenY), e.preventDefault());
+        e.button === 0 && (count = e.pointerId, f = e.screenX, p = e.screenY, m = false, e.currentTarget?.setPointerCapture?.(e.pointerId), fU.dragStart(e.screenX, e.screenY), e.preventDefault());
       }
       function S(e) {
-        if (d === e.pointerId) {
+        if (count === e.pointerId) {
           if (!(e.buttons & 1)) {
             C(e, false);
             return;
@@ -143850,13 +143850,13 @@ var V$t = {
         }
       }
       function C(e, t) {
-        if (d === null || e && d !== e.pointerId) return;
-        let n = d,
+        if (count === null || e && count !== e.pointerId) return;
+        let n = count,
           r = t && !m;
-        d = null, u.value = false, fU.dragEnd(), e && e.currentTarget?.releasePointerCapture?.(n), r && (o(), c.value?.strike()), l.value || fU.setInteractive(false);
+        count = null, u.value = false, fU.dragEnd(), e && e.currentTarget?.releasePointerCapture?.(n), r && (o(), c.value?.strike()), l.value || fU.setInteractive(false);
       }
       function w(e) {
-        d === e.pointerId && C(e, true);
+        count === e.pointerId && C(e, true);
       }
       function T(e) {
         C(e ?? null, false);
@@ -143874,9 +143874,9 @@ var V$t = {
         T();
       }
       return onBeforeMount(() => {
-        document.documentElement.classList.add(`wooden-fish-renderer`), document.body.classList.add(`wooden-fish-renderer`), h = fU.onWindowState(v), fU.getWindowState().then(v).catch(() => {}), window.addEventListener(`storage`, D), window.addEventListener(`blur`, O);
+        document.documentElement.classList.add(`wooden-fish-renderer`), document.body.classList.add(`wooden-fish-renderer`), setIntervalResult = fU.onWindowState(v), fU.getWindowState().then(v).catch(() => {}), window.addEventListener(`storage`, D), window.addEventListener(`blur`, O);
       }), onUnmounted(() => {
-        h?.(), window.removeEventListener(`storage`, D), window.removeEventListener(`blur`, O), document.documentElement.classList.remove(`wooden-fish-renderer`), document.body.classList.remove(`wooden-fish-renderer`);
+        setIntervalResult?.(), window.removeEventListener(`storage`, D), window.removeEventListener(`blur`, O), document.documentElement.classList.remove(`wooden-fish-renderer`), document.body.classList.remove(`wooden-fish-renderer`);
       }), (e, t) => (openBlock(), createElementBlock(`div`, R2t, [createElementVNode(`div`, {
         class: normalizeClass([`wooden-fish-hit`, {
           "is-dragging": u.value
@@ -144002,11 +144002,11 @@ async function X9(e) {
 }
 async function X2t(response, t) {
   let n = ``,
-    r = null,
+    requestAnimationFrameResult = null,
     fallbackValue = response.headers.get(`content-type`) || ``;
   if (response.ok && !fallbackValue.includes(`json`)) return;
   try {
-    n = await response.clone().text(), n && fallbackValue.includes(`json`) && (r = JSON.parse(n));
+    n = await response.clone().text(), n && fallbackValue.includes(`json`) && (requestAnimationFrameResult = JSON.parse(n));
   } catch (r) {
     await X9({
       ...t,
@@ -144017,14 +144017,14 @@ async function X2t(response, t) {
     });
     return;
   }
-  let a = r && Object.prototype.hasOwnProperty.call(r, `ok`) && r.ok !== true;
+  let a = requestAnimationFrameResult && Object.prototype.hasOwnProperty.call(requestAnimationFrameResult, `ok`) && requestAnimationFrameResult.ok !== true;
   (!response.ok || a) && (await X9({
     ...t,
     errorName: `ApiResponseError`,
-    errorMessage: r?.error?.message || `HTTP ${response.status}`,
+    errorMessage: requestAnimationFrameResult?.error?.message || `HTTP ${response.status}`,
     httpStatus: response.status,
-    businessCode: r?.error?.code,
-    businessMessage: r?.error?.message,
+    businessCode: requestAnimationFrameResult?.error?.code,
+    businessMessage: requestAnimationFrameResult?.error?.message,
     responseText: n
   }));
 }

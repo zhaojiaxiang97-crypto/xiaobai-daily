@@ -666,7 +666,7 @@ async function openGrowth() {
   try {
     const _0x54319c = await _0x41caa7().catch(() => false);
     if (_0xfc21b3.getSession()?.token !== _0x4bfbed) throw new Error("账号已切换，请重新打开");
-    let _0x200e26,
+    let ticket,
       flagFalse = false;
     try {
       const _0x5effe0 = await fetch(_0x3add38 + "/v3/growth-open.php", {
@@ -680,16 +680,16 @@ async function openGrowth() {
       if (!_0x5effe0.ok || !_0x5d466a?.ok || !_0x5d466a.data?.ticket) throw Object.assign(new Error(_0x5d466a?.error?.message || "成长进度正在同步"), {
         status: _0x5effe0.status
       });
-      _0x200e26 = _0x5d466a.data.ticket, flagFalse = _0x54319c && _0x5d466a.data.taskProgressReady === true;
+      ticket = _0x5d466a.data.ticket, flagFalse = _0x54319c && _0x5d466a.data.taskProgressReady === true;
     } catch (err) {
       const _0x212daf = err?.status;
       if (_0x212daf && _0x212daf >= 400 && _0x212daf < 500 && ![404, 405, 408, 429].includes(_0x212daf)) throw err;
     }
     if (_0xfc21b3.getSession()?.token !== _0x4bfbed) throw new Error("账号已切换，请重新打开");
-    if (!_0x200e26) _0x200e26 = (await request(_0x4bfbed, "POST")).ticket;
+    if (!ticket) ticket = (await request(_0x4bfbed, "POST")).ticket;
     if (_0xfc21b3.getSession()?.token !== _0x4bfbed) throw new Error("账号已切换，请重新打开");
-    if (!/^[a-f0-9]{64}$/.test(_0x200e26)) throw new Error("登录链接无效，请稍后重试");
-    await shell.openExternal(origin + "/growth/#ticket=" + _0x200e26);
+    if (!/^[a-f0-9]{64}$/.test(ticket)) throw new Error("登录链接无效，请稍后重试");
+    await shell.openExternal(origin + "/growth/#ticket=" + ticket);
     if (!flagFalse && _0xfc21b3.getSession()?.token === _0x4bfbed) try {
       telemetryClient.show(translate("growth.notificationTitle"), translate("growth.syncPendingNotice"));
     } catch {}
@@ -3012,23 +3012,23 @@ function buildAnthropicMessages(anthropic, messages, messagesValue) {
   };
 }
 function buildRequestPayload(payloadCtx, payload, payloadValue, payloadInput, _0x438f39, _0x1cd5b3) {
-  let _0x59263c;
+  let buildAnthropicPayloadResult;
   if (isAnthropic(payloadCtx)) {
     const {
       system: _0x3f4cf9,
       messages: _0x79bfd3
     } = buildAnthropicMessages(_0x438f39, _0x1cd5b3, payload);
-    _0x59263c = buildAnthropicPayload(payloadCtx, _0x79bfd3, payloadValue, payloadInput);
-    if (_0x3f4cf9) _0x59263c.system = _0x3f4cf9;
-    const customRequestParams = applyCustomRequestParams(_0x59263c, payloadCtx);
+    buildAnthropicPayloadResult = buildAnthropicPayload(payloadCtx, _0x79bfd3, payloadValue, payloadInput);
+    if (_0x3f4cf9) buildAnthropicPayloadResult.system = _0x3f4cf9;
+    const customRequestParams = applyCustomRequestParams(buildAnthropicPayloadResult, payloadCtx);
     return payloadCtx.coreBilling && (customRequestParams.rootUsageId = payloadCtx.coreBilling.rootUsageId, customRequestParams.billingFinalize = payloadCtx.coreBilling.finalize), customRequestParams;
   }
   const openAiMessages = buildOpenAiMessages(_0x438f39, _0x1cd5b3, payload),
     apiStyle = resolveApiStyle(payloadCtx);
-  if (apiStyle === "openai-responses") _0x59263c = buildOpenAiResponsesPayload(payloadCtx, openAiMessages, payloadValue, payloadInput);else {
-    if (apiStyle === "openai-completions") _0x59263c = buildOpenAiCompletionsPayload(payloadCtx, openAiMessages, payloadValue, payloadInput);else _0x59263c = buildOpenAiChatPayload(payloadCtx, openAiMessages, payloadValue, payloadInput);
+  if (apiStyle === "openai-responses") buildAnthropicPayloadResult = buildOpenAiResponsesPayload(payloadCtx, openAiMessages, payloadValue, payloadInput);else {
+    if (apiStyle === "openai-completions") buildAnthropicPayloadResult = buildOpenAiCompletionsPayload(payloadCtx, openAiMessages, payloadValue, payloadInput);else buildAnthropicPayloadResult = buildOpenAiChatPayload(payloadCtx, openAiMessages, payloadValue, payloadInput);
   }
-  const customRequestParams = applyCustomRequestParams(_0x59263c, payloadCtx);
+  const customRequestParams = applyCustomRequestParams(buildAnthropicPayloadResult, payloadCtx);
   return payloadCtx.coreBilling && (customRequestParams.rootUsageId = payloadCtx.coreBilling.rootUsageId, customRequestParams.billingFinalize = payloadCtx.coreBilling.finalize), customRequestParams;
 }
 function isRecord$2(_0x2e34ab) {
@@ -3205,18 +3205,18 @@ async function getProviderConfig(providerCfg, _0x5d7f97 = "screenshot") {
   }
   if (providerCfg.mode === "default" || providerCfg.mode === "webAccount") {
     const effectiveModelConfig = await _0x220889.getEffectiveModelConfig();
-    let _0x1635a9, _0xa9119a;
+    let label, _0xa9119a;
     if (_0x5d7f97 === "screenshot") {
-      _0x1635a9 = effectiveModelConfig?.screenshotProvider || effectiveModelConfig?.provider || "volcengine";
-      if (_0x1635a9 === "deepseek") _0x1635a9 = "volcengine";
+      label = effectiveModelConfig?.screenshotProvider || effectiveModelConfig?.provider || "volcengine";
+      if (label === "deepseek") label = "volcengine";
       _0xa9119a = effectiveModelConfig?.modelName || defaultArkModel;
-    } else _0x5d7f97 === "report" ? (_0x1635a9 = effectiveModelConfig?.reportProvider || effectiveModelConfig?.provider || "volcengine", _0xa9119a = effectiveModelConfig?.reportModelName || effectiveModelConfig?.modelName || defaultArkModel) : (_0x1635a9 = effectiveModelConfig?.overviewProvider || effectiveModelConfig?.provider || "volcengine", _0xa9119a = effectiveModelConfig?.overviewModelName || effectiveModelConfig?.modelName || defaultArkModel);
+    } else _0x5d7f97 === "report" ? (label = effectiveModelConfig?.reportProvider || effectiveModelConfig?.provider || "volcengine", _0xa9119a = effectiveModelConfig?.reportModelName || effectiveModelConfig?.modelName || defaultArkModel) : (label = effectiveModelConfig?.overviewProvider || effectiveModelConfig?.provider || "volcengine", _0xa9119a = effectiveModelConfig?.overviewModelName || effectiveModelConfig?.modelName || defaultArkModel);
     return {
       provider: {
         deepseek: "DeepSeek",
         "volces-coding": "Volces Coding",
         volcengine: "火山方舟"
-      }[_0x1635a9] || _0x1635a9,
+      }[label] || label,
       baseUrl: _0x3add38 + "/llm.php",
       apiKey: "",
       model: _0xa9119a || defaultArkModel,
@@ -3312,7 +3312,7 @@ async function* observeChatCompletion(chatReq, completion, completionValue, _0x2
     messages: buildOpenAiMessages(completionInput, _0xbd25c2, completion)
   };
   let emptyStr = "",
-    _0x386a5a = null,
+    diff = null,
     _0x2eb831,
     flagFalse = false,
     fallbackValue = Boolean(chatReq.subscriptionProviderId) || _0x4d9f29;
@@ -3352,14 +3352,14 @@ async function* observeChatCompletion(chatReq, completion, completionValue, _0x2
           maxOutputTokens: _0x3d8fc3.maxOutputTokens
         }), fallbackValue = _0x3d8fc3.stream ?? fallbackValue;
       })) {
-        if (_0x386a5a === null) _0x386a5a = Date.now() - nowMs;
+        if (diff === null) diff = Date.now() - nowMs;
         emptyStr += _0x15d45e, yield _0x15d45e;
       }
     } else {
       if (_0x4d9f29) for await (const _0x57a7be of streamHttpChatCompletion(chatReq, completion, completionValue, _0x259ee9, completionInput, _0xbd25c2, spanCtx)) {
-        if (_0x386a5a === null) _0x386a5a = Date.now() - nowMs;
+        if (diff === null) diff = Date.now() - nowMs;
         emptyStr += _0x57a7be, yield _0x57a7be;
-      } else emptyStr = await requestHttpChatCompletion(chatReq, completion, completionValue, _0x259ee9, completionInput, _0xbd25c2, spanCtx), _0x386a5a = Date.now() - nowMs, yield emptyStr;
+      } else emptyStr = await requestHttpChatCompletion(chatReq, completion, completionValue, _0x259ee9, completionInput, _0xbd25c2, spanCtx), diff = Date.now() - nowMs, yield emptyStr;
     }
     if (_0x51a67f && !emptyStr.trim()) throw new Error(translate("aiErrors.emptyOutput"));
     flagFalse = true;
@@ -3391,7 +3391,7 @@ async function* observeChatCompletion(chatReq, completion, completionValue, _0x2
         stopReason: usageStats.stopReason || "",
         httpStatus: usageStats.httpStatus ?? null,
         latencyMs: Date.now() - nowMs,
-        firstTokenMs: _0x386a5a,
+        firstTokenMs: diff,
         requestCount: usageStats.requestCount ?? (chatReq.subscriptionProviderId ? 0 : 1),
         ...countLlmInputResult,
         outputCharacters: emptyStr.length,
@@ -3508,7 +3508,7 @@ async function* streamHttpChatCompletion(streamChatReq, http, chat, _0x3ccc36 = 
     if (!_0x48b630) throw new Error(translateMenu("aiService.errors.noStreamData", _0x283ba1));
     const _0x516159 = new TextDecoder();
     let emptyStr = "",
-      _0x40feb8 = null;
+      label = null;
     const apiStyle = resolveApiStyle(streamChatReq);
     while (true) {
       const {
@@ -3543,12 +3543,12 @@ async function* streamHttpChatCompletion(streamChatReq, http, chat, _0x3ccc36 = 
           if (retryArgB.observation) observeLlmResponse(retryArgB.observation, parsedChunk);
         }
         if (parsedChunk.type === "error" || parsedChunk.type === "response.failed" || parsedChunk.error) throw new AiApiError(translate("aiErrors.streamFailed"), _0x2e6ddf.status, "provider");
-        if (_0x40feb8 === null) {
-          if (parsedChunk.type === "message_start" || parsedChunk.type === "content_block_start" || parsedChunk.type === "content_block_delta" || parsedChunk.type === "message_stop") _0x40feb8 = "claude";else {
-            if (parsedChunk.choices !== undefined || parsedChunk.id !== undefined || parsedChunk.model !== undefined) _0x40feb8 = "openai";
+        if (label === null) {
+          if (parsedChunk.type === "message_start" || parsedChunk.type === "content_block_start" || parsedChunk.type === "content_block_delta" || parsedChunk.type === "message_stop") label = "claude";else {
+            if (parsedChunk.choices !== undefined || parsedChunk.id !== undefined || parsedChunk.model !== undefined) label = "openai";
           }
         }
-        if (_0x40feb8 === "claude") {
+        if (label === "claude") {
           if (parsedChunk.type === "message_stop") return;
           if (parsedChunk.type === "content_block_delta" && parsedChunk.delta?.text) {
             yield parsedChunk.delta.text;
@@ -3722,7 +3722,7 @@ async function testConfiguredModel(modelConfig, modelTestCtx) {
       error.name = "MultimodalCapabilityError";
       throw error;
     }
-    let _0x86c8d8;
+    let translateMenuResult;
     if (modelConfig.purpose === "screenshot") {
       textStr = "capture";
       let _0x49a55e;
@@ -3738,7 +3738,7 @@ async function testConfiguredModel(modelConfig, modelTestCtx) {
         error.name = "ScreenshotCaptureError";
         throw error;
       }
-      textStr = "request_build", _0x86c8d8 = [{
+      textStr = "request_build", translateMenuResult = [{
         type: "text",
         text: modelTestCtx === "zh-CN" ? "请概括这些屏幕截图的主要内容，不超过15个字，只回答概括。" : "Summarize the main content of these screenshots in no more than 10 words. Reply with only the summary."
       }, ..._0x49a55e.map(item => ({
@@ -3747,7 +3747,7 @@ async function testConfiguredModel(modelConfig, modelTestCtx) {
           url: item.dataUrl
         }
       }))];
-    } else _0x86c8d8 = translateMenu("aiService.testConnection.prompt", modelTestCtx);
+    } else translateMenuResult = translateMenu("aiService.testConnection.prompt", modelTestCtx);
     initialTestEvidence.requestBody = {
       model: _0x52754f.model,
       apiStyle: apiStyle,
@@ -3765,7 +3765,7 @@ async function testConfiguredModel(modelConfig, modelTestCtx) {
         "anthropic-version": "2023-06-01"
       } : {})
     }, textStr = "connection";
-    const trimmed = (await requestChatCompletion(_0x52754f, _0x86c8d8, undefined, MODEL_CONNECTION_TEST_TIMEOUT_MS, undefined, undefined, _0x48ee28)).trim();
+    const trimmed = (await requestChatCompletion(_0x52754f, translateMenuResult, undefined, MODEL_CONNECTION_TEST_TIMEOUT_MS, undefined, undefined, _0x48ee28)).trim();
     initialTestEvidence.statusCode = _0x48ee28.observation?.httpStatus ?? null, initialTestEvidence.requestUrl = redactModelTestUrl(_0x48ee28.observation?.endpoint || apiUrl), textStr = "parse";
     if (!trimmed) throw new Error(modelTestCtx === "zh-CN" ? "请求成功但响应中没有有效文本" : "The request succeeded but contained no valid text");
     return initialTestEvidence.latencyMs = Date.now() - nowMs, initialTestEvidence.ruleHints = [], {
@@ -4160,14 +4160,14 @@ var AiService = class {
             reason: "unknown_error"
           });
         }
-        let _0x23f732;
-        if (_0x5ac63c) _0x23f732 = await getProviderConfig({
+        let resolvedValue;
+        if (_0x5ac63c) resolvedValue = await getProviderConfig({
           mode: "default"
-        }, "report"), _0x23f732.model = reportGenerationModel;else _0x23f732 = record ? await getProviderConfigFromSettings(record, "report") : await getProviderConfig({
+        }, "report"), resolvedValue.model = reportGenerationModel;else resolvedValue = record ? await getProviderConfigFromSettings(record, "report") : await getProviderConfig({
           mode: "default"
         }, "report");
         const _0x57ff06 = {
-          ..._0x23f732,
+          ...resolvedValue,
           enforceMaxTokens: true,
           usagePurpose: "report_compression"
         };
@@ -4192,14 +4192,14 @@ var AiService = class {
       }
     }
     async generateReport(options) {
-      let _0x429d6b;
+      let resolvedValue;
       const reportGenerationModel = normalizeReportGenerationModel(options.selectedModel);
-      if (isPremiumReportGenerationModel(reportGenerationModel)) _0x429d6b = await getProviderConfig({
+      if (isPremiumReportGenerationModel(reportGenerationModel)) resolvedValue = await getProviderConfig({
         mode: "default"
-      }, "report"), _0x429d6b.model = reportGenerationModel;else _0x429d6b = options.settings ? await getProviderConfigFromSettings(options.settings, "report") : await getProviderConfig({
+      }, "report"), resolvedValue.model = reportGenerationModel;else resolvedValue = options.settings ? await getProviderConfigFromSettings(options.settings, "report") : await getProviderConfig({
         mode: "default"
       }, "report");
-      if (options.billingRootUsageId) _0x429d6b = enableCoreCloudBilling(_0x429d6b, options.billingRootUsageId, true);
+      if (options.billingRootUsageId) resolvedValue = enableCoreCloudBilling(resolvedValue, options.billingRootUsageId, true);
       const nowMs = Date.now(),
         {
           messages: _0x1ae4e8
@@ -4211,14 +4211,14 @@ var AiService = class {
         {
           content: _0x525d99,
           finalModel: _0x454c86
-        } = await executeWithModelFallback(_0x429d6b, "", isPremiumReportGenerationModel(reportGenerationModel) ? PREMIUM_REPORT_MAX_OUTPUT_TOKENS : undefined, 0x493e0, undefined, _0x1ae4e8, _0x3716da);
-      return recordTokenUsage("report_generation", _0x429d6b, _0x454c86, _0x3716da, _0x525d99, {
+        } = await executeWithModelFallback(resolvedValue, "", isPremiumReportGenerationModel(reportGenerationModel) ? PREMIUM_REPORT_MAX_OUTPUT_TOKENS : undefined, 0x493e0, undefined, _0x1ae4e8, _0x3716da);
+      return recordTokenUsage("report_generation", resolvedValue, _0x454c86, _0x3716da, _0x525d99, {
         stream: false,
         reportType: options.report.type,
         recordCount: options.records.length,
         selectedModel: reportGenerationModel
       }), {
-        provider: getProviderDisplayName(_0x429d6b),
+        provider: getProviderDisplayName(resolvedValue),
         model: _0x454c86,
         content: _0x525d99,
         latencyMs: Date.now() - nowMs
@@ -4813,7 +4813,7 @@ var FrameDedupService = class {
     }
     probeIdleActivity(probe, idle) {
       let flagFalse = false,
-        _0x2698e2 = null;
+        diffRatioOrFallback = null;
       for (const _0x105dbb of probe) {
         const _0x31fa35 = _0x105dbb.fingerprint,
           _0x54ebf5 = this.idleProbeFrames.get(_0x105dbb.displayId);
@@ -4821,12 +4821,12 @@ var FrameDedupService = class {
         if (!_0x31fa35 || !_0x54ebf5 || _0x54ebf5.width !== _0x31fa35.width || _0x54ebf5.height !== _0x31fa35.height) continue;
         const diffRatio = this.computeDiffRatio(_0x54ebf5, _0x31fa35);
         if (diffRatio === null) continue;
-        _0x2698e2 = _0x2698e2 === null ? diffRatio : Math.max(_0x2698e2, diffRatio);
+        diffRatioOrFallback = diffRatioOrFallback === null ? diffRatio : Math.max(diffRatioOrFallback, diffRatio);
         if (diffRatio >= idle) flagFalse = true;
       }
       return this.idleActiveStreak = flagFalse ? this.idleActiveStreak + 1 : 0, {
         streak: this.idleActiveStreak,
-        maxDiffRatio: _0x2698e2
+        maxDiffRatio: diffRatioOrFallback
       };
     }
     clearIdleProbe() {
@@ -5000,13 +5000,13 @@ function buildDisplayApps(display, apps, appsValue) {
   for (const _0x1edaf1 of display) {
     const commonAppName = resolveCommonAppName(_0x1edaf1.appName);
     if (isAppExcluded(commonAppName, apps, appsValue)) continue;
-    let _0x5749b3;
+    let stringResult;
     try {
-      _0x5749b3 = String(screen.getDisplayMatching(_0x1edaf1.bounds).id);
+      stringResult = String(screen.getDisplayMatching(_0x1edaf1.bounds).id);
     } catch {
       continue;
     }
-    const _0x58727c = map.get(_0x5749b3);
+    const _0x58727c = map.get(stringResult);
     if (!_0x58727c) continue;
     if (!_0x58727c.apps.includes(commonAppName) && _0x58727c.apps.length < MAX_APPS_PER_DISPLAY) _0x58727c.apps.push(commonAppName);
   }
@@ -6431,9 +6431,9 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         traceId: fallbackValue
       };
       for (let initialZero = 0;; initialZero++) {
-        let _0x35ed27;
+        let result;
         try {
-          _0x35ed27 = await this.analyzeProtectedScreenshots(current, screenshots, _0x423f46, screenshotsValue);
+          result = await this.analyzeProtectedScreenshots(current, screenshots, _0x423f46, screenshotsValue);
         } catch (err) {
           if (!(err instanceof telemetryLib)) {
             importAliasA.event(fallbackValue, "round", "failed", {
@@ -6441,7 +6441,7 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
             }, "error");
             throw err;
           }
-          frameDedupService.reset(), _0x35ed27 = {
+          frameDedupService.reset(), result = {
             ok: true,
             capturedAt: new Date().toISOString(),
             displayCount: 0,
@@ -6454,22 +6454,22 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
             skippedPrivacy: err.reason
           };
         }
-        if (initialZero > 0 || screenshotsValue.snapshot || _0x35ed27.skippedPrivacy !== "website-changed") return importAliasA.event(fallbackValue, "round", "done", {
-          recordId: _0x35ed27.recordId || null,
-          skippedUnchanged: Boolean(_0x35ed27.skippedUnchanged),
-          skippedPrivacy: _0x35ed27.skippedPrivacy ?? null,
-          skippedSchedule: Boolean(_0x35ed27.skippedSchedule),
-          skippedBlackFrame: Boolean(_0x35ed27.skippedSystemBlackFrame),
-          skippedIdle: Boolean(_0x35ed27.skippedIdle),
-          provider: _0x35ed27.provider,
-          model: _0x35ed27.model,
-          latencyMs: _0x35ed27.latencyMs
-        }), _0x35ed27;
+        if (initialZero > 0 || screenshotsValue.snapshot || result.skippedPrivacy !== "website-changed") return importAliasA.event(fallbackValue, "round", "done", {
+          recordId: result.recordId || null,
+          skippedUnchanged: Boolean(result.skippedUnchanged),
+          skippedPrivacy: result.skippedPrivacy ?? null,
+          skippedSchedule: Boolean(result.skippedSchedule),
+          skippedBlackFrame: Boolean(result.skippedSystemBlackFrame),
+          skippedIdle: Boolean(result.skippedIdle),
+          provider: result.provider,
+          model: result.model,
+          latencyMs: result.latencyMs
+        }), result;
         importAliasA.event(screenshotsValue?.traceId, "capture", "retry", {
           reason: "website_changed",
           delayMs: 350
         }, "warn"), console.info("[截图] " + (_0x423f46 === "enter_key" ? "回车截图" : _0x423f46 === "shortcut" ? "快捷键截图" : "自动截图") + "：等待 350 毫秒后重新判断并截图，最多重试一次。"), frameDedupService.reset(), await new Promise(_0x11e6ec => setTimeout(_0x11e6ec, 350));
-        if (!systemPowerStateService.getCaptureReadiness().ok) return _0x35ed27;
+        if (!systemPowerStateService.getCaptureReadiness().ok) return result;
       }
     }
     async analyzeProtectedScreenshots(options, screenshotsValue, _0x361568 = "screenshot", captureMeta) {
@@ -6735,15 +6735,15 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
       const _0x3fc3a0 = focusCropResult?.crop ?? null,
         systemContextText = this.buildSystemContextText(_0x3aae58, Boolean(_0x3fc3a0), _0x68177),
         _0x4aec1c = flagFalse ? this.buildUnchangedDisplaysText(_0x2adb9a, _0x68177) : undefined;
-      let _0x4c44d3 = null;
+      let buildRecoveryContextResult = null;
       if (probeResult && !_0xb35b93) try {
-        _0x4c44d3 = activitySummaryService.buildRecoveryContext(probeResult);
+        buildRecoveryContextResult = activitySummaryService.buildRecoveryContext(probeResult);
       } catch (err) {
         console.error("[ScreenshotAnalysis] 读取任务恢复摘要失败，继续本轮识别:", err);
       }
       const modelCategoryProtocol = buildModelCategoryProtocol(_0x68177),
         _0x3abf72 = Boolean(modelCategoryProtocol),
-        undefinedValue = [systemContextText, _0x4aec1c, probeResult ? activityEvidenceService.buildPromptText(probeResult, _0x4c44d3, {
+        undefinedValue = [systemContextText, _0x4aec1c, probeResult ? activityEvidenceService.buildPromptText(probeResult, buildRecoveryContextResult, {
           withCategory: _0x3abf72
         }) : undefined].filter(Boolean).join("\n\n") || undefined,
         items = [...screenshots.map(item => ({
@@ -6840,7 +6840,7 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         path: _0x114e98 ?? null
       });
       const _0x307b9d = _0x1d952a.length - 1;
-      let _0x280cf1;
+      let batchCreateResult;
       const _0xff62fb = importAliasA.span(traceId, "store", "records", {
         activityCount: _0x1d952a.length
       });
@@ -6877,16 +6877,16 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
             }
           };
         });
-        _0x280cf1 = _0x368ff8.batchCreate(mapped);
-        if (_0x280cf1.length !== _0x1d952a.length) throw new Error("WORK_RECORD_BATCH_INCOMPLETE");
-        _0x280cf1.forEach((item, _0x434d91) => {
+        batchCreateResult = _0x368ff8.batchCreate(mapped);
+        if (batchCreateResult.length !== _0x1d952a.length) throw new Error("WORK_RECORD_BATCH_INCOMPLETE");
+        batchCreateResult.forEach((item, _0x434d91) => {
           const _0x53b1a9 = _0x5a2adb,
             _0x1853f5 = _0x1d952a[_0x434d91];
           if (!_0x1853f5) return;
           activityEvidenceService.linkRecord(probeResult, item.id, _0x1853f5, _0x434d91);
         }), activityEvidenceService.settle(probeResult, "analyzed"), frameDedupService.commit(screenshots, captureContextSignature), screenshotCaptureLockService.markAnalyzed(_0x361568), _0xff62fb.ok({
-          count: _0x280cf1.length,
-          records: _0x280cf1.map((item, _0x5ead67) => ({
+          count: batchCreateResult.length,
+          records: batchCreateResult.map((item, _0x5ead67) => ({
             id: item.id,
             category: item.category,
             categorySource: mapped[_0x5ead67]?.details?.categorySource ?? null,
@@ -6897,7 +6897,7 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         _0xff62fb.fail(err), activityEvidenceService.settle(probeResult, "failed");
         throw err;
       }
-      const _0x2cf1c4 = _0x280cf1[_0x307b9d];
+      const _0x2cf1c4 = batchCreateResult[_0x307b9d];
       try {
         const _0x359732 = authService.getSession()?.userId ?? 0,
           stats = authRepo.ensureStats(_0x359732);
@@ -6921,8 +6921,8 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         provider: _0x60f4fa.provider,
         model: _0x60f4fa.model,
         latencyMs: _0x60f4fa.latencyMs,
-        recordIds: _0x280cf1.map(item => item.id),
-        activityCount: _0x280cf1.length
+        recordIds: batchCreateResult.map(item => item.id),
+        activityCount: batchCreateResult.length
       };
     }
     async analyzeUploadedImages(options, images) {
@@ -6956,9 +6956,9 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         _0x597abf = importAliasA.span(newTrace, "store", "record", {
           source: "upload"
         });
-      let _0x856672;
+      let createResult;
       try {
-        _0x856672 = _0x368ff8.create({
+        createResult = _0x368ff8.create({
           startedAt: dateAlias.toISOString(),
           endedAt: date.toISOString(),
           category: _0x2d6c69,
@@ -6978,8 +6978,8 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         throw err;
       }
       _0x597abf.ok({
-        recordId: _0x856672.id,
-        category: _0x856672.category,
+        recordId: createResult.id,
+        category: createResult.category,
         categorySource: _0x8c060c
       });
       try {
@@ -6997,9 +6997,9 @@ var screenshotAnalysisService = new class ScreenshotAnalysisService {
         ok: true,
         capturedAt: date.toISOString(),
         displayCount: images.length,
-        recordId: _0x856672.id,
-        summary: _0x856672.summary,
-        category: _0x856672.category,
+        recordId: createResult.id,
+        summary: createResult.summary,
+        category: createResult.category,
         provider: _0x4bc46e.provider,
         model: _0x4bc46e.model,
         latencyMs: _0x4bc46e.latencyMs
@@ -7530,7 +7530,7 @@ var RecorderService = class {
         intervalSeconds: settings.screenshotIntervalSeconds,
         foregroundApp: _0x55350f
       }), this.isCapturing = true, this.pauseReason = "capturing", this.lastCaptureStartedAt = date, this.nextCaptureAt = null;
-      let _0x59c6e6;
+      let count;
       try {
         const analyzeCurrentScreenshots = await screenshotAnalysisService.analyzeCurrentScreenshots(_0x3fb214, undefined, "screenshot", {
           automatic: true,
@@ -7549,20 +7549,20 @@ var RecorderService = class {
           return;
         }
         if (analyzeCurrentScreenshots.skippedPrivacy) {
-          this.pauseReason = analyzeCurrentScreenshots.skippedPrivacy, this.lastError = null, _0x59c6e6 = 5000;
+          this.pauseReason = analyzeCurrentScreenshots.skippedPrivacy, this.lastError = null, count = 5000;
           return;
         }
         if (analyzeCurrentScreenshots.skippedSchedule) {
           this.pauseReason = "schedule";
           return;
         }
-        analyzeCurrentScreenshots.skippedSystemBlackFrame ? (_0x59c6e6 = analyzeCurrentScreenshots.retryAfterMs ?? 15000, this.pauseReason = "wake_stabilizing") : (this.lastRecordId = analyzeCurrentScreenshots.recordId, this.pauseReason = null);
+        analyzeCurrentScreenshots.skippedSystemBlackFrame ? (count = analyzeCurrentScreenshots.retryAfterMs ?? 15000, this.pauseReason = "wake_stabilizing") : (this.lastRecordId = analyzeCurrentScreenshots.recordId, this.pauseReason = null);
         this.lastCaptureEndedAt = new Date(), this.lastError = null, this.lastHint = null, this.consecutiveCaptureErrors = 0, this.lastCaptureErrorNoticeAt = null, this.transientCaptureRetries = 0, telemetryClient.resetCaptureErrorNotice();
         if (!analyzeCurrentScreenshots.skippedUnchanged && !analyzeCurrentScreenshots.skippedSystemBlackFrame) _0x220889.incrementScreenshotCount();
       } catch (err) {
         const fallbackValue = settingsRepository.getSettings().language || "zh-CN";
         if (err instanceof ScreenshotCaptureUnavailableError && this.transientCaptureRetries < transientCaptureRetryLimit) {
-          this.transientCaptureRetries += 1, this.lastError = null, this.pauseReason = null, _0x59c6e6 = transientCaptureRetryDelayMs, importAliasA.event(newTrace, "round", "retry", {
+          this.transientCaptureRetries += 1, this.lastError = null, this.pauseReason = null, count = transientCaptureRetryDelayMs, importAliasA.event(newTrace, "round", "retry", {
             reason: "capture_unavailable",
             attempt: this.transientCaptureRetries,
             retryAfterMs: transientCaptureRetryDelayMs
@@ -7675,7 +7675,7 @@ var RecorderService = class {
         });
       } finally {
         tryAcquire.release(), this.isCapturing = false;
-        if (this.isRunning) this.scheduleNextCapture(_0x59c6e6, _0x59c6e6 === undefined ? date.getTime() : undefined);
+        if (this.isRunning) this.scheduleNextCapture(count, count === undefined ? date.getTime() : undefined);
       }
     }
   },
@@ -7729,7 +7729,7 @@ async function requestReportCcApi(requestValue, _0x521280 = {}, _0x3b6e47 = REPO
     timerId = setTimeout(() => abortController.abort(), _0x3b6e47),
     nowMs = Date.now();
   let emptyStr = "",
-    _0x14aadb,
+    status,
     _0x5909be,
     _0xa07e;
   try {
@@ -7742,28 +7742,28 @@ async function requestReportCcApi(requestValue, _0x521280 = {}, _0x3b6e47 = REPO
       body: JSON.stringify(_0x101d3f),
       signal: abortController.signal
     });
-    _0x14aadb = _0x4a726c.status, emptyStr = await _0x4a726c.text();
-    let _0x41cd6f;
+    status = _0x4a726c.status, emptyStr = await _0x4a726c.text();
+    let resolvedValue;
     try {
-      _0x41cd6f = emptyStr.trim() ? JSON.parse(emptyStr) : {};
+      resolvedValue = emptyStr.trim() ? JSON.parse(emptyStr) : {};
     } catch {
-      _0x41cd6f = {};
+      resolvedValue = {};
     }
-    _0x5909be = _0x41cd6f.error?.code, _0xa07e = _0x41cd6f.error?.message;
-    if (!_0x4a726c.ok || !_0x41cd6f.ok || _0x41cd6f.data === undefined) throw Object.assign(new Error(_0x41cd6f.error?.message || fallbackMessage(_0x4a726c.status, _0x279829)), {
-      code: _0x41cd6f.error?.code ?? "HTTP_" + _0x4a726c.status
+    _0x5909be = resolvedValue.error?.code, _0xa07e = resolvedValue.error?.message;
+    if (!_0x4a726c.ok || !resolvedValue.ok || resolvedValue.data === undefined) throw Object.assign(new Error(resolvedValue.error?.message || fallbackMessage(_0x4a726c.status, _0x279829)), {
+      code: resolvedValue.error?.code ?? "HTTP_" + _0x4a726c.status
     });
-    return _0x41cd6f.data;
+    return resolvedValue.data;
   } catch (err) {
     const _0x32a677 = abortController.signal.aborted ? new Error(translateMenu("reportCc.timeout", _0x279829)) : err;
-    if (!(_0x14aadb !== undefined && _0x14aadb >= 400 && _0x14aadb < 500 && Boolean(_0x5909be))) await _0x5bc685({
+    if (!(status !== undefined && status >= 400 && status < 500 && Boolean(_0x5909be))) await _0x5bc685({
       source: "main",
       module: "report-cc",
       action: requestValue,
       method: "POST",
       url: _0x3c73e0,
       error: _0x32a677,
-      httpStatus: _0x14aadb,
+      httpStatus: status,
       businessCode: _0x5909be,
       businessMessage: _0xa07e,
       responseText: requestValue === "detail" || requestValue === "materials" ? "" : emptyStr,
@@ -8098,17 +8098,17 @@ var CcSummaryPromptConfigService = class {
         _0x2c3320 = _0x26e188 + ":" + usageModeLocaleKey,
         _0x23fa34 = this.cache.get(_0x2c3320);
       if (_0x23fa34 && _0x23fa34.expiresAt > Date.now()) return _0x23fa34.config;
-      let _0x166923;
+      let resolvedValue;
       try {
         const configValue = await telemetryService.getConfigValue(resolveUsageModeConfigKey(_0x26e188, usageMode), fallbackValue);
-        _0x166923 = configValue ? fn(configValue, usageModeLocaleKey) : pickDefault(_0x4edb99, usageModeLocaleKey);
+        resolvedValue = configValue ? fn(configValue, usageModeLocaleKey) : pickDefault(_0x4edb99, usageModeLocaleKey);
       } catch (err) {
-        console.warn("[CcSummaryPromptConfig] failed to load " + _0x26e188 + ", fallback to local default:", err), _0x166923 = pickDefault(_0x4edb99, usageModeLocaleKey);
+        console.warn("[CcSummaryPromptConfig] failed to load " + _0x26e188 + ", fallback to local default:", err), resolvedValue = pickDefault(_0x4edb99, usageModeLocaleKey);
       }
       return this.cache.set(_0x2c3320, {
         expiresAt: Date.now() + CACHE_TTL_MS$1,
-        config: _0x166923
-      }), _0x166923;
+        config: resolvedValue
+      }), resolvedValue;
     }
   },
   ccSummaryPromptConfigService = new CcSummaryPromptConfigService(),
@@ -9733,7 +9733,7 @@ async function requestTemplateMarketApi(requestValue, _0x4802bc = {}) {
     },
     nowMs = Date.now();
   let emptyStr = "",
-    _0x9e948c,
+    status,
     _0x59422f,
     _0x56b428;
   try {
@@ -9745,21 +9745,21 @@ async function requestTemplateMarketApi(requestValue, _0x4802bc = {}) {
       },
       body: JSON.stringify(_0x3014f2)
     });
-    _0x9e948c = _0x2b9101.status, emptyStr = await _0x2b9101.text();
-    let _0x5d90b5;
+    status = _0x2b9101.status, emptyStr = await _0x2b9101.text();
+    let undefinedOrFallback;
     try {
-      _0x5d90b5 = emptyStr ? JSON.parse(emptyStr) : undefined;
+      undefinedOrFallback = emptyStr ? JSON.parse(emptyStr) : undefined;
     } catch {
-      _0x5d90b5 = undefined;
+      undefinedOrFallback = undefined;
     }
-    _0x59422f = _0x5d90b5?.error?.code, _0x56b428 = _0x5d90b5?.error?.message;
-    if (!_0x2b9101.ok || !_0x5d90b5?.ok || _0x5d90b5.data === undefined) {
+    _0x59422f = undefinedOrFallback?.error?.code, _0x56b428 = undefinedOrFallback?.error?.message;
+    if (!_0x2b9101.ok || !undefinedOrFallback?.ok || undefinedOrFallback.data === undefined) {
       if (_0x2b9101.status === 401 || _0x59422f === "UNAUTHORIZED") AuthService.sendTokenExpiredToRenderer();
-      const error = new Error(_0x5d90b5?.error?.message || (_0x5e4d35 === "zh-CN" ? "模板市场请求失败" : "Template market request failed"));
-      error.code = _0x59422f, error.statusCode = _0x2b9101.status, error.details = _0x5d90b5?.error?.data;
+      const error = new Error(undefinedOrFallback?.error?.message || (_0x5e4d35 === "zh-CN" ? "模板市场请求失败" : "Template market request failed"));
+      error.code = _0x59422f, error.statusCode = _0x2b9101.status, error.details = undefinedOrFallback?.error?.data;
       throw error;
     }
-    return _0x5d90b5.data;
+    return undefinedOrFallback.data;
   } catch (err) {
     await _0x5bc685({
       source: "main",
@@ -9768,7 +9768,7 @@ async function requestTemplateMarketApi(requestValue, _0x4802bc = {}) {
       method: "POST",
       url: _0x4d15f4,
       error: err,
-      httpStatus: _0x9e948c,
+      httpStatus: status,
       businessCode: _0x59422f,
       businessMessage: _0x56b428,
       responseText: emptyStr,
@@ -10798,7 +10798,7 @@ var {
     allowedSpecial: _0x3a014b,
     disallowedSpecial: _0x43a569
   } = {}) {
-    let _0x4dd129;
+    let getSpecialTokenRegexResult;
     if (_0x3a014b === "all" || _0x3a014b?.has("all")) {
       _0x3a014b = new Set(this.specialTokensSet);
       const _0x4c7d47 = _0x3a014b;
@@ -10810,12 +10810,12 @@ var {
       const _0x2c782d = _0x43a569;
       if (_0x3a014b?.size) {
         _0x3a014b.forEach(item => _0x2c782d.delete(item)), _0x43a569.forEach(item => _0x3a014b.delete(item));
-        if (_0x43a569.size > 0) _0x4dd129 = getSpecialTokenRegex(_0x43a569);
-      } else _0x4dd129 = this.allSpecialTokenRegex;
+        if (_0x43a569.size > 0) getSpecialTokenRegexResult = getSpecialTokenRegex(_0x43a569);
+      } else getSpecialTokenRegexResult = this.allSpecialTokenRegex;
     }
     return {
       allowedSpecial: _0x3a014b,
-      regexPattern: _0x4dd129
+      regexPattern: getSpecialTokenRegexResult
     };
   }
   encodeGenerator(generator, generatorValue) {
@@ -12034,8 +12034,8 @@ var DeepseekChatService = class {
       try {
         const byId = telemetryApi.findById(this.savedReportId);
         if (!byId) return false;
-        let _0x50543d;
-        update === "new" ? (_0x50543d = telemetryApi.createCompleted({
+        let createCompletedResult;
+        update === "new" ? (createCompletedResult = telemetryApi.createCompleted({
           type: byId.type,
           startDate: byId.startDate,
           endDate: byId.endDate,
@@ -12046,11 +12046,11 @@ var DeepseekChatService = class {
           customInstruction: byId.customInstruction,
           language: byId.language ?? undefined,
           model: byId.model
-        }, byId.title, report, byId.factSummary, byId.summarySources), this.savedReportId = _0x50543d.id) : (telemetryApi.updateContent(byId.id, byId.title, report), _0x50543d = telemetryApi.findById(byId.id), scheduleReportCcSync(byId.id));
-        if (_0x50543d) sendToRenderer$2("report:status-changed", _0x50543d);
+        }, byId.title, report, byId.factSummary, byId.summarySources), this.savedReportId = createCompletedResult.id) : (telemetryApi.updateContent(byId.id, byId.title, report), createCompletedResult = telemetryApi.findById(byId.id), scheduleReportCcSync(byId.id));
+        if (createCompletedResult) sendToRenderer$2("report:status-changed", createCompletedResult);
         return console.log("[DeepseekDom] report updated from follow-up reply", {
           mode: update,
-          reportId: _0x50543d?.id ?? byId.id,
+          reportId: createCompletedResult?.id ?? byId.id,
           contentLength: report.length
         }), true;
       } catch (err) {
@@ -12478,8 +12478,8 @@ var ChatgptChatService = class {
       try {
         const byId = telemetryApi.findById(this.savedReportId);
         if (!byId) return false;
-        let _0x5175ff;
-        update === "new" ? (_0x5175ff = telemetryApi.createCompleted({
+        let createCompletedResult;
+        update === "new" ? (createCompletedResult = telemetryApi.createCompleted({
           type: byId.type,
           startDate: byId.startDate,
           endDate: byId.endDate,
@@ -12490,11 +12490,11 @@ var ChatgptChatService = class {
           customInstruction: byId.customInstruction,
           language: byId.language ?? undefined,
           model: byId.model
-        }, byId.title, report, byId.factSummary, byId.summarySources), this.savedReportId = _0x5175ff.id) : (telemetryApi.updateContent(byId.id, byId.title, report), _0x5175ff = telemetryApi.findById(byId.id), scheduleReportCcSync(byId.id));
-        if (_0x5175ff) sendToRenderer$1("report:status-changed", _0x5175ff);
+        }, byId.title, report, byId.factSummary, byId.summarySources), this.savedReportId = createCompletedResult.id) : (telemetryApi.updateContent(byId.id, byId.title, report), createCompletedResult = telemetryApi.findById(byId.id), scheduleReportCcSync(byId.id));
+        if (createCompletedResult) sendToRenderer$1("report:status-changed", createCompletedResult);
         return console.log("[ChatgptDom] report updated from follow-up reply", {
           mode: update,
-          reportId: _0x5175ff?.id ?? byId.id,
+          reportId: createCompletedResult?.id ?? byId.id,
           contentLength: report.length
         }), true;
       } catch (err) {
@@ -13019,7 +13019,7 @@ var ChatgptChatService = class {
     }
     async automateChatgpt(automate, chatgpt, chatgptValue, _0x400d9f = true, _0x44f720 = [], _0x2f9461 = "") {
       const textResult = clipboard.readText();
-      let _0x57cf1f = null;
+      let resolvedValue = null;
       const _0x1dffd8 = _0x44f720.length > 0;
       try {
         if (_0x2f9461) await automate.webContents.executeJavaScript("\n          document.documentElement.removeAttribute('data-xiaohei-chatgpt-sent')\n        ").catch(() => {});
@@ -13039,13 +13039,13 @@ var ChatgptChatService = class {
             status: _0x5bf9b9.status,
             step: initialZero
           };
-          _0x57cf1f = typeof _0x5bf9b9.assistantTurnId === "string" && _0x5bf9b9.assistantTurnId ? _0x5bf9b9.assistantTurnId : _0x57cf1f;
+          resolvedValue = typeof _0x5bf9b9.assistantTurnId === "string" && _0x5bf9b9.assistantTurnId ? _0x5bf9b9.assistantTurnId : resolvedValue;
         }
         if (chatgptValue) await automate.webContents.executeJavaScript(chatgptValue).catch(() => {});
         if (!_0x400d9f) return {
           status: "done"
         };
-        const runStepData = await this.runStep(automate, "\n        const targetTurnId = " + JSON.stringify(_0x57cf1f) + ";\n        let content = '';\n        let lastContent = '';\n        let stableSince = 0;\n        let contentStable = false;\n        let attempts = 0;\n        const stableMs = 5000;\n        const contentStart = Date.now();\n\n        while (Date.now() - contentStart < 300000) {\n          attempts += 1;\n          const nextContent = targetTurnId ? getAssistantMarkdownByTurnId(targetTurnId) : '';\n          const targetReady = targetTurnId ? isAssistantTurnCompleteById(targetTurnId) : false;\n\n          if (nextContent !== lastContent) {\n            lastContent = nextContent;\n            stableSince = Date.now();\n          } else if (nextContent && stableSince === 0) {\n            stableSince = Date.now();\n          }\n\n          const stableFor = nextContent ? Date.now() - stableSince : 0;\n          if (nextContent && targetReady && stableFor >= stableMs) {\n            content = nextContent;\n            contentStable = true;\n            break;\n          }\n\n          await sleep(500);\n        }\n\n        if (!content) content = lastContent;\n        return {\n          status: 'done',\n          content,\n          contentSource: 'dom-markdown',\n          extractionDebug: {\n            targetTurnId,\n            attempts,\n            waitedMs: Date.now() - contentStart,\n            stableMs,\n            contentStable,\n            contentLength: content.length,\n            candidateDebug: targetTurnId ? getAssistantMarkdownCandidateDebug(targetTurnId) : null\n          }\n        };\n      ");
+        const runStepData = await this.runStep(automate, "\n        const targetTurnId = " + JSON.stringify(resolvedValue) + ";\n        let content = '';\n        let lastContent = '';\n        let stableSince = 0;\n        let contentStable = false;\n        let attempts = 0;\n        const stableMs = 5000;\n        const contentStart = Date.now();\n\n        while (Date.now() - contentStart < 300000) {\n          attempts += 1;\n          const nextContent = targetTurnId ? getAssistantMarkdownByTurnId(targetTurnId) : '';\n          const targetReady = targetTurnId ? isAssistantTurnCompleteById(targetTurnId) : false;\n\n          if (nextContent !== lastContent) {\n            lastContent = nextContent;\n            stableSince = Date.now();\n          } else if (nextContent && stableSince === 0) {\n            stableSince = Date.now();\n          }\n\n          const stableFor = nextContent ? Date.now() - stableSince : 0;\n          if (nextContent && targetReady && stableFor >= stableMs) {\n            content = nextContent;\n            contentStable = true;\n            break;\n          }\n\n          await sleep(500);\n        }\n\n        if (!content) content = lastContent;\n        return {\n          status: 'done',\n          content,\n          contentSource: 'dom-markdown',\n          extractionDebug: {\n            targetTurnId,\n            attempts,\n            waitedMs: Date.now() - contentStart,\n            stableMs,\n            contentStable,\n            contentLength: content.length,\n            candidateDebug: targetTurnId ? getAssistantMarkdownCandidateDebug(targetTurnId) : null\n          }\n        };\n      ");
         return console.log("[ChatgptDom] extraction debug", runStepData.extractionDebug ?? null), {
           status: "done",
           content: runStepData.content,
@@ -13514,24 +13514,24 @@ var AutoDailyReportService = class {
         body: "",
         customInstruction: ""
       };
-      let _0x1df763 = null;
-      if (!template.startsWith("cloud-")) _0x1df763 = reportTemplateRepository.findById(template);
-      if (template.startsWith("cloud-") || !_0x1df763 || _0x1df763.source === "template_market") try {
-        _0x1df763 = (await reportTemplateService.list(undefined, templateValue)).find(item => item.id === template) ?? _0x1df763;
+      let findByIdResult = null;
+      if (!template.startsWith("cloud-")) findByIdResult = reportTemplateRepository.findById(template);
+      if (template.startsWith("cloud-") || !findByIdResult || findByIdResult.source === "template_market") try {
+        findByIdResult = (await reportTemplateService.list(undefined, templateValue)).find(item => item.id === template) ?? findByIdResult;
       } catch (err) {
         console.warn("[AutoReport] failed to refresh report templates:", err);
       }
-      if (!_0x1df763) return console.warn("[AutoReport] selected template not found:", template), {
+      if (!findByIdResult) return console.warn("[AutoReport] selected template not found:", template), {
         id: template,
         name: null,
         body: "",
         customInstruction: ""
       };
       return {
-        id: _0x1df763.id,
-        name: _0x1df763.name,
-        body: _0x1df763.content,
-        customInstruction: _0x1df763.customInstruction ?? ""
+        id: findByIdResult.id,
+        name: findByIdResult.name,
+        body: findByIdResult.content,
+        customInstruction: findByIdResult.customInstruction ?? ""
       };
     }
     async openHiddenChatReport(hidden, chat, report) {
@@ -13655,8 +13655,8 @@ var SNAPSHOT_SETTLE_MS = 350,
       const _0x5a3bd2 = settings.screenshotExcludeDomains.length > 0;
       let _0x2ba2d0 = null,
         _0x1e0eeb = null,
-        _0x509505 = null;
-      settings.screenshotSkipUnchanged && (_0x2ba2d0 = (await _0x2897c9(settings.screenshotExcludeAllowApps)) ?? null, _0x1e0eeb = await _0x218943(), _0x509505 = _0x2ba2d0 ? null : await telemetryMod());
+        resolvedValue = null;
+      settings.screenshotSkipUnchanged && (_0x2ba2d0 = (await _0x2897c9(settings.screenshotExcludeAllowApps)) ?? null, _0x1e0eeb = await _0x218943(), resolvedValue = _0x2ba2d0 ? null : await telemetryMod());
       const date = new Date();
       try {
         const inspect = await _0x7697ad.inspect(true);
@@ -13673,8 +13673,8 @@ var SNAPSHOT_SETTLE_MS = 350,
           systemContext: _0x580d9e,
           focusWindowBounds: _0x580d9e?.foregroundWindowBounds ?? null,
           dedupe: {
-            enabled: settings.screenshotSkipUnchanged && !_0x2ba2d0 && _0x509505 !== null,
-            focusedDisplayId: _0x509505,
+            enabled: settings.screenshotSkipUnchanged && !_0x2ba2d0 && resolvedValue !== null,
+            focusedDisplayId: resolvedValue,
             foregroundApp: _0x1e0eeb,
             whitelistChecked: settings.screenshotExcludeAllowApps.length > 0,
             whitelistKeyword: _0x2ba2d0
@@ -14756,14 +14756,14 @@ var EnterKeyComponentService = class {
       const _0x5502b5 = null,
         lifecycleGeneration = this.lifecycleGeneration;
       if (this.startOperation?.generation === lifecycleGeneration) return this.startOperation.promise;
-      let _0x4dedd5;
-      return _0x4dedd5 = this.startIfEnabledInternal(lifecycleGeneration).finally(() => {
+      let finallyResult;
+      return finallyResult = this.startIfEnabledInternal(lifecycleGeneration).finally(() => {
         const _0x481048 = _0x5502b5;
-        if (this.startOperation?.promise === _0x4dedd5) this.startOperation = null;
+        if (this.startOperation?.promise === finallyResult) this.startOperation = null;
       }), this.startOperation = {
         generation: lifecycleGeneration,
-        promise: _0x4dedd5
-      }, _0x4dedd5;
+        promise: finallyResult
+      }, finallyResult;
     }
     async startIfEnabledInternal(enabled) {
       if (isMacSupported()) return this.startMacListenerSafely();
@@ -15162,11 +15162,11 @@ var EnterKeyComponentService = class {
       return new Promise(fn => {
         const _0x32e0b0 = _0xf63a4;
         let flagFalse = false,
-          _0x48f12c = null;
+          setTimeoutResult = null;
         const handler = _0xe6d2d6 => {
             if (flagFalse) return;
             flagFalse = true;
-            if (_0x48f12c) clearTimeout(_0x48f12c);
+            if (setTimeoutResult) clearTimeout(setTimeoutResult);
             wait.removeListener("exit", _0x48405e), fn(_0xe6d2d6);
           },
           _0x48405e = () => handler(true);
@@ -15175,7 +15175,7 @@ var EnterKeyComponentService = class {
           handler(true);
           return;
         }
-        _0x48f12c = setTimeout(() => handler(false), forValue);
+        setTimeoutResult = setTimeout(() => handler(false), forValue);
       });
     }
     isOperationOwnerCurrent(operation, ownerValue, current) {
@@ -15361,11 +15361,11 @@ var EnterKeyComponentService = class {
         _0x5bc93b = 0,
         _0x2cc255 = 0;
       const nowMs = Date.now();
-      let _0x24df1b = null,
+      let label = null,
         emptyStr = "",
         _0x4e0f7c = Date.now(),
         _0x4d8e13 = 0,
-        _0x4b0e1d = null;
+        setIntervalResult = null;
       spawnChild.stderr.setEncoding("utf8"), spawnChild.stderr.on("data", event => {
         const _0x346bf4 = _0x4718fb;
         emptyStr = ("" + emptyStr + event).slice(-2000);
@@ -15375,14 +15375,14 @@ var EnterKeyComponentService = class {
         const interfaceResult = nodereadlineService.createInterface({
           input: spawnChild.stdout
         });
-        let _0x4f020f = null;
+        let setTimeoutResult = null;
         const handler = _0xf68cec => {
           if (flagFalse) return;
           flagFalse = true;
-          if (_0x4f020f) clearTimeout(_0x4f020f);
+          if (setTimeoutResult) clearTimeout(setTimeoutResult);
           if (_0xf68cec) _0x21dd3c(_0xf68cec);else fn();
         };
-        _0x4f020f = setTimeout(() => handler(new EnterKeyComponentError("READY_TIMEOUT", translate("enterKeyComponent.readyTimeout"))), READY_TIMEOUT_MS), interfaceResult.on("line", event => {
+        setTimeoutResult = setTimeout(() => handler(new EnterKeyComponentError("READY_TIMEOUT", translate("enterKeyComponent.readyTimeout"))), READY_TIMEOUT_MS), interfaceResult.on("line", event => {
           const _0x3038a6 = _0x4ce14d;
           let parsedLine;
           try {
@@ -15402,7 +15402,7 @@ var EnterKeyComponentService = class {
               progress: null,
               errorCode: null,
               errorMessage: null
-            }), processValue.protocolVersion >= COMPONENT_HEARTBEAT_PROTOCOL_VERSION && !_0x4b0e1d && (_0x4e0f7c = Date.now(), _0x4b0e1d = setInterval(() => {
+            }), processValue.protocolVersion >= COMPONENT_HEARTBEAT_PROTOCOL_VERSION && !setIntervalResult && (_0x4e0f7c = Date.now(), setIntervalResult = setInterval(() => {
               const _0x22e890 = _0x3038a6;
               if (this.child !== spawnChild || this.expectedExitChildren.has(spawnChild)) return;
               if (!systemPowerStateService.getCaptureReadiness().ok) {
@@ -15410,9 +15410,9 @@ var EnterKeyComponentService = class {
                 return;
               }
               if (Date.now() - _0x4e0f7c <= COMPONENT_HEARTBEAT_TIMEOUT_MS) return;
-              _0x24df1b = "HEARTBEAT_TIMEOUT";
-              if (_0x4b0e1d) clearInterval(_0x4b0e1d);
-              _0x4b0e1d = null, spawnChild.kill();
+              label = "HEARTBEAT_TIMEOUT";
+              if (setIntervalResult) clearInterval(setIntervalResult);
+              setIntervalResult = null, spawnChild.kill();
             }, COMPONENT_HEARTBEAT_CHECK_INTERVAL_MS)), handler();
           } else {
             if (parsedLine.type === "heartbeat" && processValue.protocolVersion >= COMPONENT_HEARTBEAT_PROTOCOL_VERSION && Number.isSafeInteger(parsedLine.sequence) && parsedLine.sequence > _0x4d8e13) {
@@ -15428,10 +15428,10 @@ var EnterKeyComponentService = class {
                 if (processInput.enter && settings.enableEnterKeyListener && settings.enableRecording) enterKeyTriggerService.handleEnter();
               } else {
                 if (parsedLine.type === "key-press" && Number.isInteger(parsedLine.sequence) && parsedLine.sequence > _0x5bc93b) _0x5bc93b = parsedLine.sequence, keyboardSoundPlayerService.handleKeyPress();else {
-                  if (parsedLine.type === "key-stat" && Number.isSafeInteger(parsedLine.sequence) && parsedLine.sequence > _0x2cc255 && Number.isInteger(parsedLine.virtualKey) && Number.isInteger(parsedLine.makeCode) && Number.isInteger(parsedLine.extendedFlags) && parsedLine.virtualKey >= 0 && parsedLine.virtualKey <= 255 && parsedLine.makeCode >= 0 && parsedLine.makeCode <= 65535 && parsedLine.extendedFlags >= 0 && (parsedLine.extendedFlags & -7) === 0) _0x2cc255 = parsedLine.sequence, keyboardHeatmapService.recordKey(normalizeWindowsKey(parsedLine.virtualKey, parsedLine.makeCode, parsedLine.extendedFlags));else parsedLine.type === "error" && (_0x24df1b = typeof parsedLine.code === "string" ? parsedLine.code : null, this.updateState({
+                  if (parsedLine.type === "key-stat" && Number.isSafeInteger(parsedLine.sequence) && parsedLine.sequence > _0x2cc255 && Number.isInteger(parsedLine.virtualKey) && Number.isInteger(parsedLine.makeCode) && Number.isInteger(parsedLine.extendedFlags) && parsedLine.virtualKey >= 0 && parsedLine.virtualKey <= 255 && parsedLine.makeCode >= 0 && parsedLine.makeCode <= 65535 && parsedLine.extendedFlags >= 0 && (parsedLine.extendedFlags & -7) === 0) _0x2cc255 = parsedLine.sequence, keyboardHeatmapService.recordKey(normalizeWindowsKey(parsedLine.virtualKey, parsedLine.makeCode, parsedLine.extendedFlags));else parsedLine.type === "error" && (label = typeof parsedLine.code === "string" ? parsedLine.code : null, this.updateState({
                     errorCode: "COMPONENT_RUNTIME_ERROR",
-                    errorMessage: _0x24df1b ? translate("enterKeyComponent.runtimeErrorWithCode", {
-                      code: _0x24df1b
+                    errorMessage: label ? translate("enterKeyComponent.runtimeErrorWithCode", {
+                      code: label
                     }) : translate("enterKeyComponent.runtimeError")
                   }));
                 }
@@ -15440,8 +15440,8 @@ var EnterKeyComponentService = class {
           }
         }), spawnChild.once("error", event => handler(new EnterKeyComponentError("SPAWN_FAILED", event.message))), spawnChild.once("exit", (event, _0x167b94) => {
           const _0xa7779e = _0x4ce14d;
-          if (_0x4b0e1d) clearInterval(_0x4b0e1d);
-          _0x4b0e1d = null;
+          if (setIntervalResult) clearInterval(setIntervalResult);
+          setIntervalResult = null;
           const _0x3f2586 = this.expectedExitChildren.has(spawnChild);
           this.child === spawnChild && (this.child = null, this.activeFeatures = null);
           const maxVal = Math.max(0, Date.now() - nowMs);
@@ -15450,12 +15450,12 @@ var EnterKeyComponentService = class {
               code: event,
               signal: _0x167b94,
               uptimeMs: maxVal,
-              componentErrorCode: _0x24df1b,
+              componentErrorCode: label,
               stderrTail: emptyStr || null,
               features: processInput,
               lastPowerEvent: systemPowerStateService.getLastPowerEventSnapshot()
             });
-            const fallbackValue = _0x24df1b || event || _0x167b94 || "unknown",
+            const fallbackValue = label || event || _0x167b94 || "unknown",
               enterKeyComponentError = new EnterKeyComponentError("UNEXPECTED_EXIT", this.scheduleUnexpectedExitRestart() ? translate("enterKeyComponent.unexpectedExitRestarting", {
                 reason: String(fallbackValue)
               }) : translate("enterKeyComponent.unexpectedExitStopped", {
@@ -19746,14 +19746,14 @@ async function ensureFreeSpace(free, space, spaceValue) {
   for (const _0x3910be of new Set(free)) {
     let _0x3ce285 = _0x3910be;
     while (!existsSync(_0x3ce285) && nodePath.dirname(_0x3ce285) !== _0x3ce285) _0x3ce285 = nodePath.dirname(_0x3ce285);
-    let _0x4ab05f;
+    let product;
     try {
       const statfsData = await statfs(_0x3ce285);
-      _0x4ab05f = Number(statfsData.bavail) * Number(statfsData.bsize);
+      product = Number(statfsData.bavail) * Number(statfsData.bsize);
     } catch {
       continue;
     }
-    if (_0x4ab05f < _0x2cf0d1) throw new Error(translateMenu("dataManagement.fullRestoreNoSpace", spaceValue).replace("{size}", formatBytes(_0x2cf0d1 - _0x4ab05f)));
+    if (product < _0x2cf0d1) throw new Error(translateMenu("dataManagement.fullRestoreNoSpace", spaceValue).replace("{size}", formatBytes(_0x2cf0d1 - product)));
   }
 }
 async function openBackupArchive(backup, archive) {
@@ -20590,26 +20590,26 @@ var MiniProgramSyncService = class {
     resolveState(state, stateValue) {
       const _0x305736 = this.dayStates.get(state.date);
       if (_0x305736 || stateValue === undefined) return _0x305736;
-      let _0x1e9669;
-      if (stateValue === null) _0x1e9669 = {
+      let options;
+      if (stateValue === null) options = {
         digest: "",
         rev: 0,
         missing: true,
         items: null
       };else {
-        if (stateValue.digest ? stateValue.digest === state.digest : stateValue.legacy !== "" && stateValue.legacy === this.legacyDigest(state)) _0x1e9669 = {
+        if (stateValue.digest ? stateValue.digest === state.digest : stateValue.legacy !== "" && stateValue.legacy === this.legacyDigest(state)) options = {
           digest: state.digest,
           rev: stateValue.rev,
           missing: false,
           items: state.items
-        };else _0x1e9669 = {
+        };else options = {
           digest: stateValue.digest,
           rev: stateValue.rev,
           missing: false,
           items: null
         };
       }
-      return this.rememberState(state.date, _0x1e9669), _0x1e9669;
+      return this.rememberState(state.date, options), options;
     }
     rememberState(remember, state) {
       this.dayStates.delete(remember), this.dayStates.set(remember, state);
@@ -21728,21 +21728,21 @@ var AppUsageBarcodeService = class {
       }
       arr.sort((left, right) => left.start - right.start || left.end - right.end);
       const _0x4c1cbb = _0x245a76(settingsRepository.getSettings());
-      let _0x5d98b5 = null,
-        _0x384579 = null;
+      let end = null,
+        key = null;
       for (const arrItem of arr) {
-        if (_0x5d98b5 !== null && _0x384579 !== null) {
-          const _0x3988f2 = arrItem.start - _0x5d98b5;
+        if (end !== null && key !== null) {
+          const _0x3988f2 = arrItem.start - end;
           if (_0x3988f2 > 0 && _0x3988f2 <= _0x4c1cbb) {
-            const _0x4039a8 = _0x5d98b5 + _0x3988f2 / 2;
-            barcodeAccumulator.add(_0x5d98b5, _0x4039a8, _0x384579), barcodeAccumulator.add(_0x4039a8, arrItem.start, arrItem.key);
+            const _0x4039a8 = end + _0x3988f2 / 2;
+            barcodeAccumulator.add(end, _0x4039a8, key), barcodeAccumulator.add(_0x4039a8, arrItem.start, arrItem.key);
           }
         }
-        const _0xf80295 = _0x5d98b5 === null ? arrItem.start : Math.max(arrItem.start, _0x5d98b5);
+        const _0xf80295 = end === null ? arrItem.start : Math.max(arrItem.start, end);
         if (arrItem.end > _0xf80295) barcodeAccumulator.add(_0xf80295, arrItem.end, arrItem.key);else {
           if (arrItem.end === arrItem.start) barcodeAccumulator.add(arrItem.start, arrItem.start + POINT_RECORD_MS, arrItem.key);
         }
-        (_0x5d98b5 === null || arrItem.end >= _0x5d98b5) && (_0x5d98b5 = arrItem.end, _0x384579 = arrItem.key);
+        (end === null || arrItem.end >= end) && (end = arrItem.end, key = arrItem.key);
       }
       return buildResult(category, barcode, seriesRegistry.drafts, barcodeAccumulator.finish());
     }
@@ -23947,22 +23947,22 @@ var FileTypeParser = class FileTypeParser {
     };
     const byteLimitedReadableStream = createByteLimitedReadableStream(new GzipHandler(detect).inflate(), maximumNestedGzipDetectionSizeInBytes),
       hasUnknownFileSizeResult = hasUnknownFileSize(detect);
-    let _0x1d32b9, _0x1d3051, _0x50d413, _0xe0a819;
+    let setTimeoutResult, resolvedValue, _0x50d413, _0xe0a819;
     if (hasUnknownFileSizeResult) {
       const abortController = new AbortController();
-      _0x1d32b9 = setTimeout(() => {
+      setTimeoutResult = setTimeout(() => {
         abortController.abort(new DOMException("Operation timed out after " + unknownSizeGzipProbeTimeoutInMilliseconds + " ms", "TimeoutError"));
-      }, unknownSizeGzipProbeTimeoutInMilliseconds), _0x1d3051 = this.options.signal === undefined ? abortController.signal : AbortSignal.any([this.options.signal, abortController.signal]), _0x50d413 = new FileTypeParser({
+      }, unknownSizeGzipProbeTimeoutInMilliseconds), resolvedValue = this.options.signal === undefined ? abortController.signal : AbortSignal.any([this.options.signal, abortController.signal]), _0x50d413 = new FileTypeParser({
         ...this.options,
-        signal: _0x1d3051
+        signal: resolvedValue
       }), _0x50d413.gzipProbeDepth = this.gzipProbeDepth + 1;
     } else this.gzipProbeDepth++;
     try {
       _0xe0a819 = await (_0x50d413 ?? this).fromStream(byteLimitedReadableStream);
     } catch (err) {
-      if (err?.name === "AbortError" && _0x1d3051?.reason?.name !== "TimeoutError") throw err;
+      if (err?.name === "AbortError" && resolvedValue?.reason?.name !== "TimeoutError") throw err;
     } finally {
-      clearTimeout(_0x1d32b9);
+      clearTimeout(setTimeoutResult);
       if (!hasUnknownFileSizeResult) this.gzipProbeDepth--;
     }
     if (_0xe0a819?.ext === "tar") return {
@@ -24135,7 +24135,7 @@ var FileTypeParser = class FileTypeParser {
       mime: "image/icns"
     };
     if (this.check([80, 75, 3, 4])) {
-      let _0x1acdbb;
+      let payload;
       const openXmlZipDetectionState = createOpenXmlZipDetectionState();
       try {
         await new ZipHandler(detectBuffer).unzip(_0xcd25e => {
@@ -24143,12 +24143,12 @@ var FileTypeParser = class FileTypeParser {
           updateOpenXmlZipDetectionStateFromFilename(openXmlZipDetectionState, _0xcd25e.filename);
           const _0x3530b9 = _0xcd25e.filename === "[Content_Types].xml",
             openXmlFileTypeFromZipEntries = getOpenXmlFileTypeFromZipEntries(openXmlZipDetectionState);
-          if (!_0x3530b9 && openXmlFileTypeFromZipEntries) return _0x1acdbb = openXmlFileTypeFromZipEntries, {
+          if (!_0x3530b9 && openXmlFileTypeFromZipEntries) return payload = openXmlFileTypeFromZipEntries, {
             stop: true
           };
           switch (_0xcd25e.filename) {
             case "META-INF/mozilla.rsa":
-              _0x1acdbb = {
+              payload = {
                 ext: "xpi",
                 mime: "application/x-xpinstall"
               };
@@ -24156,7 +24156,7 @@ var FileTypeParser = class FileTypeParser {
                 stop: true
               };
             case "META-INF/MANIFEST.MF":
-              _0x1acdbb = {
+              payload = {
                 ext: "jar",
                 mime: "application/java-archive"
               };
@@ -24168,7 +24168,7 @@ var FileTypeParser = class FileTypeParser {
               return {
                 async handler(_0x47a4ee) {
                   const _0x573b3d = _0x50f239;
-                  _0x1acdbb = getFileTypeFromMimeType(new TextDecoder("utf-8").decode(_0x47a4ee).trim());
+                  payload = getFileTypeFromMimeType(new TextDecoder("utf-8").decode(_0x47a4ee).trim());
                 },
                 stop: true
               };
@@ -24180,13 +24180,13 @@ var FileTypeParser = class FileTypeParser {
                 async handler(_0x52b740) {
                   const _0x31fad6 = _0x50f239,
                     openXmlMimeTypeFromContentTypesXml = getOpenXmlMimeTypeFromContentTypesXml(new TextDecoder("utf-8").decode(_0x52b740));
-                  if (openXmlMimeTypeFromContentTypesXml) _0x1acdbb = getFileTypeFromMimeType(openXmlMimeTypeFromContentTypesXml);
+                  if (openXmlMimeTypeFromContentTypesXml) payload = getFileTypeFromMimeType(openXmlMimeTypeFromContentTypesXml);
                   openXmlZipDetectionState.hasParsedContentTypesEntry = true, openXmlZipDetectionState.isParsingContentTypes = false;
                 },
                 stop: true
               };
             default:
-              if (/classes\d*\.dex/.test(_0xcd25e.filename)) return _0x1acdbb = {
+              if (/classes\d*\.dex/.test(_0xcd25e.filename)) return payload = {
                 ext: "apk",
                 mime: "application/vnd.android.package-archive"
               }, {
@@ -24199,7 +24199,7 @@ var FileTypeParser = class FileTypeParser {
         if (!isRecoverableZipError(err)) throw err;
         openXmlZipDetectionState.isParsingContentTypes && (openXmlZipDetectionState.isParsingContentTypes = false, openXmlZipDetectionState.hasUnparseableContentTypes = true);
       }
-      return _0x1acdbb ?? getOpenXmlFileTypeFromZipEntries(openXmlZipDetectionState) ?? {
+      return payload ?? getOpenXmlFileTypeFromZipEntries(openXmlZipDetectionState) ?? {
         ext: "zip",
         mime: "application/zip"
       };
@@ -26754,16 +26754,16 @@ var ParserFactory = class {
     return this.parsers.find(item => item.extensions.indexOf(loaderValue) !== -1);
   }
   findLoaderForContentType(loader) {
-    let _0x20254f;
+    let parseHttpContentTypeResult;
     if (!loader) return;
     try {
-      _0x20254f = parseHttpContentType(loader);
+      parseHttpContentTypeResult = parseHttpContentType(loader);
     } catch (err) {
       debug$1("Invalid HTTP Content-Type header value: " + loader);
       return;
     }
-    const _0x3af718 = _0x20254f.subtype.indexOf("x-") === 0 ? _0x20254f.subtype.substring(2) : _0x20254f.subtype;
-    return this.parsers.find(item => item.mimeTypes.find(items => items.indexOf(_0x20254f.type + "/" + _0x3af718) !== -1));
+    const _0x3af718 = parseHttpContentTypeResult.subtype.indexOf("x-") === 0 ? parseHttpContentTypeResult.subtype.substring(2) : parseHttpContentTypeResult.subtype;
+    return this.parsers.find(item => item.mimeTypes.find(items => items.indexOf(parseHttpContentTypeResult.type + "/" + _0x3af718) !== -1));
   }
   getSupportedMimeTypes() {
     const set = new Set();
@@ -32563,7 +32563,7 @@ var SurveyService = class {
         _0x29323b = _0x3add38 + "/surveys.php",
         nowMs = Date.now();
       let emptyStr = "",
-        _0x51caa6,
+        status,
         _0x7f4d47,
         _0x2f1b6f;
       try {
@@ -32576,7 +32576,7 @@ var SurveyService = class {
           body: JSON.stringify(call),
           signal: abortController.signal
         });
-        _0x51caa6 = _0x173c51.status, emptyStr = await _0x173c51.text();
+        status = _0x173c51.status, emptyStr = await _0x173c51.text();
         const parsed = JSON.parse(emptyStr || "{}");
         _0x7f4d47 = parsed.error?.code, _0x2f1b6f = parsed.error?.message;
         if (!_0x173c51.ok || !parsed.ok) throw new Error(parsed.error?.message || translate("aiErrors.requestFailed"));
@@ -32589,7 +32589,7 @@ var SurveyService = class {
           method: "POST",
           url: _0x29323b,
           error: err,
-          httpStatus: _0x51caa6,
+          httpStatus: status,
           businessCode: _0x7f4d47,
           businessMessage: _0x2f1b6f,
           responseText: emptyStr,
@@ -33313,26 +33313,26 @@ function registerTodoController() {
       const _0x2ad9b3 = currentLanguage$1(),
         _0x37cfaf = compactTimestampForFileName(),
         image = clipboard.readImage();
-      let _0x4f46d8, _0x26a97b, _0x3dba68;
-      if (!image.isEmpty()) _0x4f46d8 = image.toPNG(), _0x26a97b = _0x37cfaf + ".png", _0x3dba68 = "image/png";else {
+      let _0x4f46d8, total, label;
+      if (!image.isEmpty()) _0x4f46d8 = image.toPNG(), total = _0x37cfaf + ".png", label = "image/png";else {
         const textResult = clipboard.readText();
         if (!textResult.trim()) throw new Error(_0x2ad9b3 === "zh-CN" ? "剪贴板暂无可上传内容" : "Clipboard has no uploadable content");
-        _0x4f46d8 = Buffer.from(textResult, "utf8"), _0x26a97b = _0x37cfaf + ".txt", _0x3dba68 = "text/plain;charset=utf-8";
+        _0x4f46d8 = Buffer.from(textResult, "utf8"), total = _0x37cfaf + ".txt", label = "text/plain;charset=utf-8";
       }
       if (_0x4f46d8.length > TODO_ATTACHMENT_MAX_BYTES) throw new Error(_0x2ad9b3 === "zh-CN" ? "单个附件不能超过 300MB" : "A single attachment cannot exceed 300MB");
       const uuid = randomUUID(),
-        safeAttachmentNameResult = safeAttachmentName(_0x26a97b),
+        safeAttachmentNameResult = safeAttachmentName(total),
         options = {
           kind: "buffer",
           token: uuid,
           source: "clipboard",
           buffer: _0x4f46d8,
           originalName: safeAttachmentNameResult,
-          mimeType: _0x3dba68,
+          mimeType: label,
           name: safeAttachmentNameResult,
           meta: formatAttachmentMeta(_0x4f46d8.length),
           size: _0x4f46d8.length,
-          previewUrl: imagePreviewUrl(_0x4f46d8, _0x3dba68)
+          previewUrl: imagePreviewUrl(_0x4f46d8, label)
         };
       return pendingAttachments.set(uuid, options), ok$16(toPendingAttachment(options));
     } catch (err) {
@@ -34245,7 +34245,7 @@ var AudioTranscriptionService = class {
       const requireTokenResult = requireToken(),
         nowMs = Date.now();
       let emptyStr = "",
-        _0x176b2c;
+        status;
       try {
         const _0x544ec6 = await fetch(getTranscriptionUrl(), {
           method: "GET",
@@ -34253,7 +34253,7 @@ var AudioTranscriptionService = class {
             Authorization: "Bearer " + requireTokenResult
           }
         });
-        _0x176b2c = _0x544ec6.status;
+        status = _0x544ec6.status;
         const response = await parseResponse(_0x544ec6);
         emptyStr = response.text;
         if (!_0x544ec6.ok || !response.payload.ok || !response.payload.data) throw new AudioTranscriptionServiceError(response.payload.error?.code || "CAPABILITY_ERROR", response.payload.error?.message || translate("audioTranscription.capabilityFailed"), response.payload.error?.data);
@@ -34266,7 +34266,7 @@ var AudioTranscriptionService = class {
           method: "GET",
           url: getTranscriptionUrl(),
           error: err,
-          httpStatus: _0x176b2c,
+          httpStatus: status,
           responseText: emptyStr,
           durationMs: Date.now() - nowMs
         });
@@ -34365,7 +34365,7 @@ var AudioTranscriptionService = class {
         timerId = setTimeout(() => abortController.abort(), REQUEST_TIMEOUT_MS$1),
         nowMs = Date.now();
       let emptyStr = "",
-        _0x53f6fd,
+        status,
         _0x2ae918,
         _0x586435;
       try {
@@ -34388,7 +34388,7 @@ var AudioTranscriptionService = class {
           }),
           signal: abortController.signal
         });
-        _0x53f6fd = _0x2c1745.status;
+        status = _0x2c1745.status;
         const response = await parseResponse(_0x2c1745);
         emptyStr = response.text, _0x2ae918 = response.payload.error?.code, _0x586435 = response.payload.error?.message;
         if (!_0x2c1745.ok || !response.payload.ok || !response.payload.data) throw new AudioTranscriptionServiceError(response.payload.error?.code || "CACHE_LOOKUP_ERROR", response.payload.error?.message || translate("audioTranscription.cacheFailed"), response.payload.error?.data);
@@ -34415,7 +34415,7 @@ var AudioTranscriptionService = class {
           body: formData,
           signal: abortController.signal
         });
-        _0x53f6fd = _0xa4fb0c.status;
+        status = _0xa4fb0c.status;
         const responseData = await parseResponse(_0xa4fb0c);
         emptyStr = responseData.text, _0x2ae918 = responseData.payload.error?.code, _0x586435 = responseData.payload.error?.message;
         if (!_0xa4fb0c.ok || !responseData.payload.ok || !responseData.payload.data) throw new AudioTranscriptionServiceError(responseData.payload.error?.code || "TRANSCRIPTION_ERROR", responseData.payload.error?.message || translate("audioTranscription.failed"), responseData.payload.error?.data);
@@ -34431,7 +34431,7 @@ var AudioTranscriptionService = class {
           method: "POST",
           url: getTranscriptionUrl(),
           error: _0x7a4761,
-          httpStatus: _0x53f6fd,
+          httpStatus: status,
           businessCode: _0x2ae918,
           businessMessage: _0x586435,
           responseText: emptyStr,
@@ -34785,23 +34785,23 @@ function ok$10(_0x27e0f9) {
   };
 }
 function fail$10(event) {
-  let _0x277e7d;
-  if (event instanceof AppLockServiceError) _0x277e7d = {
+  let payload;
+  if (event instanceof AppLockServiceError) payload = {
     code: event.code,
     message: event.message
   };else {
-    if (event instanceof ZodError) _0x277e7d = {
+    if (event instanceof ZodError) payload = {
       code: "INVALID_ARGUMENT",
       message: translate("appLock.invalidArgument"),
       details: event.flatten()
-    };else _0x277e7d = {
+    };else payload = {
       code: "APP_LOCK_ERROR",
       message: event instanceof Error ? event.message : translate("appLock.actionFailed")
     };
   }
   return {
     ok: false,
-    error: _0x277e7d
+    error: payload
   };
 }
 function registerAppLockController() {
@@ -35089,23 +35089,23 @@ var TOOLBOX_ORIGIN = "https://xiaoheiribao.com",
           Authorization: "Toolbox " + ensureAccessToken,
           "Accept-Language": this.language()
         });
-      let _0x273595;
-      if (requestValue.body?.type === "json") _0x157950.set("Content-Type", "application/json"), _0x273595 = requestValue.body.value;else {
+      let value;
+      if (requestValue.body?.type === "json") _0x157950.set("Content-Type", "application/json"), value = requestValue.body.value;else {
         if (requestValue.body?.type === "multipart") {
           const formData = new FormData();
           for (const _0xccc407 of requestValue.body.fields) formData.append(_0xccc407.name, _0xccc407.value);
           for (const _0xbc8607 of requestValue.body.files) formData.append(_0xbc8607.fieldName, new Blob([_0xbc8607.data], {
             type: _0xbc8607.mimeType
           }), _0xbc8607.name);
-          _0x273595 = formData;
+          value = formData;
         }
       }
       let _0x44f32e;
       try {
         _0x44f32e = await conditionalToolboxFetch(apiUrl, {
-          method: requestValue.method || (_0x273595 ? "POST" : "GET"),
+          method: requestValue.method || (value ? "POST" : "GET"),
           headers: _0x157950,
-          body: _0x273595,
+          body: value,
           signal: requestValue.timeoutMs ? AbortSignal.timeout(requestValue.timeoutMs) : undefined
         }, this.desktopSessionToken);
       } catch (err) {
@@ -37587,24 +37587,24 @@ function avatarExtension(avatar, extension) {
 async function saveAvatar(avatar, items, avatarValue, avatarInput) {
   if (!items) return "";
   try {
-    let _0x5cdca9,
+    let resolvedValue,
       emptyStr = "";
     if (items.startsWith("data:image/")) {
       const _0x42c6fa = items.match(/^data:([^;,]+)(?:;base64)?,(.*)$/s);
       if (!_0x42c6fa) return "";
-      emptyStr = _0x42c6fa[1], _0x5cdca9 = items.includes(";base64,") ? Buffer.from(_0x42c6fa[2], "base64") : Buffer.from(decodeURIComponent(_0x42c6fa[2]));
+      emptyStr = _0x42c6fa[1], resolvedValue = items.includes(";base64,") ? Buffer.from(_0x42c6fa[2], "base64") : Buffer.from(decodeURIComponent(_0x42c6fa[2]));
     } else {
       if (/^https?:/i.test(items)) {
         const _0x2e84a6 = await avatar.request.get(items, {
           timeout: 8000
         });
         if (!_0x2e84a6.ok()) return "";
-        emptyStr = _0x2e84a6.headers()["content-type"] || "", _0x5cdca9 = await _0x2e84a6.body();
+        emptyStr = _0x2e84a6.headers()["content-type"] || "", resolvedValue = await _0x2e84a6.body();
       } else return "";
     }
-    if (!_0x5cdca9?.length || _0x5cdca9.length > 0x500000 || emptyStr && !emptyStr.startsWith("image/")) return "";
+    if (!resolvedValue?.length || resolvedValue.length > 0x500000 || emptyStr && !emptyStr.startsWith("image/")) return "";
     const _0x739d = avatarValue + "-" + avatarInput + avatarExtension(emptyStr, items);
-    return fs.writeFileSync(nodePath.join(ACCOUNT_ASSET_ROOT, _0x739d), _0x5cdca9), "/account-assets/" + _0x739d;
+    return fs.writeFileSync(nodePath.join(ACCOUNT_ASSET_ROOT, _0x739d), resolvedValue), "/account-assets/" + _0x739d;
   } catch {
     return "";
   }
@@ -37644,13 +37644,13 @@ async function hasPlatformLogin(platform, login, loginValue) {
 }
 async function hasVisibleLoginPrompt(visible, login) {
   if (visible.isClosed()) return false;
-  let _0xad9f33;
+  let framesResult;
   try {
-    _0xad9f33 = visible.frames();
+    framesResult = visible.frames();
   } catch {
     return false;
   }
-  for (const _0x1305f9 of _0xad9f33) {
+  for (const _0x1305f9 of framesResult) {
     const _0x2785f5 = _0x1305f9.url();
     if ((LOGIN_EXPIRED_URLS[login] ?? []).some(item => item.test(_0x2785f5))) return true;
     for (const _0x3dd280 of LOGIN_EXPIRED_SELECTORS[login] ?? []) try {
@@ -40423,14 +40423,14 @@ var MAX_MARKDOWN_BYTES = 0xa00000,
       return this.grantedPaths.has(_0x3c0412) || (await this.isRecentPath(_0x3c0412)) ? nodePath.dirname(_0x3c0412) : app.getPath("documents");
     }
     async pathExists(path) {
-      let _0x5a4baf = null;
+      let setTimeoutResult = null;
       const promise = new Promise(fn => {
-        _0x5a4baf = setTimeout(() => fn(true), RECENT_EXISTS_TIMEOUT_MS), _0x5a4baf.unref();
+        setTimeoutResult = setTimeout(() => fn(true), RECENT_EXISTS_TIMEOUT_MS), setTimeoutResult.unref();
       });
       try {
         return await Promise.race([access(path).then(() => true, () => false), promise]);
       } finally {
-        if (_0x5a4baf) clearTimeout(_0x5a4baf);
+        if (setTimeoutResult) clearTimeout(setTimeoutResult);
       }
     }
     async assertGranted(granted, _0x56f4f9 = translate("markdownReader.accessExpired")) {
@@ -40454,16 +40454,16 @@ var MAX_MARKDOWN_BYTES = 0xa00000,
         _0x14b295 = _0xcb4170 >= 0 ? trimmed.slice(_0xcb4170 + 1) : null,
         _0x423770 = arr.indexOf("?"),
         _0x18f3af = _0x423770 >= 0 ? arr.slice(0, _0x423770) : arr;
-      let _0x1748c6, _0x172d5a;
+      let decodeURIComponentResult, resolvedValue;
       try {
-        _0x1748c6 = decodeURIComponent(_0x18f3af), _0x172d5a = _0x14b295 === null ? null : decodeURIComponent(_0x14b295);
+        decodeURIComponentResult = decodeURIComponent(_0x18f3af), resolvedValue = _0x14b295 === null ? null : decodeURIComponent(_0x14b295);
       } catch {
         throw new MarkdownReaderServiceError("INVALID_LOCAL_PATH", translate("markdownReader.localPathEncodingInvalid"));
       }
-      if (!_0x1748c6) throw new MarkdownReaderServiceError("INVALID_LOCAL_PATH", translate("markdownReader.localPathEmpty"));
+      if (!decodeURIComponentResult) throw new MarkdownReaderServiceError("INVALID_LOCAL_PATH", translate("markdownReader.localPathEmpty"));
       return {
-        fileSource: _0x1748c6,
-        anchor: _0x172d5a
+        fileSource: decodeURIComponentResult,
+        anchor: resolvedValue
       };
     }
     historyPath() {
@@ -41019,9 +41019,9 @@ var ClipboardPickerWindowService = class {
     }
     show(_0x5bcc05) {
       if (!this.paths || !clipboardassistantApi.isEnabled() || appLockService.getState().locked) return;
-      let _0x5a7a14;
+      let buildPayloadResult;
       try {
-        _0x5a7a14 = this.buildPayload(_0x5bcc05);
+        buildPayloadResult = this.buildPayload(_0x5bcc05);
       } catch (err) {
         console.warn("[ClipboardPicker] 读取剪贴板历史失败:", err);
         return;
@@ -41030,10 +41030,10 @@ var ClipboardPickerWindowService = class {
       const windowResult = this.ensureWindow();
       windowResult.setBounds(pickerBoundsNearCursor(), false), this.presented = true;
       if (!this.loaded) {
-        this.pendingPayload = _0x5a7a14;
+        this.pendingPayload = buildPayloadResult;
         return;
       }
-      this.reveal(windowResult, _0x5a7a14);
+      this.reveal(windowResult, buildPayloadResult);
     }
     hide() {
       this.presented = false, this.pendingPayload = null;
@@ -41449,15 +41449,15 @@ async function showBotReplyFileMenu(fileMenuArg) {
       if ((await stat(fileMenuArg)).size > 0x1400000) throw new Error(translate("botFileMenu.copyTooLarge"));
       const file = await readFile(fileMenuArg);
       if (file.includes(0)) throw new Error(translate("botFileMenu.copyNotText"));
-      let _0xd5276d;
+      let decodeResult;
       try {
-        _0xd5276d = new TextDecoder("utf-8", {
+        decodeResult = new TextDecoder("utf-8", {
           fatal: true
         }).decode(file);
       } catch {
         throw new Error(translate("botFileMenu.copyNotUtf8"));
       }
-      clipboard.writeText(_0xd5276d);
+      clipboard.writeText(decodeResult);
     })
   }, {
     label: translate(_0x14ada4 ? "botFileMenu.showInFinder" : "botFileMenu.showInExplorer"),
@@ -41575,13 +41575,13 @@ async function getBotTutorial(botValue) {
     _0x5cc2e6 = _0x4ca83f.task ? _0x231789.listAgentRunsForTrigger(_0x4ca83f.task.id) : [],
     arr = _0x5cc2e6.flatMap(item => item.responseMessageId ? _0x231789.getMessage(item.responseMessageId)?.processItems ?? [] : []);
   let _0x47be3d = _0x4ca83f.task ? "queued" : "idle",
-    _0x2de6d3 = null,
+    resolvedValue = null,
     _0x1d215f = null;
   if (_0x5cc2e6.some(item => item.status === "running")) _0x47be3d = "running";else {
     if (_0x5cc2e6.some(item => item.status === "queued")) _0x47be3d = "queued";else {
       if (_0x5cc2e6.length) {
         const found = _0x5cc2e6.find(item => item.status === "failed" || item.status === "cancelled");
-        if (found) _0x47be3d = found.status === "cancelled" ? "cancelled" : "failed", _0x2de6d3 = found.responseMessageId ? _0x231789.getMessage(found.responseMessageId)?.errorMessage ?? null : null;else {
+        if (found) _0x47be3d = found.status === "cancelled" ? "cancelled" : "failed", resolvedValue = found.responseMessageId ? _0x231789.getMessage(found.responseMessageId)?.errorMessage ?? null : null;else {
           const _0x3e0919 = arr.some(item => item.kind === "tool" && item.toolName === "xiaohei_read_attachment" && item.status === "completed"),
             _0x57ac85 = arr.some(item => {
               const _0x258e0b = _0x132e02;
@@ -41608,7 +41608,7 @@ async function getBotTutorial(botValue) {
     canExecute: !_0x3785c9,
     blockedReason: _0x3785c9,
     taskStatus: _0x47be3d,
-    taskError: _0x2de6d3,
+    taskError: resolvedValue,
     processItems: arr,
     artifactContent: _0x1d215f,
     sampleText: botTutorialContentResult.sample,
@@ -41781,9 +41781,9 @@ async function importBotAttachmentPaths(importValue) {
   for (const _0x54c7ee of [...new Set(importValue)]) {
     if (!nodePath.isAbsolute(_0x54c7ee)) throw new Error(translate("botAttachment.invalidPath"));
     const _0x5ebc5e = await stat(_0x54c7ee);
-    let _0x5d31a0,
+    let subarrayResult,
       emptyStr = "";
-    if (_0x5ebc5e.isDirectory()) emptyStr = BOT_FOLDER_MIME, _0x5d31a0 = Buffer.from(JSON.stringify({
+    if (_0x5ebc5e.isDirectory()) emptyStr = BOT_FOLDER_MIME, subarrayResult = Buffer.from(JSON.stringify({
       kind: "local-directory-reference",
       path: _0x54c7ee,
       description: "用户附加的本地文件夹。请使用文件工具按任务需要列出和读取此目录中的文件；目录内容没有上传或复制。"
@@ -41802,7 +41802,7 @@ async function importBotAttachmentPaths(importValue) {
           _0x4b5952 += _0xf0e33a.bytesRead;
         }
         if (_0x4b5952 > _0x5ebc5e.size) throw new Error(translate("botAttachment.changing"));
-        _0x5d31a0 = _0x14b3f4.subarray(0, _0x4b5952);
+        subarrayResult = _0x14b3f4.subarray(0, _0x4b5952);
       } finally {
         await _0x50b6d3.close();
       }
@@ -41820,13 +41820,13 @@ async function importBotAttachmentPaths(importValue) {
         ".pdf": "application/pdf"
       }[nodePath.extname(_0x54c7ee).toLowerCase()] || "application/octet-stream";
     }
-    initialZero += _0x5d31a0.length;
+    initialZero += subarrayResult.length;
     if (initialZero > 0x3200000) throw new Error(translate("botMain.attachmentsTooLarge"));
     emptyItems.push({
       sourcePath: _0x54c7ee,
       name: nodePath.basename(_0x54c7ee) || _0x54c7ee,
       mimeType: emptyStr,
-      data: _0x5d31a0.buffer.slice(_0x5d31a0.byteOffset, _0x5d31a0.byteOffset + _0x5d31a0.byteLength)
+      data: subarrayResult.buffer.slice(subarrayResult.byteOffset, subarrayResult.byteOffset + subarrayResult.byteLength)
     });
   }
   return emptyItems;
@@ -43773,10 +43773,10 @@ function summarizeDifferentialCache(marize, differential) {
     existsSyncResult = fs.existsSync(marize),
     joined = nodePath.join(marize, _0x41f3ae);
   let flagFalse = false,
-    _0x7feb1b = null;
+    resolvedValue = null;
   if (existsSyncResult) try {
     const statSyncResult = fs.statSync(joined);
-    flagFalse = statSyncResult.isFile(), _0x7feb1b = flagFalse ? statSyncResult.size : null;
+    flagFalse = statSyncResult.isFile(), resolvedValue = flagFalse ? statSyncResult.size : null;
   } catch {
     flagFalse = false;
   }
@@ -43785,7 +43785,7 @@ function summarizeDifferentialCache(marize, differential) {
     cacheDirectoryExists: existsSyncResult,
     packageFileName: _0x41f3ae,
     packageFileExists: flagFalse,
-    packageFileSize: _0x7feb1b,
+    packageFileSize: resolvedValue,
     baselineRecord: existsSyncResult ? readJsonRecord(marize, "differential-baseline") : null,
     candidateRecord: existsSyncResult ? readJsonRecord(marize, "differential-candidate") : null,
     baselineBlockmapExists: existsSyncResult && fs.existsSync(nodePath.join(marize, "differential-baseline.blockmap")),
@@ -43909,10 +43909,10 @@ function readEnvironmentValue(environment) {
   }
 }
 function currentEnvironment() {
-  let _0x2606ed = null;
+  let product = null;
   try {
     const statfsSync = fs.statfsSync(app.getPath("userData"));
-    _0x2606ed = statfsSync.bavail * statfsSync.bsize;
+    product = statfsSync.bavail * statfsSync.bsize;
   } catch {}
   return {
     appVersion: readEnvironmentValue(() => app.getVersion()),
@@ -43927,7 +43927,7 @@ function currentEnvironment() {
     isInApplicationsFolder: process.platform === "darwin" ? readEnvironmentValue(() => app.isInApplicationsFolder()) : null,
     executablePath: readEnvironmentValue(() => sanitizeDiagnosticString(process.execPath)),
     userDataPath: "<USER_DATA>",
-    availableDiskBytes: _0x2606ed,
+    availableDiskBytes: product,
     totalMemoryBytes: readEnvironmentValue(() => os.totalmem()),
     freeMemoryBytes: readEnvironmentValue(() => os.freemem())
   };
@@ -44790,19 +44790,19 @@ async function withRequests(requests, requestsValue, requestsInput, _0x572bdd, _
     } catch {}
   };
   cancellationToken.on("cancel", handler), requests.createRequest = (response, _0xd86335) => {
-    let _0x548cc5, _0x4587a3;
+    let setTimeoutResult, _0x4587a3;
     const _0xb2ab47 = () => {
-        _0x548cc5 && (clearTimeout(_0x548cc5), _0x42708b.delete(_0x548cc5));
+        setTimeoutResult && (clearTimeout(setTimeoutResult), _0x42708b.delete(setTimeoutResult));
       },
       _0x3c5dce = _0x25b41f => {
-        _0xb2ab47(), _0x548cc5 = setTimeout(() => {
+        _0xb2ab47(), setTimeoutResult = setTimeout(() => {
           flagFalse = true;
           const _0x18852e = Object.assign(new Error(translate("updater.sourceTimeout")), {
             code: "ERR_UPDATE_SOURCE_TIMEOUT"
           });
           cancellationToken.cancel();
           if (_0x4587a3.listenerCount("error") > 0) _0x4587a3.emit("error", _0x18852e);
-        }, _0x25b41f), _0x42708b.add(_0x548cc5);
+        }, _0x25b41f), _0x42708b.add(setTimeoutResult);
       };
     return _0x4587a3 = createRequest.call(requests, response, _0x31eb3e => {
       const _0x51dd52 = null;
@@ -46276,14 +46276,14 @@ async function checkManualUpdate() {
     }).toString(),
     nowMs = Date.now();
   let emptyStr = "",
-    _0x27a19d,
+    status,
     _0x25f570;
   try {
     const _0xabcecf = await fetch(_0x59fbd7, {
       cache: "no-store",
       signal: AbortSignal.timeout(20000)
     });
-    _0x27a19d = _0xabcecf.status, emptyStr = await _0xabcecf.text();
+    status = _0xabcecf.status, emptyStr = await _0xabcecf.text();
     const parsed = JSON.parse(emptyStr || "{}");
     _0x25f570 = parsed.error?.message;
     if (!_0xabcecf.ok || !parsed.ok || !parsed.data) throw new Error(parsed.error?.message || translateMenu("updater.checkFailed", fallbackValue));
@@ -46301,7 +46301,7 @@ async function checkManualUpdate() {
       method: "GET",
       url: _0x59fbd7,
       error: err,
-      httpStatus: _0x27a19d,
+      httpStatus: status,
       businessMessage: _0x25f570,
       responseText: emptyStr,
       durationMs: Date.now() - nowMs
@@ -46344,14 +46344,14 @@ async function fetchPublishedUpdateFromPhp() {
     }).toString(),
     nowMs = Date.now();
   let emptyStr = "",
-    _0x22c29e,
+    status,
     _0x9fece5;
   try {
     const _0x2672c2 = await fetch(_0x59b014, {
       cache: "no-store",
       signal: AbortSignal.timeout(20000)
     });
-    _0x22c29e = _0x2672c2.status, emptyStr = await _0x2672c2.text();
+    status = _0x2672c2.status, emptyStr = await _0x2672c2.text();
     const parsed = JSON.parse(emptyStr || "{}");
     _0x9fece5 = parsed.error?.message;
     if (!_0x2672c2.ok || !parsed.ok) await _0x5bc685({
@@ -46362,7 +46362,7 @@ async function fetchPublishedUpdateFromPhp() {
       url: _0x59b014,
       errorName: "ApiResponseError",
       errorMessage: parsed.error?.message || "HTTP " + _0x2672c2.status,
-      httpStatus: _0x22c29e,
+      httpStatus: status,
       businessMessage: parsed.error?.message,
       responseText: emptyStr,
       durationMs: Date.now() - nowMs,
@@ -46404,7 +46404,7 @@ async function fetchPublishedUpdateFromPhp() {
       method: "GET",
       url: _0x59b014,
       error: err,
-      httpStatus: _0x22c29e,
+      httpStatus: status,
       businessMessage: _0x9fece5,
       responseText: emptyStr,
       durationMs: Date.now() - nowMs,
@@ -46426,15 +46426,15 @@ async function fetchPublishedUpdateFromPhp() {
 }
 async function checkForUpdatesWithTimeout() {
   const forUpdates = autoUpdater$1.checkForUpdates();
-  let _0x4f8a3a;
+  let setTimeoutResult;
   try {
     return await Promise.race([forUpdates, new Promise((_0x3c054d, fn) => {
-      _0x4f8a3a = setTimeout(() => {
+      setTimeoutResult = setTimeout(() => {
         _0x245fce().closeAllConnections().catch(() => {}), fn(new Error("checkForUpdates timed out after " + UPDATE_YML_LOOKUP_TIMEOUT_MS + "ms"));
       }, UPDATE_YML_LOOKUP_TIMEOUT_MS);
     })]);
   } finally {
-    if (_0x4f8a3a !== undefined) clearTimeout(_0x4f8a3a);
+    if (setTimeoutResult !== undefined) clearTimeout(setTimeoutResult);
   }
 }
 async function resolveUpdateAvailability(update) {
@@ -47016,10 +47016,10 @@ ipcMain.handle("app:confirm-quit", () => {
   const abortController = new AbortController(),
     timerId = setTimeout(() => abortController.abort(), 30000),
     nowMs = Date.now();
-  let _0x254b98;
+  let status;
   try {
     const trustedImage = await fetchTrustedImage(_0x4ce2a4, abortController.signal);
-    _0x254b98 = trustedImage.status;
+    status = trustedImage.status;
     if (!trustedImage.ok) throw new Error("HTTP " + trustedImage.status);
     const lowercased = (trustedImage.headers.get("content-type") || "").split(";", 1)[0].trim().toLowerCase();
     if (!allowedImageContentTypes.has(lowercased)) throw new Error(translate("imageAccess.remoteNotImage"));
@@ -47037,7 +47037,7 @@ ipcMain.handle("app:confirm-quit", () => {
       method: "GET",
       url: _0x4ce2a4,
       error: err,
-      httpStatus: _0x254b98,
+      httpStatus: status,
       durationMs: Date.now() - nowMs,
       timeoutMs: 30000,
       context: {
@@ -47249,10 +47249,10 @@ ipcMain.handle("app:confirm-quit", () => {
     }).toString(),
     nowMs = Date.now();
   let emptyStr = "",
-    _0xac03a;
+    status;
   try {
     const _0x4bf066 = await fetch(_0x856baa);
-    _0xac03a = _0x4bf066.status, emptyStr = await _0x4bf066.text();
+    status = _0x4bf066.status, emptyStr = await _0x4bf066.text();
     if (!_0x4bf066.ok) throw new Error("HTTP " + _0x4bf066.status);
     return JSON.parse(emptyStr || "{}");
   } catch (err) {
@@ -47263,7 +47263,7 @@ ipcMain.handle("app:confirm-quit", () => {
       method: "GET",
       url: _0x856baa,
       error: err,
-      httpStatus: _0xac03a,
+      httpStatus: status,
       responseText: emptyStr,
       durationMs: Date.now() - nowMs
     });

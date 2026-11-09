@@ -20,7 +20,7 @@ const GLOBALS = new Set(['window','document','globalThis','global','process','co
 const COMPRESSED = /^[a-zA-Z]$|^[a-zA-Z][0-9]$|^[a-z]{2}$|^_0x[0-9a-f]+$/;
 const IDENT = /^[A-Za-z_$][\w$]*$/;
 
-const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, byfunc: 0, more: 0, files: 0 };
+const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, byfunc: 0, more: 0, late: 0, files: 0 };
 
 // ---- 参数画像 ----
 function inferParam(paramName, fnPath) {
@@ -267,6 +267,87 @@ function applyMore(ast) {
   return n;
 }
 
+// ---- 后续赋值 / 三元 / 运算 / 字面量 ----
+function inferFromExprLocal(expr) {
+  if (!expr) return null;
+  if (t.isObjectExpression(expr)) {
+    const keys = new Set();
+    for (const pr of expr.properties) {
+      if (t.isObjectProperty(pr) && !pr.computed) {
+        if (t.isIdentifier(pr.key)) keys.add(pr.key.name);
+        else if (t.isStringLiteral(pr.key)) keys.add(pr.key.value);
+      }
+    }
+    const has = (...ks) => ks.some(k => keys.has(k));
+    if (has('ok','error','data')) return ['result'];
+    if (has('title','status','priority')) return ['record'];
+    if (has('url','method','body')) return ['request'];
+    if (keys.size >= 3) return ['options'];
+    return ['payload'];
+  }
+  if (t.isConditionalExpression(expr)) {
+    for (const branch of [expr.consequent, expr.alternate]) {
+      if (t.isIdentifier(branch) && !COMPRESSED.test(branch.name) && branch.name.length >= 4) return [branch.name + 'Value', branch.name];
+    }
+    return ['resolvedValue'];
+  }
+  if (t.isBinaryExpression(expr)) {
+    if (expr.operator === '+') return (t.isStringLiteral(expr.left) || t.isTemplateLiteral(expr.left)) ? ['text'] : ['total'];
+    if (expr.operator === '-') return ['diff'];
+    if (expr.operator === '*') return ['product'];
+    if (expr.operator === '/') return ['ratio'];
+  }
+  if (t.isStringLiteral(expr)) {
+    const v = expr.value;
+    if (/^[\w.-]+\.(png|jpe?g|webp|gif|svg|mp4|mp3|wav)$/i.test(v)) return ['fileName'];
+    if (/^https?:/.test(v)) return ['urlText'];
+    if (/^\d{4}-\d{2}-\d{2}/.test(v)) return ['dateText'];
+    if (v.length > 0 && v.length <= 24) return ['label'];
+    return null;
+  }
+  if (t.isNumericLiteral(expr)) return ['count'];
+  if (t.isBooleanLiteral(expr)) return ['flag'];
+  if (t.isMemberExpression(expr) && !expr.computed && t.isIdentifier(expr.property)) {
+    const pr = expr.property.name;
+    if (pr.length >= 3 && !GLOBALS.has(pr) && !KEYWORDS.has(pr)) return [pr];
+  }
+  return null;
+}
+function applyLate(ast) {
+  let n = 0;
+  const assigns = new Map();
+  traverse(ast, {
+    AssignmentExpression(pp) {
+      const l = pp.node.left;
+      if (t.isIdentifier(l) && COMPRESSED.test(l.name)) {
+        if (!assigns.has(l.name)) assigns.set(l.name, []);
+        assigns.get(l.name).push(pp);
+      }
+    },
+  });
+  traverse(ast, {
+    VariableDeclarator(pp) {
+      const { id, init } = pp.node;
+      if (!t.isIdentifier(id) || !COMPRESSED.test(id.name)) return;
+      const noInit = !init, nullInit = init && t.isNullLiteral(init);
+      const emptyArr = init && t.isArrayExpression(init) && !init.elements.length;
+      if (!noInit && !nullInit && !emptyArr) return;
+      const as = assigns.get(id.name) || [];
+      if (!as.length) return;
+      let cands = null;
+      for (const ap of as) { cands = inferFromExprLocal(ap.node.right); if (cands) break; }
+      if (!cands) return;
+      for (const cand of cands) {
+        if (!cand || GLOBALS.has(cand) || KEYWORDS.has(cand)) continue;
+        if (!/^[a-z][A-Za-z0-9]{2,28}$/.test(cand)) continue;
+        if (pp.scope.hasBinding(cand)) continue;
+        try { pp.scope.rename(id.name, cand); stats.late++; n++; break; } catch {}
+      }
+    },
+  });
+  return n;
+}
+
 function processFile(file) {
   let src;
   try { src = fs.readFileSync(file, 'utf8'); } catch { return; }
@@ -344,6 +425,8 @@ function processFile(file) {
   if (!only || only === 'byfunc') { n += applyByFunc(ast); }
   // 8) 调用结果 / logical / 容器字面量
   if (!only || only === 'more') { n += applyMore(ast); }
+  // 9) 后续赋值 / 三元 / 运算 / 字面量
+  if (!only || only === 'late') { n += applyLate(ast); }
 
   if (n > 0 && !dry) {
     fs.writeFileSync(file, generate(ast, { compact: false, comments: true, jsescOption: { minimal: true } }).code);
