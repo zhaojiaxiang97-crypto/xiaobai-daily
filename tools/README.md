@@ -88,6 +88,13 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
    `Switch` + `R` → `uiSwitchR`），个别已知语义直接命名（`H` → `withCtx`）
 4. 必须过 `GLOBALS` 黑名单与 `hasBinding` 检查
 
+分层处理建议：引用 ≥100 的先做（12 个，需人工确认语义）；引用 5–99 的按
+「来源缩写 + 导出名」批量处理（125 个，覆盖约 1300 处引用）；引用 <5 的收益低。
+
+来源缩写表需覆盖常见 chunk（vue-i18n.runtime→vue、Switch→uiSwitch、
+lucide-icons→lucide、dialog→dialog、alert-dialog→alertDialog、
+screenshot-beautifier→beautifier、en-US-player→player 等）。
+
 实测效果：`H(n.$slots, 'default')` → `withCtx(n.$slots, 'default')`；
 `unref(je)(...)` → `unref(uiSwitchXt)(...)`。表项与缩写表需人工维护，不宜自动化过度。
 
