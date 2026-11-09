@@ -22,8 +22,8 @@ function isScreenshotHistoryId(screenshot) {
   return ID_PATTERN.test(screenshot);
 }
 /** 生成列表用的小缩略图（JPEG） */
-function createScreenshotThumbnail(png) {
-  const image = nativeImage.createFromBuffer(png);
+function createScreenshotThumbnail(screenshot) {
+  const image = nativeImage.createFromBuffer(screenshot);
   const size = image.getSize();
   if (size.width <= 0 || size.height <= 0) return Buffer.alloc(0);
   const ratio = Math.min(1, THUMBNAIL_MAX_WIDTH / size.width, THUMBNAIL_MAX_HEIGHT / size.height);
@@ -43,9 +43,9 @@ var ScreenshotHistoryStore = class {
     this.accountKey = accountKey;
   }
   directory() {
-    const key = this.accountKey();
-    if (!key) return null;
-    return path.join(app.getPath("userData"), "screenshot-beautifier", key, "history");
+    const accountKey = this.accountKey();
+    if (!accountKey) return null;
+    return path.join(app.getPath("userData"), "screenshot-beautifier", accountKey, "history");
   }
   count() {
     const root = this.directory();
@@ -84,11 +84,11 @@ var ScreenshotHistoryStore = class {
     mkdirSync(folder, {
       recursive: true
     });
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const meta = {
       id: createIdResult,
-      createdAt: now,
-      updatedAt: now,
+      createdAt: isoString,
+      updatedAt: isoString,
       width: input.width,
       height: input.height,
       scale: input.scale,
@@ -128,13 +128,13 @@ var ScreenshotHistoryStore = class {
     writeFileSync(path.join(root, state, "meta.json"), JSON.stringify(meta));
   }
   /** 保存最近一次复制或保存的成品，历史里的「复制」直接用它；缩略图同步换成成品 */
-  writeOutput(output, png) {
+  writeOutput(output, outputValue) {
     const root = this.directory();
     if (!root || !isScreenshotHistoryId(output)) return;
     const meta = this.readMeta(root, output);
     if (!meta) return;
-    writeFileSync(path.join(root, output, "output.png"), png);
-    writeFileSync(path.join(root, output, "thumb.jpg"), createScreenshotThumbnail(png));
+    writeFileSync(path.join(root, output, "output.png"), outputValue);
+    writeFileSync(path.join(root, output, "thumb.jpg"), createScreenshotThumbnail(outputValue));
     meta.hasOutput = true;
     meta.updatedAt = (/* @__PURE__ */new Date()).toISOString();
     writeFileSync(path.join(root, output, "meta.json"), JSON.stringify(meta));
@@ -161,12 +161,12 @@ var ScreenshotHistoryStore = class {
   clear() {
     const root = this.directory();
     if (!root || !existsSync(root)) return 0;
-    const ids = this.entryIds(root);
-    for (const id of ids) rmSync(path.join(root, id), {
+    const entryIds = this.entryIds(root);
+    for (const id of entryIds) rmSync(path.join(root, id), {
       recursive: true,
       force: true
     });
-    return ids.length;
+    return entryIds.length;
   }
   /** 只保留最新的 limit 条；limit 为 0 时全部删除 */
   enforceLimit(limit) {
@@ -313,14 +313,14 @@ function workDirectory() {
   });
   return folder;
 }
-function prepareImage(png) {
-  const image = nativeImage.createFromBuffer(png);
+function prepareImage(prepare) {
+  const image = nativeImage.createFromBuffer(prepare);
   const size = image.getSize();
   if (size.width <= 0 || size.height <= 0) throw new ScreenshotOcrError("failed");
   const longest = Math.max(size.width, size.height);
   let ratio = 1;
   if (longest > MAX_SIDE_PX) ratio = MAX_SIDE_PX / longest;else if (process.platform === "win32" && longest < UPSCALE_BELOW_PX) ratio = Math.min(2, MAX_SIDE_PX / longest);
-  if (ratio === 1) return png;
+  if (ratio === 1) return prepare;
   return image.resize({
     width: Math.round(size.width * ratio),
     height: Math.round(size.height * ratio),
@@ -377,10 +377,10 @@ async function recognizeOnMac(imagePath) {
   return parsed.filter(line => typeof line === "string").map(line => line.trim());
 }
 /** 在本机识别图片里的文字，不上传、不消耗积分 */
-async function recognizeScreenshotText(png) {
+async function recognizeScreenshotText(recognize) {
   if (!isScreenshotOcrSupported()) throw new ScreenshotOcrError("unsupported");
   const imagePath = path.join(workDirectory(), `ocr-${Date.now().toString(36)}-${randomBytes(4).toString("hex")}.png`);
-  writeFileSync(imagePath, prepareImage(png));
+  writeFileSync(imagePath, prepareImage(recognize));
   try {
     const lines = (process.platform === "win32" ? await recognizeOnWindows(imagePath) : await recognizeOnMac(imagePath)).filter(line => line.length > 0);
     return {
@@ -688,7 +688,7 @@ var ScreenshotFloatWindowService = class {
     return false;
   }
   /** at 为图片左上角的屏幕坐标（逻辑像素）；不传时放在鼠标所在屏幕的中间 */
-  openPin(image, pin) {
+  openPin(image, pinValue) {
     if (!this.paths) return;
     if (this.pins.size >= MAX_PINS) {
       const oldest = this.pins.values().next().value;
@@ -696,7 +696,7 @@ var ScreenshotFloatWindowService = class {
     }
     const baseWidth = image.width / image.scale;
     const baseHeight = image.height / image.scale;
-    const anchor = pin ?? screen.getCursorScreenPoint();
+    const anchor = pinValue ?? screen.getCursorScreenPoint();
     const workArea = screen.getDisplayNearestPoint({
       x: Math.round(anchor.x),
       y: Math.round(anchor.y)
@@ -704,8 +704,8 @@ var ScreenshotFloatWindowService = class {
     const zoom = Math.min(1, workArea.width * .85 / baseWidth, workArea.height * .85 / baseHeight);
     const width = Math.max(1, Math.round(baseWidth * zoom));
     const height = Math.max(1, Math.round(baseHeight * zoom));
-    const x = pin ? pin.x : workArea.x + (workArea.width - width) / 2;
-    const y = pin ? pin.y : workArea.y + (workArea.height - height) / 2;
+    const x = pinValue ? pinValue.x : workArea.x + (workArea.width - width) / 2;
+    const y = pinValue ? pinValue.y : workArea.y + (workArea.height - height) / 2;
     const id = ++this.pinSequence;
     const isMac = process.platform === "darwin";
     const window = new BrowserWindow({
@@ -998,9 +998,9 @@ var ScreenshotFloatWindowService = class {
     for (const pin of this.pins.values()) if (!pin.window.isDestroyed() && pin.window.webContents.id === sender.id) return pin;
     return null;
   }
-  destroyPin(pin) {
-    this.pins.delete(pin.id);
-    if (!pin.window.isDestroyed()) pin.window.destroy();
+  destroyPin(destroy) {
+    this.pins.delete(destroy.id);
+    if (!destroy.window.isDestroyed()) destroy.window.destroy();
   }
 };
 var screenshotFloatWindowService = new ScreenshotFloatWindowService();
@@ -1386,12 +1386,12 @@ async function discoverMacOrLinuxWallpapers() {
 async function discoverWindowsWallpapers() {
   const candidates = [];
   const known = /* @__PURE__ */new Set();
-  const add = (file, current = false) => {
-    const key = path.resolve(file).toLowerCase();
-    if (known.has(key)) return;
+  const handler = (file, current = false) => {
+    const lowercased = path.resolve(file).toLowerCase();
+    if (known.has(lowercased)) return;
     try {
       if (!statSync(file).isFile()) return;
-      known.add(key);
+      known.add(lowercased);
       candidates.push({
         file,
         name: path.extname(file) ? path.basename(file, path.extname(file)) : appText("screenshotBeautifier.personalWallpaper"),
@@ -1402,12 +1402,12 @@ async function discoverWindowsWallpapers() {
   let hasCurrent = false;
   try {
     const wallpaper = await nativeActiveContextCollectorService.queryWallpaper();
-    for (const file of wallpaper.paths) add(file, true);
+    for (const file of wallpaper.paths) handler(file, true);
     hasCurrent = candidates.some(item => item.current);
-    for (const file of wallpaper.photoPaths || []) add(file);
+    for (const file of wallpaper.photoPaths || []) handler(file);
   } catch {}
   const themes = path.join(app.getPath("appData"), "Microsoft", "Windows", "Themes");
-  add(path.join(themes, "TranscodedWallpaper"), !hasCurrent);
+  handler(path.join(themes, "TranscodedWallpaper"), !hasCurrent);
   const collect = (directory, depth = 0, allowCacheNames = false) => {
     if (depth > 8) return;
     try {
@@ -1415,7 +1415,7 @@ async function discoverWindowsWallpapers() {
         withFileTypes: true
       })) {
         const file = path.join(directory, entry.name);
-        if (entry.isDirectory()) collect(file, depth + 1, allowCacheNames);else if (entry.isFile() && (/\.(png|jpe?g|bmp|webp|gif)$/i.test(entry.name) || allowCacheNames && /^Transcoded_\d+$/i.test(entry.name))) add(file);
+        if (entry.isDirectory()) collect(file, depth + 1, allowCacheNames);else if (entry.isFile() && (/\.(png|jpe?g|bmp|webp|gif)$/i.test(entry.name) || allowCacheNames && /^Transcoded_\d+$/i.test(entry.name))) handler(file);
       }
     } catch {}
   };
@@ -1444,8 +1444,8 @@ function language() {
     return "zh-CN";
   }
 }
-function message(key, params = {}) {
-  let text = t(`screenshotBeautifier.${key}`, language());
+function message(messageValue, params = {}) {
+  let text = t(`screenshotBeautifier.${messageValue}`, language());
   for (const [name, value] of Object.entries(params)) text = text.replaceAll(`{${name}}`, String(value));
   return text;
 }
@@ -1459,10 +1459,10 @@ function pad(value) {
   return String(value).padStart(2, "0");
 }
 function timestampName() {
-  const now = /* @__PURE__ */new Date();
+  const date = /* @__PURE__ */new Date();
   return message("fileName", {
-    date: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`,
-    time: `${pad(now.getHours())}.${pad(now.getMinutes())}.${pad(now.getSeconds())}`
+    date: `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+    time: `${pad(date.getHours())}.${pad(date.getMinutes())}.${pad(date.getSeconds())}`
   });
 }
 function uniqueFilePath(directory, baseName) {
@@ -2074,13 +2074,13 @@ var ScreenshotBeautifierService = class {
   }
   editorCopy(sender, input) {
     const session = this.editorImage(sender, input.id);
-    const png = assertPng(input.image);
-    this.writeImageToClipboard(png);
-    this.persistOutput(session, png);
+    const assertPngResult = assertPng(input.image);
+    this.writeImageToClipboard(assertPngResult);
+    this.persistOutput(session, assertPngResult);
   }
   async editorSave(sender, input, saveAs) {
     const session = this.editorImage(sender, input.id);
-    const png = assertPng(input.image);
+    const assertPngResult = assertPng(input.image);
     let filePath;
     if (saveAs) {
       const owner = screenshotEditorWindowService.getWindow();
@@ -2096,21 +2096,21 @@ var ScreenshotBeautifierService = class {
       const result = owner ? await dialog.showSaveDialog(owner, options) : await dialog.showSaveDialog(options);
       if (result.canceled || !result.filePath) return null;
       filePath = result.filePath.toLowerCase().endsWith(".png") ? result.filePath : `${result.filePath}.png`;
-      writeFileSync(filePath, png);
+      writeFileSync(filePath, assertPngResult);
       this.savedFiles.add(filePath);
-    } else filePath = await this.saveToDirectory(png);
-    this.persistOutput(session, png);
+    } else filePath = await this.saveToDirectory(assertPngResult);
+    this.persistOutput(session, assertPngResult);
     return {
       filePath
     };
   }
   editorPin(sender, input) {
     const session = this.editorImage(sender, input.id);
-    const png = assertPng(input.image);
-    const size = nativeImage.createFromBuffer(png).getSize();
-    this.persistOutput(session, png);
+    const assertPngResult = assertPng(input.image);
+    const size = nativeImage.createFromBuffer(assertPngResult).getSize();
+    this.persistOutput(session, assertPngResult);
     screenshotFloatWindowService.openPin({
-      png,
+      png: assertPngResult,
       width: size.width,
       height: size.height,
       scale: session.scale,
@@ -2119,15 +2119,15 @@ var ScreenshotBeautifierService = class {
   }
   editorSendToBot(sender, input) {
     const session = this.editorImage(sender, input.id);
-    const png = assertPng(input.image);
+    const assertPngResult = assertPng(input.image);
     const directory = this.outboxDirectory();
     if (!directory) throw new Error(message("notLoggedIn"));
     mkdirSync(directory, {
       recursive: true
     });
     const filePath = uniqueFilePath(directory, timestampName());
-    writeFileSync(filePath, png);
-    this.persistOutput(session, png);
+    writeFileSync(filePath, assertPngResult);
+    this.persistOutput(session, assertPngResult);
     this.pendingBotPaths = [...this.pendingBotPaths, filePath].slice(-12);
     screenshotEditorWindowService.hide();
     this.handlers?.showMainWindow();
@@ -2139,8 +2139,8 @@ var ScreenshotBeautifierService = class {
     this.pendingBotPaths = [];
     return paths;
   }
-  async editorOcr(sender, ocr) {
-    const session = this.editorImage(sender, ocr);
+  async editorOcr(sender, ocrValue) {
+    const session = this.editorImage(sender, ocrValue);
     try {
       return await recognizeScreenshotText(session.png);
     } catch (error) {
@@ -2348,10 +2348,10 @@ var ScreenshotBeautifierService = class {
   revealFile(filePath) {
     if (this.savedFiles.has(filePath) && existsSync(filePath)) shell.showItemInFolder(filePath);
   }
-  persistOutput(session, png) {
+  persistOutput(session, output) {
     if (!session.persisted) return;
     try {
-      this.history.writeOutput(session.id, png);
+      this.history.writeOutput(session.id, output);
       this.queueChanged("history");
     } catch (error) {
       console.warn("[截图美化] 保存成品失败:", error);
@@ -2419,9 +2419,9 @@ var ScreenshotBeautifierService = class {
     return this.history.list();
   }
   copyHistory(historyValue) {
-    const png = this.history.readBest(historyValue);
-    if (!png) throw new Error(message("historyNotFound"));
-    this.writeImageToClipboard(png);
+    const best = this.history.readBest(historyValue);
+    if (!best) throw new Error(message("historyNotFound"));
+    this.writeImageToClipboard(best);
   }
   deleteHistory(historyValue) {
     this.history.delete(historyValue);
@@ -2469,32 +2469,32 @@ var ScreenshotBeautifierService = class {
     if (custom && path.isAbsolute(custom)) return custom;
     return path.join(app.getPath("pictures"), message("defaultFolder"));
   }
-  async saveToDirectory(png) {
+  async saveToDirectory(directoryValue) {
     const directory = this.saveDirectory(settingsRepository.getSettings());
     mkdirSync(directory, {
       recursive: true
     });
     const filePath = uniqueFilePath(directory, timestampName());
-    writeFileSync(filePath, png);
+    writeFileSync(filePath, directoryValue);
     this.savedFiles.add(filePath);
     return filePath;
   }
-  async saveImageQuietly(png) {
+  async saveImageQuietly(image) {
     try {
-      await this.saveToDirectory(png);
+      await this.saveToDirectory(image);
       const point = screen.getCursorScreenPoint();
       const image = {
         id: temporaryId(),
         persisted: false,
-        png,
+        png: image,
         width: 0,
         height: 0,
         scale: 1
       };
-      const size = nativeImage.createFromBuffer(png).getSize();
+      const size = nativeImage.createFromBuffer(image).getSize();
       image.width = size.width;
       image.height = size.height;
-      this.showToast("saved", image, png, screen.getDisplayNearestPoint(point));
+      this.showToast("saved", image, image, screen.getDisplayNearestPoint(point));
     } catch (error) {
       dialog.showMessageBox({
         type: "warning",
@@ -2502,8 +2502,8 @@ var ScreenshotBeautifierService = class {
       });
     }
   }
-  writeImageToClipboard(png) {
-    clipboard.writeImage(nativeImage.createFromBuffer(png));
+  writeImageToClipboard(image) {
+    clipboard.writeImage(nativeImage.createFromBuffer(image));
   }
   outboxDirectory() {
     if (!this.accountKey) return null;

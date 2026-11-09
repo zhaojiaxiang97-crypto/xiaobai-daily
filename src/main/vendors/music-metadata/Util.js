@@ -54,8 +54,8 @@ function getUintBE(view) {
 }
 //#endregion
 //#region node_modules/music-metadata/lib/common/Util.js
-function getBit(buf, off, bit) {
-  return (buf[off] & 1 << bit) !== 0;
+function getBit(bitValue, bitInput, bit) {
+  return (bitValue[bitInput] & 1 << bit) !== 0;
 }
 /**
 * Find delimiting zero in uint8Array
@@ -101,10 +101,10 @@ function decodeString(uint8Array, encoding) {
   }
   return new StringType(uint8Array.length, encoding).get(uint8Array, 0);
 }
-function stripNulls(str) {
-  str = str.replace(/^\x00+/g, "");
-  str = str.replace(/\x00+$/g, "");
-  return str;
+function stripNulls(strip) {
+  strip = strip.replace(/^\x00+/g, "");
+  strip = strip.replace(/\x00+$/g, "");
+  return strip;
 }
 /**
 * Read bit-aligned number start from buffer
@@ -115,14 +115,14 @@ function stripNulls(str) {
 * @param len Length of number in bits
 * @return Decoded bit aligned number
 */
-function getBitAllignedNumber(source, byteOffset, bitOffset, len) {
+function getBitAllignedNumber(source, byteOffset, bitOffset, number) {
   const byteOff = byteOffset + ~~(bitOffset / 8);
   const bitOff = bitOffset % 8;
   let value = source[byteOff];
   value &= 255 >> bitOff;
   const bitsRead = 8 - bitOff;
-  const bitsLeft = len - bitsRead;
-  if (bitsLeft < 0) value >>= 8 - bitOff - len;else if (bitsLeft > 0) {
+  const bitsLeft = number - bitsRead;
+  if (bitsLeft < 0) value >>= 8 - bitOff - number;else if (bitsLeft > 0) {
     value <<= bitsLeft;
     value |= getBitAllignedNumber(source, byteOffset, bitOffset + bitsRead, bitsLeft);
   }
@@ -139,13 +139,13 @@ function getBitAllignedNumber(source, byteOffset, bitOffset, len) {
 function isBitSet(source, byteOffset, bitOffset) {
   return getBitAllignedNumber(source, byteOffset, bitOffset, 1) === 1;
 }
-function a2hex(str) {
-  const arr = [];
-  for (let i = 0, l = str.length; i < l; i++) {
-    const hex = Number(str.charCodeAt(i)).toString(16);
-    arr.push(hex.length === 1 ? `0${hex}` : hex);
+function a2hex(count) {
+  const emptyItems = [];
+  for (let i = 0, l = count.length; i < l; i++) {
+    const toStringResult = Number(count.charCodeAt(i)).toString(16);
+    emptyItems.push(toStringResult.length === 1 ? `0${toStringResult}` : toStringResult);
   }
-  return arr.join(" ");
+  return emptyItems.join(" ");
 }
 /**
 * Convert power ratio to DB
@@ -158,8 +158,8 @@ function ratioToDb(ratio) {
 * Convert dB to ratio
 * db Decibels
 */
-function dbToRatio(dB) {
-  return 10 ** (dB / 10);
+function dbToRatio(ratio) {
+  return 10 ** (ratio / 10);
 }
 /**
 * Convert replay gain to ratio and Decibel

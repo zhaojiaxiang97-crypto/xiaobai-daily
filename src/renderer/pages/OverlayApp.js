@@ -62,7 +62,7 @@ var Se = {
         B = null,
         V = 0,
         H = null,
-        Le = [],
+        emptyItems = [],
         U = f(() => w.value ? w.value.width / j.value.width : 1),
         W = f(() => w.value ? w.value.height / j.value.height : 1),
         G = f(() => O.value ?? (D.value === `idle` ? k.value : null)),
@@ -456,7 +456,7 @@ var Se = {
           E.value?.offsetWidth && (M.value = E.value.offsetWidth);
         });
       }), ie(() => {
-        Le.push(overlay.onOpen(e => {
+        emptyItems.push(overlay.onOpen(e => {
           lt(e);
         }), overlay.onReset(ct), overlay.onClear(() => {
           O.value && X(null), D.value = `idle`, k.value = null, A.value = null, Y();
@@ -464,7 +464,7 @@ var Se = {
           O.value && Z();
         })), window.addEventListener(`keydown`, ot), window.addEventListener(`resize`, ut), window.screenshotToolAPI.ready();
       }), ne(() => {
-        for (let e of Le) e();
+        for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, ot), window.removeEventListener(`resize`, ut), V && cancelAnimationFrame(V), H !== null && window.clearTimeout(H);
       }), (t, i) => (c(), r(`div`, {
         class: `fixed inset-0 overflow-hidden select-none`,

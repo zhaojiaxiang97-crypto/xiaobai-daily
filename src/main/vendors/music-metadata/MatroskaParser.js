@@ -674,12 +674,12 @@ var EbmlIterator = class {
           if (element.id === 524531317) {}
           debug$1(`Read element: name=${getElementPath(child)}{id=0x${element.id.toString(16)}, container=${!!child.container}} at position=${elementPosition}`);
           if (child.container) {
-            const res = await this.parseContainer(child, element.len >= 0 ? this.tokenizer.position + element.len : -1, listener);
+            const container = await this.parseContainer(child, element.len >= 0 ? this.tokenizer.position + element.len : -1, listener);
             if (child.multiple) {
               if (!tree[child.name]) tree[child.name] = [];
-              tree[child.name].push(res);
-            } else tree[child.name] = res;
-            await listener.elementValue(child, res, elementPosition);
+              tree[child.name].push(container);
+            } else tree[child.name] = container;
+            await listener.elementValue(child, container, elementPosition);
           } else {
             const parser = this.parserMap.get(child.value);
             if (typeof parser === "function") {
@@ -715,10 +715,10 @@ var EbmlIterator = class {
     return tree;
   }
   async readVintData(maxLength) {
-    const msb = await this.tokenizer.peekNumber(UINT8);
+    const peekNumber = await this.tokenizer.peekNumber(UINT8);
     let mask = 128;
     let oc = 1;
-    while ((msb & mask) === 0) {
+    while ((peekNumber & mask) === 0) {
       if (oc > maxLength) throw new EbmlContentError("VINT value exceeding maximum size");
       ++oc;
       mask >>= 1;
@@ -760,13 +760,13 @@ var EbmlIterator = class {
     return (await this.tokenizer.readToken(new StringType(string.len, "utf-8"))).replace(/\x00.*$/g, "");
   }
   async readBuffer(buffer) {
-    const buf = new Uint8Array(buffer.len);
-    await this.tokenizer.readBuffer(buf);
-    return buf;
+    const uint8Array = new Uint8Array(buffer.len);
+    await this.tokenizer.readBuffer(uint8Array);
+    return uint8Array;
   }
 };
-function readUIntBE(buf, len) {
-  return Number(readUIntBeAsBigInt(buf, len));
+function readUIntBE(int, intValue) {
+  return Number(readUIntBeAsBigInt(int, intValue));
 }
 /**
 * Reeds an unsigned integer from a big endian buffer of length `len`
@@ -774,11 +774,11 @@ function readUIntBE(buf, len) {
 * @param len Number of bytes
 * @private
 */
-function readUIntBeAsBigInt(buf, len) {
+function readUIntBeAsBigInt(int, big) {
   const normalizedNumber = /* @__PURE__ */new Uint8Array(8);
-  const cleanNumber = buf.subarray(0, len);
+  const cleanNumber = int.subarray(0, big);
   try {
-    normalizedNumber.set(cleanNumber, 8 - len);
+    normalizedNumber.set(cleanNumber, 8 - big);
     return UINT64_BE.get(normalizedNumber, 0);
   } catch (_error) {
     return BigInt(-1);
@@ -902,10 +902,10 @@ var MatroskaParser = class extends BasicParser {
           case 307544935:
             {
               const tags = value;
-              await Promise.all(tags.tag.map(async tag => {
-                const target = tag.target;
+              await Promise.all(tags.tag.map(async event => {
+                const target = event.target;
                 const targetType = target?.targetTypeValue ? TargetType[target.targetTypeValue] : target?.targetType ? target.targetType : "track";
-                await Promise.all(tag.simpleTags.map(async simpleTag => {
+                await Promise.all(event.simpleTags.map(async simpleTag => {
                   const value = simpleTag.string ? simpleTag.string : simpleTag.binary;
                   await this.addTag(`${targetType}:${simpleTag.name}`, value);
                 }));

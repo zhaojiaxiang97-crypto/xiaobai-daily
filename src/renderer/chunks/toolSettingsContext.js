@@ -9,8 +9,8 @@ var f = {
   async getMacStatus() {
     return d(await window.electronAPI.permissions.getMacStatus());
   },
-  async openMacSettings(mac) {
-    return d(await window.electronAPI.permissions.openMacSettings(mac));
+  async openMacSettings(macValue) {
+    return d(await window.electronAPI.permissions.openMacSettings(macValue));
   }
 };
 function p(result) {

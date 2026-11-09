@@ -140,7 +140,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
   qe = [`aria-label`],
   Je = [`aria-label`, `onPointerdown`],
   Ye = [`onPointerdown`],
-  Xe = {
+  options = {
     key: 4,
     class: `pointer-events-none absolute left-1/2 top-[47%] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center opacity-80`,
     "aria-hidden": `true`
@@ -2059,7 +2059,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         })
       }, [g(c(Le), {
         size: `62%`
-      })], 6))], 4)) : b(``, true), !O.value.strokes.length && !O.value.backgroundImage && !z.open ? (h(), d(`div`, Xe, [r[15] ||= x(`div`, {
+      })], 6))], 4)) : b(``, true), !O.value.strokes.length && !O.value.backgroundImage && !z.open ? (h(), d(`div`, options, [r[15] ||= x(`div`, {
         class: `relative mb-2 h-[37px] w-[50px]`
       }, [x(`span`, {
         class: `absolute left-[5px] top-2.5 block h-[3px] w-[38px] -rotate-[9deg] rounded-full bg-muted-foreground/35`

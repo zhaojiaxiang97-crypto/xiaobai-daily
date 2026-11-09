@@ -62,7 +62,7 @@ var k = {
         {
           t: g
         } = x(),
-        _ = [{
+        joined = [{
           x: 14,
           y: 18,
           size: 26,
@@ -114,7 +114,7 @@ var k = {
       return (u, b) => (d(), a(`section`, k, [v(`div`, A, [v(`div`, j, [v(`div`, {
         class: `aspect-[16/9] w-full rounded-lg border border-border/70 bg-[#f1f1ef] dark:bg-[#22262a]`,
         style: m({
-          backgroundImage: t(_)
+          backgroundImage: t(joined)
         })
       }, null, 4)]), v(`span`, M, h(t(g)(`toolboxNative.mouseHeatmapSample`)), 1)]), v(`div`, N, [v(`div`, P, [v(`strong`, F, h(t(g)(`toolboxNative.mouseHeatmapPreviewTitle`)), 1), v(`small`, I, h(t(g)(`toolboxNative.mouseHeatmapPreviewDesc`)), 1)]), v(`ul`, L, [(d(), a(l, null, o(y, e => v(`li`, {
         key: e.title,

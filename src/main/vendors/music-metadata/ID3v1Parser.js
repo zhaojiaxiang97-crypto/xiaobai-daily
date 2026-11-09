@@ -37,9 +37,9 @@ var Iid3v1Token = {
   }
 };
 var Id3v1StringType = class {
-  constructor(len) {
-    this.len = len;
-    this.stringType = new StringType(len, "latin1");
+  constructor(constructor) {
+    this.len = constructor;
+    this.stringType = new StringType(constructor, "latin1");
   }
   get(buf, off) {
     let value = this.stringType.get(buf, off);
@@ -78,19 +78,19 @@ var ID3v1Parser = class ID3v1Parser extends BasicParser {
       if (genre) await this.addTag("genre", genre);
     } else debug("ID3v1 header not found at: pos=%s", this.tokenizer.fileInfo.size - Iid3v1Token.len);
   }
-  async addTag(tag, value) {
-    await this.metadata.addTag("ID3v1", tag, value);
+  async addTag(tagValue, value) {
+    await this.metadata.addTag("ID3v1", tagValue, value);
   }
 };
 async function hasID3v1Header(tokenizer) {
   if (tokenizer.fileInfo.size >= 128) {
-    const tag = /* @__PURE__ */new Uint8Array(3);
+    const uint8Array = /* @__PURE__ */new Uint8Array(3);
     const position = tokenizer.position;
-    await tokenizer.readBuffer(tag, {
+    await tokenizer.readBuffer(uint8Array, {
       position: tokenizer.fileInfo.size - 128
     });
     tokenizer.setPosition(position);
-    return textDecode(tag, "latin1") === "TAG";
+    return textDecode(uint8Array, "latin1") === "TAG";
   }
   return false;
 }

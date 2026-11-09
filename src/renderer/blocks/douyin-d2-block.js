@@ -1,11 +1,11 @@
 import { $n as e, An as t, S as n, Wt as r, Zt as i, bn as a, gt as o, j as s, nr as c, ot as l, rr as u, rt as d, ut as ee, v as f, x as p, y as m } from "../chunks/vue-i18n.runtime.js";
 import { w as te } from "../i18n/en-US-player.js";
 import { M as ne, N as h, P as re, V as ie, X as ae, v as g } from "../chunks/main.js";
-var _ = Object.defineProperty,
+var defineProperty = Object.defineProperty,
   getOwnPropertySymbols = Object.getOwnPropertySymbols,
   hasOwnProperty = Object.prototype.hasOwnProperty,
   propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
-  handler = (e, t, n) => t in e ? _(e, t, {
+  handler = (e, t, n) => t in e ? defineProperty(e, t, {
     enumerable: true,
     configurable: true,
     writable: true,

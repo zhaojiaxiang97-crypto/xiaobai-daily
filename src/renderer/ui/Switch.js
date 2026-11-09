@@ -4,8 +4,8 @@ import { r as vn } from "./icons/lucide-icons.js";
 var create = Object.create,
   defineProperty = Object.defineProperty,
   getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
-  Sn = Object.getOwnPropertyNames,
-  Cn = Object.getPrototypeOf,
+  getOwnPropertyNames = Object.getOwnPropertyNames,
+  getPrototypeOf = Object.getPrototypeOf,
   hasOwnProperty = Object.prototype.hasOwnProperty,
   Tn = (e, t) => () => (t || (e((t = {
     exports: {}
@@ -21,13 +21,13 @@ var create = Object.create,
     }), n;
   },
   Dn = (e, t, n, r) => {
-    if (t && typeof t == `object` || typeof t == `function`) for (var i = Sn(t), a = 0, o = i.length, count; a < o; a++) count = i[a], !hasOwnProperty.call(e, count) && count !== n && defineProperty(e, count, {
+    if (t && typeof t == `object` || typeof t == `function`) for (var ownPropertyNames = getOwnPropertyNames(t), a = 0, o = ownPropertyNames.length, count; a < o; a++) count = ownPropertyNames[a], !hasOwnProperty.call(e, count) && count !== n && defineProperty(e, count, {
       get: (e => t[e]).bind(null, count),
       enumerable: !(r = getOwnPropertyDescriptor(t, count)) || r.enumerable
     });
     return e;
   },
-  On = (e, t, n) => (n = e == null ? {} : create(Cn(e)), Dn(t || !e || !e.__esModule || !hasOwnProperty.call(e, `default`) ? defineProperty(n, `default`, {
+  On = (e, t, n) => (n = e == null ? {} : create(getPrototypeOf(e)), Dn(t || !e || !e.__esModule || !hasOwnProperty.call(e, `default`) ? defineProperty(n, `default`, {
     value: e,
     enumerable: true
   }) : n, e)),

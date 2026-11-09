@@ -673,7 +673,7 @@ var Rt = 6e4,
     lineComments: [`//`],
     blockComments: [[`/*`, `*/`]]
   },
-  Gt = {
+  options = {
     javascript: {
       keywords: zt,
       literals: X,
@@ -818,7 +818,7 @@ function Jt(count, t) {
   let n = qt(t);
   return !n || count.length > Rt ? [{
     text: count
-  }] : n === `markup` ? Qt(count) : n === `yaml` ? $t(count) : n === `diff` ? en(count) : Zt(count, Gt[n]);
+  }] : n === `markup` ? Qt(count) : n === `yaml` ? $t(count) : n === `diff` ? en(count) : Zt(count, options[n]);
 }
 var Yt = class {
   tokens = [];
@@ -913,7 +913,7 @@ function Zt(items, t) {
       let i = /^[A-Za-z_$@][\w$-]*/.exec(items.slice(r));
       if (i) {
         let e = i[0];
-        !t.shellVariables && t !== Gt.css && (e = e.replace(/-.*$/, ``));
+        !t.shellVariables && t !== options.css && (e = e.replace(/-.*$/, ``));
         let a = t.caseInsensitive ? e.toLowerCase() : e,
           replaced = a.replace(/^@/, ``);
         t.literals.has(a) ? n.push(e, `literal`) : t.keywords.has(a) || t.keywords.has(replaced) ? n.push(e, `keyword`) : n.push(e), r += e.length;
@@ -998,12 +998,12 @@ var cn = class {
   occurrences = new Map();
   slug(e) {
     let fallbackValue = sn(e) || `section`,
-      n = fallbackValue;
-    for (; this.occurrences.has(n);) {
+      fallbackValueAlias = fallbackValue;
+    for (; this.occurrences.has(fallbackValueAlias);) {
       let e = (this.occurrences.get(fallbackValue) ?? 0) + 1;
-      this.occurrences.set(fallbackValue, e), n = `${fallbackValue}-${e}`;
+      this.occurrences.set(fallbackValue, e), fallbackValueAlias = `${fallbackValue}-${e}`;
     }
-    return this.occurrences.set(n, 0), n;
+    return this.occurrences.set(fallbackValueAlias, 0), fallbackValueAlias;
   }
 };
 function ln(count) {
@@ -2761,8 +2761,8 @@ var Or = {
           W(cn(e, `toolboxNative.markdownOpenFailed`));
           return;
         }
-        let t = filePath;
-        await kn(() => q.read(t), `toolboxNative.markdownOpenFailed`, {
+        let filePathAlias = filePath;
+        await kn(() => q.read(filePathAlias), `toolboxNative.markdownOpenFailed`, {
           skipConfirm: true
         });
       }
@@ -2958,8 +2958,8 @@ var Or = {
         }, `toolboxNative.markdownLinkedOpenFailed`, {
           keepHistory: true
         })) && (H.value = [...H.value.slice(-19), entity], flag)) {
-          let e = flag;
-          await ie(), window.requestAnimationFrame(() => qn(e));
+          let flagAlias = flag;
+          await ie(), window.requestAnimationFrame(() => qn(flagAlias));
         }
       }
       async function Kn() {

@@ -240,7 +240,7 @@ function Be(el, t, n) {
 }
 var I = Symbol(`_vod`),
   L = Symbol(`_vsh`),
-  Ve = {
+  entity = {
     name: `show`,
     beforeMount(before, {
       value: t
@@ -276,7 +276,7 @@ function R(el, t) {
   el.style.display = t ? el[I] : `none`, el[L] = !t;
 }
 function He() {
-  Ve.getSSRProps = ({
+  entity.getSSRProps = ({
     value: e
   }) => {
     if (!e) return {
@@ -38053,4 +38053,4 @@ var rn = false,
       }
     }
   };
-export { Y as C, Gt as E, It as S, qt as T, vt as _, _t as a, Bt as b, mt as c, an as d, De as f, We as g, bt as h, wt as i, ht as l, Qt as m, options as n, $ as o, ut as p, Ae as r, en as s, sn as t, $t as u, yt as v, Ve as w, Ft as x, Nt as y };
+export { Y as C, Gt as E, It as S, qt as T, vt as _, _t as a, Bt as b, mt as c, an as d, De as f, We as g, bt as h, wt as i, ht as l, Qt as m, options as n, $ as o, ut as p, Ae as r, en as s, sn as t, $t as u, yt as v, entity as w, Ft as x, Nt as y };

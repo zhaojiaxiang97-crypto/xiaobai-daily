@@ -54,8 +54,8 @@ function createRecognitionWindow(partition) {
   if (visible) chatWindowPositionService.arrange(window);
   return window;
 }
-async function waitForLoad(window, url) {
-  await Promise.race([window.loadURL(url), sleep(LOAD_TIMEOUT_MS)]);
+async function waitForLoad(window, forValue) {
+  await Promise.race([window.loadURL(forValue), sleep(LOAD_TIMEOUT_MS)]);
 }
 function buildFreshConversationScript(provider) {
   return `
@@ -127,11 +127,11 @@ async function pasteImages(window, images, focusScript) {
   };
   try {
     for (const image of images) {
-      const img = nativeImage.createFromDataURL(image.dataUrl);
-      if (img.isEmpty()) continue;
+      const fromDataURL = nativeImage.createFromDataURL(image.dataUrl);
+      if (fromDataURL.isEmpty()) continue;
       window.webContents.focus();
       await window.webContents.executeJavaScript(focusScript).catch(() => false);
-      clipboard.writeImage(img);
+      clipboard.writeImage(fromDataURL);
       window.webContents.paste();
       await sleep(PASTE_INTERVAL_MS);
     }

@@ -95,11 +95,11 @@ var CLIPBOARD_PICKER_PREVIEW_MAX_LENGTH = 2e4;
 var ALGORITHM = "aes-256-gcm";
 var KEY_LENGTH$1 = 32;
 var IV_LENGTH$1 = 16;
-var KEY = createHash("sha256").update("xiaohei-daily-assistant@v1.0.0+shjiyue").digest().subarray(0, KEY_LENGTH$1);
+var subarray = createHash("sha256").update("xiaohei-daily-assistant@v1.0.0+shjiyue").digest().subarray(0, KEY_LENGTH$1);
 function encryptString(plaintext) {
   if (!plaintext) return plaintext;
   const randomBytesResult = randomBytes(IV_LENGTH$1);
-  const cipher = createCipheriv(ALGORITHM, KEY, randomBytesResult);
+  const cipher = createCipheriv(ALGORITHM, subarray, randomBytesResult);
   const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
   const authTag = cipher.getAuthTag();
   return `enc:v1:${Buffer.concat([randomBytesResult, authTag, encrypted]).toString("base64")}`;
@@ -111,7 +111,7 @@ function decryptString(ciphertext) {
     const subarray = data.subarray(0, IV_LENGTH$1);
     const authTag = data.subarray(IV_LENGTH$1, 32);
     const encrypted = data.subarray(32);
-    const decipher = createDecipheriv(ALGORITHM, KEY, subarray);
+    const decipher = createDecipheriv(ALGORITHM, subarray, subarray);
     decipher.setAuthTag(authTag);
     return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString("utf8");
   } catch {
@@ -541,29 +541,29 @@ var migrations = [{
     const oldKey = oldKeyRow ? JSON.parse(oldKeyRow.value) : "";
     const oldName = oldNameRow ? JSON.parse(oldNameRow.value) : "";
     if (!oldUrl && !oldKey && !oldName) return;
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const upsert = database.prepare("INSERT INTO settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at");
     if (oldUrl) {
       const screenshotUrlRow = database.prepare("SELECT value FROM settings WHERE key = 'localScreenshotModelUrl'").get();
       const reportUrlRow = database.prepare("SELECT value FROM settings WHERE key = 'localReportModelUrl'").get();
-      if (!screenshotUrlRow) upsert.run("localScreenshotModelUrl", JSON.stringify(oldUrl), now);
-      if (!reportUrlRow) upsert.run("localReportModelUrl", JSON.stringify(oldUrl), now);
+      if (!screenshotUrlRow) upsert.run("localScreenshotModelUrl", JSON.stringify(oldUrl), isoString);
+      if (!reportUrlRow) upsert.run("localReportModelUrl", JSON.stringify(oldUrl), isoString);
     }
     if (oldKey) {
       const screenshotKeyRow = database.prepare("SELECT value FROM settings WHERE key = 'localScreenshotModelApiKey'").get();
       const reportKeyRow = database.prepare("SELECT value FROM settings WHERE key = 'localReportModelApiKey'").get();
-      if (!screenshotKeyRow) upsert.run("localScreenshotModelApiKey", JSON.stringify(oldKey), now);
-      if (!reportKeyRow) upsert.run("localReportModelApiKey", JSON.stringify(oldKey), now);
+      if (!screenshotKeyRow) upsert.run("localScreenshotModelApiKey", JSON.stringify(oldKey), isoString);
+      if (!reportKeyRow) upsert.run("localReportModelApiKey", JSON.stringify(oldKey), isoString);
     }
     if (oldName) {
       const screenshotNameRow = database.prepare("SELECT value FROM settings WHERE key = 'localScreenshotModelName'").get();
       const reportNameRow = database.prepare("SELECT value FROM settings WHERE key = 'localReportModelName'").get();
-      if (!screenshotNameRow) upsert.run("localScreenshotModelName", JSON.stringify(oldName), now);
-      if (!reportNameRow) upsert.run("localReportModelName", JSON.stringify(oldName), now);
+      if (!screenshotNameRow) upsert.run("localScreenshotModelName", JSON.stringify(oldName), isoString);
+      if (!reportNameRow) upsert.run("localReportModelName", JSON.stringify(oldName), isoString);
     }
-    upsert.run("localModelUrl", JSON.stringify(""), now);
-    upsert.run("localModelApiKey", JSON.stringify(""), now);
-    upsert.run("localModelName", JSON.stringify(""), now);
+    upsert.run("localModelUrl", JSON.stringify(""), isoString);
+    upsert.run("localModelApiKey", JSON.stringify(""), isoString);
+    upsert.run("localModelName", JSON.stringify(""), isoString);
   }
 }, {
   version: 31,
@@ -699,7 +699,7 @@ var migrations = [{
   name: "editable_builtin_work_record_categories",
   up: database => {
     if (!database.prepare("PRAGMA table_info(work_record_categories)").all().some(item => item.name === "is_builtin")) database.exec("ALTER TABLE work_record_categories ADD COLUMN is_builtin INTEGER NOT NULL DEFAULT 0");
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const findByName = database.prepare("SELECT id FROM work_record_categories WHERE name = ?");
     const findById = database.prepare("SELECT id FROM work_record_categories WHERE id = ?");
     const updateExisting = database.prepare(`
@@ -732,10 +732,10 @@ var migrations = [{
       const existingByName = findByName.get(category.name);
       if (existingByName) {
         if (!findById.get(category.id) && existingByName.id !== category.id) updateExistingId.run(category.id, existingByName.id);
-        updateExisting.run(category.sortOrder, now, category.name);
+        updateExisting.run(category.sortOrder, isoString, category.name);
         continue;
       }
-      insertBuiltin.run(category.id, category.name, JSON.stringify(category.keywords), category.color, category.enabled ? 1 : 0, category.sortOrder, 1, now, now);
+      insertBuiltin.run(category.id, category.name, JSON.stringify(category.keywords), category.color, category.enabled ? 1 : 0, category.sortOrder, 1, isoString, isoString);
     }
   }
 }, {
@@ -973,10 +973,10 @@ var migrations = [{
       `).all();
     const groups = /* @__PURE__ */new Map();
     for (const application of applications) {
-      const key = application.display_name.trim().toLocaleLowerCase();
-      const group = groups.get(key) ?? [];
+      const toLocaleLowerCase = application.display_name.trim().toLocaleLowerCase();
+      const group = groups.get(toLocaleLowerCase) ?? [];
       group.push(application);
-      groups.set(key, group);
+      groups.set(toLocaleLowerCase, group);
     }
     const identityStrength = application => {
       if (application.platform === "legacy") return 0;
@@ -1159,14 +1159,14 @@ var migrations = [{
     const sensitiveKeys = ["customApiKey", "localModelApiKey", "localScreenshotModelApiKey", "localReportModelApiKey", "conversationModelApiKey"];
     const select = database.prepare("SELECT value FROM settings WHERE key = ?");
     const update = database.prepare("UPDATE settings SET value = ?, updated_at = ? WHERE key = ?");
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     for (const key of sensitiveKeys) {
       const row = select.get(key);
       if (!row?.value) continue;
       try {
         const value = JSON.parse(row.value);
         if (typeof value !== "string" || !value || value.startsWith("enc:v1:")) continue;
-        update.run(JSON.stringify(encryptString(value)), now, key);
+        update.run(JSON.stringify(encryptString(value)), isoString, key);
       } catch {}
     }
   }
@@ -1236,14 +1236,14 @@ var migrations = [{
     const sensitiveKeys = ["customApiKey", "localModelApiKey", "localScreenshotModelApiKey", "localReportModelApiKey", "conversationModelApiKey"];
     const select = database.prepare("SELECT value FROM settings WHERE key = ?");
     const update = database.prepare("UPDATE settings SET value = ?, updated_at = ? WHERE key = ?");
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     for (const key of sensitiveKeys) {
       const row = select.get(key);
       if (!row?.value) continue;
       try {
         const value = JSON.parse(row.value);
         if (typeof value !== "string" || !value || value.startsWith("enc:v1:")) continue;
-        update.run(JSON.stringify(encryptString(value)), now, key);
+        update.run(JSON.stringify(encryptString(value)), isoString, key);
       } catch {}
     }
   }
@@ -1265,7 +1265,7 @@ var migrations = [{
   name: "repair_multi_platform_publisher_billing_columns",
   up: database => {
     const rows = database.prepare("PRAGMA table_info(publisher_publications)").all();
-    const columns = new Set(rows.map(row => row.name));
+    const columns = new Set(rows.map(item => item.name));
     const ensureColumn = (name, definition) => {
       if (columns.has(name)) return;
       database.exec(`ALTER TABLE publisher_publications ADD COLUMN ${name} ${definition}`);
@@ -2787,7 +2787,7 @@ var migrations = [{
   version: 128,
   name: "student_builtin_work_record_categories",
   up: database => {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const findByName = database.prepare("SELECT id FROM work_record_categories WHERE name = ?");
     const insertBuiltin = database.prepare(`
         INSERT OR IGNORE INTO work_record_categories (
@@ -2797,7 +2797,7 @@ var migrations = [{
       `);
     for (const category of STUDENT_BUILTIN_WORK_RECORD_CATEGORY_PRESETS) {
       if (findByName.get(category.name)) continue;
-      insertBuiltin.run(category.id, category.name, JSON.stringify(category.keywords), category.color, 0, category.sortOrder, 1, now, now);
+      insertBuiltin.run(category.id, category.name, JSON.stringify(category.keywords), category.color, 0, category.sortOrder, 1, isoString, isoString);
     }
   }
 }, {
@@ -2924,14 +2924,14 @@ var migrations = [{
           ON clipboard_phrases(sort_order, created_at);
       `);
     if (database.prepare("SELECT id FROM work_record_categories WHERE name = ?").get("剪贴板记录")) return;
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const nextSortOrder = database.prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM work_record_categories").get().next;
     database.prepare(`
         INSERT OR IGNORE INTO work_record_categories (
           id, name, keywords_json, color, enabled, sort_order, is_builtin, created_at, updated_at
         )
         VALUES (?, ?, '[]', 'indigo', 1, ?, 1, ?, ?)
-      `).run(CLIPBOARD_WORK_RECORD_CATEGORY_ID, CLIPBOARD_WORK_RECORD_CATEGORY, nextSortOrder, now, now);
+      `).run(CLIPBOARD_WORK_RECORD_CATEGORY_ID, CLIPBOARD_WORK_RECORD_CATEGORY, nextSortOrder, isoString, isoString);
   }
 }, {
   version: 133,
@@ -3026,7 +3026,7 @@ function runMigrations(database) {
   database.prepare("UPDATE schema_migrations SET version = 107 WHERE version = 103 AND name = ?").run("xiaohei_bot_sidebar_restore_order");
   database.prepare("UPDATE schema_migrations SET version = 108 WHERE version = 104 AND name = ?").run("xiaohei_bot_common_role_multiple_instances");
   const rows = database.prepare("SELECT version FROM schema_migrations").all();
-  const appliedVersions = new Set(rows.map(row => row.version));
+  const appliedVersions = new Set(rows.map(item => item.version));
   for (const migration of migrations) {
     if (appliedVersions.has(migration.version)) continue;
     database.exec("BEGIN");
@@ -3245,17 +3245,17 @@ function vaultKey() {
   } catch (error) {
     if (error.code !== "EEXIST") throw error;
   }
-  let key = readFileSync(file);
-  if (key.length !== KEY_LENGTH) {
-    key = randomBytes(KEY_LENGTH);
+  let fileSync = readFileSync(file);
+  if (fileSync.length !== KEY_LENGTH) {
+    fileSync = randomBytes(KEY_LENGTH);
     const temporary = `${file}.${randomUUID()}.tmp`;
-    writeFileSync(temporary, key, {
+    writeFileSync(temporary, fileSync, {
       mode: 384
     });
     renameSync(temporary, file);
   }
-  cachedKey = key;
-  return key;
+  cachedKey = fileSync;
+  return fileSync;
 }
 function encryptCredential(value) {
   if (!value) return "";
@@ -3346,9 +3346,9 @@ function migrate(migrateValue, userId) {
   const mcpFiles = findLegacyMcpFiles(userId);
   if (rows.length === 0 && mcpFiles.length === 0) return;
   const decrypt = createLegacyDecryptor();
-  const results = rows.map(row => ({
-    row,
-    plain: decrypt(row.value)
+  const results = rows.map(item => ({
+    row: item,
+    plain: decrypt(item.value)
   }));
   migrateValue.exec("BEGIN IMMEDIATE");
   try {
@@ -3601,8 +3601,8 @@ function switchDatabase(userId, options = {}) {
   if (needsRecordingAuthorization) database.prepare(`INSERT OR REPLACE INTO settings (key, value, updated_at)
       VALUES ('enableRecording', 'true', ?), ('recordingAuthorizationPending', 'false', ?)`).run((/* @__PURE__ */new Date()).toISOString(), (/* @__PURE__ */new Date()).toISOString());
   if (nextUserId !== null && currentDeviceId) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
-    database.prepare("INSERT OR REPLACE INTO settings (key, value, updated_at) VALUES ('deviceId', ?, ?)").run(JSON.stringify(currentDeviceId), now);
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    database.prepare("INSERT OR REPLACE INTO settings (key, value, updated_at) VALUES ('deviceId', ?, ?)").run(JSON.stringify(currentDeviceId), isoString);
   }
   startWalCheckpoint();
 }
@@ -3659,9 +3659,9 @@ function comparableWebsiteAddress(value) {
   return value.toLowerCase().replace(/^(?:https?:)?\/\//, "").replace(/^www\./, "").replace(/^([^/?#]+)\/$/, "$1");
 }
 function matchesWebsiteUrl(input, rules) {
-  const url = normalizeWebsiteUrl(input);
-  if (!url) return false;
-  const candidates = [url, decoded(url)].map(comparableWebsiteAddress);
+  const websiteUrl = normalizeWebsiteUrl(input);
+  if (!websiteUrl) return false;
+  const candidates = [websiteUrl, decoded(websiteUrl)].map(comparableWebsiteAddress);
   return rules.some(rule => {
     const keyword = normalizeWebsiteKeyword(rule);
     if (!keyword) return false;
@@ -3679,7 +3679,7 @@ var util;
   util.assertEqual = _ => {};
   function assertIs(_arg) {}
   util.assertIs = assertIs;
-  function assertNever(_x) {
+  function assertNever(never) {
     throw new Error();
   }
   util.assertNever = assertNever;
@@ -3709,7 +3709,7 @@ var util;
   };
   util.isInteger = typeof Number.isInteger === "function" ? val => Number.isInteger(val) : val => typeof val === "number" && Number.isFinite(val) && Math.floor(val) === val;
   function joinValues(array, separator = " | ") {
-    return array.map(val => typeof val === "string" ? `'${val}'` : val).join(separator);
+    return array.map(item => typeof item === "string" ? `'${item}'` : item).join(separator);
   }
   util.joinValues = joinValues;
   util.jsonStringifyReplacer = (_, value) => {
@@ -3940,15 +3940,15 @@ var makeIssue = params => {
     message: errorMessage
   };
 };
-function addIssueToContext(ctx, issueData) {
+function addIssueToContext(issueValue, issueData) {
   const overrideMap = getErrorMap();
   const issue = makeIssue({
     issueData,
-    data: ctx.data,
-    path: ctx.path,
-    errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, overrideMap, overrideMap === errorMap ? undefined : errorMap].filter(item => !!item)
+    data: issueValue.data,
+    path: issueValue.path,
+    errorMaps: [issueValue.common.contextualErrorMap, issueValue.schemaErrorMap, overrideMap, overrideMap === errorMap ? undefined : errorMap].filter(item => !!item)
   });
-  ctx.common.issues.push(issue);
+  issueValue.common.issues.push(issue);
 }
 var ParseStatus = class ParseStatus {
   constructor() {
@@ -4010,7 +4010,7 @@ var DIRTY = value => ({
   status: "dirty",
   value
 });
-var OK = value => ({
+var handler = value => ({
   status: "valid",
   value
 });
@@ -4030,12 +4030,12 @@ var errorUtil;
 //#endregion
 //#region node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
-  constructor(parent, value, path, key) {
+  constructor(parent, value, path, constructor) {
     this._cachedPath = [];
     this.parent = parent;
     this.data = value;
     this._path = path;
-    this._key = key;
+    this._key = constructor;
   }
   get path() {
     if (!this._cachedPath.length) {
@@ -4074,17 +4074,17 @@ function processCreateParams(params) {
     errorMap,
     description
   };
-  const customMap = (iss, ctx) => {
+  const customMap = (event, ctx) => {
     const {
       message
     } = params;
-    if (iss.code === "invalid_enum_value") return {
+    if (event.code === "invalid_enum_value") return {
       message: message ?? ctx.defaultError
     };
     if (typeof ctx.data === "undefined") return {
       message: message ?? required_error ?? ctx.defaultError
     };
-    if (iss.code !== "invalid_type") return {
+    if (event.code !== "invalid_type") return {
       message: ctx.defaultError
     };
     return {
@@ -4103,8 +4103,8 @@ var ZodType = class {
   _getType(input) {
     return getParsedType(input.data);
   }
-  _getOrReturnCtx(input, ctx) {
-    return ctx || {
+  _getOrReturnCtx(input, returnValue) {
+    return returnValue || {
       common: input.parent.common,
       data: input.data,
       parsedType: getParsedType(input.data),
@@ -4269,10 +4269,10 @@ var ZodType = class {
   superRefine(refinement) {
     return this._refinement(refinement);
   }
-  constructor(def) {
+  constructor(constructor) {
     /** Alias of safeParseAsync */
     this.spa = this.safeParseAsync;
-    this._def = def;
+    this._def = constructor;
     this.parse = this.parse.bind(this);
     this.safeParse = this.safeParse.bind(this);
     this.parseAsync = this.parseAsync.bind(this);
@@ -4335,8 +4335,8 @@ var ZodType = class {
       }
     });
   }
-  default(def) {
-    const defaultValueFunc = typeof def === "function" ? def : () => def;
+  default(defaultValue) {
+    const defaultValueFunc = typeof defaultValue === "function" ? defaultValue : () => defaultValue;
     return new ZodDefault({
       ...processCreateParams(this._def),
       innerType: this,
@@ -4420,17 +4420,17 @@ function isValidIP(valid, version) {
   if ((version === "v6" || !version) && ipv6Regex.test(valid)) return true;
   return false;
 }
-function isValidJWT(jwt, alg) {
-  if (!jwtRegex.test(jwt)) return false;
+function isValidJWT(text, valid) {
+  if (!jwtRegex.test(text)) return false;
   try {
-    const [header] = jwt.split(".");
+    const [header] = text.split(".");
     if (!header) return false;
     const base64 = header.replace(/-/g, "+").replace(/_/g, "/").padEnd(header.length + (4 - header.length % 4) % 4, "=");
     const decoded = JSON.parse(atob(base64));
     if (typeof decoded !== "object" || decoded === null) return false;
     if ("typ" in decoded && decoded?.typ !== "JWT") return false;
     if (!decoded.alg) return false;
-    if (alg && decoded.alg !== alg) return false;
+    if (valid && decoded.alg !== valid) return false;
     return true;
   } catch {
     return false;
@@ -4454,11 +4454,11 @@ var ZodString = class ZodString extends ZodType {
       return INVALID;
     }
     const status = new ParseStatus();
-    let ctx = undefined;
+    let undefinedAlias = undefined;
     for (const check of this._def.checks) if (check.kind === "min") {
       if (input.data.length < check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_small,
           minimum: check.value,
           type: "string",
@@ -4470,8 +4470,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "max") {
       if (input.data.length > check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_big,
           maximum: check.value,
           type: "string",
@@ -4485,15 +4485,15 @@ var ZodString = class ZodString extends ZodType {
       const tooBig = input.data.length > check.value;
       const tooSmall = input.data.length < check.value;
       if (tooBig || tooSmall) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        if (tooBig) addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        if (tooBig) addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_big,
           maximum: check.value,
           type: "string",
           inclusive: true,
           exact: true,
           message: check.message
-        });else if (tooSmall) addIssueToContext(ctx, {
+        });else if (tooSmall) addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_small,
           minimum: check.value,
           type: "string",
@@ -4505,8 +4505,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "email") {
       if (!emailRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "email",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4516,8 +4516,8 @@ var ZodString = class ZodString extends ZodType {
     } else if (check.kind === "emoji") {
       if (!emojiRegex) emojiRegex = new RegExp(_emojiRegex, "u");
       if (!emojiRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "emoji",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4526,8 +4526,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "uuid") {
       if (!uuidRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "uuid",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4536,8 +4536,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "nanoid") {
       if (!nanoidRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "nanoid",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4546,8 +4546,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "cuid") {
       if (!cuidRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "cuid",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4556,8 +4556,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "cuid2") {
       if (!cuid2Regex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "cuid2",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4566,8 +4566,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "ulid") {
       if (!ulidRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "ulid",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4577,8 +4577,8 @@ var ZodString = class ZodString extends ZodType {
     } else if (check.kind === "url") try {
       new URL(input.data);
     } catch {
-      ctx = this._getOrReturnCtx(input, ctx);
-      addIssueToContext(ctx, {
+      undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+      addIssueToContext(undefinedAlias, {
         validation: "url",
         code: ZodIssueCode.invalid_string,
         message: check.message
@@ -4587,8 +4587,8 @@ var ZodString = class ZodString extends ZodType {
     } else if (check.kind === "regex") {
       check.regex.lastIndex = 0;
       if (!check.regex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "regex",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4597,8 +4597,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "trim") input.data = input.data.trim();else if (check.kind === "includes") {
       if (!input.data.includes(check.value, check.position)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_string,
           validation: {
             includes: check.value,
@@ -4610,8 +4610,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "toLowerCase") input.data = input.data.toLowerCase();else if (check.kind === "toUpperCase") input.data = input.data.toUpperCase();else if (check.kind === "startsWith") {
       if (!input.data.startsWith(check.value)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_string,
           validation: {
             startsWith: check.value
@@ -4622,8 +4622,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "endsWith") {
       if (!input.data.endsWith(check.value)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_string,
           validation: {
             endsWith: check.value
@@ -4634,8 +4634,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "datetime") {
       if (!datetimeRegex(check).test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_string,
           validation: "datetime",
           message: check.message
@@ -4644,8 +4644,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "date") {
       if (!dateRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_string,
           validation: "date",
           message: check.message
@@ -4654,8 +4654,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "time") {
       if (!timeRegex(check).test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_string,
           validation: "time",
           message: check.message
@@ -4664,8 +4664,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "duration") {
       if (!durationRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "duration",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4674,8 +4674,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "ip") {
       if (!isValidIP(input.data, check.version)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "ip",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4684,8 +4684,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "jwt") {
       if (!isValidJWT(input.data, check.alg)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "jwt",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4694,8 +4694,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "cidr") {
       if (!isValidCidr(input.data, check.version)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "cidr",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4704,8 +4704,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "base64") {
       if (!base64Regex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "base64",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4714,8 +4714,8 @@ var ZodString = class ZodString extends ZodType {
       }
     } else if (check.kind === "base64url") {
       if (!base64urlRegex.test(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           validation: "base64url",
           code: ZodIssueCode.invalid_string,
           message: check.message
@@ -4902,10 +4902,10 @@ var ZodString = class ZodString extends ZodType {
       ...errorUtil.errToObj(message)
     });
   }
-  length(len, message) {
+  length(length, message) {
     return this._addCheck({
       kind: "length",
-      value: len,
+      value: length,
       ...errorUtil.errToObj(message)
     });
   }
@@ -4988,18 +4988,18 @@ var ZodString = class ZodString extends ZodType {
     return !!this._def.checks.find(item => item.kind === "base64url");
   }
   get minLength() {
-    let min = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "min") {
-      if (min === null || ch.value > min) min = ch.value;
+      if (value === null || ch.value > value) value = ch.value;
     }
-    return min;
+    return value;
   }
   get maxLength() {
-    let max = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "max") {
-      if (max === null || ch.value < max) max = ch.value;
+      if (value === null || ch.value < value) value = ch.value;
     }
-    return max;
+    return value;
   }
 };
 ZodString.create = params => {
@@ -5010,11 +5010,11 @@ ZodString.create = params => {
     ...processCreateParams(params)
   });
 };
-function floatSafeRemainder(val, step) {
-  const valDecCount = (val.toString().split(".")[1] || "").length;
+function floatSafeRemainder(float, step) {
+  const valDecCount = (float.toString().split(".")[1] || "").length;
   const stepDecCount = (step.toString().split(".")[1] || "").length;
   const decCount = valDecCount > stepDecCount ? valDecCount : stepDecCount;
-  return Number.parseInt(val.toFixed(decCount).replace(".", "")) % Number.parseInt(step.toFixed(decCount).replace(".", "")) / 10 ** decCount;
+  return Number.parseInt(float.toFixed(decCount).replace(".", "")) % Number.parseInt(step.toFixed(decCount).replace(".", "")) / 10 ** decCount;
 }
 var ZodNumber = class ZodNumber extends ZodType {
   constructor() {
@@ -5034,12 +5034,12 @@ var ZodNumber = class ZodNumber extends ZodType {
       });
       return INVALID;
     }
-    let ctx = undefined;
+    let undefinedAlias = undefined;
     const status = new ParseStatus();
     for (const check of this._def.checks) if (check.kind === "int") {
       if (!util.isInteger(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.invalid_type,
           expected: "integer",
           received: "float",
@@ -5049,8 +5049,8 @@ var ZodNumber = class ZodNumber extends ZodType {
       }
     } else if (check.kind === "min") {
       if (check.inclusive ? input.data < check.value : input.data <= check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_small,
           minimum: check.value,
           type: "number",
@@ -5062,8 +5062,8 @@ var ZodNumber = class ZodNumber extends ZodType {
       }
     } else if (check.kind === "max") {
       if (check.inclusive ? input.data > check.value : input.data >= check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_big,
           maximum: check.value,
           type: "number",
@@ -5075,8 +5075,8 @@ var ZodNumber = class ZodNumber extends ZodType {
       }
     } else if (check.kind === "multipleOf") {
       if (floatSafeRemainder(input.data, check.value) !== 0) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.not_multiple_of,
           multipleOf: check.value,
           message: check.message
@@ -5085,8 +5085,8 @@ var ZodNumber = class ZodNumber extends ZodType {
       }
     } else if (check.kind === "finite") {
       if (!Number.isFinite(input.data)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.not_finite,
           message: check.message
         });
@@ -5192,31 +5192,31 @@ var ZodNumber = class ZodNumber extends ZodType {
     });
   }
   get minValue() {
-    let min = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "min") {
-      if (min === null || ch.value > min) min = ch.value;
+      if (value === null || ch.value > value) value = ch.value;
     }
-    return min;
+    return value;
   }
   get maxValue() {
-    let max = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "max") {
-      if (max === null || ch.value < max) max = ch.value;
+      if (value === null || ch.value < value) value = ch.value;
     }
-    return max;
+    return value;
   }
   get isInt() {
     return !!this._def.checks.find(item => item.kind === "int" || item.kind === "multipleOf" && util.isInteger(item.value));
   }
   get isFinite() {
-    let max = null;
+    let value = null;
     let min = null;
     for (const ch of this._def.checks) if (ch.kind === "finite" || ch.kind === "int" || ch.kind === "multipleOf") return true;else if (ch.kind === "min") {
       if (min === null || ch.value > min) min = ch.value;
     } else if (ch.kind === "max") {
-      if (max === null || ch.value < max) max = ch.value;
+      if (value === null || ch.value < value) value = ch.value;
     }
-    return Number.isFinite(min) && Number.isFinite(max);
+    return Number.isFinite(min) && Number.isFinite(value);
   }
 };
 ZodNumber.create = params => {
@@ -5240,12 +5240,12 @@ var ZodBigInt = class ZodBigInt extends ZodType {
       return this._getInvalidInput(input);
     }
     if (this._getType(input) !== ZodParsedType.bigint) return this._getInvalidInput(input);
-    let ctx = undefined;
+    let undefinedAlias = undefined;
     const status = new ParseStatus();
     for (const check of this._def.checks) if (check.kind === "min") {
       if (check.inclusive ? input.data < check.value : input.data <= check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_small,
           type: "bigint",
           minimum: check.value,
@@ -5256,8 +5256,8 @@ var ZodBigInt = class ZodBigInt extends ZodType {
       }
     } else if (check.kind === "max") {
       if (check.inclusive ? input.data > check.value : input.data >= check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_big,
           type: "bigint",
           maximum: check.value,
@@ -5268,8 +5268,8 @@ var ZodBigInt = class ZodBigInt extends ZodType {
       }
     } else if (check.kind === "multipleOf") {
       if (input.data % check.value !== BigInt(0)) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.not_multiple_of,
           multipleOf: check.value,
           message: check.message
@@ -5360,18 +5360,18 @@ var ZodBigInt = class ZodBigInt extends ZodType {
     });
   }
   get minValue() {
-    let min = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "min") {
-      if (min === null || ch.value > min) min = ch.value;
+      if (value === null || ch.value > value) value = ch.value;
     }
-    return min;
+    return value;
   }
   get maxValue() {
-    let max = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "max") {
-      if (max === null || ch.value < max) max = ch.value;
+      if (value === null || ch.value < value) value = ch.value;
     }
-    return max;
+    return value;
   }
 };
 ZodBigInt.create = params => {
@@ -5394,7 +5394,7 @@ var ZodBoolean = class extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodBoolean.create = params => {
@@ -5423,11 +5423,11 @@ var ZodDate = class ZodDate extends ZodType {
       return INVALID;
     }
     const status = new ParseStatus();
-    let ctx = undefined;
+    let undefinedAlias = undefined;
     for (const check of this._def.checks) if (check.kind === "min") {
       if (input.data.getTime() < check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_small,
           message: check.message,
           inclusive: true,
@@ -5439,8 +5439,8 @@ var ZodDate = class ZodDate extends ZodType {
       }
     } else if (check.kind === "max") {
       if (input.data.getTime() > check.value) {
-        ctx = this._getOrReturnCtx(input, ctx);
-        addIssueToContext(ctx, {
+        undefinedAlias = this._getOrReturnCtx(input, undefinedAlias);
+        addIssueToContext(undefinedAlias, {
           code: ZodIssueCode.too_big,
           message: check.message,
           inclusive: true,
@@ -5477,18 +5477,18 @@ var ZodDate = class ZodDate extends ZodType {
     });
   }
   get minDate() {
-    let min = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "min") {
-      if (min === null || ch.value > min) min = ch.value;
+      if (value === null || ch.value > value) value = ch.value;
     }
-    return min != null ? new Date(min) : null;
+    return value != null ? new Date(value) : null;
   }
   get maxDate() {
-    let max = null;
+    let value = null;
     for (const ch of this._def.checks) if (ch.kind === "max") {
-      if (max === null || ch.value < max) max = ch.value;
+      if (value === null || ch.value < value) value = ch.value;
     }
-    return max != null ? new Date(max) : null;
+    return value != null ? new Date(value) : null;
   }
 };
 ZodDate.create = params => {
@@ -5510,7 +5510,7 @@ var ZodSymbol = class extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodSymbol.create = params => {
@@ -5530,7 +5530,7 @@ var ZodUndefined = class extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodUndefined.create = params => {
@@ -5550,7 +5550,7 @@ var ZodNull = class extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodNull.create = params => {
@@ -5565,7 +5565,7 @@ var ZodAny = class extends ZodType {
     this._any = true;
   }
   _parse(input) {
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodAny.create = params => {
@@ -5580,7 +5580,7 @@ var ZodUnknown = class extends ZodType {
     this._unknown = true;
   }
   _parse(input) {
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodUnknown.create = params => {
@@ -5617,7 +5617,7 @@ var ZodVoid = class extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
 };
 ZodVoid.create = params => {
@@ -5632,7 +5632,7 @@ var ZodArray = class ZodArray extends ZodType {
       ctx,
       status
     } = this._processInputParams(input);
-    const def = this._def;
+    const _def = this._def;
     if (ctx.parsedType !== ZodParsedType.array) {
       addIssueToContext(ctx, {
         code: ZodIssueCode.invalid_type,
@@ -5641,55 +5641,55 @@ var ZodArray = class ZodArray extends ZodType {
       });
       return INVALID;
     }
-    if (def.exactLength !== null) {
-      const tooBig = ctx.data.length > def.exactLength.value;
-      const tooSmall = ctx.data.length < def.exactLength.value;
+    if (_def.exactLength !== null) {
+      const tooBig = ctx.data.length > _def.exactLength.value;
+      const tooSmall = ctx.data.length < _def.exactLength.value;
       if (tooBig || tooSmall) {
         addIssueToContext(ctx, {
           code: tooBig ? ZodIssueCode.too_big : ZodIssueCode.too_small,
-          minimum: tooSmall ? def.exactLength.value : undefined,
-          maximum: tooBig ? def.exactLength.value : undefined,
+          minimum: tooSmall ? _def.exactLength.value : undefined,
+          maximum: tooBig ? _def.exactLength.value : undefined,
           type: "array",
           inclusive: true,
           exact: true,
-          message: def.exactLength.message
+          message: _def.exactLength.message
         });
         status.dirty();
       }
     }
-    if (def.minLength !== null) {
-      if (ctx.data.length < def.minLength.value) {
+    if (_def.minLength !== null) {
+      if (ctx.data.length < _def.minLength.value) {
         addIssueToContext(ctx, {
           code: ZodIssueCode.too_small,
-          minimum: def.minLength.value,
+          minimum: _def.minLength.value,
           type: "array",
           inclusive: true,
           exact: false,
-          message: def.minLength.message
+          message: _def.minLength.message
         });
         status.dirty();
       }
     }
-    if (def.maxLength !== null) {
-      if (ctx.data.length > def.maxLength.value) {
+    if (_def.maxLength !== null) {
+      if (ctx.data.length > _def.maxLength.value) {
         addIssueToContext(ctx, {
           code: ZodIssueCode.too_big,
-          maximum: def.maxLength.value,
+          maximum: _def.maxLength.value,
           type: "array",
           inclusive: true,
           exact: false,
-          message: def.maxLength.message
+          message: _def.maxLength.message
         });
         status.dirty();
       }
     }
     if (ctx.common.async) return Promise.all([...ctx.data].map((item, i) => {
-      return def.type._parseAsync(new ParseInputLazyPath(ctx, item, ctx.path, i));
+      return _def.type._parseAsync(new ParseInputLazyPath(ctx, item, ctx.path, i));
     })).then(result => {
       return ParseStatus.mergeArray(status, result);
     });
     const result = [...ctx.data].map((item, i) => {
-      return def.type._parseSync(new ParseInputLazyPath(ctx, item, ctx.path, i));
+      return _def.type._parseSync(new ParseInputLazyPath(ctx, item, ctx.path, i));
     });
     return ParseStatus.mergeArray(status, result);
   }
@@ -5714,11 +5714,11 @@ var ZodArray = class ZodArray extends ZodType {
       }
     });
   }
-  length(len, message) {
+  length(length, message) {
     return new ZodArray({
       ...this._def,
       exactLength: {
-        value: len,
+        value: length,
         message: errorUtil.toString(message)
       }
     });
@@ -5920,9 +5920,9 @@ var ZodObject = class ZodObject extends ZodType {
       typeName: ZodFirstPartyTypeKind.ZodObject
     });
   }
-  setKey(key, schema) {
+  setKey(keyValue, schema) {
     return this.augment({
-      [key]: schema
+      [keyValue]: schema
     });
   }
   catchall(index) {
@@ -6170,7 +6170,7 @@ function mergeValues(count, values) {
     data: count
   };else if (aType === ZodParsedType.object && bType === ZodParsedType.object) {
     const bKeys = util.objectKeys(values);
-    const sharedKeys = util.objectKeys(count).filter(key => bKeys.indexOf(key) !== -1);
+    const sharedKeys = util.objectKeys(count).filter(item => bKeys.indexOf(item) !== -1);
     const newObj = {
       ...count,
       ...values
@@ -6450,29 +6450,29 @@ var ZodSet = class ZodSet extends ZodType {
       });
       return INVALID;
     }
-    const def = this._def;
-    if (def.minSize !== null) {
-      if (ctx.data.size < def.minSize.value) {
+    const _def = this._def;
+    if (_def.minSize !== null) {
+      if (ctx.data.size < _def.minSize.value) {
         addIssueToContext(ctx, {
           code: ZodIssueCode.too_small,
-          minimum: def.minSize.value,
+          minimum: _def.minSize.value,
           type: "set",
           inclusive: true,
           exact: false,
-          message: def.minSize.message
+          message: _def.minSize.message
         });
         status.dirty();
       }
     }
-    if (def.maxSize !== null) {
-      if (ctx.data.size > def.maxSize.value) {
+    if (_def.maxSize !== null) {
+      if (ctx.data.size > _def.maxSize.value) {
         addIssueToContext(ctx, {
           code: ZodIssueCode.too_big,
-          maximum: def.maxSize.value,
+          maximum: _def.maxSize.value,
           type: "set",
           inclusive: true,
           exact: false,
-          message: def.maxSize.message
+          message: _def.maxSize.message
         });
         status.dirty();
       }
@@ -6572,7 +6572,7 @@ var ZodFunction = class ZodFunction extends ZodType {
     const fn = ctx.data;
     if (this._def.returns instanceof ZodPromise) {
       const me = this;
-      return OK(async function (...args) {
+      return handler(async function (...args) {
         const error = new ZodError([]);
         const parsedArgs = await me._def.args.parseAsync(args, params).catch(err => {
           error.addIssue(makeArgsIssue(args, err));
@@ -6586,7 +6586,7 @@ var ZodFunction = class ZodFunction extends ZodType {
       });
     } else {
       const me = this;
-      return OK(function (...args) {
+      return handler(function (...args) {
         const parsedArgs = me._def.args.safeParse(args, params);
         if (!parsedArgs.success) throw new ZodError([makeArgsIssue(args, parsedArgs.error)]);
         const result = Reflect.apply(fn, this, parsedArgs.data);
@@ -6708,7 +6708,7 @@ var ZodEnum = class ZodEnum extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
   get options() {
     return this._def.values;
@@ -6735,7 +6735,7 @@ var ZodEnum = class ZodEnum extends ZodType {
     });
   }
   exclude(values, newDef = this._def) {
-    return ZodEnum.create(this.options.filter(opt => !values.includes(opt)), {
+    return ZodEnum.create(this.options.filter(item => !values.includes(item)), {
       ...this._def,
       ...newDef
     });
@@ -6765,7 +6765,7 @@ var ZodNativeEnum = class extends ZodType {
       });
       return INVALID;
     }
-    return OK(input.data);
+    return handler(input.data);
   }
   get enum() {
     return this._def.values;
@@ -6794,7 +6794,7 @@ var ZodPromise = class extends ZodType {
       });
       return INVALID;
     }
-    return OK((ctx.parsedType === ZodParsedType.promise ? ctx.data : Promise.resolve(ctx.data)).then(data => {
+    return handler((ctx.parsedType === ZodParsedType.promise ? ctx.data : Promise.resolve(ctx.data)).then(data => {
       return this._def.type.parseAsync(data, {
         path: ctx.path,
         errorMap: ctx.common.contextualErrorMap
@@ -6943,7 +6943,7 @@ ZodEffects.createWithPreprocess = (preprocess, schema, params) => {
 };
 var ZodOptional = class extends ZodType {
   _parse(input) {
-    if (this._getType(input) === ZodParsedType.undefined) return OK(undefined);
+    if (this._getType(input) === ZodParsedType.undefined) return handler(undefined);
     return this._def.innerType._parse(input);
   }
   unwrap() {
@@ -6959,7 +6959,7 @@ ZodOptional.create = (type, params) => {
 };
 var ZodNullable = class extends ZodType {
   _parse(input) {
-    if (this._getType(input) === ZodParsedType.null) return OK(null);
+    if (this._getType(input) === ZodParsedType.null) return handler(null);
     return this._def.innerType._parse(input);
   }
   unwrap() {
@@ -7344,8 +7344,8 @@ function isRecordingTimeAllowed(schedule, now = /* @__PURE__ */new Date()) {
   const matches = enabledRules.filter(rule => {
     if (rule.allDay) return ruleRunsOn(rule, now);
     const start = toMinutes(rule.start);
-    const end = toMinutes(rule.end);
-    return start < end ? ruleRunsOn(rule, now) && minute >= start && minute < end : ruleRunsOn(rule, now) && minute >= start || ruleRunsOn(rule, yesterday) && minute < end;
+    const toMinutesResult = toMinutes(rule.end);
+    return start < toMinutesResult ? ruleRunsOn(rule, now) && minute >= start && minute < toMinutesResult : ruleRunsOn(rule, now) && minute >= start || ruleRunsOn(rule, yesterday) && minute < toMinutesResult;
   });
   return !matches.some(rule => rule.type === "exclude") && (!hasRecordRule || matches.some(rule => rule.type === "record"));
 }
@@ -7354,11 +7354,11 @@ function nextRecordingScheduleChange(schedule, now = /* @__PURE__ */new Date()) 
   const allowed = isRecordingTimeAllowed(schedule, now);
   const candidates = /* @__PURE__ */new Set();
   for (let offset = -1; offset <= 15; offset++) {
-    const day = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
+    const date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset);
     for (const rule of schedule.rules) {
-      if (!rule.enabled || !ruleRunsOn(rule, day)) continue;
+      if (!rule.enabled || !ruleRunsOn(rule, date)) continue;
       for (const [value, extraDay] of [[rule.allDay ? "00:00" : rule.start, 0], [rule.allDay ? "00:00" : rule.end, rule.allDay || rule.end < rule.start ? 1 : 0]]) {
-        const boundary = new Date(day.getFullYear(), day.getMonth(), day.getDate() + extraDay, Number(value.slice(0, 2)), Number(value.slice(3)));
+        const boundary = new Date(date.getFullYear(), date.getMonth(), date.getDate() + extraDay, Number(value.slice(0, 2)), Number(value.slice(3)));
         if (boundary.getTime() > now.getTime()) candidates.add(boundary.getTime());
       }
     }
@@ -7416,16 +7416,16 @@ function normalizeAgentSessionImportPeriods(value) {
   periods.sort((left, right) => left.startedAt.localeCompare(right.startedAt));
   return periods.slice(-100);
 }
-function openAgentSessionImportPeriod(periods, now) {
-  return normalizeAgentSessionImportPeriods([...closeAgentSessionImportPeriod(periods, now), {
-    startedAt: now,
+function openAgentSessionImportPeriod(periods, session) {
+  return normalizeAgentSessionImportPeriods([...closeAgentSessionImportPeriod(periods, session), {
+    startedAt: session,
     endedAt: null
   }]);
 }
-function closeAgentSessionImportPeriod(periods, now) {
+function closeAgentSessionImportPeriod(periods, session) {
   return periods.map(period => period.endedAt === null ? {
     ...period,
-    endedAt: now
+    endedAt: session
   } : period);
 }
 function hasOpenAgentSessionImportPeriod(periods) {
@@ -7548,8 +7548,8 @@ var DEFAULT_SCREENSHOT_STYLE = {
 }, {
   ...DEFAULT_SCREENSHOT_STYLE
 };
-function clampNumber(value, min, max, fallback) {
-  return typeof value === "number" && Number.isFinite(value) ? Math.min(max, Math.max(min, Math.round(value))) : fallback;
+function clampNumber(value, number, numberValue, fallback) {
+  return typeof value === "number" && Number.isFinite(value) ? Math.min(numberValue, Math.max(number, Math.round(value))) : fallback;
 }
 function pickEnum(value, options, fallback) {
   return typeof value === "string" && options.includes(value) ? value : fallback;
@@ -8131,11 +8131,11 @@ function migrateLegacyAiModeRows(rows) {
   const keys = /* @__PURE__ */new Set();
   for (const value of rows) {
     if (!value || typeof value !== "object") continue;
-    const row = value;
-    if (typeof row.key !== "string") continue;
-    keys.add(row.key);
+    const valueAlias = value;
+    if (typeof valueAlias.key !== "string") continue;
+    keys.add(valueAlias.key);
     try {
-      parsed[row.key] = JSON.parse(String(row.value));
+      parsed[valueAlias.key] = JSON.parse(String(valueAlias.value));
     } catch {}
   }
   if (!keys.has("aiMode")) return rows;
@@ -8319,17 +8319,17 @@ function mondayOf(date) {
 function lastDateOfMonth(date) {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
-function dayRange(day) {
-  const key = toLocalDateKey(day);
+function dayRange(dayValue) {
+  const toLocalDateKeyResult = toLocalDateKey(dayValue);
   return {
-    startDate: `${key} 00:00:00`,
-    endDate: `${key} 23:59:59`
+    startDate: `${toLocalDateKeyResult} 00:00:00`,
+    endDate: `${toLocalDateKeyResult} 23:59:59`
   };
 }
-function datesRange(start, end) {
+function datesRange(start, range) {
   return {
     startDate: `${toLocalDateKey(start)} 00:00:00`,
-    endDate: `${toLocalDateKey(end)} 23:59:59`
+    endDate: `${toLocalDateKey(range)} 23:59:59`
   };
 }
 function isMondayToFriday(date) {
@@ -8369,10 +8369,10 @@ function isTaskWorkday(task, date) {
   if (repeat.mode === "alternate") return isTaskRunDay(repeat, date);
   return isMondayToFriday(date);
 }
-function runTimeOn(task, day) {
-  if (!isTaskRunDay(task.repeat, day)) return null;
+function runTimeOn(task, timeValue) {
+  if (!isTaskRunDay(task.repeat, timeValue)) return null;
   const [hour, minute] = task.time.split(":").map(Number);
-  return new Date(day.getFullYear(), day.getMonth(), day.getDate(), hour, minute, 0, 0);
+  return new Date(timeValue.getFullYear(), timeValue.getMonth(), timeValue.getDate(), hour, minute, 0, 0);
 }
 /** 不晚于 atOrBefore 的最近一次执行时间 */
 function getLatestTaskRun(task, atOrBefore) {
@@ -8387,28 +8387,28 @@ function getStaticTaskRange(task, plannedAt) {
   const {
     range
   } = task;
-  const day = startOfDay(plannedAt);
+  const ofDay = startOfDay(plannedAt);
   switch (range.kind) {
     case "today":
-      return dayRange(day);
+      return dayRange(ofDay);
     case "yesterday":
-      return dayRange(addDays(day, -1));
+      return dayRange(addDays(ofDay, -1));
     case "previousWorkday":
       for (let offset = 1; offset <= 14; offset += 1) {
-        const candidate = addDays(day, -offset);
+        const candidate = addDays(ofDay, -offset);
         if (isTaskWorkday(task, candidate)) return dayRange(candidate);
       }
-      return dayRange(addDays(day, -1));
+      return dayRange(addDays(ofDay, -1));
     case "customTime":
       {
-        const startDay = addDays(day, range.startDayOffset);
+        const startDay = addDays(ofDay, range.startDayOffset);
         const [startHour, startMinute] = range.startTime.split(":").map(Number);
         const [endHour, endMinute] = range.endTime.split(":").map(Number);
         const start = new Date(startDay.getFullYear(), startDay.getMonth(), startDay.getDate(), startHour, startMinute, 0);
-        const end = /* @__PURE__ */new Date(new Date(day.getFullYear(), day.getMonth(), day.getDate(), endHour, endMinute, 0).getTime() - 1e3);
-        return end.getTime() > start.getTime() ? {
+        const date = /* @__PURE__ */new Date(new Date(ofDay.getFullYear(), ofDay.getMonth(), ofDay.getDate(), endHour, endMinute, 0).getTime() - 1e3);
+        return date.getTime() > start.getTime() ? {
           startDate: formatLocalDateTime(start),
-          endDate: formatLocalDateTime(end)
+          endDate: formatLocalDateTime(date)
         } : null;
       }
     case "lastHours":
@@ -8417,41 +8417,41 @@ function getStaticTaskRange(task, plannedAt) {
         endDate: formatLocalDateTime(/* @__PURE__ */new Date(plannedAt.getTime() - 1e3))
       };
     case "thisWeek":
-      return datesRange(mondayOf(day), day);
+      return datesRange(mondayOf(ofDay), ofDay);
     case "lastWeek":
       {
-        const monday = mondayOf(day);
+        const monday = mondayOf(ofDay);
         return datesRange(addDays(monday, -7), addDays(monday, -1));
       }
     case "lastNDays":
       {
-        const end = range.untilYesterday ? addDays(day, -1) : day;
+        const end = range.untilYesterday ? addDays(ofDay, -1) : ofDay;
         return datesRange(addDays(end, -(range.days - 1)), end);
       }
     case "thisMonth":
-      return datesRange(new Date(day.getFullYear(), day.getMonth(), 1), day);
+      return datesRange(new Date(ofDay.getFullYear(), ofDay.getMonth(), 1), ofDay);
     case "lastMonth":
-      return datesRange(new Date(day.getFullYear(), day.getMonth() - 1, 1), new Date(day.getFullYear(), day.getMonth(), 0));
+      return datesRange(new Date(ofDay.getFullYear(), ofDay.getMonth() - 1, 1), new Date(ofDay.getFullYear(), ofDay.getMonth(), 0));
     default:
       return null;
   }
 }
 /** 「最近有记录的一天/一周/一个月」的候选范围，从最近的往前排；不含执行当天、本周、本月 */
 function getRecordedPeriodCandidates(kind, plannedAt) {
-  const day = startOfDay(plannedAt);
+  const ofDay = startOfDay(plannedAt);
   const candidates = [];
-  if (kind === "lastRecordedDay") for (let offset = 1; offset <= 31; offset += 1) candidates.push(dayRange(addDays(day, -offset)));else if (kind === "lastRecordedWeek") {
-    const monday = mondayOf(day);
+  if (kind === "lastRecordedDay") for (let offset = 1; offset <= 31; offset += 1) candidates.push(dayRange(addDays(ofDay, -offset)));else if (kind === "lastRecordedWeek") {
+    const monday = mondayOf(ofDay);
     for (let offset = 1; offset <= 8; offset += 1) candidates.push(datesRange(addDays(monday, -7 * offset), addDays(monday, -7 * offset + 6)));
-  } else for (let offset = 1; offset <= 6; offset += 1) candidates.push(datesRange(new Date(day.getFullYear(), day.getMonth() - offset, 1), new Date(day.getFullYear(), day.getMonth() - offset + 1, 0)));
+  } else for (let offset = 1; offset <= 6; offset += 1) candidates.push(datesRange(new Date(ofDay.getFullYear(), ofDay.getMonth() - offset, 1), new Date(ofDay.getFullYear(), ofDay.getMonth() - offset + 1, 0)));
   return candidates;
 }
 /** 「补齐未生成的日子」：执行日之前 7 天，从早到晚 */
 function getFillMissingCandidates(plannedAt) {
-  const day = startOfDay(plannedAt);
+  const ofDay = startOfDay(plannedAt);
   return Array.from({
     length: 7
-  }, (_, index) => dayRange(addDays(day, index - 7)));
+  }, (_, index) => dayRange(addDays(ofDay, index - 7)));
 }
 var SINCE_LAST_MAX_DAYS = {
   daily: 7,
@@ -8463,17 +8463,17 @@ var SINCE_LAST_MAX_DAYS = {
 * 最长跨度：日报 7 天、周报 31 天、月报 62 天。没有新的时间段时返回 null。
 */
 function getSinceLastRange(type, plannedAt, coveredUntil) {
-  const day = startOfDay(plannedAt);
-  const periodStart = type === "daily" ? day : type === "weekly" ? mondayOf(day) : new Date(day.getFullYear(), day.getMonth(), 1);
+  const ofDay = startOfDay(plannedAt);
+  const periodStart = type === "daily" ? ofDay : type === "weekly" ? mondayOf(ofDay) : new Date(ofDay.getFullYear(), ofDay.getMonth(), 1);
   const previousEnd = coveredUntil ? parseLocalDateTime(coveredUntil) : null;
-  const earliest = addDays(day, -SINCE_LAST_MAX_DAYS[type]);
+  const earliest = addDays(ofDay, -SINCE_LAST_MAX_DAYS[type]);
   let start = previousEnd ? new Date(previousEnd.getTime() + 1e3) : periodStart;
   if (start.getTime() < earliest.getTime()) start = earliest;
-  const end = /* @__PURE__ */new Date(plannedAt.getTime() - 1e3);
-  if (end.getTime() <= start.getTime()) return null;
+  const date = /* @__PURE__ */new Date(plannedAt.getTime() - 1e3);
+  if (date.getTime() <= start.getTime()) return null;
   return {
     startDate: formatLocalDateTime(start),
-    endDate: formatLocalDateTime(end)
+    endDate: formatLocalDateTime(date)
   };
 }
 /**
@@ -8514,7 +8514,7 @@ function getDefaultAutoReportRepeat(type) {
   };
 }
 function createAutoReportTask(type, now = /* @__PURE__ */new Date()) {
-  const iso = now.toISOString();
+  const isoString = now.toISOString();
   return {
     id: globalThis.crypto.randomUUID(),
     name: "",
@@ -8533,8 +8533,8 @@ function createAutoReportTask(type, now = /* @__PURE__ */new Date()) {
     autoShare: false,
     recipients: [],
     note: "",
-    createdAt: iso,
-    updatedAt: iso
+    createdAt: isoString,
+    updatedAt: isoString
   };
 }
 /** 读取已保存的任务：逐个校验，坏的丢掉，不影响其他任务 */
@@ -8629,7 +8629,7 @@ function resolveCommonAppName(name) {
   const exact = COMMON_APP_NAME_MAP[normalized];
   if (exact) return exact;
   const lower = normalized.toLowerCase();
-  const matchedKey = Object.keys(COMMON_APP_NAME_MAP).find(key => key.toLowerCase() === lower);
+  const matchedKey = Object.keys(COMMON_APP_NAME_MAP).find(text => text.toLowerCase() === lower);
   return matchedKey ? COMMON_APP_NAME_MAP[matchedKey] : normalized;
 }
 function normalizeAppKeywords(apps) {
@@ -8637,9 +8637,9 @@ function normalizeAppKeywords(apps) {
   const result = [];
   for (const app of apps) {
     const normalized = resolveCommonAppName(app);
-    const key = normalized.toLowerCase();
-    if (!normalized || seen.has(key)) continue;
-    seen.add(key);
+    const lowercased = normalized.toLowerCase();
+    if (!normalized || seen.has(lowercased)) continue;
+    seen.add(lowercased);
     result.push(normalized);
   }
   return result;
@@ -11968,16 +11968,16 @@ function lookupList(tree, parts) {
   const value = resolve(tree, parts);
   return Array.isArray(value) ? value.filter(item => typeof item === "string") : null;
 }
-function t(key, language, mode = currentUsageMode) {
-  const parts = key.split(".");
+function t(text, language, mode = currentUsageMode) {
+  const parts = text.split(".");
   const overlayLanguage = language in usageModeOverlays[mode] ? language : "zh-CN";
   const overlayValue = lookup(usageModeOverlays[mode][overlayLanguage], parts);
   if (overlayValue !== null) return overlayValue;
-  return lookup(locales[language] ?? locales["zh-CN"], parts) ?? key;
+  return lookup(locales[language] ?? locales["zh-CN"], parts) ?? text;
 }
 /** 文案数组（同一个意思的多种说法）；覆盖层整组替换，查不到时返回空数组 */
-function tList(key, language, mode = currentUsageMode) {
-  const parts = key.split(".");
+function tList(text, language, mode = currentUsageMode) {
+  const parts = text.split(".");
   const overlayLanguage = language in usageModeOverlays[mode] ? language : "zh-CN";
   const overlayValue = lookupList(usageModeOverlays[mode][overlayLanguage], parts);
   if (overlayValue !== null) return overlayValue;
@@ -12074,16 +12074,16 @@ function readStringArray(value, fallback) {
   if (!Array.isArray(value)) return fallback;
   return value.every(item => typeof item === "string") ? value : fallback;
 }
-function normalizeSettingValue(key, value) {
-  if (key === "screenshotExcludeDomains" || key === "screenshotAllowDomains") return normalizeWebsiteKeywords(Array.isArray(value) ? value : []);
-  if (key === "websiteBrowserApps") return Array.isArray(value) ? [...new Set(value.filter(item => typeof item === "string").map(item => item.trim()).filter(Boolean))].slice(0, 50) : [];
-  if (key === "screenshotExcludeApps" || key === "screenshotExcludeAllowApps") return Array.isArray(value) ? normalizeAppKeywords(value.filter(item => typeof item === "string")) : value;
-  if (key === "scheduledReportIntervalMinutes") return normalizeScheduledReportIntervalMinutes(value);
-  if (key === "agentSessionImportIntervalMinutes") return normalizeAgentSessionImportInterval(value);
-  if (key === "agentSessionImportProviders") return normalizeAgentSessionProviderIds(value);
-  if (key === "agentSessionImportPeriods") return normalizeAgentSessionImportPeriods(value);
-  if (key === "workMotivatorConfig") return normalizeWorkMotivatorConfig(value);
-  if (key === "autoDailyReportModel" && typeof value === "string") return normalizeReportGenerationModel(value);
+function normalizeSettingValue(setting, value) {
+  if (setting === "screenshotExcludeDomains" || setting === "screenshotAllowDomains") return normalizeWebsiteKeywords(Array.isArray(value) ? value : []);
+  if (setting === "websiteBrowserApps") return Array.isArray(value) ? [...new Set(value.filter(item => typeof item === "string").map(item => item.trim()).filter(Boolean))].slice(0, 50) : [];
+  if (setting === "screenshotExcludeApps" || setting === "screenshotExcludeAllowApps") return Array.isArray(value) ? normalizeAppKeywords(value.filter(item => typeof item === "string")) : value;
+  if (setting === "scheduledReportIntervalMinutes") return normalizeScheduledReportIntervalMinutes(value);
+  if (setting === "agentSessionImportIntervalMinutes") return normalizeAgentSessionImportInterval(value);
+  if (setting === "agentSessionImportProviders") return normalizeAgentSessionProviderIds(value);
+  if (setting === "agentSessionImportPeriods") return normalizeAgentSessionImportPeriods(value);
+  if (setting === "workMotivatorConfig") return normalizeWorkMotivatorConfig(value);
+  if (setting === "autoDailyReportModel" && typeof value === "string") return normalizeReportGenerationModel(value);
   return value;
 }
 function readApiStyle(value, fallback) {
@@ -12101,13 +12101,13 @@ function decryptSensitiveValue(value) {
   if (!value) return "";
   return decryptString(value);
 }
-function serializeSetting(key, value) {
-  if (SENSITIVE_SETTING_KEYS.has(key) && typeof value === "string") return JSON.stringify(encryptSensitiveValue(value));
+function serializeSetting(setting, value) {
+  if (SENSITIVE_SETTING_KEYS.has(setting) && typeof value === "string") return JSON.stringify(encryptSensitiveValue(value));
   return JSON.stringify(value);
 }
-function parseSetting(key, value) {
+function parseSetting(setting, value) {
   const parsed = JSON.parse(value);
-  if (SENSITIVE_SETTING_KEYS.has(key) && typeof parsed === "string") return decryptSensitiveValue(parsed);
+  if (SENSITIVE_SETTING_KEYS.has(setting) && typeof parsed === "string") return decryptSensitiveValue(parsed);
   return parsed;
 }
 function normalizeSettings(input) {
@@ -12355,7 +12355,7 @@ var SettingsRepository = class {
   updateSettings(input) {
     this.getSettings();
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const statement = database.prepare(`
       INSERT INTO settings (key, value, updated_at)
       VALUES (?, ?, ?)
@@ -12368,10 +12368,10 @@ var SettingsRepository = class {
       for (const [key, value] of Object.entries(input)) {
         if (!settingKeys.has(key)) continue;
         if (value === undefined) continue;
-        statement.run(key, serializeSetting(key, normalizeSettingValue(key, value)), now);
+        statement.run(key, serializeSetting(key, normalizeSettingValue(key, value)), isoString);
       }
       database.exec("COMMIT");
-      if (Object.keys(input).some(key => /^(enableTimelineSummary|timelineSummaryRecordCount|screenshotAiMode|aiMode|language|localScreenshot|subscriptionScreenshot|custom|screenshotModelName)/.test(key))) this.revision += 1;
+      if (Object.keys(input).some(item => /^(enableTimelineSummary|timelineSummaryRecordCount|screenshotAiMode|aiMode|language|localScreenshot|subscriptionScreenshot|custom|screenshotModelName)/.test(item))) this.revision += 1;
     } catch (error) {
       database.exec("ROLLBACK");
       throw error;

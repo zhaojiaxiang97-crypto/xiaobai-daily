@@ -230,11 +230,11 @@ var ReadStreamTokenizer = class extends AbstractTokenizer {
   async ignore(length) {
     if (length < 0) throw new RangeError("ignore length must be ≥ 0 bytes");
     const bufSize = Math.min(maxBufferSize, length);
-    const buf = new Uint8Array(bufSize);
+    const uint8Array = new Uint8Array(bufSize);
     let totBytesRead = 0;
     while (totBytesRead < length) {
       const remaining = length - totBytesRead;
-      const bytesRead = await this.readBuffer(buf, {
+      const bytesRead = await this.readBuffer(uint8Array, {
         length: Math.min(bufSize, remaining)
       });
       if (bytesRead < 0) return bytesRead;
@@ -409,9 +409,9 @@ var FourCcToken = {
     return textDecodeResult;
   },
   put: (buffer, offset, id) => {
-    const str = textEncode(id, "latin1");
-    if (str.length !== 4) throw new InternalParserError("Invalid length");
-    buffer.set(str, offset);
+    const textEncodeResult = textEncode(id, "latin1");
+    if (textEncodeResult.length !== 4) throw new InternalParserError("Invalid length");
+    buffer.set(textEncodeResult, offset);
     return offset + 4;
   }
 };
@@ -503,8 +503,8 @@ function parseTagFlags(flags) {
 * @param bit 0 is least significant bit (LSB)
 * @return {boolean} true if bit is 1; otherwise false
 */
-function isBitSet(num, bit) {
-  return (num & 1 << bit) !== 0;
+function isBitSet(bitValue, setValue) {
+  return (bitValue & 1 << setValue) !== 0;
 }
 //#endregion
 //#region node_modules/music-metadata/lib/apev2/APEv2Parser.js
@@ -617,14 +617,14 @@ var APEv2Parser = class APEv2Parser extends BasicParser {
         length: Math.min(keyBuffer.length, bytesRemaining)
       });
       let zero = findZero(keyBuffer);
-      const key = await this.tokenizer.readToken(new StringType(zero, "ascii"));
+      const token = await this.tokenizer.readToken(new StringType(zero, "ascii"));
       await this.tokenizer.ignore(1);
-      bytesRemaining -= key.length + 1;
+      bytesRemaining -= token.length + 1;
       switch (tagItemHeader.flags.dataType) {
         case DataType.text_utf8:
           {
             const values = (await this.tokenizer.readToken(new StringType(tagItemHeader.size, "utf8"))).split(/\x00/g);
-            await Promise.all(values.map(val => this.metadata.addTag(tagFormat, key, val)));
+            await Promise.all(values.map(item => this.metadata.addTag(tagFormat, token, item)));
             break;
           }
         case DataType.binary:
@@ -634,19 +634,19 @@ var APEv2Parser = class APEv2Parser extends BasicParser {
             zero = findZero(picData);
             const description = textDecode(picData.subarray(0, zero), "utf-8");
             const data = picData.subarray(zero + 1);
-            await this.metadata.addTag(tagFormat, key, {
+            await this.metadata.addTag(tagFormat, token, {
               description,
               data
             });
           }
           break;
         case DataType.external_info:
-          debug(`Ignore external info ${key}`);
+          debug(`Ignore external info ${token}`);
           await this.tokenizer.ignore(tagItemHeader.size);
           break;
         case DataType.reserved:
-          debug(`Ignore external info ${key}`);
-          this.metadata.addWarning(`APEv2 header declares a reserved datatype for "${key}"`);
+          debug(`Ignore external info ${token}`);
+          this.metadata.addWarning(`APEv2 header declares a reserved datatype for "${token}"`);
           await this.tokenizer.ignore(tagItemHeader.size);
       }
     }

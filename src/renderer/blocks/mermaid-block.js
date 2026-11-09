@@ -2,10 +2,10 @@ import { $n as e, An as t, Ct as n, Nt as r, S as i, Wt as a, Yt as o, Zt as s, 
 import { E as ce, r as le, w as ue } from "../i18n/en-US-player.js";
 import { A as de, B as fe, C as pe, N as me, P as he, T as ge, U as _e, V as ve, X as ye, Y as be, _ as xe, b as Se, j as Ce, v as we, y as Te } from "../chunks/main.js";
 var defineProperty = Object.defineProperty,
-  Ee = Object.defineProperties,
-  De = Object.getOwnPropertyDescriptors,
-  _ = Object.getOwnPropertySymbols,
-  Oe = Object.prototype.hasOwnProperty,
+  defineProperties = Object.defineProperties,
+  getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
+  getOwnPropertySymbols = Object.getOwnPropertySymbols,
+  hasOwnProperty = Object.prototype.hasOwnProperty,
   propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
   handler = (e, t, n) => t in e ? defineProperty(e, t, {
     enumerable: true,
@@ -14,8 +14,8 @@ var defineProperty = Object.defineProperty,
     value: n
   }) : e[t] = n,
   Ae = (e, t) => {
-    for (var width in t ||= {}) Oe.call(t, width) && handler(e, width, t[width]);
-    if (_) for (var width of _(t)) propertyIsEnumerable.call(t, width) && handler(e, width, t[width]);
+    for (var width in t ||= {}) hasOwnProperty.call(t, width) && handler(e, width, t[width]);
+    if (getOwnPropertySymbols) for (var width of getOwnPropertySymbols(t)) propertyIsEnumerable.call(t, width) && handler(e, width, t[width]);
     return e;
   },
   y = (e, t, n) => new Promise((fn, i) => {
@@ -879,7 +879,7 @@ var defineProperty = Object.defineProperty,
               let i = `mermaid-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
               R.value || It.value || (value = r.initialize) == null || value.call(r, (payload = Ae({}, rt.value), width = {
                 dompurifyConfig: Ae({}, Oe)
-              }, Ee(payload, De(width))));
+              }, defineProperties(payload, getOwnPropertyDescriptors(width))));
               let a = function (e, t = O.value) {
                   let n = t,
                     r = `%%{init: {"theme": "${e === `dark` ? `dark` : `default`}"}}%%\n`;

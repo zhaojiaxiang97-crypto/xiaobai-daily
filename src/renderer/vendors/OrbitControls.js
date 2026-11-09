@@ -445,11 +445,11 @@ var Tt = {
     sub(e) {
       return this.x -= e.x, this.y -= e.y, this;
     }
-    subScalar(sub) {
-      return this.x -= sub, this.y -= sub, this;
+    subScalar(subValue) {
+      return this.x -= subValue, this.y -= subValue, this;
     }
-    subVectors(sub, vectors) {
-      return this.x = sub.x - vectors.x, this.y = sub.y - vectors.y, this;
+    subVectors(subValue, vectors) {
+      return this.x = subValue.x - vectors.x, this.y = subValue.y - vectors.y, this;
     }
     multiply(multiply) {
       return this.x *= multiply.x, this.y *= multiply.y, this;
@@ -887,11 +887,11 @@ var Tt = {
     sub(e) {
       return this.x -= e.x, this.y -= e.y, this.z -= e.z, this;
     }
-    subScalar(sub) {
-      return this.x -= sub, this.y -= sub, this.z -= sub, this;
+    subScalar(subValue) {
+      return this.x -= subValue, this.y -= subValue, this.z -= subValue, this;
     }
-    subVectors(sub, vectors) {
-      return this.x = sub.x - vectors.x, this.y = sub.y - vectors.y, this.z = sub.z - vectors.z, this;
+    subVectors(subValue, vectors) {
+      return this.x = subValue.x - vectors.x, this.y = subValue.y - vectors.y, this.z = subValue.z - vectors.z, this;
     }
     multiply(multiply) {
       return this.x *= multiply.x, this.y *= multiply.y, this.z *= multiply.z, this;
@@ -1644,11 +1644,11 @@ var Ut = class e {
     sub(e) {
       return this.x -= e.x, this.y -= e.y, this.z -= e.z, this.w -= e.w, this;
     }
-    subScalar(sub) {
-      return this.x -= sub, this.y -= sub, this.z -= sub, this.w -= sub, this;
+    subScalar(subValue) {
+      return this.x -= subValue, this.y -= subValue, this.z -= subValue, this.w -= subValue, this;
     }
-    subVectors(sub, vectors) {
-      return this.x = sub.x - vectors.x, this.y = sub.y - vectors.y, this.z = sub.z - vectors.z, this.w = sub.w - vectors.w, this;
+    subVectors(subValue, vectors) {
+      return this.x = subValue.x - vectors.x, this.y = subValue.y - vectors.y, this.z = subValue.z - vectors.z, this.w = subValue.w - vectors.w, this;
     }
     multiply(multiply) {
       return this.x *= multiply.x, this.y *= multiply.y, this.z *= multiply.z, this.w *= multiply.w, this;
@@ -2985,8 +2985,8 @@ var X = class {
     setScalar(scalar) {
       return this.r = scalar, this.g = scalar, this.b = scalar, this;
     }
-    setHex(hex, t = Fe) {
-      return hex = Math.floor(hex), this.r = (hex >> 16 & 255) / 255, this.g = (hex >> 8 & 255) / 255, this.b = (hex & 255) / 255, Y.colorSpaceToWorking(this, t), this;
+    setHex(hexValue, t = Fe) {
+      return hexValue = Math.floor(hexValue), this.r = (hexValue >> 16 & 255) / 255, this.g = (hexValue >> 8 & 255) / 255, this.b = (hexValue & 255) / 255, Y.colorSpaceToWorking(this, t), this;
     }
     setRGB(e, t, n, r = Y.workingColorSpace) {
       return this.r = e, this.g = t, this.b = n, Y.colorSpaceToWorking(this, r), this;
@@ -3224,11 +3224,11 @@ var jn = class extends Sn {
     set(e, t, n) {
       return this.a.copy(e), this.b.copy(t), this.c.copy(n), this;
     }
-    setFromPointsAndIndices(from, points, and, indices) {
-      return this.a.copy(from[points]), this.b.copy(from[and]), this.c.copy(from[indices]), this;
+    setFromPointsAndIndices(from, points, andValue, indices) {
+      return this.a.copy(from[points]), this.b.copy(from[andValue]), this.c.copy(from[indices]), this;
     }
-    setFromAttributeAndIndices(from, attribute, and, indices) {
-      return this.a.fromBufferAttribute(from, attribute), this.b.fromBufferAttribute(from, and), this.c.fromBufferAttribute(from, indices), this;
+    setFromAttributeAndIndices(from, attribute, andValue, indices) {
+      return this.a.fromBufferAttribute(from, attribute), this.b.fromBufferAttribute(from, andValue), this.c.fromBufferAttribute(from, indices), this;
     }
     clone() {
       return new this.constructor().copy(this);
@@ -3841,13 +3841,13 @@ var sr = new q(),
         let a = 1 / (f.x * p.y - p.x * f.y);
         isFinite(a) && (m.copy(l).multiplyScalar(p.y).addScaledVector(u, -f.y).multiplyScalar(a), h.copy(u).multiplyScalar(f.x).addScaledVector(l, -p.x).multiplyScalar(a), emptyItems[e].add(m), emptyItems[t].add(m), emptyItems[r].add(m), total[e].add(h), total[t].add(h), total[r].add(h));
       }
-      let _ = this.groups;
-      _.length === 0 && (_ = [{
+      let groups = this.groups;
+      groups.length === 0 && (groups = [{
         start: 0,
         count: e.count
       }]);
-      for (let t = 0, n = _.length; t < n; ++t) {
-        let n = _[t],
+      for (let t = 0, n = groups.length; t < n; ++t) {
+        let n = groups[t],
           r = n.start,
           i = n.count;
         for (let t = r, n = r + i; t < n; t += 3) g(e.getX(t + 0), e.getX(t + 1), e.getX(t + 2));
@@ -3863,8 +3863,8 @@ var sr = new q(),
         let n = y.dot(total[e]) < 0 ? -1 : 1;
         attribute.setXYZW(e, v.x, v.y, v.z, n);
       }
-      for (let t = 0, n = _.length; t < n; ++t) {
-        let n = _[t],
+      for (let t = 0, n = groups.length; t < n; ++t) {
+        let n = groups[t],
           r = n.start,
           i = n.count;
         for (let t = r, n = r + i; t < n; t += 3) S(e.getX(t + 0)), S(e.getX(t + 1)), S(e.getX(t + 2));
@@ -4286,7 +4286,7 @@ var sr = new q(),
       let distanceToPoint = intersects.distanceToPoint(this.origin);
       return distanceToPoint === 0 || intersects.normal.dot(this.direction) * distanceToPoint < 0;
     }
-    intersectBox(intersect, box) {
+    intersectBox(intersect, boxValue) {
       let count,
         r,
         i,
@@ -4297,7 +4297,7 @@ var sr = new q(),
         l = 1 / this.direction.y,
         u = 1 / this.direction.z,
         origin = this.origin;
-      return c >= 0 ? (count = (intersect.min.x - origin.x) * c, r = (intersect.max.x - origin.x) * c) : (count = (intersect.max.x - origin.x) * c, r = (intersect.min.x - origin.x) * c), l >= 0 ? (i = (intersect.min.y - origin.y) * l, flag = (intersect.max.y - origin.y) * l) : (i = (intersect.max.y - origin.y) * l, flag = (intersect.min.y - origin.y) * l), count > flag || i > r || ((i > count || isNaN(count)) && (count = i), (flag < r || isNaN(r)) && (r = flag), u >= 0 ? (ratio = (intersect.min.z - origin.z) * u, total = (intersect.max.z - origin.z) * u) : (ratio = (intersect.max.z - origin.z) * u, total = (intersect.min.z - origin.z) * u), count > total || ratio > r) || ((ratio > count || count !== count) && (count = ratio), (total < r || r !== r) && (r = total), r < 0) ? null : this.at(count >= 0 ? count : r, box);
+      return c >= 0 ? (count = (intersect.min.x - origin.x) * c, r = (intersect.max.x - origin.x) * c) : (count = (intersect.max.x - origin.x) * c, r = (intersect.min.x - origin.x) * c), l >= 0 ? (i = (intersect.min.y - origin.y) * l, flag = (intersect.max.y - origin.y) * l) : (i = (intersect.max.y - origin.y) * l, flag = (intersect.min.y - origin.y) * l), count > flag || i > r || ((i > count || isNaN(count)) && (count = i), (flag < r || isNaN(r)) && (r = flag), u >= 0 ? (ratio = (intersect.min.z - origin.z) * u, total = (intersect.max.z - origin.z) * u) : (ratio = (intersect.max.z - origin.z) * u, total = (intersect.min.z - origin.z) * u), count > total || ratio > r) || ((ratio > count || count !== count) && (count = ratio), (total < r || r !== r) && (r = total), r < 0) ? null : this.at(count >= 0 ? count : r, boxValue);
     }
     intersectsBox(intersects) {
       return this.intersectBox(intersects, Mr) !== null;
@@ -12427,7 +12427,7 @@ function Eo(e, t, n, r, i, options) {
     m = null,
     h = false,
     toneMapping,
-    _ = null,
+    count = null,
     y = [],
     b = false;
   this.setSize = function (e, t) {
@@ -12455,7 +12455,7 @@ function Eo(e, t, n, r, i, options) {
     }
   }, this.begin = function (e, t) {
     if (h || e.toneMapping === 0 && y.length === 0) return false;
-    if (_ = t, t !== null) {
+    if (count = t, t !== null) {
       let e = t.width,
         n = t.height;
       (o.width !== e || o.height !== n) && this.setSize(e, n);
@@ -12466,17 +12466,17 @@ function Eo(e, t, n, r, i, options) {
   }, this.end = function (e, t) {
     e.toneMapping = toneMapping, h = true;
     let n = o,
-      r = total;
+      totalAlias = total;
     for (let i = 0; i < y.length; i++) {
       let a = y[i];
-      a.enabled !== false && (a.render(e, r, n, t), a.needsSwap !== false && (n = r, r = r === total ? c : total));
+      a.enabled !== false && (a.render(e, totalAlias, n, t), a.needsSwap !== false && (n = totalAlias, totalAlias = totalAlias === total ? c : total));
     }
     if (ratio !== e.outputColorSpace || m !== e.toneMapping) {
       ratio = e.outputColorSpace, m = e.toneMapping, u.defines = {}, Y.getTransfer(ratio) === `srgb` && (u.defines.SRGB_TRANSFER = ``);
       let t = To[m];
       t && (u.defines[t] = ``), u.needsUpdate = true;
     }
-    u.uniforms.tDiffuse.value = n.texture, e.setRenderTarget(_), e.render(d, f), _ = null, h = false;
+    u.uniforms.tDiffuse.value = n.texture, e.setRenderTarget(count), e.render(d, f), count = null, h = false;
   }, this.isCompositing = function () {
     return h;
   }, this.dispose = function () {
@@ -12490,7 +12490,7 @@ var Do = new Ht(),
   jo = new fi(),
   Mo = [],
   No = [],
-  Po = new Float32Array(16),
+  float32Array = new Float32Array(16),
   Fo = new Float32Array(9),
   Io = new Float32Array(4);
 function Lo(e, t, n) {
@@ -12573,7 +12573,7 @@ function qo(e, t) {
     e.uniformMatrix4fv(this.addr, false, t), zo(cache, t);
   } else {
     if (Ro(cache, elements)) return;
-    Po.set(elements), e.uniformMatrix4fv(this.addr, false, Po), zo(cache, elements);
+    float32Array.set(elements), e.uniformMatrix4fv(this.addr, false, float32Array), zo(cache, elements);
   }
 }
 function Jo(e, t) {
@@ -14178,8 +14178,8 @@ function Vc(e, t) {
         if (r !== e) {
           let n = t.get(`EXT_clip_control`);
           e ? n.clipControlEXT(n.LOWER_LEFT_EXT, n.ZERO_TO_ONE_EXT) : n.clipControlEXT(n.LOWER_LEFT_EXT, n.NEGATIVE_ONE_TO_ONE_EXT), r = e;
-          let i = ratio;
-          ratio = null, this.setClear(i);
+          let ratioAlias = ratio;
+          ratio = null, this.setClear(ratioAlias);
         }
       },
       getReversed: function () {
@@ -14326,17 +14326,17 @@ function Vc(e, t) {
     return f[t] !== n && (e.bindFramebuffer(t, n), f[t] = n, t === e.DRAW_FRAMEBUFFER && (f[e.FRAMEBUFFER] = n), t === e.FRAMEBUFFER && (f[e.DRAW_FRAMEBUFFER] = n), true);
   }
   function le(t, n) {
-    let r = ratio,
+    let ratioAlias = ratio,
       i = false;
     if (t) {
-      r = p.get(n), r === undefined && (r = [], p.set(n, r));
+      ratioAlias = p.get(n), ratioAlias === undefined && (ratioAlias = [], p.set(n, ratioAlias));
       let textures = t.textures;
-      if (r.length !== textures.length || r[0] !== e.COLOR_ATTACHMENT0) {
-        for (let t = 0, n = textures.length; t < n; t++) r[t] = e.COLOR_ATTACHMENT0 + t;
-        r.length = textures.length, i = true;
+      if (ratioAlias.length !== textures.length || ratioAlias[0] !== e.COLOR_ATTACHMENT0) {
+        for (let t = 0, n = textures.length; t < n; t++) ratioAlias[t] = e.COLOR_ATTACHMENT0 + t;
+        ratioAlias.length = textures.length, i = true;
       }
-    } else r[0] !== e.BACK && (r[0] = e.BACK, i = true);
-    i && e.drawBuffers(r);
+    } else ratioAlias[0] !== e.BACK && (ratioAlias[0] = e.BACK, i = true);
+    i && e.drawBuffers(ratioAlias);
   }
   function ue(t) {
     return resolvedValue !== t && (e.useProgram(t), resolvedValue = t, true);
@@ -14842,18 +14842,18 @@ function Hc(e, t, d, f, p, m, h) {
       let total,
         mipmaps = n.mipmaps,
         g = n.isVideoTexture !== true,
-        _ = s.__version === undefined || a === true,
+        fallbackValue = s.__version === undefined || a === true,
         dataReady = source.dataReady,
         y = ee(n, t);
-      if (n.isDepthTexture) u = j(n.format === O, n.type), _ && (g ? d.texStorage2D(e.TEXTURE_2D, 1, u, t.width, t.height) : d.texImage2D(e.TEXTURE_2D, 0, u, t.width, t.height, 0, c, l, null));else if (n.isDataTexture) {
+      if (n.isDepthTexture) u = j(n.format === O, n.type), fallbackValue && (g ? d.texStorage2D(e.TEXTURE_2D, 1, u, t.width, t.height) : d.texImage2D(e.TEXTURE_2D, 0, u, t.width, t.height, 0, c, l, null));else if (n.isDataTexture) {
         if (mipmaps.length > 0) {
-          g && _ && d.texStorage2D(e.TEXTURE_2D, y, u, mipmaps[0].width, mipmaps[0].height);
+          g && fallbackValue && d.texStorage2D(e.TEXTURE_2D, y, u, mipmaps[0].width, mipmaps[0].height);
           for (let t = 0, n = mipmaps.length; t < n; t++) total = mipmaps[t], g ? dataReady && d.texSubImage2D(e.TEXTURE_2D, t, 0, 0, total.width, total.height, c, l, total.data) : d.texImage2D(e.TEXTURE_2D, t, u, total.width, total.height, 0, c, l, total.data);
           n.generateMipmaps = false;
-        } else g ? (_ && d.texStorage2D(e.TEXTURE_2D, y, u, t.width, t.height), dataReady && ge(n, t, c, l)) : d.texImage2D(e.TEXTURE_2D, 0, u, t.width, t.height, 0, c, l, t.data);
+        } else g ? (fallbackValue && d.texStorage2D(e.TEXTURE_2D, y, u, t.width, t.height), dataReady && ge(n, t, c, l)) : d.texImage2D(e.TEXTURE_2D, 0, u, t.width, t.height, 0, c, l, t.data);
       } else if (n.isCompressedTexture) {
         if (n.isCompressedArrayTexture) {
-          g && _ && d.texStorage3D(e.TEXTURE_2D_ARRAY, y, u, mipmaps[0].width, mipmaps[0].height, t.depth);
+          g && fallbackValue && d.texStorage3D(e.TEXTURE_2D_ARRAY, y, u, mipmaps[0].width, mipmaps[0].height, t.depth);
           for (let r = 0, i = mipmaps.length; r < i; r++) if (total = mipmaps[r], n.format !== 1023) {
             if (c !== null) {
               if (g) {
@@ -14871,12 +14871,12 @@ function Hc(e, t, d, f, p, m, h) {
           } else g ? dataReady && d.texSubImage3D(e.TEXTURE_2D_ARRAY, r, 0, 0, 0, total.width, total.height, t.depth, c, l, total.data) : d.texImage3D(e.TEXTURE_2D_ARRAY, r, u, total.width, total.height, t.depth, 0, c, l, total.data);
           n.layerUpdates.size > 0 && n.clearLayerUpdates();
         } else {
-          g && _ && d.texStorage2D(e.TEXTURE_2D, y, u, mipmaps[0].width, mipmaps[0].height);
+          g && fallbackValue && d.texStorage2D(e.TEXTURE_2D, y, u, mipmaps[0].width, mipmaps[0].height);
           for (let t = 0, r = mipmaps.length; t < r; t++) total = mipmaps[t], n.format === 1023 ? g ? dataReady && d.texSubImage2D(e.TEXTURE_2D, t, 0, 0, total.width, total.height, c, l, total.data) : d.texImage2D(e.TEXTURE_2D, t, u, total.width, total.height, 0, c, l, total.data) : c === null ? U(`WebGLRenderer: Attempt to load unsupported compressed texture format in .uploadTexture()`) : g ? dataReady && d.compressedTexSubImage2D(e.TEXTURE_2D, t, 0, 0, total.width, total.height, c, total.data) : d.compressedTexImage2D(e.TEXTURE_2D, t, u, total.width, total.height, 0, total.data);
         }
       } else if (n.isDataArrayTexture) {
         if (g) {
-          if (_ && d.texStorage3D(e.TEXTURE_2D_ARRAY, y, u, t.width, t.height, t.depth), dataReady) {
+          if (fallbackValue && d.texStorage3D(e.TEXTURE_2D_ARRAY, y, u, t.width, t.height, t.depth), dataReady) {
             if (n.layerUpdates.size > 0) {
               let r = Ia(t.width, t.height, n.format, n.type);
               for (let i of n.layerUpdates) {
@@ -14887,8 +14887,8 @@ function Hc(e, t, d, f, p, m, h) {
             } else d.texSubImage3D(e.TEXTURE_2D_ARRAY, 0, 0, 0, 0, t.width, t.height, t.depth, c, l, t.data);
           }
         } else d.texImage3D(e.TEXTURE_2D_ARRAY, 0, u, t.width, t.height, t.depth, 0, c, l, t.data);
-      } else if (n.isData3DTexture) g ? (_ && d.texStorage3D(e.TEXTURE_3D, y, u, t.width, t.height, t.depth), dataReady && d.texSubImage3D(e.TEXTURE_3D, 0, 0, 0, 0, t.width, t.height, t.depth, c, l, t.data)) : d.texImage3D(e.TEXTURE_3D, 0, u, t.width, t.height, t.depth, 0, c, l, t.data);else if (n.isFramebufferTexture) {
-        if (_) {
+      } else if (n.isData3DTexture) g ? (fallbackValue && d.texStorage3D(e.TEXTURE_3D, y, u, t.width, t.height, t.depth), dataReady && d.texSubImage3D(e.TEXTURE_3D, 0, 0, 0, 0, t.width, t.height, t.depth, c, l, t.data)) : d.texImage3D(e.TEXTURE_3D, 0, u, t.width, t.height, t.depth, 0, c, l, t.data);else if (n.isFramebufferTexture) {
+        if (fallbackValue) {
           if (g) d.texStorage2D(e.TEXTURE_2D, y, u, t.width, t.height);else {
             let n = t.width,
               r = t.height;
@@ -14914,14 +14914,14 @@ function Hc(e, t, d, f, p, m, h) {
           e.texParameteri(e.TEXTURE_2D, e.TEXTURE_MIN_FILTER, e.LINEAR), e.texParameteri(e.TEXTURE_2D, e.TEXTURE_WRAP_S, e.CLAMP_TO_EDGE), e.texParameteri(e.TEXTURE_2D, e.TEXTURE_WRAP_T, e.CLAMP_TO_EDGE);
         }
       } else if (mipmaps.length > 0) {
-        if (g && _) {
+        if (g && fallbackValue) {
           let t = z(mipmaps[0]);
           d.texStorage2D(e.TEXTURE_2D, y, u, t.width, t.height);
         }
         for (let t = 0, n = mipmaps.length; t < n; t++) total = mipmaps[t], g ? dataReady && d.texSubImage2D(e.TEXTURE_2D, t, 0, 0, c, l, total) : d.texImage2D(e.TEXTURE_2D, t, u, c, l, total);
         n.generateMipmaps = false;
       } else if (g) {
-        if (_) {
+        if (fallbackValue) {
           let n = z(t);
           d.texStorage2D(e.TEXTURE_2D, y, u, n.width, n.height);
         }
@@ -15821,10 +15821,10 @@ function Zc(e, event, n, count) {
     dispose: y
   };
 }
-var Qc = new Uint16Array([12469, 15057, 12620, 14925, 13266, 14620, 13807, 14376, 14323, 13990, 14545, 13625, 14713, 13328, 14840, 12882, 14931, 12528, 14996, 12233, 15039, 11829, 15066, 11525, 15080, 11295, 15085, 10976, 15082, 10705, 15073, 10495, 13880, 14564, 13898, 14542, 13977, 14430, 14158, 14124, 14393, 13732, 14556, 13410, 14702, 12996, 14814, 12596, 14891, 12291, 14937, 11834, 14957, 11489, 14958, 11194, 14943, 10803, 14921, 10506, 14893, 10278, 14858, 9960, 14484, 14039, 14487, 14025, 14499, 13941, 14524, 13740, 14574, 13468, 14654, 13106, 14743, 12678, 14818, 12344, 14867, 11893, 14889, 11509, 14893, 11180, 14881, 10751, 14852, 10428, 14812, 10128, 14765, 9754, 14712, 9466, 14764, 13480, 14764, 13475, 14766, 13440, 14766, 13347, 14769, 13070, 14786, 12713, 14816, 12387, 14844, 11957, 14860, 11549, 14868, 11215, 14855, 10751, 14825, 10403, 14782, 10044, 14729, 9651, 14666, 9352, 14599, 9029, 14967, 12835, 14966, 12831, 14963, 12804, 14954, 12723, 14936, 12564, 14917, 12347, 14900, 11958, 14886, 11569, 14878, 11247, 14859, 10765, 14828, 10401, 14784, 10011, 14727, 9600, 14660, 9289, 14586, 8893, 14508, 8533, 15111, 12234, 15110, 12234, 15104, 12216, 15092, 12156, 15067, 12010, 15028, 11776, 14981, 11500, 14942, 11205, 14902, 10752, 14861, 10393, 14812, 9991, 14752, 9570, 14682, 9252, 14603, 8808, 14519, 8445, 14431, 8145, 15209, 11449, 15208, 11451, 15202, 11451, 15190, 11438, 15163, 11384, 15117, 11274, 15055, 10979, 14994, 10648, 14932, 10343, 14871, 9936, 14803, 9532, 14729, 9218, 14645, 8742, 14556, 8381, 14461, 8020, 14365, 7603, 15273, 10603, 15272, 10607, 15267, 10619, 15256, 10631, 15231, 10614, 15182, 10535, 15118, 10389, 15042, 10167, 14963, 9787, 14883, 9447, 14800, 9115, 14710, 8665, 14615, 8318, 14514, 7911, 14411, 7507, 14279, 7198, 15314, 9675, 15313, 9683, 15309, 9712, 15298, 9759, 15277, 9797, 15229, 9773, 15166, 9668, 15084, 9487, 14995, 9274, 14898, 8910, 14800, 8539, 14697, 8234, 14590, 7790, 14479, 7409, 14367, 7067, 14178, 6621, 15337, 8619, 15337, 8631, 15333, 8677, 15325, 8769, 15305, 8871, 15264, 8940, 15202, 8909, 15119, 8775, 15022, 8565, 14916, 8328, 14804, 8009, 14688, 7614, 14569, 7287, 14448, 6888, 14321, 6483, 14088, 6171, 15350, 7402, 15350, 7419, 15347, 7480, 15340, 7613, 15322, 7804, 15287, 7973, 15229, 8057, 15148, 8012, 15046, 7846, 14933, 7611, 14810, 7357, 14682, 7069, 14552, 6656, 14421, 6316, 14251, 5948, 14007, 5528, 15356, 5942, 15356, 5977, 15353, 6119, 15348, 6294, 15332, 6551, 15302, 6824, 15249, 7044, 15171, 7122, 15070, 7050, 14949, 6861, 14818, 6611, 14679, 6349, 14538, 6067, 14398, 5651, 14189, 5311, 13935, 4958, 15359, 4123, 15359, 4153, 15356, 4296, 15353, 4646, 15338, 5160, 15311, 5508, 15263, 5829, 15188, 6042, 15088, 6094, 14966, 6001, 14826, 5796, 14678, 5543, 14527, 5287, 14377, 4985, 14133, 4586, 13869, 4257, 15360, 1563, 15360, 1642, 15358, 2076, 15354, 2636, 15341, 3350, 15317, 4019, 15273, 4429, 15203, 4732, 15105, 4911, 14981, 4932, 14836, 4818, 14679, 4621, 14517, 4386, 14359, 4156, 14083, 3795, 13808, 3437, 15360, 122, 15360, 137, 15358, 285, 15355, 636, 15344, 1274, 15322, 2177, 15281, 2765, 15215, 3223, 15120, 3451, 14995, 3569, 14846, 3567, 14681, 3466, 14511, 3305, 14344, 3121, 14037, 2800, 13753, 2467, 15360, 0, 15360, 1, 15359, 21, 15355, 89, 15346, 253, 15325, 479, 15287, 796, 15225, 1148, 15133, 1492, 15008, 1749, 14856, 1882, 14685, 1886, 14506, 1783, 14324, 1608, 13996, 1398, 13702, 1183]),
+var uint16Array = new Uint16Array([12469, 15057, 12620, 14925, 13266, 14620, 13807, 14376, 14323, 13990, 14545, 13625, 14713, 13328, 14840, 12882, 14931, 12528, 14996, 12233, 15039, 11829, 15066, 11525, 15080, 11295, 15085, 10976, 15082, 10705, 15073, 10495, 13880, 14564, 13898, 14542, 13977, 14430, 14158, 14124, 14393, 13732, 14556, 13410, 14702, 12996, 14814, 12596, 14891, 12291, 14937, 11834, 14957, 11489, 14958, 11194, 14943, 10803, 14921, 10506, 14893, 10278, 14858, 9960, 14484, 14039, 14487, 14025, 14499, 13941, 14524, 13740, 14574, 13468, 14654, 13106, 14743, 12678, 14818, 12344, 14867, 11893, 14889, 11509, 14893, 11180, 14881, 10751, 14852, 10428, 14812, 10128, 14765, 9754, 14712, 9466, 14764, 13480, 14764, 13475, 14766, 13440, 14766, 13347, 14769, 13070, 14786, 12713, 14816, 12387, 14844, 11957, 14860, 11549, 14868, 11215, 14855, 10751, 14825, 10403, 14782, 10044, 14729, 9651, 14666, 9352, 14599, 9029, 14967, 12835, 14966, 12831, 14963, 12804, 14954, 12723, 14936, 12564, 14917, 12347, 14900, 11958, 14886, 11569, 14878, 11247, 14859, 10765, 14828, 10401, 14784, 10011, 14727, 9600, 14660, 9289, 14586, 8893, 14508, 8533, 15111, 12234, 15110, 12234, 15104, 12216, 15092, 12156, 15067, 12010, 15028, 11776, 14981, 11500, 14942, 11205, 14902, 10752, 14861, 10393, 14812, 9991, 14752, 9570, 14682, 9252, 14603, 8808, 14519, 8445, 14431, 8145, 15209, 11449, 15208, 11451, 15202, 11451, 15190, 11438, 15163, 11384, 15117, 11274, 15055, 10979, 14994, 10648, 14932, 10343, 14871, 9936, 14803, 9532, 14729, 9218, 14645, 8742, 14556, 8381, 14461, 8020, 14365, 7603, 15273, 10603, 15272, 10607, 15267, 10619, 15256, 10631, 15231, 10614, 15182, 10535, 15118, 10389, 15042, 10167, 14963, 9787, 14883, 9447, 14800, 9115, 14710, 8665, 14615, 8318, 14514, 7911, 14411, 7507, 14279, 7198, 15314, 9675, 15313, 9683, 15309, 9712, 15298, 9759, 15277, 9797, 15229, 9773, 15166, 9668, 15084, 9487, 14995, 9274, 14898, 8910, 14800, 8539, 14697, 8234, 14590, 7790, 14479, 7409, 14367, 7067, 14178, 6621, 15337, 8619, 15337, 8631, 15333, 8677, 15325, 8769, 15305, 8871, 15264, 8940, 15202, 8909, 15119, 8775, 15022, 8565, 14916, 8328, 14804, 8009, 14688, 7614, 14569, 7287, 14448, 6888, 14321, 6483, 14088, 6171, 15350, 7402, 15350, 7419, 15347, 7480, 15340, 7613, 15322, 7804, 15287, 7973, 15229, 8057, 15148, 8012, 15046, 7846, 14933, 7611, 14810, 7357, 14682, 7069, 14552, 6656, 14421, 6316, 14251, 5948, 14007, 5528, 15356, 5942, 15356, 5977, 15353, 6119, 15348, 6294, 15332, 6551, 15302, 6824, 15249, 7044, 15171, 7122, 15070, 7050, 14949, 6861, 14818, 6611, 14679, 6349, 14538, 6067, 14398, 5651, 14189, 5311, 13935, 4958, 15359, 4123, 15359, 4153, 15356, 4296, 15353, 4646, 15338, 5160, 15311, 5508, 15263, 5829, 15188, 6042, 15088, 6094, 14966, 6001, 14826, 5796, 14678, 5543, 14527, 5287, 14377, 4985, 14133, 4586, 13869, 4257, 15360, 1563, 15360, 1642, 15358, 2076, 15354, 2636, 15341, 3350, 15317, 4019, 15273, 4429, 15203, 4732, 15105, 4911, 14981, 4932, 14836, 4818, 14679, 4621, 14517, 4386, 14359, 4156, 14083, 3795, 13808, 3437, 15360, 122, 15360, 137, 15358, 285, 15355, 636, 15344, 1274, 15322, 2177, 15281, 2765, 15215, 3223, 15120, 3451, 14995, 3569, 14846, 3567, 14681, 3466, 14511, 3305, 14344, 3121, 14037, 2800, 13753, 2467, 15360, 0, 15360, 1, 15359, 21, 15355, 89, 15346, 253, 15325, 479, 15287, 796, 15225, 1148, 15133, 1492, 15008, 1749, 14856, 1882, 14685, 1886, 14506, 1783, 14324, 1608, 13996, 1398, 13702, 1183]),
   $c = null;
 function el() {
-  return $c === null && ($c = new Qr(Qc, 16, 16, j, v), $c.name = `DFG_LUT`, $c.minFilter = c, $c.magFilter = c, $c.wrapS = r, $c.wrapT = r, $c.generateMipmaps = false, $c.needsUpdate = true), $c;
+  return $c === null && ($c = new Qr(uint16Array, 16, 16, j, v), $c.name = `DFG_LUT`, $c.minFilter = c, $c.magFilter = c, $c.wrapS = r, $c.wrapT = r, $c.generateMipmaps = false, $c.needsUpdate = true), $c;
 }
 var tl = class {
     constructor(e = {}) {
@@ -16505,14 +16505,14 @@ var tl = class {
           u,
           d,
           f,
-          p,
+          flag,
           m,
           h = e.isCompressedTexture ? e.mipmaps[a] : e.image;
         if (n !== null) ratio = n.max.x - n.min.x, total = n.max.y - n.min.y, c = n.isBox3 ? n.max.z - n.min.z : 1, l = n.min.x, u = n.min.y, d = n.isBox3 ? n.min.z : 0;else {
           let t = 2 ** -i;
           ratio = Math.floor(h.width * t), total = Math.floor(h.height * t), c = e.isDataArrayTexture ? h.depth : e.isData3DTexture ? Math.floor(h.depth * t) : 1, l = 0, u = 0, d = 0;
         }
-        r === null ? (f = 0, p = 0, m = 0) : (f = r.x, p = r.y, m = r.z);
+        r === null ? (f = 0, flag = 0, m = 0) : (f = r.x, flag = r.y, m = r.z);
         let g = $e.convert(t.format),
           _ = $e.convert(t.type),
           v;
@@ -16531,15 +16531,15 @@ var tl = class {
             h = V.get(n.__renderTarget),
             g = V.get(r.__renderTarget);
           B.bindFramebuffer(R.READ_FRAMEBUFFER, h.__webglFramebuffer), B.bindFramebuffer(R.DRAW_FRAMEBUFFER, g.__webglFramebuffer);
-          for (let n = 0; n < c; n++) fallbackValue && (R.framebufferTextureLayer(R.READ_FRAMEBUFFER, R.COLOR_ATTACHMENT0, V.get(e).__webglTexture, i, d + n), R.framebufferTextureLayer(R.DRAW_FRAMEBUFFER, R.COLOR_ATTACHMENT0, V.get(t).__webglTexture, a, m + n)), R.blitFramebuffer(l, u, ratio, total, f, p, ratio, total, R.DEPTH_BUFFER_BIT, R.NEAREST);
+          for (let n = 0; n < c; n++) fallbackValue && (R.framebufferTextureLayer(R.READ_FRAMEBUFFER, R.COLOR_ATTACHMENT0, V.get(e).__webglTexture, i, d + n), R.framebufferTextureLayer(R.DRAW_FRAMEBUFFER, R.COLOR_ATTACHMENT0, V.get(t).__webglTexture, a, m + n)), R.blitFramebuffer(l, u, ratio, total, f, flag, ratio, total, R.DEPTH_BUFFER_BIT, R.NEAREST);
           B.bindFramebuffer(R.READ_FRAMEBUFFER, null), B.bindFramebuffer(R.DRAW_FRAMEBUFFER, null);
         } else if (i !== 0 || e.isRenderTargetTexture || V.has(e)) {
           let n = V.get(e),
             r = V.get(t);
           B.bindFramebuffer(R.READ_FRAMEBUFFER, ie), B.bindFramebuffer(R.DRAW_FRAMEBUFFER, ae);
-          for (let e = 0; e < c; e++) fallbackValue ? R.framebufferTextureLayer(R.READ_FRAMEBUFFER, R.COLOR_ATTACHMENT0, n.__webglTexture, i, d + e) : R.framebufferTexture2D(R.READ_FRAMEBUFFER, R.COLOR_ATTACHMENT0, R.TEXTURE_2D, n.__webglTexture, i), T ? R.framebufferTextureLayer(R.DRAW_FRAMEBUFFER, R.COLOR_ATTACHMENT0, r.__webglTexture, a, m + e) : R.framebufferTexture2D(R.DRAW_FRAMEBUFFER, R.COLOR_ATTACHMENT0, R.TEXTURE_2D, r.__webglTexture, a), i === 0 ? T ? R.copyTexSubImage3D(v, a, f, p, m + e, l, u, ratio, total) : R.copyTexSubImage2D(v, a, f, p, l, u, ratio, total) : R.blitFramebuffer(l, u, ratio, total, f, p, ratio, total, R.COLOR_BUFFER_BIT, R.NEAREST);
+          for (let e = 0; e < c; e++) fallbackValue ? R.framebufferTextureLayer(R.READ_FRAMEBUFFER, R.COLOR_ATTACHMENT0, n.__webglTexture, i, d + e) : R.framebufferTexture2D(R.READ_FRAMEBUFFER, R.COLOR_ATTACHMENT0, R.TEXTURE_2D, n.__webglTexture, i), T ? R.framebufferTextureLayer(R.DRAW_FRAMEBUFFER, R.COLOR_ATTACHMENT0, r.__webglTexture, a, m + e) : R.framebufferTexture2D(R.DRAW_FRAMEBUFFER, R.COLOR_ATTACHMENT0, R.TEXTURE_2D, r.__webglTexture, a), i === 0 ? T ? R.copyTexSubImage3D(v, a, f, flag, m + e, l, u, ratio, total) : R.copyTexSubImage2D(v, a, f, flag, l, u, ratio, total) : R.blitFramebuffer(l, u, ratio, total, f, flag, ratio, total, R.COLOR_BUFFER_BIT, R.NEAREST);
           B.bindFramebuffer(R.READ_FRAMEBUFFER, null), B.bindFramebuffer(R.DRAW_FRAMEBUFFER, null);
-        } else T ? e.isDataTexture || e.isData3DTexture ? R.texSubImage3D(v, a, f, p, m, ratio, total, c, g, _, h.data) : t.isCompressedArrayTexture ? R.compressedTexSubImage3D(v, a, f, p, m, ratio, total, c, g, h.data) : R.texSubImage3D(v, a, f, p, m, ratio, total, c, g, _, h) : e.isDataTexture ? R.texSubImage2D(R.TEXTURE_2D, a, f, p, ratio, total, g, _, h.data) : e.isCompressedTexture ? R.compressedTexSubImage2D(R.TEXTURE_2D, a, f, p, h.width, h.height, g, h.data) : R.texSubImage2D(R.TEXTURE_2D, a, f, p, ratio, total, g, _, h);
+        } else T ? e.isDataTexture || e.isData3DTexture ? R.texSubImage3D(v, a, f, flag, m, ratio, total, c, g, _, h.data) : t.isCompressedArrayTexture ? R.compressedTexSubImage3D(v, a, f, flag, m, ratio, total, c, g, h.data) : R.texSubImage3D(v, a, f, flag, m, ratio, total, c, g, _, h) : e.isDataTexture ? R.texSubImage2D(R.TEXTURE_2D, a, f, flag, ratio, total, g, _, h.data) : e.isCompressedTexture ? R.compressedTexSubImage2D(R.TEXTURE_2D, a, f, flag, h.width, h.height, g, h.data) : R.texSubImage2D(R.TEXTURE_2D, a, f, flag, ratio, total, g, _, h);
         B.pixelStorei(R.UNPACK_ROW_LENGTH, parameter), B.pixelStorei(R.UNPACK_IMAGE_HEIGHT, parameterResult), B.pixelStorei(R.UNPACK_SKIP_PIXELS, x), B.pixelStorei(R.UNPACK_SKIP_ROWS, S), B.pixelStorei(R.UNPACK_SKIP_IMAGES, C), a === 0 && t.generateMipmaps && R.generateMipmap(v), B.unbindTexture();
       }, this.initRenderTarget = function (e) {
         V.get(e).__webglFramebuffer === undefined && H.setupRenderTarget(e);
@@ -16639,8 +16639,8 @@ var tl = class {
     getDistance() {
       return this.object.position.distanceTo(this.target);
     }
-    listenToKeyEvents(key) {
-      key.addEventListener(`keydown`, this._onKeyDown), this._domElementKeyEvents = key;
+    listenToKeyEvents(keyValue) {
+      keyValue.addEventListener(`keydown`, this._onKeyDown), this._domElementKeyEvents = keyValue;
     }
     stopListenToKeyEvents() {
       this._domElementKeyEvents !== null && (this._domElementKeyEvents.removeEventListener(`keydown`, this._onKeyDown), this._domElementKeyEvents = null);

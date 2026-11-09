@@ -89,7 +89,7 @@ var M = y(`hash`, [[`line`, {
         {
           t: g
         } = S(),
-        _ = {
+        options = {
           Space: 4,
           E: 4,
           "⌫": 4,
@@ -196,7 +196,7 @@ var M = y(`hash`, [[`line`, {
           width: 2.75
         }], y];
       function E(e) {
-        let fallbackValue = _[e] ?? 0;
+        let fallbackValue = options[e] ?? 0;
         return fallbackValue > 0 ? `var(--heatmap-${fallbackValue})` : `var(--heatmap-empty)`;
       }
       let O = [{

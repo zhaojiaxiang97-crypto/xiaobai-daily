@@ -2,10 +2,10 @@ import { $n as e, An as t, Ct as n, E as r, S as i, Wt as a, Yt as o, Zt as s, b
 import { E as se, w as ce } from "../i18n/en-US-player.js";
 import { D as le, E as ue, F as de, I as fe, J as pe, K as me, N as he, P as ge, R as _e, V as ve, W as ye, X as be, q as xe, v as Se, y as _, z as Ce } from "../chunks/main.js";
 var defineProperty = Object.defineProperty,
-  Te = Object.defineProperties,
+  defineProperties = Object.defineProperties,
   getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
-  Ee = Object.getOwnPropertySymbols,
-  De = Object.prototype.hasOwnProperty,
+  getOwnPropertySymbols = Object.getOwnPropertySymbols,
+  hasOwnProperty = Object.prototype.hasOwnProperty,
   propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
   handler = (e, t, n) => t in e ? defineProperty(e, t, {
     enumerable: true,
@@ -14,11 +14,11 @@ var defineProperty = Object.defineProperty,
     value: n
   }) : e[t] = n,
   x = (e, t) => {
-    for (var n in t ||= {}) De.call(t, n) && handler(e, n, t[n]);
-    if (Ee) for (var n of Ee(t)) propertyIsEnumerable.call(t, n) && handler(e, n, t[n]);
+    for (var n in t ||= {}) hasOwnProperty.call(t, n) && handler(e, n, t[n]);
+    if (getOwnPropertySymbols) for (var n of getOwnPropertySymbols(t)) propertyIsEnumerable.call(t, n) && handler(e, n, t[n]);
     return e;
   },
-  S = (e, t) => Te(e, getOwnPropertyDescriptors(t)),
+  S = (e, t) => defineProperties(e, getOwnPropertyDescriptors(t)),
   C = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
@@ -117,7 +117,7 @@ var defineProperty = Object.defineProperty,
   D = null,
   Ne = null,
   Pe = null,
-  Fe = new WeakMap(),
+  weakMap = new WeakMap(),
   Ie = 0,
   Le = [`data-markstream-enhanced`],
   Re = {
@@ -1268,14 +1268,14 @@ var defineProperty = Object.defineProperty,
               if (typeof e == `string`) return e;
               if (typeof e == `object` && `name` in e) return String(e.name);
               if (typeof e == `object`) {
-                let t = Fe.get(e);
+                let t = weakMap.get(e);
                 if (t) return t;
                 try {
                   let serialized = JSON.stringify(e);
-                  if (serialized) return Fe.set(e, serialized), serialized;
+                  if (serialized) return weakMap.set(e, serialized), serialized;
                 } catch {}
                 let n = `__theme_` + ++Ie;
-                return Fe.set(e, n), n;
+                return weakMap.set(e, n), n;
               }
               return String(e);
             }(t);

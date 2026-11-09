@@ -359,7 +359,7 @@ var k = .5,
           perspective: `${nt}px`,
           zoom: String(de[E.value?.size ?? `medium`])
         })),
-        At = {
+        options = {
           left: `14px`,
           top: `14px`,
           width: `${w}px`
@@ -512,8 +512,8 @@ var k = .5,
       }
       function $(event) {
         if (pointerId === null || event && pointerId !== event.pointerId) return;
-        let t = pointerId;
-        pointerId = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
+        let pointerIdAlias = pointerId;
+        pointerId = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(pointerIdAlias);
       }
       function qt(e) {
         Vt(e), Kt(e);
@@ -578,7 +578,7 @@ var k = .5,
           "is-ready": j.value,
           "is-dragging": A.value
         }]),
-        style: At,
+        style: options,
         onPointerenter: Ut,
         onPointerleave: Wt,
         onPointermove: qt,

@@ -39,8 +39,8 @@ var I = class {
       this.fullPending = true;
       for (let count of this.meshes) count.instanceColor && (count.instanceColor.clearUpdateRanges(), count.instanceColor.needsUpdate = true);
     }
-    markOne(mark, one) {
-      !mark.instanceColor || one < 0 || (this.fullPending || mark.instanceColor.addUpdateRange(one * 3, 3), mark.instanceColor.needsUpdate = true);
+    markOne(mark, oneValue) {
+      !mark.instanceColor || oneValue < 0 || (this.fullPending || mark.instanceColor.addUpdateRange(oneValue * 3, 3), mark.instanceColor.needsUpdate = true);
     }
     frameStarted() {
       this.fullPending = false;

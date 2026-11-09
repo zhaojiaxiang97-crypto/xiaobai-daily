@@ -1419,11 +1419,11 @@ var rn = function* (items) {
       let emptyItems = [],
         count = [],
         total = [],
-        i = [];
+        diff = [];
       for (let a of rn(e)) {
         let subarray = e.subarray(a.offset, a.offset + a.length),
           s = Cn(subarray[0]);
-        s === N.VPS_NUT ? emptyItems.push(subarray) : s === N.SPS_NUT ? count.push(subarray) : s === N.PPS_NUT ? total.push(subarray) : (s === N.PREFIX_SEI_NUT || s === N.SUFFIX_SEI_NUT) && i.push(subarray);
+        s === N.VPS_NUT ? emptyItems.push(subarray) : s === N.SPS_NUT ? count.push(subarray) : s === N.PPS_NUT ? total.push(subarray) : (s === N.PREFIX_SEI_NUT || s === N.SUFFIX_SEI_NUT) && diff.push(subarray);
       }
       if (count.length === 0 || total.length === 0) return null;
       let a = wn(count[0]);
@@ -1449,10 +1449,10 @@ var rn = function* (items) {
         arrayCompleteness: 1,
         nalUnitType: N.PPS_NUT,
         nalUnits: total
-      }] : []), ...(i.length ? [{
+      }] : []), ...(diff.length ? [{
         arrayCompleteness: 1,
-        nalUnitType: Cn(i[0][0]),
-        nalUnits: i
+        nalUnitType: Cn(diff[0][0]),
+        nalUnits: diff
       }] : [])];
       return {
         configurationVersion: 1,
@@ -2337,14 +2337,14 @@ var Xn = (e, t) => {
     let t = Cr(count),
       n = C(count),
       r = t ? Math.ceil(t.frameSize / 4) * 4 : 0,
-      i = null;
+      diff = null;
     for (; r + 4 <= count.length && n.getUint32(r) === 1683496997;) {
       let t = wr(count.subarray(r));
       if (!t) break;
-      i ??= t, r += t.frameSize;
+      diff ??= t, r += t.frameSize;
     }
     if (t) return {
-      frameSize: i ? r : t.frameSize,
+      frameSize: diff ? r : t.frameSize,
       sampleRate: t.sampleRate,
       numberOfChannels: t.numberOfChannels,
       sampleCount: t.sampleCount,
@@ -2352,12 +2352,12 @@ var Xn = (e, t) => {
       pcmResolution: t.pcmResolution,
       bitRate: t.bitRate,
       core: t,
-      hasExtensions: i !== null
+      hasExtensions: diff !== null
     };
-    if (!i?.asset) return null;
+    if (!diff?.asset) return null;
     let {
       asset: a
-    } = i;
+    } = diff;
     return {
       frameSize: r,
       sampleRate: a.sampleRate,
@@ -2983,16 +2983,16 @@ var Xn = (e, t) => {
       return `avc${e.avcType}.${he(r.subarray(1, 4))}`;
     }
     if (t === `hevc`) {
-      let count, t, n, i, a, s;
-      if (o) count = o.generalProfileSpace, t = o.generalProfileIdc, n = _e(o.generalProfileCompatibilityFlags), i = o.generalTierFlag, a = o.generalLevelIdc, s = [...o.generalConstraintIndicatorFlags];else {
+      let count, t, n, diff, a, s;
+      if (o) count = o.generalProfileSpace, t = o.generalProfileIdc, n = _e(o.generalProfileCompatibilityFlags), diff = o.generalTierFlag, a = o.generalLevelIdc, s = [...o.generalConstraintIndicatorFlags];else {
         if (!r || r.byteLength < 23) throw TypeError(`HEVC decoder description is not provided or is not at least 23 bytes long.`);
         let o = C(r),
           uint8 = o.getUint8(1);
-        count = uint8 >> 6 & 3, t = uint8 & 31, n = _e(o.getUint32(2)), i = uint8 >> 5 & 1, a = o.getUint8(12), s = [];
+        count = uint8 >> 6 & 3, t = uint8 & 31, n = _e(o.getUint32(2)), diff = uint8 >> 5 & 1, a = o.getUint8(12), s = [];
         for (let e = 0; e < 6; e++) s.push(o.getUint8(6 + e));
       }
       let c = `hev1.`;
-      for (c += [``, `A`, `B`, `C`][count] + t, c += `.`, c += n.toString(16).toUpperCase(), c += `.`, c += i === 0 ? `L` : `H`, c += a; s.length > 0 && s[s.length - 1] === 0;) s.pop();
+      for (c += [``, `A`, `B`, `C`][count] + t, c += `.`, c += n.toString(16).toUpperCase(), c += `.`, c += diff === 0 ? `L` : `H`, c += a; s.length > 0 && s[s.length - 1] === 0;) s.pop();
       return s.length > 0 && (c += `.`, c += s.map(item => item.toString(16).toUpperCase()).join(`.`)), c;
     }
     if (t === `vp8`) return `vp8`;
@@ -4999,8 +4999,8 @@ var yi = e => e === 3 ? 1 : 2,
         correctSampleFound: false
       }, -1 / 0, 1 / 0, first);
     }
-    mapTimestampIntoTimescale(map) {
-      return Pe(map * this.internalTrack.timescale) + this.internalTrack.editListOffset;
+    mapTimestampIntoTimescale(mapValue) {
+      return Pe(mapValue * this.internalTrack.timescale) + this.internalTrack.editListOffset;
     }
     async getPacket(packet, packetValue) {
       let mapTimestampIntoTimescale = this.mapTimestampIntoTimescale(packet),
@@ -5042,8 +5042,8 @@ var yi = e => e === 3 ? 1 : 2,
         };
       }, -1 / 0, 1 / 0, packet);
     }
-    async getKeyPacket(key, packet) {
-      let mapTimestampIntoTimescale = this.mapTimestampIntoTimescale(key),
+    async getKeyPacket(keyValue, packet) {
+      let mapTimestampIntoTimescale = this.mapTimestampIntoTimescale(keyValue),
         sampleTableForTrack = this.internalTrack.demuxer.getSampleTableForTrack(this.internalTrack),
         i = qi(sampleTableForTrack, mapTimestampIntoTimescale),
         packetForSampleIndex = await this.fetchPacketForSampleIndex(i, packet);
@@ -5060,11 +5060,11 @@ var yi = e => e === 3 ? 1 : 2,
         };
       }, mapTimestampIntoTimescale, mapTimestampIntoTimescale, packet);
     }
-    async getNextKeyPacket(next, key) {
+    async getNextKeyPacket(next, keyValue) {
       let r = this.packetToSampleIndex.get(next);
       if (r !== undefined) {
         let e = Yi(this.internalTrack.demuxer.getSampleTableForTrack(this.internalTrack), r);
-        return this.fetchPacketForSampleIndex(e, key);
+        return this.fetchPacketForSampleIndex(e, keyValue);
       }
       let i = this.packetToFragmentLocation.get(next);
       if (i === undefined) throw Error(`Packet was not created from this track.`);
@@ -5089,7 +5089,7 @@ var yi = e => e === 3 ? 1 : 2,
           sampleIndex: -1,
           correctSampleFound: false
         };
-      }, -1 / 0, 1 / 0, key);
+      }, -1 / 0, 1 / 0, keyValue);
     }
     async fetchPacketForSampleIndex(packet, forValue) {
       if (packet === -1) return null;
@@ -5160,11 +5160,11 @@ var yi = e => e === 3 ? 1 : 2,
         }
         let requestSliceRange = demuxer.reader.requestSliceRange(product, 8, 16);
         if (A(requestSliceRange) && (requestSliceRange = await requestSliceRange), !requestSliceRange) break;
-        let n = product,
+        let productAlias = product,
           r = Ti(requestSliceRange);
         if (!r) break;
         if (r.name === `moof`) {
-          count = await demuxer.readFragment(n);
+          count = await demuxer.readFragment(productAlias);
           let {
             sampleIndex: e,
             correctSampleFound: r
@@ -5172,7 +5172,7 @@ var yi = e => e === 3 ? 1 : 2,
           if (r) return this.fetchPacketInFragment(count, e, lookupInput);
           e !== -1 && (flag = count, l = e);
         }
-        product = n + r.totalSize;
+        product = productAlias + r.totalSize;
       }
       if (d && (!flag || flag.moofOffset < d.moofOffset)) {
         let e = this.internalTrack.fragmentLookupTable[u - 1];
@@ -6904,8 +6904,8 @@ var Ia = [{
         };
       }, -1 / 0, 1 / 0, packet);
     }
-    async getKeyPacket(key, packet) {
-      let intoTimescale = this.intoTimescale(key);
+    async getKeyPacket(keyValue, packet) {
+      let intoTimescale = this.intoTimescale(keyValue);
       return this.performClusterLookup(null, e => {
         let t = e.trackData.get(this.internalTrack.id);
         if (!t) return {
@@ -6919,7 +6919,7 @@ var Ia = [{
         };
       }, intoTimescale, intoTimescale, packet);
     }
-    async getNextKeyPacket(next, key) {
+    async getNextKeyPacket(next, keyValue) {
       let r = this.packetToClusterLocation.get(next);
       if (r === undefined) throw Error(`Packet was not created from this track.`);
       return this.performClusterLookup(r.cluster, e => {
@@ -6943,7 +6943,7 @@ var Ia = [{
           blockIndex: -1,
           correctBlockFound: false
         };
-      }, -1 / 0, 1 / 0, key);
+      }, -1 / 0, 1 / 0, keyValue);
     }
     async fetchPacketInCluster(count, cluster, clusterValue) {
       if (cluster === -1) return null;
@@ -6995,10 +6995,10 @@ var Ia = [{
         }
         let requestSliceRange = o.reader.requestSliceRange(elementEndPos, 2, 16);
         if (A(requestSliceRange) && (requestSliceRange = await requestSliceRange), !requestSliceRange) break;
-        let r = elementEndPos,
+        let elementEndPosAlias = elementEndPos,
           d = wa(requestSliceRange);
         if (!d || !fa.includes(d.id) && d.id !== L.Void) {
-          let e = await ka(o.reader, r, fa, Math.min(s.elementEndPos ?? 1 / 0, r + La));
+          let e = await ka(o.reader, elementEndPosAlias, fa, Math.min(s.elementEndPos ?? 1 / 0, elementEndPosAlias + La));
           if (e) {
             elementEndPos = e;
             continue;
@@ -7009,7 +7009,7 @@ var Ia = [{
           p = d.size,
           filePos = requestSliceRange.filePos;
         if (f === L.Cluster) {
-          flag = await o.readCluster(r, s), p = flag.elementEndPos - filePos;
+          flag = await o.readCluster(elementEndPosAlias, s), p = flag.elementEndPos - filePos;
           let {
             blockIndex: e,
             correctBlockFound: n
@@ -7370,11 +7370,11 @@ var Ia = [{
         acquire();
       }
     }
-    getKeyPacket(key, packet) {
-      return this.getPacket(key, packet);
+    getKeyPacket(keyValue, packet) {
+      return this.getPacket(keyValue, packet);
     }
-    getNextKeyPacket(next, key) {
-      return this.getNextPacket(next, key);
+    getNextKeyPacket(next, keyValue) {
+      return this.getNextPacket(next, keyValue);
     }
   },
   Ga = 1399285583,
@@ -7905,11 +7905,11 @@ var Ja = count => {
         acquire();
       }
     }
-    getKeyPacket(key, packet) {
-      return this.getPacket(key, packet);
+    getKeyPacket(keyValue, packet) {
+      return this.getPacket(keyValue, packet);
     }
-    getNextKeyPacket(next, key) {
-      return this.getNextPacket(next, key);
+    getNextKeyPacket(next, keyValue) {
+      return this.getNextPacket(next, keyValue);
     }
   },
   no = (items, t, r) => {
@@ -7992,8 +7992,8 @@ var ao = class extends bi {
         this.dataSize = Math.floor(this.dataSize / blockSizeInBytes) * blockSizeInBytes, this.trackBackings.push(new so(this));
       })();
     }
-    async parseFmtChunk(fmt, chunk, chunkValue) {
-      let requestSlice = this.reader.requestSlice(fmt, chunk);
+    async parseFmtChunk(fmtValue, chunk, chunkValue) {
+      let requestSlice = this.reader.requestSlice(fmtValue, chunk);
       if (A(requestSlice) && (requestSlice = await requestSlice), !requestSlice) return;
       let i = Lu(requestSlice, chunkValue),
         a = Lu(requestSlice, chunkValue),
@@ -8084,13 +8084,13 @@ var ao = class extends bi {
         filePos += 8 + t + (t & 1);
       }
     }
-    async parseId3Chunk(id3, chunk) {
-      let requestSlice = this.reader.requestSlice(id3, chunk);
+    async parseId3Chunk(id3Value, chunk) {
+      let requestSlice = this.reader.requestSlice(id3Value, chunk);
       if (A(requestSlice) && (requestSlice = await requestSlice), !requestSlice) return;
       let r = nd(requestSlice);
       if (r) {
         let i = chunk - 10;
-        r.size = Math.min(r.size, i), r.size > 0 && rd(requestSlice.slice(id3 + 10, r.size), r, this.metadataTags);
+        r.size = Math.min(r.size, i), r.size > 0 && rd(requestSlice.slice(id3Value + 10, r.size), r, this.metadataTags);
       }
     }
     getCodec() {
@@ -8229,11 +8229,11 @@ var ao = class extends bi {
       let r = Math.round(next.timestamp * this.demuxer.audioInfo.sampleRate / oo);
       return this.getPacketAtIndex(r + 1, packet);
     }
-    getKeyPacket(key, packet) {
-      return this.getPacket(key, packet);
+    getKeyPacket(keyValue, packet) {
+      return this.getPacket(keyValue, packet);
     }
-    getNextKeyPacket(next, key) {
-      return this.getNextPacket(next, key);
+    getNextKeyPacket(next, keyValue) {
+      return this.getNextPacket(next, keyValue);
     }
   },
   co = e => {
@@ -8449,11 +8449,11 @@ var ao = class extends bi {
         acquire();
       }
     }
-    getKeyPacket(key, packet) {
-      return this.getPacket(key, packet);
+    getKeyPacket(keyValue, packet) {
+      return this.getPacket(keyValue, packet);
     }
-    getNextKeyPacket(next, key) {
-      return this.getNextPacket(next, key);
+    getNextKeyPacket(next, keyValue) {
+      return this.getNextPacket(next, keyValue);
     }
   },
   po = e => e === 0 ? null : e === 1 ? 192 : e >= 2 && e <= 5 ? 144 * 2 ** e : e === 6 ? `uncommon-u8` : e === 7 ? `uncommon-u16` : e >= 8 && e <= 15 ? 2 ** e : null,
@@ -8838,11 +8838,11 @@ var ao = class extends bi {
         acquire();
       }
     }
-    getKeyPacket(key, packet) {
-      return this.getPacket(key, packet);
+    getKeyPacket(keyValue, packet) {
+      return this.getPacket(keyValue, packet);
     }
-    getNextKeyPacket(next, key) {
-      return this.getNextPacket(next, key);
+    getNextKeyPacket(next, keyValue) {
+      return this.getNextPacket(next, keyValue);
     }
     async getPacketAtIndex(packet, index) {
       let r = this.demuxer.loadedSamples[packet];
@@ -9423,18 +9423,18 @@ var ao = class extends bi {
         }
       }
     }
-    async getNextKeyPacket(next, key) {
+    async getNextKeyPacket(next, keyValue) {
       let nextAlias = next;
       for (;;) {
-        if (nextAlias = await this.getNextPacket(nextAlias, key), !nextAlias) return null;
+        if (nextAlias = await this.getNextPacket(nextAlias, keyValue), !nextAlias) return null;
         if (nextAlias.type === `key`) return nextAlias;
       }
     }
     getPacket(packet, packetValue) {
       return this.doPacketLookup(packet, false, packetValue);
     }
-    getKeyPacket(key, packet) {
-      return this.doPacketLookup(key, true, packet);
+    getKeyPacket(keyValue, packet) {
+      return this.doPacketLookup(keyValue, true, packet);
     }
     async doPacketLookup(packet, lookup, lookupValue) {
       let i = Pe(packet * xo),
@@ -9491,8 +9491,8 @@ var ao = class extends bi {
         }
         resolvedValue = Le(e * s, demuxer.packetStride) + d.sectionStartPos;
       }
-      let _ = (await l(resolvedValue, o.fileSize ?? 1 / 0, false))?.pesPacketHeader ?? null;
-      _ ||= d;
+      let fallbackValue = (await l(resolvedValue, o.fileSize ?? 1 / 0, false))?.pesPacketHeader ?? null;
+      fallbackValue ||= d;
       let reorderSize = this.getReorderSize(),
         y = async (e, t) => {
           let section = await demuxer.readSection(e, true);
@@ -9515,7 +9515,7 @@ var ao = class extends bi {
         };
       if (!lookup || this.allPacketsAreKeyPackets()) {
         outer: for (;;) {
-          let e = _.sectionStartPos + demuxer.packetStride;
+          let e = fallbackValue.sectionStartPos + demuxer.packetStride;
           for (;;) {
             let packetHeader = await demuxer.readPacketHeader(e);
             if (!packetHeader) break outer;
@@ -9525,7 +9525,7 @@ var ao = class extends bi {
                 let e = Mo(demuxer, section, false);
                 if (e && e.pts !== null) {
                   if (e.pts > i) break outer;
-                  _ = e, Lo(this.elementaryStream, _);
+                  fallbackValue = e, Lo(this.elementaryStream, fallbackValue);
                   break;
                 }
               }
@@ -9534,7 +9534,7 @@ var ao = class extends bi {
           }
         }
         outer: for (let e = 0; e < reorderSize + 1; e++) {
-          let e = _.sectionStartPos - demuxer.packetStride;
+          let e = fallbackValue.sectionStartPos - demuxer.packetStride;
           for (; e >= demuxer.packetOffset;) {
             let packetHeader = await demuxer.readPacketHeader(e);
             if (!packetHeader) break outer;
@@ -9543,7 +9543,7 @@ var ao = class extends bi {
               if (section) {
                 let e = Mo(demuxer, section, false);
                 if (e && e.pts !== null) {
-                  _ = e;
+                  fallbackValue = e;
                   break;
                 }
               }
@@ -9551,19 +9551,19 @@ var ao = class extends bi {
             e -= demuxer.packetStride;
           }
         }
-        return y(_.sectionStartPos, e => e.pts <= i);
+        return y(fallbackValue.sectionStartPos, e => e.pts <= i);
       }
       {
-        let e = resolvedValue,
+        let resolvedValueAlias = resolvedValue,
           count = null,
           r = !this.elementaryStream.canBeTrustedWithKeyPackets;
         for (;;) {
           let f = null,
-            p = e <= d.sectionStartPos,
+            p = resolvedValueAlias <= d.sectionStartPos,
             product,
             h = null;
           if (p) product = d, h = firstSection;else {
-            let t = await l(e, o.fileSize ?? 1 / 0, r);
+            let t = await l(resolvedValueAlias, o.fileSize ?? 1 / 0, r);
             product = t?.pesPacketHeader ?? null, h = t?.section ?? null;
           }
           let g = false,
@@ -9622,7 +9622,7 @@ var ao = class extends bi {
             return n(t), t;
           }
           if (p) return null;
-          count = e, e = Math.max(Le(e - d.sectionStartPos - s, demuxer.packetStride) + d.sectionStartPos, d.sectionStartPos);
+          count = resolvedValueAlias, resolvedValueAlias = Math.max(Le(resolvedValueAlias - d.sectionStartPos - s, demuxer.packetStride) + d.sectionStartPos, d.sectionStartPos);
         }
       }
     }
@@ -9784,11 +9784,11 @@ var ao = class extends bi {
     advanceCurrentPacket() {
       this.currentPesPacketPos += this.getCurrentPesPacket().data.byteLength, this.currentPesPacketIndex++;
     }
-    getPesPacketAt(pes) {
-      n(pes <= this.currentPos);
+    getPesPacketAt(pesValue) {
+      n(pesValue <= this.currentPos);
       let currentPesPacketIndex = this.currentPesPacketIndex,
         currentPesPacketPos = this.currentPesPacketPos;
-      for (; pes < currentPesPacketPos;) currentPesPacketIndex--, currentPesPacketPos -= this.pesPackets[currentPesPacketIndex].data.byteLength;
+      for (; pesValue < currentPesPacketPos;) currentPesPacketIndex--, currentPesPacketPos -= this.pesPackets[currentPesPacketIndex].data.byteLength;
       return this.pesPackets[currentPesPacketIndex];
     }
     async markNextPacket() {
@@ -10326,8 +10326,8 @@ var ao = class extends bi {
     getNextPacket(next, packet) {
       return this._getNextInternal(next, packet, false);
     }
-    getNextKeyPacket(next, key) {
-      return this._getNextInternal(next, key, true);
+    getNextKeyPacket(next, keyValue) {
+      return this._getNextInternal(next, keyValue, true);
     }
     async _getNextInternal(e, next, internal) {
       let r = this.packetInfos.get(e);
@@ -10352,8 +10352,8 @@ var ao = class extends bi {
     getPacket(packet, packetValue) {
       return this._getPacketInternal(packet, packetValue, false);
     }
-    getKeyPacket(key, packet) {
-      return this._getPacketInternal(key, packet, true);
+    getKeyPacket(keyValue, packet) {
+      return this._getPacketInternal(keyValue, packet, true);
     }
     async _getPacketInternal(e, packet, internal) {
       let segmentAt = await this.segmentedInput.getSegmentAt(e, {
@@ -11284,7 +11284,7 @@ var ds = class extends jt {
         count.targetPos = Math.min(count.targetPos, supply), count.strictTarget = true;
         for (let n = 0; n < count.pendingSlices.length; n++) {
           let r = count.pendingSlices[n];
-          for (let i of r.holes) if (i.end > supply) {
+          for (let diff of r.holes) if (diff.end > supply) {
             r.resolve(null), count.pendingSlices.splice(n, 1), n--;
             break;
           }
@@ -11517,12 +11517,12 @@ var ds = class extends jt {
         if (!x.startsWith(`#`)) {
           if (!fallbackValue) {
             if (s === null) throw Error(`Invalid M3U8 file; a segment must be preceded by an #EXTINF tag.`);
-            let e = flag;
-            if (e && e.method === `AES-128` && !e.iv) {
+            let flagAlias = flag;
+            if (flagAlias && flagAlias.method === `AES-128` && !flagAlias.iv) {
               let t = new Uint8Array(16),
                 n = C(t);
-              n.setUint32(8, Math.floor(l / 2 ** 32)), n.setUint32(12, l), e = {
-                ...e,
+              n.setUint32(8, Math.floor(l / 2 ** 32)), n.setUint32(12, l), flagAlias = {
+                ...flagAlias,
                 iv: t
               };
             }
@@ -11538,7 +11538,7 @@ var ds = class extends jt {
                 sequenceNumber: l,
                 location: t,
                 duration: s,
-                encryption: e,
+                encryption: flagAlias,
                 initSegment: resolvedValue,
                 lastProgramDateTimeSeconds: product
               };
@@ -11563,13 +11563,13 @@ var ds = class extends jt {
             t = e.get(`uri`);
           if (!t) throw Error(`Invalid #EXT-X-MAP tag; missing URI attribute.`);
           let n = e.get(`byterange`),
-            i = null;
-          if (n !== null && (i = y(n)), i && i.offset === null) throw Error(`Invalid #EXT-X-MAP tag; BYTERANGE attribute must have a specified offset.`);
+            diff = null;
+          if (n !== null && (diff = y(n)), diff && diff.offset === null) throw Error(`Invalid #EXT-X-MAP tag; BYTERANGE attribute must have a specified offset.`);
           if (!fallbackValue) {
             let e = {
               path: pt(this.rootPath, t),
-              offset: i?.offset ?? 0,
-              length: i?.length ?? null
+              offset: diff?.offset ?? 0,
+              length: diff?.length ?? null
             };
             if (flag?.method === `AES-128` && !flag.iv) throw Error(`IV attribute must be set on #EXT-X-KEY tag preceding the #EXT-X-MAP tag.`);
             resolvedValue = {
@@ -11725,12 +11725,12 @@ var ds = class extends jt {
                 ...e,
                 isRoot: false
               },
-              i,
+              diff,
               fallbackValue = inputAlias.location.offset > 0 || inputAlias.location.length !== null;
             if (!inputAlias.encryption || inputAlias.encryption.method === `SAMPLE-AES` || inputAlias.encryption.method === `SAMPLE-AES-CTR`) {
-              if (i = await this.input._getSourceCached(r), fallbackValue) {
-                let e = i.source.slice(inputAlias.location.offset, inputAlias.location.length ?? undefined).ref();
-                i.free(), i = e;
+              if (diff = await this.input._getSourceCached(r), fallbackValue) {
+                let e = diff.source.slice(inputAlias.location.offset, inputAlias.location.length ?? undefined).ref();
+                diff.free(), diff = e;
               }
             } else if (inputAlias.encryption.method === `AES-128`) {
               let encryption = inputAlias.encryption;
@@ -11740,7 +11740,7 @@ var ds = class extends jt {
                 let e = o.source.slice(inputAlias.location.offset, inputAlias.location.length ?? undefined).ref();
                 o.free(), o = e;
               }
-              i = new Os(Vi(new Pu(o.source), async () => {
+              diff = new Os(Vi(new Pu(o.source), async () => {
                 let t = {
                   stack: [],
                   error: undefined,
@@ -11765,7 +11765,7 @@ var ds = class extends jt {
                 o.free();
               })).ref();
             } else n(false);
-            return i;
+            return diff;
           }),
           formats: this.input._formats.filter(item => !(item instanceof nc)),
           initInput: count ?? undefined,
@@ -11852,7 +11852,7 @@ var ds = class extends jt {
         }
         this.masterPlaylistVariables = i;
         let s = await Promise.all(emptyItems.map(async (text, items) => {
-            let i = [],
+            let diff = [],
               a = text.attributes.get(`codecs`),
               s;
             if (a) s = a.split(`,`).map(item => item.trim());else {
@@ -11921,7 +11921,7 @@ var ds = class extends jt {
                       let e = n.match(/^(\d+)x(\d+)$/);
                       e && (total = Number(e[1]), a = Number(e[2]));
                     }
-                    i.push({
+                    diff.push({
                       id: -1,
                       demuxer: this,
                       backingTrack: null,
@@ -11953,7 +11953,7 @@ var ds = class extends jt {
                       let e = fallbackValue.match(/^(\d+)x(\d+)$/);
                       e && (flag = Number(e[1]), sampleRate = Number(e[2]));
                     }
-                    i.push({
+                    diff.push({
                       id: -1,
                       demuxer: this,
                       backingTrack: null,
@@ -11982,7 +11982,7 @@ var ds = class extends jt {
                   if (r === null) {
                     let n = text.attributes.get(`channels`),
                       r = n === null ? null : Number(n.split(`/`)[0]);
-                    i.push({
+                    diff.push({
                       id: -1,
                       demuxer: this,
                       backingTrack: null,
@@ -12008,7 +12008,7 @@ var ds = class extends jt {
                     if (a !== r || o.toLowerCase() !== `audio`) continue;
                     let fallbackValue = n.attributes.get(`channels`) ?? text.attributes.get(`channels`),
                       c = fallbackValue === null ? null : Number(fallbackValue.split(`/`)[0]);
-                    i.push({
+                    diff.push({
                       id: -1,
                       demuxer: this,
                       backingTrack: null,
@@ -12032,7 +12032,7 @@ var ds = class extends jt {
                 }
               }
             }
-            return i;
+            return diff;
           })),
           flag = [],
           l = e => {
@@ -12160,14 +12160,14 @@ var ds = class extends jt {
     async getPacket(packet, packetValue) {
       return await this.hydrate(), this.internalTrack.backingTrack.getPacket(packet, packetValue);
     }
-    async getKeyPacket(key, packet) {
-      return await this.hydrate(), this.internalTrack.backingTrack.getKeyPacket(key, packet);
+    async getKeyPacket(keyValue, packet) {
+      return await this.hydrate(), this.internalTrack.backingTrack.getKeyPacket(keyValue, packet);
     }
     async getNextPacket(next, packet) {
       return await this.hydrate(), this.internalTrack.backingTrack.getNextPacket(next, packet);
     }
-    async getNextKeyPacket(next, key) {
-      return await this.hydrate(), this.internalTrack.backingTrack.getNextKeyPacket(next, key);
+    async getNextKeyPacket(next, keyValue) {
+      return await this.hydrate(), this.internalTrack.backingTrack.getNextKeyPacket(next, keyValue);
     }
   },
   zs = class extends Rs {
@@ -12321,7 +12321,7 @@ var ds = class extends jt {
     }
   },
   Js = class extends Ws {
-    async isSupportedEBMLOfDocType(supported, doc) {
+    async isSupportedEBMLOfDocType(supported, docValue) {
       let requestSlice = supported._reader.requestSlice(0, 16);
       if (A(requestSlice) && (requestSlice = await requestSlice), !requestSlice) return false;
       let r = ya(requestSlice);
@@ -12348,7 +12348,7 @@ var ds = class extends jt {
             if (R(requestSliceResult, r) !== 1) return false;
             break;
           case L.DocType:
-            if (Ta(requestSliceResult, r) !== doc) return false;
+            if (Ta(requestSliceResult, r) !== docValue) return false;
             break;
           case L.DocTypeVersion:
             if (R(requestSliceResult, r) > 4) return false;
@@ -13055,13 +13055,13 @@ var Mc = class {
         sWidth: displayWidth,
         sHeight: displayHeight
       } = this._unmapSourceRegion(l, u, displayWidth, displayHeight, this.rotation, this.flip));
-      let _ = this.toCanvasImageSource();
+      let toCanvasImageSource = this.toCanvasImageSource();
       e.save();
       let v = p + h / 2,
         y = m + g / 2;
       e.translate(v, y), this.flip && e.scale(-1, 1), e.rotate(this.rotation * Math.PI / 180);
       let b = this.rotation % 180 == 0 ? 1 : h / g;
-      e.scale(1 / b, b), e.drawImage(_, l, u, displayWidth, displayHeight, -h / 2, -g / 2, h, g), e.restore();
+      e.scale(1 / b, b), e.drawImage(toCanvasImageSource, l, u, displayWidth, displayHeight, -h / 2, -g / 2, h, g), e.restore();
     }
     drawWithFit(draw, withValue) {
       if (!(typeof CanvasRenderingContext2D < `u` && draw instanceof CanvasRenderingContext2D || typeof OffscreenCanvasRenderingContext2D < `u` && draw instanceof OffscreenCanvasRenderingContext2D)) throw TypeError(`context must be a CanvasRenderingContext2D or OffscreenCanvasRenderingContext2D.`);
@@ -13104,12 +13104,12 @@ var Mc = class {
         sHeight: regionValue
       };
     }
-    _drawWithFitAndMipmapping(e, withValue, fit) {
+    _drawWithFitAndMipmapping(e, withValue, fitValue) {
       let r = e.width,
         i = e.height,
-        [a, o] = fit.rotation % 180 == 0 ? [this.squarePixelWidth, this.squarePixelHeight] : [this.squarePixelHeight, this.squarePixelWidth],
-        s = fit.crop ? fit.crop.width : a,
-        c = fit.crop ? fit.crop.height : o,
+        [a, o] = fitValue.rotation % 180 == 0 ? [this.squarePixelWidth, this.squarePixelHeight] : [this.squarePixelHeight, this.squarePixelWidth],
+        s = fitValue.crop ? fitValue.crop.width : a,
+        c = fitValue.crop ? fitValue.crop.height : o,
         l = 0;
       2 * r < s && 2 * i < c && (l = Math.floor(Math.log2(Math.min(s / r, c / i))));
       let u = r * 2 ** l,
@@ -13121,13 +13121,13 @@ var Mc = class {
         } = l > 0 ? Vc(u, d) : {
           canvas: e,
           context: withValue,
-          isNew: fit.targetIsFresh
+          isNew: fitValue.targetIsFresh
         };
-      p.imageSmoothingQuality = `high`, fit.fillBlack ? (p.fillStyle = `black`, p.fillRect(0, 0, u, d)) : m || p.clearRect(0, 0, u, d), this.drawWithFit(p, {
-        fit: fit.fit,
-        rotation: fit.rotation,
-        flip: fit.flip,
-        crop: fit.crop
+      p.imageSmoothingQuality = `high`, fitValue.fillBlack ? (p.fillStyle = `black`, p.fillRect(0, 0, u, d)) : m || p.clearRect(0, 0, u, d), this.drawWithFit(p, {
+        fit: fitValue.fit,
+        rotation: fitValue.rotation,
+        flip: fitValue.flip,
+        crop: fitValue.crop
       }), p.globalCompositeOperation = `copy`;
       for (let e = l; e > 1; e--) {
         let t = r * 2 ** e,
@@ -14515,10 +14515,10 @@ var Mc = class {
       if (eu(t), this._track.input._disposed) throw new Nu();
       return nu(this._track, this._track._backing.getNextPacket(next, t), t);
     }
-    async getKeyPacket(key, t = {}) {
-      if (tu(key), eu(t), this._track.input._disposed) throw new Nu();
-      if (!t.verifyKeyPackets) return this._track._backing.getKeyPacket(key, t);
-      let keyPacket = await this._track._backing.getKeyPacket(key, t);
+    async getKeyPacket(keyValue, t = {}) {
+      if (tu(keyValue), eu(t), this._track.input._disposed) throw new Nu();
+      if (!t.verifyKeyPackets) return this._track._backing.getKeyPacket(keyValue, t);
+      let keyPacket = await this._track._backing.getKeyPacket(keyValue, t);
       return keyPacket && (n(keyPacket.type === `key`), (await this._track.determinePacketType(keyPacket)) === `delta` ? this.getKeyPacket(keyPacket.timestamp - 1 / (await this._track.getTimeResolution()), t) : keyPacket);
     }
     async getNextKeyPacket(next, t = {}) {
@@ -14645,9 +14645,9 @@ var Mc = class {
           h || (product = e, h = true, s());
         });
         let n = this._createPacketSink(),
-          _ = (await n.getKeyPacket(e, g)) ?? (await n.getFirstKeyPacket(g)),
-          v = _,
-          y = n.packets(_ ?? undefined, undefined, g);
+          fallbackValue = (await n.getKeyPacket(e, g)) ?? (await n.getFirstKeyPacket(g)),
+          v = fallbackValue,
+          y = n.packets(fallbackValue ?? undefined, undefined, g);
         for (await y.next(); v && !d && !this._track.input._disposed;) {
           let e = ou(total.length);
           if (total.length + p.getDecodeQueueSize() > e) {
@@ -14668,14 +14668,14 @@ var Mc = class {
       }).finally(() => {
         p?.close();
       });
-      let _ = this._track,
+      let _track = this._track,
         v = () => {
           count?.close();
           for (let e of total) e.close();
         };
       return {
         async next() {
-          for (;;) if (_.input._disposed) throw f = true, d = true, v(), new Nu();else if (f) return {
+          for (;;) if (_track.input._disposed) throw f = true, d = true, v(), new Nu();else if (f) return {
             value: undefined,
             done: true
           };else if (h) throw f = true, d = true, v(), product;else if (total.length > 0) {
@@ -14784,13 +14784,13 @@ var Mc = class {
       }).finally(() => {
         resolvedValue?.close();
       });
-      let _ = this._track,
+      let _track = this._track,
         v = () => {
           for (let e of a) e?.close();
         };
       return {
         async next() {
-          for (;;) if (_.input._disposed) throw d = true, v(), new Nu();else if (d) return {
+          for (;;) if (_track.input._disposed) throw d = true, v(), new Nu();else if (d) return {
             value: undefined,
             done: true
           };else if (m) throw d = true, v(), p;else if (a.length > 0) {
@@ -16383,7 +16383,7 @@ var Qu;
 (function (e) {
   e[e.ISO_8859_1 = 0] = `ISO_8859_1`, e[e.UTF_16_WITH_BOM = 1] = `UTF_16_WITH_BOM`, e[e.UTF_16_BE_NO_BOM = 2] = `UTF_16_BE_NO_BOM`, e[e.UTF_8 = 3] = `UTF_8`;
 })(Qu ||= {});
-var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.New age.Oldies.Other.Pop.Rhythm and blues.Rap.Reggae.Rock.Techno.Industrial.Alternative.Ska.Death metal.Pranks.Soundtrack.Euro-techno.Ambient.Trip-hop.Vocal.Jazz & funk.Fusion.Trance.Classical.Instrumental.Acid.House.Game.Sound clip.Gospel.Noise.Alternative rock.Bass.Soul.Punk.Space.Meditative.Instrumental pop.Instrumental rock.Ethnic.Gothic.Darkwave.Techno-industrial.Electronic.Pop-folk.Eurodance.Dream.Southern rock.Comedy.Cult.Gangsta.Top 40.Christian rap.Pop/funk.Jungle music.Native US.Cabaret.New wave.Psychedelic.Rave.Showtunes.Trailer.Lo-fi.Tribal.Acid punk.Acid jazz.Polka.Retro.Musical.Rock 'n' roll.Hard rock.Folk.Folk rock.National folk.Swing.Fast fusion.Bebop.Latin.Revival.Celtic.Bluegrass.Avantgarde.Gothic rock.Progressive rock.Psychedelic rock.Symphonic rock.Slow rock.Big band.Chorus.Easy listening.Acoustic.Humour.Speech.Chanson.Opera.Chamber music.Sonata.Symphony.Booty bass.Primus.Porn groove.Satire.Slow jam.Club.Tango.Samba.Folklore.Ballad.Power ballad.Rhythmic Soul.Freestyle.Duet.Punk rock.Drum solo.A cappella.Euro-house.Dance hall.Goa music.Drum & bass.Club-house.Hardcore techno.Terror.Indie.Britpop.Negerpunk.Polsk punk.Beat.Christian gangsta rap.Heavy metal.Black metal.Crossover.Contemporary Christian.Christian rock.Merengue.Salsa.Thrash metal.Anime.Jpop.Synthpop.Christmas.Art rock.Baroque.Bhangra.Big beat.Breakbeat.Chillout.Downtempo.Dub.EBM.Eclectic.Electro.Electroclash.Emo.Experimental.Garage.Global.IDM.Illbient.Industro-Goth.Jam Band.Krautrock.Leftfield.Lounge.Math rock.New romantic.Nu-breakz.Post-punk.Post-rock.Psytrance.Shoegaze.Space rock.Trop rock.World music.Neoclassical.Audiobook.Audio theatre.Neue Deutsche Welle.Podcast.Indie rock.G-Funk.Dubstep.Garage rock.Psybient`.split(`.`),
+var parts = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.New age.Oldies.Other.Pop.Rhythm and blues.Rap.Reggae.Rock.Techno.Industrial.Alternative.Ska.Death metal.Pranks.Soundtrack.Euro-techno.Ambient.Trip-hop.Vocal.Jazz & funk.Fusion.Trance.Classical.Instrumental.Acid.House.Game.Sound clip.Gospel.Noise.Alternative rock.Bass.Soul.Punk.Space.Meditative.Instrumental pop.Instrumental rock.Ethnic.Gothic.Darkwave.Techno-industrial.Electronic.Pop-folk.Eurodance.Dream.Southern rock.Comedy.Cult.Gangsta.Top 40.Christian rap.Pop/funk.Jungle music.Native US.Cabaret.New wave.Psychedelic.Rave.Showtunes.Trailer.Lo-fi.Tribal.Acid punk.Acid jazz.Polka.Retro.Musical.Rock 'n' roll.Hard rock.Folk.Folk rock.National folk.Swing.Fast fusion.Bebop.Latin.Revival.Celtic.Bluegrass.Avantgarde.Gothic rock.Progressive rock.Psychedelic rock.Symphonic rock.Slow rock.Big band.Chorus.Easy listening.Acoustic.Humour.Speech.Chanson.Opera.Chamber music.Sonata.Symphony.Booty bass.Primus.Porn groove.Satire.Slow jam.Club.Tango.Samba.Folklore.Ballad.Power ballad.Rhythmic Soul.Freestyle.Duet.Punk rock.Drum solo.A cappella.Euro-house.Dance hall.Goa music.Drum & bass.Club-house.Hardcore techno.Terror.Indie.Britpop.Negerpunk.Polsk punk.Beat.Christian gangsta rap.Heavy metal.Black metal.Crossover.Contemporary Christian.Christian rock.Merengue.Salsa.Thrash metal.Anime.Jpop.Synthpop.Christmas.Art rock.Baroque.Bhangra.Big beat.Breakbeat.Chillout.Downtempo.Dub.EBM.Eclectic.Electro.Electroclash.Emo.Experimental.Garage.Global.IDM.Illbient.Industro-Goth.Jam Band.Krautrock.Leftfield.Lounge.Math rock.New romantic.Nu-breakz.Post-punk.Post-rock.Psytrance.Shoegaze.Space rock.Trop rock.World music.Neoclassical.Audiobook.Audio theatre.Neue Deutsche Welle.Podcast.Indie rock.G-Funk.Dubstep.Garage rock.Psybient`.split(`.`),
   ed = (e, t) => {
     let filePos = e.filePos;
     t.raw ??= {}, t.raw.TAG ??= V(e, 125), e.filePos = filePos;
@@ -16404,7 +16404,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
     } else e.skip(-30), sampleRate = td(e, 30);
     sampleRate && (t.comment ??= sampleRate);
     let u = H(e);
-    u < $u.length && (t.genre ??= $u[u]);
+    u < parts.length && (t.genre ??= parts[u]);
   },
   td = (e, t) => {
     let n = V(e, t),
@@ -16509,15 +16509,15 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
               t = /^\((\d+)\)/.exec(id3V2EncodingAndText);
             if (t) {
               let parseIntResult = Number.parseInt(t[1]);
-              if ($u[parseIntResult] !== undefined) {
-                n.genre ??= $u[parseIntResult];
+              if (parts[parseIntResult] !== undefined) {
+                n.genre ??= parts[parseIntResult];
                 break;
               }
             }
             if (t = /^\d+$/.exec(id3V2EncodingAndText), t) {
               let parseIntResult = Number.parseInt(t[0]);
-              if ($u[parseIntResult] !== undefined) {
-                n.genre ??= $u[parseIntResult];
+              if (parts[parseIntResult] !== undefined) {
+                n.genre ??= parts[parseIntResult];
                 break;
               }
             }
@@ -16566,11 +16566,11 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         case `PIC`:
           {
             let id3V2TextEncoding = r.readId3V2TextEncoding(),
-              i;
+              diff;
             if (t.majorVersion === 2) {
               let ascii = r.readAscii(3);
-              i = ascii === `PNG` ? `image/png` : ascii === `JPG` ? `image/jpeg` : `image/*`;
-            } else i = r.readId3V2Text(id3V2TextEncoding, a);
+              diff = ascii === `PNG` ? `image/png` : ascii === `JPG` ? `image/jpeg` : `image/*`;
+            } else diff = r.readId3V2Text(id3V2TextEncoding, a);
             let o = r.readU8(),
               s = r.readId3V2Text(id3V2TextEncoding, a).trimEnd(),
               c = a - r.pos;
@@ -16578,7 +16578,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
               let bytes = r.readBytes(c);
               n.images ||= [], n.images.push({
                 data: bytes,
-                mimeType: i,
+                mimeType: diff,
                 kind: o === 3 ? `coverFront` : o === 4 ? `coverBack` : `unknown`,
                 description: s
               });
@@ -16684,10 +16684,10 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
       if (e > 3) throw Error(`Unsupported text encoding: ${e}`);
       return e;
     }
-    readId3V2Text(id3, text) {
+    readId3V2Text(id3Value, text) {
       let n = this.pos,
         bytes = this.readBytes(text - this.pos);
-      switch (id3) {
+      switch (id3Value) {
         case Qu.ISO_8859_1:
           {
             let e = ``;
@@ -16729,10 +16729,10 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
           }
       }
     }
-    readId3V2EncodingAndText(id3) {
-      if (this.pos >= id3) return ``;
+    readId3V2EncodingAndText(id3Value) {
+      if (this.pos >= id3Value) return ``;
       let id3V2TextEncoding = this.readId3V2TextEncoding();
-      return this.readId3V2Text(id3V2TextEncoding, id3);
+      return this.readId3V2Text(id3V2TextEncoding, id3Value);
     }
   },
   ad = class {
@@ -16815,16 +16815,16 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
       if (count.raw) for (let t in count.raw) {
         let n = count.raw[t];
         if (n == null || t.length !== 4 || r.has(t)) continue;
-        let i;
+        let diff;
         if (typeof n == `string`) {
           if (te(n)) {
-            i = new Uint8Array(n.length + 2), i[0] = Qu.ISO_8859_1;
-            for (let e = 0; e < n.length; e++) i[e + 1] = n.charCodeAt(e);
+            diff = new Uint8Array(n.length + 2), diff[0] = Qu.ISO_8859_1;
+            for (let e = 0; e < n.length; e++) diff[e + 1] = n.charCodeAt(e);
           } else {
             let e = E.encode(n);
-            i = new Uint8Array(e.byteLength + 2), i[0] = Qu.UTF_8, i.set(e, 1);
+            diff = new Uint8Array(e.byteLength + 2), diff[0] = Qu.UTF_8, diff.set(e, 1);
           }
-        } else if (n instanceof Uint8Array) i = n;else if (t === `TXXX` && Pt(n)) {
+        } else if (n instanceof Uint8Array) diff = n;else if (t === `TXXX` && Pt(n)) {
           for (let e in n) {
             let t = n[e],
               r = te(e) && te(t),
@@ -16837,7 +16837,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
           }
           continue;
         } else continue;
-        this.writeAscii(t), this.writeSynchsafeU32(i.byteLength), this.writeU16(0), this.writer.write(i);
+        this.writeAscii(t), this.writeSynchsafeU32(diff.byteLength), this.writeU16(0), this.writer.write(diff);
       }
       let i = this.writer.getPos(),
         a = i - n;
@@ -16846,11 +16846,11 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
     writeU8(e) {
       this.helper[0] = e, this.writer.write(this.helper.subarray(0, 1));
     }
-    writeU16(u16) {
-      this.helperView.setUint16(0, u16, false), this.writer.write(this.helper.subarray(0, 2));
+    writeU16(u16Value) {
+      this.helperView.setUint16(0, u16Value, false), this.writer.write(this.helper.subarray(0, 2));
     }
-    writeU32(u32) {
-      this.helperView.setUint32(0, u32, false), this.writer.write(this.helper.subarray(0, 4));
+    writeU32(u32Value) {
+      this.helperView.setUint32(0, u32Value, false), this.writer.write(this.helper.subarray(0, 4));
     }
     writeAscii(count) {
       for (let t = 0; t < count.length; t++) this.helper[t] = count.charCodeAt(t);
@@ -16868,10 +16868,10 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
       let t = E.encode(utf8);
       this.writer.write(t), this.writeU8(0);
     }
-    writeId3V2TextFrame(id3, count) {
+    writeId3V2TextFrame(id3Value, count) {
       let n = te(count),
         r = 1 + (n ? count.length : E.encode(count).byteLength) + 1;
-      this.writeAscii(id3), this.writeSynchsafeU32(r), this.writeU16(0), this.writeU8(n ? Qu.ISO_8859_1 : Qu.UTF_8), n ? this.writeIsoString(count) : this.writeUtf8String(count);
+      this.writeAscii(id3Value), this.writeSynchsafeU32(r), this.writeU16(0), this.writeU8(n ? Qu.ISO_8859_1 : Qu.UTF_8), n ? this.writeIsoString(count) : this.writeUtf8String(count);
     }
     writeId3V2LyricsFrame(count) {
       let t = te(count),
@@ -17145,11 +17145,11 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
     constructor(constructor) {
       this.writer = constructor, this.helper = new Uint8Array(8), this.helperView = new DataView(this.helper.buffer), this.offsets = new WeakMap();
     }
-    writeU32(u32) {
-      this.helperView.setUint32(0, u32, false), this.writer.write(this.helper.subarray(0, 4));
+    writeU32(u32Value) {
+      this.helperView.setUint32(0, u32Value, false), this.writer.write(this.helper.subarray(0, 4));
     }
-    writeU64(u64) {
-      this.helperView.setUint32(0, Math.floor(u64 / 2 ** 32), false), this.helperView.setUint32(4, u64, false), this.writer.write(this.helper.subarray(0, 8));
+    writeU64(u64Value) {
+      this.helperView.setUint32(0, Math.floor(u64Value / 2 ** 32), false), this.helperView.setUint32(4, u64Value, false), this.writer.write(this.helper.subarray(0, 8));
     }
     writeAscii(count) {
       for (let t = 0; t < count.length; t++) this.helperView.setUint8(t % 8, count.charCodeAt(t)), t % 8 == 7 && this.writer.write(this.helper);
@@ -17164,17 +17164,17 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         this.writer.seek(t), this.writeBoxHeader(count, fallbackValue), this.writer.seek(n);
       }
     }
-    writeBoxHeader(box, header) {
-      this.writeU32(box.largeSize ? 1 : header), this.writeAscii(box.type), box.largeSize && this.writeU64(header);
+    writeBoxHeader(boxValue, header) {
+      this.writeU32(boxValue.largeSize ? 1 : header), this.writeAscii(boxValue.type), boxValue.largeSize && this.writeU64(header);
     }
     measureBoxHeader(measure) {
       return 8 + (measure.largeSize ? 8 : 0);
     }
-    patchBox(box) {
-      let t = this.offsets.get(box);
+    patchBox(boxValue) {
+      let t = this.offsets.get(boxValue);
       n(t !== undefined);
       let r = this.writer.getPos();
-      this.writer.seek(t), this.writeBox(box), this.writer.seek(r);
+      this.writer.seek(t), this.writeBox(boxValue), this.writer.seek(r);
     }
     measureBox(measure) {
       if (measure.contents && !measure.children) return this.measureBoxHeader(measure) + measure.contents.byteLength;
@@ -18104,10 +18104,10 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
             let t = n.start + count.start;
             if (this._monotonicity === true && t !== this._lastFlushEnd) throw Error(`Internal error: Monotonicity violation.`);
             let fallbackValue = count.start !== 0 || count.end !== n.data.byteLength,
-              i;
-            i = fallbackValue && Xe() ? n.data.slice(count.start, count.end) : n.data.subarray(count.start, count.end), this._streamWriter.write({
+              diff;
+            diff = fallbackValue && Xe() ? n.data.slice(count.start, count.end) : n.data.subarray(count.start, count.end), this._streamWriter.write({
               type: `write`,
-              data: i,
+              data: diff,
               position: t
             }).catch(err => {
               this._writeError ??= err;
@@ -18512,64 +18512,64 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         acquire();
       }
     }
-    async padWithSilence(pad, withValue, silence) {
-      let r = $(silence, pad.timescale);
-      if (silence = r / pad.timescale, r > 0) {
+    async padWithSilence(padValue, withValue, silence) {
+      let r = $(silence, padValue.timescale);
+      if (silence = r / padValue.timescale, r > 0) {
         let {
             sampleSize: i,
             silentValue: a
-          } = Xr(pad.info.decoderConfig.codec),
-          o = r * pad.info.numberOfChannels,
+          } = Xr(padValue.info.decoderConfig.codec),
+          o = r * padValue.info.numberOfChannels,
           s = new Uint8Array(i * o).fill(a),
-          sampleForTrack = this.createSampleForTrack(pad, new Uint8Array(s.buffer), withValue, silence, `key`);
-        await this.registerSample(pad, sampleForTrack);
+          sampleForTrack = this.createSampleForTrack(padValue, new Uint8Array(s.buffer), withValue, silence, `key`);
+        await this.registerSample(padValue, sampleForTrack);
       }
       return silence;
     }
-    async addSubtitleCue(subtitle, cue, cueValue) {
+    async addSubtitleCue(subtitle, cueInput, cueValue) {
       let acquire = await this.mutex.acquire();
       try {
         let subtitleTrackData = this.getSubtitleTrackData(subtitle, cueValue);
-        this.validateTimestamp(subtitleTrackData.track, cue.timestamp, true), subtitle.source._codec === `webvtt` && (subtitleTrackData.cueQueue.push(cue), await this.processWebVTTCues(subtitleTrackData, cue.timestamp));
+        this.validateTimestamp(subtitleTrackData.track, cueInput.timestamp, true), subtitle.source._codec === `webvtt` && (subtitleTrackData.cueQueue.push(cueInput), await this.processWebVTTCues(subtitleTrackData, cueInput.timestamp));
       } finally {
         acquire();
       }
     }
-    async processWebVTTCues(web, cues) {
-      for (; web.cueQueue.length > 0;) {
-        web.lastCueEndTimestamp ??= Math.min(0, web.cueQueue[0].timestamp);
+    async processWebVTTCues(webValue, cues) {
+      for (; webValue.cueQueue.length > 0;) {
+        webValue.lastCueEndTimestamp ??= Math.min(0, webValue.cueQueue[0].timestamp);
         let r = new Set([]);
-        for (let count of web.cueQueue) n(count.timestamp <= cues), n(web.lastCueEndTimestamp <= count.timestamp + count.duration), r.add(Math.max(count.timestamp, web.lastCueEndTimestamp)), r.add(count.timestamp + count.duration);
+        for (let count of webValue.cueQueue) n(count.timestamp <= cues), n(webValue.lastCueEndTimestamp <= count.timestamp + count.duration), r.add(Math.max(count.timestamp, webValue.lastCueEndTimestamp)), r.add(count.timestamp + count.duration);
         let i = [...r].sort((left, right) => left - right),
           a = i[0],
           fallbackValue = i[1] ?? a;
         if (cues < fallbackValue) break;
-        if (web.lastCueEndTimestamp < a) {
+        if (webValue.lastCueEndTimestamp < a) {
           this.auxWriter.seek(0);
           let t = Bf();
           this.auxBoxWriter.writeBox(t);
           let n = this.auxTarget._getSlice(0, this.auxWriter.getPos()),
-            sampleForTrack = this.createSampleForTrack(web, n, web.lastCueEndTimestamp, a - web.lastCueEndTimestamp, `key`);
-          await this.registerSample(web, sampleForTrack), web.lastCueEndTimestamp = a;
+            sampleForTrack = this.createSampleForTrack(webValue, n, webValue.lastCueEndTimestamp, a - webValue.lastCueEndTimestamp, `key`);
+          await this.registerSample(webValue, sampleForTrack), webValue.lastCueEndTimestamp = a;
         }
         this.auxWriter.seek(0);
-        for (let t = 0; t < web.cueQueue.length; t++) {
-          let n = web.cueQueue[t];
+        for (let t = 0; t < webValue.cueQueue.length; t++) {
+          let n = webValue.cueQueue[t];
           if (n.timestamp >= fallbackValue) break;
           md.lastIndex = 0;
           let r = md.test(n.text),
             i = n.timestamp + n.duration,
-            s = web.cueToSourceId.get(n);
-          if (s === undefined && fallbackValue < i && (s = web.nextSourceId++, web.cueToSourceId.set(n, s)), n.notes) {
+            s = webValue.cueToSourceId.get(n);
+          if (s === undefined && fallbackValue < i && (s = webValue.nextSourceId++, webValue.cueToSourceId.set(n, s)), n.notes) {
             let e = Hf(n.notes);
             this.auxBoxWriter.writeBox(e);
           }
           let c = Vf(n.text, r ? a : null, n.identifier ?? null, n.settings ?? null, s ?? null);
-          this.auxBoxWriter.writeBox(c), i === fallbackValue && web.cueQueue.splice(t--, 1);
+          this.auxBoxWriter.writeBox(c), i === fallbackValue && webValue.cueQueue.splice(t--, 1);
         }
         let s = this.auxTarget._getSlice(0, this.auxWriter.getPos()),
-          sampleForTrack = this.createSampleForTrack(web, s, a, fallbackValue - a, `key`);
-        await this.registerSample(web, sampleForTrack), web.lastCueEndTimestamp = fallbackValue;
+          sampleForTrack = this.createSampleForTrack(webValue, s, a, fallbackValue - a, `key`);
+        await this.registerSample(webValue, sampleForTrack), webValue.lastCueEndTimestamp = fallbackValue;
       }
     }
     createSampleForTrack(sample, forValue, track, trackValue, trackInput) {
@@ -19323,13 +19323,13 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
       for (let e of fallbackValue) {
         let r = e.name;
         r === undefined && (r = (e.kind === `coverFront` ? `cover` : e.kind === `coverBack` ? `back` : `image`) + (st(e.mimeType) ?? ``));
-        let i;
+        let diff;
         for (;;) {
-          i = 0n;
-          for (let e = 0; e < 8; e++) i <<= 8n, i |= BigInt(Math.floor(Math.random() * 256));
-          if (i !== 0n && !n.has(i)) break;
+          diff = 0n;
+          for (let e = 0; e < 8; e++) diff <<= 8n, diff |= BigInt(Math.floor(Math.random() * 256));
+          if (diff !== 0n && !n.has(diff)) break;
         }
-        n.add(i), count.push({
+        n.add(diff), count.push({
           id: L.AttachedFile,
           data: [e.description === undefined ? null : {
             id: L.FileDescription,
@@ -19345,7 +19345,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
             data: e.data
           }, {
             id: L.FileUID,
-            data: i
+            data: diff
           }]
         });
       }
@@ -19535,10 +19535,10 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         acquire();
       }
     }
-    async addSubtitleCue(items, options, cue) {
+    async addSubtitleCue(items, options, cueValue) {
       let acquire = await this.mutex.acquire();
       try {
-        let subtitleTrackData = this.getSubtitleTrackData(items, cue);
+        let subtitleTrackData = this.getSubtitleTrackData(items, cueValue);
         this.validateTimestamp(subtitleTrackData.track, options.timestamp, true);
         let i = options.text,
           a = Math.round(options.timestamp * 1e3);
@@ -19567,8 +19567,8 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         e || (await this.writer.flush());
       }
     }
-    fixVP9ColorSpace(fix, color) {
-      if (color.type !== `key` || !fix.info.decoderConfig.colorSpace || !fix.info.decoderConfig.colorSpace.matrix) return;
+    fixVP9ColorSpace(fixValue, color) {
+      if (color.type !== `key` || !fixValue.info.decoderConfig.colorSpace || !fixValue.info.decoderConfig.colorSpace.matrix) return;
       let n = new M(color.data);
       n.skipBits(2);
       let bits = n.readBits(1),
@@ -19580,7 +19580,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         bt709: 2,
         bt470bg: 1,
         smpte170m: 3
-      }[fix.info.decoderConfig.colorSpace.matrix];
+      }[fixValue.info.decoderConfig.colorSpace.matrix];
       x(color.data, n.pos, n.pos + 3, a);
     }
     createInternalChunk(internal, chunk, chunkValue, chunkInput, i = null) {
@@ -19727,8 +19727,8 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
     constructor(constructor) {
       this.writer = constructor, this.helper = new Uint8Array(8), this.helperView = new DataView(this.helper.buffer);
     }
-    writeU32(u32) {
-      this.helperView.setUint32(0, u32, false), this.writer.write(this.helper.subarray(0, 4));
+    writeU32(u32Value) {
+      this.helperView.setUint32(0, u32Value, false), this.writer.write(this.helper.subarray(0, 4));
     }
     writeXingFrame(xing) {
       let t = this.writer.getPos(),
@@ -20339,7 +20339,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
     writeTables() {
       n(!this.tablesWritten), this.writePsiSection(Np, Wp), this.writePsiSection(Pp, Gp(this.trackDatas)), this.tablesWritten = true;
     }
-    writePsiSection(psi, count) {
+    writePsiSection(psiValue, count) {
       let n = 0,
         r = true;
       for (; n < count.length;) {
@@ -20347,17 +20347,17 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
           a = count.length - n,
           o = Math.min(i, a),
           s;
-        r ? (s = this.payloadBuffer.subarray(0, 1 + o), s[0] = 0, s.set(count.subarray(n, n + o), 1)) : s = count.subarray(n, n + o), this.writeTsPacket(psi, r, null, s), n += o, r = false;
+        r ? (s = this.payloadBuffer.subarray(0, 1 + o), s[0] = 0, s.set(count.subarray(n, n + o), 1)) : s = count.subarray(n, n + o), this.writeTsPacket(psiValue, r, null, s), n += o, r = false;
       }
     }
-    writePesPacket(pes, packet) {
-      let r = pes.track.type === `video`,
+    writePesPacket(pesValue, packet) {
+      let r = pesValue.track.type === `video`,
         i = r ? 10 : 5,
         a = new Uint8Array(9 + i),
         o = C(a),
         s = new M(a.subarray(9));
-      Oe(o, 0, 1, false), a[3] = pes.streamId;
-      let c = pes.track.type === `video` ? 0 : Math.min(8 + packet.data.length, 65535);
+      Oe(o, 0, 1, false), a[3] = pesValue.streamId;
+      let c = pesValue.track.type === `video` ? 0 : Math.min(8 + packet.data.length, 65535);
       o.setUint16(4, c, false), o.setUint8(6, 132), o.setUint8(7, r ? 192 : 128), o.setUint8(8, i);
       let l = Ne(Math.round(packet.presentationTimestamp * xo), So);
       if (s.pos = 0, s.writeBits(4, r ? 3 : 2), s.writeBits(3, Math.floor(l / 2 ** 30)), s.writeBits(1, 1), s.writeBits(15, Math.floor(l / 2 ** 15) % 2 ** 15), s.writeBits(1, 1), s.writeBits(15, l % 2 ** 15), s.writeBits(1, 1), r) {
@@ -20372,7 +20372,7 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         let n = f,
           r = u - d,
           i = f && packet.isKeyframe,
-          o = f && !pes.firstPacketWritten,
+          o = f && !pesValue.firstPacketWritten,
           s = Math.max(0, 184 - r),
           flag;
         flag = i || o ? Math.max(2, s) : s;
@@ -20390,9 +20390,9 @@ var $u = `Blues.Classic rock.Country.Dance.Disco.Funk.Grunge.Hip-hop.Jazz.Metal.
         }
         let g = Math.max(0, d - a.length),
           _ = g + (p - h);
-        h < p && subarray.set(packet.data.subarray(g, _), h), this.writeTsPacket(pes.pid, n, sampleRate, subarray), d += p, f = false;
+        h < p && subarray.set(packet.data.subarray(g, _), h), this.writeTsPacket(pesValue.pid, n, sampleRate, subarray), d += p, f = false;
       }
-      pes.firstPacketWritten = true;
+      pesValue.firstPacketWritten = true;
     }
     writeTsPacket(packet, packetValue, count, packetInput) {
       let fallbackValue = this.continuityCounters.get(packet) ?? 0,
@@ -20453,14 +20453,14 @@ var Gp = e => {
     constructor(constructor) {
       this.writer = constructor, this.helper = new Uint8Array(8), this.helperView = new DataView(this.helper.buffer);
     }
-    writeU16(u16) {
-      this.helperView.setUint16(0, u16, true), this.writer.write(this.helper.subarray(0, 2));
+    writeU16(u16Value) {
+      this.helperView.setUint16(0, u16Value, true), this.writer.write(this.helper.subarray(0, 2));
     }
-    writeU32(u32) {
-      this.helperView.setUint32(0, u32, true), this.writer.write(this.helper.subarray(0, 4));
+    writeU32(u32Value) {
+      this.helperView.setUint32(0, u32Value, true), this.writer.write(this.helper.subarray(0, 4));
     }
-    writeU64(u64) {
-      this.helperView.setUint32(0, u64, true), this.helperView.setUint32(4, Math.floor(u64 / 2 ** 32), true), this.writer.write(this.helper);
+    writeU64(u64Value) {
+      this.helperView.setUint32(0, u64Value, true), this.helperView.setUint32(4, Math.floor(u64Value / 2 ** 32), true), this.writer.write(this.helper);
     }
     writeAscii(ascii) {
       this.writer.write(E.encode(ascii));
@@ -20578,10 +20578,10 @@ var Gp = e => {
         a = i - t - 8;
       this.writer.seek(t + 4), this.riffWriter.writeU32(a), this.writer.seek(i), a & 1 && this.writer.write(new Uint8Array(1));
     }
-    writeId3Chunk(id3) {
+    writeId3Chunk(id3Value) {
       let t = this.writer.getPos();
       this.riffWriter.writeAscii(`ID3 `), this.riffWriter.writeU32(0);
-      let writeId3V2Tag = new ad(this.writer).writeId3V2Tag(id3),
+      let writeId3V2Tag = new ad(this.writer).writeId3V2Tag(id3Value),
         r = this.writer.getPos();
       this.writer.seek(t + 4), this.riffWriter.writeU32(writeId3V2Tag), this.writer.seek(r), writeId3V2Tag & 1 && this.writer.write(new Uint8Array(1));
     }
@@ -20849,26 +20849,26 @@ var Gp = e => {
         t && e.close();
       }
     }
-    async processAndEncode(and, encode) {
+    async processAndEncode(andValue, encode) {
       let encodingConfig = this.encodingConfig,
         count;
       if (encodingConfig.transform?.process) {
-        let t = encodingConfig.transform.process(and);
+        let t = encodingConfig.transform.process(andValue);
         if (A(t) && (t = await t), t === null) return;
         Array.isArray(t) || (t = [t]);
         let n = [];
         try {
           for (let total of t) total instanceof Fc ? n.push(total) : typeof VideoFrame < `u` && total instanceof VideoFrame ? n.push(new Fc(total)) : n.push(new Fc(total, {
-            timestamp: and.timestamp,
-            duration: and.duration
+            timestamp: andValue.timestamp,
+            duration: andValue.duration
           }));
         } catch (r) {
-          for (let t of n) t !== and && t.close();
-          for (let n of t) (n instanceof Fc && n !== and || typeof VideoFrame < `u` && n instanceof VideoFrame) && n.close();
+          for (let t of n) t !== andValue && t.close();
+          for (let n of t) (n instanceof Fc && n !== andValue || typeof VideoFrame < `u` && n instanceof VideoFrame) && n.close();
           throw r;
         }
         count = n;
-      } else count = [and];
+      } else count = [andValue];
       try {
         for (let e of count) {
           if (this.encoderInitialized || (this.ensureEncoderPromise || this.ensureEncoder(e), this.encoderInitialized || (await this.ensureEncoderPromise)), n(this.encoderInitialized), this.closed) break;
@@ -20933,13 +20933,13 @@ var Gp = e => {
           await this.lastMuxerPromise;
         }
       } finally {
-        for (let t of count) t !== and && t.close();
+        for (let t of count) t !== andValue && t.close();
       }
     }
-    async padFrameRate(pad, frame) {
+    async padFrameRate(padValue, frame) {
       let frameRate = this.encodingConfig.transform.frameRate;
       n(this.frameRateLastSample);
-      let i = Math.round((pad - this.frameRateLastTimestamp) * frameRate);
+      let i = Math.round((padValue - this.frameRateLastTimestamp) * frameRate);
       for (let e = 1; e < i; e++) {
         let n = {
           stack: [],
@@ -21093,18 +21093,18 @@ var Gp = e => {
     recreateWebCodecsEncoders() {
       n(this.encoder), this.encoder.state !== `closed` && this.encoder.close(), this.alphaEncoder && this.alphaEncoder.state !== `closed` && this.alphaEncoder.close(), this.alphaFrameQueue.forEach(item => item?.close()), this.alphaFrameQueue.length = 0, this.encodersReclaimed = false, this.lastMultipleOfKeyFrameInterval = -1, this.createWebCodecsEncoders();
     }
-    async flushAndClose(and) {
+    async flushAndClose(andValue) {
       try {
-        if (!and && (this.checkForEncoderError(), this.frameRateLastSample)) {
+        if (!andValue && (this.checkForEncoderError(), this.frameRateLastSample)) {
           let frameRate = this.encodingConfig.transform.frameRate,
             t = Re(this.frameRateLastEndTimestamp, frameRate);
           await this.padFrameRate(t);
         }
-        this.closed = true, and || (this.customEncoder ? this.customEncoderCallSerializer.call(() => this.customEncoder.flush()) : this.encoder && !this.encodersReclaimed && (await this.encoder.flush(), await this.alphaEncoder?.flush(), await kt(25)));
+        this.closed = true, andValue || (this.customEncoder ? this.customEncoderCallSerializer.call(() => this.customEncoder.flush()) : this.encoder && !this.encodersReclaimed && (await this.encoder.flush(), await this.alphaEncoder?.flush(), await kt(25)));
       } finally {
         this.closed = true, this.frameRateLastSample?.close(), this.frameRateLastSample = null, this.customEncoder ? await this.customEncoderCallSerializer.call(() => this.customEncoder.close()).catch(err => this.setError(err)) : this.encoder && (this.encoder.state !== `closed` && this.encoder.close(), this.alphaEncoder && this.alphaEncoder.state !== `closed` && this.alphaEncoder.close(), this.alphaFrameQueue.forEach(item => item?.close()), this.alphaFrameQueue.length = 0, this.splitter?.close());
       }
-      and || this.checkForEncoderError();
+      andValue || this.checkForEncoderError();
     }
     getQueueSize() {
       return this.customEncoder ? this.customEncoderQueueSize : this.encoder?.encodeQueueSize ?? 0;
@@ -21498,14 +21498,14 @@ var Gp = e => {
         t && e.close();
       }
     }
-    async processAndEncode(and, encode) {
+    async processAndEncode(andValue, encode) {
       let encodingConfig = this.encodingConfig;
-      if (encodingConfig.transform?.sampleFormat !== undefined && sl(and.format) !== encodingConfig.transform.sampleFormat) {
-        let r = ll(and, encodingConfig.transform.sampleFormat);
-        encode && and.close(), and = r, encode = true;
+      if (encodingConfig.transform?.sampleFormat !== undefined && sl(andValue.format) !== encodingConfig.transform.sampleFormat) {
+        let r = ll(andValue, encodingConfig.transform.sampleFormat);
+        encode && andValue.close(), andValue = r, encode = true;
       }
       if (encodingConfig.transform?.process) try {
-        let t = encodingConfig.transform.process(and);
+        let t = encodingConfig.transform.process(andValue);
         if (A(t) && (t = await t), t === null) return;
         Array.isArray(t) || (t = [t]);
         try {
@@ -21515,8 +21515,8 @@ var Gp = e => {
           for (let count of t) count instanceof tl && count.close();
         }
       } finally {
-        encode && and.close();
-      } else await this.encodeSample(and, encode);
+        encode && andValue.close();
+      } else await this.encodeSample(andValue, encode);
     }
     async encodeSample(sample, sampleValue) {
       try {
@@ -21558,18 +21558,18 @@ var Gp = e => {
         sampleValue && sample.close();
       }
     }
-    async doPcmEncoding(pcm, encoding) {
+    async doPcmEncoding(pcmValue, encoding) {
       n(this.outputSampleSize), n(this.writeOutputValue);
       let {
           numberOfChannels: r,
           numberOfFrames: i,
           sampleRate: a,
           timestamp: o
-        } = pcm,
+        } = pcmValue,
         s = 2048,
         flag = [];
       for (let t = 0; t < i; t += s) {
-        let n = Math.min(s, pcm.numberOfFrames - t),
+        let n = Math.min(s, pcmValue.numberOfFrames - t),
           i = n * r * this.outputSampleSize,
           arrayBuffer = new ArrayBuffer(i),
           o = new DataView(arrayBuffer);
@@ -21578,16 +21578,16 @@ var Gp = e => {
           view: o
         });
       }
-      let fallbackValue = pcm.format === `s32` || pcm.format === `s32-planar`,
+      let fallbackValue = pcmValue.format === `s32` || pcmValue.format === `s32-planar`,
         u = fallbackValue ? `s32-planar` : `f32-planar`,
         d = fallbackValue ? 1 / 2147483648 : 1,
-        allocationSize = pcm.allocationSize({
+        allocationSize = pcmValue.allocationSize({
           planeIndex: 0,
           format: u
         }),
         p = fallbackValue ? new Int32Array(allocationSize / 4) : new Float32Array(allocationSize / 4);
       for (let t = 0; t < r; t++) {
-        pcm.copyTo(p, {
+        pcmValue.copyTo(p, {
           planeIndex: t,
           format: u
         });
@@ -21599,7 +21599,7 @@ var Gp = e => {
           for (let a = 0; a < n; a++) this.writeOutputValue(i, (a * r + t) * this.outputSampleSize, p[e * s + a] * d);
         }
       }
-      encoding && pcm.close();
+      encoding && pcmValue.close();
       let m = {
         decoderConfig: {
           codec: this.encodingConfig.codec,
@@ -21716,13 +21716,13 @@ var Gp = e => {
           Te(r), n(false);
       }
     }
-    async flushAndClose(and) {
+    async flushAndClose(andValue) {
       try {
-        and || (this.checkForEncoderError(), this.resampler && (await this.resampler.finalize())), this.closed = true, and || (this.customEncoder ? this.customEncoderCallSerializer.call(() => this.customEncoder.flush()) : this.encoder && (await this.encoder.flush()));
+        andValue || (this.checkForEncoderError(), this.resampler && (await this.resampler.finalize())), this.closed = true, andValue || (this.customEncoder ? this.customEncoderCallSerializer.call(() => this.customEncoder.flush()) : this.encoder && (await this.encoder.flush()));
       } finally {
         this.closed = true, this.resampler = null, this.customEncoder ? await this.customEncoderCallSerializer.call(() => this.customEncoder.close()).catch(err => this.setError(err)) : this.encoder && this.encoder.state !== `closed` && this.encoder.close();
       }
-      and || this.checkForEncoderError();
+      andValue || this.checkForEncoderError();
     }
     getQueueSize() {
       return this.customEncoder ? this.customEncoderQueueSize : this.isPcmEncoder ? 0 : this.encoder?.encodeQueueSize ?? 0;
@@ -22161,8 +22161,8 @@ var Gp = e => {
     async getMimeType() {
       return Bo;
     }
-    allTracksAreKnown(all) {
-      for (let count of all.tracks) if (!count.source._closed && !this.trackDatas.some(item => item.track === count)) return false;
+    allTracksAreKnown(allValue) {
+      for (let count of allValue.tracks) if (!count.source._closed && !this.trackDatas.some(item => item.track === count)) return false;
       return true;
     }
     async onTrackClose(track) {
@@ -22231,7 +22231,7 @@ var Gp = e => {
         acquire();
       }
     }
-    async addSubtitleCue(subtitle, cue, cueValue) {
+    async addSubtitleCue(subtitle, cueInput, cueValue) {
       throw Error(`Unreachable.`);
     }
     async advancePlaylist(advance) {
@@ -23855,16 +23855,16 @@ Check the discardedTracks field for more info.`);
         squarePixelWidth = await e.getSquarePixelWidth(),
         squarePixelHeight = await e.getSquarePixelHeight(),
         [h, g] = o % 180 == 0 ? [squarePixelWidth, squarePixelHeight] : [squarePixelHeight, squarePixelWidth],
-        _ = video.crop;
-      _ &&= Wc(_, h, g);
-      let [v, y] = _ ? [_.width, _.height] : [h, g],
+        crop = video.crop;
+      crop &&= Wc(crop, h, g);
+      let [v, y] = crop ? [crop.width, crop.height] : [h, g],
         b = v,
         x = y,
         S = b / x;
       video.width !== undefined && video.height === undefined ? (b = Mt(video.width), x = Mt(Math.round(b / S))) : video.width === undefined && video.height !== undefined ? (x = Mt(video.height), b = Mt(Math.round(x * S))) : video.width !== undefined && video.height !== undefined && (b = Mt(video.width), x = Mt(video.height));
       let supportedVideoCodecs = this.output.format.getSupportedVideoCodecs(),
         fallbackValue = video.alpha ?? `discard`,
-        w = !this._copyMode || !!video.forceTranscode || !!video.frameRate || video.keyFrameInterval !== undefined || video.process !== undefined || video.quality !== undefined || video.bitrate !== undefined || !supportedVideoCodecs.includes(codec) || video.codec && video.codec !== codec || b !== v || x !== y || o !== 0 && !d || s && !d || !!_,
+        w = !this._copyMode || !!video.forceTranscode || !!video.frameRate || video.keyFrameInterval !== undefined || video.process !== undefined || video.quality !== undefined || video.bitrate !== undefined || !supportedVideoCodecs.includes(codec) || video.codec && video.codec !== codec || b !== v || x !== y || o !== 0 && !d || s && !d || !!crop,
         T = null;
       if (!w) {
         let t = new ru(e),
@@ -23930,7 +23930,7 @@ Check the discardedTracks field for more info.`);
           transform: {}
         };
         n(h.transform);
-        let g = b !== v || x !== y || o !== 0 && (!d || video.process !== undefined) || s && (!d || video.process !== undefined) || !!_ || squarePixelWidth !== (await e.getCodedWidth()) || squarePixelHeight !== (await e.getCodedHeight());
+        let g = b !== v || x !== y || o !== 0 && (!d || video.process !== undefined) || s && (!d || video.process !== undefined) || !!crop || squarePixelWidth !== (await e.getCodedWidth()) || squarePixelHeight !== (await e.getCodedHeight());
         if (!g) {
           let t = {
             stack: [],
@@ -23956,7 +23956,7 @@ Check the discardedTracks field for more info.`);
             Qm(t);
           }
         }
-        video.frameRate && (h.transform.frameRate = video.frameRate), video.process && (h.transform.process = video.process), g && (c = 0, l = false, u = null, h.transform.width = b, h.transform.height = x, h.transform.fit = video.fit ?? `fill`, h.transform.rotate = video.rotate, h.transform.flip = video.flip, h.transform.crop = _, h.transform.alpha = fallbackValue);
+        video.frameRate && (h.transform.frameRate = video.frameRate), video.process && (h.transform.process = video.process), g && (c = 0, l = false, u = null, h.transform.width = b, h.transform.height = x, h.transform.fit = video.fit ?? `fill`, h.transform.rotate = video.rotate, h.transform.flip = video.flip, h.transform.crop = crop, h.transform.alpha = fallbackValue);
         let transferCharacteristics = null;
         h.onEncodedSample = e => {
           transferCharacteristics = e.timestamp;
@@ -24110,7 +24110,7 @@ Check the discardedTracks field for more info.`);
           });
           return;
         }
-        let i = null;
+        let diff = null;
         audio.codec && (supportedAudioCodecs = supportedAudioCodecs.filter(item => item === audio.codec));
         let d = jl(audio.quality, audio.bitrate) ?? new z(`high`),
           f = await Fl(supportedAudioCodecs, {
@@ -24124,9 +24124,9 @@ Check the discardedTracks field for more info.`);
             sampleRate: nh,
             quality: d
           })).find(item => Or.includes(item));
-          found && (i = found, numberOfChannelsValue = th, sampleRateValue = nh);
-        } else i = f[0] ?? null;
-        if (i === null) {
+          found && (diff = found, numberOfChannelsValue = th, sampleRateValue = nh);
+        } else diff = f[0] ?? null;
+        if (diff === null) {
           this.discardedTracks.push({
             track: e,
             reason: `no_encodable_target_codec`,
@@ -24135,7 +24135,7 @@ Check the discardedTracks field for more info.`);
           return;
         }
         let p = {
-          codec: i,
+          codec: diff,
           quality: d,
           transform: {
             sampleFormat: audio.sampleFormat,

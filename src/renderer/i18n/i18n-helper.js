@@ -3892,7 +3892,7 @@ var o = r(`audio-lines`, [[`path`, {
     value: `en-US`,
     label: `English`
   }],
-  _ = {
+  options = {
     "zh-CN": {
       ...i,
       toolboxNative: t,
@@ -3918,7 +3918,7 @@ var o = r(`audio-lines`, [[`path`, {
     legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
-    messages: _,
+    messages: options,
     missingWarn: false,
     fallbackWarn: false
   });
@@ -3941,4 +3941,4 @@ function x() {
     translateRemoteText: n
   };
 }
-export { y as a, l as c, o as d, _ as i, c as l, g as n, d as o, v as r, u as s, x as t, s as u };
+export { y as a, l as c, o as d, options as i, c as l, g as n, d as o, v as r, u as s, x as t, s as u };

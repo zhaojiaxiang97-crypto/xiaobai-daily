@@ -1190,7 +1190,7 @@ var mn = {
         J = null,
         Xe = 0,
         Ze = null,
-        Qe = [],
+        emptyItems = [],
         Y = j(() => T.value ? Me({
           source: T.value,
           scale: W.value,
@@ -1601,7 +1601,7 @@ var mn = {
         Je || (V.value += 1, jt(), Q());
       }), v([() => K.selectedId.value, () => K.draft.value, () => K.editingTextId.value, X], () => Q()), A(() => {
         let screenshotToolAPI = window.screenshotToolAPI;
-        Qe.push(editor.onOpen(e => {
+        emptyItems.push(editor.onOpen(e => {
           Lt(e);
         }), editor.onReset(Rt), screenshotToolAPI.onTheme(({
           dark: e
@@ -1613,7 +1613,7 @@ var mn = {
           });
         }), Ze.observe(le.value)), screenshotToolAPI.ready();
       }), O(() => {
-        for (let e of Qe) e();
+        for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, Ft), window.removeEventListener(`beforeunload`, $), Ze?.disconnect(), Xe && cancelAnimationFrame(Xe), J !== null && window.clearTimeout(J), $();
       }), (e, t) => (w(), g(`div`, mn, [N(`header`, {
         class: `screenshot-drag-region flex h-12 shrink-0 items-center gap-3 border-b border-border bg-[#fafafa] dark:bg-[#18181b]`,

@@ -66,6 +66,13 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | 2026-11-09 全库复跑（九模式一次跑） | params 800 / locals 862 / forms 367 / callbacks 1216 / byfunc 2465 / more 1331 / late 1059（96 文件） |
 | final（void 0 / !0 / 转义） | 3008 / 12612 / 89 文件 | 同左（全库） |
 
+## 短名（1–3 字符）扩展匹配
+
+`COMPRESSED` 正则可放宽到 `^[A-Za-z_$][\w$]{0,2}$`，覆盖 `Aa`/`$a`/`M2` 这类此前
+未处理的压缩形态。但必须同时维护 `MEANINGFUL_SHORT` 白名单（`id`/`ok`/`el`/`fn`/
+`max`/`min`/`url`/`api`/`err`/`msg`/`row`/`col`… 约 150 个），否则会把有意义的
+短名也改掉。放宽后全库可新增命名约 1176 处（byfunc 620 为最多）。
+
 ## 尚未安全的操作
 
 - **组件级物理拆分**：实测顶层 9986 声明零重复，但一条 `var` 逗号链常含多个组件；

@@ -22,9 +22,9 @@ var _ = (e, t, n) => new Promise((fn, i) => {
   }),
   handler = () => le(() => import(`./infographic_markstream-vue.js`), [], import.meta.url),
   resolvedValue = null,
-  _e = handler;
+  handlerAlias = handler;
 function ve() {
-  return _e !== null;
+  return handlerAlias !== null;
 }
 var ye = [`data-markstream-mode`],
   be = {
@@ -383,17 +383,17 @@ var ye = [`data-markstream-mode`],
               let e = yield function () {
                 return _(this, null, function* () {
                   if (resolvedValue) return resolvedValue;
-                  let e = _e;
-                  if (!e) return null;
-                  let t;
+                  let handlerAliasAlias = handlerAlias;
+                  if (!handlerAliasAlias) return null;
+                  let destroy;
                   try {
-                    t = yield e();
+                    destroy = yield handlerAliasAlias();
                   } catch (t) {
-                    throw e === handler ? Error(`Optional dependency "@antv/infographic" is not installed. Please install it to enable infographic diagrams.`) : t;
+                    throw handlerAliasAlias === handler ? Error(`Optional dependency "@antv/infographic" is not installed. Please install it to enable infographic diagrams.`) : t;
                   }
-                  if (!t) return null;
-                  let n = t && t.default ? t.default : t;
-                  return resolvedValue = typeof n == `function` && n.prototype && n.prototype.render ? n : t.Infographic ? t.Infographic : n && n.Infographic ? n.Infographic : n, resolvedValue;
+                  if (!destroy) return null;
+                  let n = destroy && destroy.default ? destroy.default : destroy;
+                  return resolvedValue = typeof n == `function` && n.prototype && n.prototype.render ? n : destroy.Infographic ? destroy.Infographic : n && n.Infographic ? n.Infographic : n, resolvedValue;
                 });
               }();
               if (!e) return void console.warn(`Infographic library failed to load.`);
@@ -445,8 +445,8 @@ var ye = [`data-markstream-mode`],
       }), ae(() => {
         !qe.value && ve() && (w.value = false), Z();
       }), ie(() => {
-        var value, t;
-        if ((value = k.value) == null || value.destroy(), k.value = null, K &&= ((t = K.destroy) == null || t.call(K), null), X = ``, typeof window < `u`) try {
+        var value, destroy;
+        if ((value = k.value) == null || value.destroy(), k.value = null, K &&= ((destroy = K.destroy) == null || destroy.call(K), null), X = ``, typeof window < `u`) try {
           window.removeEventListener(`keydown`, V);
         } catch {}
       });

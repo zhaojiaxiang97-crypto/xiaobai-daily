@@ -887,12 +887,12 @@ var k = class {
       f = Math.min(decodeAudioData.length, s + 1),
       h = Math.min(l, Math.max(1, f - d)),
       g = Math.max(u, h),
-      _ = context.createBuffer(decodeAudioData.numberOfChannels, g, decodeAudioData.sampleRate),
+      buffer = context.createBuffer(decodeAudioData.numberOfChannels, g, decodeAudioData.sampleRate),
       v = Math.min(6, .8 / i),
       y = Math.max(1, Math.round(decodeAudioData.sampleRate * .004));
     for (let e = 0; e < decodeAudioData.numberOfChannels; e += 1) {
       let channelData = decodeAudioData.getChannelData(e),
-        channelDataResult = _.getChannelData(e);
+        channelDataResult = buffer.getChannelData(e);
       for (let e = 0; e < h; e += 1) {
         let r = e >= h - y ? Math.max(0, (h - e - 1) / y) : 1;
         channelDataResult[e] = Math.max(-.95, Math.min(.95, channelData[d + e] * v * r));
@@ -900,10 +900,10 @@ var k = class {
     }
     return {
       type: `custom`,
-      buffer: _,
+      buffer: buffer,
       segments: [{
         offsetSeconds: 0,
-        durationSeconds: _.duration
+        durationSeconds: buffer.duration
       }]
     };
   }

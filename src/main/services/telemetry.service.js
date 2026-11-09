@@ -25,30 +25,30 @@ function decryptToken(token) {
   if (!token) return "";
   return decryptString(token);
 }
-function mapSessionRow(row) {
+function mapSessionRow(mapValue) {
   return {
-    userId: row.user_id,
-    email: row.email,
-    nickname: row.nickname,
-    jobTitle: row.job_title,
-    avatarUrl: row.avatar_url,
-    token: decryptToken(row.token),
-    loggedInAt: row.logged_in_at,
-    createdAt: row.created_at ?? "",
-    educationVerified: row.education_verified === 1
+    userId: mapValue.user_id,
+    email: mapValue.email,
+    nickname: mapValue.nickname,
+    jobTitle: mapValue.job_title,
+    avatarUrl: mapValue.avatar_url,
+    token: decryptToken(mapValue.token),
+    loggedInAt: mapValue.logged_in_at,
+    createdAt: mapValue.created_at ?? "",
+    educationVerified: mapValue.education_verified === 1
   };
 }
-function mapSubscriptionRow(row) {
+function mapSubscriptionRow(mapValue) {
   return {
-    planId: row.plan_id,
-    planName: row.plan_name,
-    isActive: row.is_active === 1,
-    expiresAt: row.expires_at,
-    paidAt: row.paid_at ?? null,
-    lastCheckedAt: row.last_checked_at ?? "",
-    freeWorkRecordLimit: row.free_work_record_limit ?? 30,
-    freeReportLimit: row.free_report_limit ?? 5,
-    pointsBalance: row.points_balance ?? 0
+    planId: mapValue.plan_id,
+    planName: mapValue.plan_name,
+    isActive: mapValue.is_active === 1,
+    expiresAt: mapValue.expires_at,
+    paidAt: mapValue.paid_at ?? null,
+    lastCheckedAt: mapValue.last_checked_at ?? "",
+    freeWorkRecordLimit: mapValue.free_work_record_limit ?? 30,
+    freeReportLimit: mapValue.free_report_limit ?? 5,
+    pointsBalance: mapValue.points_balance ?? 0
   };
 }
 var AuthRepository = class {
@@ -58,7 +58,7 @@ var AuthRepository = class {
   }
   saveSession(session) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     database.exec("BEGIN");
     try {
       database.prepare(`
@@ -75,7 +75,7 @@ var AuthRepository = class {
           created_at = excluded.created_at,
           updated_at = excluded.updated_at,
           education_verified = excluded.education_verified
-      `).run(session.userId, session.email, session.nickname, session.jobTitle, session.avatarUrl, encryptToken(session.token), session.loggedInAt, session.createdAt, now, session.educationVerified ? 1 : 0);
+      `).run(session.userId, session.email, session.nickname, session.jobTitle, session.avatarUrl, encryptToken(session.token), session.loggedInAt, session.createdAt, isoString, session.educationVerified ? 1 : 0);
       database.exec("COMMIT");
     } catch (error) {
       database.exec("ROLLBACK");
@@ -100,9 +100,9 @@ var AuthRepository = class {
     };
     return mapSubscriptionRow(row);
   }
-  saveSubscriptionCache(sub) {
+  saveSubscriptionCache(subscription) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     database.prepare(`
       INSERT INTO subscription_cache (id, plan_id, plan_name, is_active, expires_at, paid_at, last_checked_at, free_work_record_limit, free_report_limit, points_balance, updated_at)
       VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -117,7 +117,7 @@ var AuthRepository = class {
         free_report_limit = excluded.free_report_limit,
         points_balance = excluded.points_balance,
         updated_at = excluded.updated_at
-    `).run(sub.planId, sub.planName, sub.isActive ? 1 : 0, sub.expiresAt, sub.paidAt, sub.lastCheckedAt || now, sub.freeWorkRecordLimit, sub.freeReportLimit, sub.pointsBalance, now);
+    `).run(subscription.planId, subscription.planName, subscription.isActive ? 1 : 0, subscription.expiresAt, subscription.paidAt, subscription.lastCheckedAt || isoString, subscription.freeWorkRecordLimit, subscription.freeReportLimit, subscription.pointsBalance, isoString);
   }
   clearSubscriptionCache() {
     getDatabase().prepare("DELETE FROM subscription_cache WHERE id = 1").run();
@@ -292,8 +292,8 @@ function safeUrl(urlText) {
     return null;
   }
 }
-function summarizeQueryKeys(url) {
-  return Array.from(new Set(Array.from(url.searchParams.keys()))).map(key => sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key);
+function summarizeQueryKeys(marize) {
+  return Array.from(new Set(Array.from(marize.searchParams.keys()))).map(item => sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item);
 }
 function summarizeRequestBody(body) {
   if (body === undefined || body === null) return {};
@@ -307,11 +307,11 @@ function summarizeRequestBody(body) {
   }
   if (typeof FormData !== "undefined" && body instanceof FormData) return {
     requestBodyType: "form-data",
-    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(key => imageKeyPattern.test(key) || sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key)
+    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(item => imageKeyPattern.test(item) || sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item)
   };
   if (typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams) return {
     requestBodyType: "url-search-params",
-    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(key => sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key)
+    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(item => sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item)
   };
   if (typeof body === "string") {
     const result = {
@@ -320,13 +320,13 @@ function summarizeRequestBody(body) {
     };
     try {
       const parsed = JSON.parse(body);
-      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) result.requestBodyKeys = Object.keys(parsed).map(key => imageKeyPattern.test(key) || sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) result.requestBodyKeys = Object.keys(parsed).map(item => imageKeyPattern.test(item) || sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item);
     } catch {}
     return result;
   }
   if (body && typeof body === "object" && !Array.isArray(body)) return {
     requestBodyType: "object",
-    requestBodyKeys: Object.keys(body).map(key => imageKeyPattern.test(key) || sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key)
+    requestBodyKeys: Object.keys(body).map(item => imageKeyPattern.test(item) || sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item)
   };
   if (Array.isArray(body)) return {
     requestBodyType: "array",
@@ -588,9 +588,9 @@ var AiModelConfigService = class {
   */
   async getEffectiveModelConfig() {
     const cache = this.getCache();
-    const now = /* @__PURE__ */new Date();
+    const date = /* @__PURE__ */new Date();
     if (cache) {
-      if (now < new Date(cache.expiresAt)) return cache;
+      if (date < new Date(cache.expiresAt)) return cache;
     }
     const fetched = await this.fetchModelConfig();
     if (fetched) return fetched;
@@ -608,7 +608,7 @@ var aiModelConfigService = new AiModelConfigService();
 //#endregion
 //#region electron/services/app-config.service.ts
 var AppConfigService = class {
-  async requestConfig(key, language) {
+  async requestConfig(requestValue, language) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5e3);
     const startedAt = Date.now();
@@ -620,7 +620,7 @@ var AppConfigService = class {
     try {
       const lang = language || settingsRepository.getSettings().language || "zh-CN";
       url = `${API_BASE}/app-config.php?${new URLSearchParams({
-        key,
+        key: requestValue,
         clientVersion: app.getVersion(),
         lang
       }).toString()}`;
@@ -653,7 +653,7 @@ var AppConfigService = class {
         durationMs: Date.now() - startedAt,
         timeoutMs: 5e3,
         context: {
-          key,
+          key: requestValue,
           aborted: controller.signal.aborted
         }
       });
@@ -666,14 +666,14 @@ var AppConfigService = class {
   /**
   * 获取指定 key 的云端配置值。优先使用本地缓存；缓存不存在或已过期时向服务端拉取。
   */
-  async getConfigValue(key, language) {
-    return this.requestConfig(key, language);
+  async getConfigValue(config, language) {
+    return this.requestConfig(config, language);
   }
   /**
   * 强制从云端刷新指定 key 的配置值。
   */
-  async refreshConfigValue(key, language) {
-    return this.requestConfig(key, language);
+  async refreshConfigValue(refresh, language) {
+    return this.requestConfig(refresh, language);
   }
 };
 var appConfigService = new AppConfigService();
@@ -802,22 +802,22 @@ var PipelineLogService = class {
     return logsDirectory();
   }
   async openLogDirectory() {
-    const dir = logsDirectory();
-    await fs.promises.mkdir(dir, {
+    const logsDirectoryResult = logsDirectory();
+    await fs.promises.mkdir(logsDirectoryResult, {
       recursive: true
     });
-    const error = await shell.openPath(dir);
+    const error = await shell.openPath(logsDirectoryResult);
     if (error) throw new Error(error);
   }
   async clear() {
-    const dir = logsDirectory();
+    const logsDirectoryResult = logsDirectory();
     let names = [];
     try {
-      names = await fs.promises.readdir(dir);
+      names = await fs.promises.readdir(logsDirectoryResult);
     } catch {
       return;
     }
-    await Promise.all(names.filter(name => name.startsWith("pipeline") && name.endsWith(".log")).map(name => fs.promises.rm(path.join(dir, name), {
+    await Promise.all(names.filter(name => name.startsWith("pipeline") && name.endsWith(".log")).map(name => fs.promises.rm(path.join(logsDirectoryResult, name), {
       force: true
     })));
   }
@@ -848,11 +848,11 @@ var PipelineLogService = class {
   }
   cleanupExpiredLogs() {
     try {
-      const dir = logsDirectory();
+      const logsDirectoryResult = logsDirectory();
       const threshold = Date.now() - PIPELINE_LOG_RETENTION_MS;
-      for (const name of fs.readdirSync(dir)) {
+      for (const name of fs.readdirSync(logsDirectoryResult)) {
         if (!name.startsWith("pipeline") || !name.endsWith(".log")) continue;
-        const filePath = path.join(dir, name);
+        const filePath = path.join(logsDirectoryResult, name);
         if (fs.statSync(filePath).mtimeMs < threshold) fs.rmSync(filePath, {
           force: true
         });
@@ -1528,11 +1528,11 @@ function createLocalDateTime(value, isEnd = false) {
 }
 function getReportDateTimeRange(input) {
   const start = createLocalDateTime(input.startDate);
-  const end = createLocalDateTime(input.endDate, true);
-  if (end.getTime() < start.getTime()) throw new Error("Invalid report date or time range");
+  const localDateTime = createLocalDateTime(input.endDate, true);
+  if (localDateTime.getTime() < start.getTime()) throw new Error("Invalid report date or time range");
   return {
     startedAt: start.toISOString(),
-    endedAt: new Date(end.getTime() + 1e3).toISOString()
+    endedAt: new Date(localDateTime.getTime() + 1e3).toISOString()
   };
 }
 function formatReportDateTime(value, isEnd = false) {
@@ -1563,36 +1563,36 @@ function parseSummarySources(value) {
 function serializeSummarySources(sources) {
   return sources && sources.length > 0 ? JSON.stringify(sources) : null;
 }
-function mapRow(row) {
+function mapRow(mapValue) {
   return {
-    id: row.id,
-    type: row.type,
-    title: row.title,
-    content: row.content,
-    startDate: normalizeReportDateTime(row.start_date),
-    endDate: normalizeReportDateTime(row.end_date, true),
-    style: row.style,
-    templateId: row.template_id,
-    templateName: row.template_name,
-    templateBody: row.template_body,
-    customInstruction: row.custom_instruction,
-    language: row.language,
-    model: row.model,
-    factSummary: parseFactSummary(row.fact_summary_json),
-    summarySources: parseSummarySources(row.summary_sources),
-    status: row.status,
-    errorMessage: row.error_message,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
+    id: mapValue.id,
+    type: mapValue.type,
+    title: mapValue.title,
+    content: mapValue.content,
+    startDate: normalizeReportDateTime(mapValue.start_date),
+    endDate: normalizeReportDateTime(mapValue.end_date, true),
+    style: mapValue.style,
+    templateId: mapValue.template_id,
+    templateName: mapValue.template_name,
+    templateBody: mapValue.template_body,
+    customInstruction: mapValue.custom_instruction,
+    language: mapValue.language,
+    model: mapValue.model,
+    factSummary: parseFactSummary(mapValue.fact_summary_json),
+    summarySources: parseSummarySources(mapValue.summary_sources),
+    status: mapValue.status,
+    errorMessage: mapValue.error_message,
+    createdAt: mapValue.created_at,
+    updatedAt: mapValue.updated_at
   };
 }
 function localDayIsoRange(dateStr) {
   const [year, month, day] = dateStr.split("-").map(Number);
   const start = new Date(year, month - 1, day);
-  const end = new Date(year, month - 1, day + 1);
+  const date = new Date(year, month - 1, day + 1);
   return {
     start: start.toISOString(),
-    end: end.toISOString()
+    end: date.toISOString()
   };
 }
 function buildWhereClause(input) {
@@ -1626,7 +1626,7 @@ function buildWhereClause(input) {
 }
 var ReportRepository = class {
   createPending(input, title, factSummary = null, summarySources = null) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const randomUUIDResult = crypto.randomUUID();
     getDatabase().prepare(`
         INSERT INTO reports (
@@ -1635,7 +1635,7 @@ var ReportRepository = class {
           summary_sources, status, error_message, created_at, updated_at
         )
         VALUES (?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NULL, ?, ?)
-      `).run(randomUUIDResult, input.type, title, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
+      `).run(randomUUIDResult, input.type, title, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), isoString, isoString);
     return {
       id: randomUUIDResult,
       type: input.type,
@@ -1654,12 +1654,12 @@ var ReportRepository = class {
       summarySources: summarySources && summarySources.length > 0 ? summarySources : null,
       status: "pending",
       errorMessage: null,
-      createdAt: now,
-      updatedAt: now
+      createdAt: isoString,
+      updatedAt: isoString
     };
   }
   createCompleted(input, title, content, factSummary = null, summarySources = null) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const randomUUIDResult = crypto.randomUUID();
     getDatabase().prepare(`
         INSERT INTO reports (
@@ -1668,7 +1668,7 @@ var ReportRepository = class {
           summary_sources, status, error_message, created_at, updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed', NULL, ?, ?)
-      `).run(randomUUIDResult, input.type, title, content, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
+      `).run(randomUUIDResult, input.type, title, content, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), isoString, isoString);
     return {
       id: randomUUIDResult,
       type: input.type,
@@ -1687,24 +1687,24 @@ var ReportRepository = class {
       summarySources: summarySources && summarySources.length > 0 ? summarySources : null,
       status: "completed",
       errorMessage: null,
-      createdAt: now,
-      updatedAt: now
+      createdAt: isoString,
+      updatedAt: isoString
     };
   }
   updateStatus(statusValue, status, errorMessage = null) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET status = ?, error_message = ?, updated_at = ? WHERE id = ?").run(status, errorMessage, now, statusValue);
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    getDatabase().prepare("UPDATE reports SET status = ?, error_message = ?, updated_at = ? WHERE id = ?").run(status, errorMessage, isoString, statusValue);
   }
   updateFactSummary(fact, factSummary) {
     getDatabase().prepare("UPDATE reports SET fact_summary_json = ? WHERE id = ?").run(JSON.stringify(factSummary), fact);
   }
   updateContent(contentValue, title, content) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET title = ?, content = ?, status = 'completed', error_message = NULL, updated_at = ? WHERE id = ?").run(title, content, now, contentValue);
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    getDatabase().prepare("UPDATE reports SET title = ?, content = ?, status = 'completed', error_message = NULL, updated_at = ? WHERE id = ?").run(title, content, isoString, contentValue);
   }
   updateTitle(titleValue, title) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET title = ?, updated_at = ? WHERE id = ?").run(title, now, titleValue);
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    getDatabase().prepare("UPDATE reports SET title = ?, updated_at = ? WHERE id = ?").run(title, isoString, titleValue);
   }
   findPending() {
     const row = getDatabase().prepare("SELECT * FROM reports WHERE status = 'pending' ORDER BY created_at ASC LIMIT 1").get();
@@ -1824,17 +1824,17 @@ var ReportRepository = class {
         FROM reports
         WHERE status = 'completed' AND content <> '' AND updated_at > ?
         LIMIT ?
-      `).all(sinceIso, limit).map(row => ({
-      startDate: getReportDate(row.start_date),
-      endDate: getReportDate(row.end_date),
-      createdAt: row.created_at
+      `).all(sinceIso, limit).map(item => ({
+      startDate: getReportDate(item.start_date),
+      endDate: getReportDate(item.end_date),
+      createdAt: item.created_at
     }));
   }
   /** 旧版小程序同步遗漏的事实报告日期，供升级后的增量同步补传。 */
   listLocalFactDates() {
-    return getDatabase().prepare("SELECT start_date, created_at FROM reports WHERE status = 'completed' AND content <> '' AND model = 'local-facts'").all().map(row => ({
-      startDate: getReportDate(row.start_date),
-      createdAt: row.created_at
+    return getDatabase().prepare("SELECT start_date, created_at FROM reports WHERE status = 'completed' AND content <> '' AND model = 'local-facts'").all().map(item => ({
+      startDate: getReportDate(item.start_date),
+      createdAt: item.created_at
     }));
   }
   delete(deleteValue) {
@@ -1875,25 +1875,25 @@ function getNotificationTodoId(link) {
 }
 //#endregion
 //#region electron/repositories/notification.repository.ts
-function mapNotificationRow(row) {
+function mapNotificationRow(mapValue) {
   return {
-    id: row.id,
-    title: row.title,
-    content: row.content,
-    type: row.type,
-    priority: row.priority,
-    link: row.link,
-    startAt: row.start_at,
-    endAt: row.end_at,
-    createdAt: row.created_at,
-    fetchedAt: row.fetched_at
+    id: mapValue.id,
+    title: mapValue.title,
+    content: mapValue.content,
+    type: mapValue.type,
+    priority: mapValue.priority,
+    link: mapValue.link,
+    startAt: mapValue.start_at,
+    endAt: mapValue.end_at,
+    createdAt: mapValue.created_at,
+    fetchedAt: mapValue.fetched_at
   };
 }
-function mapReadRow(row) {
+function mapReadRow(mapValue) {
   return {
-    notificationId: row.notification_id,
-    readAt: row.read_at,
-    synced: row.synced
+    notificationId: mapValue.notification_id,
+    readAt: mapValue.read_at,
+    synced: mapValue.synced
   };
 }
 function parseNotificationTime(value) {
@@ -1905,11 +1905,11 @@ function parseNotificationTime(value) {
   return Number.isFinite(fallback) ? fallback : 0;
 }
 function sortNotificationsDesc(items) {
-  return [...items].sort((row, right) => {
-    const aTime = parseNotificationTime(row.createdAt) || parseNotificationTime(row.startAt) || parseNotificationTime(row.fetchedAt);
+  return [...items].sort((left, right) => {
+    const aTime = parseNotificationTime(left.createdAt) || parseNotificationTime(left.startAt) || parseNotificationTime(left.fetchedAt);
     const bTime = parseNotificationTime(right.createdAt) || parseNotificationTime(right.startAt) || parseNotificationTime(right.fetchedAt);
     if (bTime !== aTime) return bTime - aTime;
-    return right.id - row.id;
+    return right.id - left.id;
   });
 }
 var NotificationRepository = class {
@@ -1921,7 +1921,7 @@ var NotificationRepository = class {
   */
   syncAll(notifications) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     database.exec("BEGIN");
     try {
       const saveStmt = database.prepare(`
@@ -1938,10 +1938,10 @@ var NotificationRepository = class {
           created_at = excluded.created_at,
           fetched_at = excluded.fetched_at
       `);
-      for (const n of notifications) saveStmt.run(n.id, n.title, n.content, n.type, n.priority, n.link, n.start_at, n.end_at, n.created_at, now);
+      for (const n of notifications) saveStmt.run(n.id, n.title, n.content, n.type, n.priority, n.link, n.start_at, n.end_at, n.created_at, isoString);
       if (notifications.length > 0) {
-        const ids = notifications.map(item => item.id).join(",");
-        database.prepare(`DELETE FROM notifications WHERE id > 0 AND id NOT IN (${ids})`).run();
+        const joined = notifications.map(item => item.id).join(",");
+        database.prepare(`DELETE FROM notifications WHERE id > 0 AND id NOT IN (${joined})`).run();
       } else database.prepare("DELETE FROM notifications WHERE id > 0").run();
       database.exec("COMMIT");
     } catch (error) {
@@ -1951,7 +1951,7 @@ var NotificationRepository = class {
   }
   createLocalNotification(input) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const nextLocalNotificationId = this.nextLocalNotificationId();
     const type = input.type ?? "system";
     const priority = input.priority ?? "normal";
@@ -1959,7 +1959,7 @@ var NotificationRepository = class {
     database.prepare(`
       INSERT INTO notifications (id, title, content, type, priority, link, start_at, end_at, created_at, fetched_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)
-    `).run(nextLocalNotificationId, input.title, input.content, type, priority, link, now, now, now);
+    `).run(nextLocalNotificationId, input.title, input.content, type, priority, link, isoString, isoString, isoString);
     return {
       id: nextLocalNotificationId,
       title: input.title,
@@ -1967,10 +1967,10 @@ var NotificationRepository = class {
       type,
       priority,
       link,
-      startAt: now,
+      startAt: isoString,
       endAt: null,
-      createdAt: now,
-      fetchedAt: now,
+      createdAt: isoString,
+      fetchedAt: isoString,
       isRead: false,
       readAt: null
     };
@@ -1986,7 +1986,7 @@ var NotificationRepository = class {
     `).run((/* @__PURE__ */new Date()).toISOString(), `${UPDATE_NOTIFICATION_LINK_PREFIX}%`, activeLink, activeLink).changes);
   }
   listNotifications() {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     return sortNotificationsDesc(getDatabase().prepare(`
         SELECT
           n.id, n.title, n.content, n.type, n.priority, n.link,
@@ -1997,39 +1997,39 @@ var NotificationRepository = class {
         LEFT JOIN notification_reads r ON n.id = r.notification_id
         WHERE n.start_at <= ? AND (n.end_at IS NULL OR n.end_at > ?)
         ORDER BY datetime(n.created_at) DESC, n.id DESC
-      `).all(now, now).map(row => ({
-      ...mapNotificationRow(row),
-      isRead: row.is_read === 1,
-      readAt: row.read_at
+      `).all(isoString, isoString).map(item => ({
+      ...mapNotificationRow(item),
+      isRead: item.is_read === 1,
+      readAt: item.read_at
     })));
   }
   getUnreadCount() {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     return getDatabase().prepare(`
         SELECT COUNT(*) as cnt
         FROM notifications n
         LEFT JOIN notification_reads r ON n.id = r.notification_id
         WHERE n.start_at <= ? AND (n.end_at IS NULL OR n.end_at > ?)
         AND r.notification_id IS NULL
-      `).get(now, now)?.cnt ?? 0;
+      `).get(isoString, isoString)?.cnt ?? 0;
   }
   markRead(notificationId) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     database.prepare(`
       INSERT INTO notification_reads (notification_id, read_at, synced)
       VALUES (?, ?, ?)
       ON CONFLICT(notification_id) DO UPDATE SET
         read_at = excluded.read_at,
         synced = excluded.synced
-    `).run(notificationId, now, notificationId > 0 ? 0 : 1);
+    `).run(notificationId, isoString, notificationId > 0 ? 0 : 1);
   }
   markAllRead() {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     database.exec("BEGIN");
     try {
-      const ids = database.prepare(`
+      const mapped = database.prepare(`
         SELECT n.id
         FROM notifications n
         LEFT JOIN notification_reads r ON n.id = r.notification_id
@@ -2042,9 +2042,9 @@ var NotificationRepository = class {
           read_at = excluded.read_at,
           synced = excluded.synced
       `);
-      for (const id of ids) stmt.run(id, now, id > 0 ? 0 : 1);
+      for (const id of mapped) stmt.run(id, isoString, id > 0 ? 0 : 1);
       database.exec("COMMIT");
-      return ids;
+      return mapped;
     } catch (error) {
       database.exec("ROLLBACK");
       throw error;
@@ -2648,13 +2648,13 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
             z = this.rules.other.hrRegex(g),
             fencesBeginRegex = this.rules.other.fencesBeginRegex(g),
             headingBeginRegex = this.rules.other.headingBeginRegex(g),
-            Te = this.rules.other.htmlBeginRegex(g),
-            Oe = this.rules.other.blockquoteBeginRegex(g);
+            htmlBeginRegex = this.rules.other.htmlBeginRegex(g),
+            blockquoteBeginRegex = this.rules.other.blockquoteBeginRegex(g);
           for (; text;) {
             let j = text.split(`
 `, 1)[0],
               q;
-            if (k = j, this.options.pedantic ? (k = k.replace(this.rules.other.listReplaceNesting, "  "), q = k) : q = k.replace(this.rules.other.tabCharGlobal, "    "), fencesBeginRegex.test(k) || headingBeginRegex.test(k) || Te.test(k) || Oe.test(k) || nextBulletRegex.test(k) || z.test(k)) break;
+            if (k = j, this.options.pedantic ? (k = k.replace(this.rules.other.listReplaceNesting, "  "), q = k) : q = k.replace(this.rules.other.tabCharGlobal, "    "), fencesBeginRegex.test(k) || headingBeginRegex.test(k) || htmlBeginRegex.test(k) || blockquoteBeginRegex.test(k) || nextBulletRegex.test(k) || z.test(k)) break;
             if (q.search(this.rules.other.nonSpaceChar) >= g || !k.trim()) c += `
 ` + q.slice(g);else {
               if (O || h.replace(this.rules.other.tabCharGlobal, "    ").search(this.rules.other.nonSpaceChar) >= 4 || fencesBeginRegex.test(h) || headingBeginRegex.test(h) || z.test(h)) break;
@@ -3054,8 +3054,8 @@ var x = class l {
   static lex(e, t) {
     return new l(t).lex(e);
   }
-  static lexInline(lex, inline) {
-    return new l(inline).inlineTokens(lex);
+  static lexInline(lexValue, inline) {
+    return new l(inline).inlineTokens(lexValue);
   }
   lex(e) {
     e = e.replace(options.carriageReturn, `
@@ -3661,8 +3661,8 @@ var S = class {
   postprocess(processValue) {
     return processValue;
   }
-  processAllTokens(all) {
-    return all;
+  processAllTokens(allValue) {
+    return allValue;
   }
   emStrongMask(strong) {
     return strong;
@@ -3693,24 +3693,24 @@ var Q = class {
     for (let diff of walk) switch (emptyItems = emptyItems.concat(tokens.call(this, diff)), diff.type) {
       case "table":
         {
-          let r = diff;
-          for (let resolvedValue of r.header) emptyItems = emptyItems.concat(this.walkTokens(resolvedValue.tokens, tokens));
-          for (let resolvedValue of r.rows) for (let flag of resolvedValue) emptyItems = emptyItems.concat(this.walkTokens(flag.tokens, tokens));
+          let diffAlias = diff;
+          for (let resolvedValue of diffAlias.header) emptyItems = emptyItems.concat(this.walkTokens(resolvedValue.tokens, tokens));
+          for (let resolvedValue of diffAlias.rows) for (let flag of resolvedValue) emptyItems = emptyItems.concat(this.walkTokens(flag.tokens, tokens));
           break;
         }
       case "list":
         {
-          let r = diff;
-          emptyItems = emptyItems.concat(this.walkTokens(r.items, tokens));
+          let diffAlias = diff;
+          emptyItems = emptyItems.concat(this.walkTokens(diffAlias.items, tokens));
           break;
         }
       default:
         {
-          let r = diff;
-          this.defaults.extensions?.childTokens?.[r.type] ? this.defaults.extensions.childTokens[r.type].forEach(item => {
-            let s = r[item].flat(1 / 0);
+          let diffAlias = diff;
+          this.defaults.extensions?.childTokens?.[diffAlias.type] ? this.defaults.extensions.childTokens[diffAlias.type].forEach(item => {
+            let s = diffAlias[item].flat(1 / 0);
             emptyItems = emptyItems.concat(this.walkTokens(s, tokens));
-          }) : r.tokens && (emptyItems = emptyItems.concat(this.walkTokens(r.tokens, tokens)));
+          }) : diffAlias.tokens && (emptyItems = emptyItems.concat(this.walkTokens(diffAlias.tokens, tokens)));
         }
     }
     return emptyItems;
@@ -3744,10 +3744,10 @@ var Q = class {
         for (let resolvedValue in item.renderer) {
           if (!(resolvedValue in r)) throw new Error(`renderer '${resolvedValue}' does not exist`);
           if (["options", "parser"].includes(resolvedValue)) continue;
-          let s = resolvedValue,
-            u = item.renderer[s],
-            a = r[s];
-          r[s] = (...p) => {
+          let resolvedValueAlias = resolvedValue,
+            u = item.renderer[resolvedValueAlias],
+            a = r[resolvedValueAlias];
+          r[resolvedValueAlias] = (...p) => {
             let c = u.apply(r, p);
             return c === false && (c = a.apply(r, p)), c || "";
           };
@@ -3759,10 +3759,10 @@ var Q = class {
         for (let resolvedValue in item.tokenizer) {
           if (!(resolvedValue in r)) throw new Error(`tokenizer '${resolvedValue}' does not exist`);
           if (["options", "rules", "lexer"].includes(resolvedValue)) continue;
-          let s = resolvedValue,
-            u = item.tokenizer[s],
-            a = r[s];
-          r[s] = (...p) => {
+          let resolvedValueAlias = resolvedValue,
+            u = item.tokenizer[resolvedValueAlias],
+            a = r[resolvedValueAlias];
+          r[resolvedValueAlias] = (...p) => {
             let c = u.apply(r, p);
             return c === false && (c = a.apply(r, p)), c;
           };
@@ -3774,17 +3774,17 @@ var Q = class {
         for (let resolvedValue in item.hooks) {
           if (!(resolvedValue in r)) throw new Error(`hook '${resolvedValue}' does not exist`);
           if (["options", "block"].includes(resolvedValue)) continue;
-          let s = resolvedValue,
-            u = item.hooks[s],
-            a = r[s];
-          S.passThroughHooks.has(resolvedValue) ? r[s] = p => {
+          let resolvedValueAlias = resolvedValue,
+            u = item.hooks[resolvedValueAlias],
+            a = r[resolvedValueAlias];
+          S.passThroughHooks.has(resolvedValue) ? r[resolvedValueAlias] = p => {
             if (this.defaults.async && S.passThroughHooksRespectAsync.has(resolvedValue)) return (async () => {
               let h = await u.call(r, p);
               return a.call(r, h);
             })();
             let c = u.call(r, p);
             return a.call(r, c);
-          } : r[s] = (...p) => {
+          } : r[resolvedValueAlias] = (...p) => {
             if (this.defaults.async) return (async () => {
               let h = await u.apply(r, p);
               return h === false && (h = await a.apply(r, p)), h;
@@ -4068,31 +4068,31 @@ function textFromJson(value, result = [], budget = {
 function eventHashMaterial(input) {
   return stableStringify(redactAndNormalize(input));
 }
-function mapEvent$1(row) {
+function mapEvent$1(mapValue) {
   return {
-    globalSeq: Number(row.global_seq),
-    eventId: row.event_id,
-    streamId: row.stream_id,
-    streamSeq: Number(row.stream_seq),
-    conversationId: row.conversation_id,
-    eventType: row.event_type,
-    schemaVersion: Number(row.schema_version),
-    occurredAt: row.occurred_at,
-    actorType: row.actor_type,
-    actorId: row.actor_id,
-    aggregateType: row.aggregate_type,
-    aggregateId: row.aggregate_id,
-    correlationId: row.correlation_id,
-    causationEventId: row.causation_event_id,
-    parentEventId: row.parent_event_id,
-    branchId: row.branch_id,
-    retentionClass: row.retention_class,
-    sourceEventSeqs: parseNumberArray(row.source_event_seqs_json),
-    payload: parseJsonObject(row.payload_json),
-    payloadSha256: row.payload_sha256,
-    previousEventHash: row.previous_event_hash,
-    eventHash: row.event_hash,
-    synthetic: row.is_synthetic === 1
+    globalSeq: Number(mapValue.global_seq),
+    eventId: mapValue.event_id,
+    streamId: mapValue.stream_id,
+    streamSeq: Number(mapValue.stream_seq),
+    conversationId: mapValue.conversation_id,
+    eventType: mapValue.event_type,
+    schemaVersion: Number(mapValue.schema_version),
+    occurredAt: mapValue.occurred_at,
+    actorType: mapValue.actor_type,
+    actorId: mapValue.actor_id,
+    aggregateType: mapValue.aggregate_type,
+    aggregateId: mapValue.aggregate_id,
+    correlationId: mapValue.correlation_id,
+    causationEventId: mapValue.causation_event_id,
+    parentEventId: mapValue.parent_event_id,
+    branchId: mapValue.branch_id,
+    retentionClass: mapValue.retention_class,
+    sourceEventSeqs: parseNumberArray(mapValue.source_event_seqs_json),
+    payload: parseJsonObject(mapValue.payload_json),
+    payloadSha256: mapValue.payload_sha256,
+    previousEventHash: mapValue.previous_event_hash,
+    eventHash: mapValue.event_hash,
+    synthetic: mapValue.is_synthetic === 1
   };
 }
 function defaultStreamId(input) {
@@ -4451,7 +4451,7 @@ var XiaoheiBotEventLogRepository = class {
     const sequenceRange = eventSequenceRange(rows);
     return {
       ok: false,
-      checkedEvents: rows.findIndex(row => row.event_id === event.eventId) + 1,
+      checkedEvents: rows.findIndex(item => item.event_id === event.eventId) + 1,
       firstGlobalSeq: sequenceRange.first,
       lastGlobalSeq: event.globalSeq,
       brokenEventId: event.eventId,
@@ -4544,19 +4544,19 @@ var XiaoheiBotEventLogRepository = class {
     return getDatabase().prepare(`SELECT trace_id, item_id, kind, chunk_seq, occurred_at,
                 payload_json, payload_sha256
          FROM xiaohei_bot_diagnostic_chunks
-         WHERE run_id = ? ORDER BY chunk_seq ASC`).all(runId).map(row => ({
-      traceId: row.trace_id,
-      itemId: row.item_id,
-      kind: row.kind,
-      chunkSeq: Number(row.chunk_seq),
-      occurredAt: row.occurred_at,
-      payload: parseJsonObject(row.payload_json),
-      payloadSha256: row.payload_sha256
+         WHERE run_id = ? ORDER BY chunk_seq ASC`).all(runId).map(item => ({
+      traceId: item.trace_id,
+      itemId: item.item_id,
+      kind: item.kind,
+      chunkSeq: Number(item.chunk_seq),
+      occurredAt: item.occurred_at,
+      payload: parseJsonObject(item.payload_json),
+      payloadSha256: item.payload_sha256
     }));
   }
   pruneDiagnosticEvents(retentionDays) {
     if (!Number.isFinite(retentionDays) || retentionDays < 1) return 0;
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const cutoff = (/* @__PURE__ */new Date(Date.now() - retentionDays * 864e5)).toISOString();
     const statement = getDatabase().prepare(`DELETE FROM xiaohei_bot_diagnostic_chunks
        WHERE trace_id IN (
@@ -4567,7 +4567,7 @@ var XiaoheiBotEventLogRepository = class {
        )`);
     let total = 0;
     for (;;) {
-      const changes = Number(statement.run(now, cutoff).changes);
+      const changes = Number(statement.run(isoString, cutoff).changes);
       total += changes;
       if (changes < 2e3) return total;
     }
@@ -4656,17 +4656,17 @@ function parseProcessItems(value) {
     return [];
   }
 }
-function ensureLegacyTimelineText(row, items) {
-  if (row.author_type !== "bot" || !row.content.trim() || items.some(item => item.kind === "text")) return items;
-  const status = row.status === "complete" ? "completed" : row.status === "failed" || row.status === "cancelled" ? row.status : "streaming";
+function ensureLegacyTimelineText(legacy, items) {
+  if (legacy.author_type !== "bot" || !legacy.content.trim() || items.some(item => item.kind === "text")) return items;
+  const status = legacy.status === "complete" ? "completed" : legacy.status === "failed" || legacy.status === "cancelled" ? legacy.status : "streaming";
   const terminal = status !== "streaming";
   return [...items, {
-    id: `legacy-text:${row.id}`,
+    id: `legacy-text:${legacy.id}`,
     kind: "text",
     status,
-    content: row.content,
-    startedAt: row.updated_at,
-    completedAt: terminal ? row.updated_at : null,
+    content: legacy.content,
+    startedAt: legacy.updated_at,
+    completedAt: terminal ? legacy.updated_at : null,
     durationMs: terminal ? 0 : null
   }];
 }
@@ -4694,30 +4694,30 @@ function clampThinkingLevel(requested, supportedLevels) {
   }
   return supportedLevels[0] ?? "off";
 }
-function mapBot(row) {
+function mapBot(mapValue) {
   return {
-    id: row.id,
-    name: row.name,
-    description: row.description,
-    responseStyle: row.response_style,
-    tags: parseStringArray(row.tags_json),
-    providerId: row.provider_id,
-    modelId: row.model_id,
-    thinkingLevel: row.thinking_level,
-    permissionMode: row.permission_mode,
-    managementPermissions: JSON.parse(row.management_permissions_json || "{\"createBots\":true,\"manageGroups\":true}"),
-    creatorBotId: row.creator_bot_id,
-    sourceConversationId: row.source_conversation_id,
-    workingDirectory: row.working_directory,
-    workingDirectoryIsCustom: row.working_directory_is_custom === 1,
-    isBuiltin: row.is_builtin === 1,
-    profileCompletion: JSON.parse(row.profile_completion_json || "{\"name\":false,\"description\":true,\"tags\":true}"),
-    identityVersion: row.identity_version,
-    avatar: row.avatar ?? undefined,
-    avatarColor: row.avatar_color ?? undefined,
-    avatarShape: row.avatar_shape ?? undefined,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
+    id: mapValue.id,
+    name: mapValue.name,
+    description: mapValue.description,
+    responseStyle: mapValue.response_style,
+    tags: parseStringArray(mapValue.tags_json),
+    providerId: mapValue.provider_id,
+    modelId: mapValue.model_id,
+    thinkingLevel: mapValue.thinking_level,
+    permissionMode: mapValue.permission_mode,
+    managementPermissions: JSON.parse(mapValue.management_permissions_json || "{\"createBots\":true,\"manageGroups\":true}"),
+    creatorBotId: mapValue.creator_bot_id,
+    sourceConversationId: mapValue.source_conversation_id,
+    workingDirectory: mapValue.working_directory,
+    workingDirectoryIsCustom: mapValue.working_directory_is_custom === 1,
+    isBuiltin: mapValue.is_builtin === 1,
+    profileCompletion: JSON.parse(mapValue.profile_completion_json || "{\"name\":false,\"description\":true,\"tags\":true}"),
+    identityVersion: mapValue.identity_version,
+    avatar: mapValue.avatar ?? undefined,
+    avatarColor: mapValue.avatar_color ?? undefined,
+    avatarShape: mapValue.avatar_shape ?? undefined,
+    createdAt: mapValue.created_at,
+    updatedAt: mapValue.updated_at
   };
 }
 var XiaoheiBotRepository = class {
@@ -5218,7 +5218,7 @@ var XiaoheiBotRepository = class {
     const timestamp = now();
     const directConversationIds = database.prepare(`SELECT id FROM xiaohei_bot_conversations
            WHERE kind = 'direct' AND direct_bot_id = ? AND archived_at IS NULL
-           ORDER BY created_at ASC`).all(botId).map(row => row.id);
+           ORDER BY created_at ASC`).all(botId).map(item => item.id);
     const groupConversationIds = database.prepare(`SELECT DISTINCT conversations.id
            FROM xiaohei_bot_conversations conversations
            JOIN xiaohei_bot_conversation_members members
@@ -5226,7 +5226,7 @@ var XiaoheiBotRepository = class {
            WHERE conversations.kind = 'group'
              AND conversations.archived_at IS NULL
              AND members.bot_id = ?
-           ORDER BY conversations.created_at ASC`).all(botId).map(row => row.id);
+           ORDER BY conversations.created_at ASC`).all(botId).map(item => item.id);
     const groupFallbacks = groupConversationIds.map(conversationId => {
       return {
         conversationId,
@@ -5427,7 +5427,7 @@ var XiaoheiBotRepository = class {
                 )) AS replyCount
            FROM xiaohei_bot_conversations c
            WHERE c.parent_conversation_id = ? AND c.archived_at IS NULL
-           ORDER BY c.created_at ASC`).all(parentConversationId).filter(row => row.sourceMessageId);
+           ORDER BY c.created_at ASC`).all(parentConversationId).filter(item => item.sourceMessageId);
   }
   createSideTopicConversation(parent, source) {
     const existing = this.getSideTopicBySource(parent.id, source.id);
@@ -5482,59 +5482,59 @@ var XiaoheiBotRepository = class {
            ORDER BY
              CASE WHEN pinned_at IS NULL THEN 1 ELSE 0 END ASC,
              pinned_at DESC,
-             MAX(COALESCE(last_message_at, updated_at), COALESCE(sidebar_restored_at, '')) DESC`).all().map(row => this.mapConversation(row));
+             MAX(COALESCE(last_message_at, updated_at), COALESCE(sidebar_restored_at, '')) DESC`).all().map(item => this.mapConversation(item));
   }
   getUnreadConversationIds() {
     return getDatabase().prepare(`SELECT id FROM xiaohei_bot_conversations
        WHERE archived_at IS NULL AND is_consultation = 0 AND parent_conversation_id IS NULL
          AND sidebar_hidden_at IS NULL AND unread_count > 0
          AND NOT EXISTS (SELECT 1 FROM xiaohei_bot_default_role_links links
-           WHERE links.bot_id = xiaohei_bot_conversations.direct_bot_id AND links.list_removed_at IS NOT NULL)`).all().map(row => row.id);
+           WHERE links.bot_id = xiaohei_bot_conversations.direct_bot_id AND links.list_removed_at IS NOT NULL)`).all().map(item => item.id);
   }
   getConversation(conversationId) {
     const row = getDatabase().prepare(`SELECT * FROM xiaohei_bot_conversations WHERE id = ? AND archived_at IS NULL`).get(conversationId);
     return row ? this.mapConversation(row) : null;
   }
-  mapConversation(row) {
-    const defaultRoleLink = row.kind === "direct" && !row.parent_conversation_id ? getDatabase().prepare("SELECT role_id, greeting, sort_order, list_removed_at FROM xiaohei_bot_default_role_links WHERE bot_id = ?").get(row.direct_bot_id) : undefined;
-    const defaultRole = defaultRoleLink && !row.last_message_at && !row.sidebar_restored_at ? defaultRoleLink : undefined;
+  mapConversation(mapValue) {
+    const defaultRoleLink = mapValue.kind === "direct" && !mapValue.parent_conversation_id ? getDatabase().prepare("SELECT role_id, greeting, sort_order, list_removed_at FROM xiaohei_bot_default_role_links WHERE bot_id = ?").get(mapValue.direct_bot_id) : undefined;
+    const defaultRole = defaultRoleLink && !mapValue.last_message_at && !mapValue.sidebar_restored_at ? defaultRoleLink : undefined;
     const latest = getDatabase().prepare(`
       SELECT seq, author_type, status FROM xiaohei_bot_messages
       WHERE conversation_id = ? AND author_type IN ('user', 'bot')
       ORDER BY seq DESC LIMIT 1
-    `).get(row.id);
+    `).get(mapValue.id);
     return {
       latestMessageSeq: latest?.seq ?? 0,
       latestGenerationStatus: latest?.author_type === "bot" ? latest.status : null,
-      id: row.id,
-      kind: row.kind,
-      title: row.title,
-      description: row.description,
-      notificationsEnabled: row.notifications_enabled === 1,
-      directBotId: row.direct_bot_id,
-      defaultBotId: row.default_bot_id,
-      creatorBotId: row.creator_bot_id,
-      sourceConversationId: row.source_conversation_id,
-      members: this.listConversationMembers(row.id),
-      lastMessagePreview: xiaoheiBotMessagePreview(row.last_message_preview || defaultRole?.greeting || "", []),
+      id: mapValue.id,
+      kind: mapValue.kind,
+      title: mapValue.title,
+      description: mapValue.description,
+      notificationsEnabled: mapValue.notifications_enabled === 1,
+      directBotId: mapValue.direct_bot_id,
+      defaultBotId: mapValue.default_bot_id,
+      creatorBotId: mapValue.creator_bot_id,
+      sourceConversationId: mapValue.source_conversation_id,
+      members: this.listConversationMembers(mapValue.id),
+      lastMessagePreview: xiaoheiBotMessagePreview(mapValue.last_message_preview || defaultRole?.greeting || "", []),
       defaultRoleSortOrder: defaultRole?.sort_order,
       defaultRoleId: defaultRoleLink?.role_id,
       defaultRoleListRemovedAt: defaultRoleLink ? defaultRoleLink.list_removed_at ?? null : undefined,
-      lastMessageAt: row.last_message_at,
-      unreadCount: row.unread_count,
-      pinnedAt: row.pinned_at,
-      sidebarHiddenAt: row.sidebar_hidden_at,
-      sidebarRestoredAt: row.sidebar_restored_at,
-      parentConversationId: row.parent_conversation_id,
-      forkedFromMessageId: row.forked_from_message_id,
-      forkedFromEventId: row.forked_from_event_id,
-      lineageDepth: Number(row.lineage_depth ?? 0),
-      archivedAt: row.archived_at,
-      avatar: row.avatar ?? undefined,
-      avatarColor: row.avatar_color ?? undefined,
-      avatarShape: row.avatar_shape ?? undefined,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at
+      lastMessageAt: mapValue.last_message_at,
+      unreadCount: mapValue.unread_count,
+      pinnedAt: mapValue.pinned_at,
+      sidebarHiddenAt: mapValue.sidebar_hidden_at,
+      sidebarRestoredAt: mapValue.sidebar_restored_at,
+      parentConversationId: mapValue.parent_conversation_id,
+      forkedFromMessageId: mapValue.forked_from_message_id,
+      forkedFromEventId: mapValue.forked_from_event_id,
+      lineageDepth: Number(mapValue.lineage_depth ?? 0),
+      archivedAt: mapValue.archived_at,
+      avatar: mapValue.avatar ?? undefined,
+      avatarColor: mapValue.avatar_color ?? undefined,
+      avatarShape: mapValue.avatar_shape ?? undefined,
+      createdAt: mapValue.created_at,
+      updatedAt: mapValue.updated_at
     };
   }
   listConversationMembers(conversationId) {
@@ -5544,19 +5544,19 @@ var XiaoheiBotRepository = class {
       JOIN xiaohei_bot_profiles b ON b.id = m.bot_id
       WHERE m.conversation_id = ? AND b.deleted_at IS NULL
       ORDER BY m.is_default_responder DESC, m.joined_at ASC
-    `).all(conversationId).map(row => ({
-      botId: row.bot_id,
-      name: row.name,
-      participationMode: row.participation_mode,
-      isDefaultResponder: row.is_default_responder === 1,
-      joinedAt: row.joined_at,
-      joinedMessageSeq: row.joined_message_seq,
-      handoffRole: row.handoff_role,
-      handoffContext: row.handoff_context,
-      handoffTask: row.handoff_task,
-      avatar: row.avatar ?? undefined,
-      avatarColor: row.avatar_color ?? undefined,
-      avatarShape: row.avatar_shape ?? undefined
+    `).all(conversationId).map(item => ({
+      botId: item.bot_id,
+      name: item.name,
+      participationMode: item.participation_mode,
+      isDefaultResponder: item.is_default_responder === 1,
+      joinedAt: item.joined_at,
+      joinedMessageSeq: item.joined_message_seq,
+      handoffRole: item.handoff_role,
+      handoffContext: item.handoff_context,
+      handoffTask: item.handoff_task,
+      avatar: item.avatar ?? undefined,
+      avatarColor: item.avatar_color ?? undefined,
+      avatarShape: item.avatar_shape ?? undefined
     }));
   }
   createGroup(input, actor) {
@@ -6030,7 +6030,7 @@ var XiaoheiBotRepository = class {
         LIMIT ?
       ) ORDER BY seq ASC
     `).all(conversationId, ...(hasCursor ? [Number(beforeSeq)] : []), pageSize + 1);
-    const messages = rows.slice(-pageSize).map(row => this.mapMessage(row));
+    const messages = rows.slice(-pageSize).map(item => this.mapMessage(item));
     return {
       messages,
       hasMore: rows.length > pageSize,
@@ -6042,7 +6042,7 @@ var XiaoheiBotRepository = class {
       SELECT * FROM (
         SELECT * FROM xiaohei_bot_messages WHERE conversation_id = ? AND (? IS NULL OR seq < ?) ORDER BY seq DESC LIMIT ?
       ) ORDER BY seq ASC
-    `).all(conversationId, beforeSeq, beforeSeq, Math.min(500, Math.max(1, limit))).map(row => this.mapMessage(row));
+    `).all(conversationId, beforeSeq, beforeSeq, Math.min(500, Math.max(1, limit))).map(item => this.mapMessage(item));
   }
   getMessage(messageId) {
     const row = getDatabase().prepare("SELECT * FROM xiaohei_bot_messages WHERE id = ?").get(messageId);
@@ -6062,7 +6062,7 @@ var XiaoheiBotRepository = class {
         AND m.status = 'complete'
         AND seen.message_id IS NULL
       ORDER BY m.seq ASC
-    `).all(botId, conversationId, joinedMessageSeq, throughSeq).map(row => this.mapMessage(row));
+    `).all(botId, conversationId, joinedMessageSeq, throughSeq).map(item => this.mapMessage(item));
   }
   createMessage(input, withinTransaction = false) {
     const database = getDatabase();
@@ -6286,23 +6286,23 @@ var XiaoheiBotRepository = class {
       throw error;
     }
   }
-  mapMessage(row) {
+  mapMessage(mapValue) {
     const mentions = getDatabase().prepare(`
       SELECT mention_type, bot_id, label, token FROM xiaohei_bot_message_mentions WHERE message_id = ?
-    `).all(row.id);
+    `).all(mapValue.id);
     const attachments = getDatabase().prepare(`
       SELECT id, name, size, mime_type, is_image, local_path,
              asset_id, sha256, integrity_status, verified_at
       FROM xiaohei_bot_attachments WHERE message_id = ?
-    `).all(row.id);
+    `).all(mapValue.id);
     return {
-      id: row.id,
-      conversationId: row.conversation_id,
-      seq: row.seq,
-      authorType: row.author_type,
-      authorBotId: row.author_bot_id,
-      authorName: row.author_name,
-      content: row.content,
+      id: mapValue.id,
+      conversationId: mapValue.conversation_id,
+      seq: mapValue.seq,
+      authorType: mapValue.author_type,
+      authorBotId: mapValue.author_bot_id,
+      authorName: mapValue.author_name,
+      content: mapValue.content,
       mentions: mentions.map(mention => ({
         type: mention.mention_type,
         botId: mention.bot_id ?? undefined,
@@ -6320,19 +6320,19 @@ var XiaoheiBotRepository = class {
         sha256: attachment.sha256,
         integrityStatus: attachment.integrity_status ?? "pending"
       })),
-      processItems: ensureLegacyTimelineText(row, parseProcessItems(row.process_items_json)),
-      status: row.status,
-      deliveryMode: row.delivery_mode ?? "normal",
-      replyToMessageId: row.reply_to_message_id,
-      causalRootMessageId: row.causal_root_message_id,
-      hopDepth: row.hop_depth,
-      errorMessage: row.error_message,
-      originMessageId: row.origin_message_id,
-      originEventId: row.origin_event_id,
-      revision: Number(row.revision ?? 1),
-      withdrawnAt: row.withdrawn_at,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at
+      processItems: ensureLegacyTimelineText(mapValue, parseProcessItems(mapValue.process_items_json)),
+      status: mapValue.status,
+      deliveryMode: mapValue.delivery_mode ?? "normal",
+      replyToMessageId: mapValue.reply_to_message_id,
+      causalRootMessageId: mapValue.causal_root_message_id,
+      hopDepth: mapValue.hop_depth,
+      errorMessage: mapValue.error_message,
+      originMessageId: mapValue.origin_message_id,
+      originEventId: mapValue.origin_event_id,
+      revision: Number(mapValue.revision ?? 1),
+      withdrawnAt: mapValue.withdrawn_at,
+      createdAt: mapValue.created_at,
+      updatedAt: mapValue.updated_at
     };
   }
   getAttachmentPath(attachmentId) {
@@ -6355,18 +6355,18 @@ var XiaoheiBotRepository = class {
             OR attachments.sha256 IS NULL
             OR attachments.integrity_status <> 'verified'
             OR attachments.verified_at IS NULL
-         ORDER BY attachments.created_at ASC`).all().map(row => ({
-      id: String(row.id),
-      messageId: String(row.message_id),
-      conversationId: String(row.conversation_id),
-      name: String(row.name),
-      size: Number(row.size),
-      mimeType: String(row.mime_type),
-      localPath: String(row.local_path),
-      assetId: typeof row.asset_id === "string" ? row.asset_id : null,
-      sha256: typeof row.sha256 === "string" ? row.sha256 : null,
-      integrityStatus: row.integrity_status ?? "pending",
-      verifiedAt: typeof row.verified_at === "string" ? row.verified_at : null
+         ORDER BY attachments.created_at ASC`).all().map(count => ({
+      id: String(count.id),
+      messageId: String(count.message_id),
+      conversationId: String(count.conversation_id),
+      name: String(count.name),
+      size: Number(count.size),
+      mimeType: String(count.mime_type),
+      localPath: String(count.local_path),
+      assetId: typeof count.asset_id === "string" ? count.asset_id : null,
+      sha256: typeof count.sha256 === "string" ? count.sha256 : null,
+      integrityStatus: count.integrity_status ?? "pending",
+      verifiedAt: typeof count.verified_at === "string" ? count.verified_at : null
     }));
   }
   reconcileAttachmentAsset(input) {
@@ -6705,9 +6705,9 @@ var XiaoheiBotRepository = class {
       database.exec("ROLLBACK");
       throw error;
     }
-    const job = this.getRoutingJobByTrigger(input.triggerMessageId);
-    if (!job) throw new Error("接待路由任务创建失败");
-    return job;
+    const routingJobByTrigger = this.getRoutingJobByTrigger(input.triggerMessageId);
+    if (!routingJobByTrigger) throw new Error("接待路由任务创建失败");
+    return routingJobByTrigger;
   }
   getRoutingJob(jobId) {
     const row = getDatabase().prepare("SELECT * FROM xiaohei_bot_routing_jobs WHERE id = ?").get(jobId);
@@ -6725,14 +6725,14 @@ var XiaoheiBotRepository = class {
          WHERE jobs.status = 'queued'
            ${conversationId ? "AND jobs.conversation_id = ?" : ""}
          ORDER BY jobs.conversation_id ASC, messages.seq ASC,
-                  jobs.created_at ASC, jobs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(row => this.mapRoutingJob(row));
+                  jobs.created_at ASC, jobs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(item => this.mapRoutingJob(item));
   }
   listActiveRoutingJobs(conversationId, botId) {
     return getDatabase().prepare(`SELECT * FROM xiaohei_bot_routing_jobs
          WHERE status IN ('queued', 'running')
            AND (? IS NULL OR conversation_id = ?)
            AND (? IS NULL OR receptionist_bot_id = ? OR selected_bot_id = ?)
-         ORDER BY created_at ASC, id ASC`).all(conversationId ?? null, conversationId ?? null, botId ?? null, botId ?? null, botId ?? null).map(row => this.mapRoutingJob(row));
+         ORDER BY created_at ASC, id ASC`).all(conversationId ?? null, conversationId ?? null, botId ?? null, botId ?? null, botId ?? null).map(item => this.mapRoutingJob(item));
   }
   claimRoutingJob(jobId) {
     const database = getDatabase();
@@ -6776,9 +6776,9 @@ var XiaoheiBotRepository = class {
       throw error;
     }
     if (!claimed) return null;
-    const job = this.getRoutingJob(jobId);
-    if (!job) throw new Error("接待路由任务认领后丢失");
-    return job;
+    const routingJob = this.getRoutingJob(jobId);
+    if (!routingJob) throw new Error("接待路由任务认领后丢失");
+    return routingJob;
   }
   updateRoutingJob(jobId, input) {
     const database = getDatabase();
@@ -6837,20 +6837,20 @@ var XiaoheiBotRepository = class {
     }
   }
   cancelRoutingJobs(conversationId) {
-    return this.listActiveRoutingJobs(conversationId).map(job => this.updateRoutingJob(job.id, {
+    return this.listActiveRoutingJobs(conversationId).map(item => this.updateRoutingJob(item.id, {
       status: "cancelled",
       eventType: "routing.reception.cancelled",
-      correlationId: job.triggerMessageId
+      correlationId: item.triggerMessageId
     }));
   }
   recoverInterruptedRoutingJobs() {
     const jobs = getDatabase().prepare("SELECT * FROM xiaohei_bot_routing_jobs WHERE status = 'running' ORDER BY created_at ASC").all();
     for (const row of jobs) {
-      const job = this.mapRoutingJob(row);
-      this.updateRoutingJob(job.id, {
+      const mapRoutingJob = this.mapRoutingJob(row);
+      this.updateRoutingJob(mapRoutingJob.id, {
         status: "queued",
         eventType: "recovery.routing-requeued",
-        correlationId: job.triggerMessageId,
+        correlationId: mapRoutingJob.triggerMessageId,
         errorMessage: "客户端重启后重新执行无工具接待路由"
       });
     }
@@ -6918,7 +6918,7 @@ var XiaoheiBotRepository = class {
   listAgentRunsForTrigger(triggerMessageId) {
     return getDatabase().prepare(`SELECT * FROM xiaohei_bot_agent_runs
          WHERE trigger_message_id = ?
-         ORDER BY route_order ASC, created_at ASC, id ASC`).all(triggerMessageId).map(row => this.mapAgentRun(row));
+         ORDER BY route_order ASC, created_at ASC, id ASC`).all(triggerMessageId).map(item => this.mapAgentRun(item));
   }
   listAgentRunsForMessageTree(rootMessageId) {
     return getDatabase().prepare(`
@@ -6926,7 +6926,7 @@ var XiaoheiBotRepository = class {
       JOIN xiaohei_bot_messages trigger_message ON trigger_message.id = runs.trigger_message_id
       WHERE trigger_message.id = ? OR trigger_message.causal_root_message_id = ?
       ORDER BY runs.created_at ASC, runs.route_order ASC, runs.id ASC
-    `).all(rootMessageId, rootMessageId).map(row => this.mapAgentRun(row));
+    `).all(rootMessageId, rootMessageId).map(item => this.mapAgentRun(item));
   }
   listQueuedAgentRuns(conversationId) {
     return getDatabase().prepare(`SELECT runs.*
@@ -6936,7 +6936,7 @@ var XiaoheiBotRepository = class {
          WHERE runs.status = 'queued'
            ${conversationId ? "AND runs.conversation_id = ?" : ""}
          ORDER BY runs.conversation_id ASC, messages.seq ASC,
-                  runs.route_order ASC, runs.created_at ASC, runs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(row => this.mapAgentRun(row));
+                  runs.route_order ASC, runs.created_at ASC, runs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(item => this.mapAgentRun(item));
   }
   updateAgentRun(runId, input) {
     const database = getDatabase();
@@ -7165,44 +7165,44 @@ var XiaoheiBotRepository = class {
       recoveredMessages
     };
   }
-  mapAgentRun(row) {
+  mapAgentRun(mapValue) {
     return {
-      id: row.id,
-      conversationId: row.conversation_id,
-      botId: row.bot_id,
-      triggerMessageId: row.trigger_message_id,
-      responseMessageId: row.response_message_id,
-      status: row.status,
-      mandatoryReply: row.mandatory_reply === 1,
-      deliveryMode: row.delivery_mode ?? "normal",
-      routeOrder: Number(row.route_order ?? 0),
-      providerId: row.provider_id,
-      modelId: row.model_id,
-      requestEventId: row.request_event_id,
-      requestHash: row.request_hash,
-      requestSnapshot: parseJsonRecord(row.request_snapshot_json),
-      piLeafEntryId: row.pi_leaf_entry_id,
-      recoveryState: row.recovery_state ?? "clean",
-      createdAt: row.created_at,
-      updatedAt: row.updated_at
+      id: mapValue.id,
+      conversationId: mapValue.conversation_id,
+      botId: mapValue.bot_id,
+      triggerMessageId: mapValue.trigger_message_id,
+      responseMessageId: mapValue.response_message_id,
+      status: mapValue.status,
+      mandatoryReply: mapValue.mandatory_reply === 1,
+      deliveryMode: mapValue.delivery_mode ?? "normal",
+      routeOrder: Number(mapValue.route_order ?? 0),
+      providerId: mapValue.provider_id,
+      modelId: mapValue.model_id,
+      requestEventId: mapValue.request_event_id,
+      requestHash: mapValue.request_hash,
+      requestSnapshot: parseJsonRecord(mapValue.request_snapshot_json),
+      piLeafEntryId: mapValue.pi_leaf_entry_id,
+      recoveryState: mapValue.recovery_state ?? "clean",
+      createdAt: mapValue.created_at,
+      updatedAt: mapValue.updated_at
     };
   }
-  mapRoutingJob(row) {
-    const parsedCandidates = parseJsonValue(row.candidate_snapshot_json);
+  mapRoutingJob(mapValue) {
+    const parsedCandidates = parseJsonValue(mapValue.candidate_snapshot_json);
     return {
-      id: row.id,
-      conversationId: row.conversation_id,
-      triggerMessageId: row.trigger_message_id,
-      receptionistBotId: row.receptionist_bot_id,
-      status: row.status,
+      id: mapValue.id,
+      conversationId: mapValue.conversation_id,
+      triggerMessageId: mapValue.trigger_message_id,
+      receptionistBotId: mapValue.receptionist_bot_id,
+      status: mapValue.status,
       candidateSnapshot: Array.isArray(parsedCandidates) ? parsedCandidates.filter(candidate => Boolean(candidate) && typeof candidate === "object" && !Array.isArray(candidate)) : [],
-      selectedBotId: row.selected_bot_id,
-      selectedBotIds: parseStringArray(row.selected_bot_ids_json ?? "[]"),
-      decisionSource: row.decision_source ?? null,
-      decisionReason: row.decision_reason,
-      errorMessage: row.error_message,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at
+      selectedBotId: mapValue.selected_bot_id,
+      selectedBotIds: parseStringArray(mapValue.selected_bot_ids_json ?? "[]"),
+      decisionSource: mapValue.decision_source ?? null,
+      decisionReason: mapValue.decision_reason,
+      errorMessage: mapValue.error_message,
+      createdAt: mapValue.created_at,
+      updatedAt: mapValue.updated_at
     };
   }
 };
@@ -7425,19 +7425,19 @@ var NotificationService = class {
     if (!token) return false;
     const unsynced = notificationRepository.getUnsyncedReads();
     if (unsynced.length === 0) return false;
-    const ids = unsynced.map(item => item.notificationId);
+    const mapped = unsynced.map(item => item.notificationId);
     const clientTarget = this.getClientTarget();
     try {
-      if (ids.length === 1) await this.callApi("notifications.php", {
+      if (mapped.length === 1) await this.callApi("notifications.php", {
         action: "mark-read",
-        notificationId: ids[0],
+        notificationId: mapped[0],
         ...clientTarget
       });else await this.callApi("notifications.php", {
         action: "mark-all-read",
         ...clientTarget
       });
       if (this.getToken() === token) {
-        notificationRepository.markSynced(ids);
+        notificationRepository.markSynced(mapped);
         this.readStatusDirtyToken = token;
         this.readUploadRevision++;
       }
@@ -7487,7 +7487,7 @@ var NotificationService = class {
         return notification;
       }
       if (!botId && conversationId) botId = xiaoheiBotRepository.getConversation(conversationId)?.directBotId ?? null;
-      const matches = botId ? bots.filter(bot => bot.id === botId) : bots.filter(bot => notification.title === bot.name || notification.title.endsWith(` · ${bot.name}`));
+      const matches = botId ? bots.filter(item => item.id === botId) : bots.filter(item => notification.title === item.name || notification.title.endsWith(` · ${item.name}`));
       return {
         ...notification,
         avatar: matches.length === 1 ? matches[0].avatar : undefined
@@ -7519,10 +7519,10 @@ var NotificationService = class {
     if (changed) this.notifyChanged();
   }
   markAllRead() {
-    const ids = notificationRepository.markAllRead();
+    const markAllRead = notificationRepository.markAllRead();
     this.notifyChanged();
     this.syncReadStatusToCloud().catch(() => {});
-    return ids;
+    return markAllRead;
   }
   addLocalNotification(input) {
     const notification = notificationRepository.createLocalNotification(input);
@@ -7566,11 +7566,11 @@ function getMainWindow() {
   return win && !win.isDestroyed() ? win : null;
 }
 function focusMainWindow() {
-  const win = getMainWindow();
-  if (!win) return;
-  if (win.isMinimized()) win.restore();
-  win.show();
-  win.focus();
+  const mainWindow = getMainWindow();
+  if (!mainWindow) return;
+  if (mainWindow.isMinimized()) mainWindow.restore();
+  mainWindow.show();
+  mainWindow.focus();
 }
 var SystemNotificationService = class {
   current = null;
@@ -7967,10 +7967,10 @@ function canReuseWindowsContextCache(options) {
   return true;
 }
 function parseWindowsForegroundContext(stdout) {
-  const raw = stdout.trim();
-  if (!raw) return emptyWindowsContextInfo();
+  const trimmed = stdout.trim();
+  if (!trimmed) return emptyWindowsContextInfo();
   try {
-    const parsed = JSON.parse(raw);
+    const parsed = JSON.parse(trimmed);
     const name = typeof parsed.Name === "string" ? parsed.Name.trim() || null : null;
     const processId = typeof parsed.ProcessId === "number" && Number.isFinite(parsed.ProcessId) ? parsed.ProcessId : null;
     const executablePath = typeof parsed.ExecutablePath === "string" ? parsed.ExecutablePath.trim() || null : null;
@@ -8206,14 +8206,14 @@ function getPowerShellAbsoluteCandidates() {
   return uniqueStrings([path.join(windowsDir, "System32", "WindowsPowerShell", "v1.0", "powershell.exe"), path.join(windowsDir, "Sysnative", "WindowsPowerShell", "v1.0", "powershell.exe"), path.join(windowsDir, "SysWOW64", "WindowsPowerShell", "v1.0", "powershell.exe"), process$1.env.ProgramFiles ? path.join(process$1.env.ProgramFiles, "PowerShell", "7", "pwsh.exe") : null, process$1.env.ProgramW6432 ? path.join(process$1.env.ProgramW6432, "PowerShell", "7", "pwsh.exe") : null]).filter(candidate => existsSync(candidate));
 }
 function formatCommandError(error) {
-  const err = error;
+  const errorAlias = error;
   const parts = [];
-  const stderr = Buffer.isBuffer(err.stderr) ? err.stderr.toString("utf8") : err.stderr;
+  const stderr = Buffer.isBuffer(errorAlias.stderr) ? errorAlias.stderr.toString("utf8") : errorAlias.stderr;
   if (stderr?.trim()) parts.push(stderr.trim());
-  if (err.code) parts.push(`code=${err.code}`);
-  if (err.signal) parts.push(`signal=${err.signal}`);
-  if (err.killed) parts.push("timeout");
-  if (err.message) parts.push(err.message);
+  if (errorAlias.code) parts.push(`code=${errorAlias.code}`);
+  if (errorAlias.signal) parts.push(`signal=${errorAlias.signal}`);
+  if (errorAlias.killed) parts.push("timeout");
+  if (errorAlias.message) parts.push(errorAlias.message);
   return (parts.join("；") || String(error)).slice(0, 600);
 }
 async function execFileUtf8(command, args, timeout) {
@@ -8500,10 +8500,10 @@ function inferDocumentHint(title, appName) {
   if (!title) return null;
   return (title.split(/\s+[—–|-]\s+/).map(part => part.trim()).filter(Boolean).find(part => part.toLowerCase() !== appName.toLowerCase()) ?? null)?.slice(0, 160) ?? null;
 }
-function sanitizeDomain(url) {
-  if (!url) return null;
+function sanitizeDomain(domain) {
+  if (!domain) return null;
   try {
-    const parsed = new URL(url);
+    const parsed = new URL(domain);
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
     return parsed.hostname.toLowerCase().replace(/^www\./, "").slice(0, 253) || null;
   } catch {
@@ -8852,10 +8852,10 @@ function isLegacyApplicationId(applicationId) {
 function mergeEquivalentAppUsageSummaries(source) {
   const merged = /* @__PURE__ */new Map();
   for (const item of source) {
-    const key = normalizedDisplayKey(item.appName);
-    const existing = merged.get(key);
+    const normalizedDisplayKeyResult = normalizedDisplayKey(item.appName);
+    const existing = merged.get(normalizedDisplayKeyResult);
     if (!existing) {
-      merged.set(key, {
+      merged.set(normalizedDisplayKeyResult, {
         ...item
       });
       continue;
@@ -8876,27 +8876,27 @@ function mergeEquivalentAppUsageSummaries(source) {
   }
   return Array.from(merged.values()).sort((left, right) => right.activeDurationSec - left.activeDurationSec);
 }
-function mapSession(row) {
+function mapSession(mapValue) {
   return {
-    id: row.id,
-    applicationId: row.application_id,
-    activityState: row.activity_state,
-    appName: row.display_name ? resolveCommonAppName(row.display_name) : stateDisplayName(row.activity_state),
-    rawName: row.raw_name,
-    startedAt: row.started_at,
-    endedAt: row.ended_at,
-    durationSec: Math.max(0, Math.round(row.duration_ms / 1e3)),
-    activeDurationSec: Math.max(0, Math.round(row.active_duration_ms / 1e3)),
-    idleDurationSec: Math.max(0, Math.round(row.idle_duration_ms / 1e3)),
-    longestActiveDurationSec: Math.max(0, Math.round(row.longest_active_duration_ms / 1e3)),
-    sampleCount: row.sample_count,
-    contextSwitchCount: row.context_switch_count,
-    startReason: row.start_reason,
-    endReason: row.end_reason,
-    detectionSource: row.detection_source,
-    confidence: row.confidence,
-    createdAt: row.created_at,
-    isOpen: row.is_open === 1
+    id: mapValue.id,
+    applicationId: mapValue.application_id,
+    activityState: mapValue.activity_state,
+    appName: mapValue.display_name ? resolveCommonAppName(mapValue.display_name) : stateDisplayName(mapValue.activity_state),
+    rawName: mapValue.raw_name,
+    startedAt: mapValue.started_at,
+    endedAt: mapValue.ended_at,
+    durationSec: Math.max(0, Math.round(mapValue.duration_ms / 1e3)),
+    activeDurationSec: Math.max(0, Math.round(mapValue.active_duration_ms / 1e3)),
+    idleDurationSec: Math.max(0, Math.round(mapValue.idle_duration_ms / 1e3)),
+    longestActiveDurationSec: Math.max(0, Math.round(mapValue.longest_active_duration_ms / 1e3)),
+    sampleCount: mapValue.sample_count,
+    contextSwitchCount: mapValue.context_switch_count,
+    startReason: mapValue.start_reason,
+    endReason: mapValue.end_reason,
+    detectionSource: mapValue.detection_source,
+    confidence: mapValue.confidence,
+    createdAt: mapValue.created_at,
+    isOpen: mapValue.is_open === 1
   };
 }
 function getSqliteCode(error) {
@@ -8907,7 +8907,7 @@ function isForeignKeyError(error) {
   return error instanceof Error && error.message.includes("FOREIGN KEY constraint failed");
 }
 var AppUsageRepository = class {
-  upsertApplication(app, observedAt, expectedDatabaseGeneration) {
+  upsertApplication(upsert, observedAt, expectedDatabaseGeneration) {
     const connection = getOpenDatabaseConnection();
     if (!connection || connection.generation !== expectedDatabaseGeneration) return null;
     const database = connection.database;
@@ -8928,11 +8928,11 @@ var AppUsageRepository = class {
         executable_path = COALESCE(excluded.executable_path, tracked_applications.executable_path),
         last_seen_at = excluded.last_seen_at,
         updated_at = excluded.updated_at
-    `).run(app.stableId, process.platform, app.stableKey, app.rawName, app.displayName, app.processName, app.processId, app.bundleIdentifier, app.appUserModelId, app.packageFamilyName, app.executablePath, observedAt, observedAt, observedAt, observedAt);
+    `).run(upsert.stableId, process.platform, upsert.stableKey, upsert.rawName, upsert.displayName, upsert.processName, upsert.processId, upsert.bundleIdentifier, upsert.appUserModelId, upsert.packageFamilyName, upsert.executablePath, observedAt, observedAt, observedAt, observedAt);
     const row = database.prepare(`
       SELECT id FROM tracked_applications WHERE platform = ? AND stable_key = ?
-    `).get(process.platform, app.stableKey);
-    if (app.displayName && !app.stableKey.startsWith("process:")) {
+    `).get(process.platform, upsert.stableKey);
+    if (upsert.displayName && !upsert.stableKey.startsWith("process:")) {
       database.prepare(`
         UPDATE app_usage_sessions_v2
         SET application_id = ?, updated_at = ?
@@ -8942,7 +8942,7 @@ var AppUsageRepository = class {
             AND lower(trim(COALESCE(display_name, raw_name, ''))) = lower(trim(?))
             AND id != ?
         )
-      `).run(row.id, observedAt, app.displayName, row.id);
+      `).run(row.id, observedAt, upsert.displayName, row.id);
       database.prepare(`
         DELETE FROM tracked_applications
         WHERE (platform = 'legacy' OR stable_key LIKE 'process:%')
@@ -8952,7 +8952,7 @@ var AppUsageRepository = class {
             SELECT 1 FROM app_usage_sessions_v2
             WHERE application_id = tracked_applications.id
           )
-      `).run(app.displayName, row.id);
+      `).run(upsert.displayName, row.id);
     }
     return row.id;
   }
@@ -9095,14 +9095,14 @@ var AppUsageRepository = class {
     `).run(segment.id, segment.sessionId, segment.activityState, segment.startedAt, segment.endedAt, segment.durationMs, segment.startedAt, segment.endedAt);
   }
   closeStaleOpenSessions() {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       UPDATE app_usage_sessions_v2
       SET is_open = 0,
           end_reason = COALESCE(end_reason, 'crash-recovery'),
           updated_at = ?
       WHERE is_open = 1
-    `).run(now);
+    `).run(isoString);
   }
   listByRange(startedAt, endedAt, limit = 5e4) {
     return getDatabase().prepare(`
@@ -9218,13 +9218,13 @@ var AppUsageRepository = class {
       FROM app_activity_segments
       WHERE session_id IN (${placeholders})
       ORDER BY started_at ASC, id ASC
-    `).all(...sessionIds).map(row => ({
-      id: row.id,
-      sessionId: row.session_id,
-      activityState: row.activity_state,
-      startedAt: row.started_at,
-      endedAt: row.ended_at,
-      durationMs: row.duration_ms
+    `).all(...sessionIds).map(item => ({
+      id: item.id,
+      sessionId: item.session_id,
+      activityState: item.activity_state,
+      startedAt: item.started_at,
+      endedAt: item.ended_at,
+      durationMs: item.duration_ms
     }));
   }
   listContextSegments(sessionIds) {
@@ -9234,24 +9234,24 @@ var AppUsageRepository = class {
       SELECT * FROM app_context_segments
       WHERE session_id IN (${placeholders})
       ORDER BY started_at ASC
-    `).all(...sessionIds).map(row => ({
-      id: row.id,
-      sessionId: row.session_id,
-      windowId: row.window_id,
-      windowTitle: row.window_title,
-      documentHint: row.document_hint,
-      browserName: row.browser_name,
-      browserDomain: row.browser_domain,
-      displayId: row.display_id,
-      bounds: row.window_x === null || row.window_y === null || row.window_width === null || row.window_height === null ? null : {
-        x: row.window_x,
-        y: row.window_y,
-        width: row.window_width,
-        height: row.window_height
+    `).all(...sessionIds).map(item => ({
+      id: item.id,
+      sessionId: item.session_id,
+      windowId: item.window_id,
+      windowTitle: item.window_title,
+      documentHint: item.document_hint,
+      browserName: item.browser_name,
+      browserDomain: item.browser_domain,
+      displayId: item.display_id,
+      bounds: item.window_x === null || item.window_y === null || item.window_width === null || item.window_height === null ? null : {
+        x: item.window_x,
+        y: item.window_y,
+        width: item.window_width,
+        height: item.window_height
       },
-      startedAt: row.started_at,
-      endedAt: row.ended_at,
-      activeDurationMs: row.active_duration_ms
+      startedAt: item.started_at,
+      endedAt: item.ended_at,
+      activeDurationMs: item.active_duration_ms
     }));
   }
   getApplication(applicationId) {
@@ -9287,11 +9287,11 @@ var AppUsageRepository = class {
       JOIN tracked_applications a ON a.id = s.application_id
       GROUP BY a.id
       ORDER BY total_duration_ms DESC
-    `).all().map(row => resolveCommonAppName(row.app_name));
+    `).all().map(item => resolveCommonAppName(item.app_name));
   }
   clearContextData(kind) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     if (kind === "all") {
       const result = database.prepare("DELETE FROM app_context_segments").run();
       return Number(result.changes);
@@ -9302,10 +9302,10 @@ var AppUsageRepository = class {
               window_id = NULL, display_id = NULL,
               window_x = NULL, window_y = NULL, window_width = NULL, window_height = NULL,
               updated_at = ?
-        `).run(now) : database.prepare(`
+        `).run(isoString) : database.prepare(`
           UPDATE app_context_segments
           SET browser_name = NULL, browser_domain = NULL, updated_at = ?
-        `).run(now);
+        `).run(isoString);
     return Number(result.changes);
   }
   clearAllUsageData() {
@@ -9362,37 +9362,37 @@ function parseJson(value, fallback) {
     return fallback;
   }
 }
-function mapEvent(row) {
+function mapEvent(mapValue) {
   return {
-    id: row.id,
-    eventType: row.event_type,
-    observedAt: row.observed_at,
-    appBundleId: row.app_bundle_id,
-    appName: row.app_name,
-    windowId: row.window_id,
-    windowTitle: row.window_title,
-    elementRole: row.element_role,
-    elementSubrole: row.element_subrole,
-    elementLabel: row.element_label,
-    actionName: row.action_name,
-    metadata: parseJson(row.metadata_json, null),
-    createdAt: row.created_at
+    id: mapValue.id,
+    eventType: mapValue.event_type,
+    observedAt: mapValue.observed_at,
+    appBundleId: mapValue.app_bundle_id,
+    appName: mapValue.app_name,
+    windowId: mapValue.window_id,
+    windowTitle: mapValue.window_title,
+    elementRole: mapValue.element_role,
+    elementSubrole: mapValue.element_subrole,
+    elementLabel: mapValue.element_label,
+    actionName: mapValue.action_name,
+    metadata: parseJson(mapValue.metadata_json, null),
+    createdAt: mapValue.created_at
   };
 }
-function mapWindow(row) {
+function mapWindow(mapValue) {
   return {
-    id: row.id,
-    startedAt: row.started_at,
-    endedAt: row.ended_at,
-    trigger: row.trigger,
-    status: row.status,
-    activityBlocks: parseJson(row.activity_blocks_json, []),
-    sourceRefs: parseJson(row.source_refs_json, {
+    id: mapValue.id,
+    startedAt: mapValue.started_at,
+    endedAt: mapValue.ended_at,
+    trigger: mapValue.trigger,
+    status: mapValue.status,
+    activityBlocks: parseJson(mapValue.activity_blocks_json, []),
+    sourceRefs: parseJson(mapValue.source_refs_json, {
       sessionIds: [],
       contextIds: [],
       eventIds: []
     }),
-    coverage: parseJson(row.coverage_json, {
+    coverage: parseJson(mapValue.coverage_json, {
       sessionCount: 0,
       contextCount: 0,
       eventCount: 0,
@@ -9400,30 +9400,30 @@ function mapWindow(row) {
       idleDurationSec: 0,
       appSwitchCount: 0
     }),
-    hasTaskBoundary: row.has_task_boundary === 1,
-    longGap: row.long_gap === 1,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
+    hasTaskBoundary: mapValue.has_task_boundary === 1,
+    longGap: mapValue.long_gap === 1,
+    createdAt: mapValue.created_at,
+    updatedAt: mapValue.updated_at
   };
 }
-function mapSummary(row) {
+function mapSummary(mapValue) {
   return {
-    id: row.id,
-    level: row.level,
-    trigger: row.trigger,
-    startedAt: row.started_at,
-    endedAt: row.ended_at,
-    title: row.title,
-    summary: row.summary,
-    applications: parseJson(row.applications_json, []),
-    evidenceUsage: parseJson(row.evidence_usage_json, {
+    id: mapValue.id,
+    level: mapValue.level,
+    trigger: mapValue.trigger,
+    startedAt: mapValue.started_at,
+    endedAt: mapValue.ended_at,
+    title: mapValue.title,
+    summary: mapValue.summary,
+    applications: parseJson(mapValue.applications_json, []),
+    evidenceUsage: parseJson(mapValue.evidence_usage_json, {
       usedAccessibilityEvents: false,
       usedWindowTitles: false,
       usedBrowserDomains: false
     }),
-    evidenceWindowIds: parseJson(row.evidence_window_ids_json, []),
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
+    evidenceWindowIds: parseJson(mapValue.evidence_window_ids_json, []),
+    createdAt: mapValue.created_at,
+    updatedAt: mapValue.updated_at
   };
 }
 var ActivityEvidenceRepository = class {
@@ -9460,7 +9460,7 @@ var ActivityEvidenceRepository = class {
   }
   clearContextData(kind) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     let changed = 0;
     database.exec("BEGIN");
     try {
@@ -9505,7 +9505,7 @@ var ActivityEvidenceRepository = class {
           eventIds: []
         } : sourceRefs;
         if (JSON.stringify(redacted) === JSON.stringify(blocks) && JSON.stringify(nextSourceRefs) === JSON.stringify(sourceRefs)) continue;
-        changed += Number(update.run(JSON.stringify(redacted), JSON.stringify(nextSourceRefs), now, row.id).changes);
+        changed += Number(update.run(JSON.stringify(redacted), JSON.stringify(nextSourceRefs), isoString, row.id).changes);
       }
       changed += Number(database.prepare(`
         DELETE FROM work_record_evidence_links WHERE evidence_type = 'activity_summary'
@@ -9544,7 +9544,7 @@ var ActivityEvidenceRepository = class {
       const update = database.prepare(`
         UPDATE capture_evidence_windows SET activity_blocks_json = ?, updated_at = ? WHERE id = ?
       `);
-      const now = (/* @__PURE__ */new Date()).toISOString();
+      const isoString = (/* @__PURE__ */new Date()).toISOString();
       let changed = 0;
       for (const row of rows) {
         const blocks = parseJson(row.activity_blocks_json, []);
@@ -9555,7 +9555,7 @@ var ActivityEvidenceRepository = class {
           browserDomain: null
         }));
         if (JSON.stringify(redacted) === JSON.stringify(blocks)) continue;
-        changed += Number(update.run(JSON.stringify(redacted), now, row.id).changes);
+        changed += Number(update.run(JSON.stringify(redacted), isoString, row.id).changes);
       }
       changed += Number(database.prepare(`
         DELETE FROM work_record_evidence_links
@@ -9572,18 +9572,18 @@ var ActivityEvidenceRepository = class {
   }
   createWindow(input) {
     const fallbackValue = input.id ?? crypto.randomUUID();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO capture_evidence_windows (
         id, started_at, ended_at, trigger, status, activity_blocks_json,
         source_refs_json, coverage_json, has_task_boundary, long_gap, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(fallbackValue, input.startedAt, input.endedAt, input.trigger, input.status, JSON.stringify(input.activityBlocks), JSON.stringify(input.sourceRefs), JSON.stringify(input.coverage), input.hasTaskBoundary ? 1 : 0, input.longGap ? 1 : 0, now, now);
+    `).run(fallbackValue, input.startedAt, input.endedAt, input.trigger, input.status, JSON.stringify(input.activityBlocks), JSON.stringify(input.sourceRefs), JSON.stringify(input.coverage), input.hasTaskBoundary ? 1 : 0, input.longGap ? 1 : 0, isoString, isoString);
     return {
       ...input,
       id: fallbackValue,
-      createdAt: now,
-      updatedAt: now
+      createdAt: isoString,
+      updatedAt: isoString
     };
   }
   updateWindowStatus(windowValue, status) {
@@ -9657,8 +9657,8 @@ var ActivityEvidenceRepository = class {
     const uniqueIds = Array.from(new Set(evidenceWindowIds));
     const rows = [];
     for (let offset = 0; offset < uniqueIds.length; offset += SQLITE_ID_QUERY_CHUNK_SIZE) {
-      const ids = uniqueIds.slice(offset, offset + SQLITE_ID_QUERY_CHUNK_SIZE);
-      const placeholders = ids.map(() => "?").join(", ");
+      const part = uniqueIds.slice(offset, offset + SQLITE_ID_QUERY_CHUNK_SIZE);
+      const placeholders = part.map(() => "?").join(", ");
       rows.push(...getDatabase().prepare(`
         SELECT
           work_records.id,
@@ -9670,19 +9670,19 @@ var ActivityEvidenceRepository = class {
         INNER JOIN work_records ON work_records.id = work_record_evidence_links.work_record_id
         WHERE work_record_evidence_links.evidence_type = 'capture_window'
           AND work_record_evidence_links.evidence_id IN (${placeholders})
-      `).all(...ids));
+      `).all(...part));
     }
-    return rows.map(row => ({
-      id: row.id,
-      startedAt: row.started_at,
-      endedAt: row.ended_at,
-      summary: row.summary,
-      evidenceId: row.evidence_id
+    return rows.map(item => ({
+      id: item.id,
+      startedAt: item.started_at,
+      endedAt: item.ended_at,
+      summary: item.summary,
+      evidenceId: item.evidence_id
     })).sort((left, right) => left.startedAt.localeCompare(right.startedAt) || left.id.localeCompare(right.id) || left.evidenceId.localeCompare(right.evidenceId));
   }
   upsertSummary(input) {
     const randomUUIDResult = crypto.randomUUID();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO activity_summaries (
         id, level, trigger, started_at, ended_at, title, summary,
@@ -9696,7 +9696,7 @@ var ActivityEvidenceRepository = class {
         evidence_usage_json = excluded.evidence_usage_json,
         evidence_window_ids_json = excluded.evidence_window_ids_json,
         updated_at = excluded.updated_at
-    `).run(randomUUIDResult, input.level, input.trigger, input.startedAt, input.endedAt, input.title, input.summary, JSON.stringify(input.applications), JSON.stringify(input.evidenceUsage), JSON.stringify(input.evidenceWindowIds), now, now);
+    `).run(randomUUIDResult, input.level, input.trigger, input.startedAt, input.endedAt, input.title, input.summary, JSON.stringify(input.applications), JSON.stringify(input.evidenceUsage), JSON.stringify(input.evidenceWindowIds), isoString, isoString);
     return mapSummary(getDatabase().prepare(`
       SELECT * FROM activity_summaries WHERE level = ? AND started_at = ? AND ended_at = ?
     `).get(input.level, input.startedAt, input.endedAt));
@@ -9895,16 +9895,16 @@ var ScreenHeatmapRepository = class {
       SELECT display_key, label, bounds_x, bounds_y, bounds_width, bounds_height,
              scale_factor, is_primary, last_seen_at
       FROM screen_heatmap_displays
-    `).all().map(row => ({
-      displayKey: row.display_key,
-      label: row.label,
-      x: Number(row.bounds_x),
-      y: Number(row.bounds_y),
-      width: Number(row.bounds_width),
-      height: Number(row.bounds_height),
-      scaleFactor: Number(row.scale_factor) || 1,
-      isPrimary: Number(row.is_primary) === 1,
-      lastSeenAt: row.last_seen_at
+    `).all().map(item => ({
+      displayKey: item.display_key,
+      label: item.label,
+      x: Number(item.bounds_x),
+      y: Number(item.bounds_y),
+      width: Number(item.bounds_width),
+      height: Number(item.bounds_height),
+      scaleFactor: Number(item.scale_factor) || 1,
+      isPrimary: Number(item.is_primary) === 1,
+      lastSeenAt: item.last_seen_at
     }));
   }
   /** 区间内按显示器、应用和区域合并后的覆盖时长，按时长从多到少取前 limit 条 */
@@ -9917,15 +9917,15 @@ var ScreenHeatmapRepository = class {
       GROUP BY display_key, app_key, cell_x, cell_y, cell_width, cell_height
       ORDER BY active_ms DESC
       LIMIT ?
-    `).all(startDate, endDate, limit).map(row => ({
-      displayKey: row.display_key,
-      appKey: row.app_key,
-      appName: row.app_name,
-      x: Number(row.cell_x),
-      y: Number(row.cell_y),
-      width: Number(row.cell_width),
-      height: Number(row.cell_height),
-      activeMs: Number(row.active_ms)
+    `).all(startDate, endDate, limit).map(item => ({
+      displayKey: item.display_key,
+      appKey: item.app_key,
+      appName: item.app_name,
+      x: Number(item.cell_x),
+      y: Number(item.cell_y),
+      width: Number(item.cell_width),
+      height: Number(item.cell_height),
+      activeMs: Number(item.active_ms)
     }));
   }
   sumByDisplay(startDate, endDate) {
@@ -9934,9 +9934,9 @@ var ScreenHeatmapRepository = class {
       FROM screen_heatmap_daily
       WHERE stat_date BETWEEN ? AND ?
       GROUP BY display_key
-    `).all(startDate, endDate).map(row => ({
-      key: row.key,
-      activeMs: Number(row.active_ms)
+    `).all(startDate, endDate).map(event => ({
+      key: event.key,
+      activeMs: Number(event.active_ms)
     }));
   }
   sumByApp(startDate, endDate) {
@@ -9945,10 +9945,10 @@ var ScreenHeatmapRepository = class {
       FROM screen_heatmap_daily
       WHERE stat_date BETWEEN ? AND ?
       GROUP BY app_key
-    `).all(startDate, endDate).map(row => ({
-      key: row.key,
-      name: row.name,
-      activeMs: Number(row.active_ms)
+    `).all(startDate, endDate).map(event => ({
+      key: event.key,
+      name: event.name,
+      activeMs: Number(event.active_ms)
     }));
   }
   countActiveDays(startDate, endDate) {
@@ -10026,7 +10026,7 @@ function resolveHeatmapDisplays(connected, stored) {
     row,
     connected: true
   });
-  const orphans = Array.from(stored.values()).filter(row => !connected.has(row.displayKey)).sort((left, right) => right.lastSeenAt.localeCompare(left.lastSeenAt));
+  const orphans = Array.from(stored.values()).filter(item => !connected.has(item.displayKey)).sort((left, right) => right.lastSeenAt.localeCompare(left.lastSeenAt));
   const disconnected = [];
   for (const row of orphans) {
     const live = findSameDisplay(row, liveRows);
@@ -10116,8 +10116,8 @@ function listConnectedDisplays() {
   try {
     const primaryId = screen.getPrimaryDisplay().id;
     return new Map(screen.getAllDisplays().map(display => {
-      const row = toDisplayRow(display, primaryId, seenAt);
-      return [row.displayKey, row];
+      const toDisplayRowResult = toDisplayRow(display, primaryId, seenAt);
+      return [toDisplayRowResult.displayKey, toDisplayRowResult];
     }));
   } catch {
     return /* @__PURE__ */new Map();
@@ -10168,9 +10168,9 @@ var ScreenHeatmapService = class {
         ...rect,
         activeMs
       };
-      const key = incrementKey(entry);
-      const existing = this.pending.get(key);
-      if (existing) existing.activeMs += activeMs;else this.pending.set(key, entry);
+      const incrementKeyResult = incrementKey(entry);
+      const existing = this.pending.get(incrementKeyResult);
+      if (existing) existing.activeMs += activeMs;else this.pending.set(incrementKeyResult, entry);
     }
     this.ensureTimer();
   }
@@ -10190,9 +10190,9 @@ var ScreenHeatmapService = class {
       this.pendingGeneration = null;
     } catch (error) {
       for (const entry of entries) {
-        const key = incrementKey(entry);
-        const existing = this.pending.get(key);
-        if (existing) existing.activeMs += entry.activeMs;else this.pending.set(key, entry);
+        const incrementKeyResult = incrementKey(entry);
+        const existing = this.pending.get(incrementKeyResult);
+        if (existing) existing.activeMs += entry.activeMs;else this.pending.set(incrementKeyResult, entry);
       }
       for (const display of displays) if (!this.pendingDisplays.has(display.displayKey)) this.pendingDisplays.set(display.displayKey, display);
       throw error;
@@ -10210,7 +10210,7 @@ var ScreenHeatmapService = class {
   query(input) {
     this.flushSafely("查询");
     const connected = listConnectedDisplays();
-    const stored = new Map(screenHeatmapRepository.listDisplays().map(row => [row.displayKey, row]));
+    const stored = new Map(screenHeatmapRepository.listDisplays().map(item => [item.displayKey, item]));
     const resolved = resolveHeatmapDisplays(connected, stored);
     const totals = /* @__PURE__ */new Map();
     for (const total of screenHeatmapRepository.sumByDisplay(input.startDate, input.endDate)) {
@@ -10250,16 +10250,16 @@ var ScreenHeatmapService = class {
       name: total.name,
       activeMs: total.activeMs
     }));
-    const appIndex = new Map(apps.map((app, index) => [app.key, index]));
+    const appIndex = new Map(apps.map((event, index) => [event.key, index]));
     const rects = /* @__PURE__ */new Map();
     for (const row of screenHeatmapRepository.listRects(input.startDate, input.endDate, MAX_RECTS)) {
       const resolvedKey = resolved.get(row.displayKey)?.key;
       const display = resolvedKey === undefined ? undefined : displayIndex.get(resolvedKey);
       const app = appIndex.get(row.appKey);
       if (display === undefined || app === undefined || row.activeMs <= 0) continue;
-      const key = [display, app, row.x, row.y, row.width, row.height].join("\0");
-      const existing = rects.get(key);
-      if (existing) existing.activeMs += row.activeMs;else rects.set(key, {
+      const joined = [display, app, row.x, row.y, row.width, row.height].join("\0");
+      const existing = rects.get(joined);
+      if (existing) existing.activeMs += row.activeMs;else rects.set(joined, {
         display,
         app,
         x: row.x,
@@ -10276,7 +10276,7 @@ var ScreenHeatmapService = class {
       displays,
       apps,
       rects: Array.from(rects.values()),
-      totalActiveMs: displays.reduce((sum, display) => sum + display.activeMs, 0),
+      totalActiveMs: displays.reduce((acc, display) => acc + display.activeMs, 0),
       activeDays: screenHeatmapRepository.countActiveDays(input.startDate, input.endDate),
       generatedAt: (/* @__PURE__ */new Date()).toISOString()
     };
@@ -10350,10 +10350,10 @@ function forEachEncodedCell(text, visit) {
   };
   let cell = -1;
   while (offset < bytes.length) {
-    const gap = readVarint();
+    const varint = readVarint();
     const count = readVarint();
-    if (gap === null || count === null) return;
-    cell += gap + 1;
+    if (varint === null || count === null) return;
+    cell += varint + 1;
     if (cell >= CELL_COUNT$1) return;
     if (count > 0) visit(cell, count);
   }
@@ -10445,17 +10445,17 @@ var MouseHeatmapRepository = class {
       SELECT display_key, label, bounds_x, bounds_y, bounds_width, bounds_height,
              scale_factor, is_primary, is_internal, last_seen_at
       FROM mouse_heatmap_displays
-    `).all().map(row => ({
-      displayKey: row.display_key,
-      label: row.label,
-      x: Number(row.bounds_x),
-      y: Number(row.bounds_y),
-      width: Number(row.bounds_width),
-      height: Number(row.bounds_height),
-      scaleFactor: Number(row.scale_factor) || 1,
-      isPrimary: Number(row.is_primary) === 1,
-      isInternal: row.is_internal === null || row.is_internal === undefined ? null : Number(row.is_internal) === 1,
-      lastSeenAt: row.last_seen_at
+    `).all().map(item => ({
+      displayKey: item.display_key,
+      label: item.label,
+      x: Number(item.bounds_x),
+      y: Number(item.bounds_y),
+      width: Number(item.bounds_width),
+      height: Number(item.bounds_height),
+      scaleFactor: Number(item.scale_factor) || 1,
+      isPrimary: Number(item.is_primary) === 1,
+      isInternal: item.is_internal === null || item.is_internal === undefined ? null : Number(item.is_internal) === 1,
+      lastSeenAt: item.last_seen_at
     }));
   }
   /** 区间内每天每块屏每个图层的一行格子数据，逐行读出，避免一年的数据一次全放进内存 */
@@ -10746,7 +10746,7 @@ var MouseHeatmapService = class {
   query(input) {
     this.flushSafely("查询");
     const connected = listConnectedDisplays();
-    const stored = new Map(mouseHeatmapRepository.listDisplays().map(row => [row.displayKey, row]));
+    const stored = new Map(mouseHeatmapRepository.listDisplays().map(item => [item.displayKey, item]));
     const resolved = resolveHeatmapDisplays(connected, stored);
     const accumulators = /* @__PURE__ */new Map();
     for (const row of mouseHeatmapRepository.iterateCells(input.startDate, input.endDate)) {
@@ -11200,24 +11200,24 @@ var AppUsageService = class {
       if (this.running && runGeneration !== this.runGeneration) this.detect("restart");
     }
   }
-  handleDetectionFailure(now, monotonicNow) {
+  handleDetectionFailure(detection, monotonicNow) {
     this.consecutiveFailures += 1;
     if (this.failureStartedAt === null) {
-      this.advanceCurrent(now, monotonicNow);
-      this.failureStartedAt = now;
+      this.advanceCurrent(detection, monotonicNow);
+      this.failureStartedAt = detection;
       return;
     }
-    if (now - this.failureStartedAt < detectionFailureGraceMs) return;
+    if (detection - this.failureStartedAt < detectionFailureGraceMs) return;
     if (this.current?.activityState !== "unknown") {
       this.closeCurrent("error");
-      this.beginSession("unknown", null, null, "detection-failed", this.failureStartedAt, monotonicNow - (now - this.failureStartedAt));
+      this.beginSession("unknown", null, null, "detection-failed", this.failureStartedAt, monotonicNow - (detection - this.failureStartedAt));
     }
-    this.advanceCurrent(now, monotonicNow);
+    this.advanceCurrent(detection, monotonicNow);
   }
-  handleSyntheticState(state, snapshot, now, monotonicNow, startReason) {
+  handleSyntheticState(state, snapshot, stateValue, monotonicNow, startReason) {
     if (this.current?.activityState !== state) {
       if (this.current) this.closeCurrent("privacy-excluded");
-      this.beginSession(state, null, null, startReason, now, monotonicNow);
+      this.beginSession(state, null, null, startReason, stateValue, monotonicNow);
     } else this.current.sampleCount += 1;
     this.currentSnapshot = null;
   }
@@ -11227,13 +11227,13 @@ var AppUsageService = class {
       this.resetRuntimeState();
       return;
     }
-    const iso = new Date(startedAt).toISOString();
+    const isoString = new Date(startedAt).toISOString();
     this.current = {
       id: crypto.randomUUID(),
       applicationId,
       activityState: state,
-      startedAt: iso,
-      endedAt: iso,
+      startedAt: isoString,
+      endedAt: isoString,
       durationMs: 0,
       activeDurationMs: 0,
       idleDurationMs: 0,
@@ -11245,8 +11245,8 @@ var AppUsageService = class {
       detectionSource: snapshot?.source ?? "polling-fallback",
       confidence: snapshot?.confidence ?? "low",
       isOpen: true,
-      createdAt: iso,
-      updatedAt: iso,
+      createdAt: isoString,
+      updatedAt: isoString,
       databaseGeneration: this.databaseGeneration,
       lastMonotonicAt: monotonicAt,
       activeStreakMs: 0
@@ -11258,11 +11258,11 @@ var AppUsageService = class {
     }
     if (snapshot) this.updateContext(snapshot, startedAt, monotonicAt);
   }
-  advanceCurrent(now, monotonicNow) {
+  advanceCurrent(advance, monotonicNow) {
     if (!this.current) return;
     const elapsed = Math.max(0, Math.min(maxAccountedIntervalMs, monotonicNow - this.current.lastMonotonicAt));
     this.current.lastMonotonicAt = monotonicNow;
-    this.current.endedAt = new Date(now).toISOString();
+    this.current.endedAt = new Date(advance).toISOString();
     this.current.durationMs += elapsed;
     if (this.current.activityState === "app") {
       const settings = settingsRepository.getSettings();
@@ -11275,7 +11275,7 @@ var AppUsageService = class {
       this.current.activeStreakMs += activePart;
       this.current.longestActiveDurationMs = Math.max(this.current.longestActiveDurationMs, this.current.activeStreakMs);
       if (idlePart > 0) this.current.activeStreakMs = 0;
-      const intervalStartedAt = now - elapsed;
+      const intervalStartedAt = advance - elapsed;
       const windowBounds = this.currentSnapshot?.windowBounds;
       if (activePart > 0 && settings.enableScreenHeatmap && windowBounds) screenHeatmapService.record({
         appName: this.currentSnapshot?.app?.displayName ?? null,
@@ -11286,7 +11286,7 @@ var AppUsageService = class {
         if (!this.current) return;
       }
       if (idlePart > 0) {
-        this.appendActivityDuration("idle", intervalStartedAt + activePart, now, idlePart, monotonicNow);
+        this.appendActivityDuration("idle", intervalStartedAt + activePart, advance, idlePart, monotonicNow);
         if (!this.current) return;
       }
       if (this.currentContext) {
@@ -11311,7 +11311,7 @@ var AppUsageService = class {
     this.persistCurrent("close");
     this.resetRuntimeState();
   }
-  updateContext(snapshot, now, monotonicNow) {
+  updateContext(snapshot, context, monotonicNow) {
     const settings = settingsRepository.getSettings();
     if (process.platform === "darwin" && snapshot.browser?.isPrivate === true) {
       this.closeCurrentContext();
@@ -11321,33 +11321,33 @@ var AppUsageService = class {
       this.closeCurrentContext();
       return;
     }
-    const key = contextKey(snapshot);
-    if (this.currentContext?.key === key) {
+    const contextKeyResult = contextKey(snapshot);
+    if (this.currentContext?.key === contextKeyResult) {
       this.pendingContext = null;
       return;
     }
     if (this.currentContext) {
-      if (this.pendingContext?.key !== key) {
+      if (this.pendingContext?.key !== contextKeyResult) {
         this.pendingContext = {
-          key,
+          key: contextKeyResult,
           snapshot,
-          firstSeenAt: now
+          firstSeenAt: context
         };
         return;
       }
-      if (now - this.pendingContext.firstSeenAt < 3e3) return;
+      if (context - this.pendingContext.firstSeenAt < 3e3) return;
       snapshot = this.pendingContext.snapshot;
       this.pendingContext = null;
     }
     const hadContext = Boolean(this.currentContext);
     this.closeCurrentContext();
     if (!this.current) return;
-    const iso = new Date(now).toISOString();
+    const isoString = new Date(context).toISOString();
     if (hadContext) this.current.contextSwitchCount += 1;
     this.currentContext = {
       id: crypto.randomUUID(),
       sessionId: this.current.id,
-      key,
+      key: contextKeyResult,
       windowId: settings.enableAppWindowContext ? snapshot.window?.id ?? null : null,
       windowTitle: settings.enableAppWindowContext ? snapshot.window?.title ?? null : null,
       documentHint: settings.enableAppWindowContext ? snapshot.window?.documentHint ?? null : null,
@@ -11355,8 +11355,8 @@ var AppUsageService = class {
       browserDomain: settings.enableBrowserDomainTracking ? snapshot.browser?.domain ?? null : null,
       displayId: settings.enableAppWindowContext ? snapshot.window?.displayId ?? null : null,
       bounds: settings.enableAppWindowContext ? snapshot.window?.bounds ?? null : null,
-      startedAt: iso,
-      endedAt: iso,
+      startedAt: isoString,
+      endedAt: isoString,
       activeDurationMs: 0,
       lastMonotonicAt: monotonicNow
     };
@@ -11733,9 +11733,9 @@ var AppUsageService = class {
     const sessionCount = summary.reduce((total, item) => total + item.sessionCount, 0);
     const start = new Date(startedAt);
     const requestedEnd = new Date(endedAt);
-    const end = new Date(Math.min(requestedEnd.getTime(), Date.now()));
+    const date = new Date(Math.min(requestedEnd.getTime(), Date.now()));
     const startDay = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
-    const endDay = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
+    const endDay = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
     const elapsedDays = Number.isFinite(startDay) && Number.isFinite(endDay) && endDay >= startDay ? Math.floor((endDay - startDay) / 864e5) + 1 : 1;
     return {
       totalApps: summary.length,
@@ -11753,9 +11753,9 @@ var AppUsageService = class {
     const statisticalTimeline = this.collectSessions(startedAt, endedAt).filter(session => session.activityState !== "app" || session.durationSec >= 2 || session.sampleCount > 1);
     const appNames = /* @__PURE__ */new Map();
     const appKeyOf = session => {
-      const key = session.appName.trim().toLocaleLowerCase();
-      if (!appNames.has(key)) appNames.set(key, session.appName);
-      return key;
+      const toLocaleLowerCase = session.appName.trim().toLocaleLowerCase();
+      if (!appNames.has(toLocaleLowerCase)) appNames.set(toLocaleLowerCase, session.appName);
+      return toLocaleLowerCase;
     };
     const periodOfHour = hour => APP_USAGE_DAY_PERIODS.find(item => hour < item.endHour) ?? APP_USAGE_DAY_PERIODS[APP_USAGE_DAY_PERIODS.length - 1];
     const periodTotals = /* @__PURE__ */new Map();
@@ -11826,11 +11826,11 @@ var AppUsageService = class {
     };
   }
   getDetail(applicationId, startedAt, endedAt) {
-    const app = appUsageRepository.getApplication(applicationId);
-    if (!app) return null;
+    const application = appUsageRepository.getApplication(applicationId);
+    if (!application) return null;
     const timelineSessions = this.collectSessions(startedAt, endedAt);
     const allSessions = timelineSessions.filter(session => session.activityState === "app");
-    const appDisplayKey = app.appName.trim().toLocaleLowerCase();
+    const appDisplayKey = application.appName.trim().toLocaleLowerCase();
     const sessions = allSessions.filter(session => session.appName.trim().toLocaleLowerCase() === appDisplayKey);
     const dailyTotals = /* @__PURE__ */new Map();
     const hourlyActiveDurationSec = Array.from({
@@ -11871,7 +11871,7 @@ var AppUsageService = class {
       if (previous.applicationId === applicationId) transitionTotals.set(current.appName, (transitionTotals.get(current.appName) ?? 0) + 1);else if (current.applicationId === applicationId) transitionTotals.set(previous.appName, (transitionTotals.get(previous.appName) ?? 0) + 1);
     }
     return {
-      ...app,
+      ...application,
       dailyActiveDuration: Array.from(dailyTotals.entries()).sort((left, right) => left[0].localeCompare(right[0])).map(([date, durationSec]) => ({
         date,
         durationSec: Math.round(durationSec)
@@ -12063,14 +12063,14 @@ var growthEventRepository = {
       WHERE owner_user_id = ? ORDER BY created_at, rowid LIMIT ?`).all(owner.userId, Math.max(1, Math.min(50, limit)));
     const first = rows[0];
     if (!first) return [];
-    return rows.filter(row => row.device_id === first.device_id && row.app_version === first.app_version && row.platform === first.platform).map(row => ({
-      eventId: row.event_id,
-      eventName: row.event_name,
-      occurredAt: row.occurred_at,
-      props: JSON.parse(row.props_json),
-      deviceId: row.device_id,
-      appVersion: row.app_version,
-      platform: row.platform
+    return rows.filter(item => item.device_id === first.device_id && item.app_version === first.app_version && item.platform === first.platform).map(item => ({
+      eventId: item.event_id,
+      eventName: item.event_name,
+      occurredAt: item.occurred_at,
+      props: JSON.parse(item.props_json),
+      deviceId: item.device_id,
+      appVersion: item.app_version,
+      platform: item.platform
     }));
   },
   acknowledge(owner, accepted, duplicates, rejected) {
@@ -12270,13 +12270,13 @@ function retry(session, ids, code, minimumDelay = 0) {
   session.nextAttemptAt = Date.now() + Math.max(minimumDelay, backoff);
   growthEventRepository.defer(session.actor, ids, code, session.nextAttemptAt);
 }
-function validResult(input, ids) {
+function validResult(input, result) {
   if (!input || typeof input !== "object") return false;
   const data = input;
   if (!Array.isArray(data.acceptedIds) || !Array.isArray(data.duplicateIds) || !Array.isArray(data.rejected)) return false;
   const seen = /* @__PURE__ */new Set();
   const validId = id => {
-    if (typeof id !== "string" || !ids.has(id) || seen.has(id)) return false;
+    if (typeof id !== "string" || !result.has(id) || seen.has(id)) return false;
     seen.add(id);
     return true;
   };
@@ -12444,9 +12444,9 @@ function schedule() {
     flush();
   }, 25);
 }
-function remember(key, value) {
-  cache.delete(key);
-  cache.set(key, value);
+function remember(rememberValue, value) {
+  cache.delete(rememberValue);
+  cache.set(rememberValue, value);
   while (cache.size > 64) cache.delete(cache.keys().next().value);
 }
 async function fallback(read) {
@@ -12704,16 +12704,16 @@ var DesktopSyncService = class {
       this.schedule();
     };
   }
-  acknowledge(key, deliveryId) {
+  acknowledge(acknowledge, deliveryId) {
     if ((authRepository.getSession()?.token ?? null) !== this.ownerToken) return;
-    const c = this.consumers.get(key);
+    const c = this.consumers.get(acknowledge);
     if (c?.pending?.id === deliveryId) c.pending = undefined;
   }
   align(time) {
     return this.anchor + Math.ceil((time - this.anchor) / GRID) * GRID;
   }
-  advance(due, interval, now) {
-    return due + Math.max(1, Math.floor((now - due) / interval) + 1) * interval;
+  advance(advance, interval, advanceValue) {
+    return advance + Math.max(1, Math.floor((advanceValue - advance) / interval) + 1) * interval;
   }
   schedule() {
     if (this.timer) clearTimeout(this.timer);
@@ -12935,9 +12935,9 @@ function safeProperties(input) {
   if (!input) return undefined;
   const result = {};
   for (const [rawKey, value] of Object.entries(input).slice(0, 32)) {
-    const key = rawKey.trim().slice(0, 64);
-    if (!key) continue;
-    if (value === null || typeof value === "number" || typeof value === "boolean") result[key] = value;else if (typeof value === "string") result[key] = value.slice(0, 256);
+    const part = rawKey.trim().slice(0, 64);
+    if (!part) continue;
+    if (value === null || typeof value === "number" || typeof value === "boolean") result[part] = value;else if (typeof value === "string") result[part] = value.slice(0, 256);
   }
   return Object.keys(result).length > 0 ? result : undefined;
 }

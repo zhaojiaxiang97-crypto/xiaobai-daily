@@ -15,17 +15,17 @@ function parseKeywords(value) {
     return [];
   }
 }
-function mapRow(row) {
+function mapRow(mapValue) {
   return {
-    id: row.id,
-    name: row.name,
-    keywords: parseKeywords(row.keywords_json),
-    color: row.color,
-    enabled: row.enabled === 1,
-    sortOrder: row.sort_order,
-    isBuiltin: row.is_builtin === 1,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
+    id: mapValue.id,
+    name: mapValue.name,
+    keywords: parseKeywords(mapValue.keywords_json),
+    color: mapValue.color,
+    enabled: mapValue.enabled === 1,
+    sortOrder: mapValue.sort_order,
+    isBuiltin: mapValue.is_builtin === 1,
+    createdAt: mapValue.created_at,
+    updatedAt: mapValue.updated_at
   };
 }
 var WorkRecordCategoryRepository = class {
@@ -49,7 +49,7 @@ var WorkRecordCategoryRepository = class {
     return getDatabase().prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_sort_order FROM work_record_categories").get()?.next_sort_order ?? 1;
   }
   create(input) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const randomUUID = crypto.randomUUID();
     const color = input.color ?? "zinc";
     const enabled = input.enabled === false ? 0 : 1;
@@ -66,7 +66,7 @@ var WorkRecordCategoryRepository = class {
           updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(randomUUID, input.name, JSON.stringify(input.keywords), color, enabled, input.sortOrder, 0, now, now);
+      `).run(randomUUID, input.name, JSON.stringify(input.keywords), color, enabled, input.sortOrder, 0, isoString, isoString);
     return {
       id: randomUUID,
       name: input.name,
@@ -75,8 +75,8 @@ var WorkRecordCategoryRepository = class {
       enabled: enabled === 1,
       sortOrder: input.sortOrder,
       isBuiltin: false,
-      createdAt: now,
-      updatedAt: now
+      createdAt: isoString,
+      updatedAt: isoString
     };
   }
   update(input) {
@@ -118,11 +118,11 @@ var WorkRecordCategoryRepository = class {
       )
       VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?)
     `);
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     let inserted = 0;
     for (const preset of presets) {
       if (findById.get(preset.id) || findByName.get(preset.name)) continue;
-      inserted += Number(insert.run(preset.id, preset.name, JSON.stringify(preset.keywords), preset.color, enabled ? 1 : 0, preset.sortOrder, now, now).changes);
+      inserted += Number(insert.run(preset.id, preset.name, JSON.stringify(preset.keywords), preset.color, enabled ? 1 : 0, preset.sortOrder, isoString, isoString).changes);
     }
     return inserted;
   }
@@ -143,16 +143,16 @@ var WorkRecordCategoryRepository = class {
     return this.ensureBuiltinPresets([...presets.filter(preset => enabledIds.has(preset.id)), clipboardPreset], true) + this.ensureBuiltinPresets(presets.filter(preset => !enabledIds.has(preset.id)), false);
   }
   /** 批量启停内置分类（切换使用模式用）；只动 is_builtin=1 的行，用户自定义分类不受影响 */
-  setBuiltinEnabled(ids, enabled) {
-    if (ids.length === 0) return 0;
+  setBuiltinEnabled(count, enabled) {
+    if (count.length === 0) return 0;
     const statement = getDatabase().prepare(`
       UPDATE work_record_categories
       SET enabled = ?, updated_at = ?
       WHERE id = ? AND is_builtin = 1
     `);
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     let changed = 0;
-    for (const id of ids) changed += Number(statement.run(enabled ? 1 : 0, now, id).changes);
+    for (const id of count) changed += Number(statement.run(enabled ? 1 : 0, isoString, id).changes);
     return changed;
   }
 };
@@ -181,29 +181,29 @@ var HISTORY_COLUMNS = `
   id, preview, character_count, copy_count, use_count, is_pinned,
   first_copied_at, copied_at, last_used_at
 `;
-function mapHistoryRow(row) {
+function mapHistoryRow(mapValue) {
   return {
-    id: row.id,
-    preview: row.preview,
-    characterCount: row.character_count,
-    copyCount: row.copy_count,
-    useCount: row.use_count,
-    isPinned: row.is_pinned === 1,
-    firstCopiedAt: row.first_copied_at,
-    copiedAt: row.copied_at,
-    lastUsedAt: row.last_used_at
+    id: mapValue.id,
+    preview: mapValue.preview,
+    characterCount: mapValue.character_count,
+    copyCount: mapValue.copy_count,
+    useCount: mapValue.use_count,
+    isPinned: mapValue.is_pinned === 1,
+    firstCopiedAt: mapValue.first_copied_at,
+    copiedAt: mapValue.copied_at,
+    lastUsedAt: mapValue.last_used_at
   };
 }
-function mapPhraseRow(row) {
+function mapPhraseRow(mapValue) {
   return {
-    id: row.id,
-    title: row.title,
-    content: row.content,
-    sortOrder: row.sort_order,
-    useCount: row.use_count,
-    lastUsedAt: row.last_used_at,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at
+    id: mapValue.id,
+    title: mapValue.title,
+    content: mapValue.content,
+    sortOrder: mapValue.sort_order,
+    useCount: mapValue.use_count,
+    lastUsedAt: mapValue.last_used_at,
+    createdAt: mapValue.created_at,
+    updatedAt: mapValue.updated_at
   };
 }
 function escapeLikePattern(value) {
@@ -316,13 +316,13 @@ var ClipboardAssistantRepository = class {
   }
   createPhrase(input) {
     const database = getDatabase();
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const randomUUID = crypto.randomUUID();
     const nextSortOrder = database.prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM clipboard_phrases").get().next;
     database.prepare(`
       INSERT INTO clipboard_phrases (id, title, content, sort_order, use_count, last_used_at, created_at, updated_at)
       VALUES (?, ?, ?, ?, 0, NULL, ?, ?)
-    `).run(randomUUID, input.title, input.content, nextSortOrder, now, now);
+    `).run(randomUUID, input.title, input.content, nextSortOrder, isoString, isoString);
     return this.findPhrase(randomUUID);
   }
   updatePhrase(phrase, input) {
@@ -334,18 +334,18 @@ var ClipboardAssistantRepository = class {
     return Number(result.changes) > 0;
   }
   /** 按传入顺序重排；未出现在列表里的常用语排在后面，保持原有先后 */
-  reorderPhrases(ids) {
+  reorderPhrases(items) {
     const database = getDatabase();
     const existing = this.listPhrases().map(phrase => phrase.id);
     const known = new Set(existing);
-    const ordered = [...new Set(ids.filter(item => known.has(item)))];
+    const ordered = [...new Set(items.filter(item => known.has(item)))];
     const orderedSet = new Set(ordered);
     const finalOrder = [...ordered, ...existing.filter(item => !orderedSet.has(item))];
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const statement = database.prepare("UPDATE clipboard_phrases SET sort_order = ?, updated_at = ? WHERE id = ?");
     database.exec("BEGIN");
     try {
-      finalOrder.forEach((item, index) => statement.run(index + 1, now, item));
+      finalOrder.forEach((item, index) => statement.run(index + 1, isoString, item));
       database.exec("COMMIT");
     } catch (error) {
       database.exec("ROLLBACK");
@@ -384,8 +384,8 @@ function language() {
     return "zh-CN";
   }
 }
-function message(key) {
-  return t(`clipboardAssistant.${key}`, language());
+function message(messageValue) {
+  return t(`clipboardAssistant.${messageValue}`, language());
 }
 /** 截图美化开启时它的快捷键，用来避免两边设成同一个组合键 */
 function screenshotShortcutOf(settings) {
@@ -397,11 +397,11 @@ function countCharacters(text) {
   return count;
 }
 /** 按 Unicode 字符截断，避免切开代理对 */
-function truncateCharacters(text, max) {
+function truncateCharacters(text, characters) {
   let count = 0;
   let end = 0;
   for (const char of text) {
-    if (count >= max) break;
+    if (count >= characters) break;
     count += 1;
     end += char.length;
   }
@@ -650,8 +650,8 @@ var ClipboardAssistantService = class {
     clipboardAssistantRepository.deletePhrase(phrase);
     this.queueChanged("phrases");
   }
-  reorderPhrases(ids) {
-    clipboardAssistantRepository.reorderPhrases(ids);
+  reorderPhrases(reorder) {
+    clipboardAssistantRepository.reorderPhrases(reorder);
     this.queueChanged("phrases");
     return clipboardAssistantRepository.listPhrases();
   }
@@ -806,21 +806,21 @@ var ClipboardAssistantService = class {
     }
   }
   record(text) {
-    const now = (/* @__PURE__ */new Date()).toISOString();
+    const isoString = (/* @__PURE__ */new Date()).toISOString();
     const contentHash = hashText(text);
     clipboardAssistantRepository.recordText({
       text,
       contentHash,
       preview: buildPreview(text),
       characterCount: countCharacters(text),
-      copiedAt: now
+      copiedAt: isoString
     });
     this.cleanupRetention(false);
     this.queueChanged("history");
-    if (this.syncToTimeline) this.writeTimelineRecord(text, contentHash, now);
+    if (this.syncToTimeline) this.writeTimelineRecord(text, contentHash, isoString);
   }
   /** 时间线里另存一份，不进时间线概括、不占记录次数；暂停记录时不写 */
-  writeTimelineRecord(text, contentHash, now) {
+  writeTimelineRecord(text, contentHash, record) {
     if (!settingsRepository.getSettings().enableRecording) return;
     const normalized = text.replace(/\r\n?/g, "\n").replace(/\0/g, "").trim();
     const characterCount = countCharacters(normalized);
@@ -829,8 +829,8 @@ var ClipboardAssistantService = class {
     if (workRecordRepository.hasClipboardRecordSince(contentHash, since)) return;
     const truncated = characterCount > TIMELINE_MAX_CHARACTERS;
     workRecordRepository.create({
-      startedAt: now,
-      endedAt: now,
+      startedAt: record,
+      endedAt: record,
       category: workRecordCategoryRepository.findById(CLIPBOARD_WORK_RECORD_CATEGORY_ID)?.name ?? "剪贴板记录",
       summary: truncated ? `${truncateCharacters(normalized, TIMELINE_MAX_CHARACTERS)}…` : normalized,
       details: {

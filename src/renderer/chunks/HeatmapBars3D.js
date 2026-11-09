@@ -138,7 +138,7 @@ var _e = class e extends ie {
         j = new ne(),
         M = new ge(14, 1, .5, 600),
         N = new ge(),
-        Ye = new _e(be, 1, be, Se, xe).translate(0, .5, 0),
+        translate = new _e(be, 1, be, Se, xe).translate(0, .5, 0),
         P = new me();
       P.onBeforeCompile = e => {
         e.vertexShader = e.vertexShader.replace(`#include <common>`, `#include <common>
@@ -318,7 +318,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             });
           });
         }), float32Array = new Float32Array(emptyItems.length).fill(S), at = new Float32Array(emptyItems.length).fill(S), z = new Float32Array(emptyItems.length).fill(S), H = -1, O.value = null, !emptyItems.length) return;
-        let e = Ye.clone();
+        let e = translate.clone();
         B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
           Qe.makeTranslation(_t(item.column), 0, vt(item.row)), R?.setMatrixAt(t, Qe);
         }), R.instanceMatrix.needsUpdate = true, j.add(R);
@@ -580,7 +580,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }), f(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
           capture: true
-        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], Ye.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
+        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
       }), (i, o) => (c(), n(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: w,

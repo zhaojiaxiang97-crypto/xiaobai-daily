@@ -15,32 +15,32 @@ function parseWindowsGuid(guid) {
   let trimmed = guid.trim();
   if (trimmed.length !== 36 || trimmed[8] !== "-" || trimmed[13] !== "-" || trimmed[18] !== "-" || trimmed[23] !== "-") throw new Error(`Invalid GUID format: ${guid}`);
   let v;
-  const out = /* @__PURE__ */new Uint8Array(16);
+  const uint8Array = /* @__PURE__ */new Uint8Array(16);
   v = parseInt(trimmed.slice(0, 8), 16);
-  out[0] = v & 255;
-  out[1] = v >>> 8 & 255;
-  out[2] = v >>> 16 & 255;
-  out[3] = v >>> 24 & 255;
+  uint8Array[0] = v & 255;
+  uint8Array[1] = v >>> 8 & 255;
+  uint8Array[2] = v >>> 16 & 255;
+  uint8Array[3] = v >>> 24 & 255;
   v = parseInt(trimmed.slice(9, 13), 16);
-  out[4] = v & 255;
-  out[5] = v >>> 8 & 255;
+  uint8Array[4] = v & 255;
+  uint8Array[5] = v >>> 8 & 255;
   v = parseInt(trimmed.slice(14, 18), 16);
-  out[6] = v & 255;
-  out[7] = v >>> 8 & 255;
+  uint8Array[6] = v & 255;
+  uint8Array[7] = v >>> 8 & 255;
   v = parseInt(trimmed.slice(19, 23), 16);
-  out[8] = v >>> 8 & 255;
-  out[9] = v & 255;
+  uint8Array[8] = v >>> 8 & 255;
+  uint8Array[9] = v & 255;
   v = parseInt(trimmed.slice(24, 32), 16);
-  out[10] = v >>> 24 & 255;
-  out[11] = v >>> 16 & 255;
-  out[12] = v >>> 8 & 255;
-  out[13] = v & 255;
+  uint8Array[10] = v >>> 24 & 255;
+  uint8Array[11] = v >>> 16 & 255;
+  uint8Array[12] = v >>> 8 & 255;
+  uint8Array[13] = v & 255;
   v = parseInt(trimmed.slice(32, 36), 16);
-  out[14] = v >>> 8 & 255;
-  out[15] = v & 255;
-  for (let i = 0; i < 16; i++) if (!Number.isFinite(out[i])) throw new Error(`Invalid GUID format: ${guid}`);
+  uint8Array[14] = v >>> 8 & 255;
+  uint8Array[15] = v & 255;
+  for (let i = 0; i < 16; i++) if (!Number.isFinite(uint8Array[i])) throw new Error(`Invalid GUID format: ${guid}`);
   if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(trimmed)) throw new Error(`Invalid GUID format: ${guid}`);
-  return out;
+  return uint8Array;
 }
 var Guid = class Guid {
   constructor(bytes) {
@@ -63,10 +63,10 @@ var Guid = class Guid {
   * Compare against a Uint8Array containing GUID bytes
   * in Windows / CFBF layout.
   */
-  equals(buf, offset = 0) {
-    if (offset < 0 || buf.length - offset < 16) return false;
+  equals(count, offset = 0) {
+    if (offset < 0 || count.length - offset < 16) return false;
     const bytes = this.bytes;
-    for (let i = 0; i < 16; i++) if (buf[offset + i] !== bytes[i]) return false;
+    for (let i = 0; i < 16; i++) if (count[offset + i] !== bytes[i]) return false;
     return true;
   }
 };
@@ -87,8 +87,8 @@ var Guid = class Guid {
 * - https://github.com/dji-sdk/FFmpeg/blob/master/libavformat/asf.c
 */
 var AsfGuid = class AsfGuid {
-  static fromBin(bin, offset = 0) {
-    return new AsfGuid(AsfGuid.decode(bin, offset));
+  static fromBin(binValue, offset = 0) {
+    return new AsfGuid(AsfGuid.decode(binValue, offset));
   }
   /**
   * Decode GUID in format like "B503BF5F-2EA9-CF11-8EE3-00C00C205365"
@@ -128,8 +128,8 @@ var AsfGuid = class AsfGuid {
   static encode(guid) {
     return parseWindowsGuid(guid);
   }
-  constructor(str) {
-    this.str = str;
+  constructor(constructor) {
+    this.str = constructor;
   }
   equals(guid) {
     return this.str === guid.str;
@@ -190,20 +190,20 @@ function parseUnicodeAttr(uint8Array) {
   return stripNulls(decodeString(uint8Array, "utf-16le"));
 }
 var attributeParsers = [parseUnicodeAttr, parseByteArrayAttr, parseBoolAttr, parseDWordAttr, parseQWordAttr, parseWordAttr, parseByteArrayAttr];
-function parseByteArrayAttr(buf) {
-  return new Uint8Array(buf);
+function parseByteArrayAttr(byte) {
+  return new Uint8Array(byte);
 }
-function parseBoolAttr(buf, offset = 0) {
-  return parseWordAttr(buf, offset) === 1;
+function parseBoolAttr(bool, offset = 0) {
+  return parseWordAttr(bool, offset) === 1;
 }
-function parseDWordAttr(buf, offset = 0) {
-  return UINT32_LE.get(buf, offset);
+function parseDWordAttr(word, offset = 0) {
+  return UINT32_LE.get(word, offset);
 }
-function parseQWordAttr(buf, offset = 0) {
-  return UINT64_LE.get(buf, offset);
+function parseQWordAttr(word, offset = 0) {
+  return UINT64_LE.get(word, offset);
 }
-function parseWordAttr(buf, offset = 0) {
-  return UINT16_LE.get(buf, offset);
+function parseWordAttr(word, offset = 0) {
+  return UINT16_LE.get(word, offset);
 }
 //#endregion
 //#region node_modules/music-metadata/lib/asf/AsfObject.js
@@ -513,8 +513,8 @@ var WmPictureToken = class WmPictureToken {
   static fromBuffer(buffer) {
     return new WmPictureToken(buffer.length).get(buffer, 0);
   }
-  constructor(len) {
-    this.len = len;
+  constructor(constructor) {
+    this.len = constructor;
   }
   get(buffer, offset) {
     const view = new DataView(buffer.buffer, offset);
@@ -568,16 +568,16 @@ var AsfParser = class extends BasicParser {
         case FilePropertiesObject.guid.str:
           {
             this.validateAllocationSize(payloadSize, "File Properties Object");
-            const fpo = await this.tokenizer.readToken(new FilePropertiesObject(header));
-            this.metadata.setFormat("duration", Number(fpo.playDuration / BigInt(1e3)) / 1e4 - Number(fpo.preroll) / 1e3);
-            this.metadata.setFormat("bitrate", fpo.maximumBitrate);
+            const token = await this.tokenizer.readToken(new FilePropertiesObject(header));
+            this.metadata.setFormat("duration", Number(token.playDuration / BigInt(1e3)) / 1e4 - Number(token.preroll) / 1e3);
+            this.metadata.setFormat("bitrate", token.maximumBitrate);
             break;
           }
         case StreamPropertiesObject.guid.str:
           {
             this.validateAllocationSize(payloadSize, "Stream Properties Object");
-            const spo = await this.tokenizer.readToken(new StreamPropertiesObject(header));
-            this.metadata.setFormat("container", `ASF/${spo.streamType}`);
+            const token = await this.tokenizer.readToken(new StreamPropertiesObject(header));
+            this.metadata.setFormat("container", `ASF/${token.streamType}`);
             break;
           }
         case HeaderExtensionObject.guid.str:

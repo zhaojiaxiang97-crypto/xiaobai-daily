@@ -6,7 +6,7 @@ var h = `rovingFocusGroup.onEntryFocus`,
     bubbles: false,
     cancelable: true
   },
-  _ = {
+  options = {
     ArrowLeft: `prev`,
     ArrowUp: `prev`,
     ArrowRight: `next`,
@@ -21,7 +21,7 @@ function v(e, t) {
 }
 function y(event, t, n) {
   let r = v(event.key, n);
-  if (!(t === `vertical` && [`ArrowLeft`, `ArrowRight`].includes(r)) && !(t === `horizontal` && [`ArrowUp`, `ArrowDown`].includes(r))) return _[r];
+  if (!(t === `vertical` && [`ArrowLeft`, `ArrowRight`].includes(r)) && !(t === `horizontal` && [`ArrowUp`, `ArrowDown`].includes(r))) return options[r];
 }
 function b(e, t = false) {
   let r = n();

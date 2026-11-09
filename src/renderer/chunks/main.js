@@ -9151,7 +9151,7 @@ var Xd = ((e = ``) => {
     link: Yd(/^!?\[(label)\]\((.*?)\)/).replace(`label`, kf).getRegex(),
     reflink: Yd(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace(`label`, kf).getRegex()
   },
-  Nf = {
+  request = {
     ...Mf,
     emStrongRDelimAst: yee,
     emStrongLDelim: gee,
@@ -9163,9 +9163,9 @@ var Xd = ((e = ``) => {
     text: Yd(/^(`+|~+|[^`~])(?:(?=[`~])|(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|protocol:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/).replace(`protocol`, jf).getRegex()
   },
   Fee = {
-    ...Nf,
+    ...request,
     br: Yd(xf).replace(`{2,}`, `*`).getRegex(),
-    text: Yd(Nf.text).replace(`\\b_`, `\\b_| {2,}\\n`).replace(/\{2,\}/g, `*`).getRegex()
+    text: Yd(request.text).replace(`\\b_`, `\\b_| {2,}\\n`).replace(/\{2,\}/g, `*`).getRegex()
   },
   Pf = {
     normal: result,
@@ -9174,7 +9174,7 @@ var Xd = ((e = ``) => {
   },
   Ff = {
     normal: Mf,
-    gfm: Nf,
+    gfm: request,
     breaks: Fee,
     pedantic: Pee
   },
@@ -9874,8 +9874,8 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
     static lex(t, n) {
       return new e(n).lex(t);
     }
-    static lexInline(lex, inline) {
-      return new e(inline).inlineTokens(lex);
+    static lexInline(lexValue, inline) {
+      return new e(inline).inlineTokens(lexValue);
     }
     lex(e) {
       e = e.replace(Zd.carriageReturn, `
@@ -10481,8 +10481,8 @@ ${e}</tr>
     postprocess(processValue) {
       return processValue;
     }
-    processAllTokens(all) {
-      return all;
+    processAllTokens(allValue) {
+      return allValue;
     }
     emStrongMask(strong) {
       return strong;
@@ -12429,15 +12429,15 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
       let r = Promise.resolve(e instanceof Function ? e() : e),
         i = replaceResult !== undefined,
         a,
-        o = r.then(async err => {
-          if (a = [`resolve`, err], Pe(err)) i = false, this.create({
+        o = r.then(async response => {
+          if (a = [`resolve`, response], Pe(response)) i = false, this.create({
             id: replaceResult,
             type: `default`,
-            message: err
-          });else if (Gte(err) && !err.ok) {
+            message: response
+          });else if (Gte(response) && !response.ok) {
             i = false;
-            let r = typeof t.error == `function` ? await t.error(`HTTP error! status: ${err.status}`) : t.error,
-              a = typeof t.description == `function` ? await t.description(`HTTP error! status: ${err.status}`) : t.description,
+            let r = typeof t.error == `function` ? await t.error(`HTTP error! status: ${response.status}`) : t.error,
+              a = typeof t.description == `function` ? await t.description(`HTTP error! status: ${response.status}`) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
                 id: replaceResult || ``
@@ -12448,10 +12448,10 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
               description: a,
               ...o
             });
-          } else if (err instanceof Error) {
+          } else if (response instanceof Error) {
             i = false;
-            let r = typeof t.error == `function` ? await t.error(err) : t.error,
-              a = typeof t.description == `function` ? await t.description(err) : t.description,
+            let r = typeof t.error == `function` ? await t.error(response) : t.error,
+              a = typeof t.description == `function` ? await t.description(response) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
                 id: replaceResult || ``
@@ -12464,8 +12464,8 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
             });
           } else if (t.success !== undefined) {
             i = false;
-            let r = typeof t.success == `function` ? await t.success(err) : t.success,
-              a = typeof t.description == `function` ? await t.description(err) : t.description,
+            let r = typeof t.success == `function` ? await t.success(response) : t.success,
+              a = typeof t.description == `function` ? await t.description(response) : t.description,
               o = typeof r == `object` && !Pe(r) ? r : {
                 message: r || ``,
                 id: replaceResult || ``
@@ -13339,7 +13339,7 @@ var jne = {
         s = ref(Bp()),
         flag = ref(false),
         l = ref(``),
-        computedResult = computed(() => [s.value.preferredName, s.value.aliases, s.value.rolePositioning, s.value.organizationsAndTitles, s.value.projectsAndBusiness, s.value.responsibilitiesAndWork, s.value.teamAndCollaborators, s.value.additionalContext].reduce((acc, cur) => acc + cur.length, 0));
+        computedResult = computed(() => [s.value.preferredName, s.value.aliases, s.value.rolePositioning, s.value.organizationsAndTitles, s.value.projectsAndBusiness, s.value.responsibilitiesAndWork, s.value.teamAndCollaborators, s.value.additionalContext].reduce((acc, count) => acc + count.length, 0));
       watch(r, async value => {
         if (value) {
           l.value = ``;
@@ -13857,9 +13857,9 @@ var vm = {
         ...e
       }));
     },
-    async docStats(doc) {
-      return doc.length === 0 ? {} : _m(await window.electronAPI.reportCc.docStats({
-        clientReportIds: [...doc]
+    async docStats(count) {
+      return count.length === 0 ? {} : _m(await window.electronAPI.reportCc.docStats({
+        clientReportIds: [...count]
       })).items;
     },
     async shareState(share) {
@@ -13882,9 +13882,9 @@ var vm = {
         reportIds: [...local]
       })).items;
     },
-    async updateDoc(doc) {
+    async updateDoc(docValue) {
       return _m(await window.electronAPI.reportCc.updateDoc({
-        reportId: doc
+        reportId: docValue
       })).updated;
     },
     async withdraw(draw, drawValue) {
@@ -13960,7 +13960,7 @@ var vm = {
   state = ref({
     ...ym
   }),
-  are = computed(() => state.value.unread + state.value.inboxActivity + state.value.sentActivity),
+  computedResult = computed(() => state.value.unread + state.value.inboxActivity + state.value.sentActivity),
   xm = null,
   Sm = false,
   Cm = false;
@@ -14030,7 +14030,7 @@ function cre() {
 function Em() {
   return cre(), {
     counts: _t(state),
-    total: are,
+    total: computedResult,
     refresh: Tm,
     setUnread: ore,
     markOpened: sre
@@ -16282,16 +16282,16 @@ var Vie = [`src`],
         let imageData = context.getImageData(0, 0, o, d),
           p = imageData.data,
           [m, h, g] = s(t.keyColor),
-          _ = t.threshold,
+          threshold = t.threshold,
           v = Math.max(t.smoothness, 1);
         for (let e = 0; e < p.length; e += 4) {
           let fallbackValue = p[e] ?? 0,
             r = p[e + 1] ?? 0,
             i = p[e + 2] ?? 0,
             a = 255;
-          if (t.keyMode === `green`) a = l(r - Math.max(fallbackValue, i), _, v);else {
+          if (t.keyMode === `green`) a = l(r - Math.max(fallbackValue, i), threshold, v);else {
             let e = Math.max(Math.abs(fallbackValue - m), Math.abs(r - h), Math.abs(i - g));
-            e <= _ ? a = 0 : e < _ + v && (a = Math.round(c((e - _) / v) * 255));
+            e <= threshold ? a = 0 : e < threshold + v && (a = Math.round(c((e - threshold) / v) * 255));
           }
           if (t.keyMode === `green` && a > 0) {
             let [t, o, s] = u(fallbackValue, r, i, a);
@@ -19262,7 +19262,7 @@ var ase = {
           })
         }));
       }
-      let Ae = Ee.filter(item => item % 3 == 0).map(item => ({
+      let mapped = Ee.filter(item => item % 3 == 0).map(item => ({
           index: item,
           text: `${item}:00`
         })),
@@ -19515,7 +19515,7 @@ var ase = {
       }, null, 8, [`modelValue`]), createElementVNode(`span`, Yse, toDisplayString(unref(a)(`todayWork.showPrevDaysHeatmap`)), 1)]), createElementVNode(`div`, Xse, [createElementVNode(`span`, Zse, toDisplayString(unref(a)(`todayWork.less`)), 1), n[9] ||= Le(`<span class="h-2.5 w-2.5 rounded-[2px]" style="background:var(--heatmap-empty);" data-v-956a1a5f></span><span class="h-2.5 w-2.5 rounded-[2px]" style="background:var(--heatmap-1);" data-v-956a1a5f></span><span class="h-2.5 w-2.5 rounded-[2px]" style="background:var(--heatmap-2);" data-v-956a1a5f></span><span class="h-2.5 w-2.5 rounded-[2px]" style="background:var(--heatmap-3);" data-v-956a1a5f></span><span class="h-2.5 w-2.5 rounded-[2px]" style="background:var(--heatmap-4);" data-v-956a1a5f></span>`, 5), createElementVNode(`span`, Qse, toDisplayString(unref(a)(`todayWork.more`)), 1)])])]), fe.value ? (openBlock(), createBlock(unref(pe), {
         key: 0,
         rows: je.value,
-        "column-labels": unref(Ae),
+        "column-labels": unref(mapped),
         clickable: ``,
         onUnavailable: n[3] ||= e => de.value = true,
         onCellClick: Re
@@ -20084,10 +20084,10 @@ var Y_ = {
         completedAt: status.completedAt ?? null
       }));
     },
-    async patchPin(pin) {
+    async patchPin(pinValue) {
       return unwrapApiResult(await window.electronAPI.todos.patchPin({
-        id: Number(pin.id),
-        pinned: !!pin.pinned
+        id: Number(pinValue.id),
+        pinned: !!pinValue.pinned
       }));
     },
     async reorder(items) {
@@ -20218,9 +20218,9 @@ var Y_ = {
         requestId: reject
       }));
     },
-    async cancelFriendRequest(cel) {
+    async cancelFriendRequest(celValue) {
       return unwrapApiResult(await window.electronAPI.todos.cancelFriendRequest({
-        requestId: cel
+        requestId: celValue
       }));
     },
     async updateFriendRemark(friend, text) {
@@ -25033,12 +25033,12 @@ var wy = {
         ...e
       }));
     },
-    async listAll(all) {
+    async listAll(allValue) {
       let emptyItems = [],
         replaceResult;
       for (let r = 0; r < ame; r += 1) {
         let r = await this.list({
-          ...all,
+          ...allValue,
           cursor: replaceResult
         });
         if (emptyItems.push(...r.items), !r.hasMore || !r.nextCursor) return {
@@ -25110,11 +25110,11 @@ var wy = {
         size: initValue.size
       });
     },
-    attachmentPartUrl(attachment, part, url) {
+    attachmentPartUrl(attachment, part, urlValue) {
       return Sy(attachment, {
         action: `attachment-part-url`,
         token: part,
-        partNumber: url
+        partNumber: urlValue
       });
     },
     attachmentComplete(attachment, complete) {
@@ -25164,7 +25164,7 @@ var wy = {
   },
   ome = 2e4,
   Ty = `jpg.jpeg.png.webp.gif.heic.heif.bmp.pdf.doc.docx.xls.xlsx.ppt.pptx.txt.md.csv.rtf.zip.rar.7z.tar.gz.mp3.wav.m4a.aac.ogg.flac.mp4.mov.mkv.avi.webm`.split(`.`),
-  sme = Ty.map(item => `.${item}`).join(`,`);
+  joined = Ty.map(item => `.${item}`).join(`,`);
 function Ey(e) {
   return String(e).padStart(2, `0`);
 }
@@ -49925,7 +49925,7 @@ var zEe = {
     name: Un().max(64),
     avatarUrl: Un().max(1024).nullable()
   }),
-  rOe = qn({
+  superRefineResult = qn({
     id: Un().min(1).max(100),
     name: Un().max(40).default(``),
     enabled: Yn(),
@@ -51626,7 +51626,7 @@ var BOe = {
           return;
         }
         t.name = t.name.trim(), t.note = t.note.trim(), t.model = yH(t.model), t.updatedAt = new Date().toISOString();
-        let safeParse = rOe.safeParse(t);
+        let safeParse = superRefineResult.safeParse(t);
         if (!safeParse.success) {
           Ke(y.value, a(`settings.autoReport.validation.invalid`));
           return;
@@ -52226,11 +52226,11 @@ var BOe = {
         }
       }
       function k(e, t) {
-        T(computedResult.value.map(row => row.id === e.id ? {
-          ...row,
+        T(computedResult.value.map(item => item.id === e.id ? {
+          ...item,
           enabled: t,
-          updatedAt: t ? new Date().toISOString() : row.updatedAt
-        } : row));
+          updatedAt: t ? new Date().toISOString() : item.updatedAt
+        } : item));
       }
       function A(e) {
         if (S.value) {
@@ -56455,7 +56455,7 @@ var qH = [{
     clearable: false,
     importDefault: false
   }],
-  JH = qH.map(item => item.id),
+  mapped = qH.map(item => item.id),
   XLe = qH.filter(item => item.section === `daily`).map(item => item.id),
   ZLe = new Map(qH.map(item => [item.id, item]));
 function YH(e) {
@@ -56961,7 +56961,7 @@ var DRe = {
         {
           exportBackup: i
         } = KH(),
-        list = ref([...JH]),
+        list = ref([...mapped]),
         o = ref(cU()),
         s = ref(false),
         c = ref(null),
@@ -56978,7 +56978,7 @@ var DRe = {
         }
       }
       watch(n, value => {
-        value && (list.value = [...JH], o.value = cU(), s.value = false, d());
+        value && (list.value = [...mapped], o.value = cU(), s.value = false, d());
       }, {
         immediate: true
       }), watch(o, () => {
@@ -63941,33 +63941,33 @@ var qW = {
       return KW(await window.electronAPI.templateMarket.use(e));
     }
   },
-  Uqe = Object.create,
-  JW = Object.defineProperty,
-  Wqe = Object.getOwnPropertyDescriptor,
-  YW = Object.getOwnPropertyNames,
-  Gqe = Object.getPrototypeOf,
+  create = Object.create,
+  defineProperty = Object.defineProperty,
+  getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
+  getOwnPropertyNames = Object.getOwnPropertyNames,
+  getPrototypeOf = Object.getPrototypeOf,
   Kqe = Object.prototype.hasOwnProperty,
   XW = (e, t) => function () {
-    return t || (0, e[YW(e)[0]])((t = {
+    return t || (0, e[getOwnPropertyNames(e)[0]])((t = {
       exports: {}
     }).exports, t), t.exports;
   },
   ZW = e => {
     let t = {};
-    for (var joinedValue in e) JW(t, joinedValue, {
+    for (var joinedValue in e) defineProperty(t, joinedValue, {
       get: e[joinedValue],
       enumerable: true
     });
     return t;
   },
   qqe = (e, t, n, r) => {
-    if (t && typeof t == `object` || typeof t == `function`) for (var i = YW(t), a = 0, o = i.length, text; a < o; a++) text = i[a], !Kqe.call(e, text) && text !== n && JW(e, text, {
+    if (t && typeof t == `object` || typeof t == `function`) for (var ownPropertyNames = getOwnPropertyNames(t), a = 0, o = ownPropertyNames.length, text; a < o; a++) text = ownPropertyNames[a], !Kqe.call(e, text) && text !== n && defineProperty(e, text, {
       get: (e => t[e]).bind(null, text),
-      enumerable: !(r = Wqe(t, text)) || r.enumerable
+      enumerable: !(r = getOwnPropertyDescriptor(t, text)) || r.enumerable
     });
     return e;
   },
-  QW = (e, t, n) => (n = e == null ? {} : Uqe(Gqe(e)), qqe(t || !e || !e.__esModule ? JW(n, `default`, {
+  QW = (e, t, n) => (n = e == null ? {} : create(getPrototypeOf(e)), qqe(t || !e || !e.__esModule ? defineProperty(n, `default`, {
     value: e,
     enumerable: true
   }) : n, e));
@@ -64564,36 +64564,36 @@ mG.prototype.add = function (e, t) {
   e.schema || (e.url = `http://` + e.url), e.schema === `mailto:` && !/^mailto:/i.test(e.url) && (e.url = `mailto:` + e.url);
 }, mG.prototype.onCompile = function () {};
 var hG = mG,
-  TJe = new Uint16Array(`null`.split(``).map(item => item.charCodeAt(0))),
+  uint16Array = new Uint16Array(`null`.split(``).map(item => item.charCodeAt(0))),
   EJe = new Uint16Array(`null`.split(``).map(item => item.charCodeAt(0))),
   DJe = new Map([[0, 65533], [128, 8364], [130, 8218], [131, 402], [132, 8222], [133, 8230], [134, 8224], [135, 8225], [136, 710], [137, 8240], [138, 352], [139, 8249], [140, 338], [142, 381], [145, 8216], [146, 8217], [147, 8220], [148, 8221], [149, 8226], [150, 8211], [151, 8212], [152, 732], [153, 8482], [154, 353], [155, 8250], [156, 339], [158, 382], [159, 376]]),
-  OJe = String.fromCodePoint ?? function (e) {
+  fallbackValue = String.fromCodePoint ?? function (e) {
     let t = ``;
     return e > 65535 && (e -= 65536, t += String.fromCharCode(e >>> 10 & 1023 | 55296), e = 56320 | e & 1023), t += String.fromCharCode(e), t;
   };
 function kJe(e) {
   return e >= 55296 && e <= 57343 || e > 1114111 ? 65533 : DJe.get(e) ?? e;
 }
-var gG;
+var payload;
 (function (e) {
   e[e.NUM = 35] = `NUM`, e[e.SEMI = 59] = `SEMI`, e[e.EQUALS = 61] = `EQUALS`, e[e.ZERO = 48] = `ZERO`, e[e.NINE = 57] = `NINE`, e[e.LOWER_A = 97] = `LOWER_A`, e[e.LOWER_F = 102] = `LOWER_F`, e[e.LOWER_X = 120] = `LOWER_X`, e[e.LOWER_Z = 122] = `LOWER_Z`, e[e.UPPER_A = 65] = `UPPER_A`, e[e.UPPER_F = 70] = `UPPER_F`, e[e.UPPER_Z = 90] = `UPPER_Z`;
-})(gG ||= {});
+})(payload ||= {});
 var AJe = 32,
   _G;
 (function (e) {
   e[e.VALUE_LENGTH = 49152] = `VALUE_LENGTH`, e[e.BRANCH_LENGTH = 16256] = `BRANCH_LENGTH`, e[e.JUMP_TABLE = 127] = `JUMP_TABLE`;
 })(_G ||= {});
 function vG(e) {
-  return e >= gG.ZERO && e <= gG.NINE;
+  return e >= payload.ZERO && e <= payload.NINE;
 }
 function jJe(e) {
-  return e >= gG.UPPER_A && e <= gG.UPPER_F || e >= gG.LOWER_A && e <= gG.LOWER_F;
+  return e >= payload.UPPER_A && e <= payload.UPPER_F || e >= payload.LOWER_A && e <= payload.LOWER_F;
 }
 function MJe(e) {
-  return e >= gG.UPPER_A && e <= gG.UPPER_Z || e >= gG.LOWER_A && e <= gG.LOWER_Z || vG(e);
+  return e >= payload.UPPER_A && e <= payload.UPPER_Z || e >= payload.LOWER_A && e <= payload.LOWER_Z || vG(e);
 }
 function NJe(e) {
-  return e === gG.EQUALS || MJe(e);
+  return e === payload.EQUALS || MJe(e);
 }
 var yG;
 (function (e) {
@@ -64613,7 +64613,7 @@ var PJe = class {
   write(e, t) {
     switch (this.state) {
       case yG.EntityStart:
-        return e.charCodeAt(t) === gG.NUM ? (this.state = yG.NumericStart, this.consumed += 1, this.stateNumericStart(e, t + 1)) : (this.state = yG.NamedEntity, this.stateNamedEntity(e, t));
+        return e.charCodeAt(t) === payload.NUM ? (this.state = yG.NumericStart, this.consumed += 1, this.stateNumericStart(e, t + 1)) : (this.state = yG.NamedEntity, this.stateNamedEntity(e, t));
       case yG.NumericStart:
         return this.stateNumericStart(e, t);
       case yG.NumericDecimal:
@@ -64625,7 +64625,7 @@ var PJe = class {
     }
   }
   stateNumericStart(stateValue, numeric) {
-    return numeric >= stateValue.length ? -1 : (stateValue.charCodeAt(numeric) | AJe) === gG.LOWER_X ? (this.state = yG.NumericHex, this.consumed += 1, this.stateNumericHex(stateValue, numeric + 1)) : (this.state = yG.NumericDecimal, this.stateNumericDecimal(stateValue, numeric));
+    return numeric >= stateValue.length ? -1 : (stateValue.charCodeAt(numeric) | AJe) === payload.LOWER_X ? (this.state = yG.NumericHex, this.consumed += 1, this.stateNumericHex(stateValue, numeric + 1)) : (this.state = yG.NumericDecimal, this.stateNumericDecimal(stateValue, numeric));
   }
   addToNumericResult(numeric, result, resultValue, resultInput) {
     if (result !== resultValue) {
@@ -64652,8 +64652,8 @@ var PJe = class {
   emitNumericEntity(numeric, entity) {
     var replaceResult;
     if (this.consumed <= entity) return (replaceResult = this.errors) == null || replaceResult.absenceOfDigitsInNumericCharacterReference(this.consumed), 0;
-    if (numeric === gG.SEMI) this.consumed += 1;else if (this.decodeMode === bG.Strict) return 0;
-    return this.emitCodePoint(kJe(this.result), this.consumed), this.errors && (numeric !== gG.SEMI && this.errors.missingSemicolonAfterCharacterReference(), this.errors.validateNumericCharacterReference(this.result)), this.consumed;
+    if (numeric === payload.SEMI) this.consumed += 1;else if (this.decodeMode === bG.Strict) return 0;
+    return this.emitCodePoint(kJe(this.result), this.consumed), this.errors && (numeric !== payload.SEMI && this.errors.missingSemicolonAfterCharacterReference(), this.errors.validateNumericCharacterReference(this.result)), this.consumed;
   }
   stateNamedEntity(stateValue, named) {
     let {
@@ -64665,7 +64665,7 @@ var PJe = class {
       let charCodeAt = stateValue.charCodeAt(named);
       if (this.treeIndex = FJe(n, r, this.treeIndex + Math.max(1, i), charCodeAt), this.treeIndex < 0) return this.result === 0 || this.decodeMode === bG.Attribute && (i === 0 || NJe(charCodeAt)) ? 0 : this.emitNotTerminatedNamedEntity();
       if (r = n[this.treeIndex], i = (r & _G.VALUE_LENGTH) >> 14, i !== 0) {
-        if (charCodeAt === gG.SEMI) return this.emitNamedEntityData(this.treeIndex, i, this.consumed + this.excess);
+        if (charCodeAt === payload.SEMI) return this.emitNamedEntityData(this.treeIndex, i, this.consumed + this.excess);
         this.decodeMode !== bG.Strict && (this.result = this.treeIndex, this.consumed += this.excess, this.excess = 0);
       }
     }
@@ -64704,7 +64704,7 @@ var PJe = class {
 };
 function xG(items) {
   let t = ``,
-    n = new PJe(items, e => t += OJe(e));
+    n = new PJe(items, e => t += fallbackValue(e));
   return function (e, r) {
     let i = 0,
       a = 0;
@@ -64738,7 +64738,7 @@ function FJe(e, t, n, r) {
   }
   return -1;
 }
-var IJe = xG(TJe);
+var IJe = xG(uint16Array);
 xG(EJe);
 function LJe(e, t = bG.Legacy) {
   return IJe(e, t);
@@ -66716,7 +66716,7 @@ function zXe(items, t, n, r) {
     m = [],
     setIntervalResult = [],
     g = [],
-    _ = items.md.block.ruler.getRulesForState(items, `blockquote`),
+    rulesForState = items.md.block.ruler.getRulesForState(items, `blockquote`),
     parentType = items.parentType;
   items.parentType = `blockquote`;
   let y = false,
@@ -66740,7 +66740,7 @@ function zXe(items, t, n, r) {
     }
     if (y) break;
     let r = false;
-    for (let t = 0, i = _.length; t < i; t++) if (_[t](items, count, n, true)) {
+    for (let t = 0, i = rulesForState.length; t < i; t++) if (rulesForState[t](items, count, n, true)) {
       r = true;
       break;
     }
@@ -67065,7 +67065,7 @@ function ZXe(items, t, n, r) {
     bMarks = items.bMarks,
     tShift = items.tShift,
     eMarks = items.eMarks,
-    _ = items.sCount,
+    sCount = items.sCount,
     bsCount = items.bsCount,
     y = bMarks[s] + tShift[s];
   if (y >= eMarks[s]) return false;
@@ -67092,7 +67092,7 @@ function ZXe(items, t, n, r) {
     parentType = items.parentType;
   for (items.parentType = `list`; s < n;) {
     a = f, count = eMarks[s];
-    let t = _[s] + f - (bMarks[s] + tShift[s]),
+    let t = sCount[s] + f - (bMarks[s] + tShift[s]),
       r = t;
     for (; a < count;) {
       let charCodeAtData = p.charCodeAt(a);
@@ -69121,9 +69121,9 @@ var Iq = class {
     }
     return n;
   }
-  updateEnvDiagnostics(env, diagnostics, diagnosticsValue) {
+  updateEnvDiagnostics(envValue, diagnostics, diagnosticsValue) {
     try {
-      env.__mdtsUnboundedInfo = {
+      envValue.__mdtsUnboundedInfo = {
         mode: this.options.mode ?? `full`,
         maxChunkChars: diagnostics.maxChunkChars,
         maxChunkLines: diagnostics.maxChunkLines,
@@ -69197,7 +69197,7 @@ function zq(e, t, n = {}, r = {}) {
     });
   return a.feed(t), a.flushForce(n), emptyItems;
 }
-var HZe = [];
+var emptyItems = [];
 function Bq() {
   return {
     total: 0,
@@ -69716,7 +69716,7 @@ var UZe = class {
       return a !== null;
     }
     peek() {
-      return this.cache?.tokens ?? HZe;
+      return this.cache?.tokens ?? emptyItems;
     }
     getStats() {
       return {
@@ -69866,16 +69866,16 @@ var UZe = class {
       h !== 0 && this.shiftTokenLines(m, h);
       let g = tableBodySectionResult.tbodyCloseIndex >= 0 ? tableBodySectionResult.tbodyCloseIndex : tableBodySectionResult.tableCloseIndex;
       table.tokens.splice(g, 0, ...m), table.src = tryValue, table.env = tail, table.lineCount = qG(tryValue);
-      let _ = this.getDocLineCount(tryValue);
-      if (mergeInput.map && (mergeInput.map[1] = _), tableBodySectionResult.tbodyOpenIndex >= 0) {
+      let docLineCount = this.getDocLineCount(tryValue);
+      if (mergeInput.map && (mergeInput.map[1] = docLineCount), tableBodySectionResult.tbodyOpenIndex >= 0) {
         let e = table.tokens[tableBodySectionResult.tbodyOpenIndex];
-        e?.map && (e.map[1] = _);
+        e?.map && (e.map[1] = docLineCount);
       }
       return table.lastSegment = {
         tokenStart: merge.tokenStart,
         tokenEnd: table.tokens.length,
         lineStart: merge.lineStart,
-        lineEnd: _,
+        lineEnd: docLineCount,
         srcOffset: merge.srcOffset
       }, table.tokens;
     }
@@ -69984,9 +69984,9 @@ var UZe = class {
       }
       return true;
     }
-    getDocLineCount(doc) {
-      let t = qG(doc);
-      return doc.length === 0 ? 0 : doc.charCodeAt(doc.length - 1) === 10 ? t : t + 1;
+    getDocLineCount(count) {
+      let t = qG(count);
+      return count.length === 0 ? 0 : count.charCodeAt(count.length - 1) === 10 ? t : t + 1;
     }
     shiftTokenLines(shift, token) {
       if (token === 0) return;
@@ -70329,13 +70329,13 @@ function KZe(items, t, n) {
         break;
       }
     }
-    let _ = e.parentType,
+    let parentType = e.parentType,
       lineMax = e.lineMax;
     e.parentType = `container`, e.lineMax = g;
     let y = e.push(`container_` + t + `_open`, `div`, 1);
     y.markup = part, y.block = true, y.info = h, y.map = [n, g], e.md.block.tokenize(e, n + 1, g);
     let b = e.push(`container_` + t + `_close`, `div`, -1);
-    return b.markup = e.src.slice(d, setTimeoutResult), b.block = true, e.parentType = _, e.lineMax = lineMax, e.line = g + +!!u, true;
+    return b.markup = e.src.slice(d, setTimeoutResult), b.block = true, e.parentType = parentType, e.lineMax = lineMax, e.line = g + +!!u, true;
   }
   items.block.ruler.before(`fence`, `container_` + t, u, {
     alt: [`paragraph`, `reference`, `blockquote`, `list`]
@@ -72045,7 +72045,7 @@ var o$e = a$e,
   DJ = [`boldsymbol`, `mathbb`, `mathcal`, `mathfrak`, `mathrm`, `mathit`, `mathsf`, `vec`, `hat`, `bar`, `tilde`, `overline`, `underline`, `mathscr`, `mathnormal`, `operatorname`, `mathbf*`].map(item => item.replace(/[.*+?^${}()|[\\]"\]/g, `\\$&`)).join(`|`),
   s$e = /\\[a-z]+/i,
   OJ = `null`,
-  c$e = new RegExp(String.raw`${OJ}(?:${DJ})\s*\{[^}]+\}`, `i`),
+  regExp = new RegExp(String.raw`${OJ}(?:${DJ})\s*\{[^}]+\}`, `i`),
   l$e = new RegExp(String.raw`(?:${OJ})?(?:${DJ})\s*\{`, `i`),
   u$e = /\\(?:text|frac|left|right|times)/,
   d$e = /(?:^|[^+])\+(?!\+)|[=\-*/^<>]|\\times|\\pm|\\cdot|\\le|\\ge|\\neq/,
@@ -72070,7 +72070,7 @@ function kJ(e) {
   if (h$e.test(trimmed) || trimmed.includes(`**`)) return false;
   if (trimmed.length > 2e3) return true;
   let r = s$e.test(t),
-    i = c$e.test(t),
+    i = regExp.test(t),
     a = l$e.test(t),
     o = u$e.test(t),
     fallbackValue = /(?:^|[^\w\\])(?:[A-Z]|\\[A-Z]+)_(?:\{[^}]+\}|[A-Z0-9\\])/i.test(t) || /(?:^|[^\w\\])(?:[A-Z]|\\[A-Z]+)\^(?:\{[^}]+\}|[A-Z0-9\\])/i.test(t),
@@ -72837,7 +72837,7 @@ function B$e(count, t, n) {
   };
 }
 var XJ = null,
-  ZJ = new WeakMap();
+  weakMap = new WeakMap();
 function QJ() {
   return XJ ||= {
     customTagSet: null,
@@ -72856,12 +72856,12 @@ function tY(e, t) {
 }
 function V$e(items) {
   if (!items || items.length === 0) return QJ();
-  let t = ZJ.get(items);
+  let t = weakMap.get(items);
   if (t) return t;
   let filtered = items.map(tJ).filter(Boolean);
   if (!filtered.length) {
     let t = QJ();
-    return ZJ.set(items, t), t;
+    return weakMap.set(items, t), t;
   }
   let r = {
     customTagSet: new Set(filtered),
@@ -72869,7 +72869,7 @@ function V$e(items) {
       customHtmlTags: items
     })
   };
-  return ZJ.set(items, r), r;
+  return weakMap.set(items, r), r;
 }
 function nY(e) {
   let t = e,
@@ -76037,10 +76037,10 @@ function b0e(items, t) {
 ` : ``,
       h = i(part),
       fallbackValue = h?.prefix ?? ``,
-      _ = h?.content ?? part,
-      v = a(_);
+      partValue = h?.content ?? part,
+      v = a(partValue);
     v && (s ? v.markerChar === c && v.markerLen >= l && /^\s*$/.test(v.rest) && (s = false, c = ``, l = 0) : (s = true, c = v.markerChar, l = v.markerLen));
-    let y = _;
+    let y = partValue;
     if (!s && y.includes(`</`)) for (let normalizeResult of mapped) y = y.replace(normalizeResult, (e, t, n, r) => {
       if (r.replace(/^[\t ]+/, ``).startsWith(`|`)) return e;
       let replaced = r.slice(0, n).replace(/^[\t ]+/, ``);
@@ -76866,11 +76866,11 @@ function uX(e = `editor-${Date.now()}`, t = {}) {
   }, n;
 }
 var M0e = Object.defineProperty,
-  N0e = Object.defineProperties,
-  P0e = Object.getOwnPropertyDescriptors,
-  dX = Object.getOwnPropertySymbols,
+  defineProperties = Object.defineProperties,
+  getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
+  getOwnPropertySymbols = Object.getOwnPropertySymbols,
   F0e = Object.prototype.hasOwnProperty,
-  I0e = Object.prototype.propertyIsEnumerable,
+  propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
   fX = (e, t, n) => t in e ? M0e(e, t, {
     enumerable: true,
     configurable: true,
@@ -76879,10 +76879,10 @@ var M0e = Object.defineProperty,
   }) : e[t] = n,
   pX = (e, t) => {
     for (var joinedValue in t ||= {}) F0e.call(t, joinedValue) && fX(e, joinedValue, t[joinedValue]);
-    if (dX) for (var joinedValue of dX(t)) I0e.call(t, joinedValue) && fX(e, joinedValue, t[joinedValue]);
+    if (getOwnPropertySymbols) for (var joinedValue of getOwnPropertySymbols(t)) propertyIsEnumerable.call(t, joinedValue) && fX(e, joinedValue, t[joinedValue]);
     return e;
   },
-  mX = (e, t) => N0e(e, P0e(t)),
+  mX = (e, t) => defineProperties(e, getOwnPropertyDescriptors(t)),
   hX = (e, t, n) => fX(e, typeof t == `symbol` ? t : t + ``, n),
   gX = (state, t, n) => new Promise((r, i) => {
     var a = e => {
@@ -77057,7 +77057,7 @@ var G0e = `__global__`,
     };
     return globalThisAlias[SX] = t, t;
   })(),
-  wX = CX.revision;
+  revision = CX.revision;
 function TX(e) {
   let fallbackValue = CX.scopedCustomComponents[G0e] || {};
   if (!e) return fallbackValue;
@@ -77192,7 +77192,7 @@ var J0e = [`innerHTML`],
       let t = e,
         n = Ye(`markstreamHtmlPolicy`, undefined),
         computedResult = computed(() => t.htmlPolicy ?? n?.value ?? `safe`),
-        computedData = computed(() => (wX.value, TX(t.customId))),
+        computedData = computed(() => (revision.value, TX(t.customId))),
         a = defineComponent({
           name: `DynamicRenderer`,
           props: {
@@ -78089,7 +78089,7 @@ var p2e = [`href`, `title`, `aria-label`, `aria-hidden`, `target`, `rel`],
           html_inline: FX,
           inline_code: IX
         },
-        o = computed(() => (wX.value, TX(eventAlias.customId))),
+        o = computed(() => (revision.value, TX(eventAlias.customId))),
         s = Ve(),
         c = computed(() => {
           let e = eventAlias.node?.attrs;
@@ -78471,7 +78471,7 @@ var AZ = _X(defineComponent({
   },
   emits: [`copy`],
   setup(e) {
-    let computedResult = computed(() => (wX.value, TX(e.customId).list_item || kZ));
+    let computedResult = computed(() => (revision.value, TX(e.customId).list_item || kZ));
     return (n, r) => (openBlock(), createBlock(Be(e.node.ordered ? `ol` : `ul`), {
       class: normalizeClass([`list-node`, {
         "list-decimal": e.node.ordered,
@@ -78729,7 +78729,7 @@ var T2e = {
           let i = aX(n);
           return Object.keys(i).length > 0 ? i : undefined;
         }),
-        s = computed(() => (wX.value, TX(t.customId))),
+        s = computed(() => (revision.value, TX(t.customId))),
         c = defineComponent({
           name: `DynamicRenderer`,
           props: {
@@ -81945,7 +81945,7 @@ var n3e = defineComponent({
       let E = eventAlias.customId ? `renderer-${eventAlias.customId}` : `renderer-${Date.now()}-${Math.random().toString(36).slice(2)}`,
         D = uX(E),
         O = new Map(),
-        k = computed(() => (wX.value, TX(eventAlias.customId))),
+        k = computed(() => (revision.value, TX(eventAlias.customId))),
         A = computed(() => cQe(eventAlias.customHtmlTags, eventAlias.parseOptions?.customHtmlTags)),
         j = computed(() => {
           let {
@@ -90375,8 +90375,8 @@ function W0(e, t = [``], n, r, i = () => e[0]) {
     get(n, r) {
       return J0(n, r, () => Yit(r, t, e, n));
     },
-    getOwnPropertyDescriptor(own, property) {
-      return Reflect.getOwnPropertyDescriptor(own._scopes[0], property);
+    getOwnPropertyDescriptor(ownValue, property) {
+      return Reflect.getOwnPropertyDescriptor(ownValue._scopes[0], property);
     },
     getPrototypeOf() {
       return Reflect.getPrototypeOf(e[0]);
@@ -90384,8 +90384,8 @@ function W0(e, t = [``], n, r, i = () => e[0]) {
     has(e, t) {
       return $0(e).includes(t);
     },
-    ownKeys(own) {
-      return $0(own);
+    ownKeys(ownValue) {
+      return $0(ownValue);
     },
     set(e, t, n) {
       let r = e._storage ||= i();
@@ -90411,8 +90411,8 @@ function G0(e, t, n, r) {
     get(e, t, n) {
       return J0(e, t, () => Uit(e, t, n));
     },
-    getOwnPropertyDescriptor(own, property) {
-      return own._descriptors.allKeys ? Reflect.has(e, property) ? {
+    getOwnPropertyDescriptor(ownValue, property) {
+      return ownValue._descriptors.allKeys ? Reflect.has(e, property) ? {
         enumerable: true,
         configurable: true
       } : undefined : Reflect.getOwnPropertyDescriptor(e, property);
@@ -91350,13 +91350,13 @@ var w2 = e => e === `reset` || e === `none`,
         o = parsedValue && parsed._stacks[from.axis];
       parsedValue && o && (parsedValue.values = o, a = v2(parsedValue, i, this._cachedMeta.index)), range.min = Math.min(range.min, a), range.max = Math.max(range.max, a);
     }
-    getMinMax(min, max) {
+    getMinMax(minValue, maxValue) {
       let _cachedMeta = this._cachedMeta,
         _parsed = _cachedMeta._parsed,
-        i = _cachedMeta._sorted && min === _cachedMeta.iScale,
+        i = _cachedMeta._sorted && minValue === _cachedMeta.iScale,
         a = _parsed.length,
-        o = this._getOtherScale(min),
-        s = bat(max, _cachedMeta, this.chart),
+        o = this._getOtherScale(minValue),
+        s = bat(maxValue, _cachedMeta, this.chart),
         c = {
           min: 1 / 0,
           max: -1 / 0
@@ -91370,24 +91370,24 @@ var w2 = e => e === `reset` || e === `none`,
       function p() {
         f = _parsed[count];
         let t = f[o.axis];
-        return !isNumericValue(f[min.axis]) || l > t || u < t;
+        return !isNumericValue(f[minValue.axis]) || l > t || u < t;
       }
-      for (count = 0; count < a && !(!p() && (this.updateRangeFromParsed(c, min, f, s), i)); ++count);
+      for (count = 0; count < a && !(!p() && (this.updateRangeFromParsed(c, minValue, f, s), i)); ++count);
       if (i) {
         for (count = a - 1; count >= 0; --count) if (!p()) {
-          this.updateRangeFromParsed(c, min, f, s);
+          this.updateRangeFromParsed(c, minValue, f, s);
           break;
         }
       }
       return c;
     }
-    getAllParsedValues(all) {
+    getAllParsedValues(allValue) {
       let _parsed = this._cachedMeta._parsed,
         emptyItems = [],
         requestAnimationFrameResult,
         count,
         a;
-      for (requestAnimationFrameResult = 0, count = _parsed.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) a = _parsed[requestAnimationFrameResult][all.axis], isNumericValue(a) && emptyItems.push(a);
+      for (requestAnimationFrameResult = 0, count = _parsed.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) a = _parsed[requestAnimationFrameResult][allValue.axis], isNumericValue(a) && emptyItems.push(a);
       return emptyItems;
     }
     getMaxOverflow() {
@@ -91931,22 +91931,22 @@ var jat = class extends E2 {
       center: setTimeoutResult + m / 2
     };
   }
-  _calculateBarIndexPixels(e, bar) {
-    let scale = bar.scale,
+  _calculateBarIndexPixels(e, barValue) {
+    let scale = barValue.scale,
       options = this.options,
       skipNull = options.skipNull,
       withDefaultValueResult = withDefaultValue(options.maxBarThickness, 1 / 0),
       o,
       trimStartResult,
       c = this._getAxisCount();
-    if (bar.grouped) {
-      let n = skipNull ? this._getStackCount(e) : bar.stackCount,
-        l = options.barThickness === `flex` ? wat(e, bar, options, n * c) : Cat(e, bar, options, n * c),
+    if (barValue.grouped) {
+      let n = skipNull ? this._getStackCount(e) : barValue.stackCount,
+        l = options.barThickness === `flex` ? wat(e, barValue, options, n * c) : Cat(e, barValue, options, n * c),
         u = this.chart.options.indexAxis === `x` ? this.getDataset().xAxisID : this.getDataset().yAxisID,
         d = this._getAxis().indexOf(withDefaultValue(u, this.getFirstScaleIdForIndexAxis())),
         f = this._getStackIndex(this.index, this._cachedMeta.stack, skipNull ? e : undefined) + d;
       o = l.start + l.chunk * f + l.chunk / 2, trimStartResult = Math.min(withDefaultValueResult, l.chunk * l.ratio);
-    } else o = scale.getPixelForValue(this.getParsed(e)[scale.axis], e), trimStartResult = Math.min(withDefaultValueResult, bar.min * bar.ratio);
+    } else o = scale.getPixelForValue(this.getParsed(e)[scale.axis], e), trimStartResult = Math.min(withDefaultValueResult, barValue.min * barValue.ratio);
     return {
       base: o - trimStartResult / 2,
       head: o + trimStartResult / 2,
@@ -92187,7 +92187,7 @@ var Nat = class extends E2 {
         value: i
       };
     }
-    getMaxBorderWidth(max) {
+    getMaxBorderWidth(maxValue) {
       let t = 0,
         chart = this.chart,
         requestAnimationFrameResult,
@@ -92195,19 +92195,19 @@ var Nat = class extends E2 {
         a,
         o,
         trimStartResult;
-      if (!max) {
+      if (!maxValue) {
         for (requestAnimationFrameResult = 0, count = chart.data.datasets.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) if (chart.isDatasetVisible(requestAnimationFrameResult)) {
-          a = chart.getDatasetMeta(requestAnimationFrameResult), max = a.data, o = a.controller;
+          a = chart.getDatasetMeta(requestAnimationFrameResult), maxValue = a.data, o = a.controller;
           break;
         }
       }
-      if (!max) return 0;
-      for (requestAnimationFrameResult = 0, count = max.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) trimStartResult = o.resolveDataElementOptions(requestAnimationFrameResult), trimStartResult.borderAlign !== `inner` && (t = Math.max(t, trimStartResult.borderWidth || 0, trimStartResult.hoverBorderWidth || 0));
+      if (!maxValue) return 0;
+      for (requestAnimationFrameResult = 0, count = maxValue.length; requestAnimationFrameResult < count; ++requestAnimationFrameResult) trimStartResult = o.resolveDataElementOptions(requestAnimationFrameResult), trimStartResult.borderAlign !== `inner` && (t = Math.max(t, trimStartResult.borderWidth || 0, trimStartResult.hoverBorderWidth || 0));
       return t;
     }
-    getMaxOffset(max) {
+    getMaxOffset(count) {
       let t = 0;
-      for (let n = 0, r = max.length; n < r; ++n) {
+      for (let n = 0, r = count.length; n < r; ++n) {
         let dataElementOptions = this.resolveDataElementOptions(n);
         t = Math.max(t, dataElementOptions.offset || 0, dataElementOptions.hoverOffset || 0);
       }
@@ -92662,19 +92662,19 @@ function G2(e, t, n, r) {
   t.x = a, t.y = o;
 }
 var K2 = {
-    addBox(box, boxValue) {
-      box.boxes ||= [], boxValue.fullSize = boxValue.fullSize || false, boxValue.position = boxValue.position || `top`, boxValue.weight = boxValue.weight || 0, boxValue._layers = boxValue._layers || function () {
+    addBox(boxInput, boxValue) {
+      boxInput.boxes ||= [], boxValue.fullSize = boxValue.fullSize || false, boxValue.position = boxValue.position || `top`, boxValue.weight = boxValue.weight || 0, boxValue._layers = boxValue._layers || function () {
         return [{
           z: 0,
           draw(e) {
             boxValue.draw(e);
           }
         }];
-      }, box.boxes.push(boxValue);
+      }, boxInput.boxes.push(boxValue);
     },
-    removeBox(box, boxValue) {
-      let n = box.boxes ? box.boxes.indexOf(boxValue) : -1;
-      n !== -1 && box.boxes.splice(n, 1);
+    removeBox(boxInput, boxValue) {
+      let n = boxInput.boxes ? boxInput.boxes.indexOf(boxValue) : -1;
+      n !== -1 && boxInput.boxes.splice(n, 1);
     },
     configure(configure, configureValue, configureInput) {
       configureValue.fullSize = configureInput.fullSize, configureValue.position = configureInput.position, configureValue.weight = configureInput.weight;
@@ -93162,7 +93162,7 @@ var l4 = class e extends n4 {
         maxDefined: isNumericValue(t)
       };
     }
-    getMinMax(min) {
+    getMinMax(minValue) {
       let {
           min: t,
           max: n,
@@ -93175,7 +93175,7 @@ var l4 = class e extends n4 {
         max: n
       };
       let matchingVisibleMetas = this.getMatchingVisibleMetas();
-      for (let s = 0, c = matchingVisibleMetas.length; s < c; ++s) a = matchingVisibleMetas[s].controller.getMinMax(this, min), r || (t = Math.min(t, a.min)), i || (n = Math.max(n, a.max));
+      for (let s = 0, c = matchingVisibleMetas.length; s < c; ++s) a = matchingVisibleMetas[s].controller.getMinMax(this, minValue), r || (t = Math.min(t, a.min)), i || (n = Math.max(n, a.max));
       return t = i && t > n ? n : t, n = r && t > n ? t : n, {
         min: b1(t, b1(n, t)),
         max: b1(n, b1(t, n))
@@ -95914,10 +95914,10 @@ function q4(e, t) {
     m = B0(t.padding),
     h = m.height,
     g = 0,
-    _ = r.reduce((acc, cur) => acc + cur.before.length + cur.lines.length + cur.after.length, 0);
-  if (_ += e.beforeBody.length + e.afterBody.length, d && (h += d * l.lineHeight + (d - 1) * t.titleSpacing + t.titleMarginBottom), _) {
+    reduced = r.reduce((acc, cur) => acc + cur.before.length + cur.lines.length + cur.after.length, 0);
+  if (reduced += e.beforeBody.length + e.afterBody.length, d && (h += d * l.lineHeight + (d - 1) * t.titleSpacing + t.titleMarginBottom), reduced) {
     let e = t.displayColors ? Math.max(s, c.lineHeight) : c.lineHeight;
-    h += p * e + (_ - p) * c.lineHeight + (_ - 1) * t.bodySpacing;
+    h += p * e + (reduced - p) * c.lineHeight + (reduced - 1) * t.bodySpacing;
   }
   f && (h += t.footerMarginTop + f * u.lineHeight + (f - 1) * t.footerSpacing);
   let v = 0,
@@ -101065,17 +101065,17 @@ var Ylt = {
         let e = c();
         re.value = true;
         try {
-          let mapped = m.value.map(row => ({
-              id: row.id,
-              started_at: row.startedAt,
-              ended_at: row.endedAt,
-              category: row.category,
-              summary: row.summary,
-              details_json: row.details ? JSON.stringify(row.details) : null,
-              confidence: row.confidence,
-              source: row.source,
-              created_at: row.createdAt,
-              updated_at: row.updatedAt
+          let mapped = m.value.map(item => ({
+              id: item.id,
+              started_at: item.startedAt,
+              ended_at: item.endedAt,
+              category: item.category,
+              summary: item.summary,
+              details_json: item.details ? JSON.stringify(item.details) : null,
+              confidence: item.confidence,
+              source: item.source,
+              created_at: item.createdAt,
+              updated_at: item.updatedAt
             })),
             exportDayData = await VH.exportDayData({
               date: w(f.value),
@@ -101959,7 +101959,7 @@ var Ylt = {
                   let t = e.raw,
                     label = e.label,
                     r = Number((t / 60).toFixed(1)),
-                    reduced = e.dataset.data.filter(acc => acc != null).reduce((acc, cur) => acc + cur, 0),
+                    reduced = e.dataset.data.filter(item => item != null).reduce((acc, cur) => acc + cur, 0),
                     a = reduced > 0 ? Math.round(t / reduced * 100) : 0;
                   return `${label}: ${r < 0.1 ? `${t}min` : `${r}h`} (${a}%)`;
                 }
@@ -124315,20 +124315,20 @@ var PBt = [`aria-label`],
         computedData = computed(() => eventAlias.detail.sourceMessage),
         S = computed(() => l.value.has(computedResult.value) || C.value.some(item => [`pending`, `streaming`].includes(item.status))),
         C = computed(() => {
-          let e = new Map(u.value.filter(item => item.authorType !== `system`).map(row => [row.id, {
-            id: row.id,
-            seq: row.seq,
-            authorBotId: row.authorBotId ?? null,
-            authorName: row.authorName,
-            status: row.status,
-            errorMessage: row.errorMessage,
-            content: row.content,
-            createdAt: row.createdAt,
-            time: new Date(row.createdAt).toLocaleTimeString([], {
+          let e = new Map(u.value.filter(item => item.authorType !== `system`).map(item => [item.id, {
+            id: item.id,
+            seq: item.seq,
+            authorBotId: item.authorBotId ?? null,
+            authorName: item.authorName,
+            status: item.status,
+            errorMessage: item.errorMessage,
+            content: item.content,
+            createdAt: item.createdAt,
+            time: new Date(item.createdAt).toLocaleTimeString([], {
               hour: `2-digit`,
               minute: `2-digit`
             }),
-            isUser: row.authorType === `user`
+            isUser: item.authorType === `user`
           }]));
           for (let normalizeResult of a.value[computedResult.value] ?? []) {
             if (normalizeResult.sender === `system`) continue;
@@ -144084,7 +144084,7 @@ var Z9 = new URLSearchParams(window.location.search).get(`window`),
 aa((e, t) => Ot(`action`, e, t)), $9.use(Yt), Q9 === G9 ? Q2t().then(result => {
   result && (_r(), br());
 }).finally(() => $9.mount(`#app`)) : $9.mount(`#app`);
-export { kU as $, Zg as $t, FQ as A, Uo as An, ky as At, k3e as B, Ka as Bn, fme as Bt, v3e as C, ys as Cn, ome as Ct, j4e as D, ss as Dn, Sme as Dt, t$ as E, cs as En, Cme as Et, S4e as F, Za as Fn, mme as Ft, S3e as G, pa as Gn, Tv as Gt, w3e as H, Ha as Hn, vy as Ht, FZ as I, Xa as In, pme as It, e$ as J, f_ as Jt, $Q as K, sa as Kn, Y_ as Kt, i2e as L, Ya as Ln, jy as Lt, _3e as M, Io as Mn, Ay as Mt, XX as N, ko as Nn, yme as Nt, _$ as O, ts as On, bme as Ot, tZ as P, uo as Pn, Dy as Pt, AU as Q, r_ as Qt, i$ as R, Ja as Rn, vme as Rt, uZ as S, Cs as Sn, sme as St, D3e as T, ls as Tn, lme as Tt, RQ as U, Ma as Un, by as Ut, ZX as V, Wa as Vn, wy as Vt, n$ as W, Sa as Wn, yy as Wt, MZ as X, i_ as Xt, PQ as Y, l_ as Yt, MU as Z, e_ as Zt, NQ as _, cc as _n, Ky as _t, x9 as a, Pg as an, vU as at, m$ as b, Ls as bn, Vy as bt, W7 as c, sg as cn, zH as ct, q7 as d, yp as dn, CP as dt, Jg as en, EU as et, KYt as f, vp as fn, Hw as ft, z3 as g, Bd as gn, Ob as gt, O8 as h, trackActionEvent as hn, kb as ht, O9 as i, Fg as in, SU as it, O3e as j, Vo as jn, xme as jt, IQ as k, Ko as kn, ume as kt, K7 as l, Rp as ln, cH as lt, r5 as m, Zf as mn, Mb as mt, V9 as n, Kg as nn, wU as nt, m9 as o, Og as on, gU as ot, GYt as p, gp as pn, cw as pt, O4e as q, H_ as qt, j9 as r, Ag as rn, TU as rt, tXt as s, href as sn, _U as st, z9 as t, Bg as tn, CU as tt, WYt as u, Lp as un, hF as ut, _X as v, Ys as vn, Gy as vt, x3e as w, gs as wn, _me as wt, zQ as x, As as xn, By as xt, A4e as y, zs as yn, Uy as yt, C4e as z, qa as zn, cme as zt };
+export { kU as $, Zg as $t, FQ as A, Uo as An, ky as At, k3e as B, Ka as Bn, fme as Bt, v3e as C, ys as Cn, ome as Ct, j4e as D, ss as Dn, Sme as Dt, t$ as E, cs as En, Cme as Et, S4e as F, Za as Fn, mme as Ft, S3e as G, pa as Gn, Tv as Gt, w3e as H, Ha as Hn, vy as Ht, FZ as I, Xa as In, pme as It, e$ as J, f_ as Jt, $Q as K, sa as Kn, Y_ as Kt, i2e as L, Ya as Ln, jy as Lt, _3e as M, Io as Mn, Ay as Mt, XX as N, ko as Nn, yme as Nt, _$ as O, ts as On, bme as Ot, tZ as P, uo as Pn, Dy as Pt, AU as Q, r_ as Qt, i$ as R, Ja as Rn, vme as Rt, uZ as S, Cs as Sn, joined as St, D3e as T, ls as Tn, lme as Tt, RQ as U, Ma as Un, by as Ut, ZX as V, Wa as Vn, wy as Vt, n$ as W, Sa as Wn, yy as Wt, MZ as X, i_ as Xt, PQ as Y, l_ as Yt, MU as Z, e_ as Zt, NQ as _, cc as _n, Ky as _t, x9 as a, Pg as an, vU as at, m$ as b, Ls as bn, Vy as bt, W7 as c, sg as cn, zH as ct, q7 as d, yp as dn, CP as dt, Jg as en, EU as et, KYt as f, vp as fn, Hw as ft, z3 as g, Bd as gn, Ob as gt, O8 as h, trackActionEvent as hn, kb as ht, O9 as i, Fg as in, SU as it, O3e as j, Vo as jn, xme as jt, IQ as k, Ko as kn, ume as kt, K7 as l, Rp as ln, cH as lt, r5 as m, Zf as mn, Mb as mt, V9 as n, Kg as nn, wU as nt, m9 as o, Og as on, gU as ot, GYt as p, gp as pn, cw as pt, O4e as q, H_ as qt, j9 as r, Ag as rn, TU as rt, tXt as s, href as sn, _U as st, z9 as t, Bg as tn, CU as tt, WYt as u, Lp as un, hF as ut, _X as v, Ys as vn, Gy as vt, x3e as w, gs as wn, _me as wt, zQ as x, As as xn, By as xt, A4e as y, zs as yn, Uy as yt, C4e as z, qa as zn, cme as zt };
 var ApiSettingsPage = defineComponent({
   __name: "ApiSettingsPage",
   setup() {
@@ -144102,7 +144102,7 @@ var ApiSettingsPage = defineComponent({
       localTranscriptionUrl: "",
       localVisualReportUrl: ""
     });
-    var msg = ref("");
+    var label = ref("");
     onMounted((async () => {
       try {
         var r = await window.electronAPI.settings.get();
@@ -144122,9 +144122,9 @@ var ApiSettingsPage = defineComponent({
         var payload = {};
         for (var k in s.value) payload[k] = s.value[k];
         await window.electronAPI.settings.update(payload);
-        msg.value = "已保存，新配置立即生效";
+        label.value = "已保存，新配置立即生效";
       } catch (e) {
-        msg.value = "保存失败：" + (e && e.message ? e.message : e);
+        label.value = "保存失败：" + (e && e.message ? e.message : e);
       }
     }
     function field(label, k, isPwd) {
@@ -144154,9 +144154,9 @@ var ApiSettingsPage = defineComponent({
       }, [createElementVNode("button", {
         onClick: save,
         style: "padding:9px 30px;border-radius:9px;border:1px solid rgba(128,128,128,.5);background:rgba(128,128,128,.15);cursor:pointer;font-size:14px"
-      }, [createTextVNode("保存")]), unref(msg) ? createElementVNode("span", {
+      }, [createTextVNode("保存")]), unref(label) ? createElementVNode("span", {
         style: "font-size:13px;opacity:.8"
-      }, [toDisplayString(unref(msg))]) : createCommentVNode("", true)])]);
+      }, [toDisplayString(unref(label))]) : createCommentVNode("", true)])]);
     };
   }
 });

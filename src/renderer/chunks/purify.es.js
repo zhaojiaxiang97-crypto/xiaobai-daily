@@ -627,9 +627,9 @@ function Xe() {
         }
         if (n === options.element) {
           let t = e,
-            n = resolvedValue(ge(e));
+            resolvedValueResult = resolvedValue(ge(e));
           try {
-            t.hasAttribute && t.hasAttribute(`patchsrc`) && t.removeAttribute(`patchsrc`), t.hasAttribute && t.hasAttribute(`for`) && mn(`for`, n) && t.removeAttribute(`for`);
+            t.hasAttribute && t.hasAttribute(`patchsrc`) && t.removeAttribute(`patchsrc`), t.hasAttribute && t.hasAttribute(`for`) && mn(`for`, resolvedValueResult) && t.removeAttribute(`for`);
           } catch {}
         }
         let r = g(e);
@@ -730,17 +730,17 @@ function Xe() {
     Dn = function (el, n) {
       if ($(F.beforeSanitizeElements, el, null), En(el, n)) return true;
       if (bn(el)) return X(el), true;
-      let r = resolvedValue(ge(el));
+      let resolvedValueResult = resolvedValue(ge(el));
       if (I = Tn(F.uponSanitizeElement, I, vt, Dt), $(F.uponSanitizeElement, el, {
-        tagName: r,
+        tagName: resolvedValueResult,
         allowedTags: I
       }), En(el, n)) return true;
-      if (Sn(el, r)) return X(el), true;
-      if (bt[r] || !(z.tagCheck instanceof Function && z.tagCheck(r)) && !I[r]) {
-        let t = wn(el, r, n);
+      if (Sn(el, resolvedValueResult)) return X(el), true;
+      if (bt[resolvedValueResult] || !(z.tagCheck instanceof Function && z.tagCheck(resolvedValueResult)) && !I[resolvedValueResult]) {
+        let t = wn(el, resolvedValueResult, n);
         return t === false && $(F.afterSanitizeElements, el, null), t;
       }
-      if (E(el) === options.element && !ln(el) || (r === `noscript` || r === `noembed` || r === `noframes`) && C(He, el.innerHTML)) return X(el), true;
+      if (E(el) === options.element && !ln(el) || (resolvedValueResult === `noscript` || resolvedValueResult === `noembed` || resolvedValueResult === `noframes`) && C(He, el.innerHTML)) return X(el), true;
       if (B && el.nodeType === options.text) {
         let n = vn(el.textContent);
         el.textContent !== n && (oe(handler.removed, {
@@ -787,7 +787,7 @@ function Xe() {
           forceKeepAttr: undefined
         },
         i = attributes.length,
-        a = resolvedValue(e.nodeName);
+        resolvedValueResult = resolvedValue(e.nodeName);
       for (; i--;) {
         let o = attributes[i],
           s = o.name,
@@ -814,11 +814,11 @@ function Xe() {
             Z(s, e, o);
             continue;
           }
-          if (B && (f = vn(f)), !On(a, u, f)) {
+          if (B && (f = vn(f)), !On(resolvedValueResult, u, f)) {
             Z(s, e, o);
             continue;
           }
-          f = jn(a, u, namespaceURI, f), f !== d && Mn(e, s, namespaceURI, f) && ee && ae(handler.removed);
+          f = jn(resolvedValueResult, u, namespaceURI, f), f !== d && Mn(e, s, namespaceURI, f) && ee && ae(handler.removed);
         }
       }
       $(F.afterSanitizeAttributes, e, null);
@@ -886,8 +886,8 @@ function Xe() {
       hn(items);
       let t = ge(items);
       if (typeof t == `string`) {
-        let n = resolvedValue(t);
-        if (!I[n] || bt[n]) throw dn(items), w(`root node is forbidden and cannot be sanitized in-place`);
+        let resolvedValueResult = resolvedValue(t);
+        if (!I[resolvedValueResult] || bt[resolvedValueResult]) throw dn(items), w(`root node is forbidden and cannot be sanitized in-place`);
       }
       if (bn(items)) throw dn(items), w(`root node is clobbered and cannot be sanitized in-place`);
       try {
@@ -926,9 +926,9 @@ function Xe() {
     Y = null, Et = false, Dt = null, Ot = null, j = Ze, N = ``;
   }, handler.isValidAttribute = function (e, t, n) {
     Y || nn({});
-    let r = resolvedValue(e),
+    let resolvedValueResult = resolvedValue(e),
       i = resolvedValue(t);
-    return On(r, i, n);
+    return On(resolvedValueResult, i, n);
   }, handler.addHook = function (e, t) {
     typeof t == `function` && x(F, e) && oe(F[e], t);
   }, handler.removeHook = function (e, t) {

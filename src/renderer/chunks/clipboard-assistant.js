@@ -67,9 +67,9 @@ var b = {
         id: historyValue
       }));
     },
-    async pinHistory(pin, historyValue) {
+    async pinHistory(pinValue, historyValue) {
       y(await window.electronAPI.clipboardAssistant.pinHistory({
-        id: pin,
+        id: pinValue,
         pinned: historyValue
       }));
     },
@@ -294,7 +294,7 @@ var b = {
     class: `text-xs font-semibold text-muted-foreground`
   },
   Yt = [`maxlength`, `placeholder`],
-  Xt = {
+  options = {
     key: 0,
     class: `text-xs text-destructive`,
     role: `alert`
@@ -999,7 +999,7 @@ var b = {
             maxlength: o(Fe),
             placeholder: handler(`PhraseContentPlaceholder`),
             onKeydown: Nn
-          }, null, 40, Yt), [[se, R.value]])]), B.value ? (p(), c(`p`, Xt, h(B.value), 1)) : _(``, true), m(o(xe), {
+          }, null, 40, Yt), [[se, R.value]])]), B.value ? (p(), c(`p`, options, h(B.value), 1)) : _(``, true), m(o(xe), {
             class: `items-center sm:justify-between`
           }, {
             default: l(() => [v(`small`, Zt, h(handler(`PhraseSaveHint`, {

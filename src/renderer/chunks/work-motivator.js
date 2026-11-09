@@ -1832,9 +1832,9 @@ var O = class e extends b {
       typeName: q.ZodObject
     });
   }
-  setKey(key, keyValue) {
+  setKey(keyInput, keyValue) {
     return this.augment({
-      [key]: keyValue
+      [keyInput]: keyValue
     });
   }
   catchall(catchall) {

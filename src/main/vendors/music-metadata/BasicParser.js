@@ -209,11 +209,11 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String|Number}
   * @api public
   */
-  module.exports = function (val, options) {
+  module.exports = function (count, options) {
     options = options || {};
-    var type = typeof val;
-    if (type === "string" && val.length > 0) return parse(val);else if (type === "number" && isFinite(val)) return options.long ? fmtLong(val) : fmtShort(val);
-    throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(val));
+    var type = typeof count;
+    if (type === "string" && count.length > 0) return parse(count);else if (type === "number" && isFinite(count)) return options.long ? fmtLong(count) : fmtShort(count);
+    throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(count));
   };
   /**
   * Parse the given `str` and return milliseconds.
@@ -222,10 +222,10 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {Number}
   * @api private
   */
-  function parse(str) {
-    str = String(str);
-    if (str.length > 100) return;
-    var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(str);
+  function parse(count) {
+    count = String(count);
+    if (count.length > 100) return;
+    var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(count);
     if (!match) return;
     var float = parseFloat(match[1]);
     switch ((match[2] || "ms").toLowerCase()) {
@@ -278,13 +278,13 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String}
   * @api private
   */
-  function fmtShort(fmt) {
-    var msAbs = Math.abs(fmt);
-    if (msAbs >= d) return Math.round(fmt / d) + "d";
-    if (msAbs >= h) return Math.round(fmt / h) + "h";
-    if (msAbs >= m) return Math.round(fmt / m) + "m";
-    if (msAbs >= s) return Math.round(fmt / s) + "s";
-    return fmt + "ms";
+  function fmtShort(fmtValue) {
+    var msAbs = Math.abs(fmtValue);
+    if (msAbs >= d) return Math.round(fmtValue / d) + "d";
+    if (msAbs >= h) return Math.round(fmtValue / h) + "h";
+    if (msAbs >= m) return Math.round(fmtValue / m) + "m";
+    if (msAbs >= s) return Math.round(fmtValue / s) + "s";
+    return fmtValue + "ms";
   }
   /**
   * Long format for `ms`.
@@ -293,13 +293,13 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String}
   * @api private
   */
-  function fmtLong(fmt) {
-    var msAbs = Math.abs(fmt);
-    if (msAbs >= d) return plural(fmt, msAbs, d, "day");
-    if (msAbs >= h) return plural(fmt, msAbs, h, "hour");
-    if (msAbs >= m) return plural(fmt, msAbs, m, "minute");
-    if (msAbs >= s) return plural(fmt, msAbs, s, "second");
-    return fmt + " ms";
+  function fmtLong(fmtValue) {
+    var msAbs = Math.abs(fmtValue);
+    if (msAbs >= d) return plural(fmtValue, msAbs, d, "day");
+    if (msAbs >= h) return plural(fmtValue, msAbs, h, "hour");
+    if (msAbs >= m) return plural(fmtValue, msAbs, m, "minute");
+    if (msAbs >= s) return plural(fmtValue, msAbs, s, "second");
+    return fmtValue + " ms";
   }
   /**
   * Pluralization helper.
@@ -325,8 +325,8 @@ var require_common = /* @__PURE__ */__commonJSMin((exports, module) => {
     createDebug.enabled = enabled;
     createDebug.humanize = require_ms();
     createDebug.destroy = destroy;
-    Object.keys(env).forEach(key => {
-      createDebug[key] = env[key];
+    Object.keys(env).forEach(item => {
+      createDebug[item] = env[item];
     });
     /**
     * The currently active debug mode names, and names to skip.
@@ -495,9 +495,9 @@ var require_common = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @return {Mixed}
     * @api private
     */
-    function coerce(val) {
-      if (val instanceof Error) return val.stack || val.message;
-      return val;
+    function coerce(coerceValue) {
+      if (coerceValue instanceof Error) return coerceValue.stack || coerceValue.message;
+      return coerceValue;
     }
     /**
     * XXX DO NOT USE. This is a temporary stub function.
@@ -669,8 +669,8 @@ var require_supports_color = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) return 3;
     if (hasFlag("color=256")) return 2;
     if (haveStream && !streamIsTTY && forceColor === undefined) return 0;
-    const min = forceColor || 0;
-    if (env.TERM === "dumb") return min;
+    const forceColorValue = forceColor || 0;
+    if (env.TERM === "dumb") return forceColorValue;
     if (process.platform === "win32") {
       const osRelease = os.release().split(".");
       if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) return Number(osRelease[2]) >= 14931 ? 3 : 2;
@@ -678,7 +678,7 @@ var require_supports_color = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     if ("CI" in env) {
       if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some(sign => sign in env) || env.CI_NAME === "codeship") return 1;
-      return min;
+      return forceColorValue;
     }
     if ("TEAMCITY_VERSION" in env) return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
     if (env.COLORTERM === "truecolor") return 3;
@@ -694,7 +694,7 @@ var require_supports_color = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (/-256(color)?$/i.test(env.TERM)) return 2;
     if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) return 1;
     if ("COLORTERM" in env) return 1;
-    return min;
+    return forceColorValue;
   }
   function getSupportLevel(stream) {
     return translateLevel(supportsColor(stream, stream && stream.isTTY));
@@ -736,16 +736,16 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
   *
   *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
   */
-  exports.inspectOpts = Object.keys(process.env).filter(key => {
-    return /^debug_/i.test(key);
-  }).reduce((obj, key) => {
-    const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, text) => {
+  exports.inspectOpts = Object.keys(process.env).filter(item => {
+    return /^debug_/i.test(item);
+  }).reduce((acc, cur) => {
+    const prop = cur.substring(6).toLowerCase().replace(/_([a-z])/g, (_, text) => {
       return text.toUpperCase();
     });
-    let val = process.env[key];
+    let val = process.env[cur];
     if (/^(yes|on|true|enabled)$/i.test(val)) val = true;else if (/^(no|off|false|disabled)$/i.test(val)) val = false;else if (val === "null") val = null;else val = Number(val);
-    obj[prop] = val;
-    return obj;
+    acc[prop] = val;
+    return acc;
   }, {});
   /**
   * Is stdout a TTY? Colored output is enabled when `true`.
@@ -819,7 +819,7 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
   */
   formatters.o = function (v) {
     this.inspectOpts.colors = this.useColors;
-    return util.inspect(v, this.inspectOpts).split("\n").map(str => str.trim()).join(" ");
+    return util.inspect(v, this.inspectOpts).split("\n").map(text => text.trim()).join(" ");
   };
   /**
   * Map %O to `util.inspect()`, allowing multiple lines if needed.
@@ -959,8 +959,8 @@ function textDecode(bytes, encoding = "utf-8") {
     case "utf-8":
     case "utf8":
       {
-        const dec = utf8Decoder();
-        return dec ? dec.decode(bytes) : decodeUTF8(bytes);
+        const utf8DecoderResult = utf8Decoder();
+        return utf8DecoderResult ? utf8DecoderResult.decode(bytes) : decodeUTF8(bytes);
       }
     case "utf-16le":
       return decodeUTF16LE(bytes);
@@ -981,8 +981,8 @@ function textEncode(input = "", encoding = "utf-8") {
     case "utf-8":
     case "utf8":
       {
-        const enc = utf8Encoder();
-        return enc ? enc.encode(input) : encodeUTF8(input);
+        const utf8EncoderResult = utf8Encoder();
+        return utf8EncoderResult ? utf8EncoderResult.encode(input) : encodeUTF8(input);
       }
     case "utf-16le":
       return encodeUTF16LE(input);
@@ -1149,30 +1149,30 @@ function decodeWindows1252(bytes) {
   if (out) parts.push(out);
   return parts.join("");
 }
-function encodeUTF8(str) {
-  const out = [];
-  for (let i = 0; i < str.length; i++) {
-    let charCodeAtResult = str.charCodeAt(i);
+function encodeUTF8(count) {
+  const emptyItems = [];
+  for (let i = 0; i < count.length; i++) {
+    let charCodeAtResult = count.charCodeAt(i);
     if (charCodeAtResult >= 55296 && charCodeAtResult <= 56319) {
-      if (i + 1 < str.length) {
-        const lo = str.charCodeAt(i + 1);
+      if (i + 1 < count.length) {
+        const lo = count.charCodeAt(i + 1);
         if (lo >= 56320 && lo <= 57343) {
           charCodeAtResult = 65536 + (charCodeAtResult - 55296 << 10) + (lo - 56320);
           i++;
         } else charCodeAtResult = REPLACEMENT;
       } else charCodeAtResult = REPLACEMENT;
     } else if (charCodeAtResult >= 56320 && charCodeAtResult <= 57343) charCodeAtResult = REPLACEMENT;
-    if (charCodeAtResult < 128) out.push(charCodeAtResult);else if (charCodeAtResult < 2048) out.push(192 | charCodeAtResult >> 6, 128 | charCodeAtResult & 63);else if (charCodeAtResult < 65536) out.push(224 | charCodeAtResult >> 12, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);else out.push(240 | charCodeAtResult >> 18, 128 | charCodeAtResult >> 12 & 63, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);
+    if (charCodeAtResult < 128) emptyItems.push(charCodeAtResult);else if (charCodeAtResult < 2048) emptyItems.push(192 | charCodeAtResult >> 6, 128 | charCodeAtResult & 63);else if (charCodeAtResult < 65536) emptyItems.push(224 | charCodeAtResult >> 12, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);else emptyItems.push(240 | charCodeAtResult >> 18, 128 | charCodeAtResult >> 12 & 63, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);
   }
-  return new Uint8Array(out);
+  return new Uint8Array(emptyItems);
 }
-function encodeUTF16LE(str) {
+function encodeUTF16LE(count) {
   const units = [];
-  for (let i = 0; i < str.length; i++) {
-    const charCodeAtResult = str.charCodeAt(i);
+  for (let i = 0; i < count.length; i++) {
+    const charCodeAtResult = count.charCodeAt(i);
     if (charCodeAtResult >= 55296 && charCodeAtResult <= 56319) {
-      if (i + 1 < str.length) {
-        const lo = str.charCodeAt(i + 1);
+      if (i + 1 < count.length) {
+        const lo = count.charCodeAt(i + 1);
         if (lo >= 56320 && lo <= 57343) {
           units.push(charCodeAtResult, lo);
           i++;
@@ -1186,41 +1186,41 @@ function encodeUTF16LE(str) {
     }
     units.push(charCodeAtResult);
   }
-  const out = new Uint8Array(units.length * 2);
+  const uint8Array = new Uint8Array(units.length * 2);
   for (let i = 0; i < units.length; i++) {
     const code = units[i];
     const o = i * 2;
-    out[o] = code & 255;
-    out[o + 1] = code >>> 8;
+    uint8Array[o] = code & 255;
+    uint8Array[o + 1] = code >>> 8;
   }
-  return out;
+  return uint8Array;
 }
-function encodeASCII(str) {
-  const out = new Uint8Array(str.length);
-  for (let i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 127;
-  return out;
+function encodeASCII(count) {
+  const uint8Array = new Uint8Array(count.length);
+  for (let i = 0; i < count.length; i++) uint8Array[i] = count.charCodeAt(i) & 127;
+  return uint8Array;
 }
-function encodeLatin1(str) {
-  const out = new Uint8Array(str.length);
-  for (let i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 255;
-  return out;
+function encodeLatin1(count) {
+  const uint8Array = new Uint8Array(count.length);
+  for (let i = 0; i < count.length; i++) uint8Array[i] = count.charCodeAt(i) & 255;
+  return uint8Array;
 }
-function encodeWindows1252(str) {
-  const out = new Uint8Array(str.length);
-  for (let i = 0; i < str.length; i++) {
-    const ch = str[i];
+function encodeWindows1252(count) {
+  const uint8Array = new Uint8Array(count.length);
+  for (let i = 0; i < count.length; i++) {
+    const ch = count[i];
     const code = ch.charCodeAt(0);
     if (WINDOWS_1252_REVERSE[ch] !== undefined) {
-      out[i] = WINDOWS_1252_REVERSE[ch];
+      uint8Array[i] = WINDOWS_1252_REVERSE[ch];
       continue;
     }
     if (code >= 0 && code <= 127 || code >= 160 && code <= 255) {
-      out[i] = code;
+      uint8Array[i] = code;
       continue;
     }
-    out[i] = 63;
+    uint8Array[i] = 63;
   }
-  return out;
+  return uint8Array;
 }
 //#endregion
 //#region node_modules/token-types/lib/index.js
@@ -1613,14 +1613,14 @@ var IgnoreType = class {
   /**
   * @param len number of bytes to ignore
   */
-  constructor(len) {
-    this.len = len;
+  constructor(constructor) {
+    this.len = constructor;
   }
   get(_array, _off) {}
 };
 var Uint8ArrayType = class {
-  constructor(len) {
-    this.len = len;
+  constructor(constructor) {
+    this.len = constructor;
   }
   get(array, offset) {
     return array.subarray(offset, offset + this.len);
@@ -1631,8 +1631,8 @@ var Uint8ArrayType = class {
 * Supports all encodings supported by TextDecoder, plus 'windows-1252'.
 */
 var StringType = class {
-  constructor(len, encoding) {
-    this.len = len;
+  constructor(constructor, encoding) {
+    this.len = constructor;
     this.encoding = encoding;
   }
   get(data, offset = 0) {
@@ -1644,8 +1644,8 @@ var StringType = class {
 * Windows-1252 is a superset of ISO 8859-1 / Latin-1.
 */
 var AnsiStringType = class extends StringType {
-  constructor(len) {
-    super(len, "windows-1252");
+  constructor(constructor) {
+    super(constructor, "windows-1252");
   }
 };
 //#endregion

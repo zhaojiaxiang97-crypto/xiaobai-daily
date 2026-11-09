@@ -211,7 +211,7 @@ var FrameParser = class FrameParser {
               break;
             case "TCO":
             case "TCON":
-              output = this.splitValue(type, text).map(item => parseGenre(item)).reduce((acc, val) => acc.concat(val), []);
+              output = this.splitValue(type, text).map(item => parseGenre(item)).reduce((items, cur) => items.concat(cur), []);
               break;
             case "PCS":
             case "PCST":
@@ -442,12 +442,12 @@ var FrameParser = class FrameParser {
           const entryCount = uint8Array[offset++];
           const childElementIds = [];
           for (let i = 0; i < entryCount && offset < length; i++) {
-            const end = findZero(uint8Array.subarray(offset), defaultEnc);
-            const childId = decodeString(uint8Array.subarray(offset, offset + end), defaultEnc);
+            const zero = findZero(uint8Array.subarray(offset), defaultEnc);
+            const childId = decodeString(uint8Array.subarray(offset, offset + zero), defaultEnc);
             childElementIds.push(childId);
-            offset += end + 1;
+            offset += zero + 1;
           }
-          const toc = {
+          const options = {
             label,
             flags: {
               topLevel,
@@ -462,9 +462,9 @@ var FrameParser = class FrameParser {
             offset += headerSize;
             const subOutput = this.readData(uint8Array.subarray(offset, offset + subFrame.length), subFrame.id, includeCovers);
             offset += subFrame.length;
-            toc.frames.set(subFrame.id, subOutput);
+            options.frames.set(subFrame.id, subOutput);
           }
-          output = toc;
+          output = options;
           break;
         }
       default:
@@ -481,9 +481,9 @@ var FrameParser = class FrameParser {
       text: decodeString(uint8Array, encoding.encoding),
       len: originalLen
     };
-    const txt = uint8Array.subarray(0, bomSize + zeroIndex);
+    const subarray = uint8Array.subarray(0, bomSize + zeroIndex);
     return {
-      text: decodeString(txt, encoding.encoding),
+      text: decodeString(subarray, encoding.encoding),
       len: bomSize + zeroIndex + FrameParser.getNullTerminatorLength(encoding.encoding)
     };
   }
@@ -516,11 +516,11 @@ var FrameParser = class FrameParser {
   * @param text - Concatenated tag value
   * @returns Split tag value
   */
-  splitValue(tag, text) {
+  splitValue(value, text) {
     let values;
     if (this.major < 4) {
       values = text.split(/\x00/g);
-      if (values.length > 1) this.warningCollector.addWarning(`ID3v2.${this.major} ${tag} uses non standard null-separator.`);else values = text.split(/\//g);
+      if (values.length > 1) this.warningCollector.addWarning(`ID3v2.${this.major} ${value} uses non standard null-separator.`);else values = text.split(/\//g);
     } else values = text.split(/\x00/g);
     return FrameParser.trimArray(values);
   }
@@ -542,8 +542,8 @@ var FrameParser = class FrameParser {
       data: uint8Array.subarray(idStr.len)
     };
   }
-  static getNullTerminatorLength(enc) {
-    return enc.startsWith("utf-16") ? 2 : 1;
+  static getNullTerminatorLength(text) {
+    return text.startsWith("utf-16") ? 2 : 1;
   }
 };
 var Id3v2ContentError = class extends makeUnexpectedFileContentError("id3v2") {};
@@ -591,8 +591,8 @@ var ID3v2Parser = class ID3v2Parser {
   * @param description e.g. iTunPGAP
   * @returns string e.g. COM:iTunPGAP
   */
-  static makeDescriptionTagName(tag, description) {
-    return tag + (description ? `:${description}` : "");
+  static makeDescriptionTagName(descriptionValue, description) {
+    return descriptionValue + (description ? `:${description}` : "");
   }
   async parse(metadata, tokenizer, options) {
     this.tokenizer = tokenizer;
@@ -625,11 +625,11 @@ var ID3v2Parser = class ID3v2Parser {
         await (Array.isArray(tag.value) ? Promise.all(tag.value.map(value => this.addTag(tag.id, value))) : this.addTag(tag.id, tag.value));
     }
   }
-  async handleTag(tag, values, descriptor, resolveValue = value => value) {
-    await Promise.all(values.map(value => this.addTag(ID3v2Parser.makeDescriptionTagName(tag.id, descriptor(value)), resolveValue(value))));
+  async handleTag(tagValue, values, descriptor, resolveValue = value => value) {
+    await Promise.all(values.map(value => this.addTag(ID3v2Parser.makeDescriptionTagName(tagValue.id, descriptor(value)), resolveValue(value))));
   }
-  async addTag(tag, value) {
-    await this.metadata.addTag(this.headerType, tag, value);
+  async addTag(tagValue, value) {
+    await this.metadata.addTag(this.headerType, tagValue, value);
   }
   parseMetadata(data) {
     let offset = 0;

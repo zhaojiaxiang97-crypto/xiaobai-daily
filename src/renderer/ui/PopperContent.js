@@ -227,7 +227,7 @@ function ne(e, t, n) {
   };
 }
 var re = [`dir`],
-  $ = {
+  options = {
     side: `bottom`,
     sideOffset: 0,
     sideFlip: true,
@@ -339,7 +339,7 @@ var re = [`dir`],
         required: false
       }
     }, {
-      ...$
+      ...options
     }),
     emits: [`placed`],
     setup(r, {
@@ -498,4 +498,4 @@ var re = [`dir`],
       }, 16, [`as-child`, `as`, `data-side`, `data-align`, `dir`, `style`]))], 12, re));
     }
   });
-export { W as a, G as i, oe as n, B as o, ie as r, R as s, $ as t };
+export { W as a, G as i, oe as n, B as o, ie as r, R as s, options as t };
