@@ -19,7 +19,7 @@ const GENERIC = new Set(['value','target','currentTarget','data','type','name','
 const COMPRESSED = /^[a-zA-Z]$|^[a-zA-Z][0-9]$|^[a-z]{2}$|^_0x[0-9a-f]+$/;
 const IDENT = /^[A-Za-z_$][\w$]*$/;
 
-const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, files: 0 };
+const stats = { computed: 0, undef: 0, bool: 0, params: 0, locals: 0, forms: 0, callbacks: 0, files: 0 };
 
 // ---- 参数画像 ----
 function inferParam(paramName, fnPath) {
@@ -53,6 +53,88 @@ function inferParam(paramName, fnPath) {
   if (called) return 'fn';
   if (has('options','config','settings','mode','enabled','muted')) return 'options';
   return null;
+}
+
+// ---- 回调位置命名 ----
+const CALLBACK_MAP = {
+  then: ['result'], catch: ['err'], map: ['item'], filter: ['item'],
+  forEach: ['item'], find: ['item'], findIndex: ['item'], some: ['item'],
+  every: ['item'], flatMap: ['item'], reduce: ['acc', 'cur'],
+  reduceRight: ['acc', 'cur'], sort: ['left', 'right'], toSorted: ['left', 'right'],
+  on: ['event'], once: ['event'], addEventListener: ['event'], subscribe: ['state'],
+};
+function applyCallbacks(ast) {
+  let n = 0;
+  traverse(ast, {
+    CallExpression(pp) {
+      const callee = pp.node.callee;
+      let method = null;
+      if (t.isMemberExpression(callee) && !callee.computed && t.isIdentifier(callee.property)) method = callee.property.name;
+      else if (t.isIdentifier(callee)) method = callee.name;
+      const cands = CALLBACK_MAP[method];
+      if (!cands) return;
+      for (const arg of pp.node.arguments) {
+        if (!t.isArrowFunctionExpression(arg) && !t.isFunctionExpression(arg)) continue;
+        const cbPath = pp.get('arguments').find(a => a.node === arg);
+        if (!cbPath) continue;
+        (arg.params || []).forEach((pr, idx) => {
+          if (!t.isIdentifier(pr) || !COMPRESSED.test(pr.name)) return;
+          const cand = cands[idx] || cands[0];
+          if (!cand || KEYWORDS.has(cand) || cbPath.scope.hasBinding(cand)) return;
+          try { cbPath.scope.rename(pr.name, cand); stats.callbacks++; n++; } catch {}
+        });
+      }
+    },
+  });
+  return n;
+}
+
+// ---- await / new / ref 形态 ----
+function deverb(name) {
+  const m = name.match(/^(get|load|fetch|read|resolve|create|build|make|generate|compute|parse|format|normalize|find|query|list|select|extract|open|init)([A-Z]\w*)$/);
+  return m ? m[2][0].toLowerCase() + m[2].slice(1) : null;
+}
+function applyForms(ast) {
+  let n = 0;
+  traverse(ast, {
+    VariableDeclarator(pp) {
+      const id = pp.node.id, init = pp.node.init;
+      if (!t.isIdentifier(id) || !COMPRESSED.test(id.name) || !init) return;
+      let cands = null;
+      if (t.isAwaitExpression(init) && (t.isCallExpression(init.argument) || t.isOptionalCallExpression(init.argument))) {
+        const callee = init.argument.callee;
+        let fname = null;
+        if (t.isIdentifier(callee)) fname = callee.name;
+        else if (t.isMemberExpression(callee) && !callee.computed && t.isIdentifier(callee.property)) fname = callee.property.name;
+        if (fname) {
+          const d = deverb(fname);
+          cands = d && d.length >= 4 ? [d, d + 'Data'] : (fname.length >= 6 ? [fname, fname + 'Data'] : null);
+        }
+      } else if (t.isNewExpression(init) && t.isIdentifier(init.callee)) {
+        const cls = init.callee.name;
+        if (cls.length >= 4) cands = [cls[0].toLowerCase() + cls.slice(1)];
+      } else if (t.isCallExpression(init) && t.isIdentifier(init.callee) && /^(ref|shallowRef|reactive)$/.test(init.callee.name)) {
+        const arg = init.arguments[0];
+        if (!arg) cands = ['state'];
+        else if (t.isArrayExpression(arg)) cands = [arg.elements.length ? 'list' : 'items'];
+        else if (t.isObjectExpression(arg)) cands = ['state'];
+        else if (t.isNullLiteral(arg)) cands = ['target'];
+        else if (t.isBooleanLiteral(arg)) cands = ['flag'];
+        else if (t.isStringLiteral(arg)) cands = ['label'];
+        else if (t.isNumericLiteral(arg)) cands = ['counter'];
+      }
+      if (!cands) return;
+      const sc = pp.scope;
+      if (!sc.getOwnBinding(id.name)) return;
+      for (const cand of cands) {
+        if (!cand || KEYWORDS.has(cand) || GENERIC.has(cand)) continue;
+        if (!/^[a-z][A-Za-z0-9]{2,28}$/.test(cand)) continue;
+        if (sc.hasBinding(cand)) continue;
+        try { sc.rename(id.name, cand); stats.forms++; n++; break; } catch {}
+      }
+    },
+  });
+  return n;
 }
 
 function processFile(file) {
@@ -123,6 +205,11 @@ function processFile(file) {
       },
     });
   }
+
+  // 5) await/new/ref 形态命名
+  if (!only || only === 'forms') { n += applyForms(ast); }
+  // 6) 回调位置命名
+  if (!only || only === 'callbacks') { n += applyCallbacks(ast); }
 
   if (n > 0 && !dry) {
     fs.writeFileSync(file, generate(ast, { compact: false, comments: true, jsescOption: { minimal: true } }).code);

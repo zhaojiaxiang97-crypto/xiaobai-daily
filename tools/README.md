@@ -23,6 +23,8 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | `--only=params` | 压缩参数名按「函数体内属性/方法/比较画像」推断语义 | 低（scope.rename） |
 | `--only=locals` | `const x = obj.prop` → 变量名取 prop 名（过滤通用词与**全部保留字**） | 低 |
 | `--only=final` | `void 0`→`undefined`、`!0/!1`→`true/false`、字符串 `\x`/`\u` 转义还原 | 低 |
+| `--only=forms` | `const x = await obj.getY()`→`y`、`new Cls()`→`cls`、`ref([])`→`items`/`ref(null)`→`target` | 低 |
+| `--only=callbacks` | `.then(x=>)`→`result`、`.catch(x=>)`→`err`、`.map(x=>)`→`item`、`.reduce((a,b)=>`→`acc,cur`、`.sort((a,b)=>`→`left,right` | 低 |
 | 不带 `--only` | 依次执行以上全部 | — |
 
 统一入口：`node tools/deobf.cjs [--only=...] [--dry]`（遍历 `src/**/*.js`）
@@ -38,6 +40,16 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 4. **`(0, obj.method)()`**：这是提取方法解除 `this` 绑定的语义，不是混淆，保留。
 5. **改完必须回归**：`node --check` 只保证语法；语义正确性靠 `./build.sh` + 启动 +
    CDP 页面断言。
+
+## 命名模式汇总（累计已应用）
+
+| 模式 | 主进程 | 前端主 bundle |
+|---|---|---|
+| params（使用画像） | 284 | 859 |
+| locals（prop 形态） | 28 | 616 |
+| forms（await/new/ref） | 351 | 450 |
+| callbacks（回调位置） | 818 | 1630 |
+| final（void 0 / !0 / 转义） | 3008 / 12612 / 89 文件 | 同左（全库） |
 
 ## 尚未安全的操作
 
