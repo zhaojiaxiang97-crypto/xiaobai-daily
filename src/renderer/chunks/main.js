@@ -24531,34 +24531,7 @@ var lre = [`title`],
                                 [`open`],
                               ),
                               createCommentVNode(``, !0),
-                              createElementVNode(
-                                `button`,
-                                {
-                                  type: `button`,
-                                  "data-notification-trigger": ``,
-                                  class: `flex size-[26px] items-center justify-center rounded-lg hover:bg-black/[0.04] transition-colors relative shrink-0 cursor-pointer dark:hover:bg-sidebar-accent`,
-                                  title: unref(v)(`notification.title`),
-                                  "aria-label": unref(v)(`notification.title`),
-                                  onClick: (r[12] ||= withDirectives(
-                                    (...e) => unref(f) && unref(f)(...e),
-                                    [`stop`],
-                                  )),
-                                },
-                                [
-                                  resolveComponent(unref(xa), {
-                                    size: 16,
-                                    "stroke-width": 1.5,
-                                    class: `text-[#555] dark:text-muted-foreground`,
-                                  }),
-                                  unref(d)
-                                    ? (openBlock(),
-                                      createElementBlock(`span`, uie))
-                                    : createCommentVNode(``, !0),
-                                ],
-                                8,
-                                lie,
-                              ),
-                              resolveComponent(Ute),
+
                             ])),
                       ]))
                     : createCommentVNode(``, !0),
