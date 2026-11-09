@@ -19803,36 +19803,7 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
                 },
                 {
                   default: H(() => [
-                    resolveComponent(
-                      unref(Mn),
-                      {
-                        "as-child": ``,
-                      },
-                      {
-                        default: H(() => [
-                          createElementVNode(
-                            `button`,
-                            {
-                              type: `button`,
-                              "data-mobile-connect-trigger": ``,
-                              class: `relative flex size-[26px] shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors hover:bg-black/[0.04] data-[state=open]:bg-black/[0.06] dark:hover:bg-sidebar-accent dark:data-[state=open]:bg-sidebar-accent`,
-                              title: unref(t)(`mobileConnect.title`),
-                              "aria-label": unref(t)(`mobileConnect.title`),
-                            },
-                            [
-                              resolveComponent(unref(ns), {
-                                size: 16,
-                                "stroke-width": 1.5,
-                                class: `text-[#555] dark:text-muted-foreground`,
-                              }),
-                            ],
-                            8,
-                            Nte,
-                          ),
-                        ]),
-                        _: 1,
-                      },
-                    ),
+                    
                     resolveComponent(
                       unref(Dn),
                       {
