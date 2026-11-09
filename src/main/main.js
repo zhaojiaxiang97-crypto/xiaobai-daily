@@ -244652,7 +244652,7 @@ var mpegParserLoader = {
     extensions: [".wav", "wave", ".bwf"],
     mimeTypes: ["audio/vnd.wave", "audio/wav", "audio/wave"],
     async load() {
-      return (await import("./WaveParser.js")).WaveParser;
+      return (await import("./vendors/music-metadata/WaveParser.js")).WaveParser;
     },
   },
   debug$1 = (0, import_src.default)("music-metadata:parser:factory");
