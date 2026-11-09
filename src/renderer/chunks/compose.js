@@ -1,3 +1,650 @@
-import{r as e}from"../ui/icons/lucide-icons.js";import{l as t,o as n}from"./screenshot-beautifier.js";var r=e(`scan-text`,[[`path`,{d:`M3 7V5a2 2 0 0 1 2-2h2`,key:`aa7l1z`}],[`path`,{d:`M17 3h2a2 2 0 0 1 2 2v2`,key:`4qcy5o`}],[`path`,{d:`M21 17v2a2 2 0 0 1-2 2h-2`,key:`6vwrx8`}],[`path`,{d:`M7 21H5a2 2 0 0 1-2-2v-2`,key:`ioqczr`}],[`path`,{d:`M7 8h8`,key:`1jbsf9`}],[`path`,{d:`M7 12h10`,key:`b7w52i`}],[`path`,{d:`M7 16h6`,key:`1vyc9m`}]]);function i(e,t){let n=document.createElement(`canvas`);return n.width=Math.max(1,Math.round(e)),n.height=Math.max(1,Math.round(t)),n}function a(e,t){let n=e.getContext(`2d`,t);if(!n)throw Error(`Canvas 2D is not available`);return n}function o(e,t,n){let r=t*n,i=e.byteOffset%4==0?e:e.slice(),a=new Uint32Array(i.buffer,i.byteOffset,r),o=new Uint8ClampedArray(r*4),s=new Uint32Array(o.buffer);for(let e=0;e<r;e+=1){let t=a[e];s[e]=t&65280|(t&255)<<16|t>>>16&255|4278190080}return new ImageData(o,t,n)}async function s(e){let t=new Blob([e],{type:`image/png`}),n=await createImageBitmap(t);try{let e=i(n.width,n.height);return a(e).drawImage(n,0,0),e}finally{n.close()}}function c(e){return new Promise((t,n)=>{e.toBlob(e=>{if(!e){n(Error(`PNG export failed`));return}e.arrayBuffer().then(e=>t(new Uint8Array(e)),n)},`image/png`)})}function l(e,t,n,r,o){let s=i(r,o);return a(s).drawImage(e,t,n,r,o,0,0,s.width,s.height),s}function u(e){e&&(e.width=1,e.height=1)}function d(e,t){return`#${[e[t],e[t+1],e[t+2]].map(e=>e.toString(16).padStart(2,`0`)).join(``)}`}var f=`system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif`,p=1.3,m=null;function h(){return m||=a(i(4,4)),m}function g(e){return`600 ${Math.round(e)}px ${f}`}function _(e){return{x:e.width<0?e.x+e.width:e.x,y:e.height<0?e.y+e.height:e.y,width:Math.abs(e.width),height:Math.abs(e.height)}}function v(e){let t=Number.parseInt(e.slice(1),16),n=t>>16&255,r=t>>8&255,i=t&255;return(.299*n+.587*r+.114*i)/255}function y(e){let t=h();t.font=g(e.size);let n=e.text.split(`
-`),r=Math.max(e.size*.6,...n.map(e=>t.measureText(e||` `).width));return{x:e.x,y:e.y,width:r,height:n.length*e.size*p}}function b(e){switch(e.kind){case`rect`:case`ellipse`:case`mosaic`:return _(e);case`arrow`:case`line`:return _({x:e.x1,y:e.y1,width:e.x2-e.x1,height:e.y2-e.y1});case`pen`:case`highlighter`:{let t=1/0,n=1/0,r=-1/0,i=-1/0;for(let a=0;a<e.points.length;a+=2)t=Math.min(t,e.points[a]),r=Math.max(r,e.points[a]),n=Math.min(n,e.points[a+1]),i=Math.max(i,e.points[a+1]);return{x:t,y:n,width:r-t,height:i-n}}case`text`:return y(e);case`number`:return{x:e.x-e.size,y:e.y-e.size,width:e.size*2,height:e.size*2}}}function x(e,t,n,r,i,a){let o=i-n,s=a-r,c=o*o+s*s,l=c===0?0:Math.max(0,Math.min(1,((e-n)*o+(t-r)*s)/c));return Math.hypot(e-(n+l*o),t-(r+l*s))}function S(e,t,n,r){switch(e.kind){case`rect`:case`ellipse`:case`mosaic`:case`text`:case`number`:{let i=b(e);return t>=i.x-r&&t<=i.x+i.width+r&&n>=i.y-r&&n<=i.y+i.height+r}case`arrow`:case`line`:return x(t,n,e.x1,e.y1,e.x2,e.y2)<=Math.max(r,e.size);case`pen`:case`highlighter`:{let i=Math.max(r,e.kind===`highlighter`?e.size*2:e.size),a=e.points;if(a.length===2)return Math.hypot(t-a[0],n-a[1])<=i;for(let e=2;e<a.length;e+=2)if(x(t,n,a[e-2],a[e-1],a[e],a[e+1])<=i)return!0;return!1}}}function C(e){if(e.kind===`arrow`||e.kind===`line`)return[{handle:`start`,x:e.x1,y:e.y1},{handle:`end`,x:e.x2,y:e.y2}];if(e.kind===`rect`||e.kind===`ellipse`||e.kind===`mosaic`){let t=_(e);return[{handle:`nw`,x:t.x,y:t.y},{handle:`ne`,x:t.x+t.width,y:t.y},{handle:`sw`,x:t.x,y:t.y+t.height},{handle:`se`,x:t.x+t.width,y:t.y+t.height}]}return[]}function w(e,t,n,r){if(e.kind===`arrow`||e.kind===`line`)return t===`start`?{...e,x1:n,y1:r}:{...e,x2:n,y2:r};if(e.kind===`rect`||e.kind===`ellipse`||e.kind===`mosaic`){let i=_(e),a=i.x,o=i.y,s=i.x+i.width,c=i.y+i.height;return(t===`nw`||t===`sw`)&&(a=n),(t===`ne`||t===`se`)&&(s=n),(t===`nw`||t===`ne`)&&(o=r),(t===`sw`||t===`se`)&&(c=r),{...e,..._({x:a,y:o,width:s-a,height:c-o})}}return e}function T(e,t,n){switch(e.kind){case`rect`:case`ellipse`:case`mosaic`:case`text`:case`number`:return{...e,x:e.x+t,y:e.y+n};case`arrow`:case`line`:return{...e,x1:e.x1+t,y1:e.y1+n,x2:e.x2+t,y2:e.y2+n};case`pen`:case`highlighter`:return{...e,points:e.points.map((e,r)=>e+(r%2==0?t:n))}}}function E(e,t){let n=_(t);if(e.lineWidth=t.size,e.strokeStyle=t.color,e.lineJoin=`round`,e.beginPath(),t.kind===`ellipse`)e.ellipse(n.x+n.width/2,n.y+n.height/2,Math.max(.5,n.width/2),Math.max(.5,n.height/2),0,0,Math.PI*2);else{let r=Math.min(t.size*1.2,n.width/2,n.height/2);e.roundRect(n.x,n.y,n.width,n.height,r)}e.stroke()}function D(e,t){let{x1:n,y1:r,x2:i,y2:a,size:o,color:s}=t;e.strokeStyle=s,e.fillStyle=s,e.lineCap=`round`,e.lineJoin=`round`,e.lineWidth=o;let c=Math.hypot(i-n,a-r);if(t.kind===`line`||c<1){e.beginPath(),e.moveTo(n,r),e.lineTo(i,a),e.stroke();return}let l=Math.min(c*.6,Math.max(12,o*4.2)),u=l*.78,d=Math.atan2(a-r,i-n),f=i-Math.cos(d)*l*.82,p=a-Math.sin(d)*l*.82;e.beginPath(),e.moveTo(n,r),e.lineTo(f,p),e.stroke();let m=i-Math.cos(d)*l,h=a-Math.sin(d)*l,g=-Math.sin(d)*u/2,_=Math.cos(d)*u/2;e.beginPath(),e.moveTo(i,a),e.lineTo(m+g,h+_),e.quadraticCurveTo(f,p,m-g,h-_),e.closePath(),e.lineWidth=Math.max(1,o*.5),e.stroke(),e.fill()}function O(e,t){let n=t.points,r=t.kind===`highlighter`;if(e.save(),e.strokeStyle=t.color,e.fillStyle=t.color,e.lineCap=`round`,e.lineJoin=`round`,e.lineWidth=r?t.size*4:t.size,r&&(e.globalAlpha=.38),e.beginPath(),n.length===2){e.arc(n[0],n[1],e.lineWidth/2,0,Math.PI*2),e.fill(),e.restore();return}e.moveTo(n[0],n[1]);for(let t=2;t<n.length-2;t+=2){let r=(n[t]+n[t+2])/2,i=(n[t+1]+n[t+3])/2;e.quadraticCurveTo(n[t],n[t+1],r,i)}e.lineTo(n[n.length-2],n[n.length-1]),e.stroke(),e.restore()}function k(e,t){e.save(),e.font=g(t.size),e.textBaseline=`top`,e.lineJoin=`round`,e.strokeStyle=v(t.color)>.6?`rgba(0,0,0,0.55)`:`rgba(255,255,255,0.9)`,e.lineWidth=Math.max(2,t.size*.16),e.fillStyle=t.color;let n=t.size*p,r=(n-t.size)/2;t.text.split(`
-`).forEach((i,a)=>{let o=t.y+a*n+r;e.strokeText(i,t.x,o),e.fillText(i,t.x,o)}),e.restore()}function A(e,t){let n=t.size;e.save(),e.shadowColor=`rgba(0,0,0,0.25)`,e.shadowBlur=n*.4,e.shadowOffsetY=n*.12,e.fillStyle=t.color,e.beginPath(),e.arc(t.x,t.y,n,0,Math.PI*2),e.fill(),e.shadowColor=`transparent`,e.lineWidth=Math.max(1.5,n*.14),e.strokeStyle=`rgba(255,255,255,0.95)`,e.stroke(),e.fillStyle=v(t.color)>.7?`#111111`:`#ffffff`;let r=String(t.value);e.font=`700 ${Math.round(n*(r.length>2?.8:r.length>1?.95:1.1))}px ${f}`,e.textAlign=`center`,e.textBaseline=`middle`,e.fillText(r,t.x,t.y+n*.04),e.restore()}function j(e,t,n,r,o){let s=_(t),c=Math.max(0,Math.floor(s.x)),l=Math.max(0,Math.floor(s.y)),u=Math.min(r,Math.ceil(s.x+s.width)),d=Math.min(o,Math.ceil(s.y+s.height)),f=u-c,p=d-l;if(f<1||p<1)return;let m=Math.max(2,t.size),h=i(Math.max(1,Math.ceil(f/m)),Math.max(1,Math.ceil(p/m))),g=a(h);g.imageSmoothingEnabled=!0,g.imageSmoothingQuality=`medium`,g.drawImage(n,c,l,f,p,0,0,h.width,h.height),e.save(),e.imageSmoothingEnabled=!1,e.drawImage(h,0,0,h.width,h.height,c,l,h.width*m,h.height*m),e.restore()}function M(e,t,n){for(let r of t)r.kind===`mosaic`&&r.id!==n.hiddenId&&j(e,r,n.source,n.sourceWidth,n.sourceHeight);for(let r of t)if(r.id!==n.hiddenId)switch(r.kind){case`rect`:case`ellipse`:E(e,r);break;case`arrow`:case`line`:D(e,r);break;case`pen`:case`highlighter`:O(e,r);break;case`text`:k(e,r);break;case`number`:A(e,r)}}var N=24,P=.4,F=40;function I(e,t,n){return Math.abs(e[t]-n[0])+Math.abs(e[t+1]-n[1])+Math.abs(e[t+2]-n[2])<=N}function L(e,t){let{width:n,height:r}=e;if(n<24||r<24)return null;let i=a(e,{willReadFrequently:!0}).getImageData(0,0,n,r).data,o=[i[0],i[1],i[2]];if(![0,(n-1)*4,(r-1)*n*4,((r-1)*n+n-1)*4].every(e=>I(i,e,o)))return null;let s=Math.max(1,Math.floor(n/1200)),c=Math.max(1,Math.floor(r/1200)),l=e=>{let t=e*n*4;for(let e=0;e<n;e+=s)if(!I(i,t+e*4,o))return!1;return!0},u=e=>{for(let t=0;t<r;t+=c)if(!I(i,(t*n+e)*4,o))return!1;return!0},f=Math.floor(r*P),p=Math.floor(n*P),m=0;for(;m<f&&l(m);)m+=1;if(m>=f&&l(Math.floor(r/2)))return null;let h=0;for(;h<f&&l(r-1-h);)h+=1;let g=0;for(;g<p&&u(g);)g+=1;let _=0;for(;_<p&&u(n-1-_);)_+=1;if(m+h+g+_===0)return null;let v=Math.min(m,_,h,g,Math.round(F*t));return{top:m,right:_,bottom:h,left:g,margin:v,color:d(i,0)}}var R={mac:30,browser:42};function z(e){if(e===`auto`)return null;let[t,n]=e.split(`:`).map(Number);return t>0&&n>0?t/n:null}function B(e){let{source:t,style:n}=e,r=Math.max(1,e.scale);if(!n.enabled){let e={x:0,y:0,width:t.width,height:t.height};return{width:t.width,height:t.height,window:e,radius:0,frameHeight:0,image:e,origin:{x:0,y:0},balance:null}}let i=n.balance?e.balance:null,a=i?t.width-i.left-i.right+i.margin*2:t.width,o=i?t.height-i.top-i.bottom+i.margin*2:t.height,s=n.frame===`none`?0:Math.round((n.frame.startsWith(`mac`)?R.mac:R.browser)*r),c=a,l=o+s,u=Math.round(n.padding*r),d=c+u*2,f=l+u*2,p=z(n.ratio);p&&(d/f<p?d=Math.round(f*p):f=Math.round(d/p)),d=Math.max(1,d),f=Math.max(1,f);let m=Math.round((d-c)/2),h=Math.round((f-l)/2),g={x:m,y:h+s,width:a,height:o},_=i?{x:g.x+i.margin-i.left,y:g.y+i.margin-i.top}:{x:g.x,y:g.y},v=Math.min(Math.round(n.radius*r),Math.floor(Math.min(c,l)/2));return{width:d,height:f,window:{x:m,y:h,width:c,height:l},radius:v,frameHeight:s,image:g,origin:_,balance:i}}function V(){return{key:``,canvas:null}}function H(e,t,n,r){let o=i(Math.max(2,Math.ceil(n/8)),Math.max(2,Math.ceil(r/8))),s=a(o),c=Math.max(o.width/t.width,o.height/t.height)*1.25,l=t.width*c,u=t.height*c;s.filter=`blur(${Math.max(4,Math.round(Math.max(o.width,o.height)*.05))}px) saturate(1.15)`,s.drawImage(t,(o.width-l)/2,(o.height-u)/2,l,u),e.save(),e.imageSmoothingEnabled=!0,e.imageSmoothingQuality=`high`,e.drawImage(o,0,0,n,r),e.fillStyle=`rgba(255,255,255,0.12)`,e.fillRect(0,0,n,r),e.restore()}var U=null;function W(e){if(U?.url===e)return U;let t=new Image,n=new Promise((e,n)=>{t.onload=()=>e(),t.onerror=()=>n(Error(`Background image could not be decoded`))});return t.src=e,U={url:e,image:t,ready:n},U}function G(e,t,r,i){let{style:a}=t,o=r.width*i,s=r.height*i;if(a.backgroundKind===`image`){if(e.fillStyle=a.backgroundColor,e.fillRect(0,0,o,s),a.backgroundImage){let n=W(a.backgroundImage);if(n.image.complete&&n.image.naturalWidth){let t=Math.max(o/n.image.naturalWidth,s/n.image.naturalHeight),r=n.image.naturalWidth*t,i=n.image.naturalHeight*t;e.drawImage(n.image,(o-r)/2,(s-i)/2,r,i)}else n.ready.then(()=>t.onBackgroundLoaded?.(),()=>{})}}else if(a.backgroundKind===`solid`)e.fillStyle=a.backgroundColor,e.fillRect(0,0,o,s);else if(a.backgroundKind===`gradient`){let t=n.find(e=>e.id===a.gradientId)??n[0],r=e.createLinearGradient(0,0,o,s);r.addColorStop(0,t.stops[0]),r.addColorStop(1,t.stops[1]),e.fillStyle=r,e.fillRect(0,0,o,s)}else a.backgroundKind===`blur`&&H(e,t.source,o,s);let c=a.shadow/100;if(c<=0)return;let l=Math.max(1,t.scale)*i,{x:u,y:d,width:f,height:p}=r.window,m=()=>{e.beginPath(),e.roundRect(u*i,d*i,f*i,p*i,r.radius*i)};e.save(),e.fillStyle=`#ffffff`,e.shadowColor=`rgba(0,0,0,${(.12+.33*c).toFixed(3)})`,e.shadowBlur=(8+52*c)*l,e.shadowOffsetY=(2+22*c)*l,m(),e.fill(),e.shadowColor=`rgba(0,0,0,${(.06+.1*c).toFixed(3)})`,e.shadowBlur=(2+4*c)*l,e.shadowOffsetY=l,m(),e.fill(),e.restore()}function K(e,t,n,r){if(n.frameHeight<=0)return;let i=t.frame.endsWith(`dark`),{x:a,y:o,width:s}=n.window,c=n.frameHeight;e.fillStyle=i?`#2c2c2e`:`#f2f2f3`,e.fillRect(a,o,s,c),e.fillStyle=i?`rgba(0,0,0,0.5)`:`rgba(0,0,0,0.08)`,e.fillRect(a,o+c-Math.max(1,Math.round(r)),s,Math.max(1,Math.round(r)));let l=6*r,u=o+c/2;if([`#ff5f57`,`#febc2e`,`#28c840`].forEach((t,n)=>{e.fillStyle=t,e.beginPath(),e.arc(a+16*r+l+n*20*r,u,l,0,Math.PI*2),e.fill()}),t.frame.startsWith(`browser`)){let t=a+92*r,n=a+s-20*r,o=Math.min(n-t,560*r);if(o>40*r){let a=24*r,s=t+Math.max(0,(n-t-o)/2);e.fillStyle=i?`#3a3a3d`:`#ffffff`,e.beginPath(),e.roundRect(s,u-a/2,o,a,a/2),e.fill(),e.fillStyle=i?`rgba(255,255,255,0.18)`:`rgba(0,0,0,0.12)`,e.beginPath(),e.roundRect(s+14*r,u-3*r,Math.min(180*r,o*.4),6*r,3*r),e.fill()}}}function q(e,t,n,r=1,o){let{source:s,style:c}=t,l=Math.round(n.width*r),u=Math.round(n.height*r);if(e.save(),e.clearRect(0,0,l,u),c.enabled){let s=c.backgroundKind===`image`&&c.backgroundImage?W(c.backgroundImage):null,d=JSON.stringify([c.backgroundKind,c.backgroundColor,c.backgroundImage,!!s?.image.naturalWidth,c.gradientId,c.shadow,c.radius,n.window,n.width,n.height,l,u,t.scale]);if(o){if(o.key!==d||!o.canvas){let e=o.canvas&&o.canvas.width===l&&o.canvas.height===u?o.canvas:i(l,u),s=a(e);s.clearRect(0,0,e.width,e.height),G(s,t,n,r),o.canvas=e,o.key=d}e.drawImage(o.canvas,0,0)}else G(e,t,n,r)}e.scale(r,r),e.imageSmoothingEnabled=!0,e.imageSmoothingQuality=`high`;let d=Math.max(1,t.scale);e.save(),e.beginPath(),e.roundRect(n.window.x,n.window.y,n.window.width,n.window.height,n.radius),e.clip(),K(e,c,n,d);let{image:f,balance:p}=n;if(p){e.fillStyle=p.color,e.fillRect(f.x,f.y,f.width,f.height);let t=s.width-p.left-p.right,n=s.height-p.top-p.bottom;e.drawImage(s,p.left,p.top,t,n,f.x+p.margin,f.y+p.margin,t,n)}else e.drawImage(s,f.x,f.y);e.beginPath(),e.rect(f.x,f.y,f.width,f.height),e.clip(),e.translate(n.origin.x,n.origin.y),M(e,t.annotations,{source:s,sourceWidth:s.width,sourceHeight:s.height,hiddenId:t.hiddenAnnotationId}),e.restore(),e.restore()}async function J(e){e.style.enabled&&e.style.backgroundKind===`image`&&e.style.backgroundImage&&await W(e.style.backgroundImage).ready;let n=B(e),r=Math.min(1,t/Math.max(n.width,n.height)),o=i(Math.round(n.width*r),Math.round(n.height*r));q(a(o),e,n,r);let s=await c(o),l={width:o.width,height:o.height};return o.width=1,o.height=1,{png:s,...l}}export{s as _,L as a,C as c,w as d,o as f,d as g,l as h,q as i,S as l,i as m,V as n,f as o,a as p,J as r,b as s,B as t,T as u,u as v,r as y};
+import { r as e } from "../ui/icons/lucide-icons.js";
+import { l as t, o as n } from "./screenshot-beautifier.js";
+var r = e(`scan-text`, [[`path`, {
+  d: `M3 7V5a2 2 0 0 1 2-2h2`,
+  key: `aa7l1z`
+}], [`path`, {
+  d: `M17 3h2a2 2 0 0 1 2 2v2`,
+  key: `4qcy5o`
+}], [`path`, {
+  d: `M21 17v2a2 2 0 0 1-2 2h-2`,
+  key: `6vwrx8`
+}], [`path`, {
+  d: `M7 21H5a2 2 0 0 1-2-2v-2`,
+  key: `ioqczr`
+}], [`path`, {
+  d: `M7 8h8`,
+  key: `1jbsf9`
+}], [`path`, {
+  d: `M7 12h10`,
+  key: `b7w52i`
+}], [`path`, {
+  d: `M7 16h6`,
+  key: `1vyc9m`
+}]]);
+function i(e, t) {
+  let n = document.createElement(`canvas`);
+  return n.width = Math.max(1, Math.round(e)), n.height = Math.max(1, Math.round(t)), n;
+}
+function a(e, t) {
+  let n = e.getContext(`2d`, t);
+  if (!n) throw Error(`Canvas 2D is not available`);
+  return n;
+}
+function o(items, t, n) {
+  let r = t * n,
+    i = items.byteOffset % 4 == 0 ? items : items.slice(),
+    a = new Uint32Array(i.buffer, i.byteOffset, r),
+    o = new Uint8ClampedArray(r * 4),
+    s = new Uint32Array(o.buffer);
+  for (let e = 0; e < r; e += 1) {
+    let t = a[e];
+    s[e] = t & 65280 | (t & 255) << 16 | t >>> 16 & 255 | 4278190080;
+  }
+  return new ImageData(o, t, n);
+}
+async function s(e) {
+  let t = new Blob([e], {
+      type: `image/png`
+    }),
+    n = await createImageBitmap(t);
+  try {
+    let e = i(n.width, n.height);
+    return a(e).drawImage(n, 0, 0), e;
+  } finally {
+    n.close();
+  }
+}
+function c(e) {
+  return new Promise((fn, n) => {
+    e.toBlob(e => {
+      if (!e) {
+        n(Error(`PNG export failed`));
+        return;
+      }
+      e.arrayBuffer().then(e => fn(new Uint8Array(e)), n);
+    }, `image/png`);
+  });
+}
+function l(e, t, n, r, o) {
+  let s = i(r, o);
+  return a(s).drawImage(e, t, n, r, o, 0, 0, s.width, s.height), s;
+}
+function u(e) {
+  e && (e.width = 1, e.height = 1);
+}
+function d(e, t) {
+  return `#${[e[t], e[t + 1], e[t + 2]].map(e => e.toString(16).padStart(2, `0`)).join(``)}`;
+}
+var f = `system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif`,
+  p = 1.3,
+  m = null;
+function h() {
+  return m ||= a(i(4, 4)), m;
+}
+function g(e) {
+  return `600 ${Math.round(e)}px ${f}`;
+}
+function _(e) {
+  return {
+    x: e.width < 0 ? e.x + e.width : e.x,
+    y: e.height < 0 ? e.y + e.height : e.y,
+    width: Math.abs(e.width),
+    height: Math.abs(e.height)
+  };
+}
+function v(items) {
+  let t = Number.parseInt(items.slice(1), 16),
+    n = t >> 16 & 255,
+    r = t >> 8 & 255,
+    i = t & 255;
+  return (.299 * n + .587 * r + .114 * i) / 255;
+}
+function y(e) {
+  let t = h();
+  t.font = g(e.size);
+  let n = e.text.split(`
+`),
+    r = Math.max(e.size * .6, ...n.map(e => t.measureText(e || ` `).width));
+  return {
+    x: e.x,
+    y: e.y,
+    width: r,
+    height: n.length * e.size * p
+  };
+}
+function b(e) {
+  switch (e.kind) {
+    case `rect`:
+    case `ellipse`:
+    case `mosaic`:
+      return _(e);
+    case `arrow`:
+    case `line`:
+      return _({
+        x: e.x1,
+        y: e.y1,
+        width: e.x2 - e.x1,
+        height: e.y2 - e.y1
+      });
+    case `pen`:
+    case `highlighter`:
+      {
+        let t = 1 / 0,
+          n = 1 / 0,
+          r = -1 / 0,
+          i = -1 / 0;
+        for (let a = 0; a < e.points.length; a += 2) t = Math.min(t, e.points[a]), r = Math.max(r, e.points[a]), n = Math.min(n, e.points[a + 1]), i = Math.max(i, e.points[a + 1]);
+        return {
+          x: t,
+          y: n,
+          width: r - t,
+          height: i - n
+        };
+      }
+    case `text`:
+      return y(e);
+    case `number`:
+      return {
+        x: e.x - e.size,
+        y: e.y - e.size,
+        width: e.size * 2,
+        height: e.size * 2
+      };
+  }
+}
+function x(e, t, n, r, i, a) {
+  let o = i - n,
+    s = a - r,
+    c = o * o + s * s,
+    l = c === 0 ? 0 : Math.max(0, Math.min(1, ((e - n) * o + (t - r) * s) / c));
+  return Math.hypot(e - (n + l * o), t - (r + l * s));
+}
+function S(e, t, n, r) {
+  switch (e.kind) {
+    case `rect`:
+    case `ellipse`:
+    case `mosaic`:
+    case `text`:
+    case `number`:
+      {
+        let i = b(e);
+        return t >= i.x - r && t <= i.x + i.width + r && n >= i.y - r && n <= i.y + i.height + r;
+      }
+    case `arrow`:
+    case `line`:
+      return x(t, n, e.x1, e.y1, e.x2, e.y2) <= Math.max(r, e.size);
+    case `pen`:
+    case `highlighter`:
+      {
+        let i = Math.max(r, e.kind === `highlighter` ? e.size * 2 : e.size),
+          points = e.points;
+        if (points.length === 2) return Math.hypot(t - points[0], n - points[1]) <= i;
+        for (let e = 2; e < points.length; e += 2) if (x(t, n, points[e - 2], points[e - 1], points[e], points[e + 1]) <= i) return !0;
+        return !1;
+      }
+  }
+}
+function C(e) {
+  if (e.kind === `arrow` || e.kind === `line`) return [{
+    handle: `start`,
+    x: e.x1,
+    y: e.y1
+  }, {
+    handle: `end`,
+    x: e.x2,
+    y: e.y2
+  }];
+  if (e.kind === `rect` || e.kind === `ellipse` || e.kind === `mosaic`) {
+    let t = _(e);
+    return [{
+      handle: `nw`,
+      x: t.x,
+      y: t.y
+    }, {
+      handle: `ne`,
+      x: t.x + t.width,
+      y: t.y
+    }, {
+      handle: `sw`,
+      x: t.x,
+      y: t.y + t.height
+    }, {
+      handle: `se`,
+      x: t.x + t.width,
+      y: t.y + t.height
+    }];
+  }
+  return [];
+}
+function w(e, t, n, r) {
+  if (e.kind === `arrow` || e.kind === `line`) return t === `start` ? {
+    ...e,
+    x1: n,
+    y1: r
+  } : {
+    ...e,
+    x2: n,
+    y2: r
+  };
+  if (e.kind === `rect` || e.kind === `ellipse` || e.kind === `mosaic`) {
+    let i = _(e),
+      a = i.x,
+      o = i.y,
+      s = i.x + i.width,
+      c = i.y + i.height;
+    return (t === `nw` || t === `sw`) && (a = n), (t === `ne` || t === `se`) && (s = n), (t === `nw` || t === `ne`) && (o = r), (t === `sw` || t === `se`) && (c = r), {
+      ...e,
+      ..._({
+        x: a,
+        y: o,
+        width: s - a,
+        height: c - o
+      })
+    };
+  }
+  return e;
+}
+function T(e, t, n) {
+  switch (e.kind) {
+    case `rect`:
+    case `ellipse`:
+    case `mosaic`:
+    case `text`:
+    case `number`:
+      return {
+        ...e,
+        x: e.x + t,
+        y: e.y + n
+      };
+    case `arrow`:
+    case `line`:
+      return {
+        ...e,
+        x1: e.x1 + t,
+        y1: e.y1 + n,
+        x2: e.x2 + t,
+        y2: e.y2 + n
+      };
+    case `pen`:
+    case `highlighter`:
+      return {
+        ...e,
+        points: e.points.map((e, r) => e + (r % 2 == 0 ? t : n))
+      };
+  }
+}
+function E(e, t) {
+  let n = _(t);
+  if (e.lineWidth = t.size, e.strokeStyle = t.color, e.lineJoin = `round`, e.beginPath(), t.kind === `ellipse`) e.ellipse(n.x + n.width / 2, n.y + n.height / 2, Math.max(.5, n.width / 2), Math.max(.5, n.height / 2), 0, 0, Math.PI * 2);else {
+    let r = Math.min(t.size * 1.2, n.width / 2, n.height / 2);
+    e.roundRect(n.x, n.y, n.width, n.height, r);
+  }
+  e.stroke();
+}
+function D(e, t) {
+  let {
+    x1: n,
+    y1: r,
+    x2: i,
+    y2: a,
+    size: o,
+    color: s
+  } = t;
+  e.strokeStyle = s, e.fillStyle = s, e.lineCap = `round`, e.lineJoin = `round`, e.lineWidth = o;
+  let c = Math.hypot(i - n, a - r);
+  if (t.kind === `line` || c < 1) {
+    e.beginPath(), e.moveTo(n, r), e.lineTo(i, a), e.stroke();
+    return;
+  }
+  let l = Math.min(c * .6, Math.max(12, o * 4.2)),
+    u = l * .78,
+    d = Math.atan2(a - r, i - n),
+    f = i - Math.cos(d) * l * .82,
+    p = a - Math.sin(d) * l * .82;
+  e.beginPath(), e.moveTo(n, r), e.lineTo(f, p), e.stroke();
+  let m = i - Math.cos(d) * l,
+    h = a - Math.sin(d) * l,
+    g = -Math.sin(d) * u / 2,
+    _ = Math.cos(d) * u / 2;
+  e.beginPath(), e.moveTo(i, a), e.lineTo(m + g, h + _), e.quadraticCurveTo(f, p, m - g, h - _), e.closePath(), e.lineWidth = Math.max(1, o * .5), e.stroke(), e.fill();
+}
+function O(e, t) {
+  let points = t.points,
+    r = t.kind === `highlighter`;
+  if (e.save(), e.strokeStyle = t.color, e.fillStyle = t.color, e.lineCap = `round`, e.lineJoin = `round`, e.lineWidth = r ? t.size * 4 : t.size, r && (e.globalAlpha = .38), e.beginPath(), points.length === 2) {
+    e.arc(points[0], points[1], e.lineWidth / 2, 0, Math.PI * 2), e.fill(), e.restore();
+    return;
+  }
+  e.moveTo(points[0], points[1]);
+  for (let t = 2; t < points.length - 2; t += 2) {
+    let r = (points[t] + points[t + 2]) / 2,
+      i = (points[t + 1] + points[t + 3]) / 2;
+    e.quadraticCurveTo(points[t], points[t + 1], r, i);
+  }
+  e.lineTo(points[points.length - 2], points[points.length - 1]), e.stroke(), e.restore();
+}
+function k(e, t) {
+  e.save(), e.font = g(t.size), e.textBaseline = `top`, e.lineJoin = `round`, e.strokeStyle = v(t.color) > .6 ? `rgba(0,0,0,0.55)` : `rgba(255,255,255,0.9)`, e.lineWidth = Math.max(2, t.size * .16), e.fillStyle = t.color;
+  let n = t.size * p,
+    r = (n - t.size) / 2;
+  t.text.split(`
+`).forEach((i, a) => {
+    let o = t.y + a * n + r;
+    e.strokeText(i, t.x, o), e.fillText(i, t.x, o);
+  }), e.restore();
+}
+function A(e, t) {
+  let n = t.size;
+  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = n * .4, e.shadowOffsetY = n * .12, e.fillStyle = t.color, e.beginPath(), e.arc(t.x, t.y, n, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, n * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(t.color) > .7 ? `#111111` : `#ffffff`;
+  let r = String(t.value);
+  e.font = `700 ${Math.round(n * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, t.x, t.y + n * .04), e.restore();
+}
+function j(e, t, n, r, o) {
+  let s = _(t),
+    c = Math.max(0, Math.floor(s.x)),
+    l = Math.max(0, Math.floor(s.y)),
+    u = Math.min(r, Math.ceil(s.x + s.width)),
+    d = Math.min(o, Math.ceil(s.y + s.height)),
+    f = u - c,
+    p = d - l;
+  if (f < 1 || p < 1) return;
+  let m = Math.max(2, t.size),
+    h = i(Math.max(1, Math.ceil(f / m)), Math.max(1, Math.ceil(p / m))),
+    g = a(h);
+  g.imageSmoothingEnabled = !0, g.imageSmoothingQuality = `medium`, g.drawImage(n, c, l, f, p, 0, 0, h.width, h.height), e.save(), e.imageSmoothingEnabled = !1, e.drawImage(h, 0, 0, h.width, h.height, c, l, h.width * m, h.height * m), e.restore();
+}
+function M(e, t, n) {
+  for (let r of t) r.kind === `mosaic` && r.id !== n.hiddenId && j(e, r, n.source, n.sourceWidth, n.sourceHeight);
+  for (let r of t) if (r.id !== n.hiddenId) switch (r.kind) {
+    case `rect`:
+    case `ellipse`:
+      E(e, r);
+      break;
+    case `arrow`:
+    case `line`:
+      D(e, r);
+      break;
+    case `pen`:
+    case `highlighter`:
+      O(e, r);
+      break;
+    case `text`:
+      k(e, r);
+      break;
+    case `number`:
+      A(e, r);
+  }
+}
+var N = 24,
+  P = .4,
+  F = 40;
+function I(e, t, n) {
+  return Math.abs(e[t] - n[0]) + Math.abs(e[t + 1] - n[1]) + Math.abs(e[t + 2] - n[2]) <= N;
+}
+function L(e, t) {
+  let {
+    width: n,
+    height: r
+  } = e;
+  if (n < 24 || r < 24) return null;
+  let i = a(e, {
+      willReadFrequently: !0
+    }).getImageData(0, 0, n, r).data,
+    o = [i[0], i[1], i[2]];
+  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(e => I(i, e, o))) return null;
+  let s = Math.max(1, Math.floor(n / 1200)),
+    c = Math.max(1, Math.floor(r / 1200)),
+    l = e => {
+      let t = e * n * 4;
+      for (let e = 0; e < n; e += s) if (!I(i, t + e * 4, o)) return !1;
+      return !0;
+    },
+    u = e => {
+      for (let t = 0; t < r; t += c) if (!I(i, (t * n + e) * 4, o)) return !1;
+      return !0;
+    },
+    f = Math.floor(r * P),
+    p = Math.floor(n * P),
+    m = 0;
+  for (; m < f && l(m);) m += 1;
+  if (m >= f && l(Math.floor(r / 2))) return null;
+  let h = 0;
+  for (; h < f && l(r - 1 - h);) h += 1;
+  let g = 0;
+  for (; g < p && u(g);) g += 1;
+  let _ = 0;
+  for (; _ < p && u(n - 1 - _);) _ += 1;
+  if (m + h + g + _ === 0) return null;
+  let v = Math.min(m, _, h, g, Math.round(F * t));
+  return {
+    top: m,
+    right: _,
+    bottom: h,
+    left: g,
+    margin: v,
+    color: d(i, 0)
+  };
+}
+var R = {
+  mac: 30,
+  browser: 42
+};
+function z(text) {
+  if (text === `auto`) return null;
+  let [t, n] = text.split(`:`).map(Number);
+  return t > 0 && n > 0 ? t / n : null;
+}
+function B(e) {
+  let {
+      source: t,
+      style: n
+    } = e,
+    r = Math.max(1, e.scale);
+  if (!n.enabled) {
+    let e = {
+      x: 0,
+      y: 0,
+      width: t.width,
+      height: t.height
+    };
+    return {
+      width: t.width,
+      height: t.height,
+      window: e,
+      radius: 0,
+      frameHeight: 0,
+      image: e,
+      origin: {
+        x: 0,
+        y: 0
+      },
+      balance: null
+    };
+  }
+  let i = n.balance ? e.balance : null,
+    a = i ? t.width - i.left - i.right + i.margin * 2 : t.width,
+    o = i ? t.height - i.top - i.bottom + i.margin * 2 : t.height,
+    s = n.frame === `none` ? 0 : Math.round((n.frame.startsWith(`mac`) ? R.mac : R.browser) * r),
+    c = a,
+    l = o + s,
+    u = Math.round(n.padding * r),
+    d = c + u * 2,
+    f = l + u * 2,
+    p = z(n.ratio);
+  p && (d / f < p ? d = Math.round(f * p) : f = Math.round(d / p)), d = Math.max(1, d), f = Math.max(1, f);
+  let m = Math.round((d - c) / 2),
+    h = Math.round((f - l) / 2),
+    g = {
+      x: m,
+      y: h + s,
+      width: a,
+      height: o
+    },
+    _ = i ? {
+      x: g.x + i.margin - i.left,
+      y: g.y + i.margin - i.top
+    } : {
+      x: g.x,
+      y: g.y
+    },
+    v = Math.min(Math.round(n.radius * r), Math.floor(Math.min(c, l) / 2));
+  return {
+    width: d,
+    height: f,
+    window: {
+      x: m,
+      y: h,
+      width: c,
+      height: l
+    },
+    radius: v,
+    frameHeight: s,
+    image: g,
+    origin: _,
+    balance: i
+  };
+}
+function V() {
+  return {
+    key: ``,
+    canvas: null
+  };
+}
+function H(e, t, n, r) {
+  let o = i(Math.max(2, Math.ceil(n / 8)), Math.max(2, Math.ceil(r / 8))),
+    s = a(o),
+    c = Math.max(o.width / t.width, o.height / t.height) * 1.25,
+    l = t.width * c,
+    u = t.height * c;
+  s.filter = `blur(${Math.max(4, Math.round(Math.max(o.width, o.height) * .05))}px) saturate(1.15)`, s.drawImage(t, (o.width - l) / 2, (o.height - u) / 2, l, u), e.save(), e.imageSmoothingEnabled = !0, e.imageSmoothingQuality = `high`, e.drawImage(o, 0, 0, n, r), e.fillStyle = `rgba(255,255,255,0.12)`, e.fillRect(0, 0, n, r), e.restore();
+}
+var U = null;
+function W(fn) {
+  if (U?.url === fn) return U;
+  let t = new Image(),
+    n = new Promise((e, n) => {
+      t.onload = () => e(), t.onerror = () => n(Error(`Background image could not be decoded`));
+    });
+  return t.src = fn, U = {
+    url: fn,
+    image: t,
+    ready: n
+  }, U;
+}
+function G(e, t, r, i) {
+  let {
+      style: a
+    } = t,
+    o = r.width * i,
+    s = r.height * i;
+  if (a.backgroundKind === `image`) {
+    if (e.fillStyle = a.backgroundColor, e.fillRect(0, 0, o, s), a.backgroundImage) {
+      let n = W(a.backgroundImage);
+      if (n.image.complete && n.image.naturalWidth) {
+        let t = Math.max(o / n.image.naturalWidth, s / n.image.naturalHeight),
+          r = n.image.naturalWidth * t,
+          i = n.image.naturalHeight * t;
+        e.drawImage(n.image, (o - r) / 2, (s - i) / 2, r, i);
+      } else n.ready.then(() => t.onBackgroundLoaded?.(), () => {});
+    }
+  } else if (a.backgroundKind === `solid`) e.fillStyle = a.backgroundColor, e.fillRect(0, 0, o, s);else if (a.backgroundKind === `gradient`) {
+    let t = n.find(e => e.id === a.gradientId) ?? n[0],
+      r = e.createLinearGradient(0, 0, o, s);
+    r.addColorStop(0, t.stops[0]), r.addColorStop(1, t.stops[1]), e.fillStyle = r, e.fillRect(0, 0, o, s);
+  } else a.backgroundKind === `blur` && H(e, t.source, o, s);
+  let c = a.shadow / 100;
+  if (c <= 0) return;
+  let l = Math.max(1, t.scale) * i,
+    {
+      x: u,
+      y: d,
+      width: f,
+      height: p
+    } = r.window,
+    m = () => {
+      e.beginPath(), e.roundRect(u * i, d * i, f * i, p * i, r.radius * i);
+    };
+  e.save(), e.fillStyle = `#ffffff`, e.shadowColor = `rgba(0,0,0,${(.12 + .33 * c).toFixed(3)})`, e.shadowBlur = (8 + 52 * c) * l, e.shadowOffsetY = (2 + 22 * c) * l, m(), e.fill(), e.shadowColor = `rgba(0,0,0,${(.06 + .1 * c).toFixed(3)})`, e.shadowBlur = (2 + 4 * c) * l, e.shadowOffsetY = l, m(), e.fill(), e.restore();
+}
+function K(e, t, n, r) {
+  if (n.frameHeight <= 0) return;
+  let i = t.frame.endsWith(`dark`),
+    {
+      x: a,
+      y: o,
+      width: s
+    } = n.window,
+    frameHeight = n.frameHeight;
+  e.fillStyle = i ? `#2c2c2e` : `#f2f2f3`, e.fillRect(a, o, s, frameHeight), e.fillStyle = i ? `rgba(0,0,0,0.5)` : `rgba(0,0,0,0.08)`, e.fillRect(a, o + frameHeight - Math.max(1, Math.round(r)), s, Math.max(1, Math.round(r)));
+  let l = 6 * r,
+    u = o + frameHeight / 2;
+  if ([`#ff5f57`, `#febc2e`, `#28c840`].forEach((t, n) => {
+    e.fillStyle = t, e.beginPath(), e.arc(a + 16 * r + l + n * 20 * r, u, l, 0, Math.PI * 2), e.fill();
+  }), t.frame.startsWith(`browser`)) {
+    let t = a + 92 * r,
+      n = a + s - 20 * r,
+      o = Math.min(n - t, 560 * r);
+    if (o > 40 * r) {
+      let a = 24 * r,
+        s = t + Math.max(0, (n - t - o) / 2);
+      e.fillStyle = i ? `#3a3a3d` : `#ffffff`, e.beginPath(), e.roundRect(s, u - a / 2, o, a, a / 2), e.fill(), e.fillStyle = i ? `rgba(255,255,255,0.18)` : `rgba(0,0,0,0.12)`, e.beginPath(), e.roundRect(s + 14 * r, u - 3 * r, Math.min(180 * r, o * .4), 6 * r, 3 * r), e.fill();
+    }
+  }
+}
+function q(e, t, n, r = 1, event) {
+  let {
+      source: s,
+      style: c
+    } = t,
+    l = Math.round(n.width * r),
+    u = Math.round(n.height * r);
+  if (e.save(), e.clearRect(0, 0, l, u), c.enabled) {
+    let s = c.backgroundKind === `image` && c.backgroundImage ? W(c.backgroundImage) : null,
+      d = JSON.stringify([c.backgroundKind, c.backgroundColor, c.backgroundImage, !!s?.image.naturalWidth, c.gradientId, c.shadow, c.radius, n.window, n.width, n.height, l, u, t.scale]);
+    if (event) {
+      if (event.key !== d || !event.canvas) {
+        let e = event.canvas && event.canvas.width === l && event.canvas.height === u ? event.canvas : i(l, u),
+          s = a(e);
+        s.clearRect(0, 0, e.width, e.height), G(s, t, n, r), event.canvas = e, event.key = d;
+      }
+      e.drawImage(event.canvas, 0, 0);
+    } else G(e, t, n, r);
+  }
+  e.scale(r, r), e.imageSmoothingEnabled = !0, e.imageSmoothingQuality = `high`;
+  let d = Math.max(1, t.scale);
+  e.save(), e.beginPath(), e.roundRect(n.window.x, n.window.y, n.window.width, n.window.height, n.radius), e.clip(), K(e, c, n, d);
+  let {
+    image: f,
+    balance: p
+  } = n;
+  if (p) {
+    e.fillStyle = p.color, e.fillRect(f.x, f.y, f.width, f.height);
+    let t = s.width - p.left - p.right,
+      n = s.height - p.top - p.bottom;
+    e.drawImage(s, p.left, p.top, t, n, f.x + p.margin, f.y + p.margin, t, n);
+  } else e.drawImage(s, f.x, f.y);
+  e.beginPath(), e.rect(f.x, f.y, f.width, f.height), e.clip(), e.translate(n.origin.x, n.origin.y), M(e, t.annotations, {
+    source: s,
+    sourceWidth: s.width,
+    sourceHeight: s.height,
+    hiddenId: t.hiddenAnnotationId
+  }), e.restore(), e.restore();
+}
+async function J(el) {
+  el.style.enabled && el.style.backgroundKind === `image` && el.style.backgroundImage && (await W(el.style.backgroundImage).ready);
+  let n = B(el),
+    r = Math.min(1, t / Math.max(n.width, n.height)),
+    o = i(Math.round(n.width * r), Math.round(n.height * r));
+  q(a(o), el, n, r);
+  let s = await c(o),
+    l = {
+      width: o.width,
+      height: o.height
+    };
+  return o.width = 1, o.height = 1, {
+    png: s,
+    ...l
+  };
+}
+export { s as _, L as a, C as c, w as d, o as f, d as g, l as h, q as i, S as l, i as m, V as n, f as o, a as p, J as r, b as s, B as t, T as u, u as v, r as y };

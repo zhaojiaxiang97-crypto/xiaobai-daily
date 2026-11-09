@@ -1,1 +1,17 @@
-function e(e,t){if(!e)return``;let n=t===`darwin`,r=n?{Ctrl:`⌃`,Alt:`⌥`,Shift:`⇧`,Command:`⌘`}:{Super:t===`win32`?`Win`:`Super`},i=e.split(`+`),a=i.pop()||``,o=n?[`Ctrl`,`Alt`,`Shift`,`Command`]:[`Ctrl`,`Alt`,`Command`,`Super`,`Shift`];return i.sort((e,t)=>o.indexOf(e)-o.indexOf(t)),[...i,a].filter(Boolean).map(e=>r[e]||e).join(n?``:` + `)}export{e as t};
+function e(text, t) {
+  if (!text) return ``;
+  let n = t === `darwin`,
+    r = n ? {
+      Ctrl: `⌃`,
+      Alt: `⌥`,
+      Shift: `⇧`,
+      Command: `⌘`
+    } : {
+      Super: t === `win32` ? `Win` : `Super`
+    },
+    i = text.split(`+`),
+    a = i.pop() || ``,
+    o = n ? [`Ctrl`, `Alt`, `Shift`, `Command`] : [`Ctrl`, `Alt`, `Command`, `Super`, `Shift`];
+  return i.sort((e, t) => o.indexOf(e) - o.indexOf(t)), [...i, a].filter(Boolean).map(e => r[e] || e).join(n ? `` : ` + `);
+}
+export { e as t };
