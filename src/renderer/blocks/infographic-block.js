@@ -2,8 +2,8 @@ import { $n as e, An as t, Ct as n, S as r, Wt as i, Yt as ee, Zt as te, b as a,
 import { E as oe, r as se, w as ce } from "../i18n/en-US-player.js";
 import { t as le } from "../chunks/preload-helper.js";
 import { N as ue, P as de, V as fe, X as pe, _ as h, k as me, v as g, x as he } from "../chunks/main.js";
-var _ = (e, t, n) => new Promise((r, i) => {
-    var ee = e => {
+var _ = (e, t, n) => new Promise((fn, i) => {
+    var handler = e => {
         try {
           a(n.next(e));
         } catch (e) {
@@ -17,12 +17,12 @@ var _ = (e, t, n) => new Promise((r, i) => {
           i(e);
         }
       },
-      a = e => e.done ? r(e.value) : Promise.resolve(e.value).then(ee, te);
+      a = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(handler, te);
     a((n = n.apply(e, t)).next());
   }),
-  ge = () => le(() => import(`./infographic_markstream-vue.js`), [], import.meta.url),
-  v = null,
-  _e = ge;
+  handler = () => le(() => import(`./infographic_markstream-vue.js`), [], import.meta.url),
+  resolvedValue = null,
+  _e = handler;
 function ve() {
   return _e !== null;
 }
@@ -60,7 +60,7 @@ var ye = [`data-markstream-mode`],
     class: `infographic-header-actions flex items-center`
   },
   Ae = [`aria-pressed`],
-  je = {
+  options = {
     key: 0,
     xmlns: `http://www.w3.org/2000/svg`,
     "xmlns:xlink": `http://www.w3.org/1999/xlink`,
@@ -198,8 +198,8 @@ var ye = [`data-markstream-mode`],
         k = o(null),
         A = o(typeof window > `u`);
       typeof window < `u` && i(() => Ge.value, e => {
-        var t;
-        if ((t = k.value) == null || t.destroy(), k.value = null, !e) return void (A.value = false);
+        var value;
+        if ((value = k.value) == null || value.destroy(), k.value = null, !e) return void (A.value = false);
         let n = We(e, {
           rootMargin: `160px`
         });
@@ -218,23 +218,23 @@ var ye = [`data-markstream-mode`],
         N = o(`${M.value}px`);
       function Je() {
         if (!C.value) return;
-        let e = C.value.scrollHeight;
-        if (e > 0) {
-          let t = h(function (e) {
+        let scrollHeight = C.value.scrollHeight;
+        if (scrollHeight > 0) {
+          let scrollHeightValue = h(function (e) {
             if (g.maxHeight === `none`) return `${e}px`;
             if (g.maxHeight != null) {
-              let t = Number.parseFloat(String(g.maxHeight));
-              if (Number.isFinite(t)) return `${Math.min(e, t)}px`;
+              let float = Number.parseFloat(String(g.maxHeight));
+              if (Number.isFinite(float)) return `${Math.min(e, float)}px`;
             }
             let t = C.value;
             if (t) {
-              let n = getComputedStyle(t).getPropertyValue(`--ms-size-code-max-height`).trim(),
-                r = Number.parseFloat(n);
-              if (Number.isFinite(r)) return `${Math.min(e, r)}px`;
+              let trimmed = getComputedStyle(t).getPropertyValue(`--ms-size-code-max-height`).trim(),
+                float = Number.parseFloat(trimmed);
+              if (Number.isFinite(float)) return `${Math.min(e, float)}px`;
             }
             return `${Math.min(e, 500)}px`;
-          }(e)) ?? e;
-          N.value = `${Math.max(t, M.value)}px`;
+          }(scrollHeight)) ?? scrollHeight;
+          N.value = `${Math.max(scrollHeightValue, M.value)}px`;
         }
       }
       let P = o(1),
@@ -249,27 +249,27 @@ var ye = [`data-markstream-mode`],
       function Xe(e) {
         return !e || e.disabled;
       }
-      function z(e, t, n = `top`) {
-        if (Xe(e.currentTarget)) return;
-        let r = e,
-          i = r?.clientX != null && r?.clientY != null ? {
-            x: r.clientX,
-            y: r.clientY
+      function z(event, t, n = `top`) {
+        if (Xe(event.currentTarget)) return;
+        let eventAlias = event,
+          i = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
+            x: eventAlias.clientX,
+            y: eventAlias.clientY
           } : undefined;
-        ue(e.currentTarget, t, n, false, i, g.isDark);
+        ue(event.currentTarget, t, n, false, i, g.isDark);
       }
       function B() {
         fe();
       }
-      function Ze(e) {
-        if (Xe(e.currentTarget)) return;
+      function Ze(event) {
+        if (Xe(event.currentTarget)) return;
         let t = x.value ? b(`common.copied`) || `Copied` : b(`common.copy`) || `Copy`,
-          n = e,
-          r = n?.clientX != null && n?.clientY != null ? {
-            x: n.clientX,
-            y: n.clientY
+          eventAlias = event,
+          r = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
+            x: eventAlias.clientX,
+            y: eventAlias.clientY
           } : undefined;
-        ue(e.currentTarget, t, `top`, false, r, g.isDark);
+        ue(event.currentTarget, t, `top`, false, r, g.isDark);
       }
       function Qe() {
         return _(this, null, function* () {
@@ -291,18 +291,18 @@ var ye = [`data-markstream-mode`],
         e ? function (e) {
           _(this, null, function* () {
             try {
-              let t = new XMLSerializer().serializeToString(e),
-                n = new Blob([t], {
+              let toStringResult = new XMLSerializer().serializeToString(e),
+                blob = new Blob([toStringResult], {
                   type: `image/svg+xml;charset=utf-8`
                 }),
-                r = URL.createObjectURL(n);
+                objectURL = URL.createObjectURL(blob);
               if (typeof document < `u`) {
-                let e = document.createElement(`a`);
-                e.href = r, e.download = `infographic-${Date.now()}.svg`;
+                let element = document.createElement(`a`);
+                element.href = objectURL, element.download = `infographic-${Date.now()}.svg`;
                 try {
-                  document.body.appendChild(e), e.click(), document.body.removeChild(e);
+                  document.body.appendChild(element), element.click(), document.body.removeChild(element);
                 } catch {}
-                URL.revokeObjectURL(r);
+                URL.revokeObjectURL(objectURL);
               }
             } catch (e) {
               console.error(`Failed to export SVG:`, e);
@@ -310,8 +310,8 @@ var ye = [`data-markstream-mode`],
           });
         }(e) : console.error(`SVG element not found`);
       }
-      function V(e) {
-        e.key === `Escape` && T.value && H();
+      function V(event) {
+        event.key === `Escape` && T.value && H();
       }
       function H() {
         if (T.value = false, E.value && (E.value.innerHTML = ``), D.value = null, typeof document < `u`) try {
@@ -332,10 +332,10 @@ var ye = [`data-markstream-mode`],
           d(() => {
             if (C.value && E.value) {
               E.value.innerHTML = ``;
-              let e = document.createElement(`div`);
-              e.style.transition = `transform 0.1s ease`, e.style.transformOrigin = `center center`, e.style.width = `100%`, e.style.height = `100%`, e.style.display = `flex`, e.style.alignItems = `center`, e.style.justifyContent = `center`;
-              let t = C.value.cloneNode(true);
-              t.classList.add(`fullscreen`), t.style.height = `auto`, e.appendChild(t), E.value.appendChild(e), D.value = e, e.style.transform = `translate(${F.value}px, ${I.value}px) scale(${P.value})`;
+              let element = document.createElement(`div`);
+              element.style.transition = `transform 0.1s ease`, element.style.transformOrigin = `center center`, element.style.width = `100%`, element.style.height = `100%`, element.style.display = `flex`, element.style.alignItems = `center`, element.style.justifyContent = `center`;
+              let cloneNode = C.value.cloneNode(true);
+              cloneNode.classList.add(`fullscreen`), cloneNode.style.height = `auto`, element.appendChild(cloneNode), E.value.appendChild(element), D.value = element, element.style.transform = `translate(${F.value}px, ${I.value}px) scale(${P.value})`;
             }
           });
         })();
@@ -349,19 +349,19 @@ var ye = [`data-markstream-mode`],
       function it() {
         P.value = 1, F.value = 0, I.value = 0;
       }
-      function U(e) {
-        L.value = true, e instanceof MouseEvent ? R.value = {
-          x: e.clientX - F.value,
-          y: e.clientY - I.value
+      function U(event) {
+        L.value = true, event instanceof MouseEvent ? R.value = {
+          x: event.clientX - F.value,
+          y: event.clientY - I.value
         } : R.value = {
-          x: e.touches[0].clientX - F.value,
-          y: e.touches[0].clientY - I.value
+          x: event.touches[0].clientX - F.value,
+          y: event.touches[0].clientY - I.value
         };
       }
-      function W(e) {
+      function W(event) {
         if (!L.value) return;
-        let t, n;
-        e instanceof MouseEvent ? (t = e.clientX, n = e.clientY) : (t = e.touches[0].clientX, n = e.touches[0].clientY), F.value = t - R.value.x, I.value = n - R.value.y;
+        let value, clientY;
+        event instanceof MouseEvent ? (value = event.clientX, clientY = event.clientY) : (value = event.touches[0].clientX, clientY = event.touches[0].clientY), F.value = value - R.value.x, I.value = clientY - R.value.y;
       }
       function G() {
         L.value = false;
@@ -373,7 +373,7 @@ var ye = [`data-markstream-mode`],
         X = ``;
       function at(e = false) {
         return _(this, null, function* () {
-          var t, n;
+          var value, clientY;
           if (!A.value || !C.value) return;
           if (q) return J = true, void (Y ||= e);
           let r = Ye.value;
@@ -382,29 +382,29 @@ var ye = [`data-markstream-mode`],
             try {
               let e = yield function () {
                 return _(this, null, function* () {
-                  if (v) return v;
+                  if (resolvedValue) return resolvedValue;
                   let e = _e;
                   if (!e) return null;
                   let t;
                   try {
                     t = yield e();
                   } catch (t) {
-                    throw e === ge ? Error(`Optional dependency "@antv/infographic" is not installed. Please install it to enable infographic diagrams.`) : t;
+                    throw e === handler ? Error(`Optional dependency "@antv/infographic" is not installed. Please install it to enable infographic diagrams.`) : t;
                   }
                   if (!t) return null;
                   let n = t && t.default ? t.default : t;
-                  return v = typeof n == `function` && n.prototype && n.prototype.render ? n : t.Infographic ? t.Infographic : n && n.Infographic ? n.Infographic : n, v;
+                  return resolvedValue = typeof n == `function` && n.prototype && n.prototype.render ? n : t.Infographic ? t.Infographic : n && n.Infographic ? n.Infographic : n, resolvedValue;
                 });
               }();
               if (!e) return void console.warn(`Infographic library failed to load.`);
-              K &&= ((t = K.destroy) == null || t.call(K), null), C.value.innerHTML = ``, K = new e({
+              K &&= ((value = K.destroy) == null || value.call(K), null), C.value.innerHTML = ``, K = new e({
                 container: C.value,
                 width: `100%`,
                 height: `100%`
               });
               let i = ``;
-              if ((n = K.on) == null || n.call(K, `error`, e => {
-                i = (Array.isArray(e) ? e : [e]).map(e => e instanceof Error ? e.message : typeof e == `string` ? e : String(e && typeof e == `object` && `message` in e ? e.message ?? `` : e ?? ``)).filter(Boolean).join(`; `);
+              if ((clientY = K.on) == null || clientY.call(K, `error`, e => {
+                i = (Array.isArray(e) ? e : [e]).map(item => item instanceof Error ? item.message : typeof item == `string` ? item : String(item && typeof item == `object` && `message` in item ? item.message ?? `` : item ?? ``)).filter(Boolean).join(`; `);
               }), K.render(j.value), i) throw Error(i);
               if (!C.value.childNodes.length) throw Error(`Infographic render returned empty output.`);
               O.value = true, X = r, d(() => {
@@ -445,8 +445,8 @@ var ye = [`data-markstream-mode`],
       }), ae(() => {
         !qe.value && ve() && (w.value = false), Z();
       }), ie(() => {
-        var e, t;
-        if ((e = k.value) == null || e.destroy(), k.value = null, K &&= ((t = K.destroy) == null || t.call(K), null), X = ``, typeof window < `u`) try {
+        var value, t;
+        if ((value = k.value) == null || value.destroy(), k.value = null, K &&= ((t = K.destroy) == null || t.call(K), null), X = ``, typeof window < `u`) try {
           window.removeEventListener(`keydown`, V);
         } catch {}
       });
@@ -566,7 +566,7 @@ var ye = [`data-markstream-mode`],
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `M20 6L9 17l-5-5`
-      }, null, -1)])])) : (s(), r(`svg`, je, [...(o[25] ||= [m(`g`, {
+      }, null, -1)])])) : (s(), r(`svg`, options, [...(o[25] ||= [m(`g`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,

@@ -32,9 +32,9 @@ var ge = {
     leapyear: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   },
   k = class {
-    fromJulianDay(e) {
-      let t = e,
-        n = t - me,
+    fromJulianDay(julian) {
+      let julianAlias = julian,
+        n = julianAlias - me,
         r = Math.floor(n / 146097),
         i = T(n, 146097),
         a = Math.floor(i / 36524),
@@ -43,23 +43,23 @@ var ge = {
         c = T(o, 1461),
         l = Math.floor(c / 365),
         [u, d] = he(r * 400 + a * 100 + s * 4 + l + +(a !== 4 && l !== 4)),
-        f = t - E(u, d, 1, 1),
+        f = julianAlias - E(u, d, 1, 1),
         p = 2;
-      t < E(u, d, 3, 1) ? p = 0 : D(d) && (p = 1);
+      julianAlias < E(u, d, 3, 1) ? p = 0 : D(d) && (p = 1);
       let m = Math.floor(((f + p) * 12 + 373) / 367);
-      return new B(u, d, m, t - E(u, d, m, 1) + 1);
+      return new B(u, d, m, julianAlias - E(u, d, m, 1) + 1);
     }
-    toJulianDay(e) {
-      return E(e.era, e.year, e.month, e.day);
+    toJulianDay(julian) {
+      return E(julian.era, julian.year, julian.month, julian.day);
     }
-    getDaysInMonth(e) {
-      return ge[D(e.year) ? `leapyear` : `standard`][e.month - 1];
+    getDaysInMonth(days) {
+      return ge[D(days.year) ? `leapyear` : `standard`][days.month - 1];
     }
-    getMonthsInYear(e) {
+    getMonthsInYear(months) {
       return 12;
     }
-    getDaysInYear(e) {
-      return D(e.year) ? 366 : 365;
+    getDaysInYear(days) {
+      return D(days.year) ? 366 : 365;
     }
     getMaximumMonthsInYear() {
       return 12;
@@ -67,17 +67,17 @@ var ge = {
     getMaximumDaysInMonth() {
       return 31;
     }
-    getYearsInEra(e) {
+    getYearsInEra(years) {
       return 9999;
     }
     getEras() {
       return [`BC`, `AD`];
     }
-    isInverseEra(e) {
-      return e.era === `BC`;
+    isInverseEra(inverse) {
+      return inverse.era === `BC`;
     }
-    balanceDate(e) {
-      e.year <= 0 && (e.era = e.era === `BC` ? `AD` : `BC`, e.year = 1 - e.year);
+    balanceDate(balance) {
+      balance.year <= 0 && (balance.era = balance.era === `BC` ? `AD` : `BC`, balance.year = 1 - balance.year);
     }
     constructor() {
       this.identifier = `gregory`;
@@ -198,7 +198,7 @@ function Se(e, t) {
 function Ce(e, t) {
   return ve(e, De(t));
 }
-var we = {
+var options = {
   sun: 0,
   mon: 1,
   tue: 2,
@@ -208,9 +208,9 @@ var we = {
   sat: 6
 };
 function Te(e, t, n) {
-  let r = e.calendar.toJulianDay(e),
-    i = n ? we[n] : Be(t),
-    a = Math.ceil(r + 1 - i) % 7;
+  let toJulianDay = e.calendar.toJulianDay(e),
+    i = n ? options[n] : Be(t),
+    a = Math.ceil(toJulianDay + 1 - i) % 7;
   return a < 0 && (a += 7), a;
 }
 function Ee(e) {
@@ -228,10 +228,10 @@ function ke(e, t) {
 function Ae(e) {
   return e.hour * 36e5 + e.minute * 6e4 + e.second * 1e3 + e.millisecond;
 }
-var je = null,
+var timeZone = null,
   Me = false;
 function Ne() {
-  return je ??= new Intl.DateTimeFormat().resolvedOptions().timeZone, je;
+  return timeZone ??= new Intl.DateTimeFormat().resolvedOptions().timeZone, timeZone;
 }
 function Pe() {
   return Me;
@@ -253,24 +253,24 @@ function Ie(e) {
 }
 var Le = new Map(),
   Re = new Map();
-function ze(e) {
+function ze(text) {
   if (Intl.Locale) {
-    let t = Le.get(e);
-    return t || (t = new Intl.Locale(e).maximize().region, t && Le.set(e, t)), t;
+    let t = Le.get(text);
+    return t || (t = new Intl.Locale(text).maximize().region, t && Le.set(text, t)), t;
   }
-  let t = e.split(`-`)[1];
+  let t = text.split(`-`)[1];
   return t === `u` ? undefined : t;
 }
-function Be(e) {
-  let t = Re.get(e);
+function Be(text) {
+  let t = Re.get(text);
   if (!t) {
     if (Intl.Locale) {
-      let n = new Intl.Locale(e);
-      if (`getWeekInfo` in n && (t = n.getWeekInfo(), t)) return Re.set(e, t), t.firstDay;
+      let n = new Intl.Locale(text);
+      if (`getWeekInfo` in n && (t = n.getWeekInfo(), t)) return Re.set(text, t), t.firstDay;
     }
-    let n = ze(e);
-    if (e.includes(`-fw-`)) {
-      let n = e.split(`-fw-`)[1].split(`-`)[0];
+    let n = ze(text);
+    if (text.includes(`-fw-`)) {
+      let n = text.split(`-fw-`)[1].split(`-`)[0];
       t = n === `mon` ? {
         firstDay: 1
       } : n === `tue` ? {
@@ -286,12 +286,12 @@ function Be(e) {
       } : {
         firstDay: 0
       };
-    } else t = e.includes(`-ca-iso8601`) ? {
+    } else t = text.includes(`-ca-iso8601`) ? {
       firstDay: 1
     } : {
       firstDay: n && _e[n] || 0
     };
-    Re.set(e, t);
+    Re.set(text, t);
   }
   return t.firstDay;
 }
@@ -299,8 +299,8 @@ function j(e) {
   return e = F(e, new k()), Ve(O(e.era, e.year), e.month, e.day, e.hour, e.minute, e.second, e.millisecond);
 }
 function Ve(e, t, n, r, i, a, o) {
-  let s = new Date();
-  return s.setUTCHours(r, i, a, o), s.setUTCFullYear(e, t - 1, n), s.getTime();
+  let date = new Date();
+  return date.setUTCHours(r, i, a, o), date.setUTCFullYear(e, t - 1, n), date.getTime();
 }
 function He(e, t) {
   if (t === `UTC`) return 0;
@@ -329,9 +329,9 @@ function We(e, t) {
     minute: `numeric`,
     second: `numeric`
   }), Ue.set(t, n));
-  let r = n.formatToParts(new Date(e)),
+  let toParts = n.formatToParts(new Date(e)),
     i = {};
-  for (let e of r) e.type !== `literal` && (i[e.type] = e.value);
+  for (let diff of toParts) diff.type !== `literal` && (i[diff.type] = diff.value);
   return {
     year: i.era === `BC` || i.era === `B` ? -i.year + 1 : +i.year,
     month: +i.month,
@@ -343,7 +343,7 @@ function We(e, t) {
 }
 var Ge = 864e5;
 function Ke(e, t, n, r) {
-  return (n === r ? [n] : [n, r]).filter(n => qe(e, t, n));
+  return (n === r ? [n] : [n, r]).filter(item => qe(e, t, item));
 }
 function qe(e, t, n) {
   let r = We(n, t);
@@ -354,9 +354,9 @@ function M(e, t, n = `compatible`) {
   if (t === `UTC`) return j(r);
   if (t === Ne() && n === `compatible` && !Pe()) {
     r = F(r, new k());
-    let e = new Date(),
+    let date = new Date(),
       t = O(r.era, r.year);
-    return e.setFullYear(t, r.month - 1, r.day), e.setHours(r.hour, r.minute, r.second, r.millisecond), e.getTime();
+    return date.setFullYear(t, r.month - 1, r.day), date.setHours(r.hour, r.minute, r.second, r.millisecond), date.getTime();
   }
   let i = j(r),
     a = He(i - Ge, t),
@@ -387,15 +387,15 @@ function Je(e, t, n = `compatible`) {
 }
 function N(e, t) {
   let n = He(e, t),
-    r = new Date(e + n),
-    i = r.getUTCFullYear(),
-    a = r.getUTCMonth() + 1,
-    o = r.getUTCDate(),
-    s = r.getUTCHours(),
-    c = r.getUTCMinutes(),
-    l = r.getUTCSeconds(),
-    u = r.getUTCMilliseconds();
-  return new At(i < 1 ? `BC` : `AD`, i < 1 ? -i + 1 : i, a, o, t, n, s, c, l, u);
+    date = new Date(e + n),
+    uTCFullYear = date.getUTCFullYear(),
+    a = date.getUTCMonth() + 1,
+    uTCDate = date.getUTCDate(),
+    uTCHours = date.getUTCHours(),
+    uTCMinutes = date.getUTCMinutes(),
+    uTCSeconds = date.getUTCSeconds(),
+    uTCMilliseconds = date.getUTCMilliseconds();
+  return new At(uTCFullYear < 1 ? `BC` : `AD`, uTCFullYear < 1 ? -uTCFullYear + 1 : uTCFullYear, a, uTCDate, t, n, uTCHours, uTCMinutes, uTCSeconds, uTCMilliseconds);
 }
 function Ye(e) {
   return new B(e.calendar, e.era, e.year, e.month, e.day);
@@ -420,9 +420,9 @@ function P(e, t) {
 }
 function F(e, t) {
   if (Se(e.calendar, t)) return e;
-  let n = t.fromJulianDay(e.calendar.toJulianDay(e)),
+  let fromJulianDay = t.fromJulianDay(e.calendar.toJulianDay(e)),
     r = e.copy();
-  return r.calendar = t, r.era = n.era, r.year = n.year, r.month = n.month, r.day = n.day, L(r), r;
+  return r.calendar = t, r.era = fromJulianDay.era, r.year = fromJulianDay.year, r.month = fromJulianDay.month, r.day = fromJulianDay.day, L(r), r;
 }
 function Xe(e, t, n) {
   return e instanceof At ? e.timeZone === t ? e : Qe(e, t) : N(M(e, t, n), t);
@@ -439,14 +439,14 @@ function $e(e, t) {
   let n = e.copy(),
     r = `hour` in n ? dt(n, t) : 0;
   et(n, t.years || 0), n.calendar.balanceYearMonth && n.calendar.balanceYearMonth(n, e), n.month += t.months || 0, tt(n), rt(n), n.day += (t.weeks || 0) * 7, n.day += t.days || 0, n.day += r, nt(n), n.calendar.balanceDate && n.calendar.balanceDate(n), n.year < 1 && (n.year = 1, n.month = 1, n.day = 1);
-  let i = n.calendar.getYearsInEra(n);
-  if (n.year > i) {
-    let e = n.calendar.isInverseEra?.(n);
-    n.year = i, n.month = e ? 1 : n.calendar.getMonthsInYear(n), n.day = e ? 1 : n.calendar.getDaysInMonth(n);
+  let yearsInEra = n.calendar.getYearsInEra(n);
+  if (n.year > yearsInEra) {
+    let isInverseEra = n.calendar.isInverseEra?.(n);
+    n.year = yearsInEra, n.month = isInverseEra ? 1 : n.calendar.getMonthsInYear(n), n.day = isInverseEra ? 1 : n.calendar.getDaysInMonth(n);
   }
   n.month < 1 && (n.month = 1, n.day = 1);
-  let a = n.calendar.getMonthsInYear(n);
-  return n.month > a && (n.month = a, n.day = n.calendar.getDaysInMonth(n)), n.day = Math.max(1, Math.min(n.calendar.getDaysInMonth(n), n.day)), n;
+  let monthsInYear = n.calendar.getMonthsInYear(n);
+  return n.month > monthsInYear && (n.month = monthsInYear, n.day = n.calendar.getDaysInMonth(n)), n.day = Math.max(1, Math.min(n.calendar.getDaysInMonth(n), n.day)), n;
 }
 function et(e, t) {
   e.calendar.isInverseEra?.(e) && (t = -t), e.year += t;
@@ -468,7 +468,7 @@ function L(e) {
 }
 function it(e) {
   let t = {};
-  for (let n in e) typeof e[n] == `number` && (t[n] = -e[n]);
+  for (let resolvedValue in e) typeof e[resolvedValue] == `number` && (t[resolvedValue] = -e[resolvedValue]);
   return t;
 }
 function at(e, t) {
@@ -497,15 +497,15 @@ function ut(e, t) {
 function dt(e, t) {
   return e.hour += t.hours || 0, e.minute += t.minutes || 0, e.second += t.seconds || 0, e.millisecond += t.milliseconds || 0, ct(e);
 }
-function ft(e, t, n, r) {
+function ft(e, items, n, r) {
   let i = e.copy();
-  switch (t) {
+  switch (items) {
     case `era`:
       {
-        let t = e.calendar.getEras(),
-          a = t.indexOf(e.era);
+        let eras = e.calendar.getEras(),
+          a = eras.indexOf(e.era);
         if (a < 0) throw Error(`Invalid era: ` + e.era);
-        a = R(a, n, 0, t.length - 1, r?.round), i.era = t[a], L(i);
+        a = R(a, n, 0, eras.length - 1, r?.round), i.era = eras[a], L(i);
         break;
       }
     case `year`:
@@ -518,7 +518,7 @@ function ft(e, t, n, r) {
       i.day = R(e.day, n, 1, e.calendar.getDaysInMonth(e), r?.round);
       break;
     default:
-      throw Error(`Unsupported field ` + t);
+      throw Error(`Unsupported field ` + items);
   }
   return e.calendar.balanceDate && e.calendar.balanceDate(i), L(i), i;
 }
@@ -527,14 +527,14 @@ function pt(e, t, n, r) {
   switch (t) {
     case `hour`:
       {
-        let t = e.hour,
+        let hour = e.hour,
           a = 0,
           o = 23;
         if (r?.hourCycle === 12) {
-          let e = t >= 12;
+          let e = hour >= 12;
           a = e ? 12 : 0, o = e ? 23 : 11;
         }
-        i.hour = R(t, n, a, o, r?.round);
+        i.hour = R(hour, n, a, o, r?.round);
         break;
       }
     case `minute`:
@@ -560,13 +560,13 @@ function R(e, t, n, r, i = false) {
   return e;
 }
 function mt(e, t) {
-  let n;
-  return n = t.years != null && t.years !== 0 || t.months != null && t.months !== 0 || t.weeks != null && t.weeks !== 0 || t.days != null && t.days !== 0 ? M($e(P(e), {
+  let resolvedValue;
+  return resolvedValue = t.years != null && t.years !== 0 || t.months != null && t.months !== 0 || t.weeks != null && t.weeks !== 0 || t.days != null && t.days !== 0 ? M($e(P(e), {
     years: t.years,
     months: t.months,
     weeks: t.weeks,
     days: t.days
-  }), e.timeZone) : j(e) - e.offset, n += t.milliseconds || 0, n += (t.seconds || 0) * 1e3, n += (t.minutes || 0) * 6e4, n += (t.hours || 0) * 36e5, F(N(n, e.timeZone), e.calendar);
+  }), e.timeZone) : j(e) - e.offset, resolvedValue += t.milliseconds || 0, resolvedValue += (t.seconds || 0) * 1e3, resolvedValue += (t.minutes || 0) * 6e4, resolvedValue += (t.hours || 0) * 36e5, F(N(resolvedValue, e.timeZone), e.calendar);
 }
 function ht(e, t) {
   return mt(e, it(t));
@@ -585,11 +585,11 @@ function gt(e, t, n, r) {
           o = F(st(a, {
             hour: t
           }), new k()),
-          s = [M(o, e.timeZone, `earlier`), M(o, e.timeZone, `later`)].filter(t => N(t, e.timeZone).day === o.day)[0],
+          s = [M(o, e.timeZone, `earlier`), M(o, e.timeZone, `later`)].filter(item => N(item, e.timeZone).day === o.day)[0],
           c = F(st(a, {
             hour: i
           }), new k()),
-          l = [M(c, e.timeZone, `earlier`), M(c, e.timeZone, `later`)].filter(t => N(t, e.timeZone).day === c.day).pop(),
+          l = [M(c, e.timeZone, `earlier`), M(c, e.timeZone, `later`)].filter(item => N(item, e.timeZone).day === c.day).pop(),
           u = j(e) - e.offset,
           d = Math.floor(u / I),
           f = u % I;
@@ -639,8 +639,8 @@ function Ct(e) {
 }
 function wt(e) {
   let t = F(e, new k()),
-    n;
-  return n = t.era === `BC` ? t.year === 1 ? `0000` : `-` + String(Math.abs(1 - t.year)).padStart(6, `00`) : String(t.year).padStart(4, `0`), `${n}-${String(t.month).padStart(2, `0`)}-${String(t.day).padStart(2, `0`)}`;
+    resolvedValue;
+  return resolvedValue = t.era === `BC` ? t.year === 1 ? `0000` : `-` + String(Math.abs(1 - t.year)).padStart(6, `00`) : String(t.year).padStart(4, `0`), `${resolvedValue}-${String(t.month).padStart(2, `0`)}-${String(t.day).padStart(2, `0`)}`;
 }
 function Tt(e) {
   return `${wt(e)}T${Ct(e)}`;
@@ -657,17 +657,17 @@ function Et(e) {
 function Dt(e) {
   return `${Tt(e)}${Et(e.offset)}[${e.timeZone}]`;
 }
-function Ot(e) {
-  let t = typeof e[0] == `object` ? e.shift() : new k(),
-    n;
-  if (typeof e[0] == `string`) n = e.shift();else {
-    let e = t.getEras();
-    n = e[e.length - 1];
+function Ot(count) {
+  let t = typeof count[0] == `object` ? count.shift() : new k(),
+    resolvedValue;
+  if (typeof count[0] == `string`) resolvedValue = count.shift();else {
+    let eras = t.getEras();
+    resolvedValue = eras[eras.length - 1];
   }
-  let r = e.shift(),
-    i = e.shift(),
-    a = e.shift();
-  return [t, n, r, i, a];
+  let r = count.shift(),
+    i = count.shift(),
+    a = count.shift();
+  return [t, resolvedValue, r, i, a];
 }
 var B = class e {
     constructor(...e) {
@@ -680,8 +680,8 @@ var B = class e {
     add(e) {
       return $e(this, e);
     }
-    subtract(e) {
-      return at(this, e);
+    subtract(subtract) {
+      return at(this, subtract);
     }
     set(e) {
       return ot(this, e);
@@ -689,14 +689,14 @@ var B = class e {
     cycle(e, t, n) {
       return ft(this, e, t, n);
     }
-    toDate(e) {
-      return Je(this, e);
+    toDate(date) {
+      return Je(this, date);
     }
     toString() {
       return wt(this);
     }
-    compare(e) {
-      return Oe(this, e);
+    compare(compare) {
+      return Oe(this, compare);
     }
   },
   kt = class e {
@@ -710,8 +710,8 @@ var B = class e {
     add(e) {
       return $e(this, e);
     }
-    subtract(e) {
-      return at(this, e);
+    subtract(subtract) {
+      return at(this, subtract);
     }
     set(e) {
       return ot(st(this, e), e);
@@ -727,15 +727,15 @@ var B = class e {
           return pt(this, e, t, n);
       }
     }
-    toDate(e, t) {
-      return Je(this, e, t);
+    toDate(date, dateValue) {
+      return Je(this, date, dateValue);
     }
     toString() {
       return Tt(this);
     }
-    compare(e) {
-      let t = Oe(this, e);
-      return t === 0 ? ke(this, P(e)) : t;
+    compare(compare) {
+      let t = Oe(this, compare);
+      return t === 0 ? ke(this, P(compare)) : t;
     }
   },
   At = class e {
@@ -751,8 +751,8 @@ var B = class e {
     add(e) {
       return mt(this, e);
     }
-    subtract(e) {
-      return ht(this, e);
+    subtract(subtract) {
+      return ht(this, subtract);
     }
     set(e, t) {
       return _t(this, e, t);
@@ -769,8 +769,8 @@ var B = class e {
     toAbsoluteString() {
       return this.toDate().toISOString();
     }
-    compare(e) {
-      return this.toDate().getTime() - Xe(e, this.timeZone).toDate().getTime();
+    compare(compare) {
+      return this.toDate().getTime() - Xe(compare, this.timeZone).toDate().getTime();
     }
   },
   V = [[1868, 9, 8], [1912, 7, 30], [1926, 12, 25], [1989, 1, 8], [2019, 5, 1]],
@@ -778,8 +778,8 @@ var B = class e {
   Mt = [1867, 1911, 1925, 1988, 2018],
   H = [`meiji`, `taisho`, `showa`, `heisei`, `reiwa`];
 function Nt(e) {
-  let t = V.findIndex(([t, n, r]) => e.year < t || e.year === t && e.month < n || e.year === t && e.month === n && e.day < r);
-  return t === -1 ? V.length - 1 : t === 0 ? 0 : t - 1;
+  let indexResult = V.findIndex(([t, n, r]) => e.year < t || e.year === t && e.month < n || e.year === t && e.month === n && e.day < r);
+  return indexResult === -1 ? V.length - 1 : indexResult === 0 ? 0 : indexResult - 1;
 }
 function Pt(e) {
   let t = Mt[H.indexOf(e.era)];
@@ -787,53 +787,53 @@ function Pt(e) {
   return new B(e.year + t, e.month, e.day);
 }
 var Ft = class extends k {
-  fromJulianDay(e) {
-    let t = super.fromJulianDay(e),
+  fromJulianDay(julian) {
+    let fromJulianDay = super.fromJulianDay(julian),
+      n = Nt(fromJulianDay);
+    return new B(this, H[n], fromJulianDay.year - Mt[n], fromJulianDay.month, fromJulianDay.day);
+  }
+  toJulianDay(julian) {
+    return super.toJulianDay(Pt(julian));
+  }
+  balanceDate(balance) {
+    let t = Pt(balance),
       n = Nt(t);
-    return new B(this, H[n], t.year - Mt[n], t.month, t.day);
+    H[n] !== balance.era && (balance.era = H[n], balance.year = t.year - Mt[n]), this.constrainDate(balance);
   }
-  toJulianDay(e) {
-    return super.toJulianDay(Pt(e));
-  }
-  balanceDate(e) {
-    let t = Pt(e),
-      n = Nt(t);
-    H[n] !== e.era && (e.era = H[n], e.year = t.year - Mt[n]), this.constrainDate(e);
-  }
-  constrainDate(e) {
-    let t = H.indexOf(e.era),
+  constrainDate(constrain) {
+    let t = H.indexOf(constrain.era),
       n = jt[t];
     if (n != null) {
       let [r, i, a] = n,
         o = r - Mt[t];
-      e.year = Math.max(1, Math.min(o, e.year)), e.year === o && (e.month = Math.min(i, e.month), e.month === i && (e.day = Math.min(a, e.day)));
+      constrain.year = Math.max(1, Math.min(o, constrain.year)), constrain.year === o && (constrain.month = Math.min(i, constrain.month), constrain.month === i && (constrain.day = Math.min(a, constrain.day)));
     }
-    if (e.year === 1 && t >= 0) {
+    if (constrain.year === 1 && t >= 0) {
       let [, n, r] = V[t];
-      e.month = Math.max(n, e.month), e.month === n && (e.day = Math.max(r, e.day));
+      constrain.month = Math.max(n, constrain.month), constrain.month === n && (constrain.day = Math.max(r, constrain.day));
     }
   }
   getEras() {
     return H;
   }
-  getYearsInEra(e) {
-    let t = H.indexOf(e.era),
+  getYearsInEra(years) {
+    let t = H.indexOf(years.era),
       n = V[t],
       r = V[t + 1];
     if (r == null) return 9999 - n[0] + 1;
     let i = r[0] - n[0];
-    return (e.month < r[1] || e.month === r[1] && e.day < r[2]) && i++, i;
+    return (years.month < r[1] || years.month === r[1] && years.day < r[2]) && i++, i;
   }
-  getDaysInMonth(e) {
-    return super.getDaysInMonth(Pt(e));
+  getDaysInMonth(days) {
+    return super.getDaysInMonth(Pt(days));
   }
-  getMinimumMonthInYear(e) {
-    let t = It(e);
+  getMinimumMonthInYear(minimum) {
+    let t = It(minimum);
     return t ? t[1] : 1;
   }
-  getMinimumDayInMonth(e) {
-    let t = It(e);
-    return t && e.month === t[1] ? t[2] : 1;
+  getMinimumDayInMonth(minimum) {
+    let t = It(minimum);
+    return t && minimum.month === t[1] ? t[2] : 1;
   }
   constructor(...e) {
     super(...e), this.identifier = `japanese`;
@@ -844,19 +844,19 @@ function It(e) {
 }
 var Lt = -543,
   Rt = class extends k {
-    fromJulianDay(e) {
-      let t = super.fromJulianDay(e),
-        n = O(t.era, t.year);
-      return new B(this, n - Lt, t.month, t.day);
+    fromJulianDay(julian) {
+      let fromJulianDay = super.fromJulianDay(julian),
+        n = O(fromJulianDay.era, fromJulianDay.year);
+      return new B(this, n - Lt, fromJulianDay.month, fromJulianDay.day);
     }
-    toJulianDay(e) {
-      return super.toJulianDay(zt(e));
+    toJulianDay(julian) {
+      return super.toJulianDay(zt(julian));
     }
     getEras() {
       return [`BE`];
     }
-    getDaysInMonth(e) {
-      return super.getDaysInMonth(zt(e));
+    getDaysInMonth(days) {
+      return super.getDaysInMonth(zt(days));
     }
     balanceDate() {}
     constructor(...e) {
@@ -876,29 +876,29 @@ function Ht(e) {
   return t > 0 ? [`minguo`, t] : [`before_minguo`, 1 - t];
 }
 var Ut = class extends k {
-  fromJulianDay(e) {
-    let t = super.fromJulianDay(e),
-      [n, r] = Ht(O(t.era, t.year));
-    return new B(this, n, r, t.month, t.day);
+  fromJulianDay(julian) {
+    let fromJulianDay = super.fromJulianDay(julian),
+      [n, r] = Ht(O(fromJulianDay.era, fromJulianDay.year));
+    return new B(this, n, r, fromJulianDay.month, fromJulianDay.day);
   }
-  toJulianDay(e) {
-    return super.toJulianDay(Wt(e));
+  toJulianDay(julian) {
+    return super.toJulianDay(Wt(julian));
   }
   getEras() {
     return [`before_minguo`, `minguo`];
   }
-  balanceDate(e) {
-    let [t, n] = Ht(Vt(e));
-    e.era = t, e.year = n;
+  balanceDate(balance) {
+    let [t, n] = Ht(Vt(balance));
+    balance.era = t, balance.year = n;
   }
-  isInverseEra(e) {
-    return e.era === `before_minguo`;
+  isInverseEra(inverse) {
+    return inverse.era === `before_minguo`;
   }
-  getDaysInMonth(e) {
-    return super.getDaysInMonth(Wt(e));
+  getDaysInMonth(days) {
+    return super.getDaysInMonth(Wt(days));
   }
-  getYearsInEra(e) {
-    return e.era === `before_minguo` ? 9999 : 8088;
+  getYearsInEra(years) {
+    return years.era === `before_minguo` ? 9999 : 8088;
   }
   constructor(...e) {
     super(...e), this.identifier = `roc`;
@@ -911,23 +911,23 @@ function Wt(e) {
 var Gt = 1948320,
   Kt = [0, 31, 62, 93, 124, 155, 186, 216, 246, 276, 306, 336],
   qt = class {
-    fromJulianDay(e) {
-      let t = e - Gt,
+    fromJulianDay(julian) {
+      let t = julian - Gt,
         n = 1 + Math.floor((33 * t + 3) / 12053),
         r = t - (365 * (n - 1) + Math.floor((8 * n + 21) / 33)),
         i = Math.floor(r < 216 ? r / 31 : (r - 6) / 30),
         a = r - Kt[i] + 1;
       return new B(this, n, i + 1, a);
     }
-    toJulianDay(e) {
-      let t = 1948319 + 365 * (e.year - 1) + Math.floor((8 * e.year + 21) / 33);
-      return t += Kt[e.month - 1], t += e.day, t;
+    toJulianDay(julian) {
+      let t = 1948319 + 365 * (julian.year - 1) + Math.floor((8 * julian.year + 21) / 33);
+      return t += Kt[julian.month - 1], t += julian.day, t;
     }
     getMonthsInYear() {
       return 12;
     }
-    getDaysInMonth(e) {
-      return e.month <= 6 ? 31 : e.month <= 11 || T(25 * e.year + 11, 33) < 8 ? 30 : 29;
+    getDaysInMonth(days) {
+      return days.month <= 6 ? 31 : days.month <= 11 || T(25 * days.year + 11, 33) < 8 ? 30 : 29;
     }
     getMaximumMonthsInYear() {
       return 12;
@@ -948,27 +948,27 @@ var Gt = 1948320,
   Jt = 78,
   Yt = 80,
   Xt = class extends k {
-    fromJulianDay(e) {
-      let t = super.fromJulianDay(e),
-        n = t.year - Jt,
-        r = e - E(t.era, t.year, 1, 1),
-        i;
-      r < Yt ? (n--, i = D(t.year - 1) ? 31 : 30, r += i + 155 + 90 + 10) : (i = D(t.year) ? 31 : 30, r -= Yt);
-      let a, o;
-      if (r < i) a = 1, o = r + 1;else {
-        let e = r - i;
-        e < 155 ? (a = Math.floor(e / 31) + 2, o = e % 31 + 1) : (e -= 155, a = Math.floor(e / 30) + 7, o = e % 30 + 1);
+    fromJulianDay(julian) {
+      let fromJulianDay = super.fromJulianDay(julian),
+        n = fromJulianDay.year - Jt,
+        r = julian - E(fromJulianDay.era, fromJulianDay.year, 1, 1),
+        resolvedValue;
+      r < Yt ? (n--, resolvedValue = D(fromJulianDay.year - 1) ? 31 : 30, r += resolvedValue + 155 + 90 + 10) : (resolvedValue = D(fromJulianDay.year) ? 31 : 30, r -= Yt);
+      let count, o;
+      if (r < resolvedValue) count = 1, o = r + 1;else {
+        let e = r - resolvedValue;
+        e < 155 ? (count = Math.floor(e / 31) + 2, o = e % 31 + 1) : (e -= 155, count = Math.floor(e / 30) + 7, o = e % 30 + 1);
       }
-      return new B(this, n, a, o);
+      return new B(this, n, count, o);
     }
-    toJulianDay(e) {
-      let [t, n] = he(e.year + Jt),
-        r,
-        i;
-      return D(n) ? (r = 31, i = E(t, n, 3, 21)) : (r = 30, i = E(t, n, 3, 22)), e.month === 1 ? i + e.day - 1 : (i += r + Math.min(e.month - 2, 5) * 31, e.month >= 8 && (i += (e.month - 7) * 30), i += e.day - 1, i);
+    toJulianDay(julian) {
+      let [t, n] = he(julian.year + Jt),
+        total,
+        resolvedValue;
+      return D(n) ? (total = 31, resolvedValue = E(t, n, 3, 21)) : (total = 30, resolvedValue = E(t, n, 3, 22)), julian.month === 1 ? resolvedValue + julian.day - 1 : (resolvedValue += total + Math.min(julian.month - 2, 5) * 31, julian.month >= 8 && (resolvedValue += (julian.month - 7) * 30), resolvedValue += julian.day - 1, resolvedValue);
     }
-    getDaysInMonth(e) {
-      return e.month === 1 && D(e.year + Jt) || e.month >= 2 && e.month <= 6 ? 31 : 30;
+    getDaysInMonth(days) {
+      return days.month === 1 && D(days.year + Jt) || days.month >= 2 && days.month <= 6 ? 31 : 30;
     }
     getYearsInEra() {
       return 9919;
@@ -998,21 +998,21 @@ function nn(e) {
   return (14 + 11 * e) % 30 < 11;
 }
 var rn = class {
-    fromJulianDay(e) {
-      return tn(this, Zt, e);
+    fromJulianDay(julian) {
+      return tn(this, Zt, julian);
     }
-    toJulianDay(e) {
-      return en(Zt, e.year, e.month, e.day);
+    toJulianDay(julian) {
+      return en(Zt, julian.year, julian.month, julian.day);
     }
-    getDaysInMonth(e) {
-      let t = 29 + e.month % 2;
-      return e.month === 12 && nn(e.year) && t++, t;
+    getDaysInMonth(days) {
+      let t = 29 + days.month % 2;
+      return days.month === 12 && nn(days.year) && t++, t;
     }
     getMonthsInYear() {
       return 12;
     }
-    getDaysInYear(e) {
-      return nn(e.year) ? 355 : 354;
+    getDaysInYear(days) {
+      return nn(days.year) ? 355 : 354;
     }
     getMaximumMonthsInYear() {
       return 12;
@@ -1031,11 +1031,11 @@ var rn = class {
     }
   },
   an = class extends rn {
-    fromJulianDay(e) {
-      return tn(this, Qt, e);
+    fromJulianDay(julian) {
+      return tn(this, Qt, julian);
     }
-    toJulianDay(e) {
-      return en(Qt, e.year, e.month, e.day);
+    toJulianDay(julian) {
+      return en(Qt, julian.year, julian.month, julian.day);
     }
     constructor(...e) {
       super(...e), this.identifier = `islamic-tbla`;
@@ -1071,11 +1071,11 @@ var fn = class extends rn {
         }
       }
     }
-    fromJulianDay(e) {
-      let t = e - Zt,
+    fromJulianDay(julian) {
+      let t = julian - Zt,
         n = cn(U),
         r = cn(W);
-      if (t < n || t > r) return super.fromJulianDay(e);
+      if (t < n || t > r) return super.fromJulianDay(julian);
       {
         let e = 1299,
           n = 1,
@@ -1096,14 +1096,14 @@ var fn = class extends rn {
         return new B(this, e, n, t - un(e, n) + 1);
       }
     }
-    toJulianDay(e) {
-      return e.year < U || e.year > W ? super.toJulianDay(e) : Zt + un(e.year, e.month) + (e.day - 1);
+    toJulianDay(julian) {
+      return julian.year < U || julian.year > W ? super.toJulianDay(julian) : Zt + un(julian.year, julian.month) + (julian.day - 1);
     }
-    getDaysInMonth(e) {
-      return e.year < U || e.year > W ? super.getDaysInMonth(e) : ln(e.year, e.month);
+    getDaysInMonth(days) {
+      return days.year < U || days.year > W ? super.getDaysInMonth(days) : ln(days.year, days.month);
     }
-    getDaysInYear(e) {
-      return e.year < U || e.year > W ? super.getDaysInYear(e) : dn(e.year);
+    getDaysInYear(days) {
+      return days.year < U || days.year > W ? super.getDaysInYear(days) : dn(days.year);
     }
   },
   pn = 347997,
@@ -1146,8 +1146,8 @@ function bn(e, t) {
   return t === 2 ? n === 2 ? 30 : 29 : t === 3 ? n === 0 ? 29 : 30 : t === 6 ? K(e) ? 30 : 0 : 30;
 }
 var xn = class {
-    fromJulianDay(e) {
-      let t = e - pn,
+    fromJulianDay(julian) {
+      let t = julian - pn,
         n = t * mn / hn,
         r = Math.floor((19 * n + 234) / 235) + 1,
         i = q(r),
@@ -1160,19 +1160,19 @@ var xn = class {
       let c = a - s;
       return new B(this, r, o, c);
     }
-    toJulianDay(e) {
-      let t = q(e.year);
-      for (let n = 1; n < e.month; n++) t += bn(e.year, n);
-      return t + e.day + pn;
+    toJulianDay(julian) {
+      let t = q(julian.year);
+      for (let n = 1; n < julian.month; n++) t += bn(julian.year, n);
+      return t + julian.day + pn;
     }
-    getDaysInMonth(e) {
-      return bn(e.year, e.month);
+    getDaysInMonth(days) {
+      return bn(days.year, days.month);
     }
-    getMonthsInYear(e) {
-      return K(e.year) ? 13 : 12;
+    getMonthsInYear(months) {
+      return K(months.year) ? 13 : 12;
     }
-    getDaysInYear(e) {
-      return vn(e.year);
+    getDaysInYear(days) {
+      return vn(days.year);
     }
     getMaximumMonthsInYear() {
       return 13;
@@ -1186,8 +1186,8 @@ var xn = class {
     getEras() {
       return [`AM`];
     }
-    balanceYearMonth(e, t) {
-      t.year !== e.year && (K(t.year) && !K(e.year) && t.month > 6 ? e.month-- : !K(t.year) && K(e.year) && t.month > 6 && e.month++);
+    balanceYearMonth(balance, year) {
+      year.year !== balance.year && (K(year.year) && !K(balance.year) && year.month > 6 ? balance.month-- : !K(year.year) && K(balance.year) && year.month > 6 && balance.month++);
     }
     constructor() {
       this.identifier = `hebrew`;
@@ -1213,23 +1213,23 @@ function On(e, t) {
   return t % 13 == 0 ? Dn(e) + 5 : 30;
 }
 var kn = class {
-    fromJulianDay(e) {
-      let [t, n, r] = En(Sn, e),
+    fromJulianDay(julian) {
+      let [t, n, r] = En(Sn, julian),
         i = `AM`;
       return t <= 0 && (i = `AA`, t += wn), new B(this, i, t, n, r);
     }
-    toJulianDay(e) {
-      let t = e.year;
-      return e.era === `AA` && (t -= wn), Tn(Sn, t, e.month, e.day);
+    toJulianDay(julian) {
+      let year = julian.year;
+      return julian.era === `AA` && (year -= wn), Tn(Sn, year, julian.month, julian.day);
     }
-    getDaysInMonth(e) {
-      return On(e.year, e.month);
+    getDaysInMonth(days) {
+      return On(days.year, days.month);
     }
     getMonthsInYear() {
       return 13;
     }
-    getDaysInYear(e) {
-      return 365 + Dn(e.year);
+    getDaysInYear(days) {
+      return 365 + Dn(days.year);
     }
     getMaximumMonthsInYear() {
       return 13;
@@ -1237,8 +1237,8 @@ var kn = class {
     getMaximumDaysInMonth() {
       return 30;
     }
-    getYearsInEra(e) {
-      return e.era === `AA` ? 9999 : 9991;
+    getYearsInEra(years) {
+      return years.era === `AA` ? 9999 : 9991;
     }
     getEras() {
       return [`AA`, `AM`];
@@ -1248,8 +1248,8 @@ var kn = class {
     }
   },
   An = class extends kn {
-    fromJulianDay(e) {
-      let [t, n, r] = En(Sn, e);
+    fromJulianDay(julian) {
+      let [t, n, r] = En(Sn, julian);
       return t += wn, new B(this, `AA`, t, n, r);
     }
     getEras() {
@@ -1263,30 +1263,30 @@ var kn = class {
     }
   },
   jn = class extends kn {
-    fromJulianDay(e) {
-      let [t, n, r] = En(Cn, e),
+    fromJulianDay(julian) {
+      let [t, n, r] = En(Cn, julian),
         i = `CE`;
       return t <= 0 && (i = `BCE`, t = 1 - t), new B(this, i, t, n, r);
     }
-    toJulianDay(e) {
-      let t = e.year;
-      return e.era === `BCE` && (t = 1 - t), Tn(Cn, t, e.month, e.day);
+    toJulianDay(julian) {
+      let year = julian.year;
+      return julian.era === `BCE` && (year = 1 - year), Tn(Cn, year, julian.month, julian.day);
     }
-    getDaysInMonth(e) {
-      let t = e.year;
-      return e.era === `BCE` && (t = 1 - t), On(t, e.month);
+    getDaysInMonth(days) {
+      let year = days.year;
+      return days.era === `BCE` && (year = 1 - year), On(year, days.month);
     }
-    isInverseEra(e) {
-      return e.era === `BCE`;
+    isInverseEra(inverse) {
+      return inverse.era === `BCE`;
     }
-    balanceDate(e) {
-      e.year <= 0 && (e.era = e.era === `BCE` ? `CE` : `BCE`, e.year = 1 - e.year);
+    balanceDate(balance) {
+      balance.year <= 0 && (balance.era = balance.era === `BCE` ? `CE` : `BCE`, balance.year = 1 - balance.year);
     }
     getEras() {
       return [`BCE`, `CE`];
     }
-    getYearsInEra(e) {
-      return e.era === `BCE` ? 9999 : 9715;
+    getYearsInEra(years) {
+      return years.era === `BCE` ? 9999 : 9715;
     }
     constructor(...e) {
       super(...e), this.identifier = `coptic`;
@@ -1324,40 +1324,40 @@ function Mn(e) {
 }
 var Nn = new Map(),
   J = class {
-    constructor(e, t = {}) {
-      this.formatter = Fn(e, t), this.options = t;
+    constructor(constructor, t = {}) {
+      this.formatter = Fn(constructor, t), this.options = t;
     }
-    format(e) {
-      return this.formatter.format(e);
+    format(format) {
+      return this.formatter.format(format);
     }
-    formatToParts(e) {
-      return this.formatter.formatToParts(e);
+    formatToParts(parts) {
+      return this.formatter.formatToParts(parts);
     }
-    formatRange(e, t) {
-      if (typeof this.formatter.formatRange == `function`) return this.formatter.formatRange(e, t);
-      if (t < e) throw RangeError(`End date must be >= start date`);
-      return `${this.formatter.format(e)}null${this.formatter.format(t)}`;
+    formatRange(range, rangeValue) {
+      if (typeof this.formatter.formatRange == `function`) return this.formatter.formatRange(range, rangeValue);
+      if (rangeValue < range) throw RangeError(`End date must be >= start date`);
+      return `${this.formatter.format(range)}null${this.formatter.format(rangeValue)}`;
     }
-    formatRangeToParts(e, t) {
-      if (typeof this.formatter.formatRangeToParts == `function`) return this.formatter.formatRangeToParts(e, t);
-      if (t < e) throw RangeError(`End date must be >= start date`);
-      let n = this.formatter.formatToParts(e),
-        r = this.formatter.formatToParts(t);
-      return [...n.map(e => ({
-        ...e,
+    formatRangeToParts(range, parts) {
+      if (typeof this.formatter.formatRangeToParts == `function`) return this.formatter.formatRangeToParts(range, parts);
+      if (parts < range) throw RangeError(`End date must be >= start date`);
+      let toParts = this.formatter.formatToParts(range),
+        toPartsResult = this.formatter.formatToParts(parts);
+      return [...toParts.map(item => ({
+        ...item,
         source: `startRange`
       })), {
         type: `literal`,
         value: ` – `,
         source: `shared`
-      }, ...r.map(e => ({
-        ...e,
+      }, ...toPartsResult.map(item => ({
+        ...item,
         source: `endRange`
       }))];
     }
     resolvedOptions() {
-      let e = this.formatter.resolvedOptions();
-      return zn() && (this.resolvedHourCycle ||= Bn(e.locale, this.options), e.hourCycle = this.resolvedHourCycle, e.hour12 = this.resolvedHourCycle === `h11` || this.resolvedHourCycle === `h12`), e.calendar === `ethiopic-amete-alem` && (e.calendar = `ethioaa`), e;
+      let resolvedOptions = this.formatter.resolvedOptions();
+      return zn() && (this.resolvedHourCycle ||= Bn(resolvedOptions.locale, this.options), resolvedOptions.hourCycle = this.resolvedHourCycle, resolvedOptions.hour12 = this.resolvedHourCycle === `h11` || this.resolvedHourCycle === `h12`), resolvedOptions.calendar === `ethiopic-amete-alem` && (resolvedOptions.calendar = `ethioaa`), resolvedOptions;
     }
   },
   Pn = {
@@ -1366,18 +1366,18 @@ var Nn = new Map(),
     },
     false: {}
   };
-function Fn(e, t = {}) {
+function Fn(text, t = {}) {
   if (typeof t.hour12 == `boolean` && Ln()) {
     t = {
       ...t
     };
-    let n = Pn[String(t.hour12)][e.split(`-`)[0]],
+    let n = Pn[String(t.hour12)][text.split(`-`)[0]],
       r = t.hour12 ? `h12` : `h23`;
     t.hourCycle = n ?? r, delete t.hour12;
   }
-  let n = e + (t ? Object.entries(t).sort((e, t) => e[0] < t[0] ? -1 : 1).join() : ``);
+  let n = text + (t ? Object.entries(t).sort((left, right) => left[0] < right[0] ? -1 : 1).join() : ``);
   if (Nn.has(n)) return Nn.get(n);
-  let r = new Intl.DateTimeFormat(e, t);
+  let r = new Intl.DateTimeFormat(text, t);
   return Nn.set(n, r), r;
 }
 var In = null;
@@ -1401,12 +1401,12 @@ function Bn(e, t) {
       ...t,
       timeZone: undefined
     }),
-    r = parseInt(n.formatToParts(new Date(2020, 2, 3, 0)).find(e => e.type === `hour`).value, 10),
-    i = parseInt(n.formatToParts(new Date(2020, 2, 3, 23)).find(e => e.type === `hour`).value, 10);
-  if (r === 0 && i === 23) return `h23`;
-  if (r === 24 && i === 23) return `h24`;
-  if (r === 0 && i === 11) return `h11`;
-  if (r === 12 && i === 11) return `h12`;
+    parseIntResult = parseInt(n.formatToParts(new Date(2020, 2, 3, 0)).find(item => item.type === `hour`).value, 10),
+    i = parseInt(n.formatToParts(new Date(2020, 2, 3, 23)).find(item => item.type === `hour`).value, 10);
+  if (parseIntResult === 0 && i === 23) return `h23`;
+  if (parseIntResult === 24 && i === 23) return `h24`;
+  if (parseIntResult === 0 && i === 11) return `h11`;
+  if (parseIntResult === 12 && i === 11) return `h12`;
   throw Error(`Unexpected hour cycle result`);
 }
 function Y(e, t = Ne()) {
@@ -1423,9 +1423,9 @@ function Un(e) {
 }
 function X(e) {
   if (e instanceof Date) {
-    let t = e.getFullYear(),
+    let fullYear = e.getFullYear(),
       n = e.getMonth() + 1;
-    return new Date(t, n, 0).getDate();
+    return new Date(fullYear, n, 0).getDate();
   }
   return e.set({
     day: 100
@@ -1488,37 +1488,37 @@ function Qn(e) {
   if (Array.isArray(t) && t.length) return t.at(-1).copy();
   if (t && !Array.isArray(t)) return t.copy();
   if (n) return n.copy();
-  let a = new Date(),
-    o = a.getFullYear(),
-    s = a.getMonth() + 1,
-    c = a.getDate(),
+  let date = new Date(),
+    fullYear = date.getFullYear(),
+    s = date.getMonth() + 1,
+    dateResult = date.getDate(),
     l = [`hour`, `minute`, `second`],
     u = Mn(new J(i).resolvedOptions().calendar);
-  return l.includes(r ?? `day`) ? F(new kt(o, s, c, 0, 0, 0), u) : F(new B(o, s, c), u);
+  return l.includes(r ?? `day`) ? F(new kt(fullYear, s, dateResult, 0, 0, 0), u) : F(new B(fullYear, s, dateResult), u);
 }
-function $n(e, t) {
-  let n = [];
-  for (let r = 0; r < e.length; r += t) n.push(e.slice(r, r + t));
-  return n;
+function $n(items, t) {
+  let emptyItems = [];
+  for (let r = 0; r < items.length; r += t) emptyItems.push(items.slice(r, r + t));
+  return emptyItems;
 }
-function er(e) {
-  let t = e.querySelector(`[data-selected]`);
-  if (t) return t.focus();
-  let n = e.querySelector(`[data-today]`);
-  if (n) return n.focus();
-  let r = e.querySelector(`[data-value]:not([data-outside-view]):not([data-disabled])`);
+function er(el) {
+  let selector = el.querySelector(`[data-selected]`);
+  if (selector) return selector.focus();
+  let selectorResult = el.querySelector(`[data-today]`);
+  if (selectorResult) return selectorResult.focus();
+  let r = el.querySelector(`[data-value]:not([data-outside-view]):not([data-disabled])`);
   if (r) return r.focus();
 }
 function tr(e, t) {
-  let n = [],
+  let emptyItems = [],
     r = e.add({
       days: 1
     }),
     i = t;
-  for (; r.compare(i) < 0;) n.push(r), r = r.add({
+  for (; r.compare(i) < 0;) emptyItems.push(r), r = r.add({
     days: 1
   });
-  return n;
+  return emptyItems;
 }
 function nr(e) {
   let {
@@ -1558,11 +1558,11 @@ function nr(e) {
     });
     f.push(...r);
   }
-  let m = d.concat(o, f);
+  let combined = d.concat(o, f);
   return {
     value: t,
-    cells: m,
-    rows: $n(m, 7)
+    cells: combined,
+    rows: $n(combined, 7)
   };
 }
 function rr(e) {
@@ -1587,12 +1587,12 @@ function Q(e) {
       dateObj: n,
       ...r
     } = e,
-    i = [];
-  if (!t || t === 1) return i.push(nr({
+    emptyItems = [];
+  if (!t || t === 1) return emptyItems.push(nr({
     ...r,
     dateObj: n
-  })), i;
-  i.push(nr({
+  })), emptyItems;
+  emptyItems.push(nr({
     ...r,
     dateObj: n
   }));
@@ -1600,24 +1600,24 @@ function Q(e) {
     let t = n.add({
       months: e
     });
-    i.push(nr({
+    emptyItems.push(nr({
       ...r,
       dateObj: t
     }));
   }
-  return i;
+  return emptyItems;
 }
 function ir({
   start: e,
   end: t
 }) {
-  let n = [];
-  if (!e || !t) return n;
+  let emptyItems = [];
+  if (!e || !t) return emptyItems;
   let r = Ie(e);
-  for (; r.compare(t) <= 0;) n.push(r), r = Ie(r.add({
+  for (; r.compare(t) <= 0;) emptyItems.push(r), r = Ie(r.add({
     years: 1
   }));
-  return n;
+  return emptyItems;
 }
 function ar(e) {
   return (1 - Te(new B(2025, 1, 6), e) + 7) % 7;
@@ -1661,11 +1661,11 @@ function or(e, t = {}) {
   }
   function l() {
     let e = De(Ne());
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(t => ({
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(item => ({
       label: c(Y(e.set({
-        month: t
+        month: item
       }))),
-      value: t
+      value: item
     }));
   }
   function u(e, r = {}) {
@@ -1696,7 +1696,7 @@ function or(e, t = {}) {
       ...t,
       hour: `numeric`,
       minute: `numeric`
-    }).formatToParts(e).find(e => e.type === `dayPeriod`)?.value;
+    }).formatToParts(e).find(item => item.type === `dayPeriod`)?.value;
     return r === `PM` || r === `pm` || r === `p.m.` ? `PM` : `AM`;
   }
   let m = {
@@ -1708,11 +1708,11 @@ function or(e, t = {}) {
     second: `numeric`
   };
   function h(e, t, n = {}) {
-    let r = d(e, {
+    let found = d(e, {
       ...m,
       ...n
-    }).find(e => e.type === t);
-    return r ? r.value : ``;
+    }).find(item => item.type === t);
+    return found ? found.value : ``;
   }
   return {
     setLocale: i,
@@ -1775,14 +1775,14 @@ function cr(e) {
 }
 function lr(e) {
   function t(t) {
-    return Array.isArray(e.date.value) ? e.date.value.some(e => ve(e, t)) : e.date.value ? ve(e.date.value, t) : false;
+    return Array.isArray(e.date.value) ? e.date.value.some(item => ve(item, t)) : e.date.value ? ve(e.date.value, t) : false;
   }
   return {
     isDateSelected: t,
     isInvalid: w(() => {
       if (Array.isArray(e.date.value)) {
         if (!e.date.value.length) return false;
-        for (let t of e.date.value) if (e.isDateDisabled?.(t) || e.isDateUnavailable?.(t)) return true;
+        for (let region of e.date.value) if (e.isDateDisabled?.(region) || e.isDateUnavailable?.(region)) return true;
       } else {
         if (!e.date.value) return false;
         if (e.isDateDisabled?.(e.date.value) || e.isDateUnavailable?.(e.date.value)) return true;
@@ -1790,7 +1790,7 @@ function lr(e) {
       return false;
     }),
     hasSelectedDate: w(() => Array.isArray(e.date.value) ? e.date.value.length > 0 : !!e.date.value),
-    isSelectedDateDisabled: w(() => Array.isArray(e.date.value) ? e.date.value.length ? e.date.value.some(t => e.isDateDisabled?.(t)) : false : e.date.value ? !!e.isDateDisabled?.(e.date.value) : false)
+    isSelectedDateDisabled: w(() => Array.isArray(e.date.value) ? e.date.value.length ? e.date.value.some(item => e.isDateDisabled?.(item)) : false : e.date.value ? !!e.isDateDisabled?.(e.date.value) : false)
   };
 }
 function ur(e, t) {
@@ -1830,11 +1830,11 @@ function mr(e) {
       fixedWeeks: e.fixedWeeks.value,
       numberOfMonths: e.numberOfMonths.value
     })),
-    i = w(() => r.value.map(e => e.value));
+    i = w(() => r.value.map(item => item.value));
   function a(e) {
-    return !i.value.some(t => xe(e, t));
+    return !i.value.some(item => xe(e, item));
   }
-  let o = t => {
+  let handler = t => {
       if (!e.maxValue.value || !r.value.length) return false;
       if (e.disabled.value) return true;
       let n = r.value.at(-1).value;
@@ -1858,7 +1858,7 @@ function mr(e) {
     return !!(e.isDateDisabled?.(t) || e.disabled.value || e.maxValue.value && Wn(t, e.maxValue.value) || e.minValue.value && Z(t, e.minValue.value));
   }
   let l = t => !!e.isDateUnavailable?.(t),
-    u = w(() => r.value.length ? r.value[0].rows[0].map(n => t.dayOfWeek(Y(n), e.weekdayFormat.value)) : []),
+    u = w(() => r.value.length ? r.value[0].rows[0].map(item => t.dayOfWeek(Y(item), e.weekdayFormat.value)) : []),
     d = t => {
       let n = r.value[0].value;
       if (!t && !e.nextPage.value) {
@@ -1928,7 +1928,7 @@ function mr(e) {
       });
     };
   re(e.placeholder, t => {
-    i.value.some(e => xe(e, t)) || (r.value = Q({
+    i.value.some(item => xe(item, t)) || (r.value = Q({
       dateObj: t,
       weekStartsOn: e.weekStartsOn.value,
       locale: e.locale.value,
@@ -1952,16 +1952,16 @@ function mr(e) {
     }
     let i = Y(r.value[0].value),
       a = Y(r.value.at(-1).value),
-      o = t.fullMonth(i, n.value),
-      s = t.fullMonth(a, n.value),
-      c = t.fullYear(i, n.value),
-      l = t.fullYear(a, n.value);
-    return c === l ? `${o} - ${s} ${l}` : `${o} ${c} - ${s} ${l}`;
+      fullMonth = t.fullMonth(i, n.value),
+      fullMonthResult = t.fullMonth(a, n.value),
+      fullYear = t.fullYear(i, n.value),
+      fullYearResult = t.fullYear(a, n.value);
+    return fullYear === fullYearResult ? `${fullMonth} - ${fullMonthResult} ${fullYearResult}` : `${fullMonth} ${fullYear} - ${fullMonthResult} ${fullYearResult}`;
   });
   return {
     isDateDisabled: c,
     isDateUnavailable: l,
-    isNextButtonDisabled: o,
+    isNextButtonDisabled: handler,
     isPrevButtonDisabled: s,
     grid: r,
     weekdays: u,
@@ -1974,12 +1974,12 @@ function mr(e) {
     fullCalendarLabel: w(() => `${e.calendarLabel.value ?? `Event Date`}, ${p.value}`),
     isPlaceholderFocusable: w(() => !(c(e.placeholder.value) || l(e.placeholder.value) || a(e.placeholder.value))),
     firstFocusableDate: w(() => {
-      for (let t of r.value) {
-        if (e.minValue.value && Z(t.value, e.minValue.value)) continue;
-        let n = X(t.value),
-          r = e.minValue.value && ye(e.minValue.value, t.value) ? e.minValue.value.day : 1;
+      for (let region of r.value) {
+        if (e.minValue.value && Z(region.value, e.minValue.value)) continue;
+        let n = X(region.value),
+          r = e.minValue.value && ye(e.minValue.value, region.value) ? e.minValue.value.day : 1;
         for (let e = r; e <= n; e++) {
-          let n = t.value.set({
+          let n = region.value.set({
             day: e
           });
           if (!(c(n) || l(n))) return n;
@@ -2303,21 +2303,21 @@ var [$, hr] = m(`PopoverRoot`),
           forwardRef: u,
           currentElement: d
         } = o();
-      return r(d), (e, t) => (x(), y(_r, C(g(l), {
+      return r(d), (e, event) => (x(), y(_r, C(g(l), {
         ref: g(u),
         "trap-focus": g(a).open.value,
         "disable-outside-pointer-events": ``,
-        onCloseAutoFocus: t[0] ||= se(e => {
+        onCloseAutoFocus: event[0] ||= se(e => {
           i(`closeAutoFocus`, e), c.value || g(a).triggerElement.value?.focus();
         }, [`prevent`]),
-        onPointerDownOutside: t[1] ||= e => {
+        onPointerDownOutside: event[1] ||= e => {
           i(`pointerDownOutside`, e);
-          let t = e.detail.originalEvent,
-            n = t.button === 0 && t.ctrlKey === true,
-            r = t.button === 2 || n;
-          c.value = r;
+          let originalEvent = e.detail.originalEvent,
+            n = originalEvent.button === 0 && originalEvent.ctrlKey === true,
+            fallbackValue = originalEvent.button === 2 || n;
+          c.value = fallbackValue;
         },
-        onFocusOutside: t[2] ||= se(() => {}, [`prevent`])
+        onFocusOutside: event[2] ||= se(() => {}, [`prevent`])
       }), {
         default: v(() => [_(e.$slots, `default`)]),
         _: 3
@@ -2421,15 +2421,15 @@ var [$, hr] = m(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let n = e,
+      let eventAlias = event,
         r = t,
         i = $(),
         a = b(false),
         o = b(false),
-        s = h(n, r);
+        s = h(eventAlias, r);
       return (e, t) => (x(), y(_r, C(g(s), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,

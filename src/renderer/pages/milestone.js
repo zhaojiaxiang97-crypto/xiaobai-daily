@@ -116,34 +116,34 @@ var Qe = [`id`],
     setup(event, {
       emit: s
     }) {
-      let c = event,
+      let eventAlias = event,
         f = s,
         {
           t: m,
           locale: g
         } = ee(),
-        y = D(() => c.status === `completed`),
-        S = D(() => Oe(c.item) && !c.item.completedAt),
-        w = D(() => q(c.item)),
-        T = D(() => He(c.item.date, g.value)),
-        E = D(() => K(c.item.time)),
-        O = D(() => c.item.date === c.today),
+        y = D(() => eventAlias.status === `completed`),
+        S = D(() => Oe(eventAlias.item) && !eventAlias.item.completedAt),
+        w = D(() => q(eventAlias.item)),
+        T = D(() => He(eventAlias.item.date, g.value)),
+        E = D(() => K(eventAlias.item.time)),
+        O = D(() => eventAlias.item.date === eventAlias.today),
         te = D(() => w.value ? `pl-10 pr-3.5` : `px-3.5`),
-        j = D(() => c.item.content ? Y(Me(c.item.content)) : ``),
-        M = D(() => c.item.todoCount > 0 ? Math.round(c.item.completedTodoCount / c.item.todoCount * 100) : 0),
+        j = D(() => eventAlias.item.content ? Y(Me(eventAlias.item.content)) : ``),
+        M = D(() => eventAlias.item.todoCount > 0 ? Math.round(eventAlias.item.completedTodoCount / eventAlias.item.todoCount * 100) : 0),
         N = D(() => {
-          let e = De(c.status);
-          if (c.status === `completed`) return {
+          let e = De(eventAlias.status);
+          if (eventAlias.status === `completed`) return {
             label: m(`milestoneTool.status.completed`),
             className: e
           };
-          if (c.status === `overdue`) return {
+          if (eventAlias.status === `overdue`) return {
             label: m(`milestoneTool.relative.overdueDays`, {
-              days: Z(c.item.date, c.today)
+              days: Z(eventAlias.item.date, eventAlias.today)
             }),
             className: e
           };
-          let t = Z(c.today, c.item.date);
+          let t = Z(eventAlias.today, eventAlias.item.date);
           return t === 0 ? {
             label: m(`milestoneTool.relative.today`),
             className: `bg-foreground/[0.08] font-semibold text-foreground`
@@ -157,10 +157,10 @@ var Qe = [`id`],
             className: e
           };
         }),
-        P = D(() => c.status === `completed` ? `border-primary bg-primary` : c.status === `overdue` ? `border-destructive bg-destructive` : O.value ? `border-primary bg-background` : `border-muted-foreground/45 bg-background`),
-        F = D(() => c.uploads.filter(e => e.status !== `failed`)),
-        B = D(() => c.uploads.filter(e => e.status === `failed`)),
-        V = D(() => F.value.length ? Math.round(F.value.reduce((e, t) => e + t.progress, 0) / F.value.length) : 0);
+        P = D(() => eventAlias.status === `completed` ? `border-primary bg-primary` : eventAlias.status === `overdue` ? `border-destructive bg-destructive` : O.value ? `border-primary bg-background` : `border-muted-foreground/45 bg-background`),
+        F = D(() => eventAlias.uploads.filter(item => item.status !== `failed`)),
+        B = D(() => eventAlias.uploads.filter(item => item.status === `failed`)),
+        V = D(() => F.value.length ? Math.round(F.value.reduce((acc, cur) => acc + cur.progress, 0) / F.value.length) : 0);
       function ie(e) {
         return [e.project || e.assignee.remark || e.assignee.nickname, e.dueDate, e.archived ? m(`milestoneTool.card.archived`) : ``].filter(Boolean).join(` · `);
       }
@@ -303,18 +303,18 @@ var Qe = [`id`],
         class: `shrink-0 text-muted-foreground/60`
       })), A(`span`, {
         class: a([`min-w-0 flex-1 truncate text-xs`, e.status === `done` ? `text-muted-foreground line-through` : `text-foreground`])
-      }, C(e.title), 3), ie(e) ? (v(), u(`span`, gt, C(ie(e)), 1)) : k(``, true)], 8, ht)]))), 128))])) : k(``, true), event.item.attachments.length ? (v(), u(`ul`, _t, [(v(true), u(_, null, d(event.item.attachments, e => (v(), u(`li`, {
-        key: e.id,
+      }, C(e.title), 3), ie(e) ? (v(), u(`span`, gt, C(ie(e)), 1)) : k(``, true)], 8, ht)]))), 128))])) : k(``, true), event.item.attachments.length ? (v(), u(`ul`, _t, [(v(true), u(_, null, d(event.item.attachments, count => (v(), u(`li`, {
+        key: count.id,
         class: `flex items-center gap-2 text-xs text-muted-foreground`
       }, [b(o(Se), {
         size: 12,
         class: `shrink-0`
-      }), A(`span`, vt, C(e.name) + ` · ` + C(o(Ae)(e.size)), 1), A(`button`, {
+      }), A(`span`, vt, C(count.name) + ` · ` + C(o(Ae)(count.size)), 1), A(`button`, {
         type: `button`,
         class: `grid size-6 shrink-0 place-items-center rounded-md transition-colors hover:bg-muted hover:text-foreground`,
         title: o(m)(`milestoneTool.card.download`),
         "aria-label": o(m)(`milestoneTool.card.download`),
-        onClick: t => f(`download`, e)
+        onClick: t => f(`download`, count)
       }, [b(o(z), {
         size: 13
       })], 8, yt)]))), 128))])) : k(``, true), A(`div`, bt, [b(o(r), {
@@ -405,7 +405,7 @@ var Qe = [`id`],
     }),
     emits: [`update:modelValue`],
     setup(event) {
-      let t = event,
+      let eventAlias = event,
         n = c(event, `modelValue`),
         {
           t: r
@@ -414,8 +414,8 @@ var Qe = [`id`],
         l = g(true),
         p = g(new Set());
       function m() {
-        let e = i.value?.innerHTML ?? ``;
-        return ke(e) ? `` : e;
+        let fallbackValue = i.value?.innerHTML ?? ``;
+        return ke(fallbackValue) ? `` : fallbackValue;
       }
       function y() {
         let e = i.value;
@@ -431,13 +431,13 @@ var Qe = [`id`],
           return;
         }
         let e = new Set();
-        for (let t of [`bold`, `insertUnorderedList`, `insertOrderedList`]) try {
-          document.queryCommandState(t) && e.add(t);
+        for (let count of [`bold`, `insertUnorderedList`, `insertOrderedList`]) try {
+          document.queryCommandState(count) && e.add(count);
         } catch {}
         p.value = e;
       }
       function S(e) {
-        t.disabled || (i.value?.focus(), document.execCommand(e), b(), requestAnimationFrame(x));
+        eventAlias.disabled || (i.value?.focus(), document.execCommand(e), b(), requestAnimationFrame(x));
       }
       function w(e) {
         e.preventDefault();
@@ -537,7 +537,7 @@ var Qe = [`id`],
     setup(event, {
       emit: t
     }) {
-      let n = event,
+      let eventAlias = event,
         i = c(event, `open`),
         s = t,
         {
@@ -582,13 +582,13 @@ var Qe = [`id`],
           n = e ? M.value + 1 : 1;
         w.value = true, T.value = ``;
         try {
-          let r = await Q.todoOptions({
+          let todoOptions = await Q.todoOptions({
             keyword: O.value.trim(),
             status: j.value,
             page: n
           });
           if (t !== P) return;
-          S.value = e ? [...S.value, ...r.items] : r.items, M.value = n, N.value = r.hasMore;
+          S.value = e ? [...S.value, ...todoOptions.items] : todoOptions.items, M.value = n, N.value = todoOptions.hasMore;
         } catch (e) {
           if (t !== P) return;
           T.value = e instanceof Error ? e.message : y(`milestoneTool.errors.generic`);
@@ -629,7 +629,7 @@ var Qe = [`id`],
           F !== null && window.clearTimeout(F), F = null, P += 1;
           return;
         }
-        x.value = new Map(n.selected.map(e => [e.id, e])), O.value = ``, j.value = `open`, S.value = [], E.value = ``, B();
+        x.value = new Map(eventAlias.selected.map(item => [item.id, item])), O.value = ``, j.value = `open`, S.value = [], E.value = ``, B();
       }), (e, t) => (v(), h(o(oe), {
         open: i.value,
         "onUpdate:open": t[3] ||= e => i.value = e
@@ -898,7 +898,7 @@ var Qe = [`id`],
     setup(options, {
       emit: s
     }) {
-      let m = options,
+      let optionsAlias = options,
         y = c(options, `open`),
         x = s,
         {
@@ -928,12 +928,12 @@ var Qe = [`id`],
         W = g([]),
         ae = ``,
         ve = 0,
-        ye = D(() => m.milestoneId !== null),
+        ye = D(() => optionsAlias.milestoneId !== null),
         q = D(() => !!window.electronAPI?.todos?.readPendingClipboardAttachment),
         Se = typeof navigator < `u` && /mac/i.test(navigator.platform) ? `⌘↵` : `Ctrl+Enter`,
-        we = D(() => H.value.filter(e => e.status === `done`).length),
-        Y = D(() => ie.value.filter(e => !U.value.has(e.id)).length + m.uploads.filter(e => e.status !== `failed`).length + W.value.filter(e => !e.error).length),
-        Te = D(() => Y.value >= m.config.attachmentLimit),
+        we = D(() => H.value.filter(item => item.status === `done`).length),
+        Y = D(() => ie.value.filter(item => !U.value.has(item.id)).length + optionsAlias.uploads.filter(item => item.status !== `failed`).length + W.value.filter(item => !item.error).length),
+        Te = D(() => Y.value >= optionsAlias.config.attachmentLimit),
         De = D(() => Array.from(V.title).length > 400),
         Oe = D(() => {
           let e = X();
@@ -970,7 +970,7 @@ var Qe = [`id`],
       function Me() {
         return JSON.stringify({
           ...V,
-          todoIds: H.value.map(e => e.id),
+          todoIds: H.value.map(item => item.id),
           removed: [...U.value],
           files: W.value.length
         });
@@ -996,11 +996,11 @@ var Qe = [`id`],
         }), H.value = [...e.todos], ie.value = [...e.attachments], U.value = new Set(), ae = Me();
       }
       async function Ue() {
-        if (m.milestoneId === null) return;
+        if (optionsAlias.milestoneId === null) return;
         let e = ++ve;
         M.value = true, N.value = ``, F.value = ``, I.value = false;
         try {
-          let t = await Q.get(m.milestoneId, X());
+          let t = await Q.get(optionsAlias.milestoneId, X());
           if (e !== ve) return;
           Re(t), M.value = false, await w(), We();
         } catch (t) {
@@ -1016,7 +1016,7 @@ var Qe = [`id`],
         e instanceof HTMLInputElement && e.focus();
       }
       f(y, e => {
-        ve += 1, L.value = false, R.value = false, e && (Le(), ae = Me(), m.milestoneId !== null && Ue());
+        ve += 1, L.value = false, R.value = false, e && (Le(), ae = Me(), optionsAlias.milestoneId !== null && Ue());
       });
       function qe() {
         if (!P.value) {
@@ -1034,7 +1034,7 @@ var Qe = [`id`],
         R.value = false, y.value = false;
       }
       function Xe(e) {
-        H.value = H.value.filter(t => t.id !== e);
+        H.value = H.value.filter(item => item.id !== e);
       }
       function Qe(e) {
         F.value = ``;
@@ -1043,9 +1043,9 @@ var Qe = [`id`],
           r = Y.value;
         for (let i of e) {
           let e = ``;
-          if (Ve(i.name) ? i.size > m.config.attachmentMaxBytes && (e = S(`milestoneTool.errors.fileTooLarge`, {
-            size: Ae(m.config.attachmentMaxBytes)
-          })) : e = S(`milestoneTool.errors.fileType`), !e && r >= m.config.attachmentLimit) {
+          if (Ve(i.name) ? i.size > optionsAlias.config.attachmentMaxBytes && (e = S(`milestoneTool.errors.fileTooLarge`, {
+            size: Ae(optionsAlias.config.attachmentMaxBytes)
+          })) : e = S(`milestoneTool.errors.fileType`), !e && r >= optionsAlias.config.attachmentLimit) {
             t += 1;
             continue;
           }
@@ -1056,7 +1056,7 @@ var Qe = [`id`],
           });
         }
         W.value = n, t && (F.value = S(`milestoneTool.errors.fileLimit`, {
-          count: m.config.attachmentLimit,
+          count: optionsAlias.config.attachmentLimit,
           skipped: t
         }));
       }
@@ -1065,7 +1065,7 @@ var Qe = [`id`],
         Qe(Array.from(t.files || [])), t.value = ``;
       }
       function et(e) {
-        W.value = W.value.filter(t => t.id !== e);
+        W.value = W.value.filter(item => item.id !== e);
       }
       function tt(e) {
         let t = new Set(U.value);
@@ -1076,14 +1076,14 @@ var Qe = [`id`],
         B.value = true, F.value = ``;
         let e = ``;
         try {
-          let t = await Ee.readPendingClipboardAttachment();
-          if (e = t.token, !t.contentBase64) throw Error(S(`milestoneTool.editor.pasteHint`));
-          let n = atob(t.contentBase64),
-            r = new Uint8Array(n.length);
-          for (let e = 0; e < n.length; e += 1) r[e] = n.charCodeAt(e);
-          let i = t.mimeType || `application/octet-stream`;
-          Qe([new File([r], t.name, {
-            type: i
+          let pendingClipboardAttachment = await Ee.readPendingClipboardAttachment();
+          if (e = pendingClipboardAttachment.token, !pendingClipboardAttachment.contentBase64) throw Error(S(`milestoneTool.editor.pasteHint`));
+          let n = atob(pendingClipboardAttachment.contentBase64),
+            uint8Array = new Uint8Array(n.length);
+          for (let e = 0; e < n.length; e += 1) uint8Array[e] = n.charCodeAt(e);
+          let fallbackValue = pendingClipboardAttachment.mimeType || `application/octet-stream`;
+          Qe([new File([uint8Array], pendingClipboardAttachment.name, {
+            type: fallbackValue
           })]);
         } catch (e) {
           F.value = Ie(e);
@@ -1098,13 +1098,13 @@ var Qe = [`id`],
       }
       async function it() {
         if (P.value || M.value || N.value) return;
-        if (!m.user) {
+        if (!optionsAlias.user) {
           F.value = S(`milestoneTool.errors.signInExpired`);
           return;
         }
         F.value = ``, I.value = false;
-        let e = V.title.trim();
-        if (!e) {
+        let trimmed = V.title.trim();
+        if (!trimmed) {
           F.value = S(`milestoneTool.errors.titleRequired`), We();
           return;
         }
@@ -1122,38 +1122,38 @@ var Qe = [`id`],
           });
           return;
         }
-        if (Y.value > m.config.attachmentLimit) {
+        if (Y.value > optionsAlias.config.attachmentLimit) {
           F.value = S(`milestoneTool.errors.attachmentCountExceeded`, {
-            count: m.config.attachmentLimit
+            count: optionsAlias.config.attachmentLimit
           });
           return;
         }
         P.value = true;
         try {
-          let csrfToken = m.user.csrfToken,
+          let csrfToken = optionsAlias.user.csrfToken,
             n = X(),
-            r = {
+            record = {
               id: j.value?.id,
               version: j.value?.version,
-              title: e,
+              title: trimmed,
               content: V.content,
               date: V.date,
               time: V.time,
-              todoIds: H.value.map(e => e.id)
+              todoIds: H.value.map(item => item.id)
             },
-            i = j.value ? await Q.update(csrfToken, r, n) : await Q.create(csrfToken, r, n),
-            a = [];
-          for (let e of U.value) try {
-            await Q.attachmentDelete(csrfToken, e);
+            i = j.value ? await Q.update(csrfToken, record, n) : await Q.create(csrfToken, record, n),
+            emptyItems = [];
+          for (let token of U.value) try {
+            await Q.attachmentDelete(csrfToken, token);
           } catch (e) {
-            a.push(Ie(e));
+            emptyItems.push(Ie(e));
           }
           x(`saved`, {
             item: i,
-            files: W.value.filter(e => !e.error).map(e => e.file),
+            files: W.value.filter(item => !item.error).map(item => item.file),
             isNew: !j.value,
-            warning: a.length ? S(`milestoneTool.errors.attachmentDeleteFailed`, {
-              message: a[0]
+            warning: emptyItems.length ? S(`milestoneTool.errors.attachmentDeleteFailed`, {
+              message: emptyItems[0]
             }) : ``
           }), y.value = false;
         } catch (e) {
@@ -1337,17 +1337,17 @@ var Qe = [`id`],
             disabled: Te.value,
             onSelect: c[7] ||= e => te.value?.click(),
             onDrop: Qe
-          }, null, 8, [`title`, `hint`, `disabled`]), ie.value.length || options.uploads.length || W.value.length ? (v(), u(`ul`, Cn, [(v(true), u(_, null, d(ie.value, e => (v(), u(`li`, {
-            key: `saved-${e.id}`,
+          }, null, 8, [`title`, `hint`, `disabled`]), ie.value.length || options.uploads.length || W.value.length ? (v(), u(`ul`, Cn, [(v(true), u(_, null, d(ie.value, count => (v(), u(`li`, {
+            key: `saved-${count.id}`,
             class: `flex items-center gap-2 rounded-lg border border-border px-2 py-1.5`
-          }, [A(`span`, wn, C(o(Ce)(e.name)), 1), A(`span`, Tn, [A(`span`, {
-            class: a([`block truncate text-sm`, U.value.has(e.id) ? `text-muted-foreground line-through` : `text-foreground`])
-          }, C(e.name), 3), A(`span`, En, C(U.value.has(e.id) ? o(S)(`milestoneTool.editor.removeOnSave`) : o(Ae)(e.size)), 1)]), U.value.has(e.id) ? (v(), h(o(r), {
+          }, [A(`span`, wn, C(o(Ce)(count.name)), 1), A(`span`, Tn, [A(`span`, {
+            class: a([`block truncate text-sm`, U.value.has(count.id) ? `text-muted-foreground line-through` : `text-foreground`])
+          }, C(count.name), 3), A(`span`, En, C(U.value.has(count.id) ? o(S)(`milestoneTool.editor.removeOnSave`) : o(Ae)(count.size)), 1)]), U.value.has(count.id) ? (v(), h(o(r), {
             key: 0,
             variant: `ghost`,
             size: `xs`,
             class: `text-muted-foreground`,
-            onClick: t => tt(e.id)
+            onClick: t => tt(count.id)
           }, {
             default: p(() => [b(o(xe)), l(C(o(S)(`milestoneTool.editor.undo`)), 1)]),
             _: 1
@@ -1358,7 +1358,7 @@ var Qe = [`id`],
             class: `grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground`,
             title: o(S)(`milestoneTool.card.download`),
             "aria-label": o(S)(`milestoneTool.card.download`),
-            onClick: t => x(`download`, e)
+            onClick: t => x(`download`, count)
           }, [b(o(z), {
             size: 14
           })], 8, Dn), A(`button`, {
@@ -1366,7 +1366,7 @@ var Qe = [`id`],
             class: `grid size-7 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive`,
             title: o(S)(`milestoneTool.editor.removeFile`),
             "aria-label": o(S)(`milestoneTool.editor.removeFile`),
-            onClick: t => tt(e.id)
+            onClick: t => tt(count.id)
           }, [b(o(i), {
             size: 14
           })], 8, On)], 64))]))), 128)), (v(true), u(_, null, d(options.uploads, e => (v(), u(`li`, {
@@ -1479,34 +1479,34 @@ var Qe = [`id`],
 function Bn(e) {
   let t = g([]),
     n = false,
-    r = D(() => t.value.some(e => e.status !== `failed`));
+    r = D(() => t.value.some(item => item.status !== `failed`));
   function i(e) {
-    t.value = t.value.filter(t => t.id !== e);
+    t.value = t.value.filter(item => item.id !== e);
   }
   function a(e) {
-    return t.value.filter(t => t.milestoneId === e);
+    return t.value.filter(item => item.milestoneId === e);
   }
   async function o() {
     if (!n) {
       n = true;
       try {
         for (;;) {
-          let n = t.value.find(e => e.status === `queued`);
-          if (!n) break;
-          let r = e.csrfToken();
-          if (!r) {
-            t.value.forEach(t => {
-              t.status === `queued` && (t.status = `failed`, t.error = e.errorMessage(null));
+          let found = t.value.find(item => item.status === `queued`);
+          if (!found) break;
+          let csrfToken = e.csrfToken();
+          if (!csrfToken) {
+            t.value.forEach(item => {
+              item.status === `queued` && (item.status = `failed`, item.error = e.errorMessage(null));
             });
             break;
           }
-          n.status = `uploading`, n.progress = 0, n.error = ``;
+          found.status = `uploading`, found.progress = 0, found.error = ``;
           try {
-            await Q.uploadFile(r, n.milestoneId, n.file, e => {
-              n.progress = e;
-            }, () => n.cancelRequested), i(n.id), e.onUploaded(n.milestoneId);
+            await Q.uploadFile(csrfToken, found.milestoneId, found.file, e => {
+              found.progress = e;
+            }, () => found.cancelRequested), i(found.id), e.onUploaded(found.milestoneId);
           } catch (t) {
-            n.cancelRequested || J(t) === `UPLOAD_CANCELLED` ? i(n.id) : (n.status = `failed`, n.error = e.errorMessage(t));
+            found.cancelRequested || J(t) === `UPLOAD_CANCELLED` ? i(found.id) : (found.status = `failed`, found.error = e.errorMessage(t));
           }
         }
       } finally {
@@ -1515,10 +1515,10 @@ function Bn(e) {
     }
   }
   function s(e, items) {
-    items.length && (t.value = [...t.value, ...items.map(t => ({
+    items.length && (t.value = [...t.value, ...items.map(item => ({
       id: crypto.randomUUID(),
       milestoneId: e,
-      file: t,
+      file: item,
       progress: 0,
       status: `queued`,
       error: ``,
@@ -1526,20 +1526,20 @@ function Bn(e) {
     }))], o());
   }
   function c(e) {
-    let n = t.value.find(t => t.id === e);
-    n && (n.status === `uploading` ? n.cancelRequested = true : i(e));
+    let found = t.value.find(item => item.id === e);
+    found && (found.status === `uploading` ? found.cancelRequested = true : i(e));
   }
   function l(e) {
-    let n = t.value.find(t => t.id === e);
-    n && n.status === `failed` && (n.status = `queued`, n.error = ``, n.progress = 0, n.cancelRequested = false, o());
+    let found = t.value.find(item => item.id === e);
+    found && found.status === `failed` && (found.status = `queued`, found.error = ``, found.progress = 0, found.cancelRequested = false, o());
   }
   function u(e) {
-    a(e).forEach(e => c(e.id));
+    a(e).forEach(item => c(item.id));
   }
   function d() {
-    t.value.forEach(e => {
-      e.cancelRequested = true;
-    }), t.value = t.value.filter(e => e.status === `uploading`);
+    t.value.forEach(item => {
+      item.cancelRequested = true;
+    }), t.value = t.value.filter(item => item.status === `uploading`);
   }
   return {
     tasks: t,
@@ -1634,7 +1634,7 @@ var Vn = {
     key: 0,
     class: `mt-4 text-center text-xs text-muted-foreground`
   },
-  pr = {
+  options = {
     key: 0,
     class: `absolute bottom-5 left-1/2 z-[70] flex max-w-[calc(100%-48px)] -translate-x-1/2 items-center gap-3 rounded-full bg-foreground px-4 py-2 text-xs text-background shadow-lg`,
     role: `status`
@@ -1720,7 +1720,7 @@ var Vn = {
           },
           errorMessage: Pe
         }),
-        Fe = D(() => new Map(O.value.map(e => [e.id, Te(e, z.value)]))),
+        Fe = D(() => new Map(O.value.map(item => [item.id, Te(item, z.value)]))),
         Ie = D(() => {
           let e = {
             all: 0,
@@ -1728,23 +1728,23 @@ var Vn = {
             overdue: 0,
             completed: 0
           };
-          for (let t of Fe.value.values()) e.all += 1, we(t, `upcoming`) ? e.upcoming += 1 : t === `overdue` ? e.overdue += 1 : t === `completed` && (e.completed += 1);
+          for (let count of Fe.value.values()) e.all += 1, we(count, `upcoming`) ? e.upcoming += 1 : count === `overdue` ? e.overdue += 1 : count === `completed` && (e.completed += 1);
           return e;
         }),
-        Le = D(() => [`all`, `upcoming`, `overdue`, `completed`].map(e => ({
-          value: e,
-          label: c(`milestoneTool.tabs.${e}`),
-          count: Ie.value[e]
+        Le = D(() => [`all`, `upcoming`, `overdue`, `completed`].map(item => ({
+          value: item,
+          label: c(`milestoneTool.tabs.${item}`),
+          count: Ie.value[item]
         }))),
-        Re = D(() => O.value.filter(e => we(Fe.value.get(e.id) ?? `planned`, V.value))),
+        Re = D(() => O.value.filter(item => we(Fe.value.get(item.id) ?? `planned`, V.value))),
         ze = D(() => Je(Re.value, V.value, z.value, y.value)),
         Be = D(() => {
-          let e = O.value.reduce((e, t) => e + t.todoCount, 0),
-            t = O.value.reduce((e, t) => e + t.completedTodoCount, 0);
+          let reduced = O.value.reduce((acc, cur) => acc + cur.todoCount, 0),
+            t = O.value.reduce((acc, cur) => acc + cur.completedTodoCount, 0);
           return {
-            total: e,
+            total: reduced,
             done: t,
-            rate: e ? Math.round(t / e * 100) : 0
+            rate: reduced ? Math.round(t / reduced * 100) : 0
           };
         }),
         Ve = D(() => I.value && (O.value.length > 0 || U.value !== ``)),
@@ -1760,25 +1760,25 @@ var Vn = {
         return e.content === null && e.contentSummary !== `` || e.todoCount > e.todos.length || e.attachmentCount > e.attachments.length;
       }
       function Ye(e, t = false) {
-        let n = O.value.findIndex(t => t.id === e.id);
-        if (n >= 0) {
+        let indexResult = O.value.findIndex(item => item.id === e.id);
+        if (indexResult >= 0) {
           let t = [...O.value];
-          t[n] = e, O.value = t;
+          t[indexResult] = e, O.value = t;
         } else t && (O.value = [...O.value, e]);
       }
       function Xe(e, t) {
-        let n = O.value.find(t => t.id === e);
-        n && Ye({
-          ...n,
+        let found = O.value.find(item => item.id === e);
+        found && Ye({
+          ...found,
           ...t
         });
       }
       function Ze(items) {
-        let t = new Map(O.value.map(e => [e.id, e]));
-        return items.map(e => {
-          let n = t.get(e.id);
-          return !n || n.version !== e.version || n.content === null || !W.value.has(e.id) ? e : {
-            ...e,
+        let t = new Map(O.value.map(item => [item.id, item]));
+        return items.map(item => {
+          let n = t.get(item.id);
+          return !n || n.version !== item.version || n.content === null || !W.value.has(item.id) ? item : {
+            ...item,
             content: n.content
           };
         });
@@ -1805,9 +1805,9 @@ var Vn = {
             attachmentMaxBytes: i.config.attachmentMaxBytes,
             campaignText: i.config.campaignText || ``
           }), O.value = Ze(o.items), R.value = o.truncated;
-          let s = new Set(o.items.map(e => e.id));
-          W.value = new Set([...W.value].filter(e => s.has(e)));
-          for (let e of O.value) W.value.has(e.id) && qe(e) && et(e.id);
+          let s = new Set(o.items.map(item => item.id));
+          W.value = new Set([...W.value].filter(item => s.has(item)));
+          for (let token of O.value) W.value.has(token.id) && qe(token) && et(token.id);
           return Ce = Date.now(), I.value = true, L.value = ``, (e.observeView ?? !r) && a.active && t(`tool_view_loaded`, {
             panel: `milestone`
           }), true;
@@ -1841,14 +1841,14 @@ var Vn = {
           return;
         }
         Ge(W, e, true);
-        let t = O.value.find(t => t.id === e);
-        t && qe(t) && et(e);
+        let found = O.value.find(item => item.id === e);
+        found && qe(found) && et(e);
       }
       function nt() {
         J !== null && window.clearTimeout(J), J = window.setTimeout(() => {
           J = null;
-          let e = H.value.trim();
-          e !== U.value && (U.value = e, F.value = true, $({
+          let trimmed = H.value.trim();
+          trimmed !== U.value && (U.value = trimmed, F.value = true, $({
             quiet: true
           }));
         }, 300);
@@ -1897,7 +1897,7 @@ var Vn = {
       async function dt() {
         let e = K.value;
         if (K.value = null, e && a.user) {
-          Z.cancelFor(e.id), O.value = O.value.filter(t => t.id !== e.id), Ge(W, e.id, false);
+          Z.cancelFor(e.id), O.value = O.value.filter(item => item.id !== e.id), Ge(W, e.id, false);
           try {
             await Q.delete(a.user.csrfToken, e.id);
           } catch (t) {
@@ -1907,24 +1907,24 @@ var Vn = {
       }
       async function ft(e, t, n = true) {
         if (!a.user || oe.value.has(e.id) || e.completedAt === undefined) return;
-        let r = e.completedAt ?? null;
+        let fallbackValue = e.completedAt ?? null;
         Ge(oe, e.id, true), Xe(e.id, {
           completedAt: t ? new Date().toISOString() : null
         });
         try {
-          let r = await Q.setCompleted(a.user.csrfToken, e.id, t, X()),
-            i = O.value.find(t => t.id === e.id);
-          Ye(i && i.content !== null && r.content === null ? {
-            ...r,
-            content: i.content
-          } : r), n && it(c(t ? `milestoneTool.notice.completed` : `milestoneTool.notice.reopened`, {
-            title: r.title
+          let setCompleted = await Q.setCompleted(a.user.csrfToken, e.id, t, X()),
+            found = O.value.find(item => item.id === e.id);
+          Ye(found && found.content !== null && setCompleted.content === null ? {
+            ...setCompleted,
+            content: found.content
+          } : setCompleted), n && it(c(t ? `milestoneTool.notice.completed` : `milestoneTool.notice.reopened`, {
+            title: setCompleted.title
           }), () => {
-            ft(r, !t, false);
+            ft(setCompleted, !t, false);
           });
         } catch (t) {
           Xe(e.id, {
-            completedAt: r
+            completedAt: fallbackValue
           }), L.value = Pe(t);
         } finally {
           Ge(oe, e.id, false);
@@ -1942,15 +1942,15 @@ var Vn = {
       }
       async function ht(e) {
         Se && (await Se);
-        let t = O.value.find(t => t.id === e);
-        if (!t && U.value && (rt(false), await $({
+        let found = O.value.find(item => item.id === e);
+        if (!found && U.value && (rt(false), await $({
           quiet: true
-        }), t = O.value.find(t => t.id === e)), !t) {
+        }), found = O.value.find(item => item.id === e)), !found) {
           let n = await Q.get(e, X()).catch(() => null);
           if (!n) return;
-          Ye(n, true), t = n;
+          Ye(n, true), found = n;
         }
-        we(Te(t, z.value), V.value) || (V.value = `all`), W.value.has(e) || (Ge(W, e, true), qe(t) && et(e)), se.value = e, await w(), T.value?.querySelector(`#milestone-card-${e}`)?.scrollIntoView({
+        we(Te(found, z.value), V.value) || (V.value = `all`), W.value.has(e) || (Ge(W, e, true), qe(found) && et(e)), se.value = e, await w(), T.value?.querySelector(`#milestone-card-${e}`)?.scrollIntoView({
           behavior: `smooth`,
           block: `center`
         }), Ee !== null && window.clearTimeout(Ee), Ee = window.setTimeout(() => {
@@ -2156,7 +2156,7 @@ var Vn = {
         "leave-active-class": `transition duration-100 ease-in`,
         "leave-to-class": `translate-y-2 opacity-0`
       }, {
-        default: p(() => [q.value ? (v(), u(`div`, pr, [A(`span`, mr, C(q.value.text), 1), q.value.undo ? (v(), u(`button`, {
+        default: p(() => [q.value ? (v(), u(`div`, options, [A(`span`, mr, C(q.value.text), 1), q.value.undo ? (v(), u(`button`, {
           key: 0,
           type: `button`,
           class: `shrink-0 font-semibold text-primary hover:underline`,

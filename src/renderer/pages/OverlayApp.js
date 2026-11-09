@@ -55,10 +55,10 @@ var Se = {
         N = s(false),
         P = s(false),
         F = s(``),
-        I = null,
+        data = null,
         L = null,
         R = false,
-        z = null,
+        payload = null,
         B = null,
         V = 0,
         H = null,
@@ -118,7 +118,7 @@ var Se = {
             n = Math.min(w.value.height - 1, Math.max(0, Math.floor(e.y * W.value)));
           return {
             coords: `${t}, ${n}`,
-            color: I ? me(I, (n * w.value.width + t) * 4) : ``
+            color: data ? me(data, (n * w.value.width + t) * 4) : ``
           };
         }),
         We = f(() => w.value?.afterCapture === `copy` ? _(`OverlayBeautifyCopy`) : _(`OverlayBeautify`)),
@@ -149,8 +149,8 @@ var Se = {
         return t.x >= e.x && t.x <= e.x + e.width && t.y >= e.y && t.y <= e.y + e.height;
       }
       function J(e) {
-        let t = (w.value?.windows ?? []).find(t => q(t, e));
-        return t ? Ke(t) : {
+        let found = (w.value?.windows ?? []).find(item => q(item, e));
+        return found ? Ke(found) : {
           x: 0,
           y: 0,
           width: j.value.width,
@@ -183,14 +183,14 @@ var Se = {
       function Xe() {
         let e = Fe.value;
         if (!e) return;
-        let t = window.devicePixelRatio || 1,
+        let fallbackValue = window.devicePixelRatio || 1,
           {
             width: n,
             height: r
           } = j.value;
-        (e.width !== Math.round(n * t) || e.height !== Math.round(r * t)) && (e.width = Math.round(n * t), e.height = Math.round(r * t));
+        (e.width !== Math.round(n * fallbackValue) || e.height !== Math.round(r * fallbackValue)) && (e.width = Math.round(n * fallbackValue), e.height = Math.round(r * fallbackValue));
         let i = g(e);
-        if (i.setTransform(t, 0, 0, t, 0, 0), i.clearRect(0, 0, n, r), !w.value) return;
+        if (i.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), i.clearRect(0, 0, n, r), !w.value) return;
         let a = G.value;
         if (i.fillStyle = `rgba(0,0,0,0.42)`, i.beginPath(), i.rect(0, 0, n, r), a && a.width > 0 && a.height > 0 && i.rect(a.x, a.y, a.width, a.height), i.fill(`evenodd`), !(!a || a.width <= 0 || a.height <= 0) && (i.strokeStyle = `#10b981`, i.lineWidth = O.value ? 1.5 : 2, i.strokeRect(a.x + .5, a.y + .5, Math.max(0, a.width - 1), Math.max(0, a.height - 1)), D.value === `selected` || D.value === `moving` || D.value === `resizing`)) {
           let e = [[a.x, a.y], [a.x + a.width / 2, a.y], [a.x + a.width, a.y], [a.x, a.y + a.height / 2], [a.x + a.width, a.y + a.height / 2], [a.x, a.y + a.height], [a.x + a.width / 2, a.y + a.height], [a.x + a.width, a.y + a.height]];
@@ -202,15 +202,15 @@ var Se = {
           t = T.value,
           n = A.value;
         if (!e || !t || !n || !ze.value) return;
-        let r = window.devicePixelRatio || 1,
-          i = Math.round(b * r);
+        let fallbackValue = window.devicePixelRatio || 1,
+          i = Math.round(b * fallbackValue);
         e.width !== i && (e.width = i, e.height = i);
         let a = g(e);
         a.imageSmoothingEnabled = false, a.fillStyle = `#000`, a.fillRect(0, 0, i, i);
         let o = b / Pe * U.value,
           s = n.x * U.value,
           ee = n.y * W.value;
-        a.drawImage(t, s - o / 2, ee - o / 2, o, o, 0, 0, i, i), a.strokeStyle = `rgba(16,185,129,0.9)`, a.lineWidth = Math.max(1, r), a.beginPath(), a.moveTo(i / 2, 0), a.lineTo(i / 2, i), a.moveTo(0, i / 2), a.lineTo(i, i / 2), a.stroke();
+        a.drawImage(t, s - o / 2, ee - o / 2, o, o, 0, 0, i, i), a.strokeStyle = `rgba(16,185,129,0.9)`, a.lineWidth = Math.max(1, fallbackValue), a.beginPath(), a.moveTo(i / 2, 0), a.lineTo(i / 2, i), a.moveTo(0, i / 2), a.lineTo(i, i / 2), a.stroke();
       }
       function X(e) {
         let t = O.value !== null;
@@ -239,26 +239,26 @@ var Se = {
             L && (O.value = qe(L, t));
             break;
           case `moving`:
-            if (L && z) {
+            if (L && payload) {
               let {
                   width: e,
                   height: n
                 } = j.value,
-                r = Math.min(Math.max(0, z.x + t.x - L.x), e - z.width),
-                i = Math.min(Math.max(0, z.y + t.y - L.y), n - z.height);
+                r = Math.min(Math.max(0, payload.x + t.x - L.x), e - payload.width),
+                i = Math.min(Math.max(0, payload.y + t.y - L.y), n - payload.height);
               O.value = {
-                ...z,
+                ...payload,
                 x: r,
                 y: i
               };
             }
             break;
           case `resizing`:
-            if (z && B) {
-              let e = z.x,
-                n = z.y,
-                r = z.x + z.width,
-                i = z.y + z.height;
+            if (payload && B) {
+              let e = payload.x,
+                n = payload.y,
+                r = payload.x + payload.width,
+                i = payload.y + payload.height;
               B.includes(`w`) && (e = t.x), B.includes(`e`) && (r = t.x), B.includes(`n`) && (n = t.y), B.includes(`s`) && (i = t.y), O.value = qe({
                 x: e,
                 y: n
@@ -277,13 +277,13 @@ var Se = {
         if (A.value = t, event.currentTarget.setPointerCapture(event.pointerId), D.value === `selected` && O.value) {
           let e = Je(t);
           if (e) {
-            D.value = `resizing`, B = e, z = {
+            D.value = `resizing`, B = e, payload = {
               ...O.value
             };
             return;
           }
           if (q(O.value, t)) {
-            D.value = `moving`, L = t, z = {
+            D.value = `moving`, L = t, payload = {
               ...O.value
             };
             return;
@@ -304,9 +304,9 @@ var Se = {
             break;
           case `moving`:
           case `resizing`:
-            O.value && (O.value.width < v || O.value.height < v) && z && (O.value = z), D.value = `selected`;
+            O.value && (O.value.width < v || O.value.height < v) && payload && (O.value = payload), D.value = `selected`;
         }
-        L = null, z = null, B = null, R = false, Y();
+        L = null, payload = null, B = null, R = false, Y();
       }
       function tt(e) {
         D.value === `selected` && O.value && q(O.value, Q(e)) && $(`beautify`);
@@ -393,12 +393,12 @@ var Se = {
           N.value = true;
           try {
             let i = st(n),
-              a;
+              png;
             if (e === `beautify` && t.afterCapture === `copy`) {
               let e = he(r, i.x, i.y, i.width, i.height);
               try {
                 let n = t.style.enabled && t.style.balance ? fe(e, t.scale) : null;
-                a = (await ge({
+                png = (await ge({
                   source: e,
                   scale: t.scale,
                   style: t.style,
@@ -409,13 +409,13 @@ var Se = {
                 _e(e);
               }
             }
-            let o = await overlay.finish({
+            let finish = await overlay.finish({
               sessionId: t.sessionId,
               action: e,
               rect: i,
-              rendered: a
+              rendered: png
             });
-            o.ok || console.warn(`[截图美化] 完成截图失败:`, o.error.message);
+            finish.ok || console.warn(`[截图美化] 完成截图失败:`, finish.error.message);
           } catch (e) {
             console.warn(`[截图美化] 完成截图失败:`, e);
           } finally {
@@ -424,7 +424,7 @@ var Se = {
         }
       }
       function ct() {
-        w.value = null, I = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
+        w.value = null, data = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
         let e = T.value;
         e && (e.width = 1, e.height = 1), Y();
       }
@@ -437,7 +437,7 @@ var Se = {
         if (t) {
           t.width = e.width, t.height = e.height;
           let n = pe(e.bitmap, e.width, e.height);
-          g(t).putImageData(n, 0, 0), I = n.data;
+          g(t).putImageData(n, 0, 0), data = n.data;
         }
         e.cursor && (A.value = {
           ...e.cursor

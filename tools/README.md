@@ -63,6 +63,7 @@ node tools/deobf.cjs --only=final    # void 0 / !0 / 字符串转义
 | byfunc（函数名词/别名/方法结果） | 3176 | 1706 |
 | more（调用结果/logical/容器字面量） | 1193 | 1743 |
 | late（后续赋值/三元/运算/字面量） | 63 | 797 |
+| 2026-11-09 全库复跑（九模式一次跑） | params 800 / locals 862 / forms 367 / callbacks 1216 / byfunc 2465 / more 1331 / late 1059（96 文件） |
 | final（void 0 / !0 / 转义） | 3008 / 12612 / 89 文件 | 同左（全库） |
 
 ## 尚未安全的操作

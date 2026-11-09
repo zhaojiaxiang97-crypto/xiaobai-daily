@@ -1,24 +1,24 @@
 import { $n as e, An as t, Ct as n, Nt as r, S as i, Wt as a, Yt as o, Zt as s, b as c, bn as l, f as ee, gt as u, j as te, k as ne, mt as re, nr as ie, nt as ae, ot as oe, rr as d, rt as f, ut as se, v as p, x as m, y as h } from "../chunks/vue-i18n.runtime.js";
 import { E as ce, r as le, w as ue } from "../i18n/en-US-player.js";
 import { A as de, B as fe, C as pe, N as me, P as he, T as ge, U as _e, V as ve, X as ye, Y as be, _ as xe, b as Se, j as Ce, v as we, y as Te } from "../chunks/main.js";
-var g = Object.defineProperty,
+var defineProperty = Object.defineProperty,
   Ee = Object.defineProperties,
   De = Object.getOwnPropertyDescriptors,
   _ = Object.getOwnPropertySymbols,
   Oe = Object.prototype.hasOwnProperty,
-  ke = Object.prototype.propertyIsEnumerable,
-  v = (e, t, n) => t in e ? g(e, t, {
+  propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
+  handler = (e, t, n) => t in e ? defineProperty(e, t, {
     enumerable: true,
     configurable: true,
     writable: true,
     value: n
   }) : e[t] = n,
   Ae = (e, t) => {
-    for (var n in t ||= {}) Oe.call(t, n) && v(e, n, t[n]);
-    if (_) for (var n of _(t)) ke.call(t, n) && v(e, n, t[n]);
+    for (var width in t ||= {}) Oe.call(t, width) && handler(e, width, t[width]);
+    if (_) for (var width of _(t)) propertyIsEnumerable.call(t, width) && handler(e, width, t[width]);
     return e;
   },
-  y = (e, t, n) => new Promise((r, i) => {
+  y = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -33,7 +33,7 @@ var g = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(e, t)).next());
   }),
   je = [`data-markstream-mode`],
@@ -94,7 +94,7 @@ var g = Object.defineProperty,
   },
   Ge = [`aria-label`, `disabled`],
   Ke = [`aria-label`, `disabled`],
-  qe = {
+  options = {
     key: 0,
     xmlns: `http://www.w3.org/2000/svg`,
     "xmlns:xlink": `http://www.w3.org/1999/xlink`,
@@ -254,20 +254,20 @@ var g = Object.defineProperty,
         })),
         it = [/javascript:/i, /expression\s*\(/i, /url\s*\(\s*javascript:/i, /@import/i],
         at = /^(?:https?:|mailto:|tel:|#|\/|data:image\/(?:png|gif|jpe?g|webp);)/i;
-      function ot(e) {
-        if (!e) return ``;
-        let t = e.trim();
-        return at.test(t) ? t : ``;
+      function ot(text) {
+        if (!text) return ``;
+        let trimmed = text.trim();
+        return at.test(trimmed) ? trimmed : ``;
       }
-      function x(e) {
-        if (e) try {
-          e.replaceChildren();
+      function x(el) {
+        if (el) try {
+          el.replaceChildren();
         } catch {
-          e.innerHTML = ``;
+          el.innerHTML = ``;
         }
       }
-      function S(e, t) {
-        if (!e) return ``;
+      function S(el, t) {
+        if (!el) return ``;
         if (b.value === `strict`) return function (e, t) {
           if (!e) return ``;
           try {
@@ -277,71 +277,71 @@ var g = Object.defineProperty,
           }
           let n = function (e) {
             if (typeof window > `u` || typeof DOMParser > `u` || !e) return null;
-            let t = e.replace(/["']\s*javascript:/gi, `#`).replace(/\bjavascript:/gi, `#`).replace(/["']\s*vbscript:/gi, `#`).replace(/\bvbscript:/gi, `#`).replace(/\bdata:text\/html/gi, `#`),
-              n = new DOMParser().parseFromString(t, `image/svg+xml`).documentElement;
-            if (!n || n.nodeName.toLowerCase() !== `svg`) return null;
-            let r = n;
+            let replaced = e.replace(/["']\s*javascript:/gi, `#`).replace(/\bjavascript:/gi, `#`).replace(/["']\s*vbscript:/gi, `#`).replace(/\bvbscript:/gi, `#`).replace(/\bdata:text\/html/gi, `#`),
+              documentElement = new DOMParser().parseFromString(replaced, `image/svg+xml`).documentElement;
+            if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return null;
+            let documentElementAlias = documentElement;
             return function (e) {
               let t = new Set([`script`]),
                 n = [e, ...Array.from(e.querySelectorAll(`*`))];
-              for (let e of n) {
-                if (t.has(e.tagName.toLowerCase())) {
-                  e.remove();
+              for (let value of n) {
+                if (t.has(value.tagName.toLowerCase())) {
+                  value.remove();
                   continue;
                 }
-                let n = Array.from(e.attributes);
-                for (let t of n) {
-                  let n = t.name;
-                  if (/^on/i.test(n)) e.removeAttribute(n);else {
-                    if (n === `style` && t.value) {
-                      let r = t.value;
-                      if (it.some(e => e.test(r))) {
-                        e.removeAttribute(n);
+                let n = Array.from(value.attributes);
+                for (let payload of n) {
+                  let n = payload.name;
+                  if (/^on/i.test(n)) value.removeAttribute(n);else {
+                    if (n === `style` && payload.value) {
+                      let r = payload.value;
+                      if (it.some(item => item.test(r))) {
+                        value.removeAttribute(n);
                         continue;
                       }
                     }
-                    if ((n === `href` || n === `xlink:href`) && t.value) {
-                      let r = ot(t.value);
+                    if ((n === `href` || n === `xlink:href`) && payload.value) {
+                      let r = ot(payload.value);
                       if (!r) {
-                        e.removeAttribute(n);
+                        value.removeAttribute(n);
                         continue;
                       }
-                      r !== t.value && e.setAttribute(n, r);
+                      r !== payload.value && value.setAttribute(n, r);
                     }
                   }
                 }
               }
-            }(r), r;
+            }(documentElementAlias), documentElementAlias;
           }(t);
           return n ? (e.appendChild(n), e.innerHTML) : ``;
-        }(e, t);
+        }(el, t);
         try {
-          e.replaceChildren();
+          el.replaceChildren();
         } catch {
-          e.innerHTML = ``;
+          el.innerHTML = ``;
         }
         if (t) try {
-          e.insertAdjacentHTML(`afterbegin`, t);
+          el.insertAdjacentHTML(`afterbegin`, t);
         } catch {
-          e.innerHTML = t;
+          el.innerHTML = t;
         }
-        return e.innerHTML;
+        return el.innerHTML;
       }
-      function st(e) {
-        if (!e || typeof DOMParser > `u`) return !e;
-        let t = new DOMParser().parseFromString(e, `image/svg+xml`).documentElement;
-        if (!t || t.nodeName.toLowerCase() !== `svg`) return true;
-        let n = t.getAttribute(`viewBox`);
-        if (n) {
-          let e = n.trim().split(/[\s,]+/);
-          if (e.length === 4) {
-            let t = Number.parseFloat(e[2] || ``),
-              n = Number.parseFloat(e[3] || ``);
-            if (!Number.isFinite(t) || !Number.isFinite(n) || t <= 0 || n <= 0) return true;
+      function st(count) {
+        if (!count || typeof DOMParser > `u`) return !count;
+        let documentElement = new DOMParser().parseFromString(count, `image/svg+xml`).documentElement;
+        if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return true;
+        let attribute = documentElement.getAttribute(`viewBox`);
+        if (attribute) {
+          let parts = attribute.trim().split(/[\s,]+/);
+          if (parts.length === 4) {
+            let float = Number.parseFloat(parts[2] || ``),
+              floatResult = Number.parseFloat(parts[3] || ``);
+            if (!Number.isFinite(float) || !Number.isFinite(floatResult) || float <= 0 || floatResult <= 0) return true;
           }
         }
-        let r = [t, ...Array.from(t.querySelectorAll(`*`))];
-        for (let e of r) for (let t of Array.from(e.attributes)) if (/\bNaN\b/i.test(t.value) || t.name === `style` && /max-width:\s*0(?:px)?/i.test(t.value)) return true;
+        let r = [documentElement, ...Array.from(documentElement.querySelectorAll(`*`))];
+        for (let value of r) for (let payload of Array.from(value.attributes)) if (/\bNaN\b/i.test(payload.value) || payload.name === `style` && /max-width:\s*0(?:px)?/i.test(payload.value)) return true;
         return false;
       }
       let {
@@ -402,7 +402,7 @@ var g = Object.defineProperty,
         Ot = null,
         kt = null,
         At = 0,
-        jt = globalThis.requestIdleCallback ?? ((e, t) => setTimeout(() => e({
+        fallbackValue = globalThis.requestIdleCallback ?? ((e, t) => setTimeout(() => e({
           didTimeout: true
         }), 16));
       function F() {
@@ -413,7 +413,7 @@ var g = Object.defineProperty,
       }
       function Nt() {
         Mt(), kt = globalThis.setTimeout(() => {
-          kt = null, F() && jt(() => {
+          kt = null, F() && fallbackValue(() => {
             F() && Cn();
           }, {
             timeout: 500
@@ -479,26 +479,26 @@ var g = Object.defineProperty,
             a || (a = true, c(), s(Error(`Operation timed out`)));
           }, n)), r && (o = () => {
             a || (a = true, c(), s(new DOMException(`Aborted`, `AbortError`)));
-          }, r.addEventListener(`abort`, o)), e().then(e => {
-            a || (a = true, c(), t(e));
-          }).catch(e => {
-            a || (a = true, c(), s(e));
+          }, r.addEventListener(`abort`, o)), e().then(result => {
+            a || (a = true, c(), t(result));
+          }).catch(err => {
+            a || (a = true, c(), s(err));
           });
         });
       }
       function qt(e) {
         if (typeof document > `u` || !E.value) return;
         if (typeof g.onRenderError == `function` && true === g.onRenderError(e, O.value, E.value)) return H.value = true, void $();
-        let t = document.createElement(`div`);
-        t.style.padding = `var(--ms-inset-panel-body)`, t.style.color = `hsl(var(--ms-destructive))`, t.textContent = `Failed to render diagram: `;
-        let n = document.createElement(`span`);
-        n.textContent = e instanceof Error ? e.message : `Unknown error`, t.appendChild(n), x(E.value), E.value.appendChild(t);
+        let element = document.createElement(`div`);
+        element.style.padding = `var(--ms-inset-panel-body)`, element.style.color = `hsl(var(--ms-destructive))`, element.textContent = `Failed to render diagram: `;
+        let elementResult = document.createElement(`span`);
+        elementResult.textContent = e instanceof Error ? e.message : `Unknown error`, element.appendChild(elementResult), x(E.value), E.value.appendChild(element);
         let r = E.value ? getComputedStyle(E.value).getPropertyValue(`--ms-size-diagram-min-height`).trim() : ``;
         I.value = r || `360px`, H.value = true, $();
       }
       typeof window < `u` && a(() => T.value, e => {
-        var t;
-        if ((t = ft.value) == null || t.destroy(), ft.value = null, !e) return void (pt.value = false);
+        var payload;
+        if ((payload = ft.value) == null || payload.destroy(), ft.value = null, !e) return void (pt.value = false);
         let n = dt(e, {
           rootMargin: `400px`
         });
@@ -508,34 +508,34 @@ var g = Object.defineProperty,
       }, {
         immediate: true
       }), oe(() => {
-        var e;
-        (e = ft.value) == null || e.destroy(), ft.value = null, Mt();
+        var value;
+        (value = ft.value) == null || value.destroy(), ft.value = null, Mt();
       });
       let Jt = p(() => false !== g.showTooltips);
       function Yt(e) {
         return !e || e.disabled;
       }
-      function J(e, t, n = `top`) {
-        if (!Jt.value || Yt(e.currentTarget)) return;
-        let r = e,
-          i = r?.clientX != null && r?.clientY != null ? {
-            x: r.clientX,
-            y: r.clientY
+      function J(event, t, n = `top`) {
+        if (!Jt.value || Yt(event.currentTarget)) return;
+        let eventAlias = event,
+          i = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
+            x: eventAlias.clientX,
+            y: eventAlias.clientY
           } : undefined;
-        me(e.currentTarget, t, n, false, i, g.isDark);
+        me(event.currentTarget, t, n, false, i, g.isDark);
       }
       function Y() {
         Jt.value && ve();
       }
-      function Xt(e) {
-        if (!Jt.value || Yt(e.currentTarget)) return;
+      function Xt(event) {
+        if (!Jt.value || Yt(event.currentTarget)) return;
         let t = lt.value ? C(`common.copied`) || `Copied` : C(`common.copy`) || `Copy`,
-          n = e,
-          r = n?.clientX != null && n?.clientY != null ? {
-            x: n.clientX,
-            y: n.clientY
+          eventAlias = event,
+          r = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
+            x: eventAlias.clientX,
+            y: eventAlias.clientY
           } : undefined;
-        me(e.currentTarget, t, `top`, false, r, g.isDark);
+        me(event.currentTarget, t, `top`, false, r, g.isDark);
       }
       function Zt(e, t) {
         let n = `%%{init: {"theme": "${t === `dark` ? `dark` : `default`}"}}%%\n`;
@@ -544,32 +544,32 @@ var g = Object.defineProperty,
       function Qt() {
         return Wt && !M.value && !R.value && !H.value;
       }
-      function $t(e) {
-        let t = e.trim();
-        return !(!t || t.startsWith(`%%`)) && !/^(?:gantt|title|dateformat|axisformat|tickinterval|excludes|section|todaymarker|topaxis|weekday|weekend|acctitle|accdescr|accdescrmultiline)\b/i.test(t) && t.includes(`:`);
+      function $t(text) {
+        let trimmed = text.trim();
+        return !(!trimmed || trimmed.startsWith(`%%`)) && !/^(?:gantt|title|dateformat|axisformat|tickinterval|excludes|section|todaymarker|topaxis|weekday|weekend|acctitle|accdescr|accdescrmultiline)\b/i.test(trimmed) && trimmed.includes(`:`);
       }
-      function en(e) {
-        if (be(e) === `gantt`) return function (e) {
-          let t = e.split(/\r?\n/);
-          for (!/\r?\n$/.test(e) && t.length > 0 && t.pop(); t.length > 0;) {
-            let e = t[t.length - 1]?.trim();
+      function en(text) {
+        if (be(text) === `gantt`) return function (e) {
+          let parts = e.split(/\r?\n/);
+          for (!/\r?\n$/.test(e) && parts.length > 0 && parts.pop(); parts.length > 0;) {
+            let e = parts[parts.length - 1]?.trim();
             if (e && !e.startsWith(`%%`)) {
               if ($t(e)) break;
-              t.pop();
-            } else t.pop();
+              parts.pop();
+            } else parts.pop();
           }
-          return t.some($t) ? t.join(`
+          return parts.some($t) ? parts.join(`
 `) : ``;
-        }(e);
-        let t = e.split(/\r?\n/);
-        for (; t.length > 0;) {
-          let e = t[t.length - 1].trimEnd();
+        }(text);
+        let parts = text.split(/\r?\n/);
+        for (; parts.length > 0;) {
+          let e = parts[parts.length - 1].trimEnd();
           if (e !== ``) {
             if (!(/^[-=~>|<\s]+$/.test(e.trim()) || /(?:--|==|~~|->|<-|-\||-\)|-x|o-|\|-|\.-)\s*$/.test(e) || /[-|><]$/.test(e) || /(?:graph|flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|gantt)\s*$/i.test(e))) break;
-            t.pop();
-          } else t.pop();
+            parts.pop();
+          } else parts.pop();
         }
-        return t.join(`
+        return parts.join(`
 `);
       }
       function tn(e, t, n) {
@@ -654,42 +654,42 @@ var g = Object.defineProperty,
       function an() {
         if (g.maxHeight === `none`) return null;
         if (g.maxHeight != null) {
-          let e = Number.parseFloat(String(g.maxHeight));
-          if (Number.isFinite(e)) return e;
+          let float = Number.parseFloat(String(g.maxHeight));
+          if (Number.isFinite(float)) return float;
         }
         let e = T.value;
         if (e) {
-          let t = getComputedStyle(e).getPropertyValue(`--ms-size-code-max-height`).trim(),
-            n = Number.parseFloat(t);
-          if (Number.isFinite(n)) return n;
+          let trimmed = getComputedStyle(e).getPropertyValue(`--ms-size-code-max-height`).trim(),
+            float = Number.parseFloat(trimmed);
+          if (Number.isFinite(float)) return float;
         }
         return 500;
       }
-      function on(e) {
+      function on(count) {
         if (!T.value || !E.value) return;
-        let t = E.value.querySelector(`svg`);
-        if (!t) return;
+        let selector = E.value.querySelector(`svg`);
+        if (!selector) return;
         let n = 0,
           r = 0,
-          i = t.getAttribute(`viewBox`),
-          a = t.getAttribute(`width`),
-          o = t.getAttribute(`height`);
-        if (i) {
-          let e = i.split(` `);
-          e.length === 4 && (n = Number.parseFloat(e[2]), r = Number.parseFloat(e[3]));
+          attribute = selector.getAttribute(`viewBox`),
+          attributeResult = selector.getAttribute(`width`),
+          o = selector.getAttribute(`height`);
+        if (attribute) {
+          let parts = attribute.split(` `);
+          parts.length === 4 && (n = Number.parseFloat(parts[2]), r = Number.parseFloat(parts[3]));
         }
-        if (n && r || a && o && (n = Number.parseFloat(a), r = Number.parseFloat(o)), Number.isNaN(n) || Number.isNaN(r) || n <= 0 || r <= 0) try {
-          let e = t.getBBox();
-          e && e.width > 0 && e.height > 0 && (n = e.width, r = e.height);
+        if (n && r || attributeResult && o && (n = Number.parseFloat(attributeResult), r = Number.parseFloat(o)), Number.isNaN(n) || Number.isNaN(r) || n <= 0 || r <= 0) try {
+          let bBox = selector.getBBox();
+          bBox && bBox.width > 0 && bBox.height > 0 && (n = bBox.width, r = bBox.height);
         } catch (e) {
           console.error(`Failed to get SVG BBox:`, e);
           return;
         }
         if (n > 0 && r > 0) {
           let t = r / n,
-            i = e ?? T.value.clientWidth,
+            countValue = count ?? T.value.clientWidth,
             a = an(),
-            o = i * t;
+            o = countValue * t;
           I.value = `${a == null ? o : Math.min(o, a)}px`;
         }
       }
@@ -697,8 +697,8 @@ var g = Object.defineProperty,
         sn = p(() => ({
           transform: `translate(${A.value}px, ${j.value}px) scale(${k.value})`
         }));
-      function cn(e) {
-        e.key === `Escape` && X.value && ln();
+      function cn(event) {
+        event.key === `Escape` && X.value && ln();
       }
       function ln() {
         if (X.value = false, D.value && x(D.value), ut.value = null, typeof document < `u`) try {
@@ -717,34 +717,34 @@ var g = Object.defineProperty,
       function fn() {
         k.value = 1, A.value = 0, j.value = 0;
       }
-      function pn(e) {
-        gt.value = true, e instanceof MouseEvent ? _t.value = {
-          x: e.clientX - A.value,
-          y: e.clientY - j.value
+      function pn(event) {
+        gt.value = true, event instanceof MouseEvent ? _t.value = {
+          x: event.clientX - A.value,
+          y: event.clientY - j.value
         } : _t.value = {
-          x: e.touches[0].clientX - A.value,
-          y: e.touches[0].clientY - j.value
+          x: event.touches[0].clientX - A.value,
+          y: event.touches[0].clientY - j.value
         };
       }
-      function mn(e) {
+      function mn(event) {
         if (!gt.value) return;
-        let t, n;
-        e instanceof MouseEvent ? (t = e.clientX, n = e.clientY) : (t = e.touches[0].clientX, n = e.touches[0].clientY), A.value = t - _t.value.x, j.value = n - _t.value.y;
+        let payload, width;
+        event instanceof MouseEvent ? (payload = event.clientX, width = event.clientY) : (payload = event.touches[0].clientX, width = event.touches[0].clientY), A.value = payload - _t.value.x, j.value = width - _t.value.y;
       }
       function Z() {
         gt.value = false;
       }
-      function hn(e) {
-        if (g.enableWheelZoom && (e.ctrlKey || e.metaKey)) {
-          if (e.preventDefault(), !T.value) return;
-          let t = T.value.getBoundingClientRect(),
-            n = e.clientX - t.left,
-            r = e.clientY - t.top,
-            i = n - t.width / 2,
-            a = r - t.height / 2,
+      function hn(event) {
+        if (g.enableWheelZoom && (event.ctrlKey || event.metaKey)) {
+          if (event.preventDefault(), !T.value) return;
+          let boundingClientRect = T.value.getBoundingClientRect(),
+            n = event.clientX - boundingClientRect.left,
+            r = event.clientY - boundingClientRect.top,
+            i = n - boundingClientRect.width / 2,
+            a = r - boundingClientRect.height / 2,
             o = (i - A.value) / k.value,
             s = (a - j.value) / k.value,
-            c = -e.deltaY * .01,
+            c = -event.deltaY * .01,
             l = Math.min(Math.max(k.value + c, .5), 3);
           l !== k.value && (A.value = i - o * l, j.value = a - s * l, k.value = l);
         }
@@ -775,7 +775,7 @@ var g = Object.defineProperty,
       function _n() {
         let e = E.value?.querySelector(`svg`);
         if (!e) return void console.error(`SVG element not found`);
-        let t = new XMLSerializer().serializeToString(e),
+        let toStringResult = new XMLSerializer().serializeToString(e),
           n = {
             payload: {
               type: `export`
@@ -785,29 +785,29 @@ var g = Object.defineProperty,
               this.defaultPrevented = true;
             },
             svgElement: e,
-            svgString: t
+            svgString: toStringResult
           };
         _(`export`, n), n.defaultPrevented || function (e, t = null) {
           y(this, null, function* () {
             try {
               let n = t ?? new XMLSerializer().serializeToString(e),
-                r = new Blob([n], {
+                blob = new Blob([n], {
                   type: `image/svg+xml;charset=utf-8`
                 }),
-                i = URL.createObjectURL(r);
+                objectURL = URL.createObjectURL(blob);
               if (typeof document < `u`) {
-                let e = document.createElement(`a`);
-                e.href = i, e.download = `mermaid-diagram-${Date.now()}.svg`;
+                let element = document.createElement(`a`);
+                element.href = objectURL, element.download = `mermaid-diagram-${Date.now()}.svg`;
                 try {
-                  document.body.appendChild(e), e.click(), document.body.removeChild(e);
+                  document.body.appendChild(element), element.click(), document.body.removeChild(element);
                 } catch {}
-                URL.revokeObjectURL(i);
+                URL.revokeObjectURL(objectURL);
               }
             } catch (e) {
               console.error(`Failed to export SVG:`, e);
             }
           });
-        }(e, t);
+        }(e, toStringResult);
       }
       function vn() {
         let e = E.value?.querySelector(`svg`) ?? null,
@@ -831,10 +831,10 @@ var g = Object.defineProperty,
           } catch {}
           f(() => {
             if (T.value && D.value) {
-              let e = T.value.cloneNode(true);
-              e.classList.add(`fullscreen`), e.style.height = `100%`, e.style.maxHeight = `100%`;
-              let t = e.querySelector(`[data-mermaid-wrapper]`);
-              t && (ut.value = t, t.style.transform = sn.value.transform), x(D.value), D.value.appendChild(e);
+              let cloneNode = T.value.cloneNode(true);
+              cloneNode.classList.add(`fullscreen`), cloneNode.style.height = `100%`, cloneNode.style.maxHeight = `100%`;
+              let selector = cloneNode.querySelector(`[data-mermaid-wrapper]`);
+              selector && (ut.value = selector, selector.style.transform = sn.value.transform), x(D.value), D.value.appendChild(cloneNode);
             }
           });
         }();
@@ -858,8 +858,8 @@ var g = Object.defineProperty,
           if (!t) return vt.value = true, void (M.value = e === `source`);
           let n = t.getBoundingClientRect().height;
           t.style.height = `${n}px`, t.style.overflow = `hidden`, vt.value = true, M.value = e === `source`, yield f();
-          let r = t.scrollHeight;
-          t.style.transition = `height var(--ms-duration-standard) var(--ms-ease-standard)`, t.offsetHeight, t.style.height = `${r}px`;
+          let scrollHeight = t.scrollHeight;
+          t.style.transition = `height var(--ms-duration-standard) var(--ms-ease-standard)`, t.offsetHeight, t.style.height = `${scrollHeight}px`;
           let i = () => {
             t.style.transition = ``, t.style.height = ``, t.style.overflow = ``, t.removeEventListener(`transitionend`, a);
           };
@@ -872,14 +872,14 @@ var g = Object.defineProperty,
       function xn() {
         return y(this, null, function* () {
           return N.value ? yt.value : E.value || (yield f(), E.value) ? (N.value = true, yt.value = y(null, null, function* () {
-            var e, t, n;
+            var value, payload, width;
             try {
               let r = yield ct();
               if (!r) return;
               let i = `mermaid-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-              R.value || It.value || (e = r.initialize) == null || e.call(r, (t = Ae({}, rt.value), n = {
+              R.value || It.value || (value = r.initialize) == null || value.call(r, (payload = Ae({}, rt.value), width = {
                 dompurifyConfig: Ae({}, Oe)
-              }, Ee(t, De(n))));
+              }, Ee(payload, De(width))));
               let a = function (e, t = O.value) {
                   let n = t,
                     r = `%%{init: {"theme": "${e === `dark` ? `dark` : `default`}"}}%%\n`;
@@ -916,12 +916,12 @@ var g = Object.defineProperty,
       }
       function Q() {
         return y(this, null, function* () {
-          var e;
+          var value;
           let t = O.value;
           if (!t.trim()) return E.value && x(E.value), Lt.value = null, B.value = ``, void (H.value = false);
           if (!v.value || !F()) return;
-          let n = t.replace(/\s+/g, ``);
-          R.value && n === B.value && (e = E.value) != null && e.querySelector(`svg`) || (yield xn()) && (B.value = n, Lt.value = E.value?.innerHTML ?? null, H.value = false);
+          let replaced = t.replace(/\s+/g, ``);
+          R.value && replaced === B.value && (value = E.value) != null && value.querySelector(`svg`) || (yield xn()) && (B.value = replaced, Lt.value = E.value?.innerHTML ?? null, H.value = false);
         });
       }
       function Sn(e) {
@@ -950,20 +950,20 @@ var g = Object.defineProperty,
           let e = Date.now(),
             t = ++Rt.value;
           V && V.abort(), V = new AbortController();
-          let n = V.signal,
+          let signal = V.signal,
             r = g.isDark ? `dark` : `light`,
             i = O.value,
-            a = i.replace(/\s+/g, ``);
+            replaced = i.replace(/\s+/g, ``);
           if (!i.trim()) return E.value && x(E.value), Lt.value = null, B.value = ``, void (H.value = false);
-          if (a === B.value) return;
+          if (replaced === B.value) return;
           try {
             let o = yield nn(i, r, {
-              signal: n,
+              signal: signal,
               timeoutMs: W.value.worker
             });
             if (o.fullOk) {
               if (!(yield xn())) return;
-              Rt.value === t && (Lt.value = E.value?.innerHTML ?? null, B.value = a, H.value = false);
+              Rt.value === t && (Lt.value = E.value?.innerHTML ?? null, B.value = replaced, H.value = false);
               return;
             }
             let s = Ut && e <= Ut;
@@ -996,7 +996,7 @@ var g = Object.defineProperty,
       }
       function Tn(e = wt.value) {
         G && (Gt >= Et.value ? $() : (Vt && globalThis.clearTimeout(Vt), Vt = globalThis.setTimeout(() => {
-          Ht = jt(() => y(null, null, function* () {
+          Ht = fallbackValue(() => y(null, null, function* () {
             if (!G) return;
             if (!F() || M.value || R.value) return void $();
             let e = g.isDark ? `dark` : `light`,
@@ -1067,31 +1067,31 @@ var g = Object.defineProperty,
         }
       })), a(() => g.loading, (e, t) => y(null, null, function* () {
         if (true === t && false === e) {
-          let e = O.value.trim();
-          if (!e) return wn();
+          let trimmed = O.value.trim();
+          if (!trimmed) return wn();
           let t = g.isDark ? `dark` : `light`,
-            n = e.replace(/\s+/g, ``);
-          if (R.value && n === B.value) return yield f(), E.value && !E.value.querySelector(`svg`) && z.value[t] && S(E.value, z.value[t]), void wn();
+            replaced = trimmed.replace(/\s+/g, ``);
+          if (R.value && replaced === B.value) return yield f(), E.value && !E.value.querySelector(`svg`) && z.value[t] && S(E.value, z.value[t]), void wn();
           try {
-            if (yield tn(e, t, {
+            if (yield tn(trimmed, t, {
               timeoutMs: W.value.worker
             }), !(yield xn())) return;
-            B.value = n, H.value = false, wn();
+            B.value = replaced, H.value = false, wn();
           } catch (e) {
             wn(), qt(e);
           }
         }
-      })), a(T, e => {
-        L && L.disconnect(), e && (L = new ResizeObserver(e => {
+      })), a(T, count => {
+        L && L.disconnect(), count && (L = new ResizeObserver(e => {
           e && e.length > 0 && !M.value && !w.value && Te(() => {
             on(e[0].contentRect.width);
           });
-        }), L.observe(e));
+        }), L.observe(count));
       }, {
         immediate: true
       }), se(() => y(null, null, function* () {
-        ct().catch(e => {
-          v.value = false, console.warn(`[markstream-vue] Failed to initialize mermaid renderer. Call enableMermaid() to configure a loader.`, e);
+        ct().catch(err => {
+          v.value = false, console.warn(`[markstream-vue] Failed to initialize mermaid renderer. Call enableMermaid() to configure a loader.`, err);
         }), yield f(), vt.value || (M.value = !v.value), F() && (P.value ? (Nt(), bt.value = O.value.length) : M.value || Q());
       })), a(() => v.value, e => {
         vt.value || (M.value = !e);
@@ -1281,7 +1281,7 @@ var g = Object.defineProperty,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `m14 10l7-7m-1 7h-6V4M3 21l7-7m-6 0h6v6`
-      }, null, -1)])])) : (u(), i(`svg`, qe, [...(l[28] ||= [h(`path`, {
+      }, null, -1)])])) : (u(), i(`svg`, options, [...(l[28] ||= [h(`path`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,

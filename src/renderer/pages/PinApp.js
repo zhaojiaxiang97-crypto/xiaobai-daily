@@ -15,7 +15,7 @@ var h = [`src`],
         x = r(``),
         S = false,
         C = null,
-        w = [];
+        emptyItems = [];
       async function T(e) {
         p(e), y.value && URL.revokeObjectURL(y.value), y.value = URL.createObjectURL(new Blob([e.image], {
           type: `image/png`
@@ -53,7 +53,7 @@ var h = [`src`],
         event.preventDefault(), v.menu();
       }
       return u(() => {
-        w.push(v.onOpen(e => {
+        emptyItems.push(v.onOpen(e => {
           T(e);
         }), v.onZoom(({
           zoom: e
@@ -69,7 +69,7 @@ var h = [`src`],
           b.value = false;
         }), window.screenshotToolAPI.ready();
       }), s(() => {
-        for (let e of w) e();
+        for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, j), y.value && URL.revokeObjectURL(y.value), C !== null && window.clearTimeout(C);
       }), (r, a) => (i(), n(`div`, {
         class: `fixed inset-0 cursor-move`,

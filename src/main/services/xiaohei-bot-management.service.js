@@ -339,7 +339,7 @@ var XiaoheiBotManagementService = class {
             if (existing?.members.find(item => item.botId === member.existing_bot_id)?.participationMode === "context-only") invalid("仅上下文成员不能立即执行交接任务");
             if (source.hopDepth >= xiaoheiBotRepository.getSettings().maxBotChainDepth) invalid("已达接力上限，请关闭 start_task");
           }
-          if ((/* @__PURE__ */new Set([...(existing?.members.map(m => m.botId) ?? []), actor.id, "xiaohei-assistant", ...reused])).size + plan.members.filter(m => m.bot).length > 30) invalid("组队后群成员超过 30 人");
+          if ((/* @__PURE__ */new Set([...(existing?.members.map(m => m.botId) ?? []), actor.id, "xiaohei-assistant", ...reused])).size + plan.members.filter(item => item.bot).length > 30) invalid("组队后群成员超过 30 人");
           const planId = randomUUID(),
             now = (/* @__PURE__ */new Date()).toISOString();
           db.prepare("INSERT INTO xiaohei_bot_team_plans (id, owner_bot_id, plan_key, root_message_id, source_conversation_id, plan_json, progress_json, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").run(planId, actor.id, plan.plan_key, source.causalRootMessageId ?? source.id, context.conversationId, JSON.stringify(plan), JSON.stringify({
@@ -358,10 +358,10 @@ var XiaoheiBotManagementService = class {
         plan_id: row.id,
         status,
         group_id: progress.groupId,
-        members: plan.members.map(m => ({
-          key: m.key,
-          bot_id: progress.bots[m.key],
-          handed_off: Boolean(progress.handedOff[m.key])
+        members: plan.members.map(event => ({
+          key: event.key,
+          bot_id: progress.bots[event.key],
+          handed_off: Boolean(progress.handedOff[event.key])
         })),
         error,
         next_action: status === "completed" ? "组队与交接已完成；已排队的任务需另查执行结果" : "调用 xiaohei_resume_team 并沿用 plan_id；不要重新创建团队"
@@ -432,7 +432,7 @@ var XiaoheiBotManagementService = class {
           save("pending");
         }
         const group = ownGroup(progress.groupId);
-        if (Object.values(progress.bots).some(botId => !group.members.some(m => m.botId === botId))) invalid("已组队成员被移出群聊，请先恢复成员后重试");
+        if (Object.values(progress.bots).some(botId => !group.members.some(item => item.botId === botId))) invalid("已组队成员被移出群聊，请先恢复成员后重试");
         for (const member of plan.members) {
           if (progress.handedOff[member.key]) continue;
           if (member.role || member.context || member.initial_task) {
@@ -852,7 +852,7 @@ var XiaoheiBotManagementService = class {
     const record = result && typeof result === "object" && !Array.isArray(result) ? result : null;
     const mobileSync = await syncMobileCreatedGroup(result);
     xiaoheiBotService.notifyManagementDirectoryChanged(toolName === "xiaohei_create_bot" && typeof record?.conversation_id === "string" ? record.conversation_id : undefined, mobileSync);
-    if (Array.isArray(record?.handoff_message_ids)) xiaoheiBotService.notifyMemberHandoffs(record.handoff_message_ids.filter(id => typeof id === "string"));
+    if (Array.isArray(record?.handoff_message_ids)) xiaoheiBotService.notifyMemberHandoffs(record.handoff_message_ids.filter(item => typeof item === "string"));
     if (toolName === "xiaohei_send_group_task" && result && typeof result === "object" && !Array.isArray(result) && typeof result.message_id === "string") xiaoheiBotService.resumeManagedGroupTask(result.message_id);
     return result;
   }

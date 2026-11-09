@@ -5,7 +5,7 @@ import { a as ie, i as W, n as ae, o as oe, t as G } from "./PopperContent.js";
 import { r as K, t as q } from "./Collection.js";
 import { t as se } from "./RovingFocusGroup.js";
 var ce = [`INPUT`, `TEXTAREA`];
-function J(e, t, n, r = {}) {
+function J(event, t, n, r = {}) {
   if (!t || r.enableIgnoredElement && ce.includes(t.nodeName)) return null;
   let {
       arrowKeyOptions: i = `both`,
@@ -16,26 +16,26 @@ function J(e, t, n, r = {}) {
       preventScroll: l = true,
       focus: u = false
     } = r,
-    [d, f, p, m, h, g] = [e.key === `ArrowRight`, e.key === `ArrowLeft`, e.key === `ArrowUp`, e.key === `ArrowDown`, e.key === `Home`, e.key === `End`],
+    [d, f, p, m, h, g] = [event.key === `ArrowRight`, event.key === `ArrowLeft`, event.key === `ArrowUp`, event.key === `ArrowDown`, event.key === `Home`, event.key === `End`],
     _ = p || m,
-    v = d || f;
-  if (!h && !g && (!_ && !v || i === `vertical` && v || i === `horizontal` && _)) return null;
+    fallbackValue = d || f;
+  if (!h && !g && (!_ && !fallbackValue || i === `vertical` && fallbackValue || i === `horizontal` && _)) return null;
   let y = n ? Array.from(n.querySelectorAll(a)) : o;
   if (!y.length) return null;
-  l && e.preventDefault();
+  l && event.preventDefault();
   let b = null;
-  return v || _ ? b = Y(y, t, {
+  return fallbackValue || _ ? b = Y(y, t, {
     goForward: _ ? m : c === `ltr` ? d : f,
     loop: s
   }) : h ? b = y.at(0) || null : g && (b = y.at(-1) || null), u && b?.focus(), b;
 }
-function Y(e, t, n, r = e.includes(t) ? e.length : e.length + 1) {
+function Y(items, t, n, r = items.includes(t) ? items.length : items.length + 1) {
   if (--r === 0) return null;
-  let i = e.indexOf(t),
-    a;
-  if (a = i === -1 ? n.goForward ? 0 : e.length - 1 : n.goForward ? i + 1 : i - 1, !n.loop && (a < 0 || a >= e.length)) return null;
-  let o = e[(a + e.length) % e.length];
-  return o ? o.hasAttribute(`disabled`) && o.getAttribute(`disabled`) !== `false` ? Y(e, o, n, r) : o : null;
+  let i = items.indexOf(t),
+    resolvedValue;
+  if (resolvedValue = i === -1 ? n.goForward ? 0 : items.length - 1 : n.goForward ? i + 1 : i - 1, !n.loop && (resolvedValue < 0 || resolvedValue >= items.length)) return null;
+  let o = items[(resolvedValue + items.length) % items.length];
+  return o ? o.hasAttribute(`disabled`) && o.getAttribute(`disabled`) !== `false` ? Y(items, o, n, r) : o : null;
 }
 var X = F({
   __name: `MenuAnchor`,
@@ -242,10 +242,10 @@ var ue = v(le),
       ...G
     }),
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `entryFocus`, `openAutoFocus`, `closeAutoFocus`, `dismiss`],
-    setup(e, {
+    setup(event, {
       emit: r
     }) {
-      let i = e,
+      let eventAlias = event,
         a = r,
         c = Z(),
         f = Q(),
@@ -253,7 +253,7 @@ var ue = v(le),
           trapFocus: p,
           disableOutsidePointerEvents: h,
           loop: _
-        } = D(i);
+        } = D(eventAlias);
       oe(), d(h.value);
       let v = M(``),
         x = M(0),
@@ -310,8 +310,8 @@ var ue = v(le),
         if (e.defaultPrevented) return;
         let t = e.target,
           n = t.closest(`[data-reka-menu-content]`) === e.currentTarget,
-          r = [`input`, `textarea`].includes(t.tagName.toLowerCase()),
-          i = e.ctrlKey || e.altKey || e.metaKey,
+          includesResult = [`input`, `textarea`].includes(t.tagName.toLowerCase()),
+          fallbackValue = e.ctrlKey || e.altKey || e.metaKey,
           a = e.key.length === 1,
           o = J(e, b(), F.value, {
             loop: _.value,
@@ -323,9 +323,9 @@ var ue = v(le),
         if (o) return o?.focus();
         if (e.code === `Space`) return;
         let s = N.value?.getItems() ?? [];
-        if (n && (e.key === `Tab` && f.modal.value && e.preventDefault(), !i && a && !r && L(e.key, s)), e.target !== F.value || !y.includes(e.key)) return;
+        if (n && (e.key === `Tab` && f.modal.value && e.preventDefault(), !fallbackValue && a && !includesResult && L(e.key, s)), e.target !== F.value || !y.includes(e.key)) return;
         e.preventDefault();
-        let c = [...s.map(e => e.ref)];
+        let c = [...s.map(item => item.ref)];
         m.includes(e.key) && c.reverse(), l(c);
       }
       function G(e) {
@@ -448,8 +448,8 @@ var ue = v(le),
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(event) {
+      let eventAlias = event,
         r = me(),
         {
           forwardRef: i,
@@ -462,7 +462,7 @@ var ue = v(le),
         c = V(() => s.value || a.value != null && r.highlightedElement.value === a.value);
       async function l(e) {
         if (!e.defaultPrevented && n(e)) {
-          if (t.disabled) r.onItemLeave(e);else if (!r.onItemEnter(e)) {
+          if (eventAlias.disabled) r.onItemLeave(e);else if (!r.onItemEnter(e)) {
             let t = e.currentTarget;
             r.highlightedElement.value = t, [`INPUT`, `TEXTAREA`].includes(b()?.tagName || ``) || t.focus({
               preventScroll: true
@@ -525,10 +525,10 @@ var ue = v(le),
       }
     },
     emits: [`select`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let n = e,
+      let eventAlias = event,
         r = t,
         {
           forwardRef: i,
@@ -539,15 +539,15 @@ var ue = v(le),
         c = M(false);
       async function l() {
         let e = a.value;
-        if (!n.disabled && e) {
-          let e = new CustomEvent(S, {
+        if (!eventAlias.disabled && e) {
+          let customEvent = new CustomEvent(S, {
             bubbles: true,
             cancelable: true
           });
-          r(`select`, e), await R(), e.defaultPrevented ? c.value = false : o.onClose();
+          r(`select`, customEvent), await R(), customEvent.defaultPrevented ? c.value = false : o.onClose();
         }
       }
-      return (e, t) => (P(), j(_e, L(n, {
+      return (e, t) => (P(), j(_e, L(eventAlias, {
         ref: T(i),
         onClick: l,
         onPointerdown: t[0] ||= () => {
@@ -1110,10 +1110,10 @@ var ue = v(le),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `closeAutoFocus`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let n = w(e, t);
+      let n = w(event, t);
       u();
       let i = Se(),
         a = M(false);
@@ -1135,10 +1135,10 @@ var ue = v(le),
         onCloseAutoFocus: o,
         onInteractOutside: t[0] ||= e => {
           if (e.defaultPrevented) return;
-          let t = e.detail.originalEvent,
-            n = t.button === 0 && t.ctrlKey === true,
-            r = t.button === 2 || n;
-          (!T(i).modal.value || r) && (a.value = true), T(i).triggerElement.value?.contains(e.target) && e.preventDefault();
+          let originalEvent = e.detail.originalEvent,
+            n = originalEvent.button === 0 && originalEvent.ctrlKey === true,
+            fallbackValue = originalEvent.button === 2 || n;
+          (!T(i).modal.value || fallbackValue) && (a.value = true), T(i).triggerElement.value?.contains(e.target) && e.preventDefault();
         }
       }), {
         default: A(() => [E(e.$slots, `default`)]),
@@ -1215,11 +1215,11 @@ var ue = v(le),
           "data-disabled": e.disabled ? `` : undefined,
           disabled: e.disabled,
           "data-state": T(n).open.value ? `open` : `closed`,
-          onClick: r[0] ||= async t => {
-            !e.disabled && t.button === 0 && t.ctrlKey === false && (T(n)?.onOpenToggle(), await R(), T(n).open.value && t.preventDefault());
+          onClick: r[0] ||= async event => {
+            !e.disabled && event.button === 0 && event.ctrlKey === false && (T(n)?.onOpenToggle(), await R(), T(n).open.value && event.preventDefault());
           },
-          onKeydown: r[1] ||= U(t => {
-            e.disabled || ([`Enter`, ` `].includes(t.key) && T(n).onOpenToggle(), t.key === `ArrowDown` && T(n).onOpenChange(true), [`Enter`, ` `, `ArrowDown`].includes(t.key) && t.preventDefault());
+          onKeydown: r[1] ||= U(event => {
+            e.disabled || ([`Enter`, ` `].includes(event.key) && T(n).onOpenToggle(), event.key === `ArrowDown` && T(n).onOpenChange(true), [`Enter`, ` `, `ArrowDown`].includes(event.key) && event.preventDefault());
           }, [`enter`, `space`, `arrow-down`])
         }, {
           default: A(() => [E(e.$slots, `default`)]),

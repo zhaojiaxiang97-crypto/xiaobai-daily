@@ -98,20 +98,20 @@ var IV_LENGTH$1 = 16;
 var KEY = createHash("sha256").update("xiaohei-daily-assistant@v1.0.0+shjiyue").digest().subarray(0, KEY_LENGTH$1);
 function encryptString(plaintext) {
   if (!plaintext) return plaintext;
-  const iv = randomBytes(IV_LENGTH$1);
-  const cipher = createCipheriv(ALGORITHM, KEY, iv);
+  const randomBytesResult = randomBytes(IV_LENGTH$1);
+  const cipher = createCipheriv(ALGORITHM, KEY, randomBytesResult);
   const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
   const authTag = cipher.getAuthTag();
-  return `enc:v1:${Buffer.concat([iv, authTag, encrypted]).toString("base64")}`;
+  return `enc:v1:${Buffer.concat([randomBytesResult, authTag, encrypted]).toString("base64")}`;
 }
 function decryptString(ciphertext) {
   if (!ciphertext || !ciphertext.startsWith("enc:v1:")) return ciphertext;
   try {
     const data = Buffer.from(ciphertext.slice(7), "base64");
-    const iv = data.subarray(0, IV_LENGTH$1);
+    const subarray = data.subarray(0, IV_LENGTH$1);
     const authTag = data.subarray(IV_LENGTH$1, 32);
     const encrypted = data.subarray(32);
-    const decipher = createDecipheriv(ALGORITHM, KEY, iv);
+    const decipher = createDecipheriv(ALGORITHM, KEY, subarray);
     decipher.setAuthTag(authTag);
     return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString("utf8");
   } catch {
@@ -367,13 +367,13 @@ var migrations = [{
   version: 14,
   name: "badge_stats_total_screenshots",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(badge_stats)").all().some(c => c.name === "total_screenshots")) database.exec("ALTER TABLE badge_stats ADD COLUMN total_screenshots INTEGER DEFAULT 0");
+    if (!database.prepare("PRAGMA table_info(badge_stats)").all().some(item => item.name === "total_screenshots")) database.exec("ALTER TABLE badge_stats ADD COLUMN total_screenshots INTEGER DEFAULT 0");
   }
 }, {
   version: 15,
   name: "ai_model_config_report_model",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(ai_model_config_cache)").all().some(c => c.name === "report_model_name")) database.exec("ALTER TABLE ai_model_config_cache ADD COLUMN report_model_name TEXT");
+    if (!database.prepare("PRAGMA table_info(ai_model_config_cache)").all().some(item => item.name === "report_model_name")) database.exec("ALTER TABLE ai_model_config_cache ADD COLUMN report_model_name TEXT");
   }
 }, {
   version: 16,
@@ -402,25 +402,25 @@ var migrations = [{
   version: 18,
   name: "ai_model_config_overview_model",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(ai_model_config_cache)").all().some(c => c.name === "overview_model_name")) database.exec("ALTER TABLE ai_model_config_cache ADD COLUMN overview_model_name TEXT");
+    if (!database.prepare("PRAGMA table_info(ai_model_config_cache)").all().some(item => item.name === "overview_model_name")) database.exec("ALTER TABLE ai_model_config_cache ADD COLUMN overview_model_name TEXT");
   }
 }, {
   version: 19,
   name: "ai_model_config_overview_interval",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(ai_model_config_cache)").all().some(c => c.name === "overview_interval_min")) database.exec("ALTER TABLE ai_model_config_cache ADD COLUMN overview_interval_min INTEGER NOT NULL DEFAULT 180");
+    if (!database.prepare("PRAGMA table_info(ai_model_config_cache)").all().some(item => item.name === "overview_interval_min")) database.exec("ALTER TABLE ai_model_config_cache ADD COLUMN overview_interval_min INTEGER NOT NULL DEFAULT 180");
   }
 }, {
   version: 20,
   name: "reports_language",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(reports)").all().some(c => c.name === "language")) database.exec("ALTER TABLE reports ADD COLUMN language TEXT NOT NULL DEFAULT 'zh-CN'");
+    if (!database.prepare("PRAGMA table_info(reports)").all().some(item => item.name === "language")) database.exec("ALTER TABLE reports ADD COLUMN language TEXT NOT NULL DEFAULT 'zh-CN'");
   }
 }, {
   version: 21,
   name: "auth_session_job_title",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(auth_session)").all().some(c => c.name === "job_title")) database.exec("ALTER TABLE auth_session ADD COLUMN job_title TEXT");
+    if (!database.prepare("PRAGMA table_info(auth_session)").all().some(item => item.name === "job_title")) database.exec("ALTER TABLE auth_session ADD COLUMN job_title TEXT");
   }
 }, {
   version: 22,
@@ -470,19 +470,19 @@ var migrations = [{
   version: 24,
   name: "reports_model",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(reports)").all().some(c => c.name === "model")) database.exec("ALTER TABLE reports ADD COLUMN model TEXT");
+    if (!database.prepare("PRAGMA table_info(reports)").all().some(item => item.name === "model")) database.exec("ALTER TABLE reports ADD COLUMN model TEXT");
   }
 }, {
   version: 25,
   name: "subscription_cache_points_balance",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(subscription_cache)").all().some(c => c.name === "points_balance")) database.exec("ALTER TABLE subscription_cache ADD COLUMN points_balance REAL NOT NULL DEFAULT 0");
+    if (!database.prepare("PRAGMA table_info(subscription_cache)").all().some(item => item.name === "points_balance")) database.exec("ALTER TABLE subscription_cache ADD COLUMN points_balance REAL NOT NULL DEFAULT 0");
   }
 }, {
   version: 26,
   name: "add_work_records_screenshot_path",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(work_records)").all().some(c => c.name === "screenshot_path")) database.exec("ALTER TABLE work_records ADD COLUMN screenshot_path TEXT");
+    if (!database.prepare("PRAGMA table_info(work_records)").all().some(item => item.name === "screenshot_path")) database.exec("ALTER TABLE work_records ADD COLUMN screenshot_path TEXT");
   }
 }, {
   version: 28,
@@ -595,13 +595,13 @@ var migrations = [{
   version: 33,
   name: "scheduled_report_log_payload_json",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(scheduled_report_logs)").all().some(c => c.name === "payload_json")) database.exec("ALTER TABLE scheduled_report_logs ADD COLUMN payload_json TEXT");
+    if (!database.prepare("PRAGMA table_info(scheduled_report_logs)").all().some(item => item.name === "payload_json")) database.exec("ALTER TABLE scheduled_report_logs ADD COLUMN payload_json TEXT");
   }
 }, {
   version: 34,
   name: "report_templates_custom_instruction",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(report_templates)").all().some(c => c.name === "custom_instruction")) database.exec("ALTER TABLE report_templates ADD COLUMN custom_instruction TEXT");
+    if (!database.prepare("PRAGMA table_info(report_templates)").all().some(item => item.name === "custom_instruction")) database.exec("ALTER TABLE report_templates ADD COLUMN custom_instruction TEXT");
   }
 }, {
   version: 35,
@@ -692,13 +692,13 @@ var migrations = [{
   version: 40,
   name: "web_accounts_consecutive_failures",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(web_accounts)").all().some(c => c.name === "consecutive_failures")) database.exec("ALTER TABLE web_accounts ADD COLUMN consecutive_failures INTEGER NOT NULL DEFAULT 0");
+    if (!database.prepare("PRAGMA table_info(web_accounts)").all().some(item => item.name === "consecutive_failures")) database.exec("ALTER TABLE web_accounts ADD COLUMN consecutive_failures INTEGER NOT NULL DEFAULT 0");
   }
 }, {
   version: 38,
   name: "editable_builtin_work_record_categories",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(work_record_categories)").all().some(c => c.name === "is_builtin")) database.exec("ALTER TABLE work_record_categories ADD COLUMN is_builtin INTEGER NOT NULL DEFAULT 0");
+    if (!database.prepare("PRAGMA table_info(work_record_categories)").all().some(item => item.name === "is_builtin")) database.exec("ALTER TABLE work_record_categories ADD COLUMN is_builtin INTEGER NOT NULL DEFAULT 0");
     const now = (/* @__PURE__ */new Date()).toISOString();
     const findByName = database.prepare("SELECT id FROM work_record_categories WHERE name = ?");
     const findById = database.prepare("SELECT id FROM work_record_categories WHERE id = ?");
@@ -765,15 +765,15 @@ var migrations = [{
   version: 42,
   name: "frame_dedup_logs_capture_trigger",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(frame_dedup_logs)").all().some(c => c.name === "capture_trigger")) database.exec("ALTER TABLE frame_dedup_logs ADD COLUMN capture_trigger TEXT NOT NULL DEFAULT 'auto'");
+    if (!database.prepare("PRAGMA table_info(frame_dedup_logs)").all().some(item => item.name === "capture_trigger")) database.exec("ALTER TABLE frame_dedup_logs ADD COLUMN capture_trigger TEXT NOT NULL DEFAULT 'auto'");
   }
 }, {
   version: 43,
   name: "report_templates_market_source",
   up: database => {
     const columns = database.prepare("PRAGMA table_info(report_templates)").all();
-    if (!columns.some(c => c.name === "source")) database.exec("ALTER TABLE report_templates ADD COLUMN source TEXT NOT NULL DEFAULT 'custom'");
-    if (!columns.some(c => c.name === "source_ref_id")) database.exec("ALTER TABLE report_templates ADD COLUMN source_ref_id TEXT");
+    if (!columns.some(item => item.name === "source")) database.exec("ALTER TABLE report_templates ADD COLUMN source TEXT NOT NULL DEFAULT 'custom'");
+    if (!columns.some(item => item.name === "source_ref_id")) database.exec("ALTER TABLE report_templates ADD COLUMN source_ref_id TEXT");
     database.exec("CREATE INDEX IF NOT EXISTS idx_report_templates_source_ref ON report_templates(source, source_ref_id)");
   }
 }, {
@@ -2775,13 +2775,13 @@ var migrations = [{
   version: 127,
   name: "auth_session_education_verified",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(auth_session)").all().some(c => c.name === "education_verified")) database.exec("ALTER TABLE auth_session ADD COLUMN education_verified INTEGER NOT NULL DEFAULT 0");
+    if (!database.prepare("PRAGMA table_info(auth_session)").all().some(item => item.name === "education_verified")) database.exec("ALTER TABLE auth_session ADD COLUMN education_verified INTEGER NOT NULL DEFAULT 0");
   }
 }, {
   version: 129,
   name: "screenshot_prompt_template_overrides_audience",
   up: database => {
-    if (!database.prepare("PRAGMA table_info(screenshot_prompt_template_overrides)").all().some(c => c.name === "audience")) database.exec("ALTER TABLE screenshot_prompt_template_overrides ADD COLUMN audience TEXT NOT NULL DEFAULT 'work'");
+    if (!database.prepare("PRAGMA table_info(screenshot_prompt_template_overrides)").all().some(item => item.name === "audience")) database.exec("ALTER TABLE screenshot_prompt_template_overrides ADD COLUMN audience TEXT NOT NULL DEFAULT 'work'");
   }
 }, {
   version: 128,
@@ -3259,10 +3259,10 @@ function vaultKey() {
 }
 function encryptCredential(value) {
   if (!value) return "";
-  const iv = randomBytes(IV_LENGTH);
-  const cipher = createCipheriv("aes-256-gcm", vaultKey(), iv);
+  const randomBytesResult = randomBytes(IV_LENGTH);
+  const cipher = createCipheriv("aes-256-gcm", vaultKey(), randomBytesResult);
   const encrypted = Buffer.concat([cipher.update(value, "utf8"), cipher.final()]);
-  return `${LOCAL_PREFIX}${Buffer.concat([iv, cipher.getAuthTag(), encrypted]).toString("base64")}`;
+  return `${LOCAL_PREFIX}${Buffer.concat([randomBytesResult, cipher.getAuthTag(), encrypted]).toString("base64")}`;
 }
 function decryptCredential(value) {
   if (!value) return "";
@@ -3309,14 +3309,14 @@ var LEGACY_COLUMNS = [{
   unreadable: "UPDATE xiaohei_wechat_outbox SET sent = 1, payload = '' WHERE rowid = ?"
 }];
 var MCP_CONFIG_FILES = ["mcp-config.enc", "mcp-config.enc.v1-backup"];
-function hasColumn(db, table, column) {
-  return db.prepare(`PRAGMA table_info(${table})`).all().some(item => item.name === column);
+function hasColumn(columnValue, table, column) {
+  return columnValue.prepare(`PRAGMA table_info(${table})`).all().some(item => item.name === column);
 }
-function findLegacyRows(db) {
+function findLegacyRows(legacy) {
   const rows = [];
   for (const target of LEGACY_COLUMNS) {
-    if (!hasColumn(db, target.table, target.column)) continue;
-    const found = db.prepare(`SELECT rowid AS id, ${target.column} AS value FROM ${target.table} WHERE ${target.column} LIKE 'safe:v1:%'`).all();
+    if (!hasColumn(legacy, target.table, target.column)) continue;
+    const found = legacy.prepare(`SELECT rowid AS id, ${target.column} AS value FROM ${target.table} WHERE ${target.column} LIKE 'safe:v1:%'`).all();
     for (const row of found) if (row.value.startsWith("safe:v1:")) rows.push({
       target,
       ...row
@@ -3341,8 +3341,8 @@ function createLegacyDecryptor() {
     }
   };
 }
-function migrate(db, userId) {
-  const rows = findLegacyRows(db);
+function migrate(migrateValue, userId) {
+  const rows = findLegacyRows(migrateValue);
   const mcpFiles = findLegacyMcpFiles(userId);
   if (rows.length === 0 && mcpFiles.length === 0) return;
   const decrypt = createLegacyDecryptor();
@@ -3350,15 +3350,15 @@ function migrate(db, userId) {
     row,
     plain: decrypt(row.value)
   }));
-  db.exec("BEGIN IMMEDIATE");
+  migrateValue.exec("BEGIN IMMEDIATE");
   try {
     for (const {
       row,
       plain
-    } of results) if (plain === null) db.prepare(row.target.unreadable).run(row.id);else db.prepare(`UPDATE ${row.target.table} SET ${row.target.column} = ? WHERE rowid = ?`).run(encryptCredential(plain), row.id);
-    db.exec("COMMIT");
+    } of results) if (plain === null) migrateValue.prepare(row.target.unreadable).run(row.id);else migrateValue.prepare(`UPDATE ${row.target.table} SET ${row.target.column} = ? WHERE rowid = ?`).run(encryptCredential(plain), row.id);
+    migrateValue.exec("COMMIT");
   } catch (error) {
-    db.exec("ROLLBACK");
+    migrateValue.exec("ROLLBACK");
     throw error;
   }
   let failed = results.filter(item => item.plain === null).length;
@@ -3379,13 +3379,13 @@ function migrate(db, userId) {
   console.info(`[CredentialVault] 已迁移旧版钥匙串凭据 ${total - failed} 项，无法读取 ${failed} 项`);
 }
 /** 打开数据库后调用：把旧版 safeStorage 密文转成本机密钥加密，每份数据最多访问一次钥匙串。 */
-function migrateLegacyKeychainCredentials(db, userId) {
+function migrateLegacyKeychainCredentials(legacy, userId) {
   if (!app.isReady()) {
-    app.whenReady().then(() => migrateLegacyKeychainCredentials(db, userId));
+    app.whenReady().then(() => migrateLegacyKeychainCredentials(legacy, userId));
     return;
   }
   try {
-    migrate(db, userId);
+    migrate(legacy, userId);
   } catch (error) {
     console.warn("[CredentialVault] 旧版钥匙串凭据迁移失败:", error);
   }
@@ -3424,17 +3424,17 @@ function getCurrentDatabasePath() {
   return getDbPath(getActiveUserId());
 }
 function openDb(dbPath) {
-  const db = new DatabaseSync(dbPath);
+  const databaseSync = new DatabaseSync(dbPath);
   try {
     chmodSync(dbPath, 384);
   } catch {}
-  db.exec(`
+  databaseSync.exec(`
     PRAGMA foreign_keys = ON;
     PRAGMA journal_mode = WAL;
     PRAGMA synchronous = FULL;
     PRAGMA wal_autocheckpoint = 1000;
   `);
-  runMigrations(db);
+  runMigrations(databaseSync);
   try {
     rmSync(path.join(getDataDir(), "clipboard-history"), {
       recursive: true,
@@ -3443,7 +3443,7 @@ function openDb(dbPath) {
   } catch (error) {
     console.warn("[Database] 清理已下线的剪贴板历史文件失败:", error);
   }
-  return db;
+  return databaseSync;
 }
 function getLegacyDbPath(dataDir) {
   return path.join(dataDir, "xiaohei.db");
@@ -3454,26 +3454,26 @@ function removeDbFiles(dbPath) {
   } catch {}
 }
 function checkpointDbFile(dbPath) {
-  const db = new DatabaseSync(dbPath);
+  const databaseSync = new DatabaseSync(dbPath);
   try {
-    db.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+    databaseSync.exec("PRAGMA wal_checkpoint(TRUNCATE)");
   } finally {
-    db.close();
+    databaseSync.close();
   }
 }
 function getUserContentCount(dbPath) {
   if (!existsSync(dbPath)) return 0;
   const tables = ["work_records", "reports", "report_templates", "user_prompt_templates", "user_memories", "user_profile_memories", "app_usage_sessions", "app_usage_sessions_v2", "notifications", "lobster_request_logs", "token_usage_records", "recording_box_devices", "recording_box_imports", "agent_session_imports", "keyboard_daily_stats", "mac_activity_events", "capture_evidence_windows", "activity_summaries", "work_record_evidence_links"];
-  const db = new DatabaseSync(dbPath);
+  const databaseSync = new DatabaseSync(dbPath);
   try {
     let total = 0;
     for (const table of tables) try {
-      const row = db.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get();
+      const row = databaseSync.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get();
       total += row?.total ?? 0;
     } catch {}
     return total;
   } finally {
-    db.close();
+    databaseSync.close();
   }
 }
 function userDbCanBeReplaced(userDbPath) {
@@ -3670,7 +3670,7 @@ function matchesWebsiteUrl(input, rules) {
 }
 /** Native JSON dictionaries do not guarantee property order (notably Swift JSONSerialization). */
 function browserPrivacySnapshotSignature(snapshot, scope = "activity") {
-  return JSON.stringify([scope === "activity" ? snapshot.coordinateSpace : null, scope === "activity" || snapshot.windows.length ? snapshot.foregroundId : null, snapshot.windows.map(window => [window.id, window.appIdentity, window.url, scope === "activity" && window.bounds ? [window.bounds.x, window.bounds.y, window.bounds.width, window.bounds.height] : null]).sort((a, b) => String(a[0]).localeCompare(String(b[0])))]);
+  return JSON.stringify([scope === "activity" ? snapshot.coordinateSpace : null, scope === "activity" || snapshot.windows.length ? snapshot.foregroundId : null, snapshot.windows.map(window => [window.id, window.appIdentity, window.url, scope === "activity" && window.bounds ? [window.bounds.x, window.bounds.y, window.bounds.width, window.bounds.height] : null]).sort((left, right) => String(left[0]).localeCompare(String(right[0])))]);
 }
 //#endregion
 //#region node_modules/zod/v3/helpers/util.js
@@ -3689,14 +3689,14 @@ var util;
     return obj;
   };
   util.getValidEnumValues = obj => {
-    const validKeys = util.objectKeys(obj).filter(k => typeof obj[obj[k]] !== "number");
+    const validKeys = util.objectKeys(obj).filter(item => typeof obj[obj[item]] !== "number");
     const filtered = {};
     for (const k of validKeys) filtered[k] = obj[k];
     return util.objectValues(filtered);
   };
   util.objectValues = obj => {
-    return util.objectKeys(obj).map(function (e) {
-      return obj[e];
+    return util.objectKeys(obj).map(function (item) {
+      return obj[item];
     });
   };
   util.objectKeys = typeof Object.keys === "function" ? obj => Object.keys(obj) : object => {
@@ -3929,7 +3929,7 @@ var makeIssue = params => {
     message: issueData.message
   };
   let errorMessage = "";
-  const maps = errorMaps.filter(m => !!m).slice().reverse();
+  const maps = errorMaps.filter(item => !!item).slice().reverse();
   for (const map of maps) errorMessage = map(fullIssue, {
     data,
     defaultError: errorMessage
@@ -3946,7 +3946,7 @@ function addIssueToContext(ctx, issueData) {
     issueData,
     data: ctx.data,
     path: ctx.path,
-    errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, overrideMap, overrideMap === errorMap ? undefined : errorMap].filter(x => !!x)
+    errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, overrideMap, overrideMap === errorMap ? undefined : errorMap].filter(item => !!item)
   });
   ctx.common.issues.push(issue);
 }
@@ -4415,9 +4415,9 @@ function datetimeRegex(args) {
   regex = `${regex}(${opts.join("|")})`;
   return new RegExp(`^${regex}$`);
 }
-function isValidIP(ip, version) {
-  if ((version === "v4" || !version) && ipv4Regex.test(ip)) return true;
-  if ((version === "v6" || !version) && ipv6Regex.test(ip)) return true;
+function isValidIP(valid, version) {
+  if ((version === "v4" || !version) && ipv4Regex.test(valid)) return true;
+  if ((version === "v6" || !version) && ipv6Regex.test(valid)) return true;
   return false;
 }
 function isValidJWT(jwt, alg) {
@@ -4436,9 +4436,9 @@ function isValidJWT(jwt, alg) {
     return false;
   }
 }
-function isValidCidr(ip, version) {
-  if ((version === "v4" || !version) && ipv4CidrRegex.test(ip)) return true;
-  if ((version === "v6" || !version) && ipv6CidrRegex.test(ip)) return true;
+function isValidCidr(valid, version) {
+  if ((version === "v4" || !version) && ipv4CidrRegex.test(valid)) return true;
+  if ((version === "v6" || !version) && ipv6CidrRegex.test(valid)) return true;
   return false;
 }
 var ZodString = class ZodString extends ZodType {
@@ -4940,52 +4940,52 @@ var ZodString = class ZodString extends ZodType {
     });
   }
   get isDatetime() {
-    return !!this._def.checks.find(ch => ch.kind === "datetime");
+    return !!this._def.checks.find(item => item.kind === "datetime");
   }
   get isDate() {
-    return !!this._def.checks.find(ch => ch.kind === "date");
+    return !!this._def.checks.find(item => item.kind === "date");
   }
   get isTime() {
-    return !!this._def.checks.find(ch => ch.kind === "time");
+    return !!this._def.checks.find(item => item.kind === "time");
   }
   get isDuration() {
-    return !!this._def.checks.find(ch => ch.kind === "duration");
+    return !!this._def.checks.find(item => item.kind === "duration");
   }
   get isEmail() {
-    return !!this._def.checks.find(ch => ch.kind === "email");
+    return !!this._def.checks.find(item => item.kind === "email");
   }
   get isURL() {
-    return !!this._def.checks.find(ch => ch.kind === "url");
+    return !!this._def.checks.find(item => item.kind === "url");
   }
   get isEmoji() {
-    return !!this._def.checks.find(ch => ch.kind === "emoji");
+    return !!this._def.checks.find(item => item.kind === "emoji");
   }
   get isUUID() {
-    return !!this._def.checks.find(ch => ch.kind === "uuid");
+    return !!this._def.checks.find(item => item.kind === "uuid");
   }
   get isNANOID() {
-    return !!this._def.checks.find(ch => ch.kind === "nanoid");
+    return !!this._def.checks.find(item => item.kind === "nanoid");
   }
   get isCUID() {
-    return !!this._def.checks.find(ch => ch.kind === "cuid");
+    return !!this._def.checks.find(item => item.kind === "cuid");
   }
   get isCUID2() {
-    return !!this._def.checks.find(ch => ch.kind === "cuid2");
+    return !!this._def.checks.find(item => item.kind === "cuid2");
   }
   get isULID() {
-    return !!this._def.checks.find(ch => ch.kind === "ulid");
+    return !!this._def.checks.find(item => item.kind === "ulid");
   }
   get isIP() {
-    return !!this._def.checks.find(ch => ch.kind === "ip");
+    return !!this._def.checks.find(item => item.kind === "ip");
   }
   get isCIDR() {
-    return !!this._def.checks.find(ch => ch.kind === "cidr");
+    return !!this._def.checks.find(item => item.kind === "cidr");
   }
   get isBase64() {
-    return !!this._def.checks.find(ch => ch.kind === "base64");
+    return !!this._def.checks.find(item => item.kind === "base64");
   }
   get isBase64url() {
-    return !!this._def.checks.find(ch => ch.kind === "base64url");
+    return !!this._def.checks.find(item => item.kind === "base64url");
   }
   get minLength() {
     let min = null;
@@ -5206,7 +5206,7 @@ var ZodNumber = class ZodNumber extends ZodType {
     return max;
   }
   get isInt() {
-    return !!this._def.checks.find(ch => ch.kind === "int" || ch.kind === "multipleOf" && util.isInteger(ch.value));
+    return !!this._def.checks.find(item => item.kind === "int" || item.kind === "multipleOf" && util.isInteger(item.value));
   }
   get isFinite() {
     let max = null;
@@ -6162,21 +6162,21 @@ var ZodDiscriminatedUnion = class ZodDiscriminatedUnion extends ZodType {
     });
   }
 };
-function mergeValues(a, b) {
-  const aType = getParsedType(a);
-  const bType = getParsedType(b);
-  if (a === b) return {
+function mergeValues(count, values) {
+  const aType = getParsedType(count);
+  const bType = getParsedType(values);
+  if (count === values) return {
     valid: true,
-    data: a
+    data: count
   };else if (aType === ZodParsedType.object && bType === ZodParsedType.object) {
-    const bKeys = util.objectKeys(b);
-    const sharedKeys = util.objectKeys(a).filter(key => bKeys.indexOf(key) !== -1);
+    const bKeys = util.objectKeys(values);
+    const sharedKeys = util.objectKeys(count).filter(key => bKeys.indexOf(key) !== -1);
     const newObj = {
-      ...a,
-      ...b
+      ...count,
+      ...values
     };
     for (const key of sharedKeys) {
-      const sharedValue = mergeValues(a[key], b[key]);
+      const sharedValue = mergeValues(count[key], values[key]);
       if (!sharedValue.valid) return {
         valid: false
       };
@@ -6187,13 +6187,13 @@ function mergeValues(a, b) {
       data: newObj
     };
   } else if (aType === ZodParsedType.array && bType === ZodParsedType.array) {
-    if (a.length !== b.length) return {
+    if (count.length !== values.length) return {
       valid: false
     };
     const newArray = [];
-    for (let index = 0; index < a.length; index++) {
-      const itemA = a[index];
-      const itemB = b[index];
+    for (let index = 0; index < count.length; index++) {
+      const itemA = count[index];
+      const itemB = values[index];
       const sharedValue = mergeValues(itemA, itemB);
       if (!sharedValue.valid) return {
         valid: false
@@ -6204,9 +6204,9 @@ function mergeValues(a, b) {
       valid: true,
       data: newArray
     };
-  } else if (aType === ZodParsedType.date && bType === ZodParsedType.date && +a === +b) return {
+  } else if (aType === ZodParsedType.date && bType === ZodParsedType.date && +count === +values) return {
     valid: true,
-    data: a
+    data: count
   };else return {
     valid: false
   };
@@ -6297,7 +6297,7 @@ var ZodTuple = class ZodTuple extends ZodType {
       const schema = this._def.items[itemIndex] || this._def.rest;
       if (!schema) return null;
       return schema._parse(new ParseInputLazyPath(ctx, item, ctx.path, itemIndex));
-    }).filter(x => !!x);
+    }).filter(item => !!item);
     if (ctx.common.async) return Promise.all(items).then(results => {
       return ParseStatus.mergeArray(status, results);
     });else return ParseStatus.mergeArray(status, items);
@@ -6548,7 +6548,7 @@ var ZodFunction = class ZodFunction extends ZodType {
       return makeIssue({
         data: args,
         path: ctx.path,
-        errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, getErrorMap(), errorMap].filter(x => !!x),
+        errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, getErrorMap(), errorMap].filter(item => !!item),
         issueData: {
           code: ZodIssueCode.invalid_arguments,
           argumentsError: error
@@ -6559,7 +6559,7 @@ var ZodFunction = class ZodFunction extends ZodType {
       return makeIssue({
         data: returns,
         path: ctx.path,
-        errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, getErrorMap(), errorMap].filter(x => !!x),
+        errorMaps: [ctx.common.contextualErrorMap, ctx.schemaErrorMap, getErrorMap(), errorMap].filter(item => !!item),
         issueData: {
           code: ZodIssueCode.invalid_return_type,
           returnTypeError: error
@@ -6574,13 +6574,13 @@ var ZodFunction = class ZodFunction extends ZodType {
       const me = this;
       return OK(async function (...args) {
         const error = new ZodError([]);
-        const parsedArgs = await me._def.args.parseAsync(args, params).catch(e => {
-          error.addIssue(makeArgsIssue(args, e));
+        const parsedArgs = await me._def.args.parseAsync(args, params).catch(err => {
+          error.addIssue(makeArgsIssue(args, err));
           throw error;
         });
         const result = await Reflect.apply(fn, this, parsedArgs);
-        return await me._def.returns._def.type.parseAsync(result, params).catch(e => {
-          error.addIssue(makeReturnsIssue(result, e));
+        return await me._def.returns._def.type.parseAsync(result, params).catch(err => {
+          error.addIssue(makeReturnsIssue(result, err));
           throw error;
         });
       });
@@ -7132,10 +7132,10 @@ var ZodPipeline = class ZodPipeline extends ZodType {
       });
     }
   }
-  static create(a, b) {
+  static create(create, createValue) {
     return new ZodPipeline({
-      in: a,
-      out: b,
+      in: create,
+      out: createValue,
       typeName: ZodFirstPartyTypeKind.ZodPipeline
     });
   }
@@ -7171,8 +7171,8 @@ function cleanParams(params, data) {
 function custom(check, _params = {}, fatal) {
   if (check) return ZodAny.create().superRefine((data, ctx) => {
     const r = check(data);
-    if (r instanceof Promise) return r.then(r => {
-      if (!r) {
+    if (r instanceof Promise) return r.then(result => {
+      if (!result) {
         const params = cleanParams(_params, data);
         const _fatal = params.fatal ?? fatal ?? true;
         ctx.addIssue({
@@ -7363,7 +7363,7 @@ function nextRecordingScheduleChange(schedule, now = /* @__PURE__ */new Date()) 
       }
     }
   }
-  for (const timestamp of [...candidates].sort((a, b) => a - b)) if (isRecordingTimeAllowed(schedule, new Date(timestamp)) !== allowed) return new Date(timestamp);
+  for (const timestamp of [...candidates].sort((left, right) => left - right)) if (isRecordingTimeAllowed(schedule, new Date(timestamp)) !== allowed) return new Date(timestamp);
   return null;
 }
 //#endregion
@@ -7392,7 +7392,7 @@ function normalizeAgentSessionImportInterval(value) {
 }
 function normalizeAgentSessionProviderIds(value) {
   if (!Array.isArray(value)) return [...AGENT_SESSION_PROVIDER_IDS];
-  return AGENT_SESSION_PROVIDER_IDS.filter(id => value.includes(id));
+  return AGENT_SESSION_PROVIDER_IDS.filter(item => value.includes(item));
 }
 function readIsoTime(value) {
   if (typeof value !== "string" || !value) return null;

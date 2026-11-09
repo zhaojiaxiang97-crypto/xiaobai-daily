@@ -50,7 +50,7 @@ var WorkRecordCategoryRepository = class {
   }
   create(input) {
     const now = (/* @__PURE__ */new Date()).toISOString();
-    const id = crypto.randomUUID();
+    const randomUUID = crypto.randomUUID();
     const color = input.color ?? "zinc";
     const enabled = input.enabled === false ? 0 : 1;
     getDatabase().prepare(`
@@ -66,9 +66,9 @@ var WorkRecordCategoryRepository = class {
           updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(id, input.name, JSON.stringify(input.keywords), color, enabled, input.sortOrder, 0, now, now);
+      `).run(randomUUID, input.name, JSON.stringify(input.keywords), color, enabled, input.sortOrder, 0, now, now);
     return {
-      id,
+      id: randomUUID,
       name: input.name,
       keywords: input.keywords,
       color,
@@ -101,8 +101,8 @@ var WorkRecordCategoryRepository = class {
       `).run(next.name, JSON.stringify(next.keywords), next.color, next.enabled ? 1 : 0, next.updatedAt, next.id);
     return next;
   }
-  delete(id) {
-    return getDatabase().prepare("DELETE FROM work_record_categories WHERE id = ?").run(id).changes > 0;
+  delete(deleteValue) {
+    return getDatabase().prepare("DELETE FROM work_record_categories WHERE id = ?").run(deleteValue).changes > 0;
   }
   /**
   * 补齐缺失的内置分类行（切到学生模式前调用）：导入旧版本备份会清空分类表，用户也可能删过内置分类。
@@ -249,8 +249,8 @@ var ClipboardAssistantRepository = class {
       LIMIT ?
     `).all(...values, options.limit).map(mapHistoryRow);
   }
-  findHistoryDetail(id) {
-    const row = getDatabase().prepare("SELECT content_text, character_count, copy_count, copied_at FROM clipboard_history WHERE id = ?").get(id);
+  findHistoryDetail(historyValue) {
+    const row = getDatabase().prepare("SELECT content_text, character_count, copy_count, copied_at FROM clipboard_history WHERE id = ?").get(historyValue);
     return row ? {
       text: row.content_text,
       characterCount: row.character_count,
@@ -258,23 +258,23 @@ var ClipboardAssistantRepository = class {
       copiedAt: row.copied_at
     } : null;
   }
-  findHistoryText(id) {
-    return getDatabase().prepare("SELECT content_text FROM clipboard_history WHERE id = ?").get(id)?.content_text ?? null;
+  findHistoryText(historyValue) {
+    return getDatabase().prepare("SELECT content_text FROM clipboard_history WHERE id = ?").get(historyValue)?.content_text ?? null;
   }
   /** 从历史里重新复制：顶到最前面并累计使用次数 */
-  markHistoryUsed(id, usedAt) {
+  markHistoryUsed(mark, usedAt) {
     getDatabase().prepare(`
       UPDATE clipboard_history
       SET copied_at = ?, last_used_at = ?, use_count = use_count + 1, updated_at = ?
       WHERE id = ?
-    `).run(usedAt, usedAt, usedAt, id);
+    `).run(usedAt, usedAt, usedAt, mark);
   }
-  setHistoryPinned(id, pinned) {
-    const result = getDatabase().prepare("UPDATE clipboard_history SET is_pinned = ?, updated_at = ? WHERE id = ?").run(pinned ? 1 : 0, (/* @__PURE__ */new Date()).toISOString(), id);
+  setHistoryPinned(historyValue, pinned) {
+    const result = getDatabase().prepare("UPDATE clipboard_history SET is_pinned = ?, updated_at = ? WHERE id = ?").run(pinned ? 1 : 0, (/* @__PURE__ */new Date()).toISOString(), historyValue);
     return Number(result.changes) > 0;
   }
-  deleteHistory(id) {
-    const result = getDatabase().prepare("DELETE FROM clipboard_history WHERE id = ?").run(id);
+  deleteHistory(historyValue) {
+    const result = getDatabase().prepare("DELETE FROM clipboard_history WHERE id = ?").run(historyValue);
     return Number(result.changes) > 0;
   }
   /** 清空未置顶的历史，置顶的保留 */
@@ -303,12 +303,12 @@ var ClipboardAssistantRepository = class {
       ORDER BY sort_order ASC, created_at ASC
     `).all().map(mapPhraseRow);
   }
-  findPhrase(id) {
+  findPhrase(phrase) {
     const row = getDatabase().prepare(`
       SELECT id, title, content, sort_order, use_count, last_used_at, created_at, updated_at
       FROM clipboard_phrases
       WHERE id = ?
-    `).get(id);
+    `).get(phrase);
     return row ? mapPhraseRow(row) : null;
   }
   countPhrases() {
@@ -317,20 +317,20 @@ var ClipboardAssistantRepository = class {
   createPhrase(input) {
     const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    const id = crypto.randomUUID();
+    const randomUUID = crypto.randomUUID();
     const nextSortOrder = database.prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM clipboard_phrases").get().next;
     database.prepare(`
       INSERT INTO clipboard_phrases (id, title, content, sort_order, use_count, last_used_at, created_at, updated_at)
       VALUES (?, ?, ?, ?, 0, NULL, ?, ?)
-    `).run(id, input.title, input.content, nextSortOrder, now, now);
-    return this.findPhrase(id);
+    `).run(randomUUID, input.title, input.content, nextSortOrder, now, now);
+    return this.findPhrase(randomUUID);
   }
-  updatePhrase(id, input) {
-    getDatabase().prepare("UPDATE clipboard_phrases SET title = ?, content = ?, updated_at = ? WHERE id = ?").run(input.title, input.content, (/* @__PURE__ */new Date()).toISOString(), id);
-    return this.findPhrase(id);
+  updatePhrase(phrase, input) {
+    getDatabase().prepare("UPDATE clipboard_phrases SET title = ?, content = ?, updated_at = ? WHERE id = ?").run(input.title, input.content, (/* @__PURE__ */new Date()).toISOString(), phrase);
+    return this.findPhrase(phrase);
   }
-  deletePhrase(id) {
-    const result = getDatabase().prepare("DELETE FROM clipboard_phrases WHERE id = ?").run(id);
+  deletePhrase(phrase) {
+    const result = getDatabase().prepare("DELETE FROM clipboard_phrases WHERE id = ?").run(phrase);
     return Number(result.changes) > 0;
   }
   /** 按传入顺序重排；未出现在列表里的常用语排在后面，保持原有先后 */
@@ -338,22 +338,22 @@ var ClipboardAssistantRepository = class {
     const database = getDatabase();
     const existing = this.listPhrases().map(phrase => phrase.id);
     const known = new Set(existing);
-    const ordered = [...new Set(ids.filter(id => known.has(id)))];
+    const ordered = [...new Set(ids.filter(item => known.has(item)))];
     const orderedSet = new Set(ordered);
-    const finalOrder = [...ordered, ...existing.filter(id => !orderedSet.has(id))];
+    const finalOrder = [...ordered, ...existing.filter(item => !orderedSet.has(item))];
     const now = (/* @__PURE__ */new Date()).toISOString();
     const statement = database.prepare("UPDATE clipboard_phrases SET sort_order = ?, updated_at = ? WHERE id = ?");
     database.exec("BEGIN");
     try {
-      finalOrder.forEach((id, index) => statement.run(index + 1, now, id));
+      finalOrder.forEach((item, index) => statement.run(index + 1, now, item));
       database.exec("COMMIT");
     } catch (error) {
       database.exec("ROLLBACK");
       throw error;
     }
   }
-  markPhraseUsed(id, usedAt) {
-    getDatabase().prepare("UPDATE clipboard_phrases SET use_count = use_count + 1, last_used_at = ? WHERE id = ?").run(usedAt, id);
+  markPhraseUsed(mark, usedAt) {
+    getDatabase().prepare("UPDATE clipboard_phrases SET use_count = use_count + 1, last_used_at = ? WHERE id = ?").run(usedAt, mark);
   }
 };
 var clipboardAssistantRepository = new ClipboardAssistantRepository();
@@ -594,26 +594,26 @@ var ClipboardAssistantService = class {
       nextCursor: hasMore && last ? encodeCursor(last) : null
     };
   }
-  copyHistory(id) {
-    const text = clipboardAssistantRepository.findHistoryText(id);
+  copyHistory(historyValue) {
+    const text = clipboardAssistantRepository.findHistoryText(historyValue);
     if (text === null) throw new Error(message("historyNotFound"));
     this.writeToClipboard(text);
-    clipboardAssistantRepository.markHistoryUsed(id, (/* @__PURE__ */new Date()).toISOString());
+    clipboardAssistantRepository.markHistoryUsed(historyValue, (/* @__PURE__ */new Date()).toISOString());
     this.queueChanged("history");
   }
-  copyPhrase(id) {
-    const phrase = clipboardAssistantRepository.findPhrase(id);
+  copyPhrase(phraseValue) {
+    const phrase = clipboardAssistantRepository.findPhrase(phraseValue);
     if (!phrase) throw new Error(message("phraseNotFound"));
     this.writeToClipboard(phrase.content);
-    clipboardAssistantRepository.markPhraseUsed(id, (/* @__PURE__ */new Date()).toISOString());
+    clipboardAssistantRepository.markPhraseUsed(phraseValue, (/* @__PURE__ */new Date()).toISOString());
     this.queueChanged("phrases");
   }
-  setHistoryPinned(id, pinned) {
-    if (!clipboardAssistantRepository.setHistoryPinned(id, pinned)) throw new Error(message("historyNotFound"));
+  setHistoryPinned(historyValue, pinned) {
+    if (!clipboardAssistantRepository.setHistoryPinned(historyValue, pinned)) throw new Error(message("historyNotFound"));
     this.queueChanged("history");
   }
-  deleteHistory(id) {
-    clipboardAssistantRepository.deleteHistory(id);
+  deleteHistory(historyValue) {
+    clipboardAssistantRepository.deleteHistory(historyValue);
     this.queueChanged("history");
   }
   clearHistory() {
@@ -646,8 +646,8 @@ var ClipboardAssistantService = class {
     this.queueChanged("phrases");
     return phrase;
   }
-  deletePhrase(id) {
-    clipboardAssistantRepository.deletePhrase(id);
+  deletePhrase(phrase) {
+    clipboardAssistantRepository.deletePhrase(phrase);
     this.queueChanged("phrases");
   }
   reorderPhrases(ids) {
@@ -679,14 +679,14 @@ var ClipboardAssistantService = class {
     }));
   }
   /** 浮窗右侧预览：读取完整内容，超长时只取前一段 */
-  pickerDetail(kind, id) {
+  pickerDetail(kind, detail) {
     if (kind === "history") {
-      const history = clipboardAssistantRepository.findHistoryDetail(id);
+      const history = clipboardAssistantRepository.findHistoryDetail(detail);
       if (!history) return null;
       const content = truncateCharacters(history.text, CLIPBOARD_PICKER_PREVIEW_MAX_LENGTH);
       return {
         kind,
-        id,
+        id: detail,
         title: "",
         content,
         truncated: content.length < history.text.length,
@@ -695,11 +695,11 @@ var ClipboardAssistantService = class {
         copiedAt: history.copiedAt
       };
     }
-    const phrase = clipboardAssistantRepository.findPhrase(id);
+    const phrase = clipboardAssistantRepository.findPhrase(detail);
     if (!phrase) return null;
     return {
       kind,
-      id,
+      id: detail,
       title: phrase.title,
       content: phrase.content,
       truncated: false,

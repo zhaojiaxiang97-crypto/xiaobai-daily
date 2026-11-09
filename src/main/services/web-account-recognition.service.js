@@ -12,62 +12,58 @@ var AFTER_PASTE_SETTLE_MS = 5e3;
 var FRESH_CONVERSATION_SETTLE_MS = 1500;
 var RECOGNITION_TIMEOUT_MS = 6e4;
 function sleep(ms) {
-	return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 function getLanguage() {
-	return settingsRepository.getSettings().language || "zh-CN";
+  return settingsRepository.getSettings().language || "zh-CN";
 }
 function providerLabel(provider, lang) {
-	return t(`webAccount.providerName.${provider}`, lang);
+  return t(`webAccount.providerName.${provider}`, lang);
 }
 var WebAccountRecognitionTimeoutError = class extends Error {
-	constructor(lang) {
-		super(t("webAccount.recognizeTimeout", lang).replace("{seconds}", String(RECOGNITION_TIMEOUT_MS / 1e3)));
-		this.name = "WebAccountRecognitionTimeoutError";
-	}
+  constructor(lang) {
+    super(t("webAccount.recognizeTimeout", lang).replace("{seconds}", String(RECOGNITION_TIMEOUT_MS / 1e3)));
+    this.name = "WebAccountRecognitionTimeoutError";
+  }
 };
 function isRecognitionTimeoutError(error) {
-	return error instanceof WebAccountRecognitionTimeoutError || error instanceof Error && error.name === "WebAccountRecognitionTimeoutError";
+  return error instanceof WebAccountRecognitionTimeoutError || error instanceof Error && error.name === "WebAccountRecognitionTimeoutError";
 }
 async function withRecognitionTimeout(operation, lang) {
-	let timeoutId = null;
-	try {
-		return await Promise.race([operation, new Promise((_, reject) => {
-			timeoutId = setTimeout(() => reject(new WebAccountRecognitionTimeoutError(lang)), RECOGNITION_TIMEOUT_MS);
-		})]);
-	} finally {
-		if (timeoutId) clearTimeout(timeoutId);
-	}
+  let timeoutId = null;
+  try {
+    return await Promise.race([operation, new Promise((_, reject) => {
+      timeoutId = setTimeout(() => reject(new WebAccountRecognitionTimeoutError(lang)), RECOGNITION_TIMEOUT_MS);
+    })]);
+  } finally {
+    if (timeoutId) clearTimeout(timeoutId);
+  }
 }
 function createRecognitionWindow(partition) {
-	const visible = settingsRepository.getSettings().showWebAccountWindow;
-	const window = new BrowserWindow({
-		width: 1100,
-		height: 760,
-		show: visible,
-		webPreferences: {
-			session: session.fromPartition(partition),
-			contextIsolation: true,
-			nodeIntegration: false
-		}
-	});
-	if (visible) chatWindowPositionService.arrange(window);
-	return window;
+  const visible = settingsRepository.getSettings().showWebAccountWindow;
+  const window = new BrowserWindow({
+    width: 1100,
+    height: 760,
+    show: visible,
+    webPreferences: {
+      session: session.fromPartition(partition),
+      contextIsolation: true,
+      nodeIntegration: false
+    }
+  });
+  if (visible) chatWindowPositionService.arrange(window);
+  return window;
 }
 async function waitForLoad(window, url) {
-	await Promise.race([window.loadURL(url), sleep(LOAD_TIMEOUT_MS)]);
+  await Promise.race([window.loadURL(url), sleep(LOAD_TIMEOUT_MS)]);
 }
 function buildFreshConversationScript(provider) {
-	return `
+  return `
     (async () => {
       const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       const targetUrl = ${JSON.stringify(WEB_ACCOUNT_URLS[provider])};
       const inputSelectors = ${JSON.stringify(provider === "yuanbao" ? ["[contenteditable=\"true\"].ql-editor", "[contenteditable=\"true\"]"] : provider === "deepseek" ? ["textarea"] : ["textarea", "[contenteditable=\"true\"]"])};
-      const messageSelectors = ${JSON.stringify(provider === "doubao" ? [
-		".list_items .v_list_row",
-		".v_list_row",
-		"[data-message-id]"
-	] : provider === "yuanbao" ? [".agent-chat__list__item[data-conv-idx]", "[data-conv-speaker][data-conv-idx]"] : ["[data-virtual-list-item-key]"])};
+      const messageSelectors = ${JSON.stringify(provider === "doubao" ? [".list_items .v_list_row", ".v_list_row", "[data-message-id]"] : provider === "yuanbao" ? [".agent-chat__list__item[data-conv-idx]", "[data-conv-speaker][data-conv-idx]"] : ["[data-virtual-list-item-key]"])};
       const visible = (el) => !!el && el.getClientRects().length > 0;
       const textOf = (el) => [
         el.getAttribute('aria-label'),
@@ -119,36 +115,36 @@ function buildFreshConversationScript(provider) {
   `;
 }
 async function prepareFreshConversation(window, provider) {
-	await window.webContents.executeJavaScript(buildFreshConversationScript(provider)).catch(() => null);
-	await sleep(FRESH_CONVERSATION_SETTLE_MS);
+  await window.webContents.executeJavaScript(buildFreshConversationScript(provider)).catch(() => null);
+  await sleep(FRESH_CONVERSATION_SETTLE_MS);
 }
 /** 通过剪贴板把截图逐张粘贴进对话输入框（规避文件选择拦截失效） */
 async function pasteImages(window, images, focusScript) {
-	const snapshot = {
-		text: clipboard.readText(),
-		html: clipboard.readHTML(),
-		image: clipboard.readImage()
-	};
-	try {
-		for (const image of images) {
-			const img = nativeImage.createFromDataURL(image.dataUrl);
-			if (img.isEmpty()) continue;
-			window.webContents.focus();
-			await window.webContents.executeJavaScript(focusScript).catch(() => false);
-			clipboard.writeImage(img);
-			window.webContents.paste();
-			await sleep(PASTE_INTERVAL_MS);
-		}
-	} finally {
-		const restore = {};
-		if (snapshot.text) restore.text = snapshot.text;
-		if (snapshot.html) restore.html = snapshot.html;
-		if (!snapshot.image.isEmpty()) restore.image = snapshot.image;
-		clipboard.write(restore);
-	}
+  const snapshot = {
+    text: clipboard.readText(),
+    html: clipboard.readHTML(),
+    image: clipboard.readImage()
+  };
+  try {
+    for (const image of images) {
+      const img = nativeImage.createFromDataURL(image.dataUrl);
+      if (img.isEmpty()) continue;
+      window.webContents.focus();
+      await window.webContents.executeJavaScript(focusScript).catch(() => false);
+      clipboard.writeImage(img);
+      window.webContents.paste();
+      await sleep(PASTE_INTERVAL_MS);
+    }
+  } finally {
+    const restore = {};
+    if (snapshot.text) restore.text = snapshot.text;
+    if (snapshot.html) restore.html = snapshot.html;
+    if (!snapshot.image.isEmpty()) restore.image = snapshot.image;
+    clipboard.write(restore);
+  }
 }
 var FOCUS_INPUT_SCRIPTS = {
-	doubao: `
+  doubao: `
     (() => {
       const textarea = Array.from(document.querySelectorAll('textarea')).find((el) => el.offsetParent !== null);
       const input = textarea || Array.from(document.querySelectorAll('[contenteditable="true"]')).find((el) => el.offsetParent !== null);
@@ -157,7 +153,7 @@ var FOCUS_INPUT_SCRIPTS = {
       return true;
     })()
   `,
-	yuanbao: `
+  yuanbao: `
     (() => {
       const input = Array.from(document.querySelectorAll('[contenteditable="true"]')).find((el) => el.classList.contains('ql-editor') && el.offsetParent !== null)
         || Array.from(document.querySelectorAll('[contenteditable="true"]')).find((el) => el.offsetParent !== null);
@@ -166,7 +162,7 @@ var FOCUS_INPUT_SCRIPTS = {
       return true;
     })()
   `,
-	deepseek: `
+  deepseek: `
     (() => {
       const textareas = Array.from(document.querySelectorAll('textarea')).filter((el) => el.getClientRects().length > 0);
       const input = textareas[textareas.length - 1];
@@ -206,8 +202,8 @@ var DEEPSEEK_VISION_MODE_SCRIPT = `
   })()
 `;
 function buildRecognizeScript(provider, prompt) {
-	const promptLiteral = JSON.stringify(prompt);
-	if (provider === "doubao") return `
+  const promptLiteral = JSON.stringify(prompt);
+  if (provider === "doubao") return `
       (async () => {
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         const prompt = ${promptLiteral};
@@ -319,7 +315,7 @@ function buildRecognizeScript(provider, prompt) {
         return last ? { status: 'done', text: last } : { status: 'output_empty' };
       })()
     `;
-	if (provider === "deepseek") return `
+  if (provider === "deepseek") return `
       (async () => {
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         const prompt = ${promptLiteral};
@@ -376,7 +372,7 @@ function buildRecognizeScript(provider, prompt) {
         return text ? { status: 'done', text } : { status: 'output_empty' };
       })()
     `;
-	return `
+  return `
     (async () => {
       const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
       const prompt = ${promptLiteral};
@@ -462,119 +458,118 @@ function buildRecognizeScript(provider, prompt) {
   `;
 }
 var WebAccountRecognitionService = class {
-	activeAccountIds = /* @__PURE__ */ new Set();
-	accountReleaseWaiters = [];
-	clipboardQueue = Promise.resolve();
-	/** 轮循可用账号做网页自动化识别，失败自动冷却并换下一个账号 */
-	async recognize(images, prompt) {
-		return this.recognizeWithCandidates(images, prompt);
-	}
-	async withClipboardLock(operation) {
-		const previous = this.clipboardQueue;
-		let release;
-		this.clipboardQueue = new Promise((resolve) => {
-			release = resolve;
-		});
-		await previous.catch(() => {});
-		try {
-			return await operation();
-		} finally {
-			release();
-		}
-	}
-	waitForAccountRelease() {
-		return new Promise((resolve) => {
-			this.accountReleaseWaiters.push(resolve);
-		});
-	}
-	releaseAccount(accountId) {
-		this.activeAccountIds.delete(accountId);
-		this.accountReleaseWaiters.splice(0).forEach((resolve) => resolve());
-	}
-	async acquireAccount(attemptedAccountIds, lang) {
-		while (true) {
-			const candidates = webAccountSchedulerService.pickCandidates("capture").filter((account) => !attemptedAccountIds.has(account.id));
-			const idle = candidates.find((account) => !this.activeAccountIds.has(account.id));
-			if (idle) {
-				webAccountSchedulerService.markAttempted(idle.id);
-				this.activeAccountIds.add(idle.id);
-				return idle;
-			}
-			if (candidates.length === 0) return null;
-			await this.waitForAccountRelease();
-			if (webAccountSchedulerService.pickCandidates("capture").length === 0) throw new Error(t("webAccount.noAvailableAccount", lang));
-		}
-	}
-	async recognizeWithCandidates(images, prompt) {
-		const lang = getLanguage();
-		let lastError = t("webAccount.recognizeFailed", lang);
-		const attemptedAccountIds = /* @__PURE__ */ new Set();
-		while (true) {
-			const account = await this.acquireAccount(attemptedAccountIds, lang);
-			if (!account) {
-				if (attemptedAccountIds.size === 0) throw new Error(t("webAccount.noAvailableAccount", lang));
-				throw new Error(lastError);
-			}
-			attemptedAccountIds.add(account.id);
-			try {
-				const text = await this.runOnce(account, images, prompt);
-				if (text) {
-					webAccountSchedulerService.markUsed(account.id);
-					return {
-						text,
-						provider: providerLabel(account.provider, lang),
-						accountId: account.accountId
-					};
-				}
-				lastError = t("webAccount.recognizeFailed", lang);
-				webAccountSchedulerService.recordFailure(account.id, lastError);
-			} catch (error) {
-				lastError = error.message || t("webAccount.recognizeFailed", lang);
-				if (/login|登录/i.test(lastError)) webAccountSchedulerService.markLoginRequired(account.id, lastError);
-				else if (isRecognitionTimeoutError(error)) {
-					webAccountSchedulerService.recordFailure(account.id, lastError);
-					throw error;
-				} else webAccountSchedulerService.recordFailure(account.id, lastError);
-			} finally {
-				this.releaseAccount(account.id);
-			}
-		}
-	}
-	async runOnce(account, images, prompt) {
-		const lang = getLanguage();
-		const window = createRecognitionWindow(account.partition);
-		try {
-			return await withRecognitionTimeout(this.runOnceInWindow(window, account, images, prompt, lang), lang);
-		} finally {
-			if (!window.isDestroyed()) {
-				window.removeAllListeners("closed");
-				window.destroy();
-			}
-		}
-	}
-	async runOnceInWindow(window, account, images, prompt, lang) {
-		await waitForLoad(window, WEB_ACCOUNT_URLS[account.provider]);
-		const loginDeadline = Date.now() + LOGIN_WAIT_MS;
-		let loggedIn = false;
-		while (Date.now() < loginDeadline) {
-			if ((await getWebAccountLoginState(window, account.provider)).loggedIn) {
-				loggedIn = true;
-				break;
-			}
-			await sleep(1e3);
-		}
-		if (!loggedIn) throw new Error(t("webAccount.loginRequired", lang));
-		await prepareFreshConversation(window, account.provider);
-		if (account.provider === "deepseek") {
-			await window.webContents.executeJavaScript(DEEPSEEK_VISION_MODE_SCRIPT).catch(() => null);
-			await sleep(600);
-		}
-		await this.withClipboardLock(() => pasteImages(window, images, FOCUS_INPUT_SCRIPTS[account.provider]));
-		await sleep(AFTER_PASTE_SETTLE_MS);
-		const result = await window.webContents.executeJavaScript(buildRecognizeScript(account.provider, prompt));
-		if (result?.status === "done" && result.text?.trim()) return result.text.trim();
-		return "";
-	}
+  activeAccountIds = /* @__PURE__ */new Set();
+  accountReleaseWaiters = [];
+  clipboardQueue = Promise.resolve();
+  /** 轮循可用账号做网页自动化识别，失败自动冷却并换下一个账号 */
+  async recognize(images, prompt) {
+    return this.recognizeWithCandidates(images, prompt);
+  }
+  async withClipboardLock(operation) {
+    const previous = this.clipboardQueue;
+    let release;
+    this.clipboardQueue = new Promise(resolve => {
+      release = resolve;
+    });
+    await previous.catch(() => {});
+    try {
+      return await operation();
+    } finally {
+      release();
+    }
+  }
+  waitForAccountRelease() {
+    return new Promise(resolve => {
+      this.accountReleaseWaiters.push(resolve);
+    });
+  }
+  releaseAccount(accountId) {
+    this.activeAccountIds.delete(accountId);
+    this.accountReleaseWaiters.splice(0).forEach(resolve => resolve());
+  }
+  async acquireAccount(attemptedAccountIds, lang) {
+    while (true) {
+      const candidates = webAccountSchedulerService.pickCandidates("capture").filter(account => !attemptedAccountIds.has(account.id));
+      const idle = candidates.find(account => !this.activeAccountIds.has(account.id));
+      if (idle) {
+        webAccountSchedulerService.markAttempted(idle.id);
+        this.activeAccountIds.add(idle.id);
+        return idle;
+      }
+      if (candidates.length === 0) return null;
+      await this.waitForAccountRelease();
+      if (webAccountSchedulerService.pickCandidates("capture").length === 0) throw new Error(t("webAccount.noAvailableAccount", lang));
+    }
+  }
+  async recognizeWithCandidates(images, prompt) {
+    const lang = getLanguage();
+    let lastError = t("webAccount.recognizeFailed", lang);
+    const attemptedAccountIds = /* @__PURE__ */new Set();
+    while (true) {
+      const account = await this.acquireAccount(attemptedAccountIds, lang);
+      if (!account) {
+        if (attemptedAccountIds.size === 0) throw new Error(t("webAccount.noAvailableAccount", lang));
+        throw new Error(lastError);
+      }
+      attemptedAccountIds.add(account.id);
+      try {
+        const text = await this.runOnce(account, images, prompt);
+        if (text) {
+          webAccountSchedulerService.markUsed(account.id);
+          return {
+            text,
+            provider: providerLabel(account.provider, lang),
+            accountId: account.accountId
+          };
+        }
+        lastError = t("webAccount.recognizeFailed", lang);
+        webAccountSchedulerService.recordFailure(account.id, lastError);
+      } catch (error) {
+        lastError = error.message || t("webAccount.recognizeFailed", lang);
+        if (/login|登录/i.test(lastError)) webAccountSchedulerService.markLoginRequired(account.id, lastError);else if (isRecognitionTimeoutError(error)) {
+          webAccountSchedulerService.recordFailure(account.id, lastError);
+          throw error;
+        } else webAccountSchedulerService.recordFailure(account.id, lastError);
+      } finally {
+        this.releaseAccount(account.id);
+      }
+    }
+  }
+  async runOnce(account, images, prompt) {
+    const lang = getLanguage();
+    const window = createRecognitionWindow(account.partition);
+    try {
+      return await withRecognitionTimeout(this.runOnceInWindow(window, account, images, prompt, lang), lang);
+    } finally {
+      if (!window.isDestroyed()) {
+        window.removeAllListeners("closed");
+        window.destroy();
+      }
+    }
+  }
+  async runOnceInWindow(window, account, images, prompt, lang) {
+    await waitForLoad(window, WEB_ACCOUNT_URLS[account.provider]);
+    const loginDeadline = Date.now() + LOGIN_WAIT_MS;
+    let loggedIn = false;
+    while (Date.now() < loginDeadline) {
+      if ((await getWebAccountLoginState(window, account.provider)).loggedIn) {
+        loggedIn = true;
+        break;
+      }
+      await sleep(1e3);
+    }
+    if (!loggedIn) throw new Error(t("webAccount.loginRequired", lang));
+    await prepareFreshConversation(window, account.provider);
+    if (account.provider === "deepseek") {
+      await window.webContents.executeJavaScript(DEEPSEEK_VISION_MODE_SCRIPT).catch(() => null);
+      await sleep(600);
+    }
+    await this.withClipboardLock(() => pasteImages(window, images, FOCUS_INPUT_SCRIPTS[account.provider]));
+    await sleep(AFTER_PASTE_SETTLE_MS);
+    const result = await window.webContents.executeJavaScript(buildRecognizeScript(account.provider, prompt));
+    if (result?.status === "done" && result.text?.trim()) return result.text.trim();
+    return "";
+  }
 };
 var webAccountRecognitionService = new WebAccountRecognitionService();
 //#endregion

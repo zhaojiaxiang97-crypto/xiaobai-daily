@@ -66,7 +66,7 @@ function ge(e) {
   let t = M(() => e.start.value ? !!e.isDateDisabled(e.start.value) : false),
     n = M(() => e.end.value ? !!e.isDateDisabled(e.end.value) : false),
     r = M(() => !!(t.value || n.value || e.start.value && e.end.value && B(e.end.value, e.start.value))),
-    i = t => e.start.value ? U(e.start.value, t) : false,
+    handler = t => e.start.value ? U(e.start.value, t) : false,
     a = t => e.end.value ? U(e.end.value, t) : false,
     o = t => e.start.value && U(e.start.value, t) || e.end.value && U(e.end.value, t) ? true : e.end.value && e.start.value ? q(t, e.start.value, e.end.value) : false,
     s = t => {
@@ -77,13 +77,13 @@ function ge(e) {
             let n = H(e.start.value, e.end.value).length;
             if (n <= e.maximumDays.value) {
               let r = e.maximumDays.value - n - 1,
-                i = e.start.value.subtract({
+                subtract = e.start.value.subtract({
                   days: r
                 }),
                 a = e.end.value.add({
                   days: r
                 });
-              return !q(t, i, a);
+              return !q(t, subtract, a);
             }
           }
           return false;
@@ -92,10 +92,10 @@ function ge(e) {
           let n = e.start.value.add({
               days: e.maximumDays.value
             }),
-            r = e.start.value.subtract({
+            subtract = e.start.value.subtract({
               days: e.maximumDays.value
             });
-          return !q(t, r, n);
+          return !q(t, subtract, n);
         }
       }
       return false;
@@ -141,7 +141,7 @@ function ge(e) {
     isSelected: o,
     isDateHighlightable: c,
     highlightedRange: l,
-    isSelectionStart: i,
+    isSelectionStart: handler,
     isSelectionEnd: a,
     isHighlightedStart: u,
     isHighlightedEnd: d,
@@ -364,22 +364,22 @@ var _e = {
           },
           passive: o.modelValue === undefined
         }),
-        K = e => e ?? {
+        handler = e => e ?? {
           start: undefined,
           end: undefined
         },
-        q = M(() => K(G.value)),
-        J = S(K(G.value));
+        q = M(() => handler(G.value)),
+        J = S(handler(G.value));
       y(J, e => {
         s(`update:validModelValue`, e);
       });
       let pe = ce({
           defaultPlaceholder: o.placeholder,
-          defaultValue: K(G.value).start,
+          defaultValue: handler(G.value).start,
           locale: o.locale
         }),
-        Y = S(K(G.value).start),
-        X = S(K(G.value).end),
+        Y = S(handler(G.value).start),
+        X = S(handler(G.value).end),
         Z = r(o, `placeholder`, s, {
           defaultValue: o.defaultPlaceholder ?? pe.copy(),
           passive: o.placeholder === undefined
@@ -444,7 +444,7 @@ var _e = {
           maximumDays: ae
         });
       y(G, e => {
-        let t = K(e);
+        let t = handler(e);
         !t.start && !Y.value || t.start && Y.value && z(t.start, Y.value) || (Y.value = t.start?.copy?.()), !t.end && !X.value || t.end && X.value && z(t.end, X.value) || (X.value = t.end?.copy?.());
       }), y(Y, e => {
         e && !z(e, Z.value) && he(e), s(`update:startValue`, e);
@@ -688,8 +688,8 @@ var _e = {
             days: n
           });
           if (r.minValue.value && i.compare(r.minValue.value) < 0 || r.maxValue.value && i.compare(r.maxValue.value) > 0) return;
-          let a = t.querySelector(`[data-value='${i.toString()}']:not([data-outside-view])`);
-          if (!a) {
+          let selector = t.querySelector(`[data-value='${i.toString()}']:not([data-outside-view])`);
+          if (!selector) {
             if (n > 0) {
               if (r.isNextButtonDisabled()) return;
               r.nextPage();
@@ -702,8 +702,8 @@ var _e = {
             });
             return;
           }
-          if (a && a.hasAttribute(`data-disabled`)) return o(i, n);
-          r.onPlaceholderChange(i), a?.focus();
+          if (selector && selector.hasAttribute(`data-disabled`)) return o(i, n);
+          r.onPlaceholderChange(i), selector?.focus();
         }
       }
       return (e, t) => (w(), x(d(i), {
@@ -1074,13 +1074,13 @@ var _e = {
     setup(state, {
       emit: t
     }) {
-      let n = state,
+      let stateAlias = state,
         r = t,
-        i = a(n, `class`),
+        i = a(stateAlias, `class`),
         o = l(i, r);
       return (e, t) => (w(), x(d(be), O({
         "data-slot": `range-calendar`,
-        class: d(s)(`p-3`, n.class)
+        class: d(s)(`p-3`, stateAlias.class)
       }, d(o)), {
         default: b(({
           grid: e,
@@ -1429,8 +1429,8 @@ function Ye(e, t = new Date()) {
   };
 }
 function Xe(e, t) {
-  return qe.find(n => {
-    let r = Ye(n);
+  return qe.find(item => {
+    let r = Ye(item);
     return r.start === e && r.end === t;
   }) ?? null;
 }
@@ -1461,7 +1461,7 @@ var Ze = [`aria-label`, `title`],
     setup(event, {
       emit: t
     }) {
-      let n = event,
+      let eventAlias = event,
         r = t,
         {
           t: i,
@@ -1480,29 +1480,29 @@ var Ze = [`aria-label`, `title`],
         let [t, n, r] = text.split(`-`).map(Number);
         return t && n && r ? new pe(t, n, r) : undefined;
       }
-      let m = e => `${e.year}-${String(e.month).padStart(2, `0`)}-${String(e.day).padStart(2, `0`)}`,
+      let handler = e => `${e.year}-${String(e.month).padStart(2, `0`)}-${String(e.day).padStart(2, `0`)}`,
         v = R(I()),
         T = f({
           start: undefined,
           end: undefined
         }),
-        O = M(() => Xe(n.start, n.end));
+        O = M(() => Xe(eventAlias.start, eventAlias.end));
       function A(text) {
         let [t, n, r] = text.split(`-`);
         return !t || !n || !r ? `--` : Number(t) === new Date().getFullYear() ? `${n}/${r}` : `${t}/${n}/${r}`;
       }
-      let j = M(() => n.start === n.end ? A(n.start) : `${A(n.start)} – ${A(n.end)}`),
-        ee = M(() => `${n.start.replaceAll(`-`, `/`)} – ${n.end.replaceAll(`-`, `/`)}`);
+      let j = M(() => eventAlias.start === eventAlias.end ? A(eventAlias.start) : `${A(eventAlias.start)} – ${A(eventAlias.end)}`),
+        ee = M(() => `${eventAlias.start.replaceAll(`-`, `/`)} – ${eventAlias.end.replaceAll(`-`, `/`)}`);
       y(o, e => {
         e && (T.value = {
-          start: p(n.start),
-          end: p(n.end)
+          start: p(eventAlias.start),
+          end: p(eventAlias.end)
         });
       });
       function te(e) {
         T.value = e, e.start && e.end && (r(`change`, {
-          start: m(e.start),
-          end: m(e.end)
+          start: handler(e.start),
+          end: handler(e.end)
         }), o.value = false);
       }
       function F(e) {

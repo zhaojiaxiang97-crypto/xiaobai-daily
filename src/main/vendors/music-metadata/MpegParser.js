@@ -99,7 +99,7 @@ async function readXingHeader(tokenizer) {
     };
     const match = xingInfoTag.lame.version.match(/\d+.\d+/g);
     if (match !== null) {
-      const version = match[0].split(".").map(n => Number.parseInt(n, 10));
+      const version = match[0].split(".").map(item => Number.parseInt(item, 10));
       if (version[0] >= 3 && version[1] >= 90) xingInfoTag.lame.extended = await tokenizer.readToken(ExtendedLameHeader);
     }
   }

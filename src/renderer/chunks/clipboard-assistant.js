@@ -53,29 +53,29 @@ var b = {
     async getState() {
       return y(await window.electronAPI.clipboardAssistant.getState());
     },
-    async updateSettings(e) {
-      return y(await window.electronAPI.clipboardAssistant.updateSettings(e));
+    async updateSettings(settings) {
+      return y(await window.electronAPI.clipboardAssistant.updateSettings(settings));
     },
-    async setShortcutEditing(e) {
-      y(await window.electronAPI.clipboardAssistant.setShortcutEditing(e));
+    async setShortcutEditing(shortcut) {
+      y(await window.electronAPI.clipboardAssistant.setShortcutEditing(shortcut));
     },
-    async listHistory(e) {
-      return y(await window.electronAPI.clipboardAssistant.listHistory(e));
+    async listHistory(historyValue) {
+      return y(await window.electronAPI.clipboardAssistant.listHistory(historyValue));
     },
-    async copyHistory(e) {
+    async copyHistory(historyValue) {
       y(await window.electronAPI.clipboardAssistant.copyHistory({
-        id: e
+        id: historyValue
       }));
     },
-    async pinHistory(e, t) {
+    async pinHistory(pin, historyValue) {
       y(await window.electronAPI.clipboardAssistant.pinHistory({
-        id: e,
-        pinned: t
+        id: pin,
+        pinned: historyValue
       }));
     },
-    async deleteHistory(e) {
+    async deleteHistory(historyValue) {
       y(await window.electronAPI.clipboardAssistant.deleteHistory({
-        id: e
+        id: historyValue
       }));
     },
     async clearHistory() {
@@ -84,27 +84,27 @@ var b = {
     async listPhrases() {
       return y(await window.electronAPI.clipboardAssistant.listPhrases());
     },
-    async savePhrase(e) {
-      return y(await window.electronAPI.clipboardAssistant.savePhrase(e));
+    async savePhrase(phrase) {
+      return y(await window.electronAPI.clipboardAssistant.savePhrase(phrase));
     },
-    async deletePhrase(e) {
+    async deletePhrase(phrase) {
       y(await window.electronAPI.clipboardAssistant.deletePhrase({
-        id: e
+        id: phrase
       }));
     },
-    async reorderPhrases(e) {
+    async reorderPhrases(reorder) {
       return y(await window.electronAPI.clipboardAssistant.reorderPhrases({
-        ids: e
+        ids: reorder
       }));
     },
-    async copyPhrase(e) {
+    async copyPhrase(phrase) {
       y(await window.electronAPI.clipboardAssistant.copyPhrase({
-        id: e
+        id: phrase
       }));
     },
-    onChanged(e) {
+    onChanged(changed) {
       let t = window.electronAPI.clipboardAssistant?.onChanged;
-      return typeof t == `function` ? t(e) : () => {};
+      return typeof t == `function` ? t(changed) : () => {};
     }
   },
   Be = {
@@ -320,9 +320,9 @@ var b = {
           t: _e,
           locale: y
         } = fe(),
-        x = (e, t = {}) => _e(`toolboxNative.clipboardAssistant${e}`, t),
-        S = window.electronAPI?.platform || `win32`,
-        tn = S === `darwin`,
+        handler = (e, t = {}) => _e(`toolboxNative.clipboardAssistant${e}`, t),
+        fallbackValue = window.electronAPI?.platform || `win32`,
+        tn = fallbackValue === `darwin`,
         C = d(null),
         w = d(`history`),
         T = d(false),
@@ -357,7 +357,7 @@ var b = {
         W = null,
         pn = null,
         G = g(() => C.value?.enabled === true),
-        mn = g(() => Le(C.value?.effectiveShortcut || ``, S)),
+        mn = g(() => Le(C.value?.effectiveShortcut || ``, fallbackValue)),
         hn = g(() => !C.value?.shortcut),
         gn = g({
           get: () => String(C.value?.retentionDays ?? 0),
@@ -367,40 +367,40 @@ var b = {
             });
           }
         }),
-        _n = g(() => Ie.map(e => ({
-          value: String(e),
-          label: e === 0 ? x(`RetentionForever`) : e === 365 ? x(`RetentionYear`) : x(`RetentionDays`, {
-            n: e
+        _n = g(() => Ie.map(item => ({
+          value: String(item),
+          label: item === 0 ? handler(`RetentionForever`) : item === 365 ? handler(`RetentionYear`) : handler(`RetentionDays`, {
+            n: item
           })
         }))),
         vn = g(() => {
           switch (N.value) {
             case `enable-recording`:
               return {
-                title: x(`ConfirmEnableTitle`),
-                lines: [x(`ConfirmEnableDesc`)],
-                action: x(`ConfirmEnableAction`),
+                title: handler(`ConfirmEnableTitle`),
+                lines: [handler(`ConfirmEnableDesc`)],
+                action: handler(`ConfirmEnableAction`),
                 danger: false
               };
             case `enable-timeline`:
               return {
-                title: x(`ConfirmTimelineTitle`),
-                lines: [x(`ConfirmTimelineDesc1`), x(`ConfirmTimelineDesc2`), x(`ConfirmTimelineDesc3`)],
-                action: x(`ConfirmTimelineAction`),
+                title: handler(`ConfirmTimelineTitle`),
+                lines: [handler(`ConfirmTimelineDesc1`), handler(`ConfirmTimelineDesc2`), handler(`ConfirmTimelineDesc3`)],
+                action: handler(`ConfirmTimelineAction`),
                 danger: true
               };
             case `clear-history`:
               return {
-                title: x(`ConfirmClearTitle`),
-                lines: [x(`ConfirmClearDesc`)],
-                action: x(`ConfirmClearAction`),
+                title: handler(`ConfirmClearTitle`),
+                lines: [handler(`ConfirmClearDesc`)],
+                action: handler(`ConfirmClearAction`),
                 danger: true
               };
             case `delete-phrase`:
               return {
-                title: x(`ConfirmDeletePhraseTitle`),
-                lines: [x(`ConfirmDeletePhraseDesc`)],
-                action: x(`ConfirmDeleteAction`),
+                title: handler(`ConfirmDeletePhraseTitle`),
+                lines: [handler(`ConfirmDeletePhraseDesc`)],
+                action: handler(`ConfirmDeleteAction`),
                 danger: true
               };
             default:
@@ -412,18 +412,18 @@ var b = {
               };
           }
         }),
-        yn = g(() => D.value.trim() ? x(`HistoryNoMatch`) : x(`HistoryEmpty`)),
+        yn = g(() => D.value.trim() ? handler(`HistoryNoMatch`) : handler(`HistoryEmpty`)),
         bn = g(() => [{
           value: `history`,
-          label: x(`TabHistory`),
+          label: handler(`TabHistory`),
           count: C.value?.historyCount ?? 0
         }, {
           value: `phrases`,
-          label: x(`TabPhrases`),
+          label: handler(`TabPhrases`),
           count: C.value?.phraseCount ?? 0
         }]);
       function K(e) {
-        return e instanceof Error && e.message ? e.message : x(`OperationFailed`);
+        return e instanceof Error && e.message ? e.message : handler(`OperationFailed`);
       }
       function q(e, t = false) {
         t ? Ae(e) : ke(e);
@@ -475,17 +475,17 @@ var b = {
         e.append ? rn.value = true : e.silent || (nn.value = true);
         try {
           let n = e.append ? $t : Math.min(100, Math.max($t, e.silent ? E.value.length : $t)),
-            r = await b.listHistory({
+            history = await b.listHistory({
               keyword: D.value.trim() || undefined,
               cursor: e.append ? on.value : null,
               pageSize: n
             });
           if (t !== fn) return;
           if (e.append) {
-            let e = new Set(E.value.map(e => e.id));
-            E.value = [...E.value, ...r.items.filter(t => !e.has(t.id))];
-          } else E.value = r.items;
-          an.value = r.hasMore, on.value = r.nextCursor;
+            let e = new Set(E.value.map(item => item.id));
+            E.value = [...E.value, ...history.items.filter(item => !e.has(item.id))];
+          } else E.value = history.items;
+          an.value = history.hasMore, on.value = history.nextCursor;
         } catch (e) {
           t === fn && q(K(e), true);
         } finally {
@@ -504,7 +504,7 @@ var b = {
       function wn(e) {
         k.value = e, W !== null && window.clearTimeout(W), W = window.setTimeout(() => {
           k.value = ``, W = null;
-        }, 1200), q(x(`Copied`));
+        }, 1200), q(handler(`Copied`));
       }
       async function Tn(e) {
         try {
@@ -524,7 +524,7 @@ var b = {
       }
       async function Dn(e) {
         try {
-          await b.deleteHistory(e.id), E.value = E.value.filter(t => t.id !== e.id), Y();
+          await b.deleteHistory(e.id), E.value = E.value.filter(item => item.id !== e.id), Y();
         } catch (e) {
           q(K(e), true);
         }
@@ -554,7 +554,7 @@ var b = {
       async function Mn() {
         if (!z.value) {
           if (!R.value.trim()) {
-            B.value = x(`PhraseContentRequired`);
+            B.value = handler(`PhraseContentRequired`);
             return;
           }
           z.value = true, B.value = ``;
@@ -581,7 +581,7 @@ var b = {
         let t = await J(`delete-phrase`),
           n = un;
         if (un = null, t && n) try {
-          await b.deletePhrase(n.id), O.value = O.value.filter(e => e.id !== n.id), Y();
+          await b.deletePhrase(n.id), O.value = O.value.filter(item => item.id !== n.id), Y();
         } catch (e) {
           q(K(e), true);
         }
@@ -593,16 +593,16 @@ var b = {
         let n = V.value;
         if (!n || (event.preventDefault(), n === e.id)) return;
         let r = [...O.value],
-          i = r.findIndex(e => e.id === n),
-          a = r.findIndex(t => t.id === e.id);
-        if (i < 0 || a < 0) return;
-        let [o] = r.splice(i, 1);
+          indexResult = r.findIndex(item => item.id === n),
+          a = r.findIndex(item => item.id === e.id);
+        if (indexResult < 0 || a < 0) return;
+        let [o] = r.splice(indexResult, 1);
         r.splice(a, 0, o), O.value = r, H = true;
       }
       async function Ln() {
         let e = H;
         if (V.value = null, H = false, e) try {
-          O.value = await b.reorderPhrases(O.value.map(e => e.id));
+          O.value = await b.reorderPhrases(O.value.map(item => item.id));
         } catch (e) {
           q(K(e), true), await Q();
         }
@@ -634,17 +634,17 @@ var b = {
           await $();
           return;
         }
-        let t = [`Control`, `Alt`, `AltGraph`, `Shift`, `Meta`, `OS`].includes(event.key),
+        let includesResult = [`Control`, `Alt`, `AltGraph`, `Shift`, `Meta`, `OS`].includes(event.key),
           n = event.code.match(/^Key([A-Z])$/)?.[1] || (/^[a-z]$/i.test(event.key) ? event.key.toUpperCase() : ``),
-          r = [event.ctrlKey && `Ctrl`, event.altKey && `Alt`, event.metaKey && (tn ? `Command` : `Super`), event.shiftKey && `Shift`].filter(Boolean).join(`+`),
-          i = t ? `` : n || (event.key === ` ` ? `Space` : event.key);
-        if (j.value = Le([r, i].filter(Boolean).join(`+`), S), t) {
+          joined = [event.ctrlKey && `Ctrl`, event.altKey && `Alt`, event.metaKey && (tn ? `Command` : `Super`), event.shiftKey && `Shift`].filter(Boolean).join(`+`),
+          i = includesResult ? `` : n || (event.key === ` ` ? `Space` : event.key);
+        if (j.value = Le([joined, i].filter(Boolean).join(`+`), fallbackValue), includesResult) {
           M.value = ``;
           return;
         }
-        let a = Pe([r, i].filter(Boolean).join(`+`));
+        let a = Pe([joined, i].filter(Boolean).join(`+`));
         if (!a) {
-          M.value = x(`ShortcutInvalid`);
+          M.value = handler(`ShortcutInvalid`);
           return;
         }
         A.value = false, j.value = ``, M.value = ``;
@@ -653,26 +653,26 @@ var b = {
         } catch {}
         (await X({
           shortcut: a === C.value?.defaultShortcut ? `` : a
-        })) && q(x(`ShortcutSaved`));
+        })) && q(handler(`ShortcutSaved`));
       }
       async function Bn() {
         hn.value || (await X({
           shortcut: ``
-        })) && q(x(`ShortcutSaved`));
+        })) && q(handler(`ShortcutSaved`));
       }
       function Vn(e) {
-        let t = new Date(e);
-        if (Number.isNaN(t.getTime())) return ``;
+        let date = new Date(e);
+        if (Number.isNaN(date.getTime())) return ``;
         let n = new Date(),
           r = new Intl.DateTimeFormat(y.value, {
             hour: `2-digit`,
             minute: `2-digit`,
             hour12: false
-          }).format(t),
-          i = new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
-        if (t.getTime() >= i) return r;
-        if (t.getTime() >= i - 864e5) return `${x(`Yesterday`)} ${r}`;
-        let a = t.getFullYear() === n.getFullYear();
+          }).format(date),
+          time = new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
+        if (date.getTime() >= time) return r;
+        if (date.getTime() >= time - 864e5) return `${handler(`Yesterday`)} ${r}`;
+        let a = date.getFullYear() === n.getFullYear();
         return new Intl.DateTimeFormat(y.value, {
           ...(a ? {} : {
             year: `numeric`
@@ -682,7 +682,7 @@ var b = {
           hour: `2-digit`,
           minute: `2-digit`,
           hour12: false
-        }).format(t);
+        }).format(date);
       }
       function Hn(event) {
         if (w.value !== `history`) return;
@@ -723,31 +723,31 @@ var b = {
         onScroll: Hn
       }, [v(`section`, Be, [v(`span`, Ve, [m(o(me), {
         size: 14
-      }), s(` ` + h(x(`Kicker`)), 1)]), v(`h1`, He, h(x(`ToolName`)), 1), v(`p`, Ue, h(x(`HeroDesc`, {
+      }), s(` ` + h(handler(`Kicker`)), 1)]), v(`h1`, He, h(handler(`ToolName`)), 1), v(`p`, Ue, h(handler(`HeroDesc`, {
         shortcut: mn.value
       })), 1)]), v(`section`, {
         class: `flex shrink-0 flex-col divide-y divide-border rounded-xl border border-border bg-card`,
         "aria-busy": T.value
-      }, [v(`div`, Ge, [v(`div`, Ke, [v(`strong`, qe, h(x(`RecordTitle`)), 1), v(`small`, Je, h(x(`RecordDesc`)), 1)]), m(o(r), {
+      }, [v(`div`, Ge, [v(`div`, Ke, [v(`strong`, qe, h(handler(`RecordTitle`)), 1), v(`small`, Je, h(handler(`RecordDesc`)), 1)]), m(o(r), {
         "model-value": G.value,
-        "aria-label": x(`RecordTitle`),
+        "aria-label": handler(`RecordTitle`),
         disabled: !C.value || T.value,
         "onUpdate:modelValue": Sn
       }, null, 8, [`model-value`, `aria-label`, `disabled`])]), v(`div`, Ye, [v(`div`, Xe, [v(`strong`, {
         class: a([`text-[13px] font-semibold`, G.value ? `` : `text-muted-foreground`])
-      }, h(x(`ShortcutTitle`)), 3), M.value ? (p(), c(`small`, Ze, h(M.value), 1)) : G.value && C.value?.shortcutError ? (p(), c(`small`, Qe, h(x(`ShortcutInactive`, {
+      }, h(handler(`ShortcutTitle`)), 3), M.value ? (p(), c(`small`, Ze, h(M.value), 1)) : G.value && C.value?.shortcutError ? (p(), c(`small`, Qe, h(handler(`ShortcutInactive`, {
         reason: C.value.shortcutError
-      })), 1)) : (p(), c(`small`, $e, h(G.value ? x(`ShortcutDesc`) : x(`ShortcutDisabledHint`)), 1))]), v(`div`, et, [v(`button`, {
+      })), 1)) : (p(), c(`small`, $e, h(G.value ? handler(`ShortcutDesc`) : handler(`ShortcutDisabledHint`)), 1))]), v(`div`, et, [v(`button`, {
         ref_key: `shortcutButtonRef`,
         ref: ln,
         type: `button`,
         class: a([`h-[30px] min-w-[132px] rounded-lg border px-3 text-xs font-semibold tracking-wide transition-colors outline-none disabled:cursor-not-allowed disabled:opacity-55`, A.value ? `border-primary bg-card text-muted-foreground` : `border-border bg-muted text-foreground hover:border-foreground/25`]),
         disabled: !G.value || T.value,
-        title: x(`ShortcutChange`),
+        title: handler(`ShortcutChange`),
         onClick: Rn,
         onKeydown: zn,
         onBlur: $
-      }, h(A.value ? j.value || x(`ShortcutPress`) : mn.value), 43, tt), hn.value ? _(``, true) : (p(), u(o(n), {
+      }, h(A.value ? j.value || handler(`ShortcutPress`) : mn.value), 43, tt), hn.value ? _(``, true) : (p(), u(o(n), {
         key: 0,
         variant: `ghost`,
         size: `sm`,
@@ -755,19 +755,19 @@ var b = {
         disabled: !G.value || T.value,
         onClick: Bn
       }, {
-        default: l(() => [s(h(x(`ShortcutReset`)), 1)]),
+        default: l(() => [s(h(handler(`ShortcutReset`)), 1)]),
         _: 1
-      }, 8, [`disabled`]))])]), v(`div`, nt, [v(`div`, rt, [v(`strong`, it, [s(h(x(`TimelineTitle`)) + ` `, 1), C.value?.syncToTimeline ? (p(), c(`span`, at, h(x(`TimelineCloudBadge`)), 1)) : _(``, true)]), v(`small`, ot, h(x(`TimelineDesc`)), 1)]), m(o(r), {
+      }, 8, [`disabled`]))])]), v(`div`, nt, [v(`div`, rt, [v(`strong`, it, [s(h(handler(`TimelineTitle`)) + ` `, 1), C.value?.syncToTimeline ? (p(), c(`span`, at, h(handler(`TimelineCloudBadge`)), 1)) : _(``, true)]), v(`small`, ot, h(handler(`TimelineDesc`)), 1)]), m(o(r), {
         "model-value": C.value?.syncToTimeline === true,
-        "aria-label": x(`TimelineTitle`),
+        "aria-label": handler(`TimelineTitle`),
         disabled: !C.value || T.value,
         "onUpdate:modelValue": Cn
-      }, null, 8, [`model-value`, `aria-label`, `disabled`])]), v(`div`, st, [v(`div`, ct, [v(`strong`, lt, h(x(`RetentionTitle`)), 1), v(`small`, ut, h(x(`RetentionDesc`)), 1)]), v(`div`, dt, [m(Re, {
+      }, null, 8, [`model-value`, `aria-label`, `disabled`])]), v(`div`, st, [v(`div`, ct, [v(`strong`, lt, h(handler(`RetentionTitle`)), 1), v(`small`, ut, h(handler(`RetentionDesc`)), 1)]), v(`div`, dt, [m(Re, {
         modelValue: gn.value,
         "onUpdate:modelValue": d[0] ||= e => gn.value = e,
         options: _n.value,
         disabled: !C.value || T.value,
-        label: x(`RetentionTitle`),
+        label: handler(`RetentionTitle`),
         compact: ``
       }, null, 8, [`modelValue`, `options`, `disabled`, `label`])])])], 8, We), v(`section`, ft, [v(`header`, pt, [v(`div`, mt, [(p(true), c(f, null, ee(bn.value, state => (p(), c(`button`, {
         key: state.value,
@@ -785,13 +785,13 @@ var b = {
         "onUpdate:modelValue": d[1] ||= e => D.value = e,
         type: `search`,
         class: `min-w-0 flex-1 bg-transparent text-xs text-foreground outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:appearance-none`,
-        placeholder: x(`SearchPlaceholder`)
+        placeholder: handler(`SearchPlaceholder`)
       }, null, 8, vt), [[se, D.value]]), D.value ? (p(), c(`button`, {
         key: 0,
         type: `button`,
         class: `inline-flex shrink-0 hover:text-foreground`,
-        "aria-label": x(`ClearSearch`),
-        title: x(`ClearSearch`),
+        "aria-label": handler(`ClearSearch`),
+        title: handler(`ClearSearch`),
         onMousedown: d[2] ||= ce(() => {}, [`prevent`]),
         onClick: d[3] ||= e => D.value = ``
       }, [m(o(de), {
@@ -805,7 +805,7 @@ var b = {
       }, {
         default: l(() => [m(o(i), {
           size: 14
-        }), s(h(x(`ClearHistory`)), 1)]),
+        }), s(h(handler(`ClearHistory`)), 1)]),
         _: 1
       }, 8, [`disabled`])])) : (p(), c(`div`, bt, [m(o(n), {
         variant: `outline`,
@@ -815,32 +815,32 @@ var b = {
       }, {
         default: l(() => [m(o(e), {
           size: 14
-        }), s(h(x(`NewPhrase`)), 1)]),
+        }), s(h(handler(`NewPhrase`)), 1)]),
         _: 1
       })]))]), w.value === `history` ? (p(), c(f, {
         key: 0
       }, [nn.value ? (p(), c(`div`, xt, [m(o(he), {
         class: `animate-spin`,
         size: 20
-      }), s(h(x(`Loading`)), 1)])) : E.value.length === 0 ? (p(), c(`div`, St, [m(o(me), {
+      }), s(h(handler(`Loading`)), 1)])) : E.value.length === 0 ? (p(), c(`div`, St, [m(o(me), {
         size: 26
-      }), v(`strong`, Ct, h(yn.value), 1), D.value.trim() ? _(``, true) : (p(), c(`small`, wt, h(G.value ? x(`HistoryEmptyDesc`) : x(`HistoryDisabledDesc`)), 1))])) : (p(), c(`div`, Tt, [(p(true), c(f, null, ee(E.value, e => (p(), c(`article`, {
+      }), v(`strong`, Ct, h(yn.value), 1), D.value.trim() ? _(``, true) : (p(), c(`small`, wt, h(G.value ? handler(`HistoryEmptyDesc`) : handler(`HistoryDisabledDesc`)), 1))])) : (p(), c(`div`, Tt, [(p(true), c(f, null, ee(E.value, e => (p(), c(`article`, {
         key: e.id,
         class: a([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, e.isPinned ? `bg-primary/[0.04]` : ``])
       }, [v(`button`, {
         type: `button`,
         class: `flex min-w-0 flex-1 flex-col gap-1 px-2.5 py-2 text-left`,
-        title: x(`Copy`),
+        title: handler(`Copy`),
         onClick: t => Tn(e)
       }, [v(`p`, Dt, h(e.preview), 1), v(`span`, Ot, [e.isPinned ? (p(), u(o(le), {
         key: 0,
         size: 11,
         class: `text-primary`
-      })) : _(``, true), v(`span`, null, h(x(`Characters`, {
+      })) : _(``, true), v(`span`, null, h(handler(`Characters`, {
         n: e.characterCount.toLocaleString()
       })), 1), d[12] ||= v(`i`, {
         class: `not-italic`
-      }, `·`, -1), e.copyCount > 1 ? (p(), c(`span`, kt, h(x(`CopyCount`, {
+      }, `·`, -1), e.copyCount > 1 ? (p(), c(`span`, kt, h(handler(`CopyCount`, {
         n: e.copyCount
       })), 1)) : _(``, true), e.copyCount > 1 ? (p(), c(`i`, At, `·`)) : _(``, true), v(`time`, {
         datetime: e.copiedAt
@@ -848,8 +848,8 @@ var b = {
         variant: `ghost`,
         size: `icon-sm`,
         class: a(k.value === `history:${e.id}` ? `text-primary` : `text-muted-foreground`),
-        title: x(`Copy`),
-        "aria-label": x(`Copy`),
+        title: handler(`Copy`),
+        "aria-label": handler(`Copy`),
         onClick: t => Tn(e)
       }, {
         default: l(() => [k.value === `history:${e.id}` ? (p(), u(o(pe), {
@@ -864,8 +864,8 @@ var b = {
         variant: `ghost`,
         size: `icon-sm`,
         class: a(e.isPinned ? `text-primary` : `text-muted-foreground`),
-        title: e.isPinned ? x(`Unpin`) : x(`Pin`),
-        "aria-label": e.isPinned ? x(`Unpin`) : x(`Pin`),
+        title: e.isPinned ? handler(`Unpin`) : handler(`Pin`),
+        "aria-label": e.isPinned ? handler(`Unpin`) : handler(`Pin`),
         onClick: t => En(e)
       }, {
         default: l(() => [e.isPinned ? (p(), u(o(je), {
@@ -880,8 +880,8 @@ var b = {
         variant: `ghost`,
         size: `icon-sm`,
         class: `text-muted-foreground hover:text-destructive`,
-        title: x(`Delete`),
-        "aria-label": x(`Delete`),
+        title: handler(`Delete`),
+        "aria-label": handler(`Delete`),
         onClick: t => Dn(e)
       }, {
         default: l(() => [m(o(i), {
@@ -891,14 +891,14 @@ var b = {
       }, 8, [`title`, `aria-label`, `onClick`])])], 2))), 128)), rn.value ? (p(), c(`div`, Nt, [m(o(he), {
         class: `animate-spin`,
         size: 15
-      }), s(h(x(`LoadingMore`)), 1)])) : _(``, true)]))], 64)) : (p(), c(f, {
+      }), s(h(handler(`LoadingMore`)), 1)])) : _(``, true)]))], 64)) : (p(), c(f, {
         key: 1
       }, [sn.value ? (p(), c(`div`, Pt, [m(o(he), {
         class: `animate-spin`,
         size: 20
-      }), s(h(x(`Loading`)), 1)])) : O.value.length === 0 ? (p(), c(`div`, Ft, [m(o(me), {
+      }), s(h(handler(`Loading`)), 1)])) : O.value.length === 0 ? (p(), c(`div`, Ft, [m(o(me), {
         size: 26
-      }), v(`strong`, It, h(x(`PhrasesEmpty`)), 1), v(`small`, Lt, h(x(`PhrasesEmptyDesc`)), 1)])) : (p(), c(`div`, Rt, [(p(true), c(f, null, ee(O.value, e => (p(), c(`article`, {
+      }), v(`strong`, It, h(handler(`PhrasesEmpty`)), 1), v(`small`, Lt, h(handler(`PhrasesEmptyDesc`)), 1)])) : (p(), c(`div`, Rt, [(p(true), c(f, null, ee(O.value, e => (p(), c(`article`, {
         key: e.id,
         class: a([`group flex items-start gap-1 rounded-lg transition-colors hover:bg-muted/60`, V.value === e.id ? `opacity-50` : ``]),
         onDragover: t => In(e, t),
@@ -906,8 +906,8 @@ var b = {
       }, [v(`span`, {
         class: `mt-2.5 grid size-6 shrink-0 cursor-grab place-items-center rounded text-muted-foreground opacity-40 transition-opacity active:cursor-grabbing group-hover:opacity-100`,
         draggable: `true`,
-        title: x(`DragToSort`),
-        "aria-label": x(`DragToSort`),
+        title: handler(`DragToSort`),
+        "aria-label": handler(`DragToSort`),
         onDragstart: t => Fn(e, t),
         onDragend: Ln
       }, [m(o(ze), {
@@ -915,24 +915,24 @@ var b = {
       })], 40, Bt), v(`button`, {
         type: `button`,
         class: `flex min-w-0 flex-1 flex-col gap-1 px-1 py-2 text-left`,
-        title: x(`Copy`),
+        title: handler(`Copy`),
         onClick: t => kn(e)
       }, [e.title ? (p(), c(`strong`, Ht, h(e.title), 1)) : _(``, true), v(`p`, {
         class: a([`line-clamp-3 whitespace-pre-wrap break-words text-[13px] leading-relaxed`, e.title ? `text-muted-foreground` : ``])
-      }, h(e.content), 3), v(`span`, Ut, [v(`span`, null, h(x(`Characters`, {
+      }, h(e.content), 3), v(`span`, Ut, [v(`span`, null, h(handler(`Characters`, {
         n: e.content.length.toLocaleString()
       })), 1), e.useCount > 0 ? (p(), c(f, {
         key: 0
       }, [d[13] ||= v(`i`, {
         class: `not-italic`
-      }, `·`, -1), v(`span`, null, h(x(`UseCount`, {
+      }, `·`, -1), v(`span`, null, h(handler(`UseCount`, {
         n: e.useCount
       })), 1)], 64)) : _(``, true)])], 8, Vt), v(`div`, Wt, [m(o(n), {
         variant: `ghost`,
         size: `icon-sm`,
         class: a(k.value === `phrase:${e.id}` ? `text-primary` : `text-muted-foreground`),
-        title: x(`Copy`),
-        "aria-label": x(`Copy`),
+        title: handler(`Copy`),
+        "aria-label": handler(`Copy`),
         onClick: t => kn(e)
       }, {
         default: l(() => [k.value === `phrase:${e.id}` ? (p(), u(o(pe), {
@@ -947,8 +947,8 @@ var b = {
         variant: `ghost`,
         size: `icon-sm`,
         class: `text-muted-foreground`,
-        title: x(`Edit`),
-        "aria-label": x(`Edit`),
+        title: handler(`Edit`),
+        "aria-label": handler(`Edit`),
         onClick: t => An(e)
       }, {
         default: l(() => [m(o(t), {
@@ -959,8 +959,8 @@ var b = {
         variant: `ghost`,
         size: `icon-sm`,
         class: `text-muted-foreground hover:text-destructive`,
-        title: x(`Delete`),
-        "aria-label": x(`Delete`),
+        title: handler(`Delete`),
+        "aria-label": handler(`Delete`),
         onClick: t => Pn(e)
       }, {
         default: l(() => [m(o(i), {
@@ -978,38 +978,38 @@ var b = {
         }, {
           default: l(() => [m(o(be), null, {
             default: l(() => [m(o(Se), null, {
-              default: l(() => [s(h(I.value ? x(`PhraseEditorEdit`) : x(`PhraseEditorCreate`)), 1)]),
+              default: l(() => [s(h(I.value ? handler(`PhraseEditorEdit`) : handler(`PhraseEditorCreate`)), 1)]),
               _: 1
             })]),
             _: 1
-          }), v(`label`, Gt, [v(`span`, Kt, h(x(`PhraseTitleLabel`)), 1), m(o(Ne), {
+          }), v(`label`, Gt, [v(`span`, Kt, h(handler(`PhraseTitleLabel`)), 1), m(o(Ne), {
             modelValue: L.value,
             "onUpdate:modelValue": d[6] ||= e => L.value = e,
             type: `text`,
             class: `h-9 text-sm`,
             maxlength: o(60),
-            placeholder: x(`PhraseTitlePlaceholder`),
+            placeholder: handler(`PhraseTitlePlaceholder`),
             onKeydown: Nn
-          }, null, 8, [`modelValue`, `maxlength`, `placeholder`])]), v(`label`, qt, [v(`span`, Jt, h(x(`PhraseContentLabel`)), 1), ne(v(`textarea`, {
+          }, null, 8, [`modelValue`, `maxlength`, `placeholder`])]), v(`label`, qt, [v(`span`, Jt, h(handler(`PhraseContentLabel`)), 1), ne(v(`textarea`, {
             ref_key: `editorContentRef`,
             ref: dn,
             "onUpdate:modelValue": d[7] ||= e => R.value = e,
             rows: `7`,
             class: `min-h-36 w-full resize-y rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm leading-relaxed outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30`,
             maxlength: o(Fe),
-            placeholder: x(`PhraseContentPlaceholder`),
+            placeholder: handler(`PhraseContentPlaceholder`),
             onKeydown: Nn
           }, null, 40, Yt), [[se, R.value]])]), B.value ? (p(), c(`p`, Xt, h(B.value), 1)) : _(``, true), m(o(xe), {
             class: `items-center sm:justify-between`
           }, {
-            default: l(() => [v(`small`, Zt, h(x(`PhraseSaveHint`, {
+            default: l(() => [v(`small`, Zt, h(handler(`PhraseSaveHint`, {
               key: tn ? `⌘ + Enter` : `Ctrl + Enter`
             })), 1), v(`div`, Qt, [m(o(n), {
               variant: `outline`,
               disabled: z.value,
               onClick: jn
             }, {
-              default: l(() => [s(h(x(`Cancel`)), 1)]),
+              default: l(() => [s(h(handler(`Cancel`)), 1)]),
               _: 1
             }, 8, [`disabled`]), m(o(n), {
               disabled: z.value || !R.value.trim(),
@@ -1019,7 +1019,7 @@ var b = {
                 key: 0,
                 class: `animate-spin`,
                 size: 14
-              })) : _(``, true), s(h(x(`Save`)), 1)]),
+              })) : _(``, true), s(h(handler(`Save`)), 1)]),
               _: 1
             }, 8, [`disabled`])])]),
             _: 1
@@ -1052,7 +1052,7 @@ var b = {
               variant: `outline`,
               onClick: d[9] ||= e => xn(false)
             }, {
-              default: l(() => [s(h(x(`Cancel`)), 1)]),
+              default: l(() => [s(h(handler(`Cancel`)), 1)]),
               _: 1
             }), m(o(n), {
               variant: vn.value.danger ? `destructive` : `default`,

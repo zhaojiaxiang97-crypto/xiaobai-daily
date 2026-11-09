@@ -313,31 +313,31 @@ var v = {
     async get() {
       return _(await window.electronAPI.settings.get());
     },
-    async update(e) {
-      let t = JSON.parse(JSON.stringify(e));
-      return _(await window.electronAPI.settings.update(t));
+    async update(update) {
+      let parsed = JSON.parse(JSON.stringify(update));
+      return _(await window.electronAPI.settings.update(parsed));
     },
-    async switchUsageMode(e) {
+    async switchUsageMode(switchValue) {
       return _(await window.electronAPI.settings.switchUsageMode({
-        mode: e
+        mode: switchValue
       }));
     },
-    async runAutoReportTask(e) {
+    async runAutoReportTask(auto) {
       return _(await window.electronAPI.settings.runAutoReportTask({
-        taskId: e
+        taskId: auto
       })).queued;
     },
     async selectPreservePath() {
       return window.electronAPI.settings.selectPreservePath();
     },
-    async setCaptureShortcutEditing(e) {
-      _(await window.electronAPI.settings.setCaptureShortcutEditing(e));
+    async setCaptureShortcutEditing(capture) {
+      _(await window.electronAPI.settings.setCaptureShortcutEditing(capture));
     },
     async getUserProfileMemory() {
       return _(await window.electronAPI.settings.getUserProfileMemory());
     },
-    async updateUserProfileMemory(e) {
-      return _(await window.electronAPI.settings.updateUserProfileMemory(e));
+    async updateUserProfileMemory(user) {
+      return _(await window.electronAPI.settings.updateUserProfileMemory(user));
     },
     async getUserProfileContext() {
       return _(await window.electronAPI.settings.getUserProfileContext());
@@ -2663,7 +2663,7 @@ var v = {
       }]
     }
   },
-  we = {
+  options = {
     sidebar: {
       todayWork: {
         t: 0,
@@ -4966,10 +4966,10 @@ var v = {
     id: `codex`,
     label: `Codex`
   }],
-  b = y.map(e => e.id),
+  mapped = y.map(item => item.id),
   x = 1440;
 function S(e) {
-  return y.find(t => t.id === e)?.label ?? e;
+  return y.find(item => item.id === e)?.label ?? e;
 }
 var C = [1, 3, 7, 30],
   w = [10, 15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600, 5400, 7200],
@@ -5155,7 +5155,7 @@ var De = [`work`, `student`],
     agentSessionImportConsentAt: ``,
     agentSessionImportPeriods: [],
     agentSessionImportIntervalMinutes: 3,
-    agentSessionImportProviders: [...b],
+    agentSessionImportProviders: [...mapped],
     miniProgramSyncBackfillDone: false,
     miniProgramSyncBackfillCursor: ``,
     miniProgramSyncChangeCursor: ``,
@@ -5189,10 +5189,10 @@ var ke = {
     work: {},
     student: {
       "zh-CN": Ce,
-      "en-US": we
+      "en-US": options
     }
   },
-  j = Object.fromEntries(Object.keys(c).map(e => [e, c[e]])),
+  fromEntries = Object.fromEntries(Object.keys(c).map(item => [item, c[item]])),
   M = `work`;
 function N(e) {
   return !!e && typeof e == `object` && !Array.isArray(e);
@@ -5223,8 +5223,8 @@ function L(e) {
   } catch {}
   if (t !== M) {
     M = t;
-    for (let e of Object.keys(j)) {
-      let n = j[e],
+    for (let e of Object.keys(fromEntries)) {
+      let n = fromEntries[e],
         r = ke[t][e],
         i = r ? F(n, r) : n;
       l.global.setLocaleMessage(e, i);
@@ -5232,13 +5232,13 @@ function L(e) {
   }
 }
 var R = `xiaohei-theme-mode`,
-  z = window.matchMedia(`(prefers-color-scheme: dark)`),
+  matchMedia = window.matchMedia(`(prefers-color-scheme: dark)`),
   B = `system`;
 function je(e) {
   return e === `system` || e === `light` || e === `dark`;
 }
 function Me(e) {
-  return e === `system` ? z.matches ? `dark` : `light` : e;
+  return e === `system` ? matchMedia.matches ? `dark` : `light` : e;
 }
 function V(e) {
   let t = Me(e);
@@ -5248,10 +5248,10 @@ function H(e) {
   B = e, V(e), localStorage.setItem(R, e);
 }
 function Ne() {
-  let e = localStorage.getItem(R);
-  H(je(e) ? e : `system`);
+  let item = localStorage.getItem(R);
+  H(je(item) ? item : `system`);
 }
-z.addEventListener(`change`, () => {
+matchMedia.addEventListener(`change`, () => {
   B === `system` && V(`system`);
 });
 var U = r({
@@ -5277,13 +5277,13 @@ function Pe() {
         ...A,
         ...e
       }, H(U.value.themeMode), L(U.value.usageMode);
-    })), W.value = true, q.value = null, Y = v.get().then(e => {
+    })), W.value = true, q.value = null, Y = v.get().then(result => {
       U.value = {
         ...A,
-        ...e
+        ...result
       }, H(U.value.themeMode), L(U.value.usageMode), U.value.language && U.value.language !== l.global.locale.value && s(U.value.language), K.value = true;
-    }).catch(t => {
-      q.value = Z(t, e(`composables.settings.loadFailed`));
+    }).catch(err => {
+      q.value = Z(err, e(`composables.settings.loadFailed`));
     }).finally(() => {
       K.value = true, W.value = false, Y = null;
     }), Y);
@@ -5295,10 +5295,10 @@ function Pe() {
       ...t
     }, t.themeMode !== undefined && H(t.themeMode), G.value = true, q.value = null;
     try {
-      let e = await v.update(t);
+      let update = await v.update(t);
       return U.value = {
         ...A,
-        ...e,
+        ...update,
         ...t
       }, n.silent || (J.value = Date.now()), true;
     } catch (n) {
@@ -5310,11 +5310,11 @@ function Pe() {
   async function r(t) {
     G.value = true, q.value = null;
     try {
-      let e = await v.switchUsageMode(t);
+      let switchUsageMode = await v.switchUsageMode(t);
       return U.value = {
         ...A,
-        ...e.settings
-      }, L(U.value.usageMode), J.value = Date.now(), e;
+        ...switchUsageMode.settings
+      }, L(U.value.usageMode), J.value = Date.now(), switchUsageMode;
     } catch (t) {
       return q.value = Z(t, e(`composables.settings.saveFailed`)), null;
     } finally {
@@ -5400,15 +5400,15 @@ var Ie = [`width`, `height`, `stroke-width`],
           default: 2
         }
       },
-      setup(e) {
+      setup(count) {
         return (r, a) => (i(), n(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
-          width: e.size,
-          height: e.size,
+          width: count.size,
+          height: count.size,
           viewBox: `0 0 24 24`,
           fill: `none`,
           stroke: `currentColor`,
-          "stroke-width": e.strokeWidth,
+          "stroke-width": count.strokeWidth,
           "stroke-linecap": `round`,
           "stroke-linejoin": `round`,
           "aria-hidden": `true`

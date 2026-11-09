@@ -72,9 +72,9 @@ function findZero(uint8Array, encoding) {
   for (let i = 0; i < len; i++) if (uint8Array[i] === 0) return i;
   return len;
 }
-function trimRightNull(x) {
-  const pos0 = x.indexOf("\0");
-  return pos0 === -1 ? x : x.substring(0, pos0);
+function trimRightNull(items) {
+  const pos0 = items.indexOf("\0");
+  return pos0 === -1 ? items : items.substring(0, pos0);
 }
 function swapBytes(uint8Array) {
   const l = uint8Array.length;
@@ -166,15 +166,15 @@ function dbToRatio(dB) {
 * @param value string holding a ratio like '0.034' or '-7.54 dB'
 */
 function toRatio(value) {
-  const ps = value.split(" ").map(p => p.trim().toLowerCase());
-  if (ps.length >= 1) {
-    const v = Number.parseFloat(ps[0]);
-    return ps.length === 2 && ps[1] === "db" ? {
-      dB: v,
-      ratio: dbToRatio(v)
+  const mapped = value.split(" ").map(text => text.trim().toLowerCase());
+  if (mapped.length >= 1) {
+    const float = Number.parseFloat(mapped[0]);
+    return mapped.length === 2 && mapped[1] === "db" ? {
+      dB: float,
+      ratio: dbToRatio(float)
     } : {
-      dB: ratioToDb(v),
-      ratio: v
+      dB: ratioToDb(float),
+      ratio: float
     };
   }
 }

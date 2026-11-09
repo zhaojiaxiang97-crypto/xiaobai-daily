@@ -1,7 +1,7 @@
 import { $n as e, S as t, Wt as n, Yt as r, bn as i, gt as a, j as o, k as s, ot as c, rr as l, ut as u, v as d, x as f, y as p } from "../chunks/vue-i18n.runtime.js";
 import { r as m } from "../i18n/en-US-player.js";
 import { H as h, L as g, O as _, S as v, X as y, v as b, w as x } from "../chunks/main.js";
-var S = (e, t, n) => new Promise((r, i) => {
+var handler = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -16,7 +16,7 @@ var S = (e, t, n) => new Promise((r, i) => {
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(e, t)).next());
   }),
   C = [`data-markstream-mode`],
@@ -77,7 +77,7 @@ var S = (e, t, n) => new Promise((r, i) => {
         L = null,
         R = i(k.loading);
       function z() {
-        return S(this, null, function* () {
+        return handler(this, null, function* () {
           if (P) return;
           if (!b.node.content) return R.value = false, A.value = ``, j.value = b.node.raw, void (M = true);
           if (!M) try {
@@ -85,27 +85,27 @@ var S = (e, t, n) => new Promise((r, i) => {
           } catch {}
           F &&= (F.abort(), null);
           let e = ++N,
-            t = new AbortController();
-          F = t, h(O.value, true, {
+            abortController = new AbortController();
+          F = abortController, h(O.value, true, {
             timeout: 3e3,
             waitTimeout: 2e3,
             maxRetries: 1,
-            signal: t.signal
-          }).then(t => {
-            P || e !== N || (A.value = t, j.value = ``, M = true, R.value = false);
-          }).catch(t => S(null, null, function* () {
+            signal: abortController.signal
+          }).then(result => {
+            P || e !== N || (A.value = result, j.value = ``, M = true, R.value = false);
+          }).catch(event => handler(null, null, function* () {
             if (P || e !== N) return;
-            let n = t?.code || t?.name,
-              r = n === `KATEX_DISABLED`;
-            if (n === `WORKER_INIT_ERROR` || t?.fallbackToRenderer || n === `WORKER_BUSY` || n === `WORKER_TIMEOUT`) {
+            let fallbackValue = event?.code || event?.name,
+              r = fallbackValue === `KATEX_DISABLED`;
+            if (fallbackValue === `WORKER_INIT_ERROR` || event?.fallbackToRenderer || fallbackValue === `WORKER_BUSY` || fallbackValue === `WORKER_TIMEOUT`) {
               let e = yield v();
               if (e) {
                 try {
-                  let t = e.renderToString(O.value, {
+                  let toStringResult = e.renderToString(O.value, {
                     throwOnError: b.node.loading,
                     displayMode: true
                   });
-                  A.value = t, j.value = ``, M = true, R.value = false, x(O.value, true, t);
+                  A.value = toStringResult, j.value = ``, M = true, R.value = false, x(O.value, true, toStringResult);
                 } catch {}
                 return;
               }

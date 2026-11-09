@@ -717,7 +717,7 @@ var o = r(`audio-lines`, [[`path`, {
       }
     }
   },
-  m = {
+  record = {
     add: {
       t: 0,
       b: {
@@ -3896,7 +3896,7 @@ var o = r(`audio-lines`, [[`path`, {
     "zh-CN": {
       ...i,
       toolboxNative: t,
-      milestoneTool: m
+      milestoneTool: record
     },
     "en-US": {
       ...a,
@@ -3906,12 +3906,12 @@ var o = r(`audio-lines`, [[`path`, {
     "ja-JP": {
       ...f,
       toolboxNative: t,
-      milestoneTool: m
+      milestoneTool: record
     },
     "ko-KR": {
       ...p,
       toolboxNative: t,
-      milestoneTool: m
+      milestoneTool: record
     }
   },
   v = e({
@@ -3927,7 +3927,7 @@ function y(e) {
 }
 var b = new Map(Object.entries(t).map(([e, t]) => [t, `toolboxNative.${e}`]));
 function x() {
-  let e = v.global.locale;
+  let locale = v.global.locale;
   function t(e, t = {}) {
     return v.global.t(e, t);
   }
@@ -3936,7 +3936,7 @@ function x() {
     return n ? t(n) : e;
   }
   return {
-    locale: e,
+    locale: locale,
     t,
     translateRemoteText: n
   };

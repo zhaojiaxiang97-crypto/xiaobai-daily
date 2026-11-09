@@ -97,7 +97,7 @@ var k = {
           y: 70,
           size: 16,
           alpha: .22
-        }].map(e => `radial-gradient(circle at ${e.x}% ${e.y}%, rgba(22, 163, 74, ${e.alpha}) 0, rgba(22, 163, 74, 0) ${e.size}%)`).join(`, `),
+        }].map(count => `radial-gradient(circle at ${count.x}% ${count.y}%, rgba(22, 163, 74, ${count.alpha}) 0, rgba(22, 163, 74, 0) ${count.size}%)`).join(`, `),
         y = [{
           icon: C,
           title: `toolboxNative.mouseHeatmapPointCountTitle`,

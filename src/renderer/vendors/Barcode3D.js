@@ -13,8 +13,8 @@ var I = class {
     };
     startedAt = 0;
     endsAt = 0;
-    constructor(e) {
-      this.uniforms.uGrow.value = e;
+    constructor(constructor) {
+      this.uniforms.uGrow.value = constructor;
     }
     start(e, t) {
       if (!e) {
@@ -32,15 +32,15 @@ var I = class {
   L = class {
     fullPending = false;
     meshes;
-    constructor(e) {
-      this.meshes = e;
+    constructor(constructor) {
+      this.meshes = constructor;
     }
     markAll() {
       this.fullPending = true;
-      for (let e of this.meshes) e.instanceColor && (e.instanceColor.clearUpdateRanges(), e.instanceColor.needsUpdate = true);
+      for (let count of this.meshes) count.instanceColor && (count.instanceColor.clearUpdateRanges(), count.instanceColor.needsUpdate = true);
     }
-    markOne(e, t) {
-      !e.instanceColor || t < 0 || (this.fullPending || e.instanceColor.addUpdateRange(t * 3, 3), e.instanceColor.needsUpdate = true);
+    markOne(mark, one) {
+      !mark.instanceColor || one < 0 || (this.fullPending || mark.instanceColor.addUpdateRange(one * 3, 3), mark.instanceColor.needsUpdate = true);
     }
     frameStarted() {
       this.fullPending = false;
@@ -112,25 +112,25 @@ var oe = class {
     hitBox = new T();
     hitPoint = new _();
     hovered = -1;
-    constructor(e, t) {
-      this.set = F(e), this.layout = ie(this.set.dayCount);
+    constructor(constructor, constructorValue) {
+      this.set = F(constructor), this.layout = ie(this.set.dayCount);
       let {
           blocks: n
         } = this.set,
         r = n.length;
       this.heights = new Float32Array(r), this.dims = new Float32Array(r);
-      let i = new Float32Array(r),
+      let float32Array = new Float32Array(r),
         a = new w(),
         o = new _(),
         s = new y(),
         c = new _();
-      this.buildingGeometry = new v(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new O(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new O(i, 1)), this.dimAttribute = new O(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new E(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new O(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
+      this.buildingGeometry = new v(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new O(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new O(float32Array, 1)), this.dimAttribute = new O(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new E(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new O(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
       let l = 0,
         u = 4;
-      n.forEach((e, t) => {
-        let n = Math.max(U, e.end - e.start - H),
-          r = P(e) ? V : B * M(e);
-        this.heights[t] = r, u = Math.max(u, r), i[t] = j(e, this.set.dayCount, re, J), l = Math.max(l, i[t]), o.set((e.start + e.end) / 2 - z, 0, this.rowZ(e.dayIndex)), c.set(n, 1, this.layout.buildingDepth), a.compose(o, s, c), this.buildings.setMatrixAt(t, a);
+      n.forEach((item, t) => {
+        let n = Math.max(U, item.end - item.start - H),
+          r = P(item) ? V : B * M(item);
+        this.heights[t] = r, u = Math.max(u, r), float32Array[t] = j(item, this.set.dayCount, re, J), l = Math.max(l, float32Array[t]), o.set((item.start + item.end) / 2 - z, 0, this.rowZ(item.dayIndex)), c.set(n, 1, this.layout.buildingDepth), a.compose(o, s, c), this.buildings.setMatrixAt(t, a);
       }), this.buildings.instanceMatrix.needsUpdate = true, this.maxDelay = l, this.trackGeometry = new v(1, 1, 1).translate(0, -.5, 0), this.tracks = new E(this.trackGeometry, this.trackMaterial, this.set.dayCount);
       for (let e = 0; e < this.set.dayCount; e += 1) o.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), a.compose(o, s, c), this.tracks.setMatrixAt(e, a);
       this.tracks.instanceMatrix.needsUpdate = true, this.root.add(this.tracks, this.buildings), this.colorSync = new L([this.buildings]);
@@ -139,11 +139,11 @@ var oe = class {
         p = z + 1,
         m = -d,
         h = d + 8,
-        g = [];
-      for (let e of [f, p]) for (let t of [0, u]) for (let n of [m, h]) g.push(new _(e, t, n));
+        emptyItems = [];
+      for (let count of [f, p]) for (let t of [0, u]) for (let n of [m, h]) emptyItems.push(new _(count, t, n));
       this.framing = {
         target: new _((f + p) / 2, u * .2, (m + h) / 2),
-        corners: g,
+        corners: emptyItems,
         homeView: {
           polar: .98,
           azimuth: .22
@@ -157,34 +157,34 @@ var oe = class {
           maxPolar: 1.36,
           azimuthRange: Math.PI / 3
         }
-      }, this.labels = this.buildLabels(t, d);
+      }, this.labels = this.buildLabels(constructorValue, d);
     }
     rowZ(e) {
       return (e - (this.set.dayCount - 1) / 2) * this.layout.rowPitch;
     }
-    buildLabels(e, t) {
-      let n = [];
-      for (let e = 0; e <= 24; e += 3) n.push({
+    buildLabels(labels, labelsValue) {
+      let emptyItems = [];
+      for (let e = 0; e <= 24; e += 3) emptyItems.push({
         key: `hour-${e}`,
         text: `${e}:00`,
         kind: `hour`,
-        position: new _(e / 24 * R - z, 0, t + 4)
+        position: new _(e / 24 * R - z, 0, labelsValue + 4)
       });
       let r = -z - 3;
-      if (this.set.dayCount > 62) for (let t of e.monthMarks) n.push({
-        key: `month-${t.dayIndex}`,
-        text: t.label,
+      if (this.set.dayCount > 62) for (let count of labels.monthMarks) emptyItems.push({
+        key: `month-${count.dayIndex}`,
+        text: count.label,
         kind: `side`,
-        position: new _(r, 0, this.rowZ(t.dayIndex))
-      });else e.dayLabels.forEach((e, t) => {
-        e && n.push({
+        position: new _(r, 0, this.rowZ(count.dayIndex))
+      });else labels.dayLabels.forEach((item, t) => {
+        item && emptyItems.push({
           key: `day-${t}`,
-          text: e,
+          text: item,
           kind: `side`,
           position: new _(r, 0, this.rowZ(t))
         });
       });
-      return n;
+      return emptyItems;
     }
     paint(e) {
       let t = this.baseColors[e];
@@ -194,24 +194,24 @@ var oe = class {
       for (let e = 0; e < this.baseColors.length; e += 1) this.paint(e);
       this.colorSync.markAll();
     }
-    setColors(e, t) {
-      this.baseColors = this.set.blocks.map(n => new k(N(n, e, t))), this.groundColor.set(t.ground), this.hoverColor.set(t.textPrimary), this.trackMaterial.color.set(t.ground), this.paintAll();
+    setColors(colors, colorsValue) {
+      this.baseColors = this.set.blocks.map(item => new k(N(item, colors, colorsValue))), this.groundColor.set(colorsValue.ground), this.hoverColor.set(colorsValue.textPrimary), this.trackMaterial.color.set(colorsValue.ground), this.paintAll();
     }
-    setHighlight(e) {
-      this.set.blocks.forEach((t, n) => {
-        this.dims[n] = e && !e.has(t.value) ? 1 : 0;
+    setHighlight(highlight) {
+      this.set.blocks.forEach((item, n) => {
+        this.dims[n] = highlight && !highlight.has(item.value) ? 1 : 0;
       }), this.dimAttribute.needsUpdate = true, this.paintAll();
     }
-    setHovered(e) {
-      if (e === this.hovered) return;
-      let t = this.hovered;
-      this.hovered = e, this.paint(t), this.paint(e), this.colorSync.markOne(this.buildings, t), this.colorSync.markOne(this.buildings, e);
+    setHovered(hoveredValue) {
+      if (hoveredValue === this.hovered) return;
+      let hovered = this.hovered;
+      this.hovered = hoveredValue, this.paint(hovered), this.paint(hoveredValue), this.colorSync.markOne(this.buildings, hovered), this.colorSync.markOne(this.buildings, hoveredValue);
     }
-    startGrowth(e) {
-      this.clock.start(e, this.maxDelay);
+    startGrowth(growth) {
+      this.clock.start(growth, this.maxDelay);
     }
-    stepGrowth(e) {
-      return this.colorSync.frameStarted(), this.clock.step(e);
+    stepGrowth(step) {
+      return this.colorSync.frameStarted(), this.clock.step(step);
     }
     pick(e) {
       let {
@@ -220,7 +220,7 @@ var oe = class {
         dayCount: r
       } = this.set;
       if (t.length === 0) return null;
-      let i = this.framing.corners.reduce((e, t) => Math.max(e, t.y), 0),
+      let reduced = this.framing.corners.reduce((acc, cur) => Math.max(acc, cur.y), 0),
         {
           origin: a,
           direction: o
@@ -229,15 +229,15 @@ var oe = class {
         c = 1e7;
       if (Math.abs(o.y) > 1e-9) {
         let e = -a.y / o.y,
-          t = (i - a.y) / o.y;
+          t = (reduced - a.y) / o.y;
         if (s = Math.max(0, Math.min(e, t)), c = Math.max(e, t), c < s) return null;
-      } else if (a.y < 0 || a.y > i) return null;
+      } else if (a.y < 0 || a.y > reduced) return null;
       let l = a.z + o.z * s,
         u = a.z + o.z * c,
         d = this.rowZ(0),
-        f = this.layout.rowPitch,
-        p = Math.max(0, Math.floor((Math.min(l, u) - d) / f) - 1),
-        m = Math.min(r - 1, Math.ceil((Math.max(l, u) - d) / f) + 1),
+        rowPitch = this.layout.rowPitch,
+        p = Math.max(0, Math.floor((Math.min(l, u) - d) / rowPitch) - 1),
+        m = Math.min(r - 1, Math.ceil((Math.max(l, u) - d) / rowPitch) + 1),
         h = this.layout.buildingDepth / 2,
         g = -1,
         _ = 1 / 0,
@@ -250,8 +250,8 @@ var oe = class {
             s = (n.start + n.end) / 2 - z,
             c = this.heights[o] * (this.dims[o] ? W : 1);
           if (this.hitBox.min.set(s - r, 0, i - h), this.hitBox.max.set(s + r, c, i + h), !e.intersectBox(this.hitBox, this.hitPoint)) continue;
-          let l = this.hitPoint.distanceToSquared(a);
-          l < _ && (_ = l, g = o, v = this.hitPoint.x);
+          let distanceToSquared = this.hitPoint.distanceToSquared(a);
+          distanceToSquared < _ && (_ = distanceToSquared, g = o, v = this.hitPoint.x);
         }
       }
       if (g < 0) return null;
@@ -297,36 +297,36 @@ var oe = class {
     segments: 32
   }];
 function ye(e) {
-  let t = [],
+  let emptyItems = [],
     n = [],
-    r = [],
-    i = (e, r, i, a, o, s) => (t.push(e, r, i), n.push(a, o, s), t.length / 3 - 1),
+    count = [],
+    handler = (e, r, i, a, o, s) => (emptyItems.push(e, r, i), n.push(a, o, s), emptyItems.length / 3 - 1),
     a = [],
     o = [],
     s = [],
-    c = [],
+    ratio = [],
     l = [],
     u = [];
   for (let t = 0; t <= e; t += 1) {
     let n = t / e;
-    a.push(i(n, 1, 0, 0, 1, 0)), o.push(i(n, 1, 1, 0, 1, 0)), s.push(i(n, 0, 1, 0, 0, 1)), c.push(i(n, 1, 1, 0, 0, 1)), l.push(i(n, 0, 0, 0, 0, -1)), u.push(i(n, 1, 0, 0, 0, -1));
+    a.push(handler(n, 1, 0, 0, 1, 0)), o.push(handler(n, 1, 1, 0, 1, 0)), s.push(handler(n, 0, 1, 0, 0, 1)), ratio.push(handler(n, 1, 1, 0, 0, 1)), l.push(handler(n, 0, 0, 0, 0, -1)), u.push(handler(n, 1, 0, 0, 0, -1));
   }
   for (let t = 0; t < e; t += 1) {
     let e = t + 1;
-    r.push(a[t], a[e], o[e], a[t], o[e], o[t]), r.push(s[t], c[t], c[e], s[t], c[e], s[e]), r.push(l[t], u[e], u[t], l[t], l[e], u[e]);
+    count.push(a[t], a[e], o[e], a[t], o[e], o[t]), count.push(s[t], ratio[t], ratio[e], s[t], ratio[e], s[e]), count.push(l[t], u[e], u[t], l[t], l[e], u[e]);
   }
-  let d = i(0, 0, 0, -1, 0, 0),
-    f = i(0, 1, 0, -1, 0, 0),
-    p = i(0, 1, 1, -1, 0, 0),
-    m = i(0, 0, 1, -1, 0, 0);
-  r.push(d, f, p, d, p, m);
-  let h = i(1, 0, 0, 1, 0, 0),
-    g = i(1, 0, 1, 1, 0, 0),
-    _ = i(1, 1, 1, 1, 0, 0),
-    v = i(1, 1, 0, 1, 0, 0);
-  r.push(h, g, _, h, _, v);
+  let d = handler(0, 0, 0, -1, 0, 0),
+    f = handler(0, 1, 0, -1, 0, 0),
+    p = handler(0, 1, 1, -1, 0, 0),
+    m = handler(0, 0, 1, -1, 0, 0);
+  count.push(d, f, p, d, p, m);
+  let h = handler(1, 0, 0, 1, 0, 0),
+    g = handler(1, 0, 1, 1, 0, 0),
+    _ = handler(1, 1, 1, 1, 0, 0),
+    v = handler(1, 1, 0, 1, 0, 0);
+  count.push(h, g, _, h, _, v);
   let y = new D();
-  return y.setAttribute(`position`, new x(t, 3)), y.setAttribute(`normal`, new x(n, 3)), y.setIndex(r), y;
+  return y.setAttribute(`position`, new x(emptyItems, 3)), y.setAttribute(`normal`, new x(n, 3)), y.setIndex(count), y;
 }
 function be(e) {
   let t = new A();
@@ -374,8 +374,8 @@ var xe = class {
     hoverColor = new k();
     scratchColor = new k();
     hovered = -1;
-    constructor(e, t) {
-      this.set = F(e);
+    constructor(constructor, constructorValue) {
+      this.set = F(constructor);
       let {
           blocks: n,
           dayCount: r
@@ -386,51 +386,51 @@ var xe = class {
         layerPitch: a,
         layerHeight: i ? a : a * pe
       }, this.outerRadii = new Float32Array(n.length), this.tierOf = new Uint8Array(n.length), this.instanceOf = new Int32Array(n.length), this.dimmed = new Uint8Array(n.length), this.cellBlocks = new Int32Array(r * Y).fill(-1);
-      let o = $.map(() => 0),
+      let mapped = $.map(() => 0),
         s = 29;
-      n.forEach((e, t) => {
-        let n = P(e) ? ce : Q + se * M(e);
+      n.forEach((item, t) => {
+        let n = P(item) ? ce : Q + se * M(item);
         this.outerRadii[t] = Z + n, s = Math.max(s, this.outerRadii[t]);
-        let r = e.end - e.start,
-          i = $.findIndex(e => r <= e.maxSpan);
-        this.tierOf[t] = i, this.instanceOf[t] = o[i], o[i] += 1, this.cellBlocks.fill(t, e.dayIndex * Y + e.start, e.dayIndex * Y + e.end);
+        let r = item.end - item.start,
+          indexResult = $.findIndex(e => r <= e.maxSpan);
+        this.tierOf[t] = indexResult, this.instanceOf[t] = mapped[indexResult], mapped[indexResult] += 1, this.cellBlocks.fill(t, item.dayIndex * Y + item.start, item.dayIndex * Y + item.end);
       }), this.maxRadius = s, this.material = be(this.clock);
       let c = 0;
-      $.forEach((e, t) => {
-        let i = o[t];
+      $.forEach((item, t) => {
+        let i = mapped[t];
         if (i === 0) return;
-        let a = ye(e.segments),
-          s = new Float32Array(i * 2),
+        let a = ye(item.segments),
+          float32Array = new Float32Array(i * 2),
           l = new Float32Array(i * 2),
           u = new Float32Array(i * 2),
           d = new Float32Array(i),
           f = new Float32Array(i),
-          p = new Int32Array(i);
+          int32Array = new Int32Array(i);
         n.forEach((e, n) => {
           if (this.tierOf[n] !== t) return;
           let i = this.instanceOf[n];
-          p[i] = n, s[i * 2] = e.start / Y * X, s[i * 2 + 1] = e.end / Y * X, l[i * 2] = Z, l[i * 2 + 1] = this.outerRadii[n], u[i * 2] = this.layerBottom(e.dayIndex), u[i * 2 + 1] = this.layout.layerHeight, d[i] = j(e, r, ge, 0), c = Math.max(c, d[i]);
-        }), a.setAttribute(`aArc`, new O(s, 2)), a.setAttribute(`aRadius`, new O(l, 2)), a.setAttribute(`aLayer`, new O(u, 2)), a.setAttribute(`aDelay`, new O(d, 1));
+          int32Array[i] = n, float32Array[i * 2] = e.start / Y * X, float32Array[i * 2 + 1] = e.end / Y * X, l[i * 2] = Z, l[i * 2 + 1] = this.outerRadii[n], u[i * 2] = this.layerBottom(e.dayIndex), u[i * 2 + 1] = this.layout.layerHeight, d[i] = j(e, r, ge, 0), c = Math.max(c, d[i]);
+        }), a.setAttribute(`aArc`, new O(float32Array, 2)), a.setAttribute(`aRadius`, new O(l, 2)), a.setAttribute(`aLayer`, new O(u, 2)), a.setAttribute(`aDelay`, new O(d, 1));
         let m = new O(f, 1);
         a.setAttribute(`aDim`, m);
         let h = new E(a, this.material, i);
         h.instanceColor = new O(new Float32Array(i * 3), 3), h.frustumCulled = false, this.tiers[t] = {
           mesh: h,
           geometry: a,
-          blockIndexes: p,
+          blockIndexes: int32Array,
           dims: f,
           dimAttribute: m
         }, this.root.add(h);
-      }), this.maxDelay = c, this.colorSync = new L(this.tiers.filter(Boolean).map(e => e.mesh)), this.baseGeometry = new b(s + 4, s + 4, ve, 96);
+      }), this.maxDelay = c, this.colorSync = new L(this.tiers.filter(Boolean).map(item => item.mesh)), this.baseGeometry = new b(s + 4, s + 4, ve, 96);
       let l = new C(this.baseGeometry, this.baseMaterial);
       l.position.y = _e - ve / 2, this.root.add(l);
       let u = this.layerBottom(Math.max(0, r - 1)) + this.layout.layerHeight,
         d = s + 12,
-        f = [];
-      for (let e of [-d, d]) for (let t of [0, u]) for (let n of [-d, d]) f.push(new _(e, t, n));
+        emptyItems = [];
+      for (let count of [-d, d]) for (let t of [0, u]) for (let n of [-d, d]) emptyItems.push(new _(count, t, n));
       this.framing = {
         target: new _(0, u * .45, 0),
-        corners: f,
+        corners: emptyItems,
         homeView: {
           polar: 1.12,
           azimuth: .38
@@ -444,43 +444,43 @@ var xe = class {
           maxPolar: 1.48,
           azimuthRange: null
         }
-      }, this.labels = this.buildLabels(t, u);
+      }, this.labels = this.buildLabels(constructorValue, u);
     }
-    layerBottom(e) {
-      return e * this.layout.layerPitch;
+    layerBottom(layer) {
+      return layer * this.layout.layerPitch;
     }
-    buildLabels(e, t) {
-      let n = [],
+    buildLabels(labels, labelsValue) {
+      let emptyItems = [],
         r = this.maxRadius + 6;
       for (let e = 0; e < 24; e += 3) {
         let i = e / 24 * X,
           a = new _(Math.sin(i), 0, -Math.cos(i));
-        n.push({
+        emptyItems.push({
           key: `hour-${e}`,
           text: `${e}:00`,
           kind: `hour`,
-          position: a.clone().multiplyScalar(r).setY(t + .5),
+          position: a.clone().multiplyScalar(r).setY(labelsValue + .5),
           facing: a
         });
       }
       let i = new _(-1, 0, 0),
-        a = e => new _(-(this.maxRadius + 3), this.layerBottom(e) + this.layout.layerHeight / 2, 0);
-      if (this.set.dayCount > 62) for (let t of e.monthMarks) n.push({
-        key: `month-${t.dayIndex}`,
-        text: t.label,
+        handler = e => new _(-(this.maxRadius + 3), this.layerBottom(e) + this.layout.layerHeight / 2, 0);
+      if (this.set.dayCount > 62) for (let count of labels.monthMarks) emptyItems.push({
+        key: `month-${count.dayIndex}`,
+        text: count.label,
         kind: `side`,
-        position: a(t.dayIndex),
+        position: handler(count.dayIndex),
         facing: i
-      });else e.dayLabels.forEach((e, t) => {
-        e && n.push({
+      });else labels.dayLabels.forEach((item, t) => {
+        item && emptyItems.push({
           key: `day-${t}`,
-          text: e,
+          text: item,
           kind: `side`,
-          position: a(t),
+          position: handler(t),
           facing: i
         });
       });
-      return n;
+      return emptyItems;
     }
     paint(e) {
       let t = this.baseColors[e],
@@ -491,35 +491,35 @@ var xe = class {
       for (let e = 0; e < this.baseColors.length; e += 1) this.paint(e);
       this.colorSync.markAll();
     }
-    setColors(e, t) {
-      this.baseColors = this.set.blocks.map(n => new k(N(n, e, t))), this.groundColor.set(t.ground), this.hoverColor.set(t.textPrimary), this.baseMaterial.color.set(t.ground), this.paintAll();
+    setColors(colors, colorsValue) {
+      this.baseColors = this.set.blocks.map(item => new k(N(item, colors, colorsValue))), this.groundColor.set(colorsValue.ground), this.hoverColor.set(colorsValue.textPrimary), this.baseMaterial.color.set(colorsValue.ground), this.paintAll();
     }
-    setHighlight(e) {
-      this.set.blocks.forEach((t, n) => {
-        let r = e && !e.has(t.value) ? 1 : 0;
+    setHighlight(highlight) {
+      this.set.blocks.forEach((item, n) => {
+        let r = highlight && !highlight.has(item.value) ? 1 : 0;
         this.dimmed[n] = r;
         let i = this.tiers[this.tierOf[n]];
         i && (i.dims[this.instanceOf[n]] = r);
       });
-      for (let e of this.tiers) e && (e.dimAttribute.needsUpdate = true);
+      for (let count of this.tiers) count && (count.dimAttribute.needsUpdate = true);
       this.paintAll();
     }
-    setHovered(e) {
-      if (e === this.hovered) return;
-      let t = this.hovered;
-      this.hovered = e;
-      for (let n of [t, e]) {
+    setHovered(hoveredValue) {
+      if (hoveredValue === this.hovered) return;
+      let hovered = this.hovered;
+      this.hovered = hoveredValue;
+      for (let n of [hovered, hoveredValue]) {
         if (n < 0) continue;
         this.paint(n);
         let e = this.tiers[this.tierOf[n]];
         e && this.colorSync.markOne(e.mesh, this.instanceOf[n]);
       }
     }
-    startGrowth(e) {
-      this.clock.start(e, this.maxDelay);
+    startGrowth(growth) {
+      this.clock.start(growth, this.maxDelay);
     }
-    stepGrowth(e) {
-      return this.colorSync.frameStarted(), this.clock.step(e);
+    stepGrowth(step) {
+      return this.colorSync.frameStarted(), this.clock.step(step);
     }
     pick(e) {
       let {
@@ -544,15 +544,15 @@ var xe = class {
         u = -1,
         d = 0;
       for (let e = 0; e < t; e += 1) {
-        let t = this.layerBottom(e),
-          a = t + this.layout.layerHeight,
+        let layerBottom = this.layerBottom(e),
+          a = layerBottom + this.layout.layerHeight,
           o = s,
           f = c;
         if (Math.abs(r.y) > 1e-9) {
-          let e = (t - n.y) / r.y,
+          let e = (layerBottom - n.y) / r.y,
             i = (a - n.y) / r.y;
           o = Math.max(o, Math.min(e, i)), f = Math.min(f, Math.max(e, i));
-        } else if (n.y < t || n.y > a) continue;
+        } else if (n.y < layerBottom || n.y > a) continue;
         if (f < o || o >= l) continue;
         let p = Math.sqrt(i) * (f - o),
           m = Math.min(64, Math.max(2, Math.ceil(p / .5)));
@@ -580,7 +580,7 @@ var xe = class {
       };
     }
     dispose() {
-      for (let e of this.tiers) e && (e.mesh.dispose(), e.geometry.dispose());
+      for (let count of this.tiers) count && (count.mesh.dispose(), count.geometry.dispose());
       this.material.dispose(), this.baseGeometry.dispose(), this.baseMaterial.dispose();
     }
   },
@@ -628,63 +628,63 @@ var xe = class {
         w = o(null),
         T = o(false),
         E = n([]),
-        D = [],
+        emptyItems = [],
         O = h(() => b.shape === `tower` ? 500 : b.result.days.length > 62 ? 480 : 420),
         k = null,
-        A = null,
+        resolvedValue = null,
         j = null,
         M = false,
         N = 0,
         P = null,
         F = -1,
         I = false,
-        L = null,
+        payload = null,
         R = null,
         z = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
         B = new _();
       function V(e, t) {
-        D[t] = e instanceof HTMLElement ? e : null;
+        emptyItems[t] = e instanceof HTMLElement ? e : null;
       }
       function H() {
         return b.highlight ? new Set(b.highlight) : null;
       }
       function U(e) {
         if (!k) return;
-        A && (k.scene.remove(A.root), A.dispose());
+        resolvedValue && (k.scene.remove(resolvedValue.root), resolvedValue.dispose());
         let t = {
           dayLabels: b.dayLabels,
           monthMarks: b.monthMarks
         };
-        A = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), A.setColors(b.colors, b.theme), A.setHighlight(H()), k.scene.add(A.root), k.setFraming(A.framing), F = -1, D.length = 0, E.value = A.labels, A.startGrowth(e && !z);
+        resolvedValue = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), resolvedValue.setColors(b.colors, b.theme), resolvedValue.setHighlight(H()), k.scene.add(resolvedValue.root), k.setFraming(resolvedValue.framing), F = -1, emptyItems.length = 0, E.value = resolvedValue.labels, resolvedValue.startGrowth(e && !z);
       }
       function W() {
         let e = C.value;
         if (!k || !e) return;
-        let t = e.clientWidth,
-          n = e.clientHeight,
+        let clientWidth = e.clientWidth,
+          clientHeight = e.clientHeight,
           r = 1 / 0;
         for (let e = E.value.length - 1; e >= 0; --e) {
           let i = E.value[e],
-            a = D[e];
+            a = emptyItems[e];
           if (!i || !a) continue;
-          let o = k.project(i.position, t, n),
-            s = o.visible;
-          s && i.kind === `side` && (Math.abs(r - o.y) < Oe ? s = false : r = o.y);
+          let o = k.project(i.position, clientWidth, clientHeight),
+            visible = o.visible;
+          visible && i.kind === `side` && (Math.abs(r - o.y) < Oe ? visible = false : r = o.y);
           let c = 1;
-          i.facing && (B.copy(k.camera.position).sub(i.position), B.dot(i.facing) < 0 && (c = ke)), a.style.visibility = s ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
+          i.facing && (B.copy(k.camera.position).sub(i.position), B.dot(i.facing) < 0 && (c = ke)), a.style.visibility = visible ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
         }
       }
       function G(e) {
         e ? (I = true, x(`hover`, e)) : I && (I = false, x(`hover`, null));
       }
       function K(e) {
-        A && e !== F && (F = e, A.setHovered(e), k?.requestRender());
+        resolvedValue && e !== F && (F = e, resolvedValue.setHovered(e), k?.requestRender());
       }
       function te() {
         N = 0;
         let e = P;
-        if (!e || !k || !A || T.value) return;
-        let t = A.pick(k.rayFromEvent(e));
+        if (!e || !k || !resolvedValue || T.value) return;
+        let t = resolvedValue.pick(k.rayFromEvent(e));
         K(t?.blockIndex ?? -1), G(t ? {
           dayIndex: t.dayIndex,
           bucket: t.bucket,
@@ -698,29 +698,29 @@ var xe = class {
       function q() {
         P = null, N && cancelAnimationFrame(N), N = 0, K(-1), G(null);
       }
-      function re(e) {
-        T.value = true, L = {
-          x: e.clientX,
-          y: e.clientY
+      function re(event) {
+        T.value = true, payload = {
+          x: event.clientX,
+          y: event.clientY
         }, q();
       }
       function J() {
         T.value = false;
       }
-      function ie(e) {
-        if (!L || !k || !A) return;
-        let t = Math.hypot(e.clientX - L.x, e.clientY - L.y);
-        if (L = null, t > Ae) return;
-        let n = A.pick(k.rayFromEvent(e));
-        R && clearTimeout(R), R = null, !(!n || e.detail > 1) && (R = setTimeout(() => {
+      function ie(event) {
+        if (!payload || !k || !resolvedValue) return;
+        let t = Math.hypot(event.clientX - payload.x, event.clientY - payload.y);
+        if (payload = null, t > Ae) return;
+        let n = resolvedValue.pick(k.rayFromEvent(event));
+        R && clearTimeout(R), R = null, !(!n || event.detail > 1) && (R = setTimeout(() => {
           R = null, x(`select`, n.dayIndex);
         }, je));
       }
       function ae() {
         R && clearTimeout(R), R = null, Z();
       }
-      function Y(e) {
-        k && (k.controls.enableZoom = e.ctrlKey || e.metaKey);
+      function Y(event) {
+        k && (k.controls.enableZoom = event.ctrlKey || event.metaKey);
       }
       function X() {
         let e = C.value;
@@ -740,15 +740,15 @@ var xe = class {
       }), a(() => b.result, () => {
         k && (q(), U(true), k.resetHome(true));
       }), a([() => b.colors, () => b.theme], () => {
-        A?.setColors(b.colors, b.theme), k?.requestRender();
+        resolvedValue?.setColors(b.colors, b.theme), k?.requestRender();
       }), a(() => b.highlight, () => {
-        A?.setHighlight(H()), k?.requestRender();
+        resolvedValue?.setHighlight(H()), k?.requestRender();
       }), m(() => {
         let e = w.value,
           t = C.value;
         if (e && t) {
           if (k = ee.create(e, b.shape === `tower` ? De : Ee, {
-            onFrame: e => A?.stepGrowth(e) ?? false,
+            onFrame: e => resolvedValue?.stepGrowth(e) ?? false,
             onRendered: W
           }), !k) {
             x(`unavailable`);
@@ -762,7 +762,7 @@ var xe = class {
       }), f(() => {
         N && cancelAnimationFrame(N), N = 0, R && clearTimeout(R), R = null, j?.disconnect(), j = null, C.value?.removeEventListener(`wheel`, Y, {
           capture: true
-        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), A?.dispose(), A = null, k?.dispose(), k = null;
+        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), resolvedValue?.dispose(), resolvedValue = null, k?.dispose(), k = null;
       }), (n, a) => (c(), r(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: C,
@@ -781,15 +781,15 @@ var xe = class {
         onPointerdown: re,
         onClick: ie,
         onDblclick: ae
-      }, null, 42, Se), g(`div`, Ce, [(c(true), r(s, null, i(E.value, (t, n) => (c(), r(`span`, {
-        key: t.key,
+      }, null, 42, Se), g(`div`, Ce, [(c(true), r(s, null, i(E.value, (event, n) => (c(), r(`span`, {
+        key: event.key,
         ref_for: true,
         ref: e => V(e, n),
-        class: e([`absolute left-0 top-0 whitespace-nowrap text-xs leading-none`, t.kind === `hour` ? `text-[#bbb] dark:text-muted-foreground/70` : `font-medium text-[#888] dark:text-muted-foreground`]),
+        class: e([`absolute left-0 top-0 whitespace-nowrap text-xs leading-none`, event.kind === `hour` ? `text-[#bbb] dark:text-muted-foreground/70` : `font-medium text-[#888] dark:text-muted-foreground`]),
         style: {
           visibility: `hidden`
         }
-      }, p(t.text), 3))), 128))]), g(`div`, we, [g(`button`, {
+      }, p(event.text), 3))), 128))]), g(`div`, we, [g(`button`, {
         type: `button`,
         class: `h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
         onClick: a[0] ||= e => Q(`home`)

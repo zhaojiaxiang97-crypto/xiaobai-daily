@@ -55,23 +55,23 @@ import { createRequire as nodemoduleLib } from "node:module";
 nodemoduleLib(import.meta.url);
 import { i as rolldownLib, n as rolldownUtil, t as rolldownMod } from "./lib/rolldown-runtime.js";
 import { $ as settingsService, A as ENTER_KEY_RECORD_INTERVAL_SECONDS, At as settingsLib, B as workMotivatorWindowSize, Bt as getCustomDataDirForSelectedParent, C as aiModeKey, Ct as unknownType, D as migrateLegacyAiModeRows, E as getWorkOverviewModelSignature, F as getDefaultLocalEndpointPath, Ft as isDatabaseGenerationCurrent, Gt as decryptString, H as SCREENSHOT_HISTORY_LIMITS, Ht as getDatabaseStorageLocation, I as normalizeScheduledReportIntervalMinutes, J as normalizeScreenshotStyle, Jt as CLIPBOARD_HISTORY_RETENTION_DAYS, K as normalizeScreenshotAnnotations, Kt as encryptString, L as resolveLocalApiStyle, Lt as decryptCredential, M as SCHEDULED_REPORT_REDACTED_TIMELINE_SUMMARY, Mt as getDatabase, N as SCREENSHOT_INTERVAL_SECONDS, Nt as getDatabaseGeneration, O as normalizeScreenshotIntervalForAiMode, P as SUBSCRIPTION_THINKING_LEVELS, Pt as getOpenDatabaseConnection, Q as AGENT_SESSION_MANUAL_IMPORT_DAY_OPTIONS, Qt as CLIPBOARD_WORK_RECORD_CATEGORY_ID, R as normalizeWorkMotivatorConfig, Rt as encryptCredential, S as normalizeReportGenerationModel, St as unionType, T as getWorkOverviewModelPurpose, Tt as ZodIssueCode, Ut as migrateDatabaseStorage, V as SCREENSHOT_AFTER_CAPTURE_ACTIONS, Vt as getDatabaseDataDir, Wt as getLatestSchemaVersion, Y as resolveScreenshotBeautifierShortcut, Yt as CLIPBOARD_PHRASE_MAX_CONTENT_LENGTH, Z as AGENT_SESSION_IMPORT_MAX_INTERVAL_MINUTES, _ as getSinceLastRange, _t as nullType, an as builtinCategoriesForUsageMode, at as DEFAULT_RECORDING_SCHEDULE, b as toLocalDateKey, bt as recordType, c as resolveUsageModeConfigKey, ct as recordingRuleDaysFor, d as resolveCommonAppName, dt as booleanType, en as resolveClipboardAssistantShortcut, et as AGENT_SESSION_PROVIDER_IDS, f as AUTO_REPORT_TYPE_ORDER, ft as custom, g as getRecordedPeriodCandidates, gt as literalType, h as getLatestTaskRun, ht as instanceOfType, i as translateMenu, in as WORK_RECORD_CATEGORY_COLORS, it as openAgentSessionImportPeriod, j as IDLE_MINUTES_OPTIONS, jt as getCurrentDatabasePath, k as resolveAiMode, kt as closeDatabase, l as resolveUsageModeLocaleKey, lt as recordingScheduleSchema, m as getFillMissingCandidates, mt as enumType, n as settingsRepository, nt as hasOpenAgentSessionImportPeriod, o as isStudentMode, on as builtinCategoriesToDisableForUsageMode, ot as isRecordingTimeAllowed, p as autoReportTaskSchema, pt as discriminatedUnionType, r as getMainProcessUsageMode, rn as STUDENT_BUILTIN_WORK_RECORD_CATEGORY_PRESETS, rt as isWithinAgentSessionImportPeriods, s as normalizeUsageMode, sn as builtinWorkRecordCategoryId, st as nextRecordingScheduleChange, t as SENSITIVE_SETTING_KEYS, tt as closeAgentSessionImportPeriod, u as localizeCommonAppName, ut as arrayType, v as getStaticTaskRange, vt as numberType, w as buildAiConnectionInput, wt as ZodError, x as isPremiumReportGenerationModel, xt as stringType, y as templatesForReportType, yt as objectType, z as workMotivatorDateKey, zt as StorageLocationError } from "./services/settings.repository.js";
-import { $ as telemetryService, A as telemetryLib, B as telemetryApi, C as telemetryRepo, D as telemetryUtil, E as telemetryMod, H as telemetryConst, J as _0xe22873, M as telemetryClient, N as _0x11b305, O as _0x2897c9, P as _0x231789, Q as importAliasA, R as _0x23004e, S as _0x439c81, T as _0x218943, U as _0x58f2c7, V as _0x2ac41a, W as _0x565740, X as _0x526e8a, Y as settingsSvc, Z as _0x18d5e1, a as _0x401fe5, at as _0xfc21b3, b as _0x2ac963, c as _0x596d58, d as _0x41caa7, et as _0x3add38, g as _0x3d9fcc, h as _0x34dbec, it as _0x416bc0, j as _0x7697ad, k as _0xdc6aae, m as _0x53cb49, n as _0x12b869, nt as _0x5bc685, o as _0x5f545c, p as _0x49de04, r as _0x5b6c4b, rt as _0x4a3fb2, s as _0x3455b4, t as _0x105c3c, tt as _0x220889, u as _0x5986f8, v as _0x565abb, w as _0x198d0e, x as _0x5d968a, y as _0x3010b2 } from "./services/telemetry.service.js";
-import { n as metricsSvc, t as _0x4448c9 } from "./services/native-active-context-collector.service.js";
+import { $ as telemetryService, A as telemetryLib, B as telemetryApi, C as telemetryRepo, D as telemetryUtil, E as telemetryMod, H as telemetryConst, J as telemetry, M as telemetryClient, N as _0x11b305, O as telemetryFn, P as _0x231789, Q as importAliasA, R as _0x23004e, S as _0x439c81, T as _0x218943, U as _0x58f2c7, V as _0x2ac41a, W as _0x565740, X as _0x526e8a, Y as settingsSvc, Z as _0x18d5e1, a as _0x401fe5, at as _0xfc21b3, b as _0x2ac963, c as _0x596d58, d as _0x41caa7, et as _0x3add38, g as _0x3d9fcc, h as _0x34dbec, it as _0x416bc0, j as _0x7697ad, k as _0xdc6aae, m as _0x53cb49, n as _0x12b869, nt as _0x5bc685, o as _0x5f545c, p as _0x49de04, r as _0x5b6c4b, rt as _0x4a3fb2, s as _0x3455b4, t as _0x105c3c, tt as _0x220889, u as _0x5986f8, v as _0x565abb, w as _0x198d0e, x as _0x5d968a, y as _0x3010b2 } from "./services/telemetry.service.js";
+import { n as metricsSvc, t as nativeactivecontextcollector } from "./services/native-active-context-collector.service.js";
 import { i as workLib, n as workUtil, t as workService } from "./services/work-record.repository.js";
 import { n as translate, t as appLib } from "./lib/app-language.js";
-import { _ as xiaoheibotService, i as xiaoheibotLib, m as xiaoheibotUtil, n as xiaoheibotApi, o as xiaoheibotRepo, r as xiaoheibotClient, s as xiaoheibotMod, v as _0x48f15a } from "./services/xiaohei-bot-schedule.service.js";
-import { $ as authLib, A as authUtil, At as authMod, B as authConst, Bt as _0x38e940, C as authApi, Ct as _0x19e526, D as authRepo, Dt as _0x432bfd, E as authClient, Et as _0x59807a, F as _0xe6e553, Ft as _0x59b6c4, G as _0x482f2f, Gt as _0x1f85b6, H as _0x1c0eab, Ht as _0x3edd42, I as _0x7ec2c7, It as _0x139d86, J as _0x4c10cd, Jt as _0x2f9916, K as _0x27f105, Kt as _0x245fce, L as _0x3e6d27, Lt as _0x14eb26, M as _0x245a76, Mt as _0x378667, N as _0x9ed78c, Nt as _0x41585e, O as _0xabc870, Ot as _0x540c35, P as _0x3e8102, Pt as _0xd2273d, Q as _0x4d5fea, Qt as _0x39072e, R as _0xf46b52, Rt as _0x3546cd, S as _0x368ff8, St as _0x21b1fb, T as _0x26e6e2, Tt as _0xedfbed, U as _0x253e0e, Ut as _0x5ddfab, V as _0x395cad, Vt as _0x5855ec, W as _0x55c4e4, Wt as _0x21d233, X as _0x1acf0d, Y as _0x4951a0, Z as _0x506ff0, Zt as _0x41fee8, _ as _0x1a5810, _t as _0x2d2254, a as _0x423b48, at as _0x17b837, b as _0x529a49, bt as _0x29c38d, c as _0x42a303, ct as _0x370f80, d as _0x991b05, dt as _0x1ffba9, et as _0x662ec4, f as _0x459c42, ft as _0x579195, gt as _0x6aab6b, h as _0x47704a, ht as _0x57c551, in as _0x367df2, it as _0x905efa, j as _0x1d9713, jt as _0x56b584, k as _0x4d3f99, kt as _0x2a00f0, l as _0x31c313, lt as _0x20d4b7, mt as _0x4c5d35, n as authService, nn as _0x18b199, nt as _0x26b25c, ot as listTodos, p as responseIsSkip, pt as resolveTodoAssignee, q as getTodo, qt as validateNetworkProxySettings, r as xiaoheiBotSyncService, rn as SHARED_TEXT_LIMIT, rt as listTodoFriendRequests, st as patchTodoPin, t as AuthService, tn as botSharedWorkspaceStore, tt as listTodoAssigneeContacts, u as getUserProfileContext, ut as removeTodoFriend, vt as updateTodoFriendRemark, w as recordingBoxRepository, wt as consumeWordCloud, x as ensureWorkRecordQuota, xt as claimCreditCampaign, y as xiaoheiDataToolService, yt as uploadTodoAttachmentFromBuffer, z as cancelTodoFriendRequest, zt as settlePublisher } from "./services/auth.service.js";
+import { _ as xiaoheibotService, i as xiaoheibotLib, m as xiaoheibotUtil, n as xiaoheibotApi, o as xiaoheibotRepo, r as xiaoheibotClient, s as xiaoheibotMod, v as xiaoheibotscheduleService } from "./services/xiaohei-bot-schedule.service.js";
+import { $ as authLib, A as authUtil, At as authMod, B as authConst, Bt as authFn, C as authApi, Ct as auth, D as authRepo, Dt as _0x432bfd, E as authClient, Et as _0x59807a, F as _0xe6e553, Ft as _0x59b6c4, G as _0x482f2f, Gt as _0x1f85b6, H as _0x1c0eab, Ht as _0x3edd42, I as _0x7ec2c7, It as _0x139d86, J as _0x4c10cd, Jt as _0x2f9916, K as _0x27f105, Kt as _0x245fce, L as _0x3e6d27, Lt as _0x14eb26, M as _0x245a76, Mt as _0x378667, N as _0x9ed78c, Nt as _0x41585e, O as _0xabc870, Ot as _0x540c35, P as _0x3e8102, Pt as _0xd2273d, Q as _0x4d5fea, Qt as _0x39072e, R as _0xf46b52, Rt as _0x3546cd, S as _0x368ff8, St as _0x21b1fb, T as _0x26e6e2, Tt as _0xedfbed, U as _0x253e0e, Ut as _0x5ddfab, V as _0x395cad, Vt as _0x5855ec, W as _0x55c4e4, Wt as _0x21d233, X as _0x1acf0d, Y as _0x4951a0, Z as _0x506ff0, Zt as _0x41fee8, _ as _0x1a5810, _t as _0x2d2254, a as _0x423b48, at as _0x17b837, b as _0x529a49, bt as _0x29c38d, c as _0x42a303, ct as _0x370f80, d as _0x991b05, dt as _0x1ffba9, et as _0x662ec4, f as _0x459c42, ft as _0x579195, gt as _0x6aab6b, h as _0x47704a, ht as _0x57c551, in as _0x367df2, it as _0x905efa, j as _0x1d9713, jt as _0x56b584, k as _0x4d3f99, kt as _0x2a00f0, l as _0x31c313, lt as _0x20d4b7, mt as _0x4c5d35, n as authService, nn as _0x18b199, nt as _0x26b25c, ot as listTodos, p as responseIsSkip, pt as resolveTodoAssignee, q as getTodo, qt as validateNetworkProxySettings, r as xiaoheiBotSyncService, rn as SHARED_TEXT_LIMIT, rt as listTodoFriendRequests, st as patchTodoPin, t as AuthService, tn as botSharedWorkspaceStore, tt as listTodoAssigneeContacts, u as getUserProfileContext, ut as removeTodoFriend, vt as updateTodoFriendRemark, w as recordingBoxRepository, wt as consumeWordCloud, x as ensureWorkRecordQuota, xt as claimCreditCampaign, y as xiaoheiDataToolService, yt as uploadTodoAttachmentFromBuffer, z as cancelTodoFriendRequest, zt as settlePublisher } from "./services/auth.service.js";
 import { t as windowmessagingLib } from "./services/window-messaging.js";
 import { i as clipboardassistantService, r as clipboardassistantLib, t as clipboardassistantApi } from "./services/clipboard-assistant.service.js";
 import { a as screenshotbeautifierService, i as screenshotbeautifierApi, r as screenshotbeautifierRepo, t as screenshotbeautifierClient } from "./services/screenshot-beautifier.service.js";
 import { n as webaccountschedulerService, t as webaccountschedulerApi } from "./services/web-account-scheduler.service.js";
 import { a as webaccountauthService, i as webaccountauthApi, n as webaccountauthLib } from "./services/web-account-auth.service.js";
-import { A as _0x32dbed, O as _0x137df1, P as _0x5ae649, S as _0x2d45ea, T as _0x540282, _ as _0x226c23, a as _0x1f4406, d as _0x2e70fd, g as _0x1392fb, i as _0x43959c, j as _0x455ba1, n as _0x29a988, v as _0x199546, w as _0x579e16, x as _0x2dc6fc } from "./vendors/music-metadata/BasicParser.js";
-import { a as _0x5710c4, o as _0x2011fe, s as _0x527486, t as _0x515fbc } from "./vendors/music-metadata/APEv2Parser.js";
-import { d as _0x160e28, l as _0x1d217c, n as _0x1ea588 } from "./vendors/music-metadata/Util.js";
+import { A as basicParserFn, O as basicParser, P as basicParserMod, S as basicParserService, T as _0x540282, _ as _0x226c23, a as _0x1f4406, d as _0x2e70fd, g as _0x1392fb, i as _0x43959c, j as _0x455ba1, n as _0x29a988, v as _0x199546, w as _0x579e16, x as _0x2dc6fc } from "./vendors/music-metadata/BasicParser.js";
+import { a as aPEv2ParserFn, o as aPEv2Parser, s as _0x527486, t as aPEv2ParserService } from "./vendors/music-metadata/APEv2Parser.js";
+import { d as utilFn, l as util, n as _0x1ea588 } from "./vendors/music-metadata/Util.js";
 import { n as typesLib, r as typesUtil } from "./lib/types.js";
-import { c as _0x73f491, i as _0x5363d5 } from "./vendors/music-metadata/ID3v2Token.js";
-import { r as _0x4696d1 } from "./vendors/music-metadata/ID3v1Parser.js";
+import { c as iD3v2TokenConst, i as iD3v2Token } from "./vendors/music-metadata/ID3v2Token.js";
+import { r as iD3v1ParserFn } from "./vendors/music-metadata/ID3v1Parser.js";
 import crypto, { createCipheriv, createDecipheriv, createHash, randomBytes, randomInt, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 import { BrowserWindow, Menu, Notification, Tray, app, autoUpdater, clipboard, desktopCapturer, dialog, globalShortcut, ipcMain, nativeImage, nativeTheme, net, powerMonitor, protocol, screen, session, shell, systemPreferences, webContents } from "electron";
 import os from "node:os";
@@ -93,8 +93,8 @@ import nodereadlineService from "node:readline";
 import { finished, pipeline } from "node:stream/promises";
 import { chromium } from "playwright";
 import { setTimeout } from "node:timers/promises";
-import _0x1fab62 from "electron-updater/out/providers/GenericProvider.js";
-import _0x6b4cb8 from "electron-updater/out/differentialDownloader/GenericDifferentialDownloader.js";
+import genericProviderMod from "electron-updater/out/providers/GenericProvider.js";
+import genericDifferentialDownloader from "electron-updater/out/differentialDownloader/GenericDifferentialDownloader.js";
 import downloadPlanBuilderLib from "electron-updater/out/differentialDownloader/downloadPlanBuilder.js";
 var toolboxLocales = {
   "zh-CN": {
@@ -1508,13 +1508,13 @@ function countLlmInput(llm) {
   let initialZero = 0,
     _0x3d7b4b = 0,
     _0x1467a0 = 0;
-  function _0x11e1ac(_0x102a17) {
-    if (typeof _0x102a17 === "string") {
-      _0x3d7b4b += _0x102a17.length;
+  function _0x11e1ac(count) {
+    if (typeof count === "string") {
+      _0x3d7b4b += count.length;
       return;
     }
-    if (!Array.isArray(_0x102a17)) return;
-    for (const _0x4d1724 of _0x102a17) {
+    if (!Array.isArray(count)) return;
+    for (const _0x4d1724 of count) {
       const _0x3ce871 = object(_0x4d1724);
       if (["image", "image_url", "input_image"].includes(String(_0x3ce871.type))) initialZero += 1;else {
         if (typeof _0x3ce871.text === "string") _0x3d7b4b += _0x3ce871.text.length;
@@ -2614,11 +2614,11 @@ var AiConnectionDiagnosisService = class {
           items: modelTestValue.items
         }, null, 2) + "\n</diagnostic-data>";
       try {
-        const _0x5f552f = await diagnoseValue(_0x56514b, _0x339434);
+        const diagnoseValueData = await diagnoseValue(_0x56514b, _0x339434);
         return {
           aiAvailable: true,
-          diagnosis: parseDiagnosis(_0x5f552f),
-          rawText: _0x5f552f
+          diagnosis: parseDiagnosis(diagnoseValueData),
+          rawText: diagnoseValueData
         };
       } catch (err) {
         return {
@@ -2685,13 +2685,13 @@ function buildCompressionMessageChunks(compression, message, chunks, _0x534625 =
       role: "user",
       content: chunks
     }],
-    _0x50e8bb = _0x38e940(items),
+    _0x50e8bb = authFn(items),
     maxVal = Math.max(1, _0x534625 - _0x50e8bb),
     _0x89715a = Math.max(1, Math.floor((maxVal - 4) / 1.5)),
     arr = [];
   for (let initialZero = 0; initialZero < compression.length; initialZero++) {
     const _0x50db80 = compression[initialZero];
-    if (_0x38e940([_0x50db80]) <= maxVal) {
+    if (authFn([_0x50db80]) <= maxVal) {
       arr.push({
         message: _0x50db80,
         sourceRecordIndex: initialZero
@@ -2719,7 +2719,7 @@ function buildCompressionMessageChunks(compression, message, chunks, _0x534625 =
     });
   };
   for (const _0x24ddd6 of arr) {
-    const _0xdc6ba0 = _0x38e940([_0x24ddd6.message]);
+    const _0xdc6ba0 = authFn([_0x24ddd6.message]);
     _0x5310c7.length > 0 && initialZero + _0xdc6ba0 > maxVal && (handler(), _0x5310c7 = [], initialZero = 0), _0x5310c7.push(_0x24ddd6), initialZero += _0xdc6ba0;
   }
   if (_0x5310c7.length > 0) handler();
@@ -3966,7 +3966,7 @@ var AiService = class {
             if (typeof items === "string") return items;
             let initialZero = 0;
             return items.map(item => {
-              const _0x3f7ed7 = analyzeStateAlias;
+              const analyzeStateAliasAlias = analyzeStateAlias;
               if ("text" in item && item.type === "text") return item.text;
               const _0x5aec8a = analysisInput.images[initialZero];
               return initialZero += 1, _0x5aec8a ? "[图片 " + initialZero + ": " + _0x5aec8a.sourceName + " (displayId=" + _0x5aec8a.displayId + ")]" : "[图片 " + initialZero + "]";
@@ -4134,7 +4134,7 @@ var AiService = class {
           reportRecordMessages = buildReportRecordMessages(compress, _0x550332),
           reportGenerationModel = normalizeReportGenerationModel(batch),
           compressionMessageChunks = buildCompressionMessageChunks(reportRecordMessages, translateMenuResult, translateMenuData, record && resolveAiMode(record, "report") === "subscription" && !isPremiumReportGenerationModel(reportGenerationModel) ? await subscriptionInputLimit(record) : REPORT_COMPRESSION_CHUNK_TOKEN_LIMIT),
-          mapped = compressionMessageChunks.map(item => _0x38e940(item.messages)),
+          mapped = compressionMessageChunks.map(item => authFn(item.messages)),
           _0x5ac63c = isPremiumReportGenerationModel(reportGenerationModel);
         if (_0x5ac63c || !record || resolveAiMode(record, "report") === "default" || resolveAiMode(record, "report") === "webAccount") try {
           return await mapWithConcurrency(compressionMessageChunks, REPORT_COMPRESSION_MAX_CONCURRENCY, async (_0x4cbe74, _0x722946) => {
@@ -4929,7 +4929,7 @@ async function listVisibleWindows() {
       try {
         const {
           windows: _0x5027a8
-        } = await _0x4448c9.queryVisibleWindows();
+        } = await nativeactivecontextcollector.queryVisibleWindows();
         return _0x5027a8.map(({
           appName: _0x3c0ee9,
           bounds: _0x111f15
@@ -4965,7 +4965,7 @@ async function listVisibleWindows() {
     if (nodeprocessLib.platform === "win32") {
       const {
         windows: _0x503f65
-      } = await _0x4448c9.queryVisibleWindows();
+      } = await nativeactivecontextcollector.queryVisibleWindows();
       return _0x503f65.map(({
         appName: _0x2e27a8,
         bounds: _0x2b8503
@@ -5444,9 +5444,9 @@ function selectPromptBlocks(items) {
 }
 var INTERNAL_ENVELOPE_PATTERN = new RegExp([ANALYSIS_ENVELOPE_SCHEMA.replace(/\./g, "\\."), "\"overallSummary\"\\s*:", "\"evidenceBlockIndexes\"\\s*:", "\"primaryApps\"\\s*:", "\"(?:startedAt|endedAt)\"\\s*:\\s*\"\\d{4}-\\d{2}-\\d{2}T"].join("|"));
 function closesJsonString(json, string) {
-  let _0x50c405 = string;
-  while (_0x50c405 < json.length && /\s/.test(json[_0x50c405])) _0x50c405 += 1;
-  return _0x50c405 >= json.length || ",:}]".includes(json[_0x50c405]);
+  let stringAlias = string;
+  while (stringAlias < json.length && /\s/.test(json[stringAlias])) stringAlias += 1;
+  return stringAlias >= json.length || ",:}]".includes(json[stringAlias]);
 }
 function repairJsonStrings(repair) {
   let emptyStr = "",
@@ -5532,8 +5532,8 @@ function balancedJsonSegments(items) {
 }
 function isActivityLike(activity) {
   if (!activity || typeof activity !== "object" || Array.isArray(activity)) return false;
-  const _0xfb58f = activity;
-  return typeof _0xfb58f.summary === "string" && (typeof _0xfb58f.startedAt === "string" || typeof _0xfb58f.endedAt === "string" || Array.isArray(_0xfb58f.primaryApps) || Array.isArray(_0xfb58f.evidenceBlockIndexes));
+  const activityAlias = activity;
+  return typeof activityAlias.summary === "string" && (typeof activityAlias.startedAt === "string" || typeof activityAlias.endedAt === "string" || Array.isArray(activityAlias.primaryApps) || Array.isArray(activityAlias.evidenceBlockIndexes));
 }
 function leadingSummary(leading) {
   return /[:：]$/u.test(leading) || INTERNAL_ENVELOPE_PATTERN.test(leading) ? "" : leading;
@@ -7513,7 +7513,7 @@ var RecorderService = class {
       let _0x193111,
         _0x55350f = null;
       if (settings.screenshotSkipUnchanged) {
-        _0x193111 = await _0x2897c9(settings.screenshotExcludeAllowApps), _0x55350f = await _0x218943();
+        _0x193111 = await telemetryFn(settings.screenshotExcludeAllowApps), _0x55350f = await _0x218943();
         if (_0x193111) console.log("[RecorderService] 前台应用命中白名单「" + _0x193111 + "」，本次不做画面去重");
       }
       const settingsResult = settingsSvc.getSettings();
@@ -9124,7 +9124,7 @@ var ReportService = class {
         _0x21f44b = arr.filter(isCompressedWorkRecord),
         items = [...filtered, ..._0x21f44b],
         reportRecordMessages = buildReportRecordMessages(arr, budget.reportLanguage),
-        map = new Map(arr.map((item, _0x3c0100) => [item.id, _0x38e940([reportRecordMessages[_0x3c0100]])])),
+        map = new Map(arr.map((item, _0x3c0100) => [item.id, authFn([reportRecordMessages[_0x3c0100]])])),
         maxVal = Math.max(1, budget.recordEstimatedTokensBefore - budget.recordTokenBudget),
         emptyItems = [];
       let initialZero = 0,
@@ -9133,7 +9133,7 @@ var ReportService = class {
         _0x708b42 = REPORT_COMPRESSION_MAX_OUTPUT_TOKENS;
       for (const _0x27e583 of items) {
         emptyItems.push(_0x27e583);
-        const fallbackValue = map.get(_0x27e583.id) ?? _0x38e940(buildReportRecordMessages([_0x27e583], budget.reportLanguage));
+        const fallbackValue = map.get(_0x27e583.id) ?? authFn(buildReportRecordMessages([_0x27e583], budget.reportLanguage));
         initialZero += fallbackValue, _0x43926e += fallbackValue, numValue = Math.max(1, Math.ceil(_0x43926e / REPORT_COMPRESSION_CHUNK_TOKEN_LIMIT)), _0x708b42 = numValue * REPORT_COMPRESSION_MAX_OUTPUT_TOKENS;
         if (initialZero - _0x708b42 >= maxVal) break;
       }
@@ -9212,13 +9212,13 @@ var ReportService = class {
       };
       let numValue = 1,
         ccSummaryMessages = await buildCcSummaryMessages(options, materials, numValue),
-        _0x325cf2 = _0x38e940(ccSummaryMessages);
+        _0x325cf2 = authFn(ccSummaryMessages);
       summaryValue.ccSummaryInitialTokens = _0x325cf2;
       for (let initialZero = 0; _0x325cf2 > _0x20865a && initialZero < 4; initialZero++) {
         const maxVal = Math.max(1, _0x3edd42(formatSummaryMaterials(materials, fallbackValue, numValue))),
           _0x1cecda = _0x20865a - (_0x325cf2 - maxVal);
         if (_0x1cecda <= 1000) throw new Error(translateMenu("report.extraContextTooLong", fallbackValue));
-        numValue = Math.min(numValue * 0.95, numValue * (_0x1cecda / maxVal) * 0.95), ccSummaryMessages = await buildCcSummaryMessages(options, materials, numValue), _0x325cf2 = _0x38e940(ccSummaryMessages);
+        numValue = Math.min(numValue * 0.95, numValue * (_0x1cecda / maxVal) * 0.95), ccSummaryMessages = await buildCcSummaryMessages(options, materials, numValue), _0x325cf2 = authFn(ccSummaryMessages);
       }
       if (_0x325cf2 > _0x20865a) throw new Error(translateMenu("reportCc.summaryTooLong", fallbackValue));
       summaryValue.ccSummaryTruncateRatio = numValue, summaryValue.ccSummaryFinalTokens = _0x325cf2;
@@ -9371,9 +9371,9 @@ var ReportService = class {
             activitySummaries: _0x3ffb1f
           }),
           _0x40c8b2 = reportGenerationModel !== "default" ? reportGenerationModel : resolveAiMode(settings, "report") === "subscription" ? settings.subscriptionReportModelId : resolveAiMode(settings, "report") === "local" ? settings.localReportModelName || settings.reportModelName : resolveAiMode(settings, "report") === "custom" ? settings.customReportModelName || settings.reportModelName || "doubao-seed-2-0-pro-260215" : "default",
-          _0xd47a17 = await handler(),
-          _0x36cc1f = _0x38e940(_0xd47a17.messages);
-        let _0x77eaf0 = _0x38e940(buildReportRecordMessages(historyList, _0x26971d)),
+          handlerData = await handler(),
+          _0x36cc1f = authFn(handlerData.messages);
+        let _0x77eaf0 = authFn(buildReportRecordMessages(historyList, _0x26971d)),
           maxVal = Math.max(0, _0x36cc1f - _0x77eaf0),
           _0x20c432 = _0x2a0072 - maxVal,
           _0x3c7584 = _0x36cc1f;
@@ -9402,7 +9402,7 @@ var ReportService = class {
                 recordEstimatedTokensBefore: _0x77eaf0,
                 reportLanguage: _0x26971d
               }, reportGenerationModel, _0x5ec815);
-              historyList = compressRecordsToBudget.records, streamState.compressedRecordCount = historyList.length, _0x77eaf0 = _0x38e940(buildReportRecordMessages(historyList, _0x26971d)), console.log("[ReportCompression] round completed", {
+              historyList = compressRecordsToBudget.records, streamState.compressedRecordCount = historyList.length, _0x77eaf0 = authFn(buildReportRecordMessages(historyList, _0x26971d)), console.log("[ReportCompression] round completed", {
                 round: initialZero,
                 selectedRecords: compressRecordsToBudget.selectedRecordCount,
                 selectedRawRecords: compressRecordsToBudget.selectedUncompressedCount,
@@ -9415,10 +9415,10 @@ var ReportService = class {
               if (_0x77eaf0 >= _0x503531) throw new Error(translateMenu("report.contextCompressionFailed", _0x26971d));
             }
             const _0x162cc9 = await handler(),
-              _0x2c035c = _0x38e940(_0x162cc9.messages);
+              _0x2c035c = authFn(_0x162cc9.messages);
             _0x3c7584 = _0x2c035c;
             if (_0x2c035c <= _0x2a0072) break;
-            _0x77eaf0 = _0x38e940(buildReportRecordMessages(historyList, _0x26971d)), maxVal = Math.max(0, _0x2c035c - _0x77eaf0), _0x20c432 = _0x2a0072 - maxVal, streamState.extraContextTokens = maxVal, streamState.recordTokenBudget = _0x20c432;
+            _0x77eaf0 = authFn(buildReportRecordMessages(historyList, _0x26971d)), maxVal = Math.max(0, _0x2c035c - _0x77eaf0), _0x20c432 = _0x2a0072 - maxVal, streamState.extraContextTokens = maxVal, streamState.recordTokenBudget = _0x20c432;
           }
         }
         if (initialZero > 0) console.log("[ReportCompression] finished", {
@@ -10392,14 +10392,14 @@ var emptyBuffer = new Uint8Array(0),
       return -1;
     }
     findNextSpecialToken(next, special, token) {
-      let _0x2a5e25 = token;
+      let tokenAlias = token;
       while (true) {
-        this.specialTokenPatternRegex.lastIndex = _0x2a5e25;
+        this.specialTokenPatternRegex.lastIndex = tokenAlias;
         const _0x849a05 = this.specialTokenPatternRegex.exec(next);
         if (!_0x849a05) return;
         const _0x30129c = _0x849a05[0];
-        if (special?.has(_0x30129c)) return [_0x849a05.index + _0x2a5e25, _0x30129c];
-        _0x2a5e25 = _0x849a05.index + _0x2a5e25 + 1;
+        if (special?.has(_0x30129c)) return [_0x849a05.index + tokenAlias, _0x30129c];
+        tokenAlias = _0x849a05.index + tokenAlias + 1;
       }
     }
     tryDecodeToken(tryValue) {
@@ -10754,7 +10754,7 @@ var {
       _0xa74a3f = this.specialTokensEncoder.get(HarmonyChannel),
       _0x20d62a = this.specialTokensEncoder.get(HarmonyConstrain);
     if (_0x82df00 === undefined || _0x17c598 === undefined || _0x875c53 === undefined || _0x594662 === undefined || _0x5d8ebd === undefined || _0xa74a3f === undefined || _0x20d62a === undefined) throw new Error("Harmony chat format requires dedicated special tokens.");
-    const handler = _0x40aed9 => _0x40aed9.length > 0 ? this.encode(_0x40aed9) : [],
+    const handler = count => count.length > 0 ? this.encode(count) : [],
       _0x3efbe9 = _0x448185 => {
         const _0x5481bd = _0xdd6702;
         switch (_0x448185) {
@@ -13435,12 +13435,12 @@ var AutoDailyReportService = class {
       return titleValue || buildReportTitle(notification, title, titleInput);
     }
     awaitResult(awaitValue, result, resultValue) {
-      return new Promise(_0x14366d => {
+      return new Promise(fn => {
         const _0x537552 = null,
           nowMs = Date.now();
         let initialZero = 0;
         const handler = _0x5d2458 => {
-          clearInterval(_0x31d3af), this.resultHandlers.delete(awaitValue), _0x14366d(_0x5d2458);
+          clearInterval(_0x31d3af), this.resultHandlers.delete(awaitValue), fn(_0x5d2458);
         };
         this.resultHandlers.set(awaitValue, handler);
         const _0x31d3af = setInterval(() => {
@@ -13656,7 +13656,7 @@ var SNAPSHOT_SETTLE_MS = 350,
       let _0x2ba2d0 = null,
         _0x1e0eeb = null,
         resolvedValue = null;
-      settings.screenshotSkipUnchanged && (_0x2ba2d0 = (await _0x2897c9(settings.screenshotExcludeAllowApps)) ?? null, _0x1e0eeb = await _0x218943(), resolvedValue = _0x2ba2d0 ? null : await telemetryMod());
+      settings.screenshotSkipUnchanged && (_0x2ba2d0 = (await telemetryFn(settings.screenshotExcludeAllowApps)) ?? null, _0x1e0eeb = await _0x218943(), resolvedValue = _0x2ba2d0 ? null : await telemetryMod());
       const date = new Date();
       try {
         const inspect = await _0x7697ad.inspect(true);
@@ -15327,7 +15327,7 @@ var EnterKeyComponentService = class {
     }
     async verifyAuthenticodeSignature(authenticode) {
       try {
-        const verifySignature = await _0x4448c9.verifySignature(authenticode),
+        const verifySignature = await nativeactivecontextcollector.verifySignature(authenticode),
           _0x5d55b8 = verifySignature.thumbprint?.replace(/\s/g, "").toUpperCase();
         if (verifySignature.status !== "Valid" || _0x5d55b8 !== WINDOWS_SIGNING_CERTIFICATE_SHA1) throw new Error("status=" + verifySignature.status + ", thumbprint=" + (_0x5d55b8 || "missing"));
       } catch {
@@ -16080,7 +16080,7 @@ async function readJsonlLines(jsonl, lines, linesValue, linesInput) {
   const _0x575527 = await open(jsonl, "r");
   try {
     const allocUnsafe = Buffer.allocUnsafe(CHUNK_SIZE);
-    let _0x39223a = lines,
+    let linesAlias = lines,
       _0x4c0c18 = lines,
       emptyItems = [],
       initialZero = 0,
@@ -16095,10 +16095,10 @@ async function readJsonlLines(jsonl, lines, linesValue, linesInput) {
       }
       if (toString.trim()) linesInput(toString);
     };
-    while (_0x39223a < linesValue) {
+    while (linesAlias < linesValue) {
       const {
         bytesRead: _0x54cccb
-      } = await _0x575527.read(allocUnsafe, 0, Math.min(CHUNK_SIZE, linesValue - _0x39223a), _0x39223a);
+      } = await _0x575527.read(allocUnsafe, 0, Math.min(CHUNK_SIZE, linesValue - linesAlias), linesAlias);
       if (_0x54cccb === 0) break;
       const subarray = allocUnsafe.subarray(0, _0x54cccb);
       let _0x3f6da8 = 0;
@@ -16109,13 +16109,13 @@ async function readJsonlLines(jsonl, lines, linesValue, linesInput) {
           const subarrayResult = subarray.subarray(_0x3f6da8, _0x391048);
           handler(initialZero > 0 ? Buffer.concat([...emptyItems, subarrayResult]) : subarrayResult);
         }
-        emptyItems = [], initialZero = 0, flagFalse = false, _0x4c0c18 = _0x39223a + _0x391048 + 1, _0x3f6da8 = _0x391048 + 1;
+        emptyItems = [], initialZero = 0, flagFalse = false, _0x4c0c18 = linesAlias + _0x391048 + 1, _0x3f6da8 = _0x391048 + 1;
       }
       if (_0x3f6da8 < subarray.length && !flagFalse) {
         const subarrayResult = subarray.subarray(_0x3f6da8);
         initialZero + subarrayResult.length > MAX_LINE_BYTES ? (emptyItems = [], initialZero = 0, flagFalse = true) : (emptyItems.push(Buffer.from(subarrayResult)), initialZero += subarrayResult.length);
       }
-      _0x39223a += _0x54cccb, await yieldToEventLoop$1();
+      linesAlias += _0x54cccb, await yieldToEventLoop$1();
     }
     return _0x4c0c18;
   } finally {
@@ -17257,7 +17257,7 @@ function registerAuthController() {
     const authCtrlCtxAlias = authCtrlCtx;
     try {
       return ok$48(await browserLoginService.poll(async (_0x15c045, _0x4e010c) => {
-        const _0x1a776a = authCtrlCtxAlias;
+        const authCtrlCtxAliasAlias = authCtrlCtxAlias;
         await hardwareHomeSummarySyncService.stopAndWait(), await recordingBoxSyncService.stopAndWait(), await agentSessionImportService.stopAndWait(), await enterKeyComponentService.stop(), recorderService.stop(), await authService.acceptBrowserLogin(_0x15c045, _0x4e010c);
         if (!appLockService.getState().locked) _0xe6e553.restore();
         shouldStartRecorderForUser(_0x15c045.user.id) && (recorderService.start(), recorderService.resume());
@@ -17517,9 +17517,9 @@ function isDataGroupId(data) {
 var DATE_PATTERN$1 = /^\d{4}-\d{2}-\d{2}$/;
 function normalizeDataDateRange(data) {
   if (!data || typeof data !== "object") return undefined;
-  const _0xf7f67b = data;
-  let _0x360610 = typeof _0xf7f67b.from === "string" && DATE_PATTERN$1.test(_0xf7f67b.from) ? _0xf7f67b.from : undefined,
-    _0x5a832f = typeof _0xf7f67b.to === "string" && DATE_PATTERN$1.test(_0xf7f67b.to) ? _0xf7f67b.to : undefined;
+  const dataAlias = data;
+  let _0x360610 = typeof dataAlias.from === "string" && DATE_PATTERN$1.test(dataAlias.from) ? dataAlias.from : undefined,
+    _0x5a832f = typeof dataAlias.to === "string" && DATE_PATTERN$1.test(dataAlias.to) ? dataAlias.to : undefined;
   if (_0x360610 && _0x5a832f && _0x360610 > _0x5a832f) [_0x360610, _0x5a832f] = [_0x5a832f, _0x360610];
   return _0x360610 || _0x5a832f ? {
     ...(_0x360610 ? {
@@ -18464,12 +18464,12 @@ function normalizePayloadData(payload) {
 function assertBackupPayload(backup) {
   const fallbackValue = settingsRepository.getSettings().language || "zh-CN";
   if (!backup || typeof backup !== "object") throw new Error(translateMenu("dataManagement.invalidFormat", fallbackValue));
-  const _0x1a6bd7 = backup;
-  if (_0x1a6bd7.app !== backupApp || !_0x1a6bd7.data || typeof _0x1a6bd7.data !== "object") throw new Error(translateMenu("dataManagement.unsupportedBackup", fallbackValue));
-  if (_0x1a6bd7.version < 1 || _0x1a6bd7.version > backupVersion) throw new Error(translateMenu("dataManagement.unsupportedVersion", fallbackValue));
+  const backupAlias = backup;
+  if (backupAlias.app !== backupApp || !backupAlias.data || typeof backupAlias.data !== "object") throw new Error(translateMenu("dataManagement.unsupportedBackup", fallbackValue));
+  if (backupAlias.version < 1 || backupAlias.version > backupVersion) throw new Error(translateMenu("dataManagement.unsupportedVersion", fallbackValue));
   for (const _0x2833fa of tableConfigs) {
-    if (_0x1a6bd7.version < _0x2833fa.introducedVersion) continue;
-    if (!Array.isArray(_0x1a6bd7.data[_0x2833fa.key])) throw new Error(translateMenu("dataManagement.missingData", fallbackValue).replace("{key}", _0x2833fa.key));
+    if (backupAlias.version < _0x2833fa.introducedVersion) continue;
+    if (!Array.isArray(backupAlias.data[_0x2833fa.key])) throw new Error(translateMenu("dataManagement.missingData", fallbackValue).replace("{key}", _0x2833fa.key));
   }
 }
 function normalizeReportImportRows(items) {
@@ -19206,12 +19206,12 @@ var ZipWriter = class ZipWriter {
       }) : Readable.from([]);
       await this.addStream(file, _0x2a098e, fileInput.size, fileInput.compress !== false, fileInput.modifiedAt ?? new Date(), fileInput.onProgress);
     }
-    async write(_0x31d018) {
+    async write(count) {
       let initialZero = 0;
-      while (initialZero < _0x31d018.length) {
+      while (initialZero < count.length) {
         const {
           bytesWritten: _0x2e350a
-        } = await this.handle.write(_0x31d018, initialZero, _0x31d018.length - initialZero, this.position);
+        } = await this.handle.write(count, initialZero, count.length - initialZero, this.position);
         initialZero += _0x2e350a, this.position += _0x2e350a;
       }
     }
@@ -19348,9 +19348,9 @@ var ZipWriter = class ZipWriter {
       let initialZero = 0,
         _0x1df0f7 = 0;
       const transform = new Transform({
-          transform(transformValue, transformInput, _0x3205d7) {
+          transform(transformValue, transformInput, fn) {
             const _0x4137c8 = _0x3987bb;
-            initialZero = crc32(transformValue, initialZero), _0x1df0f7 += transformValue.length, entryInput?.(transformValue.length), _0x3205d7(null, transformValue);
+            initialZero = crc32(transformValue, initialZero), _0x1df0f7 += transformValue.length, entryInput?.(transformValue.length), fn(null, transformValue);
           }
         }),
         _0x3e7f7e = entry.compressedSize > 0 ? createReadStream(this.filePath, {
@@ -20164,7 +20164,7 @@ function expandRange(expand, range) {
   if (!DAY_PATTERN.test(expand)) return [];
   const _0x5dc868 = DAY_PATTERN.test(range) && range >= expand ? range : expand,
     emptyItems = [];
-  for (let _0xbef45a = expand; _0xbef45a <= _0x5dc868 && emptyItems.length < MAX_REPORT_RANGE_DAYS; _0xbef45a = addDays$1(_0xbef45a, 1)) emptyItems.push(_0xbef45a);
+  for (let expandAlias = expand; expandAlias <= _0x5dc868 && emptyItems.length < MAX_REPORT_RANGE_DAYS; expandAlias = addDays$1(expandAlias, 1)) emptyItems.push(expandAlias);
   return emptyItems;
 }
 function takeBatch(take) {
@@ -23078,9 +23078,9 @@ var Signature = {
   DataDescriptor = {
     get(_0x229e77) {
       return {
-        signature: _0x2d45ea.get(_0x229e77, 0),
-        compressedSize: _0x2d45ea.get(_0x229e77, 8),
-        uncompressedSize: _0x2d45ea.get(_0x229e77, 12)
+        signature: basicParserService.get(_0x229e77, 0),
+        compressedSize: basicParserService.get(_0x229e77, 8),
+        uncompressedSize: basicParserService.get(_0x229e77, 12)
       };
     },
     len: 16
@@ -23089,12 +23089,12 @@ var Signature = {
     get(_0x350d8f) {
       const _0x1cc179 = _0x199546.get(_0x350d8f, 6);
       return {
-        signature: _0x2d45ea.get(_0x350d8f, 0),
+        signature: basicParserService.get(_0x350d8f, 0),
         minVersion: _0x199546.get(_0x350d8f, 4),
         dataDescriptor: !!(_0x1cc179 & 8),
         compressedMethod: _0x199546.get(_0x350d8f, 8),
-        compressedSize: _0x2d45ea.get(_0x350d8f, 18),
-        uncompressedSize: _0x2d45ea.get(_0x350d8f, 22),
+        compressedSize: basicParserService.get(_0x350d8f, 18),
+        uncompressedSize: basicParserService.get(_0x350d8f, 22),
         filenameLength: _0x199546.get(_0x350d8f, 26),
         extraFieldLength: _0x199546.get(_0x350d8f, 28),
         filename: null
@@ -23105,13 +23105,13 @@ var Signature = {
   EndOfCentralDirectoryRecordToken = {
     get(_0x1f9393) {
       return {
-        signature: _0x2d45ea.get(_0x1f9393, 0),
+        signature: basicParserService.get(_0x1f9393, 0),
         nrOfThisDisk: _0x199546.get(_0x1f9393, 4),
         nrOfThisDiskWithTheStart: _0x199546.get(_0x1f9393, 6),
         nrOfEntriesOnThisDisk: _0x199546.get(_0x1f9393, 8),
         nrOfEntriesOfSize: _0x199546.get(_0x1f9393, 10),
-        sizeOfCd: _0x2d45ea.get(_0x1f9393, 12),
-        offsetOfStartOfCd: _0x2d45ea.get(_0x1f9393, 16),
+        sizeOfCd: basicParserService.get(_0x1f9393, 12),
+        offsetOfStartOfCd: basicParserService.get(_0x1f9393, 16),
         zipFileCommentLength: _0x199546.get(_0x1f9393, 20)
       };
     },
@@ -23121,25 +23121,25 @@ var Signature = {
     get(_0x919558) {
       const _0xa94971 = _0x199546.get(_0x919558, 8);
       return {
-        signature: _0x2d45ea.get(_0x919558, 0),
+        signature: basicParserService.get(_0x919558, 0),
         minVersion: _0x199546.get(_0x919558, 6),
         dataDescriptor: !!(_0xa94971 & 8),
         compressedMethod: _0x199546.get(_0x919558, 10),
-        compressedSize: _0x2d45ea.get(_0x919558, 20),
-        uncompressedSize: _0x2d45ea.get(_0x919558, 24),
+        compressedSize: basicParserService.get(_0x919558, 20),
+        uncompressedSize: basicParserService.get(_0x919558, 24),
         filenameLength: _0x199546.get(_0x919558, 28),
         extraFieldLength: _0x199546.get(_0x919558, 30),
         fileCommentLength: _0x199546.get(_0x919558, 32),
-        relativeOffsetOfLocalHeader: _0x2d45ea.get(_0x919558, 42),
+        relativeOffsetOfLocalHeader: basicParserService.get(_0x919558, 42),
         filename: null
       };
     },
     len: 46
   },
-  import_src = rolldownLib(_0x32dbed(), 1);
+  import_src = rolldownLib(basicParserFn(), 1);
 function signatureToArray(signature) {
-  const uint8Array = new Uint8Array(_0x2d45ea.len);
-  return _0x2d45ea.put(uint8Array, 0, signature), uint8Array;
+  const uint8Array = new Uint8Array(basicParserService.len);
+  return basicParserService.put(uint8Array, 0, signature), uint8Array;
 }
 var debug$3 = (0, import_src.default)("tokenizer:inflate"),
   syncBufferSize = 0x40000,
@@ -23153,7 +23153,7 @@ var debug$3 = (0, import_src.default)("tokenizer:inflate"),
       return (await this.peekSignature()) === Signature.LocalFileHeader;
     }
     peekSignature() {
-      return this.tokenizer.peekToken(_0x2d45ea);
+      return this.tokenizer.peekToken(basicParserService);
     }
     async findEndOfCentralDirectoryLocator() {
       const tokenizer = this.tokenizer,
@@ -23259,7 +23259,7 @@ var debug$3 = (0, import_src.default)("tokenizer:inflate"),
       }
     }
     async readLocalFileHeader() {
-      const peekToken = await this.tokenizer.peekToken(_0x2d45ea);
+      const peekToken = await this.tokenizer.peekToken(basicParserService);
       if (peekToken === Signature.LocalFileHeader) {
         const token = await this.tokenizer.readToken(LocalFileHeaderToken);
         return token.filename = await this.tokenizer.readToken(new _0x1392fb(token.filenameLength, "utf-8")), token;
@@ -23450,7 +23450,7 @@ var zipDataDescriptorSignature = 0x8074b50,
 function findZipDataDescriptorOffset(zip, data) {
   if (zip.length < zipDataDescriptorLengthInBytes) return -1;
   const _0x4d220d = zip.length - zipDataDescriptorLengthInBytes;
-  for (let initialZero = 0; initialZero <= _0x4d220d; initialZero++) if (_0x2d45ea.get(zip, initialZero) === zipDataDescriptorSignature && _0x2d45ea.get(zip, initialZero + 8) === data + initialZero) return initialZero;
+  for (let initialZero = 0; initialZero <= _0x4d220d; initialZero++) if (basicParserService.get(zip, initialZero) === zipDataDescriptorSignature && basicParserService.get(zip, initialZero + 8) === data + initialZero) return initialZero;
   return -1;
 }
 function isPngAncillaryChunk(png) {
@@ -23547,7 +23547,7 @@ ZipHandler.prototype.inflate = async function (_0x2745a5, _0x6c2f8c, fn) {
     if (localFileHeader.dataDescriptor) {
       const uint8Array = new Uint8Array(zipDataDescriptorLengthInBytes);
       await this.tokenizer.readBuffer(uint8Array);
-      if (_0x2d45ea.get(uint8Array, 0) !== zipDataDescriptorSignature) throw new Error("Expected data-descriptor-signature at position " + (this.tokenizer.position - uint8Array.length));
+      if (basicParserService.get(uint8Array, 0) !== zipDataDescriptorSignature) throw new Error("Expected data-descriptor-signature at position " + (this.tokenizer.position - uint8Array.length));
     }
     if (hasExceededUnknownSizeScanBudget(this.tokenizer, position, maximumUntrustedSkipSizeInBytes)) throw new ParserHardLimitError("ZIP stream probing exceeds " + maximumUntrustedSkipSizeInBytes + " bytes");
   } while (!flagFalse);
@@ -23783,7 +23783,7 @@ function getMaximumZipBufferedReadLength(maximum) {
   return Math.min(_0x33457b, maximumZipBufferedReadSizeInBytes);
 }
 function isRecoverableZipError(event) {
-  if (event instanceof _0x5ae649) return true;
+  if (event instanceof basicParserMod) return true;
   if (event instanceof ParserHardLimitError) return true;
   if (!(event instanceof Error)) return false;
   if (recoverableZipErrorMessages.has(event.message)) return true;
@@ -23876,7 +23876,7 @@ var FileTypeParser = class FileTypeParser {
       try {
         _0x4b02aa = await _0x53b767.detect(tokenizer);
       } catch (err) {
-        if (err instanceof _0x5ae649) return;
+        if (err instanceof basicParserMod) return;
         if (err instanceof ParserHardLimitError) return;
         throw err;
       }
@@ -23895,12 +23895,12 @@ var FileTypeParser = class FileTypeParser {
     if (!(buffer instanceof Uint8Array || buffer instanceof ArrayBuffer)) throw new TypeError("Expected the `input` argument to be of type `Uint8Array` or `ArrayBuffer`, got `" + typeof buffer + "`");
     const _0x45fde6 = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
     if (!(_0x45fde6?.length > 1)) return;
-    return this.fromTokenizer(_0x2011fe(_0x45fde6, this.getTokenizerOptions()));
+    return this.fromTokenizer(aPEv2Parser(_0x45fde6, this.getTokenizerOptions()));
   }
   async fromBlob(blob) {
     this.options.signal?.throwIfAborted();
-    const _0x16aa3c = _0x5710c4(blob, this.getTokenizerOptions());
-    return this.fromTokenizer(_0x16aa3c);
+    const aPEv2ParserFnResult = aPEv2ParserFn(blob, this.getTokenizerOptions());
+    return this.fromTokenizer(aPEv2ParserFnResult);
   }
   async fromStream(stream) {
     this.options.signal?.throwIfAborted();
@@ -23922,7 +23922,7 @@ var FileTypeParser = class FileTypeParser {
       if (!_0x4bff7a && _0x42a7a4) try {
         _0x38d073 = await this.fromBuffer(_0x42a7a4.subarray(0, sampleSize));
       } catch (err) {
-        if (!(err instanceof _0x5ae649)) throw err;
+        if (!(err instanceof basicParserMod)) throw err;
         _0x38d073 = undefined;
       }
       _0x2d7582 = _0x42a7a4;
@@ -24080,7 +24080,7 @@ var FileTypeParser = class FileTypeParser {
           reason: "ID3 payload"
         });
       } catch (err) {
-        if (err instanceof _0x5ae649) return;
+        if (err instanceof basicParserMod) return;
         throw err;
       }
       if (this.detectionReentryCount >= maximumDetectionReentryCount) return;
@@ -24328,8 +24328,8 @@ var FileTypeParser = class FileTypeParser {
           dataView = new DataView(_0x237564.buffer),
           _0x1a66d5 = new DataView(_0x22d918.buffer, _0x22d918.length - minVal, minVal);
         return {
-          id: _0x160e28(dataView),
-          len: _0x160e28(_0x1a66d5)
+          id: utilFn(dataView),
+          len: utilFn(_0x1a66d5)
         };
       }
       async function _0x506842(_0xac232b) {
@@ -24617,7 +24617,7 @@ var FileTypeParser = class FileTypeParser {
                 reason: "PNG chunk payload"
               });
             } catch (err) {
-              if (!hasUnknownFileSizeResult && (err instanceof ParserHardLimitError || err instanceof _0x5ae649)) return _0x17892d;
+              if (!hasUnknownFileSizeResult && (err instanceof ParserHardLimitError || err instanceof basicParserMod)) return _0x17892d;
               throw err;
             }
         }
@@ -24851,7 +24851,7 @@ var FileTypeParser = class FileTypeParser {
           }
         }
       } catch (err) {
-        if (err instanceof _0x5ae649 || err instanceof ParserHardLimitError) {
+        if (err instanceof basicParserMod || err instanceof ParserHardLimitError) {
           if (hasUnknownFileSize(detectBuffer)) flagFalse = true;
         } else throw err;
       }
@@ -25159,7 +25159,7 @@ var FileTypeParser = class FileTypeParser {
         mime: "image/tiff"
       },
       _0x35a35c = (tiff ? _0x226c23 : _0x199546).get(this.buffer, 2),
-      _0x52c1b3 = (tiff ? _0x2dc6fc : _0x2d45ea).get(this.buffer, 4);
+      _0x52c1b3 = (tiff ? _0x2dc6fc : basicParserService).get(this.buffer, 4);
     if (_0x35a35c === 42) {
       if (_0x52c1b3 >= 6) {
         if (this.checkString("CR", {
@@ -25185,14 +25185,14 @@ var FileTypeParser = class FileTypeParser {
           reason: "TIFF IFD offset"
         });
       } catch (err) {
-        if (err instanceof _0x5ae649) return;
+        if (err instanceof basicParserMod) return;
         throw err;
       }
       let _0x2bf42c;
       try {
         _0x2bf42c = await this.readTiffIFD(tiff);
       } catch (err) {
-        if (err instanceof _0x5ae649) return;
+        if (err instanceof basicParserMod) return;
         throw err;
       }
       return _0x2bf42c ?? _0x4a9045;
@@ -25792,7 +25792,7 @@ var id3v1TagMap = {
             switch (_0x290173.owner_identifier) {
               case "AverageLevel":
               case "PeakValue":
-                map.id += ":" + _0x290173.owner_identifier, map.value = _0x290173.data.length === 4 ? _0x2d45ea.get(_0x290173.data, 0) : null;
+                map.id += ":" + _0x290173.owner_identifier, map.value = _0x290173.data.length === 4 ? basicParserService.get(_0x290173.data, 0) : null;
                 if (map.value === null) mapValue.addWarning("Failed to parse PRIV:PeakValue");
                 break;
               default:
@@ -26330,8 +26330,8 @@ function parseLyrics(lyrics) {
 }
 function toUnsyncedLyrics(unsynced) {
   return {
-    contentType: _0x5363d5.lyrics,
-    timeStampFormat: _0x73f491.notSynchronized,
+    contentType: iD3v2Token.lyrics,
+    timeStampFormat: iD3v2TokenConst.notSynchronized,
     text: unsynced.trim(),
     syncText: []
   };
@@ -26354,8 +26354,8 @@ function parseLrc(lrc) {
     }
   }
   return {
-    contentType: _0x5363d5.lyrics,
-    timeStampFormat: _0x73f491.milliseconds,
+    contentType: iD3v2Token.lyrics,
+    timeStampFormat: iD3v2TokenConst.milliseconds,
     text: arr.map(item => item.text).join("\n"),
     syncText: arr
   };
@@ -26473,7 +26473,7 @@ var debug$2 = (0, import_src.default)("music-metadata:collector"),
         case "replaygain_track_peak":
         case "replaygain_album_gain":
         case "replaygain_album_peak":
-          postMapCtx.value = _0x1d217c(postMapCtx.value);
+          postMapCtx.value = util(postMapCtx.value);
           break;
         case "replaygain_track_minmax":
           postMapCtx.value = postMapCtx.value.split(",").map(item => Number.parseInt(item, 10));
@@ -26788,19 +26788,19 @@ async function getLyricsHeaderLength(lyrics) {
     await lyrics.readBuffer(uint8Array, {
       position: _0x10a35a - 143
     }), lyrics.setPosition(position);
-    const _0x5eb633 = _0x137df1(uint8Array, "latin1");
-    if (_0x5eb633.substring(6) === "LYRICS200") return Number.parseInt(_0x5eb633.substring(0, 6), 10) + 15;
+    const basicParserResult = basicParser(uint8Array, "latin1");
+    if (basicParserResult.substring(6) === "LYRICS200") return Number.parseInt(basicParserResult.substring(0, 6), 10) + 15;
   }
   return 0;
 }
 async function scanAppendingHeaders(scan, _0x2b2909 = {}) {
   let _0x597b55 = scan.fileInfo.size;
-  if (await _0x4696d1(scan)) {
+  if (await iD3v1ParserFn(scan)) {
     _0x597b55 -= 128;
     const lyricsHeaderLength = await getLyricsHeaderLength(scan);
     _0x597b55 -= lyricsHeaderLength;
   }
-  _0x2b2909.apeHeader = await _0x515fbc.findApeFooterOffset(scan, _0x597b55);
+  _0x2b2909.apeHeader = await aPEv2ParserService.findApeFooterOffset(scan, _0x597b55);
 }
 var debug = (0, import_src.default)("music-metadata:parser");
 async function parseFile(file, _0x54286b = {}) {
@@ -28240,11 +28240,11 @@ function toAppError$14(appValue) {
     details: appValue.flatten()
   };
   if (appValue instanceof Error) {
-    const _0x5a525f = appValue;
+    const appValueAlias = appValue;
     return {
-      code: _0x5a525f.code || "TEMPLATE_MARKET_ERROR",
+      code: appValueAlias.code || "TEMPLATE_MARKET_ERROR",
       message: appValue.message,
-      details: _0x5a525f.details
+      details: appValueAlias.details
     };
   }
   return {
@@ -29959,21 +29959,21 @@ function nextStartAfter(next, startValue, after) {
 function computeWorkMotivatorSnapshot(work, _0x14383c = Date.now()) {
   const ofDay = startOfDay(new Date(_0x14383c)),
     days = addDays(ofDay, -1);
-  let _0x39ae42 = ofDay;
+  let ofDayAlias = ofDay;
   if (isWorkMotivatorWorkday(work, days)) {
     const segmentsOnResult = segmentsOn(work, days);
-    if (segmentsOnResult.length && segmentsOnResult[segmentsOnResult.length - 1].end > _0x14383c) _0x39ae42 = days;
+    if (segmentsOnResult.length && segmentsOnResult[segmentsOnResult.length - 1].end > _0x14383c) ofDayAlias = days;
   }
-  const workMotivatorRatePerMsResult = workMotivatorRatePerMs(work, _0x39ae42),
+  const workMotivatorRatePerMsResult = workMotivatorRatePerMs(work, ofDayAlias),
     _0x4dd632 = workMotivatorScheduledMinutes(work) * MINUTE_MS,
     nextStartAfterResult = nextStartAfter(work, ofDay, _0x14383c),
     _0x2a1a74 = nextStartAfterResult === null ? 0 : nextStartAfterResult - _0x14383c,
     options = {
-      day: _0x39ae42,
+      day: ofDayAlias,
       hourlyRate: workMotivatorRatePerMsResult * HOUR_MS,
       nextStartAt: nextStartAfterResult
     };
-  if (!isWorkMotivatorWorkday(work, _0x39ae42)) return {
+  if (!isWorkMotivatorWorkday(work, ofDayAlias)) return {
     ...options,
     status: "rest",
     earnedToday: 0,
@@ -29982,7 +29982,7 @@ function computeWorkMotivatorSnapshot(work, _0x14383c = Date.now()) {
     scheduledMs: 0,
     countdownMs: _0x2a1a74
   };
-  const segmentsOnResult = segmentsOn(work, _0x39ae42);
+  const segmentsOnResult = segmentsOn(work, ofDayAlias);
   if (!segmentsOnResult.length) return {
     ...options,
     status: "rest",
@@ -30798,16 +30798,16 @@ function registerSettingsController() {
     } catch (err) {
       return fail$34(toAppError$11(err));
     }
-  }), ipcMain.handle("settings:test-proxy", async (_0x2b59c5, _0x580629) => {
+  }), ipcMain.handle("settings:test-proxy", async (_0x2b59c5, count) => {
     const _0x60187a = _0x30dda8;
     let emptyStr = "";
     try {
-      if (typeof _0x580629 !== "string" || _0x580629.length > 500) throw new Error(translate("ipcErrors.proxyTestUrlInvalid"));
-      emptyStr = new URL(_0x580629).host;
+      if (typeof count !== "string" || count.length > 500) throw new Error(translate("ipcErrors.proxyTestUrlInvalid"));
+      emptyStr = new URL(count).host;
       const {
         status: _0x5f4e69,
         via: _0x558457
-      } = await _0x1f85b6(_0x580629);
+      } = await _0x1f85b6(count);
       return sendToRenderer("settings:changed", settingsSvc.updateSettings({
         networkProxyLastTestStatus: "success",
         networkProxyLastTestHost: emptyStr,
@@ -30850,9 +30850,9 @@ function registerSettingsController() {
       const parsed = objectType({
           mode: enumType(["work", "student"])
         }).strict().parse(_0x154725),
-        _0x109d7a = await usageModeService.switch(parsed.mode);
-      if (_0x109d7a.changed) sendToRenderer("settings:changed", _0x109d7a.settings);
-      return ok$33(_0x109d7a);
+        switchData = await usageModeService.switch(parsed.mode);
+      if (switchData.changed) sendToRenderer("settings:changed", switchData.settings);
+      return ok$33(switchData);
     } catch (err) {
       return fail$34(toAppError$11(err));
     }
@@ -33970,14 +33970,14 @@ var WordCloudHistoryRepository = class {
   DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 function normalizeInput(input) {
   if (typeof input !== "object" || input === null) return null;
-  const _0x95a746 = input,
-    _0x3d86bb = typeof _0x95a746.rangeStart === "string" ? _0x95a746.rangeStart : "",
-    _0x3f8552 = typeof _0x95a746.rangeEnd === "string" ? _0x95a746.rangeEnd : "";
+  const inputAlias = input,
+    _0x3d86bb = typeof inputAlias.rangeStart === "string" ? inputAlias.rangeStart : "",
+    _0x3f8552 = typeof inputAlias.rangeEnd === "string" ? inputAlias.rangeEnd : "";
   if (!DATE_PATTERN.test(_0x3d86bb) || !DATE_PATTERN.test(_0x3f8552)) return null;
-  const _0x472cb8 = typeof _0x95a746.recordCount === "number" && Number.isFinite(_0x95a746.recordCount) ? Math.max(0, Math.floor(_0x95a746.recordCount)) : 0;
-  if (!Array.isArray(_0x95a746.words)) return null;
+  const _0x472cb8 = typeof inputAlias.recordCount === "number" && Number.isFinite(inputAlias.recordCount) ? Math.max(0, Math.floor(inputAlias.recordCount)) : 0;
+  if (!Array.isArray(inputAlias.words)) return null;
   const emptyItems = [];
-  for (const _0x21698c of _0x95a746.words.slice(0, MAX_WORDS)) {
+  for (const _0x21698c of inputAlias.words.slice(0, MAX_WORDS)) {
     if (typeof _0x21698c !== "object" || _0x21698c === null) continue;
     const display = _0x21698c.display,
       count = _0x21698c.count;
@@ -35891,7 +35891,7 @@ var ToolboxLocalService = class {
           _0x344d47 = "" + translate("toolboxLocal.compressedImage") + _0x3e5f1a,
           withExtensionResult = withExtension(sanitizeFileName(_0x1587e4.suggestedName, _0x344d47), _0x3e5f1a),
           joined = nodePath.join(_0x150aac, withExtensionResult);
-        let _0x3564bf = joined;
+        let joinedAlias = joined;
         await writeFile(joined, Buffer.from(_0x1587e4.data), {
           flag: "wx"
         }).catch(async event => {
@@ -35903,7 +35903,7 @@ var ToolboxLocalService = class {
             try {
               await writeFile(_0xef9228, Buffer.from(_0x1587e4.data), {
                 flag: "wx"
-              }), _0x3564bf = _0xef9228;
+              }), joinedAlias = _0xef9228;
               return;
             } catch (err) {
               if (err.code !== "EEXIST") throw err;
@@ -35913,8 +35913,8 @@ var ToolboxLocalService = class {
             name: withExtensionResult
           }));
         }), emptyItems.push({
-          fileName: nodePath.basename(_0x3564bf),
-          filePath: _0x3564bf
+          fileName: nodePath.basename(joinedAlias),
+          filePath: joinedAlias
         });
       }
       return {
@@ -39369,9 +39369,9 @@ var SharedChromeRunner = class {
     constructor(constructor, constructorValue, _0x528ea7 = () => {}) {
       this.log = constructor, this.completed = constructorValue, this.progress = _0x528ea7, this.reported = new WeakSet(), this.jobBrowsers = new Map(), this.cancelled = false;
     }
-    start(_0x1db8ba) {
-      this.log("正在并行启动 " + _0x1db8ba.length + " 个独立 Chrome 窗口");
-      for (const _0x4ca40a of _0x1db8ba) this.#runJob(_0x4ca40a);
+    start(count) {
+      this.log("正在并行启动 " + count.length + " 个独立 Chrome 窗口");
+      for (const _0x4ca40a of count) this.#runJob(_0x4ca40a);
     }
     async closeWindows() {
       await Promise.allSettled([...new Set(this.jobBrowsers.values())].map(item => closeTrackedBrowser(item))), this.jobBrowsers.clear();
@@ -39832,7 +39832,7 @@ var MultiPlatformPublisherService = class {
           scheduledAt: item.scheduledAt || undefined,
           updatedAt: isoString
         })),
-        _0x218410 = await _0x19e526({
+        _0x218410 = await auth({
           accountCount: _0x1df883.length,
           idempotencyKey: randomUUIDResult
         }),
@@ -40296,20 +40296,20 @@ var MAX_MARKDOWN_BYTES = 0xa00000,
         const _0x15b393 = documentValue.id;
         documentValue.once("destroyed", () => this.unwatch(_0x15b393));
       }
-      const handler = (_0x8298ef, _0x5a3e21) => {
+      const handler = (count, _0x5a3e21) => {
         const _0x1c6ba2 = _0xfda0cd;
         if (documentValue.isDestroyed()) {
           this.unwatch(documentValue.id);
           return;
         }
-        const fallbackValue = _0x8298ef.mtimeMs > 0 || _0x8298ef.size > 0,
+        const fallbackValue = count.mtimeMs > 0 || count.size > 0,
           _0x4be95d = _0x5a3e21.mtimeMs > 0 || _0x5a3e21.size > 0;
-        if (fallbackValue && _0x4be95d && _0x8298ef.mtimeMs === _0x5a3e21.mtimeMs && _0x8298ef.size === _0x5a3e21.size) return;
-        if (fallbackValue && this.selfWrites.get(_0x3f2742) === _0x8298ef.mtimeMs) return;
+        if (fallbackValue && _0x4be95d && count.mtimeMs === _0x5a3e21.mtimeMs && count.size === _0x5a3e21.size) return;
+        if (fallbackValue && this.selfWrites.get(_0x3f2742) === count.mtimeMs) return;
         const options = {
           filePath: _0x3f2742,
           exists: fallbackValue,
-          modifiedAt: fallbackValue ? _0x8298ef.mtime.toISOString() : null
+          modifiedAt: fallbackValue ? count.mtime.toISOString() : null
         };
         documentValue.send("markdown-reader:file-changed", options);
       };
@@ -42127,13 +42127,13 @@ function splitWechatText(wechat, _0x4cf88b = 3900) {
   const fallbackValue = wechat.trim() || translate("wechat.emptyReply");
   if (fallbackValue.length <= _0x4cf88b) return [fallbackValue];
   const arr = [];
-  let _0x26b500 = fallbackValue;
-  while (_0x26b500.length > _0x4cf88b) {
-    let maxVal = Math.max(_0x26b500.lastIndexOf("\n", _0x4cf88b), _0x26b500.lastIndexOf("。", _0x4cf88b));
+  let fallbackValueAlias = fallbackValue;
+  while (fallbackValueAlias.length > _0x4cf88b) {
+    let maxVal = Math.max(fallbackValueAlias.lastIndexOf("\n", _0x4cf88b), fallbackValueAlias.lastIndexOf("。", _0x4cf88b));
     if (maxVal < _0x4cf88b * 0.5) maxVal = _0x4cf88b;else maxVal += 1;
-    arr.push(_0x26b500.slice(0, maxVal).trim()), _0x26b500 = _0x26b500.slice(maxVal).trim();
+    arr.push(fallbackValueAlias.slice(0, maxVal).trim()), fallbackValueAlias = fallbackValueAlias.slice(maxVal).trim();
   }
-  if (_0x26b500) arr.push(_0x26b500);
+  if (fallbackValueAlias) arr.push(fallbackValueAlias);
   return arr;
 }
 function sendWechatTextPart(send) {
@@ -43196,7 +43196,7 @@ function registerXiaoheiBotController(xiaohei) {
     shareId: sharedRoleId,
     providerId: stringType().min(1).max(120),
     modelId: stringType().min(1).max(240),
-    edits: _0x48f15a.optional()
+    edits: xiaoheibotscheduleService.optional()
   }).strict().parse(_0x3283db)))), ipcMain.handle("xiaohei-bot:add-common-role", (_0x2adf37, _0x5468f9) => handleAsync(() => _0x423b48.addCommonRole(objectType({
     roleId: stringType().regex(/^\d+$/),
     providerId: stringType().min(1).max(120).optional(),
@@ -43442,7 +43442,7 @@ function registerXiaoheiBotController(xiaohei) {
         botId: stringType().min(1).max(160).optional()
       }).parse(_0x20f3f4);
     return Promise.all([...new Set(parsed.paths)].map(async item => {
-      const _0x2b6291 = botCtrlCtxAlias;
+      const botCtrlCtxAliasAlias = botCtrlCtxAlias;
       try {
         const replyPath = await resolveReplyPath({
             path: item,
@@ -44093,10 +44093,10 @@ function recordManualUpdateFallback(manual, update) {
 }
 function recordUpdateFailure(update, failure) {
   const updateInstallState = readUpdateInstallState(),
-    _0x3ffde0 = failure,
+    failureAlias = failure,
     _0x1e78ac = failure instanceof Error ? failure.name : typeof failure,
     diagnosticString = sanitizeDiagnosticString(failure instanceof Error ? failure.message : String(failure)),
-    _0x4a3f5a = typeof _0x3ffde0?.code === "string" || typeof _0x3ffde0?.code === "number" ? String(_0x3ffde0.code) : undefined;
+    _0x4a3f5a = typeof failureAlias?.code === "string" || typeof failureAlias?.code === "number" ? String(failureAlias.code) : undefined;
   if (updateInstallState) writeUpdateInstallState({
     ...updateInstallState,
     status: "failed",
@@ -44658,10 +44658,10 @@ async function rememberDifferentialCandidate(remember, differential, candidate) 
 }
 var {
     GenericProvider
-  } = _0x1fab62,
+  } = genericProviderMod,
   {
     GenericDifferentialDownloader
-  } = _0x6b4cb8,
+  } = genericDifferentialDownloader,
   {
     computeOperations,
     OperationKind
@@ -44776,7 +44776,7 @@ async function waitForRetry(wait, forValue) {
     forValue.removeListener("cancel", handler);
   }
 }
-async function withRequests(requests, requestsValue, requestsInput, _0x572bdd, _0x29bc9b = DOWNLOAD_IDLE_TIMEOUT_MS) {
+async function withRequests(requests, requestsValue, requestsInput, fn, _0x29bc9b = DOWNLOAD_IDLE_TIMEOUT_MS) {
   const cancellationToken = new CancellationToken(requestsValue),
     createRequest = requests.createRequest,
     set = new Set(),
@@ -44832,7 +44832,7 @@ async function withRequests(requests, requestsValue, requestsInput, _0x572bdd, _
         const _0x16704e = _0x51dd52;
         if (!flagTrue || cancellationToken.cancelled) return;
         _0x3c5dce(_0x29bc9b);
-        if (_0x31eb3e.statusCode >= 200 && _0x31eb3e.statusCode < 300) _0x572bdd(event.length);
+        if (_0x31eb3e.statusCode >= 200 && _0x31eb3e.statusCode < 300) fn(event.length);
       }), _0x31eb3e.once("end", _0xb2ab47), _0x31eb3e.once("close", _0xb2ab47), _0xd86335(_0x31eb3e);
     }), set.add(_0x4587a3), _0x4587a3.once("close", () => {
       _0xb2ab47(), set.delete(_0x4587a3);
@@ -44840,8 +44840,8 @@ async function withRequests(requests, requestsValue, requestsInput, _0x572bdd, _
   };
   try {
     checkCancelled(requestsValue);
-    const _0x1841e9 = await requestsInput(cancellationToken);
-    return checkCancelled(cancellationToken), _0x1841e9;
+    const requestsInputData = await requestsInput(cancellationToken);
+    return checkCancelled(cancellationToken), requestsInputData;
   } catch (err) {
     if (requestsValue.cancelled) throw cancelled();
     if (flagFalse) throw Object.assign(new Error(translate("updater.sourceTimeout")), {
@@ -45302,7 +45302,7 @@ async function launchWindowsUpdateInstaller(launch) {
   const installerArgsResult = installerArgs(launch),
     handler = async () => {
       const _0x37aee2 = _0xb7705e,
-        helperPath = _0x4448c9.getHelperPath();
+        helperPath = nativeactivecontextcollector.getHelperPath();
       if (!helperPath) throw Object.assign(new Error(translate("updater.elevationFailed")), {
         code: "EACCES"
       });
@@ -45526,17 +45526,17 @@ function matchesImageSignature(matches, image) {
 async function fetchTrustedImage(trusted, image) {
   const trustedHttpsUrlResult = trustedHttpsUrl(trusted, trustedImageHosts);
   if (!trustedHttpsUrlResult) throw new Error(translate("imageAccess.urlNotAllowed"));
-  let _0x4650d6 = trustedHttpsUrlResult;
+  let trustedHttpsUrlResultAlias = trustedHttpsUrlResult;
   for (let initialZero = 0; initialZero <= 3; initialZero += 1) {
-    const _0x38342e = await fetch(_0x4650d6, {
+    const _0x38342e = await fetch(trustedHttpsUrlResultAlias, {
       signal: image,
       redirect: "manual"
     });
     if (![301, 302, 303, 307, 308].includes(_0x38342e.status)) return _0x38342e;
     const _0x5c4f6a = _0x38342e.headers.get("location"),
-      _0x9cec15 = _0x5c4f6a ? trustedHttpsUrl(new URL(_0x5c4f6a, _0x4650d6).toString(), trustedImageHosts) : null;
+      _0x9cec15 = _0x5c4f6a ? trustedHttpsUrl(new URL(_0x5c4f6a, trustedHttpsUrlResultAlias).toString(), trustedImageHosts) : null;
     if (!_0x9cec15) throw new Error(translate("imageAccess.redirectUntrusted"));
-    _0x4650d6 = _0x9cec15;
+    trustedHttpsUrlResultAlias = _0x9cec15;
   }
   throw new Error(translate("imageAccess.tooManyRedirects"));
 }
@@ -46928,7 +46928,7 @@ function finishQuitWithoutRenderer() {
 }
 function relaunchForFullRestore() {
   quitConfirmed = true, app.relaunch({
-    args: process.argv.slice(1).filter(item => item !== _0xe22873)
+    args: process.argv.slice(1).filter(item => item !== telemetry)
   }), app.quit();
 }
 function requestQuitConfirmation() {

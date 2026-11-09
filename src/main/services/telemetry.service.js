@@ -57,11 +57,11 @@ var AuthRepository = class {
     return row ? mapSessionRow(row) : null;
   }
   saveSession(session) {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    db.exec("BEGIN");
+    database.exec("BEGIN");
     try {
-      db.prepare(`
+      database.prepare(`
         INSERT INTO auth_session (id, user_id, email, nickname, job_title, avatar_url, token, logged_in_at, created_at, updated_at, education_verified)
         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -76,9 +76,9 @@ var AuthRepository = class {
           updated_at = excluded.updated_at,
           education_verified = excluded.education_verified
       `).run(session.userId, session.email, session.nickname, session.jobTitle, session.avatarUrl, encryptToken(session.token), session.loggedInAt, session.createdAt, now, session.educationVerified ? 1 : 0);
-      db.exec("COMMIT");
+      database.exec("COMMIT");
     } catch (error) {
-      db.exec("ROLLBACK");
+      database.exec("ROLLBACK");
       throw error;
     }
   }
@@ -101,9 +101,9 @@ var AuthRepository = class {
     return mapSubscriptionRow(row);
   }
   saveSubscriptionCache(sub) {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    db.prepare(`
+    database.prepare(`
       INSERT INTO subscription_cache (id, plan_id, plan_name, is_active, expires_at, paid_at, last_checked_at, free_work_record_limit, free_report_limit, points_balance, updated_at)
       VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
@@ -409,17 +409,17 @@ var AiModelConfigService = class {
   appStartAt = "";
   lastActivityAt = "";
   screenshotCount = 0;
-  setAppStartAt(at) {
-    this.appStartAt = at;
+  setAppStartAt(appValue) {
+    this.appStartAt = appValue;
   }
-  setLastActivityAt(at) {
-    this.lastActivityAt = at;
+  setLastActivityAt(last) {
+    this.lastActivityAt = last;
   }
   incrementScreenshotCount() {
     this.screenshotCount++;
   }
-  setScreenshotCount(n) {
-    this.screenshotCount = n;
+  setScreenshotCount(screenshot) {
+    this.screenshotCount = screenshot;
   }
   getCache() {
     this.ensureTable();
@@ -456,7 +456,7 @@ var AiModelConfigService = class {
       )
     `);
     const columns = getDatabase().prepare("PRAGMA table_info(ai_model_config_cache)").all();
-    const colSet = new Set(columns.map(c => c.name));
+    const colSet = new Set(columns.map(item => item.name));
     if (!colSet.has("screenshot_provider")) getDatabase().exec(`ALTER TABLE ai_model_config_cache ADD COLUMN screenshot_provider TEXT DEFAULT NULL`);
     if (!colSet.has("report_provider")) getDatabase().exec(`ALTER TABLE ai_model_config_cache ADD COLUMN report_provider TEXT DEFAULT NULL`);
     if (!colSet.has("overview_provider")) getDatabase().exec(`ALTER TABLE ai_model_config_cache ADD COLUMN overview_provider TEXT DEFAULT NULL`);
@@ -1627,7 +1627,7 @@ function buildWhereClause(input) {
 var ReportRepository = class {
   createPending(input, title, factSummary = null, summarySources = null) {
     const now = (/* @__PURE__ */new Date()).toISOString();
-    const id = crypto.randomUUID();
+    const randomUUIDResult = crypto.randomUUID();
     getDatabase().prepare(`
         INSERT INTO reports (
           id, type, title, content, start_date, end_date, style,
@@ -1635,9 +1635,9 @@ var ReportRepository = class {
           summary_sources, status, error_message, created_at, updated_at
         )
         VALUES (?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NULL, ?, ?)
-      `).run(id, input.type, title, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
+      `).run(randomUUIDResult, input.type, title, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
     return {
-      id,
+      id: randomUUIDResult,
       type: input.type,
       title,
       content: "",
@@ -1660,7 +1660,7 @@ var ReportRepository = class {
   }
   createCompleted(input, title, content, factSummary = null, summarySources = null) {
     const now = (/* @__PURE__ */new Date()).toISOString();
-    const id = crypto.randomUUID();
+    const randomUUIDResult = crypto.randomUUID();
     getDatabase().prepare(`
         INSERT INTO reports (
           id, type, title, content, start_date, end_date, style,
@@ -1668,9 +1668,9 @@ var ReportRepository = class {
           summary_sources, status, error_message, created_at, updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed', NULL, ?, ?)
-      `).run(id, input.type, title, content, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
+      `).run(randomUUIDResult, input.type, title, content, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
     return {
-      id,
+      id: randomUUIDResult,
       type: input.type,
       title,
       content,
@@ -1691,20 +1691,20 @@ var ReportRepository = class {
       updatedAt: now
     };
   }
-  updateStatus(id, status, errorMessage = null) {
+  updateStatus(statusValue, status, errorMessage = null) {
     const now = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET status = ?, error_message = ?, updated_at = ? WHERE id = ?").run(status, errorMessage, now, id);
+    getDatabase().prepare("UPDATE reports SET status = ?, error_message = ?, updated_at = ? WHERE id = ?").run(status, errorMessage, now, statusValue);
   }
-  updateFactSummary(id, factSummary) {
-    getDatabase().prepare("UPDATE reports SET fact_summary_json = ? WHERE id = ?").run(JSON.stringify(factSummary), id);
+  updateFactSummary(fact, factSummary) {
+    getDatabase().prepare("UPDATE reports SET fact_summary_json = ? WHERE id = ?").run(JSON.stringify(factSummary), fact);
   }
-  updateContent(id, title, content) {
+  updateContent(contentValue, title, content) {
     const now = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET title = ?, content = ?, status = 'completed', error_message = NULL, updated_at = ? WHERE id = ?").run(title, content, now, id);
+    getDatabase().prepare("UPDATE reports SET title = ?, content = ?, status = 'completed', error_message = NULL, updated_at = ? WHERE id = ?").run(title, content, now, contentValue);
   }
-  updateTitle(id, title) {
+  updateTitle(titleValue, title) {
     const now = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET title = ?, updated_at = ? WHERE id = ?").run(title, now, id);
+    getDatabase().prepare("UPDATE reports SET title = ?, updated_at = ? WHERE id = ?").run(title, now, titleValue);
   }
   findPending() {
     const row = getDatabase().prepare("SELECT * FROM reports WHERE status = 'pending' ORDER BY created_at ASC LIMIT 1").get();
@@ -1837,8 +1837,8 @@ var ReportRepository = class {
       createdAt: row.created_at
     }));
   }
-  delete(id) {
-    return getDatabase().prepare("DELETE FROM reports WHERE id = ?").run(id).changes > 0;
+  delete(deleteValue) {
+    return getDatabase().prepare("DELETE FROM reports WHERE id = ?").run(deleteValue).changes > 0;
   }
   hasSuccessfulReport() {
     return (getDatabase().prepare("SELECT COUNT(*) AS total FROM reports WHERE status = 'completed' AND trim(content) <> ''").get()?.total ?? 0) > 0;
@@ -1905,11 +1905,11 @@ function parseNotificationTime(value) {
   return Number.isFinite(fallback) ? fallback : 0;
 }
 function sortNotificationsDesc(items) {
-  return [...items].sort((a, b) => {
-    const aTime = parseNotificationTime(a.createdAt) || parseNotificationTime(a.startAt) || parseNotificationTime(a.fetchedAt);
-    const bTime = parseNotificationTime(b.createdAt) || parseNotificationTime(b.startAt) || parseNotificationTime(b.fetchedAt);
+  return [...items].sort((row, right) => {
+    const aTime = parseNotificationTime(row.createdAt) || parseNotificationTime(row.startAt) || parseNotificationTime(row.fetchedAt);
+    const bTime = parseNotificationTime(right.createdAt) || parseNotificationTime(right.startAt) || parseNotificationTime(right.fetchedAt);
     if (bTime !== aTime) return bTime - aTime;
-    return b.id - a.id;
+    return right.id - row.id;
   });
 }
 var NotificationRepository = class {
@@ -1920,11 +1920,11 @@ var NotificationRepository = class {
   * 全量同步：保存所有云端通知，并删除本地多余的记录
   */
   syncAll(notifications) {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    db.exec("BEGIN");
+    database.exec("BEGIN");
     try {
-      const saveStmt = db.prepare(`
+      const saveStmt = database.prepare(`
         INSERT INTO notifications (id, title, content, type, priority, link, start_at, end_at, created_at, fetched_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -1940,28 +1940,28 @@ var NotificationRepository = class {
       `);
       for (const n of notifications) saveStmt.run(n.id, n.title, n.content, n.type, n.priority, n.link, n.start_at, n.end_at, n.created_at, now);
       if (notifications.length > 0) {
-        const ids = notifications.map(n => n.id).join(",");
-        db.prepare(`DELETE FROM notifications WHERE id > 0 AND id NOT IN (${ids})`).run();
-      } else db.prepare("DELETE FROM notifications WHERE id > 0").run();
-      db.exec("COMMIT");
+        const ids = notifications.map(item => item.id).join(",");
+        database.prepare(`DELETE FROM notifications WHERE id > 0 AND id NOT IN (${ids})`).run();
+      } else database.prepare("DELETE FROM notifications WHERE id > 0").run();
+      database.exec("COMMIT");
     } catch (error) {
-      db.exec("ROLLBACK");
+      database.exec("ROLLBACK");
       throw error;
     }
   }
   createLocalNotification(input) {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    const id = this.nextLocalNotificationId();
+    const nextLocalNotificationId = this.nextLocalNotificationId();
     const type = input.type ?? "system";
     const priority = input.priority ?? "normal";
     const link = input.link ?? null;
-    db.prepare(`
+    database.prepare(`
       INSERT INTO notifications (id, title, content, type, priority, link, start_at, end_at, created_at, fetched_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)
-    `).run(id, input.title, input.content, type, priority, link, now, now, now);
+    `).run(nextLocalNotificationId, input.title, input.content, type, priority, link, now, now, now);
     return {
-      id,
+      id: nextLocalNotificationId,
       title: input.title,
       content: input.content,
       type,
@@ -2014,9 +2014,9 @@ var NotificationRepository = class {
       `).get(now, now)?.cnt ?? 0;
   }
   markRead(notificationId) {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    db.prepare(`
+    database.prepare(`
       INSERT INTO notification_reads (notification_id, read_at, synced)
       VALUES (?, ?, ?)
       ON CONFLICT(notification_id) DO UPDATE SET
@@ -2025,17 +2025,17 @@ var NotificationRepository = class {
     `).run(notificationId, now, notificationId > 0 ? 0 : 1);
   }
   markAllRead() {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
-    db.exec("BEGIN");
+    database.exec("BEGIN");
     try {
-      const ids = db.prepare(`
+      const ids = database.prepare(`
         SELECT n.id
         FROM notifications n
         LEFT JOIN notification_reads r ON n.id = r.notification_id
         WHERE r.notification_id IS NULL
-      `).all().map(r => r.id);
-      const stmt = db.prepare(`
+      `).all().map(item => item.id);
+      const stmt = database.prepare(`
         INSERT INTO notification_reads (notification_id, read_at, synced)
         VALUES (?, ?, ?)
         ON CONFLICT(notification_id) DO UPDATE SET
@@ -2043,10 +2043,10 @@ var NotificationRepository = class {
           synced = excluded.synced
       `);
       for (const id of ids) stmt.run(id, now, id > 0 ? 0 : 1);
-      db.exec("COMMIT");
+      database.exec("COMMIT");
       return ids;
     } catch (error) {
-      db.exec("ROLLBACK");
+      database.exec("ROLLBACK");
       throw error;
     }
   }
@@ -2054,37 +2054,37 @@ var NotificationRepository = class {
     return getDatabase().prepare("SELECT notification_id, read_at, synced FROM notification_reads WHERE synced = 0 AND notification_id > 0").all().map(mapReadRow);
   }
   markSynced(notificationIds) {
-    const db = getDatabase();
-    const stmt = db.prepare("UPDATE notification_reads SET synced = 1 WHERE notification_id = ?");
-    db.exec("BEGIN");
+    const database = getDatabase();
+    const stmt = database.prepare("UPDATE notification_reads SET synced = 1 WHERE notification_id = ?");
+    database.exec("BEGIN");
     try {
       for (const id of notificationIds) stmt.run(id);
-      db.exec("COMMIT");
+      database.exec("COMMIT");
     } catch (error) {
-      db.exec("ROLLBACK");
+      database.exec("ROLLBACK");
       throw error;
     }
   }
   importCloudReads(reads) {
-    const db = getDatabase();
-    const stmt = db.prepare(`
+    const database = getDatabase();
+    const stmt = database.prepare(`
       INSERT INTO notification_reads (notification_id, read_at, synced)
       VALUES (?, ?, 1)
       ON CONFLICT(notification_id) DO NOTHING
     `);
-    db.exec("BEGIN");
+    database.exec("BEGIN");
     try {
-      for (const r of reads) stmt.run(r.notification_id, r.read_at);
-      db.exec("COMMIT");
+      for (const replacedValue of reads) stmt.run(replacedValue.notification_id, replacedValue.read_at);
+      database.exec("COMMIT");
     } catch (error) {
-      db.exec("ROLLBACK");
+      database.exec("ROLLBACK");
       throw error;
     }
   }
   clearAll() {
-    const db = getDatabase();
-    db.exec("DELETE FROM notification_reads");
-    db.exec("DELETE FROM notifications");
+    const database = getDatabase();
+    database.exec("DELETE FROM notification_reads");
+    database.exec("DELETE FROM notifications");
   }
 };
 var notificationRepository = new NotificationRepository();
@@ -2127,12 +2127,12 @@ function U(l) {
 var E = {
   exec: () => null
 };
-function I(l) {
-  let e = [];
+function I(fn) {
+  let emptyItems = [];
   return t => {
     let n = Math.max(0, Math.min(3, t - 1)),
-      i = e[n];
-    return i || (i = l(n), e[n] = i), i;
+      i = emptyItems[n];
+    return i || (i = fn(n), emptyItems[n] = i), i;
   };
 }
 function d(l, e = "") {
@@ -2140,7 +2140,7 @@ function d(l, e = "") {
     n = {
       replace: (i, r) => {
         let o = typeof r == "string" ? r : r.source;
-        return o = o.replace(m.caret, "$1"), t = t.replace(i, o), n;
+        return o = o.replace(options.caret, "$1"), t = t.replace(i, o), n;
       },
       getRegex: () => new RegExp(t, e)
     };
@@ -2153,7 +2153,7 @@ var we = ((l = "") => {
     return false;
   }
 })();
-var m = {
+var options = {
   codeRemoveIndent: /^(?: {0,3}\t| {1,4})/gm,
   outputLinkReplace: /\\([\[\]])/g,
   indentCodeCompensation: /^(\s+)(?:```)/,
@@ -2219,28 +2219,28 @@ var v = /^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/;
 var _e = /^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/;
 var K = / {0,3}(?:[*+-]|\d{1,9}[.)])/;
 var le = /^(?!bull |blockCode|fences|blockquote|heading|html|table)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html|table))+?)\n {0,3}(=+|-+) *(?:\n+|$)/;
-var ue = d(le).replace(/bull/g, K).replace(/blockCode/g, /(?: {4}| {0,3}\t)/).replace(/fences/g, / {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g, / {0,3}>/).replace(/heading/g, / {0,3}#{1,6}(?:\s|$)/).replace(/html/g, / {0,3}<[^\n>]+>\n/).replace(/\|table/g, "").getRegex();
+var regex = d(le).replace(/bull/g, K).replace(/blockCode/g, /(?: {4}| {0,3}\t)/).replace(/fences/g, / {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g, / {0,3}>/).replace(/heading/g, / {0,3}#{1,6}(?:\s|$)/).replace(/html/g, / {0,3}<[^\n>]+>\n/).replace(/\|table/g, "").getRegex();
 var $e = d(le).replace(/bull/g, K).replace(/blockCode/g, /(?: {4}| {0,3}\t)/).replace(/fences/g, / {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g, / {0,3}>/).replace(/heading/g, / {0,3}#{1,6}(?:\s|$)/).replace(/html/g, / {0,3}<[^\n>]+>\n/).replace(/table/g, / {0,3}\|?(?:[:\- ]*\|)+[\:\- ]*\n/).getRegex();
 var W = /^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table|[ \t]+\n)[^\n]+)*)/;
 var Le = /^[^\n]+/;
 var X = /(?!\s*\])(?:\\[\s\S]|[^\[\]\\])+/;
-var ze = d(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label", X).replace("title", /(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex();
+var regexResult = d(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label", X).replace("title", /(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex();
 var Ee = d(/^(bull)([ \t][^\n]*?)?(?:\n|$)/).replace(/bull/g, K).getRegex();
 var H = "address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul";
 var J = /<!--(?:-?>|[\s\S]*?(?:-->|$))/;
 var Me = d("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n*|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>[^\\n]*\\n*|$)|<![A-Z][\\s\\S]*?(?:>[^\\n]*\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>[^\\n]*\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n[ \t]*)+\\n|$)|<(?!script|pre|style|textarea)([a-z][a-z0-9-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ \t]*)+\\n|$)|</(?!script|pre|style|textarea)[a-z][a-z0-9-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ \t]*)+\\n|$))", "i").replace("comment", J).replace("tag", H).replace("attribute", / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex();
-var pe = l => d(W).replace("hr", v).replace("heading", " {0,3}#{1,6}(?:\\s|$)").replace("|lheading", "").replace("|table", "").replace("blockquote", " {0,3}>").replace("fences", " {0,3}(?:`{3,}(?=[^`\\n]*(?:\\n|$))|~~~)[^\\n]*(?:\\n|$)").replace("list", l).replace("html", "</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag", H).getRegex();
-var Ae = pe(/ {0,3}(?:[*+-]|1[.)])[ \t]+[^ \t\n]/);
-var Ie = pe(/ {0,3}(?:[*+-]|\d{1,9}[.)])(?:[ \t]|\n|$)/);
+var handler = l => d(W).replace("hr", v).replace("heading", " {0,3}#{1,6}(?:\\s|$)").replace("|lheading", "").replace("|table", "").replace("blockquote", " {0,3}>").replace("fences", " {0,3}(?:`{3,}(?=[^`\\n]*(?:\\n|$))|~~~)[^\\n]*(?:\\n|$)").replace("list", l).replace("html", "</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag", H).getRegex();
+var Ae = handler(/ {0,3}(?:[*+-]|1[.)])[ \t]+[^ \t\n]/);
+var Ie = handler(/ {0,3}(?:[*+-]|\d{1,9}[.)])(?:[ \t]|\n|$)/);
 var V = {
   blockquote: d(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph", Ie).getRegex(),
   code: Pe,
-  def: ze,
+  def: regexResult,
   fences: Se,
   heading: _e,
   hr: v,
   html: Me,
-  lheading: ue,
+  lheading: regex,
   list: Ee,
   newline: ye,
   paragraph: Ae,
@@ -2262,7 +2262,7 @@ var De = {
   fences: E,
   lheading: /^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   paragraph: d(W).replace("hr", v).replace("heading", ` *#{1,6} *[^
-]`).replace("lheading", ue).replace("|table", "").replace("blockquote", " {0,3}>").replace("|fences", "").replace("|list", "").replace("|html", "").replace("|tag", "").getRegex()
+]`).replace("lheading", regex).replace("|table", "").replace("blockquote", " {0,3}>").replace("|fences", "").replace("|list", "").replace("|html", "").replace("|tag", "").getRegex()
 };
 var qe = /^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/;
 var ve = /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/;
@@ -2333,7 +2333,7 @@ var gt = {
   link: d(/^!?\[(label)\]\((.*?)\)/).replace("label", N).getRegex(),
   reflink: d(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label", N).getRegex()
 };
-var F = {
+var request = {
   ...Y,
   emStrongRDelimAst: Je,
   emStrongLDelim: Fe,
@@ -2345,9 +2345,9 @@ var F = {
   text: d(/^(`+|~+|[^`~])(?:(?=[`~])|(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|protocol:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/).replace("protocol", ae).getRegex()
 };
 var ft = {
-  ...F,
+  ...request,
   br: d(ce).replace("{2,}", "*").getRegex(),
-  text: d(F.text).replace("\\b_", "\\b_| {2,}\\n").replace(/\{2,\}/g, "*").getRegex()
+  text: d(request.text).replace("\\b_", "\\b_| {2,}\\n").replace(/\{2,\}/g, "*").getRegex()
 };
 var G = {
   normal: V,
@@ -2356,7 +2356,7 @@ var G = {
 };
 var B = {
   normal: Y,
-  gfm: F,
+  gfm: request,
   breaks: ft,
   pedantic: gt
 };
@@ -2370,80 +2370,80 @@ var mt = {
 var fe = l => mt[l];
 function R(l, e) {
   if (e) {
-    if (m.escapeTest.test(l)) return l.replace(m.escapeReplace, fe);
-  } else if (m.escapeTestNoEncode.test(l)) return l.replace(m.escapeReplaceNoEncode, fe);
+    if (options.escapeTest.test(l)) return l.replace(options.escapeReplace, fe);
+  } else if (options.escapeTestNoEncode.test(l)) return l.replace(options.escapeReplaceNoEncode, fe);
   return l;
 }
 function ee(l) {
   try {
-    l = encodeURI(l).replace(m.percentDecode, "%");
+    l = encodeURI(l).replace(options.percentDecode, "%");
   } catch {
     return null;
   }
   return l;
 }
 function te(l, e) {
-  let n = l.replace(m.findPipe, (r, o, s) => {
+  let parts = l.replace(options.findPipe, (r, o, s) => {
       let u = false,
         a = o;
       for (; --a >= 0 && s[a] === "\\";) u = !u;
       return u ? "|" : " |";
-    }).split(m.splitPipe),
+    }).split(options.splitPipe),
     i = 0;
-  if (n[0].trim() || n.shift(), n.length > 0 && !n.at(-1)?.trim() && n.pop(), e) if (n.length > e) n.splice(e);else for (; n.length < e;) n.push("");
-  for (; i < n.length; i++) n[i] = n[i].trim().replace(m.slashPipe, "|");
-  return n;
+  if (parts[0].trim() || parts.shift(), parts.length > 0 && !parts.at(-1)?.trim() && parts.pop(), e) if (parts.length > e) parts.splice(e);else for (; parts.length < e;) parts.push("");
+  for (; i < parts.length; i++) parts[i] = parts[i].trim().replace(options.slashPipe, "|");
+  return parts;
 }
-function $(l, e, t) {
-  let n = l.length;
+function $(items, e, t) {
+  let n = items.length;
   if (n === 0) return "";
   let i = 0;
   for (; i < n;) {
-    let r = l.charAt(n - i - 1);
+    let r = items.charAt(n - i - 1);
     if (r === e && !t) i++;else if (r !== e && t) i++;else break;
   }
-  return l.slice(0, n - i);
+  return items.slice(0, n - i);
 }
-function ne(l) {
-  let e = l.split(`
+function ne(text) {
+  let parts = text.split(`
 `),
-    t = e.length - 1;
-  for (; t >= 0 && m.blankLine.test(e[t]);) t--;
-  return e.length - t <= 2 ? l : e.slice(0, t + 1).join(`
+    t = parts.length - 1;
+  for (; t >= 0 && options.blankLine.test(parts[t]);) t--;
+  return parts.length - t <= 2 ? text : parts.slice(0, t + 1).join(`
 `);
 }
-function D(l) {
-  return l.toLowerCase().toUpperCase().toLowerCase();
+function D(text) {
+  return text.toLowerCase().toUpperCase().toLowerCase();
 }
-function me(l, e) {
-  if (l.indexOf(e[1]) === -1) return -1;
+function me(items, e) {
+  if (items.indexOf(e[1]) === -1) return -1;
   let t = 0;
-  for (let n = 0; n < l.length; n++) if (l[n] === "\\") n++;else if (l[n] === e[0]) t++;else if (l[n] === e[1] && (t--, t < 0)) return n;
+  for (let n = 0; n < items.length; n++) if (items[n] === "\\") n++;else if (items[n] === e[0]) t++;else if (items[n] === e[1] && (t--, t < 0)) return n;
   return t > 0 ? -2 : -1;
 }
 function xe(l, e = 0) {
   let t = e,
     n = "";
-  for (let i of l) if (i === "\t") {
+  for (let diff of l) if (diff === "\t") {
     let r = 4 - t % 4;
     n += " ".repeat(r), t += r;
-  } else n += i, t++;
+  } else n += diff, t++;
   return n;
 }
 function be(l, e, t, n, i) {
-  let r = e.href,
-    o = e.title || null,
-    s = l[1].replace(i.other.outputLinkReplace, "$1"),
+  let href = e.href,
+    fallbackValue = e.title || null,
+    replaced = l[1].replace(i.other.outputLinkReplace, "$1"),
     u = l[0].charAt(0) === "!";
   n.state.inLink = true;
-  let a = n.state.linkEmitted,
-    p = n.state.inRawBlock;
+  let linkEmitted = n.state.linkEmitted,
+    inRawBlock = n.state.inRawBlock;
   n.state.linkEmitted = false;
-  let c = n.inlineTokens(s),
+  let inlineTokens = n.inlineTokens(replaced),
     h = n.state.linkEmitted;
-  if (n.state.linkEmitted = a, n.state.inLink = false, !u) {
+  if (n.state.linkEmitted = linkEmitted, n.state.inLink = false, !u) {
     if (h) {
-      n.state.inRawBlock = p;
+      n.state.inRawBlock = inRawBlock;
       return;
     }
     n.state.linkEmitted = true;
@@ -2451,26 +2451,26 @@ function be(l, e, t, n, i) {
   return {
     type: u ? "image" : "link",
     raw: t,
-    href: r,
-    title: o,
-    text: s,
-    tokens: c
+    href: href,
+    title: fallbackValue,
+    text: replaced,
+    tokens: inlineTokens
   };
 }
-function xt(l, e, t) {
+function xt(l, text, t) {
   let n = l.match(t.other.indentCodeCompensation);
-  if (n === null) return e;
+  if (n === null) return text;
   let i = n[1];
-  return e.split(`
-`).map(r => {
-    let o = r.match(t.other.beginningSpace);
-    if (o === null) return r;
+  return text.split(`
+`).map(items => {
+    let o = items.match(t.other.beginningSpace);
+    if (o === null) return items;
     let [s] = o;
-    return r.slice(Math.min(s.length, i.length));
+    return items.slice(Math.min(s.length, i.length));
   }).join(`
 `);
 }
-function Re(l, e, t, n) {
+function Re(items, e, t, n) {
   if (!e.includes("<")) return false;
   for (let i = 0; i < e.length; i++) {
     if (e[i] === "\\") {
@@ -2485,11 +2485,11 @@ function Re(l, e, t, n) {
       }
     }
     if (e[i] !== "<") continue;
-    let r = l.slice(t + i),
-      o = n.inline.tag.exec(r) || n.inline.autolink.exec(r);
-    if (o) {
-      if (o[0].length > e.length - i) return true;
-      i += o[0].length - 1;
+    let part = items.slice(t + i),
+      fallbackValue = n.inline.tag.exec(part) || n.inline.autolink.exec(part);
+    if (fallbackValue) {
+      if (fallbackValue[0].length > e.length - i) return true;
+      i += fallbackValue[0].length - 1;
     }
   }
   return false;
@@ -2498,8 +2498,8 @@ var y = class {
   options;
   rules;
   lexer;
-  constructor(e) {
-    this.options = e || T;
+  constructor(constructor) {
+    this.options = constructor || T;
   }
   space(e) {
     let t = this.rules.block.newline.exec(e);
@@ -2520,8 +2520,8 @@ var y = class {
       };
     }
   }
-  fences(e) {
-    let t = this.rules.block.fences.exec(e);
+  fences(fences) {
+    let t = this.rules.block.fences.exec(fences);
     if (t) {
       let n = t[0],
         i = xt(n, t[3] || "", this.rules);
@@ -2533,21 +2533,21 @@ var y = class {
       };
     }
   }
-  heading(e) {
-    let t = this.rules.block.heading.exec(e);
+  heading(heading) {
+    let t = this.rules.block.heading.exec(heading);
     if (t) {
-      let n = t[2].trim();
-      if (this.rules.other.endingHash.test(n)) {
-        let i = $(n, "#");
-        (this.options.pedantic || !i || this.rules.other.endingSpaceTabChar.test(i)) && (n = i.trim());
+      let trimmed = t[2].trim();
+      if (this.rules.other.endingHash.test(trimmed)) {
+        let i = $(trimmed, "#");
+        (this.options.pedantic || !i || this.rules.other.endingSpaceTabChar.test(i)) && (trimmed = i.trim());
       }
       return {
         type: "heading",
         raw: $(t[0], `
 `),
         depth: t[1].length,
-        text: n,
-        tokens: this.lexer.inline(n)
+        text: trimmed,
+        tokens: this.lexer.inline(trimmed)
       };
     }
   }
@@ -2559,49 +2559,49 @@ var y = class {
 `)
     };
   }
-  blockquote(e) {
-    let t = this.rules.block.blockquote.exec(e);
+  blockquote(blockquote) {
+    let t = this.rules.block.blockquote.exec(blockquote);
     if (t) {
-      let n = $(t[0], `
+      let parts = $(t[0], `
 `).split(`
 `),
         i = "",
         r = "",
-        o = [];
-      for (; n.length > 0;) {
+        emptyItems = [];
+      for (; parts.length > 0;) {
         let s = false,
-          u = [],
+          length = [],
           a = 0;
-        for (; a < n.length; a++) if (this.rules.other.blockquoteStart.test(n[a])) u.push(n[a]), s = true;else if (!s) u.push(n[a]);else break;
-        n = n.slice(a);
-        let p = u.join(`
+        for (; a < parts.length; a++) if (this.rules.other.blockquoteStart.test(parts[a])) length.push(parts[a]), s = true;else if (!s) length.push(parts[a]);else break;
+        parts = parts.slice(a);
+        let joined = length.join(`
 `),
-          c = p.replace(this.rules.other.blockquoteSetextReplace, `
+          replaced = joined.replace(this.rules.other.blockquoteSetextReplace, `
     $1`).replace(this.rules.other.blockquoteSetextReplace2, "");
         i = i ? `${i}
-${p}` : p, r = r ? `${r}
-${c}` : c;
+${joined}` : joined, r = r ? `${r}
+${replaced}` : replaced;
         let h = this.lexer.state.top;
-        if (this.lexer.state.top = true, this.lexer.blockTokens(c, o, true), this.lexer.state.top = h, n.length === 0) break;
-        let k = o.at(-1);
+        if (this.lexer.state.top = true, this.lexer.blockTokens(replaced, emptyItems, true), this.lexer.state.top = h, parts.length === 0) break;
+        let k = emptyItems.at(-1);
         if (k?.type === "code") break;
         if (k?.type === "blockquote") {
           let O = k,
-            g = n.join(`
+            g = parts.join(`
 `),
             w = O.raw + `
 ` + g.replace(this.rules.other.blockquoteSetextReplace2, ""),
-            z = this.blockquote(w);
-          o[o.length - 1] = z, i = `${i}
-${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
+            blockquoteResult = this.blockquote(w);
+          emptyItems[emptyItems.length - 1] = blockquoteResult, i = `${i}
+${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
           break;
         } else if (k?.type === "list") {
           let O = k,
             g = O.raw + `
-` + n.join(`
+` + parts.join(`
 `),
             w = this.list(g);
-          o[o.length - 1] = w, i = i.substring(0, i.length - k.raw.length) + w.raw, r = r.substring(0, r.length - O.raw.length) + w.raw, n = g.substring(o.at(-1).raw.length).split(`
+          emptyItems[emptyItems.length - 1] = w, i = i.substring(0, i.length - k.raw.length) + w.raw, r = r.substring(0, r.length - O.raw.length) + w.raw, parts = g.substring(emptyItems.at(-1).raw.length).split(`
 `);
           continue;
         }
@@ -2609,60 +2609,60 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
       return {
         type: "blockquote",
         raw: i,
-        tokens: o,
+        tokens: emptyItems,
         text: r
       };
     }
   }
-  list(e) {
-    let t = this.rules.block.list.exec(e);
+  list(text) {
+    let t = this.rules.block.list.exec(text);
     if (t) {
-      let n = t[1].trim(),
-        i = n.length > 1,
+      let trimmed = t[1].trim(),
+        i = trimmed.length > 1,
         r = {
           type: "list",
           raw: "",
           ordered: i,
-          start: i ? +n.slice(0, -1) : "",
+          start: i ? +trimmed.slice(0, -1) : "",
           loose: false,
           items: []
         };
-      n = i ? `\\d{1,9}\\${n.slice(-1)}` : `\\${n}`, this.options.pedantic && (n = i ? n : "[*+-]");
-      let o = this.rules.other.listItemRegex(n),
+      trimmed = i ? `\\d{1,9}\\${trimmed.slice(-1)}` : `\\${trimmed}`, this.options.pedantic && (trimmed = i ? trimmed : "[*+-]");
+      let itemRegex = this.rules.other.listItemRegex(trimmed),
         s = false;
-      for (; e;) {
+      for (; text;) {
         let a = false,
           p = "",
           c = "";
-        if (!(t = o.exec(e)) || this.rules.block.hr.test(e)) break;
-        p = t[0], e = e.substring(p.length);
+        if (!(t = itemRegex.exec(text)) || this.rules.block.hr.test(text)) break;
+        p = t[0], text = text.substring(p.length);
         let h = xe(t[2].split(`
 `, 1)[0], t[1].length),
-          k = e.split(`
+          k = text.split(`
 `, 1)[0],
           O = !h.trim(),
           g = 0;
         if (this.options.pedantic ? (g = 2, c = h.trimStart()) : O ? g = t[1].length + 1 : (g = h.search(this.rules.other.nonSpaceChar), g = g > 4 ? 1 : g, c = h.slice(g), g += t[1].length), O && this.rules.other.blankLine.test(k) && (p += k + `
-`, e = e.substring(k.length + 1), a = true), !a) {
-          let w = this.rules.other.nextBulletRegex(g),
+`, text = text.substring(k.length + 1), a = true), !a) {
+          let nextBulletRegex = this.rules.other.nextBulletRegex(g),
             z = this.rules.other.hrRegex(g),
-            re = this.rules.other.fencesBeginRegex(g),
-            se = this.rules.other.headingBeginRegex(g),
+            fencesBeginRegex = this.rules.other.fencesBeginRegex(g),
+            headingBeginRegex = this.rules.other.headingBeginRegex(g),
             Te = this.rules.other.htmlBeginRegex(g),
             Oe = this.rules.other.blockquoteBeginRegex(g);
-          for (; e;) {
-            let j = e.split(`
+          for (; text;) {
+            let j = text.split(`
 `, 1)[0],
               q;
-            if (k = j, this.options.pedantic ? (k = k.replace(this.rules.other.listReplaceNesting, "  "), q = k) : q = k.replace(this.rules.other.tabCharGlobal, "    "), re.test(k) || se.test(k) || Te.test(k) || Oe.test(k) || w.test(k) || z.test(k)) break;
+            if (k = j, this.options.pedantic ? (k = k.replace(this.rules.other.listReplaceNesting, "  "), q = k) : q = k.replace(this.rules.other.tabCharGlobal, "    "), fencesBeginRegex.test(k) || headingBeginRegex.test(k) || Te.test(k) || Oe.test(k) || nextBulletRegex.test(k) || z.test(k)) break;
             if (q.search(this.rules.other.nonSpaceChar) >= g || !k.trim()) c += `
 ` + q.slice(g);else {
-              if (O || h.replace(this.rules.other.tabCharGlobal, "    ").search(this.rules.other.nonSpaceChar) >= 4 || re.test(h) || se.test(h) || z.test(h)) break;
+              if (O || h.replace(this.rules.other.tabCharGlobal, "    ").search(this.rules.other.nonSpaceChar) >= 4 || fencesBeginRegex.test(h) || headingBeginRegex.test(h) || z.test(h)) break;
               c += `
 ` + k;
             }
             O = !k.trim(), p += j + `
-`, e = e.substring(j.length + 1), h = q.slice(g);
+`, text = text.substring(j.length + 1), h = q.slice(g);
           }
         }
         r.loose || (s ? r.loose = true : this.rules.other.doubleBlankLine.test(p) && (s = true)), r.items.push({
@@ -2677,37 +2677,37 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
       let u = r.items.at(-1);
       if (u) u.raw = u.raw.trimEnd(), u.text = u.text.trimEnd();else return;
       r.raw = r.raw.trimEnd();
-      for (let a of r.items) if (this.lexer.state.top = false, a.tokens = this.lexer.blockTokens(a.text, []), !r.loose) {
-        let p = a.tokens.filter(h => h.type === "space");
-        r.loose = p.length > 0 && p.some(h => this.rules.other.anyLine.test(h.raw));
+      for (let flag of r.items) if (this.lexer.state.top = false, flag.tokens = this.lexer.blockTokens(flag.text, []), !r.loose) {
+        let filtered = flag.tokens.filter(item => item.type === "space");
+        r.loose = filtered.length > 0 && filtered.some(item => this.rules.other.anyLine.test(item.raw));
       }
-      for (let a of r.items) {
-        let p = a.tokens[0];
-        if (a.task && (p?.type === "text" || p?.type === "paragraph")) {
-          a.text = a.text.replace(this.rules.other.listReplaceTask, ""), p.raw = p.raw.replace(this.rules.other.listReplaceTask, ""), p.text = p.text.replace(this.rules.other.listReplaceTask, "");
+      for (let flag of r.items) {
+        let p = flag.tokens[0];
+        if (flag.task && (p?.type === "text" || p?.type === "paragraph")) {
+          flag.text = flag.text.replace(this.rules.other.listReplaceTask, ""), p.raw = p.raw.replace(this.rules.other.listReplaceTask, ""), p.text = p.text.replace(this.rules.other.listReplaceTask, "");
           for (let h = this.lexer.inlineQueue.length - 1; h >= 0; h--) if (this.rules.other.listIsTask.test(this.lexer.inlineQueue[h].src)) {
             this.lexer.inlineQueue[h].src = this.lexer.inlineQueue[h].src.replace(this.rules.other.listReplaceTask, "");
             break;
           }
-          let c = this.rules.other.listTaskCheckbox.exec(a.raw);
+          let c = this.rules.other.listTaskCheckbox.exec(flag.raw);
           if (c) {
             let h = {
               type: "checkbox",
               raw: c[0] + " ",
               checked: c[0] !== "[ ]"
             };
-            a.checked = h.checked, r.loose ? a.tokens[0] && ["paragraph", "text"].includes(a.tokens[0].type) && "tokens" in a.tokens[0] && a.tokens[0].tokens ? (a.tokens[0].raw = h.raw + a.tokens[0].raw, a.tokens[0].text = h.raw + a.tokens[0].text, a.tokens[0].tokens.unshift(h)) : a.tokens.unshift({
+            flag.checked = h.checked, r.loose ? flag.tokens[0] && ["paragraph", "text"].includes(flag.tokens[0].type) && "tokens" in flag.tokens[0] && flag.tokens[0].tokens ? (flag.tokens[0].raw = h.raw + flag.tokens[0].raw, flag.tokens[0].text = h.raw + flag.tokens[0].text, flag.tokens[0].tokens.unshift(h)) : flag.tokens.unshift({
               type: "paragraph",
               raw: h.raw,
               text: h.raw,
               tokens: [h]
-            }) : a.tokens.unshift(h);
+            }) : flag.tokens.unshift(h);
           }
-        } else a.task && (a.task = false);
+        } else flag.task && (flag.task = false);
       }
-      if (r.loose) for (let a of r.items) {
-        a.loose = true;
-        for (let p of a.tokens) p.type === "text" && (p.type = "paragraph");
+      if (r.loose) for (let flag of r.items) {
+        flag.loose = true;
+        for (let total of flag.tokens) total.type === "text" && (total.type = "paragraph");
       }
       return r;
     }
@@ -2728,12 +2728,12 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
   def(e) {
     let t = this.rules.block.def.exec(e);
     if (t) {
-      let n = D(t[1]).replace(this.rules.other.multipleSpaceGlobal, " "),
+      let replaced = D(t[1]).replace(this.rules.other.multipleSpaceGlobal, " "),
         i = t[2] ? t[2].replace(this.rules.other.hrefBrackets, "$1").replace(this.rules.inline.anyPunctuation, "$1") : "",
         r = t[3] ? t[3].substring(1, t[3].length - 1).replace(this.rules.inline.anyPunctuation, "$1") : t[3];
       return {
         type: "def",
-        tag: n,
+        tag: replaced,
         raw: $(t[0], `
 `),
         href: i,
@@ -2745,7 +2745,7 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
     let t = this.rules.block.table.exec(e);
     if (!t || !this.rules.other.tableDelimiter.test(t[2])) return;
     let n = te(t[1]),
-      i = t[2].replace(this.rules.other.tableAlignChars, "").split("|"),
+      parts = t[2].replace(this.rules.other.tableAlignChars, "").split("|"),
       r = t[3]?.trim() ? t[3].replace(this.rules.other.tableRowBlankLine, "").split(`
 `) : [],
       o = {
@@ -2756,39 +2756,39 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
         align: [],
         rows: []
       };
-    if (n.length === i.length) {
-      for (let s of i) this.rules.other.tableAlignRight.test(s) ? o.align.push("right") : this.rules.other.tableAlignCenter.test(s) ? o.align.push("center") : this.rules.other.tableAlignLeft.test(s) ? o.align.push("left") : o.align.push(null);
+    if (n.length === parts.length) {
+      for (let flag of parts) this.rules.other.tableAlignRight.test(flag) ? o.align.push("right") : this.rules.other.tableAlignCenter.test(flag) ? o.align.push("center") : this.rules.other.tableAlignLeft.test(flag) ? o.align.push("left") : o.align.push(null);
       for (let s = 0; s < n.length; s++) o.header.push({
         text: n[s],
         tokens: this.lexer.inline(n[s]),
         header: true,
         align: o.align[s]
       });
-      for (let s of r) o.rows.push(te(s, o.header.length).map((u, a) => ({
-        text: u,
-        tokens: this.lexer.inline(u),
+      for (let flag of r) o.rows.push(te(flag, o.header.length).map((item, a) => ({
+        text: item,
+        tokens: this.lexer.inline(item),
         header: false,
         align: o.align[a]
       })));
       return o;
     }
   }
-  lheading(e) {
-    let t = this.rules.block.lheading.exec(e);
+  lheading(lheading) {
+    let t = this.rules.block.lheading.exec(lheading);
     if (t) {
-      let n = t[1].trim();
+      let trimmed = t[1].trim();
       return {
         type: "heading",
         raw: $(t[0], `
 `),
         depth: t[2].charAt(0) === "=" ? 1 : 2,
-        text: n,
-        tokens: this.lexer.inline(n)
+        text: trimmed,
+        tokens: this.lexer.inline(trimmed)
       };
     }
   }
-  paragraph(e) {
-    let t = this.rules.block.paragraph.exec(e);
+  paragraph(paragraph) {
+    let t = this.rules.block.paragraph.exec(paragraph);
     if (t) {
       let n = t[1].charAt(t[1].length - 1) === `
 ` ? t[1].slice(0, -1) : t[1];
@@ -2809,8 +2809,8 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
       tokens: this.lexer.inline(t[0])
     };
   }
-  escape(e) {
-    let t = this.rules.inline.escape.exec(e);
+  escape(escapeValue) {
+    let t = this.rules.inline.escape.exec(escapeValue);
     if (t) return {
       type: "escape",
       raw: t[0],
@@ -2833,11 +2833,11 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
     if (t) {
       let n = t[0].charAt(0) === "!" ? 2 : 1;
       if (!this.options.pedantic && Re(e, t[1], n, this.rules)) return;
-      let i = t[2].trim();
-      if (!this.options.pedantic && this.rules.other.startAngleBracket.test(i)) {
-        if (!this.rules.other.endAngleBracket.test(i)) return;
-        let s = $(i.slice(0, -1), "\\");
-        if ((i.length - s.length) % 2 === 0) return;
+      let trimmed = t[2].trim();
+      if (!this.options.pedantic && this.rules.other.startAngleBracket.test(trimmed)) {
+        if (!this.rules.other.endAngleBracket.test(trimmed)) return;
+        let s = $(trimmed.slice(0, -1), "\\");
+        if ((trimmed.length - s.length) % 2 === 0) return;
       } else {
         let s = me(t[2], "()");
         if (s === -2) return;
@@ -2852,18 +2852,18 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
         let s = this.rules.other.pedanticHrefTitle.exec(r);
         s && (r = s[1], o = s[3]);
       } else o = t[3] ? t[3].slice(1, -1) : "";
-      return r = r.trim(), this.rules.other.startAngleBracket.test(r) && (this.options.pedantic && !this.rules.other.endAngleBracket.test(i) ? r = r.slice(1) : r = r.slice(1, -1)), be(t, {
+      return r = r.trim(), this.rules.other.startAngleBracket.test(r) && (this.options.pedantic && !this.rules.other.endAngleBracket.test(trimmed) ? r = r.slice(1) : r = r.slice(1, -1)), be(t, {
         href: r && r.replace(this.rules.inline.anyPunctuation, "$1"),
         title: o && o.replace(this.rules.inline.anyPunctuation, "$1")
       }, t[0], this.lexer, this.rules);
     }
   }
-  reflink(e, t) {
+  reflink(reflink, reflinkValue) {
     let n;
-    if ((n = this.rules.inline.reflink.exec(e)) || (n = this.rules.inline.nolink.exec(e))) {
+    if ((n = this.rules.inline.reflink.exec(reflink)) || (n = this.rules.inline.nolink.exec(reflink))) {
       let i = n[0].charAt(0) === "!" ? 2 : 1;
-      if (!this.options.pedantic && Re(e, n[1], i, this.rules)) return;
-      let o = t[D((n[2] || n[1]).replace(this.rules.other.multipleSpaceGlobal, " "))];
+      if (!this.options.pedantic && Re(reflink, n[1], i, this.rules)) return;
+      let o = reflinkValue[D((n[2] || n[1]).replace(this.rules.other.multipleSpaceGlobal, " "))];
       if (!o) {
         let s = n[0].charAt(0);
         return {
@@ -2875,63 +2875,63 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
       return be(n, o, n[0], this.lexer, this.rules);
     }
   }
-  emStrong(e, t, n = "") {
-    let i = this.rules.inline.emStrongLDelim.exec(e);
+  emStrong(items, strong, n = "") {
+    let i = this.rules.inline.emStrongLDelim.exec(items);
     if (!i || !i[1] && !i[2] && !i[3] && !i[4] || i[4] && n.match(this.rules.other.unicodeAlphaNumeric)) return;
     if (!(i[1] || i[3] || "") || !n || this.rules.inline.punctuation.exec(n)) {
       let o = [...i[0]].length - 1,
-        s,
-        u,
+        flag,
+        length,
         a = o,
         p = 0,
         c = i[0][0],
         h = n === c,
         k = c === "*" ? this.rules.inline.emStrongRDelimAst : this.rules.inline.emStrongRDelimUnd;
-      for (k.lastIndex = 0, t = t.slice(-1 * e.length + o); (i = k.exec(t)) !== null;) {
-        if (s = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !s) continue;
-        if (u = [...s].length, i[3] || i[4]) {
-          a += u;
+      for (k.lastIndex = 0, strong = strong.slice(-1 * items.length + o); (i = k.exec(strong)) !== null;) {
+        if (flag = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !flag) continue;
+        if (length = [...flag].length, i[3] || i[4]) {
+          a += length;
           continue;
         } else if (i[5] || i[6]) {
-          if (o % 3 && !((o + u) % 3)) {
-            p += u;
+          if (o % 3 && !((o + length) % 3)) {
+            p += length;
             continue;
           }
           if (h) break;
         }
-        if (a -= u, a > 0) continue;
-        u = Math.min(u, u + a + p);
+        if (a -= length, a > 0) continue;
+        length = Math.min(length, length + a + p);
         let O = [...i[0]][0].length,
-          g = e.slice(0, o + i.index + O + u);
-        if (Math.min(o, u) % 2) {
-          let z = g.slice(1, -1);
+          part = items.slice(0, o + i.index + O + length);
+        if (Math.min(o, length) % 2) {
+          let z = part.slice(1, -1);
           return {
             type: "em",
-            raw: g,
+            raw: part,
             text: z,
             tokens: this.lexer.inlineTokens(z)
           };
         }
-        let w = g.slice(2, -2);
+        let w = part.slice(2, -2);
         return {
           type: "strong",
-          raw: g,
+          raw: part,
           text: w,
           tokens: this.lexer.inlineTokens(w)
         };
       }
     }
   }
-  codespan(e) {
-    let t = this.rules.inline.code.exec(e);
+  codespan(codespan) {
+    let t = this.rules.inline.code.exec(codespan);
     if (t) {
-      let n = t[2].replace(this.rules.other.newLineCharGlobal, " "),
-        i = this.rules.other.nonSpaceChar.test(n),
-        r = this.rules.other.startingSpaceChar.test(n) && this.rules.other.endingSpaceChar.test(n);
-      return i && r && (n = n.substring(1, n.length - 1)), {
+      let replaced = t[2].replace(this.rules.other.newLineCharGlobal, " "),
+        i = this.rules.other.nonSpaceChar.test(replaced),
+        r = this.rules.other.startingSpaceChar.test(replaced) && this.rules.other.endingSpaceChar.test(replaced);
+      return i && r && (replaced = replaced.substring(1, replaced.length - 1)), {
         type: "codespan",
         raw: t[0],
-        text: n
+        text: replaced
       };
     }
   }
@@ -2942,44 +2942,44 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
       raw: t[0]
     };
   }
-  del(e, t, n = "") {
-    let i = this.rules.inline.delLDelim.exec(e);
+  del(items, t, n = "") {
+    let i = this.rules.inline.delLDelim.exec(items);
     if (!i) return;
     if (!(i[1] || "") || !n || this.rules.inline.punctuation.exec(n)) {
       let o = [...i[0]].length - 1,
-        s,
-        u,
+        flag,
+        length,
         a = o,
-        p = this.rules.inline.delRDelim;
-      for (p.lastIndex = 0, t = t.slice(-1 * e.length + o); (i = p.exec(t)) !== null;) {
-        if (s = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !s || (u = [...s].length, u !== o)) continue;
+        delRDelim = this.rules.inline.delRDelim;
+      for (delRDelim.lastIndex = 0, t = t.slice(-1 * items.length + o); (i = delRDelim.exec(t)) !== null;) {
+        if (flag = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !flag || (length = [...flag].length, length !== o)) continue;
         if (i[3] || i[4]) {
-          a += u;
+          a += length;
           continue;
         }
-        if (a -= u, a > 0) continue;
-        u = Math.min(u, u + a);
+        if (a -= length, a > 0) continue;
+        length = Math.min(length, length + a);
         let c = [...i[0]][0].length,
-          h = e.slice(0, o + i.index + c + u),
-          k = h.slice(o, -o);
+          part = items.slice(0, o + i.index + c + length),
+          k = part.slice(o, -o);
         return {
           type: "del",
-          raw: h,
+          raw: part,
           text: k,
           tokens: this.lexer.inlineTokens(k)
         };
       }
     }
   }
-  autolink(e) {
-    let t = this.rules.inline.autolink.exec(e);
+  autolink(autolink) {
+    let t = this.rules.inline.autolink.exec(autolink);
     if (t) {
-      let n, i;
-      return t[2] === "@" ? (n = t[1], i = "mailto:" + n) : (n = t[1], i = n), {
+      let n, diff;
+      return t[2] === "@" ? (n = t[1], diff = "mailto:" + n) : (n = t[1], diff = n), {
         type: "link",
         raw: t[0],
         text: n,
-        href: i,
+        href: diff,
         autolink: true,
         tokens: [{
           type: "text",
@@ -2992,17 +2992,17 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
   url(e) {
     let t;
     if (t = this.rules.inline.url.exec(e)) {
-      let n, i;
-      if (t[2] === "@") n = t[0], i = "mailto:" + n;else {
-        let r;
-        do r = t[0], t[0] = this.rules.inline._backpedal.exec(t[0])?.[0] ?? ""; while (r !== t[0]);
-        n = t[0], t[1] === "www." ? i = "http://" + t[0] : i = t[0];
+      let n, diff;
+      if (t[2] === "@") n = t[0], diff = "mailto:" + n;else {
+        let replacedValue;
+        do replacedValue = t[0], t[0] = this.rules.inline._backpedal.exec(t[0])?.[0] ?? ""; while (replacedValue !== t[0]);
+        n = t[0], t[1] === "www." ? diff = "http://" + t[0] : diff = t[0];
       }
       return {
         type: "link",
         raw: t[0],
         text: n,
-        href: i,
+        href: diff,
         autolink: true,
         tokens: [{
           type: "text",
@@ -3012,15 +3012,15 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
       };
     }
   }
-  inlineText(e) {
-    let t = this.rules.inline.text.exec(e);
+  inlineText(inline) {
+    let t = this.rules.inline.text.exec(inline);
     if (t) {
-      let n = this.lexer.state.inRawBlock;
+      let inRawBlock = this.lexer.state.inRawBlock;
       return {
         type: "text",
         raw: t[0],
         text: t[0],
-        escaped: n
+        escaped: inRawBlock
       };
     }
   }
@@ -3031,15 +3031,15 @@ var x = class l {
   state;
   inlineQueue;
   tokenizer;
-  constructor(e) {
-    this.tokens = [], this.tokens.links = Object.create(null), this.options = e || T, this.options.tokenizer = this.options.tokenizer || new y(), this.tokenizer = this.options.tokenizer, this.tokenizer.options = this.options, this.tokenizer.lexer = this, this.inlineQueue = [], this.state = {
+  constructor(constructor) {
+    this.tokens = [], this.tokens.links = Object.create(null), this.options = constructor || T, this.options.tokenizer = this.options.tokenizer || new y(), this.tokenizer = this.options.tokenizer, this.tokenizer.options = this.options, this.tokenizer.lexer = this, this.inlineQueue = [], this.state = {
       inLink: false,
       inRawBlock: false,
       linkEmitted: false,
       top: true
     };
     let t = {
-      other: m,
+      other: options,
       block: G.normal,
       inline: B.normal
     };
@@ -3054,11 +3054,11 @@ var x = class l {
   static lex(e, t) {
     return new l(t).lex(e);
   }
-  static lexInline(e, t) {
-    return new l(t).inlineTokens(e);
+  static lexInline(lex, inline) {
+    return new l(inline).inlineTokens(lex);
   }
   lex(e) {
-    e = e.replace(m.carriageReturn, `
+    e = e.replace(options.carriageReturn, `
 `), this.blockTokens(e, this.tokens);
     for (let t = 0; t < this.inlineQueue.length; t++) {
       let n = this.inlineQueue[t];
@@ -3066,241 +3066,241 @@ var x = class l {
     }
     return this.inlineQueue = [], this.tokens;
   }
-  blockTokens(e, t = [], n = false) {
-    this.tokenizer.lexer = this, this.options.pedantic && (e = e.replace(m.tabCharGlobal, "    ").replace(m.spaceLine, ""));
+  blockTokens(items, t = [], n = false) {
+    this.tokenizer.lexer = this, this.options.pedantic && (items = items.replace(options.tabCharGlobal, "    ").replace(options.spaceLine, ""));
     let i = 1 / 0;
-    for (; e;) {
-      if (e.length < i) i = e.length;else {
-        this.infiniteLoopError(e.charCodeAt(0));
+    for (; items;) {
+      if (items.length < i) i = items.length;else {
+        this.infiniteLoopError(items.charCodeAt(0));
         break;
       }
-      let r;
-      if (this.options.extensions?.block?.some(s => (r = s.call({
+      let replacedValue;
+      if (this.options.extensions?.block?.some(s => (replacedValue = s.call({
         lexer: this
-      }, e, t)) ? (e = e.substring(r.raw.length), t.push(r), true) : false)) continue;
-      if (r = this.tokenizer.space(e)) {
-        e = e.substring(r.raw.length);
+      }, items, t)) ? (items = items.substring(replacedValue.raw.length), t.push(replacedValue), true) : false)) continue;
+      if (replacedValue = this.tokenizer.space(items)) {
+        items = items.substring(replacedValue.raw.length);
         let s = t.at(-1);
-        r.raw.length === 1 && s !== undefined ? s.raw += `
-` : t.push(r);
+        replacedValue.raw.length === 1 && s !== undefined ? s.raw += `
+` : t.push(replacedValue);
         continue;
       }
-      if (r = this.tokenizer.code(e)) {
-        e = e.substring(r.raw.length);
-        let s = t.at(-1);
-        s?.type === "paragraph" || s?.type === "text" ? (s.raw += (s.raw.endsWith(`
-`) ? "" : `
-`) + r.raw, s.text += `
-` + r.text, this.inlineQueue.at(-1).src = s.text) : t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.fences(e)) {
-        e = e.substring(r.raw.length), t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.heading(e)) {
-        e = e.substring(r.raw.length), t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.hr(e)) {
-        e = e.substring(r.raw.length), t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.blockquote(e)) {
-        e = e.substring(r.raw.length), t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.list(e)) {
-        e = e.substring(r.raw.length), t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.html(e)) {
-        e = e.substring(r.raw.length), t.push(r);
-        continue;
-      }
-      if (r = this.tokenizer.def(e)) {
-        e = e.substring(r.raw.length);
+      if (replacedValue = this.tokenizer.code(items)) {
+        items = items.substring(replacedValue.raw.length);
         let s = t.at(-1);
         s?.type === "paragraph" || s?.type === "text" ? (s.raw += (s.raw.endsWith(`
 `) ? "" : `
-`) + r.raw, s.text += `
-` + r.raw, this.inlineQueue.at(-1).src = s.text) : this.tokens.links[r.tag] || (this.tokens.links[r.tag] = {
-          href: r.href,
-          title: r.title
-        }, t.push(r));
+`) + replacedValue.raw, s.text += `
+` + replacedValue.text, this.inlineQueue.at(-1).src = s.text) : t.push(replacedValue);
         continue;
       }
-      if (r = this.tokenizer.table(e)) {
-        e = e.substring(r.raw.length), t.push(r);
+      if (replacedValue = this.tokenizer.fences(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
         continue;
       }
-      if (r = this.tokenizer.lheading(e)) {
-        e = e.substring(r.raw.length), t.push(r);
+      if (replacedValue = this.tokenizer.heading(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
         continue;
       }
-      let o = e;
+      if (replacedValue = this.tokenizer.hr(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+        continue;
+      }
+      if (replacedValue = this.tokenizer.blockquote(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+        continue;
+      }
+      if (replacedValue = this.tokenizer.list(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+        continue;
+      }
+      if (replacedValue = this.tokenizer.html(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+        continue;
+      }
+      if (replacedValue = this.tokenizer.def(items)) {
+        items = items.substring(replacedValue.raw.length);
+        let s = t.at(-1);
+        s?.type === "paragraph" || s?.type === "text" ? (s.raw += (s.raw.endsWith(`
+`) ? "" : `
+`) + replacedValue.raw, s.text += `
+` + replacedValue.raw, this.inlineQueue.at(-1).src = s.text) : this.tokens.links[replacedValue.tag] || (this.tokens.links[replacedValue.tag] = {
+          href: replacedValue.href,
+          title: replacedValue.title
+        }, t.push(replacedValue));
+        continue;
+      }
+      if (replacedValue = this.tokenizer.table(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+        continue;
+      }
+      if (replacedValue = this.tokenizer.lheading(items)) {
+        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+        continue;
+      }
+      let itemsAlias = items;
       if (this.options.extensions?.startBlock) {
         let s = 1 / 0,
-          u = e.slice(1),
-          a;
-        this.options.extensions.startBlock.forEach(p => {
-          a = p.call({
+          part = items.slice(1),
+          flag;
+        this.options.extensions.startBlock.forEach(item => {
+          flag = item.call({
             lexer: this
-          }, u), typeof a == "number" && a >= 0 && (s = Math.min(s, a));
-        }), s < 1 / 0 && s >= 0 && (o = e.substring(0, s + 1));
+          }, part), typeof flag == "number" && flag >= 0 && (s = Math.min(s, flag));
+        }), s < 1 / 0 && s >= 0 && (itemsAlias = items.substring(0, s + 1));
       }
-      if (this.state.top && (r = this.tokenizer.paragraph(o))) {
+      if (this.state.top && (replacedValue = this.tokenizer.paragraph(itemsAlias))) {
         let s = t.at(-1);
         n && s?.type === "paragraph" ? (s.raw += (s.raw.endsWith(`
 `) ? "" : `
-`) + r.raw, s.text += `
-` + r.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(r), n = o.length !== e.length, e = e.substring(r.raw.length);
+`) + replacedValue.raw, s.text += `
+` + replacedValue.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(replacedValue), n = itemsAlias.length !== items.length, items = items.substring(replacedValue.raw.length);
         continue;
       }
-      if (r = this.tokenizer.text(e)) {
-        e = e.substring(r.raw.length);
+      if (replacedValue = this.tokenizer.text(items)) {
+        items = items.substring(replacedValue.raw.length);
         let s = t.at(-1);
         s?.type === "text" ? (s.raw += (s.raw.endsWith(`
 `) ? "" : `
-`) + r.raw, s.text += `
-` + r.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(r);
+`) + replacedValue.raw, s.text += `
+` + replacedValue.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(replacedValue);
         continue;
       }
-      if (e) {
-        this.infiniteLoopError(e.charCodeAt(0));
+      if (items) {
+        this.infiniteLoopError(items.charCodeAt(0));
         break;
       }
     }
     return this.state.top = true, t;
   }
-  inline(e, t = []) {
+  inline(inline, t = []) {
     return this.inlineQueue.push({
-      src: e,
+      src: inline,
       tokens: t
     }), t;
   }
-  linkInText(e) {
-    if (!e.includes("[")) return false;
-    let t = this.tokenizer.rules.inline.link;
-    for (let n of e.matchAll(this.tokenizer.rules.inline.blockSkip)) if (t.test(n[0]) && e.charAt(n.index - 1) !== "!") return true;
-    for (let n of e.matchAll(this.tokenizer.rules.inline.reflinkSearch)) {
+  linkInText(text) {
+    if (!text.includes("[")) return false;
+    let link = this.tokenizer.rules.inline.link;
+    for (let n of text.matchAll(this.tokenizer.rules.inline.blockSkip)) if (link.test(n[0]) && text.charAt(n.index - 1) !== "!") return true;
+    for (let n of text.matchAll(this.tokenizer.rules.inline.reflinkSearch)) {
       let i = n[0],
-        r = i.lastIndexOf("[");
-      if (!(i.charAt(0) === "!" || !Object.hasOwn(this.tokens.links, D(i.slice(r + 1, -1)))) && !(r > 1 && this.linkInText(i.slice(1, r - 1)))) return true;
+        lastIndexOf = i.lastIndexOf("[");
+      if (!(i.charAt(0) === "!" || !Object.hasOwn(this.tokens.links, D(i.slice(lastIndexOf + 1, -1)))) && !(lastIndexOf > 1 && this.linkInText(i.slice(1, lastIndexOf - 1)))) return true;
     }
     return false;
   }
-  inlineTokens(e, t = []) {
+  inlineTokens(items, t = []) {
     this.tokenizer.lexer = this;
-    let n = e;
-    if (this.tokens.links && e.includes("[")) {
-      let s = this.tokenizer.rules.inline.reflinkSearch,
+    let itemsAlias = items;
+    if (this.tokens.links && items.includes("[")) {
+      let reflinkSearch = this.tokenizer.rules.inline.reflinkSearch,
         u = a => {
-          let p = a.lastIndexOf("[");
-          if (!Object.hasOwn(this.tokens.links, D(a.slice(p + 1, -1)))) return a;
-          if (p > 1 && a.charAt(0) !== "!") {
-            let c = a.slice(1, p - 1);
-            if (this.linkInText(c)) return "[" + c.replace(s, u) + "][" + "a".repeat(a.length - p - 2) + "]";
+          let lastIndexOf = a.lastIndexOf("[");
+          if (!Object.hasOwn(this.tokens.links, D(a.slice(lastIndexOf + 1, -1)))) return a;
+          if (lastIndexOf > 1 && a.charAt(0) !== "!") {
+            let part = a.slice(1, lastIndexOf - 1);
+            if (this.linkInText(part)) return "[" + part.replace(reflinkSearch, u) + "][" + "a".repeat(a.length - lastIndexOf - 2) + "]";
           }
           return "[" + "a".repeat(a.length - 2) + "]";
         };
-      n = n.replace(s, u);
+      itemsAlias = itemsAlias.replace(reflinkSearch, u);
     }
-    n = n.replace(this.tokenizer.rules.inline.anyPunctuation, s => "+".repeat(s.length)), n = n.replace(this.tokenizer.rules.inline.blockSkip, (s, u, a) => {
-      let p = a ? a.length : 0;
+    itemsAlias = itemsAlias.replace(this.tokenizer.rules.inline.anyPunctuation, count => "+".repeat(count.length)), itemsAlias = itemsAlias.replace(this.tokenizer.rules.inline.blockSkip, (s, u, count) => {
+      let p = count ? count.length : 0;
       return s.slice(0, p) + "[" + "a".repeat(s.length - p - 2) + "]";
-    }), n = this.options.hooks?.emStrongMask?.call({
+    }), itemsAlias = this.options.hooks?.emStrongMask?.call({
       lexer: this
-    }, n) ?? n;
+    }, itemsAlias) ?? itemsAlias;
     let i = false,
       r = "",
       o = 1 / 0;
-    for (; e;) {
-      if (e.length < o) o = e.length;else {
-        this.infiniteLoopError(e.charCodeAt(0));
+    for (; items;) {
+      if (items.length < o) o = items.length;else {
+        this.infiniteLoopError(items.charCodeAt(0));
         break;
       }
       i || (r = ""), i = false;
-      let s;
-      if (this.options.extensions?.inline?.some(a => (s = a.call({
+      let flag;
+      if (this.options.extensions?.inline?.some(a => (flag = a.call({
         lexer: this
-      }, e, t)) ? (e = e.substring(s.raw.length), t.push(s), true) : false)) continue;
-      if (s = this.tokenizer.escape(e)) {
-        e = e.substring(s.raw.length), t.push(s);
+      }, items, t)) ? (items = items.substring(flag.raw.length), t.push(flag), true) : false)) continue;
+      if (flag = this.tokenizer.escape(items)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.tag(e)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.tag(items)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.link(e)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.link(items)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.reflink(e, this.tokens.links)) {
-        e = e.substring(s.raw.length);
+      if (flag = this.tokenizer.reflink(items, this.tokens.links)) {
+        items = items.substring(flag.raw.length);
         let a = t.at(-1);
-        s.type === "text" && a?.type === "text" ? (a.raw += s.raw, a.text += s.text) : t.push(s);
+        flag.type === "text" && a?.type === "text" ? (a.raw += flag.raw, a.text += flag.text) : t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.emStrong(e, n, r)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.emStrong(items, itemsAlias, r)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.codespan(e)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.codespan(items)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.br(e)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.br(items)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.del(e, n, r)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.del(items, itemsAlias, r)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (s = this.tokenizer.autolink(e)) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (flag = this.tokenizer.autolink(items)) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      if (!this.state.inLink && (s = this.tokenizer.url(e))) {
-        e = e.substring(s.raw.length), t.push(s);
+      if (!this.state.inLink && (flag = this.tokenizer.url(items))) {
+        items = items.substring(flag.raw.length), t.push(flag);
         continue;
       }
-      let u = e;
+      let u = items;
       if (this.options.extensions?.startInline) {
         let a = 1 / 0,
-          p = e.slice(1),
-          c;
-        this.options.extensions.startInline.forEach(h => {
-          c = h.call({
+          part = items.slice(1),
+          text;
+        this.options.extensions.startInline.forEach(item => {
+          text = item.call({
             lexer: this
-          }, p), typeof c == "number" && c >= 0 && (a = Math.min(a, c));
-        }), a < 1 / 0 && a >= 0 && (u = e.substring(0, a + 1));
+          }, part), typeof text == "number" && text >= 0 && (a = Math.min(a, text));
+        }), a < 1 / 0 && a >= 0 && (u = items.substring(0, a + 1));
       }
-      if (s = this.tokenizer.inlineText(u)) {
-        e = e.substring(s.raw.length), s.raw.slice(-1) !== "_" && (r = s.raw.slice(-1)), i = true;
+      if (flag = this.tokenizer.inlineText(u)) {
+        items = items.substring(flag.raw.length), flag.raw.slice(-1) !== "_" && (r = flag.raw.slice(-1)), i = true;
         let a = t.at(-1);
-        a?.type === "text" ? (a.raw += s.raw, a.text += s.text) : t.push(s);
+        a?.type === "text" ? (a.raw += flag.raw, a.text += flag.text) : t.push(flag);
         continue;
       }
-      if (e) {
-        this.infiniteLoopError(e.charCodeAt(0));
+      if (items) {
+        this.infiniteLoopError(items.charCodeAt(0));
         break;
       }
     }
     return t;
   }
-  infiniteLoopError(e) {
-    let t = "Infinite loop on byte: " + e;
+  infiniteLoopError(infinite) {
+    let t = "Infinite loop on byte: " + infinite;
     if (this.options.silent) console.error(t);else throw new Error(t);
   }
 };
 var P = class {
   options;
   parser;
-  constructor(e) {
-    this.options = e || T;
+  constructor(constructor) {
+    this.options = constructor || T;
   }
   space(e) {
     return "";
@@ -3310,8 +3310,8 @@ var P = class {
     lang: t,
     escaped: n
   }) {
-    let i = (t || "").match(m.notSpaceStart)?.[0],
-      r = e ? e.replace(m.endingNewline, "") + `
+    let i = (t || "").match(options.notSpaceStart)?.[0],
+      r = e ? e.replace(options.endingNewline, "") + `
 ` : "";
     return i ? "<pre><code class=\"language-" + R(i) + "\">" + (n ? r : R(r, true)) + `</code></pre>
 ` : "<pre><code>" + (n ? r : R(r, true)) + `</code></pre>
@@ -3344,21 +3344,21 @@ ${this.parser.parse(e)}</blockquote>
 `;
   }
   list(e) {
-    let t = e.ordered,
+    let ordered = e.ordered,
       n = e.start,
       i = "";
     for (let s = 0; s < e.items.length; s++) {
       let u = e.items[s];
       i += this.listitem(u);
     }
-    let r = t ? "ol" : "ul",
-      o = t && n !== 1 ? " start=\"" + n + "\"" : "";
+    let r = ordered ? "ol" : "ul",
+      o = ordered && n !== 1 ? " start=\"" + n + "\"" : "";
     return "<" + r + o + `>
 ` + i + "</" + r + `>
 `;
   }
-  listitem(e) {
-    return `<li>${this.parser.parse(e.tokens)}</li>
+  listitem(item) {
+    return `<li>${this.parser.parse(item.tokens)}</li>
 `;
   }
   checkbox({
@@ -3401,10 +3401,10 @@ ${this.parser.parse(e)}</blockquote>
 ${e}</tr>
 `;
   }
-  tablecell(e) {
-    let t = this.parser.parseInline(e.tokens),
-      n = e.header ? "th" : "td";
-    return (e.align ? `<${n} align="${e.align}">` : `<${n}>`) + t + `</${n}>
+  tablecell(tablecell) {
+    let inline = this.parser.parseInline(tablecell.tokens),
+      n = tablecell.header ? "th" : "td";
+    return (tablecell.align ? `<${n} align="${tablecell.align}">` : `<${n}>`) + inline + `</${n}>
 `;
   }
   strong({
@@ -3515,20 +3515,20 @@ var b = class l {
   options;
   renderer;
   textRenderer;
-  constructor(e) {
-    this.options = e || T, this.options.renderer = this.options.renderer || new P(), this.renderer = this.options.renderer, this.renderer.options = this.options, this.renderer.parser = this, this.textRenderer = new L();
+  constructor(constructor) {
+    this.options = constructor || T, this.options.renderer = this.options.renderer || new P(), this.renderer = this.options.renderer, this.renderer.options = this.options, this.renderer.parser = this, this.textRenderer = new L();
   }
   static parse(e, t) {
     return new l(t).parse(e);
   }
-  static parseInline(e, t) {
-    return new l(t).parseInline(e);
+  static parseInline(inline, inlineValue) {
+    return new l(inlineValue).parseInline(inline);
   }
-  parse(e) {
+  parse(count) {
     this.renderer.parser = this;
     let t = "";
-    for (let n = 0; n < e.length; n++) {
-      let i = e[n];
+    for (let n = 0; n < count.length; n++) {
+      let i = count[n];
       if (this.options.extensions?.renderers?.[i.type]) {
         let o = i,
           s = this.options.extensions.renderers[o.type].call({
@@ -3587,11 +3587,11 @@ var b = class l {
     }
     return t;
   }
-  parseInline(e, t = this.renderer) {
+  parseInline(count, t = this.renderer) {
     this.renderer.parser = this;
     let n = "";
-    for (let i = 0; i < e.length; i++) {
-      let r = e[i];
+    for (let i = 0; i < count.length; i++) {
+      let r = count[i];
       if (this.options.extensions?.renderers?.[r.type]) {
         let s = this.options.extensions.renderers[r.type].call({
           parser: this
@@ -3650,22 +3650,22 @@ var b = class l {
 var S = class {
   options;
   block;
-  constructor(e) {
-    this.options = e || T;
+  constructor(constructor) {
+    this.options = constructor || T;
   }
   static passThroughHooks = /* @__PURE__ */new Set(["preprocess", "postprocess", "processAllTokens", "emStrongMask"]);
   static passThroughHooksRespectAsync = /* @__PURE__ */new Set(["preprocess", "postprocess", "processAllTokens"]);
-  preprocess(e) {
-    return e;
+  preprocess(preprocess) {
+    return preprocess;
   }
-  postprocess(e) {
-    return e;
+  postprocess(processValue) {
+    return processValue;
   }
-  processAllTokens(e) {
-    return e;
+  processAllTokens(all) {
+    return all;
   }
-  emStrongMask(e) {
-    return e;
+  emStrongMask(strong) {
+    return strong;
   }
   provideLexer(e = this.block) {
     return e ? x.lex : x.lexInline;
@@ -3688,64 +3688,64 @@ var Q = class {
   constructor(...e) {
     this.use(...e);
   }
-  walkTokens(e, t) {
-    let n = [];
-    for (let i of e) switch (n = n.concat(t.call(this, i)), i.type) {
+  walkTokens(walk, tokens) {
+    let emptyItems = [];
+    for (let diff of walk) switch (emptyItems = emptyItems.concat(tokens.call(this, diff)), diff.type) {
       case "table":
         {
-          let r = i;
-          for (let o of r.header) n = n.concat(this.walkTokens(o.tokens, t));
-          for (let o of r.rows) for (let s of o) n = n.concat(this.walkTokens(s.tokens, t));
+          let r = diff;
+          for (let resolvedValue of r.header) emptyItems = emptyItems.concat(this.walkTokens(resolvedValue.tokens, tokens));
+          for (let resolvedValue of r.rows) for (let flag of resolvedValue) emptyItems = emptyItems.concat(this.walkTokens(flag.tokens, tokens));
           break;
         }
       case "list":
         {
-          let r = i;
-          n = n.concat(this.walkTokens(r.items, t));
+          let r = diff;
+          emptyItems = emptyItems.concat(this.walkTokens(r.items, tokens));
           break;
         }
       default:
         {
-          let r = i;
-          this.defaults.extensions?.childTokens?.[r.type] ? this.defaults.extensions.childTokens[r.type].forEach(o => {
-            let s = r[o].flat(1 / 0);
-            n = n.concat(this.walkTokens(s, t));
-          }) : r.tokens && (n = n.concat(this.walkTokens(r.tokens, t)));
+          let r = diff;
+          this.defaults.extensions?.childTokens?.[r.type] ? this.defaults.extensions.childTokens[r.type].forEach(item => {
+            let s = r[item].flat(1 / 0);
+            emptyItems = emptyItems.concat(this.walkTokens(s, tokens));
+          }) : r.tokens && (emptyItems = emptyItems.concat(this.walkTokens(r.tokens, tokens)));
         }
     }
-    return n;
+    return emptyItems;
   }
   use(...e) {
-    let t = this.defaults.extensions || {
+    let fallbackValue = this.defaults.extensions || {
       renderers: {},
       childTokens: {}
     };
-    return e.forEach(n => {
+    return e.forEach(item => {
       let i = {
-        ...n
+        ...item
       };
-      if (i.async = this.defaults.async || i.async || false, n.extensions && (n.extensions.forEach(r => {
+      if (i.async = this.defaults.async || i.async || false, item.extensions && (item.extensions.forEach(r => {
         if (!r.name) throw new Error("extension name required");
         if ("renderer" in r) {
-          let o = t.renderers[r.name];
-          o ? t.renderers[r.name] = function (...s) {
+          let o = fallbackValue.renderers[r.name];
+          o ? fallbackValue.renderers[r.name] = function (...s) {
             let u = r.renderer.apply(this, s);
             return u === false && (u = o.apply(this, s)), u;
-          } : t.renderers[r.name] = r.renderer;
+          } : fallbackValue.renderers[r.name] = r.renderer;
         }
         if ("tokenizer" in r) {
           if (!r.level || r.level !== "block" && r.level !== "inline") throw new Error("extension level must be 'block' or 'inline'");
-          let o = t[r.level];
-          o ? o.unshift(r.tokenizer) : t[r.level] = [r.tokenizer], r.start && (r.level === "block" ? t.startBlock ? t.startBlock.push(r.start) : t.startBlock = [r.start] : r.level === "inline" && (t.startInline ? t.startInline.push(r.start) : t.startInline = [r.start]));
+          let o = fallbackValue[r.level];
+          o ? o.unshift(r.tokenizer) : fallbackValue[r.level] = [r.tokenizer], r.start && (r.level === "block" ? fallbackValue.startBlock ? fallbackValue.startBlock.push(r.start) : fallbackValue.startBlock = [r.start] : r.level === "inline" && (fallbackValue.startInline ? fallbackValue.startInline.push(r.start) : fallbackValue.startInline = [r.start]));
         }
-        "childTokens" in r && r.childTokens && (t.childTokens[r.name] = r.childTokens);
-      }), i.extensions = t), n.renderer) {
+        "childTokens" in r && r.childTokens && (fallbackValue.childTokens[r.name] = r.childTokens);
+      }), i.extensions = fallbackValue), item.renderer) {
         let r = this.defaults.renderer || new P(this.defaults);
-        for (let o in n.renderer) {
-          if (!(o in r)) throw new Error(`renderer '${o}' does not exist`);
-          if (["options", "parser"].includes(o)) continue;
-          let s = o,
-            u = n.renderer[s],
+        for (let resolvedValue in item.renderer) {
+          if (!(resolvedValue in r)) throw new Error(`renderer '${resolvedValue}' does not exist`);
+          if (["options", "parser"].includes(resolvedValue)) continue;
+          let s = resolvedValue,
+            u = item.renderer[s],
             a = r[s];
           r[s] = (...p) => {
             let c = u.apply(r, p);
@@ -3754,13 +3754,13 @@ var Q = class {
         }
         i.renderer = r;
       }
-      if (n.tokenizer) {
+      if (item.tokenizer) {
         let r = this.defaults.tokenizer || new y(this.defaults);
-        for (let o in n.tokenizer) {
-          if (!(o in r)) throw new Error(`tokenizer '${o}' does not exist`);
-          if (["options", "rules", "lexer"].includes(o)) continue;
-          let s = o,
-            u = n.tokenizer[s],
+        for (let resolvedValue in item.tokenizer) {
+          if (!(resolvedValue in r)) throw new Error(`tokenizer '${resolvedValue}' does not exist`);
+          if (["options", "rules", "lexer"].includes(resolvedValue)) continue;
+          let s = resolvedValue,
+            u = item.tokenizer[s],
             a = r[s];
           r[s] = (...p) => {
             let c = u.apply(r, p);
@@ -3769,16 +3769,16 @@ var Q = class {
         }
         i.tokenizer = r;
       }
-      if (n.hooks) {
+      if (item.hooks) {
         let r = this.defaults.hooks || new S();
-        for (let o in n.hooks) {
-          if (!(o in r)) throw new Error(`hook '${o}' does not exist`);
-          if (["options", "block"].includes(o)) continue;
-          let s = o,
-            u = n.hooks[s],
+        for (let resolvedValue in item.hooks) {
+          if (!(resolvedValue in r)) throw new Error(`hook '${resolvedValue}' does not exist`);
+          if (["options", "block"].includes(resolvedValue)) continue;
+          let s = resolvedValue,
+            u = item.hooks[s],
             a = r[s];
-          S.passThroughHooks.has(o) ? r[s] = p => {
-            if (this.defaults.async && S.passThroughHooksRespectAsync.has(o)) return (async () => {
+          S.passThroughHooks.has(resolvedValue) ? r[s] = p => {
+            if (this.defaults.async && S.passThroughHooksRespectAsync.has(resolvedValue)) return (async () => {
               let h = await u.call(r, p);
               return a.call(r, h);
             })();
@@ -3795,12 +3795,12 @@ var Q = class {
         }
         i.hooks = r;
       }
-      if (n.walkTokens) {
-        let r = this.defaults.walkTokens,
-          o = n.walkTokens;
+      if (item.walkTokens) {
+        let walkTokens = this.defaults.walkTokens,
+          o = item.walkTokens;
         i.walkTokens = function (s) {
-          let u = [];
-          return u.push(o.call(this, s)), r && (u = u.concat(r.call(this, s))), u;
+          let emptyItems = [];
+          return emptyItems.push(o.call(this, s)), walkTokens && (emptyItems = emptyItems.concat(walkTokens.call(this, s))), emptyItems;
         };
       }
       this.defaults = {
@@ -3809,10 +3809,10 @@ var Q = class {
       };
     }), this;
   }
-  setOptions(e) {
+  setOptions(options) {
     return this.defaults = {
       ...this.defaults,
-      ...e
+      ...options
     }, this;
   }
   lexer(e, t) {
@@ -3821,7 +3821,7 @@ var Q = class {
   parser(e, t) {
     return b.parse(e, t ?? this.defaults);
   }
-  parseMarkdown(e) {
+  parseMarkdown(markdown) {
     return (n, i) => {
       let r = {
           ...i
@@ -3834,33 +3834,33 @@ var Q = class {
       if (this.defaults.async === true && r.async === false) return s(/* @__PURE__ */new Error("marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."));
       if (typeof n > "u" || n === null) return s(/* @__PURE__ */new Error("marked(): input parameter is undefined or null"));
       if (typeof n != "string") return s(/* @__PURE__ */new Error("marked(): input parameter is of type " + Object.prototype.toString.call(n) + ", string expected"));
-      if (o.hooks && (o.hooks.options = o, o.hooks.block = e), o.async) return (async () => {
+      if (o.hooks && (o.hooks.options = o, o.hooks.block = markdown), o.async) return (async () => {
         let u = o.hooks ? await o.hooks.preprocess(n) : n,
-          p = await (o.hooks ? await o.hooks.provideLexer(e) : e ? x.lex : x.lexInline)(u, o),
+          p = await (o.hooks ? await o.hooks.provideLexer(markdown) : markdown ? x.lex : x.lexInline)(u, o),
           c = o.hooks ? await o.hooks.processAllTokens(p) : p;
         o.walkTokens && (await Promise.all(this.walkTokens(c, o.walkTokens)));
-        let k = await (o.hooks ? await o.hooks.provideParser(e) : e ? b.parse : b.parseInline)(c, o);
+        let k = await (o.hooks ? await o.hooks.provideParser(markdown) : markdown ? b.parse : b.parseInline)(c, o);
         return o.hooks ? await o.hooks.postprocess(k) : k;
       })().catch(s);
       try {
         o.hooks && (n = o.hooks.preprocess(n));
-        let a = (o.hooks ? o.hooks.provideLexer(e) : e ? x.lex : x.lexInline)(n, o);
+        let a = (o.hooks ? o.hooks.provideLexer(markdown) : markdown ? x.lex : x.lexInline)(n, o);
         o.hooks && (a = o.hooks.processAllTokens(a)), o.walkTokens && this.walkTokens(a, o.walkTokens);
-        let c = (o.hooks ? o.hooks.provideParser(e) : e ? b.parse : b.parseInline)(a, o);
+        let c = (o.hooks ? o.hooks.provideParser(markdown) : markdown ? b.parse : b.parseInline)(a, o);
         return o.hooks && (c = o.hooks.postprocess(c)), c;
       } catch (u) {
         return s(u);
       }
     };
   }
-  onError(e, t) {
+  onError(error, errorValue) {
     return n => {
       if (n.message += `
-Please report this to https://github.com/markedjs/marked.`, e) {
+Please report this to https://github.com/markedjs/marked.`, error) {
         let i = "<p>An error occurred:</p><pre>" + R(n.message + "", true) + "</pre>";
-        return t ? Promise.resolve(i) : i;
+        return errorValue ? Promise.resolve(i) : i;
       }
-      if (t) return Promise.reject(n);
+      if (errorValue) return Promise.reject(n);
       throw n;
     };
   }
@@ -5402,12 +5402,12 @@ var XiaoheiBotRepository = class {
     if (!bot) throw new Error(appText("botRepo.workingDirectorySaveFailed"));
     return bot;
   }
-  createConsultationConversation(id, ownerId, targetId) {
-    const db = getDatabase(),
+  createConsultationConversation(consultation, ownerId, targetId) {
+    const database = getDatabase(),
       timestamp = (/* @__PURE__ */new Date()).toISOString();
-    db.prepare(`INSERT INTO xiaohei_bot_conversations (id, kind, title, description, notifications_enabled, direct_bot_id, default_bot_id, is_consultation, created_at, updated_at) VALUES (?, 'direct', ?, ?, 0, ?, ?, 1, ?, ?)`).run(id, appText("botRepo.consultationTitle"), appText("botRepo.consultationDescription"), targetId, targetId, timestamp, timestamp);
-    for (const botId of [ownerId, targetId]) db.prepare(`INSERT INTO xiaohei_bot_conversation_members (conversation_id, bot_id, participation_mode, is_default_responder, joined_message_seq, joined_at) VALUES (?, ?, ?, ?, 0, ?)`).run(id, botId, botId === targetId ? "auto" : "context-only", botId === targetId ? 1 : 0, timestamp);
-    ensureMainBranch(db, id, timestamp);
+    database.prepare(`INSERT INTO xiaohei_bot_conversations (id, kind, title, description, notifications_enabled, direct_bot_id, default_bot_id, is_consultation, created_at, updated_at) VALUES (?, 'direct', ?, ?, 0, ?, ?, 1, ?, ?)`).run(consultation, appText("botRepo.consultationTitle"), appText("botRepo.consultationDescription"), targetId, targetId, timestamp, timestamp);
+    for (const botId of [ownerId, targetId]) database.prepare(`INSERT INTO xiaohei_bot_conversation_members (conversation_id, bot_id, participation_mode, is_default_responder, joined_message_seq, joined_at) VALUES (?, ?, ?, ?, 0, ?)`).run(consultation, botId, botId === targetId ? "auto" : "context-only", botId === targetId ? 1 : 0, timestamp);
+    ensureMainBranch(database, consultation, timestamp);
   }
   getSideTopicBySource(parentConversationId, sourceMessageId) {
     const row = getDatabase().prepare(`SELECT * FROM xiaohei_bot_conversations
@@ -5660,7 +5660,7 @@ var XiaoheiBotRepository = class {
     const timestamp = now();
     const existing = this.getConversation(input.conversationId);
     if (!existing || existing.kind !== "group") throw new Error(appText("botMain.groupMissing"));
-    const botIds = [...new Set(input.botIds)].filter(id => !existing.members.some(member => member.botId === id));
+    const botIds = [...new Set(input.botIds)].filter(item => !existing.members.some(member => member.botId === item));
     if (botIds.length && existing.members.length + botIds.length > 30) throw new Error(appText("botRepo.groupMaxBots"));
     if (botIds.some(botId => !this.getBot(botId))) throw new Error(appText("botRepo.addingMissingBot"));
     database.exec("SAVEPOINT management_addGroupMembers");
@@ -6673,26 +6673,26 @@ var XiaoheiBotRepository = class {
   createRoutingJob(input) {
     const database = getDatabase();
     const timestamp = now();
-    const id = randomUUID();
+    const randomUUIDResult = randomUUID();
     database.exec("BEGIN IMMEDIATE");
     try {
       if (database.prepare(`INSERT OR IGNORE INTO xiaohei_bot_routing_jobs (
             id, conversation_id, trigger_message_id, receptionist_bot_id,
             status, candidate_snapshot_json, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, 'queued', ?, ?, ?)`).run(id, input.conversationId, input.triggerMessageId, input.receptionistBotId, JSON.stringify(input.candidateSnapshot), timestamp, timestamp).changes > 0) appendXiaoheiBotEvent(database, {
+          ) VALUES (?, ?, ?, ?, 'queued', ?, ?, ?)`).run(randomUUIDResult, input.conversationId, input.triggerMessageId, input.receptionistBotId, JSON.stringify(input.candidateSnapshot), timestamp, timestamp).changes > 0) appendXiaoheiBotEvent(database, {
         conversationId: input.conversationId,
         eventType: input.eventType ?? "routing.reception.queued",
         occurredAt: timestamp,
         actorType: input.actorType ?? "system",
         actorId: input.actorId ?? input.receptionistBotId,
         aggregateType: "routing-job",
-        aggregateId: id,
+        aggregateId: randomUUIDResult,
         correlationId: input.correlationId ?? input.triggerMessageId,
         causationEventId: input.causationEventId ?? null,
         parentEventId: input.parentEventId ?? null,
         branchId: input.branchId ?? activeBranchId(database, input.conversationId),
         payload: {
-          id,
+          id: randomUUIDResult,
           conversationId: input.conversationId,
           triggerMessageId: input.triggerMessageId,
           receptionistBotId: input.receptionistBotId,
@@ -7425,7 +7425,7 @@ var NotificationService = class {
     if (!token) return false;
     const unsynced = notificationRepository.getUnsyncedReads();
     if (unsynced.length === 0) return false;
-    const ids = unsynced.map(r => r.notificationId);
+    const ids = unsynced.map(item => item.notificationId);
     const clientTarget = this.getClientTarget();
     try {
       if (ids.length === 1) await this.callApi("notifications.php", {
@@ -8874,7 +8874,7 @@ function mergeEquivalentAppUsageSummaries(source) {
     if (item.lastUsedAt > existing.lastUsedAt) existing.lastUsedAt = item.lastUsedAt;
     existing.averageSessionDurationSec = Math.round(existing.activeDurationSec / Math.max(1, existing.sessionCount));
   }
-  return Array.from(merged.values()).sort((a, b) => b.activeDurationSec - a.activeDurationSec);
+  return Array.from(merged.values()).sort((left, right) => right.activeDurationSec - left.activeDurationSec);
 }
 function mapSession(row) {
   return {
@@ -9290,38 +9290,38 @@ var AppUsageRepository = class {
     `).all().map(row => resolveCommonAppName(row.app_name));
   }
   clearContextData(kind) {
-    const db = getDatabase();
+    const database = getDatabase();
     const now = (/* @__PURE__ */new Date()).toISOString();
     if (kind === "all") {
-      const result = db.prepare("DELETE FROM app_context_segments").run();
+      const result = database.prepare("DELETE FROM app_context_segments").run();
       return Number(result.changes);
     }
-    const result = kind === "window" ? db.prepare(`
+    const result = kind === "window" ? database.prepare(`
           UPDATE app_context_segments
           SET window_title = NULL, document_hint = NULL,
               window_id = NULL, display_id = NULL,
               window_x = NULL, window_y = NULL, window_width = NULL, window_height = NULL,
               updated_at = ?
-        `).run(now) : db.prepare(`
+        `).run(now) : database.prepare(`
           UPDATE app_context_segments
           SET browser_name = NULL, browser_domain = NULL, updated_at = ?
         `).run(now);
     return Number(result.changes);
   }
   clearAllUsageData() {
-    const db = getDatabase();
-    db.exec("BEGIN");
+    const database = getDatabase();
+    database.exec("BEGIN");
     try {
-      db.exec(`
+      database.exec(`
         DELETE FROM app_context_segments;
         DELETE FROM app_activity_segments;
         DELETE FROM app_usage_sessions_v2;
         DELETE FROM tracked_applications;
         DELETE FROM app_usage_sessions;
       `);
-      db.exec("COMMIT");
+      database.exec("COMMIT");
     } catch (error) {
-      db.exec("ROLLBACK");
+      database.exec("ROLLBACK");
       throw error;
     }
   }
@@ -9428,17 +9428,17 @@ function mapSummary(row) {
 }
 var ActivityEvidenceRepository = class {
   createEvent(input) {
-    const id = input.id ?? crypto.randomUUID();
+    const fallbackValue = input.id ?? crypto.randomUUID();
     const createdAt = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO mac_activity_events (
         id, event_type, observed_at, app_bundle_id, app_name, window_id, window_title,
         element_role, element_subrole, element_label, action_name, metadata_json, created_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, input.eventType, input.observedAt, input.appBundleId, input.appName, input.windowId, input.windowTitle, input.elementRole, input.elementSubrole, input.elementLabel, input.actionName, input.metadata ? JSON.stringify(input.metadata) : null, createdAt);
+    `).run(fallbackValue, input.eventType, input.observedAt, input.appBundleId, input.appName, input.windowId, input.windowTitle, input.elementRole, input.elementSubrole, input.elementLabel, input.actionName, input.metadata ? JSON.stringify(input.metadata) : null, createdAt);
     return {
       ...input,
-      id,
+      id: fallbackValue,
       createdAt
     };
   }
@@ -9571,25 +9571,25 @@ var ActivityEvidenceRepository = class {
     }
   }
   createWindow(input) {
-    const id = input.id ?? crypto.randomUUID();
+    const fallbackValue = input.id ?? crypto.randomUUID();
     const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO capture_evidence_windows (
         id, started_at, ended_at, trigger, status, activity_blocks_json,
         source_refs_json, coverage_json, has_task_boundary, long_gap, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, input.startedAt, input.endedAt, input.trigger, input.status, JSON.stringify(input.activityBlocks), JSON.stringify(input.sourceRefs), JSON.stringify(input.coverage), input.hasTaskBoundary ? 1 : 0, input.longGap ? 1 : 0, now, now);
+    `).run(fallbackValue, input.startedAt, input.endedAt, input.trigger, input.status, JSON.stringify(input.activityBlocks), JSON.stringify(input.sourceRefs), JSON.stringify(input.coverage), input.hasTaskBoundary ? 1 : 0, input.longGap ? 1 : 0, now, now);
     return {
       ...input,
-      id,
+      id: fallbackValue,
       createdAt: now,
       updatedAt: now
     };
   }
-  updateWindowStatus(id, status) {
+  updateWindowStatus(windowValue, status) {
     getDatabase().prepare(`
       UPDATE capture_evidence_windows SET status = ?, updated_at = ? WHERE id = ?
-    `).run(status, (/* @__PURE__ */new Date()).toISOString(), id);
+    `).run(status, (/* @__PURE__ */new Date()).toISOString(), windowValue);
   }
   failPendingWindowsBefore(cutoff) {
     return Number(getDatabase().prepare(`
@@ -9605,8 +9605,8 @@ var ActivityEvidenceRepository = class {
       WHERE status = 'pending'
     `).run((/* @__PURE__ */new Date()).toISOString()).changes);
   }
-  findWindowById(id) {
-    const row = getDatabase().prepare("SELECT * FROM capture_evidence_windows WHERE id = ?").get(id);
+  findWindowById(windowValue) {
+    const row = getDatabase().prepare("SELECT * FROM capture_evidence_windows WHERE id = ?").get(windowValue);
     return row ? mapWindow(row) : null;
   }
   findLatestPendingWindow() {
@@ -9681,7 +9681,7 @@ var ActivityEvidenceRepository = class {
     })).sort((left, right) => left.startedAt.localeCompare(right.startedAt) || left.id.localeCompare(right.id) || left.evidenceId.localeCompare(right.evidenceId));
   }
   upsertSummary(input) {
-    const id = crypto.randomUUID();
+    const randomUUIDResult = crypto.randomUUID();
     const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO activity_summaries (
@@ -9696,7 +9696,7 @@ var ActivityEvidenceRepository = class {
         evidence_usage_json = excluded.evidence_usage_json,
         evidence_window_ids_json = excluded.evidence_window_ids_json,
         updated_at = excluded.updated_at
-    `).run(id, input.level, input.trigger, input.startedAt, input.endedAt, input.title, input.summary, JSON.stringify(input.applications), JSON.stringify(input.evidenceUsage), JSON.stringify(input.evidenceWindowIds), now, now);
+    `).run(randomUUIDResult, input.level, input.trigger, input.startedAt, input.endedAt, input.title, input.summary, JSON.stringify(input.applications), JSON.stringify(input.evidenceUsage), JSON.stringify(input.evidenceWindowIds), now, now);
     return mapSummary(getDatabase().prepare(`
       SELECT * FROM activity_summaries WHERE level = ? AND started_at = ? AND ended_at = ?
     `).get(input.level, input.startedAt, input.endedAt));
@@ -10082,15 +10082,15 @@ function toGridRect(bounds, display) {
   const right = Math.min(bounds.x + bounds.width, display.x + display.width);
   const bottom = Math.min(bounds.y + bounds.height, display.y + display.height);
   if (right - left < 1 || bottom - top < 1) return null;
-  const x0 = clampGrid(Math.floor((left - display.x) / display.width * 200 + GRID_EPSILON));
+  const clampGridResult = clampGrid(Math.floor((left - display.x) / display.width * 200 + GRID_EPSILON));
   const y0 = clampGrid(Math.floor((top - display.y) / display.height * 200 + GRID_EPSILON));
   const x1 = clampGrid(Math.ceil((right - display.x) / display.width * 200 - GRID_EPSILON));
   const y1 = clampGrid(Math.ceil((bottom - display.y) / display.height * 200 - GRID_EPSILON));
-  if (x1 <= x0 || y1 <= y0) return null;
+  if (x1 <= clampGridResult || y1 <= y0) return null;
   return {
-    x: x0,
+    x: clampGridResult,
     y: y0,
-    width: x1 - x0,
+    width: x1 - clampGridResult,
     height: y1 - y0
   };
 }
@@ -11553,7 +11553,7 @@ var AppUsageService = class {
       if (index >= 0) sessions[index] = live;else sessions.push(live);
     }
     const mergedSessions = [];
-    for (const session of sessions.sort((a, b) => a.startedAt.localeCompare(b.startedAt))) {
+    for (const session of sessions.sort((left, right) => left.startedAt.localeCompare(right.startedAt))) {
       const previous = mergedSessions.at(-1);
       if (previous && previous.detectionSource === "legacy-import" && session.detectionSource === "legacy-import" && previous.applicationId === session.applicationId && Date.parse(session.startedAt) - Date.parse(previous.endedAt) <= 250 && previous) {
         previous.endedAt = session.endedAt > previous.endedAt ? session.endedAt : previous.endedAt;
@@ -11572,7 +11572,7 @@ var AppUsageService = class {
       segments.push(segment);
       activityBySession.set(segment.sessionId, segments);
     }
-    return mergedSessions.map(session => this.clipSession(session, rangeStart, rangeEnd, activityBySession.get(session.id))).filter(session => session !== null).sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id));
+    return mergedSessions.map(session => this.clipSession(session, rangeStart, rangeEnd, activityBySession.get(session.id))).filter(session => session !== null).sort((left, right) => left.startedAt.localeCompare(right.startedAt) || left.id.localeCompare(right.id));
   }
   clipSession(session, rangeStart, rangeEnd, activitySegments) {
     const originalStart = Date.parse(session.startedAt);
@@ -11822,7 +11822,7 @@ var AppUsageService = class {
         fromAppName: appNames.get(item.fromKey) ?? item.fromKey,
         toAppName: appNames.get(item.toKey) ?? item.toKey,
         count: item.count
-      })).sort((a, b) => b.count - a.count)
+      })).sort((left, right) => right.count - left.count)
     };
   }
   getDetail(applicationId, startedAt, endedAt) {
@@ -11863,7 +11863,7 @@ var AppUsageService = class {
       const title = context.documentHint || context.windowTitle;
       if (title) contextTotals.set(title, (contextTotals.get(title) ?? 0) + durationSec);
     }
-    const sorted = map => Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    const sorted = map => Array.from(map.entries()).sort((left, right) => right[1] - left[1]).slice(0, 10);
     for (let index = 1; index < timelineSessions.length; index += 1) {
       const previous = timelineSessions[index - 1];
       const current = timelineSessions[index];
@@ -11872,12 +11872,12 @@ var AppUsageService = class {
     }
     return {
       ...app,
-      dailyActiveDuration: Array.from(dailyTotals.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([date, durationSec]) => ({
+      dailyActiveDuration: Array.from(dailyTotals.entries()).sort((left, right) => left[0].localeCompare(right[0])).map(([date, durationSec]) => ({
         date,
         durationSec: Math.round(durationSec)
       })),
       hourlyActiveDurationSec,
-      recentSessions: [...sessions].sort((a, b) => b.startedAt.localeCompare(a.startedAt)).slice(0, 20),
+      recentSessions: [...sessions].sort((left, right) => right.startedAt.localeCompare(left.startedAt)).slice(0, 20),
       commonDomains: sorted(domainTotals).map(([domain, durationSec]) => ({
         domain,
         durationSec
@@ -12485,11 +12485,11 @@ async function flush() {
       body: JSON.stringify({
         protocolVersion: 2,
         todoAttachmentLinks: true,
-        reads: reads.map((read, i) => ({
-          id: String(i),
+        reads: reads.map((read, item) => ({
+          id: String(item),
           kind: read.kind,
           params: read.params,
-          knownDigest: known[i]?.digest ?? ""
+          knownDigest: known[item]?.digest ?? ""
         })),
         ...(batch ? {
           device: batch.device,
@@ -12520,12 +12520,12 @@ async function flush() {
     if (currentToken() !== token) throw new Error(appText("ipcErrors.syncAccountChanged"));
     if (!body.ok || body.protocolVersion !== 2 || !body.results) throw new Error(appText("ipcErrors.syncProtocolUnavailable"));
     if (body.telemetryAccepted) batch?.accept();
-    await Promise.all(reads.map(async (read, i) => {
+    await Promise.all(reads.map(async (read, item) => {
       try {
-        const result = body.results[String(i)];
+        const result = body.results[String(item)];
         if (!result || result.fallback || !/^[a-f0-9]{64}$/.test(result.digest ?? "")) return fallback(read);
         let payload;
-        if (result.changed && result.payload?.ok === true) payload = result.payload;else if (result.changed === false && known[i]?.digest === result.digest) payload = JSON.parse(known[i].text);else return fallback(read);
+        if (result.changed && result.payload?.ok === true) payload = result.payload;else if (result.changed === false && known[item]?.digest === result.digest) payload = JSON.parse(known[item].text);else return fallback(read);
         if (result.volatile) {
           const {
             campaignLinks,
@@ -12719,7 +12719,7 @@ var DesktopSyncService = class {
     if (this.timer) clearTimeout(this.timer);
     this.timer = undefined;
     if (this.running || !this.consumers.size && !this.pulse) return;
-    const due = Math.min(this.pulse ? this.pulseDue : Infinity, ...[...this.consumers.values()].map(c => c.due));
+    const due = Math.min(this.pulse ? this.pulseDue : Infinity, ...[...this.consumers.values()].map(item => item.due));
     this.timer = setTimeout(() => void this.tick(), Math.max(1e3, due - Date.now()));
     this.timer.unref?.();
   }
@@ -12731,25 +12731,25 @@ var DesktopSyncService = class {
       const token = authRepository.getSession()?.token ?? null;
       if (token !== this.ownerToken) {
         this.ownerToken = token;
-        for (const c of this.consumers.values()) c.pending = undefined;
+        for (const text of this.consumers.values()) text.pending = undefined;
       }
-      for (const c of this.consumers.values()) {
-        if (c.due > now + 1e3) continue;
-        c.due = this.advance(c.due, c.interval, now);
-        if (!token || c.pending && now - c.pending.at < 6e4) continue;
-        const id = crypto.randomUUID();
-        c.pending = {
-          id,
+      for (const text of this.consumers.values()) {
+        if (text.due > now + 1e3) continue;
+        text.due = this.advance(text.due, text.interval, now);
+        if (!token || text.pending && now - text.pending.at < 6e4) continue;
+        const randomUUIDResult = crypto.randomUUID();
+        text.pending = {
+          id: randomUUIDResult,
           at: now
         };
         try {
-          const result = c.refresh({
-            id: c.key,
-            deliveryId: id
+          const result = text.refresh({
+            id: text.key,
+            deliveryId: randomUUIDResult
           });
-          if (result instanceof Promise) result.then(() => this.acknowledge(c.key, id), () => this.acknowledge(c.key, id));
+          if (result instanceof Promise) result.then(() => this.acknowledge(text.key, randomUUIDResult), () => this.acknowledge(text.key, randomUUIDResult));
         } catch {
-          this.acknowledge(c.key, id);
+          this.acknowledge(text.key, randomUUIDResult);
         }
       }
       if (this.pulse && this.pulseDue <= now + 1e3) {
@@ -12949,9 +12949,9 @@ function summarizeTelemetryBody(body) {
     hasDevice: Boolean(record.device)
   };
 }
-function safeCount(fn) {
+function safeCount(safe) {
   try {
-    return fn();
+    return safe();
   } catch {
     return 0;
   }
@@ -13106,13 +13106,13 @@ function handleForcedLogout(reason) {
   macActivityEventService.applyRetentionPolicy();
   appUsageService.applyRetentionPolicy();
   if (settingsRepository.getSettings().enableAppUsageTracking) appUsageService.start("forced-logout");
-  import("./clipboard-assistant.service.js").then(n => n.n).then(({
+  import("./clipboard-assistant.service.js").then(result => result.n).then(({
     clipboardAssistantService
   }) => clipboardAssistantService.sync());
-  import("./screenshot-beautifier.service.js").then(n => n.n).then(({
+  import("./screenshot-beautifier.service.js").then(result => result.n).then(({
     screenshotBeautifierService
   }) => screenshotBeautifierService.sync());
-  import("../main.js").then(n => n.t).then(({
+  import("../main.js").then(result => result.t).then(({
     enterKeyComponentService
   }) => enterKeyComponentService.startIfEnabled());
   settingsService.syncDockIcon();

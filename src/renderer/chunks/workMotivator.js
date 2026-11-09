@@ -34,22 +34,22 @@ function je(e, t, n) {
     c = (T - (r + o * i + (t ? D : 0))) / 2,
     l = c;
   c += r;
-  let u = [];
-  for (let n = 0; n < e; n++) u.push({
+  let emptyItems = [];
+  for (let n = 0; n < e; n++) emptyItems.push({
     x: c + E / 2,
     power: t + e - 1 - n,
     decimal: false
   }), c += o;
   let d = null;
   t && (d = c, c += D);
-  for (let e = 0; e < t; e++) u.push({
+  for (let e = 0; e < t; e++) emptyItems.push({
     x: c + E / 2,
     power: t - 1 - e,
     decimal: true
   }), c += o;
   return {
     cellWidth: s,
-    cells: u,
+    cells: emptyItems,
     currencyX: l,
     currencyWidth: r,
     dotX: d
@@ -65,17 +65,17 @@ var k = .5,
     baseTime = 0;
     unitsPerMs = 0;
     carryTimer = null;
-    constructor(e) {
-      this.windowHeight = e;
+    constructor(constructor) {
+      this.windowHeight = constructor;
     }
-    attach(items, t) {
-      this.stopAll(), this.reels = items.map(e => ({
-        ...e,
+    attach(items, attach) {
+      this.stopAll(), this.reels = items.map(item => ({
+        ...item,
         index: 0,
         continuous: false,
         animation: null
       }));
-      for (let e of this.reels) e.index = this.digitAt(t, e.power), this.place(e, e.index);
+      for (let e of this.reels) e.index = this.digitAt(attach, e.power), this.place(e, e.index);
     }
     sync(e, t, n) {
       this.clearCarryTimer(), this.baseUnits = Math.max(0, e), this.baseTime = performance.now(), this.unitsPerMs = Math.max(0, t);
@@ -91,42 +91,42 @@ var k = .5,
     dispose() {
       this.stopAll(), this.reels = [];
     }
-    digitAt(e, t) {
-      return Math.floor(e / 10 ** t + 1e-9) % 10;
+    digitAt(digit, digitValue) {
+      return Math.floor(digit / 10 ** digitValue + 1e-9) % 10;
     }
-    offset(e) {
-      return `translateY(${this.windowHeight / 2 - (e + .5) * 34}px)`;
+    offset(offset) {
+      return `translateY(${this.windowHeight / 2 - (offset + .5) * 34}px)`;
     }
     place(e, t) {
       e.strip.style.transform = this.offset(t);
     }
-    startContinuous(e, t) {
-      e.animation?.cancel(), e.continuous = true;
-      let n = this.baseUnits / 10 ** e.power % 10;
-      e.animation = e.strip.animate([{
+    startContinuous(continuous, continuousValue) {
+      continuous.animation?.cancel(), continuous.continuous = true;
+      let n = this.baseUnits / 10 ** continuous.power % 10;
+      continuous.animation = continuous.strip.animate([{
         transform: this.offset(n)
       }, {
         transform: this.offset(n + 10)
       }], {
-        duration: 1e4 / t,
+        duration: 1e4 / continuousValue,
         iterations: 1 / 0,
         easing: `linear`
       });
     }
-    stopContinuous(e, t) {
-      e.continuous = false, e.animation?.cancel(), e.animation = null, e.index = t, this.place(e, t);
+    stopContinuous(continuous, continuousValue) {
+      continuous.continuous = false, continuous.animation?.cancel(), continuous.animation = null, continuous.index = continuousValue, this.place(continuous, continuousValue);
     }
-    stepTo(e, t, n) {
-      if (t === e.index && !e.animation) return;
-      e.animation?.cancel(), e.animation = null;
-      let r = e.index;
-      if (e.index = t, !n) {
-        this.place(e, t);
+    stepTo(step, stepValue, stepInput) {
+      if (stepValue === step.index && !step.animation) return;
+      step.animation?.cancel(), step.animation = null;
+      let r = step.index;
+      if (step.index = stepValue, !stepInput) {
+        this.place(step, stepValue);
         return;
       }
-      let i = t >= r ? t : t + 10;
-      this.place(e, t);
-      let a = e.strip.animate([{
+      let i = stepValue >= r ? stepValue : stepValue + 10;
+      this.place(step, stepValue);
+      let a = step.strip.animate([{
         transform: this.offset(r)
       }, {
         transform: this.offset(i)
@@ -134,21 +134,21 @@ var k = .5,
         duration: A,
         easing: j
       });
-      e.animation = a, a.onfinish = () => {
-        e.animation === a && (e.animation = null);
+      step.animation = a, a.onfinish = () => {
+        step.animation === a && (step.animation = null);
       };
     }
     scheduleCarry() {
       if (this.unitsPerMs <= 0) return;
-      let e = this.reels.filter(e => !e.continuous);
-      if (!e.length) return;
-      let t = 10 ** Math.min(...e.map(e => e.power)),
+      let filtered = this.reels.filter(item => !item.continuous);
+      if (!filtered.length) return;
+      let t = 10 ** Math.min(...filtered.map(item => item.power)),
         n = this.baseUnits + this.unitsPerMs * (performance.now() - this.baseTime),
         r = (Math.floor(n / t + 1e-9) + 1) * t,
         i = Math.max(0, (r - this.baseUnits) / this.unitsPerMs - (performance.now() - this.baseTime));
       this.carryTimer = window.setTimeout(() => {
         this.carryTimer = null;
-        for (let t of e) this.stepTo(t, this.digitAt(r, t.power), true);
+        for (let t of filtered) this.stepTo(t, this.digitAt(r, t.power), true);
         this.scheduleCarry();
       }, i);
     }
@@ -228,7 +228,7 @@ var k = .5,
           t: ie,
           locale: y
         } = ee(),
-        b = (e, t = {}) => ie(`toolboxNative.workMotivator${e}`, t),
+        handler = (e, t = {}) => ie(`toolboxNative.workMotivator${e}`, t),
         x = Array.from({
           length: 64
         }, (e, t) => t % 10),
@@ -291,7 +291,7 @@ var k = .5,
         N = c(null),
         st = c(null),
         P = c(null),
-        F = window.matchMedia(`(prefers-reduced-motion: reduce)`),
+        matchMedia = window.matchMedia(`(prefers-reduced-motion: reduce)`),
         I = new Me(50),
         L = false,
         R = null,
@@ -301,7 +301,7 @@ var k = .5,
         ct = 0,
         lt = 0,
         ut = null,
-        H = null,
+        pointerId = null,
         U = 0,
         dt = 0,
         W = false,
@@ -318,35 +318,35 @@ var k = .5,
         ht = g(() => !!(O.value && Te(O.value.status))),
         gt = g(() => E.value && O.value ? pe(E.value, O.value) : 0),
         J = g(() => Math.max(0, gt.value * 10 ** G.value)),
-        _t = g(() => ye(b, E.value?.earnedRange ?? `today`)),
+        _t = g(() => ye(handler, E.value?.earnedRange ?? `today`)),
         vt = g(() => !E.value || !O.value ? `` : S(E.value, gt.value, y.value, G.value)),
-        yt = g(() => !E.value || !O.value ? `` : b(`HourlyRate`, {
+        yt = g(() => !E.value || !O.value ? `` : handler(`HourlyRate`, {
           amount: q.value ? `••••` : S(E.value, O.value.hourlyRate, y.value)
         })),
-        bt = g(() => O.value ? De(b, O.value.status) : ``),
-        xt = g(() => O.value ? be(b, O.value) : ``),
-        St = g(() => we(b, new Date(D.value), y.value)),
+        bt = g(() => O.value ? De(handler, O.value.status) : ``),
+        xt = g(() => O.value ? be(handler, O.value) : ``),
+        St = g(() => we(handler, new Date(D.value), y.value)),
         Ct = g(() => Ee(new Date(D.value))),
         Y = g(() => {
           if (!E.value || !O.value) return null;
           let e = ge(E.value);
           return e ? ve(E.value, e, O.value) : null;
         }),
-        wt = g(() => Y.value ? he(b, Y.value) : ``),
+        wt = g(() => Y.value ? he(handler, Y.value) : ``),
         X = g(() => {
           let e = O.value;
           return !e || e.scheduledMs <= 0 ? 0 : e.workedMs / e.scheduledMs;
         }),
         Tt = g(() => {
           let e = O.value;
-          return e ? b(`WorkHoursValue`, {
+          return e ? handler(`WorkHoursValue`, {
             worked: C(e.workedMs),
             total: C(e.scheduledMs)
           }) : ``;
         }),
-        Et = g(() => E.value ? Se(b, Ce(E.value, D.value)) : ``),
+        Et = g(() => E.value ? Se(handler, Ce(E.value, D.value)) : ``),
         Dt = g(() => {
-          if (E.value && N.value && !q.value) return b(`PeriodEarned`, {
+          if (E.value && N.value && !q.value) return handler(`PeriodEarned`, {
             month: S(E.value, N.value.month, y.value),
             year: S(E.value, N.value.year, y.value)
           });
@@ -396,7 +396,7 @@ var k = .5,
         if (!e || !t) return;
         let celebrateAmount = t.celebrateAmount,
           r = Math.floor(e.earnedToday / celebrateAmount + 1e-9);
-        V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !F.matches && zt(r), V = r, ct = celebrateAmount;
+        V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !matchMedia.matches && zt(r), V = r, ct = celebrateAmount;
       }
       function It() {
         let e = O.value;
@@ -409,7 +409,7 @@ var k = .5,
       }
       function Lt() {
         let e = O.value;
-        return !e || q.value || F.matches ? 0 : e.earningPerMs * 10 ** G.value;
+        return !e || q.value || matchMedia.matches ? 0 : e.earningPerMs * 10 ** G.value;
       }
       function Q(e) {
         if (!L) return;
@@ -417,16 +417,16 @@ var k = .5,
           n = J.value,
           r = t > 0 ? `run|${t}|${Math.floor(Date.now() / at)}` : `idle|${Math.floor(n)}`;
         if (!e && r === B) return;
-        let i = B !== `` && !F.matches;
+        let i = B !== `` && !matchMedia.matches;
         B = r, I.sync(n, t, i);
       }
       async function Rt() {
         await ne();
         let e = Array.from(P.value?.querySelectorAll(`.wm-reel-strip`) ?? []),
           cells = K.value.cells;
-        e.length === cells.length && (I.attach(cells.map((t, n) => ({
+        e.length === cells.length && (I.attach(cells.map((item, n) => ({
           strip: e[n],
-          power: t.power
+          power: item.power
         })), J.value), L = true, B = ``, Q(true));
       }
       function zt(e) {
@@ -435,9 +435,9 @@ var k = .5,
         let n = Math.min(6, e),
           r = fe[n - 1],
           i = Number.isInteger(t.celebrateAmount) ? 0 : 2,
-          a = r.text === `burst` ? b(`CelebrateBurst`, {
+          a = r.text === `burst` ? handler(`CelebrateBurst`, {
             amount: S(t, t.celebrateAmount, y.value, i)
-          }) : r.text === `milestone` ? b(`CelebrateMilestone`, {
+          }) : r.text === `milestone` ? handler(`CelebrateMilestone`, {
             amount: S(t, t.celebrateAmount * e, y.value, i)
           }) : ``,
           o = Array.from({
@@ -474,12 +474,12 @@ var k = .5,
       function Vt(event) {
         let t = P.value,
           n = st.value;
-        if (!t || !n || F.matches || A.value) return;
-        let r = n.getBoundingClientRect(),
-          i = Math.max(.01, r.width / (w + 28)),
+        if (!t || !n || matchMedia.matches || A.value) return;
+        let boundingClientRect = n.getBoundingClientRect(),
+          i = Math.max(.01, boundingClientRect.width / (w + 28)),
           a = Math.max(1, t.getBoundingClientRect().height / i),
-          o = Math.max(-1, Math.min(1, ((event.clientX - r.left) / i - 14) / w * 2 - 1)),
-          s = Math.max(-1, Math.min(1, ((event.clientY - r.top) / i - 14) / a * 2 - 1)),
+          o = Math.max(-1, Math.min(1, ((event.clientX - boundingClientRect.left) / i - 14) / w * 2 - 1)),
+          s = Math.max(-1, Math.min(1, ((event.clientY - boundingClientRect.top) / i - 14) / a * 2 - 1)),
           c = w / Math.max(w, a * 2);
         t.style.transform = `rotateX(${(-s * rt * c).toFixed(2)}deg) rotateY(${(o * rt).toFixed(2)}deg)`;
       }
@@ -493,13 +493,13 @@ var k = .5,
         k.value = false, Ht();
       }
       function Gt(event) {
-        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (H = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
+        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (pointerId = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
           screenX: event.screenX,
           screenY: event.screenY
         })));
       }
       function Kt(e) {
-        if (H === e.pointerId) {
+        if (pointerId === e.pointerId) {
           if (!(e.buttons & 1)) {
             $(e);
             return;
@@ -511,9 +511,9 @@ var k = .5,
         }
       }
       function $(event) {
-        if (H === null || event && H !== event.pointerId) return;
-        let t = H;
-        H = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
+        if (pointerId === null || event && pointerId !== event.pointerId) return;
+        let t = pointerId;
+        pointerId = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
       }
       function qt(e) {
         Vt(e), Kt(e);
@@ -646,7 +646,7 @@ var k = .5,
         class: e([`wm-shutter`, {
           "is-closed": q.value
         }])
-      }, [v(`span`, null, m(b(`AmountHidden`)), 1)], 2)], 14, He), M.value ? (u(), i(l, {
+      }, [v(`span`, null, m(handler(`AmountHidden`)), 1)], 2)], 14, He), M.value ? (u(), i(l, {
         key: 0
       }, [M.value.text ? (u(), i(`span`, {
         key: `burst-${M.value.id}`,
@@ -656,18 +656,18 @@ var k = .5,
         style: p({
           top: `${jt.value - 4}px`
         })
-      }, m(M.value.text), 7)) : _(``, true), (u(true), i(l, null, a(M.value.sparks, t => (u(), i(`i`, {
-        key: `spark-${M.value.id}-${t.id}`,
+      }, m(M.value.text), 7)) : _(``, true), (u(true), i(l, null, a(M.value.sparks, count => (u(), i(`i`, {
+        key: `spark-${M.value.id}-${count.id}`,
         class: e([`wm-spark`, {
-          "is-accent": t.accent
+          "is-accent": count.accent
         }]),
         style: p({
           ...Nt.value,
-          width: `${t.size}px`,
-          height: `${t.size}px`,
-          "--wm-spark-x": `${t.dx}px`,
-          "--wm-spark-y": `${t.dy}px`,
-          animationDelay: `${t.delay}ms`
+          width: `${count.size}px`,
+          height: `${count.size}px`,
+          "--wm-spark-x": `${count.dx}px`,
+          "--wm-spark-y": `${count.dy}px`,
+          animationDelay: `${count.delay}ms`
         })
       }, null, 6))), 128))], 64)) : _(``, true), v(`div`, {
         class: `wm-groove wm-collapsed-only`,
@@ -678,9 +678,9 @@ var k = .5,
         })
       }, null, 4)], 8, Ue), v(`div`, We, [Y.value ? (u(), i(l, {
         key: 0
-      }, [v(`div`, Ge, [v(`strong`, null, m(b(`WishTitle`, {
+      }, [v(`div`, Ge, [v(`strong`, null, m(handler(`WishTitle`, {
         name: Y.value.wish.name
-      })), 1), v(`b`, null, m(t(me)(Y.value.ratio)), 1)]), v(`p`, null, m(q.value ? b(`AmountHidden`) : wt.value), 1), v(`div`, Ke, [v(`i`, {
+      })), 1), v(`b`, null, m(t(me)(Y.value.ratio)), 1)]), v(`p`, null, m(q.value ? handler(`AmountHidden`) : wt.value), 1), v(`div`, Ke, [v(`i`, {
         style: p({
           width: `${Y.value.ratio * 100}%`
         })
@@ -690,7 +690,7 @@ var k = .5,
         class: `wm-empty-wish`,
         "data-no-drag": ``,
         onClick: o[0] ||= e => t(workMotivatorAPI)?.openSettings()
-      }, [v(`strong`, null, m(b(`WishEmpty`)), 1), v(`p`, null, m(b(`WishEmptyHint`)), 1)]))]), v(`div`, qe, [v(`div`, Je, [v(`strong`, null, m(b(`WorkHours`)), 1), v(`b`, null, m(t(me)(X.value)), 1)]), v(`p`, null, m(Tt.value), 1), v(`div`, Ye, [v(`i`, {
+      }, [v(`strong`, null, m(handler(`WishEmpty`)), 1), v(`p`, null, m(handler(`WishEmptyHint`)), 1)]))]), v(`div`, qe, [v(`div`, Je, [v(`strong`, null, m(handler(`WorkHours`)), 1), v(`b`, null, m(t(me)(X.value)), 1)]), v(`p`, null, m(Tt.value), 1), v(`div`, Ye, [v(`i`, {
         style: p({
           width: `${Math.min(1, X.value) * 100}%`
         })
@@ -704,14 +704,14 @@ var k = .5,
         class: e({
           "is-on": E.value.alwaysOnTop
         }),
-        title: E.value.alwaysOnTop ? b(`ButtonUnpin`) : b(`ButtonPin`),
+        title: E.value.alwaysOnTop ? handler(`ButtonUnpin`) : handler(`ButtonPin`),
         onClick: Zt
       }, [f(t(ae), {
         size: 13,
         "stroke-width": 2
       })], 10, Ze), v(`button`, {
         type: `button`,
-        title: q.value ? b(`ButtonShowAmount`) : b(`ButtonHideAmount`),
+        title: q.value ? handler(`ButtonShowAmount`) : handler(`ButtonHideAmount`),
         onClick: Qt
       }, [q.value ? (u(), s(t(se), {
         key: 1,
@@ -723,7 +723,7 @@ var k = .5,
         "stroke-width": 2
       }))], 8, Qe), v(`button`, {
         type: `button`,
-        title: E.value.expanded ? b(`ButtonCollapse`) : b(`ButtonExpand`),
+        title: E.value.expanded ? handler(`ButtonCollapse`) : handler(`ButtonExpand`),
         onClick: Jt
       }, [E.value.expanded ? (u(), s(t(ke), {
         key: 0,
@@ -735,14 +735,14 @@ var k = .5,
         "stroke-width": 2
       }))], 8, $e), v(`button`, {
         type: `button`,
-        title: b(`ButtonSettings`),
+        title: handler(`ButtonSettings`),
         onClick: o[1] ||= e => t(workMotivatorAPI)?.openSettings()
       }, [f(t(ce), {
         size: 13,
         "stroke-width": 2
       })], 8, et), v(`button`, {
         type: `button`,
-        title: b(`ButtonClose`),
+        title: handler(`ButtonClose`),
         onClick: o[2] ||= e => t(workMotivatorAPI)?.hide()
       }, [f(t(oe), {
         size: 13,

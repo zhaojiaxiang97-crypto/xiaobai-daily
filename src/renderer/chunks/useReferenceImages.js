@@ -73,26 +73,26 @@ var S = {
         multiple: ``,
         accept: `image/jpeg,image/png,image/webp,image/bmp,image/tiff,image/gif,image/heic,image/heif,.heic,.heif`,
         onChange: N
-      }, null, 544), g(`div`, S, [(c(true), r(s, null, i(d.items, (i, o) => (c(), r(`article`, {
-        key: i.id,
-        class: t([`grid h-[78px] w-[250px] min-w-0 shrink-0 grid-cols-[48px_minmax(0,1fr)_26px] items-center gap-2 rounded-[10px] border bg-card p-[7px]`, i.error ? `border-destructive/45` : `border-border`])
-      }, [g(`div`, C, [i.previewFailed ? (c(), a(n(e), {
+      }, null, 544), g(`div`, S, [(c(true), r(s, null, i(d.items, (count, o) => (c(), r(`article`, {
+        key: count.id,
+        class: t([`grid h-[78px] w-[250px] min-w-0 shrink-0 grid-cols-[48px_minmax(0,1fr)_26px] items-center gap-2 rounded-[10px] border bg-card p-[7px]`, count.error ? `border-destructive/45` : `border-border`])
+      }, [g(`div`, C, [count.previewFailed ? (c(), a(n(e), {
         key: 1,
         size: 24
       })) : (c(), r(`img`, {
         key: 0,
         class: `size-full object-cover`,
-        src: i.previewUrl,
-        alt: i.name,
-        onError: e => i.previewFailed = true
-      }, null, 40, w)), g(`span`, T, f(o + 1), 1), i.uploading ? (c(), r(`span`, E, [u(n(y), {
+        src: count.previewUrl,
+        alt: count.name,
+        onError: e => count.previewFailed = true
+      }, null, 40, w)), g(`span`, T, f(o + 1), 1), count.uploading ? (c(), r(`span`, E, [u(n(y), {
         size: 18,
         class: `animate-spin`
-      })])) : h(``, true)]), g(`div`, D, [g(`strong`, O, f(i.name), 1), i.error ? (c(), r(`span`, k, f(i.error), 1)) : (c(), r(`span`, A, f(i.uploading ? n(p)(`toolboxNative.uploading`) : b(i.size)), 1))]), g(`button`, {
+      })])) : h(``, true)]), g(`div`, D, [g(`strong`, O, f(count.name), 1), count.error ? (c(), r(`span`, k, f(count.error), 1)) : (c(), r(`span`, A, f(count.uploading ? n(p)(`toolboxNative.uploading`) : b(count.size)), 1))]), g(`button`, {
         type: `button`,
         class: `inline-flex size-[26px] items-center justify-center rounded-[7px] text-muted-foreground transition-colors hover:bg-muted hover:text-destructive`,
         "aria-label": n(p)(`toolboxNative.removeReferenceImage`),
-        onClick: e => d.remove(i.id)
+        onClick: e => d.remove(count.id)
       }, [u(n(_), {
         size: 14
       })], 8, j)], 2))), 128)), d.items.length < 10 ? (c(), a(x, {
@@ -115,27 +115,27 @@ function I(e) {
   let t = o([]),
     n = o(``),
     r = new Map(),
-    i = e.maxCount ?? 10,
-    a = p(() => t.value.some(e => e.uploading)),
-    s = p(() => t.value.some(e => e.error || !e.token));
+    fallbackValue = e.maxCount ?? 10,
+    a = p(() => t.value.some(item => item.uploading)),
+    s = p(() => t.value.some(item => item.error || !item.token));
   async function c(t) {
     if (!e.user.value) return;
     t.uploading = true, t.error = ``;
-    let n = new FormData();
-    n.append(`file`, t.file, t.name);
-    let i = new AbortController();
-    r.set(t.id, i);
+    let formData = new FormData();
+    formData.append(`file`, t.file, t.name);
+    let abortController = new AbortController();
+    r.set(t.id, abortController);
     try {
       let r = await b(`reference-upload.php`, {
         method: `POST`,
         csrfToken: e.user.value.csrfToken,
-        body: n,
-        signal: i.signal,
+        body: formData,
+        signal: abortController.signal,
         timeoutMs: 12e4
       });
-      i.signal.aborted || (t.token = r.token);
+      abortController.signal.aborted || (t.token = r.token);
     } catch (n) {
-      if (i.signal.aborted) return;
+      if (abortController.signal.aborted) return;
       t.error = n instanceof DOMException && n.name === `AbortError` ? e.t(`toolboxNative.uploadTimedOutRemoveTheFileAndTryAgain`) : n instanceof Error ? e.translateRemoteText(n.message) : e.t(`toolboxNative.uploadFailed`);
     } finally {
       r.delete(t.id), t.uploading = false;
@@ -146,7 +146,7 @@ function I(e) {
       n.value = e.t(`toolboxNative.yourSessionExpiredPleaseReopenTheToolbox`);
       return;
     }
-    let a = Math.max(0, i - t.value.length);
+    let a = Math.max(0, fallbackValue - t.value.length);
     if (a === 0) {
       n.value = e.t(`toolboxNative.youCanUploadUpTo10ReferenceImages`);
       return;
@@ -154,7 +154,7 @@ function I(e) {
     items.length > a && (n.value = e.t(`toolboxNative.youCanAddCountMoreReferenceImages`, {
       count: a
     }));
-    let o = [];
+    let emptyItems = [];
     for (let i of items.slice(0, a)) {
       if (!F(i)) {
         n.value = e.t(`toolboxNative.nameIsNotASupportedImageFormat`, {
@@ -180,16 +180,16 @@ function I(e) {
         uploading: true,
         error: ``
       });
-      t.value.push(r), o.push(r);
+      t.value.push(r), emptyItems.push(r);
     }
-    await Promise.all(o.map(c));
+    await Promise.all(emptyItems.map(c));
   }
   function u(e) {
-    let i = t.value.findIndex(t => t.id === e);
-    i < 0 || (r.get(e)?.abort(), r.delete(e), URL.revokeObjectURL(t.value[i].previewUrl), t.value.splice(i, 1), n.value = ``);
+    let indexResult = t.value.findIndex(item => item.id === e);
+    indexResult < 0 || (r.get(e)?.abort(), r.delete(e), URL.revokeObjectURL(t.value[indexResult].previewUrl), t.value.splice(indexResult, 1), n.value = ``);
   }
   function f() {
-    r.forEach(e => e.abort()), r.clear(), t.value.forEach(e => URL.revokeObjectURL(e.previewUrl)), t.value = [], n.value = ``;
+    r.forEach(item => item.abort()), r.clear(), t.value.forEach(item => URL.revokeObjectURL(item.previewUrl)), t.value = [], n.value = ``;
   }
   return d(f), {
     items: t,

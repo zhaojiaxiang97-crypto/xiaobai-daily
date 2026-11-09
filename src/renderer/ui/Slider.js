@@ -3,7 +3,7 @@ import { An as d, Ct as f, Dn as p, Et as m, S as h, St as g, Tn as _, Yt as v, 
 import { n as j, r as ee, t as M } from "./Collection.js";
 function N(e = [], t, n) {
   let r = [...e];
-  return r[n] = t, r.sort((e, t) => e - t);
+  return r[n] = t, r.sort((left, right) => left - right);
 }
 function P(e, t, n) {
   let r = 100 / (n - t) * (e - t);
@@ -13,18 +13,18 @@ function F(e, t) {
   if (t > 2) return `Value ${e + 1} of ${t}`;
   if (t === 2) return [`Minimum`, `Maximum`][e];
 }
-function I(e, t) {
-  if (e.length === 1) return 0;
-  let n = e.map(e => Math.abs(e - t)),
-    r = Math.min(...n);
-  return n.indexOf(r);
+function I(items, t) {
+  if (items.length === 1) return 0;
+  let mapped = items.map(item => Math.abs(item - t)),
+    r = Math.min(...mapped);
+  return mapped.indexOf(r);
 }
 function L(e, t, n) {
   let r = e / 2;
   return (r - B([0, 50], [0, r])(t) * n) * n;
 }
-function R(e) {
-  return e.slice(0, -1).map((t, n) => e[n + 1] - t);
+function R(items) {
+  return items.slice(0, -1).map((item, n) => items[n + 1] - item);
 }
 function z(e, t) {
   if (t > 0) {
@@ -49,7 +49,7 @@ function H(e, t) {
 }
 var U = [`PageUp`, `PageDown`],
   W = [`ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`],
-  G = {
+  options = {
     "from-left": [`Home`, `PageDown`, `ArrowDown`, `ArrowLeft`],
     "from-right": [`Home`, `PageDown`, `ArrowDown`, `ArrowRight`],
     "from-bottom": [`Home`, `PageDown`, `ArrowDown`, `ArrowLeft`],
@@ -77,17 +77,17 @@ var U = [`PageUp`, `PageDown`],
       }
     },
     emits: [`slideEnd`, `slideStart`, `slideMove`, `homeKeyDown`, `endKeyDown`, `stepKeyDown`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let r = e,
+      let eventAlias = event,
         i = t,
         {
           max: a,
           min: o,
           dir: s,
           inverted: c
-        } = p(r),
+        } = p(eventAlias),
         {
           forwardRef: l,
           currentElement: u
@@ -97,12 +97,12 @@ var U = [`PageUp`, `PageDown`],
         g = b(),
         _ = k(() => s?.value !== `rtl` && !c.value || s?.value !== `ltr` && c.value);
       function x(e, t) {
-        let n = g.value || u.value.getBoundingClientRect(),
+        let fallbackValue = g.value || u.value.getBoundingClientRect(),
           r = [...m.thumbElements.value][m.valueIndexToChangeRef.value],
           i = m.thumbAlignment.value === `contain` ? r.clientWidth : 0;
         !h.value && !t && m.thumbAlignment.value === `contain` && (h.value = e.clientX - r.getBoundingClientRect().left);
-        let s = B([0, n.width - i], _.value ? [o.value, a.value] : [a.value, o.value]);
-        return g.value = n, s(t ? e.clientX - n.left - i / 2 : e.clientX - n.left - (h.value ?? 0));
+        let s = B([0, fallbackValue.width - i], _.value ? [o.value, a.value] : [a.value, o.value]);
+        return g.value = fallbackValue, s(t ? e.clientX - fallbackValue.left - i / 2 : e.clientX - fallbackValue.left - (h.value ?? 0));
       }
       return q({
         startEdge: k(() => _.value ? `left` : `right`),
@@ -129,8 +129,8 @@ var U = [`PageUp`, `PageDown`],
         },
         onStepKeyDown: t[3] ||= e => {
           let t = _.value ? `from-left` : `from-right`,
-            n = d(G)[t].includes(e.key);
-          i(`stepKeyDown`, e, n ? -1 : 1);
+            includesResult = d(options)[t].includes(e.key);
+          i(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
         onEndKeyDown: t[4] ||= e => i(`endKeyDown`, e),
         onHomeKeyDown: t[5] ||= e => i(`homeKeyDown`, e)
@@ -157,16 +157,16 @@ var U = [`PageUp`, `PageDown`],
       }
     },
     emits: [`slideEnd`, `slideStart`, `slideMove`, `homeKeyDown`, `endKeyDown`, `stepKeyDown`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let r = e,
+      let eventAlias = event,
         i = t,
         {
           max: a,
           min: o,
           inverted: s
-        } = p(r),
+        } = p(eventAlias),
         c = X(),
         {
           forwardRef: l,
@@ -176,13 +176,13 @@ var U = [`PageUp`, `PageDown`],
         h = b(),
         g = k(() => !s.value);
       function _(e, t) {
-        let n = h.value || u.value.getBoundingClientRect(),
+        let fallbackValue = h.value || u.value.getBoundingClientRect(),
           r = [...c.thumbElements.value][c.valueIndexToChangeRef.value],
           i = c.thumbAlignment.value === `contain` ? r.clientHeight : 0;
         !m.value && !t && c.thumbAlignment.value === `contain` && (m.value = e.clientY - r.getBoundingClientRect().top);
-        let s = B([0, n.height - i], g.value ? [a.value, o.value] : [o.value, a.value]),
-          l = t ? e.clientY - n.top - i / 2 : e.clientY - n.top - (m.value ?? 0);
-        return h.value = n, s(l);
+        let s = B([0, fallbackValue.height - i], g.value ? [a.value, o.value] : [o.value, a.value]),
+          l = t ? e.clientY - fallbackValue.top - i / 2 : e.clientY - fallbackValue.top - (m.value ?? 0);
+        return h.value = fallbackValue, s(l);
       }
       return q({
         startEdge: k(() => g.value ? `bottom` : `top`),
@@ -208,8 +208,8 @@ var U = [`PageUp`, `PageDown`],
         },
         onStepKeyDown: t[3] ||= e => {
           let t = g.value ? `from-bottom` : `from-top`,
-            n = d(G)[t].includes(e.key);
-          i(`stepKeyDown`, e, n ? -1 : 1);
+            includesResult = d(options)[t].includes(e.key);
+          i(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
         onEndKeyDown: t[4] ||= e => i(`endKeyDown`, e),
         onHomeKeyDown: t[5] ||= e => i(`homeKeyDown`, e)
@@ -296,10 +296,10 @@ var U = [`PageUp`, `PageDown`],
       }
     },
     emits: [`update:modelValue`, `valueCommit`],
-    setup(e, {
+    setup(event, {
       emit: o
     }) {
-      let s = e,
+      let eventAlias = event,
         c = o,
         {
           min: l,
@@ -310,7 +310,7 @@ var U = [`PageUp`, `PageDown`],
           disabled: C,
           thumbAlignment: w,
           dir: T
-        } = p(s),
+        } = p(eventAlias),
         E = ee(T),
         {
           forwardRef: O,
@@ -322,9 +322,9 @@ var U = [`PageUp`, `PageDown`],
         } = M({
           isProvider: true
         }),
-        L = r(s, `modelValue`, c, {
-          defaultValue: s.defaultValue,
-          passive: s.modelValue === undefined
+        L = r(eventAlias, `modelValue`, c, {
+          defaultValue: eventAlias.defaultValue,
+          passive: eventAlias.modelValue === undefined
         }),
         R = k(() => Array.isArray(L.value) ? [...L.value] : []),
         B = b(0),
@@ -430,15 +430,15 @@ var U = [`PageUp`, `PageDown`],
       }
     },
     emits: [`slideStart`, `slideMove`, `slideEnd`, `homeKeyDown`, `endKeyDown`, `stepKeyDown`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let n = e,
+      let eventAlias = event,
         r = t,
         i = X();
       return (e, t) => (S(), y(d(o), D({
         "data-slider-impl": ``
-      }, n, {
+      }, eventAlias, {
         onKeydown: t[0] ||= e => {
           e.key === `Home` ? (r(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (r(`endKeyDown`, e), e.preventDefault()) : d(U).concat(d(W)).includes(e.key) && (r(`stepKeyDown`, e), e.preventDefault());
         },
@@ -476,7 +476,7 @@ var U = [`PageUp`, `PageDown`],
       let t = X(),
         r = K();
       n();
-      let i = k(() => t.currentModelValue.value.map(e => P(e, t.min.value, t.max.value))),
+      let i = k(() => t.currentModelValue.value.map(item => P(item, t.min.value, t.max.value))),
         a = k(() => t.currentModelValue.value.length > 1 ? Math.min(...i.value) : 0),
         s = k(() => 100 - Math.max(...i.value, 0));
       return (e, n) => (S(), y(d(o), {
@@ -532,8 +532,8 @@ var U = [`PageUp`, `PageDown`],
       return O(() => {
         i.thumbElements.value.push(c.value);
       }), T(() => {
-        let e = i.thumbElements.value.findIndex(e => e === c.value) ?? -1;
-        i.thumbElements.value.splice(e, 1);
+        let fallbackValue = i.thumbElements.value.findIndex(item => item === c.value) ?? -1;
+        i.thumbElements.value.splice(fallbackValue, 1);
       }), (e, t) => (S(), y(d(l), null, {
         default: v(() => [w(d(o), D(e.$attrs, {
           ref: d(s),
@@ -587,7 +587,7 @@ var U = [`PageUp`, `PageDown`],
           forwardRef: i,
           currentElement: a
         } = n(),
-        o = k(() => a.value ? r(true).findIndex(e => e.ref === a.value) : -1);
+        o = k(() => a.value ? r(true).findIndex(item => item.ref === a.value) : -1);
       return (e, n) => (S(), y(ne, D({
         ref: d(i)
       }, t, {

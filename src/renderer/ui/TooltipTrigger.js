@@ -2,7 +2,7 @@ import { B as e, C as t, G as n, I as r, N as i, Q as a, T as o, V as s, _ as c,
 import { An as x, Ct as S, Dn as C, Et as ee, Gt as w, Nt as te, O as ne, S as T, V as E, Wt as re, Yt as D, b as O, bn as k, gt as A, j, k as M, nr as ie, nt as N, rr as ae, tr as P, ut as F, v as I, x as L } from "../chunks/vue-i18n.runtime.js";
 import { E as R } from "../i18n/en-US-player.js";
 import { a as z, i as B, n as V, r as H } from "./PopperContent.js";
-function U(e, t) {
+function U(event, el) {
   let n = _(false, 300);
   u(() => {
     n.value = false;
@@ -24,29 +24,29 @@ function U(e, t) {
       c = J([...o, ...s]);
     r.value = c, n.value = true;
   }
-  return w(n => {
-    if (e.value && t.value) {
-      let r = e => o(e, t.value),
-        i = t => o(t, e.value);
-      e.value.addEventListener(`pointerleave`, r), t.value.addEventListener(`pointerleave`, i), n(() => {
-        e.value?.removeEventListener(`pointerleave`, r), t.value?.removeEventListener(`pointerleave`, i);
+  return w(fn => {
+    if (event.value && el.value) {
+      let handler = e => o(e, el.value),
+        i = t => o(t, event.value);
+      event.value.addEventListener(`pointerleave`, handler), el.value.addEventListener(`pointerleave`, i), fn(() => {
+        event.value?.removeEventListener(`pointerleave`, handler), el.value?.removeEventListener(`pointerleave`, i);
       });
     }
   }), w(n => {
     if (r.value) {
-      let o = n => {
+      let handler = n => {
         if (!r.value || !(n.target instanceof Element)) return;
         let o = n.target,
           s = {
             x: n.clientX,
             y: n.clientY
           },
-          c = e.value?.contains(o) || t.value?.contains(o),
+          fallbackValue = event.value?.contains(o) || el.value?.contains(o),
           l = !q(s, r.value),
           u = !!o.closest(`[data-grace-area-trigger]`);
-        c ? a() : (l || u) && (a(), i.trigger());
+        fallbackValue ? a() : (l || u) && (a(), i.trigger());
       };
-      e.value?.ownerDocument.addEventListener(`pointermove`, o), n(() => e.value?.ownerDocument.removeEventListener(`pointermove`, o));
+      event.value?.ownerDocument.addEventListener(`pointermove`, handler), n(() => event.value?.ownerDocument.removeEventListener(`pointermove`, handler));
     }
   }), {
     isPointerInTransit: n,
@@ -72,10 +72,10 @@ function W(e, t) {
   }
 }
 function G(e, t, n = 5) {
-  let r = [];
+  let emptyItems = [];
   switch (t) {
     case `top`:
-      r.push({
+      emptyItems.push({
         x: e.x - n,
         y: e.y + n
       }, {
@@ -84,7 +84,7 @@ function G(e, t, n = 5) {
       });
       break;
     case `bottom`:
-      r.push({
+      emptyItems.push({
         x: e.x - n,
         y: e.y - n
       }, {
@@ -93,7 +93,7 @@ function G(e, t, n = 5) {
       });
       break;
     case `left`:
-      r.push({
+      emptyItems.push({
         x: e.x + n,
         y: e.y - n
       }, {
@@ -102,7 +102,7 @@ function G(e, t, n = 5) {
       });
       break;
     case `right`:
-      r.push({
+      emptyItems.push({
         x: e.x - n,
         y: e.y - n
       }, {
@@ -110,7 +110,7 @@ function G(e, t, n = 5) {
         y: e.y + n
       });
   }
-  return r;
+  return emptyItems;
 }
 function K(e) {
   let {
@@ -133,41 +133,41 @@ function K(e) {
     y: r
   }];
 }
-function q(e, t) {
+function q(e, count) {
   let {
       x: n,
       y: r
     } = e,
     i = false;
-  for (let e = 0, a = t.length - 1; e < t.length; a = e++) {
-    let o = t[e].x,
-      s = t[e].y,
-      c = t[a].x,
-      l = t[a].y;
+  for (let e = 0, a = count.length - 1; e < count.length; a = e++) {
+    let o = count[e].x,
+      s = count[e].y,
+      c = count[a].x,
+      l = count[a].y;
     s > r != l > r && n < (c - o) * (r - s) / (l - s) + o && (i = !i);
   }
   return i;
 }
-function J(e) {
-  let t = e.slice();
-  return t.sort((e, t) => e.x < t.x ? -1 : e.x > t.x ? 1 : e.y < t.y ? -1 : +(e.y > t.y)), oe(t);
+function J(items) {
+  let part = items.slice();
+  return part.sort((left, right) => left.x < right.x ? -1 : left.x > right.x ? 1 : left.y < right.y ? -1 : +(left.y > right.y)), oe(part);
 }
-function oe(e) {
-  if (e.length <= 1) return e.slice();
-  let t = [];
-  for (let n = 0; n < e.length; n++) {
-    let r = e[n];
-    for (; t.length >= 2;) {
-      let e = t.at(-1),
-        n = t[t.length - 2];
-      if ((e.x - n.x) * (r.y - n.y) >= (e.y - n.y) * (r.x - n.x)) t.pop();else break;
+function oe(items) {
+  if (items.length <= 1) return items.slice();
+  let emptyItems = [];
+  for (let n = 0; n < items.length; n++) {
+    let r = items[n];
+    for (; emptyItems.length >= 2;) {
+      let e = emptyItems.at(-1),
+        n = emptyItems[emptyItems.length - 2];
+      if ((e.x - n.x) * (r.y - n.y) >= (e.y - n.y) * (r.x - n.x)) emptyItems.pop();else break;
     }
-    t.push(r);
+    emptyItems.push(r);
   }
-  t.pop();
+  emptyItems.pop();
   let n = [];
-  for (let t = e.length - 1; t >= 0; t--) {
-    let r = e[t];
+  for (let t = items.length - 1; t >= 0; t--) {
+    let r = items[t];
     for (; n.length >= 2;) {
       let e = n.at(-1),
         t = n[n.length - 2];
@@ -175,7 +175,7 @@ function oe(e) {
     }
     n.push(r);
   }
-  return n.pop(), t.length === 1 && n.length === 1 && t[0].x === n[0].x && t[0].y === n[0].y ? t : t.concat(n);
+  return n.pop(), emptyItems.length === 1 && n.length === 1 && emptyItems[0].x === n[0].x && emptyItems[0].y === n[0].y ? emptyItems : emptyItems.concat(n);
 }
 var se = {
     key: 0,
@@ -225,7 +225,7 @@ var se = {
       }, 16, [`width`, `height`, `viewBox`, `preserveAspectRatio`]));
     }
   }),
-  ue = {
+  options = {
     top: `bottom`,
     right: `left`,
     bottom: `top`,
@@ -262,7 +262,7 @@ var se = {
           forwardRef: t
         } = s(),
         n = H(),
-        r = I(() => ue[n.placedSide.value]);
+        r = I(() => options[n.placedSide.value]);
       return (e, i) => (A(), T(`span`, {
         ref: e => {
           x(n).onArrowChange(e ?? undefined);
@@ -631,8 +631,8 @@ var se = {
         open: f,
         stateAttribute: g,
         trigger: m,
-        onTriggerChange(e) {
-          m.value = e;
+        onTriggerChange(trigger) {
+          m.value = trigger;
         },
         onTriggerEnter() {
           i.isOpenDelayed.value ? C() : y();
@@ -722,10 +722,10 @@ var se = {
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let r = e,
+      let eventAlias = event,
         i = t,
         o = Z(),
         c = Y(),
@@ -733,12 +733,12 @@ var se = {
           forwardRef: l,
           currentElement: u
         } = s(),
-        f = I(() => r.ariaLabel || u.value?.textContent),
+        f = I(() => eventAlias.ariaLabel || u.value?.textContent),
         m = I(() => {
           let {
             ariaLabel: e,
             ...t
-          } = r;
+          } = eventAlias;
           return n(t, c.content.value ?? {}, {
             side: `top`,
             sideOffset: 0,
@@ -1021,8 +1021,8 @@ var se = {
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(event) {
+      let eventAlias = event,
         n = Z(),
         i = Y();
       n.contentId ||= r(undefined, `reka-tooltip-content`);
@@ -1077,7 +1077,7 @@ var se = {
           "aria-describedby": x(n).open.value ? x(n).contentId : undefined,
           "data-state": x(n).stateAttribute.value,
           as: e.as,
-          "as-child": t.asChild,
+          "as-child": eventAlias.asChild,
           "data-grace-area-trigger": ``
         }, te(u.value)), {
           default: D(() => [S(e.$slots, `default`)]),

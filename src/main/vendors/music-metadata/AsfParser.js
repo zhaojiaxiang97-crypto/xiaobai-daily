@@ -12,34 +12,34 @@ var import_src = /* @__PURE__ */__toESM(require_src(), 1);
 * into Windows / CFBF byte order.
 */
 function parseWindowsGuid(guid) {
-  let s = guid.trim();
-  if (s.length !== 36 || s[8] !== "-" || s[13] !== "-" || s[18] !== "-" || s[23] !== "-") throw new Error(`Invalid GUID format: ${guid}`);
+  let trimmed = guid.trim();
+  if (trimmed.length !== 36 || trimmed[8] !== "-" || trimmed[13] !== "-" || trimmed[18] !== "-" || trimmed[23] !== "-") throw new Error(`Invalid GUID format: ${guid}`);
   let v;
   const out = /* @__PURE__ */new Uint8Array(16);
-  v = parseInt(s.slice(0, 8), 16);
+  v = parseInt(trimmed.slice(0, 8), 16);
   out[0] = v & 255;
   out[1] = v >>> 8 & 255;
   out[2] = v >>> 16 & 255;
   out[3] = v >>> 24 & 255;
-  v = parseInt(s.slice(9, 13), 16);
+  v = parseInt(trimmed.slice(9, 13), 16);
   out[4] = v & 255;
   out[5] = v >>> 8 & 255;
-  v = parseInt(s.slice(14, 18), 16);
+  v = parseInt(trimmed.slice(14, 18), 16);
   out[6] = v & 255;
   out[7] = v >>> 8 & 255;
-  v = parseInt(s.slice(19, 23), 16);
+  v = parseInt(trimmed.slice(19, 23), 16);
   out[8] = v >>> 8 & 255;
   out[9] = v & 255;
-  v = parseInt(s.slice(24, 32), 16);
+  v = parseInt(trimmed.slice(24, 32), 16);
   out[10] = v >>> 24 & 255;
   out[11] = v >>> 16 & 255;
   out[12] = v >>> 8 & 255;
   out[13] = v & 255;
-  v = parseInt(s.slice(32, 36), 16);
+  v = parseInt(trimmed.slice(32, 36), 16);
   out[14] = v >>> 8 & 255;
   out[15] = v & 255;
   for (let i = 0; i < 16; i++) if (!Number.isFinite(out[i])) throw new Error(`Invalid GUID format: ${guid}`);
-  if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(s)) throw new Error(`Invalid GUID format: ${guid}`);
+  if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(trimmed)) throw new Error(`Invalid GUID format: ${guid}`);
   return out;
 }
 var Guid = class Guid {
@@ -55,9 +55,9 @@ var Guid = class Guid {
   * xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   */
   toString() {
-    const b = this.bytes;
-    const hx = n => n.toString(16).padStart(2, "0");
-    return `${hx(b[3]) + hx(b[2]) + hx(b[1]) + hx(b[0])}-${hx(b[5]) + hx(b[4])}-${hx(b[7]) + hx(b[6])}-${hx(b[8]) + hx(b[9])}-${hx(b[10]) + hx(b[11]) + hx(b[12]) + hx(b[13]) + hx(b[14]) + hx(b[15])}`.toUpperCase();
+    const bytes = this.bytes;
+    const handler = n => n.toString(16).padStart(2, "0");
+    return `${handler(bytes[3]) + handler(bytes[2]) + handler(bytes[1]) + handler(bytes[0])}-${handler(bytes[5]) + handler(bytes[4])}-${handler(bytes[7]) + handler(bytes[6])}-${handler(bytes[8]) + handler(bytes[9])}-${handler(bytes[10]) + handler(bytes[11]) + handler(bytes[12]) + handler(bytes[13]) + handler(bytes[14]) + handler(bytes[15])}`.toUpperCase();
   }
   /**
   * Compare against a Uint8Array containing GUID bytes
@@ -65,8 +65,8 @@ var Guid = class Guid {
   */
   equals(buf, offset = 0) {
     if (offset < 0 || buf.length - offset < 16) return false;
-    const a = this.bytes;
-    for (let i = 0; i < 16; i++) if (buf[offset + i] !== a[i]) return false;
+    const bytes = this.bytes;
+    for (let i = 0; i < 16; i++) if (buf[offset + i] !== bytes[i]) return false;
     return true;
   }
 };
@@ -183,8 +183,8 @@ AsfGuid.BinaryMedia = new AsfGuid("3AFB65E2-47EF-40F2-AC2C-70A90D71D343");
 AsfGuid.ASF_Index_Placeholder_Object = new AsfGuid("D9AADE20-7C17-4F9C-BC28-8555DD98E2A2");
 //#endregion
 //#region node_modules/music-metadata/lib/asf/AsfUtil.js
-function getParserForAttr(i) {
-  return attributeParsers[i];
+function getParserForAttr(parser) {
+  return attributeParsers[parser];
 }
 function parseUnicodeAttr(uint8Array) {
   return stripNulls(decodeString(uint8Array, "utf-16le"));

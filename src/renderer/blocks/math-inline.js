@@ -1,7 +1,7 @@
 import { Ct as e, S as t, Wt as n, Yt as r, b as i, bn as a, gt as o, j as s, ot as c, rr as l, ut as u, v as d, x as f, y as p } from "../chunks/vue-i18n.runtime.js";
 import { r as m } from "../i18n/en-US-player.js";
 import { H as h, L as g, O as _, S as v, X as y, v as b, w as x } from "../chunks/main.js";
-var S = (e, t, n) => new Promise((r, i) => {
+var handler = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -16,7 +16,7 @@ var S = (e, t, n) => new Promise((r, i) => {
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(e, t)).next());
   }),
   C = [`data-markstream-mode`],
@@ -25,7 +25,7 @@ var S = (e, t, n) => new Promise((r, i) => {
     key: 1,
     class: `math-inline math-inline--fallback`
   },
-  E = {
+  options = {
     class: `math-inline__loading`,
     role: `status`,
     "aria-live": `polite`
@@ -80,35 +80,35 @@ var S = (e, t, n) => new Promise((r, i) => {
         z = y(),
         B = null;
       function V() {
-        return S(this, null, function* () {
+        return handler(this, null, function* () {
           if (I) return;
           if (!b.node.content) return R.value = false, M.value = ``, N.value = b.node.raw, void (P = true);
           L &&= (L.abort(), null);
           let e = ++F,
-            t = new AbortController();
-          if (L = t, !P) try {
+            abortController = new AbortController();
+          if (L = abortController, !P) try {
             !B && D.value && (B = z(D.value)), yield B?.whenVisible;
           } catch {}
           h(A.value, k.value, {
             timeout: 1500,
             waitTimeout: 0,
             maxRetries: 0,
-            signal: t.signal
-          }).then(t => {
-            I || e !== F || (M.value = t, N.value = ``, R.value = false, P = true);
-          }).catch(t => S(null, null, function* () {
+            signal: abortController.signal
+          }).then(result => {
+            I || e !== F || (M.value = result, N.value = ``, R.value = false, P = true);
+          }).catch(event => handler(null, null, function* () {
             if (I || e !== F) return;
-            let n = t?.code || t?.name,
-              r = n === `KATEX_DISABLED`;
-            if (n === `WORKER_INIT_ERROR` || t?.fallbackToRenderer || n === `WORKER_BUSY` || n === `WORKER_TIMEOUT`) {
+            let fallbackValue = event?.code || event?.name,
+              r = fallbackValue === `KATEX_DISABLED`;
+            if (fallbackValue === `WORKER_INIT_ERROR` || event?.fallbackToRenderer || fallbackValue === `WORKER_BUSY` || fallbackValue === `WORKER_TIMEOUT`) {
               let e = yield v();
               if (e) {
                 try {
-                  let t = e.renderToString(A.value, {
+                  let toStringResult = e.renderToString(A.value, {
                     throwOnError: b.node.loading,
                     displayMode: k.value
                   });
-                  M.value = t, N.value = ``, R.value = false, P = true, x(A.value, k.value, t);
+                  M.value = toStringResult, N.value = ``, R.value = false, P = true, x(A.value, k.value, toStringResult);
                 } catch {}
                 return;
               }
@@ -139,7 +139,7 @@ var S = (e, t, n) => new Promise((r, i) => {
         key: 2,
         name: `table-node-fade`
       }, {
-        default: r(() => [p(`span`, E, [e(n.$slots, `loading`, {
+        default: r(() => [p(`span`, options, [e(n.$slots, `loading`, {
           isLoading: R.value
         }, () => [a[0] ||= p(`span`, {
           class: `math-inline__spinner animate-spin`,

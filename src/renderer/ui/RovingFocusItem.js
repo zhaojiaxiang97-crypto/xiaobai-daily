@@ -49,20 +49,20 @@ var y = c({
     }), i(() => y.focusable, (e, t) => {
       e !== t && (e ? b.onFocusableItemAdd() : b.onFocusableItemRemove());
     });
-    function E(e) {
-      if (e.key === `Tab` && e.shiftKey) {
+    function E(event) {
+      if (event.key === `Tab` && event.shiftKey) {
         b.onItemShiftTab();
         return;
       }
-      if (e.target !== e.currentTarget) return;
-      let t = g(e, b.orientation.value, b.dir.value);
+      if (event.target !== event.currentTarget) return;
+      let t = g(event, b.orientation.value, b.dir.value);
       if (t !== undefined) {
-        if (e.metaKey || e.ctrlKey || e.altKey || !y.allowShiftKey && e.shiftKey) return;
-        e.preventDefault();
-        let n = [...w().map(e => e.ref).filter(e => e.dataset.disabled !== ``)];
+        if (event.metaKey || event.ctrlKey || event.altKey || !y.allowShiftKey && event.shiftKey) return;
+        event.preventDefault();
+        let n = [...w().map(item => item.ref).filter(item => item.dataset.disabled !== ``)];
         if (t === `last`) n.reverse();else if (t === `prev` || t === `next`) {
           t === `prev` && n.reverse();
-          let r = n.indexOf(e.currentTarget);
+          let r = n.indexOf(event.currentTarget);
           n = b.loop.value ? h(n, r + 1) : n.slice(r + 1);
         }
         d(() => v(n));
@@ -76,8 +76,8 @@ var y = c({
         "data-disabled": e.focusable ? undefined : ``,
         as: e.as,
         "as-child": e.asChild,
-        onMousedown: i[0] ||= t => {
-          e.focusable ? n(b).onItemFocus(S.value) : t.preventDefault();
+        onMousedown: i[0] ||= event => {
+          e.focusable ? n(b).onItemFocus(S.value) : event.preventDefault();
         },
         onFocus: i[1] ||= e => n(b).onItemFocus(S.value),
         onKeydown: E

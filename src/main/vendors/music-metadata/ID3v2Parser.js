@@ -39,33 +39,33 @@ function getFrameHeaderLength(majorVer) {
       throw makeUnexpectedMajorVersionError$2(majorVer);
   }
 }
-function readFrameFlags(b, majorVer) {
+function readFrameFlags(frame, majorVer) {
   if (majorVer === 3) return {
     status: {
-      tag_alter_preservation: getBit(b, 0, 7),
-      file_alter_preservation: getBit(b, 0, 6),
-      read_only: getBit(b, 0, 5)
+      tag_alter_preservation: getBit(frame, 0, 7),
+      file_alter_preservation: getBit(frame, 0, 6),
+      read_only: getBit(frame, 0, 5)
     },
     format: {
-      compression: getBit(b, 1, 7),
-      encryption: getBit(b, 1, 6),
-      grouping_identity: getBit(b, 1, 5),
+      compression: getBit(frame, 1, 7),
+      encryption: getBit(frame, 1, 6),
+      grouping_identity: getBit(frame, 1, 5),
       unsynchronisation: false,
       data_length_indicator: false
     }
   };
   return {
     status: {
-      tag_alter_preservation: getBit(b, 0, 6),
-      file_alter_preservation: getBit(b, 0, 5),
-      read_only: getBit(b, 0, 4)
+      tag_alter_preservation: getBit(frame, 0, 6),
+      file_alter_preservation: getBit(frame, 0, 5),
+      read_only: getBit(frame, 0, 4)
     },
     format: {
-      grouping_identity: getBit(b, 1, 6),
-      compression: getBit(b, 1, 3),
-      encryption: getBit(b, 1, 2),
-      unsynchronisation: getBit(b, 1, 1),
-      data_length_indicator: getBit(b, 1, 0)
+      grouping_identity: getBit(frame, 1, 6),
+      compression: getBit(frame, 1, 3),
+      encryption: getBit(frame, 1, 2),
+      unsynchronisation: getBit(frame, 1, 1),
+      data_length_indicator: getBit(frame, 1, 0)
     }
   };
 }
@@ -211,7 +211,7 @@ var FrameParser = class FrameParser {
               break;
             case "TCO":
             case "TCON":
-              output = this.splitValue(type, text).map(v => parseGenre(v)).reduce((acc, val) => acc.concat(val), []);
+              output = this.splitValue(type, text).map(item => parseGenre(item)).reduce((acc, val) => acc.concat(val), []);
               break;
             case "PCS":
             case "PCST":
@@ -628,8 +628,8 @@ var ID3v2Parser = class ID3v2Parser {
   async handleTag(tag, values, descriptor, resolveValue = value => value) {
     await Promise.all(values.map(value => this.addTag(ID3v2Parser.makeDescriptionTagName(tag.id, descriptor(value)), resolveValue(value))));
   }
-  async addTag(id, value) {
-    await this.metadata.addTag(this.headerType, id, value);
+  async addTag(tag, value) {
+    await this.metadata.addTag(this.headerType, tag, value);
   }
   parseMetadata(data) {
     let offset = 0;
@@ -662,9 +662,9 @@ var ID3v2Parser = class ID3v2Parser {
   */
   static mapId3v2Chapters(id3Tags) {
     if (!id3Tags) return;
-    const chapFrames = id3Tags.filter(t => t.id === "CHAP");
+    const chapFrames = id3Tags.filter(item => item.id === "CHAP");
     if (!chapFrames?.length) return;
-    const topLevelToc = id3Tags.filter(t => t.id === "CTOC")?.find(t => t.value.flags?.topLevel);
+    const topLevelToc = id3Tags.filter(item => item.id === "CTOC")?.find(t => t.value.flags?.topLevel);
     const chapterById = /* @__PURE__ */new Map();
     for (const chap of chapFrames) chapterById.set(chap.value.label, chap.value);
     const orderedIds = topLevelToc?.value.childElementIds;
@@ -685,7 +685,7 @@ var ID3v2Parser = class ID3v2Parser {
         image: frames.get("APIC")
       });
     }
-    if (!orderedIds) chapters.sort((a, b) => a.start - b.start);
+    if (!orderedIds) chapters.sort((left, right) => left.start - right.start);
     return chapters.length ? chapters : undefined;
   }
 };

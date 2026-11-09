@@ -369,12 +369,12 @@ var He = I(`grid-3x3`, [[`rect`, {
     setup(result, {
       emit: r
     }) {
-      let i = result,
+      let resultAlias = result,
         a = r,
         o = S(false),
         s = S(``),
         c = S(null),
-        u = {
+        options = {
           image: `BackgroundImage`,
           blur: `BackgroundBlur`,
           solid: `BackgroundSolid`,
@@ -388,19 +388,19 @@ var He = I(`grid-3x3`, [[`rect`, {
           "browser-light": `FrameBrowserLight`,
           "browser-dark": `FrameBrowserDark`
         },
-        m = j(() => !B.includes(i.current.backgroundColor)),
-        y = j(() => [...le.map(el => ({
-          id: `builtin:${el.id}`,
-          name: G(`Preset${el.id}`),
-          style: el.style,
+        m = j(() => !B.includes(resultAlias.current.backgroundColor)),
+        y = j(() => [...le.map(item => ({
+          id: `builtin:${item.id}`,
+          name: G(`Preset${item.id}`),
+          style: item.style,
           builtin: true
-        })), ...i.presets.map(e => ({
-          ...e,
+        })), ...resultAlias.presets.map(item => ({
+          ...item,
           builtin: false
         }))]);
       function T(e) {
         a(`update:style`, {
-          ...i.current,
+          ...resultAlias.current,
           ...e
         });
       }
@@ -409,28 +409,28 @@ var He = I(`grid-3x3`, [[`rect`, {
         F = S([]),
         te = S(``);
       async function ne(e) {
-        let t = await window.screenshotToolAPI.editor.loadBackground(e.id);
-        if (!t.ok) throw Error(t.error.message);
+        let background = await window.screenshotToolAPI.editor.loadBackground(e.id);
+        if (!background.ok) throw Error(background.error.message);
         te.value = e.id, T({
           backgroundKind: `image`,
-          backgroundImage: t.data,
+          backgroundImage: background.data,
           backgroundImageSource: e.file ?? ``
         });
       }
       function re() {
-        let e = i.current.backgroundImageSource.trim();
-        if (!e) {
+        let trimmed = resultAlias.current.backgroundImageSource.trim();
+        if (!trimmed) {
           te.value = ``;
           return;
         }
-        let t = F.value.find(t => t.file === e);
-        te.value = t?.id ?? ``;
+        let found = F.value.find(item => item.file === trimmed);
+        te.value = found?.id ?? ``;
       }
-      v(() => i.backgroundLibrary, e => {
+      v(() => resultAlias.backgroundLibrary, e => {
         F.value = [...e], re();
       }, {
         immediate: true
-      }), v(() => i.current.backgroundImageSource, () => re());
+      }), v(() => resultAlias.current.backgroundImageSource, () => re());
       async function I(e) {
         if (!O.value) {
           O.value = true, A.value = ``;
@@ -447,9 +447,9 @@ var He = I(`grid-3x3`, [[`rect`, {
         if (!O.value) {
           O.value = true, A.value = ``;
           try {
-            let e = await window.screenshotToolAPI.editor.backgrounds(`system`);
-            if (!e.ok) throw Error(e.error.message);
-            e.data.length ? (F.value = e.data, re()) : (F.value = [], A.value = G(`BackgroundSystemEmpty`));
+            let backgrounds = await window.screenshotToolAPI.editor.backgrounds(`system`);
+            if (!backgrounds.ok) throw Error(backgrounds.error.message);
+            backgrounds.data.length ? (F.value = backgrounds.data, re()) : (F.value = [], A.value = G(`BackgroundSystemEmpty`));
           } catch (e) {
             A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
           } finally {
@@ -461,10 +461,10 @@ var He = I(`grid-3x3`, [[`rect`, {
         if (!O.value) {
           O.value = true, A.value = ``;
           try {
-            let e = await window.screenshotToolAPI.editor.backgrounds(`custom`);
-            if (!e.ok) throw Error(e.error.message);
-            if (!e.data.length) return;
-            F.value = e.data, e.data[0] && (await ne(e.data[0]));
+            let backgrounds = await window.screenshotToolAPI.editor.backgrounds(`custom`);
+            if (!backgrounds.ok) throw Error(backgrounds.error.message);
+            if (!backgrounds.data.length) return;
+            F.value = backgrounds.data, backgrounds.data[0] && (await ne(backgrounds.data[0]));
           } catch (e) {
             A.value = e instanceof Error ? e.message : G(`BackgroundImageFailed`);
           } finally {
@@ -476,8 +476,8 @@ var He = I(`grid-3x3`, [[`rect`, {
         return JSON.stringify(e) === JSON.stringify(t);
       }
       function me(e) {
-        let t = fe.find(t => t.id === e) ?? fe[0];
-        return `linear-gradient(135deg, ${t.stops[0]}, ${t.stops[1]})`;
+        let fallbackValue = fe.find(item => item.id === e) ?? fe[0];
+        return `linear-gradient(135deg, ${fallbackValue.stops[0]}, ${fallbackValue.stops[1]})`;
       }
       function he(e) {
         switch (e.backgroundKind) {
@@ -500,8 +500,8 @@ var He = I(`grid-3x3`, [[`rect`, {
               background: rn
             };
           default:
-            return i.thumbnail ? {
-              backgroundImage: `url(${i.thumbnail})`,
+            return resultAlias.thumbnail ? {
+              backgroundImage: `url(${resultAlias.thumbnail})`,
               backgroundSize: `cover`,
               backgroundPosition: `center`,
               filter: `blur(3px) saturate(1.15)`,
@@ -517,15 +517,15 @@ var He = I(`grid-3x3`, [[`rect`, {
       function _e(event) {
         T({
           backgroundKind: `solid`,
-          backgroundColor: ue(event.target.value, i.current.backgroundColor)
+          backgroundColor: ue(event.target.value, resultAlias.current.backgroundColor)
         });
       }
       function ve() {
         s.value = ``, o.value = true, ee(() => c.value?.focus());
       }
       function ye() {
-        let e = s.value.trim();
-        e && (a(`savePreset`, e), o.value = false);
+        let trimmed = s.value.trim();
+        trimmed && (a(`savePreset`, trimmed), o.value = false);
       }
       function be(event) {
         event.stopPropagation(), event.key === `Enter` && !event.isComposing ? (event.preventDefault(), ye()) : event.key === `Escape` && (event.preventDefault(), o.value = false);
@@ -600,7 +600,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         onClick: t => T({
           backgroundKind: e
         })
-      }, k(f(G)(u[e])), 11, Q))), 128))]), result.current.backgroundKind === `image` ? (w(), g(`div`, ft, [N(`div`, pt, [N(`button`, {
+      }, k(f(G)(options[e])), 11, Q))), 128))]), result.current.backgroundKind === `image` ? (w(), g(`div`, ft, [N(`div`, pt, [N(`button`, {
         type: `button`,
         class: `text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-50`,
         disabled: O.value,
@@ -729,7 +729,7 @@ var He = I(`grid-3x3`, [[`rect`, {
       }, null, 8, [`model-value`, `aria-label`])])], 2)]));
     }
   }),
-  on = {
+  options = {
     v: `select`,
     r: `rect`,
     o: `ellipse`,
@@ -772,12 +772,12 @@ var He = I(`grid-3x3`, [[`rect`, {
 function ln(e, t, n) {
   return Math.round(cn[e === `text` ? `text` : e === `number` ? `number` : e === `mosaic` ? `mosaic` : e === `highlighter` ? `highlighter` : `stroke`][t] * n * 10) / 10;
 }
-function un(e, t) {
+function un(count, t) {
   let n = [`s`, `m`, `l`],
     r = `m`,
     i = 1 / 0;
   for (let a of n) {
-    let n = Math.abs(ln(e.kind, a, t) - e.size);
+    let n = Math.abs(ln(count.kind, a, t) - count.size);
     n < i && (i = n, r = a);
   }
   return r;
@@ -798,7 +798,7 @@ function pn(e) {
     l = p([]),
     u = null,
     d = null,
-    f = j(() => t.value.find(e => e.id === r.value) ?? null),
+    f = j(() => t.value.find(item => item.id === r.value) ?? null),
     m = j(() => c.value.length > 0),
     h = j(() => l.value.length > 0),
     g = j(() => n.value ? [...t.value, n.value] : t.value);
@@ -812,7 +812,7 @@ function pn(e) {
     v(_()), t.value = e;
   }
   function b(e, n) {
-    t.value = t.value.map(t => t.id === e ? n : t);
+    t.value = t.value.map(item => item.id === e ? n : item);
   }
   function x(e) {
     t.value = e, n.value = null, r.value = null, i.value = null, c.value = [], l.value = [], u = null, d = null;
@@ -820,16 +820,16 @@ function pn(e) {
   function C() {
     F();
     let e = c.value.at(-1);
-    e !== undefined && (l.value = [_(), ...l.value].slice(0, fn), c.value = c.value.slice(0, -1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
+    e !== undefined && (l.value = [_(), ...l.value].slice(0, fn), c.value = c.value.slice(0, -1), t.value = JSON.parse(e), r.value && !t.value.some(item => item.id === r.value) && (r.value = null));
   }
   function w() {
     F();
     let e = l.value[0];
-    e !== undefined && (c.value = [...c.value, _()].slice(-100), l.value = l.value.slice(1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
+    e !== undefined && (c.value = [...c.value, _()].slice(-100), l.value = l.value.slice(1), t.value = JSON.parse(e), r.value && !t.value.some(item => item.id === r.value) && (r.value = null));
   }
   function T() {
     let e = r.value;
-    return e ? (y(t.value.filter(t => t.id !== e)), r.value = null, true) : false;
+    return e ? (y(t.value.filter(item => item.id !== e)), r.value = null, true) : false;
   }
   function E(e) {
     F(), a.value = e, e !== `select` && (r.value = null);
@@ -861,22 +861,22 @@ function pn(e) {
   }
   function ee(e, t) {
     let n = f.value;
-    return n ? Ce(n).find(n => Math.hypot(n.x - e.x, n.y - e.y) <= t * 1.4)?.handle ?? null : null;
+    return n ? Ce(n).find(item => Math.hypot(item.x - e.x, item.y - e.y) <= t * 1.4)?.handle ?? null : null;
   }
   function A(t) {
     r.value = t?.id ?? null, t && (t.kind !== `mosaic` && (o.value = t.color), s.value = un(t, e()));
   }
   function M() {
-    return t.value.reduce((e, state) => state.kind === `number` ? Math.max(e, state.value) : e, 0) + 1;
+    return t.value.reduce((acc, state) => state.kind === `number` ? Math.max(acc, state.value) : acc, 0) + 1;
   }
   function N(e) {
     d = _(), r.value = e.id, i.value = e.id;
   }
   function P(e) {
     let n = i.value,
-      r = t.value.find(e => e.id === n);
-    r && r.kind === `text` && b(r.id, {
-      ...r,
+      found = t.value.find(item => item.id === n);
+    found && found.kind === `text` && b(found.id, {
+      ...found,
       text: e
     });
   }
@@ -884,9 +884,9 @@ function pn(e) {
     let e = i.value;
     if (!e) return;
     i.value = null;
-    let n = t.value.find(t => t.id === e),
+    let found = t.value.find(item => item.id === e),
       a = d;
-    d = null, n?.kind === `text` && !n.text.trim() && (t.value = t.value.filter(t => t.id !== e), r.value === e && (r.value = null)), a !== null && a !== _() && v(a);
+    d = null, found?.kind === `text` && !found.text.trim() && (t.value = t.value.filter(item => item.id !== e), r.value === e && (r.value = null)), a !== null && a !== _() && v(a);
   }
   function te(e, t, n, r) {
     if (!r) return t;
@@ -956,33 +956,33 @@ function pn(e) {
       return y([...t.value, e]), r.value = e.id, true;
     }
     let h = a.value,
-      g = {
+      entity = {
         id: dn(),
         color: o.value,
         size: ln(h, s.value, p)
       },
-      v;
-    return v = h === `rect` || h === `ellipse` || h === `mosaic` ? {
-      ...g,
+      resolvedValue;
+    return resolvedValue = h === `rect` || h === `ellipse` || h === `mosaic` ? {
+      ...entity,
       kind: h,
       x: c.x,
       y: c.y,
       width: 0,
       height: 0
     } : h === `arrow` || h === `line` ? {
-      ...g,
+      ...entity,
       kind: h,
       x1: c.x,
       y1: c.y,
       x2: c.x,
       y2: c.y
     } : {
-      ...g,
+      ...entity,
       kind: h,
       points: [c.x, c.y]
-    }, r.value = null, n.value = v, u = {
+    }, r.value = null, n.value = resolvedValue, u = {
       type: `draw`,
-      annotation: v,
+      annotation: resolvedValue,
       startX: c.x,
       startY: c.y
     }, true;
@@ -1211,8 +1211,8 @@ var mn = {
         $e = j(() => Y.value && X.value ? Y.value.width / X.value.width : 1),
         et = j(() => {
           let e = K.editingTextId.value,
-            t = K.annotations.value.find(t => t.id === e);
-          return t?.kind === `text` ? t : null;
+            found = K.annotations.value.find(item => item.id === e);
+          return found?.kind === `text` ? found : null;
         }),
         tt = j(() => {
           let e = et.value,
@@ -1335,8 +1335,8 @@ var mn = {
           n = T.value,
           r = X.value;
         if (!e || !t || !n || !r) return;
-        let i = window.devicePixelRatio || 1,
-          a = Math.min(1, r.width * i / t.width),
+        let fallbackValue = window.devicePixelRatio || 1,
+          a = Math.min(1, r.width * fallbackValue / t.width),
           o = Math.max(1, Math.round(t.width * a)),
           s = Math.max(1, Math.round(t.height * a));
         (e.width !== o || e.height !== s) && (e.width = o, e.height = s);
@@ -1355,21 +1355,21 @@ var mn = {
         let n = Y.value,
           r = K.selected.value;
         if (!n || !r || K.editingTextId.value === r.id) return;
-        let i = e => e * $e.value,
+        let handler = e => e * $e.value,
           a = je(r),
-          o = i(4);
-        e.save(), e.setTransform(t, 0, 0, t, n.origin.x * t, n.origin.y * t), e.setLineDash([i(4), i(3)]), e.lineWidth = i(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
-        for (let t of Ce(r)) e.beginPath(), e.arc(t.x, t.y, i(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = i(1.5), e.stroke();
+          o = handler(4);
+        e.save(), e.setTransform(t, 0, 0, t, n.origin.x * t, n.origin.y * t), e.setLineDash([handler(4), handler(3)]), e.lineWidth = handler(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
+        for (let t of Ce(r)) e.beginPath(), e.arc(t.x, t.y, handler(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = handler(1.5), e.stroke();
         e.restore();
       }
       function mt(e) {
         let t = ue.value,
           n = Y.value;
         if (!t || !n) return null;
-        let r = t.getBoundingClientRect();
-        return r.width <= 0 || r.height <= 0 ? null : {
-          x: (e.clientX - r.left) / r.width * n.width - n.origin.x,
-          y: (e.clientY - r.top) / r.height * n.height - n.origin.y
+        let boundingClientRect = t.getBoundingClientRect();
+        return boundingClientRect.width <= 0 || boundingClientRect.height <= 0 ? null : {
+          x: (e.clientX - boundingClientRect.left) / boundingClientRect.width * n.width - n.origin.x,
+          y: (e.clientY - boundingClientRect.top) / boundingClientRect.height * n.height - n.origin.y
         };
       }
       function ht() {
@@ -1462,9 +1462,9 @@ var mn = {
             saveAs: e
           }));
           if (!i) return;
-          let a = i.filePath.split(/[\\/]/).pop() || i.filePath;
+          let fallbackValue = i.filePath.split(/[\\/]/).pop() || i.filePath;
           Z(G(`ToastSaved`, {
-            name: a
+            name: fallbackValue
           }), {
             label: G(`ToastReveal`),
             run: () => editor.revealFile(i.filePath)
@@ -1534,7 +1534,7 @@ var mn = {
         if (!l.value || e.isComposing) return;
         let t = e.target;
         if (t && (t.tagName === `INPUT` || t.tagName === `TEXTAREA` || t.isContentEditable)) return;
-        let n = e.key.toLowerCase(),
+        let lowercased = e.key.toLowerCase(),
           r = Re(e);
         if (e.key === `Escape`) {
           e.preventDefault(), K.cancelDraft() ? Q() : K.selectedId.value ? (K.select(null), Q()) : Mt();
@@ -1544,19 +1544,19 @@ var mn = {
           e.preventDefault(), Dt(true);
           return;
         }
-        if (r && n === `c`) {
+        if (r && lowercased === `c`) {
           e.preventDefault(), Dt(false);
           return;
         }
-        if (r && n === `s`) {
+        if (r && lowercased === `s`) {
           e.preventDefault(), Ot(e.shiftKey);
           return;
         }
-        if (r && n === `z`) {
+        if (r && lowercased === `z`) {
           e.preventDefault(), e.shiftKey ? K.redo() : K.undo(), Q();
           return;
         }
-        if (r && n === `y`) {
+        if (r && lowercased === `y`) {
           e.preventDefault(), K.redo(), Q();
           return;
         }
@@ -1564,14 +1564,14 @@ var mn = {
           e.preventDefault(), K.deleteSelected(), Q();
           return;
         }
-        !r && !e.altKey && !e.ctrlKey && !e.metaKey && on[n] && (e.preventDefault(), Ct(on[n]));
+        !r && !e.altKey && !e.ctrlKey && !e.metaKey && options[lowercased] && (e.preventDefault(), Ct(options[lowercased]));
       }
       function It(e) {
         let t = Math.min(1, 96 / Math.max(e.width, e.height)),
           n = Ee(e.width * t, e.height * t);
         ke(n).drawImage(e, 0, 0, n.width, n.height);
-        let r = n.toDataURL(`image/jpeg`, .7);
-        return Ne(n), r;
+        let toDataURL = n.toDataURL(`image/jpeg`, .7);
+        return Ne(n), toDataURL;
       }
       async function Lt(el) {
         $(), ze(el);

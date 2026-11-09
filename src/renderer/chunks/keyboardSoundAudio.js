@@ -1,7 +1,7 @@
 import { t as e } from "./vue-i18n.runtime.js";
 import { n as t, t as n } from "../i18n/en-US-main.js";
 var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
-  i = {
+  options = {
     id: `custom-sound-pack-1582707445334`,
     name: `CherryMX Blue - ABS keycaps`,
     key_define_type: `single`,
@@ -557,7 +557,7 @@ var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
   x = {
     blue: {
       url: href,
-      config: i
+      config: options
     },
     red: {
       url: a,
@@ -626,7 +626,7 @@ function w(e, t, n, r) {
     l = Math.min(1, t / .0015) * Math.exp(-48 * t);
   return (Math.sin(c) * .34 + Math.sin(c * 2) * .08 + r * .025 * Math.exp(-150 * t)) * l;
 }
-function T(e, t) {
+function T(e, count) {
   let n = {
       "mobile-crisp": .036,
       "mobile-soft": .048,
@@ -638,30 +638,30 @@ function T(e, t) {
       "minimal-tick": .024
     },
     sampleRate = e.sampleRate,
-    i = n[t],
+    i = n[count],
     a = Math.ceil(i * sampleRate),
     o = Math.ceil((i + .008) * sampleRate),
-    s = e.createBuffer(1, o * f, sampleRate),
-    c = s.getChannelData(0),
-    l = [];
+    buffer = e.createBuffer(1, o * f, sampleRate),
+    channelData = buffer.getChannelData(0),
+    emptyItems = [];
   for (let e = 0; e < f; e += 1) {
     let n = e * o,
-      s = C(1295788826 + e * 7919 + t.length * 104729);
+      s = C(1295788826 + e * 7919 + count.length * 104729);
     for (let o = 0; o < a; o += 1) {
       let a = o / sampleRate,
         l = Math.min(1, (i - a) / .004),
-        u = w(t, a, e, s()) * Math.max(0, l);
-      c[n + o] = Math.max(-.95, Math.min(.95, u));
+        u = w(count, a, e, s()) * Math.max(0, l);
+      channelData[n + o] = Math.max(-.95, Math.min(.95, u));
     }
-    l.push({
+    emptyItems.push({
       offsetSeconds: n / sampleRate,
       durationSeconds: i
     });
   }
   return {
-    type: t,
-    buffer: s,
-    segments: l
+    type: count,
+    buffer: buffer,
+    segments: emptyItems
   };
 }
 function E(text) {
@@ -674,16 +674,16 @@ function E(text) {
     };
   });
 }
-function D(e, t, items) {
-  let sampleRate = t.sampleRate,
+function D(e, count, items) {
+  let sampleRate = count.sampleRate,
     i = Array.from({
-      length: t.numberOfChannels
-    }, (e, n) => t.getChannelData(n)),
+      length: count.numberOfChannels
+    }, (e, n) => count.getChannelData(n)),
     a = Math.round(sampleRate * v),
     o = Math.round(sampleRate * b),
-    s = items.map(e => {
-      let n = Math.min(t.length, Math.max(0, Math.round(e.offsetSeconds * sampleRate))),
-        o = Math.min(t.length, n + Math.round(e.durationSeconds * sampleRate)),
+    filtered = items.map(item => {
+      let n = Math.min(count.length, Math.max(0, Math.round(item.offsetSeconds * sampleRate))),
+        o = Math.min(count.length, n + Math.round(item.durationSeconds * sampleRate)),
         s = 0;
       for (let e of i) for (let t = n; t < o; t += 1) s = Math.max(s, Math.abs(e[t]));
       let c = n,
@@ -697,53 +697,53 @@ function D(e, t, items) {
         onset: c,
         end: o
       };
-    }).filter(e => e.end > e.start),
-    c = s.reduce((e, t) => e + t.end - t.start + o, 0),
-    l = e.createBuffer(t.numberOfChannels, Math.max(1, c), sampleRate),
+    }).filter(item => item.end > item.start),
+    reduced = filtered.reduce((acc, cur) => acc + cur.end - cur.start + o, 0),
+    buffer = e.createBuffer(count.numberOfChannels, Math.max(1, reduced), sampleRate),
     u = Math.max(1, Math.round(sampleRate * y)),
-    d = [],
+    emptyItems = [],
     f = 0;
-  for (let e of s) {
+  for (let e of filtered) {
     let t = e.end - e.start,
       n = e.onset - e.start;
     for (let r = 0; r < i.length; r += 1) {
       let a = i[r],
-        o = l.getChannelData(r);
+        channelData = buffer.getChannelData(r);
       for (let r = 0; r < t; r += 1) {
         let i = r < n ? (r + 1) / (n + 1) : 1,
           s = r >= t - u ? Math.max(0, (t - r - 1) / u) : 1;
-        o[f + r] = a[e.start + r] * i * s;
+        channelData[f + r] = a[e.start + r] * i * s;
       }
     }
-    d.push({
+    emptyItems.push({
       offsetSeconds: f / sampleRate,
       durationSeconds: t / sampleRate
     }), f += t + o;
   }
   return {
-    buffer: l,
-    segments: d
+    buffer: buffer,
+    segments: emptyItems
   };
 }
 function O() {
-  let e = new Float32Array(g);
-  for (let t = 0; t < e.length; t += 1) {
-    let n = t / (e.length - 1) * 2 - 1,
+  let float32Array = new Float32Array(g);
+  for (let t = 0; t < float32Array.length; t += 1) {
+    let n = t / (float32Array.length - 1) * 2 - 1,
       r = Math.abs(n);
     if (r <= h) {
-      e[t] = n;
+      float32Array[t] = n;
       continue;
     }
     let i = .09999999999999998,
       a = h + i * (1 - Math.exp(-(r - h) / i));
-    e[t] = Math.sign(n) * a;
+    float32Array[t] = Math.sign(n) * a;
   }
-  return e;
+  return float32Array;
 }
 var k = class {
   hosts;
-  constructor(e) {
-    this.hosts = e;
+  constructor(constructor) {
+    this.hosts = constructor;
   }
   context = null;
   masterGain = null;
@@ -759,33 +759,33 @@ var k = class {
   customScope = `guest`;
   async configure(options) {
     if (options.customScope !== undefined && options.customScope !== this.customScope && (this.customScope = options.customScope, this.invalidateCustomSound()), this.enabled = options.enabled, this.switchType = options.switchType, this.volume = Math.max(0, Math.min(100, Math.round(options.volume))), this.applyVolume(), this.enabled) {
-      let e = this.getContext();
-      await Promise.all([e.state === `suspended` ? e.resume() : Promise.resolve(), this.loadPack(this.switchType)]);
+      let context = this.getContext();
+      await Promise.all([context.state === `suspended` ? context.resume() : Promise.resolve(), this.loadPack(this.switchType)]);
     }
   }
   async preview(e = this.switchType) {
-    let t = await this.loadPack(e),
-      n = this.getContext();
-    n.state === `suspended` && (await n.resume()), this.playFromPack(t);
+    let pack = await this.loadPack(e),
+      context = this.getContext();
+    context.state === `suspended` && (await context.resume()), this.playFromPack(pack);
   }
-  async previewCustomCandidate(e) {
-    let t = await this.createCustomPack(e),
-      n = this.getContext();
-    return n.state === `suspended` && (await n.resume()), this.playFromPack(t), Math.round(t.segments[0].durationSeconds * 1e3);
+  async previewCustomCandidate(preview) {
+    let customPack = await this.createCustomPack(preview),
+      context = this.getContext();
+    return context.state === `suspended` && (await context.resume()), this.playFromPack(customPack), Math.round(customPack.segments[0].durationSeconds * 1e3);
   }
   async isCustomSoundAvailable() {
     return (await this.loadPack(`custom`)).usesFallback !== true;
   }
   invalidateCustomSound() {
     this.loadedPack?.type === `custom` && (this.loadedPack = null), this.loadingType === `custom` && (this.loadingPack = null, this.loadingType = null);
-    for (let e of this.activeVoices) if (e.type === `custom`) try {
-      e.source.stop();
+    for (let count of this.activeVoices) if (count.type === `custom`) try {
+      count.source.stop();
     } catch {}
-    this.activeVoices = this.activeVoices.filter(e => e.type !== `custom`), this.applyVolume();
+    this.activeVoices = this.activeVoices.filter(item => item.type !== `custom`), this.applyVolume();
   }
   dispose() {
-    for (let e of this.activeVoices) try {
-      e.source.stop();
+    for (let count of this.activeVoices) try {
+      count.source.stop();
     } catch {}
     this.activeVoices = [], this.outputLimiter?.disconnect(), this.context?.close(), this.context = null, this.masterGain = null, this.outputLimiter = null, this.loadedPack = null, this.loadingPack = null, this.loadingType = null;
   }
@@ -803,9 +803,9 @@ var k = class {
       this.context = new AudioContext({
         latencyHint: .005
       });
-      let e = this.context.createGain(),
-        t = this.context.createWaveShaper();
-      t.curve = O(), t.oversample = `none`, e.connect(t), t.connect(this.context.destination), this.masterGain = e, this.outputLimiter = t, this.applyVolume();
+      let gain = this.context.createGain(),
+        waveShaper = this.context.createWaveShaper();
+      waveShaper.curve = O(), waveShaper.oversample = `none`, gain.connect(waveShaper), waveShaper.connect(this.context.destination), this.masterGain = gain, this.outputLimiter = waveShaper, this.applyVolume();
     }
     return this.context;
   }
@@ -814,30 +814,30 @@ var k = class {
     let e = this.volume / 100;
     this.masterGain.gain.setTargetAtTime(e * e, this.context.currentTime, .003);
   }
-  async loadPack(e) {
-    if (this.loadedPack?.type === e) return this.loadedPack;
-    if (this.loadingPack && this.loadingType === e) return this.loadingPack;
-    let t = this.getContext();
-    this.loadingType = e;
-    let n = x[e],
-      r = (e === `custom` ? this.loadCustomPack() : S(e) ? Promise.resolve(T(t, e)) : this.loadRecordedPack(e, n)).then(t => {
-        if (t.segments.length === 0) throw Error(this.hosts.t(`keyboardSoundErrors.noSegments`));
-        return this.loadingType === e && (this.loadedPack = t, this.lastSegmentIndex = -1), t;
+  async loadPack(pack) {
+    if (this.loadedPack?.type === pack) return this.loadedPack;
+    if (this.loadingPack && this.loadingType === pack) return this.loadingPack;
+    let context = this.getContext();
+    this.loadingType = pack;
+    let n = x[pack],
+      r = (pack === `custom` ? this.loadCustomPack() : S(pack) ? Promise.resolve(T(context, pack)) : this.loadRecordedPack(pack, n)).then(result => {
+        if (result.segments.length === 0) throw Error(this.hosts.t(`keyboardSoundErrors.noSegments`));
+        return this.loadingType === pack && (this.loadedPack = result, this.lastSegmentIndex = -1), result;
       }).finally(() => {
-        this.loadingType === e && (this.loadingPack = null, this.loadingType = null);
+        this.loadingType === pack && (this.loadingPack = null, this.loadingType = null);
       });
     return this.loadingPack = r, r;
   }
-  async loadRecordedPack(e, t = x[e]) {
+  async loadRecordedPack(recorded, t = x[recorded]) {
     if (!t) throw Error(this.hosts.t(`keyboardSoundErrors.resourceMissing`));
     let n = await fetch(t.url);
     if (!n.ok) throw Error(this.hosts.t(`keyboardSoundErrors.loadFailed`, {
       status: n.status
     }));
-    let r = this.getContext();
+    let context = this.getContext();
     return {
-      type: e,
-      ...D(r, await r.decodeAudioData(await n.arrayBuffer()), E(t.config))
+      type: recorded,
+      ...D(context, await context.decodeAudioData(await n.arrayBuffer()), E(t.config))
     };
   }
   async loadCustomPack() {
@@ -851,51 +851,51 @@ var k = class {
       usesFallback: true
     };
   }
-  async createCustomPack(e) {
-    if (!(e instanceof Uint8Array) || e.byteLength === 0) throw Error(this.hosts.t(`keyboardSoundErrors.invalidData`));
-    let t = this.getContext(),
-      n = new Uint8Array(e.byteLength);
-    n.set(e);
-    let r = await t.decodeAudioData(n.buffer);
-    if (r.numberOfChannels < 1 || r.numberOfChannels > 2 || r.length <= 0 || r.duration <= 0 || r.duration > 3.05) throw Error(this.hosts.t(`keyboardSoundErrors.invalidChannels`));
+  async createCustomPack(custom) {
+    if (!(custom instanceof Uint8Array) || custom.byteLength === 0) throw Error(this.hosts.t(`keyboardSoundErrors.invalidData`));
+    let context = this.getContext(),
+      uint8Array = new Uint8Array(custom.byteLength);
+    uint8Array.set(custom);
+    let decodeAudioData = await context.decodeAudioData(uint8Array.buffer);
+    if (decodeAudioData.numberOfChannels < 1 || decodeAudioData.numberOfChannels > 2 || decodeAudioData.length <= 0 || decodeAudioData.duration <= 0 || decodeAudioData.duration > 3.05) throw Error(this.hosts.t(`keyboardSoundErrors.invalidChannels`));
     let i = 0;
-    for (let e = 0; e < r.numberOfChannels; e += 1) {
-      let t = r.getChannelData(e);
-      for (let e = 0; e < t.length; e += 1) {
-        let n = t[e];
+    for (let e = 0; e < decodeAudioData.numberOfChannels; e += 1) {
+      let channelData = decodeAudioData.getChannelData(e);
+      for (let e = 0; e < channelData.length; e += 1) {
+        let n = channelData[e];
         if (!Number.isFinite(n)) throw Error(this.hosts.t(`keyboardSoundErrors.invalidSamples`));
         i = Math.max(i, Math.abs(n));
       }
     }
     if (i < .003) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
     let a = Math.max(.003, i * .025),
-      o = r.length,
+      o = decodeAudioData.length,
       s = -1;
-    for (let e = 0; e < r.length; e += 1) {
+    for (let e = 0; e < decodeAudioData.length; e += 1) {
       let t = false;
-      for (let n = 0; n < r.numberOfChannels; n += 1) if (Math.abs(r.getChannelData(n)[e]) >= a) {
+      for (let n = 0; n < decodeAudioData.numberOfChannels; n += 1) if (Math.abs(decodeAudioData.getChannelData(n)[e]) >= a) {
         t = true;
         break;
       }
       t && (o = Math.min(o, e), s = e);
     }
     if (s < o) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
-    let c = Math.round(r.sampleRate * .001),
-      l = Math.round(r.sampleRate * p),
-      u = Math.round(r.sampleRate * m),
+    let c = Math.round(decodeAudioData.sampleRate * .001),
+      l = Math.round(decodeAudioData.sampleRate * p),
+      u = Math.round(decodeAudioData.sampleRate * m),
       d = Math.max(0, o - c),
-      f = Math.min(r.length, s + 1),
+      f = Math.min(decodeAudioData.length, s + 1),
       h = Math.min(l, Math.max(1, f - d)),
       g = Math.max(u, h),
-      _ = t.createBuffer(r.numberOfChannels, g, r.sampleRate),
+      _ = context.createBuffer(decodeAudioData.numberOfChannels, g, decodeAudioData.sampleRate),
       v = Math.min(6, .8 / i),
-      y = Math.max(1, Math.round(r.sampleRate * .004));
-    for (let e = 0; e < r.numberOfChannels; e += 1) {
-      let t = r.getChannelData(e),
-        n = _.getChannelData(e);
+      y = Math.max(1, Math.round(decodeAudioData.sampleRate * .004));
+    for (let e = 0; e < decodeAudioData.numberOfChannels; e += 1) {
+      let channelData = decodeAudioData.getChannelData(e),
+        channelDataResult = _.getChannelData(e);
       for (let e = 0; e < h; e += 1) {
         let r = e >= h - y ? Math.max(0, (h - e - 1) / y) : 1;
-        n[e] = Math.max(-.95, Math.min(.95, t[d + e] * v * r));
+        channelDataResult[e] = Math.max(-.95, Math.min(.95, channelData[d + e] * v * r));
       }
     }
     return {
@@ -907,30 +907,30 @@ var k = class {
       }]
     };
   }
-  playFromPack(e) {
-    let t = this.getContext(),
+  playFromPack(play) {
+    let context = this.getContext(),
       masterGain = this.masterGain;
-    if (!masterGain || e.segments.length === 0) return;
+    if (!masterGain || play.segments.length === 0) return;
     if (this.activeVoices.length >= d) {
-      let e = this.activeVoices.reduce((e, t) => e.startedAt <= t.startedAt ? e : t);
+      let reduced = this.activeVoices.reduce((acc, cur) => acc.startedAt <= cur.startedAt ? acc : cur);
       try {
-        e.source.stop();
+        reduced.source.stop();
       } catch {}
-      this.activeVoices = this.activeVoices.filter(t => t !== e);
+      this.activeVoices = this.activeVoices.filter(item => item !== reduced);
     }
-    let r = Math.floor(Math.random() * e.segments.length);
-    e.segments.length > 1 && r === this.lastSegmentIndex && (r = (r + 1 + Math.floor(Math.random() * (e.segments.length - 1))) % e.segments.length), this.lastSegmentIndex = r;
-    let i = e.segments[r],
-      a = t.createBufferSource();
-    a.buffer = e.buffer, a.connect(masterGain);
+    let r = Math.floor(Math.random() * play.segments.length);
+    play.segments.length > 1 && r === this.lastSegmentIndex && (r = (r + 1 + Math.floor(Math.random() * (play.segments.length - 1))) % play.segments.length), this.lastSegmentIndex = r;
+    let i = play.segments[r],
+      bufferSource = context.createBufferSource();
+    bufferSource.buffer = play.buffer, bufferSource.connect(masterGain);
     let o = {
-      source: a,
-      startedAt: t.currentTime,
-      type: e.type
+      source: bufferSource,
+      startedAt: context.currentTime,
+      type: play.type
     };
-    this.activeVoices.push(o), a.onended = () => {
-      this.activeVoices = this.activeVoices.filter(e => e !== o), a.disconnect();
-    }, a.start(0, i.offsetSeconds, i.durationSeconds);
+    this.activeVoices.push(o), bufferSource.onended = () => {
+      this.activeVoices = this.activeVoices.filter(item => item !== o), bufferSource.disconnect();
+    }, bufferSource.start(0, i.offsetSeconds, i.durationSeconds);
   }
 };
 function A(e) {
@@ -948,9 +948,9 @@ var keyboardSoundAudioAPI = window.keyboardSoundAudioAPI,
   }),
   N = A({
     loadCustomFile: async () => {
-      let e = await keyboardSoundAudioAPI.loadCustomFile();
-      return !e.ok || !e.data ? null : {
-        data: e.data.data
+      let customFile = await keyboardSoundAudioAPI.loadCustomFile();
+      return !customFile.ok || !customFile.data ? null : {
+        data: customFile.data.data
       };
     },
     t: (e, t) => String(M.global.t(e, t ?? {}))
@@ -998,10 +998,10 @@ async function F(e) {
   }
   if (e.type === `previewCustom`) {
     try {
-      let t = await N.previewCustomCandidate(e.data);
+      let previewCustomCandidate = await N.previewCustomCandidate(e.data);
       P(e.requestId, {
         ok: true,
-        processedDurationMs: t
+        processedDurationMs: previewCustomCandidate
       });
     } catch (t) {
       P(e.requestId, {
@@ -1012,10 +1012,10 @@ async function F(e) {
     return;
   }
   if (e.type === `probeCustom`) try {
-    let t = await N.isCustomSoundAvailable();
+    let isCustomSoundAvailable = await N.isCustomSoundAvailable();
     P(e.requestId, {
       ok: true,
-      customAvailable: t
+      customAvailable: isCustomSoundAvailable
     });
   } catch (t) {
     P(e.requestId, {

@@ -1,25 +1,25 @@
 import { $n as e, An as t, Ct as n, E as r, S as i, Wt as a, Yt as o, Zt as s, b as c, bn as l, f as u, gt as d, j as f, k as p, mt as ee, nr as te, ot as ne, rr as re, rt as ie, ut as m, v as h, x as ae, y as g, z as oe } from "../chunks/vue-i18n.runtime.js";
 import { E as se, w as ce } from "../i18n/en-US-player.js";
 import { D as le, E as ue, F as de, I as fe, J as pe, K as me, N as he, P as ge, R as _e, V as ve, W as ye, X as be, q as xe, v as Se, y as _, z as Ce } from "../chunks/main.js";
-var we = Object.defineProperty,
+var defineProperty = Object.defineProperty,
   Te = Object.defineProperties,
-  v = Object.getOwnPropertyDescriptors,
+  getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
   Ee = Object.getOwnPropertySymbols,
   De = Object.prototype.hasOwnProperty,
-  y = Object.prototype.propertyIsEnumerable,
-  b = (e, t, n) => t in e ? we(e, t, {
+  propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
+  handler = (e, t, n) => t in e ? defineProperty(e, t, {
     enumerable: true,
     configurable: true,
     writable: true,
     value: n
   }) : e[t] = n,
   x = (e, t) => {
-    for (var n in t ||= {}) De.call(t, n) && b(e, n, t[n]);
-    if (Ee) for (var n of Ee(t)) y.call(t, n) && b(e, n, t[n]);
+    for (var n in t ||= {}) De.call(t, n) && handler(e, n, t[n]);
+    if (Ee) for (var n of Ee(t)) propertyIsEnumerable.call(t, n) && handler(e, n, t[n]);
     return e;
   },
-  S = (e, t) => Te(e, v(t)),
-  C = (e, t, n) => new Promise((r, i) => {
+  S = (e, t) => Te(e, getOwnPropertyDescriptors(t)),
+  C = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -34,7 +34,7 @@ var we = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(e, t)).next());
   }),
   Oe = {
@@ -69,17 +69,17 @@ var we = Object.defineProperty,
           t: i
         } = ge(),
         a = h(() => {
-          let e = r.code || ``,
-            t = e.trim().toLowerCase();
-          return t.startsWith(`<!doctype`) || t.startsWith(`<html`) || t.startsWith(`<body`) ? e : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${r.isDark ? `#020617` : `#ffffff`};\n        color: ${r.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${e}\n  </body>\n</html>`;
+          let fallbackValue = r.code || ``,
+            lowercased = fallbackValue.trim().toLowerCase();
+          return lowercased.startsWith(`<!doctype`) || lowercased.startsWith(`<html`) || lowercased.startsWith(`<body`) ? fallbackValue : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${r.isDark ? `#020617` : `#ffffff`};\n        color: ${r.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${fallbackValue}\n  </body>\n</html>`;
         }),
         o = h(() => {
-          return e = r.htmlPreviewSandbox, t = r.htmlPreviewAllowScripts, typeof e == `string` ? e : e === undefined && true === t ? `allow-scripts` : ``;
-          var e, t;
+          return htmlPreviewSandbox = r.htmlPreviewSandbox, payload = r.htmlPreviewAllowScripts, typeof htmlPreviewSandbox == `string` ? htmlPreviewSandbox : htmlPreviewSandbox === undefined && true === payload ? `allow-scripts` : ``;
+          var htmlPreviewSandbox, payload;
         });
-      function s(e) {
-        var t;
-        e.key !== `Escape` && e.key !== `Esc` || (t = r.onClose) == null || t.call(r);
+      function s(event) {
+        var payload;
+        event.key !== `Escape` && event.key !== `Esc` || (payload = r.onClose) == null || payload.call(r);
       }
       return m(() => {
         typeof window < `u` && window.addEventListener(`keydown`, s);
@@ -247,8 +247,8 @@ var we = Object.defineProperty,
         Xe = l(null),
         M = l(typeof window > `u`);
       typeof window < `u` && a(() => Ee.value, e => {
-        var t;
-        if ((t = Xe.value) == null || t.destroy(), Xe.value = null, !e) return void (M.value = false);
+        var payload;
+        if ((payload = Xe.value) == null || payload.destroy(), Xe.value = null, !e) return void (M.value = false);
         let n = Ye(e, {
           rootMargin: `400px`
         });
@@ -258,8 +258,8 @@ var we = Object.defineProperty,
       }, {
         immediate: true
       }), ne(() => {
-        var e;
-        k = true, (e = Xe.value) == null || e.destroy(), Xe.value = null;
+        var htmlPreviewSandbox;
+        k = true, (htmlPreviewSandbox = Xe.value) == null || htmlPreviewSandbox.destroy(), Xe.value = null;
       });
       let N = null,
         Ze = null,
@@ -286,7 +286,7 @@ var we = Object.defineProperty,
         I = null,
         it = () => String(m.node.language ?? `plaintext`),
         at = () => C(null, null, function* () {}),
-        L = [],
+        emptyItems = [],
         ot = [],
         R = null,
         z = h(() => m.node.diff),
@@ -305,12 +305,12 @@ var we = Object.defineProperty,
           revealLineCount: 5
         });
       function ut(e) {
-        var t;
+        var payload;
         if (typeof e == `boolean`) return e;
         if (e && typeof e == `object`) {
           let n = e;
           return S(x(x({}, lt), n), {
-            enabled: (t = n.enabled) == null || t
+            enabled: (payload = n.enabled) == null || payload
           });
         }
         return x({}, lt);
@@ -322,7 +322,7 @@ var we = Object.defineProperty,
         };
       }
       let V = h(() => {
-          var e;
+          var htmlPreviewSandbox;
           let t = m.monacoOptions ? x({}, m.monacoOptions) : {};
           if (!z.value) return t;
           let n = t.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(t.diffHideUnchangedRegions),
@@ -331,7 +331,7 @@ var we = Object.defineProperty,
             a = i ? x({}, ct) : n,
             o = i ? x({}, ct) : r,
             s = x({}, t.experimental ?? {}),
-            c = t.diffUnchangedRegionStyle ?? `line-info`;
+            fallbackValue = t.diffUnchangedRegionStyle ?? `line-info`;
           return S(x(S(x(x({}, {
             maxComputationTime: 0,
             diffAlgorithm: `legacy`,
@@ -351,10 +351,10 @@ var we = Object.defineProperty,
             hideCursorInOverviewRuler: true,
             scrollBeyondLastLine: false,
             diffHideUnchangedRegions: a,
-            useInlineViewWhenSpaceIsLimited: (e = t.useInlineViewWhenSpaceIsLimited) != null && e,
+            useInlineViewWhenSpaceIsLimited: (htmlPreviewSandbox = t.useInlineViewWhenSpaceIsLimited) != null && htmlPreviewSandbox,
             diffLineStyle: `background`,
             diffAppearance: `auto`,
-            diffUnchangedRegionStyle: c,
+            diffUnchangedRegionStyle: fallbackValue,
             diffHunkActionsOnHover: false,
             experimental: s
           }), t), {
@@ -381,14 +381,14 @@ var we = Object.defineProperty,
           let e = yield Ce();
           if (k) return;
           if (!e) return void (mt.value = true);
-          let t = e.useMonaco,
-            n = e.detectLanguage;
-          if (typeof n == `function` && (it = n), typeof t == `function`) {
+          let useMonaco = e.useMonaco,
+            detectLanguage = e.detectLanguage;
+          if (typeof detectLanguage == `function` && (it = detectLanguage), typeof useMonaco == `function`) {
             let e = pn();
             if (e && m.themes && Array.isArray(m.themes) && !m.themes.includes(e)) throw Error(`Preferred theme not in provided themes array`);
             R = _n();
-            let n = t(R);
-            N = n.createEditor || N, Ze = n.createDiffEditor || Ze, Qe = n.updateCode || Qe, $e = n.updateDiff || $e, et = n.getEditor || et, P = n.getEditorView || P, F = n.getDiffEditorView || F, tt = n.cleanupEditor || tt, nt = n.safeClean || n.cleanupEditor || nt, rt = n.refreshDiffPresentation || rt, at = n.setTheme || at, Ge.value = true, !k && v.value && (yield ln(v.value));
+            let useMonacoResult = useMonaco(R);
+            N = useMonacoResult.createEditor || N, Ze = useMonacoResult.createDiffEditor || Ze, Qe = useMonacoResult.updateCode || Qe, $e = useMonacoResult.updateDiff || $e, et = useMonacoResult.getEditor || et, P = useMonacoResult.getEditorView || P, F = useMonacoResult.getDiffEditorView || F, tt = useMonacoResult.cleanupEditor || tt, nt = useMonacoResult.safeClean || useMonacoResult.cleanupEditor || nt, rt = useMonacoResult.refreshDiffPresentation || rt, at = useMonacoResult.setTheme || at, Ge.value = true, !k && v.value && (yield ln(v.value));
           }
         } catch {
           if (k) return;
@@ -424,12 +424,12 @@ var we = Object.defineProperty,
           };
         }),
         G = h(() => {
-          let e = m.estimatedContentHeightPx;
-          return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : null;
+          let estimatedContentHeightPx = m.estimatedContentHeightPx;
+          return typeof estimatedContentHeightPx == `number` && Number.isFinite(estimatedContentHeightPx) && estimatedContentHeightPx > 0 ? estimatedContentHeightPx : null;
         }),
         wt = h(() => {
-          let e = m.estimatedHeightPx;
-          return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : null;
+          let estimatedHeightPx = m.estimatedHeightPx;
+          return typeof estimatedHeightPx == `number` && Number.isFinite(estimatedHeightPx) && estimatedHeightPx > 0 ? estimatedHeightPx : null;
         }),
         Tt = h(() => {
           let e = m.monacoOptions?.fontFamily;
@@ -471,9 +471,9 @@ var we = Object.defineProperty,
         });
       }
       function jt() {
-        var e;
+        var htmlPreviewSandbox;
         try {
-          let t = z.value ? (e = F())?.getModifiedEditor?.call(e) ?? F() : P(),
+          let t = z.value ? (htmlPreviewSandbox = F())?.getModifiedEditor?.call(htmlPreviewSandbox) ?? F() : P(),
             n = et()?.EditorOption?.fontInfo;
           if (t && n != null) {
             let e = t.getOption?.call(t, n)?.fontSize;
@@ -483,11 +483,11 @@ var we = Object.defineProperty,
         try {
           let e = v.value;
           if (e) {
-            let t = e.querySelector(`.view-lines .view-line`);
-            if (t) try {
+            let selector = e.querySelector(`.view-lines .view-line`);
+            if (selector) try {
               if (typeof window < `u` && typeof window.getComputedStyle == `function`) {
-                let e = window.getComputedStyle(t).fontSize,
-                  n = e && e.match(/^(\d+(?:\.\d+)?)/);
+                let fontSize = window.getComputedStyle(selector).fontSize,
+                  n = fontSize && fontSize.match(/^(\d+(?:\.\d+)?)/);
                 if (n) return Number.parseFloat(n[1]);
               }
             } catch {}
@@ -495,11 +495,11 @@ var we = Object.defineProperty,
         } catch {}
         return null;
       }
-      function Mt(e) {
+      function Mt(el) {
         try {
           let t = et()?.EditorOption?.lineHeight;
           if (t != null) {
-            let n = e?.getOption?.call(e, t);
+            let n = el?.getOption?.call(el, t);
             if (typeof n == `number` && n > 0) return n;
           }
         } catch {}
@@ -507,9 +507,9 @@ var we = Object.defineProperty,
           try {
             let e = v.value;
             if (!e) return null;
-            let t = e.querySelector(`.view-lines .view-line`);
-            if (t) {
-              let e = Math.ceil(t.getBoundingClientRect().height);
+            let selector = e.querySelector(`.view-lines .view-line`);
+            if (selector) {
+              let e = Math.ceil(selector.getBoundingClientRect().height);
               if (e > 0) return e;
             }
           } catch {}
@@ -537,10 +537,10 @@ var we = Object.defineProperty,
       function Pt(e, t) {
         return typeof e != `number` || typeof t != `number` || e < 1 || t < e ? 0 : t - e + 1;
       }
-      function Ft(e) {
-        if (!e) return [];
-        let t = e.split(/\r?\n/);
-        return t.length === 1 && t[0] === `` ? [] : t;
+      function Ft(text) {
+        if (!text) return [];
+        let parts = text.split(/\r?\n/);
+        return parts.length === 1 && parts[0] === `` ? [] : parts;
       }
       function It() {
         z.value ? B.value = function (e, t) {
@@ -567,7 +567,7 @@ var we = Object.defineProperty,
           if (!Array.isArray(t)) return void It();
           let n = 0,
             r = 0;
-          for (let e of t) n += Pt(e.originalStartLineNumber, e.originalEndLineNumber), r += Pt(e.modifiedStartLineNumber, e.modifiedEndLineNumber);
+          for (let htmlPreviewSandbox of t) n += Pt(htmlPreviewSandbox.originalStartLineNumber, htmlPreviewSandbox.originalEndLineNumber), r += Pt(htmlPreviewSandbox.modifiedStartLineNumber, htmlPreviewSandbox.modifiedEndLineNumber);
           B.value = {
             removed: n,
             added: r
@@ -598,7 +598,7 @@ var we = Object.defineProperty,
         Rt(), Number.isFinite(U.value) && (W.value = U.value);
       }
       function Ht() {
-        var e, t, n, r, i;
+        var htmlPreviewSandbox, payload, n, parentElement, i;
         try {
           let a = z.value ? F() : null,
             o = z.value ? a : P();
@@ -606,21 +606,21 @@ var we = Object.defineProperty,
           if (a?.getOriginalEditor && a?.getModifiedEditor) {
             let i = a.getOriginalEditor?.call(a),
               o = a.getModifiedEditor?.call(a);
-            (e = i?.layout) == null || e.call(i), (t = o?.layout) == null || t.call(o);
-            let s = i?.getContentHeight?.call(i) || 0,
+            (htmlPreviewSandbox = i?.layout) == null || htmlPreviewSandbox.call(i), (payload = o?.layout) == null || payload.call(o);
+            let fallbackValue = i?.getContentHeight?.call(i) || 0,
               c = o?.getContentHeight?.call(o) || 0,
-              l = Math.max(s, c);
+              l = Math.max(fallbackValue, c);
             if (l > 0) return Math.ceil(l + 1);
             let u = (n = i?.getModel?.call(i))?.getLineCount?.call(n) || 1,
-              d = (r = o?.getModel?.call(o))?.getLineCount?.call(r) || 1,
+              d = (parentElement = o?.getModel?.call(o))?.getLineCount?.call(parentElement) || 1,
               f = Math.max(u, d),
               p = Math.max(Mt(i), Mt(o));
             return Math.ceil(f * (p + 1.5) + 0 + 1);
           }
           if (o?.getContentHeight) {
             (i = o?.layout) == null || i.call(o);
-            let e = o.getContentHeight();
-            if (e > 0) return Math.ceil(e + 1);
+            let contentHeight = o.getContentHeight();
+            if (contentHeight > 0) return Math.ceil(contentHeight + 1);
           }
           let s = o?.getModel?.call(o),
             c = 1;
@@ -631,14 +631,14 @@ var we = Object.defineProperty,
           return null;
         }
       }
-      function Ut(e) {
-        let t = String(e ?? ``).trim(),
-          n = t.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1];
+      function Ut(items) {
+        let trimmed = String(items ?? ``).trim(),
+          n = trimmed.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1];
         if (n) {
-          let e = n.length === 3 ? n.split(``).map(e => `${e}${e}`).join(``) : n;
+          let e = n.length === 3 ? n.split(``).map(item => `${item}${item}`).join(``) : n;
           return .2126 * Number.parseInt(e.slice(0, 2), 16) + .7152 * Number.parseInt(e.slice(2, 4), 16) + .0722 * Number.parseInt(e.slice(4, 6), 16);
         }
-        let r = t.match(/\d+(?:\.\d+)?/g);
+        let r = trimmed.match(/\d+(?:\.\d+)?/g);
         if (!r || r.length < 3) return null;
         let [i, a, o] = r.slice(0, 3).map(Number);
         return .2126 * i + .7152 * a + .0722 * o;
@@ -648,53 +648,53 @@ var we = Object.defineProperty,
           t = Ee.value;
         if (!e || !t) return;
         let n = e,
-          r = e.querySelector(`.monaco-editor`) || e,
-          i = r.querySelector(`.monaco-editor-background`) || r,
-          a = r.querySelector(`.view-lines`) || r,
+          fallbackValue = e.querySelector(`.monaco-editor`) || e,
+          fallbackValueValue = fallbackValue.querySelector(`.monaco-editor-background`) || fallbackValue,
+          a = fallbackValue.querySelector(`.view-lines`) || fallbackValue,
           o = null,
-          s = null,
+          resolvedValue = null,
           c = null;
         try {
-          typeof window < `u` && typeof window.getComputedStyle == `function` && (o = window.getComputedStyle(r), s = i === r ? o : window.getComputedStyle(i), c = a === r ? o : window.getComputedStyle(a));
+          typeof window < `u` && typeof window.getComputedStyle == `function` && (o = window.getComputedStyle(fallbackValue), resolvedValue = fallbackValueValue === fallbackValue ? o : window.getComputedStyle(fallbackValueValue), c = a === fallbackValue ? o : window.getComputedStyle(a));
         } catch {
-          o = null, s = null, c = null;
+          o = null, resolvedValue = null, c = null;
         }
-        let l = String(o?.getPropertyValue(`--vscode-editor-foreground`) ?? ``).trim(),
+        let trimmed = String(o?.getPropertyValue(`--vscode-editor-foreground`) ?? ``).trim(),
           u = String(o?.getPropertyValue(`--vscode-editor-background`) ?? ``).trim(),
           d = String(o?.getPropertyValue(`--vscode-editor-selectionBackground`) ?? o?.getPropertyValue(`--vscode-editor-hoverHighlightBackground`) ?? ``).trim(),
-          f = l || String(c?.color ?? o?.color ?? ``).trim(),
-          p = u || String(s?.backgroundColor ?? o?.backgroundColor ?? ``).trim();
-        z.value ? (f ? (t.style.setProperty(`--markstream-diff-editor-fg`, f), n.style.setProperty(`--vscode-editor-foreground`, f), n.style.setProperty(`--stream-monaco-editor-fg`, f)) : (t.style.removeProperty(`--markstream-diff-editor-fg`), n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--stream-monaco-editor-fg`)), p ? (t.style.setProperty(`--markstream-diff-editor-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg-soft`, p), t.style.setProperty(`--markstream-diff-panel-bg-strong`, p), n.style.setProperty(`--vscode-editor-background`, p), n.style.setProperty(`--stream-monaco-editor-bg`, p), n.style.setProperty(`--stream-monaco-fixed-editor-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg-soft`, p), n.style.setProperty(`--stream-monaco-panel-bg-strong`, p), n.style.backgroundColor = p) : (t.style.removeProperty(`--markstream-diff-editor-bg`), t.style.removeProperty(`--markstream-diff-panel-bg`), t.style.removeProperty(`--markstream-diff-panel-bg-soft`), t.style.removeProperty(`--markstream-diff-panel-bg-strong`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--stream-monaco-editor-bg`), n.style.removeProperty(`--stream-monaco-fixed-editor-bg`), n.style.removeProperty(`--stream-monaco-panel-bg`), n.style.removeProperty(`--stream-monaco-panel-bg-soft`), n.style.removeProperty(`--stream-monaco-panel-bg-strong`), n.style.backgroundColor = ``), d ? n.style.setProperty(`--vscode-editor-selectionBackground`, d) : n.style.removeProperty(`--vscode-editor-selectionBackground`)) : function (e, t, n) {
+          trimmedValue = trimmed || String(c?.color ?? o?.color ?? ``).trim(),
+          p = u || String(resolvedValue?.backgroundColor ?? o?.backgroundColor ?? ``).trim();
+        z.value ? (trimmedValue ? (t.style.setProperty(`--markstream-diff-editor-fg`, trimmedValue), n.style.setProperty(`--vscode-editor-foreground`, trimmedValue), n.style.setProperty(`--stream-monaco-editor-fg`, trimmedValue)) : (t.style.removeProperty(`--markstream-diff-editor-fg`), n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--stream-monaco-editor-fg`)), p ? (t.style.setProperty(`--markstream-diff-editor-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg-soft`, p), t.style.setProperty(`--markstream-diff-panel-bg-strong`, p), n.style.setProperty(`--vscode-editor-background`, p), n.style.setProperty(`--stream-monaco-editor-bg`, p), n.style.setProperty(`--stream-monaco-fixed-editor-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg-soft`, p), n.style.setProperty(`--stream-monaco-panel-bg-strong`, p), n.style.backgroundColor = p) : (t.style.removeProperty(`--markstream-diff-editor-bg`), t.style.removeProperty(`--markstream-diff-panel-bg`), t.style.removeProperty(`--markstream-diff-panel-bg-soft`), t.style.removeProperty(`--markstream-diff-panel-bg-strong`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--stream-monaco-editor-bg`), n.style.removeProperty(`--stream-monaco-fixed-editor-bg`), n.style.removeProperty(`--stream-monaco-panel-bg`), n.style.removeProperty(`--stream-monaco-panel-bg-soft`), n.style.removeProperty(`--stream-monaco-panel-bg-strong`), n.style.backgroundColor = ``), d ? n.style.setProperty(`--vscode-editor-selectionBackground`, d) : n.style.removeProperty(`--vscode-editor-selectionBackground`)) : function (e, t, n) {
           if (!Oe.value) return false;
           let r = Ut(e),
             i = Ut(t);
           return n ? r != null && r > 170 || i != null && i < 110 : r != null && r < 85 || i != null && i > 190;
-        }(p, f, t.classList.contains(`is-dark`)) ? (n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--vscode-editor-selectionBackground`)) : (f && n.style.setProperty(`--vscode-editor-foreground`, f), p && n.style.setProperty(`--vscode-editor-background`, p), d && n.style.setProperty(`--vscode-editor-selectionBackground`, d));
+        }(p, trimmedValue, t.classList.contains(`is-dark`)) ? (n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--vscode-editor-selectionBackground`)) : (trimmedValue && n.style.setProperty(`--vscode-editor-foreground`, trimmedValue), p && n.style.setProperty(`--vscode-editor-background`, p), d && n.style.setProperty(`--vscode-editor-selectionBackground`, d));
       }
       let Gt = /auto|scroll|overlay/i;
-      function q(e, t, n) {
+      function q(el, t, n) {
         if (typeof window > `u` || z.value) return;
         let r = Math.ceil(n) - Math.ceil(t);
         if (!r) return;
         let i = function (e) {
           if (typeof window > `u`) return null;
-          let t = e?.ownerDocument ?? document,
-            n = t.scrollingElement || t.documentElement || t.body,
+          let documentValue = e?.ownerDocument ?? document,
+            fallbackValue = documentValue.scrollingElement || documentValue.documentElement || documentValue.body,
             r = e?.parentElement ?? null;
-          for (; r && r !== t.body && r !== n;) {
-            let e = window.getComputedStyle(r),
-              t = (e.overflowY || ``).toLowerCase(),
-              n = (e.overflow || ``).toLowerCase();
-            if (Gt.test(t) || Gt.test(n)) return r;
+          for (; r && r !== documentValue.body && r !== fallbackValue;) {
+            let computedStyle = window.getComputedStyle(r),
+              lowercased = (computedStyle.overflowY || ``).toLowerCase(),
+              toLowerCase = (computedStyle.overflow || ``).toLowerCase();
+            if (Gt.test(lowercased) || Gt.test(toLowerCase)) return r;
             r = r.parentElement;
           }
-          return n;
-        }(e);
+          return fallbackValue;
+        }(el);
         if (!i) return;
-        let a = e.ownerDocument ?? document,
-          o = i === a.body || i === a.documentElement || i === a.scrollingElement,
-          s = o ? 0 : i.getBoundingClientRect().top;
-        e.getBoundingClientRect().top - s >= 0 || (o && typeof window.scrollBy == `function` ? window.scrollBy(0, r) : i.scrollTop += r);
+        let documentValue = el.ownerDocument ?? document,
+          fallbackValue = i === documentValue.body || i === documentValue.documentElement || i === documentValue.scrollingElement,
+          s = fallbackValue ? 0 : i.getBoundingClientRect().top;
+        el.getBoundingClientRect().top - s >= 0 || (fallbackValue && typeof window.scrollBy == `function` ? window.scrollBy(0, r) : i.scrollTop += r);
       }
       function Kt() {
         try {
@@ -713,14 +713,14 @@ var we = Object.defineProperty,
         } catch {}
       }
       function qt() {
-        for (var e, t; L.length > 0;) try {
-          (t = (e = L.pop())?.dispose) == null || t.call(e);
+        for (var htmlPreviewSandbox, payload; emptyItems.length > 0;) try {
+          (payload = (htmlPreviewSandbox = emptyItems.pop())?.dispose) == null || payload.call(htmlPreviewSandbox);
         } catch {}
         Ke != null && (le(Ke), Ke = null);
       }
       function J() {
-        for (var e; ot.length > 0;) try {
-          (e = ot.pop()) == null || e();
+        for (var htmlPreviewSandbox; ot.length > 0;) try {
+          (htmlPreviewSandbox = ot.pop()) == null || htmlPreviewSandbox();
         } catch {}
       }
       function Y(e = false) {
@@ -732,15 +732,15 @@ var we = Object.defineProperty,
               n = Jt(),
               r = Math.ceil(e.getBoundingClientRect?.call(e).height || 0),
               i = z.value ? function () {
-                var e, t;
+                var htmlPreviewSandbox, payload;
                 try {
                   let n = F(),
                     r = n?.getOriginalEditor?.call(n),
                     i = n?.getModifiedEditor?.call(n);
                   if (!r || !i) return null;
-                  let a = (e = r.getModel?.call(r))?.getLineCount?.call(e) || 1,
-                    o = (t = i.getModel?.call(i))?.getLineCount?.call(t) || 1,
-                    s = Math.max(a, o),
+                  let fallbackValue = (htmlPreviewSandbox = r.getModel?.call(r))?.getLineCount?.call(htmlPreviewSandbox) || 1,
+                    o = (payload = i.getModel?.call(i))?.getLineCount?.call(payload) || 1,
+                    s = Math.max(fallbackValue, o),
                     c = Math.max(Mt(r), Mt(i)),
                     l = Math.max(Nt(r), Nt(i));
                   return Math.ceil(s * (c + 1.5) + l + 0 + 1);
@@ -748,37 +748,37 @@ var we = Object.defineProperty,
                   return null;
                 }
               }() : null,
-              a = z.value && function (e) {
+              a = z.value && function (el) {
                 if (typeof window > `u`) return false;
-                let t = e.querySelectorAll(`.editor.modified .diff-hidden-lines .center, .stream-monaco-diff-unchanged-bridge`);
-                for (let e of Array.from(t)) {
-                  if (!(e instanceof HTMLElement)) continue;
-                  let t = window.getComputedStyle(e);
-                  if (t.display === `none` || t.visibility === `hidden` || Number.parseFloat(t.opacity || `1`) <= .01) continue;
-                  let n = e.getBoundingClientRect();
-                  if (!(n.width <= 0 || n.height <= 0)) return true;
+                let selectorAll = el.querySelectorAll(`.editor.modified .diff-hidden-lines .center, .stream-monaco-diff-unchanged-bridge`);
+                for (let htmlPreviewSandbox of Array.from(selectorAll)) {
+                  if (!(htmlPreviewSandbox instanceof HTMLElement)) continue;
+                  let computedStyle = window.getComputedStyle(htmlPreviewSandbox);
+                  if (computedStyle.display === `none` || computedStyle.visibility === `hidden` || Number.parseFloat(computedStyle.opacity || `1`) <= .01) continue;
+                  let boundingClientRect = htmlPreviewSandbox.getBoundingClientRect();
+                  if (!(boundingClientRect.width <= 0 || boundingClientRect.height <= 0)) return true;
                 }
                 return false;
               }(e);
             if (a || (j.value = null), Je > 0 && (Je--, A.value != null)) return void q(e, t, Q(e, A.value, n));
-            let o = z.value ? function (e) {
+            let o = z.value ? function (el) {
                 if (typeof window > `u`) return null;
                 try {
-                  let t = e.getBoundingClientRect();
-                  if (t.height <= 0) return null;
+                  let boundingClientRect = el.getBoundingClientRect();
+                  if (boundingClientRect.height <= 0) return null;
                   let n = [`.editor.original .view-lines .view-line`, `.editor.modified .view-lines .view-line`, `.editor.original .view-zones > div`, `.editor.modified .view-zones > div`, `.editor.original .margin-view-zones > div`, `.editor.modified .margin-view-zones > div`, `.editor.original .diff-hidden-lines`, `.editor.modified .diff-hidden-lines`, `.stream-monaco-diff-unchanged-bridge`],
                     r = 0;
-                  for (let i of Array.from(e.querySelectorAll(n.join(`,`)))) {
+                  for (let i of Array.from(el.querySelectorAll(n.join(`,`)))) {
                     if (!(i instanceof HTMLElement)) continue;
-                    let e = window.getComputedStyle(i);
-                    if (e.display === `none` || e.visibility === `hidden` || Number.parseFloat(e.opacity || `1`) <= .01) continue;
-                    let n = i.getBoundingClientRect();
-                    n.height <= 0 || n.bottom <= t.top || (r = Math.max(r, n.bottom - t.top));
+                    let computedStyle = window.getComputedStyle(i);
+                    if (computedStyle.display === `none` || computedStyle.visibility === `hidden` || Number.parseFloat(computedStyle.opacity || `1`) <= .01) continue;
+                    let boundingClientRectResult = i.getBoundingClientRect();
+                    boundingClientRectResult.height <= 0 || boundingClientRectResult.bottom <= boundingClientRect.top || (r = Math.max(r, boundingClientRectResult.bottom - boundingClientRect.top));
                   }
                   if (r > 0) return Math.ceil(r + 1);
-                  let i = e.querySelector(`.monaco-diff-editor`),
-                    a = i?.getBoundingClientRect?.call(i).height ?? 0;
-                  return a > 0 ? Math.ceil(a + 1) : null;
+                  let selector = el.querySelector(`.monaco-diff-editor`),
+                    fallbackValue = selector?.getBoundingClientRect?.call(selector).height ?? 0;
+                  return fallbackValue > 0 ? Math.ceil(fallbackValue + 1) : null;
                 } catch {
                   return null;
                 }
@@ -804,8 +804,8 @@ var we = Object.defineProperty,
             }
             let l = K();
             if (l != null) return void q(e, t, Q(e, l, n));
-            let u = Number.parseFloat(e.style.height);
-            !Number.isNaN(u) && u > 0 ? q(e, t, Q(e, u, n)) : z.value || q(e, t, Q(e, n, n));
+            let float = Number.parseFloat(e.style.height);
+            !Number.isNaN(float) && float > 0 ? q(e, t, Q(e, float, n)) : z.value || q(e, t, Q(e, n, n));
           } catch {}
         }());
       }
@@ -813,32 +813,32 @@ var we = Object.defineProperty,
         if (!z.value) return void J();
         let e = v.value;
         if (!e) return void J();
-        let t = e.querySelector(`.monaco-diff-editor`);
-        if (!t || t.classList.contains(`side-by-side`)) return void J();
-        let n = Array.from(t.querySelectorAll(`.editor.original .diff-hidden-lines`)),
-          r = Array.from(t.querySelectorAll(`.editor.modified .diff-hidden-lines`)),
+        let selector = e.querySelector(`.monaco-diff-editor`);
+        if (!selector || selector.classList.contains(`side-by-side`)) return void J();
+        let n = Array.from(selector.querySelectorAll(`.editor.original .diff-hidden-lines`)),
+          r = Array.from(selector.querySelectorAll(`.editor.modified .diff-hidden-lines`)),
           i = Math.min(n.length, r.length);
         for (let e = 0; e < i; e++) {
           let t = r[e],
-            n = t.querySelector(`a`),
+            selectorResult = t.querySelector(`a`),
             i = t.querySelector(`.center > div:first-child`),
             a = t.querySelector(`.center`);
-          if (!n || !i || !a || a.querySelector(`.markstream-inline-fold-proxy`)) continue;
-          let o = document.createElement(`button`);
-          o.type = `button`, o.className = `markstream-inline-fold-proxy`, o.dataset.markstreamInlineFoldProxy = `true`;
-          let s = n.getAttribute(`title`) || `Show Unchanged Region`;
-          o.title = s, o.setAttribute(`aria-label`, s);
-          let c = e => {
-              e.preventDefault(), e.stopPropagation();
+          if (!selectorResult || !i || !a || a.querySelector(`.markstream-inline-fold-proxy`)) continue;
+          let element = document.createElement(`button`);
+          element.type = `button`, element.className = `markstream-inline-fold-proxy`, element.dataset.markstreamInlineFoldProxy = `true`;
+          let fallbackValue = selectorResult.getAttribute(`title`) || `Show Unchanged Region`;
+          element.title = fallbackValue, element.setAttribute(`aria-label`, fallbackValue);
+          let c = event => {
+              event.preventDefault(), event.stopPropagation();
             },
-            l = e => {
-              e.preventDefault(), e.stopPropagation(), n.click(), _(() => Z());
+            l = event => {
+              event.preventDefault(), event.stopPropagation(), selectorResult.click(), _(() => Z());
             },
-            u = e => {
-              e.key !== `Enter` && e.key !== ` ` || (e.preventDefault(), e.stopPropagation(), n.click(), _(() => Z()));
+            u = event => {
+              event.key !== `Enter` && event.key !== ` ` || (event.preventDefault(), event.stopPropagation(), selectorResult.click(), _(() => Z()));
             };
-          o.addEventListener(`mousedown`, c), o.addEventListener(`click`, l), o.addEventListener(`keydown`, u), a.appendChild(o), ot.push(() => {
-            o.removeEventListener(`mousedown`, c), o.removeEventListener(`click`, l), o.removeEventListener(`keydown`, u), o.parentElement === a && a.removeChild(o);
+          element.addEventListener(`mousedown`, c), element.addEventListener(`click`, l), element.addEventListener(`keydown`, u), a.appendChild(element), ot.push(() => {
+            element.removeEventListener(`mousedown`, c), element.removeEventListener(`click`, l), element.removeEventListener(`keydown`, u), element.parentElement === a && a.removeChild(element);
           });
         }
       }
@@ -849,19 +849,19 @@ var we = Object.defineProperty,
           });
         });
       }
-      function Q(e, t, n, r = {}) {
+      function Q(el, t, n, r = {}) {
         let i = kt(Math.min(t, n), true === r.clearEstimatedFloor),
           a = K();
-        if (e.style.minHeight = a == null ? `0px` : `${Math.min(a, Math.ceil(n))}px`, e.style.height = `${i}px`, e.style.maxHeight = `${Math.ceil(n)}px`, z.value) e.style.overflow = `hidden`;else {
+        if (el.style.minHeight = a == null ? `0px` : `${Math.min(a, Math.ceil(n))}px`, el.style.height = `${i}px`, el.style.maxHeight = `${Math.ceil(n)}px`, z.value) el.style.overflow = `hidden`;else {
           let r = t > n + 1;
-          e.style.overflow = r ? `auto` : `hidden`;
+          el.style.overflow = r ? `auto` : `hidden`;
         }
         return i;
       }
       function Jt() {
-        let e = m.monacoOptions?.MAX_HEIGHT ?? 500;
-        if (typeof e == `number`) return e;
-        let t = String(e).match(/^(\d+(?:\.\d+)?)/);
+        let fallbackValue = m.monacoOptions?.MAX_HEIGHT ?? 500;
+        if (typeof fallbackValue == `number`) return fallbackValue;
+        let t = String(fallbackValue).match(/^(\d+(?:\.\d+)?)/);
         return t ? Number.parseFloat(t[1]) : 500;
       }
       let Yt = h(() => m.isShowPreview && (y.value === `html` || y.value === `svg`));
@@ -895,22 +895,22 @@ var we = Object.defineProperty,
           let e = y.value;
           return e ? ye[e] || e.charAt(0).toUpperCase() + e.slice(1) : ye[``] || `Plain Text`;
         }),
-        Zt = h(() => function (e) {
+        Zt = h(() => function (items) {
           let t = function (e) {
-            let t = String(e ?? ``).split(/\r?\n/, 1)[0]?.trim() ?? ``;
-            if (t.length < 3) return ``;
-            let n = t[0];
-            if (n !== "`" && n !== `~` || t[1] !== n || t[2] !== n) return ``;
+            let fallbackValue = String(e ?? ``).split(/\r?\n/, 1)[0]?.trim() ?? ``;
+            if (fallbackValue.length < 3) return ``;
+            let n = fallbackValue[0];
+            if (n !== "`" && n !== `~` || fallbackValue[1] !== n || fallbackValue[2] !== n) return ``;
             let r = 3;
-            for (; t[r] === n;) r += 1;
-            return t.slice(r).trim();
-          }(e);
+            for (; fallbackValue[r] === n;) r += 1;
+            return fallbackValue.slice(r).trim();
+          }(items);
           if (!t) return ``;
-          let n = t.split(/\s+/).filter(Boolean);
-          if (!n.length) return ``;
-          let r = n[0] === `diff` ? n.slice(1) : n;
-          for (let e of r) {
-            let t = e.includes(`:`) ? e.slice(e.indexOf(`:`) + 1) : e;
+          let filtered = t.split(/\s+/).filter(Boolean);
+          if (!filtered.length) return ``;
+          let r = filtered[0] === `diff` ? filtered.slice(1) : filtered;
+          for (let htmlPreviewSandbox of r) {
+            let t = htmlPreviewSandbox.includes(`:`) ? htmlPreviewSandbox.slice(htmlPreviewSandbox.indexOf(`:`) + 1) : htmlPreviewSandbox;
             if (t && /[./\\-]/.test(t)) return t;
           }
           return ``;
@@ -939,12 +939,12 @@ var we = Object.defineProperty,
           }
         });
       }
-      function an(e) {
-        if (w.value = !w.value, e && nn.value) {
+      function an(event) {
+        if (w.value = !w.value, event && nn.value) {
           let t = function (e) {
-            let t = e.currentTarget || e.target;
-            return !t || t.disabled ? null : t;
-          }(e);
+            let fallbackValue = e.currentTarget || e.target;
+            return !fallbackValue || fallbackValue.disabled ? null : fallbackValue;
+          }(event);
           if (t) {
             let e = w.value ? Te(`common.collapse`) || `Collapse` : Te(`common.expand`) || `Expand`;
             he(t, e, `top`, false, undefined, m.isDark);
@@ -955,10 +955,10 @@ var we = Object.defineProperty,
         t && n && (w.value ? (cn(true), n.style.maxHeight = `none`, n.style.overflow = `visible`, Y(true)) : (cn(false), n.style.overflow = z.value ? `hidden` : `auto`, Y(true)));
       }
       function on() {
-        var e, t;
+        var htmlPreviewSandbox, payload;
         if (T.value = !T.value, T.value) {
           if (v.value) {
-            let t = Math.ceil((e = v.value).getBoundingClientRect?.call(e).height || 0);
+            let t = Math.ceil((htmlPreviewSandbox = v.value).getBoundingClientRect?.call(htmlPreviewSandbox).height || 0);
             t > 0 && (A.value = t);
           }
           cn(false);
@@ -966,7 +966,7 @@ var we = Object.defineProperty,
           w.value && cn(true), v.value && A.value != null && (v.value.style.height = `${A.value}px`);
           let e = z.value ? F() : P();
           try {
-            (t = e?.layout) == null || t.call(e);
+            (payload = e?.layout) == null || payload.call(e);
           } catch {}
           Je = 2, _(() => {
             Y(true);
@@ -990,11 +990,11 @@ var we = Object.defineProperty,
         e === `html` && (vt.value = !vt.value);
       }
       function cn(e) {
-        var t, n;
+        var payload, n;
         try {
           if (z.value) {
             let n = F();
-            (t = n?.updateOptions) == null || t.call(n, {
+            (payload = n?.updateOptions) == null || payload.call(n, {
               automaticLayout: e
             });
           } else {
@@ -1019,22 +1019,22 @@ var we = Object.defineProperty,
                   n = t?.addEventListener;
                 if (!t || !n) return yield e();
                 let r = function () {
-                  let e = window,
-                    t = e[We];
+                  let windowAlias = window,
+                    t = windowAlias[We];
                   if (t) return t;
                   let n = {
                     depth: 0,
                     original: null
                   };
-                  return e[We] = n, n;
+                  return windowAlias[We] = n, n;
                 }();
                 r.depth === 0 && (r.original = n, t.addEventListener = function (e, t, i) {
-                  let a = r.original ?? n;
+                  let fallbackValue = r.original ?? n;
                   return e === `touchstart` && function (e, t) {
                     if (!e) return false;
                     let n = e;
                     return !(typeof n.closest != `function` || !n.closest(`.monaco-editor, .monaco-diff-editor`) || t && typeof t == `object` && `passive` in t);
-                  }(this, i) ? a.call(this, e, t, function (e) {
+                  }(this, i) ? fallbackValue.call(this, e, t, function (e) {
                     return e == null ? {
                       passive: true
                     } : typeof e == `boolean` ? {
@@ -1045,7 +1045,7 @@ var we = Object.defineProperty,
                     }) : {
                       passive: true
                     };
-                  }(i)) : a.call(this, e, t, i);
+                  }(i)) : fallbackValue.call(this, e, t, i);
                 }), r.depth++;
                 try {
                   return yield e();
@@ -1092,14 +1092,14 @@ var we = Object.defineProperty,
                         let n = e?.[t];
                         if (typeof n != `function`) return;
                         let r = n.call(e, () => Z());
-                        r && L.push(r);
+                        r && emptyItems.push(r);
                       } catch {}
                     };
                   try {
                     let t = e?.onDidUpdateDiff?.call(e, () => {
                       Z(), _(() => Lt());
                     });
-                    t && L.push(t);
+                    t && emptyItems.push(t);
                   } catch {}
                   r(t, `onDidContentSizeChange`), r(n, `onDidContentSizeChange`), r(t, `onDidLayoutChange`), r(n, `onDidLayoutChange`);
                   return;
@@ -1107,11 +1107,11 @@ var we = Object.defineProperty,
                 let e = P();
                 try {
                   let t = e?.onDidContentSizeChange?.call(e, () => Z());
-                  t && L.push(t);
+                  t && emptyItems.push(t);
                 } catch {}
                 try {
                   let t = e?.onDidLayoutChange?.call(e, () => Z());
-                  t && L.push(t);
+                  t && emptyItems.push(t);
                 } catch {}
               }(), Wt(), X(), Lt(), Z(), yield function () {
                 return C(this, null, function* () {
@@ -1163,21 +1163,21 @@ var we = Object.defineProperty,
       function pn() {
         let e = function () {
             if (m.theme !== undefined) {
-              let e = m.theme;
-              return dn(e) ? m.isDark ? e.dark : e.light : e;
+              let theme = m.theme;
+              return dn(theme) ? m.isDark ? theme.dark : theme.light : theme;
             }
             return m.isDark ? m.darkTheme : m.lightTheme;
           }(),
           t = V.value?.theme,
-          n = e ?? t;
-        if (typeof n == `object` && n) return n;
+          fallbackValue = e ?? t;
+        if (typeof fallbackValue == `object` && fallbackValue) return fallbackValue;
         let r = Array.isArray(m.themes) ? m.themes : [];
-        if (!r.length || n == null) return n;
-        let i = $(n),
-          a = r.map(e => $(e)).filter(e => !!e);
-        if (!i || a.includes(i)) return n;
+        if (!r.length || fallbackValue == null) return fallbackValue;
+        let i = $(fallbackValue),
+          filtered = r.map(item => $(item)).filter(item => !!item);
+        if (!i || filtered.includes(i)) return fallbackValue;
         let o = $(t);
-        return t != null && o && a.includes(o) ? t : r[0];
+        return t != null && o && filtered.includes(o) ? t : r[0];
       }
       a(ft, (e, t) => C(null, null, function* () {
         if (e === t || (pt.value = e, !N || !v.value) || !E.value || false === m.stream && false !== m.loading || !M.value) return;
@@ -1199,8 +1199,8 @@ var we = Object.defineProperty,
             let t = Ut(e.colors[`editor.background`]);
             if (t != null) return t < 128;
           }
-          let t = ($(e) ?? ``).toLowerCase();
-          return t ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(e => t.includes(e)) && ![`light`, `latte`, `dawn`, `lotus`].some(e => t.includes(e)) : !!m.isDark;
+          let lowercased = ($(e) ?? ``).toLowerCase();
+          return lowercased ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(item => lowercased.includes(item)) && ![`light`, `latte`, `dawn`, `lotus`].some(item => lowercased.includes(item)) : !!m.isDark;
         }(pn()) : !!m.isDark),
         hn = h(() => {
           if (!z.value) return mn.value ? `dark` : `light`;
@@ -1226,28 +1226,28 @@ var we = Object.defineProperty,
       function vn() {
         let e = _n();
         if (!R) return R = e, R;
-        for (let t of Object.keys(R)) t in e || delete R[t];
+        for (let payload of Object.keys(R)) payload in e || delete R[payload];
         return Object.assign(R, e), R;
       }
       let yn = h(() => {
-        var e, t, n, r, i;
+        var htmlPreviewSandbox, payload, n, parentElement, i;
         return JSON.stringify({
           diffLineStyle: V.value?.diffLineStyle ?? `background`,
           diffUnchangedRegionStyle: V.value?.diffUnchangedRegionStyle ?? `line-info`,
           diffHideUnchangedRegions: m.monacoOptions?.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(m.monacoOptions.diffHideUnchangedRegions),
-          renderSideBySide: (e = V.value?.renderSideBySide) == null || e,
-          useInlineViewWhenSpaceIsLimited: (t = V.value?.useInlineViewWhenSpaceIsLimited) == null || t,
+          renderSideBySide: (htmlPreviewSandbox = V.value?.renderSideBySide) == null || htmlPreviewSandbox,
+          useInlineViewWhenSpaceIsLimited: (payload = V.value?.useInlineViewWhenSpaceIsLimited) == null || payload,
           enableSplitViewResizing: (n = V.value?.enableSplitViewResizing) == null || n,
-          ignoreTrimWhitespace: (r = V.value?.ignoreTrimWhitespace) == null || r,
+          ignoreTrimWhitespace: (parentElement = V.value?.ignoreTrimWhitespace) == null || parentElement,
           originalEditable: (i = V.value?.originalEditable) != null && i
         });
       });
       return a(() => [m.monacoOptions, M.value], () => {
-        var e;
+        var htmlPreviewSandbox;
         if (vn(), !N || !M.value) return;
         let t = z.value ? F() : P(),
           n = typeof m.monacoOptions?.fontSize == `number` ? m.monacoOptions.fontSize : Number.isFinite(W.value) ? W.value : undefined;
-        typeof n == `number` && Number.isFinite(n) && n > 0 && ((e = t?.updateOptions) == null || e.call(t, {
+        typeof n == `number` && Number.isFinite(n) && n > 0 && ((htmlPreviewSandbox = t?.updateOptions) == null || htmlPreviewSandbox.call(t, {
           fontSize: n
         })), Y(false);
       }, {
@@ -1271,8 +1271,8 @@ var we = Object.defineProperty,
                 let t = Fe.get(e);
                 if (t) return t;
                 try {
-                  let t = JSON.stringify(e);
-                  if (t) return Fe.set(e, t), t;
+                  let serialized = JSON.stringify(e);
+                  if (serialized) return Fe.set(e, serialized), serialized;
                 } catch {}
                 let n = `__theme_` + ++Ie;
                 return Fe.set(e, n), n;
@@ -1290,7 +1290,7 @@ var we = Object.defineProperty,
             }).finally(() => {
               Ae = null, je = null;
             }), Ae) : Promise.resolve()) : Promise.resolve();
-          }(at, t).then(n).catch(e => {}) : n();
+          }(at, t).then(n).catch(err => {}) : n();
         }({
           appearanceOnly: t != null && fn(e, t[0])
         });

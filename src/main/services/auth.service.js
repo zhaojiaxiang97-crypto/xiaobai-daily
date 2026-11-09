@@ -65,11 +65,11 @@ async function fetchCommonRoles() {
   }).parse(await response.json()).data.items;
 }
 function database$1() {
-  const db = getDatabase();
-  db.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_common_role_links (
+  const databaseResult = getDatabase();
+  databaseResult.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_common_role_links (
     role_id TEXT NOT NULL, bot_id TEXT PRIMARY KEY, revision INTEGER NOT NULL, snapshot_json TEXT NOT NULL
   )`);
-  return db;
+  return databaseResult;
 }
 function syncCommonRoles(roles) {
   const db = database$1();
@@ -250,7 +250,7 @@ function listSharedFiles(root, directory = "", offset = 0) {
   const target = sharedFilePath(root, directory);
   const entries = readdirSync(target, {
     withFileTypes: true
-  }).filter(entry => !entry.name.startsWith(".") && !entry.isSymbolicLink()).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
+  }).filter(entry => !entry.name.startsWith(".") && !entry.isSymbolicLink()).sort((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
   return {
     entries: entries.slice(offset, offset + 100).map(entry => ({
       path: [directory, entry.name].filter(Boolean).join("/"),
@@ -365,9 +365,9 @@ var BotSharedWorkspaceStore = class {
     this.read(scope, relative);
     return this.database.prepare("SELECT id, revision, actor, created_at AS createdAt FROM xiaohei_bot_shared_versions WHERE root = ? AND path = ? ORDER BY id DESC LIMIT 50").all(scope.root, relative);
   }
-  version(scope, relative, id) {
+  version(scope, relative, version) {
     this.assertScope(scope);
-    const row = this.database.prepare("SELECT content, revision FROM xiaohei_bot_shared_versions WHERE id = ? AND root = ? AND path = ?").get(id, scope.root, relative);
+    const row = this.database.prepare("SELECT content, revision FROM xiaohei_bot_shared_versions WHERE id = ? AND root = ? AND path = ?").get(version, scope.root, relative);
     if (!row) throw new Error(appText("botSharedWorkspace.versionMissing"));
     return row;
   }
@@ -504,31 +504,31 @@ async function fetchDefaultRoles() {
   }).parse(await response.json()).data.items;
 }
 function database() {
-  const db = getDatabase();
-  db.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_default_role_templates (
+  const databaseResult = getDatabase();
+  databaseResult.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_default_role_templates (
     role_id TEXT NOT NULL, bot_id TEXT PRIMARY KEY, revision INTEGER NOT NULL, snapshot_json TEXT NOT NULL
   )`);
-  return db;
+  return databaseResult;
 }
 function createDefaultRole(role, input) {
-  const db = database();
-  db.exec("SAVEPOINT default_template_create");
+  const databaseResult = database();
+  databaseResult.exec("SAVEPOINT default_template_create");
   try {
     const created = xiaoheiBotRepository.createBot({
       ...input,
       ...commonRoleProfile(role)
     });
-    db.prepare(`INSERT INTO xiaohei_bot_default_role_templates (role_id, bot_id, revision, snapshot_json)
+    databaseResult.prepare(`INSERT INTO xiaohei_bot_default_role_templates (role_id, bot_id, revision, snapshot_json)
       VALUES (?, ?, ?, ?)`).run(role.id, created.bot.id, role.revision, JSON.stringify(commonRoleProfile(role)));
-    db.exec("RELEASE default_template_create");
+    databaseResult.exec("RELEASE default_template_create");
     return created;
   } catch (error) {
-    db.exec("ROLLBACK TO default_template_create; RELEASE default_template_create");
+    databaseResult.exec("ROLLBACK TO default_template_create; RELEASE default_template_create");
     throw error;
   }
 }
 function syncDefaultListRoles(roles, preferred) {
-  const db = database();
+  const databaseResult = database();
   const providers = xiaoheiBotRepository.listProviders();
   const provider = providers.find(item => item.id === preferred?.providerId && item.models.some(model => model.id === preferred?.modelId)) ?? providers.find(item => item.isBuiltin && item.models.length) ?? providers.find(item => item.models.length);
   const model = provider?.models.find(item => item.id === preferred?.modelId) ?? provider?.models[0];
@@ -537,11 +537,11 @@ function syncDefaultListRoles(roles, preferred) {
       name: role.name,
       description: role.description
     });
-    if (db.prepare("SELECT bot_id FROM xiaohei_bot_default_role_links WHERE role_id = ?").get(role.id)) continue;
+    if (databaseResult.prepare("SELECT bot_id FROM xiaohei_bot_default_role_links WHERE role_id = ?").get(role.id)) continue;
     if (!provider || !model) continue;
-    db.exec("SAVEPOINT default_role_create");
+    databaseResult.exec("SAVEPOINT default_role_create");
     try {
-      const botId = db.prepare(`SELECT links.bot_id FROM xiaohei_bot_default_role_templates links
+      const botId = databaseResult.prepare(`SELECT links.bot_id FROM xiaohei_bot_default_role_templates links
         JOIN xiaohei_bot_profiles bots ON bots.id = links.bot_id
         WHERE links.role_id = ? AND bots.deleted_at IS NULL ORDER BY bots.created_at LIMIT 1`).get(role.id)?.bot_id ?? createDefaultRole(role, {
         ...commonRoleProfile(role),
@@ -549,10 +549,10 @@ function syncDefaultListRoles(roles, preferred) {
         modelId: model.id,
         permissionMode: "default"
       }).bot.id;
-      db.prepare("INSERT INTO xiaohei_bot_default_role_links (role_id, bot_id, greeting, sort_order) VALUES (?, ?, ?, ?)").run(role.id, botId, greeting, role.sortOrder ?? 0);
-      db.exec("RELEASE default_role_create");
+      databaseResult.prepare("INSERT INTO xiaohei_bot_default_role_links (role_id, bot_id, greeting, sort_order) VALUES (?, ?, ?, ?)").run(role.id, botId, greeting, role.sortOrder ?? 0);
+      databaseResult.exec("RELEASE default_role_create");
     } catch (error) {
-      db.exec("ROLLBACK TO default_role_create; RELEASE default_role_create");
+      databaseResult.exec("ROLLBACK TO default_role_create; RELEASE default_role_create");
       throw error;
     }
   }
@@ -568,9 +568,9 @@ function countUserMessages(conversationId) {
 }
 /** 移除「同名默认专家」的重复单聊（保留 default_role_links 绑定的那条）。 */
 function dedupeDuplicateDefaultRoleBots() {
-  const db = database();
+  const databaseResult = database();
   const removed = [];
-  const linkRows = db.prepare(`SELECT role_id, bot_id, list_removed_at FROM xiaohei_bot_default_role_links
+  const linkRows = databaseResult.prepare(`SELECT role_id, bot_id, list_removed_at FROM xiaohei_bot_default_role_links
       WHERE withdrawn_at IS NULL OR withdrawn_at = ''`).all();
   const canonicalBotIds = new Set(linkRows.map(row => row.bot_id));
   const canonicalRows = linkRows.filter(row => !row.list_removed_at);
@@ -581,14 +581,14 @@ function dedupeDuplicateDefaultRoleBots() {
     if (!canonical || canonical.deletedAt) continue;
     const duplicates = xiaoheiBotRepository.listBots().filter(bot => !isProtectedXiaoheiBot(bot.id) && bot.id !== canonicalBotId && !canonicalBotIds.has(bot.id) && bot.name === canonical.name && !bot.deletedAt);
     for (const duplicate of duplicates) {
-      if (db.prepare(`SELECT cloud_origin FROM xiaohei_mobile_bindings
+      if (databaseResult.prepare(`SELECT cloud_origin FROM xiaohei_mobile_bindings
           WHERE bot_id = ? AND status = 'active' LIMIT 1`).get(duplicate.id)?.cloud_origin === "mobile") continue;
       const conversationId = directConversationId(duplicate.id);
       if (!conversationId) continue;
       if (countUserMessages(conversationId) > 0) continue;
-      db.prepare(`DELETE FROM xiaohei_mobile_bindings WHERE bot_id = ?`).run(duplicate.id);
-      db.prepare(`DELETE FROM xiaohei_mobile_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
-      db.prepare(`DELETE FROM xiaohei_mobile_pending_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
+      databaseResult.prepare(`DELETE FROM xiaohei_mobile_bindings WHERE bot_id = ?`).run(duplicate.id);
+      databaseResult.prepare(`DELETE FROM xiaohei_mobile_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
+      databaseResult.prepare(`DELETE FROM xiaohei_mobile_pending_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
       xiaoheiBotRepository.deleteBot(duplicate.id);
       removed.push(duplicate.id);
     }
@@ -626,13 +626,13 @@ function setDefaultRoleListRemoved(botId, removedAt) {
 * 用户仍然看不到它，需要时可以从「预设角色」加回。同步开启时，登录后会把移出状态迁移到云端。
 */
 function restoreDeletedDefaultRoles() {
-  const db = database();
-  const rows = db.prepare(`SELECT links.bot_id, bots.deleted_at FROM xiaohei_bot_default_role_links links
+  const databaseResult = database();
+  const rows = databaseResult.prepare(`SELECT links.bot_id, bots.deleted_at FROM xiaohei_bot_default_role_links links
     JOIN xiaohei_bot_profiles bots ON bots.id = links.bot_id
     WHERE bots.deleted_at IS NOT NULL`).all();
   let restored = 0;
   for (const row of rows) {
-    db.prepare("UPDATE xiaohei_bot_default_role_links SET list_removed_at = COALESCE(list_removed_at, ?) WHERE bot_id = ?").run(row.deleted_at, row.bot_id);
+    databaseResult.prepare("UPDATE xiaohei_bot_default_role_links SET list_removed_at = COALESCE(list_removed_at, ?) WHERE bot_id = ?").run(row.deleted_at, row.bot_id);
     if (xiaoheiBotRepository.restoreDeletedBot(row.bot_id)) restored += 1;
   }
   return restored;
@@ -644,15 +644,15 @@ async function provisionDefaultListRolesForSync(preferred) {
   syncDefaultListRoles(roles, preferred);
 }
 function introduceDefaultListRole(conversationId) {
-  const db = database();
+  const databaseResult = database();
   const conversation = xiaoheiBotRepository.getConversation(conversationId);
   if (!conversation || conversation.kind !== "direct" || conversation.parentConversationId || conversation.archivedAt || !conversation.directBotId || conversation.id !== `direct-${conversation.directBotId}`) return;
-  const link = db.prepare("SELECT greeting FROM xiaohei_bot_default_role_links WHERE bot_id = ? AND introduced = 0").get(conversation.directBotId);
+  const link = databaseResult.prepare("SELECT greeting FROM xiaohei_bot_default_role_links WHERE bot_id = ? AND introduced = 0").get(conversation.directBotId);
   const bot = xiaoheiBotRepository.getBot(conversation.directBotId);
   if (!link || !bot) return;
-  db.exec("SAVEPOINT default_role_introduce");
+  databaseResult.exec("SAVEPOINT default_role_introduce");
   try {
-    const message = db.prepare("SELECT 1 FROM xiaohei_bot_messages WHERE conversation_id = ? LIMIT 1").get(conversationId) || db.prepare("SELECT 1 FROM xiaohei_bot_events WHERE conversation_id = ? AND aggregate_type = 'message' LIMIT 1").get(conversationId) ? undefined : xiaoheiBotRepository.createMessage({
+    const message = databaseResult.prepare("SELECT 1 FROM xiaohei_bot_messages WHERE conversation_id = ? LIMIT 1").get(conversationId) || databaseResult.prepare("SELECT 1 FROM xiaohei_bot_events WHERE conversation_id = ? AND aggregate_type = 'message' LIMIT 1").get(conversationId) ? undefined : xiaoheiBotRepository.createMessage({
       conversationId,
       authorType: "bot",
       authorBotId: bot.id,
@@ -663,11 +663,11 @@ function introduceDefaultListRole(conversationId) {
       synthetic: true,
       incrementUnread: false
     }, true);
-    db.prepare("UPDATE xiaohei_bot_default_role_links SET introduced = 1 WHERE bot_id = ?").run(bot.id);
-    db.exec("RELEASE default_role_introduce");
+    databaseResult.prepare("UPDATE xiaohei_bot_default_role_links SET introduced = 1 WHERE bot_id = ?").run(bot.id);
+    databaseResult.exec("RELEASE default_role_introduce");
     return message;
   } catch (error) {
-    db.exec("ROLLBACK TO default_role_introduce; RELEASE default_role_introduce");
+    databaseResult.exec("ROLLBACK TO default_role_introduce; RELEASE default_role_introduce");
     throw error;
   }
 }
@@ -683,7 +683,7 @@ var embeddedJson = value => stableSerialize$1(value).replace(/[<>&\u2028\u2029]/
 * message bodies are explicitly marked. JSON escaping counts toward the budget. */
 function limitHistorySources(sources, maxCharacters = HISTORY_MAX_CHARACTERS, roundLimit = 10) {
   const capacity = Math.max(0, Math.floor((maxCharacters - 512) / 1500));
-  const ordered = [...sources].sort((a, b) => compare(b.rounds.at(-1)?.createdAt ?? "", a.rounds.at(-1)?.createdAt ?? "") || compare(a.conversationId, b.conversationId)).slice(0, capacity).sort((a, b) => compare(a.conversationId, b.conversationId));
+  const ordered = [...sources].sort((left, right) => compare(right.rounds.at(-1)?.createdAt ?? "", left.rounds.at(-1)?.createdAt ?? "") || compare(left.conversationId, right.conversationId)).slice(0, capacity).sort((left, right) => compare(left.conversationId, right.conversationId));
   const selected = [];
   const quota = ordered.length ? Math.floor(Math.max(0, maxCharacters - 512) / ordered.length) : 0;
   for (let index = 0; index < ordered.length; index++) {
@@ -766,7 +766,7 @@ function historyUpdateMessage(before, after, roundLimit = 10) {
     }),
     baseHash: before ? historyHash(before) : null,
     resultHash: after ? historyHash(after) : null,
-    removedMessageIds: [...oldMessages.keys()].filter(id => !newIds.has(id)).sort(compare),
+    removedMessageIds: [...oldMessages.keys()].filter(item => !newIds.has(item)).sort(compare),
     upsertMessages: newMessages.filter(message => !oldMessages.has(message.id) || historyHash(oldMessages.get(message.id)) !== historyHash(message))
   };
   return {
@@ -2325,7 +2325,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   var {
     tree
   } = require_tree();
-  var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map(v => Number(v));
+  var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map(item => Number(item));
   var BodyAsyncIterable = class {
     constructor(body) {
       this[kBody] = body;
@@ -2581,7 +2581,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
       let val = obj[key];
       if (val !== undefined) {
         if (!Object.hasOwn(obj, key)) {
-          const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(x => x.toString("latin1")) : headers[i + 1].toString("latin1");
+          const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(item => item.toString("latin1")) : headers[i + 1].toString("latin1");
           if (key === "__proto__") Object.defineProperty(obj, key, {
             value: headersValue,
             enumerable: true,
@@ -2596,7 +2596,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
           val.push(headers[i + 1].toString("latin1"));
         }
       } else {
-        const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(x => x.toString("latin1")) : headers[i + 1].toString("latin1");
+        const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(item => item.toString("latin1")) : headers[i + 1].toString("latin1");
         obj[key] = headersValue;
       }
     }
@@ -2630,7 +2630,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   */
   function encodeRawHeaders(headers) {
     if (!Array.isArray(headers)) throw new TypeError("expected headers to be an array");
-    return headers.map(x => Buffer.from(x));
+    return headers.map(item => Buffer.from(item));
   }
   /**
   * @param {*} buffer
@@ -2752,8 +2752,8 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {number} c
   * @returns {boolean}
   */
-  function isTokenCharCode(c) {
-    return validTokenChars[c] === 1;
+  function isTokenCharCode(token) {
+    return validTokenChars[token] === 1;
   }
   var tokenRegExp = /^[\^_`a-zA-Z\-0-9!#$%&'*+.|~]+$/;
   /**
@@ -3898,16 +3898,16 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
       socket.setNoDelay(true).once(protocol === "https:" ? "secureConnect" : "connect", function () {
         queueMicrotask(clearConnectTimeout);
         if (callback) {
-          const cb = callback;
+          const callbackAlias = callback;
           callback = null;
-          cb(null, this);
+          callbackAlias(null, this);
         }
       }).on("error", function (err) {
         queueMicrotask(clearConnectTimeout);
         if (callback) {
-          const cb = callback;
+          const callbackAlias = callback;
           callback = null;
-          cb(err);
+          callbackAlias(err);
         }
       });
       return socket;
@@ -4178,9 +4178,9 @@ var require_constants$3 = /* @__PURE__ */__commonJSMin(exports => {
   exports.H_METHOD_MAP = Object.fromEntries(Object.entries(exports.METHODS).filter(([k]) => k.startsWith("H")));
   exports.STATUSES_HTTP = [exports.STATUSES.CONTINUE, exports.STATUSES.SWITCHING_PROTOCOLS, exports.STATUSES.PROCESSING, exports.STATUSES.EARLY_HINTS, exports.STATUSES.RESPONSE_IS_STALE, exports.STATUSES.REVALIDATION_FAILED, exports.STATUSES.DISCONNECTED_OPERATION, exports.STATUSES.HEURISTIC_EXPIRATION, exports.STATUSES.MISCELLANEOUS_WARNING, exports.STATUSES.OK, exports.STATUSES.CREATED, exports.STATUSES.ACCEPTED, exports.STATUSES.NON_AUTHORITATIVE_INFORMATION, exports.STATUSES.NO_CONTENT, exports.STATUSES.RESET_CONTENT, exports.STATUSES.PARTIAL_CONTENT, exports.STATUSES.MULTI_STATUS, exports.STATUSES.ALREADY_REPORTED, exports.STATUSES.TRANSFORMATION_APPLIED, exports.STATUSES.IM_USED, exports.STATUSES.MISCELLANEOUS_PERSISTENT_WARNING, exports.STATUSES.MULTIPLE_CHOICES, exports.STATUSES.MOVED_PERMANENTLY, exports.STATUSES.FOUND, exports.STATUSES.SEE_OTHER, exports.STATUSES.NOT_MODIFIED, exports.STATUSES.USE_PROXY, exports.STATUSES.SWITCH_PROXY, exports.STATUSES.TEMPORARY_REDIRECT, exports.STATUSES.PERMANENT_REDIRECT, exports.STATUSES.BAD_REQUEST, exports.STATUSES.UNAUTHORIZED, exports.STATUSES.PAYMENT_REQUIRED, exports.STATUSES.FORBIDDEN, exports.STATUSES.NOT_FOUND, exports.STATUSES.METHOD_NOT_ALLOWED, exports.STATUSES.NOT_ACCEPTABLE, exports.STATUSES.PROXY_AUTHENTICATION_REQUIRED, exports.STATUSES.REQUEST_TIMEOUT, exports.STATUSES.CONFLICT, exports.STATUSES.GONE, exports.STATUSES.LENGTH_REQUIRED, exports.STATUSES.PRECONDITION_FAILED, exports.STATUSES.PAYLOAD_TOO_LARGE, exports.STATUSES.URI_TOO_LONG, exports.STATUSES.UNSUPPORTED_MEDIA_TYPE, exports.STATUSES.RANGE_NOT_SATISFIABLE, exports.STATUSES.EXPECTATION_FAILED, exports.STATUSES.IM_A_TEAPOT, exports.STATUSES.PAGE_EXPIRED, exports.STATUSES.ENHANCE_YOUR_CALM, exports.STATUSES.MISDIRECTED_REQUEST, exports.STATUSES.UNPROCESSABLE_ENTITY, exports.STATUSES.LOCKED, exports.STATUSES.FAILED_DEPENDENCY, exports.STATUSES.TOO_EARLY, exports.STATUSES.UPGRADE_REQUIRED, exports.STATUSES.PRECONDITION_REQUIRED, exports.STATUSES.TOO_MANY_REQUESTS, exports.STATUSES.REQUEST_HEADER_FIELDS_TOO_LARGE_UNOFFICIAL, exports.STATUSES.REQUEST_HEADER_FIELDS_TOO_LARGE, exports.STATUSES.LOGIN_TIMEOUT, exports.STATUSES.NO_RESPONSE, exports.STATUSES.RETRY_WITH, exports.STATUSES.BLOCKED_BY_PARENTAL_CONTROL, exports.STATUSES.UNAVAILABLE_FOR_LEGAL_REASONS, exports.STATUSES.CLIENT_CLOSED_LOAD_BALANCED_REQUEST, exports.STATUSES.INVALID_X_FORWARDED_FOR, exports.STATUSES.REQUEST_HEADER_TOO_LARGE, exports.STATUSES.SSL_CERTIFICATE_ERROR, exports.STATUSES.SSL_CERTIFICATE_REQUIRED, exports.STATUSES.HTTP_REQUEST_SENT_TO_HTTPS_PORT, exports.STATUSES.INVALID_TOKEN, exports.STATUSES.CLIENT_CLOSED_REQUEST, exports.STATUSES.INTERNAL_SERVER_ERROR, exports.STATUSES.NOT_IMPLEMENTED, exports.STATUSES.BAD_GATEWAY, exports.STATUSES.SERVICE_UNAVAILABLE, exports.STATUSES.GATEWAY_TIMEOUT, exports.STATUSES.HTTP_VERSION_NOT_SUPPORTED, exports.STATUSES.VARIANT_ALSO_NEGOTIATES, exports.STATUSES.INSUFFICIENT_STORAGE, exports.STATUSES.LOOP_DETECTED, exports.STATUSES.BANDWIDTH_LIMIT_EXCEEDED, exports.STATUSES.NOT_EXTENDED, exports.STATUSES.NETWORK_AUTHENTICATION_REQUIRED, exports.STATUSES.WEB_SERVER_UNKNOWN_ERROR, exports.STATUSES.WEB_SERVER_IS_DOWN, exports.STATUSES.CONNECTION_TIMEOUT, exports.STATUSES.ORIGIN_IS_UNREACHABLE, exports.STATUSES.TIMEOUT_OCCURED, exports.STATUSES.SSL_HANDSHAKE_FAILED, exports.STATUSES.INVALID_SSL_CERTIFICATE, exports.STATUSES.RAILGUN_ERROR, exports.STATUSES.SITE_IS_OVERLOADED, exports.STATUSES.SITE_IS_FROZEN, exports.STATUSES.IDENTITY_PROVIDER_AUTHENTICATION_ERROR, exports.STATUSES.NETWORK_READ_TIMEOUT, exports.STATUSES.NETWORK_CONNECT_TIMEOUT];
   exports.ALPHA = [];
-  for (let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
-    exports.ALPHA.push(String.fromCharCode(i));
-    exports.ALPHA.push(String.fromCharCode(i + 32));
+  for (let charCodeAtResult = "A".charCodeAt(0); charCodeAtResult <= "Z".charCodeAt(0); charCodeAtResult++) {
+    exports.ALPHA.push(String.fromCharCode(charCodeAtResult));
+    exports.ALPHA.push(String.fromCharCode(charCodeAtResult + 32));
   }
   exports.NUM_MAP = {
     0: 0,
@@ -4227,7 +4227,7 @@ var require_constants$3 = /* @__PURE__ */__commonJSMin(exports => {
   exports.TOKEN = ["!", "#", "$", "%", "&", "'", "*", "+", "-", ".", "^", "_", "`", "|", "~"].concat(exports.ALPHANUM);
   exports.HEADER_CHARS = ["\t"];
   for (let i = 32; i <= 255; i++) if (i !== 127) exports.HEADER_CHARS.push(i);
-  exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS.filter(c => c !== 44);
+  exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS.filter(item => item !== 44);
   exports.QUOTED_STRING = ["\t", " "];
   for (let i = 33; i <= 255; i++) if (i !== 34 && i !== 92) exports.QUOTED_STRING.push(i);
   exports.HTAB_SP_VCHAR_OBS_TEXT = ["\t", " "];
@@ -5003,7 +5003,7 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
   };
   webidl.brandCheckMultiple = function (List) {
-    const prototypes = List.map(c => webidl.util.MakeTypeAssertion(c));
+    const prototypes = List.map(item => webidl.util.MakeTypeAssertion(item));
     return V => {
       if (prototypes.every(typeCheck => !typeCheck(V))) {
         const err = /* @__PURE__ */new TypeError("Illegal invocation");
@@ -5207,7 +5207,7 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
     };
   };
   webidl.dictionaryConverter = function (converters) {
-    converters.sort((a, b) => (a.key > b.key) - (a.key < b.key));
+    converters.sort((event, right) => (event.key > right.key) - (event.key < right.key));
     return (dictionary, prefix, argument) => {
       const dict = {};
       if (dictionary != null && webidl.util.Type(dictionary) !== OBJECT) throw webidl.errors.exception({
@@ -5545,8 +5545,8 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function isValidReasonPhrase(statusText) {
     for (let i = 0; i < statusText.length; ++i) {
-      const c = statusText.charCodeAt(i);
-      if (!(c === 9 || c >= 32 && c <= 126 || c >= 128 && c <= 255)) return false;
+      const charCodeAtResult = statusText.charCodeAt(i);
+      if (!(charCodeAtResult === 9 || charCodeAtResult >= 32 && charCodeAtResult <= 126 || charCodeAtResult >= 128 && charCodeAtResult <= 255)) return false;
     }
     return true;
   }
@@ -5810,9 +5810,9 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {URL} A
   * @param {URL} B
   */
-  function sameOrigin(A, B) {
-    if (A.origin === B.origin && A.origin === "null") return true;
-    if (A.protocol === B.protocol && A.hostname === B.hostname && A.port === B.port) return true;
+  function sameOrigin(same, origin) {
+    if (same.origin === origin.origin && same.origin === "null") return true;
+    if (same.protocol === origin.protocol && same.hostname === origin.hostname && same.port === origin.port) return true;
     return false;
   }
   function isAborted(fetchParams) {
@@ -6365,11 +6365,11 @@ var require_formdata = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (idx !== -1) this.#state = [...this.#state.slice(0, idx), entry, ...this.#state.slice(idx + 1).filter(entry => entry.name !== name)];else this.#state.push(entry);
     }
     [nodeUtil$2.inspect.custom](depth, options) {
-      const state = this.#state.reduce((a, b) => {
-        if (a[b.name]) {
-          if (Array.isArray(a[b.name])) a[b.name].push(b.value);else a[b.name] = [a[b.name], b.value];
-        } else a[b.name] = b.value;
-        return a;
+      const state = this.#state.reduce((acc, cur) => {
+        if (acc[cur.name]) {
+          if (Array.isArray(acc[cur.name])) acc[cur.name].push(cur.value);else acc[cur.name] = [acc[cur.name], cur.value];
+        } else acc[cur.name] = cur.value;
+        return acc;
       }, {
         __proto__: null
       });
@@ -6483,8 +6483,8 @@ var require_formdata_parser = /* @__PURE__ */__commonJSMin((exports, module) => 
     const length = boundary.length;
     if (length < 27 || length > 70) return false;
     for (let i = 0; i < length; ++i) {
-      const cp = boundary.charCodeAt(i);
-      if (!(cp >= 48 && cp <= 57 || cp >= 65 && cp <= 90 || cp >= 97 && cp <= 122 || cp === 39 || cp === 45 || cp === 95)) return false;
+      const charCodeAtResult = boundary.charCodeAt(i);
+      if (!(charCodeAtResult >= 48 && charCodeAtResult <= 57 || charCodeAtResult >= 65 && charCodeAtResult <= 90 || charCodeAtResult >= 97 && charCodeAtResult <= 122 || charCodeAtResult === 39 || charCodeAtResult === 45 || charCodeAtResult === 95)) return false;
     }
     return true;
   }
@@ -6832,7 +6832,7 @@ var require_body = /* @__PURE__ */__commonJSMin((exports, module) => {
       const formdataEscape = str => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
       const normalizeLinefeeds = value => value.replace(/\r?\n|\r/g, "\r\n");
       const blobParts = [];
-      const rn = new Uint8Array([13, 10]);
+      const uint8Array = new Uint8Array([13, 10]);
       length = 0;
       let hasUnknownSizeValue = false;
       for (const [name, value] of object) if (typeof value === "string") {
@@ -6842,8 +6842,8 @@ var require_body = /* @__PURE__ */__commonJSMin((exports, module) => {
       } else {
         const chunk = textEncoder.encode(`${prefix}; name="${formdataEscape(normalizeLinefeeds(name))}"` + (value.name ? `; filename="${formdataEscape(value.name)}"` : "") + `\r
 Content-Type: ${value.type || "application/octet-stream"}\r\n\r\n`);
-        blobParts.push(chunk, value, rn);
-        if (typeof value.size === "number") length += chunk.byteLength + value.size + rn.byteLength;else hasUnknownSizeValue = true;
+        blobParts.push(chunk, value, uint8Array);
+        if (typeof value.size === "number") length += chunk.byteLength + value.size + uint8Array.byteLength;else hasUnknownSizeValue = true;
       }
       const chunk = textEncoder.encode(`--${boundary}--\r\n`);
       blobParts.push(chunk);
@@ -6945,16 +6945,16 @@ Content-Type: ${value.type || "application/octet-stream"}\r\n\r\n`);
             case "multipart/form-data":
               {
                 const parsed = multipartFormDataParser(value, mimeType);
-                const fd = new FormData();
-                setFormDataState(fd, parsed);
-                return fd;
+                const formData = new FormData();
+                setFormDataState(formData, parsed);
+                return formData;
               }
             case "application/x-www-form-urlencoded":
               {
                 const entries = new URLSearchParams(value.toString());
-                const fd = new FormData();
-                for (const [name, value] of entries) fd.append(name, value);
-                return fd;
+                const formData = new FormData();
+                for (const [name, value] of entries) formData.append(name, value);
+                return formData;
               }
           }
           throw new TypeError("Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".");
@@ -7098,7 +7098,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let mod;
     let useWasmSIMD = true;
     if (process.arch === "ppc64") {
-      const [major, minor] = process.versions.node.split(".").map(n => parseInt(n, 10));
+      const [major, minor] = process.versions.node.split(".").map(item => parseInt(item, 10));
       if (major < 24 || major === 24 && minor < 12) useWasmSIMD = false;
     }
     if (process.env.UNDICI_NO_WASM_SIMD === "1") useWasmSIMD = false;else if (process.env.UNDICI_NO_WASM_SIMD === "0") useWasmSIMD = true;
@@ -8069,9 +8069,9 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let callback = null;
     function onDrain() {
       if (callback) {
-        const cb = callback;
+        const callbackAlias = callback;
         callback = null;
-        cb();
+        callbackAlias();
       }
     }
     const waitForDrain = () => new Promise((resolve, reject) => {
@@ -8438,8 +8438,8 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     this[kSocket][kError] = err;
     this[kClient][kOnError](err);
   }
-  function onHttp2FrameError(type, code, id) {
-    if (id === 0) {
+  function onHttp2FrameError(type, code, error) {
+    if (error === 0) {
       const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code}`);
       this[kSocket][kError] = err;
       this[kClient][kOnError](err);
@@ -8846,9 +8846,9 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let callback = null;
     function onDrain() {
       if (callback) {
-        const cb = callback;
+        const callbackAlias = callback;
         callback = null;
-        cb();
+        callbackAlias();
       }
     }
     const waitForDrain = () => new Promise((resolve, reject) => {
@@ -9098,9 +9098,9 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
     get [kBusy]() {
       return Boolean(this[kHTTPContext]?.busy(null) || this[kSize] >= (getPipelining(this) || 1) || this[kPending] > 0);
     }
-    [kConnect](cb) {
+    [kConnect](connectValue) {
       connect(this);
-      this.once("connect", cb);
+      this.once("connect", connectValue);
     }
     [kDispatch](opts, handler) {
       const request = new Request(this[kUrl].origin, opts, handler);
@@ -9166,9 +9166,9 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (hostname[0] === "[") {
       const idx = hostname.indexOf("]");
       assert$21(idx !== -1);
-      const ip = hostname.substring(1, idx);
-      assert$21(net$2.isIPv6(ip));
-      hostname = ip;
+      const part = hostname.substring(1, idx);
+      assert$21(net$2.isIPv6(part));
+      hostname = part;
     }
     client[kConnecting] = true;
     if (channels.beforeConnect.hasSubscribers) channels.beforeConnect.publish({
@@ -9715,14 +9715,14 @@ var require_balanced_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {number} b
   * @returns {number}
   */
-  function getGreatestCommonDivisor(a, b) {
-    if (a === 0) return b;
-    while (b !== 0) {
-      const t = b;
-      b = a % b;
-      a = t;
+  function getGreatestCommonDivisor(greatest, common) {
+    if (greatest === 0) return common;
+    while (common !== 0) {
+      const commonAlias = common;
+      common = greatest % common;
+      greatest = commonAlias;
     }
-    return a;
+    return greatest;
   }
   function defaultFactory(origin, opts) {
     return new Pool(origin, opts);
@@ -9798,12 +9798,12 @@ var require_balanced_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
       return this[kClients].find(pool => pool[kUrl].origin === upstreamOrigin && pool.closed !== true && pool.destroyed !== true);
     }
     get upstreams() {
-      return this[kClients].filter(dispatcher => dispatcher.closed !== true && dispatcher.destroyed !== true).map(p => p[kUrl].origin);
+      return this[kClients].filter(dispatcher => dispatcher.closed !== true && dispatcher.destroyed !== true).map(item => item[kUrl].origin);
     }
     [kGetDispatcher]() {
       if (this[kClients].length === 0) throw new BalancedPoolMissingUpstreamError();
       if (!this[kClients].find(dispatcher => !dispatcher[kNeedDrain] && dispatcher.closed !== true && dispatcher.destroyed !== true)) return;
-      if (this[kClients].map(pool => pool[kNeedDrain]).reduce((a, b) => a && b, true)) return;
+      if (this[kClients].map(pool => pool[kNeedDrain]).reduce((acc, cur) => acc && cur, true)) return;
       let counter = 0;
       let maxWeightIndex = this[kClients].findIndex(pool => !pool[kNeedDrain]);
       while (counter++ < this[kClients].length) {
@@ -10374,8 +10374,8 @@ var require_socks5_client = /* @__PURE__ */__commonJSMin((exports, module) => {
       const request = Buffer$1.alloc(2 + this.authMethods.length);
       request[0] = SOCKS_VERSION;
       request[1] = this.authMethods.length;
-      this.authMethods.forEach((method, i) => {
-        request[2 + i] = method;
+      this.authMethods.forEach((method, item) => {
+        request[2 + item] = method;
       });
       this.socket.write(request);
     }
@@ -11291,7 +11291,7 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     static [kRetryHandlerDefaultRetry](err, {
       state,
       opts
-    }, cb) {
+    }, defaultValue) {
       const {
         statusCode,
         code,
@@ -11314,19 +11314,19 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         counter
       } = state;
       if (code && code !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code)) {
-        cb(err);
+        defaultValue(err);
         return;
       }
       if (Array.isArray(methods) && !methods.includes(method)) {
-        cb(err);
+        defaultValue(err);
         return;
       }
       if (statusCode != null && Array.isArray(statusCodes) && !statusCodes.includes(statusCode)) {
-        cb(err);
+        defaultValue(err);
         return;
       }
       if (counter > maxRetries) {
-        cb(err);
+        defaultValue(err);
         return;
       }
       let retryAfterHeader = headers?.["retry-after"];
@@ -11335,7 +11335,7 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(headers["retry-after"]) : retryAfterHeader * 1e3;
       }
       const retryTimeout = retryAfterHeader > 0 ? Math.min(retryAfterHeader, maxTimeout) : Math.min(minTimeout * timeoutFactor ** (counter - 1), maxTimeout);
-      setTimeout(() => cb(null), retryTimeout);
+      setTimeout(() => defaultValue(null), retryTimeout);
     }
     onResponseStart(controller, statusCode, headers, statusMessage) {
       this.error = null;
@@ -11883,7 +11883,7 @@ var require_readable = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (state.bufferIndex) {
       const start = state.bufferIndex;
       const end = state.buffer.length;
-      for (let n = start; n < end; n++) consumePush(consume, state.buffer[n]);
+      for (let startAlias = start; startAlias < end; startAlias++) consumePush(consume, state.buffer[startAlias]);
     } else for (const chunk of state.buffer) consumePush(consume, chunk);
     if (state.endEmitted) consumeEnd(this[kConsume], this._readableState.encoding);else consume.stream.on("end", function () {
       consumeEnd(this[kConsume], this._readableState.encoding);
@@ -12957,9 +12957,9 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (typeof path !== "string") return path;
     const pathSegments = path.split("?", 3);
     if (pathSegments.length !== 2) return path;
-    const qp = new URLSearchParams(pathSegments.pop());
-    qp.sort();
-    return [...pathSegments, qp.toString()].join("?");
+    const uRLSearchParams = new URLSearchParams(pathSegments.pop());
+    uRLSearchParams.sort();
+    return [...pathSegments, uRLSearchParams.toString()].join("?");
   }
   function matchKey(mockDispatch, {
     path,
@@ -13687,8 +13687,8 @@ var require_pending_interceptors_formatter = /* @__PURE__ */__commonJSMin((expor
       disableColors
     } = {}) {
       this.transform = new Transform$1({
-        transform(chunk, _enc, cb) {
-          cb(null, chunk);
+        transform(chunk, _enc, transform) {
+          transform(null, chunk);
         }
       });
       this.logger = new Console({
@@ -15257,10 +15257,10 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.pick = opts.pick ?? this.#defaultPick;
       this.storage = opts.storage ?? new DNSStorage(opts);
     }
-    runLookup(origin, opts, cb) {
+    runLookup(origin, opts, lookupValue) {
       const ips = this.storage.get(origin.hostname);
       if (ips == null && this.storage.full()) {
-        cb(null, origin);
+        lookupValue(null, origin);
         return;
       }
       const newOpts = {
@@ -15274,7 +15274,7 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       };
       if (ips == null) this.lookup(origin, newOpts, (err, addresses) => {
         if (err || addresses == null || addresses.length === 0) {
-          cb(err ?? new InformationalError("No DNS entries found"));
+          lookupValue(err ?? new InformationalError("No DNS entries found"));
           return;
         }
         this.setRecords(origin, addresses);
@@ -15282,29 +15282,29 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
         const ip = this.pick(origin, records, newOpts.affinity);
         let port;
         if (typeof ip.port === "number") port = `:${ip.port}`;else if (origin.port !== "") port = `:${origin.port}`;else port = "";
-        cb(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
+        lookupValue(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
       });else {
         const ip = this.pick(origin, ips, newOpts.affinity);
         if (ip == null) {
           this.storage.delete(origin.hostname);
-          this.runLookup(origin, opts, cb);
+          this.runLookup(origin, opts, lookupValue);
           return;
         }
         let port;
         if (typeof ip.port === "number") port = `:${ip.port}`;else if (origin.port !== "") port = `:${origin.port}`;else port = "";
-        cb(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
+        lookupValue(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
       }
     }
-    #defaultLookup(origin, opts, cb) {
+    #defaultLookup(origin, opts, fn) {
       lookup(origin.hostname, {
         all: true,
         family: this.dualStack === false ? this.affinity : 0,
         order: "ipv4first"
       }, (err, addresses) => {
-        if (err) return cb(err);
+        if (err) return fn(err);
         const results = /* @__PURE__ */new Map();
         for (const addr of addresses) results.set(`${addr.address}:${addr.family}`, addr);
-        cb(null, results.values());
+        fn(null, results.values());
       });
     }
     #defaultPick(origin, hostnameRecords, affinity) {
@@ -15344,10 +15344,10 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (!family) return null;
       if (family.offset == null || family.offset === maxInt) family.offset = 0;else family.offset++;
       const position = family.offset % family.ips.length;
-      const ip = family.ips[position] ?? null;
-      if (ip == null) return ip;
-      if (Date.now() - ip.timestamp > ip.ttl) family.ips.splice(position, 1);
-      return ip;
+      const fallbackValue = family.ips[position] ?? null;
+      if (fallbackValue == null) return fallbackValue;
+      if (Date.now() - fallbackValue.timestamp > fallbackValue.ttl) family.ips.splice(position, 1);
+      return fallbackValue;
     }
     setRecords(origin, addresses) {
       const timestamp = Date.now();
@@ -15415,16 +15415,16 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
             }
             this.#firstTry = false;
             const otherFamily = this.#newOrigin.hostname[0] === "[" ? 4 : 6;
-            const ip = this.#state.pickFamily(this.#origin, otherFamily);
-            if (ip == null) {
+            const pickFamily = this.#state.pickFamily(this.#origin, otherFamily);
+            if (pickFamily == null) {
               super.onResponseError(controller, err);
               return;
             }
             let port;
-            if (typeof ip.port === "number") port = `:${ip.port}`;else if (this.#origin.port !== "") port = `:${this.#origin.port}`;else port = "";
+            if (typeof pickFamily.port === "number") port = `:${pickFamily.port}`;else if (this.#origin.port !== "") port = `:${this.#origin.port}`;else port = "";
             const dispatchOpts = {
               ...this.#opts,
-              origin: `${this.#origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`,
+              origin: `${this.#origin.protocol}//${pickFamily.family === 6 ? `[${pickFamily.address}]` : pickFamily.address}${port}`,
               headers: withHostHeader(this.#origin.host, this.#opts.headers)
             };
             this.#dispatch(dispatchOpts, this);
@@ -15514,7 +15514,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function findUnescapedQuote(value, start) {
     let escaped = false;
-    for (let i = start; i < value.length; i++) if (escaped) escaped = false;else if (value[i] === "\\") escaped = true;else if (value[i] === "\"") return i;
+    for (let startAlias = start; startAlias < value.length; startAlias++) if (escaped) escaped = false;else if (value[startAlias] === "\\") escaped = true;else if (value[startAlias] === "\"") return startAlias;
     return -1;
   }
   function splitCacheControlHeaderValue(value) {
@@ -15609,9 +15609,9 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let headers;
     if (opts.headers == null) headers = {};else if (typeof opts.headers === "object") {
       headers = {};
-      if (hasSafeIterator(opts.headers)) for (const x of opts.headers) {
-        if (!Array.isArray(x)) throw new Error("opts.headers is not a valid header map");
-        const [key, val] = x;
+      if (hasSafeIterator(opts.headers)) for (const count of opts.headers) {
+        if (!Array.isArray(count)) throw new Error("opts.headers is not a valid header map");
+        const [key, val] = count;
         if (typeof key !== "string" || typeof val !== "string") throw new Error("opts.headers is not a valid header map");
         appendHeader(headers, key, val);
       } else for (const key of Object.keys(opts.headers)) appendHeader(headers, key, opts.headers[key]);
@@ -18529,8 +18529,8 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     return headersList.sortedMap = headers;
   }
-  function compareHeaderName(a, b) {
-    return a[0] < b[0] ? -1 : 1;
+  function compareHeaderName(compareValue, header) {
+    return compareValue[0] < header[0] ? -1 : 1;
   }
   var HeadersList = class HeadersList {
     /** @type {[string, string][]|null} */
@@ -18656,20 +18656,20 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
         const firstValue = iterator.next().value;
         array[0] = [firstValue[0], firstValue[1].value];
         assert$9(firstValue[1].value !== null);
-        for (let i = 1, j = 0, right = 0, left = 0, pivot = 0, x, value; i < size; ++i) {
+        for (let i = 1, j = 0, right = 0, left = 0, pivot = 0, count, value; i < size; ++i) {
           value = iterator.next().value;
-          x = array[i] = [value[0], value[1].value];
-          assert$9(x[1] !== null);
+          count = array[i] = [value[0], value[1].value];
+          assert$9(count[1] !== null);
           left = 0;
           right = i;
           while (left < right) {
             pivot = left + (right - left >> 1);
-            if (array[pivot][0] <= x[0]) left = pivot + 1;else right = pivot;
+            if (array[pivot][0] <= count[0]) left = pivot + 1;else right = pivot;
           }
           if (i !== pivot) {
             j = i;
             while (j > left) array[j] = array[--j];
-            array[left] = x;
+            array[left] = count;
           }
         }
         /* c8 ignore next 4 */
@@ -18784,17 +18784,17 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
       options.depth ??= depth;
       return `Headers ${util.formatWithOptions(options, this.#headersList.entries)}`;
     }
-    static getHeadersGuard(o) {
-      return o.#guard;
+    static getHeadersGuard(headers) {
+      return headers.#guard;
     }
-    static setHeadersGuard(o, guard) {
-      o.#guard = guard;
+    static setHeadersGuard(headers, guard) {
+      headers.#guard = guard;
     }
     /**
     * @param {Headers} o
     */
-    static getHeadersList(o) {
-      return o.#headersList;
+    static getHeadersList(headers) {
+      return headers.#headersList;
     }
     /**
     * @param {Headers} target
@@ -19451,15 +19451,15 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       if (init.signal !== undefined) signal = init.signal;
       this.#state = request;
-      const ac = new AbortController();
-      this.#signal = ac.signal;
+      const abortController = new AbortController();
+      this.#signal = abortController.signal;
       if (signal != null) {
-        if (signal.aborted) ac.abort(signal.reason);else {
-          this[kAbortController] = ac;
-          const abort = buildAbort(new WeakRef(ac));
+        if (signal.aborted) abortController.abort(signal.reason);else {
+          this[kAbortController] = abortController;
+          const abort = buildAbort(new WeakRef(abortController));
           if (abortSignalHasEventHandlerLeakWarning && getMaxListeners(signal) === defaultMaxListeners) setMaxListeners(1500, signal);
           util.addAbortListener(signal, abort);
-          requestFinalizer.register(ac, {
+          requestFinalizer.register(abortController, {
             signal,
             abort
           }, abort);
@@ -19590,18 +19590,18 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       webidl.brandCheck(this, Request);
       if (bodyUnusable(this.#state)) throw new TypeError("unusable");
       const clonedRequest = cloneRequest(this.#state);
-      const ac = new AbortController();
-      if (this.signal.aborted) ac.abort(this.signal.reason);else {
+      const abortController = new AbortController();
+      if (this.signal.aborted) abortController.abort(this.signal.reason);else {
         let list = dependentControllerMap.get(this.signal);
         if (list === undefined) {
           list = /* @__PURE__ */new Set();
           dependentControllerMap.set(this.signal, list);
         }
-        const acRef = new WeakRef(ac);
+        const acRef = new WeakRef(abortController);
         list.add(acRef);
-        util.addAbortListener(ac.signal, buildAbort(acRef));
+        util.addAbortListener(abortController.signal, buildAbort(acRef));
       }
-      return fromInnerRequest(clonedRequest, this.#dispatcher, ac.signal, getHeadersGuard(this.#headers));
+      return fromInnerRequest(clonedRequest, this.#dispatcher, abortController.signal, getHeadersGuard(this.#headers));
     }
     [nodeUtil.inspect.custom](depth, options) {
       if (options.depth === null) options.depth = 2;
@@ -20163,18 +20163,18 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function fetch(input, init = undefined) {
     webidl.argumentLengthCheck(arguments, 1, "globalThis.fetch");
-    let p = createDeferredPromise();
+    let deferredPromise = createDeferredPromise();
     let requestObject;
     try {
       requestObject = new Request(input, init);
     } catch (e) {
-      p.reject(e);
-      return p.promise;
+      deferredPromise.reject(e);
+      return deferredPromise.promise;
     }
     const request = getRequestState(requestObject);
     if (requestObject.signal.aborted) {
-      abortFetch(p, request, null, requestObject.signal.reason, null);
-      return p.promise;
+      abortFetch(deferredPromise, request, null, requestObject.signal.reason, null);
+      return deferredPromise.promise;
     }
     if (request.client.globalObject?.constructor?.name === "ServiceWorkerGlobalScope") request.serviceWorkers = "none";
     let responseObject = null;
@@ -20185,23 +20185,23 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
       assert$5(controller != null);
       controller.abort(requestObject.signal.reason);
       const realResponse = responseObject?.deref();
-      abortFetch(p, request, realResponse, requestObject.signal.reason, controller.controller);
+      abortFetch(deferredPromise, request, realResponse, requestObject.signal.reason, controller.controller);
     });
     const processResponse = response => {
       if (locallyAborted) return;
       if (response.aborted) {
-        abortFetch(p, request, responseObject, controller.serializedAbortReason, controller.controller);
+        abortFetch(deferredPromise, request, responseObject, controller.serializedAbortReason, controller.controller);
         return;
       }
       if (response.type === "error") {
-        p.reject(new TypeError("fetch failed", {
+        deferredPromise.reject(new TypeError("fetch failed", {
           cause: response.error
         }));
         return;
       }
       responseObject = new WeakRef(fromInnerResponse(response, "immutable"));
-      p.resolve(responseObject.deref());
-      p = null;
+      deferredPromise.resolve(responseObject.deref());
+      deferredPromise = null;
     };
     controller = fetching({
       request,
@@ -20210,7 +20210,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
       dispatcher: getRequestDispatcher(requestObject),
       requestObject
     });
-    return p.promise;
+    return deferredPromise.promise;
   }
   function finalizeAndReportTiming(response, initiatorType = "other") {
     if (response.type === "error" && response.aborted) return;
@@ -20231,8 +20231,8 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     markResourceTiming(timingInfo, originalURL.href, initiatorType, globalThis, cacheState, "", response.status);
   }
   var markResourceTiming = performance.markResourceTiming;
-  function abortFetch(p, request, responseObject, error, controller) {
-    if (p) p.reject(error);
+  function abortFetch(abort, request, responseObject, error, controller) {
+    if (abort) abort.reject(error);
     if (request.body?.stream != null && isReadable(request.body.stream)) request.body.stream.cancel(error).catch(err => {
       if (err.code === "ERR_INVALID_STATE") return;
       throw err;
@@ -20910,8 +20910,8 @@ var require_util$3 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {boolean | undefined} excludeFragment
   * @returns {boolean}
   */
-  function urlEquals(A, B, excludeFragment = false) {
-    return URLSerializer(A, excludeFragment) === URLSerializer(B, excludeFragment);
+  function urlEquals(url, equals, excludeFragment = false) {
+    return URLSerializer(url, excludeFragment) === URLSerializer(equals, excludeFragment);
   }
   /**
   * @see https://github.com/chromium/chromium/blob/694d20d134cb553d8d89e5500b9148012b1ba299/content/browser/cache_storage/cache_storage_cache.cc#L260-L262
@@ -21030,8 +21030,8 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
         });
         request = webidl.converters.RequestInfo(request);
         if (typeof request === "string") continue;
-        const r = getRequestState(request);
-        if (!urlIsHttpHttpsScheme(r.url) || r.method !== "GET") throw webidl.errors.exception({
+        const requestState = getRequestState(request);
+        if (!urlIsHttpHttpsScheme(requestState.url) || requestState.method !== "GET") throw webidl.errors.exception({
           header: prefix,
           message: "Expected http/s scheme when method is not GET."
         });
@@ -21039,17 +21039,17 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
       /** @type {ReturnType<typeof fetching>[]} */
       const fetchControllers = [];
       for (const request of requests) {
-        const r = getRequestState(new Request(request));
-        if (!urlIsHttpHttpsScheme(r.url)) throw webidl.errors.exception({
+        const requestState = getRequestState(new Request(request));
+        if (!urlIsHttpHttpsScheme(requestState.url)) throw webidl.errors.exception({
           header: prefix,
           message: "Expected http/s scheme."
         });
-        r.initiator = "fetch";
-        r.destination = "subresource";
-        requestList.push(r);
+        requestState.initiator = "fetch";
+        requestState.destination = "subresource";
+        requestList.push(requestState);
         const responsePromise = createDeferredPromise();
         fetchControllers.push(fetching({
-          request: r,
+          request: requestState,
           processResponse(response) {
             if (response.type === "error" || response.status === 206 || response.status < 200 || response.status > 299) responsePromise.reject(webidl.errors.exception({
               header: "Cache.addAll",
@@ -21263,12 +21263,12 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
               header: "Cache.#batchCacheOperations",
               message: "put operation should have an associated response"
             });
-            const r = operation.request;
-            if (!urlIsHttpHttpsScheme(r.url)) throw webidl.errors.exception({
+            const request = operation.request;
+            if (!urlIsHttpHttpsScheme(request.url)) throw webidl.errors.exception({
               header: "Cache.#batchCacheOperations",
               message: "expected http or https scheme"
             });
-            if (r.method !== "GET") throw webidl.errors.exception({
+            if (request.method !== "GET") throw webidl.errors.exception({
               header: "Cache.#batchCacheOperations",
               message: "not get method"
             });
@@ -21610,7 +21610,7 @@ var require_util$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   var IMFDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   var IMFMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var IMFPaddedNumbers = Array(61).fill(0).map((_, i) => i.toString().padStart(2, "0"));
+  var IMFPaddedNumbers = Array(61).fill(0).map((_, item) => item.toString().padStart(2, "0"));
   /**
   * @see https://www.rfc-editor.org/rfc/rfc7231#section-7.1.1.1
   * @param {number|Date} date
@@ -22325,8 +22325,8 @@ var require_util$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {EventInit | undefined} eventInitDict
   * @returns {void}
   */
-  function fireEvent(e, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
-    const event = eventFactory(e, eventInitDict);
+  function fireEvent(fire, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
+    const event = eventFactory(fire, eventInitDict);
     target.dispatchEvent(event);
   }
   /**
@@ -23062,25 +23062,25 @@ var require_receiver = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {number} n
     * @returns {Buffer}
     */
-    consume(n) {
-      if (n > this.#byteOffset) throw new Error("Called consume() before buffers satiated.");else if (n === 0) return emptyBuffer;
-      this.#byteOffset -= n;
+    consume(consume) {
+      if (consume > this.#byteOffset) throw new Error("Called consume() before buffers satiated.");else if (consume === 0) return emptyBuffer;
+      this.#byteOffset -= consume;
       const first = this.#buffers[0];
-      if (first.length > n) {
-        this.#buffers[0] = first.subarray(n, first.length);
-        return first.subarray(0, n);
-      } else if (first.length === n) return this.#buffers.shift();else {
+      if (first.length > consume) {
+        this.#buffers[0] = first.subarray(consume, first.length);
+        return first.subarray(0, consume);
+      } else if (first.length === consume) return this.#buffers.shift();else {
         let offset = 0;
-        const buffer = Buffer.allocUnsafeSlow(n);
-        while (offset !== n) {
+        const buffer = Buffer.allocUnsafeSlow(consume);
+        while (offset !== consume) {
           const next = this.#buffers[0];
           const length = next.length;
-          if (length + offset === n) {
+          if (length + offset === consume) {
             buffer.set(this.#buffers.shift(), offset);
             break;
-          } else if (length + offset > n) {
-            buffer.set(next.subarray(0, n - offset), offset);
-            this.#buffers[0] = next.subarray(n - offset);
+          } else if (length + offset > consume) {
+            buffer.set(next.subarray(0, consume - offset), offset);
+            this.#buffers[0] = next.subarray(consume - offset);
             break;
           } else {
             buffer.set(this.#buffers.shift(), offset);
@@ -23254,9 +23254,9 @@ var require_sender = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       /** @type {SendQueueNode} */
       const node = {
-        promise: item.arrayBuffer().then(ab => {
+        promise: item.arrayBuffer().then(result => {
           node.promise = null;
-          node.frame = createFrame(ab, hint);
+          node.frame = createFrame(result, hint);
         }),
         callback: cb,
         frame: null
@@ -23441,8 +23441,8 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
       const baseURL = environmentSettingsObject.settingsObject.baseUrl;
       const urlRecord = getURLRecord(url, baseURL);
       if (typeof protocols === "string") protocols = [protocols];
-      if (protocols.length !== new Set(protocols.map(p => p.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
-      if (protocols.length > 0 && !protocols.every(p => isValidSubprotocol(p))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length !== new Set(protocols.map(text => text.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length > 0 && !protocols.every(item => isValidSubprotocol(item))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
       this.#url = new URL(urlRecord.href);
       const client = environmentSettingsObject.settingsObject;
       this.#handler.controller = establishWebSocketConnection(urlRecord, protocols, client, this.#handler, options);
@@ -23521,52 +23521,52 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
       webidl.brandCheck(this, WebSocket);
       return this.#events.open;
     }
-    set onopen(fn) {
+    set onopen(open) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.open) this.removeEventListener("open", this.#events.open);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(open);
       if (listener !== null) {
         this.addEventListener("open", listener);
-        this.#events.open = fn;
+        this.#events.open = open;
       } else this.#events.open = null;
     }
     get onerror() {
       webidl.brandCheck(this, WebSocket);
       return this.#events.error;
     }
-    set onerror(fn) {
+    set onerror(error) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.error) this.removeEventListener("error", this.#events.error);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(error);
       if (listener !== null) {
         this.addEventListener("error", listener);
-        this.#events.error = fn;
+        this.#events.error = error;
       } else this.#events.error = null;
     }
     get onclose() {
       webidl.brandCheck(this, WebSocket);
       return this.#events.close;
     }
-    set onclose(fn) {
+    set onclose(close) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.close) this.removeEventListener("close", this.#events.close);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(close);
       if (listener !== null) {
         this.addEventListener("close", listener);
-        this.#events.close = fn;
+        this.#events.close = close;
       } else this.#events.close = null;
     }
     get onmessage() {
       webidl.brandCheck(this, WebSocket);
       return this.#events.message;
     }
-    set onmessage(fn) {
+    set onmessage(message) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.message) this.removeEventListener("message", this.#events.message);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(message);
       if (listener !== null) {
         this.addEventListener("message", listener);
-        this.#events.message = fn;
+        this.#events.message = message;
       } else this.#events.message = null;
     }
     get binaryType() {
@@ -23934,8 +23934,8 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
       const baseURL = environmentSettingsObject.settingsObject.baseUrl;
       const urlRecord = getURLRecord(url, baseURL);
       const protocols = options.protocols;
-      if (protocols.length !== new Set(protocols.map(p => p.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
-      if (protocols.length > 0 && !protocols.every(p => isValidSubprotocol(p))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length !== new Set(protocols.map(text => text.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length > 0 && !protocols.every(item => isValidSubprotocol(item))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
       this.#url = urlRecord.toString();
       this.#openedPromise = createDeferredPromise();
       this.#closedPromise = createDeferredPromise();
@@ -24188,11 +24188,11 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
   var RETRY = Buffer.from("retry");
   function isASCIINumberBytes(buffer, start) {
     if (start >= buffer.length) return false;
-    for (let i = start; i < buffer.length; i++) if (buffer[i] < 48 || buffer[i] > 57) return false;
+    for (let startAlias = start; startAlias < buffer.length; startAlias++) if (buffer[startAlias] < 48 || buffer[startAlias] > 57) return false;
     return true;
   }
   function isValidLastEventIdBytes(buffer, start) {
-    for (let i = start; i < buffer.length; i++) if (buffer[i] === 0) return false;
+    for (let startAlias = start; startAlias < buffer.length; startAlias++) if (buffer[startAlias] === 0) return false;
     return true;
   }
   function isFieldName(line, length, field) {
@@ -24406,10 +24406,10 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
       if (this.lineChunkIndex === this.chunkIndex) return this.chunks[this.chunkIndex].subarray(this.linePos, this.pos);
       const chunks = [];
       let length = 0;
-      for (let i = this.lineChunkIndex; i <= this.chunkIndex; i++) {
-        const chunk = this.chunks[i];
-        const start = i === this.lineChunkIndex ? this.linePos : 0;
-        const end = i === this.chunkIndex ? this.pos : chunk.length;
+      for (let lineChunkIndex = this.lineChunkIndex; lineChunkIndex <= this.chunkIndex; lineChunkIndex++) {
+        const chunk = this.chunks[lineChunkIndex];
+        const start = lineChunkIndex === this.lineChunkIndex ? this.linePos : 0;
+        const end = lineChunkIndex === this.chunkIndex ? this.pos : chunk.length;
         const slice = chunk.subarray(start, end);
         length += slice.length;
         chunks.push(slice);
@@ -24729,34 +24729,34 @@ var require_eventsource = /* @__PURE__ */__commonJSMin((exports, module) => {
     get onopen() {
       return this.#events.open;
     }
-    set onopen(fn) {
+    set onopen(open) {
       if (this.#events.open) this.removeEventListener("open", this.#events.open);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(open);
       if (listener !== null) {
         this.addEventListener("open", listener);
-        this.#events.open = fn;
+        this.#events.open = open;
       } else this.#events.open = null;
     }
     get onmessage() {
       return this.#events.message;
     }
-    set onmessage(fn) {
+    set onmessage(message) {
       if (this.#events.message) this.removeEventListener("message", this.#events.message);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(message);
       if (listener !== null) {
         this.addEventListener("message", listener);
-        this.#events.message = fn;
+        this.#events.message = message;
       } else this.#events.message = null;
     }
     get onerror() {
       return this.#events.error;
     }
-    set onerror(fn) {
+    set onerror(error) {
       if (this.#events.error) this.removeEventListener("error", this.#events.error);
-      const listener = webidl.converters.EventHandlerNonNull(fn);
+      const listener = webidl.converters.EventHandlerNonNull(error);
       if (listener !== null) {
         this.addEventListener("error", listener);
-        this.#events.error = fn;
+        this.#events.error = error;
       } else this.#events.error = null;
     }
   };
@@ -24891,7 +24891,7 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
     parseHeaders: util.parseHeaders,
     headerNameToString: util.headerNameToString
   };
-  function makeDispatcher(fn) {
+  function makeDispatcher(dispatcher) {
     return (url, opts, handler) => {
       if (typeof opts === "function") {
         handler = opts;
@@ -24913,7 +24913,7 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
         dispatcher = getGlobalDispatcher()
       } = opts;
       if (agent) throw new InvalidArgumentError("unsupported opts.agent. Did you mean opts.client?");
-      return fn.call(dispatcher, {
+      return dispatcher.call(dispatcher, {
         ...opts,
         origin: url.origin,
         path: url.search ? `${url.pathname}${url.search}` : url.pathname,
@@ -25511,771 +25511,771 @@ var xiaoheiBotMcpService = {
 };
 //#endregion
 //#region electron/browser-harness/generated.ts
-function bindDomains(t) {
+function bindDomains(domains) {
   return {
     Accessibility: {
-      disable: params => t._call("Accessibility.disable", params),
-      enable: params => t._call("Accessibility.enable", params),
-      getPartialAXTree: params => t._call("Accessibility.getPartialAXTree", params),
-      getFullAXTree: params => t._call("Accessibility.getFullAXTree", params),
-      getRootAXNode: params => t._call("Accessibility.getRootAXNode", params),
-      getAXNodeAndAncestors: params => t._call("Accessibility.getAXNodeAndAncestors", params),
-      getChildAXNodes: params => t._call("Accessibility.getChildAXNodes", params),
-      queryAXTree: params => t._call("Accessibility.queryAXTree", params)
+      disable: params => domains._call("Accessibility.disable", params),
+      enable: params => domains._call("Accessibility.enable", params),
+      getPartialAXTree: params => domains._call("Accessibility.getPartialAXTree", params),
+      getFullAXTree: params => domains._call("Accessibility.getFullAXTree", params),
+      getRootAXNode: params => domains._call("Accessibility.getRootAXNode", params),
+      getAXNodeAndAncestors: params => domains._call("Accessibility.getAXNodeAndAncestors", params),
+      getChildAXNodes: params => domains._call("Accessibility.getChildAXNodes", params),
+      queryAXTree: params => domains._call("Accessibility.queryAXTree", params)
     },
     Animation: {
-      disable: params => t._call("Animation.disable", params),
-      enable: params => t._call("Animation.enable", params),
-      getCurrentTime: params => t._call("Animation.getCurrentTime", params),
-      getPlaybackRate: params => t._call("Animation.getPlaybackRate", params),
-      releaseAnimations: params => t._call("Animation.releaseAnimations", params),
-      resolveAnimation: params => t._call("Animation.resolveAnimation", params),
-      seekAnimations: params => t._call("Animation.seekAnimations", params),
-      setPaused: params => t._call("Animation.setPaused", params),
-      setPlaybackRate: params => t._call("Animation.setPlaybackRate", params),
-      setTiming: params => t._call("Animation.setTiming", params)
+      disable: params => domains._call("Animation.disable", params),
+      enable: params => domains._call("Animation.enable", params),
+      getCurrentTime: params => domains._call("Animation.getCurrentTime", params),
+      getPlaybackRate: params => domains._call("Animation.getPlaybackRate", params),
+      releaseAnimations: params => domains._call("Animation.releaseAnimations", params),
+      resolveAnimation: params => domains._call("Animation.resolveAnimation", params),
+      seekAnimations: params => domains._call("Animation.seekAnimations", params),
+      setPaused: params => domains._call("Animation.setPaused", params),
+      setPlaybackRate: params => domains._call("Animation.setPlaybackRate", params),
+      setTiming: params => domains._call("Animation.setTiming", params)
     },
     Audits: {
-      getEncodedResponse: params => t._call("Audits.getEncodedResponse", params),
-      disable: params => t._call("Audits.disable", params),
-      enable: params => t._call("Audits.enable", params),
-      checkFormsIssues: params => t._call("Audits.checkFormsIssues", params)
+      getEncodedResponse: params => domains._call("Audits.getEncodedResponse", params),
+      disable: params => domains._call("Audits.disable", params),
+      enable: params => domains._call("Audits.enable", params),
+      checkFormsIssues: params => domains._call("Audits.checkFormsIssues", params)
     },
     Autofill: {
-      trigger: params => t._call("Autofill.trigger", params),
-      setAddresses: params => t._call("Autofill.setAddresses", params),
-      disable: params => t._call("Autofill.disable", params),
-      enable: params => t._call("Autofill.enable", params)
+      trigger: params => domains._call("Autofill.trigger", params),
+      setAddresses: params => domains._call("Autofill.setAddresses", params),
+      disable: params => domains._call("Autofill.disable", params),
+      enable: params => domains._call("Autofill.enable", params)
     },
     BackgroundService: {
-      startObserving: params => t._call("BackgroundService.startObserving", params),
-      stopObserving: params => t._call("BackgroundService.stopObserving", params),
-      setRecording: params => t._call("BackgroundService.setRecording", params),
-      clearEvents: params => t._call("BackgroundService.clearEvents", params)
+      startObserving: params => domains._call("BackgroundService.startObserving", params),
+      stopObserving: params => domains._call("BackgroundService.stopObserving", params),
+      setRecording: params => domains._call("BackgroundService.setRecording", params),
+      clearEvents: params => domains._call("BackgroundService.clearEvents", params)
     },
     BluetoothEmulation: {
-      enable: params => t._call("BluetoothEmulation.enable", params),
-      setSimulatedCentralState: params => t._call("BluetoothEmulation.setSimulatedCentralState", params),
-      disable: params => t._call("BluetoothEmulation.disable", params),
-      simulatePreconnectedPeripheral: params => t._call("BluetoothEmulation.simulatePreconnectedPeripheral", params),
-      simulateAdvertisement: params => t._call("BluetoothEmulation.simulateAdvertisement", params),
-      simulateGATTOperationResponse: params => t._call("BluetoothEmulation.simulateGATTOperationResponse", params),
-      simulateCharacteristicOperationResponse: params => t._call("BluetoothEmulation.simulateCharacteristicOperationResponse", params),
-      simulateDescriptorOperationResponse: params => t._call("BluetoothEmulation.simulateDescriptorOperationResponse", params),
-      addService: params => t._call("BluetoothEmulation.addService", params),
-      removeService: params => t._call("BluetoothEmulation.removeService", params),
-      addCharacteristic: params => t._call("BluetoothEmulation.addCharacteristic", params),
-      removeCharacteristic: params => t._call("BluetoothEmulation.removeCharacteristic", params),
-      addDescriptor: params => t._call("BluetoothEmulation.addDescriptor", params),
-      removeDescriptor: params => t._call("BluetoothEmulation.removeDescriptor", params),
-      simulateGATTDisconnection: params => t._call("BluetoothEmulation.simulateGATTDisconnection", params)
+      enable: params => domains._call("BluetoothEmulation.enable", params),
+      setSimulatedCentralState: params => domains._call("BluetoothEmulation.setSimulatedCentralState", params),
+      disable: params => domains._call("BluetoothEmulation.disable", params),
+      simulatePreconnectedPeripheral: params => domains._call("BluetoothEmulation.simulatePreconnectedPeripheral", params),
+      simulateAdvertisement: params => domains._call("BluetoothEmulation.simulateAdvertisement", params),
+      simulateGATTOperationResponse: params => domains._call("BluetoothEmulation.simulateGATTOperationResponse", params),
+      simulateCharacteristicOperationResponse: params => domains._call("BluetoothEmulation.simulateCharacteristicOperationResponse", params),
+      simulateDescriptorOperationResponse: params => domains._call("BluetoothEmulation.simulateDescriptorOperationResponse", params),
+      addService: params => domains._call("BluetoothEmulation.addService", params),
+      removeService: params => domains._call("BluetoothEmulation.removeService", params),
+      addCharacteristic: params => domains._call("BluetoothEmulation.addCharacteristic", params),
+      removeCharacteristic: params => domains._call("BluetoothEmulation.removeCharacteristic", params),
+      addDescriptor: params => domains._call("BluetoothEmulation.addDescriptor", params),
+      removeDescriptor: params => domains._call("BluetoothEmulation.removeDescriptor", params),
+      simulateGATTDisconnection: params => domains._call("BluetoothEmulation.simulateGATTDisconnection", params)
     },
     Browser: {
-      setPermission: params => t._call("Browser.setPermission", params),
-      grantPermissions: params => t._call("Browser.grantPermissions", params),
-      resetPermissions: params => t._call("Browser.resetPermissions", params),
-      setDownloadBehavior: params => t._call("Browser.setDownloadBehavior", params),
-      cancelDownload: params => t._call("Browser.cancelDownload", params),
-      close: params => t._call("Browser.close", params),
-      crash: params => t._call("Browser.crash", params),
-      crashGpuProcess: params => t._call("Browser.crashGpuProcess", params),
-      getVersion: params => t._call("Browser.getVersion", params),
-      getBrowserCommandLine: params => t._call("Browser.getBrowserCommandLine", params),
-      getHistograms: params => t._call("Browser.getHistograms", params),
-      getHistogram: params => t._call("Browser.getHistogram", params),
-      getWindowBounds: params => t._call("Browser.getWindowBounds", params),
-      getWindowForTarget: params => t._call("Browser.getWindowForTarget", params),
-      setWindowBounds: params => t._call("Browser.setWindowBounds", params),
-      setContentsSize: params => t._call("Browser.setContentsSize", params),
-      setDockTile: params => t._call("Browser.setDockTile", params),
-      executeBrowserCommand: params => t._call("Browser.executeBrowserCommand", params),
-      addPrivacySandboxEnrollmentOverride: params => t._call("Browser.addPrivacySandboxEnrollmentOverride", params),
-      addPrivacySandboxCoordinatorKeyConfig: params => t._call("Browser.addPrivacySandboxCoordinatorKeyConfig", params)
+      setPermission: params => domains._call("Browser.setPermission", params),
+      grantPermissions: params => domains._call("Browser.grantPermissions", params),
+      resetPermissions: params => domains._call("Browser.resetPermissions", params),
+      setDownloadBehavior: params => domains._call("Browser.setDownloadBehavior", params),
+      cancelDownload: params => domains._call("Browser.cancelDownload", params),
+      close: params => domains._call("Browser.close", params),
+      crash: params => domains._call("Browser.crash", params),
+      crashGpuProcess: params => domains._call("Browser.crashGpuProcess", params),
+      getVersion: params => domains._call("Browser.getVersion", params),
+      getBrowserCommandLine: params => domains._call("Browser.getBrowserCommandLine", params),
+      getHistograms: params => domains._call("Browser.getHistograms", params),
+      getHistogram: params => domains._call("Browser.getHistogram", params),
+      getWindowBounds: params => domains._call("Browser.getWindowBounds", params),
+      getWindowForTarget: params => domains._call("Browser.getWindowForTarget", params),
+      setWindowBounds: params => domains._call("Browser.setWindowBounds", params),
+      setContentsSize: params => domains._call("Browser.setContentsSize", params),
+      setDockTile: params => domains._call("Browser.setDockTile", params),
+      executeBrowserCommand: params => domains._call("Browser.executeBrowserCommand", params),
+      addPrivacySandboxEnrollmentOverride: params => domains._call("Browser.addPrivacySandboxEnrollmentOverride", params),
+      addPrivacySandboxCoordinatorKeyConfig: params => domains._call("Browser.addPrivacySandboxCoordinatorKeyConfig", params)
     },
     CacheStorage: {
-      deleteCache: params => t._call("CacheStorage.deleteCache", params),
-      deleteEntry: params => t._call("CacheStorage.deleteEntry", params),
-      requestCacheNames: params => t._call("CacheStorage.requestCacheNames", params),
-      requestCachedResponse: params => t._call("CacheStorage.requestCachedResponse", params),
-      requestEntries: params => t._call("CacheStorage.requestEntries", params)
+      deleteCache: params => domains._call("CacheStorage.deleteCache", params),
+      deleteEntry: params => domains._call("CacheStorage.deleteEntry", params),
+      requestCacheNames: params => domains._call("CacheStorage.requestCacheNames", params),
+      requestCachedResponse: params => domains._call("CacheStorage.requestCachedResponse", params),
+      requestEntries: params => domains._call("CacheStorage.requestEntries", params)
     },
     Cast: {
-      enable: params => t._call("Cast.enable", params),
-      disable: params => t._call("Cast.disable", params),
-      setSinkToUse: params => t._call("Cast.setSinkToUse", params),
-      startDesktopMirroring: params => t._call("Cast.startDesktopMirroring", params),
-      startTabMirroring: params => t._call("Cast.startTabMirroring", params),
-      stopCasting: params => t._call("Cast.stopCasting", params)
+      enable: params => domains._call("Cast.enable", params),
+      disable: params => domains._call("Cast.disable", params),
+      setSinkToUse: params => domains._call("Cast.setSinkToUse", params),
+      startDesktopMirroring: params => domains._call("Cast.startDesktopMirroring", params),
+      startTabMirroring: params => domains._call("Cast.startTabMirroring", params),
+      stopCasting: params => domains._call("Cast.stopCasting", params)
     },
     Console: {
-      clearMessages: params => t._call("Console.clearMessages", params),
-      disable: params => t._call("Console.disable", params),
-      enable: params => t._call("Console.enable", params)
+      clearMessages: params => domains._call("Console.clearMessages", params),
+      disable: params => domains._call("Console.disable", params),
+      enable: params => domains._call("Console.enable", params)
     },
     CrashReportContext: {
-      getEntries: params => t._call("CrashReportContext.getEntries", params)
+      getEntries: params => domains._call("CrashReportContext.getEntries", params)
     },
     CSS: {
-      addRule: params => t._call("CSS.addRule", params),
-      collectClassNames: params => t._call("CSS.collectClassNames", params),
-      createStyleSheet: params => t._call("CSS.createStyleSheet", params),
-      disable: params => t._call("CSS.disable", params),
-      enable: params => t._call("CSS.enable", params),
-      forcePseudoState: params => t._call("CSS.forcePseudoState", params),
-      forceStartingStyle: params => t._call("CSS.forceStartingStyle", params),
-      getBackgroundColors: params => t._call("CSS.getBackgroundColors", params),
-      getComputedStyleForNode: params => t._call("CSS.getComputedStyleForNode", params),
-      resolveValues: params => t._call("CSS.resolveValues", params),
-      getLonghandProperties: params => t._call("CSS.getLonghandProperties", params),
-      getInlineStylesForNode: params => t._call("CSS.getInlineStylesForNode", params),
-      getAnimatedStylesForNode: params => t._call("CSS.getAnimatedStylesForNode", params),
-      getMatchedStylesForNode: params => t._call("CSS.getMatchedStylesForNode", params),
-      getEnvironmentVariables: params => t._call("CSS.getEnvironmentVariables", params),
-      getMediaQueries: params => t._call("CSS.getMediaQueries", params),
-      getPlatformFontsForNode: params => t._call("CSS.getPlatformFontsForNode", params),
-      getStyleSheetText: params => t._call("CSS.getStyleSheetText", params),
-      getLayersForNode: params => t._call("CSS.getLayersForNode", params),
-      getLocationForSelector: params => t._call("CSS.getLocationForSelector", params),
-      trackComputedStyleUpdatesForNode: params => t._call("CSS.trackComputedStyleUpdatesForNode", params),
-      trackComputedStyleUpdates: params => t._call("CSS.trackComputedStyleUpdates", params),
-      takeComputedStyleUpdates: params => t._call("CSS.takeComputedStyleUpdates", params),
-      setEffectivePropertyValueForNode: params => t._call("CSS.setEffectivePropertyValueForNode", params),
-      setPropertyRulePropertyName: params => t._call("CSS.setPropertyRulePropertyName", params),
-      setKeyframeKey: params => t._call("CSS.setKeyframeKey", params),
-      setMediaText: params => t._call("CSS.setMediaText", params),
-      setContainerQueryText: params => t._call("CSS.setContainerQueryText", params),
-      setSupportsText: params => t._call("CSS.setSupportsText", params),
-      setNavigationText: params => t._call("CSS.setNavigationText", params),
-      setScopeText: params => t._call("CSS.setScopeText", params),
-      setRuleSelector: params => t._call("CSS.setRuleSelector", params),
-      setStyleSheetText: params => t._call("CSS.setStyleSheetText", params),
-      setStyleTexts: params => t._call("CSS.setStyleTexts", params),
-      startRuleUsageTracking: params => t._call("CSS.startRuleUsageTracking", params),
-      stopRuleUsageTracking: params => t._call("CSS.stopRuleUsageTracking", params),
-      takeCoverageDelta: params => t._call("CSS.takeCoverageDelta", params),
-      setLocalFontsEnabled: params => t._call("CSS.setLocalFontsEnabled", params)
+      addRule: params => domains._call("CSS.addRule", params),
+      collectClassNames: params => domains._call("CSS.collectClassNames", params),
+      createStyleSheet: params => domains._call("CSS.createStyleSheet", params),
+      disable: params => domains._call("CSS.disable", params),
+      enable: params => domains._call("CSS.enable", params),
+      forcePseudoState: params => domains._call("CSS.forcePseudoState", params),
+      forceStartingStyle: params => domains._call("CSS.forceStartingStyle", params),
+      getBackgroundColors: params => domains._call("CSS.getBackgroundColors", params),
+      getComputedStyleForNode: params => domains._call("CSS.getComputedStyleForNode", params),
+      resolveValues: params => domains._call("CSS.resolveValues", params),
+      getLonghandProperties: params => domains._call("CSS.getLonghandProperties", params),
+      getInlineStylesForNode: params => domains._call("CSS.getInlineStylesForNode", params),
+      getAnimatedStylesForNode: params => domains._call("CSS.getAnimatedStylesForNode", params),
+      getMatchedStylesForNode: params => domains._call("CSS.getMatchedStylesForNode", params),
+      getEnvironmentVariables: params => domains._call("CSS.getEnvironmentVariables", params),
+      getMediaQueries: params => domains._call("CSS.getMediaQueries", params),
+      getPlatformFontsForNode: params => domains._call("CSS.getPlatformFontsForNode", params),
+      getStyleSheetText: params => domains._call("CSS.getStyleSheetText", params),
+      getLayersForNode: params => domains._call("CSS.getLayersForNode", params),
+      getLocationForSelector: params => domains._call("CSS.getLocationForSelector", params),
+      trackComputedStyleUpdatesForNode: params => domains._call("CSS.trackComputedStyleUpdatesForNode", params),
+      trackComputedStyleUpdates: params => domains._call("CSS.trackComputedStyleUpdates", params),
+      takeComputedStyleUpdates: params => domains._call("CSS.takeComputedStyleUpdates", params),
+      setEffectivePropertyValueForNode: params => domains._call("CSS.setEffectivePropertyValueForNode", params),
+      setPropertyRulePropertyName: params => domains._call("CSS.setPropertyRulePropertyName", params),
+      setKeyframeKey: params => domains._call("CSS.setKeyframeKey", params),
+      setMediaText: params => domains._call("CSS.setMediaText", params),
+      setContainerQueryText: params => domains._call("CSS.setContainerQueryText", params),
+      setSupportsText: params => domains._call("CSS.setSupportsText", params),
+      setNavigationText: params => domains._call("CSS.setNavigationText", params),
+      setScopeText: params => domains._call("CSS.setScopeText", params),
+      setRuleSelector: params => domains._call("CSS.setRuleSelector", params),
+      setStyleSheetText: params => domains._call("CSS.setStyleSheetText", params),
+      setStyleTexts: params => domains._call("CSS.setStyleTexts", params),
+      startRuleUsageTracking: params => domains._call("CSS.startRuleUsageTracking", params),
+      stopRuleUsageTracking: params => domains._call("CSS.stopRuleUsageTracking", params),
+      takeCoverageDelta: params => domains._call("CSS.takeCoverageDelta", params),
+      setLocalFontsEnabled: params => domains._call("CSS.setLocalFontsEnabled", params)
     },
     Debugger: {
-      continueToLocation: params => t._call("Debugger.continueToLocation", params),
-      disable: params => t._call("Debugger.disable", params),
-      enable: params => t._call("Debugger.enable", params),
-      evaluateOnCallFrame: params => t._call("Debugger.evaluateOnCallFrame", params),
-      getPossibleBreakpoints: params => t._call("Debugger.getPossibleBreakpoints", params),
-      getScriptSource: params => t._call("Debugger.getScriptSource", params),
-      disassembleWasmModule: params => t._call("Debugger.disassembleWasmModule", params),
-      nextWasmDisassemblyChunk: params => t._call("Debugger.nextWasmDisassemblyChunk", params),
-      getWasmBytecode: params => t._call("Debugger.getWasmBytecode", params),
-      getStackTrace: params => t._call("Debugger.getStackTrace", params),
-      pause: params => t._call("Debugger.pause", params),
-      pauseOnAsyncCall: params => t._call("Debugger.pauseOnAsyncCall", params),
-      removeBreakpoint: params => t._call("Debugger.removeBreakpoint", params),
-      restartFrame: params => t._call("Debugger.restartFrame", params),
-      resume: params => t._call("Debugger.resume", params),
-      searchInContent: params => t._call("Debugger.searchInContent", params),
-      setAsyncCallStackDepth: params => t._call("Debugger.setAsyncCallStackDepth", params),
-      setBlackboxExecutionContexts: params => t._call("Debugger.setBlackboxExecutionContexts", params),
-      setBlackboxPatterns: params => t._call("Debugger.setBlackboxPatterns", params),
-      setBlackboxedRanges: params => t._call("Debugger.setBlackboxedRanges", params),
-      setBreakpoint: params => t._call("Debugger.setBreakpoint", params),
-      setInstrumentationBreakpoint: params => t._call("Debugger.setInstrumentationBreakpoint", params),
-      setBreakpointByUrl: params => t._call("Debugger.setBreakpointByUrl", params),
-      setBreakpointOnFunctionCall: params => t._call("Debugger.setBreakpointOnFunctionCall", params),
-      setBreakpointsActive: params => t._call("Debugger.setBreakpointsActive", params),
-      setPauseOnExceptions: params => t._call("Debugger.setPauseOnExceptions", params),
-      setReturnValue: params => t._call("Debugger.setReturnValue", params),
-      setScriptSource: params => t._call("Debugger.setScriptSource", params),
-      setSkipAllPauses: params => t._call("Debugger.setSkipAllPauses", params),
-      setVariableValue: params => t._call("Debugger.setVariableValue", params),
-      stepInto: params => t._call("Debugger.stepInto", params),
-      stepOut: params => t._call("Debugger.stepOut", params),
-      stepOver: params => t._call("Debugger.stepOver", params)
+      continueToLocation: params => domains._call("Debugger.continueToLocation", params),
+      disable: params => domains._call("Debugger.disable", params),
+      enable: params => domains._call("Debugger.enable", params),
+      evaluateOnCallFrame: params => domains._call("Debugger.evaluateOnCallFrame", params),
+      getPossibleBreakpoints: params => domains._call("Debugger.getPossibleBreakpoints", params),
+      getScriptSource: params => domains._call("Debugger.getScriptSource", params),
+      disassembleWasmModule: params => domains._call("Debugger.disassembleWasmModule", params),
+      nextWasmDisassemblyChunk: params => domains._call("Debugger.nextWasmDisassemblyChunk", params),
+      getWasmBytecode: params => domains._call("Debugger.getWasmBytecode", params),
+      getStackTrace: params => domains._call("Debugger.getStackTrace", params),
+      pause: params => domains._call("Debugger.pause", params),
+      pauseOnAsyncCall: params => domains._call("Debugger.pauseOnAsyncCall", params),
+      removeBreakpoint: params => domains._call("Debugger.removeBreakpoint", params),
+      restartFrame: params => domains._call("Debugger.restartFrame", params),
+      resume: params => domains._call("Debugger.resume", params),
+      searchInContent: params => domains._call("Debugger.searchInContent", params),
+      setAsyncCallStackDepth: params => domains._call("Debugger.setAsyncCallStackDepth", params),
+      setBlackboxExecutionContexts: params => domains._call("Debugger.setBlackboxExecutionContexts", params),
+      setBlackboxPatterns: params => domains._call("Debugger.setBlackboxPatterns", params),
+      setBlackboxedRanges: params => domains._call("Debugger.setBlackboxedRanges", params),
+      setBreakpoint: params => domains._call("Debugger.setBreakpoint", params),
+      setInstrumentationBreakpoint: params => domains._call("Debugger.setInstrumentationBreakpoint", params),
+      setBreakpointByUrl: params => domains._call("Debugger.setBreakpointByUrl", params),
+      setBreakpointOnFunctionCall: params => domains._call("Debugger.setBreakpointOnFunctionCall", params),
+      setBreakpointsActive: params => domains._call("Debugger.setBreakpointsActive", params),
+      setPauseOnExceptions: params => domains._call("Debugger.setPauseOnExceptions", params),
+      setReturnValue: params => domains._call("Debugger.setReturnValue", params),
+      setScriptSource: params => domains._call("Debugger.setScriptSource", params),
+      setSkipAllPauses: params => domains._call("Debugger.setSkipAllPauses", params),
+      setVariableValue: params => domains._call("Debugger.setVariableValue", params),
+      stepInto: params => domains._call("Debugger.stepInto", params),
+      stepOut: params => domains._call("Debugger.stepOut", params),
+      stepOver: params => domains._call("Debugger.stepOver", params)
     },
     DeviceAccess: {
-      enable: params => t._call("DeviceAccess.enable", params),
-      disable: params => t._call("DeviceAccess.disable", params),
-      selectPrompt: params => t._call("DeviceAccess.selectPrompt", params),
-      cancelPrompt: params => t._call("DeviceAccess.cancelPrompt", params)
+      enable: params => domains._call("DeviceAccess.enable", params),
+      disable: params => domains._call("DeviceAccess.disable", params),
+      selectPrompt: params => domains._call("DeviceAccess.selectPrompt", params),
+      cancelPrompt: params => domains._call("DeviceAccess.cancelPrompt", params)
     },
     DeviceOrientation: {
-      clearDeviceOrientationOverride: params => t._call("DeviceOrientation.clearDeviceOrientationOverride", params),
-      setDeviceOrientationOverride: params => t._call("DeviceOrientation.setDeviceOrientationOverride", params)
+      clearDeviceOrientationOverride: params => domains._call("DeviceOrientation.clearDeviceOrientationOverride", params),
+      setDeviceOrientationOverride: params => domains._call("DeviceOrientation.setDeviceOrientationOverride", params)
     },
     DOM: {
-      collectClassNamesFromSubtree: params => t._call("DOM.collectClassNamesFromSubtree", params),
-      copyTo: params => t._call("DOM.copyTo", params),
-      describeNode: params => t._call("DOM.describeNode", params),
-      scrollIntoViewIfNeeded: params => t._call("DOM.scrollIntoViewIfNeeded", params),
-      disable: params => t._call("DOM.disable", params),
-      discardSearchResults: params => t._call("DOM.discardSearchResults", params),
-      enable: params => t._call("DOM.enable", params),
-      focus: params => t._call("DOM.focus", params),
-      getAttributes: params => t._call("DOM.getAttributes", params),
-      getBoxModel: params => t._call("DOM.getBoxModel", params),
-      getContentQuads: params => t._call("DOM.getContentQuads", params),
-      getDocument: params => t._call("DOM.getDocument", params),
-      getFlattenedDocument: params => t._call("DOM.getFlattenedDocument", params),
-      getNodesForSubtreeByStyle: params => t._call("DOM.getNodesForSubtreeByStyle", params),
-      getNodeForLocation: params => t._call("DOM.getNodeForLocation", params),
-      getOuterHTML: params => t._call("DOM.getOuterHTML", params),
-      getRelayoutBoundary: params => t._call("DOM.getRelayoutBoundary", params),
-      getSearchResults: params => t._call("DOM.getSearchResults", params),
-      markUndoableState: params => t._call("DOM.markUndoableState", params),
-      moveTo: params => t._call("DOM.moveTo", params),
-      performSearch: params => t._call("DOM.performSearch", params),
-      pushNodeByPathToFrontend: params => t._call("DOM.pushNodeByPathToFrontend", params),
-      pushNodesByBackendIdsToFrontend: params => t._call("DOM.pushNodesByBackendIdsToFrontend", params),
-      querySelector: params => t._call("DOM.querySelector", params),
-      querySelectorAll: params => t._call("DOM.querySelectorAll", params),
-      getTopLayerElements: params => t._call("DOM.getTopLayerElements", params),
-      getElementByRelation: params => t._call("DOM.getElementByRelation", params),
-      redo: params => t._call("DOM.redo", params),
-      removeAttribute: params => t._call("DOM.removeAttribute", params),
-      removeNode: params => t._call("DOM.removeNode", params),
-      requestChildNodes: params => t._call("DOM.requestChildNodes", params),
-      requestNode: params => t._call("DOM.requestNode", params),
-      resolveNode: params => t._call("DOM.resolveNode", params),
-      setAttributeValue: params => t._call("DOM.setAttributeValue", params),
-      setAttributesAsText: params => t._call("DOM.setAttributesAsText", params),
-      setFileInputFiles: params => t._call("DOM.setFileInputFiles", params),
-      setNodeStackTracesEnabled: params => t._call("DOM.setNodeStackTracesEnabled", params),
-      getNodeStackTraces: params => t._call("DOM.getNodeStackTraces", params),
-      getFileInfo: params => t._call("DOM.getFileInfo", params),
-      getDetachedDomNodes: params => t._call("DOM.getDetachedDomNodes", params),
-      setInspectedNode: params => t._call("DOM.setInspectedNode", params),
-      setNodeName: params => t._call("DOM.setNodeName", params),
-      setNodeValue: params => t._call("DOM.setNodeValue", params),
-      setOuterHTML: params => t._call("DOM.setOuterHTML", params),
-      undo: params => t._call("DOM.undo", params),
-      getFrameOwner: params => t._call("DOM.getFrameOwner", params),
-      getContainerForNode: params => t._call("DOM.getContainerForNode", params),
-      getQueryingDescendantsForContainer: params => t._call("DOM.getQueryingDescendantsForContainer", params),
-      getAnchorElement: params => t._call("DOM.getAnchorElement", params),
-      forceShowPopover: params => t._call("DOM.forceShowPopover", params)
+      collectClassNamesFromSubtree: params => domains._call("DOM.collectClassNamesFromSubtree", params),
+      copyTo: params => domains._call("DOM.copyTo", params),
+      describeNode: params => domains._call("DOM.describeNode", params),
+      scrollIntoViewIfNeeded: params => domains._call("DOM.scrollIntoViewIfNeeded", params),
+      disable: params => domains._call("DOM.disable", params),
+      discardSearchResults: params => domains._call("DOM.discardSearchResults", params),
+      enable: params => domains._call("DOM.enable", params),
+      focus: params => domains._call("DOM.focus", params),
+      getAttributes: params => domains._call("DOM.getAttributes", params),
+      getBoxModel: params => domains._call("DOM.getBoxModel", params),
+      getContentQuads: params => domains._call("DOM.getContentQuads", params),
+      getDocument: params => domains._call("DOM.getDocument", params),
+      getFlattenedDocument: params => domains._call("DOM.getFlattenedDocument", params),
+      getNodesForSubtreeByStyle: params => domains._call("DOM.getNodesForSubtreeByStyle", params),
+      getNodeForLocation: params => domains._call("DOM.getNodeForLocation", params),
+      getOuterHTML: params => domains._call("DOM.getOuterHTML", params),
+      getRelayoutBoundary: params => domains._call("DOM.getRelayoutBoundary", params),
+      getSearchResults: params => domains._call("DOM.getSearchResults", params),
+      markUndoableState: params => domains._call("DOM.markUndoableState", params),
+      moveTo: params => domains._call("DOM.moveTo", params),
+      performSearch: params => domains._call("DOM.performSearch", params),
+      pushNodeByPathToFrontend: params => domains._call("DOM.pushNodeByPathToFrontend", params),
+      pushNodesByBackendIdsToFrontend: params => domains._call("DOM.pushNodesByBackendIdsToFrontend", params),
+      querySelector: params => domains._call("DOM.querySelector", params),
+      querySelectorAll: params => domains._call("DOM.querySelectorAll", params),
+      getTopLayerElements: params => domains._call("DOM.getTopLayerElements", params),
+      getElementByRelation: params => domains._call("DOM.getElementByRelation", params),
+      redo: params => domains._call("DOM.redo", params),
+      removeAttribute: params => domains._call("DOM.removeAttribute", params),
+      removeNode: params => domains._call("DOM.removeNode", params),
+      requestChildNodes: params => domains._call("DOM.requestChildNodes", params),
+      requestNode: params => domains._call("DOM.requestNode", params),
+      resolveNode: params => domains._call("DOM.resolveNode", params),
+      setAttributeValue: params => domains._call("DOM.setAttributeValue", params),
+      setAttributesAsText: params => domains._call("DOM.setAttributesAsText", params),
+      setFileInputFiles: params => domains._call("DOM.setFileInputFiles", params),
+      setNodeStackTracesEnabled: params => domains._call("DOM.setNodeStackTracesEnabled", params),
+      getNodeStackTraces: params => domains._call("DOM.getNodeStackTraces", params),
+      getFileInfo: params => domains._call("DOM.getFileInfo", params),
+      getDetachedDomNodes: params => domains._call("DOM.getDetachedDomNodes", params),
+      setInspectedNode: params => domains._call("DOM.setInspectedNode", params),
+      setNodeName: params => domains._call("DOM.setNodeName", params),
+      setNodeValue: params => domains._call("DOM.setNodeValue", params),
+      setOuterHTML: params => domains._call("DOM.setOuterHTML", params),
+      undo: params => domains._call("DOM.undo", params),
+      getFrameOwner: params => domains._call("DOM.getFrameOwner", params),
+      getContainerForNode: params => domains._call("DOM.getContainerForNode", params),
+      getQueryingDescendantsForContainer: params => domains._call("DOM.getQueryingDescendantsForContainer", params),
+      getAnchorElement: params => domains._call("DOM.getAnchorElement", params),
+      forceShowPopover: params => domains._call("DOM.forceShowPopover", params)
     },
     DOMDebugger: {
-      getEventListeners: params => t._call("DOMDebugger.getEventListeners", params),
-      removeDOMBreakpoint: params => t._call("DOMDebugger.removeDOMBreakpoint", params),
-      removeEventListenerBreakpoint: params => t._call("DOMDebugger.removeEventListenerBreakpoint", params),
-      removeXHRBreakpoint: params => t._call("DOMDebugger.removeXHRBreakpoint", params),
-      setBreakOnCSPViolation: params => t._call("DOMDebugger.setBreakOnCSPViolation", params),
-      setDOMBreakpoint: params => t._call("DOMDebugger.setDOMBreakpoint", params),
-      setEventListenerBreakpoint: params => t._call("DOMDebugger.setEventListenerBreakpoint", params),
-      setXHRBreakpoint: params => t._call("DOMDebugger.setXHRBreakpoint", params)
+      getEventListeners: params => domains._call("DOMDebugger.getEventListeners", params),
+      removeDOMBreakpoint: params => domains._call("DOMDebugger.removeDOMBreakpoint", params),
+      removeEventListenerBreakpoint: params => domains._call("DOMDebugger.removeEventListenerBreakpoint", params),
+      removeXHRBreakpoint: params => domains._call("DOMDebugger.removeXHRBreakpoint", params),
+      setBreakOnCSPViolation: params => domains._call("DOMDebugger.setBreakOnCSPViolation", params),
+      setDOMBreakpoint: params => domains._call("DOMDebugger.setDOMBreakpoint", params),
+      setEventListenerBreakpoint: params => domains._call("DOMDebugger.setEventListenerBreakpoint", params),
+      setXHRBreakpoint: params => domains._call("DOMDebugger.setXHRBreakpoint", params)
     },
     DOMSnapshot: {
-      disable: params => t._call("DOMSnapshot.disable", params),
-      enable: params => t._call("DOMSnapshot.enable", params),
-      getSnapshot: params => t._call("DOMSnapshot.getSnapshot", params),
-      captureSnapshot: params => t._call("DOMSnapshot.captureSnapshot", params)
+      disable: params => domains._call("DOMSnapshot.disable", params),
+      enable: params => domains._call("DOMSnapshot.enable", params),
+      getSnapshot: params => domains._call("DOMSnapshot.getSnapshot", params),
+      captureSnapshot: params => domains._call("DOMSnapshot.captureSnapshot", params)
     },
     DOMStorage: {
-      clear: params => t._call("DOMStorage.clear", params),
-      disable: params => t._call("DOMStorage.disable", params),
-      enable: params => t._call("DOMStorage.enable", params),
-      getDOMStorageItems: params => t._call("DOMStorage.getDOMStorageItems", params),
-      removeDOMStorageItem: params => t._call("DOMStorage.removeDOMStorageItem", params),
-      setDOMStorageItem: params => t._call("DOMStorage.setDOMStorageItem", params)
+      clear: params => domains._call("DOMStorage.clear", params),
+      disable: params => domains._call("DOMStorage.disable", params),
+      enable: params => domains._call("DOMStorage.enable", params),
+      getDOMStorageItems: params => domains._call("DOMStorage.getDOMStorageItems", params),
+      removeDOMStorageItem: params => domains._call("DOMStorage.removeDOMStorageItem", params),
+      setDOMStorageItem: params => domains._call("DOMStorage.setDOMStorageItem", params)
     },
     Emulation: {
-      canEmulate: params => t._call("Emulation.canEmulate", params),
-      clearDeviceMetricsOverride: params => t._call("Emulation.clearDeviceMetricsOverride", params),
-      clearGeolocationOverride: params => t._call("Emulation.clearGeolocationOverride", params),
-      resetPageScaleFactor: params => t._call("Emulation.resetPageScaleFactor", params),
-      setFocusEmulationEnabled: params => t._call("Emulation.setFocusEmulationEnabled", params),
-      setAutoDarkModeOverride: params => t._call("Emulation.setAutoDarkModeOverride", params),
-      setCPUThrottlingRate: params => t._call("Emulation.setCPUThrottlingRate", params),
-      setDefaultBackgroundColorOverride: params => t._call("Emulation.setDefaultBackgroundColorOverride", params),
-      setSafeAreaInsetsOverride: params => t._call("Emulation.setSafeAreaInsetsOverride", params),
-      setDeviceMetricsOverride: params => t._call("Emulation.setDeviceMetricsOverride", params),
-      setDevicePostureOverride: params => t._call("Emulation.setDevicePostureOverride", params),
-      clearDevicePostureOverride: params => t._call("Emulation.clearDevicePostureOverride", params),
-      setDisplayFeaturesOverride: params => t._call("Emulation.setDisplayFeaturesOverride", params),
-      clearDisplayFeaturesOverride: params => t._call("Emulation.clearDisplayFeaturesOverride", params),
-      setScrollbarsHidden: params => t._call("Emulation.setScrollbarsHidden", params),
-      setDocumentCookieDisabled: params => t._call("Emulation.setDocumentCookieDisabled", params),
-      setEmitTouchEventsForMouse: params => t._call("Emulation.setEmitTouchEventsForMouse", params),
-      setEmulatedMedia: params => t._call("Emulation.setEmulatedMedia", params),
-      setEmulatedVisionDeficiency: params => t._call("Emulation.setEmulatedVisionDeficiency", params),
-      setEmulatedOSTextScale: params => t._call("Emulation.setEmulatedOSTextScale", params),
-      setGeolocationOverride: params => t._call("Emulation.setGeolocationOverride", params),
-      getOverriddenSensorInformation: params => t._call("Emulation.getOverriddenSensorInformation", params),
-      setSensorOverrideEnabled: params => t._call("Emulation.setSensorOverrideEnabled", params),
-      setSensorOverrideReadings: params => t._call("Emulation.setSensorOverrideReadings", params),
-      setPressureSourceOverrideEnabled: params => t._call("Emulation.setPressureSourceOverrideEnabled", params),
-      setPressureStateOverride: params => t._call("Emulation.setPressureStateOverride", params),
-      setPressureDataOverride: params => t._call("Emulation.setPressureDataOverride", params),
-      setIdleOverride: params => t._call("Emulation.setIdleOverride", params),
-      clearIdleOverride: params => t._call("Emulation.clearIdleOverride", params),
-      setNavigatorOverrides: params => t._call("Emulation.setNavigatorOverrides", params),
-      setPageScaleFactor: params => t._call("Emulation.setPageScaleFactor", params),
-      setScriptExecutionDisabled: params => t._call("Emulation.setScriptExecutionDisabled", params),
-      setTouchEmulationEnabled: params => t._call("Emulation.setTouchEmulationEnabled", params),
-      setVirtualTimePolicy: params => t._call("Emulation.setVirtualTimePolicy", params),
-      setLocaleOverride: params => t._call("Emulation.setLocaleOverride", params),
-      setTimezoneOverride: params => t._call("Emulation.setTimezoneOverride", params),
-      setVisibleSize: params => t._call("Emulation.setVisibleSize", params),
-      setDisabledImageTypes: params => t._call("Emulation.setDisabledImageTypes", params),
-      setDataSaverOverride: params => t._call("Emulation.setDataSaverOverride", params),
-      setHardwareConcurrencyOverride: params => t._call("Emulation.setHardwareConcurrencyOverride", params),
-      setUserAgentOverride: params => t._call("Emulation.setUserAgentOverride", params),
-      setAutomationOverride: params => t._call("Emulation.setAutomationOverride", params),
-      setSmallViewportHeightDifferenceOverride: params => t._call("Emulation.setSmallViewportHeightDifferenceOverride", params),
-      getScreenInfos: params => t._call("Emulation.getScreenInfos", params),
-      addScreen: params => t._call("Emulation.addScreen", params),
-      updateScreen: params => t._call("Emulation.updateScreen", params),
-      removeScreen: params => t._call("Emulation.removeScreen", params),
-      setPrimaryScreen: params => t._call("Emulation.setPrimaryScreen", params)
+      canEmulate: params => domains._call("Emulation.canEmulate", params),
+      clearDeviceMetricsOverride: params => domains._call("Emulation.clearDeviceMetricsOverride", params),
+      clearGeolocationOverride: params => domains._call("Emulation.clearGeolocationOverride", params),
+      resetPageScaleFactor: params => domains._call("Emulation.resetPageScaleFactor", params),
+      setFocusEmulationEnabled: params => domains._call("Emulation.setFocusEmulationEnabled", params),
+      setAutoDarkModeOverride: params => domains._call("Emulation.setAutoDarkModeOverride", params),
+      setCPUThrottlingRate: params => domains._call("Emulation.setCPUThrottlingRate", params),
+      setDefaultBackgroundColorOverride: params => domains._call("Emulation.setDefaultBackgroundColorOverride", params),
+      setSafeAreaInsetsOverride: params => domains._call("Emulation.setSafeAreaInsetsOverride", params),
+      setDeviceMetricsOverride: params => domains._call("Emulation.setDeviceMetricsOverride", params),
+      setDevicePostureOverride: params => domains._call("Emulation.setDevicePostureOverride", params),
+      clearDevicePostureOverride: params => domains._call("Emulation.clearDevicePostureOverride", params),
+      setDisplayFeaturesOverride: params => domains._call("Emulation.setDisplayFeaturesOverride", params),
+      clearDisplayFeaturesOverride: params => domains._call("Emulation.clearDisplayFeaturesOverride", params),
+      setScrollbarsHidden: params => domains._call("Emulation.setScrollbarsHidden", params),
+      setDocumentCookieDisabled: params => domains._call("Emulation.setDocumentCookieDisabled", params),
+      setEmitTouchEventsForMouse: params => domains._call("Emulation.setEmitTouchEventsForMouse", params),
+      setEmulatedMedia: params => domains._call("Emulation.setEmulatedMedia", params),
+      setEmulatedVisionDeficiency: params => domains._call("Emulation.setEmulatedVisionDeficiency", params),
+      setEmulatedOSTextScale: params => domains._call("Emulation.setEmulatedOSTextScale", params),
+      setGeolocationOverride: params => domains._call("Emulation.setGeolocationOverride", params),
+      getOverriddenSensorInformation: params => domains._call("Emulation.getOverriddenSensorInformation", params),
+      setSensorOverrideEnabled: params => domains._call("Emulation.setSensorOverrideEnabled", params),
+      setSensorOverrideReadings: params => domains._call("Emulation.setSensorOverrideReadings", params),
+      setPressureSourceOverrideEnabled: params => domains._call("Emulation.setPressureSourceOverrideEnabled", params),
+      setPressureStateOverride: params => domains._call("Emulation.setPressureStateOverride", params),
+      setPressureDataOverride: params => domains._call("Emulation.setPressureDataOverride", params),
+      setIdleOverride: params => domains._call("Emulation.setIdleOverride", params),
+      clearIdleOverride: params => domains._call("Emulation.clearIdleOverride", params),
+      setNavigatorOverrides: params => domains._call("Emulation.setNavigatorOverrides", params),
+      setPageScaleFactor: params => domains._call("Emulation.setPageScaleFactor", params),
+      setScriptExecutionDisabled: params => domains._call("Emulation.setScriptExecutionDisabled", params),
+      setTouchEmulationEnabled: params => domains._call("Emulation.setTouchEmulationEnabled", params),
+      setVirtualTimePolicy: params => domains._call("Emulation.setVirtualTimePolicy", params),
+      setLocaleOverride: params => domains._call("Emulation.setLocaleOverride", params),
+      setTimezoneOverride: params => domains._call("Emulation.setTimezoneOverride", params),
+      setVisibleSize: params => domains._call("Emulation.setVisibleSize", params),
+      setDisabledImageTypes: params => domains._call("Emulation.setDisabledImageTypes", params),
+      setDataSaverOverride: params => domains._call("Emulation.setDataSaverOverride", params),
+      setHardwareConcurrencyOverride: params => domains._call("Emulation.setHardwareConcurrencyOverride", params),
+      setUserAgentOverride: params => domains._call("Emulation.setUserAgentOverride", params),
+      setAutomationOverride: params => domains._call("Emulation.setAutomationOverride", params),
+      setSmallViewportHeightDifferenceOverride: params => domains._call("Emulation.setSmallViewportHeightDifferenceOverride", params),
+      getScreenInfos: params => domains._call("Emulation.getScreenInfos", params),
+      addScreen: params => domains._call("Emulation.addScreen", params),
+      updateScreen: params => domains._call("Emulation.updateScreen", params),
+      removeScreen: params => domains._call("Emulation.removeScreen", params),
+      setPrimaryScreen: params => domains._call("Emulation.setPrimaryScreen", params)
     },
     EventBreakpoints: {
-      setInstrumentationBreakpoint: params => t._call("EventBreakpoints.setInstrumentationBreakpoint", params),
-      removeInstrumentationBreakpoint: params => t._call("EventBreakpoints.removeInstrumentationBreakpoint", params),
-      disable: params => t._call("EventBreakpoints.disable", params)
+      setInstrumentationBreakpoint: params => domains._call("EventBreakpoints.setInstrumentationBreakpoint", params),
+      removeInstrumentationBreakpoint: params => domains._call("EventBreakpoints.removeInstrumentationBreakpoint", params),
+      disable: params => domains._call("EventBreakpoints.disable", params)
     },
     Extensions: {
-      triggerAction: params => t._call("Extensions.triggerAction", params),
-      loadUnpacked: params => t._call("Extensions.loadUnpacked", params),
-      getExtensions: params => t._call("Extensions.getExtensions", params),
-      uninstall: params => t._call("Extensions.uninstall", params),
-      getStorageItems: params => t._call("Extensions.getStorageItems", params),
-      removeStorageItems: params => t._call("Extensions.removeStorageItems", params),
-      clearStorageItems: params => t._call("Extensions.clearStorageItems", params),
-      setStorageItems: params => t._call("Extensions.setStorageItems", params)
+      triggerAction: params => domains._call("Extensions.triggerAction", params),
+      loadUnpacked: params => domains._call("Extensions.loadUnpacked", params),
+      getExtensions: params => domains._call("Extensions.getExtensions", params),
+      uninstall: params => domains._call("Extensions.uninstall", params),
+      getStorageItems: params => domains._call("Extensions.getStorageItems", params),
+      removeStorageItems: params => domains._call("Extensions.removeStorageItems", params),
+      clearStorageItems: params => domains._call("Extensions.clearStorageItems", params),
+      setStorageItems: params => domains._call("Extensions.setStorageItems", params)
     },
     FedCm: {
-      enable: params => t._call("FedCm.enable", params),
-      disable: params => t._call("FedCm.disable", params),
-      selectAccount: params => t._call("FedCm.selectAccount", params),
-      clickDialogButton: params => t._call("FedCm.clickDialogButton", params),
-      openUrl: params => t._call("FedCm.openUrl", params),
-      dismissDialog: params => t._call("FedCm.dismissDialog", params),
-      resetCooldown: params => t._call("FedCm.resetCooldown", params)
+      enable: params => domains._call("FedCm.enable", params),
+      disable: params => domains._call("FedCm.disable", params),
+      selectAccount: params => domains._call("FedCm.selectAccount", params),
+      clickDialogButton: params => domains._call("FedCm.clickDialogButton", params),
+      openUrl: params => domains._call("FedCm.openUrl", params),
+      dismissDialog: params => domains._call("FedCm.dismissDialog", params),
+      resetCooldown: params => domains._call("FedCm.resetCooldown", params)
     },
     Fetch: {
-      disable: params => t._call("Fetch.disable", params),
-      enable: params => t._call("Fetch.enable", params),
-      failRequest: params => t._call("Fetch.failRequest", params),
-      fulfillRequest: params => t._call("Fetch.fulfillRequest", params),
-      continueRequest: params => t._call("Fetch.continueRequest", params),
-      continueWithAuth: params => t._call("Fetch.continueWithAuth", params),
-      continueResponse: params => t._call("Fetch.continueResponse", params),
-      getResponseBody: params => t._call("Fetch.getResponseBody", params),
-      takeResponseBodyAsStream: params => t._call("Fetch.takeResponseBodyAsStream", params)
+      disable: params => domains._call("Fetch.disable", params),
+      enable: params => domains._call("Fetch.enable", params),
+      failRequest: params => domains._call("Fetch.failRequest", params),
+      fulfillRequest: params => domains._call("Fetch.fulfillRequest", params),
+      continueRequest: params => domains._call("Fetch.continueRequest", params),
+      continueWithAuth: params => domains._call("Fetch.continueWithAuth", params),
+      continueResponse: params => domains._call("Fetch.continueResponse", params),
+      getResponseBody: params => domains._call("Fetch.getResponseBody", params),
+      takeResponseBodyAsStream: params => domains._call("Fetch.takeResponseBodyAsStream", params)
     },
     FileSystem: {
-      getDirectory: params => t._call("FileSystem.getDirectory", params)
+      getDirectory: params => domains._call("FileSystem.getDirectory", params)
     },
     HeadlessExperimental: {
-      beginFrame: params => t._call("HeadlessExperimental.beginFrame", params),
-      disable: params => t._call("HeadlessExperimental.disable", params),
-      enable: params => t._call("HeadlessExperimental.enable", params)
+      beginFrame: params => domains._call("HeadlessExperimental.beginFrame", params),
+      disable: params => domains._call("HeadlessExperimental.disable", params),
+      enable: params => domains._call("HeadlessExperimental.enable", params)
     },
     HeapProfiler: {
-      addInspectedHeapObject: params => t._call("HeapProfiler.addInspectedHeapObject", params),
-      collectGarbage: params => t._call("HeapProfiler.collectGarbage", params),
-      disable: params => t._call("HeapProfiler.disable", params),
-      enable: params => t._call("HeapProfiler.enable", params),
-      getHeapObjectId: params => t._call("HeapProfiler.getHeapObjectId", params),
-      getObjectByHeapObjectId: params => t._call("HeapProfiler.getObjectByHeapObjectId", params),
-      getSamplingProfile: params => t._call("HeapProfiler.getSamplingProfile", params),
-      startSampling: params => t._call("HeapProfiler.startSampling", params),
-      startTrackingHeapObjects: params => t._call("HeapProfiler.startTrackingHeapObjects", params),
-      stopSampling: params => t._call("HeapProfiler.stopSampling", params),
-      stopTrackingHeapObjects: params => t._call("HeapProfiler.stopTrackingHeapObjects", params),
-      takeHeapSnapshot: params => t._call("HeapProfiler.takeHeapSnapshot", params)
+      addInspectedHeapObject: params => domains._call("HeapProfiler.addInspectedHeapObject", params),
+      collectGarbage: params => domains._call("HeapProfiler.collectGarbage", params),
+      disable: params => domains._call("HeapProfiler.disable", params),
+      enable: params => domains._call("HeapProfiler.enable", params),
+      getHeapObjectId: params => domains._call("HeapProfiler.getHeapObjectId", params),
+      getObjectByHeapObjectId: params => domains._call("HeapProfiler.getObjectByHeapObjectId", params),
+      getSamplingProfile: params => domains._call("HeapProfiler.getSamplingProfile", params),
+      startSampling: params => domains._call("HeapProfiler.startSampling", params),
+      startTrackingHeapObjects: params => domains._call("HeapProfiler.startTrackingHeapObjects", params),
+      stopSampling: params => domains._call("HeapProfiler.stopSampling", params),
+      stopTrackingHeapObjects: params => domains._call("HeapProfiler.stopTrackingHeapObjects", params),
+      takeHeapSnapshot: params => domains._call("HeapProfiler.takeHeapSnapshot", params)
     },
     IndexedDB: {
-      clearObjectStore: params => t._call("IndexedDB.clearObjectStore", params),
-      deleteDatabase: params => t._call("IndexedDB.deleteDatabase", params),
-      deleteObjectStoreEntries: params => t._call("IndexedDB.deleteObjectStoreEntries", params),
-      disable: params => t._call("IndexedDB.disable", params),
-      enable: params => t._call("IndexedDB.enable", params),
-      requestData: params => t._call("IndexedDB.requestData", params),
-      getMetadata: params => t._call("IndexedDB.getMetadata", params),
-      requestDatabase: params => t._call("IndexedDB.requestDatabase", params),
-      requestDatabaseNames: params => t._call("IndexedDB.requestDatabaseNames", params)
+      clearObjectStore: params => domains._call("IndexedDB.clearObjectStore", params),
+      deleteDatabase: params => domains._call("IndexedDB.deleteDatabase", params),
+      deleteObjectStoreEntries: params => domains._call("IndexedDB.deleteObjectStoreEntries", params),
+      disable: params => domains._call("IndexedDB.disable", params),
+      enable: params => domains._call("IndexedDB.enable", params),
+      requestData: params => domains._call("IndexedDB.requestData", params),
+      getMetadata: params => domains._call("IndexedDB.getMetadata", params),
+      requestDatabase: params => domains._call("IndexedDB.requestDatabase", params),
+      requestDatabaseNames: params => domains._call("IndexedDB.requestDatabaseNames", params)
     },
     Input: {
-      dispatchDragEvent: params => t._call("Input.dispatchDragEvent", params),
-      dispatchKeyEvent: params => t._call("Input.dispatchKeyEvent", params),
-      insertText: params => t._call("Input.insertText", params),
-      imeSetComposition: params => t._call("Input.imeSetComposition", params),
-      dispatchMouseEvent: params => t._call("Input.dispatchMouseEvent", params),
-      dispatchTouchEvent: params => t._call("Input.dispatchTouchEvent", params),
-      cancelDragging: params => t._call("Input.cancelDragging", params),
-      emulateTouchFromMouseEvent: params => t._call("Input.emulateTouchFromMouseEvent", params),
-      setIgnoreInputEvents: params => t._call("Input.setIgnoreInputEvents", params),
-      setInterceptDrags: params => t._call("Input.setInterceptDrags", params),
-      synthesizePinchGesture: params => t._call("Input.synthesizePinchGesture", params),
-      synthesizeScrollGesture: params => t._call("Input.synthesizeScrollGesture", params),
-      synthesizeTapGesture: params => t._call("Input.synthesizeTapGesture", params)
+      dispatchDragEvent: params => domains._call("Input.dispatchDragEvent", params),
+      dispatchKeyEvent: params => domains._call("Input.dispatchKeyEvent", params),
+      insertText: params => domains._call("Input.insertText", params),
+      imeSetComposition: params => domains._call("Input.imeSetComposition", params),
+      dispatchMouseEvent: params => domains._call("Input.dispatchMouseEvent", params),
+      dispatchTouchEvent: params => domains._call("Input.dispatchTouchEvent", params),
+      cancelDragging: params => domains._call("Input.cancelDragging", params),
+      emulateTouchFromMouseEvent: params => domains._call("Input.emulateTouchFromMouseEvent", params),
+      setIgnoreInputEvents: params => domains._call("Input.setIgnoreInputEvents", params),
+      setInterceptDrags: params => domains._call("Input.setInterceptDrags", params),
+      synthesizePinchGesture: params => domains._call("Input.synthesizePinchGesture", params),
+      synthesizeScrollGesture: params => domains._call("Input.synthesizeScrollGesture", params),
+      synthesizeTapGesture: params => domains._call("Input.synthesizeTapGesture", params)
     },
     Inspector: {
-      disable: params => t._call("Inspector.disable", params),
-      enable: params => t._call("Inspector.enable", params)
+      disable: params => domains._call("Inspector.disable", params),
+      enable: params => domains._call("Inspector.enable", params)
     },
     IO: {
-      close: params => t._call("IO.close", params),
-      read: params => t._call("IO.read", params),
-      resolveBlob: params => t._call("IO.resolveBlob", params)
+      close: params => domains._call("IO.close", params),
+      read: params => domains._call("IO.read", params),
+      resolveBlob: params => domains._call("IO.resolveBlob", params)
     },
     LayerTree: {
-      compositingReasons: params => t._call("LayerTree.compositingReasons", params),
-      disable: params => t._call("LayerTree.disable", params),
-      enable: params => t._call("LayerTree.enable", params),
-      loadSnapshot: params => t._call("LayerTree.loadSnapshot", params),
-      makeSnapshot: params => t._call("LayerTree.makeSnapshot", params),
-      profileSnapshot: params => t._call("LayerTree.profileSnapshot", params),
-      releaseSnapshot: params => t._call("LayerTree.releaseSnapshot", params),
-      replaySnapshot: params => t._call("LayerTree.replaySnapshot", params),
-      snapshotCommandLog: params => t._call("LayerTree.snapshotCommandLog", params)
+      compositingReasons: params => domains._call("LayerTree.compositingReasons", params),
+      disable: params => domains._call("LayerTree.disable", params),
+      enable: params => domains._call("LayerTree.enable", params),
+      loadSnapshot: params => domains._call("LayerTree.loadSnapshot", params),
+      makeSnapshot: params => domains._call("LayerTree.makeSnapshot", params),
+      profileSnapshot: params => domains._call("LayerTree.profileSnapshot", params),
+      releaseSnapshot: params => domains._call("LayerTree.releaseSnapshot", params),
+      replaySnapshot: params => domains._call("LayerTree.replaySnapshot", params),
+      snapshotCommandLog: params => domains._call("LayerTree.snapshotCommandLog", params)
     },
     Log: {
-      clear: params => t._call("Log.clear", params),
-      disable: params => t._call("Log.disable", params),
-      enable: params => t._call("Log.enable", params),
-      startViolationsReport: params => t._call("Log.startViolationsReport", params),
-      stopViolationsReport: params => t._call("Log.stopViolationsReport", params)
+      clear: params => domains._call("Log.clear", params),
+      disable: params => domains._call("Log.disable", params),
+      enable: params => domains._call("Log.enable", params),
+      startViolationsReport: params => domains._call("Log.startViolationsReport", params),
+      stopViolationsReport: params => domains._call("Log.stopViolationsReport", params)
     },
     Media: {
-      enable: params => t._call("Media.enable", params),
-      disable: params => t._call("Media.disable", params)
+      enable: params => domains._call("Media.enable", params),
+      disable: params => domains._call("Media.disable", params)
     },
     Memory: {
-      getDOMCounters: params => t._call("Memory.getDOMCounters", params),
-      getDOMCountersForLeakDetection: params => t._call("Memory.getDOMCountersForLeakDetection", params),
-      prepareForLeakDetection: params => t._call("Memory.prepareForLeakDetection", params),
-      forciblyPurgeJavaScriptMemory: params => t._call("Memory.forciblyPurgeJavaScriptMemory", params),
-      setPressureNotificationsSuppressed: params => t._call("Memory.setPressureNotificationsSuppressed", params),
-      simulatePressureNotification: params => t._call("Memory.simulatePressureNotification", params),
-      startSampling: params => t._call("Memory.startSampling", params),
-      stopSampling: params => t._call("Memory.stopSampling", params),
-      getAllTimeSamplingProfile: params => t._call("Memory.getAllTimeSamplingProfile", params),
-      getBrowserSamplingProfile: params => t._call("Memory.getBrowserSamplingProfile", params),
-      getSamplingProfile: params => t._call("Memory.getSamplingProfile", params)
+      getDOMCounters: params => domains._call("Memory.getDOMCounters", params),
+      getDOMCountersForLeakDetection: params => domains._call("Memory.getDOMCountersForLeakDetection", params),
+      prepareForLeakDetection: params => domains._call("Memory.prepareForLeakDetection", params),
+      forciblyPurgeJavaScriptMemory: params => domains._call("Memory.forciblyPurgeJavaScriptMemory", params),
+      setPressureNotificationsSuppressed: params => domains._call("Memory.setPressureNotificationsSuppressed", params),
+      simulatePressureNotification: params => domains._call("Memory.simulatePressureNotification", params),
+      startSampling: params => domains._call("Memory.startSampling", params),
+      stopSampling: params => domains._call("Memory.stopSampling", params),
+      getAllTimeSamplingProfile: params => domains._call("Memory.getAllTimeSamplingProfile", params),
+      getBrowserSamplingProfile: params => domains._call("Memory.getBrowserSamplingProfile", params),
+      getSamplingProfile: params => domains._call("Memory.getSamplingProfile", params)
     },
     Network: {
-      setAcceptedEncodings: params => t._call("Network.setAcceptedEncodings", params),
-      clearAcceptedEncodingsOverride: params => t._call("Network.clearAcceptedEncodingsOverride", params),
-      canClearBrowserCache: params => t._call("Network.canClearBrowserCache", params),
-      canClearBrowserCookies: params => t._call("Network.canClearBrowserCookies", params),
-      canEmulateNetworkConditions: params => t._call("Network.canEmulateNetworkConditions", params),
-      clearBrowserCache: params => t._call("Network.clearBrowserCache", params),
-      clearBrowserCookies: params => t._call("Network.clearBrowserCookies", params),
-      continueInterceptedRequest: params => t._call("Network.continueInterceptedRequest", params),
-      deleteCookies: params => t._call("Network.deleteCookies", params),
-      disable: params => t._call("Network.disable", params),
-      emulateNetworkConditions: params => t._call("Network.emulateNetworkConditions", params),
-      emulateNetworkConditionsByRule: params => t._call("Network.emulateNetworkConditionsByRule", params),
-      overrideNetworkState: params => t._call("Network.overrideNetworkState", params),
-      enable: params => t._call("Network.enable", params),
-      configureDurableMessages: params => t._call("Network.configureDurableMessages", params),
-      getAllCookies: params => t._call("Network.getAllCookies", params),
-      getCertificate: params => t._call("Network.getCertificate", params),
-      getCookies: params => t._call("Network.getCookies", params),
-      getResponseBody: params => t._call("Network.getResponseBody", params),
-      getRequestPostData: params => t._call("Network.getRequestPostData", params),
-      getResponseBodyForInterception: params => t._call("Network.getResponseBodyForInterception", params),
-      takeResponseBodyForInterceptionAsStream: params => t._call("Network.takeResponseBodyForInterceptionAsStream", params),
-      replayXHR: params => t._call("Network.replayXHR", params),
-      searchInResponseBody: params => t._call("Network.searchInResponseBody", params),
-      setBlockedURLs: params => t._call("Network.setBlockedURLs", params),
-      setBypassServiceWorker: params => t._call("Network.setBypassServiceWorker", params),
-      setCacheDisabled: params => t._call("Network.setCacheDisabled", params),
-      setCookie: params => t._call("Network.setCookie", params),
-      setCookies: params => t._call("Network.setCookies", params),
-      setExtraHTTPHeaders: params => t._call("Network.setExtraHTTPHeaders", params),
-      setAttachDebugStack: params => t._call("Network.setAttachDebugStack", params),
-      setRequestInterception: params => t._call("Network.setRequestInterception", params),
-      streamResourceContent: params => t._call("Network.streamResourceContent", params),
-      getSecurityIsolationStatus: params => t._call("Network.getSecurityIsolationStatus", params),
-      enableReportingApi: params => t._call("Network.enableReportingApi", params),
-      enableDeviceBoundSessions: params => t._call("Network.enableDeviceBoundSessions", params),
-      deleteDeviceBoundSession: params => t._call("Network.deleteDeviceBoundSession", params),
-      fetchSchemefulSite: params => t._call("Network.fetchSchemefulSite", params),
-      loadNetworkResource: params => t._call("Network.loadNetworkResource", params),
-      setCookieControls: params => t._call("Network.setCookieControls", params)
+      setAcceptedEncodings: params => domains._call("Network.setAcceptedEncodings", params),
+      clearAcceptedEncodingsOverride: params => domains._call("Network.clearAcceptedEncodingsOverride", params),
+      canClearBrowserCache: params => domains._call("Network.canClearBrowserCache", params),
+      canClearBrowserCookies: params => domains._call("Network.canClearBrowserCookies", params),
+      canEmulateNetworkConditions: params => domains._call("Network.canEmulateNetworkConditions", params),
+      clearBrowserCache: params => domains._call("Network.clearBrowserCache", params),
+      clearBrowserCookies: params => domains._call("Network.clearBrowserCookies", params),
+      continueInterceptedRequest: params => domains._call("Network.continueInterceptedRequest", params),
+      deleteCookies: params => domains._call("Network.deleteCookies", params),
+      disable: params => domains._call("Network.disable", params),
+      emulateNetworkConditions: params => domains._call("Network.emulateNetworkConditions", params),
+      emulateNetworkConditionsByRule: params => domains._call("Network.emulateNetworkConditionsByRule", params),
+      overrideNetworkState: params => domains._call("Network.overrideNetworkState", params),
+      enable: params => domains._call("Network.enable", params),
+      configureDurableMessages: params => domains._call("Network.configureDurableMessages", params),
+      getAllCookies: params => domains._call("Network.getAllCookies", params),
+      getCertificate: params => domains._call("Network.getCertificate", params),
+      getCookies: params => domains._call("Network.getCookies", params),
+      getResponseBody: params => domains._call("Network.getResponseBody", params),
+      getRequestPostData: params => domains._call("Network.getRequestPostData", params),
+      getResponseBodyForInterception: params => domains._call("Network.getResponseBodyForInterception", params),
+      takeResponseBodyForInterceptionAsStream: params => domains._call("Network.takeResponseBodyForInterceptionAsStream", params),
+      replayXHR: params => domains._call("Network.replayXHR", params),
+      searchInResponseBody: params => domains._call("Network.searchInResponseBody", params),
+      setBlockedURLs: params => domains._call("Network.setBlockedURLs", params),
+      setBypassServiceWorker: params => domains._call("Network.setBypassServiceWorker", params),
+      setCacheDisabled: params => domains._call("Network.setCacheDisabled", params),
+      setCookie: params => domains._call("Network.setCookie", params),
+      setCookies: params => domains._call("Network.setCookies", params),
+      setExtraHTTPHeaders: params => domains._call("Network.setExtraHTTPHeaders", params),
+      setAttachDebugStack: params => domains._call("Network.setAttachDebugStack", params),
+      setRequestInterception: params => domains._call("Network.setRequestInterception", params),
+      streamResourceContent: params => domains._call("Network.streamResourceContent", params),
+      getSecurityIsolationStatus: params => domains._call("Network.getSecurityIsolationStatus", params),
+      enableReportingApi: params => domains._call("Network.enableReportingApi", params),
+      enableDeviceBoundSessions: params => domains._call("Network.enableDeviceBoundSessions", params),
+      deleteDeviceBoundSession: params => domains._call("Network.deleteDeviceBoundSession", params),
+      fetchSchemefulSite: params => domains._call("Network.fetchSchemefulSite", params),
+      loadNetworkResource: params => domains._call("Network.loadNetworkResource", params),
+      setCookieControls: params => domains._call("Network.setCookieControls", params)
     },
     Overlay: {
-      disable: params => t._call("Overlay.disable", params),
-      enable: params => t._call("Overlay.enable", params),
-      getHighlightObjectForTest: params => t._call("Overlay.getHighlightObjectForTest", params),
-      getGridHighlightObjectsForTest: params => t._call("Overlay.getGridHighlightObjectsForTest", params),
-      getSourceOrderHighlightObjectForTest: params => t._call("Overlay.getSourceOrderHighlightObjectForTest", params),
-      hideHighlight: params => t._call("Overlay.hideHighlight", params),
-      highlightFrame: params => t._call("Overlay.highlightFrame", params),
-      highlightNode: params => t._call("Overlay.highlightNode", params),
-      highlightQuad: params => t._call("Overlay.highlightQuad", params),
-      highlightRect: params => t._call("Overlay.highlightRect", params),
-      highlightSourceOrder: params => t._call("Overlay.highlightSourceOrder", params),
-      setInspectMode: params => t._call("Overlay.setInspectMode", params),
-      setShowAdHighlights: params => t._call("Overlay.setShowAdHighlights", params),
-      setPausedInDebuggerMessage: params => t._call("Overlay.setPausedInDebuggerMessage", params),
-      setShowDebugBorders: params => t._call("Overlay.setShowDebugBorders", params),
-      setShowFPSCounter: params => t._call("Overlay.setShowFPSCounter", params),
-      setShowGridOverlays: params => t._call("Overlay.setShowGridOverlays", params),
-      setShowFlexOverlays: params => t._call("Overlay.setShowFlexOverlays", params),
-      setShowScrollSnapOverlays: params => t._call("Overlay.setShowScrollSnapOverlays", params),
-      setShowContainerQueryOverlays: params => t._call("Overlay.setShowContainerQueryOverlays", params),
-      setShowInspectedElementAnchor: params => t._call("Overlay.setShowInspectedElementAnchor", params),
-      setShowPaintRects: params => t._call("Overlay.setShowPaintRects", params),
-      setShowLayoutShiftRegions: params => t._call("Overlay.setShowLayoutShiftRegions", params),
-      setShowScrollBottleneckRects: params => t._call("Overlay.setShowScrollBottleneckRects", params),
-      setShowHitTestBorders: params => t._call("Overlay.setShowHitTestBorders", params),
-      setShowWebVitals: params => t._call("Overlay.setShowWebVitals", params),
-      setShowViewportSizeOnResize: params => t._call("Overlay.setShowViewportSizeOnResize", params),
-      setShowHinge: params => t._call("Overlay.setShowHinge", params),
-      setShowIsolatedElements: params => t._call("Overlay.setShowIsolatedElements", params),
-      setShowWindowControlsOverlay: params => t._call("Overlay.setShowWindowControlsOverlay", params)
+      disable: params => domains._call("Overlay.disable", params),
+      enable: params => domains._call("Overlay.enable", params),
+      getHighlightObjectForTest: params => domains._call("Overlay.getHighlightObjectForTest", params),
+      getGridHighlightObjectsForTest: params => domains._call("Overlay.getGridHighlightObjectsForTest", params),
+      getSourceOrderHighlightObjectForTest: params => domains._call("Overlay.getSourceOrderHighlightObjectForTest", params),
+      hideHighlight: params => domains._call("Overlay.hideHighlight", params),
+      highlightFrame: params => domains._call("Overlay.highlightFrame", params),
+      highlightNode: params => domains._call("Overlay.highlightNode", params),
+      highlightQuad: params => domains._call("Overlay.highlightQuad", params),
+      highlightRect: params => domains._call("Overlay.highlightRect", params),
+      highlightSourceOrder: params => domains._call("Overlay.highlightSourceOrder", params),
+      setInspectMode: params => domains._call("Overlay.setInspectMode", params),
+      setShowAdHighlights: params => domains._call("Overlay.setShowAdHighlights", params),
+      setPausedInDebuggerMessage: params => domains._call("Overlay.setPausedInDebuggerMessage", params),
+      setShowDebugBorders: params => domains._call("Overlay.setShowDebugBorders", params),
+      setShowFPSCounter: params => domains._call("Overlay.setShowFPSCounter", params),
+      setShowGridOverlays: params => domains._call("Overlay.setShowGridOverlays", params),
+      setShowFlexOverlays: params => domains._call("Overlay.setShowFlexOverlays", params),
+      setShowScrollSnapOverlays: params => domains._call("Overlay.setShowScrollSnapOverlays", params),
+      setShowContainerQueryOverlays: params => domains._call("Overlay.setShowContainerQueryOverlays", params),
+      setShowInspectedElementAnchor: params => domains._call("Overlay.setShowInspectedElementAnchor", params),
+      setShowPaintRects: params => domains._call("Overlay.setShowPaintRects", params),
+      setShowLayoutShiftRegions: params => domains._call("Overlay.setShowLayoutShiftRegions", params),
+      setShowScrollBottleneckRects: params => domains._call("Overlay.setShowScrollBottleneckRects", params),
+      setShowHitTestBorders: params => domains._call("Overlay.setShowHitTestBorders", params),
+      setShowWebVitals: params => domains._call("Overlay.setShowWebVitals", params),
+      setShowViewportSizeOnResize: params => domains._call("Overlay.setShowViewportSizeOnResize", params),
+      setShowHinge: params => domains._call("Overlay.setShowHinge", params),
+      setShowIsolatedElements: params => domains._call("Overlay.setShowIsolatedElements", params),
+      setShowWindowControlsOverlay: params => domains._call("Overlay.setShowWindowControlsOverlay", params)
     },
     Page: {
-      addScriptToEvaluateOnLoad: params => t._call("Page.addScriptToEvaluateOnLoad", params),
-      addScriptToEvaluateOnNewDocument: params => t._call("Page.addScriptToEvaluateOnNewDocument", params),
-      bringToFront: params => t._call("Page.bringToFront", params),
-      captureScreenshot: params => t._call("Page.captureScreenshot", params),
-      captureSnapshot: params => t._call("Page.captureSnapshot", params),
-      createIsolatedWorld: params => t._call("Page.createIsolatedWorld", params),
-      disable: params => t._call("Page.disable", params),
-      enable: params => t._call("Page.enable", params),
-      getAppManifest: params => t._call("Page.getAppManifest", params),
-      getInstallabilityErrors: params => t._call("Page.getInstallabilityErrors", params),
-      getManifestIcons: params => t._call("Page.getManifestIcons", params),
-      getAppId: params => t._call("Page.getAppId", params),
-      getAdScriptAncestry: params => t._call("Page.getAdScriptAncestry", params),
-      getFrameTree: params => t._call("Page.getFrameTree", params),
-      getLayoutMetrics: params => t._call("Page.getLayoutMetrics", params),
-      getNavigationHistory: params => t._call("Page.getNavigationHistory", params),
-      resetNavigationHistory: params => t._call("Page.resetNavigationHistory", params),
-      getResourceContent: params => t._call("Page.getResourceContent", params),
-      getResourceTree: params => t._call("Page.getResourceTree", params),
-      handleJavaScriptDialog: params => t._call("Page.handleJavaScriptDialog", params),
-      navigate: params => t._call("Page.navigate", params),
-      navigateToHistoryEntry: params => t._call("Page.navigateToHistoryEntry", params),
-      printToPDF: params => t._call("Page.printToPDF", params),
-      reload: params => t._call("Page.reload", params),
-      removeScriptToEvaluateOnLoad: params => t._call("Page.removeScriptToEvaluateOnLoad", params),
-      removeScriptToEvaluateOnNewDocument: params => t._call("Page.removeScriptToEvaluateOnNewDocument", params),
-      screencastFrameAck: params => t._call("Page.screencastFrameAck", params),
-      searchInResource: params => t._call("Page.searchInResource", params),
-      setAdBlockingEnabled: params => t._call("Page.setAdBlockingEnabled", params),
-      setBypassCSP: params => t._call("Page.setBypassCSP", params),
-      getPermissionsPolicyState: params => t._call("Page.getPermissionsPolicyState", params),
-      getOriginTrials: params => t._call("Page.getOriginTrials", params),
-      setFontFamilies: params => t._call("Page.setFontFamilies", params),
-      setFontSizes: params => t._call("Page.setFontSizes", params),
-      setDocumentContent: params => t._call("Page.setDocumentContent", params),
-      setDownloadBehavior: params => t._call("Page.setDownloadBehavior", params),
-      setLifecycleEventsEnabled: params => t._call("Page.setLifecycleEventsEnabled", params),
-      startScreencast: params => t._call("Page.startScreencast", params),
-      stopLoading: params => t._call("Page.stopLoading", params),
-      crash: params => t._call("Page.crash", params),
-      close: params => t._call("Page.close", params),
-      setWebLifecycleState: params => t._call("Page.setWebLifecycleState", params),
-      stopScreencast: params => t._call("Page.stopScreencast", params),
-      produceCompilationCache: params => t._call("Page.produceCompilationCache", params),
-      addCompilationCache: params => t._call("Page.addCompilationCache", params),
-      clearCompilationCache: params => t._call("Page.clearCompilationCache", params),
-      setSPCTransactionMode: params => t._call("Page.setSPCTransactionMode", params),
-      setRPHRegistrationMode: params => t._call("Page.setRPHRegistrationMode", params),
-      generateTestReport: params => t._call("Page.generateTestReport", params),
-      waitForDebugger: params => t._call("Page.waitForDebugger", params),
-      setInterceptFileChooserDialog: params => t._call("Page.setInterceptFileChooserDialog", params),
-      setPrerenderingAllowed: params => t._call("Page.setPrerenderingAllowed", params),
-      getAnnotatedPageContent: params => t._call("Page.getAnnotatedPageContent", params)
+      addScriptToEvaluateOnLoad: params => domains._call("Page.addScriptToEvaluateOnLoad", params),
+      addScriptToEvaluateOnNewDocument: params => domains._call("Page.addScriptToEvaluateOnNewDocument", params),
+      bringToFront: params => domains._call("Page.bringToFront", params),
+      captureScreenshot: params => domains._call("Page.captureScreenshot", params),
+      captureSnapshot: params => domains._call("Page.captureSnapshot", params),
+      createIsolatedWorld: params => domains._call("Page.createIsolatedWorld", params),
+      disable: params => domains._call("Page.disable", params),
+      enable: params => domains._call("Page.enable", params),
+      getAppManifest: params => domains._call("Page.getAppManifest", params),
+      getInstallabilityErrors: params => domains._call("Page.getInstallabilityErrors", params),
+      getManifestIcons: params => domains._call("Page.getManifestIcons", params),
+      getAppId: params => domains._call("Page.getAppId", params),
+      getAdScriptAncestry: params => domains._call("Page.getAdScriptAncestry", params),
+      getFrameTree: params => domains._call("Page.getFrameTree", params),
+      getLayoutMetrics: params => domains._call("Page.getLayoutMetrics", params),
+      getNavigationHistory: params => domains._call("Page.getNavigationHistory", params),
+      resetNavigationHistory: params => domains._call("Page.resetNavigationHistory", params),
+      getResourceContent: params => domains._call("Page.getResourceContent", params),
+      getResourceTree: params => domains._call("Page.getResourceTree", params),
+      handleJavaScriptDialog: params => domains._call("Page.handleJavaScriptDialog", params),
+      navigate: params => domains._call("Page.navigate", params),
+      navigateToHistoryEntry: params => domains._call("Page.navigateToHistoryEntry", params),
+      printToPDF: params => domains._call("Page.printToPDF", params),
+      reload: params => domains._call("Page.reload", params),
+      removeScriptToEvaluateOnLoad: params => domains._call("Page.removeScriptToEvaluateOnLoad", params),
+      removeScriptToEvaluateOnNewDocument: params => domains._call("Page.removeScriptToEvaluateOnNewDocument", params),
+      screencastFrameAck: params => domains._call("Page.screencastFrameAck", params),
+      searchInResource: params => domains._call("Page.searchInResource", params),
+      setAdBlockingEnabled: params => domains._call("Page.setAdBlockingEnabled", params),
+      setBypassCSP: params => domains._call("Page.setBypassCSP", params),
+      getPermissionsPolicyState: params => domains._call("Page.getPermissionsPolicyState", params),
+      getOriginTrials: params => domains._call("Page.getOriginTrials", params),
+      setFontFamilies: params => domains._call("Page.setFontFamilies", params),
+      setFontSizes: params => domains._call("Page.setFontSizes", params),
+      setDocumentContent: params => domains._call("Page.setDocumentContent", params),
+      setDownloadBehavior: params => domains._call("Page.setDownloadBehavior", params),
+      setLifecycleEventsEnabled: params => domains._call("Page.setLifecycleEventsEnabled", params),
+      startScreencast: params => domains._call("Page.startScreencast", params),
+      stopLoading: params => domains._call("Page.stopLoading", params),
+      crash: params => domains._call("Page.crash", params),
+      close: params => domains._call("Page.close", params),
+      setWebLifecycleState: params => domains._call("Page.setWebLifecycleState", params),
+      stopScreencast: params => domains._call("Page.stopScreencast", params),
+      produceCompilationCache: params => domains._call("Page.produceCompilationCache", params),
+      addCompilationCache: params => domains._call("Page.addCompilationCache", params),
+      clearCompilationCache: params => domains._call("Page.clearCompilationCache", params),
+      setSPCTransactionMode: params => domains._call("Page.setSPCTransactionMode", params),
+      setRPHRegistrationMode: params => domains._call("Page.setRPHRegistrationMode", params),
+      generateTestReport: params => domains._call("Page.generateTestReport", params),
+      waitForDebugger: params => domains._call("Page.waitForDebugger", params),
+      setInterceptFileChooserDialog: params => domains._call("Page.setInterceptFileChooserDialog", params),
+      setPrerenderingAllowed: params => domains._call("Page.setPrerenderingAllowed", params),
+      getAnnotatedPageContent: params => domains._call("Page.getAnnotatedPageContent", params)
     },
     Performance: {
-      disable: params => t._call("Performance.disable", params),
-      enable: params => t._call("Performance.enable", params),
-      setTimeDomain: params => t._call("Performance.setTimeDomain", params),
-      getMetrics: params => t._call("Performance.getMetrics", params)
+      disable: params => domains._call("Performance.disable", params),
+      enable: params => domains._call("Performance.enable", params),
+      setTimeDomain: params => domains._call("Performance.setTimeDomain", params),
+      getMetrics: params => domains._call("Performance.getMetrics", params)
     },
     PerformanceTimeline: {
-      enable: params => t._call("PerformanceTimeline.enable", params)
+      enable: params => domains._call("PerformanceTimeline.enable", params)
     },
     Preload: {
-      enable: params => t._call("Preload.enable", params),
-      disable: params => t._call("Preload.disable", params)
+      enable: params => domains._call("Preload.enable", params),
+      disable: params => domains._call("Preload.disable", params)
     },
     Profiler: {
-      disable: params => t._call("Profiler.disable", params),
-      enable: params => t._call("Profiler.enable", params),
-      getBestEffortCoverage: params => t._call("Profiler.getBestEffortCoverage", params),
-      setSamplingInterval: params => t._call("Profiler.setSamplingInterval", params),
-      start: params => t._call("Profiler.start", params),
-      startPreciseCoverage: params => t._call("Profiler.startPreciseCoverage", params),
-      stop: params => t._call("Profiler.stop", params),
-      stopPreciseCoverage: params => t._call("Profiler.stopPreciseCoverage", params),
-      takePreciseCoverage: params => t._call("Profiler.takePreciseCoverage", params)
+      disable: params => domains._call("Profiler.disable", params),
+      enable: params => domains._call("Profiler.enable", params),
+      getBestEffortCoverage: params => domains._call("Profiler.getBestEffortCoverage", params),
+      setSamplingInterval: params => domains._call("Profiler.setSamplingInterval", params),
+      start: params => domains._call("Profiler.start", params),
+      startPreciseCoverage: params => domains._call("Profiler.startPreciseCoverage", params),
+      stop: params => domains._call("Profiler.stop", params),
+      stopPreciseCoverage: params => domains._call("Profiler.stopPreciseCoverage", params),
+      takePreciseCoverage: params => domains._call("Profiler.takePreciseCoverage", params)
     },
     PWA: {
-      getOsAppState: params => t._call("PWA.getOsAppState", params),
-      install: params => t._call("PWA.install", params),
-      uninstall: params => t._call("PWA.uninstall", params),
-      launch: params => t._call("PWA.launch", params),
-      launchFilesInApp: params => t._call("PWA.launchFilesInApp", params),
-      openCurrentPageInApp: params => t._call("PWA.openCurrentPageInApp", params),
-      changeAppUserSettings: params => t._call("PWA.changeAppUserSettings", params)
+      getOsAppState: params => domains._call("PWA.getOsAppState", params),
+      install: params => domains._call("PWA.install", params),
+      uninstall: params => domains._call("PWA.uninstall", params),
+      launch: params => domains._call("PWA.launch", params),
+      launchFilesInApp: params => domains._call("PWA.launchFilesInApp", params),
+      openCurrentPageInApp: params => domains._call("PWA.openCurrentPageInApp", params),
+      changeAppUserSettings: params => domains._call("PWA.changeAppUserSettings", params)
     },
     Runtime: {
-      awaitPromise: params => t._call("Runtime.awaitPromise", params),
-      callFunctionOn: params => t._call("Runtime.callFunctionOn", params),
-      compileScript: params => t._call("Runtime.compileScript", params),
-      disable: params => t._call("Runtime.disable", params),
-      discardConsoleEntries: params => t._call("Runtime.discardConsoleEntries", params),
-      enable: params => t._call("Runtime.enable", params),
-      evaluate: params => t._call("Runtime.evaluate", params),
-      getIsolateId: params => t._call("Runtime.getIsolateId", params),
-      getHeapUsage: params => t._call("Runtime.getHeapUsage", params),
-      getProperties: params => t._call("Runtime.getProperties", params),
-      globalLexicalScopeNames: params => t._call("Runtime.globalLexicalScopeNames", params),
-      queryObjects: params => t._call("Runtime.queryObjects", params),
-      releaseObject: params => t._call("Runtime.releaseObject", params),
-      releaseObjectGroup: params => t._call("Runtime.releaseObjectGroup", params),
-      runIfWaitingForDebugger: params => t._call("Runtime.runIfWaitingForDebugger", params),
-      runScript: params => t._call("Runtime.runScript", params),
-      setCustomObjectFormatterEnabled: params => t._call("Runtime.setCustomObjectFormatterEnabled", params),
-      setMaxCallStackSizeToCapture: params => t._call("Runtime.setMaxCallStackSizeToCapture", params),
-      terminateExecution: params => t._call("Runtime.terminateExecution", params),
-      addBinding: params => t._call("Runtime.addBinding", params),
-      removeBinding: params => t._call("Runtime.removeBinding", params),
-      getExceptionDetails: params => t._call("Runtime.getExceptionDetails", params)
+      awaitPromise: params => domains._call("Runtime.awaitPromise", params),
+      callFunctionOn: params => domains._call("Runtime.callFunctionOn", params),
+      compileScript: params => domains._call("Runtime.compileScript", params),
+      disable: params => domains._call("Runtime.disable", params),
+      discardConsoleEntries: params => domains._call("Runtime.discardConsoleEntries", params),
+      enable: params => domains._call("Runtime.enable", params),
+      evaluate: params => domains._call("Runtime.evaluate", params),
+      getIsolateId: params => domains._call("Runtime.getIsolateId", params),
+      getHeapUsage: params => domains._call("Runtime.getHeapUsage", params),
+      getProperties: params => domains._call("Runtime.getProperties", params),
+      globalLexicalScopeNames: params => domains._call("Runtime.globalLexicalScopeNames", params),
+      queryObjects: params => domains._call("Runtime.queryObjects", params),
+      releaseObject: params => domains._call("Runtime.releaseObject", params),
+      releaseObjectGroup: params => domains._call("Runtime.releaseObjectGroup", params),
+      runIfWaitingForDebugger: params => domains._call("Runtime.runIfWaitingForDebugger", params),
+      runScript: params => domains._call("Runtime.runScript", params),
+      setCustomObjectFormatterEnabled: params => domains._call("Runtime.setCustomObjectFormatterEnabled", params),
+      setMaxCallStackSizeToCapture: params => domains._call("Runtime.setMaxCallStackSizeToCapture", params),
+      terminateExecution: params => domains._call("Runtime.terminateExecution", params),
+      addBinding: params => domains._call("Runtime.addBinding", params),
+      removeBinding: params => domains._call("Runtime.removeBinding", params),
+      getExceptionDetails: params => domains._call("Runtime.getExceptionDetails", params)
     },
     Schema: {
-      getDomains: params => t._call("Schema.getDomains", params)
+      getDomains: params => domains._call("Schema.getDomains", params)
     },
     Security: {
-      disable: params => t._call("Security.disable", params),
-      enable: params => t._call("Security.enable", params),
-      setIgnoreCertificateErrors: params => t._call("Security.setIgnoreCertificateErrors", params),
-      handleCertificateError: params => t._call("Security.handleCertificateError", params),
-      setOverrideCertificateErrors: params => t._call("Security.setOverrideCertificateErrors", params)
+      disable: params => domains._call("Security.disable", params),
+      enable: params => domains._call("Security.enable", params),
+      setIgnoreCertificateErrors: params => domains._call("Security.setIgnoreCertificateErrors", params),
+      handleCertificateError: params => domains._call("Security.handleCertificateError", params),
+      setOverrideCertificateErrors: params => domains._call("Security.setOverrideCertificateErrors", params)
     },
     ServiceWorker: {
-      deliverPushMessage: params => t._call("ServiceWorker.deliverPushMessage", params),
-      disable: params => t._call("ServiceWorker.disable", params),
-      dispatchSyncEvent: params => t._call("ServiceWorker.dispatchSyncEvent", params),
-      dispatchPeriodicSyncEvent: params => t._call("ServiceWorker.dispatchPeriodicSyncEvent", params),
-      enable: params => t._call("ServiceWorker.enable", params),
-      setForceUpdateOnPageLoad: params => t._call("ServiceWorker.setForceUpdateOnPageLoad", params),
-      skipWaiting: params => t._call("ServiceWorker.skipWaiting", params),
-      startWorker: params => t._call("ServiceWorker.startWorker", params),
-      stopAllWorkers: params => t._call("ServiceWorker.stopAllWorkers", params),
-      stopWorker: params => t._call("ServiceWorker.stopWorker", params),
-      unregister: params => t._call("ServiceWorker.unregister", params),
-      updateRegistration: params => t._call("ServiceWorker.updateRegistration", params)
+      deliverPushMessage: params => domains._call("ServiceWorker.deliverPushMessage", params),
+      disable: params => domains._call("ServiceWorker.disable", params),
+      dispatchSyncEvent: params => domains._call("ServiceWorker.dispatchSyncEvent", params),
+      dispatchPeriodicSyncEvent: params => domains._call("ServiceWorker.dispatchPeriodicSyncEvent", params),
+      enable: params => domains._call("ServiceWorker.enable", params),
+      setForceUpdateOnPageLoad: params => domains._call("ServiceWorker.setForceUpdateOnPageLoad", params),
+      skipWaiting: params => domains._call("ServiceWorker.skipWaiting", params),
+      startWorker: params => domains._call("ServiceWorker.startWorker", params),
+      stopAllWorkers: params => domains._call("ServiceWorker.stopAllWorkers", params),
+      stopWorker: params => domains._call("ServiceWorker.stopWorker", params),
+      unregister: params => domains._call("ServiceWorker.unregister", params),
+      updateRegistration: params => domains._call("ServiceWorker.updateRegistration", params)
     },
     SmartCardEmulation: {
-      enable: params => t._call("SmartCardEmulation.enable", params),
-      disable: params => t._call("SmartCardEmulation.disable", params),
-      reportEstablishContextResult: params => t._call("SmartCardEmulation.reportEstablishContextResult", params),
-      reportReleaseContextResult: params => t._call("SmartCardEmulation.reportReleaseContextResult", params),
-      reportListReadersResult: params => t._call("SmartCardEmulation.reportListReadersResult", params),
-      reportGetStatusChangeResult: params => t._call("SmartCardEmulation.reportGetStatusChangeResult", params),
-      reportBeginTransactionResult: params => t._call("SmartCardEmulation.reportBeginTransactionResult", params),
-      reportPlainResult: params => t._call("SmartCardEmulation.reportPlainResult", params),
-      reportConnectResult: params => t._call("SmartCardEmulation.reportConnectResult", params),
-      reportDataResult: params => t._call("SmartCardEmulation.reportDataResult", params),
-      reportStatusResult: params => t._call("SmartCardEmulation.reportStatusResult", params),
-      reportError: params => t._call("SmartCardEmulation.reportError", params)
+      enable: params => domains._call("SmartCardEmulation.enable", params),
+      disable: params => domains._call("SmartCardEmulation.disable", params),
+      reportEstablishContextResult: params => domains._call("SmartCardEmulation.reportEstablishContextResult", params),
+      reportReleaseContextResult: params => domains._call("SmartCardEmulation.reportReleaseContextResult", params),
+      reportListReadersResult: params => domains._call("SmartCardEmulation.reportListReadersResult", params),
+      reportGetStatusChangeResult: params => domains._call("SmartCardEmulation.reportGetStatusChangeResult", params),
+      reportBeginTransactionResult: params => domains._call("SmartCardEmulation.reportBeginTransactionResult", params),
+      reportPlainResult: params => domains._call("SmartCardEmulation.reportPlainResult", params),
+      reportConnectResult: params => domains._call("SmartCardEmulation.reportConnectResult", params),
+      reportDataResult: params => domains._call("SmartCardEmulation.reportDataResult", params),
+      reportStatusResult: params => domains._call("SmartCardEmulation.reportStatusResult", params),
+      reportError: params => domains._call("SmartCardEmulation.reportError", params)
     },
     Storage: {
-      getStorageKeyForFrame: params => t._call("Storage.getStorageKeyForFrame", params),
-      getStorageKey: params => t._call("Storage.getStorageKey", params),
-      clearDataForOrigin: params => t._call("Storage.clearDataForOrigin", params),
-      clearDataForStorageKey: params => t._call("Storage.clearDataForStorageKey", params),
-      getCookies: params => t._call("Storage.getCookies", params),
-      setCookies: params => t._call("Storage.setCookies", params),
-      clearCookies: params => t._call("Storage.clearCookies", params),
-      getUsageAndQuota: params => t._call("Storage.getUsageAndQuota", params),
-      overrideQuotaForOrigin: params => t._call("Storage.overrideQuotaForOrigin", params),
-      trackCacheStorageForOrigin: params => t._call("Storage.trackCacheStorageForOrigin", params),
-      trackCacheStorageForStorageKey: params => t._call("Storage.trackCacheStorageForStorageKey", params),
-      trackIndexedDBForOrigin: params => t._call("Storage.trackIndexedDBForOrigin", params),
-      trackIndexedDBForStorageKey: params => t._call("Storage.trackIndexedDBForStorageKey", params),
-      untrackCacheStorageForOrigin: params => t._call("Storage.untrackCacheStorageForOrigin", params),
-      untrackCacheStorageForStorageKey: params => t._call("Storage.untrackCacheStorageForStorageKey", params),
-      untrackIndexedDBForOrigin: params => t._call("Storage.untrackIndexedDBForOrigin", params),
-      untrackIndexedDBForStorageKey: params => t._call("Storage.untrackIndexedDBForStorageKey", params),
-      getTrustTokens: params => t._call("Storage.getTrustTokens", params),
-      clearTrustTokens: params => t._call("Storage.clearTrustTokens", params),
-      getInterestGroupDetails: params => t._call("Storage.getInterestGroupDetails", params),
-      setInterestGroupTracking: params => t._call("Storage.setInterestGroupTracking", params),
-      setInterestGroupAuctionTracking: params => t._call("Storage.setInterestGroupAuctionTracking", params),
-      getSharedStorageMetadata: params => t._call("Storage.getSharedStorageMetadata", params),
-      getSharedStorageEntries: params => t._call("Storage.getSharedStorageEntries", params),
-      setSharedStorageEntry: params => t._call("Storage.setSharedStorageEntry", params),
-      deleteSharedStorageEntry: params => t._call("Storage.deleteSharedStorageEntry", params),
-      clearSharedStorageEntries: params => t._call("Storage.clearSharedStorageEntries", params),
-      resetSharedStorageBudget: params => t._call("Storage.resetSharedStorageBudget", params),
-      setSharedStorageTracking: params => t._call("Storage.setSharedStorageTracking", params),
-      setStorageBucketTracking: params => t._call("Storage.setStorageBucketTracking", params),
-      deleteStorageBucket: params => t._call("Storage.deleteStorageBucket", params),
-      runBounceTrackingMitigations: params => t._call("Storage.runBounceTrackingMitigations", params),
-      getRelatedWebsiteSets: params => t._call("Storage.getRelatedWebsiteSets", params),
-      setProtectedAudienceKAnonymity: params => t._call("Storage.setProtectedAudienceKAnonymity", params)
+      getStorageKeyForFrame: params => domains._call("Storage.getStorageKeyForFrame", params),
+      getStorageKey: params => domains._call("Storage.getStorageKey", params),
+      clearDataForOrigin: params => domains._call("Storage.clearDataForOrigin", params),
+      clearDataForStorageKey: params => domains._call("Storage.clearDataForStorageKey", params),
+      getCookies: params => domains._call("Storage.getCookies", params),
+      setCookies: params => domains._call("Storage.setCookies", params),
+      clearCookies: params => domains._call("Storage.clearCookies", params),
+      getUsageAndQuota: params => domains._call("Storage.getUsageAndQuota", params),
+      overrideQuotaForOrigin: params => domains._call("Storage.overrideQuotaForOrigin", params),
+      trackCacheStorageForOrigin: params => domains._call("Storage.trackCacheStorageForOrigin", params),
+      trackCacheStorageForStorageKey: params => domains._call("Storage.trackCacheStorageForStorageKey", params),
+      trackIndexedDBForOrigin: params => domains._call("Storage.trackIndexedDBForOrigin", params),
+      trackIndexedDBForStorageKey: params => domains._call("Storage.trackIndexedDBForStorageKey", params),
+      untrackCacheStorageForOrigin: params => domains._call("Storage.untrackCacheStorageForOrigin", params),
+      untrackCacheStorageForStorageKey: params => domains._call("Storage.untrackCacheStorageForStorageKey", params),
+      untrackIndexedDBForOrigin: params => domains._call("Storage.untrackIndexedDBForOrigin", params),
+      untrackIndexedDBForStorageKey: params => domains._call("Storage.untrackIndexedDBForStorageKey", params),
+      getTrustTokens: params => domains._call("Storage.getTrustTokens", params),
+      clearTrustTokens: params => domains._call("Storage.clearTrustTokens", params),
+      getInterestGroupDetails: params => domains._call("Storage.getInterestGroupDetails", params),
+      setInterestGroupTracking: params => domains._call("Storage.setInterestGroupTracking", params),
+      setInterestGroupAuctionTracking: params => domains._call("Storage.setInterestGroupAuctionTracking", params),
+      getSharedStorageMetadata: params => domains._call("Storage.getSharedStorageMetadata", params),
+      getSharedStorageEntries: params => domains._call("Storage.getSharedStorageEntries", params),
+      setSharedStorageEntry: params => domains._call("Storage.setSharedStorageEntry", params),
+      deleteSharedStorageEntry: params => domains._call("Storage.deleteSharedStorageEntry", params),
+      clearSharedStorageEntries: params => domains._call("Storage.clearSharedStorageEntries", params),
+      resetSharedStorageBudget: params => domains._call("Storage.resetSharedStorageBudget", params),
+      setSharedStorageTracking: params => domains._call("Storage.setSharedStorageTracking", params),
+      setStorageBucketTracking: params => domains._call("Storage.setStorageBucketTracking", params),
+      deleteStorageBucket: params => domains._call("Storage.deleteStorageBucket", params),
+      runBounceTrackingMitigations: params => domains._call("Storage.runBounceTrackingMitigations", params),
+      getRelatedWebsiteSets: params => domains._call("Storage.getRelatedWebsiteSets", params),
+      setProtectedAudienceKAnonymity: params => domains._call("Storage.setProtectedAudienceKAnonymity", params)
     },
     SystemInfo: {
-      getInfo: params => t._call("SystemInfo.getInfo", params),
-      getFeatureState: params => t._call("SystemInfo.getFeatureState", params),
-      getProcessInfo: params => t._call("SystemInfo.getProcessInfo", params)
+      getInfo: params => domains._call("SystemInfo.getInfo", params),
+      getFeatureState: params => domains._call("SystemInfo.getFeatureState", params),
+      getProcessInfo: params => domains._call("SystemInfo.getProcessInfo", params)
     },
     Target: {
-      activateTarget: params => t._call("Target.activateTarget", params),
-      attachToTarget: params => t._call("Target.attachToTarget", params),
-      attachToBrowserTarget: params => t._call("Target.attachToBrowserTarget", params),
-      closeTarget: params => t._call("Target.closeTarget", params),
-      exposeDevToolsProtocol: params => t._call("Target.exposeDevToolsProtocol", params),
-      createBrowserContext: params => t._call("Target.createBrowserContext", params),
-      getBrowserContexts: params => t._call("Target.getBrowserContexts", params),
-      createTarget: params => t._call("Target.createTarget", params),
-      detachFromTarget: params => t._call("Target.detachFromTarget", params),
-      disposeBrowserContext: params => t._call("Target.disposeBrowserContext", params),
-      getTargetInfo: params => t._call("Target.getTargetInfo", params),
-      getTargets: params => t._call("Target.getTargets", params),
-      sendMessageToTarget: params => t._call("Target.sendMessageToTarget", params),
-      setAutoAttach: params => t._call("Target.setAutoAttach", params),
-      autoAttachRelated: params => t._call("Target.autoAttachRelated", params),
-      setDiscoverTargets: params => t._call("Target.setDiscoverTargets", params),
-      setRemoteLocations: params => t._call("Target.setRemoteLocations", params),
-      getDevToolsTarget: params => t._call("Target.getDevToolsTarget", params),
-      openDevTools: params => t._call("Target.openDevTools", params)
+      activateTarget: params => domains._call("Target.activateTarget", params),
+      attachToTarget: params => domains._call("Target.attachToTarget", params),
+      attachToBrowserTarget: params => domains._call("Target.attachToBrowserTarget", params),
+      closeTarget: params => domains._call("Target.closeTarget", params),
+      exposeDevToolsProtocol: params => domains._call("Target.exposeDevToolsProtocol", params),
+      createBrowserContext: params => domains._call("Target.createBrowserContext", params),
+      getBrowserContexts: params => domains._call("Target.getBrowserContexts", params),
+      createTarget: params => domains._call("Target.createTarget", params),
+      detachFromTarget: params => domains._call("Target.detachFromTarget", params),
+      disposeBrowserContext: params => domains._call("Target.disposeBrowserContext", params),
+      getTargetInfo: params => domains._call("Target.getTargetInfo", params),
+      getTargets: params => domains._call("Target.getTargets", params),
+      sendMessageToTarget: params => domains._call("Target.sendMessageToTarget", params),
+      setAutoAttach: params => domains._call("Target.setAutoAttach", params),
+      autoAttachRelated: params => domains._call("Target.autoAttachRelated", params),
+      setDiscoverTargets: params => domains._call("Target.setDiscoverTargets", params),
+      setRemoteLocations: params => domains._call("Target.setRemoteLocations", params),
+      getDevToolsTarget: params => domains._call("Target.getDevToolsTarget", params),
+      openDevTools: params => domains._call("Target.openDevTools", params)
     },
     Tethering: {
-      bind: params => t._call("Tethering.bind", params),
-      unbind: params => t._call("Tethering.unbind", params)
+      bind: params => domains._call("Tethering.bind", params),
+      unbind: params => domains._call("Tethering.unbind", params)
     },
     Tracing: {
-      end: params => t._call("Tracing.end", params),
-      getCategories: params => t._call("Tracing.getCategories", params),
-      getTrackEventDescriptor: params => t._call("Tracing.getTrackEventDescriptor", params),
-      recordClockSyncMarker: params => t._call("Tracing.recordClockSyncMarker", params),
-      requestMemoryDump: params => t._call("Tracing.requestMemoryDump", params),
-      start: params => t._call("Tracing.start", params)
+      end: params => domains._call("Tracing.end", params),
+      getCategories: params => domains._call("Tracing.getCategories", params),
+      getTrackEventDescriptor: params => domains._call("Tracing.getTrackEventDescriptor", params),
+      recordClockSyncMarker: params => domains._call("Tracing.recordClockSyncMarker", params),
+      requestMemoryDump: params => domains._call("Tracing.requestMemoryDump", params),
+      start: params => domains._call("Tracing.start", params)
     },
     WebAudio: {
-      enable: params => t._call("WebAudio.enable", params),
-      disable: params => t._call("WebAudio.disable", params),
-      getRealtimeData: params => t._call("WebAudio.getRealtimeData", params)
+      enable: params => domains._call("WebAudio.enable", params),
+      disable: params => domains._call("WebAudio.disable", params),
+      getRealtimeData: params => domains._call("WebAudio.getRealtimeData", params)
     },
     WebAuthn: {
-      enable: params => t._call("WebAuthn.enable", params),
-      disable: params => t._call("WebAuthn.disable", params),
-      addVirtualAuthenticator: params => t._call("WebAuthn.addVirtualAuthenticator", params),
-      setResponseOverrideBits: params => t._call("WebAuthn.setResponseOverrideBits", params),
-      removeVirtualAuthenticator: params => t._call("WebAuthn.removeVirtualAuthenticator", params),
-      addCredential: params => t._call("WebAuthn.addCredential", params),
-      getCredential: params => t._call("WebAuthn.getCredential", params),
-      getCredentials: params => t._call("WebAuthn.getCredentials", params),
-      removeCredential: params => t._call("WebAuthn.removeCredential", params),
-      clearCredentials: params => t._call("WebAuthn.clearCredentials", params),
-      setUserVerified: params => t._call("WebAuthn.setUserVerified", params),
-      setAutomaticPresenceSimulation: params => t._call("WebAuthn.setAutomaticPresenceSimulation", params),
-      setCredentialProperties: params => t._call("WebAuthn.setCredentialProperties", params)
+      enable: params => domains._call("WebAuthn.enable", params),
+      disable: params => domains._call("WebAuthn.disable", params),
+      addVirtualAuthenticator: params => domains._call("WebAuthn.addVirtualAuthenticator", params),
+      setResponseOverrideBits: params => domains._call("WebAuthn.setResponseOverrideBits", params),
+      removeVirtualAuthenticator: params => domains._call("WebAuthn.removeVirtualAuthenticator", params),
+      addCredential: params => domains._call("WebAuthn.addCredential", params),
+      getCredential: params => domains._call("WebAuthn.getCredential", params),
+      getCredentials: params => domains._call("WebAuthn.getCredentials", params),
+      removeCredential: params => domains._call("WebAuthn.removeCredential", params),
+      clearCredentials: params => domains._call("WebAuthn.clearCredentials", params),
+      setUserVerified: params => domains._call("WebAuthn.setUserVerified", params),
+      setAutomaticPresenceSimulation: params => domains._call("WebAuthn.setAutomaticPresenceSimulation", params),
+      setCredentialProperties: params => domains._call("WebAuthn.setCredentialProperties", params)
     },
     WebMCP: {
-      enable: params => t._call("WebMCP.enable", params),
-      disable: params => t._call("WebMCP.disable", params),
-      invokeTool: params => t._call("WebMCP.invokeTool", params),
-      cancelInvocation: params => t._call("WebMCP.cancelInvocation", params)
+      enable: params => domains._call("WebMCP.enable", params),
+      disable: params => domains._call("WebMCP.disable", params),
+      invokeTool: params => domains._call("WebMCP.invokeTool", params),
+      cancelInvocation: params => domains._call("WebMCP.cancelInvocation", params)
     }
   };
 }
@@ -26333,7 +26333,7 @@ var XiaoheiBotBrowserService = class {
     for (const page of [...this.pages.values()]) if (page.owner === runtimeKey) this.closeTab(page);
   }
   closeAll() {
-    for (const key of /* @__PURE__ */new Set([...this.queues.keys(), ...[...this.pages.values()].map(p => p.owner)])) this.closeRuntime(key);
+    for (const key of /* @__PURE__ */new Set([...this.queues.keys(), ...[...this.pages.values()].map(item => item.owner)])) this.closeRuntime(key);
   }
   notify(runtimeKey, message) {
     const list = this.notices.get(runtimeKey) ?? [];
@@ -26497,7 +26497,7 @@ var XiaoheiBotBrowserService = class {
     const win = existing && !existing.window.isDestroyed() ? existing : undefined;
     const mine = win?.tabs ?? [];
     if (win && mine.length >= MAX_TABS_PER_RUNTIME) {
-      const victim = mine.filter(tab => tab.id !== win.active).sort((a, b) => a.lastUsed - b.lastUsed)[0] ?? mine[0];
+      const victim = mine.filter(tab => tab.id !== win.active).sort((left, right) => left.lastUsed - right.lastUsed)[0] ?? mine[0];
       this.notify(scope.runtimeKey, `标签页已达上限，已自动关闭最久未使用的页面 ${this.label(victim)}。`);
       this.closeTab(victim);
     }
@@ -26637,9 +26637,9 @@ var XiaoheiBotBrowserService = class {
       if (page && (!this.pages.has(page.id) || page.view.webContents.isDestroyed())) throw new Error("页面已关闭，请先查询页面列表。");
     };
     check();
-    const mine = () => [...this.pages.values()].filter(p => p.owner === scope.runtimeKey);
+    const mine = () => [...this.pages.values()].filter(item => item.owner === scope.runtimeKey);
     if (input.action === "list") return {
-      pages: mine().map(p => this.info(p))
+      pages: mine().map(item => this.info(item))
     };
     let page = input.pageId ? this.pages.get(input.pageId) : undefined;
     if (page && page.owner !== scope.runtimeKey) throw new Error("不能操作其他任务的浏览器页面。");
@@ -26647,7 +26647,7 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "open") {
       const url = webUrl(input.url);
       if (!page) {
-        const same = mine().find(p => !p.view.webContents.isDestroyed() && p.view.webContents.getURL() === url);
+        const same = mine().find(item => !item.view.webContents.isDestroyed() && item.view.webContents.getURL() === url);
         if (same) {
           this.activate(same);
           return {
@@ -26676,7 +26676,7 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "closeOthers") {
       const keep = page ?? this.activeOf(scope.runtimeKey);
       if (!keep) throw new Error("当前没有打开的页面。");
-      const closed = mine().filter(p => p !== keep).map(p => p.id);
+      const closed = mine().filter(item => item !== keep).map(item => item.id);
       for (const id of closed) {
         const other = this.pages.get(id);
         if (other) this.closeTab(other);
@@ -26734,7 +26734,7 @@ var XiaoheiBotBrowserService = class {
       const {
         nodes
       } = await cdp.Accessibility.getFullAXTree({});
-      const useful = nodes.filter(n => !n.ignored && (n.name?.value || n.role?.value === "textbox") && n.backendDOMNodeId);
+      const useful = nodes.filter(item => !item.ignored && (item.name?.value || item.role?.value === "textbox") && item.backendDOMNodeId);
       page.refs.clear();
       page.snapshotId = randomUUID();
       const elements = useful.slice(input.offset, input.offset + 250).map((node, index) => {
@@ -26862,9 +26862,9 @@ var XiaoheiBotBrowserService = class {
       } = await cdp.DOM.getBoxModel({
         backendNodeId
       });
-      const q = model.content;
-      const x = (q[0] + q[2] + q[4] + q[6]) / 4;
-      const y = (q[1] + q[3] + q[5] + q[7]) / 4;
+      const content = model.content;
+      const x = (content[0] + content[2] + content[4] + content[6]) / 4;
+      const y = (content[1] + content[3] + content[5] + content[7]) / 4;
       await cdp.Input.dispatchMouseEvent({
         type: "mousePressed",
         x,
@@ -27343,27 +27343,27 @@ async function getPremiumModels(lang = "zh-CN") {
     }
   }), getCreditsExchangePolicy()]);
   if (!data.ok || !Array.isArray(data.data)) return [];
-  return data.data.map(m => {
-    const inputPriceYuanPerM = Number(m.input_price_yuan_per_m ?? 0);
-    const outputPriceYuanPerM = Number(m.output_price_yuan_per_m ?? 0);
+  return data.data.map(item => {
+    const inputPriceYuanPerM = Number(item.input_price_yuan_per_m ?? 0);
+    const outputPriceYuanPerM = Number(item.output_price_yuan_per_m ?? 0);
     return {
-      id: String(m.id ?? ""),
-      name: String(m.name ?? ""),
-      description: String(m.description ?? ""),
-      inputTokens: Number(m.input_tokens ?? 0),
-      inputPoints: Number(m.input_points ?? 0),
-      outputTokens: Number(m.output_tokens ?? 0),
-      outputPoints: Number(m.output_points ?? 0),
-      sortOrder: Number(m.sort_order ?? 0),
+      id: String(item.id ?? ""),
+      name: String(item.name ?? ""),
+      description: String(item.description ?? ""),
+      inputTokens: Number(item.input_tokens ?? 0),
+      inputPoints: Number(item.input_points ?? 0),
+      outputTokens: Number(item.output_tokens ?? 0),
+      outputPoints: Number(item.output_points ?? 0),
+      sortOrder: Number(item.sort_order ?? 0),
       inputPriceYuanPerM,
       outputPriceYuanPerM,
       inputPriceCreditsPerM: creditsFromYuan(inputPriceYuanPerM, policy),
       outputPriceCreditsPerM: creditsFromYuan(outputPriceYuanPerM, policy),
-      brandColor: String(m.brand_color ?? ""),
-      logoUrl: m.logo_url ? String(m.logo_url) : null,
-      tag: String(m.tag ?? ""),
-      tagColor: String(m.tag_color ?? ""),
-      badgeText: String(m.badge_text ?? "")
+      brandColor: String(item.brand_color ?? ""),
+      logoUrl: item.logo_url ? String(item.logo_url) : null,
+      tag: String(item.tag ?? ""),
+      tagColor: String(item.tag_color ?? ""),
+      badgeText: String(item.badge_text ?? "")
     };
   });
 }
@@ -27385,9 +27385,9 @@ async function getRechargeConfig() {
   const config = data.data;
   return {
     exchangeRate: Number(config.exchangeRate ?? 1),
-    options: Array.isArray(config.options) ? config.options.map(o => ({
-      amount: Number(o.amount ?? 0),
-      points: Number(o.points ?? 0)
+    options: Array.isArray(config.options) ? config.options.map(item => ({
+      amount: Number(item.amount ?? 0),
+      points: Number(item.points ?? 0)
     })) : []
   };
 }
@@ -27493,14 +27493,14 @@ async function getUsageRecords(page = 1, pageSize = 20, source = "ai") {
   });
   if (!data.ok || !data.data) throw new Error(data.error?.message || "Failed to fetch usage records");
   return {
-    records: Array.isArray(data.data.records) ? data.data.records.map(r => ({
-      id: String(r.id ?? ""),
-      type: String(r.type ?? "unknown"),
-      inputTokens: Number(r.input_tokens ?? r.inputTokens ?? 0),
-      outputTokens: Number(r.output_tokens ?? r.outputTokens ?? 0),
-      pointsCost: Number(r.points_cost ?? r.pointsCost ?? 0),
-      status: String(r.status ?? "success"),
-      createdAt: String(r.created_at ?? r.createdAt ?? "")
+    records: Array.isArray(data.data.records) ? data.data.records.map(row => ({
+      id: String(row.id ?? ""),
+      type: String(row.type ?? "unknown"),
+      inputTokens: Number(row.input_tokens ?? row.inputTokens ?? 0),
+      outputTokens: Number(row.output_tokens ?? row.outputTokens ?? 0),
+      pointsCost: Number(row.points_cost ?? row.pointsCost ?? 0),
+      status: String(row.status ?? "success"),
+      createdAt: String(row.created_at ?? row.createdAt ?? "")
     })) : [],
     total: Number(data.data.total ?? 0),
     page: Number(data.data.page ?? page),
@@ -27543,14 +27543,14 @@ async function getCreditUsageRecords(page = 1, pageSize = 20, source = "ai") {
   });
   if (!data.ok || !data.data) throw new Error(data.error?.message || "Failed to fetch credit usage records");
   return {
-    records: Array.isArray(data.data.records) ? data.data.records.map(r => ({
-      id: String(r.id ?? ""),
-      type: String(r.type ?? "unknown"),
-      inputTokens: Number(r.input_tokens ?? r.inputTokens ?? 0),
-      outputTokens: Number(r.output_tokens ?? r.outputTokens ?? 0),
-      creditsCost: Math.max(0, Math.round(Number(r.credits_cost ?? r.creditsCost ?? 0))),
-      status: String(r.status ?? "success"),
-      createdAt: String(r.created_at ?? r.createdAt ?? "")
+    records: Array.isArray(data.data.records) ? data.data.records.map(row => ({
+      id: String(row.id ?? ""),
+      type: String(row.type ?? "unknown"),
+      inputTokens: Number(row.input_tokens ?? row.inputTokens ?? 0),
+      outputTokens: Number(row.output_tokens ?? row.outputTokens ?? 0),
+      creditsCost: Math.max(0, Math.round(Number(row.credits_cost ?? row.creditsCost ?? 0))),
+      status: String(row.status ?? "success"),
+      createdAt: String(row.created_at ?? row.createdAt ?? "")
     })) : [],
     total: Number(data.data.total ?? 0),
     page: Number(data.data.page ?? page),
@@ -27623,10 +27623,10 @@ function bigrams(text) {
   return grams;
 }
 /** Dice 系数：2|A∩B| / (|A|+|B|)，按字符二元组计算 */
-function summarySimilarity(a, b) {
-  if (a === b) return 1;
-  const left = bigrams(a);
-  const right = bigrams(b);
+function summarySimilarity(mary, similarity) {
+  if (mary === similarity) return 1;
+  const left = bigrams(mary);
+  const right = bigrams(similarity);
   let leftSize = 0;
   let rightSize = 0;
   let overlap = 0;
@@ -27655,7 +27655,7 @@ function mergeAdjacentRecords(records) {
     record,
     startedAt,
     endedAt
-  }) => record.summary.trim() && Number.isFinite(startedAt.getTime()) && Number.isFinite(endedAt.getTime())).sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
+  }) => record.summary.trim() && Number.isFinite(startedAt.getTime()) && Number.isFinite(endedAt.getTime())).sort((left, right) => left.startedAt.getTime() - right.startedAt.getTime());
   for (const {
     record,
     startedAt,
@@ -27931,7 +27931,7 @@ async function uploadTodoAttachmentBuffer(todoId, buffer, originalName, mimeType
 }
 function getTimelineRecords(date = toLocalDateString()) {
   const range = getDayRange$2(date);
-  return workRecordRepository.listByRange(range.startedAt, range.endedAt, undefined, 500).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime());
+  return workRecordRepository.listByRange(range.startedAt, range.endedAt, undefined, 500).sort((left, right) => new Date(left.startedAt).getTime() - new Date(right.startedAt).getTime());
 }
 function toAutoCompletionTimelineRecord(record) {
   return {
@@ -27946,7 +27946,7 @@ function toAutoCompletionTimelineRecord(record) {
 function getTodoAutoCompletionTimelineRecords(timelineHours = 0) {
   const now = /* @__PURE__ */new Date();
   const rangeStart = timelineHours > 0 ? /* @__PURE__ */new Date(now.getTime() - timelineHours * 60 * 60 * 1e3) : new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return workRecordRepository.listByRange(rangeStart.toISOString(), now.toISOString(), undefined, -1).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime()).map(toAutoCompletionTimelineRecord);
+  return workRecordRepository.listByRange(rangeStart.toISOString(), now.toISOString(), undefined, -1).sort((left, right) => new Date(left.startedAt).getTime() - new Date(right.startedAt).getTime()).map(toAutoCompletionTimelineRecord);
 }
 async function listTodos(filters = {}) {
   const data = await requestTodoApi("list", {
@@ -27960,9 +27960,9 @@ async function listTodos(filters = {}) {
     nextCursor: typeof data.nextCursor === "string" && data.nextCursor ? data.nextCursor : null
   };
 }
-async function getTodo(id) {
+async function getTodo(todo) {
   return (await requestTodoApi("get", {
-    id
+    id: todo
   })).task;
 }
 async function getTodoStats(filters = {}) {
@@ -28014,9 +28014,9 @@ async function reorderTodos(items) {
   });
   return Array.isArray(data.tasks) ? data.tasks : [];
 }
-async function deleteTodo(id) {
+async function deleteTodo(todo) {
   await requestTodoApi("delete", {
-    id
+    id: todo
   });
 }
 async function resolveTodoAssignee(email) {
@@ -28901,7 +28901,7 @@ var TodoFloatingWindowService = class {
 var todoFloatingWindowService = new TodoFloatingWindowService();
 //#endregion
 //#region electron/services/bot-todo.service.ts
-var id = numberType().int().positive();
+var positive = numberType().int().positive();
 var emailList = arrayType(stringType().email().max(255)).max(20);
 var todoStatus = enumType(["todo", "in-progress", "done", "overdue"]);
 var dateTimeValue = stringType().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/);
@@ -28948,29 +28948,29 @@ var schemas = {
     limit: numberType().int().min(1).max(50).optional()
   }).strict(),
   get: objectType({
-    id
+    id: positive
   }).strict(),
   create: fields.extend({
     title: stringType().trim().min(1).max(1e3)
   }).strict(),
   update: fields.extend({
-    id
+    id: positive
   }).strict().refine(value => Object.keys(value).length > 1, "请指定需要修改的字段"),
   status: objectType({
-    id,
+    id: positive,
     status: todoStatus,
     completedAt: dateTimeValue.optional()
   }).strict(),
   archive: objectType({
-    id,
+    id: positive,
     archived: booleanType()
   }).strict(),
   pin: objectType({
-    id,
+    id: positive,
     pinned: booleanType()
   }).strict(),
   delete: objectType({
-    id
+    id: positive
   }).strict()
 };
 var botTodoRequestSchema = objectType({
@@ -29120,8 +29120,8 @@ function focusMaxGapMs(settings) {
 var DEDUP_EXTENDED_FROM_KEY = "dedupExtendedFrom";
 function parseTime(value) {
   if (typeof value !== "string") return null;
-  const ms = Date.parse(value);
-  return Number.isFinite(ms) ? ms : null;
+  const parsed = Date.parse(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 function parseRange(range) {
   const startMs = parseTime(range?.startedAt);
@@ -29365,8 +29365,8 @@ var BadgeRepository = class {
     if (category) return database.prepare("SELECT * FROM badge_definitions WHERE category = ? ORDER BY sort_order").all(category).map(mapBadgeDef);
     return database.prepare("SELECT * FROM badge_definitions ORDER BY sort_order").all().map(mapBadgeDef);
   }
-  getDefinitionById(id) {
-    const row = getDatabase().prepare("SELECT * FROM badge_definitions WHERE id = ?").get(id);
+  getDefinitionById(definition) {
+    const row = getDatabase().prepare("SELECT * FROM badge_definitions WHERE id = ?").get(definition);
     return row ? mapBadgeDef(row) : null;
   }
   getUserBadges(userId) {
@@ -29530,7 +29530,7 @@ var BadgeService = class {
   getBadges(userId) {
     const uid = userId ?? getCurrentUserId();
     const definitions = badgeRepository.getDefinitions();
-    const userBadges = new Map(badgeRepository.getUserBadges(uid).map(ub => [ub.badgeId, ub]));
+    const userBadges = new Map(badgeRepository.getUserBadges(uid).map(item => [item.badgeId, item]));
     const categoryMap = /* @__PURE__ */new Map();
     let unlockedCount = 0;
     const lang = settingsRepository.getSettings().language || "zh-CN";
@@ -29559,7 +29559,7 @@ var BadgeService = class {
       badges
     }));
     return {
-      total: definitions.filter(d => !d.isHidden).length,
+      total: definitions.filter(item => !item.isHidden).length,
       unlocked: unlockedCount,
       categories
     };
@@ -29626,25 +29626,25 @@ var BadgeService = class {
     const all = badgeRepository.getDefinitions();
     switch (event) {
       case "app_start":
-        return all.filter(b => b.conditionType === "timer" && (b.category === "streak" || b.category === "time") || b.conditionType === "composite");
+        return all.filter(item => item.conditionType === "timer" && (item.category === "streak" || item.category === "time") || item.conditionType === "composite");
       case "app_quit":
-        return all.filter(b => b.conditionType === "timer" && b.category === "time");
+        return all.filter(item => item.conditionType === "timer" && item.category === "time");
       case "generate_invite_link":
-        return all.filter(b => b.conditionType === "event" && b.id === "invite_link");
+        return all.filter(item => item.conditionType === "event" && item.id === "invite_link");
       case "invite_success":
-        return all.filter(b => b.category === "invite" && b.conditionType === "data_count");
+        return all.filter(item => item.category === "invite" && item.conditionType === "data_count");
       case "report_generated":
-        return all.filter(b => b.category === "report" || b.conditionType === "composite");
+        return all.filter(item => item.category === "report" || item.conditionType === "composite");
       case "page_visit":
-        return all.filter(b => b.conditionType === "visit");
+        return all.filter(item => item.conditionType === "visit");
       case "work_record_created":
-        return all.filter(b => b.id.startsWith("records_") || b.conditionType === "composite");
+        return all.filter(item => item.id.startsWith("records_") || item.conditionType === "composite");
       case "screenshot_analyzed":
-        return all.filter(b => b.id.startsWith("screenshots_") || b.conditionType === "composite");
+        return all.filter(item => item.id.startsWith("screenshots_") || item.conditionType === "composite");
       case "easter_egg_click":
-        return all.filter(b => b.id === "special_hidden");
+        return all.filter(item => item.id === "special_hidden");
       case "streak_check":
-        return all.filter(b => b.category === "streak" || b.conditionType === "composite");
+        return all.filter(item => item.category === "streak" || item.conditionType === "composite");
       case "backfill":
         return all;
       default:
@@ -29667,7 +29667,7 @@ var BadgeService = class {
               const timeRange = value.time_range;
               if (timeRange) {
                 const hour = (/* @__PURE__ */new Date()).getHours();
-                const [start, end] = timeRange.split("-").map(t => Number(t.split(":")[0]));
+                const [start, end] = timeRange.split("-").map(text => Number(text.split(":")[0]));
                 if (hour < start || hour >= end) return false;
               }
               return true;
@@ -29701,7 +29701,7 @@ var BadgeService = class {
         {
           const conditions = value.conditions;
           if (!Array.isArray(conditions)) return false;
-          return conditions.every(c => this.checkCompositeCondition(c, userId));
+          return conditions.every(item => this.checkCompositeCondition(item, userId));
         }
       default:
         return false;
@@ -29713,8 +29713,8 @@ var BadgeService = class {
     if (type === "streak") return badgeRepository.ensureStats(userId).currentStreak >= days;
     if (type === "has_records") {
       for (let i = 0; i < days; i++) {
-        const d = (/* @__PURE__ */new Date(Date.now() - i * 864e5)).toISOString().slice(0, 10);
-        if (!badgeRepository.hasWorkRecordsOnDate(d)) return false;
+        const part = (/* @__PURE__ */new Date(Date.now() - i * 864e5)).toISOString().slice(0, 10);
+        if (!badgeRepository.hasWorkRecordsOnDate(part)) return false;
       }
       return true;
     }
@@ -29747,28 +29747,28 @@ var HOUR_MS = 36e5;
 function pad$2(value) {
   return String(value).padStart(2, "0");
 }
-function formatClock(ms) {
-  const date = new Date(ms);
+function formatClock(clock) {
+  const date = new Date(clock);
   return `${pad$2(date.getHours())}:${pad$2(date.getMinutes())}`;
 }
 function formatHour(hour) {
   return `${pad$2(hour)}:00`;
 }
 /** 不足 minuteLimit 分钟时按分钟说，否则按一位小数的小时说 */
-function formatMinutes(minutes, en, minuteLimit = 60) {
+function formatMinutes(minutes, minutesValue, minuteLimit = 60) {
   const rounded = Math.max(1, Math.round(minutes));
-  if (rounded < minuteLimit) return en ? `${rounded} minute${rounded === 1 ? "" : "s"}` : `${rounded}分钟`;
+  if (rounded < minuteLimit) return minutesValue ? `${rounded} minute${rounded === 1 ? "" : "s"}` : `${rounded}分钟`;
   const hours = Number((rounded / 60).toFixed(1));
-  return en ? `${hours} hour${hours === 1 ? "" : "s"}` : `${hours}小时`;
+  return minutesValue ? `${hours} hour${hours === 1 ? "" : "s"}` : `${hours}小时`;
 }
-function formatInterval(seconds, en) {
-  if (seconds >= 90) return formatMinutes(seconds / 60, en);
+function formatInterval(seconds, interval) {
+  if (seconds >= 90) return formatMinutes(seconds / 60, interval);
   const rounded = Math.max(2, Math.round(seconds));
-  return en ? `${rounded} seconds` : `${rounded}秒`;
+  return interval ? `${rounded} seconds` : `${rounded}秒`;
 }
-function formatCount(value, en) {
+function formatCount(value, count) {
   const rounded = Math.round(value);
-  if (en) return rounded.toLocaleString("en-US");
+  if (count) return rounded.toLocaleString("en-US");
   return rounded >= 1e4 ? `${Number((rounded / 1e4).toFixed(1))}万` : String(rounded);
 }
 function localizeCategory(category, lang) {
@@ -29862,7 +29862,7 @@ function composeWorkOverview(input) {
   const lastHour = new Date(Math.min(lastMs, dayEndMs - 1)).getHours();
   const spanHours = (lastMs - firstMs) / HOUR_MS;
   const justStarted = input.isToday && input.now.getHours() < 12 && (isLight || input.now.getTime() - firstMs < 1.5 * HOUR_MS);
-  const sumHours = (from, to) => hourlyCounts.slice(from, to).reduce((a, b) => a + b, 0);
+  const sumHours = (from, to) => hourlyCounts.slice(from, to).reduce((acc, cur) => acc + cur, 0);
   const hourlyTotal = Math.max(1, sumHours(0, 24));
   const periodNames = en ? {
     morning: "the morning",
@@ -29907,7 +29907,7 @@ function composeWorkOverview(input) {
     }
   }
   const windowShare = windowCount / hourlyTotal;
-  const intervals = records.map(record => [Math.max(new Date(record.startedAt).getTime(), dayStartMs), Math.min(new Date(record.endedAt).getTime(), dayEndMs)]).filter(([start, end]) => !Number.isNaN(start) && !Number.isNaN(end) && end >= start).sort((a, b) => a[0] - b[0]);
+  const intervals = records.map(record => [Math.max(new Date(record.startedAt).getTime(), dayStartMs), Math.min(new Date(record.endedAt).getTime(), dayEndMs)]).filter(([start, end]) => !Number.isNaN(start) && !Number.isNaN(end) && end >= start).sort((left, right) => left[0] - right[0]);
   let gap = null;
   let coveredUntil = intervals[0]?.[1] ?? 0;
   for (const [start, end] of intervals.slice(1)) {
@@ -30123,7 +30123,7 @@ function composeWorkOverview(input) {
     blocked.add(next.group);
     next.blocks.forEach(key => blocked.add(key));
   }
-  picked.sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group));
+  picked.sort((left, right) => GROUP_ORDER.indexOf(left.group) - GROUP_ORDER.indexOf(right.group));
   const closing = picked.length < 3 && random() < .5 ? pickWeighted(candidates.closing.filter(isAllowed), random) : null;
   const separators = {
     clause: t("workRecord.overviewPhrases.join.clause", lang),
@@ -30970,7 +30970,7 @@ function buildHourlyCounts(records, dayStart, dayEnd) {
 }
 /** 概览里应用相关的说法：主力应用、最长连续使用、最常往返的两个应用、切换频率 */
 function collectOverviewAppSignals(startedAt, endedAt, lang) {
-  const items = appUsageService.getSummary(startedAt, endedAt).filter(item => item.activeDurationSec > 0).sort((a, b) => b.activeDurationSec - a.activeDurationSec);
+  const items = appUsageService.getSummary(startedAt, endedAt).filter(item => item.activeDurationSec > 0).sort((left, right) => right.activeDurationSec - left.activeDurationSec);
   if (items.length === 0) return undefined;
   const displayName = name => localizeCommonAppName(name, lang);
   const activeByName = new Map(items.map(item => [item.appName.trim().toLocaleLowerCase(), item.activeDurationSec]));
@@ -31146,30 +31146,30 @@ var WorkRecordService = class {
       console.warn("[WorkRecord] 记录已写入，但排行榜同步调度失败:", error);
     }
   }
-  updateScreenshotPath(id, screenshotPath) {
-    workRecordRepository.updateScreenshotPath(id, screenshotPath);
+  updateScreenshotPath(screenshot, screenshotPath) {
+    workRecordRepository.updateScreenshotPath(screenshot, screenshotPath);
   }
   findLatestBySources(sources) {
     return workRecordRepository.findLatestBySources(sources);
   }
-  extendEndedAt(id, endedAt, details) {
-    workRecordRepository.updateEndedAt(id, endedAt, details);
+  extendEndedAt(extend, endedAt, details) {
+    workRecordRepository.updateEndedAt(extend, endedAt, details);
   }
   getAllCategories() {
     return workRecordRepository.getAllCategories();
   }
-  updateCategory(id, category) {
-    workRecordRepository.updateCategory(id, category);
+  updateCategory(categoryValue, category) {
+    workRecordRepository.updateCategory(categoryValue, category);
   }
-  delete(id) {
-    const record = workRecordRepository.findById(id);
+  delete(deleteValue) {
+    const record = workRecordRepository.findById(deleteValue);
     if (!record) {
       const lang = settingsRepository.getSettings().language || "zh-CN";
       throw new Error(t("workRecord.operationFailed", lang));
     }
-    if (record.source === "recording_box") recordingBoxRepository.markWorkRecordDeleted(id);
-    if (record.source === "agent_session") agentSessionImportRepository.markWorkRecordDeleted(id);
-    workRecordRepository.delete(id);
+    if (record.source === "recording_box") recordingBoxRepository.markWorkRecordDeleted(deleteValue);
+    if (record.source === "agent_session") agentSessionImportRepository.markWorkRecordDeleted(deleteValue);
+    workRecordRepository.delete(deleteValue);
     trackEvent({
       type: "action",
       name: "record_delete",
@@ -31182,9 +31182,9 @@ var WorkRecordService = class {
     });
     leaderboardService.syncDateIfEnabled(toDateString(new Date(record.startedAt)));
   }
-  update(id, category, summary, details, startedAt, endedAt) {
-    const previous = workRecordRepository.findById(id);
-    workRecordRepository.update(id, category, summary, details, startedAt, endedAt);
+  update(update, category, summary, details, startedAt, endedAt) {
+    const previous = workRecordRepository.findById(update);
+    workRecordRepository.update(update, category, summary, details, startedAt, endedAt);
     if (previous) {
       const changed = previous.summary !== summary || previous.category !== category || startedAt !== undefined && previous.startedAt !== startedAt || endedAt !== undefined && previous.endedAt !== endedAt || details !== undefined && JSON.stringify(previous.details) !== JSON.stringify(details);
       if (previous.source === "text" && summary.trim() && changed) trackEvent({
@@ -31192,7 +31192,7 @@ var WorkRecordService = class {
         name: "record_update_success",
         feature: "work_record",
         props: {
-          record_id: id,
+          record_id: update,
           source: previous.source,
           output_nonempty: true
         }
@@ -32019,7 +32019,7 @@ var XiaoheiDataToolService = class {
     const offset = decodeCursor(parsed.cursor, "shared-reports", scope)?.offset ?? 0;
     const {
       reportCcService
-    } = await import("../main.js").then(n => n.n);
+    } = await import("../main.js").then(result => result.n);
     const contentById = /* @__PURE__ */new Map();
     let entries = [];
     try {
@@ -32064,7 +32064,7 @@ var XiaoheiDataToolService = class {
         if (result.items.length < 50 || page * 50 >= result.total) break;
       }
       const pageEntries = entries.slice(offset, offset + limit);
-      const missing = pageEntries.map(item => item.docId).filter(id => !contentById.has(id));
+      const missing = pageEntries.map(item => item.docId).filter(item => !contentById.has(item));
       if (missing.length) for (const item of await reportCcService.materials(missing)) contentById.set(item.docId, item.content);
       const bounded = pageEntries.map(entry => {
         const content = clipText(contentById.get(entry.docId) ?? "", contentMode === "full" ? REPORT_CONTENT_MAX_CHARACTERS : REPORT_PREVIEW_MAX_CHARACTERS);
@@ -33445,7 +33445,7 @@ function parseWechatMentions(text, conversation) {
   };
   for (const name of ["所有人", "所有成员", "全体成员", "everyone", "all"]) targets.set(name, everyone);
   const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const names = [...targets.keys()].sort((a, b) => b.length - a.length).map(name => name === "all" ? "[aA][lL][lL]" : name === "everyone" ? "[eE][vV][eE][rR][yY][oO][nN][eE]" : escape(name));
+  const names = [...targets.keys()].sort((count, right) => right.length - count.length).map(name => name === "all" ? "[aA][lL][lL]" : name === "everyone" ? "[eE][vV][eE][rR][yY][oO][nN][eE]" : escape(name));
   const pattern = new RegExp(`null${names.join("|")})`, "gmu");
   const seen = /* @__PURE__ */new Set();
   let previousMentionEnd = -1;
@@ -33972,9 +33972,9 @@ function parseReceptionDecision(text, candidates) {
     const scope = record.scope === "all" ? "all" : "selected";
     const eligible = eligibleReceptionCandidates(candidates);
     const rawIds = scope === "all" ? eligible.map(candidate => candidate.botId) : Array.isArray(record.botIds) ? record.botIds : [record.botId];
-    if (rawIds.length === 0 || rawIds.some(id => typeof id !== "string" || !id.trim())) return null;
-    const botIds = [...new Set(rawIds.map(id => id.trim()))];
-    if (botIds.some(id => !eligible.some(candidate => candidate.botId === id))) return null;
+    if (rawIds.length === 0 || rawIds.some(item => typeof item !== "string" || !item.trim())) return null;
+    const botIds = [...new Set(rawIds.map(item => item.trim()))];
+    if (botIds.some(item => !eligible.some(candidate => candidate.botId === item))) return null;
     return {
       scope,
       botIds,
@@ -34245,8 +34245,8 @@ var XiaoheiBotService = class {
     };
   }
   requestUserConfirmation(botId, conversationId, triggerMessageId, question) {
-    const db = getDatabase();
-    const previous = db.prepare("SELECT message_id FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(triggerMessageId, botId);
+    const databaseResult = getDatabase();
+    const previous = databaseResult.prepare("SELECT message_id FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(triggerMessageId, botId);
     if (previous) return {
       messageId: previous.message_id,
       waitingForUser: true
@@ -34256,7 +34256,7 @@ var XiaoheiBotService = class {
     const trigger = xiaoheiBotRepository.getMessage(triggerMessageId);
     if (!bot || !conversation || trigger?.conversationId !== conversationId) throw new Error(appText("botMain.confirmationSourceMissing"));
     const visible = this.visibleConversationId === conversationId && Boolean(this.getMainWindow()?.isFocused());
-    db.exec("BEGIN IMMEDIATE");
+    databaseResult.exec("BEGIN IMMEDIATE");
     let message;
     try {
       message = xiaoheiBotRepository.createMessage({
@@ -34270,7 +34270,7 @@ var XiaoheiBotService = class {
         actorType: "bot",
         actorId: botId
       }, true);
-      db.prepare("INSERT INTO xiaohei_bot_confirmation_notices(trigger_message_id,bot_id,message_id) VALUES(?,?,?)").run(triggerMessageId, botId, message.id);
+      databaseResult.prepare("INSERT INTO xiaohei_bot_confirmation_notices(trigger_message_id,bot_id,message_id) VALUES(?,?,?)").run(triggerMessageId, botId, message.id);
       if (!visible) notificationService.addLocalNotification({
         title: `${bot.name} · ${appText("botMain.awaitingConfirmation")}`,
         content: question,
@@ -34282,9 +34282,9 @@ var XiaoheiBotService = class {
           messageId: message.id
         })}`
       });
-      db.exec("COMMIT");
+      databaseResult.exec("COMMIT");
     } catch (error) {
-      db.exec("ROLLBACK");
+      databaseResult.exec("ROLLBACK");
       throw error;
     }
     this.emit({
@@ -34433,9 +34433,9 @@ var XiaoheiBotService = class {
     const recovery = (async () => {
       xiaoheiBotEventLogRepository.ensureLegacyBackfill();
       await this.reconcileLegacyAssets(userId);
-      const resumableTelemetryTasks = new Set([...xiaoheiBotRepository.listQueuedAgentRuns().map(run => run.triggerMessageId), ...xiaoheiBotRepository.listQueuedRoutingJobs().map(job => job.triggerMessageId)].map(id => {
-        const message = xiaoheiBotRepository.getMessage(id);
-        return message ? botObservationTaskId(message) : id;
+      const resumableTelemetryTasks = new Set([...xiaoheiBotRepository.listQueuedAgentRuns().map(run => run.triggerMessageId), ...xiaoheiBotRepository.listQueuedRoutingJobs().map(job => job.triggerMessageId)].map(item => {
+        const message = xiaoheiBotRepository.getMessage(item);
+        return message ? botObservationTaskId(message) : item;
       }));
       botTaskTelemetry.recover(resumableTelemetryTasks);
       xiaoheiBotRepository.recoverInterruptedRuns();
@@ -34810,7 +34810,7 @@ var XiaoheiBotService = class {
   addGroupMembers(input) {
     const existing = xiaoheiBotRepository.getConversation(input.conversationId);
     if (!existing || existing.kind !== "group") throw new Error(appText("botMain.groupMissing"));
-    const newIds = input.botIds.filter(id => !existing.members.some(member => member.botId === id));
+    const newIds = input.botIds.filter(item => !existing.members.some(member => member.botId === item));
     if (input.handoffs?.some(item => !input.botIds.includes(item.botId))) throw new Error(appText("botMain.handoffTargetNotAdded"));
     const database = getDatabase();
     database.exec("BEGIN IMMEDIATE");
@@ -35485,7 +35485,7 @@ var XiaoheiBotService = class {
         if (buffer.byteLength !== upload.size) throw new Error(appText("botMain.attachmentIncomplete", {
           name: upload.name
         }));
-        const id = randomUUID();
+        const randomUUIDResult = randomUUID();
         const name = safeFileName(upload.name);
         const sha256 = createHash("sha256").update(buffer).digest("hex");
         const storageKey = ["assets", "v1", sha256.slice(0, 2), sha256].join("/");
@@ -35510,7 +35510,7 @@ var XiaoheiBotService = class {
           name: upload.name
         }));
         stored.push({
-          id,
+          id: randomUUIDResult,
           name,
           size: buffer.byteLength,
           mimeType: upload.mimeType || "application/octet-stream",
@@ -35924,7 +35924,7 @@ var XiaoheiBotService = class {
     const liveConversation = xiaoheiBotRepository.getConversation(conversation.id) ?? conversation;
     const eligible = eligibleReceptionCandidates(this.buildGroupRoutingCandidates(liveConversation, job.receptionistBotId, trigger.seq));
     if (!persistedIds.length) {
-      if (decision?.scope === "all") decision.botIds = eligible.map(candidate => candidate.botId);else if (decision) decision.botIds = decision.botIds.filter(id => eligible.some(candidate => candidate.botId === id));
+      if (decision?.scope === "all") decision.botIds = eligible.map(candidate => candidate.botId);else if (decision) decision.botIds = decision.botIds.filter(item => eligible.some(candidate => candidate.botId === item));
       if (decision && !decision.botIds.length) {
         routingError = appText("botMain.routingMemberUnavailable");
         decision = null;
@@ -35938,8 +35938,8 @@ var XiaoheiBotService = class {
       source: "reception-fallback",
       reason: "路由未得到有效回答者，由接待 Bot 使用自己的模型直接承接"
     };
-    const selectedBots = (decision?.botIds ?? []).flatMap(id => {
-      const bot = liveConversation.members.some(member => member.botId === id && member.participationMode !== "context-only") ? xiaoheiBotRepository.getBot(id) : null;
+    const selectedBots = (decision?.botIds ?? []).flatMap(item => {
+      const bot = liveConversation.members.some(member => member.botId === item && member.participationMode !== "context-only") ? xiaoheiBotRepository.getBot(item) : null;
       return bot ? [bot] : [];
     });
     this.cancelQueuedRuns(existingRuns.filter(run => run.status === "queued" && !selectedBots.some(bot => bot.id === run.botId)), "routing.revoked-member-cancelled");
@@ -38043,8 +38043,8 @@ var XiaoheiBotSyncService = class {
     return Boolean(db.prepare("SELECT 1 FROM xiaohei_mobile_outbox WHERE upload_state = 'pending' LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_sync_prefs LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_profiles LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_deletes LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_group_deletes LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_conv_states LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_catalog_list LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_inbox WHERE state IN ('pending','running') LIMIT 1").get());
   }
   /** ±15% 抖动，避免服务重启后所有桌面在同一时刻打回来。 */
-  jitter(ms) {
-    return Math.round(ms * (.85 + Math.random() * .3));
+  jitter(jitter) {
+    return Math.round(jitter * (.85 + Math.random() * .3));
   }
   deviceDescriptor() {
     return {
@@ -39093,7 +39093,7 @@ var XiaoheiBotSyncService = class {
     }
     if (db.prepare("SELECT conversation_id FROM xiaohei_mobile_group_bindings WHERE cloud_conversation_id = ?").get(cloudConversationId)) return;
     const rawMembers = payload.member_bot_ids;
-    const memberCloudIds = Array.isArray(rawMembers) ? rawMembers.map(id => String(id)) : [];
+    const memberCloudIds = Array.isArray(rawMembers) ? rawMembers.map(item => String(item)) : [];
     const localBotIds = [];
     for (const cloudBotId of memberCloudIds) {
       const row = db.prepare("SELECT bot_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ?").get(cloudBotId);
@@ -39192,7 +39192,7 @@ var XiaoheiBotSyncService = class {
       }
       this.scheduleLocalGroupSync(binding.conversation_id);
     }
-    const cloudIds = [...new Set(rawMembers.map(id => String(id)))];
+    const cloudIds = [...new Set(rawMembers.map(item => String(item)))];
     const localByCloud = /* @__PURE__ */new Map();
     for (const cloudId of cloudIds) {
       const row = db.prepare("SELECT bot_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ? AND status = ?").get(cloudId, "active");
@@ -39205,8 +39205,8 @@ var XiaoheiBotSyncService = class {
     }
     let group = xiaoheiBotRepository.getConversation(binding.conversation_id);
     if (!group || group.kind !== "group") return;
-    const desiredIds = cloudIds.map(id => localByCloud.get(id));
-    const missing = desiredIds.filter(id => !group.members.some(member => member.botId === id));
+    const desiredIds = cloudIds.map(item => localByCloud.get(item));
+    const missing = desiredIds.filter(item => !group.members.some(member => member.botId === item));
     if (missing.length) group = xiaoheiBotService.addGroupMembers({
       conversationId: group.id,
       botIds: missing
@@ -39511,7 +39511,7 @@ var XiaoheiBotSyncService = class {
     } catch {
       history = [];
     }
-    const previous = history.filter(id => id !== current);
+    const previous = history.filter(item => item !== current);
     const next = [current, ...previous].slice(0, 20);
     if (JSON.stringify(next) !== JSON.stringify(history)) db.prepare("INSERT OR REPLACE INTO xiaohei_mobile_sync_state(key, value) VALUES (?, ?)").run("device_id_history", JSON.stringify(next));
     return previous.slice(0, 19);
@@ -40020,8 +40020,8 @@ var AuthService = class {
       }, session.token, 1e4);
       return true;
     } catch (error) {
-      const e = error;
-      if (e.statusCode === 401 || e.errorCode === "UNAUTHORIZED") return false;
+      const errorAlias = error;
+      if (errorAlias.statusCode === 401 || errorAlias.errorCode === "UNAUTHORIZED") return false;
       return true;
     }
   }
@@ -40155,26 +40155,26 @@ export { getTodoStats as $, BotMemoryRepository as $t, computeCategoryHourlyStat
 var localTodoDb = null;
 function localTodoDatabase() {
   if (localTodoDb) return localTodoDb;
-  const db = getDatabase();
-  db.exec("CREATE TABLE IF NOT EXISTS local_todos (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, status TEXT, pinned INTEGER DEFAULT 0, sort_order INTEGER DEFAULT 0, updated_at TEXT)");
-  localTodoDb = db;
-  return db;
+  const databaseResult = getDatabase();
+  databaseResult.exec("CREATE TABLE IF NOT EXISTS local_todos (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, status TEXT, pinned INTEGER DEFAULT 0, sort_order INTEGER DEFAULT 0, updated_at TEXT)");
+  localTodoDb = databaseResult;
+  return databaseResult;
 }
-function localTodoRead(db, id) {
-  const row = db.prepare("SELECT data FROM local_todos WHERE id = ?").get(id);
+function localTodoRead(local, todo) {
+  const row = local.prepare("SELECT data FROM local_todos WHERE id = ?").get(todo);
   if (!row) throw new Error("待办不存在");
   return JSON.parse(row.data);
 }
-function localTodoWrite(db, t) {
-  db.prepare("INSERT INTO local_todos (id, data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data, status = excluded.status, pinned = excluded.pinned, sort_order = excluded.sort_order, updated_at = excluded.updated_at").run(t.id, JSON.stringify(t), String(t.status || "todo"), t.pinned ? 1 : 0, Number(t.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
+function localTodoWrite(local, todo) {
+  local.prepare("INSERT INTO local_todos (id, data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data, status = excluded.status, pinned = excluded.pinned, sort_order = excluded.sort_order, updated_at = excluded.updated_at").run(todo.id, JSON.stringify(todo), String(todo.status || "todo"), todo.pinned ? 1 : 0, Number(todo.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
 }
 function localTodoAction(action, body) {
   const LOCAL_ACTIONS = new Set(["list", "get", "create", "update", "patch-status", "patch-pin", "delete", "reorder", "stats", "list-labels", "add-comment", "delete-comment", "list-activities", "activity-summary", "list-assignee-contacts", "resolve-assignee", "list-friends", "list-friend-requests", "search-friend-user", "remove-label-history", "bot-todos", "auto-completion-preview", "auto-completion-records"]);
   if (!LOCAL_ACTIONS.has(action)) return null;
-  const db = localTodoDatabase();
+  const localTodoDatabaseResult = localTodoDatabase();
   if (action === "list") {
-    const rows = db.prepare("SELECT data FROM local_todos ORDER BY pinned DESC, sort_order ASC, id DESC").all();
-    const tasks = rows.map(r => JSON.parse(r.data));
+    const rows = localTodoDatabaseResult.prepare("SELECT data FROM local_todos ORDER BY pinned DESC, sort_order ASC, id DESC").all();
+    const tasks = rows.map(item => JSON.parse(item.data));
     return {
       tasks,
       pageSize: tasks.length,
@@ -40183,12 +40183,12 @@ function localTodoAction(action, body) {
     };
   }
   if (action === "get") return {
-    task: localTodoRead(db, body.id)
+    task: localTodoRead(localTodoDatabaseResult, body.id)
   };
   if (action === "create") {
     const input = body.task || body;
     const nowIso = (/* @__PURE__ */new Date()).toISOString();
-    const t = {
+    const record = {
       title: "",
       group: "today",
       status: "todo",
@@ -40224,53 +40224,53 @@ function localTodoAction(action, body) {
       ...input,
       ...(input && Array.isArray(input.subtasks) === false && input.subtasks === undefined ? {} : {})
     };
-    for (const k of ["tags", "subtasks", "comments", "activities", "attachments", "assignees", "followers"]) if (!Array.isArray(t[k])) t[k] = [];
-    if (typeof t.pinned !== "boolean") t.pinned = false;
-    if (typeof t.archived !== "boolean") t.archived = false;
-    const info = db.prepare("INSERT INTO local_todos (data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?)").run(JSON.stringify(t), String(t.status || "todo"), 0, Number(t.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
-    t.id = Number(info.lastInsertRowid);
-    localTodoWrite(db, t);
+    for (const k of ["tags", "subtasks", "comments", "activities", "attachments", "assignees", "followers"]) if (!Array.isArray(record[k])) record[k] = [];
+    if (typeof record.pinned !== "boolean") record.pinned = false;
+    if (typeof record.archived !== "boolean") record.archived = false;
+    const info = localTodoDatabaseResult.prepare("INSERT INTO local_todos (data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?)").run(JSON.stringify(record), String(record.status || "todo"), 0, Number(record.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
+    record.id = Number(info.lastInsertRowid);
+    localTodoWrite(localTodoDatabaseResult, record);
     return {
-      task: t
+      task: record
     };
   }
   if (action === "update") {
     const input = body.task || body;
     const t = {
-      ...localTodoRead(db, input.id),
+      ...localTodoRead(localTodoDatabaseResult, input.id),
       ...input
     };
     for (const k of ["tags", "subtasks", "comments", "activities", "attachments", "assignees", "followers"]) if (!Array.isArray(t[k])) t[k] = [];
-    localTodoWrite(db, t);
+    localTodoWrite(localTodoDatabaseResult, t);
     return {
       task: t
     };
   }
   if (action === "patch-status") {
-    const p = body.patch || body;
-    const t = {
-      ...localTodoRead(db, p.id),
-      status: p.status,
-      completedAt: p.completedAt ?? null
+    const bodyValue = body.patch || body;
+    const record = {
+      ...localTodoRead(localTodoDatabaseResult, bodyValue.id),
+      status: bodyValue.status,
+      completedAt: bodyValue.completedAt ?? null
     };
-    localTodoWrite(db, t);
+    localTodoWrite(localTodoDatabaseResult, record);
     return {
-      task: t
+      task: record
     };
   }
   if (action === "patch-pin") {
-    const p = body.patch || body;
+    const bodyValue = body.patch || body;
     const t = {
-      ...localTodoRead(db, p.id),
-      pinned: !!p.pinned
+      ...localTodoRead(localTodoDatabaseResult, bodyValue.id),
+      pinned: !!bodyValue.pinned
     };
-    localTodoWrite(db, t);
+    localTodoWrite(localTodoDatabaseResult, t);
     return {
       task: t
     };
   }
   if (action === "delete") {
-    db.prepare("DELETE FROM local_todos WHERE id = ?").run(body.id);
+    localTodoDatabaseResult.prepare("DELETE FROM local_todos WHERE id = ?").run(body.id);
     return {
       deleted: true
     };
@@ -40278,12 +40278,12 @@ function localTodoAction(action, body) {
   if (action === "reorder") {
     for (const it of body.items || body || []) {
       try {
-        const t = {
-          ...localTodoRead(db, it.id),
+        const record = {
+          ...localTodoRead(localTodoDatabaseResult, it.id),
           status: it.status,
           sortOrder: it.sortOrder
         };
-        localTodoWrite(db, t);
+        localTodoWrite(localTodoDatabaseResult, record);
       } catch {}
     }
     return {
@@ -40291,26 +40291,26 @@ function localTodoAction(action, body) {
     };
   }
   if (action === "stats") {
-    const rows = db.prepare("SELECT data FROM local_todos").all().map(r => JSON.parse(r.data));
-    const by = s => rows.filter(t => (t.status || "todo") === s).length;
+    const rows = localTodoDatabaseResult.prepare("SELECT data FROM local_todos").all().map(item => JSON.parse(item.data));
+    const handler = s => rows.filter(item => (item.status || "todo") === s).length;
     const todayKey = (/* @__PURE__ */new Date()).toISOString().slice(0, 10);
     return {
       stats: {
         total: rows.length,
-        todo: by("todo"),
-        inProgress: by("in-progress"),
-        done: by("done"),
-        overdue: by("overdue"),
-        dueToday: rows.filter(t => t.dueDate === todayKey).length,
+        todo: handler("todo"),
+        inProgress: handler("in-progress"),
+        done: handler("done"),
+        overdue: handler("overdue"),
+        dueToday: rows.filter(item => item.dueDate === todayKey).length,
         completedToday: 0,
-        projectHistory: [...new Set(rows.map(t => t.project).filter(Boolean))],
-        labelHistory: [...new Set(rows.map(t => t.group).filter(Boolean))]
+        projectHistory: [...new Set(rows.map(item => item.project).filter(Boolean))],
+        labelHistory: [...new Set(rows.map(item => item.group).filter(Boolean))]
       }
     };
   }
   if (action === "list-labels") {
-    const rows = db.prepare("SELECT data FROM local_todos").all().map(r => JSON.parse(r.data));
-    const inUse = [...new Set(rows.map(t => t.group).filter(Boolean))];
+    const rows = localTodoDatabaseResult.prepare("SELECT data FROM local_todos").all().map(item => JSON.parse(item.data));
+    const inUse = [...new Set(rows.map(item => item.group).filter(Boolean))];
     return {
       defaults: [],
       inUse,
@@ -40318,8 +40318,8 @@ function localTodoAction(action, body) {
     };
   }
   if (action === "add-comment") {
-    const t = localTodoRead(db, body.todoId ?? body.id);
-    const comments = Array.isArray(t.comments) ? t.comments : [];
+    const localTodoReadResult = localTodoRead(localTodoDatabaseResult, body.todoId ?? body.id);
+    const comments = Array.isArray(localTodoReadResult.comments) ? localTodoReadResult.comments : [];
     const activity = {
       id: Date.now(),
       content: String(body.content || ""),
@@ -40328,19 +40328,19 @@ function localTodoAction(action, body) {
       kind: "comment"
     };
     comments.push(activity);
-    t.comments = comments;
-    localTodoWrite(db, t);
+    localTodoReadResult.comments = comments;
+    localTodoWrite(localTodoDatabaseResult, localTodoReadResult);
     return {
       activity
     };
   }
   if (action === "delete-comment") {
-    const rows = db.prepare("SELECT id, data FROM local_todos").all();
+    const rows = localTodoDatabaseResult.prepare("SELECT id, data FROM local_todos").all();
     for (const r of rows) {
-      const t = JSON.parse(r.data);
-      if (Array.isArray(t.comments) && t.comments.some(c => c.id === body.commentId)) {
-        t.comments = t.comments.filter(c => c.id !== body.commentId);
-        localTodoWrite(db, t);
+      const parsed = JSON.parse(r.data);
+      if (Array.isArray(parsed.comments) && parsed.comments.some(item => item.id === body.commentId)) {
+        parsed.comments = parsed.comments.filter(item => item.id !== body.commentId);
+        localTodoWrite(localTodoDatabaseResult, parsed);
         break;
       }
     }

@@ -78,8 +78,8 @@ var ID3v1Parser = class ID3v1Parser extends BasicParser {
       if (genre) await this.addTag("genre", genre);
     } else debug("ID3v1 header not found at: pos=%s", this.tokenizer.fileInfo.size - Iid3v1Token.len);
   }
-  async addTag(id, value) {
-    await this.metadata.addTag("ID3v1", id, value);
+  async addTag(tag, value) {
+    await this.metadata.addTag("ID3v1", tag, value);
   }
 };
 async function hasID3v1Header(tokenizer) {

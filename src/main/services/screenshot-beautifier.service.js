@@ -18,8 +18,8 @@ var ID_PATTERN = /^[a-z0-9]{6,16}-[a-f0-9]{8}$/;
 function createId() {
   return `${Date.now().toString(36)}-${randomBytes(4).toString("hex")}`;
 }
-function isScreenshotHistoryId(id) {
-  return ID_PATTERN.test(id);
+function isScreenshotHistoryId(screenshot) {
+  return ID_PATTERN.test(screenshot);
 }
 /** 生成列表用的小缩略图（JPEG） */
 function createScreenshotThumbnail(png) {
@@ -79,14 +79,14 @@ var ScreenshotHistoryStore = class {
   create(input) {
     const root = this.directory();
     if (!root) return null;
-    const id = createId();
-    const folder = path.join(root, id);
+    const createIdResult = createId();
+    const folder = path.join(root, createIdResult);
     mkdirSync(folder, {
       recursive: true
     });
     const now = (/* @__PURE__ */new Date()).toISOString();
     const meta = {
-      id,
+      id: createIdResult,
       createdAt: now,
       updatedAt: now,
       width: input.width,
@@ -100,7 +100,7 @@ var ScreenshotHistoryStore = class {
     writeFileSync(path.join(folder, "source.png"), input.png);
     writeFileSync(path.join(folder, "thumb.jpg"), createScreenshotThumbnail(input.png));
     writeFileSync(path.join(folder, "meta.json"), JSON.stringify(meta));
-    return id;
+    return createIdResult;
   }
   load(id) {
     const root = this.directory();
@@ -117,43 +117,43 @@ var ScreenshotHistoryStore = class {
     }
   }
   /** 编辑器里的样式和标注，关窗后下次打开可以接着改 */
-  updateState(id, style, annotations) {
+  updateState(state, style, annotations) {
     const root = this.directory();
-    if (!root || !isScreenshotHistoryId(id)) return;
-    const meta = this.readMeta(root, id);
+    if (!root || !isScreenshotHistoryId(state)) return;
+    const meta = this.readMeta(root, state);
     if (!meta) return;
     meta.style = style;
     meta.annotations = annotations;
     meta.updatedAt = (/* @__PURE__ */new Date()).toISOString();
-    writeFileSync(path.join(root, id, "meta.json"), JSON.stringify(meta));
+    writeFileSync(path.join(root, state, "meta.json"), JSON.stringify(meta));
   }
   /** 保存最近一次复制或保存的成品，历史里的「复制」直接用它；缩略图同步换成成品 */
-  writeOutput(id, png) {
+  writeOutput(output, png) {
     const root = this.directory();
-    if (!root || !isScreenshotHistoryId(id)) return;
-    const meta = this.readMeta(root, id);
+    if (!root || !isScreenshotHistoryId(output)) return;
+    const meta = this.readMeta(root, output);
     if (!meta) return;
-    writeFileSync(path.join(root, id, "output.png"), png);
-    writeFileSync(path.join(root, id, "thumb.jpg"), createScreenshotThumbnail(png));
+    writeFileSync(path.join(root, output, "output.png"), png);
+    writeFileSync(path.join(root, output, "thumb.jpg"), createScreenshotThumbnail(png));
     meta.hasOutput = true;
     meta.updatedAt = (/* @__PURE__ */new Date()).toISOString();
-    writeFileSync(path.join(root, id, "meta.json"), JSON.stringify(meta));
+    writeFileSync(path.join(root, output, "meta.json"), JSON.stringify(meta));
   }
   /** 有成品时返回成品，否则返回原图 */
-  readBest(id) {
+  readBest(best) {
     const root = this.directory();
-    if (!root || !isScreenshotHistoryId(id)) return null;
+    if (!root || !isScreenshotHistoryId(best)) return null;
     for (const name of ["output.png", "source.png"]) try {
-      return readFileSync(path.join(root, id, name));
+      return readFileSync(path.join(root, best, name));
     } catch {
       continue;
     }
     return null;
   }
-  delete(id) {
+  delete(deleteValue) {
     const root = this.directory();
-    if (!root || !isScreenshotHistoryId(id)) return;
-    rmSync(path.join(root, id), {
+    if (!root || !isScreenshotHistoryId(deleteValue)) return;
+    rmSync(path.join(root, deleteValue), {
       recursive: true,
       force: true
     });
@@ -188,14 +188,14 @@ var ScreenshotHistoryStore = class {
       return [];
     }
   }
-  readMeta(root, id) {
+  readMeta(root, meta) {
     try {
-      const parsed = JSON.parse(readFileSync(path.join(root, id, "meta.json"), "utf8"));
+      const parsed = JSON.parse(readFileSync(path.join(root, meta, "meta.json"), "utf8"));
       const width = Number(parsed.width);
       const height = Number(parsed.height);
       if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return null;
       return {
-        id,
+        id: meta,
         createdAt: typeof parsed.createdAt === "string" ? parsed.createdAt : (/* @__PURE__ */new Date(0)).toISOString(),
         updatedAt: typeof parsed.updatedAt === "string" ? parsed.updatedAt : (/* @__PURE__ */new Date(0)).toISOString(),
         width,
@@ -688,7 +688,7 @@ var ScreenshotFloatWindowService = class {
     return false;
   }
   /** at 为图片左上角的屏幕坐标（逻辑像素）；不传时放在鼠标所在屏幕的中间 */
-  openPin(image, at) {
+  openPin(image, pin) {
     if (!this.paths) return;
     if (this.pins.size >= MAX_PINS) {
       const oldest = this.pins.values().next().value;
@@ -696,7 +696,7 @@ var ScreenshotFloatWindowService = class {
     }
     const baseWidth = image.width / image.scale;
     const baseHeight = image.height / image.scale;
-    const anchor = at ?? screen.getCursorScreenPoint();
+    const anchor = pin ?? screen.getCursorScreenPoint();
     const workArea = screen.getDisplayNearestPoint({
       x: Math.round(anchor.x),
       y: Math.round(anchor.y)
@@ -704,8 +704,8 @@ var ScreenshotFloatWindowService = class {
     const zoom = Math.min(1, workArea.width * .85 / baseWidth, workArea.height * .85 / baseHeight);
     const width = Math.max(1, Math.round(baseWidth * zoom));
     const height = Math.max(1, Math.round(baseHeight * zoom));
-    const x = at ? at.x : workArea.x + (workArea.width - width) / 2;
-    const y = at ? at.y : workArea.y + (workArea.height - height) / 2;
+    const x = pin ? pin.x : workArea.x + (workArea.width - width) / 2;
+    const y = pin ? pin.y : workArea.y + (workArea.height - height) / 2;
     const id = ++this.pinSequence;
     const isMac = process.platform === "darwin";
     const window = new BrowserWindow({
@@ -1253,7 +1253,7 @@ function readScreenshotBackgroundLibrary() {
   try {
     const parsed = JSON.parse(readFileSync(libraryPath(), "utf8"));
     if (!Array.isArray(parsed)) return [];
-    return parsed.map(normalizeStored).filter(item => item !== null).sort((a, b) => b.touchedAt - a.touchedAt).slice(0, 48);
+    return parsed.map(normalizeStored).filter(item => item !== null).sort((left, right) => right.touchedAt - left.touchedAt).slice(0, 48);
   } catch {
     return [];
   }
@@ -1264,13 +1264,13 @@ function mergeScreenshotBackgroundLibrary(items, touchIds = []) {
   for (const entry of readScreenshotBackgroundLibrary()) map.set(entry.id, entry);
   for (const item of items) {
     if (!existsSync(item.file)) continue;
-    const id = item.id || screenshotBackgroundId(item.file);
-    map.set(id, {
-      id,
+    const fallbackValue = item.id || screenshotBackgroundId(item.file);
+    map.set(fallbackValue, {
+      id: fallbackValue,
       file: item.file,
       name: item.name,
       thumbnail: item.thumbnail,
-      touchedAt: touchIds.includes(id) ? now : map.get(id)?.touchedAt ?? now
+      touchedAt: touchIds.includes(fallbackValue) ? now : map.get(fallbackValue)?.touchedAt ?? now
     });
   }
   for (const id of touchIds) {
@@ -1280,7 +1280,7 @@ function mergeScreenshotBackgroundLibrary(items, touchIds = []) {
       touchedAt: now
     });
   }
-  const merged = [...map.values()].sort((a, b) => b.touchedAt - a.touchedAt).slice(0, 48);
+  const merged = [...map.values()].sort((left, right) => right.touchedAt - left.touchedAt).slice(0, 48);
   writeFileSync(libraryPath(), JSON.stringify(merged));
   return merged;
 }
@@ -2002,16 +2002,16 @@ var ScreenshotBeautifierService = class {
       if (!screenshotEditorWindowService.isPresented()) this.editorSession = null;
     }, 5e3);
   }
-  editorImage(sender, id) {
+  editorImage(sender, image) {
     const session = this.editorSession;
-    if (!screenshotEditorWindowService.isEditorContents(sender) || !session || session.id !== id) throw new Error(message("sessionExpired"));
+    if (!screenshotEditorWindowService.isEditorContents(sender) || !session || session.id !== image) throw new Error(message("sessionExpired"));
     return session;
   }
-  openHistory(id) {
-    const entry = this.history.load(id);
+  openHistory(historyValue) {
+    const entry = this.history.load(historyValue);
     if (!entry) throw new Error(message("historyNotFound"));
     this.openEditor({
-      id,
+      id: historyValue,
       persisted: true,
       png: entry.png,
       width: entry.meta.width,
@@ -2139,8 +2139,8 @@ var ScreenshotBeautifierService = class {
     this.pendingBotPaths = [];
     return paths;
   }
-  async editorOcr(sender, id) {
-    const session = this.editorImage(sender, id);
+  async editorOcr(sender, ocr) {
+    const session = this.editorImage(sender, ocr);
     try {
       return await recognizeScreenshotText(session.png);
     } catch (error) {
@@ -2221,7 +2221,7 @@ var ScreenshotBeautifierService = class {
       name: path.basename(file, path.extname(file)),
       current: false
     });
-    candidates.sort((a, b) => Number(b.current) - Number(a.current) || Number(!!b.file) - Number(!!a.file));
+    candidates.sort((left, right) => Number(right.current) - Number(left.current) || Number(!!right.file) - Number(!!left.file));
     const seenThumbnails = /* @__PURE__ */new Set();
     for (const candidate of candidates) try {
       const file = candidate.preview || candidate.file;
@@ -2257,13 +2257,13 @@ var ScreenshotBeautifierService = class {
       if (seenThumbnails.has(signature)) continue;
       seenThumbnails.add(signature);
       if (!candidate.file) continue;
-      const id = screenshotBackgroundId(candidate.file);
-      this.backgroundFiles.set(id, {
+      const screenshotBackgroundIdResult = screenshotBackgroundId(candidate.file);
+      this.backgroundFiles.set(screenshotBackgroundIdResult, {
         file: candidate.file,
         owner: sender.id
       });
       images.push({
-        id,
+        id: screenshotBackgroundIdResult,
         file: candidate.file,
         name: candidate.name,
         thumbnail: `data:image/jpeg;base64,${thumbData.toString("base64")}`,
@@ -2282,8 +2282,8 @@ var ScreenshotBeautifierService = class {
     this.registerBackgroundLibrary(sender);
     return toScreenshotBackgroundImages(stored, currentFiles);
   }
-  async loadBackground(sender, id) {
-    const entry = this.backgroundFiles.get(id);
+  async loadBackground(sender, background) {
+    const entry = this.backgroundFiles.get(background);
     if (!screenshotEditorWindowService.isEditorContents(sender) || !entry || entry.owner !== sender.id) throw new Error(message("sessionExpired"));
     const isVideo = process.platform === "darwin" && /\.(mov|mp4)$/i.test(entry.file);
     if (!isVideo && statSync(entry.file).size > 41943040) throw new Error(appText("screenshotBeautifier.backgroundImageFailed"));
@@ -2315,7 +2315,7 @@ var ScreenshotBeautifierService = class {
     });
     const data = image.toJPEG(95);
     if (data.length > 48e6) throw new Error(appText("screenshotBeautifier.backgroundImageFailed"));
-    mergeScreenshotBackgroundLibrary([], [id]);
+    mergeScreenshotBackgroundLibrary([], [background]);
     return `data:image/jpeg;base64,${data.toString("base64")}`;
   }
   savePreset(sender, name, style) {
@@ -2335,9 +2335,9 @@ var ScreenshotBeautifierService = class {
       screenshotBeautifierPresets: next
     }).screenshotBeautifierPresets;
   }
-  deletePreset(sender, id) {
+  deletePreset(sender, preset) {
     if (!screenshotEditorWindowService.isEditorContents(sender)) throw new Error(message("sessionExpired"));
-    const presets = settingsRepository.getSettings().screenshotBeautifierPresets.filter(preset => preset.id !== id);
+    const presets = settingsRepository.getSettings().screenshotBeautifierPresets.filter(preset => preset.id !== preset);
     return settingsRepository.updateSettings({
       screenshotBeautifierPresets: presets
     }).screenshotBeautifierPresets;
@@ -2418,13 +2418,13 @@ var ScreenshotBeautifierService = class {
   listHistory() {
     return this.history.list();
   }
-  copyHistory(id) {
-    const png = this.history.readBest(id);
+  copyHistory(historyValue) {
+    const png = this.history.readBest(historyValue);
     if (!png) throw new Error(message("historyNotFound"));
     this.writeImageToClipboard(png);
   }
-  deleteHistory(id) {
-    this.history.delete(id);
+  deleteHistory(historyValue) {
+    this.history.delete(historyValue);
     this.queueChanged("history");
   }
   clearHistory() {

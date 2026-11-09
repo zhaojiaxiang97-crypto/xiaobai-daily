@@ -21,18 +21,18 @@ var _e = class e extends ie {
         segments: r,
         radius: i
       }, a === 1) return;
-      let o = this.toNonIndexed();
-      this.index = null, this.attributes.position = o.attributes.position, this.attributes.normal = o.attributes.normal, this.attributes.uv = o.attributes.uv;
+      let toNonIndexed = this.toNonIndexed();
+      this.index = null, this.attributes.position = toNonIndexed.attributes.position, this.attributes.normal = toNonIndexed.attributes.normal, this.attributes.uv = toNonIndexed.attributes.uv;
       let s = new _(),
         c = new _(),
-        l = new _(e, t, n).divideScalar(2).subScalar(i),
+        subScalar = new _(e, t, n).divideScalar(2).subScalar(i),
         array = this.attributes.position.array,
         d = this.attributes.normal.array,
         f = this.attributes.uv.array,
         p = array.length / 6,
         m = new _(),
         h = .5 / a;
-      for (let r = 0, a = 0; r < array.length; r += 3, a += 2) switch (s.fromArray(array, r), c.copy(s), c.x -= Math.sign(c.x) * h, c.y -= Math.sign(c.y) * h, c.z -= Math.sign(c.z) * h, c.normalize(), array[r + 0] = l.x * Math.sign(s.x) + c.x * i, array[r + 1] = l.y * Math.sign(s.y) + c.y * i, array[r + 2] = l.z * Math.sign(s.z) + c.z * i, d[r + 0] = c.x, d[r + 1] = c.y, d[r + 2] = c.z, Math.floor(r / p)) {
+      for (let r = 0, a = 0; r < array.length; r += 3, a += 2) switch (s.fromArray(array, r), c.copy(s), c.x -= Math.sign(c.x) * h, c.y -= Math.sign(c.y) * h, c.z -= Math.sign(c.z) * h, c.normalize(), array[r + 0] = subScalar.x * Math.sign(s.x) + c.x * i, array[r + 1] = subScalar.y * Math.sign(s.y) + c.y * i, array[r + 2] = subScalar.z * Math.sign(s.z) + c.z * i, d[r + 0] = c.x, d[r + 1] = c.y, d[r + 2] = c.z, Math.floor(r / p)) {
         case 0:
           m.set(1, 0, 0), f[a + 0] = x(m, c, `z`, `y`, i, n), f[a + 1] = 1 - x(m, c, `y`, `z`, i, t);
           break;
@@ -115,22 +115,22 @@ var _e = class e extends ie {
         D = o([]),
         O = o(null),
         k = o(false),
-        He = h(() => Math.max(1, ...x.rows.map(e => e.cells.length))),
+        He = h(() => Math.max(1, ...x.rows.map(item => item.cells.length))),
         Ue = h(() => Math.max(3, He.value * .125)),
-        We = h(() => x.rows.some(e => e.label)),
-        Ge = h(() => x.rows.some(e => e.summary)),
-        A = [],
+        We = h(() => x.rows.some(item => item.label)),
+        Ge = h(() => x.rows.some(item => item.summary)),
+        emptyItems = [],
         Ke = h(() => {
           if (!O.value) return ``;
-          let e = A[O.value.index];
+          let e = emptyItems[O.value.index];
           return e ? X(e)?.tooltip ?? `` : ``;
         }),
         qe = o(false),
         Je = h(() => {
           if (!O.value) return {};
-          let e = w.value?.clientWidth ?? 0;
+          let fallbackValue = w.value?.clientWidth ?? 0;
           return {
-            left: `${Math.min(Math.max(O.value.x, 72), Math.max(72, e - 72))}px`,
+            left: `${Math.min(Math.max(O.value.x, 72), Math.max(72, fallbackValue - 72))}px`,
             top: `${O.value.y}px`,
             transform: O.value.y < 40 ? `translate(-50%, 16px)` : `translate(-50%, calc(-100% - 10px))`
           };
@@ -157,11 +157,11 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         et = new _(),
         tt = new y(),
         nt = new y(),
-        rt = new _().setFromSphericalCoords(1, De, Oe),
+        setFromSphericalCoords = new _().setFromSphericalCoords(1, De, Oe),
         I = null,
         L = null,
         R = null,
-        it = new Float32Array(),
+        float32Array = new Float32Array(),
         at = new Float32Array(),
         z = new Float32Array(),
         B = null,
@@ -169,7 +169,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         ot = [],
         H = -1,
         U = false,
-        W = null,
+        payload = null,
         G = 0,
         st = 0,
         K = false,
@@ -228,7 +228,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             front: r
           } = xt(),
           i = [];
-        for (let a of [e, t]) for (let e of [0, Ue.value]) for (let t of [n, r]) i.push(new _(a, e, t));
+        for (let count of [e, t]) for (let value of [0, Ue.value]) for (let t of [n, r]) i.push(new _(count, value, t));
         return i;
       }
       function wt() {
@@ -237,7 +237,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let fontFamily = getComputedStyle(w.value ?? document.body).fontFamily;
         Y.font = `${je} ${fontFamily}`;
         let t = 0;
-        for (let e of x.rows) t = Math.max(t, Y.measureText(e.label).width), e.summary && (t = Math.max(t, Y.measureText(e.summary).width));
+        for (let value of x.rows) t = Math.max(t, Y.measureText(value.label).width), value.summary && (t = Math.max(t, Y.measureText(value.summary).width));
         return Math.ceil(t) + 4;
       }
       function Tt(e) {
@@ -252,19 +252,19 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         return new y().setRGB(i / 255, a / 255, o / 255, v);
       }
       function Dt() {
-        let e = document.createElement(`canvas`);
-        e.width = 1, e.height = 1;
-        let t = e.getContext(`2d`, {
+        let element = document.createElement(`canvas`);
+        element.width = 1, element.height = 1;
+        let context = element.getContext(`2d`, {
           willReadFrequently: true
         });
-        if (!t) {
+        if (!context) {
           V = Re.map(() => new y(1483594));
           return;
         }
-        let n = getComputedStyle(document.documentElement);
-        V = Re.map(e => Et(t, n, e, `#16a34a`)), tt.copy(Et(t, n, `--foreground`, `#333333`));
+        let computedStyle = getComputedStyle(document.documentElement);
+        V = Re.map(item => Et(context, computedStyle, item, `#16a34a`)), tt.copy(Et(context, computedStyle, `--foreground`, `#333333`));
       }
-      let Z = {
+      let options = {
           r: 0,
           g: 0,
           b: 0
@@ -276,7 +276,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         };
       function Ot() {
         let e = V[0];
-        ot = x.rows.map(t => !t.color || !e ? null : (e.getRGB(Z, v), new y(t.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(Z.r + (Q.r - Z.r) * e, Z.g + (Q.g - Z.g) * e, Z.b + (Q.b - Z.b) * e, v))]));
+        ot = x.rows.map(item => !item.color || !e ? null : (e.getRGB(options, v), new y(item.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(options.r + (Q.r - options.r) * e, options.g + (Q.g - options.g) * e, options.b + (Q.b - options.b) * e, v))]));
       }
       function kt(e, t) {
         if (e <= 0) return 0;
@@ -289,14 +289,14 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         return e;
       }
       function jt(e, t) {
-        let n = A[e],
+        let n = emptyItems[e],
           r = n ? (ot[n.row] ?? V)[kt(X(n)?.value ?? 0, t)] : undefined;
         R && r && R.setColorAt(e, e === H ? nt.copy(r).lerp(tt, .28) : r);
       }
       function Mt() {
         if (!R) return;
         let e = At();
-        for (let t = 0; t < A.length; t++) jt(t, e);
+        for (let t = 0; t < emptyItems.length; t++) jt(t, e);
         R.instanceColor && (R.instanceColor.needsUpdate = true);
       }
       function Nt(e) {
@@ -310,33 +310,33 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         R && (j.remove(R), R.geometry.dispose(), R.dispose(), R = null, B = null);
       }
       function Ft() {
-        if (Pt(), A = [], x.rows.forEach((e, t) => {
-          e.cells.forEach((e, n) => {
-            e && A.push({
+        if (Pt(), emptyItems = [], x.rows.forEach((item, t) => {
+          item.cells.forEach((e, n) => {
+            e && emptyItems.push({
               row: t,
               column: n
             });
           });
-        }), it = new Float32Array(A.length).fill(S), at = new Float32Array(A.length).fill(S), z = new Float32Array(A.length).fill(S), H = -1, O.value = null, !A.length) return;
+        }), float32Array = new Float32Array(emptyItems.length).fill(S), at = new Float32Array(emptyItems.length).fill(S), z = new Float32Array(emptyItems.length).fill(S), H = -1, O.value = null, !emptyItems.length) return;
         let e = Ye.clone();
-        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, A.length), R.frustumCulled = false, A.forEach((e, t) => {
-          Qe.makeTranslation(_t(e.column), 0, vt(e.row)), R?.setMatrixAt(t, Qe);
+        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
+          Qe.makeTranslation(_t(item.column), 0, vt(item.row)), R?.setMatrixAt(t, Qe);
         }), R.instanceMatrix.needsUpdate = true, j.add(R);
       }
       function It() {
         let e = At(),
           t = Ue.value;
-        A.forEach((n, r) => {
-          let i = X(n)?.value ?? 0;
-          it[r] = z[r] ?? S, at[r] = i > 0 ? Ce + i / e * (t - Ce) : S;
+        emptyItems.forEach((item, r) => {
+          let fallbackValue = X(item)?.value ?? 0;
+          float32Array[r] = z[r] ?? S, at[r] = fallbackValue > 0 ? Ce + fallbackValue / e * (t - Ce) : S;
         }), Mt(), st = performance.now(), K = true, $();
       }
       function Lt(e) {
         let t = Math.min(1, Math.max(0, (e - st) / we)),
           n = 1 - (1 - t) ** 3;
-        for (let e = 0; e < A.length; e++) {
-          let t = it[e] ?? S;
-          z[e] = t + ((at[e] ?? S) - t) * n;
+        for (let e = 0; e < emptyItems.length; e++) {
+          let fallbackValue = float32Array[e] ?? S;
+          z[e] = fallbackValue + ((at[e] ?? S) - fallbackValue) * n;
         }
         return B && (B.needsUpdate = true), t < 1;
       }
@@ -344,7 +344,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         N.copy(M), N.aspect = e, N.far = 1e5, N.updateProjectionMatrix();
       }
       function zt(e, t) {
-        N.position.copy(e).addScaledVector(rt, t), N.lookAt(e), N.updateMatrixWorld();
+        N.position.copy(e).addScaledVector(setFromSphericalCoords, t), N.lookAt(e), N.updateMatrixWorld();
       }
       function Bt(e) {
         let t = St(),
@@ -354,7 +354,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           i = 5e3;
         for (let e = 0; e < 24; e++) {
           let e = (r + i) / 2;
-          zt(t, e), n.every(e => (F.copy(e).project(N), F.z < 1 && Math.abs(F.x) <= Ee && Math.abs(F.y) <= Ee)) ? i = e : r = e;
+          zt(t, e), n.every(item => (F.copy(item).project(N), F.z < 1 && Math.abs(F.x) <= Ee && Math.abs(F.y) <= Ee)) ? i = e : r = e;
         }
         return i;
       }
@@ -367,7 +367,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           a = -1 / 0,
           o = 1 / 0,
           s = -1 / 0;
-        for (let e of n) F.copy(e).project(N), i = Math.min(i, F.x), a = Math.max(a, F.x), o = Math.min(o, F.y), s = Math.max(s, F.y);
+        for (let value of n) F.copy(value).project(N), i = Math.min(i, F.x), a = Math.max(a, F.x), o = Math.min(o, F.y), s = Math.max(s, F.y);
         let c = e * ((s - o) / Math.max(.01, a - i));
         return Math.round(Math.min(Ae, Math.max(ke, c)));
       }
@@ -375,14 +375,14 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         if (!L) return;
         let t = St(),
           n = Bt(M.aspect),
-          r = t.clone().addScaledVector(rt, n);
+          scaledVector = t.clone().addScaledVector(setFromSphericalCoords, n);
         L.minDistance = n * .35, L.maxDistance = n * 1.8, M.far = Math.max(600, n * 3), M.updateProjectionMatrix(), q = false, ct = true, e ? J = {
           fromPosition: M.position.clone(),
-          toPosition: r,
+          toPosition: scaledVector,
           fromTarget: L.target.clone(),
           toTarget: t,
           startedAt: performance.now()
-        } : (J = null, L.target.copy(t), M.position.copy(r), L.update()), $();
+        } : (J = null, L.target.copy(t), M.position.copy(scaledVector), L.update()), $();
       }
       function Ut(e) {
         if (!J || !L) return false;
@@ -407,17 +407,17 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         if (!e) return;
         let clientWidth = e.clientWidth,
           clientHeight = e.clientHeight,
-          r = x.rows.map((e, r) => e.label ? Wt(-yt() - ft, 0, vt(r), clientWidth, clientHeight) : Gt),
+          mapped = x.rows.map((item, r) => item.label ? Wt(-yt() - ft, 0, vt(r), clientWidth, clientHeight) : Gt),
           i = Ge.value ? 28 : 14,
           a = 1 / 0;
-        for (let e = r.length - 1; e >= 0; e--) {
-          let t = r[e];
-          t?.visible && (a - t.y < i ? r[e] = Gt : a = t.y);
+        for (let e = mapped.length - 1; e >= 0; e--) {
+          let t = mapped[e];
+          t?.visible && (a - t.y < i ? mapped[e] = Gt : a = t.y);
         }
-        E.value = r;
+        E.value = mapped;
         let o = -1 / 0;
-        D.value = x.columnLabels.map(e => {
-          let r = Wt(_t(e.index), 0, bt() + mt, clientWidth, clientHeight);
+        D.value = x.columnLabels.map(item => {
+          let r = Wt(_t(item.index), 0, bt() + mt, clientWidth, clientHeight);
           return !r.visible || r.x - o < Fe ? Gt : (o = r.x, r);
         });
       }
@@ -454,13 +454,13 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let t = T.value;
         if (!I || !t || !ct) return null;
         K &&= Lt(1 / 0), Ut(1 / 0), L?.update(), I.setPixelRatio(e), I.render(j, M);
-        let n = t.toDataURL(`image/png`);
+        let toDataURL = t.toDataURL(`image/png`);
         Jt(), I.render(j, M), Kt();
-        let r = new Image();
-        r.className = `block h-full w-full`, r.src = n, await r.decode(), t.style.display = `none`, t.after(r);
+        let image = new Image();
+        image.className = `block h-full w-full`, image.src = toDataURL, await image.decode(), t.style.display = `none`, t.after(image);
         let i = Be.value;
         return i && (i.style.display = `none`), () => {
-          r.remove(), t.style.display = ``, i && (i.style.display = ``);
+          image.remove(), t.style.display = ``, i && (i.style.display = ``);
         };
       }
       ie({
@@ -468,22 +468,22 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       });
       function Qt(event) {
         let t = T.value;
-        if (!t || !A.length) return -1;
-        let n = t.getBoundingClientRect();
-        Ze.set((event.clientX - n.left) / n.width * 2 - 1, -((event.clientY - n.top) / n.height) * 2 + 1), Xe.setFromCamera(Ze, M);
+        if (!t || !emptyItems.length) return -1;
+        let boundingClientRect = t.getBoundingClientRect();
+        Ze.set((event.clientX - boundingClientRect.left) / boundingClientRect.width * 2 - 1, -((event.clientY - boundingClientRect.top) / boundingClientRect.height) * 2 + 1), Xe.setFromCamera(Ze, M);
         let r = be / 2,
           i = -1,
           a = 1 / 0;
-        return A.forEach((e, t) => {
-          let n = _t(e.column),
-            o = vt(e.row);
+        return emptyItems.forEach((item, t) => {
+          let n = _t(item.column),
+            o = vt(item.row);
           if ($e.min.set(n - r, 0, o - r), $e.max.set(n + r, z[t] ?? S, o + r), !Xe.ray.intersectBox($e, et)) return;
-          let s = et.distanceToSquared(Xe.ray.origin);
-          s < a && (a = s, i = t);
+          let distanceToSquared = et.distanceToSquared(Xe.ray.origin);
+          distanceToSquared < a && (a = distanceToSquared, i = t);
         }), i;
       }
       function $t(e) {
-        let t = A[e],
+        let t = emptyItems[e],
           n = t ? X(t) : null,
           r = t ? x.rows[t.row] : undefined;
         return t && n && r ? {
@@ -501,7 +501,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           y: event.clientY - n.top
         } : null;
         let r = $t(t);
-        qe.value = x.clickable && t >= 0 && (X(A[t])?.value ?? 0) > 0, r ? (C(`cell-hover`, {
+        qe.value = x.clickable && t >= 0 && (X(emptyItems[t])?.value ?? 0) > 0, r ? (C(`cell-hover`, {
           ...r,
           event: event
         }), U = true) : U &&= (C(`cell-hover`, null), false), Nt(t);
@@ -510,7 +510,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         O.value = null, qe.value = false, U &&= (C(`cell-hover`, null), false), Nt(-1);
       }
       function nn(event) {
-        k.value = true, W = {
+        k.value = true, payload = {
           x: event.clientX,
           y: event.clientY
         }, tn();
@@ -519,23 +519,23 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         k.value = false;
       }
       function an(event) {
-        if (!W) return;
-        let t = Math.hypot(event.clientX - W.x, event.clientY - W.y);
-        if (W = null, t > Ie) return;
+        if (!payload) return;
+        let t = Math.hypot(event.clientX - payload.x, event.clientY - payload.y);
+        if (payload = null, t > Ie) return;
         let n = Qt(event),
           r = $t(n),
           i = T.value;
         if (!r || !i) return;
-        let a = i.getBoundingClientRect(),
-          o = event.clientX - a.left,
-          s = event.clientY - a.top;
+        let boundingClientRect = i.getBoundingClientRect(),
+          o = event.clientX - boundingClientRect.left,
+          s = event.clientY - boundingClientRect.top;
         C(`cell-click`, {
           ...r,
-          value: X(A[n])?.value ?? 0,
+          value: X(emptyItems[n])?.value ?? 0,
           anchor: {
             getBoundingClientRect: () => {
-              let e = i.getBoundingClientRect();
-              return new DOMRect(e.left + o, e.top + s, 1, 1);
+              let boundingClientRectResult = i.getBoundingClientRect();
+              return new DOMRect(boundingClientRectResult.left + o, boundingClientRectResult.top + s, 1, 1);
             }
           }
         });
@@ -546,9 +546,9 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function sn() {
         Dt(), Ot(), Mt(), $();
       }
-      let cn = h(() => x.rows.map(e => e.cells.map(e => +!!e).join(``)).join(`|`)),
-        ln = h(() => x.rows.map(state => state.cells.map(e => e?.value ?? ``).join(`,`)).join(`|`)),
-        un = h(() => x.rows.map(e => e.color ?? ``).join(`|`));
+      let cn = h(() => x.rows.map(item => item.cells.map(e => +!!e).join(``)).join(`|`)),
+        ln = h(() => x.rows.map(state => state.cells.map(item => item?.value ?? ``).join(`,`)).join(`|`)),
+        un = h(() => x.rows.map(item => item.color ?? ``).join(`|`));
       return i([cn, ln, un], ([e, t], [n, r]) => {
         I && (Ot(), e !== n && (Ft(), Yt(true)), e !== n || t !== r ? It() : (Mt(), $()));
       }), m(() => {
@@ -580,7 +580,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }), f(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
           capture: true
-        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), A = [], Ye.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
+        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], Ye.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
       }), (i, o) => (c(), n(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: w,

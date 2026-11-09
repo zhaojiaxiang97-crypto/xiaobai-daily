@@ -196,10 +196,10 @@ var [A, j] = f(`DialogRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
+    setup(event, {
       emit: n
     }) {
-      let r = e,
+      let eventAlias = event,
         o = n,
         s = A(),
         c = i(o),
@@ -207,16 +207,16 @@ var [A, j] = f(`DialogRoot`),
           forwardRef: l,
           currentElement: u
         } = a(),
-        d = E(() => r.present ? u.value : undefined);
+        d = E(() => eventAlias.present ? u.value : undefined);
       t(d);
       let f = E(() => {
         let {
           present: e,
           ...t
-        } = r;
+        } = eventAlias;
         return t;
       });
-      return g(() => r.present, (e, t) => {
+      return g(() => eventAlias.present, (e, t) => {
         !e && t && s.triggerElement.value?.focus();
       }), (e, t) => (x(), y(P, w({
         ...f.value,
@@ -225,14 +225,14 @@ var [A, j] = f(`DialogRoot`),
         ref: p(l),
         present: e.present,
         "trap-focus": p(s).open.value,
-        "disable-outside-pointer-events": r.disableOutsidePointerEvents,
+        "disable-outside-pointer-events": eventAlias.disableOutsidePointerEvents,
         onCloseAutoFocus: t[0] ||= e => {
           e.defaultPrevented || (e.preventDefault(), p(s).triggerElement.value?.focus());
         },
         onPointerDownOutside: t[1] ||= e => {
-          let t = e.detail.originalEvent,
-            n = t.button === 0 && t.ctrlKey === true;
-          (t.button === 2 || n) && e.preventDefault();
+          let originalEvent = e.detail.originalEvent,
+            n = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+          (originalEvent.button === 2 || n) && e.preventDefault();
         },
         onFocusOutside: t[2] ||= e => {
           e.preventDefault();
@@ -272,10 +272,10 @@ var [A, j] = f(`DialogRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let n = e,
+      let eventAlias = event,
         r = i(t);
       a();
       let o = A(),
@@ -285,10 +285,10 @@ var [A, j] = f(`DialogRoot`),
           let {
             present: e,
             ...t
-          } = n;
+          } = eventAlias;
           return t;
         });
-      return g(() => n.present, (e, t) => {
+      return g(() => eventAlias.present, (e, t) => {
         !e && t && (s.value || o.triggerElement.value?.focus(), s.value = false, c.value = false);
       }), (e, t) => (x(), y(P, w({
         ...l.value,

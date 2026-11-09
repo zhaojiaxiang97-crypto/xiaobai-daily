@@ -723,21 +723,21 @@ var EbmlIterator = class {
       ++oc;
       mask >>= 1;
     }
-    const id = new Uint8Array(oc);
-    await this.tokenizer.readBuffer(id);
-    return id;
+    const uint8Array = new Uint8Array(oc);
+    await this.tokenizer.readBuffer(uint8Array);
+    return uint8Array;
   }
   async readElement() {
-    const id = await this.readVintData(this.ebmlMaxIDLength);
+    const vintData = await this.readVintData(this.ebmlMaxIDLength);
     const lenField = await this.readVintData(this.ebmlMaxSizeLength);
     lenField[0] ^= 128 >> lenField.length - 1;
     return {
-      id: readUIntBE(id, id.length),
+      id: readUIntBE(vintData, vintData.length),
       len: readUIntBE(lenField, lenField.length)
     };
   }
-  async readFloat(e) {
-    switch (e.len) {
+  async readFloat(float) {
+    switch (float.len) {
       case 0:
         return 0;
       case 4:
@@ -747,20 +747,20 @@ var EbmlIterator = class {
       case 10:
         return this.tokenizer.readNumber(Float64_BE);
       default:
-        throw new EbmlContentError(`Invalid IEEE-754 float length: ${e.len}`);
+        throw new EbmlContentError(`Invalid IEEE-754 float length: ${float.len}`);
     }
   }
-  async readFlag(e) {
-    return (await this.readUint(e)) === 1;
+  async readFlag(flag) {
+    return (await this.readUint(flag)) === 1;
   }
-  async readUint(e) {
-    return readUIntBE(await this.readBuffer(e), e.len);
+  async readUint(uint) {
+    return readUIntBE(await this.readBuffer(uint), uint.len);
   }
-  async readString(e) {
-    return (await this.tokenizer.readToken(new StringType(e.len, "utf-8"))).replace(/\x00.*$/g, "");
+  async readString(string) {
+    return (await this.tokenizer.readToken(new StringType(string.len, "utf-8"))).replace(/\x00.*$/g, "");
   }
-  async readBuffer(e) {
-    const buf = new Uint8Array(e.len);
+  async readBuffer(buffer) {
+    const buf = new Uint8Array(buffer.len);
     await this.tokenizer.readBuffer(buf);
     return buf;
   }
@@ -785,9 +785,9 @@ function readUIntBeAsBigInt(buf, len) {
   }
 }
 function linkParents(element) {
-  if (element.container) Object.keys(element.container).map(id => {
-    const child = element.container[id];
-    child.id = Number.parseInt(id, 10);
+  if (element.container) Object.keys(element.container).map(item => {
+    const child = element.container[item];
+    child.id = Number.parseInt(item, 10);
     return child;
   }).forEach(child => {
     child.parent = element;

@@ -9,8 +9,8 @@ var f = {
   async getMacStatus() {
     return d(await window.electronAPI.permissions.getMacStatus());
   },
-  async openMacSettings(e) {
-    return d(await window.electronAPI.permissions.openMacSettings(e));
+  async openMacSettings(mac) {
+    return d(await window.electronAPI.permissions.openMacSettings(mac));
   }
 };
 function p(result) {
@@ -33,8 +33,8 @@ var m = {
     async retry() {
       return p(await window.electronAPI.enterKeyComponent.retry());
     },
-    onStatusChanged(e) {
-      return window.electronAPI.enterKeyComponent.onStatusChanged(e);
+    onStatusChanged(status) {
+      return window.electronAPI.enterKeyComponent.onStatusChanged(status);
     }
   },
   h = a(() => window.electronAPI?.platform === `win32`),
@@ -59,7 +59,7 @@ function x(event) {
       settings: h
     } = l(),
     v = a(() => c.value || d.value),
-    x = [],
+    emptyItems = [],
     S = [],
     C = t(0),
     w = t(false),
@@ -93,10 +93,10 @@ function x(event) {
       O.value = true, k.value = ``;
       try {
         D.value = await f.getMacStatus();
-        let e = D.value.items.find(e => e.key === `accessibility`);
-        e && (A.value = {
-          required: e.required,
-          granted: e.granted
+        let found = D.value.items.find(item => item.key === `accessibility`);
+        found && (A.value = {
+          required: found.required,
+          granted: found.granted
         });
       } catch (e) {
         k.value = e instanceof Error ? e.message : s(`settings.permissionCheck.loadFailed`);
@@ -107,10 +107,10 @@ function x(event) {
   }
   async function P() {
     if (g.value) try {
-      let e = await window.electronAPI.requestAccessibility();
+      let requestAccessibility = await window.electronAPI.requestAccessibility();
       A.value = {
         required: true,
-        granted: e
+        granted: requestAccessibility
       }, N();
     } catch {
       A.value = {
@@ -126,23 +126,23 @@ function x(event) {
     L = a(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
     R;
   i(() => {
-    M(), N(), _.value ? (m.getStatus().then(e => {
-      I.value = e;
+    M(), N(), _.value ? (m.getStatus().then(result => {
+      I.value = result;
     }), R = m.onStatusChanged(e => {
       I.value = e;
     })) : (h.value.enableEnterKeyListener || !h.value.enterKeyLegacyMigrationHandled) && m.disable().then(() => p());
   }), n(() => {
     R?.();
   });
-  let z = {
+  let options = {
     controlsDisabled: v,
     growthSettingsLoaded: event.growthSettingsLoaded,
     highlightedItem: event.highlightedItem,
     refresh: event.refresh,
-    onRefresh: e => b(x, e),
+    onRefresh: e => b(emptyItems, e),
     onLocalDataChanged: e => b(S, e),
     notifyLocalDataChanged: () => {
-      S.forEach(fn => fn());
+      S.forEach(item => item());
     },
     navigate: event.navigate,
     openUpdate: event.openUpdate,
@@ -162,10 +162,10 @@ function x(event) {
     enterKeyComponentState: I,
     enterKeyComponentBusy: L
   };
-  return o(y, z), {
-    ...z,
+  return o(y, options), {
+    ...options,
     runRefreshLoaders: () => {
-      x.forEach(fn => fn());
+      emptyItems.forEach(item => item());
     }
   };
 }
@@ -197,8 +197,8 @@ function O() {
     u = t(null),
     d;
   return i(() => {
-    _.value && (m.getStatus().then(e => {
-      u.value = e;
+    _.value && (m.getStatus().then(result => {
+      u.value = result;
     }).catch(() => undefined), d = m.onStatusChanged(e => {
       u.value = e;
     }));

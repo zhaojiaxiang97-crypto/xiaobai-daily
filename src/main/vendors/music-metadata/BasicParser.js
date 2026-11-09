@@ -227,46 +227,46 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (str.length > 100) return;
     var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(str);
     if (!match) return;
-    var n = parseFloat(match[1]);
+    var float = parseFloat(match[1]);
     switch ((match[2] || "ms").toLowerCase()) {
       case "years":
       case "year":
       case "yrs":
       case "yr":
       case "y":
-        return n * y;
+        return float * y;
       case "weeks":
       case "week":
       case "w":
-        return n * w;
+        return float * w;
       case "days":
       case "day":
       case "d":
-        return n * d;
+        return float * d;
       case "hours":
       case "hour":
       case "hrs":
       case "hr":
       case "h":
-        return n * h;
+        return float * h;
       case "minutes":
       case "minute":
       case "mins":
       case "min":
       case "m":
-        return n * m;
+        return float * m;
       case "seconds":
       case "second":
       case "secs":
       case "sec":
       case "s":
-        return n * s;
+        return float * s;
       case "milliseconds":
       case "millisecond":
       case "msecs":
       case "msec":
       case "ms":
-        return n;
+        return float;
       default:
         return;
     }
@@ -278,13 +278,13 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String}
   * @api private
   */
-  function fmtShort(ms) {
-    var msAbs = Math.abs(ms);
-    if (msAbs >= d) return Math.round(ms / d) + "d";
-    if (msAbs >= h) return Math.round(ms / h) + "h";
-    if (msAbs >= m) return Math.round(ms / m) + "m";
-    if (msAbs >= s) return Math.round(ms / s) + "s";
-    return ms + "ms";
+  function fmtShort(fmt) {
+    var msAbs = Math.abs(fmt);
+    if (msAbs >= d) return Math.round(fmt / d) + "d";
+    if (msAbs >= h) return Math.round(fmt / h) + "h";
+    if (msAbs >= m) return Math.round(fmt / m) + "m";
+    if (msAbs >= s) return Math.round(fmt / s) + "s";
+    return fmt + "ms";
   }
   /**
   * Long format for `ms`.
@@ -293,20 +293,20 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String}
   * @api private
   */
-  function fmtLong(ms) {
-    var msAbs = Math.abs(ms);
-    if (msAbs >= d) return plural(ms, msAbs, d, "day");
-    if (msAbs >= h) return plural(ms, msAbs, h, "hour");
-    if (msAbs >= m) return plural(ms, msAbs, m, "minute");
-    if (msAbs >= s) return plural(ms, msAbs, s, "second");
-    return ms + " ms";
+  function fmtLong(fmt) {
+    var msAbs = Math.abs(fmt);
+    if (msAbs >= d) return plural(fmt, msAbs, d, "day");
+    if (msAbs >= h) return plural(fmt, msAbs, h, "hour");
+    if (msAbs >= m) return plural(fmt, msAbs, m, "minute");
+    if (msAbs >= s) return plural(fmt, msAbs, s, "second");
+    return fmt + " ms";
   }
   /**
   * Pluralization helper.
   */
-  function plural(ms, msAbs, n, name) {
-    var isPlural = msAbs >= n * 1.5;
-    return Math.round(ms / n) + " " + name + (isPlural ? "s" : "");
+  function plural(pluralValue, msAbs, pluralInput, name) {
+    var isPlural = msAbs >= pluralInput * 1.5;
+    return Math.round(pluralValue / pluralInput) + " " + name + (isPlural ? "s" : "");
   }
 });
 //#endregion
@@ -545,8 +545,8 @@ var require_browser = /* @__PURE__ */__commonJSMin((exports, module) => {
   function useColors() {
     if (typeof window !== "undefined" && window.process && (window.process.type === "renderer" || window.process.__nwjs)) return true;
     if (typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) return false;
-    let m;
-    return typeof document !== "undefined" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || typeof window !== "undefined" && window.console && (window.console.firebug || window.console.exception && window.console.table) || typeof navigator !== "undefined" && navigator.userAgent && (m = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(m[1], 10) >= 31 || typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+    let total;
+    return typeof document !== "undefined" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || typeof window !== "undefined" && window.console && (window.console.firebug || window.console.exception && window.console.table) || typeof navigator !== "undefined" && navigator.userAgent && (total = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(total[1], 10) >= 31 || typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
   }
   /**
   * Colorize log arguments if enabled.
@@ -739,8 +739,8 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
   exports.inspectOpts = Object.keys(process.env).filter(key => {
     return /^debug_/i.test(key);
   }).reduce((obj, key) => {
-    const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, k) => {
-      return k.toUpperCase();
+    const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, text) => {
+      return text.toUpperCase();
     });
     let val = process.env[key];
     if (/^(yes|on|true|enabled)$/i.test(val)) val = true;else if (/^(no|off|false|disabled)$/i.test(val)) val = false;else if (val === "null") val = null;else val = Number(val);
@@ -764,8 +764,8 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
       useColors
     } = this;
     if (useColors) {
-      const c = this.color;
-      const colorCode = "[3" + (c < 8 ? c : "8;5;" + c);
+      const color = this.color;
+      const colorCode = "[3" + (color < 8 ? color : "8;5;" + color);
       const prefix = `  ${colorCode};1m${name}null`;
       args[0] = prefix + args[0].split("\n").join("\n" + prefix);
       args.push(colorCode + "m+" + module.exports.humanize(this.diff) + "[0m");
@@ -843,7 +843,7 @@ var require_src = /* @__PURE__ */__commonJSMin((exports, module) => {
 //#region node_modules/@borewit/text-codec/lib/index.js
 var import_ieee754 = /* @__PURE__ */__toESM((/* @__PURE__ */__commonJSMin(exports => {
   exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-    var e, m;
+    var total, m;
     var eLen = nBytes * 8 - mLen - 1;
     var eMax = (1 << eLen) - 1;
     var eBias = eMax >> 1;
@@ -852,22 +852,22 @@ var import_ieee754 = /* @__PURE__ */__toESM((/* @__PURE__ */__commonJSMin(export
     var d = isLE ? -1 : 1;
     var s = buffer[offset + i];
     i += d;
-    e = s & (1 << -nBits) - 1;
+    total = s & (1 << -nBits) - 1;
     s >>= -nBits;
     nBits += eLen;
-    for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
-    m = e & (1 << -nBits) - 1;
-    e >>= -nBits;
+    for (; nBits > 0; total = total * 256 + buffer[offset + i], i += d, nBits -= 8);
+    m = total & (1 << -nBits) - 1;
+    total >>= -nBits;
     nBits += mLen;
     for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
-    if (e === 0) e = 1 - eBias;else if (e === eMax) return m ? NaN : (s ? -1 : 1) * Infinity;else {
+    if (total === 0) total = 1 - eBias;else if (total === eMax) return m ? NaN : (s ? -1 : 1) * Infinity;else {
       m = m + Math.pow(2, mLen);
-      e = e - eBias;
+      total = total - eBias;
     }
-    return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+    return (s ? -1 : 1) * m * Math.pow(2, total - mLen);
   };
   exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-    var e, m, c;
+    var total, m, count;
     var eLen = nBytes * 8 - mLen - 1;
     var eMax = (1 << eLen) - 1;
     var eBias = eMax >> 1;
@@ -878,33 +878,33 @@ var import_ieee754 = /* @__PURE__ */__toESM((/* @__PURE__ */__commonJSMin(export
     value = Math.abs(value);
     if (isNaN(value) || value === Infinity) {
       m = isNaN(value) ? 1 : 0;
-      e = eMax;
+      total = eMax;
     } else {
-      e = Math.floor(Math.log(value) / Math.LN2);
-      if (value * (c = Math.pow(2, -e)) < 1) {
-        e--;
-        c *= 2;
+      total = Math.floor(Math.log(value) / Math.LN2);
+      if (value * (count = Math.pow(2, -total)) < 1) {
+        total--;
+        count *= 2;
       }
-      if (e + eBias >= 1) value += rt / c;else value += rt * Math.pow(2, 1 - eBias);
-      if (value * c >= 2) {
-        e++;
-        c /= 2;
+      if (total + eBias >= 1) value += rt / count;else value += rt * Math.pow(2, 1 - eBias);
+      if (value * count >= 2) {
+        total++;
+        count /= 2;
       }
-      if (e + eBias >= eMax) {
+      if (total + eBias >= eMax) {
         m = 0;
-        e = eMax;
-      } else if (e + eBias >= 1) {
-        m = (value * c - 1) * Math.pow(2, mLen);
-        e = e + eBias;
+        total = eMax;
+      } else if (total + eBias >= 1) {
+        m = (value * count - 1) * Math.pow(2, mLen);
+        total = total + eBias;
       } else {
         m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-        e = 0;
+        total = 0;
       }
     }
     for (; mLen >= 8; buffer[offset + i] = m & 255, i += d, m /= 256, mLen -= 8);
-    e = e << mLen | m;
+    total = total << mLen | m;
     eLen += mLen;
-    for (; eLen > 0; buffer[offset + i] = e & 255, i += d, e /= 256, eLen -= 8);
+    for (; eLen > 0; buffer[offset + i] = total & 255, i += d, total /= 256, eLen -= 8);
     buffer[offset + i - d] |= s * 128;
   };
 }))(), 1);
@@ -1007,14 +1007,14 @@ function pushCodeUnit(parts, chunk, codeUnit) {
   chunk.push(codeUnit);
   if (chunk.length >= CHUNK) flushChunk(parts, chunk);
 }
-function pushCodePoint(parts, chunk, cp) {
-  if (cp <= 65535) {
-    pushCodeUnit(parts, chunk, cp);
+function pushCodePoint(parts, chunk, point) {
+  if (point <= 65535) {
+    pushCodeUnit(parts, chunk, point);
     return;
   }
-  cp -= 65536;
-  pushCodeUnit(parts, chunk, 55296 + (cp >> 10));
-  pushCodeUnit(parts, chunk, 56320 + (cp & 1023));
+  point -= 65536;
+  pushCodeUnit(parts, chunk, 55296 + (point >> 10));
+  pushCodeUnit(parts, chunk, 56320 + (point & 1023));
 }
 function decodeUTF8(bytes) {
   const parts = [];
@@ -1152,39 +1152,39 @@ function decodeWindows1252(bytes) {
 function encodeUTF8(str) {
   const out = [];
   for (let i = 0; i < str.length; i++) {
-    let cp = str.charCodeAt(i);
-    if (cp >= 55296 && cp <= 56319) {
+    let charCodeAtResult = str.charCodeAt(i);
+    if (charCodeAtResult >= 55296 && charCodeAtResult <= 56319) {
       if (i + 1 < str.length) {
         const lo = str.charCodeAt(i + 1);
         if (lo >= 56320 && lo <= 57343) {
-          cp = 65536 + (cp - 55296 << 10) + (lo - 56320);
+          charCodeAtResult = 65536 + (charCodeAtResult - 55296 << 10) + (lo - 56320);
           i++;
-        } else cp = REPLACEMENT;
-      } else cp = REPLACEMENT;
-    } else if (cp >= 56320 && cp <= 57343) cp = REPLACEMENT;
-    if (cp < 128) out.push(cp);else if (cp < 2048) out.push(192 | cp >> 6, 128 | cp & 63);else if (cp < 65536) out.push(224 | cp >> 12, 128 | cp >> 6 & 63, 128 | cp & 63);else out.push(240 | cp >> 18, 128 | cp >> 12 & 63, 128 | cp >> 6 & 63, 128 | cp & 63);
+        } else charCodeAtResult = REPLACEMENT;
+      } else charCodeAtResult = REPLACEMENT;
+    } else if (charCodeAtResult >= 56320 && charCodeAtResult <= 57343) charCodeAtResult = REPLACEMENT;
+    if (charCodeAtResult < 128) out.push(charCodeAtResult);else if (charCodeAtResult < 2048) out.push(192 | charCodeAtResult >> 6, 128 | charCodeAtResult & 63);else if (charCodeAtResult < 65536) out.push(224 | charCodeAtResult >> 12, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);else out.push(240 | charCodeAtResult >> 18, 128 | charCodeAtResult >> 12 & 63, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);
   }
   return new Uint8Array(out);
 }
 function encodeUTF16LE(str) {
   const units = [];
   for (let i = 0; i < str.length; i++) {
-    const u = str.charCodeAt(i);
-    if (u >= 55296 && u <= 56319) {
+    const charCodeAtResult = str.charCodeAt(i);
+    if (charCodeAtResult >= 55296 && charCodeAtResult <= 56319) {
       if (i + 1 < str.length) {
         const lo = str.charCodeAt(i + 1);
         if (lo >= 56320 && lo <= 57343) {
-          units.push(u, lo);
+          units.push(charCodeAtResult, lo);
           i++;
         } else units.push(REPLACEMENT);
       } else units.push(REPLACEMENT);
       continue;
     }
-    if (u >= 56320 && u <= 57343) {
+    if (charCodeAtResult >= 56320 && charCodeAtResult <= 57343) {
       units.push(REPLACEMENT);
       continue;
     }
-    units.push(u);
+    units.push(charCodeAtResult);
   }
   const out = new Uint8Array(units.length * 2);
   for (let i = 0; i < units.length; i++) {

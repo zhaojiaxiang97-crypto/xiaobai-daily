@@ -19,8 +19,8 @@ var h = `rovingFocusGroup.onEntryFocus`,
 function v(e, t) {
   return t === `rtl` ? e === `ArrowLeft` ? `ArrowRight` : e === `ArrowRight` ? `ArrowLeft` : e : e;
 }
-function y(e, t, n) {
-  let r = v(e.key, n);
+function y(event, t, n) {
+  let r = v(event.key, n);
   if (!(t === `vertical` && [`ArrowLeft`, `ArrowRight`].includes(r)) && !(t === `horizontal` && [`ArrowUp`, `ArrowDown`].includes(r))) return _[r];
 }
 function b(e, t = false) {
@@ -29,8 +29,8 @@ function b(e, t = false) {
     preventScroll: t
   }), n() !== r)) return;
 }
-function x(e, t) {
-  return e.map((n, r) => e[(t + r) % e.length]);
+function x(items, t) {
+  return items.map((item, r) => items[(t + r) % items.length]);
 }
 var [S, C] = r(`RovingFocusGroup`),
   w = d({
@@ -98,13 +98,13 @@ var [S, C] = r(`RovingFocusGroup`),
         } = m({
           isProvider: true
         });
-      function j(e) {
+      function j(event) {
         let t = !D.value;
-        if (e.currentTarget && e.target === e.currentTarget && t && !E.value) {
-          let t = new CustomEvent(h, g);
-          if (e.currentTarget.dispatchEvent(t), v(`entryFocus`, t), !t.defaultPrevented) {
-            let e = k().map(e => e.ref).filter(e => e.dataset.disabled !== ``);
-            b([e.find(e => e.getAttribute(`data-active`) === ``), e.find(e => e.getAttribute(`data-highlighted`) === ``), e.find(e => e.id === T.value), ...e].filter(Boolean), _.preventScrollOnEntryFocus);
+        if (event.currentTarget && event.target === event.currentTarget && t && !E.value) {
+          let customEvent = new CustomEvent(h, g);
+          if (event.currentTarget.dispatchEvent(customEvent), v(`entryFocus`, customEvent), !customEvent.defaultPrevented) {
+            let filtered = k().map(item => item.ref).filter(item => item.dataset.disabled !== ``);
+            b([filtered.find(item => item.getAttribute(`data-active`) === ``), filtered.find(item => item.getAttribute(`data-highlighted`) === ``), filtered.find(item => item.id === T.value), ...filtered].filter(Boolean), _.preventScrollOnEntryFocus);
           }
         }
         D.value = false;

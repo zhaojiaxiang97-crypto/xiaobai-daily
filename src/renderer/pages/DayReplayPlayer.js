@@ -1,4 +1,4 @@
-const __vite__mapDeps = (items, m = __vite__mapDeps, d = m.f || (m.f = ["../ui/icons/matrix-math.js", "../ui/Switch.js", "../chunks/vue-i18n.runtime.js", "../i18n/en-US-player.js", "../ui/icons/lucide-icons.js"])) => items.map(i => d[i]);
+const __vite__mapDeps = (items, m = __vite__mapDeps, d = m.f || (m.f = ["../ui/icons/matrix-math.js", "../ui/Switch.js", "../chunks/vue-i18n.runtime.js", "../i18n/en-US-player.js", "../ui/icons/lucide-icons.js"])) => items.map(item => d[item]);
 import { $n as e, An as t, Cn as n, O as r, S as i, St as a, Wt as o, Yt as s, Zt as c, b as l, bn as u, c as d, f, gt as p, j as m, k as h, n as g, nr as _, ot as v, rr as y, ut as b, v as x, vn as S, x as C, y as w } from "../chunks/vue-i18n.runtime.js";
 import { E as T, r as E, w as D } from "../i18n/en-US-player.js";
 import { t as O } from "../chunks/preload-helper.js";
@@ -77,19 +77,19 @@ function z(result) {
   throw Error(result.error.message);
 }
 var Ie = {
-    async thumbnails(e, t) {
+    async thumbnails(thumbnails, thumbnailsValue) {
       return z(await window.electronAPI.dayReplay.thumbnails({
-        paths: e,
-        ...(t ? {
-          width: t
+        paths: thumbnails,
+        ...(thumbnailsValue ? {
+          width: thumbnailsValue
         } : {})
       }));
     },
-    async saveVideo(e, t, n) {
+    async saveVideo(video, videoValue, videoInput) {
       return z(await window.electronAPI.dayReplay.saveVideo({
-        data: e,
-        fileName: t,
-        extension: n
+        data: video,
+        fileName: videoValue,
+        extension: videoInput
       }));
     }
   },
@@ -111,7 +111,7 @@ var Ie = {
     1080: 35e5,
     1440: 6e6
   },
-  G = {
+  options = {
     none: 1,
     corner: 1.4,
     main: 2
@@ -128,7 +128,7 @@ function q(e) {
 }
 function J(e) {
   let t = e.frameRate === 30 ? .65 : 1;
-  return Math.round(ze[e.resolution] * t * G[e.screenshots]);
+  return Math.round(ze[e.resolution] * t * options[e.screenshots]);
 }
 function Ve(e, t) {
   return e / t;
@@ -142,13 +142,13 @@ function Ue(e, t) {
 function We() {
   let e = Re;
   try {
-    let t = JSON.parse(localStorage.getItem(Be) ?? `null`);
+    let parsed = JSON.parse(localStorage.getItem(Be) ?? `null`);
     return {
-      screenshots: K(B, t?.screenshots, e.screenshots),
-      pace: K(V, t?.pace, e.pace),
-      speed: K(H, t?.speed, e.speed),
-      resolution: K(Le, t?.resolution, e.resolution),
-      frameRate: K(U, t?.frameRate, e.frameRate)
+      screenshots: K(B, parsed?.screenshots, e.screenshots),
+      pace: K(V, parsed?.pace, e.pace),
+      speed: K(H, parsed?.speed, e.speed),
+      resolution: K(Le, parsed?.resolution, e.resolution),
+      frameRate: K(U, parsed?.frameRate, e.frameRate)
     };
   } catch {
     return {
@@ -202,17 +202,17 @@ var Ke = {
     setup(state, {
       emit: r
     }) {
-      let o = state,
+      let stateAlias = state,
         s = r,
         {
           t: c
         } = g(),
         l = S({
-          ...o.options
+          ...stateAlias.options
         }),
         u = x(() => ({
           ...l,
-          screenshots: o.hasScreenshots ? l.screenshots : `none`
+          screenshots: stateAlias.hasScreenshots ? l.screenshots : `none`
         })),
         f = {
           720: `720p`,
@@ -231,50 +231,50 @@ var Ke = {
         _ = x(() => [{
           key: `screenshots`,
           label: c(`dayReplay.exportScreenshots`),
-          choices: B.map(e => ({
-            value: e,
-            label: c(m[e]),
-            disabled: e !== `none` && !o.hasScreenshots
+          choices: B.map(item => ({
+            value: item,
+            label: c(m[item]),
+            disabled: item !== `none` && !stateAlias.hasScreenshots
           })),
-          hint: o.hasScreenshots ? undefined : c(`dayReplay.exportNoScreenshots`)
+          hint: stateAlias.hasScreenshots ? undefined : c(`dayReplay.exportNoScreenshots`)
         }, {
           key: `pace`,
           label: c(`dayReplay.exportPace`),
-          choices: V.map(e => ({
-            value: e,
-            label: c(h[e])
+          choices: V.map(item => ({
+            value: item,
+            label: c(h[item])
           })),
           disabled: u.value.screenshots === `none`
         }, {
           key: `speed`,
           label: c(`dayReplay.exportSpeed`),
-          choices: H.map(e => ({
-            value: e,
-            label: `${e}×`
+          choices: H.map(item => ({
+            value: item,
+            label: `${item}×`
           }))
         }, {
           key: `resolution`,
           label: c(`dayReplay.exportResolution`),
-          choices: Le.map(e => ({
-            value: e,
-            label: f[e]
+          choices: Le.map(item => ({
+            value: item,
+            label: f[item]
           }))
         }, {
           key: `frameRate`,
           label: c(`dayReplay.exportFrameRate`),
-          choices: U.map(e => ({
-            value: e,
+          choices: U.map(item => ({
+            value: item,
             label: c(`dayReplay.exportFrameRateValue`, {
-              fps: e
+              fps: item
             })
           }))
         }]),
         v = x(() => {
           let e = u.value,
             t = q(e.resolution),
-            n = Ue(o.timelineDurationMs, e) / 1024 / 1024;
+            n = Ue(stateAlias.timelineDurationMs, e) / 1024 / 1024;
           return c(`dayReplay.exportEstimate`, {
-            seconds: Math.ceil(He(o.timelineDurationMs, e.speed) / 1e3),
+            seconds: Math.ceil(He(stateAlias.timelineDurationMs, e.speed) / 1e3),
             width: t.width,
             height: t.height,
             size: n < 10 ? n.toFixed(1) : Math.round(n)
@@ -325,7 +325,7 @@ var Ke = {
       let t = e,
         n = u(null),
         r = u(null),
-        a = null,
+        payload = null,
         s = 0;
       function c() {
         s = 0;
@@ -339,26 +339,26 @@ var Ke = {
           l = Math.round(clientWidth * c),
           u = Math.round(clientHeight * c);
         (e.width !== l || e.height !== u) && (e.width = l, e.height = u);
-        let d = e.getContext(`2d`);
-        if (!d) return;
-        d.clearRect(0, 0, l, u);
+        let context = e.getContext(`2d`);
+        if (!context) return;
+        context.clearRect(0, 0, l, u);
         let bitmap = t.bitmap;
         if (!bitmap) return;
         let p = Math.min(l / bitmap.width, u / bitmap.height),
           m = bitmap.width * p,
           h = bitmap.height * p;
-        d.imageSmoothingQuality = `high`;
+        context.imageSmoothingQuality = `high`;
         try {
-          d.drawImage(bitmap, (l - m) / 2, (u - h) / 2, m, h);
+          context.drawImage(bitmap, (l - m) / 2, (u - h) / 2, m, h);
         } catch {}
       }
       function l() {
         s ||= requestAnimationFrame(c);
       }
       return o(() => t.bitmap, l), b(() => {
-        n.value && (a = new ResizeObserver(l), a.observe(n.value)), l();
+        n.value && (payload = new ResizeObserver(l), payload.observe(n.value)), l();
       }), v(() => {
-        a?.disconnect(), s && cancelAnimationFrame(s);
+        payload?.disconnect(), s && cancelAnimationFrame(s);
       }), (e, t) => (p(), i(`div`, {
         ref_key: `containerRef`,
         ref: n,
@@ -386,19 +386,19 @@ var Ke = {
     setup(event, {
       emit: t
     }) {
-      let n = event,
+      let eventAlias = event,
         r = t,
         a = u(null),
         o = u(false),
         s = x(() => ({
-          start: n.startMinute / 5,
-          end: n.endMinute / 5
+          start: eventAlias.startMinute / 5,
+          end: eventAlias.endMinute / 5
         }));
       function c(e) {
         let t = a.value?.getBoundingClientRect();
-        if (!t || t.width <= 0) return n.minute;
+        if (!t || t.width <= 0) return eventAlias.minute;
         let r = Math.min(1, Math.max(0, (e.clientX - t.left) / t.width));
-        return n.startMinute + r * (n.endMinute - n.startMinute);
+        return eventAlias.startMinute + r * (eventAlias.endMinute - eventAlias.startMinute);
       }
       function l(e) {
         e.button === 0 && (o.value = true, e.currentTarget.setPointerCapture(e.pointerId), r(`scrub-start`), r(`seek`, c(e)));
@@ -445,25 +445,25 @@ var Ke = {
     target = new N();
     position = new N();
     offset = new N();
-    constructor(e, t) {
-      this.stage = e, this.scene = t;
+    constructor(constructor, constructorValue) {
+      this.stage = constructor, this.scene = constructorValue;
     }
     reset() {
       this.lastTime = 0;
     }
-    update(e, t) {
+    update(update, updateValue) {
       let {
           stage: n
         } = this,
-        r = this.lastTime ? Math.min(100, e - this.lastTime) : 16;
-      this.lastTime = e;
+        r = this.lastTime ? Math.min(100, update - this.lastTime) : 16;
+      this.lastTime = update;
       let {
           minDistance: i,
           maxDistance: a
         } = n.controls,
         o = Math.min(a * .98, Math.max(ot, i * 1.05));
-      this.offset.setFromSphericalCoords(o, st, ct), this.target.set(this.scene.minuteToX(t) + lt, this.scene.maxHeight * .3, 0), this.position.copy(this.target).add(this.offset);
-      let s = Number.isFinite(e) ? 1 - Math.exp(-r / ut) : 1;
+      this.offset.setFromSphericalCoords(o, st, ct), this.target.set(this.scene.minuteToX(updateValue) + lt, this.scene.maxHeight * .3, 0), this.position.copy(this.target).add(this.offset);
+      let s = Number.isFinite(update) ? 1 - Math.exp(-r / ut) : 1;
       return n.controls.target.lerp(this.target, s), n.camera.position.lerp(this.position, s), n.camera.position.distanceToSquared(this.position) > .01 || n.controls.target.distanceToSquared(this.target) > .01;
     }
   },
@@ -528,24 +528,24 @@ var Et = class {
     beam;
     hitBox = new I();
     hitPoint = new N();
-    constructor(e, t) {
-      this.blocks = Ne(e).blocks, this.centerBucket = (t.startBucket + t.endBucket) / 2;
-      let n = (t.endBucket - t.startBucket) / 2,
-        r = (t.endBucket - t.startBucket) / pt,
+    constructor(constructor, constructorValue) {
+      this.blocks = Ne(constructor).blocks, this.centerBucket = (constructorValue.startBucket + constructorValue.endBucket) / 2;
+      let n = (constructorValue.endBucket - constructorValue.startBucket) / 2,
+        r = (constructorValue.endBucket - constructorValue.startBucket) / pt,
         i = Math.max(1, Math.ceil(r / mt));
       this.hourMarks = [];
-      for (let e = Math.ceil(t.startBucket / pt); e * pt <= t.endBucket; e += i) this.hourMarks.push(e);
+      for (let e = Math.ceil(constructorValue.startBucket / pt); e * pt <= constructorValue.endBucket; e += i) this.hourMarks.push(e);
       let a = this.blocks.length,
-        o = new Float32Array(a * 2),
+        float32Array = new Float32Array(a * 2),
         s = new Float32Array(a),
         c = new De(),
         l = new N(),
         u = new Te(),
         d = new N();
-      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(o, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new L(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
+      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(float32Array, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new L(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
       let f = 6;
-      this.blocks.forEach((e, t) => {
-        o[t * 2] = e.start, o[t * 2 + 1] = e.end, s[t] = +!Me(e), Me(e) || (f = Math.max(f, ht * Math.sqrt(e.end - e.start))), this.cellBlocks.fill(t, e.start, e.end), l.set(this.bucketToX(e.start) + Y / 2, 0, 0), d.set(Math.max(.3, e.end - e.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
+      this.blocks.forEach((item, t) => {
+        float32Array[t * 2] = item.start, float32Array[t * 2 + 1] = item.end, s[t] = +!Me(item), Me(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), l.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
       }), this.buildings.instanceMatrix.needsUpdate = true, this.maxHeight = f, this.trackGeometry = new P(n * 2 + 2, xt, 14).translate(0, -.2 / 2, 0);
       let p = new Ee(this.trackGeometry, this.trackMaterial);
       p.position.y = bt, this.beamGeometry = new P(X, 1, 16).translate(0, .5, 0), this.beamMaterial = new we({
@@ -554,11 +554,11 @@ var Et = class {
         opacity: Ct,
         depthWrite: false
       }), this.beam = new Ee(this.beamGeometry, this.beamMaterial), this.beam.scale.y = f * 1.25, this.beam.renderOrder = 1, this.root.add(p, this.buildings, this.beam);
-      let m = [];
-      for (let e of [-n - 2, n + 2]) for (let t of [0, f]) for (let n of [-7, 13]) m.push(new N(e, t, n));
+      let emptyItems = [];
+      for (let count of [-n - 2, n + 2]) for (let t of [0, f]) for (let total of [-7, 13]) emptyItems.push(new N(count, t, total));
       this.framing = {
         target: new N(0, f * .25, 0),
-        corners: m,
+        corners: emptyItems,
         homeView: {
           polar: 1.02,
           azimuth: .3
@@ -574,47 +574,47 @@ var Et = class {
         }
       };
     }
-    bucketToX(e) {
-      return e - this.centerBucket;
+    bucketToX(bucket) {
+      return bucket - this.centerBucket;
     }
-    minuteToX(e) {
-      return this.bucketToX(e / 5);
+    minuteToX(minute) {
+      return this.bucketToX(minute / 5);
     }
-    setColors(e, t) {
+    setColors(colors, colorsValue) {
       let n = new ke();
-      this.blocks.forEach((r, i) => {
-        this.buildings.setColorAt(i, n.set(je(r, e, t)));
-      }), this.buildings.instanceColor && (this.buildings.instanceColor.needsUpdate = true), this.uniforms.uGround.value.set(t.ground), this.trackMaterial.color.set(t.ground);
+      this.blocks.forEach((item, i) => {
+        this.buildings.setColorAt(i, n.set(je(item, colors, colorsValue)));
+      }), this.buildings.instanceColor && (this.buildings.instanceColor.needsUpdate = true), this.uniforms.uGround.value.set(colorsValue.ground), this.trackMaterial.color.set(colorsValue.ground);
     }
-    setPlayhead(e) {
-      let t = e / 5;
+    setPlayhead(playhead) {
+      let t = playhead / 5;
       this.uniforms.uPlayhead.value = t, this.beam.position.x = this.bucketToX(t);
     }
-    currentHeight(e) {
-      let t = this.blocks[e];
+    currentHeight(current) {
+      let t = this.blocks[current];
       if (!t) return 0;
       let n = Math.min(t.end - t.start, Math.max(0, this.uniforms.uPlayhead.value - t.start));
       return n <= 0 ? _t : Me(t) ? gt : ht * Math.sqrt(n);
     }
-    anchorAt(e, t) {
-      let n = Math.min(ft - 1, Math.max(0, Math.floor(e / 5))),
+    anchorAt(anchor, anchorValue) {
+      let n = Math.min(ft - 1, Math.max(0, Math.floor(anchor / 5))),
         r = this.cellBlocks[n],
         i = r >= 0 ? this.currentHeight(r) : 0;
-      return t.set(this.minuteToX(e), i + 2.5, 0);
+      return anchorValue.set(this.minuteToX(anchor), i + 2.5, 0);
     }
-    blockIndexAt(e) {
-      let t = Math.min(ft - 1, Math.max(0, Math.floor(e / 5)));
+    blockIndexAt(block) {
+      let t = Math.min(ft - 1, Math.max(0, Math.floor(block / 5)));
       return this.cellBlocks[t];
     }
     pick(e) {
       let t = -1,
         n = 1 / 0;
-      return this.blocks.forEach((r, i) => {
-        let a = this.bucketToX(r.start) + Y / 2,
-          o = a + Math.max(.3, r.end - r.start - Y);
+      return this.blocks.forEach((item, i) => {
+        let a = this.bucketToX(item.start) + Y / 2,
+          o = a + Math.max(.3, item.end - item.start - Y);
         if (this.hitBox.min.set(a, 0, -4), this.hitBox.max.set(o, Math.max(wt, this.currentHeight(i)), vt / 2), !e.intersectBox(this.hitBox, this.hitPoint)) return;
-        let s = this.hitPoint.distanceToSquared(e.origin);
-        s < n && (n = s, t = i);
+        let distanceToSquared = this.hitPoint.distanceToSquared(e.origin);
+        distanceToSquared < n && (n = distanceToSquared, t = i);
       }), t < 0 ? null : {
         blockIndex: t,
         minute: this.blocks[t].start * 5
@@ -661,18 +661,18 @@ var Et = class {
         h = u(null),
         g = u(false),
         _ = n([]),
-        x = [],
+        emptyItems = [],
         S = null,
         C = null,
         T = null,
         E = null,
         O = false,
-        k = null,
+        payload = null,
         ee = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
         te = new N(),
         ne = new N();
       function re(e, t) {
-        x[t] = e instanceof HTMLElement ? e : null;
+        emptyItems[t] = e instanceof HTMLElement ? e : null;
       }
       function ie(e) {
         if (!S || !E || !s.following || s.overview || S.isCameraTweening) return E?.reset(), false;
@@ -689,8 +689,8 @@ var Et = class {
         let clientWidth = e.clientWidth,
           clientHeight = e.clientHeight,
           i = C;
-        _.value.forEach((e, a) => {
-          ne.set(i.minuteToX(e * 60), 0, 10), ae(x[a] ?? null, t.project(ne, clientWidth, clientHeight));
+        _.value.forEach((item, a) => {
+          ne.set(i.minuteToX(item * 60), 0, 10), ae(emptyItems[a] ?? null, t.project(ne, clientWidth, clientHeight));
         });
         let a = t.project(C.anchorAt(s.minute, te), clientWidth, clientHeight);
         ae(h.value, {
@@ -703,7 +703,7 @@ var Et = class {
         S && e && S.resize(e.clientWidth, e.clientHeight) && (O ? s.following && !s.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
       }
       function ce(event) {
-        g.value = true, k = {
+        g.value = true, payload = {
           x: event.clientX,
           y: event.clientY
         };
@@ -712,9 +712,9 @@ var Et = class {
         g.value = false;
       }
       function le(event) {
-        if (!k || !S || !C) return;
-        let t = Math.hypot(event.clientX - k.x, event.clientY - k.y);
-        if (k = null, t > Ot) return;
+        if (!payload || !S || !C) return;
+        let t = Math.hypot(event.clientX - payload.x, event.clientY - payload.y);
+        if (payload = null, t > Ot) return;
         let n = C.pick(S.rayFromEvent(event));
         n && l(`seek`, n.minute);
       }
@@ -811,11 +811,11 @@ function At() {
     }];
   }
   function i(state, r, i) {
-    return state.top.map(e => ({
-      key: e.value,
-      name: n(r, e.value),
-      color: i[e.value] ?? `#999999`,
-      duration: t(e.activeSec)
+    return state.top.map(item => ({
+      key: item.value,
+      name: n(r, item.value),
+      color: i[item.value] ?? `#999999`,
+      duration: t(item.activeSec)
     }));
   }
   return {
@@ -883,15 +883,15 @@ var jt = {
     setup(event, {
       emit: n
     }) {
-      let o = event,
+      let eventAlias = event,
         s = n,
         {
           t: c,
           summaryItems: l,
           topItems: u
         } = At(),
-        f = x(() => l(o.summary, o.street)),
-        m = x(() => u(o.summary, o.street, o.colors));
+        f = x(() => l(eventAlias.summary, eventAlias.street)),
+        m = x(() => u(eventAlias.summary, eventAlias.street, eventAlias.colors));
       return (n, o) => (p(), i(`div`, jt, [w(`div`, Mt, [w(`h3`, Nt, y(t(c)(`dayReplay.summaryTitle`)), 1), w(`span`, Pt, y(event.dateLabel), 1)]), w(`div`, Ft, [(p(true), i(d, null, a(f.value, state => (p(), i(`div`, {
         key: state.label,
         class: `min-w-0`
@@ -937,67 +937,67 @@ function nn(e) {
 }
 function rn(e) {
   if (!e.screenshotPath || e.screenshotExists === false) return null;
-  let t = e.screenshotPath.trim();
-  if (!t.startsWith(`[`)) return t;
+  let trimmed = e.screenshotPath.trim();
+  if (!trimmed.startsWith(`[`)) return trimmed;
   try {
-    let e = JSON.parse(t);
-    return Array.isArray(e) && typeof e[0] == `string` ? e[0] : null;
+    let parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) && typeof parsed[0] == `string` ? parsed[0] : null;
   } catch {
     return null;
   }
 }
 function an(e, items) {
-  let n = tn(e).getTime();
-  return items.map(e => {
-    let t = nn((Date.parse(e.startedAt) - n) / 6e4),
-      r = nn((Date.parse(e.endedAt) - n) / 6e4);
+  let time = tn(e).getTime();
+  return items.map(item => {
+    let t = nn((Date.parse(item.startedAt) - time) / 6e4),
+      r = nn((Date.parse(item.endedAt) - time) / 6e4);
     return {
-      id: e.id,
+      id: item.id,
       startMinute: Math.min(t, r),
       endMinute: Math.max(t, r),
-      summary: e.summary.trim(),
-      category: e.category,
-      screenshotPath: rn(e)
+      summary: item.summary.trim(),
+      category: item.category,
+      screenshotPath: rn(item)
     };
-  }).filter(e => Number.isFinite(e.startMinute) && e.summary).sort((e, t) => e.startMinute - t.startMinute || e.endMinute - t.endMinute);
+  }).filter(item => Number.isFinite(item.startMinute) && item.summary).sort((left, right) => left.startMinute - right.startMinute || left.endMinute - right.endMinute);
 }
 function on(e, t, items) {
-  let r = t.days[0]?.cells ?? [],
-    i = new Uint8Array(Kt);
-  r.forEach((e, t) => {
-    e !== -1 && (i[t] = 1);
+  let fallbackValue = t.days[0]?.cells ?? [],
+    uint8Array = new Uint8Array(Kt);
+  fallbackValue.forEach((item, t) => {
+    item !== -1 && (uint8Array[t] = 1);
   });
-  for (let e of items) {
-    let t = Math.floor(e.startMinute / Z),
-      n = Math.max(t + 1, Math.ceil(Math.max(e.endMinute, e.startMinute + Qt) / Z));
-    i.fill(1, Math.min(Kt - 1, t), Math.min(Kt, n));
+  for (let count of items) {
+    let t = Math.floor(count.startMinute / Z),
+      n = Math.max(t + 1, Math.ceil(Math.max(count.endMinute, count.startMinute + Qt) / Z));
+    uint8Array.fill(1, Math.min(Kt - 1, t), Math.min(Kt, n));
   }
-  let a = i.indexOf(1);
+  let a = uint8Array.indexOf(1);
   if (a < 0) return null;
-  let o = i.lastIndexOf(1),
+  let lastIndexOf = uint8Array.lastIndexOf(1),
     s = Math.floor(a / $t) * $t,
-    c = Math.min(Kt, Math.ceil((o + 1) / $t) * $t);
+    c = Math.min(Kt, Math.ceil((lastIndexOf + 1) / $t) * $t);
   c - s < en && (c = Math.min(Kt, s + en), s = Math.max(0, c - en));
   let l = c - s,
     u = new Float32Array(l).fill(1),
     d = -1;
   for (let e = 0; e <= l; e += 1) {
-    let t = e < l && !i[s + e];
+    let t = e < l && !uint8Array[s + e];
     t && d < 0 && (d = e), !t && d >= 0 && (e - d >= qt && u.fill(Jt, d, e), d = -1);
   }
-  let f = new Float64Array(l + 1);
-  for (let e = 0; e < l; e += 1) f[e + 1] = f[e] + u[e];
-  let p = Math.min(Zt, Math.max(Xt, f[l] * Yt));
+  let float64Array = new Float64Array(l + 1);
+  for (let e = 0; e < l; e += 1) float64Array[e + 1] = float64Array[e] + u[e];
+  let p = Math.min(Zt, Math.max(Xt, float64Array[l] * Yt));
   return {
     date: e,
     street: t,
     records: items,
     startBucket: s,
     endBucket: c,
-    cumulative: f,
+    cumulative: float64Array,
     weights: u,
     durationMs: p,
-    hasScreenshots: items.some(e => e.screenshotPath),
+    hasScreenshots: items.some(item => item.screenshotPath),
     frames: hn(items)
   };
 }
@@ -1006,8 +1006,8 @@ function sn(e, t) {
       cumulative: n,
       startBucket: r
     } = e,
-    i = n[n.length - 1] || 1,
-    a = Math.min(1, Math.max(0, t)) * i,
+    fallbackValue = n[n.length - 1] || 1,
+    a = Math.min(1, Math.max(0, t)) * fallbackValue,
     o = 0,
     s = n.length - 2;
   for (; o < s;) {
@@ -1051,31 +1051,31 @@ function dn(e, t) {
 var fn = 60,
   pn = /XHD\d{8}(\d{2})(\d{2})(\d{2})/;
 function mn(e, text) {
-  let n = text.split(/[\\/]/).pop() ?? ``,
-    r = pn.exec(n);
+  let fallbackValue = text.split(/[\\/]/).pop() ?? ``,
+    r = pn.exec(fallbackValue);
   return r ? Number(r[1]) * 60 + Number(r[2]) + Number(r[3]) / 60 : e.endMinute;
 }
 function hn(e) {
   let t = new Set(),
-    n = [];
-  for (let r of e) {
-    let screenshotPath = r.screenshotPath;
-    screenshotPath && !t.has(screenshotPath) && (t.add(screenshotPath), n.push({
-      minute: mn(r, screenshotPath),
+    emptyItems = [];
+  for (let total of e) {
+    let screenshotPath = total.screenshotPath;
+    screenshotPath && !t.has(screenshotPath) && (t.add(screenshotPath), emptyItems.push({
+      minute: mn(total, screenshotPath),
       path: screenshotPath
     }));
   }
-  return n.sort((e, t) => e.minute - t.minute);
+  return emptyItems.sort((left, right) => left.minute - right.minute);
 }
-function gn(e, t) {
+function gn(count, t) {
   let n = 0,
-    r = e.length - 1,
+    r = count.length - 1,
     i = -1;
   for (; n <= r;) {
     let a = n + r >> 1;
-    e[a].minute <= t ? (i = a, n = a + 1) : r = a - 1;
+    count[a].minute <= t ? (i = a, n = a + 1) : r = a - 1;
   }
-  return i < 0 || t - e[i].minute > fn ? -1 : i;
+  return i < 0 || t - count[i].minute > fn ? -1 : i;
 }
 function _n(e, t) {
   let n = Math.min(Kt - 1, Math.max(0, Math.floor(t / Z)));
@@ -1083,27 +1083,27 @@ function _n(e, t) {
 }
 function vn(e) {
   let t = e.street.days[0],
-    n = t?.cells ?? [],
-    r = null,
-    i = null,
-    a = null;
-  for (let e of M(n)) {
-    if (e.value < 0) continue;
-    r === null && (r = e.start * Z), i = e.end * Z;
-    let t = (e.end - e.start) * Z;
-    (!a || t > a.minutes) && (a = {
-      value: e.value,
+    fallbackValue = t?.cells ?? [],
+    total = null,
+    diff = null,
+    payload = null;
+  for (let count of M(fallbackValue)) {
+    if (count.value < 0) continue;
+    total === null && (total = count.start * Z), diff = count.end * Z;
+    let t = (count.end - count.start) * Z;
+    (!payload || t > payload.minutes) && (payload = {
+      value: count.value,
       minutes: t
     });
   }
   return {
     activeSec: t?.activeSec ?? 0,
-    firstMinute: r,
-    lastMinute: i,
-    longest: a,
-    top: e.street.series.map((e, t) => ({
+    firstMinute: total,
+    lastMinute: diff,
+    longest: payload,
+    top: e.street.series.map((item, t) => ({
       value: t,
-      activeSec: e.activeSec
+      activeSec: item.activeSec
     })).slice(0, 3),
     recordCount: e.records.length
   };
@@ -1111,21 +1111,21 @@ function vn(e) {
 function yn(e, t, r) {
   let i = n(e()),
     a = 0,
-    s = null;
+    count = null;
   function c() {
-    s && clearTimeout(s), s = null, i.value = e(), a = performance.now();
+    count && clearTimeout(count), count = null, i.value = e(), a = performance.now();
   }
   return o(e, e => {
     if (Object.is(e, i.value)) {
-      s && clearTimeout(s), s = null;
+      count && clearTimeout(count), count = null;
       return;
     }
     let n = r() ? 0 : t - (performance.now() - a);
-    n <= 0 ? c() : s ||= setTimeout(c, n);
+    n <= 0 ? c() : count ||= setTimeout(c, n);
   }), o(r, e => {
-    e && s && c();
+    e && count && c();
   }), v(() => {
-    s && clearTimeout(s), s = null;
+    count && clearTimeout(count), count = null;
   }), i;
 }
 var bn = 100,
@@ -1187,33 +1187,33 @@ function Dn() {
   let e = u(0),
     t = u(0),
     n = u(0),
-    r = [],
-    i = [],
+    emptyItems = [],
+    diff = [],
     a = new Map(),
     o = new Set(),
     s = 0,
     c = false;
   function l() {
-    for (let e of a.values()) e.close();
+    for (let count of a.values()) count.close();
     a.clear(), o.clear();
   }
   async function d(items) {
     let o = ++s;
-    l(), r = items, i = Array(items.length), e.value = items.length, t.value = 0;
+    l(), emptyItems = items, diff = Array(items.length), e.value = items.length, t.value = 0;
     for (let e = 0; e < items.length; e += Cn) {
-      let r = items.slice(e, e + Cn),
+      let part = items.slice(e, e + Cn),
         l;
       try {
-        l = await Ie.thumbnails(r.map(e => e.path));
+        l = await Ie.thumbnails(part.map(item => item.path));
       } catch (e) {
-        console.warn(`[DayReplay] 截图缩略图读取失败:`, e), l = r.map(() => null);
+        console.warn(`[DayReplay] 截图缩略图读取失败:`, e), l = part.map(() => null);
       }
       if (c || o !== s) return;
-      l.forEach((t, n) => {
-        i[e + n] = t ? new Blob([t], {
+      l.forEach((item, n) => {
+        diff[e + n] = item ? new Blob([item], {
           type: `image/jpeg`
         }) : null;
-      }), t.value = e + r.length, n.value += 1;
+      }), t.value = e + part.length, n.value += 1;
     }
   }
   function f(e) {
@@ -1229,22 +1229,22 @@ function Dn() {
   }
   function m(e) {
     if (a.has(e) || o.has(e)) return;
-    let t = i[e];
+    let t = diff[e];
     if (!t) return;
     let r = s;
-    o.add(e), createImageBitmap(t).then(t => {
+    o.add(e), createImageBitmap(t).then(result => {
       if (o.delete(e), c || r !== s) {
-        t.close();
+        result.close();
         return;
       }
-      a.set(e, t), p(), n.value += 1;
+      a.set(e, result), p(), n.value += 1;
     }).catch(() => {
-      o.delete(e), !(c || r !== s) && (i[e] = null, n.value += 1);
+      o.delete(e), !(c || r !== s) && (diff[e] = null, n.value += 1);
     });
   }
   function h(e) {
-    if (e < 0 || e >= r.length) return null;
-    let t = Math.min(r.length, e + Tn);
+    if (e < 0 || e >= emptyItems.length) return null;
+    let t = Math.min(emptyItems.length, e + Tn);
     for (let n = e; n < t; n += 1) m(n);
     for (let t = e; t >= 0 && t > e - En; --t) {
       let e = a.get(t);
@@ -1253,10 +1253,10 @@ function Dn() {
     return null;
   }
   function g(e) {
-    return i[e] instanceof Blob;
+    return diff[e] instanceof Blob;
   }
   return v(() => {
-    c = true, s += 1, l(), i = [];
+    c = true, s += 1, l(), diff = [];
   }), {
     total: e,
     loaded: t,
@@ -1306,39 +1306,39 @@ function Hn(e, t) {
 }
 var Un = /[⺀-鿿　-〿＀-￯]/;
 function Wn(e, items, n, r) {
-  let i = items.match(/[⺀-鿿　-〿＀-￯]|[^\s⺀-鿿　-〿＀-￯]+|\s+/g) ?? [],
-    a = [],
+  let fallbackValue = items.match(/[⺀-鿿　-〿＀-￯]|[^\s⺀-鿿　-〿＀-￯]+|\s+/g) ?? [],
+    emptyItems = [],
     o = ``,
     s = false,
-    c = () => {
-      a.push(o.trimEnd()), o = ``;
+    handler = () => {
+      emptyItems.push(o.trimEnd()), o = ``;
     };
-  for (let t of i) if (!/^\s+$/.test(t) || o) {
-    if (e.measureText(o + t).width <= n) {
-      o += t;
+  for (let count of fallbackValue) if (!/^\s+$/.test(count) || o) {
+    if (e.measureText(o + count).width <= n) {
+      o += count;
       continue;
     }
-    if (o && c(), a.length >= r) {
+    if (o && handler(), emptyItems.length >= r) {
       s = true;
       break;
     }
-    if (!Un.test(t) && e.measureText(t).width > n) {
-      for (let i of t) {
-        if (e.measureText(o + i).width > n && o && (c(), a.length >= r)) {
+    if (!Un.test(count) && e.measureText(count).width > n) {
+      for (let diff of count) {
+        if (e.measureText(o + diff).width > n && o && (handler(), emptyItems.length >= r)) {
           s = true;
           break;
         }
-        o += i;
+        o += diff;
       }
       if (s) break;
-    } else o = t.trimStart();
+    } else o = count.trimStart();
   }
-  if (!s && o && (a.length >= r ? s = true : c()), s && a.length > 0) {
-    let t = a[a.length - 1];
+  if (!s && o && (emptyItems.length >= r ? s = true : handler()), s && emptyItems.length > 0) {
+    let t = emptyItems[emptyItems.length - 1];
     for (; t && e.measureText(`${t}…`).width > n;) t = t.slice(0, -1);
-    a[a.length - 1] = `${t}…`;
+    emptyItems[emptyItems.length - 1] = `${t}…`;
   }
-  return a.slice(0, r);
+  return emptyItems.slice(0, r);
 }
 function Gn(e, t, n, r, i, a) {
   e.save(), e.beginPath(), e.roundRect(n, r, i, i, a), e.clip(), e.drawImage(t, n, r, i, i), e.restore();
@@ -1423,9 +1423,9 @@ function Zn(e, t, n) {
   } = n;
   e.textAlign = `center`, e.textBaseline = `top`, e.font = `12px ${i}`, e.fillStyle = r.textMuted;
   let o = t.record?.category ? a.categoryLabel?.(t.record.category) ?? t.record.category : ``,
-    s = [t.clock, o, t.fastForward ? a.fastForward : ``].filter(Boolean).join(` · `);
-  e.fillText(s, Q / 2, kn), t.record && (e.font = `15px ${i}`, e.fillStyle = r.textPrimary, Wn(e, t.record.summary, An, 2).forEach((t, n) => {
-    e.fillText(t, Q / 2, 554 + n * jn);
+    joined = [t.clock, o, t.fastForward ? a.fastForward : ``].filter(Boolean).join(` · `);
+  e.fillText(joined, Q / 2, kn), t.record && (e.font = `15px ${i}`, e.fillStyle = r.textPrimary, Wn(e, t.record.summary, An, 2).forEach((item, n) => {
+    e.fillText(item, Q / 2, 554 + n * jn);
   }));
 }
 function Qn(e, t, n) {
@@ -1448,15 +1448,15 @@ function $n(e, state, n) {
     o = a.topItems.length,
     s = (o > 0 ? 210 : 176) + o * 26,
     c = 56 + Math.max(12, (464 - s) / 2);
-  if (e.save(), e.globalAlpha = state * .78, e.fillStyle = r.surface, e.fillRect(0, 56, Q, 464), e.globalAlpha = state, e.fillStyle = r.dark ? `#1b1f23` : `#ffffff`, e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath(), e.roundRect(380, c, 520, s, 12), e.fill(), e.stroke(), e.textBaseline = `alphabetic`, e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 16px ${i}`, e.fillText(a.summaryTitle, 408, c + 40), e.textAlign = `right`, e.fillStyle = r.textMuted, e.font = `13px ${i}`, e.fillText(a.dateLabel, 872, c + 40), a.summaryItems.slice(0, 4).forEach((t, n) => {
+  if (e.save(), e.globalAlpha = state * .78, e.fillStyle = r.surface, e.fillRect(0, 56, Q, 464), e.globalAlpha = state, e.fillStyle = r.dark ? `#1b1f23` : `#ffffff`, e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath(), e.roundRect(380, c, 520, s, 12), e.fill(), e.stroke(), e.textBaseline = `alphabetic`, e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 16px ${i}`, e.fillText(a.summaryTitle, 408, c + 40), e.textAlign = `right`, e.fillStyle = r.textMuted, e.font = `13px ${i}`, e.fillText(a.dateLabel, 872, c + 40), a.summaryItems.slice(0, 4).forEach((item, n) => {
     let a = 408 + n % 2 * 232,
       o = c + 82 + Math.floor(n / 2) * 52;
-    e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 20px ${i}`, e.fillText(t.value, a, o), e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(t.detail ? `${t.label} · ${t.detail}` : t.label, a, o + 20);
+    e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 20px ${i}`, e.fillText(item.value, a, o), e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(item.detail ? `${item.label} · ${item.detail}` : item.label, a, o + 20);
   }), o > 0) {
     let t = c + 196;
-    e.fillStyle = r.grid, e.fillRect(408, t - 22, 464, 1), e.textAlign = `left`, e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(a.topLabel, 408, t - 4), a.topItems.forEach((n, a) => {
+    e.fillStyle = r.grid, e.fillRect(408, t - 22, 464, 1), e.textAlign = `left`, e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(a.topLabel, 408, t - 4), a.topItems.forEach((item, a) => {
       let o = t + 18 + a * 26;
-      e.fillStyle = n.color, e.beginPath(), e.roundRect(408, o - 9, 10, 10, 3), e.fill(), e.textAlign = `left`, e.fillStyle = r.textSecondary, e.font = `13px ${i}`, e.fillText(n.name, 426, o), e.textAlign = `right`, e.fillStyle = r.textMuted, e.fillText(n.duration, 872, o);
+      e.fillStyle = item.color, e.beginPath(), e.roundRect(408, o - 9, 10, 10, 3), e.fill(), e.textAlign = `left`, e.fillStyle = r.textSecondary, e.font = `13px ${i}`, e.fillText(item.name, 426, o), e.textAlign = `right`, e.fillStyle = r.textMuted, e.fillText(item.duration, 872, o);
     });
   }
   e.restore();
@@ -1492,63 +1492,63 @@ var ir = class {
     decoding = new Map();
     shownIndex = -1;
     disposed = false;
-    constructor(e, t) {
-      this.frames = e, this.width = t;
+    constructor(constructor, constructorValue) {
+      this.frames = constructor, this.width = constructorValue;
     }
     async load(e, t) {
       let n = this.frames.length;
       for (let r = 0; r < n; r += tr) {
         if (e.aborted) throw rr();
-        let i = this.frames.slice(r, r + tr),
-          a;
+        let part = this.frames.slice(r, r + tr),
+          payload;
         try {
-          a = await Ie.thumbnails(i.map(e => e.path), this.width);
+          payload = await Ie.thumbnails(part.map(item => item.path), this.width);
         } catch (e) {
-          console.warn(`[DayReplay] 导出用截图读取失败:`, e), a = i.map(() => null);
+          console.warn(`[DayReplay] 导出用截图读取失败:`, e), payload = part.map(() => null);
         }
         if (e.aborted) throw rr();
-        a.forEach(e => {
-          this.blobs.push(e ? new Blob([e], {
+        payload.forEach(item => {
+          this.blobs.push(item ? new Blob([item], {
             type: `image/jpeg`
           }) : null);
-        }), t(Math.min(1, (r + i.length) / n));
+        }), t(Math.min(1, (r + part.length) / n));
       }
     }
-    decode(e) {
-      if (e < 0 || this.decoded.has(e)) return Promise.resolve();
-      let t = this.decoding.get(e);
+    decode(decode) {
+      if (decode < 0 || this.decoded.has(decode)) return Promise.resolve();
+      let t = this.decoding.get(decode);
       if (t) return t;
-      let n = this.blobs[e];
+      let n = this.blobs[decode];
       if (!n) return Promise.resolve();
-      let r = createImageBitmap(n).then(t => {
+      let r = createImageBitmap(n).then(result => {
         if (this.disposed) {
-          t.close();
+          result.close();
           return;
         }
-        this.decoded.set(e, t), this.evict();
+        this.decoded.set(decode, result), this.evict();
       }).catch(() => {
-        this.blobs[e] = null;
+        this.blobs[decode] = null;
       }).finally(() => {
-        this.decoding.delete(e);
+        this.decoding.delete(decode);
       });
-      return this.decoding.set(e, r), r;
+      return this.decoding.set(decode, r), r;
     }
-    imageFor(e) {
-      let t = this.decoded.get(e);
-      return t ? (this.shownIndex = e, t) : this.decoded.get(this.shownIndex) ?? null;
+    imageFor(image) {
+      let t = this.decoded.get(image);
+      return t ? (this.shownIndex = image, t) : this.decoded.get(this.shownIndex) ?? null;
     }
     lastShown() {
       return this.decoded.get(this.shownIndex) ?? null;
     }
     evict() {
-      for (let e of this.decoded.keys()) {
+      for (let count of this.decoded.keys()) {
         if (this.decoded.size <= nr) break;
-        e !== this.shownIndex && (this.decoded.get(e)?.close(), this.decoded.delete(e));
+        count !== this.shownIndex && (this.decoded.get(count)?.close(), this.decoded.delete(count));
       }
     }
     dispose() {
       this.disposed = true;
-      for (let e of this.decoded.values()) e.close();
+      for (let count of this.decoded.values()) count.close();
       this.decoded.clear(), this.blobs = [];
     }
   },
@@ -1583,14 +1583,14 @@ var ir = class {
   }],
   pr = class extends Error {
     code;
-    constructor(e) {
-      super(e), this.code = e;
+    constructor(constructor) {
+      super(constructor), this.code = constructor;
     }
   };
 function mr(e) {
   return new Promise(t => {
-    let n = new Image();
-    n.onload = () => t(n), n.onerror = () => t(null), n.src = e;
+    let image = new Image();
+    image.onload = () => t(image), image.onerror = () => t(null), image.src = e;
   });
 }
 function hr() {
@@ -1624,8 +1624,8 @@ async function vr(e, t, n) {
   await document.fonts?.ready;
   let l = o ? i.screenshots : `none`,
     u = Vn(l),
-    d = document.createElement(`canvas`),
-    f = R.create(d, 30, {}, {
+    element = document.createElement(`canvas`),
+    f = R.create(element, 30, {}, {
       manual: true,
       antialias: true
     });
@@ -1635,10 +1635,10 @@ async function vr(e, t, n) {
       endBucket: r.endBucket
     }),
     m = q(i.resolution),
-    h = document.createElement(`canvas`);
-  h.width = m.width, h.height = m.height;
-  let g = h.getContext(`2d`);
-  if (!g) throw p.dispose(), f.dispose(), o?.dispose(), new pr(`RECORDER_FAILED`);
+    elementResult = document.createElement(`canvas`);
+  elementResult.width = m.width, elementResult.height = m.height;
+  let context = elementResult.getContext(`2d`);
+  if (!context) throw p.dispose(), f.dispose(), o?.dispose(), new pr(`RECORDER_FAILED`);
   p.setColors(e.colors, e.theme), f.scene.add(p.root), f.setFraming(p.framing), f.resize(u.width, u.height, a), f.flyIn(false);
   let _ = new dt(f, p),
     v = {
@@ -1669,21 +1669,21 @@ async function vr(e, t, n) {
     D = -1 / 0,
     O = 0,
     k = 0,
-    ee = (e, t) => {
+    handler = (e, t) => {
       let n = gn(r.frames, t);
       return i.pace === `timelapse` ? n : (n !== E && e - D >= 1e3 && (E = n, D = e), E);
     };
   return {
-    canvas: h,
+    canvas: elementResult,
     renderAt: async (t, n) => {
       let i = Math.min(y, Math.max(0, t - 900)),
         a = sn(r, i / y),
-        s = null;
+        count = null;
       if (o) {
-        let e = ee(t, a);
-        n ? await o.decode(e) : o.decode(e), e >= 0 ? s = o.imageFor(e) : l === `corner` && (s = o.lastShown());
+        let e = handler(t, a);
+        n ? await o.decode(e) : o.decode(e), e >= 0 ? count = o.imageFor(e) : l === `corner` && (count = o.lastShown());
         let r = Math.max(0, t - k) / lr;
-        O = Math.min(1, Math.max(0, O + (e >= 0 && s ? r : -r)));
+        O = Math.min(1, Math.max(0, O + (e >= 0 && count ? r : -r)));
       }
       k = t, p.setPlayhead(a), t >= 900 && _.update(t, a), f.renderNow(t);
       let c = dn(r, a);
@@ -1698,15 +1698,15 @@ async function vr(e, t, n) {
         record: S,
         label: t >= 900 ? w : ``,
         labelPoint: f.project(p.anchorAt(a, b), u.width, u.height),
-        hourPoints: p.hourMarks.map(e => ({
-          text: `${e}:00`,
-          point: f.project(x.set(p.minuteToX(e * 60), 0, 10), u.width, u.height)
+        hourPoints: p.hourMarks.map(item => ({
+          text: `${item}:00`,
+          point: f.project(x.set(p.minuteToX(item * 60), 0, 10), u.width, u.height)
         })),
         endCard: Math.min(1, Math.max(0, (t - 900 - y) / or)),
-        screenshot: s,
+        screenshot: count,
         screenshotAlpha: l === `corner` ? O : 1
       };
-      er(g, d, E, v);
+      er(context, element, E, v);
     },
     dispose: () => {
       p.dispose(), f.dispose(), o?.dispose();
@@ -1715,9 +1715,9 @@ async function vr(e, t, n) {
 }
 async function yr(e, t, n, r, i) {
   if (typeof VideoEncoder > `u`) return null;
-  let a;
+  let payload;
   try {
-    a = await O(() => import(`./matrix-math.js`), __vite__mapDeps([0, 1, 2, 3, 4]), import.meta.url);
+    payload = await O(() => import(`./matrix-math.js`), __vite__mapDeps([0, 1, 2, 3, 4]), import.meta.url);
   } catch (e) {
     return console.warn(`[DayReplay] 视频封装模块加载失败，改用实时录制:`, e), null;
   }
@@ -1729,7 +1729,7 @@ async function yr(e, t, n, r, i) {
       Quality: u,
       WebMOutputFormat: d,
       getFirstEncodableVideoCodec: f
-    } = a,
+    } = payload,
     {
       frameRate: p
     } = t,
@@ -1779,23 +1779,23 @@ async function yr(e, t, n, r, i) {
   };
 }
 async function br(e, t, n, r, i) {
-  let a = typeof MediaRecorder > `u` ? null : fr.find(e => MediaRecorder.isTypeSupported(e.mimeType)) ?? null;
+  let a = typeof MediaRecorder > `u` ? null : fr.find(item => MediaRecorder.isTypeSupported(item.mimeType)) ?? null;
   if (!a) throw new pr(`UNSUPPORTED`);
   let o = Math.min(ar, t.frameRate);
   e.renderAt(0, false);
-  let s = e.canvas.captureStream(o),
-    c = new MediaRecorder(s, {
+  let stream = e.canvas.captureStream(o),
+    mediaRecorder = new MediaRecorder(stream, {
       mimeType: a.mimeType,
       videoBitsPerSecond: J(t)
     }),
-    l = [];
-  c.ondataavailable = e => {
-    e.data.size > 0 && l.push(e.data);
+    emptyItems = [];
+  mediaRecorder.ondataavailable = e => {
+    e.data.size > 0 && emptyItems.push(e.data);
   };
-  let u = new Promise((e, t) => {
-    c.onstop = () => e(), c.onerror = () => t(new pr(`RECORDER_FAILED`));
+  let promise = new Promise((e, t) => {
+    mediaRecorder.onstop = () => e(), mediaRecorder.onerror = () => t(new pr(`RECORDER_FAILED`));
   });
-  u.catch(() => undefined), c.start(1e3);
+  promise.catch(() => undefined), mediaRecorder.start(1e3);
   let d = 0,
     f = performance.now(),
     p = 0,
@@ -1803,8 +1803,8 @@ async function br(e, t, n, r, i) {
     h = null;
   try {
     return await new Promise((t, a) => {
-      let s = () => a(hr());
-      i.addEventListener(`abort`, s, {
+      let handler = () => a(hr());
+      i.addEventListener(`abort`, handler, {
         once: true
       });
       let l = a => {
@@ -1813,7 +1813,7 @@ async function br(e, t, n, r, i) {
             m = a;
             let o = Math.min(n, a - f);
             if (e.renderAt(o, false), r(o / n), o >= n) {
-              i.removeEventListener(`abort`, s), t();
+              i.removeEventListener(`abort`, handler), t();
               return;
             }
           }
@@ -1821,16 +1821,16 @@ async function br(e, t, n, r, i) {
         }
       };
       h = () => {
-        document.hidden ? !p && c.state === `recording` && (p = performance.now(), c.pause()) : p && (f += performance.now() - p, p = 0, c.resume(), d ||= requestAnimationFrame(l));
+        document.hidden ? !p && mediaRecorder.state === `recording` && (p = performance.now(), mediaRecorder.pause()) : p && (f += performance.now() - p, p = 0, mediaRecorder.resume(), d ||= requestAnimationFrame(l));
       }, document.addEventListener(`visibilitychange`, h), d = requestAnimationFrame(l);
-    }), c.stop(), await u, {
-      blob: new Blob(l, {
+    }), mediaRecorder.stop(), await promise, {
+      blob: new Blob(emptyItems, {
         type: a.mimeType.split(`;`)[0]
       }),
       extension: a.extension
     };
   } finally {
-    d && cancelAnimationFrame(d), h && document.removeEventListener(`visibilitychange`, h), c.state !== `inactive` && c.stop(), s.getTracks().forEach(e => e.stop());
+    d && cancelAnimationFrame(d), h && document.removeEventListener(`visibilitychange`, h), mediaRecorder.state !== `inactive` && mediaRecorder.stop(), stream.getTracks().forEach(item => item.stop());
   }
 }
 async function xr(e, t, n) {
@@ -1840,11 +1840,11 @@ async function xr(e, t, n) {
     } = e,
     a = r.screenshots !== `none` && i.frames.length > 0 ? ur : 0,
     o = await vr(e, n, e => t(e * a, `screenshots`)),
-    s = e => t(a + e * (1 - a), `encoding`);
+    handler = e => t(a + e * (1 - a), `encoding`);
   try {
     if (n.aborted) throw hr();
     let e = He(i.durationMs, r.speed);
-    return (await yr(o, r, e, s, n)) ?? (await br(o, r, e, s, n));
+    return (await yr(o, r, e, handler, n)) ?? (await br(o, r, e, handler, n));
   } finally {
     o.dispose();
   }
@@ -1998,7 +1998,7 @@ var Sr = [`aria-label`],
           dayLabel: k,
           cellName: se
         } = A(),
-        le = e => ue(e, O.value),
+        handler = e => ue(e, O.value),
         _e = pe(),
         be = x(() => he(_e.value)),
         M = Dn(),
@@ -2020,8 +2020,8 @@ var Sr = [`aria-label`],
         ke = x(() => Math.round(Ee.value * 100)),
         Ae = x(() => z.value && I.value ? Math.ceil(He(z.value.durationMs, I.value.speed) / 1e3) : 0),
         je = x(() => {
-          let e = I.value?.resolution ?? 1080;
-          return e === 1440 ? `2K` : `${e}p`;
+          let fallbackValue = I.value?.resolution ?? 1080;
+          return fallbackValue === 1440 ? `2K` : `${fallbackValue}p`;
         }),
         Me = u(null),
         Ne = u(true),
@@ -2078,12 +2078,12 @@ var Sr = [`aria-label`],
             })]),
             n = t;
           if (!ge(n)) {
-            let e = await xe.barcode({
+            let barcode = await xe.barcode({
               startDate: g.date,
               endDate: g.date,
               colorBy: `category`
             });
-            ge(e) && (n = e);
+            ge(barcode) && (n = barcode);
           }
           z.value = on(g.date, n, an(g.date, e)), z.value?.frames.length && M.load(z.value.frames);
         } catch (e) {
@@ -2133,19 +2133,19 @@ var Sr = [`aria-label`],
           n = K.value;
         if (!t || !n || F.value) return;
         W.pause();
-        let r = new AbortController();
-        Oe = r, F.value = true, Ee.value = 0, De.value = `encoding`, I.value = e, j(`feature_map_heat_click`, {
+        let abortController = new AbortController();
+        Oe = abortController, F.value = true, Ee.value = 0, De.value = `encoding`, I.value = e, j(`feature_map_heat_click`, {
           entry: `day_replay_export_start`,
           ...e
         });
         try {
-          let i = null;
+          let diff = null;
           if (we.value?.avatarUrl) {
-            let e = await window.electronAPI.fetchImageAsBase64(we.value.avatarUrl);
-            e.success && e.dataUrl && (i = e.dataUrl);
+            let imageAsBase64 = await window.electronAPI.fetchImageAsBase64(we.value.avatarUrl);
+            imageAsBase64.success && imageAsBase64.dataUrl && (diff = imageAsBase64.dataUrl);
           }
           let a = vn(t),
-            o = new Date().toLocaleDateString(undefined, {
+            replaced = new Date().toLocaleDateString(undefined, {
               year: `numeric`,
               month: `2-digit`,
               day: `2-digit`
@@ -2157,18 +2157,18 @@ var Sr = [`aria-label`],
               theme: be.value,
               fontFamily: getComputedStyle(document.body).fontFamily || `system-ui, sans-serif`,
               logoUrl: Se,
-              avatarDataUrl: i,
+              avatarDataUrl: diff,
               cellName: e => se(n, e),
               texts: {
                 title: D(`dayReplay.title`),
                 dateLabel: Ze.value,
                 brand: D(`heatMap.brandWatermark`),
                 footer: D(`heatMap.footerText`, {
-                  date: o
+                  date: replaced
                 }),
                 userName: we.value?.nickname,
                 fastForward: D(`dayReplay.fastForward`),
-                categoryLabel: le,
+                categoryLabel: handler,
                 noScreenshot: D(`dayReplay.noFrameNow`),
                 summaryTitle: D(`dayReplay.summaryTitle`),
                 summaryItems: Ce(a, n),
@@ -2177,18 +2177,18 @@ var Sr = [`aria-label`],
               }
             }, (e, t) => {
               Ee.value = e, De.value = t;
-            }, r.signal),
-            c = new Uint8Array(await s.blob.arrayBuffer()),
-            l = new Date(),
-            u = [l.getHours(), l.getMinutes(), l.getSeconds()].map(e => String(e).padStart(2, `0`)).join(``);
-          (await Ie.saveVideo(c, `${D(`dayReplay.videoFileName`)}_${g.date}_${u}`, s.extension)).cancelled || (ae(D(`dayReplay.exportSaved`)), j(`feature_map_heat_click`, {
+            }, abortController.signal),
+            uint8Array = new Uint8Array(await s.blob.arrayBuffer()),
+            date = new Date(),
+            joined = [date.getHours(), date.getMinutes(), date.getSeconds()].map(item => String(item).padStart(2, `0`)).join(``);
+          (await Ie.saveVideo(uint8Array, `${D(`dayReplay.videoFileName`)}_${g.date}_${joined}`, s.extension)).cancelled || (ae(D(`dayReplay.exportSaved`)), j(`feature_map_heat_click`, {
             entry: `day_replay_export_saved_${s.extension}`
           }));
         } catch (t) {
           if (t instanceof DOMException && t.name === `AbortError`) return;
           console.warn(`[DayReplay] 导出视频失败:`, t, e), oe(D(t instanceof pr && t.code === `UNSUPPORTED` ? `dayReplay.exportUnsupported` : `dayReplay.exportFailed`));
         } finally {
-          Oe === r && (Oe = null), F.value = false;
+          Oe === abortController && (Oe = null), F.value = false;
         }
       }
       function Y() {
@@ -2215,8 +2215,8 @@ var Sr = [`aria-label`],
           U.value = null;
           return;
         }
-        let t = M.bitmapAt(e);
-        (t || !M.isLoaded(e)) && (U.value = t);
+        let bitmapAt = M.bitmapAt(e);
+        (bitmapAt || !M.isLoaded(e)) && (U.value = bitmapAt);
       });
       function wt(e) {
         Le.value = e, e && (B.value = true), j(`feature_map_heat_click`, {
@@ -2341,7 +2341,7 @@ var Sr = [`aria-label`],
         default: s(() => [t(et) ? (p(), i(`p`, {
           key: t(et).id,
           class: `absolute inset-x-0 top-0 line-clamp-2 text-center text-sm leading-[22px] text-[#333] dark:text-foreground`
-        }, [t(et).category ? (p(), i(`span`, $r, y(le(t(et).category)) + ` · `, 1)) : C(``, true), r(y(t(et).summary), 1)])) : C(``, true)]),
+        }, [t(et).category ? (p(), i(`span`, $r, y(handler(t(et).category)) + ` · `, 1)) : C(``, true), r(y(t(et).summary), 1)])) : C(``, true)]),
         _: 1
       })])]), w(`div`, ei, [w(`button`, {
         type: `button`,

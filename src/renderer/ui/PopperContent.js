@@ -8,17 +8,17 @@ var R = F(`chevron-down`, [[`path`, {
   }]]),
   z = 0;
 function B() {
-  v(e => {
+  v(fn => {
     if (!r) return;
-    let t = document.querySelectorAll(`[data-reka-focus-guard]`);
-    document.body.insertAdjacentElement(`afterbegin`, t[0] ?? V()), document.body.insertAdjacentElement(`beforeend`, t[1] ?? V()), z++, e(() => {
-      z === 1 && document.querySelectorAll(`[data-reka-focus-guard]`).forEach(e => e.remove()), z--;
+    let selectorAll = document.querySelectorAll(`[data-reka-focus-guard]`);
+    document.body.insertAdjacentElement(`afterbegin`, selectorAll[0] ?? V()), document.body.insertAdjacentElement(`beforeend`, selectorAll[1] ?? V()), z++, fn(() => {
+      z === 1 && document.querySelectorAll(`[data-reka-focus-guard]`).forEach(item => item.remove()), z--;
     });
   });
 }
 function V() {
-  let e = document.createElement(`span`);
-  return e.setAttribute(`data-reka-focus-guard`, ``), e.tabIndex = 0, e.style.outline = `none`, e.style.opacity = `0`, e.style.position = `fixed`, e.style.pointerEvents = `none`, e;
+  let element = document.createElement(`span`);
+  return element.setAttribute(`data-reka-focus-guard`, ``), element.tabIndex = 0, element.style.outline = `none`, element.style.opacity = `0`, element.style.position = `fixed`, element.style.pointerEvents = `none`, element;
 }
 var [H, U] = m(`PopperRoot`),
   W = A({
@@ -107,8 +107,8 @@ function ee(e) {
     }
   };
 }
-function q(e) {
-  let [t, n = `center`] = e.split(`-`);
+function q(text) {
+  let [t, n = `center`] = text.split(`-`);
   return [t, n];
 }
 function J(e) {
@@ -121,8 +121,8 @@ function Y(e) {
   }
   return e;
 }
-function X(e) {
-  return typeof e == `function` ? e() : h(e);
+function X(fn) {
+  return typeof fn == `function` ? fn() : h(fn);
 }
 function te(e) {
   return {
@@ -146,7 +146,7 @@ function Q(e, t) {
 }
 function ne(e, t, n) {
   n === undefined && (n = {});
-  let r = n.whileElementsMounted,
+  let whileElementsMounted = n.whileElementsMounted,
     i = P(() => X(n.open) ?? true),
     a = P(() => X(n.middleware)),
     o = P(() => X(n.placement) ?? `bottom`),
@@ -161,16 +161,16 @@ function ne(e, t, n) {
     _ = g({}),
     v = E(false),
     y = P(() => {
-      let e = {
+      let options = {
         position: m.value,
         left: `0`,
         top: `0`
       };
-      if (!d.value) return e;
+      if (!d.value) return options;
       let t = Q(d.value, f.value),
         n = Q(d.value, p.value);
       return c.value ? {
-        ...e,
+        ...options,
         transform: `translate(` + t + `px, ` + n + `px)`,
         ...(Z(d.value) >= 1.5 && {
           willChange: `transform`
@@ -189,20 +189,20 @@ function ne(e, t, n) {
       middleware: a.value,
       placement: o.value,
       strategy: s.value
-    }).then(t => {
-      f.value = t.x, p.value = t.y, m.value = t.strategy, h.value = t.placement, _.value = t.middlewareData, v.value = e !== false;
+    }).then(result => {
+      f.value = result.x, p.value = result.y, m.value = result.strategy, h.value = result.placement, _.value = result.middlewareData, v.value = e !== false;
     });
   }
   function w() {
     typeof b == `function` && (b(), b = undefined);
   }
   function T() {
-    if (w(), r === undefined) {
+    if (w(), whileElementsMounted === undefined) {
       x();
       return;
     }
     if (l.value != null && d.value != null) {
-      b = r(l.value, d.value, x);
+      b = whileElementsMounted(l.value, d.value, x);
       return;
     }
   }

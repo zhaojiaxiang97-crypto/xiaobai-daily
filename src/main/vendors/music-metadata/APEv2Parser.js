@@ -404,9 +404,9 @@ var validFourCC = /^[\x21-\x7e©][\x20-\x7e\x00()]{3}/;
 var FourCcToken = {
   len: 4,
   get: (buf, off) => {
-    const id = textDecode(buf.subarray(off, off + FourCcToken.len), "latin1");
-    if (!id.match(validFourCC)) throw new FieldDecodingError(`FourCC contains invalid characters: ${a2hex(id)} "${id}"`);
-    return id;
+    const textDecodeResult = textDecode(buf.subarray(off, off + FourCcToken.len), "latin1");
+    if (!textDecodeResult.match(validFourCC)) throw new FieldDecodingError(`FourCC contains invalid characters: ${a2hex(textDecodeResult)} "${textDecodeResult}"`);
+    return textDecodeResult;
   },
   put: (buffer, offset, id) => {
     const str = textEncode(id, "latin1");
@@ -530,10 +530,10 @@ var APEv2Parser = class APEv2Parser extends BasicParser {
   * @param ah ApeHeader
   * @return {number} duration in seconds
   */
-  static calculateDuration(ah) {
-    let duration = ah.totalFrames > 1 ? ah.blocksPerFrame * (ah.totalFrames - 1) : 0;
-    duration += ah.finalFrameBlocks;
-    return duration / ah.sampleRate;
+  static calculateDuration(ulate) {
+    let duration = ulate.totalFrames > 1 ? ulate.blocksPerFrame * (ulate.totalFrames - 1) : 0;
+    duration += ulate.finalFrameBlocks;
+    return duration / ulate.sampleRate;
   }
   /**
   * Calculates the APEv1 / APEv2 first field offset

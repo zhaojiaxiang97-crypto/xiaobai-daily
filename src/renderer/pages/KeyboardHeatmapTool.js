@@ -170,34 +170,34 @@ var M = y(`hash`, [[`line`, {
           width: 1.5
         }],
         b = D.value ? `⇧` : `Shift`,
-        w = e => [...e].map(e => ({
-          label: e
+        handler = e => [...e].map(item => ({
+          label: item
         })),
-        T = [[...w("`1234567890-="), {
+        T = [[...handler("`1234567890-="), {
           label: `⌫`,
           width: 2
         }], [{
           label: `Tab`,
           width: 1.5
-        }, ...w(`QWERTYUIOP[]`), {
+        }, ...handler(`QWERTYUIOP[]`), {
           label: `\\`,
           width: 1.5
         }], [{
           label: `Caps`,
           width: 1.75
-        }, ...w(`ASDFGHJKL;'`), {
+        }, ...handler(`ASDFGHJKL;'`), {
           label: `Enter`,
           width: 2.25
         }], [{
           label: b,
           width: 2.25
-        }, ...w(`ZXCVBNM,./`), {
+        }, ...handler(`ZXCVBNM,./`), {
           label: b,
           width: 2.75
         }], y];
       function E(e) {
-        let t = _[e] ?? 0;
-        return t > 0 ? `var(--heatmap-${t})` : `var(--heatmap-empty)`;
+        let fallbackValue = _[e] ?? 0;
+        return fallbackValue > 0 ? `var(--heatmap-${fallbackValue})` : `var(--heatmap-empty)`;
       }
       let O = [{
         icon: M,

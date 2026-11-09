@@ -366,30 +366,30 @@ function kt(text, items) {
       lineStart: a,
       lineEnd: o
     } = Ot(n, r, i),
-    s = n.slice(a, o),
-    c = s.split(`
+    part = n.slice(a, o),
+    parts = part.split(`
 `),
     l = items.startsWith(`h`) ? Number(items.slice(1)) : 0,
     u = l ? RegExp(`^#{${l}}\\s+`) : null,
     d = items === `unordered-list` ? /^[-*+]\s+(?!\[[ xX]\]\s+)/ : items === `ordered-list` ? /^\d+[.)]\s+/ : items === `task-list` ? /^[-*+]\s+\[[ xX]\]\s+/ : null,
-    f = c.map(e => e.match(/^(\s*)(.*)$/)?.[2] || ``).filter(e => e.trim()),
-    p = f.length > 0 && f.every(e => u ? u.test(e) : d ? d.test(e) : items === `quote` && /^>\s?/.test(e)),
+    filtered = parts.map(item => item.match(/^(\s*)(.*)$/)?.[2] || ``).filter(item => item.trim()),
+    p = filtered.length > 0 && filtered.every(item => u ? u.test(item) : d ? d.test(item) : items === `quote` && /^>\s?/.test(item)),
     m = 1,
-    h = c.map(e => {
-      let n = e.match(/^(\s*)(.*)$/),
-        r = n?.[1] || ``,
+    joined = parts.map(item => {
+      let n = item.match(/^(\s*)(.*)$/),
+        fallbackValue = n?.[1] || ``,
         i = n?.[2] || ``;
-      if (!i.trim() && c.length > 1) return e;
+      if (!i.trim() && parts.length > 1) return item;
       let a = i;
-      return a = l ? a.replace(/^#{1,6}\s+/, ``) : items === `quote` ? a.replace(/^>\s?/, ``) : a.replace(/^(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)/, ``), p ? `${r}${a}` : l ? `${r}${`#`.repeat(l)} ${a}` : items === `unordered-list` ? `${r}- ${a}` : items === `task-list` ? `${r}- [ ] ${a}` : items === `quote` ? `${r}> ${a}` : `${r}${m++}. ${a}`;
+      return a = l ? a.replace(/^#{1,6}\s+/, ``) : items === `quote` ? a.replace(/^>\s?/, ``) : a.replace(/^(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)/, ``), p ? `${fallbackValue}${a}` : l ? `${fallbackValue}${`#`.repeat(l)} ${a}` : items === `unordered-list` ? `${fallbackValue}- ${a}` : items === `task-list` ? `${fallbackValue}- [ ] ${a}` : items === `quote` ? `${fallbackValue}> ${a}` : `${fallbackValue}${m++}. ${a}`;
     }).join(`
 `);
   if (r === i) {
-    let e = Math.max(a, Math.min(a + h.length, r + h.length - s.length));
+    let e = Math.max(a, Math.min(a + joined.length, r + joined.length - part.length));
     return {
       start: a,
       end: o,
-      replacement: h,
+      replacement: joined,
       selectionStart: e,
       selectionEnd: e
     };
@@ -397,9 +397,9 @@ function kt(text, items) {
   return {
     start: a,
     end: o,
-    replacement: h,
+    replacement: joined,
     selectionStart: a,
-    selectionEnd: a + h.length
+    selectionEnd: a + joined.length
   };
 }
 function At(e) {
@@ -411,10 +411,10 @@ function jt(items, t, n, r) {
     lineEnd: a
   } = Ot(items, t, t);
   if (n > a) return null;
-  let o = items.slice(i, a);
-  for (let e of o.matchAll(At(r))) {
-    let r = i + (e.index ?? 0),
-      a = r + e[0].length;
+  let part = items.slice(i, a);
+  for (let filePath of part.matchAll(At(r))) {
+    let r = i + (filePath.index ?? 0),
+      a = r + filePath[0].length;
     if (r <= t && n <= a) return {
       start: r,
       end: a
@@ -422,31 +422,31 @@ function jt(items, t, n, r) {
   }
   return null;
 }
-function Mt(e, t) {
+function Mt(count, t) {
   let {
       text: n,
       start: r,
       end: i
-    } = e,
-    a = n.slice(r, i);
-  if (t === `code` && a.includes(`
+    } = count,
+    part = n.slice(r, i);
+  if (t === `code` && part.includes(`
 `)) {
-    if (a.startsWith("```") && a.trimEnd().endsWith("```")) {
-      let e = a.replace(/^```[^\n]*\n?/, ``).replace(/\n?```\s*$/, ``);
+    if (part.startsWith("```") && part.trimEnd().endsWith("```")) {
+      let replaced = part.replace(/^```[^\n]*\n?/, ``).replace(/\n?```\s*$/, ``);
       return {
         start: r,
         end: i,
-        replacement: e,
+        replacement: replaced,
         selectionStart: r,
-        selectionEnd: r + e.length
+        selectionEnd: r + replaced.length
       };
     }
     return {
       start: r,
       end: i,
-      replacement: `\`\`\`\n${a.replace(/\n$/, ``)}\n\`\`\``,
+      replacement: `\`\`\`\n${part.replace(/\n$/, ``)}\n\`\`\``,
       selectionStart: r + 4,
-      selectionEnd: r + 4 + a.replace(/\n$/, ``).length
+      selectionEnd: r + 4 + part.replace(/\n$/, ``).length
     };
   }
   let o = Dt[t],
@@ -464,8 +464,8 @@ function Mt(e, t) {
       selectionEnd: s.start + l
     };
   }
-  if (a.length >= o.length * 2 && a.startsWith(o) && a.endsWith(o)) {
-    let e = a.slice(o.length, a.length - o.length);
+  if (part.length >= o.length * 2 && part.startsWith(o) && part.endsWith(o)) {
+    let e = part.slice(o.length, part.length - o.length);
     return {
       start: r,
       end: i,
@@ -477,9 +477,9 @@ function Mt(e, t) {
   return {
     start: r,
     end: i,
-    replacement: `${o}${a}${o}`,
+    replacement: `${o}${part}${o}`,
     selectionStart: r + o.length,
-    selectionEnd: r + o.length + a.length
+    selectionEnd: r + o.length + part.length
   };
 }
 function Nt(e) {
@@ -488,23 +488,23 @@ function Nt(e) {
       start: n,
       end: r
     } = e,
-    i = t.slice(n, r);
-  if (/^https?:\/\/\S+$/.test(i)) return {
+    part = t.slice(n, r);
+  if (/^https?:\/\/\S+$/.test(part)) return {
     start: n,
     end: r,
-    replacement: `[](${i})`,
+    replacement: `[](${part})`,
     selectionStart: n + 1,
     selectionEnd: n + 1
   };
-  let a = `[${i}](https://)`;
-  if (!i) return {
+  let a = `[${part}](https://)`;
+  if (!part) return {
     start: n,
     end: r,
     replacement: a,
     selectionStart: n + 1,
     selectionEnd: n + 1
   };
-  let o = n + i.length + 3;
+  let o = n + part.length + 3;
   return {
     start: n,
     end: r,
@@ -519,62 +519,62 @@ function Pt(items, t) {
       start: r,
       end: i
     } = items,
-    a = n.slice(r, i).includes(`
+    includesResult = n.slice(r, i).includes(`
 `),
     {
       lineStart: o,
       lineEnd: s
     } = Ot(n, r, i),
-    c = n.slice(o, s);
-  if (!t && !a && !Et.test(c)) return {
+    part = n.slice(o, s);
+  if (!t && !includesResult && !Et.test(part)) return {
     start: r,
     end: i,
     replacement: Tt,
     selectionStart: r + 2,
     selectionEnd: r + 2
   };
-  let l = n.slice(o, s).split(`
+  let parts = n.slice(o, s).split(`
 `),
     u = 0,
     d = 0,
-    f = l.map((e, n) => {
-      if (!t) return !e.trim() && l.length > 1 ? e : (n === 0 && (u = -2), d += 2, `${Tt}${e}`);
-      let i = e.startsWith(`	`) ? 1 : Math.min(2, e.length - e.trimStart().length);
-      return n === 0 && (u = Math.min(i, r - o)), d -= i, e.slice(i);
+    joined = parts.map((item, n) => {
+      if (!t) return !item.trim() && parts.length > 1 ? item : (n === 0 && (u = -2), d += 2, `${Tt}${item}`);
+      let i = item.startsWith(`	`) ? 1 : Math.min(2, item.length - item.trimStart().length);
+      return n === 0 && (u = Math.min(i, r - o)), d -= i, item.slice(i);
     }).join(`
 `);
-  return d === 0 ? null : a ? {
+  return d === 0 ? null : includesResult ? {
     start: o,
     end: s,
-    replacement: f,
+    replacement: joined,
     selectionStart: o,
-    selectionEnd: o + f.length
+    selectionEnd: o + joined.length
   } : {
     start: o,
     end: s,
-    replacement: f,
+    replacement: joined,
     selectionStart: Math.max(o, r - u),
     selectionEnd: Math.max(o, i + (t ? -u : 2))
   };
 }
-function Ft(e) {
+function Ft(count) {
   let {
     text: t,
     start: n,
     end: r
-  } = e;
+  } = count;
   if (n !== r) return null;
   let i = n === 0 ? 0 : t.lastIndexOf(`
 `, n - 1) + 1,
     a = t.indexOf(`
 `, n),
     o = a === -1 ? t.length : a,
-    s = t.slice(i, o),
+    part = t.slice(i, o),
     c = t.slice(i, n),
-    l = Et.exec(s);
+    l = Et.exec(part);
   if (l && c.length >= l[0].length) {
     let [e, t, a, c, u, d] = l;
-    if (!s.slice(e.length).trim() && n === o) {
+    if (!part.slice(e.length).trim() && n === o) {
       let e = t.includes(`>`) ? `${t.trimEnd()} ` : ``;
       return {
         start: i,
@@ -594,9 +594,9 @@ function Ft(e) {
       selectionEnd: n + p.length
     };
   }
-  let u = /^(\s*(?:>\s?)+)/.exec(s);
+  let u = /^(\s*(?:>\s?)+)/.exec(part);
   if (u && c.length >= u[1].length) {
-    if (!s.slice(u[1].length).trim() && n === o) return {
+    if (!part.slice(u[1].length).trim() && n === o) return {
       start: i,
       end: o,
       replacement: ``,
@@ -629,37 +629,37 @@ function Lt(e) {
 `, n - 1) + 1,
     o = t.indexOf(`
 `, a),
-    s = t.slice(a, o === -1 ? t.length : o).replace(/^\s+/, ``),
-    c = /^(#{1,3})\s/.exec(s);
-  c && i.add(`h${c[1].length}`), /^[-*+]\s+\[[ xX]\]\s/.test(s) ? i.add(`task-list`) : /^[-*+]\s/.test(s) && i.add(`unordered-list`), /^\d+[.)]\s/.test(s) && i.add(`ordered-list`), /^>/.test(s) && i.add(`quote`);
-  for (let e of [`bold`, `italic`, `strike`, `code`]) jt(t, n, r, e) && i.add(e);
+    replaced = t.slice(a, o === -1 ? t.length : o).replace(/^\s+/, ``),
+    c = /^(#{1,3})\s/.exec(replaced);
+  c && i.add(`h${c[1].length}`), /^[-*+]\s+\[[ xX]\]\s/.test(replaced) ? i.add(`task-list`) : /^[-*+]\s/.test(replaced) && i.add(`unordered-list`), /^\d+[.)]\s/.test(replaced) && i.add(`ordered-list`), /^>/.test(replaced) && i.add(`quote`);
+  for (let filePath of [`bold`, `italic`, `strike`, `code`]) jt(t, n, r, filePath) && i.add(filePath);
   return i;
 }
 var Rt = 6e4,
-  Y = text => new Set(text.split(/\s+/).filter(Boolean)),
-  X = Y(`true false null undefined nil None True False NaN Infinity`),
-  zt = Y(`
+  handler = text => new Set(text.split(/\s+/).filter(Boolean)),
+  X = handler(`true false null undefined nil None True False NaN Infinity`),
+  zt = handler(`
   async await break case catch class const continue debugger default delete do else enum export extends
   finally for from function get if implements import in instanceof interface let new of package private
   protected public readonly return set static super switch this throw try type typeof var void while with
   yield as declare keyof namespace abstract satisfies
 `),
-  Bt = Y(`
+  Bt = handler(`
   and as assert async await break class continue def del elif else except finally for from global if import
   in is lambda nonlocal not or pass raise return try while with yield match case self print
 `),
-  Vt = Y(`
+  Vt = handler(`
   if then else elif fi for in do done while until case esac function return export local readonly unset
   echo cd source alias sudo exit set shift trap eval exec cat grep sed awk curl wget npm npx pnpm yarn node
   git brew apt pip python python3 mkdir rm cp mv ls chmod chown touch
 `),
-  Z = Y(`
+  Z = handler(`
   select from where and or not insert into values update set delete create table alter drop index view
   join left right inner outer full on group by order having limit offset as distinct union all case when
   then else end is null like in between exists primary key foreign references default unique begin commit
   rollback transaction with returning desc asc count sum avg min max
 `),
-  Ht = Y(`
+  Ht = handler(`
   abstract break case catch class const continue default defer do else enum export extends extern final
   finally fn for func go goto if impl implements import in interface let loop match mod module mut namespace
   new package private protected pub public return select static struct super switch this throw throws
@@ -668,7 +668,7 @@ var Rt = 6e4,
   boolean string byte uint usize isize i32 i64 u32 u64 f32 f64 map chan range defer require include define
   echo function foreach elseif endif endforeach def end unless until module puts require_relative
 `),
-  Ut = Y(`important media import supports keyframes from to and not only screen print root`),
+  Ut = handler(`important media import supports keyframes from to and not only screen print root`),
   Wt = {
     lineComments: [`//`],
     blockComments: [[`/*`, `*/`]]
@@ -690,7 +690,7 @@ var Rt = 6e4,
     },
     shell: {
       keywords: Vt,
-      literals: Y(`true false`),
+      literals: handler(`true false`),
       lineComments: [`#`],
       blockComments: [],
       quotes: [`'`, `"`],
@@ -700,7 +700,7 @@ var Rt = 6e4,
     },
     sql: {
       keywords: Z,
-      literals: Y(`true false null`),
+      literals: handler(`true false null`),
       lineComments: [`--`],
       blockComments: [[`/*`, `*/`]],
       quotes: [`'`, `"`, "`"],
@@ -708,7 +708,7 @@ var Rt = 6e4,
     },
     json: {
       keywords: new Set(),
-      literals: Y(`true false null`),
+      literals: handler(`true false null`),
       lineComments: [`//`],
       blockComments: [[`/*`, `*/`]],
       quotes: [`"`],
@@ -814,11 +814,11 @@ var Rt = 6e4,
 function qt(text) {
   return Kt[text.trim().toLowerCase()] || null;
 }
-function Jt(e, t) {
+function Jt(count, t) {
   let n = qt(t);
-  return !n || e.length > Rt ? [{
-    text: e
-  }] : n === `markup` ? Qt(e) : n === `yaml` ? $t(e) : n === `diff` ? en(e) : Zt(e, Gt[n]);
+  return !n || count.length > Rt ? [{
+    text: count
+  }] : n === `markup` ? Qt(count) : n === `yaml` ? $t(count) : n === `diff` ? en(count) : Zt(count, Gt[n]);
 }
 var Yt = class {
   tokens = [];
@@ -844,17 +844,17 @@ var Yt = class {
     return this.flush(), this.tokens;
   }
 };
-function Xt(text, t, n) {
-  let r = t + n.length;
+function Xt(text, t, count) {
+  let r = t + count.length;
   for (; r < text.length;) {
     let t = text[r];
     if (t === `\\`) {
       r += 2;
       continue;
     }
-    if (text.startsWith(n, r)) return r + n.length;
+    if (text.startsWith(count, r)) return r + count.length;
     if (t === `
-` && n.length === 1 && n !== "`") return r;
+` && count.length === 1 && count !== "`") return r;
     r += 1;
   }
   return text.length;
@@ -866,14 +866,14 @@ function Zt(items, t) {
     let i = items[r],
       a = r > 0 ? items[r - 1] : `
 `,
-      o = t.blockComments.find(([t]) => items.startsWith(t, r));
-    if (o) {
-      let t = items.indexOf(o[1], r + o[0].length),
-        i = t < 0 ? items.length : t + o[1].length;
+      found = t.blockComments.find(([t]) => items.startsWith(t, r));
+    if (found) {
+      let t = items.indexOf(found[1], r + found[0].length),
+        i = t < 0 ? items.length : t + found[1].length;
       n.push(items.slice(r, i), `comment`), r = i;
       continue;
     }
-    let s = t.lineComments.find(t => items.startsWith(t, r));
+    let s = t.lineComments.find(item => items.startsWith(item, r));
     if (s && (!(t.hashNeedsBoundary && s === `#`) || /\s/.test(a))) {
       let t = items.indexOf(`
 `, r),
@@ -882,17 +882,17 @@ function Zt(items, t) {
       continue;
     }
     if (t.tripleQuotes && (items.startsWith(`"""`, r) || items.startsWith(`'''`, r))) {
-      let t = items.slice(r, r + 3),
-        i = items.indexOf(t, r + 3),
+      let part = items.slice(r, r + 3),
+        i = items.indexOf(part, r + 3),
         a = i < 0 ? items.length : i + 3;
       n.push(items.slice(r, a), `string`), r = a;
       continue;
     }
     if (t.quotes.includes(i) && !(i === `'` && t.apostropheInWords && /[A-Za-z0-9]/.test(a))) {
       let a = Xt(items, r, i),
-        o = items.slice(r, a),
+        part = items.slice(r, a),
         s = t.jsonKeys && /^\s*:/.test(items.slice(a, a + 20));
-      n.push(o, s ? `key` : `string`), r = a;
+      n.push(part, s ? `key` : `string`), r = a;
       continue;
     }
     if (t.shellVariables && i === `$`) {
@@ -915,8 +915,8 @@ function Zt(items, t) {
         let e = i[0];
         !t.shellVariables && t !== Gt.css && (e = e.replace(/-.*$/, ``));
         let a = t.caseInsensitive ? e.toLowerCase() : e,
-          o = a.replace(/^@/, ``);
-        t.literals.has(a) ? n.push(e, `literal`) : t.keywords.has(a) || t.keywords.has(o) ? n.push(e, `keyword`) : n.push(e), r += e.length;
+          replaced = a.replace(/^@/, ``);
+        t.literals.has(a) ? n.push(e, `literal`) : t.keywords.has(a) || t.keywords.has(replaced) ? n.push(e, `keyword`) : n.push(e), r += e.length;
         continue;
       }
     }
@@ -968,13 +968,13 @@ function $t(text) {
       a = /^(\s*(?:-\s+)?)([^\s:#][^:#]*?)(\s*[:=])(?=\s|$)/.exec(i),
       o = i;
     a ? (t.push(a[1]), t.push(a[2], `key`), t.push(a[3]), o = i.slice(a[0].length)) : /^\s*\[.*\]\s*$/.test(i) && (t.push(i, `meta`), o = ``);
-    for (let e of Zt(o, {
+    for (let filePath of Zt(o, {
       keywords: new Set(),
-      literals: Y(`true false null yes no on off ~`),
+      literals: handler(`true false null yes no on off ~`),
       lineComments: [],
       blockComments: [],
       quotes: [`'`, `"`]
-    })) t.push(e.text, e.type);
+    })) t.push(filePath.text, filePath.type);
     e && t.push(r.slice(e.index + e[1].length), `comment`);
   }
   return t.result();
@@ -986,7 +986,7 @@ function en(text) {
 `), /^(\+\+\+|---|diff |index )/.test(r) || r.startsWith(`@@`) ? t.push(r, `meta`) : r.startsWith(`+`) ? t.push(r, `addition`) : r.startsWith(`-`) ? t.push(r, `deletion`) : t.push(r);
   return t.result();
 }
-var tn = `a.abbr.b.blockquote.br.code.dd.del.details.div.dl.dt.em.figcaption.figure.h1.h2.h3.h4.h5.h6.hr.i.img.input.kbd.li.mark.ol.p.pre.s.small.span.strike.strong.sub.summary.sup.table.tbody.td.th.thead.tr.u.ul`.split(`.`),
+var parts = `a.abbr.b.blockquote.br.code.dd.del.details.div.dl.dt.em.figcaption.figure.h1.h2.h3.h4.h5.h6.hr.i.img.input.kbd.li.mark.ol.p.pre.s.small.span.strike.strong.sub.summary.sup.table.tbody.td.th.thead.tr.u.ul`.split(`.`),
   nn = [`align`, `alt`, `checked`, `class`, `colspan`, `disabled`, `href`, `id`, `open`, `rowspan`, `src`, `start`, `title`, `type`],
   rn = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="10" height="10" rx="2"></rect><path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path></svg>`,
   an = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 12 4 4 8-8"></path></svg>`,
@@ -997,18 +997,18 @@ function sn(text) {
 var cn = class {
   occurrences = new Map();
   slug(e) {
-    let t = sn(e) || `section`,
-      n = t;
+    let fallbackValue = sn(e) || `section`,
+      n = fallbackValue;
     for (; this.occurrences.has(n);) {
-      let e = (this.occurrences.get(t) ?? 0) + 1;
-      this.occurrences.set(t, e), n = `${t}-${e}`;
+      let e = (this.occurrences.get(fallbackValue) ?? 0) + 1;
+      this.occurrences.set(fallbackValue, e), n = `${fallbackValue}-${e}`;
     }
     return this.occurrences.set(n, 0), n;
   }
 };
-function ln(e) {
+function ln(count) {
   let t = 2166136261;
-  for (let n = 0; n < e.length; n += 1) t ^= e.charCodeAt(n), t = Math.imul(t, 16777619);
+  for (let n = 0; n < count.length; n += 1) t ^= count.charCodeAt(n), t = Math.imul(t, 16777619);
   return (t >>> 0).toString(36);
 }
 function un(e) {
@@ -1024,12 +1024,12 @@ function fn(items) {
 `, n + 1)) t.push(n + 1);
   return t;
 }
-function pn(e, t) {
+function pn(count, t) {
   let n = 0,
-    r = e.length - 1;
+    r = count.length - 1;
   for (; n < r;) {
     let i = n + r + 1 >> 1;
-    e[i] <= t ? n = i : r = i - 1;
+    count[i] <= t ? n = i : r = i - 1;
   }
   return n;
 }
@@ -1040,23 +1040,23 @@ function hn(e) {
   return /^data:image\/(png|jpeg|gif|webp|bmp);base64,/i.test(e);
 }
 function gn(text, t) {
-  let n = [],
+  let emptyItems = [],
     r = text.split(`
 `),
     i = 0,
-    a = null;
+    resolvedValue = null;
   for (let [e, o] of r.entries()) {
     let s = /^\s*(?:>\s?)*\s*(`{3,}|~{3,})/.exec(o);
     if (s) {
       let e = s[1][0];
-      a ? a === e && (a = null) : a = e;
-    } else if (!a) {
+      resolvedValue ? resolvedValue === e && (resolvedValue = null) : resolvedValue = e;
+    } else if (!resolvedValue) {
       let a = t(o, r[e + 1]);
-      a !== null && n.push(i + a);
+      a !== null && emptyItems.push(i + a);
     }
     i += o.length + 1;
   }
-  return n;
+  return emptyItems;
 }
 function _n(text) {
   return gn(text, (e, t) => /^\s{0,3}(?:>\s?)*\s{0,3}#{1,6}(?:\s|$)/.test(e) || /<h[1-6][\s>]/i.test(e) || e.trim() && t !== undefined && /^\s{0,3}(?:>\s?)*\s{0,3}(?:=+|-{2,})\s*$/.test(t) ? 0 : null);
@@ -1071,101 +1071,101 @@ function yn(e) {
 var bn = /\*\*(?=[^\s*])([^*\n]*?[^\s*])\*\*/g;
 function xn(el) {
   let ownerDocument = el.ownerDocument,
-    n = ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT),
-    r = [];
-  for (; n.nextNode();) {
-    let currentNode = n.currentNode;
-    currentNode.data.includes(`**`) && !currentNode.parentElement?.closest(`code, pre, kbd`) && r.push(currentNode);
+    treeWalker = ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT),
+    emptyItems = [];
+  for (; treeWalker.nextNode();) {
+    let currentNode = treeWalker.currentNode;
+    currentNode.data.includes(`**`) && !currentNode.parentElement?.closest(`code, pre, kbd`) && emptyItems.push(currentNode);
   }
-  for (let e of r) {
-    let n = e.data,
+  for (let filePath of emptyItems) {
+    let n = filePath.data,
       r = Array.from(n.matchAll(bn));
     if (!r.length) continue;
-    let i = ownerDocument.createDocumentFragment(),
+    let documentFragment = ownerDocument.createDocumentFragment(),
       a = 0;
     for (let e of r) {
-      let r = e.index ?? 0;
-      i.append(n.slice(a, r));
-      let o = ownerDocument.createElement(`strong`);
-      o.textContent = e[1], i.append(o), a = r + e[0].length;
+      let fallbackValue = e.index ?? 0;
+      documentFragment.append(n.slice(a, fallbackValue));
+      let element = ownerDocument.createElement(`strong`);
+      element.textContent = e[1], documentFragment.append(element), a = fallbackValue + e[0].length;
     }
-    i.append(n.slice(a)), e.replaceWith(i);
+    documentFragment.append(n.slice(a)), filePath.replaceWith(documentFragment);
   }
 }
 function Sn(el, t) {
   let ownerDocument = el.ownerDocument;
-  for (let r of Array.from(el.querySelectorAll(`pre > code`))) {
-    let parentElement = r.parentElement;
+  for (let count of Array.from(el.querySelectorAll(`pre > code`))) {
+    let parentElement = count.parentElement;
     if (!parentElement) continue;
-    let i = Array.from(r.classList).find(text => text.startsWith(`language-`))?.slice(9) || ``,
-      a = r.textContent || ``;
-    r.textContent = ``;
-    for (let e of Jt(a, i)) {
-      if (!e.type) {
-        r.append(e.text);
+    let fallbackValue = Array.from(count.classList).find(text => text.startsWith(`language-`))?.slice(9) || ``,
+      a = count.textContent || ``;
+    count.textContent = ``;
+    for (let filePath of Jt(a, fallbackValue)) {
+      if (!filePath.type) {
+        count.append(filePath.text);
         continue;
       }
-      let t = ownerDocument.createElement(`span`);
-      t.className = `hl-${e.type}`, t.textContent = e.text, r.append(t);
+      let element = ownerDocument.createElement(`span`);
+      element.className = `hl-${filePath.type}`, element.textContent = filePath.text, count.append(element);
     }
     parentElement.classList.add(`markdown-code-block`);
-    let o = ownerDocument.createElement(`div`);
-    o.className = `markdown-code-shell`;
-    let s = ownerDocument.createElement(`div`);
-    if (s.className = `markdown-code-toolbar`, i) {
+    let element = ownerDocument.createElement(`div`);
+    element.className = `markdown-code-shell`;
+    let elementResult = ownerDocument.createElement(`div`);
+    if (elementResult.className = `markdown-code-toolbar`, fallbackValue) {
       let e = ownerDocument.createElement(`span`);
-      e.className = `markdown-code-language`, e.textContent = i, s.append(e);
+      e.className = `markdown-code-language`, e.textContent = fallbackValue, elementResult.append(e);
     }
     let c = ownerDocument.createElement(`button`);
-    c.type = `button`, c.className = `markdown-copy-code`, c.setAttribute(`data-copy-code`, ``), c.title = t, c.setAttribute(`aria-label`, t), c.innerHTML = rn, s.append(c), parentElement.replaceWith(o), o.append(parentElement, s);
+    c.type = `button`, c.className = `markdown-copy-code`, c.setAttribute(`data-copy-code`, ``), c.title = t, c.setAttribute(`aria-label`, t), c.innerHTML = rn, elementResult.append(c), parentElement.replaceWith(element), element.append(parentElement, elementResult);
   }
 }
 function Cn(el, t, n) {
   let r = t.parser([el]),
-    i = me.sanitize(r, {
-      ALLOWED_TAGS: tn,
+    sanitize = me.sanitize(r, {
+      ALLOWED_TAGS: parts,
       ALLOWED_ATTR: nn,
       ALLOW_DATA_ATTR: false,
       ALLOW_UNKNOWN_PROTOCOLS: false
     }),
-    a = new DOMParser().parseFromString(`<body>${String(i)}</body>`, `text/html`),
-    body = a.body,
+    fromString = new DOMParser().parseFromString(`<body>${String(sanitize)}</body>`, `text/html`),
+    body = fromString.body,
     s = el.type === `heading` ? [0] : _n(el.raw),
-    c = [];
-  for (let [e, t] of Array.from(body.querySelectorAll(`h1, h2, h3, h4, h5, h6`)).entries()) t.removeAttribute(`id`), t.setAttribute(`data-heading-slot`, String(e)), c.push({
+    emptyItems = [];
+  for (let [e, t] of Array.from(body.querySelectorAll(`h1, h2, h3, h4, h5, h6`)).entries()) t.removeAttribute(`id`), t.setAttribute(`data-heading-slot`, String(e)), emptyItems.push({
     text: t.textContent?.trim() || ``,
     level: Number(t.tagName.slice(1)),
     offset: s[e] ?? 0
   });
-  for (let e of Array.from(body.querySelectorAll(`a`))) {
-    let t = e.getAttribute(`href`)?.trim() || ``;
-    if (!t || /^(javascript|vbscript|data|file):/i.test(t)) {
-      e.removeAttribute(`href`);
+  for (let filePath of Array.from(body.querySelectorAll(`a`))) {
+    let fallbackValue = filePath.getAttribute(`href`)?.trim() || ``;
+    if (!fallbackValue || /^(javascript|vbscript|data|file):/i.test(fallbackValue)) {
+      filePath.removeAttribute(`href`);
       continue;
     }
-    e.setAttribute(`rel`, `noreferrer noopener`);
+    filePath.setAttribute(`rel`, `noreferrer noopener`);
   }
-  for (let e of Array.from(body.querySelectorAll(`img`))) {
-    let t = e.getAttribute(`src`)?.trim() || ``;
-    if (e.classList.add(`markdown-image`), e.setAttribute(`decoding`, `async`), e.setAttribute(`referrerpolicy`, `no-referrer`), !(mn(t) || hn(t))) {
-      if (e.removeAttribute(`src`), !t || t.startsWith(`//`) || /^[a-z][a-z\d+.-]*:/i.test(t)) {
-        e.classList.add(`is-unavailable`);
+  for (let filePath of Array.from(body.querySelectorAll(`img`))) {
+    let fallbackValue = filePath.getAttribute(`src`)?.trim() || ``;
+    if (filePath.classList.add(`markdown-image`), filePath.setAttribute(`decoding`, `async`), filePath.setAttribute(`referrerpolicy`, `no-referrer`), !(mn(fallbackValue) || hn(fallbackValue))) {
+      if (filePath.removeAttribute(`src`), !fallbackValue || fallbackValue.startsWith(`//`) || /^[a-z][a-z\d+.-]*:/i.test(fallbackValue)) {
+        filePath.classList.add(`is-unavailable`);
         continue;
       }
-      e.setAttribute(`data-markdown-src`, t), e.classList.add(`is-loading`);
+      filePath.setAttribute(`data-markdown-src`, fallbackValue), filePath.classList.add(`is-loading`);
     }
   }
   let l = Array.from(body.querySelectorAll(`input[type="checkbox"]`)),
     u = yn(el.raw),
     d = l.length > 0 && l.length === u.length;
   for (let [e, t] of l.entries()) t.classList.add(`markdown-task-checkbox`), t.closest(`li`)?.classList.add(`markdown-task-item`), d ? (t.removeAttribute(`disabled`), t.setAttribute(`data-task-index`, String(e))) : t.setAttribute(`disabled`, ``);
-  for (let e of Array.from(body.querySelectorAll(`table`))) {
-    let t = a.createElement(`div`);
-    t.className = `markdown-table-wrap`, e.replaceWith(t), t.append(e);
+  for (let filePath of Array.from(body.querySelectorAll(`table`))) {
+    let element = fromString.createElement(`div`);
+    element.className = `markdown-table-wrap`, filePath.replaceWith(element), element.append(filePath);
   }
   return Sn(body, n.copyLabel), xn(body), {
     html: body.innerHTML,
-    headings: c,
+    headings: emptyItems,
     taskOffsets: d ? u : []
   };
 }
@@ -1179,24 +1179,24 @@ var wn = class {
     breaks: false
   });
   cache = new Map();
-  render(items, t) {
-    let n = t.softBreaks ? this.softParser : this.strictParser,
+  render(items, render) {
+    let n = render.softBreaks ? this.softParser : this.strictParser,
       r = n.lexer(items),
-      i = `${+!!t.softBreaks}null${t.copyLabel}null${JSON.stringify(r.links || {})}null`,
+      i = `${+!!render.softBreaks}null${render.copyLabel}null${JSON.stringify(r.links || {})}null`,
       a = fn(items),
       o = new cn(),
       s = new Map(),
       c = new Set(),
-      l = [],
+      emptyItems = [],
       u = [],
       d = 0;
     for (let f of r) {
-      let r = f.raw || ``,
-        p = items.startsWith(r, d) ? d : items.indexOf(r, d);
-      if (p < 0 && (p = d), d = p + r.length, f.type === `space` || f.type === `def` || !r.trim()) continue;
-      let m = i + r,
+      let fallbackValue = f.raw || ``,
+        p = items.startsWith(fallbackValue, d) ? d : items.indexOf(fallbackValue, d);
+      if (p < 0 && (p = d), d = p + fallbackValue.length, f.type === `space` || f.type === `def` || !fallbackValue.trim()) continue;
+      let m = i + fallbackValue,
         h = this.cache.get(m);
-      h || (h = Cn(f, n, t), this.cache.set(m, h)), c.add(m);
+      h || (h = Cn(f, n, render), this.cache.set(m, h)), c.add(m);
       let html = h.html;
       for (let [e, t] of h.headings.entries()) {
         let n = o.slug(t.text);
@@ -1207,19 +1207,19 @@ var wn = class {
           line: pn(a, p + t.offset)
         });
       }
-      let _ = ln(r),
+      let _ = ln(fallbackValue),
         ee = s.get(_) ?? 0;
-      s.set(_, ee + 1), l.push({
+      s.set(_, ee + 1), emptyItems.push({
         key: `${_}-${ee}`,
         html: html,
         line: pn(a, p),
         offset: p,
-        taskPositions: h.taskOffsets.map(e => p + e)
+        taskPositions: h.taskOffsets.map(item => p + item)
       });
     }
-    if (this.cache.size > c.size * 2 + 200) for (let e of Array.from(this.cache.keys())) c.has(e) || this.cache.delete(e);
+    if (this.cache.size > c.size * 2 + 200) for (let filePath of Array.from(this.cache.keys())) c.has(filePath) || this.cache.delete(filePath);
     return {
-      blocks: l,
+      blocks: emptyItems,
       headings: u
     };
   }
@@ -1229,23 +1229,23 @@ function Tn(el, t) {
   try {
     n = decodeURIComponent(t);
   } catch {}
-  for (let r of [t, n, sn(n)]) {
-    if (!r) continue;
-    let t = el.querySelector(`#${CSS.escape(r)}`);
-    if (t) return t;
+  for (let count of [t, n, sn(n)]) {
+    if (!count) continue;
+    let selector = el.querySelector(`#${CSS.escape(count)}`);
+    if (selector) return selector;
   }
   return null;
 }
-async function En(el, t) {
-  let body = new DOMParser().parseFromString(`<body>${el.map(e => e.html).join(`
+async function En(items, t) {
+  let body = new DOMParser().parseFromString(`<body>${items.map(item => item.html).join(`
 `)}</body>`, `text/html`).body;
-  for (let e of Array.from(body.querySelectorAll(`.markdown-code-toolbar`))) e.remove();
-  for (let e of Array.from(body.querySelectorAll(`input[type="checkbox"]`))) e.setAttribute(`disabled`, ``), e.removeAttribute(`data-task-index`);
-  return await Promise.all(Array.from(body.querySelectorAll(`img[data-markdown-src]`)).map(async e => {
-    let n = e.getAttribute(`data-markdown-src`) || ``;
-    e.removeAttribute(`data-markdown-src`), e.classList.remove(`is-loading`);
-    let r = n ? await t(n).catch(() => null) : null;
-    r ? e.setAttribute(`src`, r) : e.remove();
+  for (let filePath of Array.from(body.querySelectorAll(`.markdown-code-toolbar`))) filePath.remove();
+  for (let filePath of Array.from(body.querySelectorAll(`input[type="checkbox"]`))) filePath.setAttribute(`disabled`, ``), filePath.removeAttribute(`data-task-index`);
+  return await Promise.all(Array.from(body.querySelectorAll(`img[data-markdown-src]`)).map(async item => {
+    let fallbackValue = item.getAttribute(`data-markdown-src`) || ``;
+    item.removeAttribute(`data-markdown-src`), item.classList.remove(`is-loading`);
+    let r = fallbackValue ? await t(fallbackValue).catch(() => null) : null;
+    r ? item.setAttribute(`src`, r) : item.remove();
   })), body.innerHTML;
 }
 function Dn(e, t, n) {
@@ -1356,7 +1356,7 @@ body { margin: 0; background: #fff; }
       expose: t,
       emit: n
     }) {
-      let r = event,
+      let eventAlias = event,
         i = n,
         {
           t: a
@@ -1375,38 +1375,38 @@ body { margin: 0; background: #fff; }
         w = null,
         E = null,
         D = false,
-        O = M(() => fn(r.modelValue)),
+        O = M(() => fn(eventAlias.modelValue)),
         k = M(() => O.value.length),
         j = M(() => pn(O.value, b.value.start)),
         oe = M(() => `${Math.max(2, String(k.value).length) * 8 + 20}px`),
         F = M(() => Lt({
-          text: r.modelValue,
+          text: eventAlias.modelValue,
           start: b.value.start,
           end: b.value.end
         })),
         I = M(() => {
-          let e = r.findMatches || [];
-          if (!e.length) return [];
-          let modelValue = r.modelValue,
-            n = [],
+          let fallbackValue = eventAlias.findMatches || [];
+          if (!fallbackValue.length) return [];
+          let modelValue = eventAlias.modelValue,
+            emptyItems = [],
             i = 0;
-          for (let [a, o] of e.entries()) o.start < i || o.end > modelValue.length || (o.start > i && n.push({
+          for (let [a, o] of fallbackValue.entries()) o.start < i || o.end > modelValue.length || (o.start > i && emptyItems.push({
             text: modelValue.slice(i, o.start),
             mark: false,
             current: false
-          }), n.push({
+          }), emptyItems.push({
             text: modelValue.slice(o.start, o.end),
             mark: true,
-            current: a === r.findCurrent
+            current: a === eventAlias.findCurrent
           }), i = o.end);
-          return n.push({
+          return emptyItems.push({
             text: `${modelValue.slice(i)}null`,
             mark: false,
             current: false
-          }), n;
+          }), emptyItems;
         }),
         se = M(() => {
-          let modifierLabel = r.modifierLabel;
+          let modifierLabel = eventAlias.modifierLabel;
           return [[{
             key: `h1`,
             text: `H1`,
@@ -1461,20 +1461,20 @@ body { margin: 0; background: #fff; }
           }]];
         }),
         L = M(() => {
-          if (!r.lineNumbers) return [];
+          if (!eventAlias.lineNumbers) return [];
           let e = c.value,
             t = R(),
             n = l.value - Q - 200,
             i = l.value + p.value + 200,
-            a = [];
+            emptyItems = [];
           if (!e.length) {
             let e = Math.max(0, Math.floor(n / t)),
               r = Math.min(k.value - 1, Math.ceil(i / t));
-            for (let n = e; n <= r; n += 1) a.push({
+            for (let n = e; n <= r; n += 1) emptyItems.push({
               line: n,
               top: n * t + Q - l.value
             });
-            return a;
+            return emptyItems;
           }
           let o = 0,
             s = e.length - 1;
@@ -1482,11 +1482,11 @@ body { margin: 0; background: #fff; }
             let t = o + s >> 1;
             e[t] < n ? o = t + 1 : s = t;
           }
-          for (let t = Math.max(0, o - 1); t < e.length && e[t] <= i; t += 1) a.push({
+          for (let t = Math.max(0, o - 1); t < e.length && e[t] <= i; t += 1) emptyItems.push({
             line: t,
             top: e[t] + Q - l.value
           });
-          return a;
+          return emptyItems;
         });
       function R() {
         let e = o.value;
@@ -1495,7 +1495,7 @@ body { margin: 0; background: #fff; }
       function ce() {
         let e = o.value;
         return {
-          text: e?.value ?? r.modelValue,
+          text: e?.value ?? eventAlias.modelValue,
           start: e?.selectionStart ?? 0,
           end: e?.selectionEnd ?? 0
         };
@@ -1520,15 +1520,15 @@ body { margin: 0; background: #fff; }
       function he() {
         te.value && (te.value = false, pe());
       }
-      function ge(e) {
+      function ge(count) {
         let t = o.value;
-        if (!t || te.value || t.value === e) return;
+        if (!t || te.value || t.value === count) return;
         let {
           selectionStart: n,
           selectionEnd: r,
           scrollTop: i
         } = t;
-        t.value = e, t.setSelectionRange(Math.min(n, e.length), Math.min(r, e.length)), t.scrollTop = i, le();
+        t.value = count, t.setSelectionRange(Math.min(n, count.length), Math.min(r, count.length)), t.scrollTop = i, le();
       }
       function _e(e) {
         let t = o.value;
@@ -1541,12 +1541,12 @@ body { margin: 0; background: #fff; }
       }
       function B(e) {
         if (e.isComposing || e.keyCode === 229) return;
-        let t = e.metaKey || e.ctrlKey;
+        let fallbackValue = e.metaKey || e.ctrlKey;
         if (e.key === `Escape`) {
           D = true;
           return;
         }
-        if (e.key === `Tab` && !t && !e.altKey) {
+        if (e.key === `Tab` && !fallbackValue && !e.altKey) {
           if (D) {
             D = false;
             return;
@@ -1554,14 +1554,14 @@ body { margin: 0; background: #fff; }
           e.preventDefault(), _e(Pt(ce(), e.shiftKey));
           return;
         }
-        if (D = false, e.key === `Enter` && !t && !e.shiftKey && !e.altKey) {
+        if (D = false, e.key === `Enter` && !fallbackValue && !e.shiftKey && !e.altKey) {
           let t = Ft(ce());
           t && (e.preventDefault(), _e(t));
           return;
         }
-        if (!t || e.altKey) return;
-        let n = e.key.toLowerCase(),
-          r = n === `b` && !e.shiftKey ? `bold` : n === `i` && !e.shiftKey ? `italic` : n === `k` && !e.shiftKey ? `link` : n === `x` && e.shiftKey ? `strike` : null;
+        if (!fallbackValue || e.altKey) return;
+        let lowercased = e.key.toLowerCase(),
+          r = lowercased === `b` && !e.shiftKey ? `bold` : lowercased === `i` && !e.shiftKey ? `italic` : lowercased === `k` && !e.shiftKey ? `link` : lowercased === `x` && e.shiftKey ? `strike` : null;
         r && (e.preventDefault(), e.stopPropagation(), ve(r));
       }
       function be() {
@@ -1571,25 +1571,25 @@ body { margin: 0; background: #fff; }
       function xe() {
         let e = o.value,
           t = s.value;
-        if (p.value = e?.clientHeight ?? 0, e && (ee.value = `${e.clientWidth}px`), !e || !t || !(r.lineNumbers || r.measureLines)) return;
+        if (p.value = e?.clientHeight ?? 0, e && (ee.value = `${e.clientWidth}px`), !e || !t || !(eventAlias.lineNumbers || eventAlias.measureLines)) return;
         let n = e.value.split(`
 `);
         if (n.length > In) {
           c.value = [];
           return;
         }
-        let i = window.getComputedStyle(e),
-          a = e.clientWidth - Number.parseFloat(i.paddingLeft) - Number.parseFloat(i.paddingRight);
+        let computedStyle = window.getComputedStyle(e),
+          a = e.clientWidth - Number.parseFloat(computedStyle.paddingLeft) - Number.parseFloat(computedStyle.paddingRight);
         t.style.width = `${Math.max(0, a)}px`;
-        let l = document.createDocumentFragment();
-        for (let e of n) {
-          let t = document.createElement(`div`);
-          t.textContent = e || `​`, l.append(t);
+        let documentFragment = document.createDocumentFragment();
+        for (let filePath of n) {
+          let element = document.createElement(`div`);
+          element.textContent = filePath || `​`, documentFragment.append(element);
         }
-        t.replaceChildren(l);
-        let u = [];
-        for (let e of Array.from(t.children)) u.push(e.offsetTop);
-        t.replaceChildren(), c.value = u;
+        t.replaceChildren(documentFragment);
+        let emptyItems = [];
+        for (let filePath of Array.from(t.children)) emptyItems.push(filePath.offsetTop);
+        t.replaceChildren(), c.value = emptyItems;
       }
       function Se(e = false) {
         w !== null && (window.clearTimeout(w), w = null), w = window.setTimeout(() => {
@@ -1630,10 +1630,10 @@ body { margin: 0; background: #fff; }
       function V(e) {
         let t = o.value;
         if (!t) return;
-        let n = O.value[Math.min(Math.max(0, e), O.value.length - 1)] ?? 0;
+        let fallbackValue = O.value[Math.min(Math.max(0, e), O.value.length - 1)] ?? 0;
         t.focus({
           preventScroll: true
-        }), t.setSelectionRange(n, n), le(), (r.lineNumbers || r.measureLines) && xe(), Te(Math.max(0, we(e) - Q - 12));
+        }), t.setSelectionRange(fallbackValue, fallbackValue), le(), (eventAlias.lineNumbers || eventAlias.measureLines) && xe(), Te(Math.max(0, we(e) - Q - 12));
       }
       function H(e, t, n = true) {
         let r = o.value;
@@ -1648,13 +1648,13 @@ body { margin: 0; background: #fff; }
       function De() {
         !te.value && document.activeElement === o.value && le();
       }
-      return v(() => r.modelValue, (text, t) => {
+      return v(() => eventAlias.modelValue, (text, t) => {
         ge(text), Se(text.split(`
 `).length !== (t ?? ``).split(`
 `).length);
-      }), v(() => [r.lineNumbers, r.measureLines], () => ie(() => Se(true))), ae(() => {
+      }), v(() => [eventAlias.lineNumbers, eventAlias.measureLines], () => ie(() => Se(true))), ae(() => {
         let e = o.value;
-        e && (e.value = r.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
+        e && (e.value = eventAlias.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
       }), re(() => {
         E?.disconnect(), document.removeEventListener(`selectionchange`, De), w !== null && window.clearTimeout(w);
       }), t({
@@ -1686,8 +1686,8 @@ body { margin: 0; background: #fff; }
         })) : (T(), g(`span`, Mn, A(e.text), 1))]),
         _: 2
       }, 1032, [`label`, `shortcut`, `active`, `onClick`]))), 128))], 64))), 128))], 8, An), P(`div`, {
-        class: u([`relative flex min-h-0 min-w-0 flex-1`, r.lineNumbers ? `[--editor-pad-left:12px]` : `[--editor-pad-left:24px]`])
-      }, [r.lineNumbers ? (T(), g(`div`, {
+        class: u([`relative flex min-h-0 min-w-0 flex-1`, eventAlias.lineNumbers ? `[--editor-pad-left:12px]` : `[--editor-pad-left:24px]`])
+      }, [eventAlias.lineNumbers ? (T(), g(`div`, {
         key: 0,
         class: `relative shrink-0 select-none overflow-hidden text-xs tabular-nums text-muted-foreground/60`,
         style: ne({
@@ -1778,8 +1778,8 @@ body { margin: 0; background: #fff; }
       async function u() {
         let e = ++l;
         if (a.value?.token) try {
-          let t = await window.electronAPI.growth.summary(),
-            n = t?.available ? t.pet.mediaSlots?.timeline?.url : undefined,
+          let summary = await window.electronAPI.growth.summary(),
+            n = summary?.available ? summary.pet.mediaSlots?.timeline?.url : undefined,
             r = n ? await et(n, G) : G;
           c && e === l && (o.value = r);
         } catch {}
@@ -1840,7 +1840,7 @@ body { margin: 0; background: #fff; }
       expose: t,
       emit: n
     }) {
-      let r = event,
+      let eventAlias = event,
         i = n,
         {
           t: a
@@ -1859,7 +1859,7 @@ body { margin: 0; background: #fff; }
       function p() {
         s = false, c();
       }
-      v(() => r.query, e => {
+      v(() => eventAlias.query, e => {
         let t = o.value;
         t && !s && t.value !== e && (t.value = e);
       });
@@ -1872,7 +1872,7 @@ body { margin: 0; background: #fff; }
         });
       }
       return ae(() => {
-        o.value && (o.value.value = r.query), h();
+        o.value && (o.value.value = eventAlias.query), h();
       }), t({
         focus: h
       }), (e, t) => (T(), g(`div`, Kn, [D(d(We), {
@@ -1891,14 +1891,14 @@ body { margin: 0; background: #fff; }
         onBlur: t[1] ||= e => f(false),
         onKeydown: m
       }, null, 40, qn), P(`span`, {
-        class: u([`min-w-9 shrink-0 text-right text-xs tabular-nums`, r.query && !r.hasMatches ? `text-destructive` : `text-muted-foreground`])
-      }, A(r.summary), 3), t[5] ||= P(`span`, {
+        class: u([`min-w-9 shrink-0 text-right text-xs tabular-nums`, eventAlias.query && !eventAlias.hasMatches ? `text-destructive` : `text-muted-foreground`])
+      }, A(eventAlias.summary), 3), t[5] ||= P(`span`, {
         class: `mx-0.5 h-4 w-px bg-border`
       }, null, -1), D(wt, {
         size: `xs`,
         label: d(a)(`toolboxNative.markdownFindPrevious`),
         shortcut: `⇧Enter`,
-        disabled: !r.hasMatches,
+        disabled: !eventAlias.hasMatches,
         onClick: t[2] ||= e => i(`previous`)
       }, {
         default: y(() => [D(d(ge), {
@@ -1909,7 +1909,7 @@ body { margin: 0; background: #fff; }
         size: `xs`,
         label: d(a)(`toolboxNative.markdownFindNext`),
         shortcut: `Enter`,
-        disabled: !r.hasMatches,
+        disabled: !eventAlias.hasMatches,
         onClick: t[3] ||= e => i(`next`)
       }, {
         default: y(() => [D(d(he), {
@@ -1941,7 +1941,7 @@ function Qn(e, t) {
   let i = q.readAsset({
     documentPath: e,
     source: t
-  }).then(e => e.dataUrl);
+  }).then(result => result.dataUrl);
   if (i.catch(() => Yn.delete(n)), Yn.size >= Xn) {
     let e = Yn.keys().next().value;
     e !== undefined && Yn.delete(e);
@@ -1959,12 +1959,12 @@ function er(e, t) {
   return $.get(Zn(e, t));
 }
 function tr(e) {
-  for (let t of [Yn, $]) {
+  for (let count of [Yn, $]) {
     if (!e) {
-      t.clear();
+      count.clear();
       continue;
     }
-    for (let n of Array.from(t.keys())) n.startsWith(`${e}\n`) && t.delete(n);
+    for (let length of Array.from(count.keys())) length.startsWith(`${e}\n`) && count.delete(length);
   }
 }
 var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
@@ -1983,7 +1983,7 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       expose: t,
       emit: n
     }) {
-      let r = event,
+      let eventAlias = event,
         i = n,
         {
           t: a
@@ -1999,22 +1999,22 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       function u() {
         let e = o.value;
         if (!e) return;
-        let documentPath = r.documentPath;
-        for (let n of Array.from(e.querySelectorAll(`img[data-markdown-src]:not([data-hydrated])`))) {
-          n.setAttribute(`data-hydrated`, ``);
-          let e = n.getAttribute(`data-markdown-src`) || ``;
-          if (!documentPath || !e) {
-            l(n, e);
+        let documentPath = eventAlias.documentPath;
+        for (let length of Array.from(e.querySelectorAll(`img[data-markdown-src]:not([data-hydrated])`))) {
+          length.setAttribute(`data-hydrated`, ``);
+          let fallbackValue = length.getAttribute(`data-markdown-src`) || ``;
+          if (!documentPath || !fallbackValue) {
+            l(length, fallbackValue);
             continue;
           }
-          let r = er(documentPath, e);
+          let r = er(documentPath, fallbackValue);
           if (r) {
-            n.src = r, n.classList.remove(`is-loading`);
+            length.src = r, length.classList.remove(`is-loading`);
             continue;
           }
-          Qn(documentPath, e).then(r => {
-            $n(documentPath, e, r), n.isConnected && (n.src = r, n.classList.remove(`is-loading`));
-          }).catch(() => l(n, e));
+          Qn(documentPath, fallbackValue).then(result => {
+            $n(documentPath, fallbackValue, result), length.isConnected && (length.src = result, length.classList.remove(`is-loading`));
+          }).catch(() => l(length, fallbackValue));
         }
       }
       function f(el, t) {
@@ -2022,9 +2022,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         el.innerHTML = t ? an : rn, el.classList.toggle(`is-copied`, t), el.title = n, el.setAttribute(`aria-label`, n);
       }
       async function p(e) {
-        let t = e.closest(`.markdown-code-shell`)?.querySelector(`code`)?.textContent || ``;
+        let fallbackValue = e.closest(`.markdown-code-shell`)?.querySelector(`code`)?.textContent || ``;
         try {
-          await navigator.clipboard.writeText(t), f(e, true), window.clearTimeout(c.get(e)), c.set(e, window.setTimeout(() => {
+          await navigator.clipboard.writeText(fallbackValue), f(e, true), window.clearTimeout(c.get(e)), c.set(e, window.setTimeout(() => {
             c.delete(e), f(e, false);
           }, 1200));
         } catch {
@@ -2055,22 +2055,22 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
           return;
         }
         e.preventDefault();
-        let o = r.getAttribute(`href`) || ``;
-        if (o.startsWith(`#`)) {
-          m(o.slice(1));
+        let fallbackValue = r.getAttribute(`href`) || ``;
+        if (fallbackValue.startsWith(`#`)) {
+          m(fallbackValue.slice(1));
           return;
         }
-        if (/^(https?:|mailto:)/i.test(o)) {
-          q.openExternal(o).catch(() => W(a(`toolboxNative.markdownErrorInvalidLink`)));
+        if (/^(https?:|mailto:)/i.test(fallbackValue)) {
+          q.openExternal(fallbackValue).catch(() => W(a(`toolboxNative.markdownErrorInvalidLink`)));
           return;
         }
-        i(`openLink`, o);
+        i(`openLink`, fallbackValue);
       }
       function ee(e) {
         let t = e.target;
         if (!t.matches(`input.markdown-task-checkbox[data-task-index]`)) return;
         let n = t.closest(`[data-block-index]`),
-          a = (n ? r.blocks[Number(n.dataset.blockIndex)] : undefined)?.taskPositions[Number(t.dataset.taskIndex)];
+          a = (n ? eventAlias.blocks[Number(n.dataset.blockIndex)] : undefined)?.taskPositions[Number(t.dataset.taskIndex)];
         if (a === undefined) {
           t.checked = !t.checked;
           return;
@@ -2078,11 +2078,11 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         i(`toggleTask`, a);
       }
       function y(text) {
-        let t = text.split(/[?#]/)[0].split(/[\\/]/).pop() || ``;
+        let fallbackValue = text.split(/[?#]/)[0].split(/[\\/]/).pop() || ``;
         try {
-          return decodeURIComponent(t) || `image`;
+          return decodeURIComponent(fallbackValue) || `image`;
         } catch {
-          return t || `image`;
+          return fallbackValue || `image`;
         }
       }
       function b() {
@@ -2094,12 +2094,12 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       }
       return v(s, e => {
         e ? window.addEventListener(`keydown`, w, true) : window.removeEventListener(`keydown`, w, true);
-      }), v(() => [r.blocks, r.epoch], u, {
+      }), v(() => [eventAlias.blocks, eventAlias.epoch], u, {
         flush: `post`,
         immediate: true
       }), re(() => {
         window.removeEventListener(`keydown`, w, true);
-        for (let e of c.values()) window.clearTimeout(e);
+        for (let filePath of c.values()) window.clearTimeout(filePath);
       }), t({
         root: () => o.value,
         scrollToAnchor: m
@@ -2109,8 +2109,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         class: `markdown-reader-rendered text-[15px] leading-[1.8] text-[#1a1a1a] dark:text-foreground`,
         onClick: h,
         onChange: ee
-      }, [(T(true), g(C, null, _(r.blocks, (e, t) => (T(), g(`div`, {
-        key: `${r.epoch}:${e.key}`,
+      }, [(T(true), g(C, null, _(eventAlias.blocks, (e, t) => (T(), g(`div`, {
+        key: `${eventAlias.epoch}:${e.key}`,
         class: `markdown-block`,
         "data-block-index": t,
         "data-source-line": e.line,
@@ -2204,21 +2204,21 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         s = S(null),
         c = M(() => i?.value || `zh-CN`),
         l = M(() => {
-          let e = o.value.trim().toLocaleLowerCase(c.value);
-          return e ? n.recentFiles.filter(t => `${t.name} ${t.filePath}`.toLocaleLowerCase(c.value).includes(e)) : n.recentFiles;
+          let toLocaleLowerCase = o.value.trim().toLocaleLowerCase(c.value);
+          return toLocaleLowerCase ? n.recentFiles.filter(item => `${item.name} ${item.filePath}`.toLocaleLowerCase(c.value).includes(toLocaleLowerCase)) : n.recentFiles;
         }),
-        f = M(() => n.headings.length ? Math.min(...n.headings.map(e => e.level)) : 1);
+        f = M(() => n.headings.length ? Math.min(...n.headings.map(item => item.level)) : 1);
       function p(e) {
-        let t = new Date(e);
-        if (Number.isNaN(t.getTime())) return ``;
+        let date = new Date(e);
+        if (Number.isNaN(date.getTime())) return ``;
         let n = new Date();
-        return t.toDateString() === n.toDateString() ? t.toLocaleTimeString(c.value, {
+        return date.toDateString() === n.toDateString() ? date.toLocaleTimeString(c.value, {
           hour: `2-digit`,
           minute: `2-digit`
-        }) : t.getFullYear() === n.getFullYear() ? t.toLocaleDateString(c.value, {
+        }) : date.getFullYear() === n.getFullYear() ? date.toLocaleDateString(c.value, {
           month: `numeric`,
           day: `numeric`
-        }) : t.toLocaleDateString(c.value, {
+        }) : date.toLocaleDateString(c.value, {
           year: `numeric`,
           month: `numeric`,
           day: `numeric`
@@ -2232,9 +2232,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         let e = s.value,
           t = e?.querySelector(`[aria-current="location"]`);
         if (!e || !t) return;
-        let n = e.getBoundingClientRect(),
-          r = t.getBoundingClientRect();
-        r.top < n.top ? e.scrollTop += r.top - n.top - 8 : r.bottom > n.bottom && (e.scrollTop += r.bottom - n.bottom + 8);
+        let boundingClientRect = e.getBoundingClientRect(),
+          boundingClientRectResult = t.getBoundingClientRect();
+        boundingClientRectResult.top < boundingClientRect.top ? e.scrollTop += boundingClientRectResult.top - boundingClientRect.top - 8 : boundingClientRectResult.bottom > boundingClientRect.bottom && (e.scrollTop += boundingClientRectResult.bottom - boundingClientRect.bottom + 8);
       }), (e, t) => (T(), g(`aside`, sr, [D(d(nt), {
         class: `shrink-0 px-2 pt-2`,
         "model-value": n.tab,
@@ -2335,8 +2335,8 @@ function Dr(el) {
     n = S(``),
     r = S(0),
     i = S(0),
-    a = [],
-    o = [],
+    emptyItems = [],
+    total = [],
     s = f([]),
     c = false,
     l = M(() => i.value ? `${r.value + 1}/${i.value}` : `0/0`);
@@ -2344,20 +2344,20 @@ function Dr(el) {
     let e = Er();
     e?.registry.delete(`markdown-find`), e?.registry.delete(`markdown-find-current`);
   }
-  function d(e, t) {
-    let n = [],
-      r = document.createTreeWalker(e, NodeFilter.SHOW_TEXT, {
+  function d(e, count) {
+    let length = [],
+      treeWalker = document.createTreeWalker(e, NodeFilter.SHOW_TEXT, {
         acceptNode: e => e.parentElement?.closest(`.markdown-code-toolbar`) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
       });
-    for (; r.nextNode() && n.length < Tr;) {
-      let currentNode = r.currentNode,
-        i = currentNode.data.toLocaleLowerCase();
-      for (let r = i.indexOf(t); r >= 0 && n.length < Tr; r = i.indexOf(t, r + t.length)) {
-        let i = document.createRange();
-        i.setStart(currentNode, r), i.setEnd(currentNode, Math.min(currentNode.length, r + t.length)), n.push(i);
+    for (; treeWalker.nextNode() && length.length < Tr;) {
+      let currentNode = treeWalker.currentNode,
+        toLocaleLowerCase = currentNode.data.toLocaleLowerCase();
+      for (let r = toLocaleLowerCase.indexOf(count); r >= 0 && length.length < Tr; r = toLocaleLowerCase.indexOf(count, r + count.length)) {
+        let range = document.createRange();
+        range.setStart(currentNode, r), range.setEnd(currentNode, Math.min(currentNode.length, r + count.length)), length.push(range);
       }
     }
-    return n;
+    return length;
   }
   function p(t = true) {
     if (!i.value) {
@@ -2366,35 +2366,35 @@ function Dr(el) {
     }
     if (c) {
       let n = Er(),
-        i = a[r.value];
-      if (n && i && (n.registry.set(`markdown-find`, new n.Highlight(...a)), n.registry.set(`markdown-find-current`, new n.Highlight(i))), !t) return;
-      let o = el.previewScroller();
-      if (i && o) {
-        let e = i.getBoundingClientRect(),
-          t = o.getBoundingClientRect();
-        (e.top < t.top + 24 || e.bottom > t.bottom - 24) && (o.scrollTop += e.top - t.top - o.clientHeight / 3);
+        i = emptyItems[r.value];
+      if (n && i && (n.registry.set(`markdown-find`, new n.Highlight(...emptyItems)), n.registry.set(`markdown-find-current`, new n.Highlight(i))), !t) return;
+      let previewScroller = el.previewScroller();
+      if (i && previewScroller) {
+        let boundingClientRect = i.getBoundingClientRect(),
+          boundingClientRectResult = previewScroller.getBoundingClientRect();
+        (boundingClientRect.top < boundingClientRectResult.top + 24 || boundingClientRect.bottom > boundingClientRectResult.bottom - 24) && (previewScroller.scrollTop += boundingClientRect.top - boundingClientRectResult.top - previewScroller.clientHeight / 3);
       }
       return;
     }
-    let n = o[r.value];
+    let n = total[r.value];
     t && n && el.selectSource(n.start, n.end);
   }
   function m(t = false) {
-    let l = n.value.toLocaleLowerCase(),
-      f = el.previewRoot();
-    if (c = !!f, a = [], o = [], !l) {
+    let toLocaleLowerCase = n.value.toLocaleLowerCase(),
+      previewRoot = el.previewRoot();
+    if (c = !!previewRoot, emptyItems = [], total = [], !toLocaleLowerCase) {
       i.value = 0, r.value = 0, s.value = [], u();
       return;
     }
-    if (f) a = d(f, l), i.value = a.length;else {
-      let t = el.sourceText().toLocaleLowerCase();
-      for (let e = t.indexOf(l); e >= 0 && o.length < Tr; e = t.indexOf(l, e + l.length)) o.push({
+    if (previewRoot) emptyItems = d(previewRoot, toLocaleLowerCase), i.value = emptyItems.length;else {
+      let toLocaleLowerCaseResult = el.sourceText().toLocaleLowerCase();
+      for (let e = toLocaleLowerCaseResult.indexOf(toLocaleLowerCase); e >= 0 && total.length < Tr; e = toLocaleLowerCaseResult.indexOf(toLocaleLowerCase, e + toLocaleLowerCase.length)) total.push({
         start: e,
-        end: e + l.length
+        end: e + toLocaleLowerCase.length
       });
-      i.value = o.length;
+      i.value = total.length;
     }
-    s.value = o, r.value = t ? Math.min(r.value, Math.max(0, i.value - 1)) : 0, p(!t);
+    s.value = total, r.value = t ? Math.min(r.value, Math.max(0, i.value - 1)) : 0, p(!t);
   }
   function h(e) {
     i.value && (r.value = (r.value + e + i.value) % i.value, p());
@@ -2403,7 +2403,7 @@ function Dr(el) {
     t.value = true, e && (n.value = e), m();
   }
   function _() {
-    t.value = false, u(), a = [], o = [], s.value = [];
+    t.value = false, u(), emptyItems = [], total = [], s.value = [];
   }
   function ee() {
     t.value && m(true);
@@ -2512,10 +2512,10 @@ var Or = {
       expose: t,
       emit: n
     }) {
-      let r = event,
+      let eventAlias = event,
         i = n,
         a = [`.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, `.mdwn`, `.txt`],
-        o = {
+        options = {
           FILE_ACCESS_DENIED: `markdownErrorAccessDenied`,
           FILE_NOT_FOUND: `markdownErrorFileNotFound`,
           INVALID_FILE: `markdownErrorFileNotFound`,
@@ -2601,7 +2601,7 @@ var Or = {
         Ht = M(() => I.value ? I.value.split(`
 `).length : 0),
         Ut = M(() => Array.from(I.value.replace(/\s+/g, ``)).length),
-        Wt = M(() => L.value.filter(e => e.exists).slice(0, 5)),
+        Wt = M(() => L.value.filter(item => item.exists).slice(0, 5)),
         Gt = M(() => [{
           value: `preview`,
           icon: Ge,
@@ -2644,7 +2644,7 @@ var Or = {
           selectSource: (e, t) => K.value?.selectRange(e, t, false)
         });
       function cn(e, t) {
-        return e instanceof it && o[e.code] ? l(`toolboxNative.${o[e.code]}`) : l(t);
+        return e instanceof it && options[e.code] ? l(`toolboxNative.${options[e.code]}`) : l(t);
       }
       function ln() {
         et !== null && (window.clearTimeout(et), et = null);
@@ -2729,7 +2729,7 @@ var Or = {
         } catch {}
       }
       function On(e) {
-        r.active !== false && I.value.trim() && de.value.blocks.length && e(`tool_action_success`, {
+        eventAlias.active !== false && I.value.trim() && de.value.blocks.length && e(`tool_action_success`, {
           action: `markdown_opened`
         });
       }
@@ -2749,19 +2749,19 @@ var Or = {
       }
       async function An() {
         if (!(await vn())) return;
-        let e;
+        let filePath;
         try {
-          let t = await q.select({
+          let select = await q.select({
             title: l(`toolboxNative.markdownOpenDialogTitle`),
             filterName: l(`toolboxNative.markdownFileFilterName`)
           });
-          if (t.cancelled || !t.filePath) return;
-          e = t.filePath;
+          if (select.cancelled || !select.filePath) return;
+          filePath = select.filePath;
         } catch (e) {
           W(cn(e, `toolboxNative.markdownOpenFailed`));
           return;
         }
-        let t = e;
+        let t = filePath;
         await kn(() => q.read(t), `toolboxNative.markdownOpenFailed`, {
           skipConfirm: true
         });
@@ -2784,7 +2784,7 @@ var Or = {
       }
       function Fn() {
         return j.value ? j.value.name : `${(Lt.value[0]?.text || I.value.split(`
-`).map(e => e.replace(/^#+\s*/, ``).trim()).find(Boolean) || ``).replace(/[\\/:*?"<>|]/g, `-`).slice(0, 60).trim() || l(`toolboxNative.untitledMarkdownDocument`)}.md`;
+`).map(item => item.replace(/^#+\s*/, ``).trim()).find(Boolean) || ``).replace(/[\\/:*?"<>|]/g, `-`).slice(0, 60).trim() || l(`toolboxNative.untitledMarkdownDocument`)}.md`;
       }
       async function Q(e = false) {
         if (z.value) return false;
@@ -2821,7 +2821,7 @@ var Or = {
         let e = I.value,
           t = j.value;
         try {
-          let n = await q.saveAs({
+          let saveAs = await q.saveAs({
             content: e,
             suggestedName: Fn(),
             sourcePath: t?.filePath,
@@ -2832,8 +2832,8 @@ var Or = {
               filterName: l(`toolboxNative.markdownFileFilterName`)
             }
           });
-          return n.cancelled || !n.document ? false : (j.value = n.document, se.value = e, F.value = true, V.value = null, Je.lastPath = n.document.filePath, t?.filePath !== n.document.filePath && (fe.value += 1, ln(), q.watch(n.document.filePath).catch(() => undefined)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
-            name: n.document.name
+          return saveAs.cancelled || !saveAs.document ? false : (j.value = saveAs.document, se.value = e, F.value = true, V.value = null, Je.lastPath = saveAs.document.filePath, t?.filePath !== saveAs.document.filePath && (fe.value += 1, ln(), q.watch(saveAs.document.filePath).catch(() => undefined)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
+            name: saveAs.document.name
           })), true);
         } catch (e) {
           return W(cn(e, `toolboxNative.markdownSaveFailed`)), false;
@@ -2916,9 +2916,9 @@ var Or = {
         try {
           n = decodeURIComponent(t);
         } catch {}
-        let r = n.split(/[\\/]/).pop() || ``,
-          i = r.lastIndexOf(`.`);
-        return i > 0 ? r.slice(i).toLowerCase() : ``;
+        let fallbackValue = n.split(/[\\/]/).pop() || ``,
+          lastIndexOf = fallbackValue.lastIndexOf(`.`);
+        return lastIndexOf > 0 ? fallbackValue.slice(lastIndexOf).toLowerCase() : ``;
       }
       async function Wn(text) {
         let t = j.value;
@@ -2943,22 +2943,22 @@ var Or = {
           }
           return;
         }
-        let o = {
+        let entity = {
             filePath: t.filePath,
             name: t.name,
             scroll: yn()
           },
-          s = null;
+          flag = null;
         if ((await kn(async () => {
-          let n = await q.openLinked({
+          let linked = await q.openLinked({
             documentPath: t.filePath,
             source: text
           });
-          return s = n.anchor, n.document;
+          return flag = linked.anchor, linked.document;
         }, `toolboxNative.markdownLinkedOpenFailed`, {
           keepHistory: true
-        })) && (H.value = [...H.value.slice(-19), o], s)) {
-          let e = s;
+        })) && (H.value = [...H.value.slice(-19), entity], flag)) {
+          let e = flag;
           await ie(), window.requestAnimationFrame(() => qn(e));
         }
       }
@@ -2980,8 +2980,8 @@ var Or = {
           });
           return;
         }
-        let r = Lt.value.find(t => t.id === e);
-        r && K.value?.revealLine(r.line);
+        let found = Lt.value.find(item => item.id === e);
+        found && K.value?.revealLine(found.line);
       }
       function Yn() {
         _t !== null && (_t = null, $());
@@ -3003,9 +3003,9 @@ var Or = {
           return;
         }
         if (Z.value === `edit`) {
-          let t = K.value?.lineAtScrollTop() ?? 0,
+          let fallbackValue = K.value?.lineAtScrollTop() ?? 0,
             n = e[0];
-          for (let r of e) if (r.line <= t + .5) n = r;else break;
+          for (let count of e) if (count.line <= fallbackValue + .5) n = count;else break;
           me.value = n.id;
           return;
         }
@@ -3014,10 +3014,10 @@ var Or = {
         if (!t || !n) return;
         let r = t.scrollTop + 48,
           i = e[0].id;
-        for (let t of e) {
-          let e = n.querySelector(`#${CSS.escape(t.id)}`);
-          if (e) {
-            if (e.offsetTop <= r) i = t.id;else break;
+        for (let count of e) {
+          let selector = n.querySelector(`#${CSS.escape(count.id)}`);
+          if (selector) {
+            if (selector.offsetTop <= r) i = count.id;else break;
           }
         }
         me.value = i;
@@ -3042,11 +3042,11 @@ var Or = {
             line: 0,
             top: 0
           }];
-        if (e) for (let n of Array.from(e.children)) {
-          let e = Number(n.dataset.sourceLine);
+        if (e) for (let length of Array.from(e.children)) {
+          let e = Number(length.dataset.sourceLine);
           Number.isFinite(e) && t.push({
             line: e,
-            top: Math.max(0, n.offsetTop - ti)
+            top: Math.max(0, length.offsetTop - ti)
           });
         }
         return J = t, t;
@@ -3060,17 +3060,17 @@ var Or = {
           t.scrollTop = n;
           return;
         }
-        let r = e.lineAtScrollTop(),
+        let lineAtScrollTop = e.lineAtScrollTop(),
           i = nr(),
           a = 0;
-        for (; a + 1 < i.length && i[a + 1].line <= r;) a += 1;
+        for (; a + 1 < i.length && i[a + 1].line <= lineAtScrollTop;) a += 1;
         let o = i[a],
-          s = i[a + 1] ?? {
+          fallbackValue = i[a + 1] ?? {
             line: Math.max(Ht.value, o.line + 1),
             top: n
           },
-          c = (r - o.line) / Math.max(1, s.line - o.line);
-        t.scrollTop = o.top + Math.min(1, Math.max(0, c)) * (s.top - o.top);
+          c = (lineAtScrollTop - o.line) / Math.max(1, fallbackValue.line - o.line);
+        t.scrollTop = o.top + Math.min(1, Math.max(0, c)) * (fallbackValue.top - o.top);
       }
       function ir() {
         let e = K.value,
@@ -3090,12 +3090,12 @@ var Or = {
           a = 0;
         for (; a + 1 < r.length && r[a + 1].top <= scrollTop;) a += 1;
         let o = r[a],
-          s = r[a + 1] ?? {
+          fallbackValue = r[a + 1] ?? {
             line: Math.max(Ht.value, o.line + 1),
             top: t.scrollHeight
           },
-          c = (scrollTop - o.top) / Math.max(1, s.top - o.top),
-          l = o.line + Math.min(1, Math.max(0, c)) * (s.line - o.line);
+          c = (scrollTop - o.top) / Math.max(1, fallbackValue.top - o.top),
+          l = o.line + Math.min(1, Math.max(0, c)) * (fallbackValue.line - o.line);
         e.setScrollTop(e.scrollTopForLine(l));
       }
       function ar() {
@@ -3113,7 +3113,7 @@ var Or = {
         if (!e) return 0;
         let t = nr(),
           n = 0;
-        for (let r of t) if (r.top <= e.scrollTop + 4) n = r.line;else break;
+        for (let count of t) if (count.top <= e.scrollTop + 4) n = count.line;else break;
         return n;
       }
       async function ur(e) {
@@ -3122,8 +3122,8 @@ var Or = {
         k.value = e, O.mode = e, F.value && (await ie(), window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
           if (J = null, $n(300), Z.value !== `preview` && K.value?.setScrollTop(K.value.scrollTopForLine(t)), Z.value !== `edit`) {
             let e = G.value,
-              n = [...nr()].reverse().find(e => e.line <= t);
-            e && n && (e.scrollTop = n.top);
+              found = [...nr()].reverse().find(item => item.line <= t);
+            e && found && (e.scrollTop = found.top);
           }
           an();
         })));
@@ -3197,7 +3197,7 @@ var Or = {
           try {
             let t = vr(),
               n = Dn(await _r(), t, Pt.value),
-              r = await q.exportDocument({
+              exportDocument = await q.exportDocument({
                 format: e,
                 html: n,
                 suggestedName: `${t}.${e}`,
@@ -3207,8 +3207,8 @@ var Or = {
                   filterName: e === `pdf` ? `PDF` : `HTML`
                 }
               });
-            !r.cancelled && r.filePath && Ie(l(`toolboxNative.markdownExported`, {
-              name: r.filePath.split(/[\\/]/).pop() || r.filePath
+            !exportDocument.cancelled && exportDocument.filePath && Ie(l(`toolboxNative.markdownExported`, {
+              name: exportDocument.filePath.split(/[\\/]/).pop() || exportDocument.filePath
             }));
           } catch (e) {
             W(cn(e, `toolboxNative.markdownExportFailed`));
@@ -3223,9 +3223,9 @@ var Or = {
       }
       function Cr() {
         let e = K.value?.element(),
-          t = (e && document.activeElement === e ? e.value.slice(e.selectionStart, e.selectionEnd) : window.getSelection()?.toString() || ``).trim();
-        tn(t && !t.includes(`
-`) && t.length <= 80 ? t : undefined), $e.value?.focus();
+          trimmed = (e && document.activeElement === e ? e.value.slice(e.selectionStart, e.selectionEnd) : window.getSelection()?.toString() || ``).trim();
+        tn(trimmed && !trimmed.includes(`
+`) && trimmed.length <= 80 ? trimmed : undefined), $e.value?.focus();
       }
       function Tr(e) {
         return !!e.dataTransfer?.types.includes(`Files`);
@@ -3242,20 +3242,20 @@ var Or = {
       async function ii(e) {
         if (!Tr(e)) return;
         e.preventDefault(), Dt = 0, Oe.value = false;
-        let t = Array.from(e.dataTransfer?.files || []).find(e => a.includes(Un(e.name)));
-        if (!t) {
+        let found = Array.from(e.dataTransfer?.files || []).find(item => a.includes(Un(item.name)));
+        if (!found) {
           W(l(`toolboxNative.markdownDropUnsupported`));
           return;
         }
-        let n = q.getPathForFile(t);
-        if (!n) {
+        let pathForFile = q.getPathForFile(found);
+        if (!pathForFile) {
           W(l(`toolboxNative.markdownOpenFailed`));
           return;
         }
-        await kn(() => q.openDropped(n), `toolboxNative.markdownOpenFailed`);
+        await kn(() => q.openDropped(pathForFile), `toolboxNative.markdownOpenFailed`);
       }
       function ai() {
-        return r.active !== false && !!Ve.value?.offsetParent && !Re.value;
+        return eventAlias.active !== false && !!Ve.value?.offsetParent && !Re.value;
       }
       function oi(e) {
         if (e.isComposing || e.keyCode === 229 || e.defaultPrevented || !ai()) return;
@@ -3273,11 +3273,11 @@ var Or = {
           return;
         }
         if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
-        let t = e.key.toLowerCase();
-        if (t === `s`) {
+        let lowercased = e.key.toLowerCase();
+        if (lowercased === `s`) {
           if (e.preventDefault(), !F.value) return;
           e.shiftKey ? In() : Q();
-        } else t === `o` ? (e.preventDefault(), An()) : t === `n` ? (e.preventDefault(), Nn()) : t === `f` && F.value ? (e.preventDefault(), Cr()) : t === `\\` && (e.preventDefault(), dr());
+        } else lowercased === `o` ? (e.preventDefault(), An()) : lowercased === `n` ? (e.preventDefault(), Nn()) : lowercased === `f` && F.value ? (e.preventDefault(), Cr()) : lowercased === `\\` && (e.preventDefault(), dr());
       }
       async function si() {
         return await vn();
@@ -3313,7 +3313,7 @@ var Or = {
         J = null, $();
       }), v(X, e => {
         e && (U.value = false);
-      }), v(() => r.openRequest, e => {
+      }), v(() => eventAlias.openRequest, e => {
         e && Mn(e);
       }, {
         immediate: true
@@ -3330,13 +3330,13 @@ var Or = {
             touch: false
           }), `toolboxNative.markdownOpenFailed`, {
             skipConfirm: true
-          }).then(e => {
-            e || (Je.lastPath = null);
+          }).then(result => {
+            result || (Je.lastPath = null);
           });
         }
       }), re(() => {
         window.removeEventListener(`keydown`, oi), jt?.(), At?.(), Et?.disconnect(), Tt?.disconnect();
-        for (let e of [et, st, lt, bt, xt]) e !== null && window.clearTimeout(e);
+        for (let filePath of [et, st, lt, bt, xt]) filePath !== null && window.clearTimeout(filePath);
         ci !== null && (window.clearTimeout(ci), tt({
           ...O
         })), mt !== null && window.cancelAnimationFrame(mt), nn(), kt?.(`cancel`), kt = null, q.watch(null).catch(() => undefined);
@@ -3352,9 +3352,9 @@ var Or = {
           onDragleave: ri,
           onDrop: ii
         }, [D(xe, {
-          tool: r.tool,
-          user: r.user,
-          "credits-balance": r.creditsBalance,
+          tool: eventAlias.tool,
+          user: eventAlias.user,
+          "credits-balance": eventAlias.creditsBalance,
           "voice-tool": false,
           "show-history": false,
           onBack: t[16] ||= e => i(`back`),
@@ -3376,7 +3376,7 @@ var Or = {
           }, 8, [`label`, `shortcut`]), !F.value || !Y.value ? (T(), g(`span`, {
             key: 0,
             class: u([`ml-1 shrink-0 truncate text-sm font-medium text-muted-foreground`, F.value ? `max-w-[160px]` : ``])
-          }, A(r.tool.name), 3)) : N(``, true), F.value ? (T(), g(C, {
+          }, A(eventAlias.tool.name), 3)) : N(``, true), F.value ? (T(), g(C, {
             key: 1
           }, [Y.value ? N(``, true) : (T(), g(`span`, kr, `/`)), H.value.length ? (T(), x(wt, {
             key: 1,

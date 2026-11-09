@@ -2,21 +2,21 @@ import { $n as e, An as t, S as n, Wt as r, Zt as i, bn as a, gt as o, j as s, n
 import { w as te } from "../i18n/en-US-player.js";
 import { M as ne, N as h, P as re, V as ie, X as ae, v as g } from "../chunks/main.js";
 var _ = Object.defineProperty,
-  v = Object.getOwnPropertySymbols,
-  y = Object.prototype.hasOwnProperty,
-  b = Object.prototype.propertyIsEnumerable,
-  x = (e, t, n) => t in e ? _(e, t, {
+  getOwnPropertySymbols = Object.getOwnPropertySymbols,
+  hasOwnProperty = Object.prototype.hasOwnProperty,
+  propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
+  handler = (e, t, n) => t in e ? _(e, t, {
     enumerable: true,
     configurable: true,
     writable: true,
     value: n
   }) : e[t] = n,
   S = (e, t) => {
-    for (var n in t ||= {}) y.call(t, n) && x(e, n, t[n]);
-    if (v) for (var n of v(t)) b.call(t, n) && x(e, n, t[n]);
+    for (var n in t ||= {}) hasOwnProperty.call(t, n) && handler(e, n, t[n]);
+    if (getOwnPropertySymbols) for (var n of getOwnPropertySymbols(t)) propertyIsEnumerable.call(t, n) && handler(e, n, t[n]);
     return e;
   },
-  C = (e, t, n) => new Promise((r, i) => {
+  C = (e, t, n) => new Promise((fn, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -31,7 +31,7 @@ var _ = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(e, t)).next());
   }),
   oe = [`data-markstream-mode`],
@@ -47,7 +47,7 @@ var _ = Object.defineProperty,
     class: `d2-mode-toggle flex items-center gap-0.5`
   },
   ue = [`aria-label`],
-  w = {
+  options = {
     key: 0,
     xmlns: `http://www.w3.org/2000/svg`,
     "aria-hidden": `true`,
@@ -186,8 +186,8 @@ var _ = Object.defineProperty,
         W = null,
         G = ``;
       typeof window < `u` && r(() => M.value, e => {
-        var t;
-        if ((t = N.value) == null || t.destroy(), N.value = null, !e) return void (P.value = false);
+        var payload;
+        if ((payload = N.value) == null || payload.destroy(), N.value = null, !e) return void (P.value = false);
         let n = Se(e, {
           rootMargin: `160px`
         });
@@ -220,27 +220,27 @@ var _ = Object.defineProperty,
       function K(e) {
         return !e || e.disabled;
       }
-      function q(e, t, n = `top`) {
-        if (K(e.currentTarget)) return;
-        let r = e,
-          i = r?.clientX != null && r?.clientY != null ? {
-            x: r.clientX,
-            y: r.clientY
+      function q(event, t, n = `top`) {
+        if (K(event.currentTarget)) return;
+        let eventAlias = event,
+          i = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
+            x: eventAlias.clientX,
+            y: eventAlias.clientY
           } : undefined;
-        h(e.currentTarget, t, n, false, i, g.isDark);
+        h(event.currentTarget, t, n, false, i, g.isDark);
       }
       function J() {
         ie();
       }
-      function Y(e) {
-        if (K(e.currentTarget)) return;
+      function Y(event) {
+        if (K(event.currentTarget)) return;
         let t = v.value ? _(`common.copied`) || `Copied` : _(`common.copy`) || `Copy`,
-          n = e,
-          r = n?.clientX != null && n?.clientY != null ? {
-            x: n.clientX,
-            y: n.clientY
+          eventAlias = event,
+          r = eventAlias?.clientX != null && eventAlias?.clientY != null ? {
+            x: eventAlias.clientX,
+            y: eventAlias.clientY
           } : undefined;
-        h(e.currentTarget, t, `top`, false, r, g.isDark);
+        h(event.currentTarget, t, `top`, false, r, g.isDark);
       }
       function Oe() {
         return C(this, null, function* () {
@@ -262,10 +262,10 @@ var _ = Object.defineProperty,
       }
       let Ae = [/javascript:/i, /expression\s*\(/i, /url\s*\(\s*javascript:/i, /@import/i],
         je = /^(?:https?:|mailto:|tel:|#|\/|data:image\/(?:png|gif|jpe?g|webp);)/i;
-      function Me(e) {
-        if (!e) return ``;
-        let t = e.trim();
-        return je.test(t) ? t : ``;
+      function Me(text) {
+        if (!text) return ``;
+        let trimmed = text.trim();
+        return je.test(trimmed) ? trimmed : ``;
       }
       function Z() {
         O.value = ``;
@@ -297,7 +297,7 @@ var _ = Object.defineProperty,
             x.value = true;
             let i = yield r.compile(t);
             if (n !== k.value) return;
-            let a = i?.diagram ?? i,
+            let fallbackValue = i?.diagram ?? i,
               o = i?.renderOptions ?? i?.options ?? {},
               s = g.themeId ?? o.themeID,
               c = g.darkThemeId ?? o.darkThemeID,
@@ -306,51 +306,51 @@ var _ = Object.defineProperty,
               let e = o.themeOverrides && typeof o.themeOverrides == `object` ? o.themeOverrides : null;
               l.themeOverrides = S(S({}, De), e || {});
             }
-            let u = yield r.render(a, l);
+            let u = yield r.render(fallbackValue, l);
             if (n !== k.value) return;
             let d = function (e) {
               return e ? typeof e == `string` ? e : typeof e.svg == `string` ? e.svg : typeof e.data == `string` ? e.data : `` : ``;
             }(u);
             if (!d) throw Error(`D2 render returned empty output.`);
-            (function (e) {
+            (function (el) {
               let t = function (e) {
                 if (typeof window > `u` || typeof DOMParser > `u` || !e) return ``;
-                let t = e.replace(/["']\s*javascript:/gi, `#`).replace(/\bjavascript:/gi, `#`).replace(/["']\s*vbscript:/gi, `#`).replace(/\bvbscript:/gi, `#`).replace(/\bdata:text\/html/gi, `#`),
-                  n = new DOMParser().parseFromString(t, `image/svg+xml`).documentElement;
-                if (!n || n.nodeName.toLowerCase() !== `svg`) return ``;
-                let r = n;
+                let replaced = e.replace(/["']\s*javascript:/gi, `#`).replace(/\bjavascript:/gi, `#`).replace(/["']\s*vbscript:/gi, `#`).replace(/\bvbscript:/gi, `#`).replace(/\bdata:text\/html/gi, `#`),
+                  documentElement = new DOMParser().parseFromString(replaced, `image/svg+xml`).documentElement;
+                if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return ``;
+                let documentElementAlias = documentElement;
                 return function (e) {
                   let t = new Set([`script`]),
                     n = [e, ...Array.from(e.querySelectorAll(`*`))];
-                  for (let e of n) {
-                    if (t.has(e.tagName.toLowerCase())) {
-                      e.remove();
+                  for (let value of n) {
+                    if (t.has(value.tagName.toLowerCase())) {
+                      value.remove();
                       continue;
                     }
-                    let n = Array.from(e.attributes);
-                    for (let t of n) {
-                      let n = t.name;
-                      if (/^on/i.test(n)) e.removeAttribute(n);else {
-                        if (n === `style` && t.value) {
-                          let r = t.value;
-                          if (Ae.some(e => e.test(r))) {
-                            e.removeAttribute(n);
+                    let n = Array.from(value.attributes);
+                    for (let payload of n) {
+                      let n = payload.name;
+                      if (/^on/i.test(n)) value.removeAttribute(n);else {
+                        if (n === `style` && payload.value) {
+                          let r = payload.value;
+                          if (Ae.some(item => item.test(r))) {
+                            value.removeAttribute(n);
                             continue;
                           }
                         }
-                        if ((n === `href` || n === `xlink:href`) && t.value) {
-                          let r = Me(t.value);
+                        if ((n === `href` || n === `xlink:href`) && payload.value) {
+                          let r = Me(payload.value);
                           if (!r) {
-                            e.removeAttribute(n);
+                            value.removeAttribute(n);
                             continue;
                           }
-                          r !== t.value && e.setAttribute(n, r);
+                          r !== payload.value && value.setAttribute(n, r);
                         }
                       }
                     }
                   }
-                }(r), r.classList.add(`markstream-d2-root-svg`), r.outerHTML;
-              }(e);
+                }(documentElementAlias), documentElementAlias.classList.add(`markstream-d2-root-svg`), documentElementAlias.outerHTML;
+              }(el);
               O.value = t || ``;
             })(d), G = e, g.loading && (b.value = false), E.value = null;
           } catch (e) {
@@ -378,15 +378,15 @@ var _ = Object.defineProperty,
       }
       function Pe() {
         if (O.value) try {
-          let e = new Blob([O.value], {
+          let blob = new Blob([O.value], {
               type: `image/svg+xml;charset=utf-8`
             }),
-            t = URL.createObjectURL(e);
+            objectURL = URL.createObjectURL(blob);
           if (typeof document < `u`) {
-            let e = document.createElement(`a`);
-            e.href = t, e.download = `d2-diagram-${Date.now()}.svg`, document.body.appendChild(e), e.click(), document.body.removeChild(e);
+            let element = document.createElement(`a`);
+            element.href = objectURL, element.download = `d2-diagram-${Date.now()}.svg`, document.body.appendChild(element), element.click(), document.body.removeChild(element);
           }
-          URL.revokeObjectURL(t);
+          URL.revokeObjectURL(objectURL);
         } catch (e) {
           console.error(`Failed to export SVG:`, e);
         }
@@ -416,8 +416,8 @@ var _ = Object.defineProperty,
           $();
         }), A.value && W.observe(A.value));
       }), l(() => {
-        var e;
-        B = true, G = ``, (e = N.value) == null || e.destroy(), N.value = null, H != null && (clearTimeout(H), H = null), W?.disconnect(), W = null;
+        var value;
+        B = true, G = ``, (value = N.value) == null || value.destroy(), N.value = null, H != null && (clearTimeout(H), H = null), W?.disconnect(), W = null;
       }), (r, a) => (o(), n(`div`, {
         ref_key: `viewportTarget`,
         ref: M,
@@ -463,7 +463,7 @@ var _ = Object.defineProperty,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `M20 6L9 17l-5-5`
-      }, null, -1)])])) : (o(), n(`svg`, w, [...(a[12] ||= [m(`g`, {
+      }, null, -1)])])) : (o(), n(`svg`, options, [...(a[12] ||= [m(`g`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,

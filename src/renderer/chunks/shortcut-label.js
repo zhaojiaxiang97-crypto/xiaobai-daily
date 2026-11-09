@@ -9,9 +9,9 @@ function e(text, t) {
     } : {
       Super: t === `win32` ? `Win` : `Super`
     },
-    i = text.split(`+`),
-    a = i.pop() || ``,
+    parts = text.split(`+`),
+    fallbackValue = parts.pop() || ``,
     o = n ? [`Ctrl`, `Alt`, `Shift`, `Command`] : [`Ctrl`, `Alt`, `Command`, `Super`, `Shift`];
-  return i.sort((e, t) => o.indexOf(e) - o.indexOf(t)), [...i, a].filter(Boolean).map(e => r[e] || e).join(n ? `` : ` + `);
+  return parts.sort((left, right) => o.indexOf(left) - o.indexOf(right)), [...parts, fallbackValue].filter(Boolean).map(item => r[item] || item).join(n ? `` : ` + `);
 }
 export { e as t };

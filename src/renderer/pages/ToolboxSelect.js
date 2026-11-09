@@ -29,10 +29,10 @@ var S = {
     }),
     emits: [`update:modelValue`],
     setup(options) {
-      let m = options,
+      let optionsAlias = options,
         C = r(options, `modelValue`),
-        w = h(() => m.compact ? `w-full data-[size=default]:h-7 text-xs text-muted-foreground` : m.comfortable ? `w-full data-[size=default]:h-9 text-sm` : `w-full data-[size=default]:h-9 text-xs font-medium`),
-        T = h(() => m.comfortable ? `text-sm` : `text-xs`);
+        w = h(() => optionsAlias.compact ? `w-full data-[size=default]:h-7 text-xs text-muted-foreground` : optionsAlias.comfortable ? `w-full data-[size=default]:h-9 text-sm` : `w-full data-[size=default]:h-9 text-xs font-medium`),
+        T = h(() => optionsAlias.comfortable ? `text-sm` : `text-xs`);
       function E(e) {
         typeof e == `string` && (C.value = e);
       }

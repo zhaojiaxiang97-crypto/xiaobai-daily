@@ -23,36 +23,36 @@ var r = e(`scan-text`, [[`path`, {
   key: `1vyc9m`
 }]]);
 function i(e, t) {
-  let n = document.createElement(`canvas`);
-  return n.width = Math.max(1, Math.round(e)), n.height = Math.max(1, Math.round(t)), n;
+  let element = document.createElement(`canvas`);
+  return element.width = Math.max(1, Math.round(e)), element.height = Math.max(1, Math.round(t)), element;
 }
 function a(e, t) {
-  let n = e.getContext(`2d`, t);
-  if (!n) throw Error(`Canvas 2D is not available`);
-  return n;
+  let context = e.getContext(`2d`, t);
+  if (!context) throw Error(`Canvas 2D is not available`);
+  return context;
 }
 function o(items, t, n) {
   let r = t * n,
     i = items.byteOffset % 4 == 0 ? items : items.slice(),
-    a = new Uint32Array(i.buffer, i.byteOffset, r),
-    o = new Uint8ClampedArray(r * 4),
-    s = new Uint32Array(o.buffer);
+    uint32Array = new Uint32Array(i.buffer, i.byteOffset, r),
+    uint8ClampedArray = new Uint8ClampedArray(r * 4),
+    s = new Uint32Array(uint8ClampedArray.buffer);
   for (let e = 0; e < r; e += 1) {
-    let t = a[e];
+    let t = uint32Array[e];
     s[e] = t & 65280 | (t & 255) << 16 | t >>> 16 & 255 | 4278190080;
   }
-  return new ImageData(o, t, n);
+  return new ImageData(uint8ClampedArray, t, n);
 }
 async function s(e) {
-  let t = new Blob([e], {
+  let blob = new Blob([e], {
       type: `image/png`
     }),
-    n = await createImageBitmap(t);
+    imageBitmap = await createImageBitmap(blob);
   try {
-    let e = i(n.width, n.height);
-    return a(e).drawImage(n, 0, 0), e;
+    let e = i(imageBitmap.width, imageBitmap.height);
+    return a(e).drawImage(imageBitmap, 0, 0), e;
   } finally {
-    n.close();
+    imageBitmap.close();
   }
 }
 function c(e) {
@@ -62,7 +62,7 @@ function c(e) {
         n(Error(`PNG export failed`));
         return;
       }
-      e.arrayBuffer().then(e => fn(new Uint8Array(e)), n);
+      e.arrayBuffer().then(result => fn(new Uint8Array(result)), n);
     }, `image/png`);
   });
 }
@@ -74,13 +74,13 @@ function u(e) {
   e && (e.width = 1, e.height = 1);
 }
 function d(e, t) {
-  return `#${[e[t], e[t + 1], e[t + 2]].map(e => e.toString(16).padStart(2, `0`)).join(``)}`;
+  return `#${[e[t], e[t + 1], e[t + 2]].map(item => item.toString(16).padStart(2, `0`)).join(``)}`;
 }
 var f = `system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif`,
   p = 1.3,
-  m = null;
+  count = null;
 function h() {
-  return m ||= a(i(4, 4)), m;
+  return count ||= a(i(4, 4)), count;
 }
 function g(e) {
   return `600 ${Math.round(e)}px ${f}`;
@@ -94,38 +94,38 @@ function _(e) {
   };
 }
 function v(items) {
-  let t = Number.parseInt(items.slice(1), 16),
-    n = t >> 16 & 255,
-    r = t >> 8 & 255,
-    i = t & 255;
+  let parseIntResult = Number.parseInt(items.slice(1), 16),
+    n = parseIntResult >> 16 & 255,
+    r = parseIntResult >> 8 & 255,
+    i = parseIntResult & 255;
   return (.299 * n + .587 * r + .114 * i) / 255;
 }
-function y(e) {
+function y(count) {
   let t = h();
-  t.font = g(e.size);
-  let n = e.text.split(`
+  t.font = g(count.size);
+  let parts = count.text.split(`
 `),
-    r = Math.max(e.size * .6, ...n.map(e => t.measureText(e || ` `).width));
+    r = Math.max(count.size * .6, ...parts.map(item => t.measureText(item || ` `).width));
   return {
-    x: e.x,
-    y: e.y,
+    x: count.x,
+    y: count.y,
     width: r,
-    height: n.length * e.size * p
+    height: parts.length * count.size * p
   };
 }
-function b(e) {
-  switch (e.kind) {
+function b(count) {
+  switch (count.kind) {
     case `rect`:
     case `ellipse`:
     case `mosaic`:
-      return _(e);
+      return _(count);
     case `arrow`:
     case `line`:
       return _({
-        x: e.x1,
-        y: e.y1,
-        width: e.x2 - e.x1,
-        height: e.y2 - e.y1
+        x: count.x1,
+        y: count.y1,
+        width: count.x2 - count.x1,
+        height: count.y2 - count.y1
       });
     case `pen`:
     case `highlighter`:
@@ -134,7 +134,7 @@ function b(e) {
           n = 1 / 0,
           r = -1 / 0,
           i = -1 / 0;
-        for (let a = 0; a < e.points.length; a += 2) t = Math.min(t, e.points[a]), r = Math.max(r, e.points[a]), n = Math.min(n, e.points[a + 1]), i = Math.max(i, e.points[a + 1]);
+        for (let a = 0; a < count.points.length; a += 2) t = Math.min(t, count.points[a]), r = Math.max(r, count.points[a]), n = Math.min(n, count.points[a + 1]), i = Math.max(i, count.points[a + 1]);
         return {
           x: t,
           y: n,
@@ -143,13 +143,13 @@ function b(e) {
         };
       }
     case `text`:
-      return y(e);
+      return y(count);
     case `number`:
       return {
-        x: e.x - e.size,
-        y: e.y - e.size,
-        width: e.size * 2,
-        height: e.size * 2
+        x: count.x - count.size,
+        y: count.y - count.size,
+        width: count.size * 2,
+        height: count.size * 2
       };
   }
 }
@@ -160,25 +160,25 @@ function x(e, t, n, r, i, a) {
     l = c === 0 ? 0 : Math.max(0, Math.min(1, ((e - n) * o + (t - r) * s) / c));
   return Math.hypot(e - (n + l * o), t - (r + l * s));
 }
-function S(e, t, n, r) {
-  switch (e.kind) {
+function S(count, t, n, r) {
+  switch (count.kind) {
     case `rect`:
     case `ellipse`:
     case `mosaic`:
     case `text`:
     case `number`:
       {
-        let i = b(e);
+        let i = b(count);
         return t >= i.x - r && t <= i.x + i.width + r && n >= i.y - r && n <= i.y + i.height + r;
       }
     case `arrow`:
     case `line`:
-      return x(t, n, e.x1, e.y1, e.x2, e.y2) <= Math.max(r, e.size);
+      return x(t, n, count.x1, count.y1, count.x2, count.y2) <= Math.max(r, count.size);
     case `pen`:
     case `highlighter`:
       {
-        let i = Math.max(r, e.kind === `highlighter` ? e.size * 2 : e.size),
-          points = e.points;
+        let i = Math.max(r, count.kind === `highlighter` ? count.size * 2 : count.size),
+          points = count.points;
         if (points.length === 2) return Math.hypot(t - points[0], n - points[1]) <= i;
         for (let e = 2; e < points.length; e += 2) if (x(t, n, points[e - 2], points[e - 1], points[e], points[e + 1]) <= i) return true;
         return false;
@@ -270,14 +270,14 @@ function T(e, t, n) {
     case `highlighter`:
       return {
         ...e,
-        points: e.points.map((e, r) => e + (r % 2 == 0 ? t : n))
+        points: e.points.map((item, r) => item + (r % 2 == 0 ? t : n))
       };
   }
 }
-function E(e, t) {
-  let n = _(t);
-  if (e.lineWidth = t.size, e.strokeStyle = t.color, e.lineJoin = `round`, e.beginPath(), t.kind === `ellipse`) e.ellipse(n.x + n.width / 2, n.y + n.height / 2, Math.max(.5, n.width / 2), Math.max(.5, n.height / 2), 0, 0, Math.PI * 2);else {
-    let r = Math.min(t.size * 1.2, n.width / 2, n.height / 2);
+function E(e, count) {
+  let n = _(count);
+  if (e.lineWidth = count.size, e.strokeStyle = count.color, e.lineJoin = `round`, e.beginPath(), count.kind === `ellipse`) e.ellipse(n.x + n.width / 2, n.y + n.height / 2, Math.max(.5, n.width / 2), Math.max(.5, n.height / 2), 0, 0, Math.PI * 2);else {
+    let r = Math.min(count.size * 1.2, n.width / 2, n.height / 2);
     e.roundRect(n.x, n.y, n.width, n.height, r);
   }
   e.stroke();
@@ -309,10 +309,10 @@ function D(e, t) {
     _ = Math.cos(d) * u / 2;
   e.beginPath(), e.moveTo(i, a), e.lineTo(m + g, h + _), e.quadraticCurveTo(f, p, m - g, h - _), e.closePath(), e.lineWidth = Math.max(1, o * .5), e.stroke(), e.fill();
 }
-function O(e, t) {
-  let points = t.points,
-    r = t.kind === `highlighter`;
-  if (e.save(), e.strokeStyle = t.color, e.fillStyle = t.color, e.lineCap = `round`, e.lineJoin = `round`, e.lineWidth = r ? t.size * 4 : t.size, r && (e.globalAlpha = .38), e.beginPath(), points.length === 2) {
+function O(e, count) {
+  let points = count.points,
+    r = count.kind === `highlighter`;
+  if (e.save(), e.strokeStyle = count.color, e.fillStyle = count.color, e.lineCap = `round`, e.lineJoin = `round`, e.lineWidth = r ? count.size * 4 : count.size, r && (e.globalAlpha = .38), e.beginPath(), points.length === 2) {
     e.arc(points[0], points[1], e.lineWidth / 2, 0, Math.PI * 2), e.fill(), e.restore();
     return;
   }
@@ -324,24 +324,24 @@ function O(e, t) {
   }
   e.lineTo(points[points.length - 2], points[points.length - 1]), e.stroke(), e.restore();
 }
-function k(e, t) {
-  e.save(), e.font = g(t.size), e.textBaseline = `top`, e.lineJoin = `round`, e.strokeStyle = v(t.color) > .6 ? `rgba(0,0,0,0.55)` : `rgba(255,255,255,0.9)`, e.lineWidth = Math.max(2, t.size * .16), e.fillStyle = t.color;
-  let n = t.size * p,
-    r = (n - t.size) / 2;
-  t.text.split(`
-`).forEach((i, a) => {
-    let o = t.y + a * n + r;
-    e.strokeText(i, t.x, o), e.fillText(i, t.x, o);
+function k(e, count) {
+  e.save(), e.font = g(count.size), e.textBaseline = `top`, e.lineJoin = `round`, e.strokeStyle = v(count.color) > .6 ? `rgba(0,0,0,0.55)` : `rgba(255,255,255,0.9)`, e.lineWidth = Math.max(2, count.size * .16), e.fillStyle = count.color;
+  let n = count.size * p,
+    r = (n - count.size) / 2;
+  count.text.split(`
+`).forEach((item, a) => {
+    let o = count.y + a * n + r;
+    e.strokeText(item, count.x, o), e.fillText(item, count.x, o);
   }), e.restore();
 }
-function A(e, t) {
-  let n = t.size;
-  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = n * .4, e.shadowOffsetY = n * .12, e.fillStyle = t.color, e.beginPath(), e.arc(t.x, t.y, n, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, n * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(t.color) > .7 ? `#111111` : `#ffffff`;
-  let r = String(t.value);
-  e.font = `700 ${Math.round(n * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, t.x, t.y + n * .04), e.restore();
+function A(e, count) {
+  let n = count.size;
+  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = n * .4, e.shadowOffsetY = n * .12, e.fillStyle = count.color, e.beginPath(), e.arc(count.x, count.y, n, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, n * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(count.color) > .7 ? `#111111` : `#ffffff`;
+  let r = String(count.value);
+  e.font = `700 ${Math.round(n * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, count.x, count.y + n * .04), e.restore();
 }
-function j(e, t, n, r, o) {
-  let s = _(t),
+function j(e, count, n, r, o) {
+  let s = _(count),
     c = Math.max(0, Math.floor(s.x)),
     l = Math.max(0, Math.floor(s.y)),
     u = Math.min(r, Math.ceil(s.x + s.width)),
@@ -349,7 +349,7 @@ function j(e, t, n, r, o) {
     f = u - c,
     p = d - l;
   if (f < 1 || p < 1) return;
-  let m = Math.max(2, t.size),
+  let m = Math.max(2, count.size),
     h = i(Math.max(1, Math.ceil(f / m)), Math.max(1, Math.ceil(p / m))),
     g = a(h);
   g.imageSmoothingEnabled = true, g.imageSmoothingQuality = `medium`, g.drawImage(n, c, l, f, p, 0, 0, h.width, h.height), e.save(), e.imageSmoothingEnabled = false, e.drawImage(h, 0, 0, h.width, h.height, c, l, h.width * m, h.height * m), e.restore();
@@ -392,10 +392,10 @@ function L(e, t) {
       willReadFrequently: true
     }).getImageData(0, 0, n, r).data,
     o = [i[0], i[1], i[2]];
-  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(e => I(i, e, o))) return null;
+  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(item => I(i, item, o))) return null;
   let s = Math.max(1, Math.floor(n / 1200)),
     c = Math.max(1, Math.floor(r / 1200)),
-    l = e => {
+    handler = e => {
       let t = e * n * 4;
       for (let e = 0; e < n; e += s) if (!I(i, t + e * 4, o)) return false;
       return true;
@@ -407,10 +407,10 @@ function L(e, t) {
     f = Math.floor(r * P),
     p = Math.floor(n * P),
     m = 0;
-  for (; m < f && l(m);) m += 1;
-  if (m >= f && l(Math.floor(r / 2))) return null;
+  for (; m < f && handler(m);) m += 1;
+  if (m >= f && handler(Math.floor(r / 2))) return null;
   let h = 0;
-  for (; h < f && l(r - 1 - h);) h += 1;
+  for (; h < f && handler(r - 1 - h);) h += 1;
   let g = 0;
   for (; g < p && u(g);) g += 1;
   let _ = 0;
@@ -442,7 +442,7 @@ function B(e) {
     } = e,
     r = Math.max(1, e.scale);
   if (!n.enabled) {
-    let e = {
+    let options = {
       x: 0,
       y: 0,
       width: t.width,
@@ -451,10 +451,10 @@ function B(e) {
     return {
       width: t.width,
       height: t.height,
-      window: e,
+      window: options,
       radius: 0,
       frameHeight: 0,
-      image: e,
+      image: options,
       origin: {
         x: 0,
         y: 0
@@ -475,18 +475,18 @@ function B(e) {
   p && (d / f < p ? d = Math.round(f * p) : f = Math.round(d / p)), d = Math.max(1, d), f = Math.max(1, f);
   let m = Math.round((d - c) / 2),
     h = Math.round((f - l) / 2),
-    g = {
+    options = {
       x: m,
       y: h + s,
       width: a,
       height: o
     },
     _ = i ? {
-      x: g.x + i.margin - i.left,
-      y: g.y + i.margin - i.top
+      x: options.x + i.margin - i.left,
+      y: options.y + i.margin - i.top
     } : {
-      x: g.x,
-      y: g.y
+      x: options.x,
+      y: options.y
     },
     v = Math.min(Math.round(n.radius * r), Math.floor(Math.min(c, l) / 2));
   return {
@@ -500,7 +500,7 @@ function B(e) {
     },
     radius: v,
     frameHeight: s,
-    image: g,
+    image: options,
     origin: _,
     balance: i
   };
@@ -519,18 +519,18 @@ function H(e, t, n, r) {
     u = t.height * c;
   s.filter = `blur(${Math.max(4, Math.round(Math.max(o.width, o.height) * .05))}px) saturate(1.15)`, s.drawImage(t, (o.width - l) / 2, (o.height - u) / 2, l, u), e.save(), e.imageSmoothingEnabled = true, e.imageSmoothingQuality = `high`, e.drawImage(o, 0, 0, n, r), e.fillStyle = `rgba(255,255,255,0.12)`, e.fillRect(0, 0, n, r), e.restore();
 }
-var U = null;
+var request = null;
 function W(fn) {
-  if (U?.url === fn) return U;
-  let t = new Image(),
-    n = new Promise((e, n) => {
-      t.onload = () => e(), t.onerror = () => n(Error(`Background image could not be decoded`));
+  if (request?.url === fn) return request;
+  let image = new Image(),
+    promise = new Promise((e, n) => {
+      image.onload = () => e(), image.onerror = () => n(Error(`Background image could not be decoded`));
     });
-  return t.src = fn, U = {
+  return image.src = fn, request = {
     url: fn,
-    image: t,
-    ready: n
-  }, U;
+    image: image,
+    ready: promise
+  }, request;
 }
 function G(e, t, r, i) {
   let {
@@ -549,9 +549,9 @@ function G(e, t, r, i) {
       } else n.ready.then(() => t.onBackgroundLoaded?.(), () => {});
     }
   } else if (a.backgroundKind === `solid`) e.fillStyle = a.backgroundColor, e.fillRect(0, 0, o, s);else if (a.backgroundKind === `gradient`) {
-    let t = n.find(e => e.id === a.gradientId) ?? n[0],
-      r = e.createLinearGradient(0, 0, o, s);
-    r.addColorStop(0, t.stops[0]), r.addColorStop(1, t.stops[1]), e.fillStyle = r, e.fillRect(0, 0, o, s);
+    let fallbackValue = n.find(item => item.id === a.gradientId) ?? n[0],
+      linearGradient = e.createLinearGradient(0, 0, o, s);
+    linearGradient.addColorStop(0, fallbackValue.stops[0]), linearGradient.addColorStop(1, fallbackValue.stops[1]), e.fillStyle = linearGradient, e.fillRect(0, 0, o, s);
   } else a.backgroundKind === `blur` && H(e, t.source, o, s);
   let c = a.shadow / 100;
   if (c <= 0) return;
@@ -562,25 +562,25 @@ function G(e, t, r, i) {
       width: f,
       height: p
     } = r.window,
-    m = () => {
+    handler = () => {
       e.beginPath(), e.roundRect(u * i, d * i, f * i, p * i, r.radius * i);
     };
-  e.save(), e.fillStyle = `#ffffff`, e.shadowColor = `rgba(0,0,0,${(.12 + .33 * c).toFixed(3)})`, e.shadowBlur = (8 + 52 * c) * l, e.shadowOffsetY = (2 + 22 * c) * l, m(), e.fill(), e.shadowColor = `rgba(0,0,0,${(.06 + .1 * c).toFixed(3)})`, e.shadowBlur = (2 + 4 * c) * l, e.shadowOffsetY = l, m(), e.fill(), e.restore();
+  e.save(), e.fillStyle = `#ffffff`, e.shadowColor = `rgba(0,0,0,${(.12 + .33 * c).toFixed(3)})`, e.shadowBlur = (8 + 52 * c) * l, e.shadowOffsetY = (2 + 22 * c) * l, handler(), e.fill(), e.shadowColor = `rgba(0,0,0,${(.06 + .1 * c).toFixed(3)})`, e.shadowBlur = (2 + 4 * c) * l, e.shadowOffsetY = l, handler(), e.fill(), e.restore();
 }
 function K(e, t, n, r) {
   if (n.frameHeight <= 0) return;
-  let i = t.frame.endsWith(`dark`),
+  let endsWith = t.frame.endsWith(`dark`),
     {
       x: a,
       y: o,
       width: s
     } = n.window,
     frameHeight = n.frameHeight;
-  e.fillStyle = i ? `#2c2c2e` : `#f2f2f3`, e.fillRect(a, o, s, frameHeight), e.fillStyle = i ? `rgba(0,0,0,0.5)` : `rgba(0,0,0,0.08)`, e.fillRect(a, o + frameHeight - Math.max(1, Math.round(r)), s, Math.max(1, Math.round(r)));
+  e.fillStyle = endsWith ? `#2c2c2e` : `#f2f2f3`, e.fillRect(a, o, s, frameHeight), e.fillStyle = endsWith ? `rgba(0,0,0,0.5)` : `rgba(0,0,0,0.08)`, e.fillRect(a, o + frameHeight - Math.max(1, Math.round(r)), s, Math.max(1, Math.round(r)));
   let l = 6 * r,
     u = o + frameHeight / 2;
-  if ([`#ff5f57`, `#febc2e`, `#28c840`].forEach((t, n) => {
-    e.fillStyle = t, e.beginPath(), e.arc(a + 16 * r + l + n * 20 * r, u, l, 0, Math.PI * 2), e.fill();
+  if ([`#ff5f57`, `#febc2e`, `#28c840`].forEach((item, n) => {
+    e.fillStyle = item, e.beginPath(), e.arc(a + 16 * r + l + n * 20 * r, u, l, 0, Math.PI * 2), e.fill();
   }), t.frame.startsWith(`browser`)) {
     let t = a + 92 * r,
       n = a + s - 20 * r,
@@ -588,7 +588,7 @@ function K(e, t, n, r) {
     if (o > 40 * r) {
       let a = 24 * r,
         s = t + Math.max(0, (n - t - o) / 2);
-      e.fillStyle = i ? `#3a3a3d` : `#ffffff`, e.beginPath(), e.roundRect(s, u - a / 2, o, a, a / 2), e.fill(), e.fillStyle = i ? `rgba(255,255,255,0.18)` : `rgba(0,0,0,0.12)`, e.beginPath(), e.roundRect(s + 14 * r, u - 3 * r, Math.min(180 * r, o * .4), 6 * r, 3 * r), e.fill();
+      e.fillStyle = endsWith ? `#3a3a3d` : `#ffffff`, e.beginPath(), e.roundRect(s, u - a / 2, o, a, a / 2), e.fill(), e.fillStyle = endsWith ? `rgba(255,255,255,0.18)` : `rgba(0,0,0,0.12)`, e.beginPath(), e.roundRect(s + 14 * r, u - 3 * r, Math.min(180 * r, o * .4), 6 * r, 3 * r), e.fill();
     }
   }
 }
@@ -601,12 +601,12 @@ function q(e, t, n, r = 1, event) {
     u = Math.round(n.height * r);
   if (e.save(), e.clearRect(0, 0, l, u), c.enabled) {
     let s = c.backgroundKind === `image` && c.backgroundImage ? W(c.backgroundImage) : null,
-      d = JSON.stringify([c.backgroundKind, c.backgroundColor, c.backgroundImage, !!s?.image.naturalWidth, c.gradientId, c.shadow, c.radius, n.window, n.width, n.height, l, u, t.scale]);
+      serialized = JSON.stringify([c.backgroundKind, c.backgroundColor, c.backgroundImage, !!s?.image.naturalWidth, c.gradientId, c.shadow, c.radius, n.window, n.width, n.height, l, u, t.scale]);
     if (event) {
-      if (event.key !== d || !event.canvas) {
+      if (event.key !== serialized || !event.canvas) {
         let e = event.canvas && event.canvas.width === l && event.canvas.height === u ? event.canvas : i(l, u),
           s = a(e);
-        s.clearRect(0, 0, e.width, e.height), G(s, t, n, r), event.canvas = e, event.key = d;
+        s.clearRect(0, 0, e.width, e.height), G(s, t, n, r), event.canvas = e, event.key = serialized;
       }
       e.drawImage(event.canvas, 0, 0);
     } else G(e, t, n, r);
