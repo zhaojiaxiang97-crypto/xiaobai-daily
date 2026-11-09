@@ -149,3 +149,23 @@ app.asar.unpacked/
 | 待办本地化 | auth.service | 文件尾 `localTodoDatabase`/`localTodoAction`（~120 行）|
 | 前端 UI 清理 | dist/assets/main-*.js | 各已删功能的挂载点（详见 README 改造清单）|
 | API 设置页 | dist/assets/main-*.js | `ApiSettingsPage` 组件 |
+
+## 单文件 bundle 的定位方法（工程性补充）
+
+`src/renderer/chunks/main.js`（11MB）是打包产物形态，组件与函数全部内联。物理分文件
+（组件级拆分）需要符号重映射，实测边界如下：
+
+- 顶层声明 **9986 个，无重复**（已核验）——同名冲突不来自顶层
+- 早期拆分失败的根因是「一条 var 逗号链含多个组件却写成多个文件」→ 同一链被复制多份
+  → 聚合导出时同名冲突。按**链**（而非按组件）拆可规避
+- 仍存在的风险：链内 `var` 赋值顺序依赖、跨链前向引用（拆分后 import 提升会改变
+  初始化顺序）、以及 `new URL(..., import.meta.url)` 图像路径在移动后失效
+
+因此当前采用**索引式可读性**而非物理拆分：
+
+- [docs/COMPONENT-INDEX.md](COMPONENT-INDEX.md)——418 个组件 + 1600 个顶层函数的
+  「名称 → 行号」索引，以及按库特征密度切分的**文件区块地图**（chart.js / reka-ui /
+  markdown-it / Vue 运行时 / 业务 各占哪段行区间）
+
+实际开发时：按组件名查索引 → 跳到行号 → 该行附近即组件定义；该组件依赖的共享
+CSS 常量与工具函数同在文件内（就近可查）。
