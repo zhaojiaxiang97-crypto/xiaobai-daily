@@ -10,7 +10,7 @@ const __vite__mapDeps = (
       "../styles/preload-helper.css",
       "../ui/icons/lucide-icons.js",
       "../ui/icons/icon-clapperboard.js",
-      "./screenshot-beautifier-page.js",
+      
       "../ui/icons/icon-minimize.js",
       "../ui/icons/icon-pause.js",
       "./alert.js",
@@ -28,34 +28,34 @@ const __vite__mapDeps = (
       "../blocks/douyin-d2-block.js",
       "../blocks/placeholder.js",
       "../vendors/Barcode3D.js",
-      "./seedream.js",
+      
       "../ui/Switch.js",
       "../i18n/i18n-helper.js",
       "../i18n/en-US-main.js",
-      "../pages/ToolboxWorkspaceHeader.js",
-      "../pages/ToolboxSelect.js",
-      "../pages/ToolPricingBadge.js",
+      
+      
+      
       "./square-play.js",
       "./dialog.js",
       "../ui/DialogTitle.js",
       "./useReferenceImages.js",
-      "../pages/ToolDropzone.js",
-      "../pages/ToolEmptyState.js",
-      "../pages/ToolPageIntro.js",
-      "../pages/ToolStepHeading.js",
-      "./gpt-image-2.js",
+      
+      
+      
+      
+      
       "./useGrowthTelemetry.js",
       "./use-telemetry.js",
-      "./seedance-2.js",
-      "./voice-clone.js",
+      
+      
       "./check.js",
-      "../pages/VoiceSynthesisWorkspace.js",
+      
       "./volume-2.js",
       "../ui/alert-dialog.js",
       "../ui/Slider.js",
       "../ui/Collection.js",
       "../ui/AlertDialogMedia.js",
-      "./voice-synthesis.js",
+      
       "../pages/whiteboard.js",
       "./circle-question-mark.js",
       "./image-down.js",
@@ -63,11 +63,11 @@ const __vite__mapDeps = (
       "./pen-line.js",
       "./toolbox-local.js",
       "../ui/Kbd.js",
-      "./pdf-compress.js",
+      
       "./file-down.js",
-      "../pages/ToolSavingRing.js",
-      "./image-compress.js",
-      "./multi-platform-publisher.js",
+      
+      
+      
       "./work-motivator.js",
       "./points.js",
       "../pages/markdown-reader.js",
@@ -83,10 +83,10 @@ const __vite__mapDeps = (
       "./clipboard-list.js",
       "./clipboard-assistant-page.js",
       "./shortcut-label.js",
-      "./screenshot-beautifier-page.js",
+      
       "./camera.js",
       "./shield-alert.js",
-      "../pages/WoodenFishTool.js",
+      
       "./tool-icons.js",
       "./flag.js",
       "../pages/DesktopWidgetPage.js",
@@ -96,10 +96,13 @@ const __vite__mapDeps = (
       "./HeatMapRangePicker.js",
       "../ui/PopoverTrigger.js",
       "../pages/MouseHeatmapTool.js",
-      "../pages/WorkMotivatorTool.js",
+      
       "./format-number.js",
       "../pages/milestone.js",
-    ]),
+    
+      "../pages/ToolDropzone.js",
+      "../pages/ToolboxWorkspaceHeader.js",
+      "../pages/ToolboxSelect.js",]),
 ) => i.map((i) => d[i]);
 import {
   A as e,
