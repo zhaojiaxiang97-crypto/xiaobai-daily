@@ -2395,15 +2395,15 @@ var oa = lucideR(`activity`, [[`path`, {
       },
       variant: {}
     },
-    setup(e) {
-      let t = e;
-      return (n, r) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `alert`,
         class: normalizeClass(unref(uiSwitchXt)(unref(pc)({
-          variant: e.variant
+          variant: props.variant
         }), t.class)),
         role: `alert`
-      }, [withCtx(n.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   defineComponentData = defineComponent({
@@ -2413,12 +2413,12 @@ var oa = lucideR(`activity`, [[`path`, {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `alert-description`,
         class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-sm text-balance md:text-pretty [&_p:not(:last-child)]:mb-4 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   AlertTitle = defineComponent({
@@ -2428,12 +2428,12 @@ var oa = lucideR(`activity`, [[`path`, {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `alert-title`,
         class: normalizeClass(unref(uiSwitchXt)(`font-medium group-has-[>svg]/alert:col-start-2 cn-font-heading [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   pc = uiSwitchSt(`grid gap-0.5 rounded-lg border px-2.5 py-2 text-left text-sm has-data-[slot=alert-action]:relative has-data-[slot=alert-action]:pr-18 has-[>svg]:grid-cols-[auto_1fr] has-[>svg]:gap-x-2 *:[svg]:row-span-2 *:[svg]:translate-y-0.5 *:[svg]:text-current *:[svg:not([class*=size-])]:size-4 group/alert relative w-full`, {
@@ -2566,8 +2566,8 @@ var DialogTrigger = defineComponent({
       default: `button`
     }
   },
-  setup(e) {
-    let t = e,
+  setup(props) {
+    let t = props,
       n = ci(),
       {
         forwardRef: r,
@@ -2657,11 +2657,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
     },
     emits: [`update:modelValue`, `highlight`, `entryFocus`, `leave`],
     setup(items, {
-      expose: n,
-      emit: r
+      expose: expose,
+      emit: emit
     }) {
       let itemsAlias = items,
-        a = r,
+        a = emit,
         {
           multiple: o,
           highlightOnHover: s,
@@ -2849,7 +2849,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       }, {
         immediate: true,
         deep: true
-      }), n({
+      }), expose({
         highlightedElement: D,
         highlightItem: ie,
         highlightFirstItem: ue,
@@ -2925,24 +2925,24 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         } = collectionT(),
         n = Dc(),
         r = Oe(false, 10);
-      return (e, i) => (openBlock(), createBlock(unref(t), null, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(t), null, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), {
           role: `listbox`,
-          as: e.as,
-          "as-child": e.asChild,
+          as: ctx.as,
+          "as-child": ctx.asChild,
           tabindex: unref(n).focusable.value ? unref(n).highlightedElement.value ? `-1` : `0` : `-1`,
           "aria-orientation": unref(n).orientation.value,
           "aria-multiselectable": !!unref(n).multiple.value,
           "data-orientation": unref(n).orientation.value,
-          onMousedown: i[0] ||= withDirectives(e => r.value = true, [`left`]),
-          onFocus: i[1] ||= e => {
+          onMousedown: cache[0] ||= withDirectives(e => r.value = true, [`left`]),
+          onFocus: cache[1] ||= e => {
             unref(r) || unref(n).onEnter(e);
           },
-          onKeydown: [i[2] ||= playerT(e => {
+          onKeydown: [cache[2] ||= playerT(e => {
             (unref(n).orientation.value !== `vertical` || e.key !== `ArrowLeft` && e.key !== `ArrowRight`) && (unref(n).orientation.value !== `horizontal` || e.key !== `ArrowUp` && e.key !== `ArrowDown`) && (e.preventDefault(), unref(n).focusable.value && unref(n).onKeydownNavigation(e));
           }, [`down`, `up`, `left`, `right`, `home`, `end`]), playerT(unref(n).onKeydownEnter, [`enter`]), unref(n).onKeydownTypeAhead]
         }, {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }, 8, [`as`, `as-child`, `tabindex`, `aria-orientation`, `aria-multiselectable`, `data-orientation`, `onKeydown`])]),
         _: 3
@@ -2975,11 +2975,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       }
     },
     emits: [`update:modelValue`],
-    setup(t, {
-      emit: n
+    setup(props, {
+      emit: emit
     }) {
-      let r = t,
-        i = uiSwitchAt(r, `modelValue`, n, {
+      let r = props,
+        i = uiSwitchAt(r, `modelValue`, emit, {
           defaultValue: ``,
           passive: r.modelValue === undefined
         }),
@@ -3018,11 +3018,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       function v(e) {
         u.value || a.onKeydownEnter(e);
       }
-      return (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         ref_key: `primitiveElement`,
         ref: o,
-        as: e.as,
-        "as-child": e.asChild,
+        as: ctx.as,
+        "as-child": ctx.asChild,
         value: unref(i),
         disabled: computedResult.value ? `` : undefined,
         "data-disabled": computedResult.value ? `` : undefined,
@@ -3035,7 +3035,7 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         onCompositionupdate: unref(p),
         onCompositionend: unref(m)
       }, {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           modelValue: unref(i)
         })]),
         _: 3
@@ -3055,8 +3055,8 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchI(undefined, `reka-listbox-group`);
       return Fc({
         id: n
@@ -3087,15 +3087,15 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
         default: `div`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = Pc({
           id: ``
         });
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         id: unref(n).id
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }
@@ -3124,11 +3124,11 @@ var [Dc, Oc] = uiSwitchYt(`ListboxRoot`),
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchI(undefined, `reka-listbox-item`),
         {
           CollectionItem: a
@@ -3202,7 +3202,7 @@ var [Hc, Uc] = uiSwitchYt(`AvatarRoot`),
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       return uiSwitchV(), Uc({
         imageLoadingStatus: ref(`idle`)
       }), (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
@@ -3231,8 +3231,8 @@ var [Hc, Uc] = uiSwitchYt(`AvatarRoot`),
         default: `span`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = Hc();
       uiSwitchV();
       let r = ref(t.delayMs === undefined);
@@ -3310,11 +3310,11 @@ var AvatarImage = defineComponent({
       }
     },
     emits: [`loadingStatusChange`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           src: i,
           referrerPolicy: a,
@@ -3487,10 +3487,10 @@ var AvatarImage = defineComponent({
     },
     emits: [`update:modelValue`, `update:placeholder`],
     setup(items, {
-      emit: n
+      emit: emit
     }) {
       let itemsAlias = items,
-        i = n,
+        i = emit,
         {
           disabled: a,
           readonly: o,
@@ -3684,17 +3684,17 @@ var AvatarImage = defineComponent({
         default: `td`
       }
     },
-    setup(e) {
+    setup(props) {
       let t = Zc();
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), {
-        as: e.as,
-        "as-child": e.asChild,
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
+        as: ctx.as,
+        "as-child": ctx.asChild,
         role: `gridcell`,
-        "aria-selected": unref(t).isDateSelected(e.date) ? true : undefined,
-        "aria-disabled": unref(t).isDateDisabled(e.date) || unref(t).isDateUnavailable?.(e.date) || unref(t).disableDaysOutsideCurrentView.value,
-        "data-disabled": unref(t).isDateDisabled(e.date) || unref(t).disableDaysOutsideCurrentView.value ? `` : undefined
+        "aria-selected": unref(t).isDateSelected(ctx.date) ? true : undefined,
+        "aria-disabled": unref(t).isDateDisabled(ctx.date) || unref(t).isDateUnavailable?.(ctx.date) || unref(t).disableDaysOutsideCurrentView.value,
+        "data-disabled": unref(t).isDateDisabled(ctx.date) || unref(t).disableDaysOutsideCurrentView.value ? `` : undefined
       }, {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`as`, `as-child`, `aria-selected`, `aria-disabled`, `data-disabled`]));
     }
@@ -3720,8 +3720,8 @@ var AvatarImage = defineComponent({
         default: `div`
       }
     },
-    setup(t) {
-      let n = t,
+    setup(props) {
+      let n = props,
         r = bn(),
         i = Zc(),
         {
@@ -3793,7 +3793,7 @@ var AvatarImage = defineComponent({
           i.onPlaceholderChange(r), selector?.focus();
         }
       }
-      return (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         ref_key: `primitiveElement`,
         ref: a,
         as: n.as,
@@ -3803,7 +3803,7 @@ var AvatarImage = defineComponent({
         "data-reka-calendar-cell-trigger": ``,
         "aria-disabled": p.value || l.value ? true : undefined,
         "data-selected": h.value ? true : undefined,
-        "data-value": e.day.toString(),
+        "data-value": ctx.day.toString(),
         "data-disabled": p.value ? `` : undefined,
         "data-unavailable": l.value ? `` : undefined,
         "data-today": u.value ? `` : undefined,
@@ -3814,7 +3814,7 @@ var AvatarImage = defineComponent({
         onClick: _,
         onKeydown: playerT(v, [`up`, `down`, `left`, `right`, `space`, `enter`])
       }, {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           dayValue: computedResult.value,
           disabled: p.value,
           today: u.value,
@@ -3840,12 +3840,12 @@ var AvatarImage = defineComponent({
         default: `table`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = Zc(),
         computedResult = computed(() => n.disabled.value ? true : undefined),
         computedData = computed(() => n.readonly.value ? true : undefined);
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         tabindex: `-1`,
         role: `application`,
         "aria-readonly": computedData.value,
@@ -3853,7 +3853,7 @@ var AvatarImage = defineComponent({
         "data-readonly": computedData.value && ``,
         "data-disabled": computedResult.value && ``
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`aria-readonly`, `aria-disabled`, `data-readonly`, `data-disabled`]));
     }
@@ -3871,10 +3871,10 @@ var AvatarImage = defineComponent({
         default: `tbody`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -3892,12 +3892,12 @@ var AvatarImage = defineComponent({
         default: `thead`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         "aria-hidden": `true`
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -3915,10 +3915,10 @@ var AvatarImage = defineComponent({
         default: `tr`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -3936,10 +3936,10 @@ var AvatarImage = defineComponent({
         default: `th`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -3957,10 +3957,10 @@ var AvatarImage = defineComponent({
         default: `div`
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -3978,13 +3978,13 @@ var AvatarImage = defineComponent({
         default: `div`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = Zc();
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         "data-disabled": unref(n).disabled.value ? `` : undefined
       }), {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           headingValue: unref(n).headingValue.value
         }, () => [createTextVNode(toDisplayString(unref(n).headingValue.value), 1)])]),
         _: 3
@@ -4008,14 +4008,14 @@ var AvatarImage = defineComponent({
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         computedResult = computed(() => r.disabled.value || r.isNextButtonDisabled(t.nextPage)),
         r = Zc();
       function i() {
         computedResult.value || r.nextPage(t.nextPage);
       }
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         as: t.as,
         "as-child": t.asChild,
         "aria-label": `Next page`,
@@ -4025,9 +4025,9 @@ var AvatarImage = defineComponent({
         disabled: computedResult.value,
         onClick: i
       }, {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           disabled: computedResult.value
-        }, () => [r[0] ||= createTextVNode(` Next page `)])]),
+        }, () => [cache[0] ||= createTextVNode(` Next page `)])]),
         _: 3
       }, 8, [`as`, `as-child`, `type`, `aria-disabled`, `data-disabled`, `disabled`]));
     }
@@ -4049,14 +4049,14 @@ var AvatarImage = defineComponent({
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         computedResult = computed(() => r.disabled.value || r.isPrevButtonDisabled(t.prevPage)),
         r = Zc();
       function i() {
         computedResult.value || r.prevPage(t.prevPage);
       }
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         "aria-label": `Previous page`,
         as: t.as,
         "as-child": t.asChild,
@@ -4066,9 +4066,9 @@ var AvatarImage = defineComponent({
         disabled: computedResult.value,
         onClick: i
       }, {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           disabled: computedResult.value
-        }, () => [r[0] ||= createTextVNode(` Prev page `)])]),
+        }, () => [cache[0] ||= createTextVNode(` Prev page `)])]),
         _: 3
       }, 8, [`as`, `as-child`, `type`, `aria-disabled`, `data-disabled`, `disabled`]));
     }
@@ -4137,10 +4137,10 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     },
     emits: [`update:modelValue`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
-        r = t,
+        r = emit,
         {
           forwardRef: i,
           currentElement: a
@@ -4225,13 +4225,13 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           forwardRef: t
         } = uiSwitchV(),
         n = ml();
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchN), {
-        present: e.forceMount || unref(fl)(unref(n).state.value) || unref(n).state.value === true
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchN), {
+        present: ctx.forceMount || unref(fl)(unref(n).state.value) || unref(n).state.value === true
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), vueNt({
           ref: unref(t),
@@ -4240,10 +4240,10 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
           style: {
             pointerEvents: `none`
           },
-          "as-child": e.asChild,
-          as: e.as
-        }, e.$attrs), {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          "as-child": ctx.asChild,
+          as: ctx.as
+        }, ctx.$attrs), {
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`data-state`, `data-disabled`, `as-child`, `as`])]),
         _: 3
@@ -4269,11 +4269,11 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let r = e,
-        i = t,
+      let r = props,
+        i = emit,
         a = uiSwitchLt(r, [`modelValue`]),
         o = uiSwitchB(a),
         s = uiSwitchAt(r, `modelValue`, i);
@@ -4315,11 +4315,11 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let i = e,
-        a = t,
+      let i = props,
+        a = emit,
         o = uiSwitchLt(i, [`value`]),
         s = uiSwitchB(o),
         {
@@ -4355,13 +4355,13 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         role: `separator`,
         "aria-orientation": `horizontal`
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -4387,11 +4387,11 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           dir: i,
           modal: a,
@@ -4506,13 +4506,13 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `closeAutoFocus`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
-      let n = uiSwitchZ(event, t);
+      let n = uiSwitchZ(event, emit);
       uiSwitchV();
       let r = Cl(),
         flag = ref(false);
-      return (e, renderCache) => (openBlock(), createBlock(unref(Rr), vueNt(unref(n), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(Rr), vueNt(unref(n), {
         side: `right`,
         "side-offset": 2,
         align: `start`,
@@ -4531,7 +4531,7 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
           e.detail.originalEvent.button === 2 && e.target === unref(r).triggerElement.value && e.preventDefault(), !e.defaultPrevented && !unref(r).modal.value && (flag.value = true);
         }
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -4548,8 +4548,8 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
         required: false
       }
     },
-    setup(e) {
-      let t = e;
+    setup(props) {
+      let t = props;
       return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(ti), vueTr(vueV(t)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -4577,11 +4577,11 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = T(t);
+      let n = props,
+        r = T(emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(Ur), vueTr(vueV({
         ...n,
         ...unref(r)
@@ -4611,10 +4611,10 @@ var [ml, hl] = uiSwitchYt(`CheckboxRoot`),
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(Br), vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(Br), vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -4727,8 +4727,8 @@ var ContextMenuTrigger = defineComponent({
         required: false
       }
     },
-    setup(e) {
-      let t = e;
+    setup(props) {
+      let t = props;
       uiSwitchV();
       let n = Cn();
       return Ze(() => {
@@ -4753,8 +4753,8 @@ var ContextMenuTrigger = defineComponent({
         required: false
       }
     },
-    setup(e) {
-      let t = e;
+    setup(props) {
+      let t = props;
       return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(ti), vueTr(vueV(t)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -4778,11 +4778,11 @@ var ContextMenuTrigger = defineComponent({
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = T(t);
+      let n = props,
+        r = T(emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(MenuRadioGroup), vueTr(vueV({
         ...n,
         ...unref(r)
@@ -4817,10 +4817,10 @@ var ContextMenuTrigger = defineComponent({
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = uiSwitchZ(e, t);
+      let n = uiSwitchZ(props, emit);
       return uiSwitchV(), (e, t) => (openBlock(), createBlock(unref(MenuRadioItem), vueTr(vueV(unref(n))), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -4839,8 +4839,8 @@ var ContextMenuTrigger = defineComponent({
         required: false
       }
     },
-    setup(e) {
-      let t = e;
+    setup(props) {
+      let t = props;
       return uiSwitchV(), (e, n) => (openBlock(), createBlock(unref(MenuSeparator), vueTr(vueV(t)), {
         default: H(() => [withCtx(e.$slots, `default`)]),
         _: 3
@@ -4921,11 +4921,11 @@ var ProgressRoot = defineComponent({
       }
     },
     emits: [`update:modelValue`, `update:max`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t;
+      let n = props,
+        r = emit;
       uiSwitchV();
       let i = uiSwitchAt(n, `modelValue`, r, {
           passive: n.modelValue === undefined
@@ -4981,8 +4981,8 @@ var ProgressRoot = defineComponent({
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = zl();
       return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         "data-state": unref(n).progressState.value,
@@ -5043,10 +5043,10 @@ var Radio = defineComponent({
     },
     emits: [`update:checked`, `select`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         i = uiSwitchAt(eventAlias, `checked`, r, {
           passive: eventAlias.checked === undefined
         }),
@@ -5065,40 +5065,40 @@ var Radio = defineComponent({
           r(`select`, e), !e?.defaultPrevented && (i.value = true, c.value && e.stopPropagation());
         });
       }
-      return (e, t) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
-        id: e.id,
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
+        id: ctx.id,
         ref: unref(o),
         role: `radio`,
-        type: e.as === `button` ? `button` : undefined,
-        as: e.as,
+        type: ctx.as === `button` ? `button` : undefined,
+        as: ctx.as,
         "aria-checked": unref(i) ?? false,
         "aria-label": computedResult.value,
-        "as-child": e.asChild,
-        disabled: e.disabled ? `` : undefined,
+        "as-child": ctx.asChild,
+        disabled: ctx.disabled ? `` : undefined,
         "data-state": unref(i) ? `checked` : `unchecked`,
-        "data-disabled": e.disabled ? `` : undefined,
+        "data-disabled": ctx.disabled ? `` : undefined,
         value: unref(a),
-        required: e.required,
-        name: e.name
+        required: ctx.required,
+        name: ctx.name
       }, {
         ...unref(u),
-        ...e.$attrs
+        ...ctx.$attrs
       }, {
         onClick: withDirectives(f, [`stop`])
       }), {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           checked: unref(i)
         })]),
         _: 3
-      }, 16, [`id`, `type`, `as`, `aria-checked`, `aria-label`, `as-child`, `disabled`, `data-state`, `data-disabled`, `value`, `required`, `name`]), unref(c) && e.name ? (openBlock(), createBlock(unref(ce), vueNt({
+      }, 16, [`id`, `type`, `as`, `aria-checked`, `aria-label`, `as-child`, `disabled`, `data-state`, `data-disabled`, `value`, `required`, `name`]), unref(c) && ctx.name ? (openBlock(), createBlock(unref(ce), vueNt({
         key: 0,
         type: `radio`,
         tabindex: `-1`,
         value: unref(a),
         checked: !!unref(i),
-        name: e.name,
-        disabled: e.disabled,
-        required: e.required
+        name: ctx.name,
+        disabled: ctx.disabled,
+        required: ctx.required
       }, unref(u)), null, 16, [`value`, `checked`, `name`, `disabled`, `required`])) : createCommentVNode(`v-if`, true)], 64));
     }
   }),
@@ -5152,11 +5152,11 @@ var Radio = defineComponent({
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           forwardRef: i,
           currentElement: a
@@ -5254,10 +5254,10 @@ var Radio = defineComponent({
     },
     emits: [`select`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           forwardRef: i,
           currentElement: a
@@ -5283,7 +5283,7 @@ var Radio = defineComponent({
         }, 0);
       }
       let p = x();
-      return (state, t) => (openBlock(), createBlock(unref(Ei), {
+      return (state, cache) => (openBlock(), createBlock(unref(Ei), {
         checked: l.value,
         disabled: computedResult.value,
         "as-child": ``,
@@ -5299,9 +5299,9 @@ var Radio = defineComponent({
           checked: l.value,
           required: computedData.value,
           disabled: computedResult.value,
-          "onUpdate:checked": t[0] ||= t => unref(o).changeModelValue(state.value),
-          onSelect: t[1] ||= e => r(`select`, e),
-          onKeydown: t[2] ||= playerT(withDirectives(() => {}, [`prevent`]), [`enter`]),
+          "onUpdate:checked": cache[0] ||= t => unref(o).changeModelValue(state.value),
+          onSelect: cache[1] ||= e => r(`select`, e),
+          onKeydown: cache[2] ||= playerT(withDirectives(() => {}, [`prevent`]), [`enter`]),
           onFocus: f
         }), {
           default: H(() => [withCtx(state.$slots, `default`, {
@@ -5332,22 +5332,22 @@ var Radio = defineComponent({
         default: `span`
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           forwardRef: t
         } = uiSwitchV(),
         n = Ql();
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchN), {
-        present: e.forceMount || unref(n).checked.value
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchN), {
+        present: ctx.forceMount || unref(n).checked.value
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), vueNt({
           ref: unref(t),
           "data-state": unref(n).checked.value ? `checked` : `unchecked`,
           "data-disabled": unref(n).disabled.value ? `` : undefined,
-          "as-child": e.asChild,
-          as: e.as
-        }, e.$attrs), {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          "as-child": ctx.asChild,
+          as: ctx.as
+        }, ctx.$attrs), {
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`data-state`, `data-disabled`, `as-child`, `as`])]),
         _: 3
@@ -5381,10 +5381,10 @@ var Radio = defineComponent({
         required: false
       }
     },
-    setup(e, {
-      expose: t
+    setup(props, {
+      expose: expose
     }) {
-      let n = e,
+      let n = props,
         counter = ref(0),
         i = ref(0),
         state = ref(),
@@ -5410,7 +5410,7 @@ var Radio = defineComponent({
           left: 0
         });
       }
-      t({
+      expose({
         viewport: state,
         scrollTop: h,
         scrollTopLeft: g
@@ -5472,7 +5472,7 @@ var Radio = defineComponent({
   }),
   ScrollAreaCornerImpl = defineComponent({
     __name: `ScrollAreaCornerImpl`,
-    setup(e) {
+    setup(props) {
       let t = nu(),
         counter = ref(0),
         r = ref(0),
@@ -5513,20 +5513,20 @@ var Radio = defineComponent({
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           forwardRef: n
         } = uiSwitchV(),
         r = nu(),
         computedResult = computed(() => !!r.scrollbarX.value && !!r.scrollbarY.value),
         computedData = computed(() => r.type.value !== `scroll` && computedResult.value);
-      return (e, r) => computedData.value ? (openBlock(), createBlock(ScrollAreaCornerImpl, vueNt({
+      return (ctx, cache) => computedData.value ? (openBlock(), createBlock(ScrollAreaCornerImpl, vueNt({
         key: 0
       }, t, {
         ref: unref(n)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16)) : createCommentVNode(`v-if`, true);
     }
@@ -5593,7 +5593,7 @@ function mu(e, t) {
 }
 var ScrollAreaScrollbarX = defineComponent({
     __name: `ScrollAreaScrollbarX`,
-    setup(e) {
+    setup(props) {
       let t = nu(),
         n = wu(),
         {
@@ -5606,7 +5606,7 @@ var ScrollAreaScrollbarX = defineComponent({
         t.onScrollbarXChange(null);
       });
       let computedResult = computed(() => n.sizes.value);
-      return (e, renderCache) => (openBlock(), createBlock(ScrollAreaScrollbarImpl, {
+      return (ctx, renderCache) => (openBlock(), createBlock(ScrollAreaScrollbarImpl, {
         ref: unref(r),
         "is-horizontal": true,
         "data-orientation": `horizontal`,
@@ -5618,14 +5618,14 @@ var ScrollAreaScrollbarX = defineComponent({
         }),
         onOnDragScroll: renderCache[0] ||= e => unref(n).onDragScroll(e.x)
       }, {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`style`]));
     }
   }),
   ScrollAreaScrollbarY = defineComponent({
     __name: `ScrollAreaScrollbarY`,
-    setup(e) {
+    setup(props) {
       let t = nu(),
         n = wu(),
         {
@@ -5638,7 +5638,7 @@ var ScrollAreaScrollbarX = defineComponent({
         t.onScrollbarYChange(null);
       });
       let computedResult = computed(() => n.sizes.value);
-      return (e, renderCache) => (openBlock(), createBlock(ScrollAreaScrollbarImpl, {
+      return (ctx, renderCache) => (openBlock(), createBlock(ScrollAreaScrollbarImpl, {
         ref: unref(r),
         "is-horizontal": false,
         "data-orientation": `vertical`,
@@ -5651,7 +5651,7 @@ var ScrollAreaScrollbarX = defineComponent({
         }),
         onOnDragScroll: renderCache[0] ||= e => unref(n).onDragScroll(e.y)
       }, {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`style`]));
     }
@@ -5664,7 +5664,7 @@ var ScrollAreaScrollbarX = defineComponent({
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let t = nu(),
         n = xu(),
         {
@@ -5701,7 +5701,7 @@ var ScrollAreaScrollbarX = defineComponent({
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let t = nu(),
         n = xu(),
         {
@@ -5799,7 +5799,7 @@ var ScrollAreaScrollbarX = defineComponent({
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let t = nu(),
         {
           forwardRef: n
@@ -5842,7 +5842,7 @@ var ScrollAreaScrollbarX = defineComponent({
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let t = nu(),
         n = xu(),
         {
@@ -5930,8 +5930,8 @@ var ScrollAreaScrollbarX = defineComponent({
         default: `div`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           forwardRef: n
         } = uiSwitchV(),
@@ -6101,10 +6101,10 @@ var ScrollAreaScrollbarX = defineComponent({
     },
     emits: [`onDragScroll`, `onWheelScroll`, `onThumbPointerDown`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         i = nu(),
         a = wu(),
         o = xu(),
@@ -6262,10 +6262,10 @@ var ScrollAreaScrollbarX = defineComponent({
         required: false
       }
     },
-    setup(e, {
-      expose: t
+    setup(props, {
+      expose: expose
     }) {
-      let n = e,
+      let n = props,
         {
           nonce: r
         } = vueDn(n),
@@ -6274,14 +6274,14 @@ var ScrollAreaScrollbarX = defineComponent({
         state = ref();
       onBeforeMount(() => {
         a.onViewportChange(state.value), a.onContentChange(c.value);
-      }), t({
+      }), expose({
         viewportElement: state
       });
       let {
         forwardRef: s,
         currentElement: c
       } = uiSwitchV();
-      return (e, t) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, vueNt({
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, vueNt({
         ref_key: `viewportElement`,
         ref: state,
         "data-reka-scroll-area-viewport": ``,
@@ -6289,7 +6289,7 @@ var ScrollAreaScrollbarX = defineComponent({
           overflowX: unref(a).scrollbarXEnabled.value ? `scroll` : `hidden`,
           overflowY: unref(a).scrollbarYEnabled.value ? `scroll` : `hidden`
         }
-      }, e.$attrs, {
+      }, ctx.$attrs, {
         tabindex: 0
       }), [resolveComponent(unref(uiSwitchJ), {
         ref: unref(s),
@@ -6297,15 +6297,15 @@ var ScrollAreaScrollbarX = defineComponent({
           minWidth: unref(a).scrollbarXEnabled.value ? `fit-content` : undefined
         }),
         "as-child": n.asChild,
-        as: e.as
+        as: ctx.as
       }, {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`style`, `as-child`, `as`])], 16), resolveComponent(unref(uiSwitchJ), {
         as: `style`,
         nonce: unref(i)
       }, {
-        default: H(() => t[0] ||= [createTextVNode(` /* Hide scrollbars cross-browser and enable momentum scroll for touch devices */ [data-reka-scroll-area-viewport] { scrollbar-width:none; -ms-overflow-style:none; -webkit-overflow-scrolling:touch; } [data-reka-scroll-area-viewport]::-webkit-scrollbar { display:none; } `)]),
+        default: H(() => cache[0] ||= [createTextVNode(` /* Hide scrollbars cross-browser and enable momentum scroll for touch devices */ [data-reka-scroll-area-viewport] { scrollbar-width:none; -ms-overflow-style:none; -webkit-overflow-scrolling:touch; } [data-reka-scroll-area-viewport]::-webkit-scrollbar { display:none; } `)]),
         _: 1,
         __: [0]
       }, 8, [`nonce`])], 64));
@@ -6381,11 +6381,11 @@ var Fu = [`value`],
       }
     },
     emits: [`update:modelValue`, `update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           required: i,
           disabled: a,
@@ -6543,7 +6543,7 @@ var Fu = [`value`],
       function i(e) {
         r.onValueChange(e.target.value);
       }
-      return (e, r) => (openBlock(), createBlock(unref(oe), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(oe), {
         "as-child": ``
       }, {
         default: H(() => [createElementVNode(`select`, vueNt({
@@ -6551,7 +6551,7 @@ var Fu = [`value`],
           ref: state
         }, eventAlias, {
           onInput: i
-        }), [withCtx(e.$slots, `default`)], 16)]),
+        }), [withCtx(ctx.$slots, `default`)], 16)]),
         _: 3
       }));
     }
@@ -6650,9 +6650,9 @@ var Fu = [`value`],
         required: false
       }
     },
-    setup(e) {
-      let t = uiSwitchB(e);
-      return (e, n) => (openBlock(), createBlock(unref(cn), vueNt(unref(t), {
+    setup(props) {
+      let t = uiSwitchB(props);
+      return (ctx, cache) => (openBlock(), createBlock(unref(cn), vueNt(unref(t), {
         style: {
           boxSizing: `border-box`,
           "--reka-select-content-transform-origin": `var(--reka-popper-transform-origin)`,
@@ -6662,7 +6662,7 @@ var Fu = [`value`],
           "--reka-select-trigger-height": `var(--reka-popper-anchor-height)`
         }
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -6783,10 +6783,10 @@ var Fu = [`value`],
     },
     emits: [`closeAutoFocus`, `escapeKeyDown`, `pointerDownOutside`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        i = t,
+        i = emit,
         a = Iu();
       ln(), D(eventAlias.bodyLock);
       let {
@@ -6947,11 +6947,11 @@ var Fu = [`value`],
       }
     },
     emits: [`placed`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           getItems: i
         } = collectionT(),
@@ -7075,8 +7075,8 @@ var Fu = [`value`],
         required: true
       }
     },
-    setup(e) {
-      return Lu(e.context), Uu(Vu), (e, t) => withCtx(e.$slots, `default`);
+    setup(props) {
+      return Lu(props.context), Uu(Vu), (e, t) => withCtx(e.$slots, `default`);
     }
   }),
   Yu = {
@@ -7192,11 +7192,11 @@ var Fu = [`value`],
       }
     },
     emits: [`closeAutoFocus`, `escapeKeyDown`, `pointerDownOutside`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = uiSwitchZ(n, t),
+      let n = props,
+        r = uiSwitchZ(n, emit),
         i = Iu(),
         state = ref();
       onBeforeMount(() => {
@@ -7250,8 +7250,8 @@ var Fu = [`value`],
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchI(undefined, `reka-select-group`);
       return Qu({
         id: n
@@ -7278,13 +7278,13 @@ var Fu = [`value`],
         default: `span`
       }
     },
-    setup(e) {
-      return (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), {
+    setup(props) {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         "aria-hidden": `true`,
-        as: e.as,
-        "as-child": e.asChild
+        as: ctx.as,
+        "as-child": ctx.asChild
       }, {
-        default: H(() => [withCtx(e.$slots, `default`, {}, () => [t[0] ||= createTextVNode(`▼`)])]),
+        default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [cache[0] ||= createTextVNode(`▼`)])]),
         _: 3
       }, 8, [`as`, `as-child`]));
     }
@@ -7316,10 +7316,10 @@ var Fu = [`value`],
     },
     emits: [`select`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           disabled: i
         } = vueDn(eventAlias),
@@ -7419,14 +7419,14 @@ var Fu = [`value`],
         default: `span`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = td();
-      return (e, r) => unref(n).isSelected.value ? (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
+      return (ctx, cache) => unref(n).isSelected.value ? (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         key: 0,
         "aria-hidden": `true`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16)) : createCommentVNode(`v-if`, true);
     }
@@ -7445,8 +7445,8 @@ var Fu = [`value`],
         default: `span`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = Iu(),
         r = Hu(),
         i = td(),
@@ -7492,15 +7492,15 @@ var Fu = [`value`],
         default: `div`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = Zu({
           id: ``
         });
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         id: unref(n).id
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`id`]));
     }
@@ -7525,10 +7525,10 @@ var Fu = [`value`],
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(j), vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(j), vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -7536,10 +7536,10 @@ var Fu = [`value`],
   SelectScrollButtonImpl = defineComponent({
     __name: `SelectScrollButtonImpl`,
     emits: [`autoScroll`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           getItems: r
         } = collectionT(),
@@ -7737,14 +7737,14 @@ var Fu = [`value`],
       function _(e) {
         m || e.currentTarget?.focus(), m = false;
       }
-      return (e, t) => (openBlock(), createBlock(unref(sn), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(sn), {
         "as-child": ``,
-        reference: e.reference
+        reference: ctx.reference
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), {
           ref: unref(r),
           role: `combobox`,
-          type: e.as === `button` ? `button` : undefined,
+          type: ctx.as === `button` ? `button` : undefined,
           "aria-controls": unref(n).open.value ? unref(n).contentId : undefined,
           "aria-expanded": unref(n).open.value || false,
           "aria-required": unref(n).required?.value,
@@ -7754,20 +7754,20 @@ var Fu = [`value`],
           "data-state": unref(n)?.open.value ? `open` : `closed`,
           "data-disabled": computedResult.value ? `` : undefined,
           "data-placeholder": unref(Pu)(unref(n).modelValue?.value) ? `` : undefined,
-          "as-child": e.asChild,
-          as: e.as,
+          "as-child": ctx.asChild,
+          as: ctx.as,
           onClick: _,
           onPointerdown: h,
           onMousedown: g,
-          onPointerup: t[0] ||= withDirectives(e => {
+          onPointerup: cache[0] ||= withDirectives(e => {
             e.pointerType === `touch` && f(e);
           }, [`prevent`]),
-          onKeydown: t[1] ||= e => {
+          onKeydown: cache[1] ||= e => {
             let t = unref(s) !== ``;
             (e.ctrlKey || e.altKey || e.metaKey || e.key.length !== 1 || !t || e.key !== ` `) && (unref(c)(e.key, unref(o)()), unref(Au).includes(e.key) && (d(), e.preventDefault()));
           }
         }, {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }, 8, [`type`, `aria-controls`, `aria-expanded`, `aria-required`, `disabled`, `dir`, `data-state`, `data-disabled`, `data-placeholder`, `as-child`, `as`])]),
         _: 3
@@ -7809,16 +7809,16 @@ var Fu = [`value`],
           return emptyItems = Array.isArray(i.modelValue.value) ? i.modelValue.value.map(item => handler(item)?.textContent ?? ``) : [handler(i.modelValue.value)?.textContent ?? ``], emptyItems.filter(Boolean);
         }),
         computedData = computed(() => computedResult.value.length ? computedResult.value.join(`, `) : itemsAlias.placeholder);
-      return (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         ref: unref(n),
-        as: e.as,
-        "as-child": e.asChild,
+        as: ctx.as,
+        "as-child": ctx.asChild,
         style: {
           pointerEvents: `none`
         },
         "data-placeholder": computedResult.value.length ? undefined : itemsAlias.placeholder
       }, {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           selectedLabel: computedResult.value,
           modelValue: unref(i).modelValue.value
         }, () => [createTextVNode(toDisplayString(computedData.value), 1)])]),
@@ -7881,12 +7881,12 @@ var Fu = [`value`],
         }
         counter.value = t.scrollTop;
       }
-      return (e, n) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
         ref: unref(o),
         "data-reka-select-viewport": ``,
         role: `presentation`
       }, {
-        ...e.$attrs,
+        ...ctx.$attrs,
         ...eventAlias
       }, {
         style: {
@@ -7896,13 +7896,13 @@ var Fu = [`value`],
         },
         onScroll: l
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16), resolveComponent(unref(uiSwitchJ), {
         as: `style`,
         nonce: unref(r)
       }, {
-        default: H(() => n[0] ||= [createTextVNode(` /* Hide scrollbars cross-browser and enable momentum scroll for touch devices */ [data-reka-select-viewport] { scrollbar-width:none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; } [data-reka-select-viewport]::-webkit-scrollbar { display: none; } `)]),
+        default: H(() => cache[0] ||= [createTextVNode(` /* Hide scrollbars cross-browser and enable momentum scroll for touch devices */ [data-reka-select-viewport] { scrollbar-width:none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; } [data-reka-select-viewport]::-webkit-scrollbar { display: none; } `)]),
         _: 1,
         __: [0]
       }, 8, [`nonce`])], 64));
@@ -7929,8 +7929,8 @@ var Fu = [`value`],
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = [`horizontal`, `vertical`];
       function r(e) {
         return n.includes(e);
@@ -7943,12 +7943,12 @@ var Fu = [`value`],
           "aria-orientation": computedData.value,
           role: `separator`
         });
-      return (e, t) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
-        as: e.as,
-        "as-child": e.asChild,
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
+        as: ctx.as,
+        "as-child": ctx.asChild,
         "data-orientation": computedResult.value
       }, o.value), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`as`, `as-child`, `data-orientation`]));
     }
@@ -7974,10 +7974,10 @@ var Fu = [`value`],
         required: false
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(BaseSeparator, vueTr(vueV(t)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(BaseSeparator, vueTr(vueV(t)), {
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -8031,12 +8031,12 @@ var Fu = [`value`],
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let r = e,
-        i = n,
+      let r = props,
+        i = emit,
         {
           dir: a,
           orientation: o,
@@ -8088,7 +8088,7 @@ var Fu = [`value`],
         dir: c,
         linear: s,
         totalStepperItems: l
-      }), t({
+      }), expose({
         goToStep: h,
         nextStep: g,
         prevStep: _,
@@ -8152,12 +8152,12 @@ var Fu = [`value`],
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           disabled: t,
           step: n,
           completed: r
-        } = vueDn(e),
+        } = vueDn(props),
         {
           forwardRef: i
         } = uiSwitchV(),
@@ -8203,8 +8203,8 @@ var Fu = [`value`],
         default: `span`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = bd();
       return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueTr(vueV(t)), {
         default: H(() => [withCtx(e.$slots, `default`, {
@@ -8227,8 +8227,8 @@ var Fu = [`value`],
         default: `h4`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = bd();
       return uiSwitchV(), (e, r) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt(t, {
         id: unref(n).titleId
@@ -8349,11 +8349,11 @@ var Fu = [`value`],
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           orientation: i,
           unmountOnHide: a,
@@ -8425,8 +8425,8 @@ var TabsContent = defineComponent({
         required: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           forwardRef: n
         } = uiSwitchV(),
@@ -8488,10 +8488,10 @@ var TabsContent = defineComponent({
         required: false
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           loop: t
-        } = vueDn(e),
+        } = vueDn(props),
         {
           forwardRef: n,
           currentElement: r
@@ -8539,8 +8539,8 @@ var TabsContent = defineComponent({
         default: `button`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           forwardRef: n
         } = uiSwitchV(),
@@ -8548,34 +8548,34 @@ var TabsContent = defineComponent({
         computedResult = computed(() => kd(r.baseId, t.value)),
         computedData = computed(() => r.contentIds.value.has(t.value) ? Ad(r.baseId, t.value) : undefined),
         o = computed(() => t.value === r.modelValue.value);
-      return (e, event) => (openBlock(), createBlock(unref(Ei), {
+      return (ctx, event) => (openBlock(), createBlock(unref(Ei), {
         "as-child": ``,
-        focusable: !e.disabled,
+        focusable: !ctx.disabled,
         active: o.value
       }, {
         default: H(() => [resolveComponent(unref(uiSwitchJ), {
           id: computedResult.value,
           ref: unref(n),
           role: `tab`,
-          type: e.as === `button` ? `button` : undefined,
-          as: e.as,
-          "as-child": e.asChild,
+          type: ctx.as === `button` ? `button` : undefined,
+          as: ctx.as,
+          "as-child": ctx.asChild,
           "aria-selected": o.value ? `true` : `false`,
           "aria-controls": computedData.value,
           "data-state": o.value ? `active` : `inactive`,
-          disabled: e.disabled,
-          "data-disabled": e.disabled ? `` : undefined,
+          disabled: ctx.disabled,
+          "data-disabled": ctx.disabled ? `` : undefined,
           "data-orientation": unref(r).orientation.value,
           onMousedown: event[0] ||= withDirectives(t => {
-            !e.disabled && t.ctrlKey === false ? unref(r).changeModelValue(e.value) : t.preventDefault();
+            !ctx.disabled && t.ctrlKey === false ? unref(r).changeModelValue(ctx.value) : t.preventDefault();
           }, [`left`]),
-          onKeydown: event[1] ||= playerT(t => unref(r).changeModelValue(e.value), [`enter`, `space`]),
+          onKeydown: event[1] ||= playerT(t => unref(r).changeModelValue(ctx.value), [`enter`, `space`]),
           onFocus: event[2] ||= () => {
             let t = unref(r).activationMode !== `manual`;
-            !o.value && !e.disabled && t && unref(r).changeModelValue(e.value);
+            !o.value && !ctx.disabled && t && unref(r).changeModelValue(ctx.value);
           }
         }, {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }, 8, [`id`, `type`, `as`, `as-child`, `aria-selected`, `aria-controls`, `data-state`, `disabled`, `data-disabled`, `data-orientation`])]),
         _: 3
@@ -8639,11 +8639,11 @@ var TabsContent = defineComponent({
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           loop: i,
           rovingFocus: a,
@@ -8733,11 +8733,11 @@ var TabsContent = defineComponent({
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           forwardRef: i,
           currentElement: a
@@ -8753,34 +8753,34 @@ var TabsContent = defineComponent({
       }
       let computedResult = computed(() => c.value ? `on` : `off`),
         f = uiSwitchH(a);
-      return (e, t) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(uiSwitchJ), vueNt({
         ref: unref(i),
-        type: e.as === `button` ? `button` : undefined,
+        type: ctx.as === `button` ? `button` : undefined,
         "as-child": n.asChild,
-        as: e.as,
+        as: ctx.as,
         "aria-pressed": unref(c),
         "data-state": computedResult.value,
-        "data-disabled": e.disabled ? `` : undefined,
-        disabled: e.disabled
+        "data-disabled": ctx.disabled ? `` : undefined,
+        disabled: ctx.disabled
       }, {
         ...unref(o),
-        ...e.$attrs
+        ...ctx.$attrs
       }, {
         onClick: u
       }), {
-        default: H(() => [withCtx(e.$slots, `default`, {
+        default: H(() => [withCtx(ctx.$slots, `default`, {
           modelValue: unref(c),
-          disabled: e.disabled,
+          disabled: ctx.disabled,
           pressed: unref(c),
           state: computedResult.value
         })]),
         _: 3
-      }, 16, [`type`, `as-child`, `as`, `aria-pressed`, `data-state`, `data-disabled`, `disabled`]), unref(f) && e.name && !unref(s) ? (openBlock(), createBlock(ce, vueNt({
+      }, 16, [`type`, `as-child`, `as`, `aria-pressed`, `data-state`, `data-disabled`, `disabled`]), unref(f) && ctx.name && !unref(s) ? (openBlock(), createBlock(ce, vueNt({
         key: 0,
         type: `checkbox`,
-        name: e.name,
+        name: ctx.name,
         value: unref(c),
-        required: e.required
+        required: ctx.required
       }, unref(o)), null, 16, [`name`, `value`, `required`])) : createCommentVNode(`v-if`, true)], 64));
     }
   }),
@@ -8814,7 +8814,7 @@ var TabsContent = defineComponent({
           forwardRef: a
         } = uiSwitchV(),
         o = x();
-      return (e, s) => (openBlock(), createBlock(vueEt(unref(n).rovingFocus.value ? unref(Ei) : unref(uiSwitchJ)), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(vueEt(unref(n).rovingFocus.value ? unref(Ei) : unref(uiSwitchJ)), vueNt({
         "as-child": ``
       }, unref(n).rovingFocus.value ? {
         focusable: !computedResult.value,
@@ -8827,9 +8827,9 @@ var TabsContent = defineComponent({
           ref: unref(a),
           disabled: computedResult.value,
           "model-value": computedData.value,
-          "onUpdate:modelValue": s[0] ||= t => unref(n).changeModelValue(e.value)
+          "onUpdate:modelValue": cache[0] ||= t => unref(n).changeModelValue(ctx.value)
         }), {
-          default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+          default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
           _: 3
         }, 16, [`disabled`, `model-value`])]),
         _: 3
@@ -8844,12 +8844,12 @@ var TabsContent = defineComponent({
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(ri), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(ri), vueNt({
         "data-slot": `dialog-close`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -8865,16 +8865,16 @@ var TabsContent = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(si), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(si), vueNt({
         "data-slot": `dialog-description`
       }, unref(i), {
         class: unref(uiSwitchXt)(`text-muted-foreground *:[a]:hover:text-foreground text-sm *:[a]:underline *:[a]:underline-offset-3`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -8887,12 +8887,12 @@ var TabsContent = defineComponent({
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(DialogTrigger), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(DialogTrigger), vueNt({
         "data-slot": `dialog-trigger`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -10784,10 +10784,10 @@ var Vee = [`innerHTML`],
     },
     emits: [`openLink`, `openLocalLink`, `localPathError`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         parts = `a.b.blockquote.br.code.del.div.em.h1.h2.h3.hr.i.li.ol.p.pre.s.span.strike.strong.table.tbody.td.th.thead.tr.u.ul`.split(`.`);
       function a(e) {
         try {
@@ -11147,7 +11147,7 @@ var Vee = [`innerHTML`],
           r(`openLink`, e.toString());
         } catch {}
       }
-      return (e, t) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
         class: `markdown-body text-[15px] leading-[1.8] text-[#1a1a1a] dark:text-foreground`,
         onClick: te,
         onContextmenu: ee,
@@ -11260,13 +11260,13 @@ var Vee = [`innerHTML`],
     },
     emits: [`update:open`, `confirm`, `move-to-applications`, `open-applications`, `cancel`, `official-download`, `export-diagnostics`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           t: i18nTranslate
         } = vueN(),
         eventAlias = event,
-        i = t,
+        i = emit,
         computedResult = computed(() => eventAlias.state ? eventAlias.state.phase === `downloaded` ? `updateDialog.packageReady` : eventAlias.state.phase === `install_requested` || eventAlias.state.phase === `handoff_preparing` ? eventAlias.state.isSlowHandoff ? `updateDialog.handoffSlow` : `updateDialog.preparingInstallDesc` : eventAlias.state.phase === `handoff_started` || eventAlias.state.phase === `relaunch_pending` ? `updateDialog.handoffStarted` : null : null),
         computedData = computed(() => eventAlias.state?.downloadStage === `retry_wait` ? i18nTranslate(`updateDialog.retryingDownload`, {
           attempt: eventAlias.state.sourceAttempt || 1,
@@ -11473,28 +11473,28 @@ var Vee = [`innerHTML`],
       }
     },
     emits: [`close`, `changelog`, `update`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
-      return (t, i) => (openBlock(), createBlock(playerR, {
+      return (ctx, cache) => (openBlock(), createBlock(playerR, {
         "enter-active-class": `transition duration-200 ease-out`,
         "enter-from-class": `opacity-0 translate-y-2`,
         "leave-active-class": `transition duration-150 ease-in`,
         "leave-to-class": `opacity-0 translate-y-2`
       }, {
-        default: H(() => [e.open ? (openBlock(), createElementBlock(`div`, fte, [resolveComponent(unref(ha), {
+        default: H(() => [props.open ? (openBlock(), createElementBlock(`div`, fte, [resolveComponent(unref(ha), {
           size: 18,
           "stroke-width": 1.75,
           class: `shrink-0 text-primary`
-        }), createElementVNode(`div`, pte, [createElementVNode(`p`, mte, toDisplayString(e.ready ? unref(r)(`updateToast.readyTitle`) : unref(r)(`updateToast.availableTitle`)), 1), e.version ? (openBlock(), createElementBlock(`p`, hte, `v` + toDisplayString(e.version), 1)) : createCommentVNode(``, true)]), resolveComponent(unref(uiSwitchR), {
+        }), createElementVNode(`div`, pte, [createElementVNode(`p`, mte, toDisplayString(props.ready ? unref(r)(`updateToast.readyTitle`) : unref(r)(`updateToast.availableTitle`)), 1), props.version ? (openBlock(), createElementBlock(`p`, hte, `v` + toDisplayString(props.version), 1)) : createCommentVNode(``, true)]), resolveComponent(unref(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `update-ready-toast-outline cursor-pointer`,
-          onClick: i[0] ||= e => n(`changelog`)
+          onClick: cache[0] ||= e => n(`changelog`)
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(r)(`updateToast.changelog`)), 1)]),
           _: 1
@@ -11502,15 +11502,15 @@ var Vee = [`innerHTML`],
           size: `sm`,
           class: `cursor-pointer`,
           "data-testid": `update-ready-toast-action`,
-          onClick: i[1] ||= e => n(`update`)
+          onClick: cache[1] ||= e => n(`update`)
         }, {
-          default: H(() => [createTextVNode(toDisplayString(e.ready ? unref(r)(`updateToast.restartToUpdate`) : unref(r)(`updateToast.updateNow`)), 1)]),
+          default: H(() => [createTextVNode(toDisplayString(props.ready ? unref(r)(`updateToast.restartToUpdate`) : unref(r)(`updateToast.updateNow`)), 1)]),
           _: 1
         }), createElementVNode(`button`, {
           type: `button`,
           class: `update-ready-toast-close`,
           "aria-label": unref(r)(`common.close`),
-          onClick: i[2] ||= e => n(`close`)
+          onClick: cache[2] ||= e => n(`close`)
         }, [resolveComponent(unref(lucideT), {
           size: 12,
           "stroke-width": 2
@@ -11554,11 +11554,11 @@ var Vee = [`innerHTML`],
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate,
           tm: a,
@@ -11590,41 +11590,41 @@ var Vee = [`innerHTML`],
       function u(e) {
         n.disabled || r(`update:modelValue`, e);
       }
-      return (options, n) => (openBlock(), createElementBlock(`div`, {
-        class: normalizeClass([`grid gap-4`, e.compact ? `grid-cols-1` : `grid-cols-2`]),
+      return (options, cache) => (openBlock(), createElementBlock(`div`, {
+        class: normalizeClass([`grid gap-4`, props.compact ? `grid-cols-1` : `grid-cols-2`]),
         role: `radiogroup`,
         "aria-label": unref(i18nTranslate)(`usageMode.settingTitle`)
       }, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedResult.value, t => (openBlock(), createElementBlock(`button`, {
         key: t.mode,
         type: `button`,
         role: `radio`,
-        "aria-checked": e.modelValue === t.mode,
+        "aria-checked": props.modelValue === t.mode,
         "data-usage-mode": t.mode,
-        disabled: e.disabled,
-        class: normalizeClass([`group relative flex flex-col rounded-2xl border-2 bg-card text-left transition-all disabled:cursor-not-allowed disabled:opacity-60`, [e.compact ? `gap-3 p-4` : `gap-4 p-5`, e.modelValue === t.mode ? `border-primary bg-primary/[0.04] ring-4 ring-primary/10` : `border-border hover:border-primary/40 hover:bg-muted/30`]]),
+        disabled: props.disabled,
+        class: normalizeClass([`group relative flex flex-col rounded-2xl border-2 bg-card text-left transition-all disabled:cursor-not-allowed disabled:opacity-60`, [props.compact ? `gap-3 p-4` : `gap-4 p-5`, props.modelValue === t.mode ? `border-primary bg-primary/[0.04] ring-4 ring-primary/10` : `border-border hover:border-primary/40 hover:bg-muted/30`]]),
         onClick: e => u(t.mode)
       }, [createElementVNode(`div`, fp, [createElementVNode(`span`, {
-        class: normalizeClass([`flex shrink-0 items-center justify-center rounded-xl transition-colors`, [e.compact ? `size-10` : `size-12`, e.modelValue === t.mode ? `bg-primary text-primary-foreground` : `bg-muted text-muted-foreground group-hover:text-foreground`]])
+        class: normalizeClass([`flex shrink-0 items-center justify-center rounded-xl transition-colors`, [props.compact ? `size-10` : `size-12`, props.modelValue === t.mode ? `bg-primary text-primary-foreground` : `bg-muted text-muted-foreground group-hover:text-foreground`]])
       }, [(openBlock(), createBlock(vueEt(t.icon), {
-        class: normalizeClass(e.compact ? `size-5` : `size-6`)
+        class: normalizeClass(props.compact ? `size-5` : `size-6`)
       }, null, 8, [`class`]))], 2), createElementVNode(`span`, _te, [l(t.mode) ? (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: normalizeClass([`rounded-full px-2 py-0.5 text-[11px] font-medium leading-5 whitespace-nowrap`, l(t.mode).tone === `primary` ? `bg-primary/10 text-primary` : `bg-muted text-muted-foreground`])
       }, toDisplayString(l(t.mode).text), 3)) : createCommentVNode(``, true), createElementVNode(`span`, {
-        class: normalizeClass([`flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors`, e.modelValue === t.mode ? `border-primary bg-primary text-primary-foreground` : `border-border bg-background`])
-      }, [e.modelValue === t.mode ? (openBlock(), createBlock(unref(checkT), {
+        class: normalizeClass([`flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors`, props.modelValue === t.mode ? `border-primary bg-primary text-primary-foreground` : `border-border bg-background`])
+      }, [props.modelValue === t.mode ? (openBlock(), createBlock(unref(checkT), {
         key: 0,
         class: `size-3.5`,
         "stroke-width": `3`
       })) : createCommentVNode(``, true)], 2)])]), createElementVNode(`div`, vte, [createElementVNode(`p`, {
-        class: normalizeClass([`whitespace-nowrap font-semibold text-foreground`, e.compact ? `text-sm` : `text-base`])
+        class: normalizeClass([`whitespace-nowrap font-semibold text-foreground`, props.compact ? `text-sm` : `text-base`])
       }, toDisplayString(t.title), 3), createElementVNode(`p`, {
-        class: normalizeClass([`mt-1.5 text-xs leading-5 text-muted-foreground`, e.compact ? `` : `min-h-[60px]`])
-      }, toDisplayString(t.desc), 3)]), e.compact ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`ul`, yte, [(openBlock(true), createElementBlock(Fragment, null, renderList(t.points, n => (openBlock(), createElementBlock(`li`, {
+        class: normalizeClass([`mt-1.5 text-xs leading-5 text-muted-foreground`, props.compact ? `` : `min-h-[60px]`])
+      }, toDisplayString(t.desc), 3)]), props.compact ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`ul`, yte, [(openBlock(true), createElementBlock(Fragment, null, renderList(t.points, n => (openBlock(), createElementBlock(`li`, {
         key: n,
         class: `flex items-start gap-2 text-xs leading-5 text-muted-foreground`
       }, [resolveComponent(unref(checkT), {
-        class: normalizeClass([`mt-1 size-3.5 shrink-0`, e.modelValue === t.mode ? `text-primary` : `text-muted-foreground/60`])
+        class: normalizeClass([`mt-1 size-3.5 shrink-0`, props.modelValue === t.mode ? `text-primary` : `text-muted-foreground/60`])
       }, null, 8, [`class`]), createElementVNode(`span`, null, toDisplayString(n), 1)]))), 128))]))], 10, dp))), 128))], 10, up));
     }
   }),
@@ -11653,11 +11653,11 @@ var Vee = [`innerHTML`],
       }
     },
     emits: [`update:open`, `choose`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -11668,9 +11668,9 @@ var Vee = [`innerHTML`],
       function o() {
         r(`choose`, a.value);
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
-        open: e.open,
-        "onUpdate:open": renderCache[1] ||= t => !e.switching && r(`update:open`, t)
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+        open: props.open,
+        "onUpdate:open": renderCache[1] ||= t => !props.switching && r(`update:open`, t)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `gap-6 p-7 sm:max-w-[720px]`,
@@ -11696,19 +11696,19 @@ var Vee = [`innerHTML`],
           }), resolveComponent(UsageModePicker, {
             modelValue: a.value,
             "onUpdate:modelValue": renderCache[0] ||= e => a.value = e,
-            recommended: e.recommendedMode,
-            current: e.currentMode,
-            disabled: e.switching
+            recommended: props.recommendedMode,
+            current: props.currentMode,
+            disabled: props.switching
           }, null, 8, [`modelValue`, `recommended`, `current`, `disabled`]), createElementVNode(`div`, xte, [createElementVNode(`p`, Ste, toDisplayString(unref(i)(`usageMode.guide.footer`)), 1), resolveComponent(unref(uiSwitchR), {
             class: `h-10 shrink-0 gap-2 px-5`,
-            disabled: e.switching,
+            disabled: props.switching,
             "data-testid": `usage-mode-guide-confirm`,
             onClick: o
           }, {
-            default: H(() => [e.switching ? (openBlock(), createBlock(unref(beautifier), {
+            default: H(() => [props.switching ? (openBlock(), createBlock(unref(beautifier), {
               key: 0,
               class: `size-4 animate-spin`
-            })) : createCommentVNode(``, true), createTextVNode(` ` + toDisplayString(e.switching ? unref(i)(`usageMode.guide.switching`) : a.value === `student` ? unref(i)(`usageMode.guide.switchStudent`) : unref(i)(`usageMode.guide.keepWork`)), 1)]),
+            })) : createCommentVNode(``, true), createTextVNode(` ` + toDisplayString(props.switching ? unref(i)(`usageMode.guide.switching`) : a.value === `student` ? unref(i)(`usageMode.guide.switchStudent`) : unref(i)(`usageMode.guide.keepWork`)), 1)]),
             _: 1
           }, 8, [`disabled`])])]),
           _: 1
@@ -11730,10 +11730,10 @@ var Vee = [`innerHTML`],
     },
     emits: [`update:target`, `switched`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           tm: a,
@@ -11780,7 +11780,7 @@ var Vee = [`innerHTML`],
           }
         }
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(alertDialogC), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(alertDialogC), {
         open: flag.value,
         "onUpdate:open": renderCache[0] ||= e => {
           e || f();
@@ -11838,12 +11838,12 @@ var Vee = [`innerHTML`],
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(PopoverAnchor), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(PopoverAnchor), vueNt({
         "data-slot": `popover-anchor`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -11868,20 +11868,20 @@ var Vee = [`innerHTML`],
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (e, t) => (openBlock(), createBlock(unref(TabsRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(TabsRoot), vueNt({
         "data-slot": `tabs`,
         "data-orientation": unref(a).orientation || `horizontal`
       }, unref(a), {
         class: unref(uiSwitchXt)(`gap-2 group/tabs flex data-horizontal:flex-col`, n.class)
       }), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`data-orientation`, `class`]));
     }
@@ -11901,14 +11901,14 @@ var Vee = [`innerHTML`],
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(TabsContent), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(TabsContent), vueNt({
         "data-slot": `tabs-content`,
         class: unref(uiSwitchXt)(`text-sm flex-1 outline-none`, t.class)
       }, unref(n)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -11930,18 +11930,18 @@ var Vee = [`innerHTML`],
         default: `default`
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`, `variant`);
-      return (r, i) => (openBlock(), createBlock(unref(TabsList), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(TabsList), vueNt({
         "data-slot": `tabs-list`,
-        "data-variant": e.variant
+        "data-variant": props.variant
       }, unref(n), {
         class: unref(uiSwitchXt)(unref(Ete)({
-          variant: e.variant
+          variant: props.variant
         }), t.class)
       }), {
-        default: H(() => [withCtx(r.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`data-variant`, `class`]));
     }
@@ -11961,15 +11961,15 @@ var Vee = [`innerHTML`],
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(TabsTrigger), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(TabsTrigger), vueNt({
         "data-slot": `tabs-trigger`,
         class: unref(uiSwitchXt)(`gap-1.5 rounded-md border border-transparent px-1.5 py-0.5 text-sm font-medium group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg:not([class*=size-])]:size-4 has-data-[icon=inline-end]:pr-1 has-data-[icon=inline-start]:pl-1 relative inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center whitespace-nowrap text-foreground/60 transition-all group-data-vertical/tabs:w-full group-data-vertical/tabs:justify-start hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 dark:text-muted-foreground dark:hover:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0`, `group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent`, `data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 dark:data-active:text-foreground`, `after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:bottom-[-5px] group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -12020,16 +12020,16 @@ var Vee = [`innerHTML`],
       progressOpenModifiers: {}
     }),
     emits: vueTt([`confirm-consent`], [`update:consentOpen`, `update:progressOpen`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = vueLt(e, `consentOpen`),
-        r = vueLt(e, `progressOpen`),
-        i = t,
+      let n = vueLt(props, `consentOpen`),
+        r = vueLt(props, `progressOpen`),
+        i = emit,
         {
           t: a
         } = vueN();
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(alertDialogC), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(alertDialogC), {
         open: n.value,
         "onUpdate:open": renderCache[1] ||= e => n.value = e
       }, {
@@ -12073,23 +12073,23 @@ var Vee = [`innerHTML`],
             default: H(() => [resolveComponent(unref(dialogT), {
               class: `text-sm font-medium`
             }, {
-              default: H(() => [createTextVNode(toDisplayString(e.status?.backfillDone ? unref(a)(`settings.miniProgramSyncDoneTitle`) : unref(a)(`settings.miniProgramSyncProgressTitle`)), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(props.status?.backfillDone ? unref(a)(`settings.miniProgramSyncDoneTitle`) : unref(a)(`settings.miniProgramSyncProgressTitle`)), 1)]),
               _: 1
             })]),
             _: 1
           }), createElementVNode(`div`, Dte, [createElementVNode(`div`, Ote, [createElementVNode(`div`, {
             class: `h-full rounded-full bg-emerald-500 transition-all duration-500`,
             style: vueNr({
-              width: `${e.status?.backfillDone ? 100 : e.progressPercent}%`
+              width: `${props.status?.backfillDone ? 100 : props.progressPercent}%`
             })
-          }, null, 4)]), createElementVNode(`p`, kte, [e.status?.backfillDone ? (openBlock(), createElementBlock(Fragment, {
+          }, null, 4)]), createElementVNode(`p`, kte, [props.status?.backfillDone ? (openBlock(), createElementBlock(Fragment, {
             key: 0
           }, [createTextVNode(toDisplayString(unref(a)(`settings.miniProgramSyncDoneDesc`)), 1)], 64)) : (openBlock(), createElementBlock(Fragment, {
             key: 1
           }, [createTextVNode(toDisplayString(unref(a)(`settings.miniProgramSyncDays`, {
-            synced: e.status?.syncedDays ?? 0,
-            total: e.status?.totalDays ?? 0
-          })) + ` `, 1), e.status?.currentDate ? (openBlock(), createElementBlock(`span`, Ate, `（` + toDisplayString(e.status.currentDate) + `）`, 1)) : createCommentVNode(``, true)], 64))]), e.status?.lastError ? (openBlock(), createElementBlock(`p`, jte, toDisplayString(e.status.lastError), 1)) : createCommentVNode(``, true), e.status?.backfillDone ? createCommentVNode(``, true) : (openBlock(), createBlock(unref(defineComponentResult), {
+            synced: props.status?.syncedDays ?? 0,
+            total: props.status?.totalDays ?? 0
+          })) + ` `, 1), props.status?.currentDate ? (openBlock(), createElementBlock(`span`, Ate, `（` + toDisplayString(props.status.currentDate) + `）`, 1)) : createCommentVNode(``, true)], 64))]), props.status?.lastError ? (openBlock(), createElementBlock(`p`, jte, toDisplayString(props.status.lastError), 1)) : createCommentVNode(``, true), props.status?.backfillDone ? createCommentVNode(``, true) : (openBlock(), createBlock(unref(defineComponentResult), {
             key: 1,
             class: `py-2.5`
           }, {
@@ -12106,7 +12106,7 @@ var Vee = [`innerHTML`],
               class: `cursor-pointer`,
               onClick: renderCache[2] ||= e => r.value = false
             }, {
-              default: H(() => [createTextVNode(toDisplayString(e.status?.backfillDone ? unref(a)(`common.ok`) : unref(a)(`settings.miniProgramSyncContinueBg`)), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(props.status?.backfillDone ? unref(a)(`common.ok`) : unref(a)(`settings.miniProgramSyncContinueBg`)), 1)]),
               _: 1
             })]),
             _: 1
@@ -12270,7 +12270,7 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
           time: f(e.lastSyncAt)
         }) : i18nTranslate(`mobileConnect.syncWaiting`) : i18nTranslate(`mobileConnect.syncWaiting`);
       });
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(popoverR), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(popoverR), {
         open: flag.value,
         "onUpdate:open": renderCache[1] ||= e => flag.value = e
       }, {
@@ -12565,11 +12565,11 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
     },
     setup(count) {
       let countAlias = count;
-      return (n, r) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card`,
         "data-size": count.size,
         class: normalizeClass(unref(uiSwitchXt)(`ring-foreground/10 bg-card text-card-foreground gap-4 overflow-hidden rounded-xl py-4 text-sm ring-1 has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:gap-3 data-[size=sm]:py-3 data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl group/card flex flex-col`, countAlias.class))
-      }, [withCtx(n.$slots, `default`)], 10, Kte));
+      }, [withCtx(ctx.$slots, `default`)], 10, Kte));
     }
   }),
   CardContent = defineComponent({
@@ -12579,12 +12579,12 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-content`,
         class: normalizeClass(unref(uiSwitchXt)(`px-4 group-data-[size=sm]/card:px-3`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   CardDescription = defineComponent({
@@ -12594,12 +12594,12 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-description`,
         class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-sm`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   CardFooter = defineComponent({
@@ -12609,12 +12609,12 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-footer`,
         class: normalizeClass(unref(uiSwitchXt)(`bg-muted/50 rounded-b-xl border-t p-4 group-data-[size=sm]/card:p-3 flex items-center`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   CardHeader = defineComponent({
@@ -12624,12 +12624,12 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-header`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-1 rounded-t-xl px-4 group-data-[size=sm]/card:px-3 [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-3 group/card-header @container/card-header grid auto-rows-min items-start has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto]`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   CardTitle = defineComponent({
@@ -12639,12 +12639,12 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `card-title`,
         class: normalizeClass(unref(uiSwitchXt)(`text-base leading-snug font-medium group-data-[size=sm]/card:text-sm cn-font-heading`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   SeparatorComponent = defineComponent({
@@ -12665,10 +12665,10 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(Separator), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(Separator), vueNt({
         "data-slot": `separator`
       }, unref(n), {
         class: unref(uiSwitchXt)(`shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch`, t.class)
@@ -12687,17 +12687,17 @@ var Gte = response => response && typeof response == `object` && `ok` in respons
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (r, i) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         "data-slot": `badge`,
-        "data-variant": e.variant,
+        "data-variant": props.variant,
         class: unref(uiSwitchXt)(unref(qte)({
-          variant: e.variant
+          variant: props.variant
         }), t.class)
       }, unref(n)), {
-        default: H(() => [withCtx(r.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`data-variant`, `class`]));
     }
@@ -12823,8 +12823,8 @@ var Jte = {
     },
     emits: [`claimed`],
     setup(text, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let textAlias = text,
         {
@@ -12832,7 +12832,7 @@ var Jte = {
           locale: a
         } = vueN(),
         o = A(`credit-campaign-claimed`),
-        s = n,
+        s = emit,
         c = ref(null),
         flag = ref(false),
         u = ref(null),
@@ -12861,7 +12861,7 @@ var Jte = {
         } catch {}
         return true;
       }
-      t({
+      expose({
         open: E
       });
       function D(e) {
@@ -13124,15 +13124,15 @@ var Jte = {
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = uiSwitchAt(n, `modelValue`, t, {
+      let n = props,
+        r = uiSwitchAt(n, `modelValue`, emit, {
           passive: true,
           defaultValue: n.defaultValue
         });
-      return (e, renderCache) => vueZt((openBlock(), createElementBlock(`input`, {
+      return (ctx, renderCache) => vueZt((openBlock(), createElementBlock(`input`, {
         "onUpdate:modelValue": renderCache[0] ||= e => vueFn(r) ? r.value = e : null,
         "data-slot": `input`,
         class: normalizeClass(unref(uiSwitchXt)(`dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50`, n.class))
@@ -13149,15 +13149,15 @@ var Jte = {
       modelValue: {}
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = uiSwitchAt(n, `modelValue`, t, {
+      let n = props,
+        r = uiSwitchAt(n, `modelValue`, emit, {
           passive: true,
           defaultValue: n.defaultValue
         });
-      return (e, renderCache) => vueZt((openBlock(), createElementBlock(`textarea`, {
+      return (ctx, renderCache) => vueZt((openBlock(), createElementBlock(`textarea`, {
         "onUpdate:modelValue": renderCache[0] ||= e => vueFn(r) ? r.value = e : null,
         "data-slot": `textarea`,
         class: normalizeClass(unref(uiSwitchXt)(`border-input dark:bg-input/30 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 rounded-lg border bg-transparent px-2.5 py-2 text-base transition-colors focus-visible:ring-3 aria-invalid:ring-3 md:text-sm flex field-sizing-content min-h-16 w-full outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50`, n.class))
@@ -13181,12 +13181,12 @@ var Jte = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (r, i) => (openBlock(), createBlock(unref(ScrollAreaScrollbar), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ScrollAreaScrollbar), vueNt({
         "data-slot": `scroll-area-scrollbar`,
-        "data-orientation": e.orientation
+        "data-orientation": props.orientation
       }, unref(n), {
         class: unref(uiSwitchXt)(`data-horizontal:h-2 data-horizontal:flex-col data-horizontal:border-t data-horizontal:border-t-transparent data-vertical:h-full data-vertical:w-2 data-vertical:border-l data-vertical:border-l-transparent flex touch-none p-px transition-colors select-none`, t.class)
       }), {
@@ -13212,10 +13212,10 @@ var Jte = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(ScrollAreaRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ScrollAreaRoot), vueNt({
         "data-slot": `scroll-area`
       }, unref(n), {
         class: unref(uiSwitchXt)(`relative`, t.class)
@@ -13224,7 +13224,7 @@ var Jte = {
           "data-slot": `scroll-area-viewport`,
           class: `size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1`
         }, {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }), resolveComponent(ScrollBar), resolveComponent(unref(ScrollAreaCorner))]),
         _: 3
@@ -13325,14 +13325,14 @@ var jne = {
     }),
     emits: vueTt([`saved`, `skipped`], [`update:open`]),
     setup(text, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
         } = growthTelT(),
         r = vueLt(text, `open`),
         textAlias = text,
-        a = t,
+        a = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -13387,7 +13387,7 @@ var jne = {
       function f() {
         r.value = false, a(`skipped`);
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
         "onUpdate:open": renderCache[10] ||= e => r.value = e
       }, {
@@ -14319,14 +14319,14 @@ var lre = [`title`],
     },
     emits: [`update:collapsed`, `update:activeNav`, `show-wechat-qrcode`, `open-update`, `contact-panel-target-change`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let {
           vBotFunnel: n,
           trackBotEntryClick: r
         } = km(),
         itemsAlias = items,
-        a = t,
+        a = emit,
         o = ref(null);
       watch(o, value => {
         value && a(`contact-panel-target-change`, value);
@@ -14601,7 +14601,7 @@ var lre = [`title`],
       function Ie(e) {
         e !== y.value.usageMode && (k(), Fe.value = e);
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`aside`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`aside`, {
         class: normalizeClass([`sidebar`, {
           "sidebar-collapsed": items.collapsed
         }])
@@ -14855,10 +14855,10 @@ var lre = [`title`],
   LoginPage = _export_sfc(defineComponent({
     __name: `LoginPage`,
     emits: [`show-wechat-qrcode`, `registered`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -15099,11 +15099,11 @@ var Die = {
       }
     },
     emits: [`next`, `retryCredits`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -15153,14 +15153,14 @@ var Die = {
         return e.showStatus && s.value[e.permission] === `granted`;
       }
       let v = computed(() => o && s.value.screenRecording !== undefined && s.value.screenRecording !== `granted`);
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, Die, [e.newRegistration ? (openBlock(), createElementBlock(`section`, Oie, [createElementVNode(`span`, kie, [resolveComponent(unref(vo), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, Die, [props.newRegistration ? (openBlock(), createElementBlock(`section`, Oie, [createElementVNode(`span`, kie, [resolveComponent(unref(vo), {
         size: 22
       })]), createElementVNode(`div`, Am, [createElementVNode(`p`, jm, toDisplayString(unref(i)(a(`giftTitle`))), 1), computedData.value > 0 ? (openBlock(), createElementBlock(`p`, Mm, [createElementVNode(`span`, Nm, toDisplayString(computedData.value), 1), createElementVNode(`span`, Pm, toDisplayString(unref(i)(a(`giftCredits`))), 1), createElementVNode(`span`, Fm, [resolveComponent(unref(checkT), {
         size: 12
       }), createTextVNode(toDisplayString(unref(i)(a(`giftArrived`))), 1)])])) : computedResult.value ? (openBlock(), createElementBlock(`p`, Im, [resolveComponent(unref(checkT), {
         size: 16,
         class: `text-primary`
-      }), createTextVNode(toDisplayString(unref(i)(a(`giftClaimed`))), 1)])) : e.creditsLoading || m.value ? (openBlock(), createElementBlock(`p`, Lm, [resolveComponent(unref(beautifier), {
+      }), createTextVNode(toDisplayString(unref(i)(a(`giftClaimed`))), 1)])) : props.creditsLoading || m.value ? (openBlock(), createElementBlock(`p`, Lm, [resolveComponent(unref(beautifier), {
         class: `size-4 animate-spin`
       }), createTextVNode(toDisplayString(unref(i)(a(`giftLoading`))), 1)])) : (openBlock(), createElementBlock(Fragment, {
         key: 3
@@ -15169,7 +15169,7 @@ var Die = {
         class: `ml-1 cursor-pointer font-medium text-primary underline-offset-4 hover:underline`,
         onClick: renderCache[0] ||= e => r(`retryCredits`)
       }, toDisplayString(unref(i)(a(`giftRetry`))), 1)])], 64)), computedResult.value ? (openBlock(), createElementBlock(`p`, Bm, toDisplayString(unref(i)(a(`giftUsage`))), 1)) : createCommentVNode(``, true)])])) : createCommentVNode(``, true), createElementVNode(`section`, {
-        class: normalizeClass(e.newRegistration ? `mt-5` : ``)
+        class: normalizeClass(props.newRegistration ? `mt-5` : ``)
       }, [createElementVNode(`h2`, Vm, toDisplayString(unref(i)(a(`capabilitiesTitle`))), 1), createElementVNode(`ul`, Hm, [(openBlock(), createElementBlock(Fragment, null, renderList(h, t => createElementVNode(`li`, {
         key: t.id,
         class: `flex items-start gap-3 px-4 py-3`
@@ -15188,7 +15188,7 @@ var Die = {
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i)(a(g[t.permission]))) + ` · ` + toDisplayString(unref(i)(a(t.showStatus ? `permissionGrant` : `permissionSettings`))), 1)]),
         _: 2
-      }, 1032, [`onClick`]))], 64)) : createCommentVNode(``, true)]), createElementVNode(`p`, Jm, toDisplayString(unref(i)(a(`${t.id}Desc`))), 1), t.id === `appUsage` && e.platform === `win32` ? (openBlock(), createElementBlock(`details`, Ym, [createElementVNode(`summary`, Xm, [resolveComponent(unref(PopperContentS), {
+      }, 1032, [`onClick`]))], 64)) : createCommentVNode(``, true)]), createElementVNode(`p`, Jm, toDisplayString(unref(i)(a(`${t.id}Desc`))), 1), t.id === `appUsage` && props.platform === `win32` ? (openBlock(), createElementBlock(`details`, Ym, [createElementVNode(`summary`, Xm, [resolveComponent(unref(PopperContentS), {
         size: 12,
         class: `transition-transform group-open:rotate-180`
       }), createTextVNode(toDisplayString(unref(i)(a(`windowsDetails`))), 1)]), createElementVNode(`p`, Zm, toDisplayString(unref(i)(a(`windowsDetailsBody`))), 1)])) : createCommentVNode(``, true)])])), 64))]), v.value ? (openBlock(), createElementBlock(`p`, Qm, [resolveComponent(unref(toolIconC), {
@@ -15231,11 +15231,11 @@ var Die = {
       modelModifiers: {}
     }),
     emits: vueTt([`back`, `next`], [`update:modelValue`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = vueLt(e, `modelValue`),
-        r = t,
+      let n = vueLt(props, `modelValue`),
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -15260,10 +15260,10 @@ var Die = {
           }
         }
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, th, [resolveComponent(UsageModePicker, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, th, [resolveComponent(UsageModePicker, {
         modelValue: n.value,
         "onUpdate:modelValue": renderCache[0] ||= e => n.value = e,
-        recommended: e.recommendedUsageMode,
+        recommended: props.recommendedUsageMode,
         disabled: c.value
       }, null, 8, [`modelValue`, `recommended`, `disabled`]), createElementVNode(`footer`, nh, [resolveComponent(unref(uiSwitchR), {
         variant: `ghost`,
@@ -15440,12 +15440,12 @@ var ch = {
       openModifiers: {}
     }),
     emits: vueTt([`select`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = vueLt(e, `open`),
-        i = t,
+      let n = props,
+        r = vueLt(props, `open`),
+        i = emit,
         {
           t: a
         } = vueN(),
@@ -15461,7 +15461,7 @@ var ch = {
       function l(e) {
         i(`select`, e), r.value = false;
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
         "onUpdate:open": renderCache[1] ||= e => r.value = e
       }, {
@@ -15499,8 +15499,8 @@ var ch = {
             key: t.id,
             type: `button`,
             role: `radio`,
-            "aria-checked": t.id === e.selectedId,
-            class: normalizeClass([`w-full cursor-pointer rounded-lg border p-3 text-left transition-colors`, t.id === e.selectedId ? `border-primary bg-primary/[0.04]` : `border-border hover:border-primary/40`]),
+            "aria-checked": t.id === props.selectedId,
+            class: normalizeClass([`w-full cursor-pointer rounded-lg border p-3 text-left transition-colors`, t.id === props.selectedId ? `border-primary bg-primary/[0.04]` : `border-border hover:border-primary/40`]),
             onClick: e => l(t.id)
           }, [createElementVNode(`span`, ph, [createElementVNode(`span`, mh, toDisplayString(t.name), 1), resolveComponent(unref(Badge), {
             variant: `secondary`,
@@ -15508,7 +15508,7 @@ var ch = {
           }, {
             default: H(() => [createTextVNode(toDisplayString(t.isRecommended ? unref(a)(o(`recommended`)) : t.category.name), 1)]),
             _: 2
-          }, 1032, [`class`]), t.id === e.selectedId ? (openBlock(), createBlock(unref(checkT), {
+          }, 1032, [`class`]), t.id === props.selectedId ? (openBlock(), createBlock(unref(checkT), {
             key: 0,
             class: `ml-auto size-4 shrink-0 text-primary`
           })) : createCommentVNode(``, true)]), createElementVNode(`span`, hh, toDisplayString(t.description || unref(a)(o(`noDescription`))), 1)], 10, fh))), 128))], 8, dh)) : (openBlock(), createElementBlock(`p`, uh, toDisplayString(unref(a)(o(`emptyResults`))), 1))])]),
@@ -15663,11 +15663,11 @@ var Sh = {
     }),
     emits: vueTt([`back`, `complete`, `open-settings`], [`update:interval`]),
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
         r = vueLt(event, `interval`),
-        i = t,
+        i = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -15881,11 +15881,11 @@ var Sh = {
       }
     },
     emits: [`welcome-complete`, `retry-credits`, `complete`, `open-settings`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = [`welcome`, `mode`, `recording`],
         {
           t: i18nTranslate
@@ -15923,7 +15923,7 @@ var Sh = {
       function m() {
         n.includeWelcome && r(`welcome-complete`), s.value = `mode`;
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `scrollContainer`,
         ref: d,
         class: `h-full min-h-0 overflow-y-auto bg-[#f7f8fa] px-6 dark:bg-background`
@@ -15946,17 +15946,17 @@ var Sh = {
         key: 1
       }, [createTextVNode(toDisplayString(t + 1), 1)], 64))], 2), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`promptOnboarding.steps.${e}`)), 1)], 10, ng), t < i.length - 1 ? (openBlock(), createElementBlock(`span`, rg)) : createCommentVNode(``, true)])), 64))], 8, tg), createElementVNode(`h1`, ig, toDisplayString(computedData.value.title), 1), createElementVNode(`p`, ag, toDisplayString(computedData.value.subtitle), 1)]), createElementVNode(`div`, og, [s.value === `welcome` ? (openBlock(), createBlock(OnboardingWelcomeStep, {
         key: 0,
-        platform: e.platform,
-        "new-registration": e.newRegistration,
-        credits: e.credits,
-        "credits-loading": e.creditsLoading,
+        platform: props.platform,
+        "new-registration": props.newRegistration,
+        credits: props.credits,
+        "credits-loading": props.creditsLoading,
         onRetryCredits: renderCache[0] ||= e => r(`retry-credits`),
         onNext: m
       }, null, 8, [`platform`, `new-registration`, `credits`, `credits-loading`])) : s.value === `mode` ? (openBlock(), createBlock(OnboardingModeStep, {
         key: 1,
         modelValue: l.value,
         "onUpdate:modelValue": renderCache[1] ||= e => l.value = e,
-        "recommended-usage-mode": e.recommendedUsageMode,
+        "recommended-usage-mode": props.recommendedUsageMode,
         onBack: renderCache[2] ||= e => s.value = `welcome`,
         onNext: renderCache[3] ||= e => s.value = `recording`
       }, null, 8, [`modelValue`, `recommended-usage-mode`])) : (openBlock(), createBlock(OnboardingRecordingStep, {
@@ -15990,25 +15990,25 @@ var Sh = {
       }
     },
     emits: [`accept`, `reject`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
       function i(e) {
         e || n(`reject`);
       }
-      return (t, a) => (openBlock(), createBlock(unref(dialogA), {
-        open: e.open,
+      return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), {
+        open: props.open,
         "onUpdate:open": i
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `!w-[440px] gap-0 p-5`,
           "show-close-button": false,
-          onInteractOutside: a[2] ||= withDirectives(() => {}, [`prevent`]),
-          onOpenAutoFocus: a[3] ||= withDirectives(() => {}, [`prevent`])
+          onInteractOutside: cache[2] ||= withDirectives(() => {}, [`prevent`]),
+          onOpenAutoFocus: cache[3] ||= withDirectives(() => {}, [`prevent`])
         }, {
           default: H(() => [resolveComponent(unref(dialogN), {
             class: `flex-row items-start gap-3 text-left`
@@ -16031,13 +16031,13 @@ var Sh = {
           }), createElementVNode(`div`, Pie, [resolveComponent(unref(uiSwitchR), {
             variant: `outline`,
             class: `h-9 cursor-pointer px-4`,
-            onClick: a[0] ||= e => n(`reject`)
+            onClick: cache[0] ||= e => n(`reject`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(r)(`todoSyncAgreement.reject`)), 1)]),
             _: 1
           }), resolveComponent(unref(uiSwitchR), {
             class: `h-9 cursor-pointer px-4`,
-            onClick: a[1] ||= e => n(`accept`)
+            onClick: cache[1] ||= e => n(`accept`)
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(r)(`todoSyncAgreement.accept`)), 1)]),
             _: 1
@@ -16073,14 +16073,14 @@ var Sh = {
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (e, t) => (openBlock(), createBlock(unref(CheckboxRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CheckboxRoot), vueNt({
         "data-slot": `checkbox`
       }, unref(a), {
         class: unref(uiSwitchXt)(`border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 flex size-4 items-center justify-center rounded-[4px] border transition-colors group-has-disabled/field:opacity-50 focus-visible:ring-3 aria-invalid:ring-3 peer relative shrink-0 outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50`, n.class)
@@ -16089,7 +16089,7 @@ var Sh = {
           "data-slot": `checkbox-indicator`,
           class: `[&>svg]:size-3.5 grid place-content-center text-current transition-none`
         }, {
-          default: H(() => [withCtx(e.$slots, `default`, vueTr(vueV(t)), () => [resolveComponent(unref(checkT))])]),
+          default: H(() => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)), () => [resolveComponent(unref(checkT))])]),
           _: 2
         }, 1024)]),
         _: 3
@@ -16118,11 +16118,11 @@ var Sh = {
       snapshot: {}
     },
     emits: [`update:open`, `generate`, `exit`, `suppressChange`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -16138,14 +16138,14 @@ var Sh = {
       function s(e) {
         a.value = e === true, r(`suppressChange`, a.value);
       }
-      return (t, n) => (openBlock(), createBlock(unref(dialogA), {
-        open: e.open
+      return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), {
+        open: props.open
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
           class: `max-w-[460px] gap-0 p-0 overflow-hidden`,
           "show-close-button": false,
-          onEscapeKeyDown: n[2] ||= withDirectives(() => {}, [`prevent`]),
-          onInteractOutside: n[3] ||= withDirectives(() => {}, [`prevent`])
+          onEscapeKeyDown: cache[2] ||= withDirectives(() => {}, [`prevent`]),
+          onInteractOutside: cache[3] ||= withDirectives(() => {}, [`prevent`])
         }, {
           default: H(() => [createElementVNode(`div`, Iie, [resolveComponent(unref(dialogN), {
             class: `space-y-3 text-left`
@@ -16162,8 +16162,8 @@ var Sh = {
               _: 1
             })]),
             _: 1
-          }), e.snapshot ? (openBlock(), createElementBlock(`p`, Lie, toDisplayString(unref(i)(`exitReportReminder.stats`, {
-            count: e.snapshot.totalRecords,
+          }), props.snapshot ? (openBlock(), createElementBlock(`p`, Lie, toDisplayString(unref(i)(`exitReportReminder.stats`, {
+            count: props.snapshot.totalRecords,
             duration: computedResult.value
           })), 1)) : createCommentVNode(``, true), createElementVNode(`p`, Rie, toDisplayString(unref(i)(`exitReportReminder.billingNote`)), 1), createElementVNode(`label`, zie, [resolveComponent(unref(Checkbox), {
             "model-value": a.value,
@@ -16176,14 +16176,14 @@ var Sh = {
               size: `sm`,
               variant: `outline`,
               class: `cursor-pointer`,
-              onClick: n[0] ||= e => r(`exit`)
+              onClick: cache[0] ||= e => r(`exit`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`exitReportReminder.exit`)), 1)]),
               _: 1
             }), resolveComponent(unref(uiSwitchR), {
               size: `sm`,
               class: `cursor-pointer`,
-              onClick: n[1] ||= e => r(`generate`)
+              onClick: cache[1] ||= e => r(`generate`)
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(i)(`exitReportReminder.generate`)) + ` `, 1), resolveComponent(unref(pa), {
                 size: 14
@@ -16240,8 +16240,8 @@ var Vie = [`src`],
         default: 28
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = ref(null),
         r = ref(null),
         i = 0,
@@ -16348,13 +16348,13 @@ var Vie = [`src`],
       }), (t, renderCache) => (openBlock(), createElementBlock(`span`, {
         class: `chroma-key-video`,
         style: vueNr({
-          width: `${e.width}px`,
+          width: `${props.width}px`,
           height: `${computedResult.value}px`
         })
       }, [createElementVNode(`video`, {
         ref_key: `videoRef`,
         ref: r,
-        src: e.src,
+        src: props.src,
         muted: ``,
         loop: ``,
         playsinline: ``,
@@ -16365,7 +16365,7 @@ var Vie = [`src`],
         ref_key: `canvasRef`,
         ref: n,
         class: `chroma-key-video__canvas`,
-        width: e.width * 2,
+        width: props.width * 2,
         height: computedResult.value * 2
       }, null, 8, Hie), renderCache[0] ||= createElementVNode(`span`, {
         class: `chroma-key-video__shadow`,
@@ -16407,7 +16407,7 @@ var Vie = [`src`],
   iae = `https://player.bilibili.com/player.html?isOutside=true&aid=117325101536913&bvid=BV1tHaA6qEkq&cid=42160883053&p=1`,
   TodayWorkTutorial = _export_sfc(defineComponent({
     __name: `TodayWorkTutorial`,
-    setup(e) {
+    setup(props) {
       let {
           captureGrowthObservation: t
         } = growthTelT(),
@@ -16432,7 +16432,7 @@ var Vie = [`src`],
       }
       let s = Gie,
         c = ref(false);
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, Kie, [, createElementVNode(`button`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, Kie, [, createElementVNode(`button`, {
         type: `button`,
         class: `tutorial-sticker group ml-auto flex w-[100px] cursor-pointer flex-col items-center border-0 bg-transparent p-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40`,
         "aria-label": unref(i18nTranslate)(`todayWork.growthEntry.title`),
@@ -16526,10 +16526,10 @@ var Vie = [`src`],
       snapshot: {}
     },
     emits: [`generate`, `dismiss`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
@@ -16537,13 +16537,13 @@ var Vie = [`src`],
         let t = e / 60;
         return t < 0.1 ? `${e}min` : `${Number.isInteger(t) ? String(t) : t.toFixed(1)}h`;
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`section`, oae, [createElementVNode(`div`, sae, [createElementVNode(`div`, cae, [resolveComponent(unref(uo), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`section`, oae, [createElementVNode(`div`, sae, [createElementVNode(`div`, cae, [resolveComponent(unref(uo), {
         size: 18
       })]), createElementVNode(`div`, lae, [createElementVNode(`p`, uae, toDisplayString(unref(r)(`todayWork.firstReportGuide.badge`)), 1), createElementVNode(`h3`, dae, toDisplayString(unref(r)(`todayWork.firstReportGuide.title`)), 1), createElementVNode(`p`, fae, toDisplayString(unref(r)(`todayWork.firstReportGuide.description`, {
-        count: e.snapshot.totalRecords
+        count: props.snapshot.totalRecords
       })), 1), createElementVNode(`p`, pae, toDisplayString(unref(r)(`todayWork.firstReportGuide.stats`, {
-        count: e.snapshot.totalRecords,
-        duration: i(e.snapshot.focusMinutes)
+        count: props.snapshot.totalRecords,
+        duration: i(props.snapshot.focusMinutes)
       })), 1), createElementVNode(`div`, mae, [resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         class: `cursor-pointer`,
@@ -16803,13 +16803,13 @@ var Oae = [`data-kind`],
     props: {
       item: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: n
         } = vueN(),
         computedResult = computed(() => wg(t.item));
-      return (e, renderCache) => computedResult.value.kind === `unknown` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`span`, {
+      return (ctx, renderCache) => computedResult.value.kind === `unknown` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: `lb-change`,
         "data-kind": computedResult.value.kind
@@ -16849,7 +16849,7 @@ var Oae = [`data-kind`],
   Nae = 3e5,
   LeaderboardRankChip = _export_sfc(defineComponent({
     __name: `LeaderboardRankChip`,
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -17339,11 +17339,11 @@ var Jae = [`aria-label`],
     },
     emits: [`hover`, `select`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        i = emit,
         a = ref(null),
         o = ref(null),
         counter = ref(0),
@@ -17409,7 +17409,7 @@ var Jae = [`aria-label`],
           count = null, m();
         };
       }
-      return t({
+      return expose({
         prepareExport: y
       }), onBeforeMount(() => {
         let e = a.value;
@@ -17573,7 +17573,7 @@ var Yae = {
             top: `${r}px`
           };
         });
-      return (e, t) => computedResult.value ? (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => computedResult.value ? (openBlock(), createElementBlock(`div`, {
         key: 0,
         class: `fixed z-50 w-[220px] rounded-lg border border-black/10 bg-white px-3 py-2 text-xs shadow-lg pointer-events-none dark:border-border dark:bg-popover`,
         style: vueNr(computedData.value)
@@ -17738,10 +17738,10 @@ var soe = {
     },
     emits: [`open`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
-        r = t,
+        r = emit,
         i = vueA(() => preloadT(() => import(`./DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
         a = ref(null);
       function o() {
@@ -17862,11 +17862,11 @@ var soe = {
       }
     },
     emits: [`jump`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -17899,7 +17899,7 @@ var soe = {
       function c() {
         s(), r(`jump`);
       }
-      return (e, t) => (openBlock(), createBlock(playerR, {
+      return (ctx, cache) => (openBlock(), createBlock(playerR, {
         name: `scroll-hint`
       }, {
         default: H(() => [o.value ? (openBlock(), createElementBlock(`button`, {
@@ -18191,10 +18191,10 @@ var koe = {
     },
     emits: [`close`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -18410,7 +18410,7 @@ var koe = {
           error: n.length > 0 ? `` : i18nTranslate(`heatmapCellDetail.imageFailed`)
         };
       }
-      return (t, n) => (openBlock(), createElementBlock(Fragment, null, [event.target ? (openBlock(), createBlock(unref(popoverR), {
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [event.target ? (openBlock(), createBlock(unref(popoverR), {
         key: computedResult.value,
         open: !d.value && !f.value,
         "onUpdate:open": fe
@@ -18431,7 +18431,7 @@ var koe = {
           "collision-padding": 12,
           "update-position-strategy": `always`,
           class: `w-[260px] max-w-[calc(100vw-24px)] gap-0 overflow-hidden p-0`,
-          onOpenAutoFocus: n[1] ||= withDirectives(() => {}, [`prevent`]),
+          onOpenAutoFocus: cache[1] ||= withDirectives(() => {}, [`prevent`]),
           onInteractOutside: de
         }, {
           default: H(() => [createElementVNode(`div`, koe, [createElementVNode(`div`, Aoe, [createElementVNode(`div`, joe, toDisplayString(ne.value), 1), createElementVNode(`div`, Moe, toDisplayString(re.value), 1)]), resolveComponent(unref(uiSwitchR), {
@@ -18439,7 +18439,7 @@ var koe = {
             variant: `ghost`,
             class: `h-7 shrink-0 gap-1 px-2 text-xs text-muted-foreground hover:text-foreground`,
             disabled: s.value || o.value.length === 0,
-            onClick: n[0] ||= e => le()
+            onClick: cache[0] ||= e => le()
           }, {
             default: H(() => [resolveComponent(unref(Ko), {
               size: 12
@@ -19111,13 +19111,13 @@ var ase = {
     },
     emits: [`generate-first-report`, `navigate`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
         } = growthTelT(),
         eventAlias = event,
-        i = t,
+        i = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -19624,8 +19624,8 @@ var ase = {
         type: Boolean
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           captureGrowthObservation: n
         } = growthTelT(),
@@ -19647,7 +19647,7 @@ var ase = {
           interaction: `explicit_open`
         });
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
         "onUpdate:open": [renderCache[0] ||= e => r.value = e, o]
       }, {
@@ -19657,9 +19657,9 @@ var ase = {
           default: H(() => [createElementVNode(`button`, {
             type: `button`,
             class: `inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground disabled:cursor-default disabled:opacity-50`,
-            title: e.title,
-            "aria-label": e.title,
-            disabled: e.disabled,
+            title: props.title,
+            "aria-label": props.title,
+            disabled: props.disabled,
             onClick: a
           }, [resolveComponent(unref(circlequestionmarkT), {
             size: 14
@@ -19672,14 +19672,14 @@ var ase = {
         }, {
           default: H(() => [resolveComponent(unref(dialogN), null, {
             default: H(() => [resolveComponent(unref(dialogT), null, {
-              default: H(() => [createTextVNode(toDisplayString(e.title), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(props.title), 1)]),
               _: 1
             }), resolveComponent(unref(DialogDescription), null, {
-              default: H(() => [createTextVNode(toDisplayString(e.description), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(props.description), 1)]),
               _: 1
             })]),
             _: 1
-          }), t.$slots.default ? (openBlock(), createElementBlock(`div`, Fce, [withCtx(t.$slots, `default`)])) : createCommentVNode(``, true)]),
+          }), ctx.$slots.default ? (openBlock(), createElementBlock(`div`, Fce, [withCtx(ctx.$slots, `default`)])) : createCommentVNode(``, true)]),
           _: 3
         })]),
         _: 3
@@ -19695,22 +19695,22 @@ var ase = {
     props: {
       source: {}
     },
-    setup(e) {
+    setup(props) {
       let {
         t
       } = vueN();
-      return (n, r) => e.source ? (openBlock(), createElementBlock(`span`, {
+      return (ctx, cache) => props.source ? (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: `inline-flex max-w-full items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs font-normal text-muted-foreground`,
         title: unref(t)(`botTodos.sourceDetail`, {
-          bot: e.source.botName,
-          conversation: e.source.conversationName
+          bot: props.source.botName,
+          conversation: props.source.conversationName
         })
       }, [resolveComponent(unref(wa), {
         size: 12,
         class: `shrink-0`
       }), createElementVNode(`span`, Lce, toDisplayString(unref(t)(`botTodos.createdBy`, {
-        name: e.source.botName || `Bot`
+        name: props.source.botName || `Bot`
       })), 1)], 8, Ice)) : createCommentVNode(``, true);
     }
   }),
@@ -19752,30 +19752,30 @@ var ase = {
       }
     },
     emits: [`select`, `addFriend`],
-    setup(e) {
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, {
-        class: normalizeClass([`flex items-center gap-2 rounded-lg border border-[#e5e7eb] bg-[#f9fafb] transition-colors hover:border-[#86efac] hover:bg-[#f0fdf4]`, e.compact ? `px-2.5 py-2` : `px-3 py-2`])
+    setup(props) {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
+        class: normalizeClass([`flex items-center gap-2 rounded-lg border border-[#e5e7eb] bg-[#f9fafb] transition-colors hover:border-[#86efac] hover:bg-[#f0fdf4]`, props.compact ? `px-2.5 py-2` : `px-3 py-2`])
       }, [createElementVNode(`button`, {
         type: `button`,
         class: normalizeClass([`flex min-w-0 flex-1 items-center gap-2 text-left`, {
-          "cursor-not-allowed opacity-60": e.selected
+          "cursor-not-allowed opacity-60": props.selected
         }]),
-        disabled: e.selected,
-        onClick: renderCache[0] ||= e => t.$emit(`select`)
+        disabled: props.selected,
+        onClick: renderCache[0] ||= e => ctx.$emit(`select`)
       }, [createElementVNode(`span`, {
-        class: normalizeClass([`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 font-bold text-primary`, e.compact ? `size-7 text-xs` : `size-8 text-sm`])
-      }, [e.avatarUrl ? (openBlock(), createElementBlock(`img`, {
+        class: normalizeClass([`flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 font-bold text-primary`, props.compact ? `size-7 text-xs` : `size-8 text-sm`])
+      }, [props.avatarUrl ? (openBlock(), createElementBlock(`img`, {
         key: 0,
-        src: e.avatarUrl,
+        src: props.avatarUrl,
         class: `size-full object-cover`
-      }, null, 8, zce)) : (openBlock(), createElementBlock(`span`, Bce, toDisplayString(e.initial), 1))], 2), createElementVNode(`span`, Vce, [createElementVNode(`span`, Hce, toDisplayString(e.name), 1), createElementVNode(`span`, Uce, toDisplayString(e.email), 1)])], 10, Rce), e.showAddFriend ? (openBlock(), createElementBlock(`button`, {
+      }, null, 8, zce)) : (openBlock(), createElementBlock(`span`, Bce, toDisplayString(props.initial), 1))], 2), createElementVNode(`span`, Vce, [createElementVNode(`span`, Hce, toDisplayString(props.name), 1), createElementVNode(`span`, Uce, toDisplayString(props.email), 1)])], 10, Rce), props.showAddFriend ? (openBlock(), createElementBlock(`button`, {
         key: 0,
         type: `button`,
         class: `inline-flex h-7 shrink-0 items-center gap-1 whitespace-nowrap rounded-lg border border-[#bbf7d0] bg-[#f0fdf4] px-2 text-xs font-semibold text-[#16a34a] transition-colors hover:bg-[#dcfce7] disabled:cursor-not-allowed disabled:opacity-60`,
-        title: e.addFriendTitle || e.addFriendLabel,
-        disabled: e.addingFriend,
-        onClick: renderCache[1] ||= withDirectives(e => t.$emit(`addFriend`), [`stop`])
-      }, [e.addingFriend ? (openBlock(), createBlock(unref(beautifier), {
+        title: props.addFriendTitle || props.addFriendLabel,
+        disabled: props.addingFriend,
+        onClick: renderCache[1] ||= withDirectives(e => ctx.$emit(`addFriend`), [`stop`])
+      }, [props.addingFriend ? (openBlock(), createBlock(unref(beautifier), {
         key: 0,
         size: 13,
         "stroke-width": 1.8,
@@ -19784,7 +19784,7 @@ var ase = {
         key: 1,
         size: 13,
         "stroke-width": 1.8
-      })), createTextVNode(` ` + toDisplayString(e.addFriendLabel), 1)], 8, Wce)) : createCommentVNode(``, true)], 2));
+      })), createTextVNode(` ` + toDisplayString(props.addFriendLabel), 1)], 8, Wce)) : createCommentVNode(``, true)], 2));
     }
   }),
   Gce = {
@@ -19860,10 +19860,10 @@ var ase = {
     },
     emits: [`add`, `remove`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -19914,7 +19914,7 @@ var ase = {
         let found = h.value.find(item => !f(item));
         found && v(found);
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, Gce, [createElementVNode(`div`, Kce, [resolveComponent(unref(Cs), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, Gce, [createElementVNode(`div`, Kce, [resolveComponent(unref(Cs), {
         size: 14,
         "stroke-width": 1.8,
         class: `shrink-0 text-[#9ca3af]`
@@ -20534,10 +20534,10 @@ var TodoCommentBody = defineComponent({
     },
     emits: [`reply`, `remove`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -20615,8 +20615,8 @@ var Ole = [`innerHTML`],
         default: 8
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: n
         } = vueN(),
@@ -20832,10 +20832,10 @@ var Ole = [`innerHTML`],
     },
     emits: [`update:open`, `comment-count`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -21301,7 +21301,7 @@ var Ole = [`innerHTML`],
           content: e.content.replace(/\s+/g, ` `).slice(0, 60)
         });
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: event.open,
         "onUpdate:open": renderCache[8] ||= e => r(`update:open`, e)
       }, {
@@ -21567,10 +21567,10 @@ var Ole = [`innerHTML`],
     },
     emits: [`update:open`, `select`, `clear`, `remove-history`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -21602,14 +21602,14 @@ var Ole = [`innerHTML`],
       function _(e) {
         r(`remove-history`, e), r(`update:open`, false);
       }
-      return (t, n) => (openBlock(), createBlock(unref(popoverR), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(popoverR), {
         open: event.open,
         "onUpdate:open": p
       }, {
         default: H(() => [resolveComponent(unref(popoverT), {
           "as-child": ``
         }, {
-          default: H(() => [withCtx(t.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }), resolveComponent(unref(popoverN), {
           align: `start`,
@@ -21621,7 +21621,7 @@ var Ole = [`innerHTML`],
             "stroke-width": 1.8,
             class: `shrink-0 text-[#9ca3af]`
           }), vueZt(createElementVNode(`input`, {
-            "onUpdate:modelValue": n[0] ||= e => o.value = e,
+            "onUpdate:modelValue": cache[0] ||= e => o.value = e,
             maxlength: jv,
             class: `h-10 min-w-0 flex-1 bg-transparent text-sm text-[#111827] outline-none placeholder:text-[#9ca3af]`,
             placeholder: unref(i)(`todo.labelPopover.placeholder`),
@@ -21630,7 +21630,7 @@ var Ole = [`innerHTML`],
             key: 0,
             type: `button`,
             class: `flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-[#111827] transition-colors hover:bg-[#f3f4f6]`,
-            onClick: n[1] ||= e => m(computedResult.value)
+            onClick: cache[1] ||= e => m(computedResult.value)
           }, [resolveComponent(unref(uiSwitchDt), {
             size: 14,
             "stroke-width": 1.8,
@@ -21717,11 +21717,11 @@ var Ole = [`innerHTML`],
       choices: {}
     },
     emits: [`update:open`, `select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN();
@@ -21736,14 +21736,14 @@ var Ole = [`innerHTML`],
       function s(e) {
         r(`select`, e), r(`update:open`, false);
       }
-      return (t, n) => (openBlock(), createBlock(unref(popoverR), {
-        open: e.open,
+      return (ctx, cache) => (openBlock(), createBlock(unref(popoverR), {
+        open: props.open,
         "onUpdate:open": o
       }, {
         default: H(() => [resolveComponent(unref(popoverT), {
           "as-child": ``
         }, {
-          default: H(() => [withCtx(t.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }), resolveComponent(unref(popoverN), {
           align: `start`,
@@ -21757,23 +21757,23 @@ var Ole = [`innerHTML`],
           }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`todo.remind.label`)), 1)]), createElementVNode(`div`, Xue, [createElementVNode(`button`, {
             type: `button`,
             class: `flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-[#111827] transition-colors hover:bg-[#f3f4f6]`,
-            onClick: n[0] ||= e => s(null)
-          }, [createElementVNode(`span`, Zue, toDisplayString(unref(i18nTranslate)(`todo.remind.none`)), 1), e.current ? createCommentVNode(``, true) : (openBlock(), createBlock(unref(checkT), {
+            onClick: cache[0] ||= e => s(null)
+          }, [createElementVNode(`span`, Zue, toDisplayString(unref(i18nTranslate)(`todo.remind.none`)), 1), props.current ? createCommentVNode(``, true) : (openBlock(), createBlock(unref(checkT), {
             key: 0,
             size: 14,
             "stroke-width": 2,
             class: `shrink-0 text-[#16a34a]`
-          }))]), (openBlock(true), createElementBlock(Fragment, null, renderList(e.choices, t => (openBlock(), createElementBlock(`button`, {
+          }))]), (openBlock(true), createElementBlock(Fragment, null, renderList(props.choices, t => (openBlock(), createElementBlock(`button`, {
             key: `remind-${t}`,
             type: `button`,
             class: `flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm text-[#111827] transition-colors hover:bg-[#f3f4f6]`,
             onClick: e => s(t)
-          }, [createElementVNode(`span`, $ue, toDisplayString(a(t)), 1), e.current === t ? (openBlock(), createBlock(unref(checkT), {
+          }, [createElementVNode(`span`, $ue, toDisplayString(a(t)), 1), props.current === t ? (openBlock(), createBlock(unref(checkT), {
             key: 0,
             size: 14,
             "stroke-width": 2,
             class: `shrink-0 text-[#16a34a]`
-          })) : createCommentVNode(``, true)], 8, Que))), 128)), e.choices.length ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, ede, toDisplayString(unref(i18nTranslate)(`todo.remind.tooClose`)), 1))])]),
+          })) : createCommentVNode(``, true)], 8, Que))), 128)), props.choices.length ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, ede, toDisplayString(unref(i18nTranslate)(`todo.remind.tooClose`)), 1))])]),
           _: 1
         })]),
         _: 3
@@ -21822,11 +21822,11 @@ var Ole = [`innerHTML`],
       refreshKey: {}
     },
     emits: [`open`],
-    setup(row, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = row,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -21859,14 +21859,14 @@ var Ole = [`innerHTML`],
       function u(e) {
         return e.user.remark || e.user.nickname || e.user.email || i18nTranslate(`todo.activity.unknownUser`);
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`section`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`section`, {
         class: `mt-5 border-t border-[#e5e7eb] pt-4`,
         onClick: renderCache[3] ||= withDirectives(() => {}, [`stop`])
       }, [createElementVNode(`div`, nde, [createElementVNode(`h3`, rde, [resolveComponent(unref(ts), {
         size: 15,
         "stroke-width": 2,
         class: `text-[#6b7280]`
-      }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`todo.activity.dialogTitle`)) + ` `, 1), row.commentCount > 0 ? (openBlock(), createElementBlock(`span`, ide, toDisplayString(row.commentCount), 1)) : createCommentVNode(``, true)]), computedResult.value ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`button`, {
+      }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`todo.activity.dialogTitle`)) + ` `, 1), props.commentCount > 0 ? (openBlock(), createElementBlock(`span`, ide, toDisplayString(props.commentCount), 1)) : createCommentVNode(``, true)]), computedResult.value ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`button`, {
         key: 0,
         type: `button`,
         class: `text-xs font-medium text-[#16a34a] transition-colors hover:text-[#15803d]`,
@@ -22210,10 +22210,10 @@ var Dde = [`data-drag-mode`],
     },
     emits: [`select`, `loadMore`, `reschedule`, `openComments`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -23296,10 +23296,10 @@ var kfe = {
     },
     emits: [`select`, `move`, `dragStart`, `loadMore`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -23438,7 +23438,7 @@ var kfe = {
       function E(e) {
         return o.value?.overStatus === e.status;
       }
-      return (t, n) => (openBlock(), createElementBlock(`div`, kfe, [createElementVNode(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, kfe, [createElementVNode(`div`, {
         class: `grid items-stretch gap-3`,
         style: vueNr(p.value)
       }, [(openBlock(true), createElementBlock(Fragment, null, renderList(f.value, s => (openBlock(), createElementBlock(`section`, {
@@ -23469,7 +23469,7 @@ var kfe = {
       }, [y.value?.taskId === n.id ? (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: normalizeClass([`pointer-events-none absolute inset-x-1 h-0.5 rounded-full bg-[#16a34a]`, y.value.position === `before` ? `-top-[5px]` : `-bottom-[5px]`])
-      }, null, 2)) : createCommentVNode(``, true), withCtx(t.$slots, `card`, {
+      }, null, 2)) : createCommentVNode(``, true), withCtx(ctx.$slots, `card`, {
         task: n
       })], 42, Ffe))), 128)), s.tasks.length === 0 ? (openBlock(), createElementBlock(`div`, {
         key: 0,
@@ -23478,7 +23478,7 @@ var kfe = {
         key: 1,
         type: `button`,
         class: `inline-flex h-8 shrink-0 items-center justify-center rounded-lg border border-dashed border-[#e5e7eb] text-xs font-medium text-[#6b7280] transition-colors hover:border-[#d1d5db] hover:bg-[#f9fafb] hover:text-[#111827]`,
-        onClick: n[0] ||= withDirectives(e => a.value = !a.value, [`stop`])
+        onClick: cache[0] ||= withDirectives(e => a.value = !a.value, [`stop`])
       }, toDisplayString(a.value ? unref(i18nTranslate)(`todo.board.hideEarlierDone`, {
         count: s.earlierDoneCount
       }) : unref(i18nTranslate)(`todo.board.showEarlierDone`, {
@@ -23488,7 +23488,7 @@ var kfe = {
         type: `button`,
         class: `inline-flex h-8 shrink-0 items-center justify-center rounded-lg text-xs font-medium text-[#9ca3af] transition-colors hover:bg-[#f9fafb] hover:text-[#16a34a] disabled:cursor-not-allowed disabled:opacity-60`,
         disabled: event.loadingMore,
-        onClick: n[1] ||= withDirectives(e => r(`loadMore`), [`stop`])
+        onClick: cache[1] ||= withDirectives(e => r(`loadMore`), [`stop`])
       }, toDisplayString(event.loadingMore ? unref(i18nTranslate)(`todo.loadingMore`) : unref(i18nTranslate)(`todo.board.unloaded`, {
         count: s.total - s.loaded
       })), 9, Ife)) : createCommentVNode(``, true)], 2)], 42, Afe))), 128))], 4)]));
@@ -23653,10 +23653,10 @@ var Kfe = {
     },
     emits: [`select`, `reschedule`, `create`, `openWeek`, `contextMenu`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -23824,7 +23824,7 @@ var Kfe = {
       function oe(e) {
         return Lv(eventAlias.startDay + e) >= 5;
       }
-      return (e, t) => (openBlock(), createElementBlock(`div`, Kfe, [createElementVNode(`div`, qfe, [(openBlock(), createElementBlock(Fragment, null, renderList(a, (e, t) => createElementVNode(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, Kfe, [createElementVNode(`div`, qfe, [(openBlock(), createElementBlock(Fragment, null, renderList(a, (e, t) => createElementVNode(`div`, {
         key: e,
         class: normalizeClass([`px-2.5 py-1.5 text-xs font-medium`, oe(t) ? `text-[#9ca3af]` : `text-[#6b7280]`])
       }, toDisplayString(h(e)), 3)), 64))]), createElementVNode(`div`, {
@@ -23875,9 +23875,9 @@ var Kfe = {
         key: 1,
         "data-calendar-popover": ``,
         class: normalizeClass([`absolute z-30 flex w-[240px] flex-col rounded-lg border border-[#e5e7eb] bg-white p-2 shadow-[0_10px_28px_rgba(15,23,42,0.12)]`, E(e)]),
-        onClick: t[1] ||= withDirectives(() => {}, [`stop`]),
-        onDblclick: t[2] ||= withDirectives(() => {}, [`stop`]),
-        onContextmenu: t[3] ||= withDirectives(() => {}, [`stop`, `prevent`])
+        onClick: cache[1] ||= withDirectives(() => {}, [`stop`]),
+        onDblclick: cache[2] ||= withDirectives(() => {}, [`stop`]),
+        onContextmenu: cache[3] ||= withDirectives(() => {}, [`stop`, `prevent`])
       }, [createElementVNode(`div`, $fe, [createElementVNode(`span`, epe, toDisplayString(unref(i18nTranslate)(`todo.calendar.dayTasks`, {
         date: g(e.day),
         count: e.items.length
@@ -23885,7 +23885,7 @@ var Kfe = {
         type: `button`,
         class: `flex size-5 items-center justify-center rounded text-[#9ca3af] transition-colors hover:bg-[#f3f4f6] hover:text-[#111827]`,
         "aria-label": unref(i18nTranslate)(`common.close`),
-        onClick: t[0] ||= e => u.value = null
+        onClick: cache[0] ||= e => u.value = null
       }, [resolveComponent(unref(lucideT), {
         size: 12,
         "stroke-width": 2
@@ -23948,10 +23948,10 @@ var Kfe = {
     },
     emits: [`select`, `reschedule`, `create`, `contextMenu`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -24377,9 +24377,9 @@ var Kfe = {
     },
     emits: [`select`, `reschedule`, `create`, `rangeChange`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: i18nTranslate
         } = vueN();
@@ -24681,10 +24681,10 @@ var Kfe = {
     },
     emits: [`select`, `toggleDone`, `editDue`, `changePriority`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -25331,8 +25331,8 @@ var Eme = [`src`],
         default: 32
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: i18nTranslate
         } = vueN(),
@@ -25349,12 +25349,12 @@ var Eme = [`src`],
           "--avatar-bg": computedResult.value.background,
           "--avatar-fg": computedResult.value.color
         }));
-      return (t, renderCache) => (openBlock(), createElementBlock(`span`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`span`, {
         class: `leaderboard-avatar`,
         style: vueNr(o.value)
-      }, [e.avatarUrl && !r.value ? (openBlock(), createElementBlock(`img`, {
+      }, [props.avatarUrl && !r.value ? (openBlock(), createElementBlock(`img`, {
         key: 0,
-        src: e.avatarUrl,
+        src: props.avatarUrl,
         alt: ``,
         draggable: `false`,
         onError: renderCache[0] ||= e => r.value = true
@@ -25698,11 +25698,11 @@ var kme = {
     }),
     emits: vueTt([`changed`, `added`], [`update:open`]),
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
         r = vueLt(event, `open`),
-        i = t,
+        i = emit,
         a = /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         {
           t: i18nTranslate
@@ -26292,14 +26292,14 @@ var kme = {
       }
     },
     emits: [`update:modelValue`, `update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = uiSwitchZ(e, t);
-      return (e, t) => (openBlock(), createBlock(unref(SelectRoot), vueNt({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectRoot), vueNt({
         "data-slot": `select`
       }, unref(n)), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
     }
@@ -26365,28 +26365,28 @@ var kme = {
       }
     },
     emits: [`closeAutoFocus`, `escapeKeyDown`, `pointerDownOutside`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (t, r) => (openBlock(), createBlock(unref(SelectPortal), null, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectPortal), null, {
         default: H(() => [resolveComponent(unref(SelectContent), vueNt({
           "data-slot": `select-content`,
-          "data-align-trigger": e.position === `item-aligned`
+          "data-align-trigger": props.position === `item-aligned`
         }, {
-          ...t.$attrs,
+          ...ctx.$attrs,
           ...unref(a)
         }, {
-          class: unref(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 cn-menu-translucent relative z-50 !max-h-[min(20rem,calc(100vh-2rem))] origin-(--reka-select-content-transform-origin) overflow-hidden data-[align-trigger=true]:animate-none`, e.position === `popper` && `data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1`, n.class)
+          class: unref(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 min-w-36 rounded-lg shadow-md ring-1 duration-100 data-[side=inline-start]:slide-in-from-right-2 data-[side=inline-end]:slide-in-from-left-2 cn-menu-translucent relative z-50 !max-h-[min(20rem,calc(100vh-2rem))] origin-(--reka-select-content-transform-origin) overflow-hidden data-[align-trigger=true]:animate-none`, props.position === `popper` && `data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1`, n.class)
         }), {
           default: H(() => [resolveComponent(unref(SelectScrollUpButtonComponent)), resolveComponent(unref(SelectViewport), {
-            "data-position": e.position,
+            "data-position": props.position,
             class: normalizeClass(unref(uiSwitchXt)(`max-h-[min(18rem,calc(100vh-4rem))] overflow-y-auto data-[position=popper]:w-full data-[position=popper]:min-w-[var(--reka-select-trigger-width)]`))
           }, {
-            default: H(() => [withCtx(t.$slots, `default`)]),
+            default: H(() => [withCtx(ctx.$slots, `default`)]),
             _: 3
           }, 8, [`data-position`, `class`]), resolveComponent(unref(SelectScrollDownButtonComponent))]),
           _: 3
@@ -26406,15 +26406,15 @@ var kme = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(SelectGroup), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectGroup), vueNt({
         "data-slot": `select-group`
       }, unref(n), {
         class: unref(uiSwitchXt)(`scroll-my-1 p-1`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -26438,24 +26438,24 @@ var kme = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(SelectItem), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectItem), vueNt({
         "data-slot": `select-item`
       }, unref(i), {
         class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm [&_svg:not([class*=size-])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2 relative flex w-full cursor-default items-center outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, t.class)
       }), {
         default: H(() => [createElementVNode(`span`, oge, [resolveComponent(unref(SelectItemIndicator), null, {
-          default: H(() => [withCtx(e.$slots, `indicator-icon`, {}, () => [resolveComponent(unref(checkT), {
+          default: H(() => [withCtx(ctx.$slots, `indicator-icon`, {}, () => [resolveComponent(unref(checkT), {
             class: `pointer-events-none`
           })])]),
           _: 3
         })]), resolveComponent(unref(SelectItemText), null, {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
-        }), withCtx(e.$slots, `extra`)]),
+        }), withCtx(ctx.$slots, `extra`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -26472,13 +26472,13 @@ var kme = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(SelectLabel), {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectLabel), {
         "data-slot": `select-label`,
         class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground px-1.5 py-1 text-xs`, t.class))
       }, {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`class`]));
     }
@@ -26494,16 +26494,16 @@ var kme = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(SelectScrollDownButton), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectScrollDownButton), vueNt({
         "data-slot": `select-scroll-down-button`
       }, unref(i), {
         class: unref(uiSwitchXt)(`bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`, {}, () => [resolveComponent(unref(PopperContentS))])]),
+        default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(PopperContentS))])]),
         _: 3
       }, 16, [`class`]));
     }
@@ -26519,16 +26519,16 @@ var kme = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(SelectScrollUpButton), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectScrollUpButton), vueNt({
         "data-slot": `select-scroll-up-button`
       }, unref(i), {
         class: unref(uiSwitchXt)(`bg-popover z-10 flex cursor-default items-center justify-center py-1 [&_svg:not([class*=size-])]:size-4`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`, {}, () => [resolveComponent(unref(In))])]),
+        default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(In))])]),
         _: 3
       }, 16, [`class`]));
     }
@@ -26555,13 +26555,13 @@ var kme = {
       let countAlias = count,
         r = uiSwitchLt(countAlias, `class`, `size`),
         i = uiSwitchB(r);
-      return (n, r) => (openBlock(), createBlock(unref(SelectTrigger), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectTrigger), vueNt({
         "data-slot": `select-trigger`,
         "data-size": count.size
       }, unref(i), {
         class: unref(uiSwitchXt)(`border-input data-placeholder:text-muted-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 gap-1.5 rounded-lg border bg-transparent py-2 pr-2 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=default]:h-8 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] *:data-[slot=select-value]:gap-1.5 [&_svg:not([class*=size-])]:size-4 flex w-fit items-center justify-between whitespace-nowrap outline-none disabled:cursor-not-allowed disabled:opacity-50 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center [&_svg]:pointer-events-none [&_svg]:shrink-0`, countAlias.class)
       }), {
-        default: H(() => [withCtx(n.$slots, `default`), resolveComponent(unref(SelectIcon), {
+        default: H(() => [withCtx(ctx.$slots, `default`), resolveComponent(unref(SelectIcon), {
           "as-child": ``
         }, {
           default: H(() => [resolveComponent(unref(PopperContentS), {
@@ -26582,12 +26582,12 @@ var kme = {
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(SelectValue), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(SelectValue), vueNt({
         "data-slot": `select-value`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -26710,10 +26710,10 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
     },
     emits: [`update:modelValue`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -26754,7 +26754,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
         let t = e.detail.originalEvent.target;
         t instanceof Node && a.value?.contains(t) && e.preventDefault();
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(popoverR), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(popoverR), {
         open: s.value,
         "onUpdate:open": renderCache[4] ||= e => s.value = e
       }, {
@@ -26886,11 +26886,11 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
     },
     emits: [`update:modelValue`, `update:target`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        i = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -27087,7 +27087,7 @@ var pge = [`aria-expanded`, `aria-label`, `aria-invalid`, `title`, `disabled`],
           start: `${e}T${eventAlias.quickStart}`,
           end: `${e}T${eventAlias.quickEnd}`
         });
-      return t({
+      return expose({
         focus: () => s.value?.querySelector(`[data-boundary="${eventAlias.target}"] button`)?.focus()
       }), (t, renderCache) => (openBlock(), createElementBlock(`section`, {
         ref_key: `panel`,
@@ -28938,11 +28938,11 @@ var Qge = {
     },
     emits: [`openTaskRequestHandled`, `openMilestone`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let n = Ud(`todo_create_impression`),
         eventAlias = event,
-        i = t,
+        i = emit,
         {
           t: i18nTranslate,
           locale: s
@@ -34941,16 +34941,16 @@ var Qge = {
       },
       orientation: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `group`,
         "data-slot": `button-group`,
         "data-orientation": t.orientation,
         class: normalizeClass(unref(uiSwitchXt)(unref(lw)({
           orientation: t.orientation
         }), t.class))
-      }, [withCtx(e.$slots, `default`)], 10, sw));
+      }, [withCtx(ctx.$slots, `default`)], 10, sw));
     }
   }),
   lw = uiSwitchSt(`has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-r-lg flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1`, {
@@ -36077,7 +36077,7 @@ Minimum version required to store current data is: ` + bestVersionForData + `.
       function c() {
         i.value = true, n.value = ``;
       }
-      return (t, a) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-preserve-light-surface": ``,
         class: `box-border flex items-center justify-center rounded-lg border border-black/10 bg-white p-3`,
         style: vueNr(computedData.value)
@@ -36730,14 +36730,14 @@ var Uw = {
     },
     emits: [`show-wechat-qrcode`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
         } = growthTelT(),
         r = Ud(`plan_card_impression`, 0),
         eventAlias = event,
-        o = t,
+        o = emit,
         s = Date.now(),
         c = `${CO}/uploads/image/subscribe-banner.png?v=${s}`,
         l = `${CO}/uploads/image/subscribe-banner-dark.png?v=${s}`,
@@ -37838,12 +37838,12 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-4 rounded-xl border-dashed p-6 flex w-full min-w-0 flex-1 flex-col items-center justify-center text-center text-balance`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   EmptyDescription = defineComponent({
@@ -37853,11 +37853,11 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      return (e, t) => (openBlock(), createElementBlock(`p`, {
+    setup(props) {
+      return (ctx, cache) => (openBlock(), createElementBlock(`p`, {
         "data-slot": `empty-description`,
-        class: normalizeClass(unref(uiSwitchXt)(`text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, e.$attrs.class ?? ``))
-      }, [withCtx(e.$slots, `default`)], 2));
+        class: normalizeClass(unref(uiSwitchXt)(`text-sm/relaxed text-muted-foreground [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, ctx.$attrs.class ?? ``))
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   EmptyHeader = defineComponent({
@@ -37867,12 +37867,12 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty-header`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-2 flex max-w-sm flex-col items-center`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   kO = [`data-variant`],
@@ -37886,15 +37886,15 @@ var Empty = defineComponent({
         default: `default`
       }
     },
-    setup(e) {
-      let t = e;
-      return (n, r) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty-icon`,
-        "data-variant": e.variant,
+        "data-variant": props.variant,
         class: normalizeClass(unref(uiSwitchXt)(unref(MO)({
-          variant: e.variant
+          variant: props.variant
         }), t.class))
-      }, [withCtx(n.$slots, `default`)], 10, kO));
+      }, [withCtx(ctx.$slots, `default`)], 10, kO));
     }
   }),
   EmptyTitle = defineComponent({
@@ -37904,12 +37904,12 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `empty-title`,
         class: normalizeClass(unref(uiSwitchXt)(`text-sm font-medium tracking-tight cn-font-heading`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   MO = uiSwitchSt(`mb-2 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0`, {
@@ -37930,9 +37930,9 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `skeleton`,
         class: normalizeClass(unref(uiSwitchXt)(`bg-muted rounded-md`, t.class))
       }, null, 2));
@@ -37950,15 +37950,15 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(Label), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(Label), vueNt({
         "data-slot": `label`
       }, unref(n), {
         class: unref(uiSwitchXt)(`gap-2 text-sm leading-none font-medium group-data-[disabled=true]:opacity-50 peer-disabled:opacity-50 flex items-center select-none group-data-[disabled=true]:pointer-events-none peer-disabled:cursor-not-allowed`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -38039,11 +38039,11 @@ var Empty = defineComponent({
       token: {}
     },
     emits: [`close`, `contact`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -38475,14 +38475,14 @@ var Empty = defineComponent({
     },
     emits: [`navigate`, `show-wechat-qrcode`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
         } = growthTelT(),
         r = Ud(`invite_reward_impression`, 0),
         eventAlias = event,
-        a = t,
+        a = emit,
         {
           user: o
         } = useAuthT(),
@@ -38521,7 +38521,7 @@ var Empty = defineComponent({
           alertT(computedResult.value.copyError);
         }
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `productImpressionEl`,
         ref: r,
         class: `generate-report-theme-scope invite-theme-scope flex flex-col gap-4 p-5 px-6`,
@@ -39074,11 +39074,11 @@ var Empty = defineComponent({
     props: {
       refreshKey: {}
     },
-    setup(e) {
+    setup(props) {
       let {
           captureGrowthObservation: t
         } = growthTelT(),
-        n = e,
+        n = props,
         {
           t: i18nTranslate
         } = vueN(),
@@ -39156,7 +39156,7 @@ var Empty = defineComponent({
           q: i18nTranslate(`privacy.faqs.7.q`),
           a: i18nTranslate(`privacy.faqs.7.a`)
         }]);
-      return (e, t) => (openBlock(), createElementBlock(`div`, $k, [createElementVNode(`div`, eA, [createElementVNode(`div`, tA, [resolveComponent(unref(js), {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, $k, [createElementVNode(`div`, eA, [createElementVNode(`div`, tA, [resolveComponent(unref(js), {
         size: 32,
         "stroke-width": 1.5,
         style: {
@@ -39293,11 +39293,11 @@ var Empty = defineComponent({
   CreditRechargePayment = defineComponent({
     __name: `CreditRechargePayment`,
     emits: [`paid`, `error`, `busy`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let r = n,
+      let r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -39450,7 +39450,7 @@ var Empty = defineComponent({
       }
       return watch(() => o.value?.userId, () => {
         C(), p.value = null;
-      }), onMounted(_), t({
+      }), onMounted(_), expose({
         start: S,
         close: C
       }), (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
@@ -39612,10 +39612,10 @@ var Empty = defineComponent({
     },
     emits: [`update:open`, `balanceChanged`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i,
           locale: a
@@ -39887,18 +39887,18 @@ var Empty = defineComponent({
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (e, t) => (openBlock(), createBlock(unref(RadioGroupRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(RadioGroupRoot), vueNt({
         "data-slot": `radio-group`,
         class: unref(uiSwitchXt)(`grid gap-2 w-full`, n.class)
       }, unref(a)), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`class`]));
     }
@@ -39923,11 +39923,11 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(RadioGroupItem), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(RadioGroupItem), vueNt({
         "data-slot": `radio-group-item`
       }, unref(i), {
         class: unref(uiSwitchXt)(`border-input dark:bg-input/30 data-checked:bg-primary data-checked:text-primary-foreground dark:data-checked:bg-primary data-checked:border-primary aria-invalid:aria-checked:border-primary aria-invalid:border-destructive focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 dark:aria-invalid:border-destructive/50 flex size-4 rounded-full focus-visible:ring-3 aria-invalid:ring-3 group/radio-group-item peer relative aspect-square shrink-0 border outline-none after:absolute after:-inset-x-3 after:-inset-y-2 disabled:cursor-not-allowed disabled:opacity-50`, t.class)
@@ -39936,7 +39936,7 @@ var Empty = defineComponent({
           "data-slot": `radio-group-indicator`,
           class: `flex size-4 items-center justify-center`
         }, {
-          default: H(() => [withCtx(e.$slots, `default`, {}, () => [resolveComponent(unref(pe), {
+          default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(pe), {
             class: `bg-primary-foreground absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full`
           })])]),
           _: 3
@@ -40134,7 +40134,7 @@ var Empty = defineComponent({
           }
         }
       }
-      return (r, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, yM, [createElementVNode(`div`, bM, [createElementVNode(`p`, xM, toDisplayString(unref(i18nTranslate)(`settings.networkProxy.title`)), 1), createElementVNode(`p`, SM, toDisplayString(unref(i18nTranslate)(`settings.networkProxy.desc`)), 1), createElementVNode(`p`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, yM, [createElementVNode(`div`, bM, [createElementVNode(`p`, xM, toDisplayString(unref(i18nTranslate)(`settings.networkProxy.title`)), 1), createElementVNode(`p`, SM, toDisplayString(unref(i18nTranslate)(`settings.networkProxy.desc`)), 1), createElementVNode(`p`, {
         class: `truncate text-xs text-muted-foreground`,
         title: computedResult.value
       }, toDisplayString(computedResult.value), 9, CM), unref(n).networkProxyEnabled ? (openBlock(), createElementBlock(`p`, {
@@ -40323,20 +40323,20 @@ var Empty = defineComponent({
     props: {
       id: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: n
         } = vueN(),
         computedResult = computed(() => WM.find(item => item.id === t.id));
-      return (t, i) => (openBlock(), createElementBlock(`section`, {
-        id: `settings-${e.id}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`section`, {
+        id: `settings-${props.id}`,
         class: `scroll-mt-6 rounded-[10px] bg-black/[0.02] p-5 px-[18px] dark:bg-card`
       }, [createElementVNode(`div`, qM, [(openBlock(), createBlock(vueEt(computedResult.value.icon), {
         size: 14,
         "stroke-width": 1.5,
         class: `text-[#999] dark:text-muted-foreground`
-      })), createElementVNode(`h2`, JM, toDisplayString(unref(n)(computedResult.value.titleKey)), 1)]), withCtx(t.$slots, `default`)], 8, KM));
+      })), createElementVNode(`h2`, JM, toDisplayString(unref(n)(computedResult.value.titleKey)), 1)]), withCtx(ctx.$slots, `default`)], 8, KM));
     }
   }),
   XM = {
@@ -40418,7 +40418,7 @@ var Empty = defineComponent({
   },
   GeneralSettingsSection = defineComponent({
     __name: `GeneralSettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate,
           locale: n
@@ -40500,7 +40500,7 @@ var Empty = defineComponent({
             });
           }
         });
-      return (state, i) => (openBlock(), createBlock(SettingsSection, {
+      return (state, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `general`
       }, {
         default: H(() => [createElementVNode(`div`, XM, [unref(toolSettingsO) ? (openBlock(), createElementBlock(Fragment, {
@@ -40516,11 +40516,11 @@ var Empty = defineComponent({
             size: 13
           }), createTextVNode(` ` + toDisplayString(y.value), 1)]),
           _: 1
-        }, 8, [`disabled`, `onClick`])]), i[7] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`, `onClick`])]), cache[7] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1)], 64)) : createCommentVNode(``, true), createElementVNode(`div`, tN, [createElementVNode(`div`, null, [createElementVNode(`p`, nN, toDisplayString(unref(i18nTranslate)(`settings.themeMode`)), 1), createElementVNode(`p`, rN, toDisplayString(unref(i18nTranslate)(`settings.themeModeDesc`)), 1)]), (openBlock(), createBlock(unref(Select), {
           modelValue: b.value,
-          "onUpdate:modelValue": i[0] ||= e => b.value = e,
+          "onUpdate:modelValue": cache[0] ||= e => b.value = e,
           disabled: unref(f),
           key: unref(n)
         }, {
@@ -40549,11 +40549,11 @@ var Empty = defineComponent({
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`]))]), i[9] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`]))]), cache[9] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1), createElementVNode(`div`, iN, [createElementVNode(`div`, null, [createElementVNode(`p`, aN, toDisplayString(unref(i18nTranslate)(`settings.language`)), 1), createElementVNode(`p`, oN, toDisplayString(unref(i18nTranslate)(`settings.languageDesc`)), 1)]), (openBlock(), createBlock(unref(Select), {
           modelValue: x.value,
-          "onUpdate:modelValue": i[1] ||= e => x.value = e,
+          "onUpdate:modelValue": cache[1] ||= e => x.value = e,
           disabled: unref(f),
           key: unref(n)
         }, {
@@ -40575,11 +40575,11 @@ var Empty = defineComponent({
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`]))]), i[10] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`]))]), cache[10] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1), createElementVNode(`div`, sN, [createElementVNode(`div`, cN, [createElementVNode(`p`, lN, toDisplayString(unref(i18nTranslate)(`usageMode.settingTitle`)), 1), createElementVNode(`p`, uN, toDisplayString(unref(i18nTranslate)(`usageMode.settingDesc`)), 1), s.value ? (openBlock(), createElementBlock(`p`, dN, toDisplayString(s.value), 1)) : createCommentVNode(``, true)]), (openBlock(), createBlock(unref(Select), {
           modelValue: computedResult.value,
-          "onUpdate:modelValue": i[2] ||= e => computedResult.value = e,
+          "onUpdate:modelValue": cache[2] ||= e => computedResult.value = e,
           disabled: unref(f) || unref(a),
           key: `${unref(n)}-${unref(r).usageMode}`
         }, {
@@ -40606,33 +40606,33 @@ var Empty = defineComponent({
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`]))]), i[11] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`]))]), cache[11] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1), createElementVNode(`div`, fN, [createElementVNode(`div`, null, [createElementVNode(`p`, pN, toDisplayString(unref(i18nTranslate)(`settings.autoStart`)), 1), createElementVNode(`p`, mN, toDisplayString(unref(i18nTranslate)(`settings.autoStartDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: C.value,
-          "onUpdate:modelValue": i[3] ||= e => C.value = e,
+          "onUpdate:modelValue": cache[3] ||= e => C.value = e,
           disabled: unref(f)
         }, null, 8, [`modelValue`, `disabled`])]), unref(toolSettingsO) ? (openBlock(), createElementBlock(Fragment, {
           key: 1
-        }, [i[8] ||= createElementVNode(`div`, {
+        }, [cache[8] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1), createElementVNode(`div`, hN, [createElementVNode(`div`, null, [createElementVNode(`p`, gN, toDisplayString(unref(i18nTranslate)(`settings.showDockIcon`)), 1), createElementVNode(`p`, _N, toDisplayString(unref(i18nTranslate)(`settings.showDockIconDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: w.value,
-          "onUpdate:modelValue": i[4] ||= e => w.value = e,
+          "onUpdate:modelValue": cache[4] ||= e => w.value = e,
           disabled: unref(f)
-        }, null, 8, [`modelValue`, `disabled`])])], 64)) : createCommentVNode(``, true), i[12] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])])], 64)) : createCommentVNode(``, true), cache[12] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1), createElementVNode(`div`, vN, [createElementVNode(`div`, null, [createElementVNode(`p`, yN, toDisplayString(unref(i18nTranslate)(`settings.enableSystemNotifications`)), 1), createElementVNode(`p`, bN, toDisplayString(unref(i18nTranslate)(`settings.enableSystemNotificationsDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: T.value,
-          "onUpdate:modelValue": i[5] ||= e => T.value = e,
+          "onUpdate:modelValue": cache[5] ||= e => T.value = e,
           disabled: unref(f)
-        }, null, 8, [`modelValue`, `disabled`])]), i[13] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])]), cache[13] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 dark:bg-border`
         }, null, -1), resolveComponent(NetworkProxySettings, {
           disabled: unref(f)
         }, null, 8, [`disabled`])]), resolveComponent(UsageModeSwitchDialog, {
           target: o.value,
-          "onUpdate:target": i[6] ||= e => o.value = e,
+          "onUpdate:target": cache[6] ||= e => o.value = e,
           onSwitched: u
         }, null, 8, [`target`])]),
         _: 1
@@ -40652,28 +40652,28 @@ var Empty = defineComponent({
       size: {}
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = uiSwitchAt(n, `modelValue`, t, {
+      let n = props,
+        r = uiSwitchAt(n, `modelValue`, emit, {
           passive: true,
           defaultValue: ``
         }),
         i = uiSwitchLt(n, `class`, `size`);
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         class: `group/native-select relative w-fit has-[select:disabled]:opacity-50`,
         "data-slot": `native-select-wrapper`,
         "data-size": n.size ?? `default`
       }, [vueZt(createElementVNode(`select`, vueNt({
-        ...e.$attrs,
+        ...ctx.$attrs,
         ...unref(i)
       }, {
         "onUpdate:modelValue": renderCache[0] ||= e => vueFn(r) ? r.value = e : null,
         "data-slot": `native-select`,
         "data-size": n.size ?? `default`,
         class: unref(uiSwitchXt)(`border-input placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 dark:hover:bg-input/50 focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 h-8 w-full min-w-0 appearance-none rounded-lg border bg-transparent py-1 pr-8 pl-2.5 text-sm transition-colors select-none focus-visible:ring-3 aria-invalid:ring-3 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:py-0.5 outline-none disabled:pointer-events-none disabled:cursor-not-allowed`, n.class)
-      }), [withCtx(e.$slots, `default`)], 16, CN), [[bt, unref(r)]]), resolveComponent(unref(PopperContentS), {
+      }), [withCtx(ctx.$slots, `default`)], 16, CN), [[bt, unref(r)]]), resolveComponent(unref(PopperContentS), {
         class: `text-muted-foreground top-1/2 right-2.5 size-4 -translate-y-1/2 pointer-events-none absolute select-none`,
         "aria-hidden": `true`,
         "data-slot": `native-select-icon`
@@ -40687,12 +40687,12 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`option`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`option`, {
         "data-slot": `native-select-option`,
         class: normalizeClass(unref(uiSwitchXt)(`bg-[Canvas] text-[CanvasText]`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   EN = {
@@ -40790,10 +40790,10 @@ var Empty = defineComponent({
     },
     emits: [`update:modelValue`, `update:placeholder`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         i = uiSwitchLt(eventAlias, `class`, `layout`, `placeholder`),
         a = uiSwitchAt(eventAlias, `placeholder`, r, {
           passive: true,
@@ -40807,7 +40807,7 @@ var Empty = defineComponent({
         [c, l] = Se(),
         [u, d] = Se(),
         f = uiSwitchZ(i, r);
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(c), null, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(c), null, {
         default: H(({
           date: e
         }) => [createElementVNode(`div`, EN, [createElementVNode(`div`, DN, [createElementVNode(`div`, ON, toDisplayString(unref(o).custom(unref(popoverB)(e), {
@@ -40875,12 +40875,12 @@ var Empty = defineComponent({
           class: `pt-0`
         }, {
           default: H(() => [createElementVNode(`nav`, MN, [resolveComponent(unref(CalendarPrevButton), null, {
-            default: H(() => [withCtx(t.$slots, `calendar-prev-icon`)]),
+            default: H(() => [withCtx(ctx.$slots, `calendar-prev-icon`)]),
             _: 3
           }), resolveComponent(unref(CalendarNextButton), null, {
-            default: H(() => [withCtx(t.$slots, `calendar-next-icon`)]),
+            default: H(() => [withCtx(ctx.$slots, `calendar-next-icon`)]),
             _: 3
-          })]), withCtx(t.$slots, `calendar-heading`, {
+          })]), withCtx(ctx.$slots, `calendar-heading`, {
             date: i,
             month: unref(l),
             year: unref(d)
@@ -40951,15 +40951,15 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarCell), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarCell), vueNt({
         "data-slot": `calendar-cell`,
         class: unref(uiSwitchXt)(`relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:rounded-md [&:has([data-selected])]:bg-accent`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -40979,17 +40979,17 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarCellTrigger), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarCellTrigger), vueNt({
         "data-slot": `calendar-cell-trigger`,
         class: unref(uiSwitchXt)(unref(_e)({
           variant: `ghost`
         }), `size-8 p-0 font-normal aria-selected:opacity-100 cursor-default`, `[&[data-today]:not([data-selected])]:bg-accent [&[data-today]:not([data-selected])]:text-accent-foreground`, `data-[selected]:bg-primary data-[selected]:text-primary-foreground data-[selected]:opacity-100 data-[selected]:hover:bg-primary data-[selected]:hover:text-primary-foreground data-[selected]:focus:bg-primary data-[selected]:focus:text-primary-foreground`, `data-[disabled]:text-muted-foreground data-[disabled]:opacity-50`, `data-[unavailable]:text-destructive-foreground data-[unavailable]:line-through`, `data-[outside-view]:text-muted-foreground`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -41005,15 +41005,15 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarGrid), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGrid), vueNt({
         "data-slot": `calendar-grid`,
         class: unref(uiSwitchXt)(`w-full border-collapse space-x-1`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -41026,12 +41026,12 @@ var Empty = defineComponent({
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(CalendarGridBody), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGridBody), vueNt({
         "data-slot": `calendar-grid-body`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -41047,12 +41047,12 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(CalendarGridHead), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGridHead), vueNt({
         "data-slot": `calendar-grid-head`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -41068,15 +41068,15 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarGridRow), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarGridRow), vueNt({
         "data-slot": `calendar-grid-row`,
         class: unref(uiSwitchXt)(`flex`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -41092,15 +41092,15 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarHeadCell), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarHeadCell), vueNt({
         "data-slot": `calendar-head-cell`,
         class: unref(uiSwitchXt)(`text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem]`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -41116,15 +41116,15 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarHeader), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarHeader), vueNt({
         "data-slot": `calendar-header`,
         class: unref(uiSwitchXt)(`flex justify-center pt-1 relative items-center w-full px-8`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -41140,17 +41140,17 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarHeading), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarHeading), vueNt({
         "data-slot": `calendar-heading`,
         class: unref(uiSwitchXt)(`text-sm font-medium`, t.class)
       }, unref(i)), {
         default: H(({
           headingValue: t
-        }) => [withCtx(e.$slots, `default`, {
+        }) => [withCtx(ctx.$slots, `default`, {
           headingValue: t
         }, () => [createTextVNode(toDisplayString(t), 1)])]),
         _: 3
@@ -41171,17 +41171,17 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarNext), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarNext), vueNt({
         "data-slot": `calendar-next-button`,
         class: unref(uiSwitchXt)(unref(_e)({
           variant: `outline`
         }), `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`, {}, () => [resolveComponent(unref(popoverA), {
+        default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(popoverA), {
           class: `cn-rtl-flip size-4`
         })])]),
         _: 3
@@ -41202,17 +41202,17 @@ var Empty = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(CalendarPrev), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(CalendarPrev), vueNt({
         "data-slot": `calendar-prev-button`,
         class: unref(uiSwitchXt)(unref(_e)({
           variant: `outline`
         }), `size-7 bg-transparent p-0 opacity-50 hover:opacity-100`, t.class)
       }, unref(i)), {
-        default: H(() => [withCtx(e.$slots, `default`, {}, () => [resolveComponent(unref(i18nU), {
+        default: H(() => [withCtx(ctx.$slots, `default`, {}, () => [resolveComponent(unref(i18nU), {
           class: `cn-rtl-flip size-4`
         })])]),
         _: 3
@@ -41333,10 +41333,10 @@ var Empty = defineComponent({
     },
     emits: [`update:modelValue`],
     setup(options, {
-      emit: t
+      emit: emit
     }) {
       let optionsAlias = options,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -41532,7 +41532,7 @@ var Empty = defineComponent({
         let t = pe(e);
         c.value = t, p.value = new popoverX(t.year, t.month, 1), m.value = t.year, f.value = `days`;
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(popoverR), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(popoverR), {
         open: o.value,
         "onUpdate:open": renderCache[8] ||= e => o.value = e,
         modal: options.modal
@@ -42047,7 +42047,7 @@ var Empty = defineComponent({
       function ce(e) {
         return `inline-flex h-7 cursor-pointer items-center rounded-md px-3 text-xs transition-colors ${fF} ${e ? `bg-[#fff] font-medium text-primary dark:bg-white/[0.12]` : `text-[#666] hover:text-(--foreground) dark:text-muted-foreground`}`;
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, wP, [createElementVNode(`div`, TP, [createElementVNode(`div`, EP, [createElementVNode(`p`, DP, toDisplayString(unref(i18nTranslate)(`settings.recordingSchedule.title`)), 1), createElementVNode(`p`, OP, toDisplayString(unref(i18nTranslate)(`settings.recordingSchedule.description`)), 1)]), createElementVNode(`div`, kP, [computedResult.value.enabled ? (openBlock(), createBlock(unref(uiSwitchR), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, wP, [createElementVNode(`div`, TP, [createElementVNode(`div`, EP, [createElementVNode(`p`, DP, toDisplayString(unref(i18nTranslate)(`settings.recordingSchedule.title`)), 1), createElementVNode(`p`, OP, toDisplayString(unref(i18nTranslate)(`settings.recordingSchedule.description`)), 1)]), createElementVNode(`div`, kP, [computedResult.value.enabled ? (openBlock(), createBlock(unref(uiSwitchR), {
         key: 0,
         variant: `outline`,
         size: `sm`,
@@ -42722,7 +42722,7 @@ var KF = {
         type: Boolean
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -42773,7 +42773,7 @@ var KF = {
         class: `flex shrink-0`
       }, [resolveComponent(unref(uiSwitchT), {
         "model-value": unref(u)(n.id),
-        disabled: e.disabled || unref(d)(n.id),
+        disabled: props.disabled || unref(d)(n.id),
         "aria-label": n.label,
         "onUpdate:modelValue": e => unref(f)(n.id, e)
       }, null, 8, [`model-value`, `disabled`, `aria-label`, `onUpdate:modelValue`])], 8, sI)]))), 128))])) : createCommentVNode(``, true)]));
@@ -42934,7 +42934,7 @@ var KF = {
   },
   RecordingSettingsSection = defineComponent({
     __name: `RecordingSettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate,
           locale: n
@@ -43257,7 +43257,7 @@ var KF = {
       function He() {
         window.electronAPI.appUsage.openScreenRecordingSettings();
       }
-      return (e, i) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `recording`
       }, {
         default: H(() => [createElementVNode(`div`, lI, [ee.value ? (openBlock(), createElementBlock(`p`, {
@@ -43282,17 +43282,17 @@ var KF = {
           "data-credit-feature": `screenshot`,
           "data-credit-action": `enable`,
           modelValue: computedData.value,
-          "onUpdate:modelValue": i[0] ||= e => computedData.value = e,
+          "onUpdate:modelValue": cache[0] ||= e => computedData.value = e,
           disabled: unref(u)
-        }, null, 8, [`modelValue`, `disabled`])], 512), i[16] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])], 512), cache[16] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(RecordingScheduleSettings, {
           disabled: unref(u)
-        }, null, 8, [`disabled`]), i[17] ||= createElementVNode(`div`, {
+        }, null, 8, [`disabled`]), cache[17] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, pI, [createElementVNode(`div`, null, [createElementVNode(`p`, mI, toDisplayString(unref(i18nTranslate)(`settings.screenshotInterval`)), 1), createElementVNode(`p`, hI, toDisplayString(unref(i18nTranslate)(`settings.screenshotIntervalDesc`)), 1)]), (openBlock(), createBlock(unref(Select), {
           modelValue: re.value,
-          "onUpdate:modelValue": i[1] ||= e => re.value = e,
+          "onUpdate:modelValue": cache[1] ||= e => re.value = e,
           disabled: unref(u) || oe.value,
           key: unref(n)
         }, {
@@ -43324,7 +43324,7 @@ var KF = {
           _: 1
         }, 8, [`modelValue`, `disabled`]))]), resolveComponent(unref(alertDialogC), {
           open: ae.value,
-          "onUpdate:open": i[2] ||= e => ae.value = e
+          "onUpdate:open": cache[2] ||= e => ae.value = e
         }, {
           default: H(() => [resolveComponent(unref(alertDialogA), null, {
             default: H(() => [resolveComponent(unref(alertDialogN), null, {
@@ -43353,19 +43353,19 @@ var KF = {
             _: 1
           })]),
           _: 1
-        }, 8, [`open`]), i[18] ||= createElementVNode(`div`, {
+        }, 8, [`open`]), cache[18] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(CaptureDisplaySettings, {
           disabled: unref(u)
-        }, null, 8, [`disabled`]), i[19] ||= createElementVNode(`div`, {
+        }, null, 8, [`disabled`]), cache[19] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, gI, [createElementVNode(`div`, null, [createElementVNode(`p`, _I, toDisplayString(unref(i18nTranslate)(`settings.autoPause`)), 1), createElementVNode(`p`, vI, toDisplayString(unref(i18nTranslate)(`settings.autoPauseDesc`)), 1)]), createElementVNode(`div`, yI, [resolveComponent(unref(uiSwitchT), {
           modelValue: de.value,
-          "onUpdate:modelValue": i[3] ||= e => de.value = e,
+          "onUpdate:modelValue": cache[3] ||= e => de.value = e,
           disabled: unref(u)
         }, null, 8, [`modelValue`, `disabled`]), (openBlock(), createBlock(unref(Select), {
           modelValue: fe.value,
-          "onUpdate:modelValue": i[4] ||= e => fe.value = e,
+          "onUpdate:modelValue": cache[4] ||= e => fe.value = e,
           disabled: unref(u),
           key: unref(n)
         }, {
@@ -43389,13 +43389,13 @@ var KF = {
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`]))])]), i[20] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`]))])]), cache[20] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, bI, [createElementVNode(`div`, null, [createElementVNode(`p`, xI, toDisplayString(unref(i18nTranslate)(`settings.skipUnchangedScreens`)), 1), createElementVNode(`p`, SI, toDisplayString(unref(i18nTranslate)(`settings.skipUnchangedScreensDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: me.value,
-          "onUpdate:modelValue": i[5] ||= e => me.value = e,
+          "onUpdate:modelValue": cache[5] ||= e => me.value = e,
           disabled: unref(u)
-        }, null, 8, [`modelValue`, `disabled`])]), i[21] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])]), cache[21] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, CI, [createElementVNode(`div`, wI, [createElementVNode(`div`, null, [createElementVNode(`div`, TI, [createElementVNode(`p`, EI, toDisplayString(unref(i18nTranslate)(`settings.screenshotPreserve`)), 1), resolveComponent(FeatureInfoDialog, {
           title: unref(i18nTranslate)(`settings.screenshotPreserve`),
@@ -43432,7 +43432,7 @@ var KF = {
             _: 1
           }, 8, [`disabled`])])])) : createCommentVNode(``, true)]),
           _: 1
-        })]), i[22] ||= createElementVNode(`div`, {
+        })]), cache[22] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), unref(toolSettingsA) ? (openBlock(), createElementBlock(Fragment, {
           key: 1
@@ -43477,11 +43477,11 @@ var KF = {
           "model-value": unref(r).enableEnterKeyListener,
           disabled: unref(u) || !unref(c) || unref(_) || Se.value,
           "onUpdate:modelValue": ke
-        }, null, 8, [`model-value`, `disabled`])]), i[14] ||= createElementVNode(`div`, {
+        }, null, 8, [`model-value`, `disabled`])]), cache[14] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, VI, [createElementVNode(`div`, null, [createElementVNode(`p`, HI, toDisplayString(unref(i18nTranslate)(`settings.enterKeyRecordInterval`)), 1), createElementVNode(`p`, UI, toDisplayString(unref(i18nTranslate)(`settings.enterKeyRecordIntervalDesc`)), 1)]), (openBlock(), createBlock(unref(Select), {
           modelValue: Ie.value,
-          "onUpdate:modelValue": i[6] ||= e => Ie.value = e,
+          "onUpdate:modelValue": cache[6] ||= e => Ie.value = e,
           disabled: unref(u) || !unref(r).enableEnterKeyListener || unref(_),
           key: unref(n)
         }, {
@@ -43503,18 +43503,18 @@ var KF = {
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`]))]), i[15] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`]))]), cache[15] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1)], 64)) : createCommentVNode(``, true), resolveComponent(CaptureShortcutSettings, {
           disabled: unref(u)
-        }, null, 8, [`disabled`]), i[23] ||= createElementVNode(`div`, {
+        }, null, 8, [`disabled`]), cache[23] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, WI, [createElementVNode(`div`, null, [createElementVNode(`div`, GI, [createElementVNode(`p`, KI, toDisplayString(unref(i18nTranslate)(`settings.analyzeCurrentScreen`)), 1), unref(toolSettingsO) ? (openBlock(), createElementBlock(`button`, {
           key: 0,
           type: `button`,
           class: `inline-flex items-center justify-center rounded-full text-[#bbb] hover:text-foreground transition-colors cursor-pointer`,
           title: unref(i18nTranslate)(`settings.screenshotPermissionHelpTitle`),
-          onClick: i[7] ||= e => Le.value = true
+          onClick: cache[7] ||= e => Le.value = true
         }, [resolveComponent(unref(circlequestionmarkT), {
           size: 14
         })], 8, qI)) : createCommentVNode(``, true)]), createElementVNode(`p`, JI, toDisplayString(unref(i18nTranslate)(`settings.analyzeCurrentScreenDesc`)), 1), ze.value ? (openBlock(), createElementBlock(`p`, {
@@ -43536,7 +43536,7 @@ var KF = {
           _: 1
         }, 8, [`disabled`])])]), resolveComponent(unref(alertDialogC), {
           open: he.value,
-          "onUpdate:open": i[9] ||= e => he.value = e
+          "onUpdate:open": cache[9] ||= e => he.value = e
         }, {
           default: H(() => [resolveComponent(unref(alertDialogA), null, {
             default: H(() => [resolveComponent(unref(alertDialogN), null, {
@@ -43550,7 +43550,7 @@ var KF = {
               _: 1
             }), resolveComponent(unref(alertDialogR), null, {
               default: H(() => [resolveComponent(unref(alertDialogO), {
-                onClick: i[8] ||= e => ge.value = false
+                onClick: cache[8] ||= e => ge.value = false
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.cancel`)), 1)]),
                 _: 1
@@ -43567,7 +43567,7 @@ var KF = {
           _: 1
         }, 8, [`open`]), resolveComponent(unref(dialogA), {
           open: Le.value,
-          "onUpdate:open": i[12] ||= e => Le.value = e
+          "onUpdate:open": cache[12] ||= e => Le.value = e
         }, {
           default: H(() => [resolveComponent(unref(dialogI), {
             class: `!w-[420px]`
@@ -43587,14 +43587,14 @@ var KF = {
                 size: `sm`,
                 variant: `outline`,
                 class: `cursor-pointer`,
-                onClick: i[10] ||= e => He()
+                onClick: cache[10] ||= e => He()
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.openScreenRecordingSettings`)), 1)]),
                 _: 1
               }), resolveComponent(unref(uiSwitchR), {
                 size: `sm`,
                 class: `cursor-pointer`,
-                onClick: i[11] ||= e => Le.value = false
+                onClick: cache[11] ||= e => Le.value = false
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.ok`)), 1)]),
                 _: 1
@@ -43607,7 +43607,7 @@ var KF = {
         }, 8, [`open`]), unref(toolSettingsC) ? (openBlock(), createBlock(unref(alertDialogC), {
           key: 0,
           open: xe.value,
-          "onUpdate:open": i[13] ||= e => xe.value = e
+          "onUpdate:open": cache[13] ||= e => xe.value = e
         }, {
           default: H(() => [resolveComponent(unref(alertDialogA), {
             class: `sm:max-w-[520px]`
@@ -43865,55 +43865,55 @@ var KF = {
           }
         }
       }
-      return (e, i) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `app-usage`
       }, {
         default: H(() => [createElementVNode(`div`, sL, [createElementVNode(`div`, cL, [createElementVNode(`div`, null, [createElementVNode(`p`, lL, toDisplayString(unref(i18nTranslate)(`settings.enableAppUsageTracking`)), 1), createElementVNode(`p`, uL, toDisplayString(unref(i18nTranslate)(`settings.enableAppUsageTrackingDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: computedResult.value,
-          "onUpdate:modelValue": i[0] ||= e => computedResult.value = e,
+          "onUpdate:modelValue": cache[0] ||= e => computedResult.value = e,
           disabled: unref(a)
         }, null, 8, [`modelValue`, `disabled`])]), computedResult.value ? (openBlock(), createElementBlock(Fragment, {
           key: 0
-        }, [i[14] ||= createElementVNode(`div`, {
+        }, [cache[14] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, dL, [createElementVNode(`div`, null, [createElementVNode(`p`, fL, toDisplayString(unref(i18nTranslate)(`settings.enableAppWindowContext`)), 1), createElementVNode(`p`, pL, toDisplayString(unref(i18nTranslate)(`settings.enableAppWindowContextDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: computedData.value,
-          "onUpdate:modelValue": i[1] ||= e => computedData.value = e,
+          "onUpdate:modelValue": cache[1] ||= e => computedData.value = e,
           disabled: unref(a)
-        }, null, 8, [`modelValue`, `disabled`])]), i[15] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])]), cache[15] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, mL, [createElementVNode(`div`, null, [createElementVNode(`p`, hL, toDisplayString(unref(i18nTranslate)(`settings.enableBrowserDomainTracking`)), 1), createElementVNode(`p`, gL, toDisplayString(unref(i18nTranslate)(`settings.enableBrowserDomainTrackingDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: f.value,
-          "onUpdate:modelValue": i[2] ||= e => f.value = e,
+          "onUpdate:modelValue": cache[2] ||= e => f.value = e,
           disabled: unref(a)
-        }, null, 8, [`modelValue`, `disabled`])]), i[16] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])]), cache[16] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, {
           id: `settings-item-screen-heatmap`,
           class: normalizeClass([`flex items-center justify-between gap-4 rounded-md outline-2 outline-offset-[6px] transition-[outline-color] duration-500`, unref(s) === `screen-heatmap` ? `outline-primary/40` : `outline-transparent`])
         }, [createElementVNode(`div`, _L, [createElementVNode(`p`, vL, toDisplayString(unref(i18nTranslate)(`settings.enableScreenHeatmap`)), 1), createElementVNode(`p`, yL, toDisplayString(unref(i18nTranslate)(`settings.enableScreenHeatmapDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: p.value,
-          "onUpdate:modelValue": i[3] ||= e => p.value = e,
+          "onUpdate:modelValue": cache[3] ||= e => p.value = e,
           disabled: unref(a)
         }, null, 8, [`modelValue`, `disabled`])], 2), unref(toolSettingsO) || unref(toolSettingsC) ? (openBlock(), createElementBlock(Fragment, {
           key: 0
-        }, [i[13] ||= createElementVNode(`div`, {
+        }, [cache[13] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, bL, [createElementVNode(`div`, xL, [createElementVNode(`p`, SL, toDisplayString(unref(i18nTranslate)(`settings.enableMacActivityEvidence`)), 1), createElementVNode(`p`, CL, toDisplayString(unref(i18nTranslate)(`settings.enableMacActivityEvidenceDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: m.value,
-          "onUpdate:modelValue": i[4] ||= e => m.value = e,
+          "onUpdate:modelValue": cache[4] ||= e => m.value = e,
           disabled: unref(a)
         }, null, 8, [`modelValue`, `disabled`])]), m.value ? (openBlock(), createElementBlock(Fragment, {
           key: 0
         }, [unref(toolSettingsO) ? (openBlock(), createElementBlock(`div`, wL)) : createCommentVNode(``, true), unref(toolSettingsO) ? (openBlock(), createElementBlock(`div`, TL, [createElementVNode(`div`, EL, [createElementVNode(`p`, DL, toDisplayString(unref(i18nTranslate)(`settings.enableMacAccessibilityEvents`)), 1), createElementVNode(`p`, OL, toDisplayString(unref(i18nTranslate)(`settings.enableMacAccessibilityEventsDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: h.value,
-          "onUpdate:modelValue": i[5] ||= e => h.value = e,
+          "onUpdate:modelValue": cache[5] ||= e => h.value = e,
           disabled: unref(a)
-        }, null, 8, [`modelValue`, `disabled`])])) : createCommentVNode(``, true), i[12] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])])) : createCommentVNode(``, true), cache[12] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, kL, [createElementVNode(`div`, AL, [createElementVNode(`p`, jL, toDisplayString(unref(i18nTranslate)(`settings.enableLayeredActivitySummaries`)), 1), createElementVNode(`p`, ML, toDisplayString(unref(i18nTranslate)(`settings.enableLayeredActivitySummariesDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: g.value,
-          "onUpdate:modelValue": i[6] ||= e => g.value = e,
+          "onUpdate:modelValue": cache[6] ||= e => g.value = e,
           disabled: unref(a)
         }, null, 8, [`modelValue`, `disabled`])])], 64)) : createCommentVNode(``, true)], 64)) : createCommentVNode(``, true), y.value ? (openBlock(), createElementBlock(`div`, NL, [createElementVNode(`div`, PL, [createElementVNode(`p`, FL, toDisplayString(unref(i18nTranslate)(`settings.appUsagePermissionTitle`)), 1), createElementVNode(`p`, IL, toDisplayString(b.value), 1)]), resolveComponent(unref(uiSwitchR), {
           variant: `outline`,
@@ -43923,7 +43923,7 @@ var KF = {
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.appUsagePermissionAction`)), 1)]),
           _: 1
-        }, 8, [`onClick`])])) : createCommentVNode(``, true), i[17] ||= createElementVNode(`div`, {
+        }, 8, [`onClick`])])) : createCommentVNode(``, true), cache[17] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, LL, [createElementVNode(`div`, null, [createElementVNode(`div`, RL, [createElementVNode(`p`, zL, toDisplayString(unref(i18nTranslate)(`settings.appUsageContextRetention`)), 1), resolveComponent(FeatureInfoDialog, {
           title: unref(i18nTranslate)(`settings.appUsageContextRetention`),
@@ -43936,7 +43936,7 @@ var KF = {
           _: 1
         }, 8, [`title`, `description`, `disabled`])]), createElementVNode(`p`, BL, toDisplayString(unref(i18nTranslate)(`settings.appUsageContextRetentionDesc`)), 1)]), resolveComponent(unref(Select), {
           modelValue: _.value,
-          "onUpdate:modelValue": i[7] ||= e => _.value = e,
+          "onUpdate:modelValue": cache[7] ||= e => _.value = e,
           disabled: unref(a)
         }, {
           default: H(() => [resolveComponent(unref(SelectTriggerComponent), {
@@ -43969,14 +43969,14 @@ var KF = {
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`])]), i[18] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`])]), cache[18] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, VL, [createElementVNode(`div`, null, [createElementVNode(`p`, HL, toDisplayString(unref(i18nTranslate)(`settings.appUsageDataCleanup`)), 1), createElementVNode(`p`, UL, toDisplayString(unref(i18nTranslate)(`settings.appUsageDataCleanupDesc`)), 1)]), createElementVNode(`div`, WL, [resolveComponent(unref(uiSwitchR), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 text-xs`,
           disabled: x.value,
-          onClick: i[8] ||= e => E(`window`)
+          onClick: cache[8] ||= e => E(`window`)
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.clearWindowContext`)), 1)]),
           _: 1
@@ -43985,7 +43985,7 @@ var KF = {
           size: `sm`,
           class: `h-7 text-xs`,
           disabled: x.value,
-          onClick: i[9] ||= e => E(`browser`)
+          onClick: cache[9] ||= e => E(`browser`)
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.clearBrowserContext`)), 1)]),
           _: 1
@@ -43994,13 +43994,13 @@ var KF = {
           size: `sm`,
           class: `h-7 border-red-200 text-xs text-red-600 hover:bg-red-50 hover:text-red-700`,
           disabled: x.value,
-          onClick: i[10] ||= e => E(`usage`)
+          onClick: cache[10] ||= e => E(`usage`)
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.clearAllAppUsage`)), 1)]),
           _: 1
         }, 8, [`disabled`])])])], 64)) : createCommentVNode(``, true)]), resolveComponent(unref(alertDialogC), {
           open: S.value,
-          "onUpdate:open": i[11] ||= e => S.value = e
+          "onUpdate:open": cache[11] ||= e => S.value = e
         }, {
           default: H(() => [resolveComponent(unref(alertDialogA), null, {
             default: H(() => [resolveComponent(unref(alertDialogN), null, {
@@ -44076,10 +44076,10 @@ var KF = {
     },
     emits: [`update:modelValue`],
     setup(count, {
-      emit: t
+      emit: emit
     }) {
       let countAlias = count,
-        r = t;
+        r = emit;
       vueVt(`toggleGroup`, {
         variant: countAlias.variant,
         size: countAlias.size,
@@ -44087,7 +44087,7 @@ var KF = {
       });
       let i = uiSwitchLt(countAlias, `class`, `size`, `variant`),
         a = uiSwitchZ(i, r);
-      return (t, r) => (openBlock(), createBlock(unref(ToggleGroupRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ToggleGroupRoot), vueNt({
         "data-slot": `toggle-group`,
         "data-size": count.size,
         "data-variant": count.variant,
@@ -44098,7 +44098,7 @@ var KF = {
       }, unref(a), {
         class: unref(uiSwitchXt)(`rounded-lg data-[size=sm]:rounded-[min(var(--radius-md),10px)] group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] data-vertical:flex-col data-vertical:items-stretch`, countAlias.class)
       }), {
-        default: H(e => [withCtx(t.$slots, `default`, vueTr(vueV(e)))]),
+        default: H(e => [withCtx(ctx.$slots, `default`, vueTr(vueV(e)))]),
         _: 3
       }, 16, [`data-size`, `data-variant`, `data-spacing`, `style`, `class`]));
     }
@@ -44142,7 +44142,7 @@ var KF = {
         r = vueX(`toggleGroup`),
         i = uiSwitchLt(countAlias, `class`, `size`, `variant`),
         a = uiSwitchB(i);
-      return (n, i) => (openBlock(), createBlock(unref(ToggleGroupItem), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ToggleGroupItem), vueNt({
         "data-slot": `toggle-group-item`,
         "data-variant": unref(r)?.variant || count.variant,
         "data-size": unref(r)?.size || count.size,
@@ -44153,7 +44153,7 @@ var KF = {
           size: unref(r)?.size || count.size
         }), countAlias.class)
       }), {
-        default: H(e => [withCtx(n.$slots, `default`, vueTr(vueV(e)))]),
+        default: H(e => [withCtx(ctx.$slots, `default`, vueTr(vueV(e)))]),
         _: 3
       }, 16, [`data-variant`, `data-size`, `data-spacing`, `class`]));
     }
@@ -44322,10 +44322,10 @@ var tR = {
     },
     emits: [`update:open`, `save`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -44407,7 +44407,7 @@ var tR = {
       function A(e) {
         (e === `exclude` || e === `allow`) && (a.value = e);
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: event.open,
         "onUpdate:open": renderCache[1] ||= e => r(`update:open`, e)
       }, {
@@ -44599,10 +44599,10 @@ var jR = {
     },
     emits: [`update:open`],
     setup(text, {
-      emit: t
+      emit: emit
     }) {
       let textAlias = text,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -44642,7 +44642,7 @@ var jR = {
           }
         }
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: text.open,
         "onUpdate:open": renderCache[7] ||= e => !u.value && r(`update:open`, e)
       }, {
@@ -44761,10 +44761,10 @@ var ZR = {
     async getRecoveryWordSuggestions() {
       return XR(await window.electronAPI.appLock.getRecoveryWordSuggestions()).words;
     },
-    async setup(e) {
+    async setup(props) {
       return XR(await window.electronAPI.appLock.setup({
-        ...e,
-        recoveryWords: [...e.recoveryWords]
+        ...props,
+        recoveryWords: [...props.recoveryWords]
       }));
     },
     async enable() {
@@ -44855,11 +44855,11 @@ var ZR = {
       }
     },
     emits: [`update:modelValue`, `refresh`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -44896,8 +44896,8 @@ var ZR = {
       }, {
         deep: true
       }), (t, renderCache) => (openBlock(), createElementBlock(`div`, QR, [createElementVNode(`div`, $R, [createElementVNode(`div`, null, [createElementVNode(`p`, ez, toDisplayString(unref(i)(`appLock.selectedRecoveryWords`)), 1), createElementVNode(`p`, tz, toDisplayString(unref(i)(`appLock.recoveryWordCountHint`)), 1)]), createElementVNode(`span`, {
-        class: normalizeClass([`rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums`, e.modelValue.length >= 3 ? `bg-primary/10 text-primary` : `bg-amber-500/10 text-amber-700`])
-      }, toDisplayString(e.modelValue.length) + ` / 8 `, 3)]), createElementVNode(`div`, nz, [e.modelValue.length ? (openBlock(), createElementBlock(`div`, rz, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.modelValue, e => (openBlock(), createElementBlock(`button`, {
+        class: normalizeClass([`rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums`, props.modelValue.length >= 3 ? `bg-primary/10 text-primary` : `bg-amber-500/10 text-amber-700`])
+      }, toDisplayString(props.modelValue.length) + ` / 8 `, 3)]), createElementVNode(`div`, nz, [props.modelValue.length ? (openBlock(), createElementBlock(`div`, rz, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.modelValue, e => (openBlock(), createElementBlock(`button`, {
         key: e,
         type: `button`,
         class: `flex h-7 items-center gap-1 rounded-lg bg-primary px-2.5 text-xs font-medium text-primary-foreground`,
@@ -44909,7 +44909,7 @@ var ZR = {
         size: `sm`,
         variant: `ghost`,
         class: `absolute right-1.5 top-1.5 h-7 gap-1.5 px-2 text-xs text-muted-foreground`,
-        disabled: !e.modelValue.length,
+        disabled: !props.modelValue.length,
         onClick: p
       }, {
         default: H(() => [s.value ? (openBlock(), createBlock(unref(checkT), {
@@ -44943,15 +44943,15 @@ var ZR = {
         size: `sm`,
         variant: `ghost`,
         class: `h-7 gap-1.5 px-2 text-xs text-muted-foreground`,
-        disabled: e.loading,
+        disabled: props.loading,
         onClick: renderCache[1] ||= e => r(`refresh`)
       }, {
         default: H(() => [resolveComponent(unref(gs), {
           size: 13,
-          class: normalizeClass(e.loading ? `animate-spin` : ``)
+          class: normalizeClass(props.loading ? `animate-spin` : ``)
         }, null, 8, [`class`]), createTextVNode(` ` + toDisplayString(unref(i)(`appLock.changeSuggestions`)), 1)]),
         _: 1
-      }, 8, [`disabled`])]), createElementVNode(`div`, uz, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.suggestions, e => (openBlock(), createElementBlock(`button`, {
+      }, 8, [`disabled`])]), createElementVNode(`div`, uz, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.suggestions, e => (openBlock(), createElementBlock(`button`, {
         key: e,
         type: `button`,
         class: normalizeClass([`flex h-8 min-w-0 items-center justify-center gap-1 rounded-lg border px-1.5 text-xs transition-colors`, computedResult.value.has(e) ? `border-primary bg-primary/10 font-medium text-primary` : computedData.value ? `cursor-not-allowed border-black/[0.05] text-muted-foreground/50` : `border-black/[0.07] text-foreground hover:border-primary/40 hover:bg-primary/[0.04]`]),
@@ -44983,11 +44983,11 @@ var ZR = {
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i
         } = vueN(),
@@ -44996,14 +44996,14 @@ var ZR = {
           get: () => n.modelValue,
           set: e => r(`update:modelValue`, String(e))
         });
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, mz, [resolveComponent(unref(Input), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, mz, [resolveComponent(unref(Input), {
         modelValue: computedResult.value,
         "onUpdate:modelValue": renderCache[0] ||= e => computedResult.value = e,
         type: a.value ? `text` : `password`,
         class: `h-10 pr-10`,
-        placeholder: e.placeholder,
-        autocomplete: e.autocomplete,
-        autofocus: e.autofocus
+        placeholder: props.placeholder,
+        autocomplete: props.autocomplete,
+        autofocus: props.autofocus
       }, null, 8, [`modelValue`, `type`, `placeholder`, `autocomplete`, `autofocus`]), createElementVNode(`button`, {
         type: `button`,
         class: `absolute right-1.5 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-black/5 hover:text-foreground dark:hover:bg-accent`,
@@ -45203,13 +45203,13 @@ var ZR = {
   AppLockSettings = defineComponent({
     __name: `AppLockSettings`,
     emits: [`loaded`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
       let {
           t: i18nTranslate
         } = vueN(),
-        r = t,
+        r = emit,
         i = ref({
           configured: false,
           enabled: false,
@@ -45773,7 +45773,7 @@ var ZR = {
   },
   PrivacySettingsSection = defineComponent({
     __name: `PrivacySettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -45793,14 +45793,14 @@ var ZR = {
           screenshotExcludeAllowApps: e.allowApps
         });
       }
-      return (e, l) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `privacy`
       }, {
         default: H(() => [createElementVNode(`div`, CB, [createElementVNode(`div`, wB, [createElementVNode(`div`, null, [createElementVNode(`div`, TB, [createElementVNode(`p`, EB, toDisplayString(unref(t)(`settings.screenshotExcludeApps`)), 1), createElementVNode(`button`, {
           type: `button`,
           class: `inline-flex items-center justify-center rounded-full text-[#bbb] hover:text-foreground transition-colors cursor-pointer`,
           title: unref(t)(`settings.screenshotExcludeAppsHelpTitle`),
-          onClick: l[0] ||= e => s.value = true
+          onClick: cache[0] ||= e => s.value = true
         }, [resolveComponent(unref(circlequestionmarkT), {
           size: 14
         })], 8, DB)]), createElementVNode(`p`, OB, toDisplayString(unref(t)(`settings.screenshotExcludeAppsDesc`)), 1)]), createElementVNode(`div`, kB, [createElementVNode(`span`, AB, toDisplayString(unref(t)(`settings.screenshotExcludeAppsCount`, {
@@ -45811,11 +45811,11 @@ var ZR = {
           variant: `outline`,
           class: `h-7 text-xs`,
           disabled: unref(i),
-          onClick: l[1] ||= e => o.value = true
+          onClick: cache[1] ||= e => o.value = true
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(t)(`settings.configureExcludeApps`)), 1)]),
           _: 1
-        }, 8, [`disabled`])])]), l[7] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])])]), cache[7] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, jB, [createElementVNode(`div`, null, [createElementVNode(`p`, MB, toDisplayString(unref(t)(`settings.websitePrivacy.title`)), 1), createElementVNode(`p`, NB, toDisplayString(unref(t)(`settings.websitePrivacy.shortDescription`)), 1)]), createElementVNode(`div`, PB, [createElementVNode(`span`, FB, toDisplayString(unref(t)(`settings.websitePrivacy.count`, {
           count: unref(n).screenshotExcludeDomains.length
@@ -45824,27 +45824,27 @@ var ZR = {
           variant: `outline`,
           class: `h-7 text-xs`,
           disabled: unref(i),
-          onClick: l[2] ||= e => a.value = true
+          onClick: cache[2] ||= e => a.value = true
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(t)(`settings.websitePrivacy.configure`)), 1)]),
           _: 1
-        }, 8, [`disabled`])])]), l[8] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])])]), cache[8] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(AppLockSettings)]), resolveComponent(WebsitePrivacyDialog, {
           open: a.value,
-          "onUpdate:open": l[3] ||= e => a.value = e,
+          "onUpdate:open": cache[3] ||= e => a.value = e,
           domains: unref(n).screenshotExcludeDomains,
           "allow-domains": unref(n).screenshotAllowDomains,
           save: unref(r)
         }, null, 8, [`open`, `domains`, `allow-domains`, `save`]), resolveComponent(ScreenshotExcludeAppsDialog, {
           open: o.value,
-          "onUpdate:open": l[4] ||= e => o.value = e,
+          "onUpdate:open": cache[4] ||= e => o.value = e,
           "exclude-apps": unref(n).screenshotExcludeApps,
           "allow-apps": unref(n).screenshotExcludeAllowApps,
           onSave: c
         }, null, 8, [`open`, `exclude-apps`, `allow-apps`]), resolveComponent(unref(dialogA), {
           open: s.value,
-          "onUpdate:open": l[6] ||= e => s.value = e
+          "onUpdate:open": cache[6] ||= e => s.value = e
         }, {
           default: H(() => [resolveComponent(unref(dialogI), {
             class: `!w-[420px]`
@@ -45861,7 +45861,7 @@ var ZR = {
               default: H(() => [resolveComponent(unref(uiSwitchR), {
                 size: `sm`,
                 class: `cursor-pointer`,
-                onClick: l[5] ||= e => s.value = false
+                onClick: cache[5] ||= e => s.value = false
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(t)(`common.ok`)), 1)]),
                 _: 1
@@ -45887,16 +45887,16 @@ var ZR = {
         default: `vertical`
       }
     },
-    setup(e) {
-      let t = e;
-      return (n, r) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `group`,
         "data-slot": `field`,
-        "data-orientation": e.orientation,
+        "data-orientation": props.orientation,
         class: normalizeClass(unref(uiSwitchXt)(unref(KB)({
-          orientation: e.orientation
+          orientation: props.orientation
         }), t.class))
-      }, [withCtx(n.$slots, `default`)], 10, zB));
+      }, [withCtx(ctx.$slots, `default`)], 10, zB));
     }
   }),
   FieldDescription = defineComponent({
@@ -45906,12 +45906,12 @@ var ZR = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`p`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`p`, {
         "data-slot": `field-description`,
         class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-left text-sm [[data-variant=legend]+&]:-mt-1.5 leading-normal font-normal group-has-data-horizontal/field:text-balance`, `last:mt-0 nth-last-2:-mt-1`, `[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   HB = {
@@ -45933,12 +45933,12 @@ var ZR = {
           let e = [...new Map(itemsAlias.errors.filter(Boolean).map(item => [typeof item == `string` ? item : item?.message, item])).values()];
           return e.length === 1 && e[0] ? typeof e[0] == `string` ? e[0] : e[0].message : e.map(item => typeof item == `string` ? item : item?.message);
         });
-      return (e, r) => e.$slots.default || computedResult.value ? (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => ctx.$slots.default || computedResult.value ? (openBlock(), createElementBlock(`div`, {
         key: 0,
         role: `alert`,
         "data-slot": `field-error`,
         class: normalizeClass(unref(uiSwitchXt)(`text-destructive text-sm font-normal`, itemsAlias.class))
-      }, [e.$slots.default ? withCtx(e.$slots, `default`, {}, undefined, undefined, 0) : typeof computedResult.value == `string` ? (openBlock(), createElementBlock(Fragment, {
+      }, [ctx.$slots.default ? withCtx(ctx.$slots, `default`, {}, undefined, undefined, 0) : typeof computedResult.value == `string` ? (openBlock(), createElementBlock(Fragment, {
         key: 1
       }, [createTextVNode(toDisplayString(computedResult.value), 1)], 64)) : Array.isArray(computedResult.value) ? (openBlock(), createElementBlock(`ul`, HB, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedResult.value, (e, t) => (openBlock(), createElementBlock(`li`, {
         key: t
@@ -45952,12 +45952,12 @@ var ZR = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `field-group`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-5 data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4 group/field-group @container/field-group flex w-full flex-col`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   FieldLabel = defineComponent({
@@ -45967,13 +45967,13 @@ var ZR = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(LabelComponent), {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(LabelComponent), {
         "data-slot": `field-label`,
         class: normalizeClass(unref(uiSwitchXt)(`has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 gap-2 group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5 group/field-label peer/field-label flex w-fit leading-snug`, `has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col`, t.class))
       }, {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`class`]));
     }
@@ -46177,8 +46177,8 @@ var YB = {
       openModifiers: {}
     },
     emits: [`update:open`],
-    setup(e) {
-      let t = vueLt(e, `open`),
+    setup(props) {
+      let t = vueLt(props, `open`),
         {
           t: n,
           providerCatalog: r,
@@ -46196,7 +46196,7 @@ var YB = {
           providerCatalogDescription: h
         } = JB(t),
         g = qB(t);
-      return (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: t.value,
         "onUpdate:open": renderCache[3] ||= e => t.value = e
       }, {
@@ -46384,8 +46384,8 @@ var YB = {
       openModifiers: {}
     }),
     emits: [`update:open`],
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: n
         } = vueN(),
@@ -46399,7 +46399,7 @@ var YB = {
           isSaving: s,
           error: c
         } = toolIconR(),
-        l = vueLt(e, `open`),
+        l = vueLt(props, `open`),
         u = ref(false),
         d = ref(false),
         f = ref(``),
@@ -46661,8 +46661,8 @@ var gV = {
         type: Boolean
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: i18nTranslate
         } = vueN(),
@@ -46898,11 +46898,11 @@ var gV = {
       }
     },
     emits: [`test`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -47458,7 +47458,7 @@ var vCe = [`doubao`, `yuanbao`, `deepseek`],
   },
   WebAccountRotationSettings = defineComponent({
     __name: `WebAccountRotationSettings`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate,
           locale: n
@@ -47577,7 +47577,7 @@ var vCe = [`doubao`, `yuanbao`, `deepseek`],
       async function ue() {
         ce.value &&= (await h(ce.value.id), null);
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [computedResult.value === `webAccount` ? (openBlock(), createElementBlock(Fragment, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [computedResult.value === `webAccount` ? (openBlock(), createElementBlock(Fragment, {
         key: 0
       }, [renderCache[11] ||= createElementVNode(`div`, {
         class: `h-px bg-black/5 my-4`
@@ -48061,7 +48061,7 @@ var PV = {
           r = i18nTranslate(n);
         return r === n ? e : r;
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, fwe, [createElementVNode(`div`, pwe, [createElementVNode(`div`, mwe, [createElementVNode(`p`, hwe, toDisplayString(unref(i18nTranslate)(`settings.tokenUsage`)), 1), a.value?.estimatedCount ? (openBlock(), createElementBlock(`span`, gwe, toDisplayString(unref(i18nTranslate)(`settings.tokenUsageEstimatedCount`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, fwe, [createElementVNode(`div`, pwe, [createElementVNode(`div`, mwe, [createElementVNode(`p`, hwe, toDisplayString(unref(i18nTranslate)(`settings.tokenUsage`)), 1), a.value?.estimatedCount ? (openBlock(), createElementBlock(`span`, gwe, toDisplayString(unref(i18nTranslate)(`settings.tokenUsageEstimatedCount`, {
         count: a.value.estimatedCount
       })), 1)) : createCommentVNode(``, true)]), createElementVNode(`p`, _we, toDisplayString(S.value), 1), a.value?.totalCount ? (openBlock(), createElementBlock(`div`, vwe, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedResult.value, e => (openBlock(), createElementBlock(`span`, {
         key: e.key,
@@ -48366,7 +48366,7 @@ var PV = {
           A = null, m(t, e);
         }, 800) : m(t, e);
       }
-      return (e, s) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `ai-model`
       }, {
         default: H(() => [!unref(a) && !unref(n) && unref(r) ? (openBlock(), createElementBlock(`div`, nTe, [createElementVNode(`p`, rTe, toDisplayString(unref(r)), 1), resolveComponent(unref(uiSwitchR), {
@@ -48391,11 +48391,11 @@ var PV = {
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.modelDiagnosis.viewDetails`)), 1)]),
           _: 1
-        })) : createCommentVNode(``, true)])) : createCommentVNode(``, true), resolveComponent(WebAccountRotationSettings), s[3] ||= createElementVNode(`div`, {
+        })) : createCommentVNode(``, true)])) : createCommentVNode(``, true), resolveComponent(WebAccountRotationSettings), cache[3] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5 my-4`
         }, null, -1), resolveComponent(TokenUsageSettings), resolveComponent(unref(dialogA), {
           open: _.value,
-          "onUpdate:open": s[1] ||= e => _.value = e
+          "onUpdate:open": cache[1] ||= e => _.value = e
         }, {
           default: H(() => [resolveComponent(unref(dialogI), {
             class: `flex max-h-[88vh] flex-col gap-0 overflow-hidden p-0 sm:max-w-[760px]`
@@ -48429,7 +48429,7 @@ var PV = {
               key: e
             }, toDisplayString(e), 1))), 128))])])) : createCommentVNode(``, true), x(e.purpose)?.solutions.length ? (openBlock(), createElementBlock(`div`, _Te, [createElementVNode(`p`, vTe, toDisplayString(unref(i18nTranslate)(`settings.modelDiagnosis.solutions`)), 1), createElementVNode(`ol`, yTe, [(openBlock(true), createElementBlock(Fragment, null, renderList(x(e.purpose)?.solutions, e => (openBlock(), createElementBlock(`li`, {
               key: e.step
-            }, [createTextVNode(toDisplayString(e.action), 1), e.field ? (openBlock(), createElementBlock(`span`, bTe, [createTextVNode(`（` + toDisplayString(e.field), 1), e.suggestedValue ? (openBlock(), createElementBlock(`span`, xTe, `：` + toDisplayString(e.suggestedValue), 1)) : createCommentVNode(``, true), s[2] ||= createTextVNode(`）`, -1)])) : createCommentVNode(``, true)]))), 128))])])) : createCommentVNode(``, true)])) : createCommentVNode(``, true)], 64))]))), 128)), unref(d) ? (openBlock(), createElementBlock(`div`, STe, [resolveComponent(unref(beautifier), {
+            }, [createTextVNode(toDisplayString(e.action), 1), e.field ? (openBlock(), createElementBlock(`span`, bTe, [createTextVNode(`（` + toDisplayString(e.field), 1), e.suggestedValue ? (openBlock(), createElementBlock(`span`, xTe, `：` + toDisplayString(e.suggestedValue), 1)) : createCommentVNode(``, true), cache[2] ||= createTextVNode(`）`, -1)])) : createCommentVNode(``, true)]))), 128))])])) : createCommentVNode(``, true)])) : createCommentVNode(``, true)], 64))]))), 128)), unref(d) ? (openBlock(), createElementBlock(`div`, STe, [resolveComponent(unref(beautifier), {
               size: 14,
               class: `animate-spin`
             }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`settings.modelDiagnosis.analyzing`)), 1)])) : unref(l) && !unref(l).aiAvailable ? (openBlock(), createBlock(unref(defineComponentResult), {
@@ -48458,7 +48458,7 @@ var PV = {
                 size: `sm`,
                 variant: `outline`,
                 class: `text-xs`,
-                onClick: s[0] ||= e => _.value = false
+                onClick: cache[0] ||= e => _.value = false
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.close`)), 1)]),
                 _: 1
@@ -48654,13 +48654,13 @@ var PV = {
     },
     emits: [`update:open`, `apply`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let {
           t: i18nTranslate
         } = vueN(),
         itemsAlias = items,
-        i = t,
+        i = emit,
         {
           templates: a,
           loadTemplates: o,
@@ -48815,7 +48815,7 @@ var PV = {
         let e = await l(count);
         b.value = false, count = null, x.value = ``, e && (computedData.value.length > 0 ? O(computedData.value[0].id) : (p.value = ``, m.value = ``, h.value = ``, g.value = ``));
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: items.open,
         "onUpdate:open": renderCache[9] ||= e => i(`update:open`, e)
       }, {
@@ -49736,7 +49736,7 @@ var zEe = {
   },
   RecognitionSettingsSection = defineComponent({
     __name: `RecognitionSettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
           t,
           locale: n
@@ -49799,7 +49799,7 @@ var zEe = {
             });
           }
         });
-      return (e, i) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `recognition`
       }, {
         default: H(() => [createElementVNode(`div`, jDe, [createElementVNode(`div`, MDe, [createElementVNode(`div`, NDe, [createElementVNode(`p`, PDe, toDisplayString(unref(t)(`settings.promptConfig`)), 1), createElementVNode(`p`, FDe, toDisplayString(unref(t)(`settings.promptConfigDesc`)), 1)]), createElementVNode(`div`, IDe, [unref(r).activeScreenshotPromptTemplateId || l.value ? (openBlock(), createElementBlock(`div`, LDe, [resolveComponent(unref(Badge), {
@@ -49813,34 +49813,34 @@ var zEe = {
           variant: `outline`,
           class: `h-7 gap-1.5 text-xs`,
           disabled: unref(o),
-          onClick: i[0] ||= e => c.value = true
+          onClick: cache[0] ||= e => c.value = true
         }, {
           default: H(() => [resolveComponent(unref($o), {
             class: `size-3.5`
           }), createTextVNode(` ` + toDisplayString(unref(t)(`settings.promptTemplate.managePrompt`)), 1)]),
           _: 1
-        }, 8, [`disabled`])])]), i[7] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])])]), cache[7] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, RDe, [createElementVNode(`div`, null, [createElementVNode(`p`, zDe, toDisplayString(unref(t)(`settings.myProfile`)), 1), createElementVNode(`p`, BDe, toDisplayString(unref(t)(`settings.myProfileDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
           variant: `outline`,
           size: `sm`,
           class: `h-7 text-xs`,
           disabled: unref(o),
-          onClick: i[1] ||= e => f.value = true
+          onClick: cache[1] ||= e => f.value = true
         }, {
           default: H(() => [createTextVNode(toDisplayString(unref(t)(`settings.manageMyProfile`)), 1)]),
           _: 1
-        }, 8, [`disabled`])]), i[8] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])]), cache[8] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, VDe, [createElementVNode(`div`, null, [createElementVNode(`p`, HDe, toDisplayString(unref(t)(`settings.enableUserProfileInScreenshot`)), 1), createElementVNode(`p`, UDe, toDisplayString(unref(t)(`settings.enableUserProfileInScreenshotDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: computedResult.value,
-          "onUpdate:modelValue": i[2] ||= e => computedResult.value = e,
+          "onUpdate:modelValue": cache[2] ||= e => computedResult.value = e,
           disabled: unref(o)
-        }, null, 8, [`modelValue`, `disabled`])]), i[9] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])]), cache[9] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, WDe, [createElementVNode(`div`, null, [createElementVNode(`p`, GDe, toDisplayString(unref(t)(`settings.screenshotHistoryCount`)), 1), createElementVNode(`p`, KDe, toDisplayString(unref(t)(`settings.screenshotHistoryCountDesc`)), 1)]), resolveComponent(unref(Select), {
           modelValue: computedData.value,
-          "onUpdate:modelValue": i[3] ||= e => computedData.value = e,
+          "onUpdate:modelValue": cache[3] ||= e => computedData.value = e,
           disabled: unref(o)
         }, {
           default: H(() => [resolveComponent(unref(SelectTriggerComponent), {
@@ -49861,24 +49861,24 @@ var zEe = {
             _: 1
           })]),
           _: 1
-        }, 8, [`modelValue`, `disabled`])]), i[10] ||= createElementVNode(`div`, {
+        }, 8, [`modelValue`, `disabled`])]), cache[10] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, qDe, [createElementVNode(`div`, JDe, [createElementVNode(`p`, YDe, toDisplayString(unref(t)(`settings.enableModelCategoryRecognition`)), 1), createElementVNode(`p`, XDe, toDisplayString(unref(t)(`settings.enableModelCategoryRecognitionDesc`)), 1), createElementVNode(`p`, ZDe, toDisplayString(unref(t)(`settings.enableModelCategoryRecognitionNote`)), 1)]), resolveComponent(unref(uiSwitchT), {
           modelValue: h.value,
-          "onUpdate:modelValue": i[4] ||= e => h.value = e,
+          "onUpdate:modelValue": cache[4] ||= e => h.value = e,
           disabled: unref(o)
-        }, null, 8, [`modelValue`, `disabled`])]), i[11] ||= createElementVNode(`div`, {
+        }, null, 8, [`modelValue`, `disabled`])]), cache[11] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(CustomCategorySettings)]), resolveComponent(ScreenshotPromptManager, {
           open: c.value,
-          "onUpdate:open": i[5] ||= e => c.value = e,
+          "onUpdate:open": cache[5] ||= e => c.value = e,
           "current-template-id": unref(r).activeScreenshotPromptTemplateId,
           "current-content": unref(r).activeScreenshotPromptContent,
           language: unref(n),
           onApply: u
         }, null, 8, [`open`, `current-template-id`, `current-content`, `language`]), resolveComponent(UserProfileDialog, {
           open: f.value,
-          "onUpdate:open": i[6] ||= e => f.value = e,
+          "onUpdate:open": cache[6] ||= e => f.value = e,
           "preferred-name-fallback": unref(a)?.nickname || ``
         }, null, 8, [`open`, `preferred-name-fallback`])]),
         _: 1
@@ -50220,12 +50220,12 @@ var DropdownMenuGroupComponent = defineComponent({
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(DropdownMenuGroup), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuGroup), vueNt({
         "data-slot": `dropdown-menu-group`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -50240,14 +50240,14 @@ var DropdownMenuGroupComponent = defineComponent({
       as: {}
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = uiSwitchZ(e, t);
-      return (e, t) => (openBlock(), createBlock(unref(DropdownMenuRadioGroup), vueNt({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuRadioGroup), vueNt({
         "data-slot": `dropdown-menu-radio-group`
       }, unref(n)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -50273,22 +50273,22 @@ var DropdownMenuGroupComponent = defineComponent({
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (e, t) => (openBlock(), createBlock(unref(DropdownMenuRadioItem), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuRadioItem), vueNt({
         "data-slot": `dropdown-menu-radio-item`
       }, unref(a), {
         class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground focus:**:text-accent-foreground gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class)
       }), {
         default: H(() => [createElementVNode(`span`, _Oe, [resolveComponent(unref($r), null, {
-          default: H(() => [withCtx(e.$slots, `indicator-icon`, {}, () => [resolveComponent(unref(checkT))])]),
+          default: H(() => [withCtx(ctx.$slots, `indicator-icon`, {}, () => [resolveComponent(unref(checkT))])]),
           _: 3
-        })]), withCtx(e.$slots, `default`)]),
+        })]), withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -50304,10 +50304,10 @@ var DropdownMenuGroupComponent = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(DropdownMenuSeparator), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(DropdownMenuSeparator), vueNt({
         "data-slot": `dropdown-menu-separator`
       }, unref(n), {
         class: unref(uiSwitchXt)(`bg-border -mx-1 my-1 h-px`, t.class)
@@ -50338,8 +50338,8 @@ var DropdownMenuGroupComponent = defineComponent({
         default: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = ref(false);
       watch(() => t.avatarUrl, () => {
         n.value = false;
@@ -50350,13 +50350,13 @@ var DropdownMenuGroupComponent = defineComponent({
           height: `${t.size}px`,
           fontSize: `${Math.max(10, Math.round(t.size * 0.42))}px`
         }));
-      return (t, renderCache) => (openBlock(), createElementBlock(`span`, {
-        class: normalizeClass([`inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-primary/10 font-semibold leading-none text-primary`, [e.muted ? `opacity-35 grayscale` : ``, e.ring ? `ring-2 ring-white dark:ring-background` : ``]]),
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`span`, {
+        class: normalizeClass([`inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-primary/10 font-semibold leading-none text-primary`, [props.muted ? `opacity-35 grayscale` : ``, props.ring ? `ring-2 ring-white dark:ring-background` : ``]]),
         style: vueNr(computedData.value),
-        title: e.name
-      }, [e.avatarUrl && !n.value ? (openBlock(), createElementBlock(`img`, {
+        title: props.name
+      }, [props.avatarUrl && !n.value ? (openBlock(), createElementBlock(`img`, {
         key: 0,
-        src: e.avatarUrl,
+        src: props.avatarUrl,
         alt: ``,
         draggable: `false`,
         class: `size-full object-cover`,
@@ -50566,11 +50566,11 @@ var wOe = [`disabled`],
       }
     },
     emits: [`toggle`, `edit`, `runNow`, `duplicate`, `delete`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -50593,25 +50593,25 @@ var wOe = [`disabled`],
       function p(e) {
         setTimeout(e, 0);
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, {
-        class: normalizeClass([`flex items-stretch gap-4 rounded-xl px-4 py-3.5 transition-colors`, e.task.enabled ? `bg-black/[0.028] hover:bg-black/[0.045] dark:bg-white/[0.045] dark:hover:bg-white/[0.07]` : `bg-black/[0.018] hover:bg-black/[0.032] dark:bg-white/[0.022] dark:hover:bg-white/[0.045]`])
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
+        class: normalizeClass([`flex items-stretch gap-4 rounded-xl px-4 py-3.5 transition-colors`, props.task.enabled ? `bg-black/[0.028] hover:bg-black/[0.045] dark:bg-white/[0.045] dark:hover:bg-white/[0.07]` : `bg-black/[0.018] hover:bg-black/[0.032] dark:bg-white/[0.022] dark:hover:bg-white/[0.045]`])
       }, [createElementVNode(`button`, {
         type: `button`,
         class: normalizeClass([`min-w-0 flex-1 cursor-pointer rounded-md text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40`, {
-          "opacity-50": !e.task.enabled
+          "opacity-50": !props.task.enabled
         }]),
-        disabled: e.disabled,
+        disabled: props.disabled,
         onClick: renderCache[0] ||= e => r(`edit`)
       }, [createElementVNode(`div`, TOe, toDisplayString(computedResult.value), 1), createElementVNode(`div`, EOe, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedData.value, (e, t) => (openBlock(), createElementBlock(Fragment, {
         key: t
       }, [t > 0 ? (openBlock(), createElementBlock(`span`, DOe, `·`)) : createCommentVNode(``, true), createElementVNode(`span`, OOe, toDisplayString(e), 1)], 64))), 128)), renderCache[6] ||= createElementVNode(`span`, {
         class: `text-black/20 dark:text-white/20`
-      }, `·`, -1), c.value ? (openBlock(), createElementBlock(`span`, kOe, [createElementVNode(`span`, AOe, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.task.recipients.slice(0, 3), e => (openBlock(), createBlock(ReportCcAvatar, {
+      }, `·`, -1), c.value ? (openBlock(), createElementBlock(`span`, kOe, [createElementVNode(`span`, AOe, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.task.recipients.slice(0, 3), e => (openBlock(), createBlock(ReportCcAvatar, {
         key: e.userId,
         name: e.name || String(e.userId),
         "avatar-url": e.avatarUrl,
         size: 16
-      }, null, 8, [`name`, `avatar-url`]))), 128))]), createElementVNode(`span`, jOe, toDisplayString(unref(a).shareText(e.task)), 1)])) : (openBlock(), createElementBlock(`span`, MOe, toDisplayString(unref(a).shareText(e.task)), 1))]), createElementVNode(`div`, NOe, [createElementVNode(`span`, POe, [resolveComponent(unref(Ma), {
+      }, null, 8, [`name`, `avatar-url`]))), 128))]), createElementVNode(`span`, jOe, toDisplayString(unref(a).shareText(props.task)), 1)])) : (openBlock(), createElementBlock(`span`, MOe, toDisplayString(unref(a).shareText(props.task)), 1))]), createElementVNode(`div`, NOe, [createElementVNode(`span`, POe, [resolveComponent(unref(Ma), {
         size: 12,
         class: `shrink-0`
       }), createTextVNode(` ` + toDisplayString(l.value), 1)]), u.value ? (openBlock(), createElementBlock(`span`, {
@@ -50625,15 +50625,15 @@ var wOe = [`disabled`],
         class: `truncate`,
         title: u.value.text
       }, toDisplayString(u.value.text), 9, FOe)], 2)) : createCommentVNode(``, true)])], 10, wOe), createElementVNode(`div`, IOe, [resolveComponent(unref(uiSwitchT), {
-        "model-value": e.task.enabled,
-        disabled: e.disabled,
-        "aria-label": unref(i18nTranslate)(e.task.enabled ? `settings.autoReport.actions.disable` : `settings.autoReport.actions.enable`),
+        "model-value": props.task.enabled,
+        disabled: props.disabled,
+        "aria-label": unref(i18nTranslate)(props.task.enabled ? `settings.autoReport.actions.disable` : `settings.autoReport.actions.enable`),
         "onUpdate:modelValue": renderCache[1] ||= e => r(`toggle`, e)
       }, null, 8, [`model-value`, `disabled`, `aria-label`]), createElementVNode(`div`, LOe, [resolveComponent(unref(uiSwitchR), {
         variant: `ghost`,
         size: `icon`,
         class: `h-7 w-7`,
-        disabled: e.disabled,
+        disabled: props.disabled,
         "aria-label": unref(i18nTranslate)(`settings.autoReport.actions.edit`),
         onClick: renderCache[2] ||= e => r(`edit`)
       }, {
@@ -50651,7 +50651,7 @@ var wOe = [`disabled`],
             variant: `ghost`,
             size: `icon`,
             class: `h-7 w-7`,
-            disabled: e.disabled,
+            disabled: props.disabled,
             "aria-label": unref(i18nTranslate)(`settings.autoReport.actions.more`)
           }, {
             default: H(() => [resolveComponent(unref(purifyR), {
@@ -50867,11 +50867,11 @@ var BOe = {
     }),
     emits: vueTt([`retry`, `addFriends`], [`update:modelValue`]),
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
         r = vueLt(items, `modelValue`),
-        i = t,
+        i = emit,
         {
           t: a
         } = vueN(),
@@ -50904,7 +50904,7 @@ var BOe = {
       function f(e) {
         r.value = computedResult.value.has(e.userId) ? r.value.filter(item => item.userId !== e.userId) : [...r.value, l(e)];
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, BOe, [createElementVNode(`div`, VOe, [createElementVNode(`div`, HOe, [resolveComponent(unref(Cs), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, BOe, [createElementVNode(`div`, VOe, [createElementVNode(`div`, HOe, [resolveComponent(unref(Cs), {
         size: 13,
         class: `pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-[#bbb]`
       }), resolveComponent(unref(Input), {
@@ -51257,11 +51257,11 @@ var BOe = {
     }),
     emits: vueTt([`save`], [`update:open`]),
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
         r = vueLt(event, `open`),
-        i = t,
+        i = emit,
         {
           t: i18nTranslate,
           locale: s
@@ -51650,7 +51650,7 @@ var BOe = {
       function Ze(e) {
         return `relative flex min-w-0 cursor-pointer rounded-xl text-left transition-colors ${CH} ${e ? `bg-primary/[0.06] ring-1 ring-inset ring-primary/40` : `bg-black/[0.028] hover:bg-black/[0.05] dark:bg-white/[0.045] dark:hover:bg-white/[0.08]`}`;
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: r.value,
         "onUpdate:open": renderCache[26] ||= e => r.value = e
       }, {
@@ -52823,7 +52823,7 @@ var BOe = {
   },
   TodoAutoCompletionSettings = defineComponent({
     __name: `TodoAutoCompletionSettings`,
-    setup(row) {
+    setup(props) {
       let {
           t: i18nTranslate,
           locale: n
@@ -53566,11 +53566,11 @@ var BOe = {
   },
   ReportTodoSettingsSection = defineComponent({
     __name: `ReportTodoSettingsSection`,
-    setup(e) {
-      return (e, t) => (openBlock(), createBlock(SettingsSection, {
+    setup(props) {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `report-todo`
       }, {
-        default: H(() => [createElementVNode(`div`, kNe, [resolveComponent(AutoDailyReportSettings), t[0] ||= createElementVNode(`div`, {
+        default: H(() => [createElementVNode(`div`, kNe, [resolveComponent(AutoDailyReportSettings), cache[0] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(TodoAutoCompletionSettings)])]),
         _: 1
@@ -53588,12 +53588,12 @@ var BOe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, jNe, [createElementVNode(`table`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, jNe, [createElementVNode(`table`, {
         "data-slot": `table`,
         class: normalizeClass(unref(uiSwitchXt)(`w-full caption-bottom text-sm`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2)]));
+      }, [withCtx(ctx.$slots, `default`)], 2)]));
     }
   }),
   TableBody = defineComponent({
@@ -53603,12 +53603,12 @@ var BOe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`tbody`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`tbody`, {
         "data-slot": `table-body`,
         class: normalizeClass(unref(uiSwitchXt)(`[&_tr:last-child]:border-0`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   TableCell = defineComponent({
@@ -53618,12 +53618,12 @@ var BOe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`td`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`td`, {
         "data-slot": `table-cell`,
         class: normalizeClass(unref(uiSwitchXt)(`p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   TableRow = defineComponent({
@@ -53633,12 +53633,12 @@ var BOe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`tr`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`tr`, {
         "data-slot": `table-row`,
         class: normalizeClass(unref(uiSwitchXt)(`hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors has-aria-expanded:bg-muted/50`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   TableHead = defineComponent({
@@ -53648,12 +53648,12 @@ var BOe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`th`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`th`, {
         "data-slot": `table-head`,
         class: normalizeClass(unref(uiSwitchXt)(`text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   TableHeader = defineComponent({
@@ -53663,12 +53663,12 @@ var BOe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`thead`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`thead`, {
         "data-slot": `table-header`,
         class: normalizeClass(unref(uiSwitchXt)(`[&_tr]:border-b`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   FNe = {
@@ -53857,7 +53857,7 @@ All business endpoints use this response envelope:
 }`,
   LobsterPage = defineComponent({
     __name: `LobsterPage`,
-    setup(row) {
+    setup(props) {
       let {
           captureGrowthObservation: t
         } = growthTelT(),
@@ -54206,15 +54206,15 @@ All business endpoints use this response envelope:
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
-        open: e.open,
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+        open: props.open,
         "onUpdate:open": renderCache[0] ||= e => n(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
@@ -54258,7 +54258,7 @@ All business endpoints use this response envelope:
   },
   MiniProgramSyncSettings = defineComponent({
     __name: `MiniProgramSyncSettings`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate
         } = vueN(),
@@ -54307,7 +54307,7 @@ All business endpoints use this response envelope:
           }
         }
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, hPe, [createElementVNode(`div`, gPe, [createElementVNode(`p`, _Pe, toDisplayString(unref(i18nTranslate)(`settings.miniProgramSync`)), 1), createElementVNode(`p`, vPe, toDisplayString(computedResult.value), 1), createElementVNode(`p`, yPe, toDisplayString(unref(i18nTranslate)(`settings.miniProgramSyncCloudNote`)), 1)]), createElementVNode(`div`, bPe, [unref(i) && unref(a) && !unref(a).backfillDone ? (openBlock(), createBlock(unref(uiSwitchR), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, hPe, [createElementVNode(`div`, gPe, [createElementVNode(`p`, _Pe, toDisplayString(unref(i18nTranslate)(`settings.miniProgramSync`)), 1), createElementVNode(`p`, vPe, toDisplayString(computedResult.value), 1), createElementVNode(`p`, yPe, toDisplayString(unref(i18nTranslate)(`settings.miniProgramSyncCloudNote`)), 1)]), createElementVNode(`div`, bPe, [unref(i) && unref(a) && !unref(a).backfillDone ? (openBlock(), createBlock(unref(uiSwitchR), {
         key: 0,
         size: `sm`,
         variant: `outline`,
@@ -54439,8 +54439,8 @@ All business endpoints use this response envelope:
         default: false
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         computedResult = computed(() => Array.isArray(t.value)),
         computedData = computed(() => t.value !== null && typeof t.value == `object` && !Array.isArray(t.value)),
         i = computed(() => computedResult.value || computedData.value),
@@ -54450,15 +54450,15 @@ All business endpoints use this response envelope:
         c = computed(() => t.label === undefined ? `` : typeof t.label == `number` ? `[${t.label}]` : JSON.stringify(t.label)),
         l = computed(() => typeof t.value == `string` ? JSON.stringify(t.value) : typeof t.value == `number` || typeof t.value == `boolean` ? String(t.value) : t.value === null ? `null` : JSON.stringify(t.value)),
         u = computed(() => typeof t.value == `string` ? `text-emerald-700` : typeof t.value == `number` ? `text-sky-700` : typeof t.value == `boolean` ? `text-purple-700` : `text-[#777]`);
-      return (t, renderCache) => {
+      return (ctx, renderCache) => {
         let d = vueWt(`JsonTreeNode`, true);
         return openBlock(), createElementBlock(`div`, SPe, [i.value ? (openBlock(), createElementBlock(`details`, {
           key: 0,
-          open: e.root,
+          open: props.root,
           class: `group`
         }, [createElementVNode(`summary`, wPe, [renderCache[0] ||= createElementVNode(`span`, {
           class: `w-3 shrink-0 text-[#999] transition-transform group-open:rotate-90`
-        }, `>`, -1), c.value ? (openBlock(), createElementBlock(`span`, TPe, toDisplayString(c.value), 1)) : createCommentVNode(``, true), c.value ? (openBlock(), createElementBlock(`span`, EPe, `:`)) : createCommentVNode(``, true), createElementVNode(`span`, DPe, toDisplayString(computedResult.value ? `[` : `{`), 1), createElementVNode(`span`, OPe, toDisplayString(s.value) + ` ` + toDisplayString(computedResult.value ? `items` : `keys`), 1), createElementVNode(`span`, kPe, toDisplayString(computedResult.value ? `]` : `}`), 1), e.trailing ? (openBlock(), createElementBlock(`span`, APe, `,`)) : createCommentVNode(``, true)]), createElementVNode(`div`, jPe, [computedResult.value ? (openBlock(true), createElementBlock(Fragment, {
+        }, `>`, -1), c.value ? (openBlock(), createElementBlock(`span`, TPe, toDisplayString(c.value), 1)) : createCommentVNode(``, true), c.value ? (openBlock(), createElementBlock(`span`, EPe, `:`)) : createCommentVNode(``, true), createElementVNode(`span`, DPe, toDisplayString(computedResult.value ? `[` : `{`), 1), createElementVNode(`span`, OPe, toDisplayString(s.value) + ` ` + toDisplayString(computedResult.value ? `items` : `keys`), 1), createElementVNode(`span`, kPe, toDisplayString(computedResult.value ? `]` : `}`), 1), props.trailing ? (openBlock(), createElementBlock(`span`, APe, `,`)) : createCommentVNode(``, true)]), createElementVNode(`div`, jPe, [computedResult.value ? (openBlock(true), createElementBlock(Fragment, {
           key: 0
         }, renderList(a.value, (e, t) => (openBlock(), createBlock(d, {
           key: t,
@@ -54476,7 +54476,7 @@ All business endpoints use this response envelope:
           class: `w-3 shrink-0`
         }, null, -1), c.value ? (openBlock(), createElementBlock(`span`, NPe, toDisplayString(c.value), 1)) : createCommentVNode(``, true), c.value ? (openBlock(), createElementBlock(`span`, PPe, `:`)) : createCommentVNode(``, true), createElementVNode(`span`, {
           class: normalizeClass([u.value, `break-all`])
-        }, toDisplayString(l.value), 3), e.trailing ? (openBlock(), createElementBlock(`span`, FPe, `,`)) : createCommentVNode(``, true)]))]);
+        }, toDisplayString(l.value), 3), props.trailing ? (openBlock(), createElementBlock(`span`, FPe, `,`)) : createCommentVNode(``, true)]))]);
       };
     }
   }),
@@ -54489,7 +54489,7 @@ All business endpoints use this response envelope:
       value: {}
     },
     setup(state) {
-      return (t, n) => (openBlock(), createElementBlock(`div`, LPe, [resolveComponent(JsonTreeNode, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, LPe, [resolveComponent(JsonTreeNode, {
         value: state.value,
         root: ``
       }, null, 8, [`value`])]));
@@ -54943,7 +54943,7 @@ var PH = {
           await PH.clearLogs(), M.value = 1, re.value = ``, await le(), c();
         } catch {}
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, zPe, [createElementVNode(`div`, null, [createElementVNode(`p`, BPe, toDisplayString(unref(i18nTranslate)(`settings.scheduledReport`)), 1), createElementVNode(`p`, VPe, toDisplayString(unref(i18nTranslate)(`settings.scheduledReportDesc`)), 1)]), createElementVNode(`div`, HPe, [resolveComponent(unref(uiSwitchR), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, zPe, [createElementVNode(`div`, null, [createElementVNode(`p`, BPe, toDisplayString(unref(i18nTranslate)(`settings.scheduledReport`)), 1), createElementVNode(`p`, VPe, toDisplayString(unref(i18nTranslate)(`settings.scheduledReportDesc`)), 1)]), createElementVNode(`div`, HPe, [resolveComponent(unref(uiSwitchR), {
         variant: `outline`,
         size: `sm`,
         class: `h-7 text-xs`,
@@ -56158,27 +56158,27 @@ var RH = {
   },
   IntegrationSettingsSection = defineComponent({
     __name: `IntegrationSettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
         n = ref(false);
-      return (e, r) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `integrations`
       }, {
-        default: H(() => [createElementVNode(`div`, WLe, [resolveComponent(MiniProgramSyncSettings), r[3] ||= createElementVNode(`div`, {
+        default: H(() => [createElementVNode(`div`, WLe, [resolveComponent(MiniProgramSyncSettings), cache[3] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(ScheduledReportSettings), unref(false) ? (openBlock(), createElementBlock(Fragment, {
           key: 0
-        }, [r[2] ||= createElementVNode(`div`, {
+        }, [cache[2] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
-        }, null, -1), resolveComponent(RecordingBoxSettings)], 64)) : createCommentVNode(``, true), r[4] ||= createElementVNode(`div`, {
+        }, null, -1), resolveComponent(RecordingBoxSettings)], 64)) : createCommentVNode(``, true), cache[4] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, GLe, [createElementVNode(`div`, KLe, [createElementVNode(`p`, qLe, toDisplayString(unref(t)(`lobster.title`)), 1), createElementVNode(`p`, JLe, toDisplayString(unref(t)(`settings.agentIntegrationDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 shrink-0 gap-1.5 text-xs`,
-          onClick: r[0] ||= e => n.value = true
+          onClick: cache[0] ||= e => n.value = true
         }, {
           default: H(() => [resolveComponent(unref(Es), {
             size: 13
@@ -56186,7 +56186,7 @@ var RH = {
           _: 1
         })])]), resolveComponent(AgentIntegrationDialog, {
           open: n.value,
-          "onUpdate:open": r[1] ||= e => n.value = e
+          "onUpdate:open": cache[1] ||= e => n.value = e
         }, null, 8, [`open`])]),
         _: 1
       }));
@@ -56209,10 +56209,10 @@ var RH = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(ProgressRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ProgressRoot), vueNt({
         "data-slot": `progress`
       }, unref(n), {
         class: unref(uiSwitchXt)(`bg-muted h-1 rounded-full relative flex w-full items-center overflow-x-hidden`, t.class)
@@ -56502,7 +56502,7 @@ var QLe = {
     emits: [`update:open`],
     setup(event) {
       let t = vueLt(event, `open`);
-      return (n, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: t.value,
         "onUpdate:open": renderCache[1] ||= n => {
           event.busy || (t.value = n);
@@ -56521,9 +56521,9 @@ var QLe = {
           }), resolveComponent(unref(DialogDescription), {
             class: `mt-1 text-xs leading-relaxed`
           }, {
-            default: H(() => [withCtx(n.$slots, `description`, {}, () => [createTextVNode(toDisplayString(event.description), 1)])]),
+            default: H(() => [withCtx(ctx.$slots, `description`, {}, () => [createTextVNode(toDisplayString(event.description), 1)])]),
             _: 3
-          })]), n.$slots.options ? (openBlock(), createElementBlock(`div`, $Le, [withCtx(n.$slots, `options`)])) : createCommentVNode(``, true), n.$slots.options ? (openBlock(), createElementBlock(`div`, eRe)) : createCommentVNode(``, true), createElementVNode(`div`, tRe, [withCtx(n.$slots, `default`)]), createElementVNode(`div`, nRe, [createElementVNode(`div`, rRe, [withCtx(n.$slots, `summary`)]), createElementVNode(`div`, iRe, [withCtx(n.$slots, `footer`)])])]),
+          })]), ctx.$slots.options ? (openBlock(), createElementBlock(`div`, $Le, [withCtx(ctx.$slots, `options`)])) : createCommentVNode(``, true), ctx.$slots.options ? (openBlock(), createElementBlock(`div`, eRe)) : createCommentVNode(``, true), createElementVNode(`div`, tRe, [withCtx(ctx.$slots, `default`)]), createElementVNode(`div`, nRe, [createElementVNode(`div`, rRe, [withCtx(ctx.$slots, `summary`)]), createElementVNode(`div`, iRe, [withCtx(ctx.$slots, `footer`)])])]),
           _: 3
         }, 8, [`show-close-button`])]),
         _: 3
@@ -56635,7 +56635,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
       function p(e) {
         return e.disabled ? e.note ?? `` : e.count === undefined ? `` : e.count === null ? `…` : e.count.toLocaleString();
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, sRe, [createElementVNode(`div`, cRe, [createElementVNode(`p`, lRe, [createElementVNode(`span`, uRe, toDisplayString(unref(r)(`settings.dataTransfer.selectedCount`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, sRe, [createElementVNode(`div`, cRe, [createElementVNode(`p`, lRe, [createElementVNode(`span`, uRe, toDisplayString(unref(r)(`settings.dataTransfer.selectedCount`, {
         count: n.value.length
       })), 1), items.hint ? (openBlock(), createElementBlock(Fragment, {
         key: 0
@@ -56689,10 +56689,10 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
     },
     emits: [`change`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           locale: i
         } = vueN(),
@@ -56725,7 +56725,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
           end: l(e.end)
         }), a.value = false);
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(popoverR), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(popoverR), {
         open: a.value,
         "onUpdate:open": renderCache[0] ||= e => a.value = e,
         modal: ``
@@ -56813,7 +56813,7 @@ var oRe = `bg-black/[0.045] hover:bg-black/[0.07] dark:bg-white/[0.06] dark:hove
           date: s(e)
         }, a.value = false);
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, CRe, [(openBlock(true), createElementBlock(Fragment, null, renderList(textAlias.kinds, e => (openBlock(), createElementBlock(`button`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, CRe, [(openBlock(true), createElementBlock(Fragment, null, renderList(textAlias.kinds, e => (openBlock(), createElementBlock(`button`, {
         key: e,
         type: `button`,
         class: normalizeClass(unref(QH)(n.value.kind === e)),
@@ -56952,9 +56952,9 @@ var DRe = {
       openModifiers: {}
     },
     emits: [`update:open`],
-    setup(e) {
+    setup(props) {
       let t = [`all`, `last7`, `last30`, `thisYear`, `custom`],
-        n = vueLt(e, `open`),
+        n = vueLt(props, `open`),
         {
           t: r
         } = vueN(),
@@ -57007,7 +57007,7 @@ var DRe = {
           }
         }
       }
-      return (e, renderCache) => (openBlock(), createBlock(DataTransferDialogShell, {
+      return (ctx, renderCache) => (openBlock(), createBlock(DataTransferDialogShell, {
         open: n.value,
         "onUpdate:open": renderCache[4] ||= e => n.value = e,
         title: unref(r)(`settings.dataTransfer.export.title`),
@@ -57142,14 +57142,14 @@ var DRe = {
       openModifiers: {}
     }),
     emits: vueTt([`imported`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
       let n = [`all`, `custom`],
         r = [`skip`, `merge`, `replace`],
-        i = e,
-        a = vueLt(e, `open`),
-        o = t,
+        i = props,
+        a = vueLt(props, `open`),
+        o = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -57263,7 +57263,7 @@ var DRe = {
           count: e.unchanged.toLocaleString()
         }) : ``].filter(Boolean).join(` · `);
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(DataTransferDialogShell, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(DataTransferDialogShell, {
         open: a.value,
         "onUpdate:open": renderCache[4] ||= e => a.value = e,
         title: p.value ? unref(i18nTranslate)(`settings.dataTransfer.import.resultTitle`) : unref(i18nTranslate)(`settings.dataTransfer.import.title`),
@@ -57271,13 +57271,13 @@ var DRe = {
       }, ze({
         description: H(() => [createElementVNode(`span`, IRe, [createElementVNode(`span`, {
           class: `flex min-w-0 max-w-[320px] items-center gap-1 font-medium text-(--foreground)`,
-          title: e.preview?.filePath
+          title: props.preview?.filePath
         }, [resolveComponent(unref(lo), {
           size: 13,
           class: `shrink-0 text-muted-foreground`
         }), createElementVNode(`span`, RRe, toDisplayString(computedResult.value), 1)], 8, LRe), createElementVNode(`span`, zRe, toDisplayString(unref(i18nTranslate)(`settings.dataTransfer.import.exportedAt`)) + ` ` + toDisplayString(computedData.value), 1), createElementVNode(`span`, BRe, toDisplayString(unref(i18nTranslate)(`settings.dataTransfer.import.coverage`)) + ` ` + toDisplayString(x.value), 1), createElementVNode(`span`, null, [createTextVNode(toDisplayString(unref(i18nTranslate)(`settings.dataTransfer.import.source`)) + ` `, 1), createElementVNode(`span`, {
-          class: normalizeClass(e.preview?.fromOtherAccount ? `text-amber-600` : ``)
-        }, toDisplayString(e.preview?.fromOtherAccount ? unref(i18nTranslate)(`settings.dataTransfer.import.sourceOther`) : unref(i18nTranslate)(`settings.dataTransfer.import.sourceCurrent`)), 3)])])]),
+          class: normalizeClass(props.preview?.fromOtherAccount ? `text-amber-600` : ``)
+        }, toDisplayString(props.preview?.fromOtherAccount ? unref(i18nTranslate)(`settings.dataTransfer.import.sourceOther`) : unref(i18nTranslate)(`settings.dataTransfer.import.sourceCurrent`)), 3)])])]),
         summary: H(() => [p.value ? (openBlock(), createElementBlock(`p`, XRe, toDisplayString(unref(i18nTranslate)(`settings.dataTransfer.import.resultDesc`)), 1)) : u.value.length ? (openBlock(), createElementBlock(`p`, {
           key: 2,
           class: normalizeClass([`text-[13px] font-semibold tabular-nums`, l.value === `replace` ? `text-destructive` : `text-(--foreground)`])
@@ -57448,13 +57448,13 @@ var DRe = {
       openModifiers: {}
     },
     emits: vueTt([`cleared`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
       let n = [`all`, `before`, `custom`],
         mapped = qH.filter(item => item.clearable).map(item => item.id),
-        i = vueLt(e, `open`),
-        a = t,
+        i = vueLt(props, `open`),
+        a = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -57546,7 +57546,7 @@ var DRe = {
           }
         }
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(DataTransferDialogShell, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(DataTransferDialogShell, {
         open: i.value,
         "onUpdate:open": renderCache[4] ||= e => i.value = e,
         title: unref(i18nTranslate)(`settings.dataTransfer.clear.title`),
@@ -58107,7 +58107,7 @@ var DRe = {
           }
         }
       }
-      return (e, o) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `data`
       }, {
         default: H(() => [computedResult.value ? (openBlock(), createElementBlock(`p`, {
@@ -58132,7 +58132,7 @@ var DRe = {
           variant: `outline`,
           class: `h-7 gap-1.5 text-xs`,
           disabled: _.value || re.value,
-          onClick: o[0] ||= e => k.value = true
+          onClick: cache[0] ||= e => k.value = true
         }, {
           default: H(() => [re.value ? (openBlock(), createBlock(unref(beautifier), {
             key: 0,
@@ -58143,25 +58143,25 @@ var DRe = {
             size: 13
           })), createTextVNode(` ` + toDisplayString(re.value ? unref(i18nTranslate)(`settings.dataStorageLocationChanging`) : unref(i18nTranslate)(`settings.dataStorageLocationChange`)), 1)]),
           _: 1
-        }, 8, [`disabled`])])]), o[17] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])])]), cache[17] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, Eze, [createElementVNode(`div`, Dze, [createElementVNode(`p`, Oze, toDisplayString(unref(i18nTranslate)(`settings.localDatabaseSize`)), 1), createElementVNode(`p`, kze, toDisplayString(ne.value && !M.value ? unref(i18nTranslate)(`common.loading`) : unref(i18nTranslate)(`settings.localDatabaseStatsDesc`)), 1)]), createElementVNode(`div`, Aze, [(openBlock(true), createElementBlock(Fragment, null, renderList(oe.value, e => (openBlock(), createElementBlock(`div`, {
           key: e.key,
           class: `min-w-[66px] border-r border-black/[0.08] px-2.5 py-2 text-center last:border-r-0`
-        }, [createElementVNode(`div`, jze, toDisplayString(e.label), 1), createElementVNode(`div`, Mze, toDisplayString(e.value), 1)]))), 128))])]), o[18] ||= createElementVNode(`div`, {
+        }, [createElementVNode(`div`, jze, toDisplayString(e.label), 1), createElementVNode(`div`, Mze, toDisplayString(e.value), 1)]))), 128))])]), cache[18] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, Nze, [createElementVNode(`div`, Pze, [createElementVNode(`p`, Fze, toDisplayString(unref(i18nTranslate)(`settings.fullBackup`)), 1), createElementVNode(`p`, Ize, toDisplayString(unref(i18nTranslate)(`settings.fullBackupDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 shrink-0 gap-1.5 text-xs`,
           disabled: _.value,
-          onClick: o[1] ||= e => v.value = true
+          onClick: cache[1] ||= e => v.value = true
         }, {
           default: H(() => [resolveComponent(unref(la), {
             size: 13
           }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`common.export`)), 1)]),
           _: 1
-        }, 8, [`disabled`])]), o[19] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])]), cache[19] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, Lze, [createElementVNode(`div`, Rze, [createElementVNode(`p`, zze, toDisplayString(unref(i18nTranslate)(`settings.fullRestore`)), 1), createElementVNode(`p`, Bze, toDisplayString(unref(i18nTranslate)(`settings.fullRestoreDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
           size: `sm`,
@@ -58174,20 +58174,20 @@ var DRe = {
             size: 13
           }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`common.import`)), 1)]),
           _: 1
-        }, 8, [`disabled`])]), o[20] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])]), cache[20] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, Vze, [createElementVNode(`div`, null, [createElementVNode(`p`, Hze, toDisplayString(unref(i18nTranslate)(`settings.exportData`)), 1), createElementVNode(`p`, Uze, toDisplayString(unref(i18nTranslate)(`settings.exportDataDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 shrink-0 gap-1.5 text-xs`,
           disabled: _.value,
-          onClick: o[2] ||= e => A.value = true
+          onClick: cache[2] ||= e => A.value = true
         }, {
           default: H(() => [resolveComponent(unref(beautifierV), {
             size: 13
           }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`common.export`)), 1)]),
           _: 1
-        }, 8, [`disabled`])]), o[21] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])]), cache[21] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, Wze, [createElementVNode(`div`, null, [createElementVNode(`div`, Gze, [createElementVNode(`p`, Kze, toDisplayString(unref(i18nTranslate)(`settings.importData`)), 1), resolveComponent(FeatureInfoDialog, {
           title: unref(i18nTranslate)(`settings.importData`),
@@ -58211,14 +58211,14 @@ var DRe = {
             size: 13
           }), createTextVNode(` ` + toDisplayString(unref(i18nTranslate)(`common.import`)), 1)]),
           _: 1
-        }, 8, [`disabled`])]), o[22] ||= createElementVNode(`div`, {
+        }, 8, [`disabled`])]), cache[22] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), createElementVNode(`div`, Jze, [createElementVNode(`div`, null, [createElementVNode(`p`, Yze, toDisplayString(unref(i18nTranslate)(`settings.clearData`)), 1), createElementVNode(`p`, Xze, toDisplayString(unref(i18nTranslate)(`settings.clearDataDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
           size: `sm`,
           variant: `outline`,
           class: `h-7 gap-1.5 border-destructive/30 text-xs text-destructive hover:bg-destructive/20 hover:text-destructive`,
           disabled: _.value,
-          onClick: o[3] ||= e => ee.value = true
+          onClick: cache[3] ||= e => ee.value = true
         }, {
           default: H(() => [resolveComponent(unref(uiSwitchWt), {
             size: 13
@@ -58226,7 +58226,7 @@ var DRe = {
           _: 1
         }, 8, [`disabled`])])]), resolveComponent(unref(alertDialogC), {
           open: k.value,
-          "onUpdate:open": o[4] ||= e => k.value = e
+          "onUpdate:open": cache[4] ||= e => k.value = e
         }, {
           default: H(() => [resolveComponent(unref(alertDialogA), null, {
             default: H(() => [resolveComponent(unref(alertDialogN), null, {
@@ -58255,16 +58255,16 @@ var DRe = {
           _: 1
         }, 8, [`open`]), resolveComponent(DataExportDialog, {
           open: A.value,
-          "onUpdate:open": o[5] ||= e => A.value = e
+          "onUpdate:open": cache[5] ||= e => A.value = e
         }, null, 8, [`open`]), resolveComponent(DataImportDialog, {
           open: j.value,
-          "onUpdate:open": o[6] ||= e => j.value = e,
+          "onUpdate:open": cache[6] ||= e => j.value = e,
           preview: te.value,
-          onImported: o[7] ||= e => unref(c)()
+          onImported: cache[7] ||= e => unref(c)()
         }, null, 8, [`open`, `preview`]), resolveComponent(DataClearDialog, {
           open: ee.value,
-          "onUpdate:open": o[8] ||= e => ee.value = e,
-          onCleared: o[9] ||= e => unref(c)()
+          "onUpdate:open": cache[8] ||= e => ee.value = e,
+          onCleared: cache[9] ||= e => unref(c)()
         }, null, 8, [`open`]), resolveComponent(unref(dialogA), {
           open: v.value,
           "onUpdate:open": be
@@ -58283,15 +58283,15 @@ var DRe = {
               _: 1
             }), createElementVNode(`div`, Zze, [createElementVNode(`label`, Qze, [createElementVNode(`span`, $ze, [createElementVNode(`span`, eBe, toDisplayString(unref(i18nTranslate)(`settings.fullBackupIncludeAppContext`)), 1), createElementVNode(`span`, tBe, toDisplayString(unref(i18nTranslate)(`settings.fullBackupIncludeAppContextDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
               modelValue: y.includeAppContext,
-              "onUpdate:modelValue": o[10] ||= e => y.includeAppContext = e,
+              "onUpdate:modelValue": cache[10] ||= e => y.includeAppContext = e,
               disabled: x.value
             }, null, 8, [`modelValue`, `disabled`])]), createElementVNode(`label`, nBe, [createElementVNode(`span`, rBe, [createElementVNode(`span`, iBe, toDisplayString(unref(i18nTranslate)(`settings.fullBackupIncludeWorkspace`)), 1), createElementVNode(`span`, aBe, toDisplayString(unref(i18nTranslate)(`settings.fullBackupIncludeWorkspaceDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
               modelValue: y.includeWorkspaceFiles,
-              "onUpdate:modelValue": o[11] ||= e => y.includeWorkspaceFiles = e,
+              "onUpdate:modelValue": cache[11] ||= e => y.includeWorkspaceFiles = e,
               disabled: x.value
             }, null, 8, [`modelValue`, `disabled`])]), createElementVNode(`label`, oBe, [createElementVNode(`span`, sBe, [createElementVNode(`span`, cBe, toDisplayString(unref(i18nTranslate)(`settings.fullBackupIncludeScreenshots`)), 1), createElementVNode(`span`, lBe, toDisplayString(unref(i18nTranslate)(`settings.fullBackupIncludeScreenshotsDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
               modelValue: y.includeScreenshots,
-              "onUpdate:modelValue": o[12] ||= e => y.includeScreenshots = e,
+              "onUpdate:modelValue": cache[12] ||= e => y.includeScreenshots = e,
               disabled: x.value
             }, null, 8, [`modelValue`, `disabled`])]), x.value ? (openBlock(), createElementBlock(`div`, uBe, [resolveComponent(unref(Progress), {
               "model-value": se.value ?? 0
@@ -58300,7 +58300,7 @@ var DRe = {
                 variant: `outline`,
                 size: `sm`,
                 disabled: x.value,
-                onClick: o[13] ||= e => v.value = false
+                onClick: cache[13] ||= e => v.value = false
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.cancel`)), 1)]),
                 _: 1
@@ -58351,7 +58351,7 @@ var DRe = {
                 variant: `outline`,
                 size: `sm`,
                 disabled: T.value || E.value,
-                onClick: o[14] ||= e => C.value = false
+                onClick: cache[14] ||= e => C.value = false
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`common.cancel`)), 1)]),
                 _: 1
@@ -58359,7 +58359,7 @@ var DRe = {
                 size: `sm`,
                 class: `gap-1.5`,
                 disabled: T.value || E.value || unref(i),
-                onClick: o[15] ||= e => w.value = true
+                onClick: cache[15] ||= e => w.value = true
               }, {
                 default: H(() => [T.value || E.value ? (openBlock(), createBlock(unref(beautifier), {
                   key: 0,
@@ -58375,7 +58375,7 @@ var DRe = {
           _: 1
         }, 8, [`open`]), resolveComponent(unref(alertDialogC), {
           open: w.value,
-          "onUpdate:open": o[16] ||= e => w.value = e
+          "onUpdate:open": cache[16] ||= e => w.value = e
         }, {
           default: H(() => [resolveComponent(unref(alertDialogA), null, {
             default: H(() => [resolveComponent(unref(alertDialogN), null, {
@@ -58595,7 +58595,7 @@ var LBe = {
           restoreWoodenFish: s,
           changeWoodenFishMode: c
         } = _U();
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, LBe, [createElementVNode(`div`, RBe, [createElementVNode(`div`, null, [createElementVNode(`p`, zBe, toDisplayString(unref(t)(`settings.showWoodenFish`)), 1), createElementVNode(`p`, BBe, toDisplayString(unref(t)(`settings.showWoodenFishDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, LBe, [createElementVNode(`div`, RBe, [createElementVNode(`div`, null, [createElementVNode(`p`, zBe, toDisplayString(unref(t)(`settings.showWoodenFish`)), 1), createElementVNode(`p`, BBe, toDisplayString(unref(t)(`settings.showWoodenFishDesc`)), 1)]), resolveComponent(unref(uiSwitchT), {
         modelValue: unref(a),
         "onUpdate:modelValue": renderCache[0] ||= e => vueFn(a) ? a.value = e : null,
         disabled: unref(r)
@@ -58663,16 +58663,16 @@ var LBe = {
       deleteOpenModifiers: {}
     }),
     emits: vueTt([`confirmConsent`, `confirmDelete`], [`update:consentOpen`, `update:deleteOpen`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
-        r = vueLt(e, `consentOpen`),
-        i = vueLt(e, `deleteOpen`),
+      let n = emit,
+        r = vueLt(props, `consentOpen`),
+        i = vueLt(props, `deleteOpen`),
         {
           t: a
         } = vueN();
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [unref(toolSettingsC) ? (openBlock(), createBlock(unref(alertDialogC), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [unref(toolSettingsC) ? (openBlock(), createBlock(unref(alertDialogC), {
         key: 0,
         open: r.value,
         "onUpdate:open": renderCache[1] ||= e => r.value = e
@@ -58685,10 +58685,10 @@ var LBe = {
             }), resolveComponent(unref(alertDialogI), {
               class: `space-y-2`
             }, {
-              default: H(() => [createElementVNode(`span`, ZBe, toDisplayString(unref(a)(`settings.mechanicalKeyboardConsentDesc`)), 1), e.consentInfo ? (openBlock(), createElementBlock(`span`, QBe, toDisplayString(unref(a)(`settings.mechanicalKeyboardConsentMeta`, {
-                version: e.consentInfo.version,
-                size: unref(ea)(e.consentInfo.sizeBytes),
-                publisher: e.consentInfo.publisher
+              default: H(() => [createElementVNode(`span`, ZBe, toDisplayString(unref(a)(`settings.mechanicalKeyboardConsentDesc`)), 1), props.consentInfo ? (openBlock(), createElementBlock(`span`, QBe, toDisplayString(unref(a)(`settings.mechanicalKeyboardConsentMeta`, {
+                version: props.consentInfo.version,
+                size: unref(ea)(props.consentInfo.sizeBytes),
+                publisher: props.consentInfo.publisher
               })), 1)) : createCommentVNode(``, true), createElementVNode(`span`, $Be, toDisplayString(unref(a)(`settings.mechanicalKeyboardPrivacyNote`)), 1)]),
               _: 1
             })]),
@@ -59213,7 +59213,7 @@ var eVe = {
           previewMechanicalKeyboardVolume: x,
           saveMechanicalKeyboardVolume: S
         } = TU();
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, eVe, [createElementVNode(`div`, tVe, [createElementVNode(`div`, nVe, [createElementVNode(`div`, rVe, [createElementVNode(`p`, iVe, toDisplayString(unref(t)(`settings.mechanicalKeyboardSound`)), 1), resolveComponent(unref(toolIconS), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, eVe, [createElementVNode(`div`, tVe, [createElementVNode(`div`, nVe, [createElementVNode(`div`, rVe, [createElementVNode(`p`, iVe, toDisplayString(unref(t)(`settings.mechanicalKeyboardSound`)), 1), resolveComponent(unref(toolIconS), {
         size: 14,
         class: `text-[#999]`
       })]), createElementVNode(`p`, aVe, toDisplayString(unref(t)(`settings.mechanicalKeyboardSoundDesc`)), 1), unref(toolSettingsC) ? (openBlock(), createElementBlock(`p`, oVe, toDisplayString(unref(t)(`settings.mechanicalKeyboardWindowsNote`)), 1)) : createCommentVNode(``, true), unref(n).enableMechanicalKeyboardSound && unref(i)?.status === `error` ? (openBlock(), createElementBlock(`div`, sVe, [createElementVNode(`span`, cVe, toDisplayString(unref(i).errorMessage || unref(t)(`settings.mechanicalKeyboardSoundFailed`)), 1), resolveComponent(unref(uiSwitchR), {
@@ -59332,15 +59332,15 @@ var eVe = {
       openModifiers: {}
     }),
     emits: vueTt([`confirm`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
-        r = vueLt(e, `open`),
+      let n = emit,
+        r = vueLt(props, `open`),
         {
           t: i
         } = vueN();
-      return (t, renderCache) => (openBlock(), createBlock(unref(alertDialogC), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(alertDialogC), {
         open: r.value,
         "onUpdate:open": renderCache[1] ||= e => r.value = e
       }, {
@@ -59352,10 +59352,10 @@ var eVe = {
             }), resolveComponent(unref(alertDialogI), {
               class: `flex flex-col gap-2`
             }, {
-              default: H(() => [createElementVNode(`span`, null, toDisplayString(unref(i)(`settings.keyboardHeatmapConsentDesc`)), 1), e.consentInfo ? (openBlock(), createElementBlock(`span`, TVe, toDisplayString(unref(i)(`settings.keyboardHeatmapConsentMeta`, {
-                version: e.consentInfo.version,
-                size: unref(ea)(e.consentInfo.sizeBytes),
-                publisher: e.consentInfo.publisher
+              default: H(() => [createElementVNode(`span`, null, toDisplayString(unref(i)(`settings.keyboardHeatmapConsentDesc`)), 1), props.consentInfo ? (openBlock(), createElementBlock(`span`, TVe, toDisplayString(unref(i)(`settings.keyboardHeatmapConsentMeta`, {
+                version: props.consentInfo.version,
+                size: unref(ea)(props.consentInfo.sizeBytes),
+                publisher: props.consentInfo.publisher
               })), 1)) : createCommentVNode(``, true), createElementVNode(`span`, EVe, toDisplayString(unref(i)(`settings.keyboardHeatmapPrivacyNote`)), 1)]),
               _: 1
             })]),
@@ -59538,7 +59538,7 @@ var DVe = {
   },
   KeyboardHeatmapSettings = defineComponent({
     __name: `KeyboardHeatmapSettings`,
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -59561,7 +59561,7 @@ var DVe = {
           enableKeyboardHeatmap: p,
           retryKeyboardHeatmap: m
         } = kU();
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
         id: `settings-item-keyboard-heatmap`,
         class: normalizeClass([`flex items-center justify-between gap-4 rounded-md outline-2 outline-offset-[6px] transition-[outline-color] duration-500`, unref(a) === `keyboard-heatmap` ? `outline-primary/40` : `outline-transparent`])
       }, [createElementVNode(`div`, DVe, [createElementVNode(`div`, OVe, [createElementVNode(`p`, kVe, toDisplayString(unref(t)(`settings.keyboardHeatmap`)), 1), resolveComponent(unref(toolIconS), {
@@ -59616,15 +59616,15 @@ var DVe = {
       openModifiers: {}
     },
     emits: vueTt([`confirm`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
-        r = vueLt(e, `open`),
+      let n = emit,
+        r = vueLt(props, `open`),
         {
           t: i
         } = vueN();
-      return (e, renderCache) => (openBlock(), createBlock(unref(alertDialogC), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(alertDialogC), {
         open: r.value,
         "onUpdate:open": renderCache[1] ||= e => r.value = e
       }, {
@@ -59744,7 +59744,7 @@ var RVe = {
   },
   MouseHeatmapSettings = defineComponent({
     __name: `MouseHeatmapSettings`,
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -59761,7 +59761,7 @@ var RVe = {
           handleMouseHeatmapToggle: l,
           enableMouseHeatmap: u
         } = MU(`settings`);
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
         id: `settings-item-mouse-heatmap`,
         class: normalizeClass([`flex items-center justify-between gap-4 rounded-md outline-2 outline-offset-[6px] transition-[outline-color] duration-500`, unref(r) === `mouse-heatmap` ? `outline-primary/40` : `outline-transparent`])
       }, [createElementVNode(`div`, RVe, [createElementVNode(`div`, zVe, [createElementVNode(`p`, BVe, toDisplayString(unref(t)(`settings.mouseHeatmap`)), 1), resolveComponent(unref(toolIconX), {
@@ -59806,19 +59806,19 @@ var RVe = {
   },
   ToolsSettingsSection = defineComponent({
     __name: `ToolsSettingsSection`,
-    setup(e) {
-      return (e, t) => (openBlock(), createBlock(SettingsSection, {
+    setup(props) {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `tools`
       }, {
         default: H(() => [createElementVNode(`div`, GVe, [resolveComponent(WoodenFishSettings), unref(toolSettingsA) ? (openBlock(), createElementBlock(Fragment, {
           key: 0
-        }, [t[0] ||= createElementVNode(`div`, {
+        }, [cache[0] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
-        }, null, -1), resolveComponent(KeyboardSoundSettings), t[1] ||= createElementVNode(`div`, {
+        }, null, -1), resolveComponent(KeyboardSoundSettings), cache[1] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(KeyboardHeatmapSettings)], 64)) : createCommentVNode(``, true), unref(toolSettingsS) ? (openBlock(), createElementBlock(Fragment, {
           key: 1
-        }, [t[2] ||= createElementVNode(`div`, {
+        }, [cache[2] ||= createElementVNode(`div`, {
           class: `h-px bg-black/5`
         }, null, -1), resolveComponent(MouseHeatmapSettings)], 64)) : createCommentVNode(``, true)])]),
         _: 1
@@ -59965,8 +59965,8 @@ var PU = {
         type: Boolean
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: i18nTranslate,
           locale: r
@@ -60267,11 +60267,11 @@ var PU = {
   },
   ExperimentSettingsSection = defineComponent({
     __name: `ExperimentSettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
         controlsDisabled: t
       } = toolSettingsI();
-      return (e, n) => (openBlock(), createBlock(SettingsSection, {
+      return (ctx, cache) => (openBlock(), createBlock(SettingsSection, {
         id: `experiment`
       }, {
         default: H(() => [createElementVNode(`div`, kHe, [resolveComponent(AgentSessionImportSettings, {
@@ -60521,7 +60521,7 @@ var RU = {
   HUe = 5,
   DiagnosticLogSettings = defineComponent({
     __name: `DiagnosticLogSettings`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate
         } = vueN(),
@@ -60677,7 +60677,7 @@ var RU = {
           k.value = e instanceof Error ? e.message : i18nTranslate(`settings.frameDedupLogLoadFailed`);
         }
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, NHe, [createElementVNode(`div`, PHe, [createElementVNode(`div`, FHe, [createElementVNode(`p`, IHe, toDisplayString(unref(i18nTranslate)(`settings.frameDedupLog`)), 1), createElementVNode(`p`, LHe, toDisplayString(unref(i18nTranslate)(`settings.frameDedupLogDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, NHe, [createElementVNode(`div`, PHe, [createElementVNode(`div`, FHe, [createElementVNode(`p`, IHe, toDisplayString(unref(i18nTranslate)(`settings.frameDedupLog`)), 1), createElementVNode(`p`, LHe, toDisplayString(unref(i18nTranslate)(`settings.frameDedupLogDesc`)), 1)]), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         variant: `outline`,
         class: `h-7 gap-1.5 text-xs shrink-0`,
@@ -60956,7 +60956,7 @@ var RU = {
   },
   AboutSettingsSection = defineComponent({
     __name: `AboutSettingsSection`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate,
           locale: n
@@ -61209,7 +61209,7 @@ var RU = {
           i.value = e instanceof Error ? e.message : i18nTranslate(`settings.permissionCheck.loadFailed`);
         }
       }
-      return (e, renderCache) => unref(toolSettingsO) ? (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => unref(toolSettingsO) ? (openBlock(), createBlock(unref(dialogA), {
         key: 0,
         open: unref(a),
         "onUpdate:open": renderCache[1] ||= e => vueFn(a) ? a.value = e : null
@@ -61305,11 +61305,11 @@ var RU = {
       focusTarget: {}
     },
     emits: [`navigate`, `open-update`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -61512,10 +61512,10 @@ var RU = {
     },
     emits: [`update:modelValue`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -61540,7 +61540,7 @@ var RU = {
       function u(e) {
         r(`update:modelValue`, eventAlias.modelValue.includes(e) ? eventAlias.modelValue.filter(item => item !== e) : [...eventAlias.modelValue, e]);
       }
-      return (t, n) => (openBlock(), createBlock(unref(popoverR), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(popoverR), {
         modal: ``
       }, {
         default: H(() => [resolveComponent(unref(popoverT), {
@@ -61570,12 +61570,12 @@ var RU = {
             key: 0,
             type: `button`,
             class: `text-xs text-primary hover:underline`,
-            onClick: n[0] ||= e => r(`update:modelValue`, [])
+            onClick: cache[0] ||= e => r(`update:modelValue`, [])
           }, toDisplayString(unref(i18nTranslate)(`profile.ledgerMethodClear`)), 1)) : createCommentVNode(``, true)]), event.items.length > VWe ? (openBlock(), createElementBlock(`div`, FWe, [resolveComponent(unref(Cs), {
             size: 13,
             class: `pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-muted-foreground`
           }), vueZt(createElementVNode(`input`, {
-            "onUpdate:modelValue": n[1] ||= e => a.value = e,
+            "onUpdate:modelValue": cache[1] ||= e => a.value = e,
             type: `text`,
             placeholder: unref(i18nTranslate)(`profile.ledgerMethodSearch`),
             class: `h-7 w-full rounded-md border border-input bg-background pl-7 pr-2 text-xs outline-none focus-visible:border-primary`
@@ -61588,7 +61588,7 @@ var RU = {
           }, [resolveComponent(unref(Checkbox), {
             "model-value": event.modelValue.includes(t.key),
             tabindex: `-1`,
-            onClick: n[2] ||= withDirectives(() => {}, [`stop`]),
+            onClick: cache[2] ||= withDirectives(() => {}, [`stop`]),
             "onUpdate:modelValue": e => u(t.key)
           }, null, 8, [`model-value`, `onUpdate:modelValue`]), createElementVNode(`span`, BWe, toDisplayString(event.methodLabel(t.key)), 1)], 8, zWe))), 128))])]),
           _: 1
@@ -62658,7 +62658,7 @@ var KGe = {
     },
     emits: [`navigate`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
@@ -62667,7 +62667,7 @@ var KGe = {
           t: i18nTranslate,
           locale: i
         } = vueN(),
-        a = t,
+        a = emit,
         eventAlias = event,
         {
           user: s,
@@ -63011,7 +63011,7 @@ var KGe = {
           }
         }
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, KGe, [createElementVNode(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, KGe, [createElementVNode(`div`, {
         class: `mt-6 mb-4 relative cursor-pointer group`,
         title: unref(i18nTranslate)(`profile.changeAvatar`),
         onClick: Le
@@ -63399,8 +63399,8 @@ var KGe = {
         type: Boolean
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: n
         } = vueN(),
@@ -63464,18 +63464,18 @@ var KGe = {
         s = false, ++c, window.removeEventListener(`focus`, u), document.removeEventListener(`visibilitychange`, u);
       }), (t, r) => (openBlock(), createElementBlock(`div`, {
         class: normalizeClass([`report-companion`, {
-          "report-companion--compact": e.compact
+          "report-companion--compact": props.compact
         }])
       }, [createElementVNode(`img`, {
         src: computedResult.value,
-        alt: unref(n)(`generateReport.companion.${e.state}Title`),
+        alt: unref(n)(`generateReport.companion.${props.state}Title`),
         draggable: `false`,
         onError: d
-      }, null, 40, Nqe), e.compact ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`div`, Pqe, [createElementVNode(`strong`, null, toDisplayString(unref(n)(`generateReport.companion.${e.state}Title`)), 1), createElementVNode(`p`, null, toDisplayString(unref(n)(`generateReport.companion.${e.state}Description`)), 1), e.state === `completed` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`span`, Fqe, [resolveComponent(unref(beautifier), {
+      }, null, 40, Nqe), props.compact ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`div`, Pqe, [createElementVNode(`strong`, null, toDisplayString(unref(n)(`generateReport.companion.${props.state}Title`)), 1), createElementVNode(`p`, null, toDisplayString(unref(n)(`generateReport.companion.${props.state}Description`)), 1), props.state === `completed` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`span`, Fqe, [resolveComponent(unref(beautifier), {
         size: 13,
         class: `animate-spin motion-reduce:animate-none`,
         "aria-hidden": `true`
-      }), createTextVNode(` ` + toDisplayString(unref(n)(e.state === `waiting` ? `generateReport.queuing` : `generateReport.generating`)), 1)]))]))], 2));
+      }), createTextVNode(` ` + toDisplayString(unref(n)(props.state === `waiting` ? `generateReport.queuing` : `generateReport.generating`)), 1)]))]))], 2));
     }
   }), [[`__scopeId`, `data-v-8108dfc8`]]),
   Iqe = {
@@ -63501,7 +63501,7 @@ var KGe = {
         type: Boolean
       }
     },
-    setup(e) {
+    setup(props) {
       let {
           t,
           locale: n
@@ -63509,10 +63509,10 @@ var KGe = {
         r = e => new Intl.NumberFormat(n.value, {
           maximumFractionDigits: 0
         }).format(e);
-      return (n, i) => (openBlock(), createElementBlock(`div`, Iqe, [createElementVNode(`div`, Lqe, [createElementVNode(`span`, {
-        class: normalizeClass([e.insufficient ? `text-destructive` : `text-primary`, `font-medium`])
-      }, toDisplayString(e.loading ? unref(t)(`generateReport.reportEstimating`) : e.credits === null ? `—` : unref(t)(`generateReport.reportEstimateCredits`, {
-        credits: r(e.credits)
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, Iqe, [createElementVNode(`div`, Lqe, [createElementVNode(`span`, {
+        class: normalizeClass([props.insufficient ? `text-destructive` : `text-primary`, `font-medium`])
+      }, toDisplayString(props.loading ? unref(t)(`generateReport.reportEstimating`) : props.credits === null ? `—` : unref(t)(`generateReport.reportEstimateCredits`, {
+        credits: r(props.credits)
       })), 3), resolveComponent(unref(TooltipTriggerN), {
         "delay-duration": 150
       }, {
@@ -63525,8 +63525,8 @@ var KGe = {
               role: `img`,
               "aria-label": unref(t)(`generateReport.reportPricingDetails`),
               class: `inline-flex shrink-0 text-[#999] bg-transparent hover:bg-transparent hover:text-[#999] cursor-default p-1`,
-              onClick: i[0] ||= withDirectives(() => {}, [`stop`]),
-              onKeydown: [i[1] ||= playerT(withDirectives(() => {}, [`stop`, `prevent`]), [`enter`]), i[2] ||= playerT(withDirectives(() => {}, [`stop`, `prevent`]), [`space`])]
+              onClick: cache[0] ||= withDirectives(() => {}, [`stop`]),
+              onKeydown: [cache[1] ||= playerT(withDirectives(() => {}, [`stop`, `prevent`]), [`enter`]), cache[2] ||= playerT(withDirectives(() => {}, [`stop`, `prevent`]), [`space`])]
             }, [resolveComponent(unref(toolIconC), {
               size: 13
             })], 40, Rqe)]),
@@ -63537,7 +63537,7 @@ var KGe = {
             "side-offset": 6,
             class: `max-w-[320px] rounded-[14px] border border-border bg-popover text-popover-foreground px-2.5 py-2 shadow-sm`
           }, {
-            default: H(() => [createElementVNode(`div`, zqe, [createElementVNode(`p`, null, toDisplayString(unref(t)(`generateReport.inputLabel`)) + `：` + toDisplayString(r(e.inputRate)) + ` ` + toDisplayString(unref(t)(`generateReport.creditsUnit`)) + toDisplayString(unref(t)(`generateReport.perMillionTokens`)), 1), createElementVNode(`p`, null, toDisplayString(unref(t)(`generateReport.outputLabel`)) + `：` + toDisplayString(r(e.outputRate)) + ` ` + toDisplayString(unref(t)(`generateReport.creditsUnit`)) + toDisplayString(unref(t)(`generateReport.perMillionTokens`)), 1)])]),
+            default: H(() => [createElementVNode(`div`, zqe, [createElementVNode(`p`, null, toDisplayString(unref(t)(`generateReport.inputLabel`)) + `：` + toDisplayString(r(props.inputRate)) + ` ` + toDisplayString(unref(t)(`generateReport.creditsUnit`)) + toDisplayString(unref(t)(`generateReport.perMillionTokens`)), 1), createElementVNode(`p`, null, toDisplayString(unref(t)(`generateReport.outputLabel`)) + `：` + toDisplayString(r(props.outputRate)) + ` ` + toDisplayString(unref(t)(`generateReport.creditsUnit`)) + toDisplayString(unref(t)(`generateReport.perMillionTokens`)), 1)])]),
             _: 1
           })]),
           _: 1
@@ -63563,14 +63563,14 @@ var KGe = {
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = uiSwitchZ(e, t);
-      return (e, t) => (openBlock(), createBlock(unref(oi), vueNt({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, cache) => (openBlock(), createBlock(unref(oi), vueNt({
         "data-slot": `sheet`
       }, unref(n)), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16));
     }
@@ -63583,12 +63583,12 @@ var KGe = {
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(ri), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(ri), vueNt({
         "data-slot": `sheet-close`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -63607,10 +63607,10 @@ var KGe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(ai), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ai), vueNt({
         "data-slot": `sheet-overlay`,
         class: unref(uiSwitchXt)(`bg-black/10 dark:bg-black/60 supports-backdrop-filter:backdrop-blur-xs pointer-events-auto absolute inset-0 z-50 duration-100 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0`, t.class)
       }, unref(n), {
@@ -63618,7 +63618,7 @@ var KGe = {
           "-webkit-app-region": `no-drag`
         }
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -63649,29 +63649,29 @@ var KGe = {
       as: {}
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`, `side`, `showCloseButton`),
         a = uiSwitchZ(i, r);
-      return (t, r) => (openBlock(), createBlock(unref(pi), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(pi), {
         to: `#app-window-portal`
       }, {
         default: H(() => [resolveComponent(SheetOverlay), resolveComponent(unref(ii), vueNt({
           "data-slot": `sheet-content`,
-          "data-side": e.side,
+          "data-side": props.side,
           class: unref(uiSwitchXt)(`bg-popover text-popover-foreground pointer-events-auto absolute z-50 flex flex-col gap-4 bg-clip-padding text-sm shadow-lg transition duration-200 ease-in-out data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-[side=bottom]:data-open:slide-in-from-bottom-10 data-[side=left]:data-open:slide-in-from-left-10 data-[side=right]:data-open:slide-in-from-right-10 data-[side=top]:data-open:slide-in-from-top-10 data-closed:animate-out data-closed:fade-out-0 data-[side=bottom]:data-closed:slide-out-to-bottom-10 data-[side=left]:data-closed:slide-out-to-left-10 data-[side=right]:data-closed:slide-out-to-right-10 data-[side=top]:data-closed:slide-out-to-top-10`, n.class)
         }, {
-          ...t.$attrs,
+          ...ctx.$attrs,
           ...unref(a)
         }, {
           style: {
             "-webkit-app-region": `no-drag`
           }
         }), {
-          default: H(() => [withCtx(t.$slots, `default`), e.showCloseButton ? (openBlock(), createBlock(unref(ri), {
+          default: H(() => [withCtx(ctx.$slots, `default`), props.showCloseButton ? (openBlock(), createBlock(unref(ri), {
             key: 0,
             "data-slot": `sheet-close`,
             "as-child": ``
@@ -63681,7 +63681,7 @@ var KGe = {
               class: `absolute top-3 right-3`,
               size: `icon-sm`
             }, {
-              default: H(() => [resolveComponent(unref(lucideT)), r[0] ||= createElementVNode(`span`, {
+              default: H(() => [resolveComponent(unref(lucideT)), cache[0] ||= createElementVNode(`span`, {
                 class: `sr-only`
               }, `Close`, -1)]),
               _: 1
@@ -63705,14 +63705,14 @@ var KGe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(si), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(si), vueNt({
         "data-slot": `sheet-description`,
         class: unref(uiSwitchXt)(`text-muted-foreground text-sm`, t.class)
       }, unref(n)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -63724,12 +63724,12 @@ var KGe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `sheet-footer`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-2 p-4 mt-auto flex flex-col`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   SheetHeader = defineComponent({
@@ -63739,12 +63739,12 @@ var KGe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `sheet-header`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-0.5 p-4 flex flex-col`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   SheetTitle = defineComponent({
@@ -63758,14 +63758,14 @@ var KGe = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(li), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(li), vueNt({
         "data-slot": `sheet-title`,
         class: unref(uiSwitchXt)(`text-foreground text-base font-medium cn-font-heading`, t.class)
       }, unref(n)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -76919,18 +76919,18 @@ var M0e = Object.defineProperty,
       customId: {}
     },
     emits: [`copy`],
-    setup(e) {
-      let t = e;
-      return (n, renderCache) => (openBlock(), createElementBlock(`blockquote`, {
+    setup(props) {
+      let t = props;
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`blockquote`, {
         class: `blockquote`,
         dir: `auto`,
-        cite: e.node.cite
+        cite: props.node.cite
       }, [resolveComponent(unref(s$), {
         "index-key": `blockquote-${t.indexKey}`,
         nodes: t.node.children || [],
         "custom-id": t.customId,
         typewriter: t.typewriter,
-        onCopy: renderCache[0] ||= e => n.$emit(`copy`, e)
+        onCopy: renderCache[0] ||= e => ctx.$emit(`copy`, e)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])], 8, L0e));
     }
   }), [[`__scopeId`, `data-v-07e0310e`]]);
@@ -76961,11 +76961,11 @@ var R0e = [`aria-label`],
     props: {
       node: {}
     },
-    setup: e => (t, renderCache) => (openBlock(), createElementBlock(`span`, {
+    setup: props => (t, renderCache) => (openBlock(), createElementBlock(`span`, {
       class: `checkbox-node`,
       role: `img`,
-      "aria-label": e.node.checked ? `checked` : `unchecked`
-    }, [e.node.checked ? (openBlock(), createElementBlock(`svg`, B0e, [...(renderCache[1] ||= [createElementVNode(`rect`, {
+      "aria-label": props.node.checked ? `checked` : `unchecked`
+    }, [props.node.checked ? (openBlock(), createElementBlock(`svg`, B0e, [...(renderCache[1] ||= [createElementVNode(`rect`, {
       x: `3`,
       y: `3`,
       width: `18`,
@@ -77011,22 +77011,22 @@ var V0e = {
       customId: {}
     },
     emits: [`copy`],
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`dl`, V0e, [(openBlock(true), createElementBlock(Fragment, null, renderList(t.node.items, (r, i) => (openBlock(), createElementBlock(Fragment, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`dl`, V0e, [(openBlock(true), createElementBlock(Fragment, null, renderList(t.node.items, (r, i) => (openBlock(), createElementBlock(Fragment, {
         key: i
       }, [createElementVNode(`dt`, H0e, [resolveComponent(unref(s$), {
         "index-key": `definition-term-${t.indexKey}-${i}`,
         nodes: r.term,
         "custom-id": t.customId,
         typewriter: t.typewriter,
-        onCopy: n[0] ||= t => e.$emit(`copy`, t)
+        onCopy: cache[0] ||= t => ctx.$emit(`copy`, t)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])]), createElementVNode(`dd`, U0e, [resolveComponent(unref(s$), {
         "index-key": `definition-desc-${t.indexKey}-${i}`,
         nodes: r.definition,
         "custom-id": t.customId,
         typewriter: t.typewriter,
-        onCopy: n[1] ||= t => e.$emit(`copy`, t)
+        onCopy: cache[1] ||= t => ctx.$emit(`copy`, t)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])])], 64))), 128))]));
     }
   }), [[`__scopeId`, `data-v-c1b2a2e8`]]);
@@ -77041,7 +77041,7 @@ var W0e = {
     props: {
       node: {}
     },
-    setup: e => (t, n) => (openBlock(), createElementBlock(`span`, W0e, toDisplayString(e.node.name), 1))
+    setup: props => (t, n) => (openBlock(), createElementBlock(`span`, W0e, toDisplayString(props.node.name), 1))
   }), [[`__scopeId`, `data-v-de55dc97`]]);
 xX.install = e => {
   e.component(xX.__name, xX);
@@ -77071,8 +77071,8 @@ var K0e = [`id`],
     props: {
       node: {}
     },
-    setup(e) {
-      let t = `#fnref--${e.node.id}`;
+    setup(props) {
+      let t = `#fnref--${props.node.id}`;
       function n() {
         if (typeof document > `u`) return;
         let selector = document.querySelector(t);
@@ -77080,15 +77080,15 @@ var K0e = [`id`],
           behavior: `smooth`
         }) : console.warn(`Element with href: ${t} not found`);
       }
-      return (r, i) => (openBlock(), createElementBlock(`sup`, {
-        id: `fnref-${e.node.id}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`sup`, {
+        id: `fnref-${props.node.id}`,
         class: `footnote-reference`,
         onClick: n
       }, [createElementVNode(`span`, {
         href: t,
-        title: `查看脚注 ${e.node.id}`,
+        title: `查看脚注 ${props.node.id}`,
         class: `footnote-link cursor-pointer`
-      }, `[` + toDisplayString(e.node.id) + `]`, 9, q0e)], 8, K0e));
+      }, `[` + toDisplayString(props.node.id) + `]`, 9, q0e)], 8, K0e));
     }
   }), [[`__scopeId`, `data-v-c1463a29`]]);
 EX.install = e => {
@@ -77188,8 +77188,8 @@ var J0e = [`innerHTML`],
       customId: {},
       htmlPolicy: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = vueX(`markstreamHtmlPolicy`, undefined),
         computedResult = computed(() => t.htmlPolicy ?? n?.value ?? `safe`),
         computedData = computed(() => (revision.value, TX(t.customId))),
@@ -77239,7 +77239,7 @@ var J0e = [`innerHTML`],
             nodes: n
           };
         });
-      return (e, n) => o.value.mode === `dynamic` ? (openBlock(), createElementBlock(`span`, {
+      return (ctx, cache) => o.value.mode === `dynamic` ? (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: normalizeClass([`html-inline-node`, {
           "html-inline-node--loading": t.node.loading
@@ -77274,8 +77274,8 @@ var Y0e = {
     props: {
       node: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = vueFt(),
         r = vueX(`markstreamTypewriter`, undefined),
         i = vueX(`markstreamTextStreamState`, undefined),
@@ -77312,7 +77312,7 @@ var Y0e = {
         value || f(d());
       });
       let m = computed(() => counter.value % 2 == 0 ? `inline-code-stream-delta--a` : `inline-code-stream-delta--b`);
-      return (e, t) => (openBlock(), createElementBlock(`code`, Y0e, [c.value ? (openBlock(), createElementBlock(`span`, X0e, toDisplayString(c.value), 1)) : createCommentVNode(``, true), l.value ? (openBlock(), createElementBlock(`span`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`code`, Y0e, [c.value ? (openBlock(), createElementBlock(`span`, X0e, toDisplayString(c.value), 1)) : createCommentVNode(``, true), l.value ? (openBlock(), createElementBlock(`span`, {
         key: 1,
         class: normalizeClass([`inline-code-stream-delta`, [m.value]]),
         onAnimationend: p
@@ -77341,8 +77341,8 @@ var Z0e = [`id`],
         type: [Boolean, null]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = ref(null),
         r = ref(null),
         i = ref({
@@ -77416,7 +77416,7 @@ var Z0e = [`id`],
         to: `body`
       }, [createElementVNode(`div`, {
         class: normalizeClass([`markstream-vue`, {
-          dark: e.isDark
+          dark: props.isDark
         }])
       }, [resolveComponent(playerR, {
         name: `tooltip`,
@@ -77434,13 +77434,13 @@ var Z0e = [`id`],
           }),
           class: `tooltip-element`,
           role: `tooltip`
-        }, [createTextVNode(toDisplayString(e.content) + ` `, 1), createElementVNode(`div`, {
+        }, [createTextVNode(toDisplayString(props.content) + ` `, 1), createElementVNode(`div`, {
           ref_key: `arrowEl`,
           ref: r,
           class: `tooltip-arrow`,
           "data-placement": o.value,
           style: vueNr(a.value)
-        }, null, 12, Q0e)], 12, Z0e), [[playerW, e.visible && s.value]])]),
+        }, null, 12, Q0e)], 12, Z0e), [[playerW, props.visible && s.value]])]),
         _: 1
       })], 2)]));
     }
@@ -77604,10 +77604,10 @@ var $0e = {
     },
     emits: [`load`, `error`, `click`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         i = ref(false),
         a = ref(false),
         o = ref(false),
@@ -77749,8 +77749,8 @@ var dZ = vueCn(false),
       node: {}
     },
     emits: [`copy`],
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = (a2e ||= uZ().then(result => {
           dZ.value = !!result;
         }).catch(() => {
@@ -77793,8 +77793,8 @@ var dZ = vueCn(false),
         value || m(p());
       });
       let g = computed(() => counter.value % 2 == 0 ? `text-node-stream-delta--a` : `text-node-stream-delta--b`);
-      return (t, r) => (openBlock(), createElementBlock(`span`, {
-        class: normalizeClass([[unref(n) && e.node.center ? `text-node-center` : ``], `whitespace-pre-wrap break-words text-node`])
+      return (ctx, cache) => (openBlock(), createElementBlock(`span`, {
+        class: normalizeClass([[unref(n) && props.node.center ? `text-node-center` : ``], `whitespace-pre-wrap break-words text-node`])
       }, [u.value ? (openBlock(), createElementBlock(`span`, o2e, toDisplayString(u.value), 1)) : createCommentVNode(``, true), d.value ? (openBlock(), createElementBlock(`span`, {
         key: 1,
         class: normalizeClass([`text-node-stream-delta`, [g.value]]),
@@ -77850,14 +77850,14 @@ var pZ = vueA(() => gX(null, null, function* () {
       threadId: {}
     },
     emits: [`click`, `mouseEnter`, `mouseLeave`],
-    setup: e => (t, renderCache) => (openBlock(), createElementBlock(`span`, {
+    setup: props => (t, renderCache) => (openBlock(), createElementBlock(`span`, {
       class: `reference-node cursor-pointer text-xs rounded-md px-1.5 mx-0.5`,
       role: `button`,
       tabindex: `0`,
-      onClick: renderCache[0] ||= n => t.$emit(`click`, n, e.node.id, e.messageId, e.threadId),
-      onMouseenter: renderCache[1] ||= n => t.$emit(`mouseEnter`, n, e.node.id, e.messageId, e.threadId),
-      onMouseleave: renderCache[2] ||= n => t.$emit(`mouseLeave`, n, e.node.id, e.messageId, e.threadId)
-    }, toDisplayString(e.node.id), 33))
+      onClick: renderCache[0] ||= n => t.$emit(`click`, n, props.node.id, props.messageId, props.threadId),
+      onMouseenter: renderCache[1] ||= n => t.$emit(`mouseEnter`, n, props.node.id, props.messageId, props.threadId),
+      onMouseleave: renderCache[2] ||= n => t.$emit(`mouseLeave`, n, props.node.id, props.messageId, props.threadId)
+    }, toDisplayString(props.node.id), 33))
   }), [[`__scopeId`, `data-v-775c65e4`]]);
 hZ.install = e => {
   e.component(hZ.__name, hZ);
@@ -77875,8 +77875,8 @@ var s2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -77894,13 +77894,13 @@ var s2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`sup`, s2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createElementBlock(Fragment, {
-        key: `${e.indexKey || `superscript`}-${i}`
+      return (ctx, cache) => (openBlock(), createElementBlock(`sup`, s2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createElementBlock(Fragment, {
+        key: `${props.indexKey || `superscript`}-${i}`
       }, [r[n.type] ? (openBlock(), createBlock(vueEt(r[n.type]), {
         key: 0,
         node: n,
         "custom-id": t.customId,
-        "index-key": `${e.indexKey || `superscript`}-${i}`
+        "index-key": `${props.indexKey || `superscript`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`])) : (openBlock(), createElementBlock(`span`, c2e, toDisplayString(n.content || n.raw), 1))], 64))), 128))]));
     }
   }), [[`__scopeId`, `data-v-6dc1e3ba`]]);
@@ -77920,8 +77920,8 @@ var l2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -77939,13 +77939,13 @@ var l2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`sub`, l2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createElementBlock(Fragment, {
-        key: `${e.indexKey || `subscript`}-${i}`
+      return (ctx, cache) => (openBlock(), createElementBlock(`sub`, l2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createElementBlock(Fragment, {
+        key: `${props.indexKey || `subscript`}-${i}`
       }, [r[n.type] ? (openBlock(), createBlock(vueEt(r[n.type]), {
         key: 0,
         node: n,
         "custom-id": t.customId,
-        "index-key": `${e.indexKey || `subscript`}-${i}`
+        "index-key": `${props.indexKey || `subscript`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`])) : (openBlock(), createElementBlock(`span`, u2e, toDisplayString(n.content || n.raw), 1))], 64))), 128))]));
     }
   }), [[`__scopeId`, `data-v-69de9b81`]]);
@@ -77962,8 +77962,8 @@ var d2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -77981,9 +77981,9 @@ var d2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`strong`, d2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
-        key: `${e.indexKey || `strong`}-${i}`,
-        "index-key": `${e.indexKey || `strong`}-${i}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`strong`, d2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
+        key: `${props.indexKey || `strong`}-${i}`,
+        "index-key": `${props.indexKey || `strong`}-${i}`,
         node: n,
         "custom-id": t.customId
       }, null, 8, [`index-key`, `node`, `custom-id`]))), 128))]));
@@ -78002,8 +78002,8 @@ var f2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -78021,11 +78021,11 @@ var f2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`del`, f2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
-        key: `${e.indexKey || `strikethrough`}-${i}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`del`, f2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
+        key: `${props.indexKey || `strikethrough`}-${i}`,
         node: n,
         "custom-id": t.customId,
-        "index-key": `${e.indexKey || `strikethrough`}-${i}`
+        "index-key": `${props.indexKey || `strikethrough`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
   }), [[`__scopeId`, `data-v-904d5bd1`]]);
@@ -78124,7 +78124,7 @@ var p2e = [`href`, `title`, `aria-label`, `aria-hidden`, `target`, `rel`],
         let e = eventAlias.node?.title;
         return typeof e == `string` && e.trim().length > 0 ? e : String(m.value ?? ``);
       });
-      return (n, renderCache) => event.node.loading ? (openBlock(), createElementBlock(`span`, vueNt({
+      return (ctx, renderCache) => event.node.loading ? (openBlock(), createElementBlock(`span`, vueNt({
         key: 1,
         class: `link-loading inline-flex items-baseline gap-1.5`,
         "aria-hidden": event.node.loading ? `false` : `true`
@@ -78186,8 +78186,8 @@ var _2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -78205,11 +78205,11 @@ var _2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`ins`, _2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
-        key: `${e.indexKey || `insert`}-${i}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`ins`, _2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
+        key: `${props.indexKey || `insert`}-${i}`,
         node: n,
         "custom-id": t.customId,
-        "index-key": `${e.indexKey || `insert`}-${i}`
+        "index-key": `${props.indexKey || `insert`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
   }), [[`__scopeId`, `data-v-ab1ec9bc`]]);
@@ -78226,8 +78226,8 @@ var v2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -78245,11 +78245,11 @@ var v2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`mark`, v2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
-        key: `${e.indexKey || `highlight`}-${i}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`mark`, v2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
+        key: `${props.indexKey || `highlight`}-${i}`,
         node: n,
         "custom-id": t.customId,
-        "index-key": `${e.indexKey || `highlight`}-${i}`
+        "index-key": `${props.indexKey || `highlight`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
   }), [[`__scopeId`, `data-v-36e74e6b`]]);
@@ -78266,8 +78266,8 @@ var y2e = {
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -78285,11 +78285,11 @@ var y2e = {
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createElementBlock(`em`, y2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
-        key: `${e.indexKey || `emphasis`}-${i}`,
+      return (ctx, cache) => (openBlock(), createElementBlock(`em`, y2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
+        key: `${props.indexKey || `emphasis`}-${i}`,
         node: n,
         "custom-id": t.customId,
-        "index-key": `${e.indexKey || `emphasis`}-${i}`
+        "index-key": `${props.indexKey || `emphasis`}-${i}`
       }, null, 8, [`node`, `custom-id`, `index-key`]))), 128))]));
     }
   }), [[`__scopeId`, `data-v-8264674d`]]);
@@ -78312,7 +78312,7 @@ var b2e = [`href`, `title`],
           behavior: `smooth`
         });
       }
-      return (t, r) => (openBlock(), createElementBlock(`a`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`a`, {
         class: `footnote-anchor text-sm hover:underline cursor-pointer`,
         href: `#fnref-${event.node.id}`,
         title: `返回引用 ${event.node.id}`,
@@ -78338,17 +78338,17 @@ var x2e = [`id`],
       customId: {}
     },
     emits: [`copy`],
-    setup(e) {
-      let t = e;
-      return (n, renderCache) => (openBlock(), createElementBlock(`div`, {
-        id: `fnref--${e.node.id}`,
+    setup(props) {
+      let t = props;
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
+        id: `fnref--${props.node.id}`,
         class: `footnote-node flex text-sm leading-relaxed border-t border-[var(--footnote-border)] pt-2`
       }, [createElementVNode(`div`, S2e, [resolveComponent(unref(s$), {
         "index-key": `footnote-${t.indexKey}`,
         nodes: t.node.children,
         "custom-id": t.customId,
         typewriter: t.typewriter,
-        onCopy: renderCache[0] ||= e => n.$emit(`copy`, e)
+        onCopy: renderCache[0] ||= e => ctx.$emit(`copy`, e)
       }, null, 8, [`index-key`, `nodes`, `custom-id`, `typewriter`])])], 8, x2e));
     }
   });
@@ -78363,7 +78363,7 @@ var C2e = {
     props: {
       node: {}
     },
-    setup: e => (e, t) => (openBlock(), createElementBlock(`br`, C2e))
+    setup: props => (e, t) => (openBlock(), createElementBlock(`br`, C2e))
   }), [[`__scopeId`, `data-v-50c58f70`]]);
 EZ.install = e => {
   e.component(EZ.__name, EZ);
@@ -78375,8 +78375,8 @@ var DZ = _X(defineComponent({
       customId: {},
       indexKey: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId),
         r = pX({
           text: fZ,
@@ -78398,15 +78398,15 @@ var DZ = _X(defineComponent({
           math_inline: pZ,
           reference: hZ
         }, n);
-      return (n, i) => (openBlock(), createBlock(vueEt(`h${e.node.level}`), vueNt({
-        class: [`heading-node`, [`heading-${e.node.level}`]],
+      return (ctx, cache) => (openBlock(), createBlock(vueEt(`h${props.node.level}`), vueNt({
+        class: [`heading-node`, [`heading-${props.node.level}`]],
         dir: `auto`
-      }, e.node.attrs), {
-        default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
-          key: `${e.indexKey || `heading`}-${i}`,
+      }, props.node.attrs), {
+        default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, i) => (openBlock(), createBlock(vueEt(r[n.type]), {
+          key: `${props.indexKey || `heading`}-${i}`,
           "custom-id": t.customId,
           node: n,
-          "index-key": `${e.indexKey || `heading`}-${i}`
+          "index-key": `${props.indexKey || `heading`}-${i}`
         }, null, 8, [`custom-id`, `node`, `index-key`]))), 128))]),
         _: 1
       }, 16, [`class`]));
@@ -78432,13 +78432,13 @@ var kZ = _X(defineComponent({
     }
   },
   emits: [`copy`],
-  setup(e) {
-    let t = e,
+  setup(props) {
+    let t = props,
       computedResult = computed(() => t.node ?? t.item),
       computedData = computed(() => t.value == null ? {} : {
         value: t.value
       });
-    return (e, renderCache) => (openBlock(), createElementBlock(`li`, vueNt({
+    return (ctx, renderCache) => (openBlock(), createElementBlock(`li`, vueNt({
       class: `list-item`,
       dir: `auto`
     }, computedData.value), [resolveComponent(unref(s$), vueNt({
@@ -78449,7 +78449,7 @@ var kZ = _X(defineComponent({
       "custom-id": t.customId,
       typewriter: t.typewriter,
       "batch-rendering": false,
-      onCopy: renderCache[0] ||= t => e.$emit(`copy`, t)
+      onCopy: renderCache[0] ||= t => ctx.$emit(`copy`, t)
     }), null, 16, [`index-key`, `nodes`, `custom-id`, `typewriter`])], 16));
   }
 }), [[`__scopeId`, `data-v-fdeabeb1`]]);
@@ -78470,27 +78470,27 @@ var AZ = _X(defineComponent({
     }
   },
   emits: [`copy`],
-  setup(e) {
-    let computedResult = computed(() => (revision.value, TX(e.customId).list_item || kZ));
-    return (n, r) => (openBlock(), createBlock(vueEt(e.node.ordered ? `ol` : `ul`), {
+  setup(props) {
+    let computedResult = computed(() => (revision.value, TX(props.customId).list_item || kZ));
+    return (ctx, cache) => (openBlock(), createBlock(vueEt(props.node.ordered ? `ol` : `ul`), {
       class: normalizeClass([`list-node`, {
-        "list-decimal": e.node.ordered,
-        "list-disc": !e.node.ordered
+        "list-decimal": props.node.ordered,
+        "list-disc": !props.node.ordered
       }])
     }, {
-      default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.items, (i, a) => (openBlock(), createBlock(vueEt(computedResult.value), vueNt({
-        key: `${e.indexKey || `list`}-${a}`
+      default: H(() => [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.items, (i, a) => (openBlock(), createBlock(vueEt(computedResult.value), vueNt({
+        key: `${props.indexKey || `list`}-${a}`
       }, {
         ref_for: true
       }, {
-        showTooltips: e.showTooltips
+        showTooltips: props.showTooltips
       }, {
         node: i,
-        "custom-id": e.customId,
-        "index-key": `${e.indexKey || `list`}-${a}`,
-        typewriter: e.typewriter,
-        value: e.node.ordered ? (e.node.start ?? 1) + a : undefined,
-        onCopy: r[0] ||= e => n.$emit(`copy`, e)
+        "custom-id": props.customId,
+        "index-key": `${props.indexKey || `list`}-${a}`,
+        typewriter: props.typewriter,
+        value: props.node.ordered ? (props.node.start ?? 1) + a : undefined,
+        onCopy: cache[0] ||= e => ctx.$emit(`copy`, e)
       }), null, 16, [`node`, `custom-id`, `index-key`, `typewriter`, `value`]))), 128))]),
       _: 1
     }, 8, [`class`]));
@@ -78708,8 +78708,8 @@ var T2e = {
       customId: {},
       htmlPolicy: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = vueX(`markstreamHtmlPolicy`, undefined),
         computedResult = computed(() => t.htmlPolicy ?? n?.value ?? `safe`),
         i = vueA({
@@ -78822,7 +78822,7 @@ var T2e = {
         }, [g.value.mode === `structured` ? (openBlock(), createBlock(unref(i), {
           key: 0,
           nodes: f.value,
-          "custom-id": e.customId,
+          "custom-id": props.customId,
           "batch-rendering": false,
           "defer-nodes-until-visible": false,
           "render-as-fragment": true,
@@ -78835,7 +78835,7 @@ var T2e = {
         }, computedData.value, {
           innerHTML: g.value.content
         }), null, 16, E2e))], 64)) : (openBlock(), createElementBlock(`div`, D2e, [withCtx(t.$slots, `placeholder`, {
-          node: e.node
+          node: props.node
         }, () => [n[0] ||= createElementVNode(`span`, {
           class: `html-block-node__placeholder-bar`
         }, null, -1), n[1] ||= createElementVNode(`span`, {
@@ -78862,8 +78862,8 @@ var O2e = {
       indexKey: {},
       customHtmlTags: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = TX(t.customId);
       function r(e) {
         return e.type === `text` && String(e.content ?? ``).trim() === ``;
@@ -78948,8 +78948,8 @@ var O2e = {
           component: u[e.type]
         };
       }
-      return (t, n) => (openBlock(), createElementBlock(`p`, O2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(c.value, (t, n) => (openBlock(), createElementBlock(Fragment, {
-        key: `${e.indexKey || `paragraph`}-${n}`
+      return (ctx, cache) => (openBlock(), createElementBlock(`p`, O2e, [(openBlock(true), createElementBlock(Fragment, null, renderList(c.value, (t, n) => (openBlock(), createElementBlock(Fragment, {
+        key: `${props.indexKey || `paragraph`}-${n}`
       }, [computedData.value && r(t) ? (openBlock(), createElementBlock(Fragment, {
         key: 0
       }, [createTextVNode(toDisplayString(i(t)), 1)], 64)) : (openBlock(), createBlock(vueEt(d(t).component), vueNt({
@@ -78968,8 +78968,8 @@ var k2e = [`aria-busy`, `aria-label`, `data-language`],
     props: {
       node: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         computedResult = computed(() => {
           let e = String(t.node?.language ?? ``);
           return String(String(e).split(/\s+/g)[0] ?? ``).toLowerCase().replace(/[^\w-]/g, ``) || `plaintext`;
@@ -78979,16 +78979,16 @@ var k2e = [`aria-busy`, `aria-label`, `data-language`],
           let e = computedResult.value;
           return e ? `Code block: ${e}` : `Code block`;
         });
-      return (t, a) => (openBlock(), createElementBlock(`pre`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`pre`, {
         class: normalizeClass([computedData.value]),
-        "aria-busy": true === e.node.loading,
+        "aria-busy": true === props.node.loading,
         "aria-label": i.value,
         "data-language": computedResult.value,
         "data-markstream-pre": `1`,
         tabindex: `0`
       }, [createElementVNode(`code`, {
         translate: `no`,
-        textContent: toDisplayString(e.node.code)
+        textContent: toDisplayString(props.node.code)
       }, null, 8, A2e)], 10, k2e));
     }
   });
@@ -79139,7 +79139,7 @@ var L2e = {
     props: {
       node: {}
     },
-    setup: e => (t, n) => (openBlock(), createElementBlock(`div`, L2e, toDisplayString(e.node.raw), 1))
+    setup: props => (t, n) => (openBlock(), createElementBlock(`div`, L2e, toDisplayString(props.node.raw), 1))
   }),
   zZ = _X(defineComponent({
     __name: `VmrContainerNode`,
@@ -79154,8 +79154,8 @@ var L2e = {
       },
       customId: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         computedResult = computed(() => `vmr-container vmr-container-${t.node.name}`),
         r = TX(t.customId),
         i = pX({
@@ -79180,14 +79180,14 @@ var L2e = {
           math_block: mZ,
           table: IZ
         }, r);
-      return (r, a) => (openBlock(), createElementBlock(`div`, vueNt({
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, vueNt({
         class: computedResult.value
-      }, e.node.attrs), [(openBlock(true), createElementBlock(Fragment, null, renderList(e.node.children, (n, r) => {
+      }, props.node.attrs), [(openBlock(true), createElementBlock(Fragment, null, renderList(props.node.children, (n, r) => {
         return openBlock(), createBlock(vueEt((a = n.type, i[a] || FallbackComponent)), {
-          key: `${e.indexKey || `vmr-container`}-${r}`,
+          key: `${props.indexKey || `vmr-container`}-${r}`,
           "custom-id": t.customId,
           node: n,
-          "index-key": `${e.indexKey || `vmr-container`}-${r}`
+          "index-key": `${props.indexKey || `vmr-container`}-${r}`
         }, null, 8, [`custom-id`, `node`, `index-key`]);
         var a;
       }), 128))], 16));
@@ -80987,10 +80987,10 @@ var M4e = {
     },
     emits: [`toggleCollapse`, `decreaseFont`, `resetFont`, `increaseFont`, `copy`, `toggleExpand`, `preview`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         i = ref(false),
         a = ref(null),
         o = ref(null);
@@ -81024,7 +81024,7 @@ var M4e = {
       let h = computed(() => !!Number.isFinite(eventAlias.codeFontSize) && (eventAlias.codeFontSize ?? 0) <= (eventAlias.codeFontMin ?? 0)),
         g = computed(() => !eventAlias.fontBaselineReady || eventAlias.codeFontSize === eventAlias.defaultCodeFontSize),
         _ = computed(() => !!Number.isFinite(eventAlias.codeFontSize) && (eventAlias.codeFontSize ?? 0) >= (eventAlias.codeFontMax ?? 100));
-      return (t, c) => (openBlock(), createElementBlock(Fragment, null, [eventAlias.showHeader ? (openBlock(), createElementBlock(`div`, M4e, [withCtx(t.$slots, `header-left`), withCtx(t.$slots, `header-right`, {}, () => [createElementVNode(`div`, N4e, [event.diffStats ? (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(Fragment, null, [eventAlias.showHeader ? (openBlock(), createElementBlock(`div`, M4e, [withCtx(ctx.$slots, `header-left`), withCtx(ctx.$slots, `header-right`, {}, () => [createElementVNode(`div`, N4e, [event.diffStats ? (openBlock(), createElementBlock(`div`, {
         key: 0,
         class: `code-diff-stats`,
         "aria-label": event.diffStatsAriaLabel
@@ -81033,19 +81033,19 @@ var M4e = {
         type: `button`,
         class: `code-action-btn inline-flex items-center justify-center p-[var(--ms-action-btn-padding)] rounded leading-none shrink-0 cursor-pointer text-[var(--code-action-fg)] hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] active:scale-[0.96] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
         "aria-label": event.copyText ? unref(i18nTranslate)(`common.copied`) || `Copied` : unref(i18nTranslate)(`common.copy`) || `Copy`,
-        onClick: c[0] ||= e => r(`copy`),
-        onMouseenter: c[1] ||= e => m(e),
-        onFocus: c[2] ||= e => m(e),
+        onClick: cache[0] ||= e => r(`copy`),
+        onMouseenter: cache[1] ||= e => m(e),
+        onFocus: cache[2] ||= e => m(e),
         onMouseleave: p,
         onBlur: p
-      }, [event.copyText ? (openBlock(), createElementBlock(`svg`, z4e, [...(c[14] ||= [createElementVNode(`path`, {
+      }, [event.copyText ? (openBlock(), createElementBlock(`svg`, z4e, [...(cache[14] ||= [createElementVNode(`path`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
         "stroke-linejoin": `round`,
         "stroke-width": `2`,
         d: `M20 6L9 17l-5-5`
-      }, null, -1)])])) : (openBlock(), createElementBlock(`svg`, R4e, [...(c[13] ||= [createElementVNode(`g`, {
+      }, null, -1)])])) : (openBlock(), createElementBlock(`svg`, R4e, [...(cache[13] ||= [createElementVNode(`g`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
@@ -81065,9 +81065,9 @@ var M4e = {
         type: `button`,
         class: `code-action-btn inline-flex items-center justify-center p-[var(--ms-action-btn-padding)] rounded leading-none shrink-0 cursor-pointer text-[var(--code-action-fg)] hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] active:scale-[0.96] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
         "aria-pressed": event.isCollapsed,
-        onClick: c[3] ||= e => r(`toggleCollapse`),
-        onMouseenter: c[4] ||= t => f(t, event.isCollapsed ? unref(i18nTranslate)(`common.expand`) || `Expand` : unref(i18nTranslate)(`common.collapse`) || `Collapse`),
-        onFocus: c[5] ||= t => f(t, event.isCollapsed ? unref(i18nTranslate)(`common.expand`) || `Expand` : unref(i18nTranslate)(`common.collapse`) || `Collapse`),
+        onClick: cache[3] ||= e => r(`toggleCollapse`),
+        onMouseenter: cache[4] ||= t => f(t, event.isCollapsed ? unref(i18nTranslate)(`common.expand`) || `Expand` : unref(i18nTranslate)(`common.collapse`) || `Collapse`),
+        onFocus: cache[5] ||= t => f(t, event.isCollapsed ? unref(i18nTranslate)(`common.expand`) || `Expand` : unref(i18nTranslate)(`common.collapse`) || `Collapse`),
         onMouseleave: p,
         onBlur: p
       }, [(openBlock(), createElementBlock(`svg`, {
@@ -81080,7 +81080,7 @@ var M4e = {
         height: `1em`,
         viewBox: `0 0 24 24`,
         class: `action-icon`
-      }, [...(c[15] ||= [createElementVNode(`path`, {
+      }, [...(cache[15] ||= [createElementVNode(`path`, {
         fill: `none`,
         stroke: `currentColor`,
         "stroke-linecap": `round`,
@@ -81095,11 +81095,11 @@ var M4e = {
         "aria-expanded": i.value,
         "aria-haspopup": `true`,
         onClick: withDirectives(s, [`stop`]),
-        onMouseenter: c[6] ||= e => f(e, unref(i18nTranslate)(`common.more`) || `More`),
-        onFocus: c[7] ||= e => f(e, unref(i18nTranslate)(`common.more`) || `More`),
+        onMouseenter: cache[6] ||= e => f(e, unref(i18nTranslate)(`common.more`) || `More`),
+        onFocus: cache[7] ||= e => f(e, unref(i18nTranslate)(`common.more`) || `More`),
         onMouseleave: p,
         onBlur: p
-      }, [...(c[16] ||= [vueD(`<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="1em" height="1em" viewBox="0 0 24 24" class="action-icon"><g fill="currentColor"><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></g></svg>`, 1)])], 40, H4e), resolveComponent(playerR, {
+      }, [...(cache[16] ||= [vueD(`<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="1em" height="1em" viewBox="0 0 24 24" class="action-icon"><g fill="currentColor"><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></g></svg>`, 1)])], 40, H4e), resolveComponent(playerR, {
         name: `code-menu`
       }, {
         default: H(() => [i.value ? (openBlock(), createElementBlock(`div`, {
@@ -81115,8 +81115,8 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
           disabled: h.value,
-          onClick: c[8] ||= e => r(`decreaseFont`)
-        }, [c[17] ||= createElementVNode(`svg`, {
+          onClick: cache[8] ||= e => r(`decreaseFont`)
+        }, [cache[17] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
           width: `1em`,
@@ -81135,8 +81135,8 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
           disabled: g.value,
-          onClick: c[9] ||= e => r(`resetFont`)
-        }, [c[18] ||= createElementVNode(`svg`, {
+          onClick: cache[9] ||= e => r(`resetFont`)
+        }, [cache[18] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
           width: `1em`,
@@ -81158,8 +81158,8 @@ var M4e = {
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors`,
           disabled: _.value,
-          onClick: c[10] ||= e => r(`increaseFont`)
-        }, [c[19] ||= createElementVNode(`svg`, {
+          onClick: cache[10] ||= e => r(`increaseFont`)
+        }, [cache[19] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
           width: `1em`,
@@ -81178,17 +81178,17 @@ var M4e = {
           type: `button`,
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] transition-colors`,
-          onClick: c[11] ||= e => {
+          onClick: cache[11] ||= e => {
             r(`toggleExpand`, e), i.value = false;
           }
-        }, [event.isExpanded ? (openBlock(), createElementBlock(`svg`, K4e, [...(c[20] ||= [createElementVNode(`path`, {
+        }, [event.isExpanded ? (openBlock(), createElementBlock(`svg`, K4e, [...(cache[20] ||= [createElementVNode(`path`, {
           fill: `none`,
           stroke: `currentColor`,
           "stroke-linecap": `round`,
           "stroke-linejoin": `round`,
           "stroke-width": `2`,
           d: `m14 10l7-7m-1 7h-6V4M3 21l7-7m-6 0h6v6`
-        }, null, -1)])])) : (openBlock(), createElementBlock(`svg`, q4e, [...(c[21] ||= [createElementVNode(`path`, {
+        }, null, -1)])])) : (openBlock(), createElementBlock(`svg`, q4e, [...(cache[21] ||= [createElementVNode(`path`, {
           fill: `none`,
           stroke: `currentColor`,
           "stroke-linecap": `round`,
@@ -81200,10 +81200,10 @@ var M4e = {
           type: `button`,
           role: `menuitem`,
           class: `flex items-center gap-2 w-full py-1.5 px-2 rounded text-xs text-[var(--code-action-fg)] cursor-pointer whitespace-nowrap hover:bg-[var(--code-action-hover-bg)] hover:text-[var(--code-action-hover-fg)] transition-colors`,
-          onClick: c[12] ||= e => {
+          onClick: cache[12] ||= e => {
             r(`preview`), i.value = false;
           }
-        }, [c[22] ||= createElementVNode(`svg`, {
+        }, [cache[22] ||= createElementVNode(`svg`, {
           xmlns: `http://www.w3.org/2000/svg`,
           "aria-hidden": `true`,
           width: `1em`,
@@ -81224,7 +81224,7 @@ var M4e = {
           r: `3`
         })])], -1), createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`common.preview`) || `Preview`), 1)])) : createCommentVNode(``, true)], 512)) : createCommentVNode(``, true)]),
         _: 1
-      })])) : createCommentVNode(``, true)])])])) : createCommentVNode(``, true), vueZt(createElementVNode(`div`, J4e, [withCtx(t.$slots, `default`)], 512), [[playerW, !(event.isCollapsed || !event.stream && event.loading)]]), vueZt(createElementVNode(`div`, Y4e, [withCtx(t.$slots, `loading`, {}, () => [c[23] ||= createElementVNode(`div`, {
+      })])) : createCommentVNode(``, true)])])])) : createCommentVNode(``, true), vueZt(createElementVNode(`div`, J4e, [withCtx(ctx.$slots, `default`)], 512), [[playerW, !(event.isCollapsed || !event.stream && event.loading)]]), vueZt(createElementVNode(`div`, Y4e, [withCtx(ctx.$slots, `loading`, {}, () => [cache[23] ||= createElementVNode(`div`, {
         class: `loading-skeleton`
       }, [createElementVNode(`div`, {
         class: `skeleton-line`
@@ -81323,10 +81323,10 @@ var M4e = {
     },
     emits: [`previewCode`, `copy`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = tZ(),
@@ -81646,8 +81646,8 @@ var n3e = defineComponent({
         default: undefined
       }
     },
-    setup(e) {
-      let computedResult = computed(() => zQ(NQ(e.estimatedPreviewHeightPx) ?? IQ(String(e.node.code ?? ``))));
+    setup(props) {
+      let computedResult = computed(() => zQ(NQ(props.estimatedPreviewHeightPx) ?? IQ(String(props.node.code ?? ``))));
       return () => vueH(`div`, {
         class: `infographic-block-container rounded-lg border overflow-hidden`,
         style: {
@@ -81658,7 +81658,7 @@ var n3e = defineComponent({
         },
         "data-markstream-infographic": `1`,
         "data-markstream-mode": `pending`
-      }, [e.showHeader ? vueH(`div`, {
+      }, [props.showHeader ? vueH(`div`, {
         class: `infographic-block-header flex justify-between items-center border-b`,
         style: {
           padding: `var(--ms-inset-panel-y) var(--ms-inset-panel-x)`,
@@ -81725,8 +81725,8 @@ var n3e = defineComponent({
         default: undefined
       }
     },
-    setup(e) {
-      let computedResult = computed(() => RQ(NQ(e.estimatedPreviewHeightPx) ?? FQ(String(e.node.code ?? ``))));
+    setup(props) {
+      let computedResult = computed(() => RQ(NQ(props.estimatedPreviewHeightPx) ?? FQ(String(props.node.code ?? ``))));
       return () => vueH(`div`, {
         class: `mermaid-block-container rounded-lg border overflow-hidden`,
         style: {
@@ -81735,7 +81735,7 @@ var n3e = defineComponent({
         },
         "data-markstream-mermaid": `1`,
         "data-markstream-mode": `pending`
-      }, [e.showHeader ? vueH(`div`, {
+      }, [props.showHeader ? vueH(`div`, {
         class: `mermaid-block-header flex justify-between items-center border-b px-[var(--ms-inset-panel-x)] py-[var(--ms-inset-panel-y)]`,
         style: {
           background: `var(--diagram-header-bg)`,
@@ -81865,10 +81865,10 @@ var n3e = defineComponent({
     },
     emits: [`copy`, `handleArtifactClick`, `click`, `mouseover`, `mouseout`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         i = ref(),
         a = ref(null),
         o = ref(null),
@@ -83109,7 +83109,7 @@ var n3e = defineComponent({
       function Pn(e) {
         r(`mouseout`, e);
       }
-      return (e, t) => computedResult.value ? (openBlock(true), createElementBlock(Fragment, {
+      return (ctx, cache) => computedResult.value ? (openBlock(true), createElementBlock(Fragment, {
         key: 0
       }, renderList(Dn.value, e => (openBlock(), createBlock(vueEt(e.component), vueNt({
         key: e.index,
@@ -83124,8 +83124,8 @@ var n3e = defineComponent({
         onClick: An,
         onMouseover: Nn,
         onMouseout: Pn,
-        onCopy: t[0] ||= e => r(`copy`, e),
-        onHandleArtifactClick: t[1] ||= e => r(`handleArtifactClick`, e)
+        onCopy: cache[0] ||= e => r(`copy`, e),
+        onHandleArtifactClick: cache[1] ||= e => r(`handleArtifactClick`, e)
       }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`]))), 128)) : (openBlock(), createElementBlock(`div`, {
         key: 1,
         ref_key: `containerRef`,
@@ -83252,8 +83252,8 @@ var n3e = defineComponent({
         }, e.bindings, {
           "custom-id": eventAlias.customId,
           "is-dark": eventAlias.isDark,
-          onCopy: t[4] ||= e => r(`copy`, e),
-          onHandleArtifactClick: t[5] ||= e => r(`handleArtifactClick`, e)
+          onCopy: cache[4] ||= e => r(`copy`, e),
+          onHandleArtifactClick: cache[5] ||= e => r(`handleArtifactClick`, e)
         }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`])) : (openBlock(), createBlock(playerR, {
           key: 0,
           name: `typewriter`,
@@ -83268,8 +83268,8 @@ var n3e = defineComponent({
           }, e.bindings, {
             "custom-id": eventAlias.customId,
             "is-dark": eventAlias.isDark,
-            onCopy: t[2] ||= e => r(`copy`, e),
-            onHandleArtifactClick: t[3] ||= e => r(`handleArtifactClick`, e)
+            onCopy: cache[2] ||= e => r(`copy`, e),
+            onHandleArtifactClick: cache[3] ||= e => r(`handleArtifactClick`, e)
           }), null, 16, [`node`, `loading`, `index-key`, `custom-id`, `is-dark`]))]),
           _: 2
         }, 1024))], 512)))], 8, s3e);
@@ -83367,11 +83367,11 @@ var c3e = Object.freeze(Object.defineProperty({
     },
     emits: [`copy`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       var replaceResult;
       let itemsAlias = items,
-        i = t,
+        i = emit,
         computedResult = computed(() => {
           if (itemsAlias.node.title && itemsAlias.node.title.trim().length) return itemsAlias.node.title;
           let fallbackValue = itemsAlias.node.kind || `note`;
@@ -83382,7 +83382,7 @@ var c3e = Object.freeze(Object.defineProperty({
         itemsAlias.node.collapsible && (o.value = !o.value);
       }
       let c = `admonition-${Math.random().toString(36).slice(2, 9)}`;
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         class: normalizeClass([`admonition`, [`admonition-${itemsAlias.node.kind}`]])
       }, [createElementVNode(`div`, {
         id: c,
@@ -83907,7 +83907,7 @@ var A3e = {
             sources: emptyItems.join(r.value.startsWith(`zh`) ? `、` : `, `)
           }) : i18nTranslate(`reportGenerationBasis.contextNotUsed`);
         });
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, A3e, [createElementVNode(`div`, null, [createElementVNode(`div`, j3e, [createElementVNode(`div`, M3e, [createElementVNode(`div`, N3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.range`)), 1), createElementVNode(`div`, P3e, [createTextVNode(toDisplayString(items.summary.range.startedAt), 1), renderCache[0] ||= createElementVNode(`br`, null, null, -1), createTextVNode(toDisplayString(items.summary.range.endedAt), 1)])]), createElementVNode(`div`, F3e, [createElementVNode(`div`, I3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.workRecords`)), 1), createElementVNode(`div`, L3e, toDisplayString(items.summary.workRecords.total), 1), items.summary.workRecords.inputCount === items.summary.workRecords.total ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`div`, R3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.compressedInput`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, A3e, [createElementVNode(`div`, null, [createElementVNode(`div`, j3e, [createElementVNode(`div`, M3e, [createElementVNode(`div`, N3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.range`)), 1), createElementVNode(`div`, P3e, [createTextVNode(toDisplayString(items.summary.range.startedAt), 1), renderCache[0] ||= createElementVNode(`br`, null, null, -1), createTextVNode(toDisplayString(items.summary.range.endedAt), 1)])]), createElementVNode(`div`, F3e, [createElementVNode(`div`, I3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.workRecords`)), 1), createElementVNode(`div`, L3e, toDisplayString(items.summary.workRecords.total), 1), items.summary.workRecords.inputCount === items.summary.workRecords.total ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`div`, R3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.compressedInput`, {
         count: items.summary.workRecords.inputCount
       })), 1))]), createElementVNode(`div`, z3e, [createElementVNode(`div`, B3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.appReference`)), 1), createElementVNode(`div`, V3e, toDisplayString(items.summary.appUsage ? i(items.summary.appUsage.includedDurationSec) : `--`), 1), items.summary.appUsage ? (openBlock(), createElementBlock(`div`, H3e, toDisplayString(unref(i18nTranslate)(`reportGenerationBasis.appCount`, {
         count: items.summary.appUsage.includedAppCount
@@ -83942,15 +83942,15 @@ var A3e = {
       summary: {}
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
-        open: e.open,
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+        open: props.open,
         "onUpdate:open": renderCache[0] ||= e => n(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
@@ -83973,9 +83973,9 @@ var A3e = {
               _: 1
             })]),
             _: 1
-          }), createElementVNode(`div`, t6e, [e.summary ? (openBlock(), createBlock(ReportGenerationBasis, {
+          }), createElementVNode(`div`, t6e, [props.summary ? (openBlock(), createBlock(ReportGenerationBasis, {
             key: 0,
-            summary: e.summary
+            summary: props.summary
           }, null, 8, [`summary`])) : createCommentVNode(``, true)])]),
           _: 1
         })]),
@@ -84007,10 +84007,10 @@ var A3e = {
     },
     emits: [`update:modelValue`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         a = ref(),
         {
           t: o
@@ -84103,7 +84103,7 @@ var A3e = {
       function v(e, t) {
         return (t ? l.value === t : c.value.has(e)) ? `bg-primary text-white rounded` : `rounded hover:bg-black/5`;
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         class: normalizeClass([`flex flex-col gap-1.5 min-h-[120px] overflow-hidden`, eventAlias.class])
       }, [createElementVNode(`div`, n6e, [createElementVNode(`button`, {
         type: `button`,
@@ -84215,18 +84215,18 @@ var A3e = {
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t;
-      return (t, renderCache) => (openBlock(), createBlock(DateTimePickerField, {
-        "model-value": e.modelValue,
-        label: e.label,
+      let n = emit;
+      return (ctx, renderCache) => (openBlock(), createBlock(DateTimePickerField, {
+        "model-value": props.modelValue,
+        label: props.label,
         precision: `minute`,
         "minute-step": 5,
         "value-format": `report`,
-        "end-boundary": e.endBoundary,
-        align: e.align,
+        "end-boundary": props.endBoundary,
+        align: props.align,
         "trigger-class": `!h-8 !w-[156px]`,
         "onUpdate:modelValue": renderCache[0] ||= e => n(`update:modelValue`, e)
       }, null, 8, [`model-value`, `label`, `end-boundary`, `align`]));
@@ -85647,7 +85647,7 @@ var _6e = {
     },
     emits: [`navigate`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let n = Ud(`report_generate_impression`, 0),
         {
@@ -85658,7 +85658,7 @@ var _6e = {
           captureGrowthObservation: o
         } = growthTelT(),
         eventAlias = event,
-        c = t,
+        c = emit,
         l = ref(`daily`),
         u = ref(`concise`),
         computedResult = computed(() => [{
@@ -87145,7 +87145,7 @@ var _6e = {
         }, 2e3);
       }
       let Ra = computed(() => !ai.value && !!(gn.value || Rr.value) && (mn.value || zr.value === `completed`));
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `productImpressionEl`,
         ref: n,
         class: `generate-report-theme-scope flex flex-col gap-4 p-6 px-7 h-full`
@@ -97777,11 +97777,11 @@ function Ust(e, t) {
 }
 var Wst = defineComponent({
   props: zst,
-  setup(options, t) {
+  setup(options, context) {
     let {
         expose: n,
         slots: r
-      } = t,
+      } = context,
       i = ref(null),
       a = vueCn(null);
     n({
@@ -97849,10 +97849,10 @@ var Wst = defineComponent({
 function E3(e, t) {
   return k4.register(t), defineComponent({
     props: S3,
-    setup(t, n) {
+    setup(props, context) {
       let {
           expose: r
-        } = n,
+        } = context,
         i = vueCn(null),
         a = vueCn(null);
       watch(() => a.value?.chart ?? null, value => {
@@ -97869,7 +97869,7 @@ function E3(e, t) {
         ref: o
       }, {
         type: e,
-        ...t
+        ...props
       }));
     }
   });
@@ -97882,15 +97882,15 @@ var Gst = E3(`bar`, jat),
       modelValue: {}
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
-      return (t, renderCache) => (openBlock(), createBlock(DateTimePickerField, {
-        "model-value": e.modelValue,
+      return (ctx, renderCache) => (openBlock(), createBlock(DateTimePickerField, {
+        "model-value": props.modelValue,
         label: unref(r)(`common.selectDateTime`),
         "value-format": `iso`,
         align: `start`,
@@ -98424,14 +98424,14 @@ var M3 = {
       generateSignal: {}
     },
     emits: [`update:open`, `select`, `request-generate`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
       let {
           t: i18nTranslate
         } = vueN(),
-        r = e,
-        i = t,
+        r = props,
+        i = emit,
         a = [`--word-cloud-green`, `--word-cloud-blue`, `--word-cloud-amber`, `--word-cloud-purple`, `--word-cloud-rose`],
         o = {
           "--word-cloud-green": `#059669`,
@@ -98612,7 +98612,7 @@ var M3 = {
       }), onUnmounted(() => {
         setTimeoutResult?.disconnect(), k3.default.stop();
       }), (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
-        open: e.open,
+        open: props.open,
         "onUpdate:open": renderCache[4] ||= e => i(`update:open`, e)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
@@ -98948,7 +98948,7 @@ var oct = {
       function _() {
         c.value = null, l.value = null;
       }
-      return (t, r) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `containerEl`,
         ref: n
       }, [computedResult.value > 0 ? (openBlock(), createElementBlock(`div`, {
@@ -98990,7 +98990,7 @@ var oct = {
           fill: s(e)
         } : undefined),
         onMouseenter: t => l.value = e.key,
-        onMouseleave: r[0] ||= e => l.value = null
+        onMouseleave: cache[0] ||= e => l.value = null
       }, null, 46, cct))), 128)), (openBlock(true), createElementBlock(Fragment, null, renderList(computedData.value.nodes, e => (openBlock(), createElementBlock(`rect`, {
         key: e.key,
         x: e.x,
@@ -99007,7 +99007,7 @@ var oct = {
           fill: e.color
         } : undefined),
         onMouseenter: t => c.value = e.key,
-        onMouseleave: r[1] ||= e => c.value = null
+        onMouseleave: cache[1] ||= e => c.value = null
       }, null, 46, lct))), 128))], 8, sct)), (openBlock(true), createElementBlock(Fragment, null, renderList(computedData.value.nodes, t => (openBlock(), createElementBlock(`div`, {
         key: `label-${t.key}`,
         class: normalizeClass([`absolute flex -translate-y-1/2 items-baseline gap-1.5 text-xs leading-4`, t.side === `source` ? `justify-end text-right` : ``]),
@@ -99021,7 +99021,7 @@ var oct = {
           width: `${computedData.value.width - t.x - P3 - F3}px`
         }),
         onMouseenter: e => c.value = t.key,
-        onMouseleave: r[2] ||= e => c.value = null
+        onMouseleave: cache[2] ||= e => c.value = null
       }, [createElementVNode(`span`, {
         class: normalizeClass([`min-w-0 truncate`, t.muted ? `text-[#999]` : `text-foreground`])
       }, toDisplayString(t.label), 3), createElementVNode(`span`, dct, toDisplayString(event.formatValue(t.value)), 1)], 46, uct))), 128)), m.value ? (openBlock(), createElementBlock(`div`, {
@@ -99070,7 +99070,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
   H3 = 0,
   TimelineCompanion = _export_sfc(defineComponent({
     __name: `TimelineCompanion`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate
         } = vueN(),
@@ -99126,7 +99126,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
           }
         }
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`button`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`button`, {
         type: `button`,
         class: `timeline-companion`,
         "aria-label": unref(i18nTranslate)(`timeline.companionOpenGrowth`),
@@ -99169,10 +99169,10 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
     },
     emits: [`change`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -99291,13 +99291,13 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
           T(t, t);
         } else o.value = false;
       }
-      return (event, n) => (openBlock(), createBlock(unref(ButtonGroup), null, {
+      return (event, cache) => (openBlock(), createBlock(unref(ButtonGroup), null, {
         default: H(() => [resolveComponent(unref(uiSwitchR), {
           size: `icon-sm`,
           variant: `outline`,
           title: S.value,
           "aria-label": S.value,
-          onClick: n[0] ||= e => E(-1)
+          onClick: cache[0] ||= e => E(-1)
         }, {
           default: H(() => [resolveComponent(unref(i18nU), {
             size: 14
@@ -99305,7 +99305,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
           _: 1
         }, 8, [`title`, `aria-label`]), resolveComponent(unref(popoverR), {
           open: o.value,
-          "onUpdate:open": n[1] ||= e => o.value = e
+          "onUpdate:open": cache[1] ||= e => o.value = e
         }, {
           default: H(() => [resolveComponent(unref(popoverT), {
             "as-child": ``
@@ -99354,7 +99354,7 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
           title: C.value,
           "aria-label": C.value,
           disabled: !_.value,
-          onClick: n[2] ||= e => E(1)
+          onClick: cache[2] ||= e => E(1)
         }, {
           default: H(() => [resolveComponent(unref(popoverA), {
             size: 14
@@ -99938,13 +99938,13 @@ var z3 = new URL(`../assets/default-journal.webp`, import.meta.url).href,
     },
     emits: [`update:open`, `confirmed`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           t: i18nTranslate
         } = vueN(),
         eventAlias = event,
-        i = t,
+        i = emit,
         a = {
           key: `word_cloud`,
           label: `词云`,
@@ -104147,16 +104147,16 @@ var zmt = {
     props: {
       scene: {}
     },
-    setup(e) {
+    setup(props) {
       let {
         statisticsPetImages: t,
         onStatisticsPetImageError: n
       } = Rmt();
-      return (r, renderCache) => (openBlock(), createElementBlock(`span`, zmt, [createElementVNode(`img`, {
-        src: unref(t)[e.scene],
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`span`, zmt, [createElementVNode(`img`, {
+        src: unref(t)[props.scene],
         alt: ``,
         draggable: `false`,
-        onError: renderCache[0] ||= t => unref(n)(e.scene)
+        onError: renderCache[0] ||= t => unref(n)(props.scene)
       }, null, 40, Bmt)]));
     }
   }), [[`__scopeId`, `data-v-4bdcecec`]]),
@@ -104285,10 +104285,10 @@ var zmt = {
     },
     emits: [`share`, `addFriend`],
     setup(text, {
-      emit: t
+      emit: emit
     }) {
       let textAlias = text,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -104298,7 +104298,7 @@ var zmt = {
         c = computed(() => i18nTranslate(`leaderboard.rankTemplate`, {
           rank: `\0`
         }).split(`\0`).map(item => item.trim()));
-      return (t, renderCache) => (openBlock(), createElementBlock(`section`, Vmt, [createElementVNode(`div`, Hmt, [createElementVNode(`p`, Umt, [createElementVNode(`span`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`section`, Vmt, [createElementVNode(`div`, Hmt, [createElementVNode(`p`, Umt, [createElementVNode(`span`, {
         class: normalizeClass([`lb-hero-dot`, {
           "is-live": text.isLive
         }])
@@ -104370,8 +104370,8 @@ var zmt = {
     props: {
       items: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         {
           t: n
         } = vueN(),
@@ -104381,7 +104381,7 @@ var zmt = {
             n = t.items.find(item => item.rank === 2);
           return found && n ? found.recordCount - n.recordCount : null;
         });
-      return (e, t) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         class: `lb-podium`,
         "data-count": computedResult.value.length
       }, [(openBlock(true), createElementBlock(Fragment, null, renderList(computedResult.value, e => (openBlock(), createElementBlock(`div`, {
@@ -104507,7 +104507,7 @@ var zmt = {
           count: e.recordCount
         });
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, Mht, [resolveComponent(St, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, Mht, [resolveComponent(St, {
         name: `lb-row`,
         tag: `div`,
         class: `lb-list-rows`
@@ -104571,17 +104571,17 @@ var zmt = {
       message: {}
     },
     emits: [`share`, `dismiss`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = t,
+      let n = emit,
         {
           t: r
         } = vueN();
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, Xht, [resolveComponent(unref(Xs), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, Xht, [resolveComponent(unref(Xs), {
         class: `lb-celebrate-icon`,
         size: 14
-      }), createElementVNode(`p`, Zht, toDisplayString(e.message), 1), createElementVNode(`button`, {
+      }), createElementVNode(`p`, Zht, toDisplayString(props.message), 1), createElementVNode(`button`, {
         type: `button`,
         class: `lb-celebrate-action`,
         onClick: renderCache[0] ||= e => n(`share`)
@@ -105493,8 +105493,8 @@ var rgt = {
     __name: `LeaderboardPanel`,
     emits: [`state-change`],
     setup(items, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let {
           captureGrowthObservation: r
@@ -105502,7 +105502,7 @@ var rgt = {
         {
           t: i18nTranslate
         } = vueN(),
-        a = n;
+        a = emit;
       function o(e) {
         if (!e) return ``;
         let date = new Date(e.replace(` `, `T`));
@@ -105840,7 +105840,7 @@ var rgt = {
         }), e && !t ? Ie() : L();
       }, {
         immediate: true
-      }), t({
+      }), expose({
         openLeaveDialog: Be,
         generateImage: Ue
       }), onBeforeMount(async () => {
@@ -106150,8 +106150,8 @@ var rgt = {
       modelModifiers: {}
     },
     emits: [`update:modelValue`],
-    setup(e) {
-      let t = vueLt(e, `modelValue`),
+    setup(props) {
+      let t = vueLt(props, `modelValue`),
         {
           t: n
         } = vueN(),
@@ -106159,7 +106159,7 @@ var rgt = {
       function i(e) {
         t.value = Math.min(fullYear, Math.max(y8, t.value + e));
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, h_t, [createElementVNode(`button`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, h_t, [createElementVNode(`button`, {
         type: `button`,
         class: `flex h-7 w-7 items-center justify-center rounded-l-md transition-colors hover:bg-black/[0.06] disabled:cursor-not-allowed disabled:opacity-40`,
         "aria-label": unref(n)(`heatMap.previousYear`),
@@ -106595,7 +106595,7 @@ var D_t = {
     },
     emits: [`navigate`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
@@ -106619,7 +106619,7 @@ var D_t = {
           full: `keyboardHeatmap.layoutOptionFull`
         },
         eventAlias = event,
-        o = t,
+        o = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -107032,12 +107032,12 @@ var D_t = {
       refreshKey: {}
     },
     emits: [`navigate`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
-      let r = e,
-        i = n;
+      let r = props,
+        i = emit;
       function a() {
         let e = {
           span: `recent`,
@@ -107221,7 +107221,7 @@ var D_t = {
       async function Ce(e) {
         return computedResult.value && _.value ? _.value.freezeForExport(e) : g.value?.prepareExport(e) ?? null;
       }
-      return t({
+      return expose({
         canShare: P,
         prepareExport: Ce
       }), (e, renderCache) => (openBlock(), createElementBlock(`div`, pvt, [(openBlock(), createBlock(vueF, {
@@ -107748,11 +107748,11 @@ var myt = [`aria-label`],
     },
     emits: [`hover`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        i = emit,
         a = ref(null),
         o = ref(null),
         counter = ref(0),
@@ -107807,7 +107807,7 @@ var myt = [`aria-label`],
           count = null, h();
         };
       }
-      return t({
+      return expose({
         prepareExport: y
       }), onBeforeMount(() => {
         let e = a.value;
@@ -108009,11 +108009,11 @@ var myt = [`aria-label`],
     },
     emits: [`navigate`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        i = emit,
         {
           t: i18nTranslate,
           locale: o,
@@ -108263,7 +108263,7 @@ var myt = [`aria-label`],
       async function Oe(e) {
         return E.value = null, D.value?.prepareExport(e) ?? null;
       }
-      return t({
+      return expose({
         canShare: De,
         prepareExport: Oe
       }), (e, renderCache) => (openBlock(), createElementBlock(`div`, gyt, [(openBlock(), createBlock(vueF, {
@@ -108455,7 +108455,7 @@ var myt = [`aria-label`],
           count: itemsAlias.other.toLocaleString(r.value)
         })), emptyItems.join(` · `);
       });
-      return (t, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         class: `flex shrink-0 items-center gap-3.5`,
         title: p.value || undefined
       }, [createElementVNode(`div`, _bt, [createElementVNode(`p`, vbt, toDisplayString(l.value), 1), createElementVNode(`p`, ybt, toDisplayString(unref(i18nTranslate)(`mouseHeatmap.leftButton`)) + ` · ` + toDisplayString(d(items.left)), 1)]), (openBlock(), createElementBlock(`svg`, {
@@ -108897,11 +108897,11 @@ var txt = [`tabindex`],
     },
     emits: [`hover`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        i = emit,
         {
           t: a
         } = vueN(),
@@ -109290,7 +109290,7 @@ var txt = [`tabindex`],
           f.value = false, resolvedValue = null, le();
         };
       }
-      return t({
+      return expose({
         prepareExport: xe
       }), onBeforeMount(() => {
         let e = o.value;
@@ -109529,11 +109529,11 @@ var txt = [`tabindex`],
     },
     emits: [`navigate`],
     setup(event, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let eventAlias = event,
-        i = n,
+        i = emit,
         {
           t: i18nTranslate,
           locale: o
@@ -109785,7 +109785,7 @@ var txt = [`tabindex`],
         let fallbackValue = T.value?.prepareExport(e) ?? null;
         return await vueRt(), fallbackValue;
       }
-      return t({
+      return expose({
         canShare: ke,
         prepareExport: Ae
       }), (e, renderCache) => (openBlock(), createElementBlock(`div`, Sxt, [unref(toolSettingsS) ? (openBlock(), createBlock(vueF, {
@@ -109989,10 +109989,10 @@ var gSt = {
     },
     emits: [`navigate`],
     setup(text, {
-      emit: t
+      emit: emit
     }) {
       let textAlias = text,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -110281,10 +110281,10 @@ var gSt = {
     },
     emits: [`generate-badge`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -110404,7 +110404,7 @@ var gSt = {
           image: e.image
         }));
       }
-      return (t, renderCache) => event.summaries.length > 0 ? (openBlock(), createElementBlock(`div`, ISt, [createElementVNode(`section`, LSt, [createElementVNode(`div`, RSt, [createElementVNode(`h2`, zSt, toDisplayString(unref(i18nTranslate)(`heatMap.yearHighlights.monthlyTrend`)), 1), createElementVNode(`span`, BSt, toDisplayString(event.year), 1)]), createElementVNode(`div`, {
+      return (ctx, renderCache) => event.summaries.length > 0 ? (openBlock(), createElementBlock(`div`, ISt, [createElementVNode(`section`, LSt, [createElementVNode(`div`, RSt, [createElementVNode(`h2`, zSt, toDisplayString(unref(i18nTranslate)(`heatMap.yearHighlights.monthlyTrend`)), 1), createElementVNode(`span`, BSt, toDisplayString(event.year), 1)]), createElementVNode(`div`, {
         class: `grid grid-cols-12 gap-1`,
         role: `tablist`,
         "aria-label": unref(i18nTranslate)(`heatMap.yearHighlights.monthlyTrend`)
@@ -110558,10 +110558,10 @@ var gSt = {
     },
     emits: [`close`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -110617,7 +110617,7 @@ var gSt = {
           }
         }
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`dialog`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`dialog`, {
         ref_key: `dialog`,
         ref: o,
         class: `badge-share-dialog`,
@@ -110875,7 +110875,7 @@ var gSt = {
     },
     emits: [`navigate`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
@@ -110886,7 +110886,7 @@ var gSt = {
           locale: a
         } = vueN(),
         eventAlias = event,
-        s = t,
+        s = emit,
         c = ref(null),
         l = ref({
           enabled: false,
@@ -112267,7 +112267,7 @@ var gSt = {
     },
     emits: [`navigate`],
     setup(text, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
@@ -112309,7 +112309,7 @@ var gSt = {
         }
       });
       let textAlias = text,
-        u = t,
+        u = emit,
         d = ref(false),
         f = ref(false),
         p = ref([]),
@@ -112695,7 +112695,7 @@ var gSt = {
         }
         S.value = e.id, !C.value[e.id] && (C.value[e.id] = await Og.contexts([e.id]));
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, {
         ref_key: `productImpressionEl`,
         ref: r,
         class: `generate-report-theme-scope app-usage-theme-scope p-6`
@@ -113035,12 +113035,12 @@ var nOt = {
       openModifiers: {}
     }),
     emits: vueTt([`changed`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = vueLt(e, `open`),
-        i = t,
+      let n = props,
+        r = vueLt(props, `open`),
+        i = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -113162,7 +113162,7 @@ var nOt = {
       function A(e) {
         s.value = e;
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: r.value,
         "onUpdate:open": renderCache[5] ||= e => r.value = e
       }, {
@@ -113178,8 +113178,8 @@ var nOt = {
           }), resolveComponent(unref(DialogDescription), {
             class: `mt-1 truncate text-xs text-[#999]`
           }, {
-            default: H(() => [createTextVNode(toDisplayString(e.title ? unref(i18nTranslate)(`reportCc.share.descWithTitle`, {
-              title: e.title
+            default: H(() => [createTextVNode(toDisplayString(props.title ? unref(i18nTranslate)(`reportCc.share.descWithTitle`, {
+              title: props.title
             }) : unref(i18nTranslate)(`reportCc.share.desc`)), 1)]),
             _: 1
           })]), c.value ? (openBlock(), createElementBlock(`div`, rOt, [resolveComponent(unref(beautifier), {
@@ -113607,11 +113607,11 @@ var jOt = {
     }),
     emits: vueTt([`generated`], [`update:open`]),
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
         r = vueLt(event, `open`),
-        i = t,
+        i = emit,
         {
           t: i18nTranslate,
           locale: s
@@ -113818,7 +113818,7 @@ var jOt = {
           he.value = false;
         }
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
         "onUpdate:open": renderCache[12] ||= e => r.value = e
       }, {
@@ -114692,11 +114692,11 @@ var jOt = {
     }),
     emits: vueTt([`prev`, `next`, `loaded`, `social`, `gone`, `manage`, `stop`, `edited`], [`update:open`]),
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
         r = vueLt(items, `open`),
-        i = t,
+        i = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -114798,7 +114798,7 @@ var jOt = {
           f.value = false;
         }
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(Sheet), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(Sheet), {
         open: r.value,
         "onUpdate:open": renderCache[8] ||= e => r.value = e
       }, {
@@ -115117,11 +115117,11 @@ var jOt = {
     },
     emits: [`generated`, `changed`, `goMine`],
     setup(text, {
-      expose: t,
-      emit: n
+      expose: expose,
+      emit: emit
     }) {
       let textAlias = text,
-        i = n,
+        i = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -115264,7 +115264,7 @@ var jOt = {
       async function ce(e) {
         Se(), p.value = ``, m.value = ``, d.value = `all`, f.value = `all`, await D(1), ne.value = e, M.value = true;
       }
-      t({
+      expose({
         focusDoc: ce,
         reload: () => D(b.value)
       });
@@ -116074,7 +116074,7 @@ var oMt = {
     },
     emits: [`recharge`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let n = Ud(`history_report_impression`, 0),
         {
@@ -116085,7 +116085,7 @@ var oMt = {
           captureGrowthObservation: a
         } = growthTelT(),
         itemsAlias = items,
-        c = t,
+        c = emit,
         {
           reports: l,
           total: u,
@@ -117460,14 +117460,14 @@ var oMt = {
     },
     setup(count) {
       let countAlias = count;
-      return (n, r) => (openBlock(), createBlock(unref(AvatarRoot), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(AvatarRoot), {
         "data-slot": `avatar`,
         "data-size": count.size ?? `default`,
         class: normalizeClass(unref(uiSwitchXt)(unref(QNt)({
           size: count.size
         }), countAlias.class))
       }, {
-        default: H(() => [withCtx(n.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`data-size`, `class`]));
     }
@@ -117484,15 +117484,15 @@ var oMt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`);
-      return (e, r) => (openBlock(), createBlock(unref(AvatarFallback), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(AvatarFallback), vueNt({
         "data-slot": `avatar-fallback`
       }, unref(n), {
         class: unref(uiSwitchXt)(`bg-muted text-muted-foreground rounded-full flex size-full items-center justify-center text-sm group-data-[size=sm]/avatar:text-xs`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -117508,14 +117508,14 @@ var oMt = {
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(AvatarImage), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(AvatarImage), vueNt({
         "data-slot": `avatar-image`
       }, t, {
         class: `rounded-full aspect-square size-full object-cover`
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -117608,13 +117608,13 @@ var oMt = {
     __name: `XiaoheiBotNotifications`,
     emits: [`close`, `open-conversation`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let {
           t: i18nTranslate,
           locale: r
         } = vueN(),
-        i = t,
+        i = emit,
         {
           notifications: a,
           isLoading: o,
@@ -117925,7 +117925,7 @@ var OPt = {
   },
   XiaoheiBotConsultationsDialog = _export_sfc(defineComponent({
     __name: `XiaoheiBotConsultationsDialog`,
-    setup(row) {
+    setup(props) {
       let {
           t,
           consultationView: n,
@@ -118061,7 +118061,7 @@ var OPt = {
       });
       let ne = qB(computedResult),
         N = qB(p);
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: computedResult.value,
         "onUpdate:open": renderCache[11] ||= e => computedResult.value = e
       }, {
@@ -118367,7 +118367,7 @@ var OPt = {
   },
   XiaoheiBotAvatarEditorDialog = _export_sfc(defineComponent({
     __name: `XiaoheiBotAvatarEditorDialog`,
-    setup(e) {
+    setup(props) {
       let {
           t: n,
           avatarEditorOpen: r,
@@ -118391,7 +118391,7 @@ var OPt = {
           applyAvatar: x
         } = M5(),
         S = qB(r);
-      return (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: unref(r),
         "onUpdate:open": renderCache[10] ||= e => vueFn(r) ? r.value = e : null
       }, {
@@ -118564,13 +118564,13 @@ var OPt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `input-group`,
         role: `group`,
         class: normalizeClass(unref(uiSwitchXt)(`border-input dark:bg-input/30 has-[[data-slot=input-group-control]:focus-visible]:border-ring has-[[data-slot=input-group-control]:focus-visible]:ring-ring/50 has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40 has-disabled:bg-input/50 dark:has-disabled:bg-input/80 h-8 rounded-lg border transition-colors in-data-[slot=combobox-content]:focus-within:border-inherit in-data-[slot=combobox-content]:focus-within:ring-0 has-disabled:opacity-50 has-[[data-slot=input-group-control]:focus-visible]:ring-3 has-[[data-slot][aria-invalid=true]]:ring-3 has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>[data-align=block-end]]:[&>input]:pt-3 has-[>[data-align=block-start]]:[&>input]:pb-3 has-[>[data-align=inline-end]]:[&>input]:pr-1.5 has-[>[data-align=inline-start]]:[&>input]:pl-1.5 group/input-group relative flex w-full min-w-0 items-center outline-none has-[>textarea]:h-auto`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   yFt = [`data-align`],
@@ -118591,7 +118591,7 @@ var OPt = {
           n = e.target;
         n && n.closest(`button`) || t && t?.parentElement && t.parentElement?.querySelector(`input`)?.focus();
       }
-      return (e, r) => (openBlock(), createElementBlock(`div`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `group`,
         "data-slot": `input-group-addon`,
         "data-align": eventAlias.align,
@@ -118599,7 +118599,7 @@ var OPt = {
           align: eventAlias.align
         }), eventAlias.class)),
         onClick: n
-      }, [withCtx(e.$slots, `default`)], 10, yFt));
+      }, [withCtx(ctx.$slots, `default`)], 10, yFt));
     }
   }),
   InputGroupInput = defineComponent({
@@ -118609,9 +118609,9 @@ var OPt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(Input), {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(Input), {
         "data-slot": `input-group-control`,
         class: normalizeClass(unref(uiSwitchXt)(`rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0 dark:bg-transparent dark:disabled:bg-transparent flex-1`, t.class))
       }, null, 8, [`class`]));
@@ -118664,7 +118664,7 @@ var Item = defineComponent({
     },
     setup(count) {
       let countAlias = count;
-      return (n, r) => (openBlock(), createBlock(unref(uiSwitchJ), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(uiSwitchJ), {
         "data-slot": `item`,
         "data-variant": count.variant,
         "data-size": count.size,
@@ -118675,7 +118675,7 @@ var Item = defineComponent({
           size: count.size
         }), countAlias.class))
       }, {
-        default: H(() => [withCtx(n.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 8, [`data-variant`, `data-size`, `as`, `as-child`, `class`]));
     }
@@ -118687,12 +118687,12 @@ var Item = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-actions`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-2 flex items-center`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   ItemContent = defineComponent({
@@ -118702,12 +118702,12 @@ var Item = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-content`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-1 group-data-[size=xs]/item:gap-0 flex flex-1 flex-col [&+[data-slot=item-content]]:flex-none`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   ItemDescription = defineComponent({
@@ -118717,12 +118717,12 @@ var Item = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`p`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`p`, {
         "data-slot": `item-description`,
         class: normalizeClass(unref(uiSwitchXt)(`text-muted-foreground text-left text-sm leading-normal group-data-[size=xs]/item:text-xs line-clamp-2 font-normal [&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   ItemGroup = defineComponent({
@@ -118732,13 +118732,13 @@ var Item = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         role: `list`,
         "data-slot": `item-group`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-4 has-data-[size=sm]:gap-2.5 has-data-[size=xs]:gap-2 group/item-group flex w-full flex-col`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   xFt = [`data-variant`],
@@ -118750,15 +118750,15 @@ var Item = defineComponent({
       },
       variant: {}
     },
-    setup(e) {
-      let t = e;
-      return (n, r) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-media`,
         "data-variant": t.variant,
         class: normalizeClass(unref(uiSwitchXt)(unref(CFt)({
-          variant: e.variant
+          variant: props.variant
         }), t.class))
-      }, [withCtx(n.$slots, `default`)], 10, xFt));
+      }, [withCtx(ctx.$slots, `default`)], 10, xFt));
     }
   }),
   ItemTitle = defineComponent({
@@ -118768,12 +118768,12 @@ var Item = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createElementBlock(`div`, {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, {
         "data-slot": `item-title`,
         class: normalizeClass(unref(uiSwitchXt)(`gap-2 text-sm leading-snug font-medium underline-offset-4 cn-font-heading line-clamp-1 flex w-fit items-center`, t.class))
-      }, [withCtx(e.$slots, `default`)], 2));
+      }, [withCtx(ctx.$slots, `default`)], 2));
     }
   }),
   SFt = uiSwitchSt(`[a]:hover:bg-muted rounded-lg border text-sm group/item flex w-full flex-wrap items-center transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 [a]:transition-colors`, {
@@ -118836,7 +118836,7 @@ var Item = defineComponent({
   },
   XiaoheiBotConfirmationDialogs = _export_sfc(defineComponent({
     __name: `XiaoheiBotConfirmationDialogs`,
-    setup(e) {
+    setup(props) {
       let {
           t,
           removeMemberOpen: n,
@@ -118886,7 +118886,7 @@ var Item = defineComponent({
         de = qB(m),
         fe = qB(v),
         pe = qB(T);
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(alertDialogC), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(alertDialogC), {
         open: unref(n),
         "onUpdate:open": renderCache[0] ||= e => vueFn(n) ? n.value = e : null
       }, {
@@ -119371,11 +119371,11 @@ var Command = defineComponent({
       }
     },
     emits: [`update:modelValue`, `highlight`, `entryFocus`, `leave`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r),
         o = ref(new Map()),
@@ -119456,29 +119456,29 @@ var Command = defineComponent({
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = uiSwitchZ(n, t);
-      return (t, i) => (openBlock(), createBlock(unref(dialogA), vueTr(vueV(unref(r))), {
+      let n = props,
+        r = uiSwitchZ(n, emit);
+      return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), vueTr(vueV(unref(r))), {
         default: H(r => [resolveComponent(unref(dialogI), {
           class: normalizeClass(unref(uiSwitchXt)(`rounded-xl! top-1/3 translate-y-0 overflow-hidden p-0`, n.class)),
-          "show-close-button": e.showCloseButton
+          "show-close-button": props.showCloseButton
         }, {
           default: H(() => [resolveComponent(unref(dialogN), {
             class: `sr-only`
           }, {
             default: H(() => [resolveComponent(unref(dialogT), null, {
-              default: H(() => [createTextVNode(toDisplayString(e.title), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(props.title), 1)]),
               _: 1
             }), resolveComponent(unref(DialogDescription), null, {
-              default: H(() => [createTextVNode(toDisplayString(e.description), 1)]),
+              default: H(() => [createTextVNode(toDisplayString(props.description), 1)]),
               _: 1
             })]),
             _: 1
           }), resolveComponent(Command, null, {
-            default: H(() => [withCtx(t.$slots, `default`, vueTr(vueV(r)))]),
+            default: H(() => [withCtx(ctx.$slots, `default`, vueTr(vueV(r)))]),
             _: 2
           }, 1024)]),
           _: 2
@@ -119498,20 +119498,20 @@ var Command = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`),
         {
           filterState: r
         } = K5(),
         computedResult = computed(() => !!r.search && r.filtered.count === 0);
-      return (e, r) => computedResult.value ? (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
+      return (ctx, cache) => computedResult.value ? (openBlock(), createBlock(unref(uiSwitchJ), vueNt({
         key: 0,
         "data-slot": `command-empty`
       }, unref(n), {
         class: unref(uiSwitchXt)(`py-6 text-center text-sm`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`])) : createCommentVNode(``, true);
     }
@@ -119528,8 +119528,8 @@ var Command = defineComponent({
       },
       heading: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = uiSwitchLt(t, `class`),
         {
           allGroups: r,
@@ -119549,12 +119549,12 @@ var Command = defineComponent({
         class: unref(uiSwitchXt)(`text-foreground **:[[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:py-1.5 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-medium`, t.class),
         hidden: !computedResult.value || undefined
       }), {
-        default: H(() => [e.heading ? (openBlock(), createBlock(unref(ListboxGroupLabel), {
+        default: H(() => [props.heading ? (openBlock(), createBlock(unref(ListboxGroupLabel), {
           key: 0,
           "data-slot": `command-group-heading`,
           class: ``
         }, {
-          default: H(() => [createTextVNode(toDisplayString(e.heading), 1)]),
+          default: H(() => [createTextVNode(toDisplayString(props.heading), 1)]),
           _: 1
         })) : createCommentVNode(``, true), withCtx(r.$slots, `default`)]),
         _: 3
@@ -119584,22 +119584,22 @@ var Command = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r),
         {
           filterState: a
         } = K5();
-      return (e, n) => (openBlock(), createElementBlock(`div`, VFt, [resolveComponent(unref(InputGroup), {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, VFt, [resolveComponent(unref(InputGroup), {
         class: `bg-input/30 border-input/30 h-8! rounded-lg! shadow-none! *:data-[slot=input-group-addon]:pl-2!`
       }, {
         default: H(() => [resolveComponent(unref(ListboxFilter), vueNt({
           ...unref(i),
-          ...e.$attrs
+          ...ctx.$attrs
         }, {
           modelValue: unref(a).search,
-          "onUpdate:modelValue": n[0] ||= e => unref(a).search = e,
+          "onUpdate:modelValue": cache[0] ||= e => unref(a).search = e,
           "data-slot": `command-input`,
           "auto-focus": ``,
           class: unref(uiSwitchXt)(`w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50`, t.class)
@@ -119629,11 +119629,11 @@ var Command = defineComponent({
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r),
         o = uiSwitchI(),
@@ -119692,16 +119692,16 @@ var Command = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(ListboxContent), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ListboxContent), vueNt({
         "data-slot": `command-list`
       }, unref(i), {
         class: unref(uiSwitchXt)(`no-scrollbar max-h-72 scroll-py-1 outline-none overflow-x-hidden overflow-y-auto`, t.class)
       }), {
-        default: H(() => [createElementVNode(`div`, WFt, [withCtx(e.$slots, `default`)])]),
+        default: H(() => [createElementVNode(`div`, WFt, [withCtx(ctx.$slots, `default`)])]),
         _: 3
       }, 16, [`class`]));
     }
@@ -119799,8 +119799,8 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
       now: {}
     },
     emits: [`close`, `begin`, `reconnect`, `unbind`, `verify`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
@@ -119809,8 +119809,8 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           t: i18nTranslate,
           locale: i
         } = vueN(),
-        a = e,
-        o = t,
+        a = props,
+        o = emit,
         s = qB(computed(() => !!a.contact)),
         c = ref(``),
         l = ref(``),
@@ -119862,7 +119862,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           i || (l.value = i18nTranslate(`botUi.qrFailed`));
         }
       }), (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
-        open: !!e.contact,
+        open: !!props.contact,
         "onUpdate:open": renderCache[8] ||= e => !e && o(`close`)
       }, {
         default: H(() => [resolveComponent(unref(dialogI), {
@@ -119879,8 +119879,8 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             }), resolveComponent(unref(DialogDescription), {
               class: `sr-only`
             }, {
-              default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(e.contact?.kind === `group` ? `botUi.connectGroup` : `botUi.connectBot`, {
-                name: e.contact?.name ?? ``
+              default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(props.contact?.kind === `group` ? `botUi.connectGroup` : `botUi.connectBot`, {
+                name: props.contact?.name ?? ``
               })), 1)]),
               _: 1
             })]),
@@ -119893,13 +119893,13 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             key: 0
           }, [createElementVNode(`div`, {
             class: normalizeClass([`wechat-state-icon`, {
-              "wechat-state-icon--muted": e.binding?.status === `expired` || d.value
+              "wechat-state-icon--muted": props.binding?.status === `expired` || d.value
             }])
-          }, [d.value || e.binding?.status === `expired` ? (openBlock(), createBlock(unref(Qs), {
+          }, [d.value || props.binding?.status === `expired` ? (openBlock(), createBlock(unref(Qs), {
             key: 0,
             size: 27,
             "stroke-width": 1.7
-          })) : e.binding?.status === `reconnecting` ? (openBlock(), createBlock(unref(beautifier), {
+          })) : props.binding?.status === `reconnecting` ? (openBlock(), createBlock(unref(beautifier), {
             key: 1,
             size: 27,
             class: `animate-spin`
@@ -119907,32 +119907,32 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             key: 2,
             size: 27,
             "stroke-width": 1.8
-          }))], 2), createElementVNode(`div`, QFt, [createElementVNode(`h3`, null, toDisplayString(d.value ? unref(i18nTranslate)(`botUi.unbind`) : e.binding?.status === `reconnecting` ? unref(i18nTranslate)(`botUi.reconnect`) : e.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.wechatExpired`) : unref(i18nTranslate)(`botUi.wechatConnectedTitle`)), 1), createElementVNode(`p`, null, toDisplayString(d.value ? unref(i18nTranslate)(`botUi.unbindHint`) : e.binding?.status === `reconnecting` ? unref(i18nTranslate)(`botUi.wechatRestoring`) : e.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.wechatRescanHint`) : unref(i18nTranslate)(`botUi.wechatConnectedDescription`, {
-            name: e.contact?.name ?? ``
-          })), 1)]), createElementVNode(`dl`, $Ft, [createElementVNode(`div`, null, [createElementVNode(`dt`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatConnectedRole`)), 1), createElementVNode(`dd`, eIt, [createElementVNode(`span`, tIt, [e.contact?.kind === `group` && !e.contact.avatar ? (openBlock(), createBlock(unref(ac), {
+          }))], 2), createElementVNode(`div`, QFt, [createElementVNode(`h3`, null, toDisplayString(d.value ? unref(i18nTranslate)(`botUi.unbind`) : props.binding?.status === `reconnecting` ? unref(i18nTranslate)(`botUi.reconnect`) : props.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.wechatExpired`) : unref(i18nTranslate)(`botUi.wechatConnectedTitle`)), 1), createElementVNode(`p`, null, toDisplayString(d.value ? unref(i18nTranslate)(`botUi.unbindHint`) : props.binding?.status === `reconnecting` ? unref(i18nTranslate)(`botUi.wechatRestoring`) : props.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.wechatRescanHint`) : unref(i18nTranslate)(`botUi.wechatConnectedDescription`, {
+            name: props.contact?.name ?? ``
+          })), 1)]), createElementVNode(`dl`, $Ft, [createElementVNode(`div`, null, [createElementVNode(`dt`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatConnectedRole`)), 1), createElementVNode(`dd`, eIt, [createElementVNode(`span`, tIt, [props.contact?.kind === `group` && !props.contact.avatar ? (openBlock(), createBlock(unref(ac), {
             key: 0,
             size: 16
           })) : (openBlock(), createElementBlock(`img`, {
             key: 1,
-            src: e.avatar,
+            src: props.avatar,
             alt: ``
-          }, null, 8, nIt))]), createElementVNode(`span`, null, toDisplayString(e.contact?.name), 1)])]), createElementVNode(`div`, null, [createElementVNode(`dt`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatConnectionStatus`)), 1), createElementVNode(`dd`, null, toDisplayString(e.binding?.status === `connected` ? unref(i18nTranslate)(`botUi.wechatBound`) : e.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.wechatExpired`) : unref(i18nTranslate)(`botUi.reconnect`)), 1)]), createElementVNode(`div`, null, [createElementVNode(`dt`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatBoundTime`)), 1), createElementVNode(`dd`, null, toDisplayString(computedResult.value), 1)])]), e.binding?.error ? (openBlock(), createElementBlock(`p`, rIt, toDisplayString(e.binding.error), 1)) : createCommentVNode(``, true)], 64)) : (openBlock(), createElementBlock(Fragment, {
+          }, null, 8, nIt))]), createElementVNode(`span`, null, toDisplayString(props.contact?.name), 1)])]), createElementVNode(`div`, null, [createElementVNode(`dt`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatConnectionStatus`)), 1), createElementVNode(`dd`, null, toDisplayString(props.binding?.status === `connected` ? unref(i18nTranslate)(`botUi.wechatBound`) : props.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.wechatExpired`) : unref(i18nTranslate)(`botUi.reconnect`)), 1)]), createElementVNode(`div`, null, [createElementVNode(`dt`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatBoundTime`)), 1), createElementVNode(`dd`, null, toDisplayString(computedResult.value), 1)])]), props.binding?.error ? (openBlock(), createElementBlock(`p`, rIt, toDisplayString(props.binding.error), 1)) : createCommentVNode(``, true)], 64)) : (openBlock(), createElementBlock(Fragment, {
             key: 1
-          }, [createElementVNode(`div`, iIt, [createElementVNode(`span`, aIt, [e.contact?.kind === `group` && !e.contact.avatar ? (openBlock(), createBlock(unref(ac), {
+          }, [createElementVNode(`div`, iIt, [createElementVNode(`span`, aIt, [props.contact?.kind === `group` && !props.contact.avatar ? (openBlock(), createBlock(unref(ac), {
             key: 0,
             size: 24
           })) : (openBlock(), createElementBlock(`img`, {
             key: 1,
-            src: e.avatar,
+            src: props.avatar,
             alt: ``
           }, null, 8, oIt))]), createElementVNode(`div`, sIt, [createElementVNode(`strong`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatConnectName`, {
-            name: e.contact?.name ?? ``
-          })), 1), createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatRoleHint`)), 1)])]), createElementVNode(`div`, cIt, [createElementVNode(`h3`, null, toDisplayString(unref(i18nTranslate)(`botUi.scanTitle`)), 1), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatScanDescription`)), 1)]), createElementVNode(`div`, lIt, [c.value && !h.value && e.login?.status !== `error` && !e.busy ? (openBlock(), createElementBlock(`img`, {
+            name: props.contact?.name ?? ``
+          })), 1), createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatRoleHint`)), 1)])]), createElementVNode(`div`, cIt, [createElementVNode(`h3`, null, toDisplayString(unref(i18nTranslate)(`botUi.scanTitle`)), 1), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`botUi.wechatScanDescription`)), 1)]), createElementVNode(`div`, lIt, [c.value && !h.value && props.login?.status !== `error` && !props.busy ? (openBlock(), createElementBlock(`img`, {
             key: 0,
             src: c.value,
             alt: unref(i18nTranslate)(`botUi.qrAlt`),
             class: `size-full`
-          }, null, 8, uIt)) : e.busy ? (openBlock(), createBlock(unref(beautifier), {
+          }, null, 8, uIt)) : props.busy ? (openBlock(), createBlock(unref(beautifier), {
             key: 1,
             class: `size-8 animate-spin text-neutral-500`
           })) : (openBlock(), createElementBlock(`div`, dIt, [resolveComponent(J5, {
@@ -119944,7 +119944,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           }, {
             default: H(() => [createTextVNode(toDisplayString(h.value ? unref(i18nTranslate)(`botUi.qrRefresh`) : unref(i18nTranslate)(`botUi.qrGet`)), 1)]),
             _: 1
-          })]))]), createElementVNode(`div`, fIt, toDisplayString(e.busy ? unref(i18nTranslate)(`botUi.qrGetting`) : _.value), 1), e.login?.status === `need_verifycode` && !h.value ? (openBlock(), createElementBlock(`form`, {
+          })]))]), createElementVNode(`div`, fIt, toDisplayString(props.busy ? unref(i18nTranslate)(`botUi.qrGetting`) : _.value), 1), props.login?.status === `need_verifycode` && !h.value ? (openBlock(), createElementBlock(`form`, {
             key: 0,
             class: `flex w-full gap-2`,
             onSubmit: renderCache[2] ||= withDirectives(e => o(`verify`, u.value), [`prevent`])
@@ -119957,11 +119957,11 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
             maxlength: `32`
           }, null, 8, [`modelValue`, `aria-label`, `placeholder`]), resolveComponent(unref(uiSwitchR), {
             type: `submit`,
-            disabled: e.busy || !u.value.trim()
+            disabled: props.busy || !u.value.trim()
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.confirm`)), 1)]),
             _: 1
-          }, 8, [`disabled`])], 32)) : createCommentVNode(``, true), computedData.value && !h.value && !e.busy ? (openBlock(), createElementBlock(`div`, pIt, [createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`botUi.qrCountdownShort`, {
+          }, 8, [`disabled`])], 32)) : createCommentVNode(``, true), computedData.value && !h.value && !props.busy ? (openBlock(), createElementBlock(`div`, pIt, [createElementVNode(`span`, null, toDisplayString(unref(i18nTranslate)(`botUi.qrCountdownShort`, {
             time: `${Math.floor(m.value / 60)}:${String(m.value % 60).padStart(2, `0`)}`
           })), 1), renderCache[9] ||= createElementVNode(`span`, {
             "aria-hidden": `true`
@@ -119973,18 +119973,18 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.qrRefresh`)), 1)]),
             _: 1
-          })])) : createCommentVNode(``, true)], 64)), e.error || e.login?.error || l.value ? (openBlock(), createElementBlock(`p`, mIt, toDisplayString(e.error || e.login?.error || l.value), 1)) : createCommentVNode(``, true)], 2), g.value ? (openBlock(), createElementBlock(`footer`, hIt, [d.value ? (openBlock(), createElementBlock(Fragment, {
+          })])) : createCommentVNode(``, true)], 64)), props.error || props.login?.error || l.value ? (openBlock(), createElementBlock(`p`, mIt, toDisplayString(props.error || props.login?.error || l.value), 1)) : createCommentVNode(``, true)], 2), g.value ? (openBlock(), createElementBlock(`footer`, hIt, [d.value ? (openBlock(), createElementBlock(Fragment, {
             key: 0
           }, [resolveComponent(unref(uiSwitchR), {
             variant: `outline`,
-            disabled: e.busy,
+            disabled: props.busy,
             onClick: renderCache[4] ||= e => d.value = false
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.cancel`)), 1)]),
             _: 1
           }, 8, [`disabled`]), resolveComponent(unref(uiSwitchR), {
             variant: `destructive`,
-            disabled: e.busy,
+            disabled: props.busy,
             onClick: renderCache[5] ||= e => {
               o(`unbind`), d.value = false;
             }
@@ -119996,18 +119996,18 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
           }, [resolveComponent(unref(uiSwitchR), {
             variant: `outline`,
             class: `wechat-unbind`,
-            disabled: e.busy,
+            disabled: props.busy,
             onClick: renderCache[6] ||= e => d.value = true
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.unbind`)), 1)]),
             _: 1
           }, 8, [`disabled`]), resolveComponent(unref(uiSwitchR), {
-            disabled: e.busy,
-            onClick: renderCache[7] ||= t => e.binding?.status === `expired` ? o(`begin`) : o(`reconnect`)
+            disabled: props.busy,
+            onClick: renderCache[7] ||= t => props.binding?.status === `expired` ? o(`begin`) : o(`reconnect`)
           }, {
             default: H(() => [resolveComponent(unref(gs), {
               size: 14
-            }), createTextVNode(toDisplayString(e.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.rescan`) : unref(i18nTranslate)(`botUi.reconnect`)), 1)]),
+            }), createTextVNode(toDisplayString(props.binding?.status === `expired` ? unref(i18nTranslate)(`botUi.rescan`) : unref(i18nTranslate)(`botUi.reconnect`)), 1)]),
             _: 1
           }, 8, [`disabled`])], 64))])) : createCommentVNode(``, true)]),
           _: 1
@@ -120030,7 +120030,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
         computedResult = computed(() => countAlias.origin === `mobile` || countAlias.origin === `miniprogram`),
         computedData = computed(() => countAlias.origin === `miniprogram`),
         i = computed(() => countAlias.size === `md` ? 10 : 8);
-      return (t, renderCache) => computedResult.value ? (openBlock(), createElementBlock(`span`, {
+      return (ctx, renderCache) => computedResult.value ? (openBlock(), createElementBlock(`span`, {
         key: 0,
         class: normalizeClass([`avatar-origin-badge`, [`avatar-origin-badge--${count.size}`, computedData.value ? `avatar-origin-badge--miniprogram` : null]]),
         "aria-hidden": `true`
@@ -120065,7 +120065,7 @@ var J5 = _export_sfc(YFt, [[`render`, ZFt]]),
     setup(count) {
       let countAlias = count,
         computedResult = computed(() => countAlias.size === `md` ? 9 : 8);
-      return (t, r) => (openBlock(), createElementBlock(`span`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`span`, {
         class: normalizeClass([`avatar-sync-badge`, `avatar-sync-badge--${count.size}`]),
         "aria-hidden": `true`
       }, [resolveComponent(unref(ns), {
@@ -120095,21 +120095,21 @@ var bIt = {
         type: Boolean
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         computedResult = computed(() => Y5(t.originKey ?? ``, t.origin)),
         computedData = computed(() => computedResult.value === `mobile` || computedResult.value === `miniprogram`),
         i = computed(() => X5(t.originKey ?? ``, t.synced, t.origin)),
         a = computed(() => i.value || computedData.value);
-      return (t, o) => (openBlock(), createElementBlock(`span`, {
-        class: normalizeClass([`avatar-frame`, [a.value ? `avatar-frame--badged` : null, a.value ? `avatar-frame--${e.badgeSize ?? `sm`}` : null]])
-      }, [createElementVNode(`span`, bIt, [withCtx(t.$slots, `default`, {}, undefined, true)]), computedData.value ? (openBlock(), createBlock(XiaoheiBotAvatarOriginBadge, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`span`, {
+        class: normalizeClass([`avatar-frame`, [a.value ? `avatar-frame--badged` : null, a.value ? `avatar-frame--${props.badgeSize ?? `sm`}` : null]])
+      }, [createElementVNode(`span`, bIt, [withCtx(ctx.$slots, `default`, {}, undefined, true)]), computedData.value ? (openBlock(), createBlock(XiaoheiBotAvatarOriginBadge, {
         key: 0,
         origin: computedResult.value,
-        size: e.badgeSize ?? `sm`
+        size: props.badgeSize ?? `sm`
       }, null, 8, [`origin`, `size`])) : i.value ? (openBlock(), createBlock(XiaoheiBotAvatarSyncBadge, {
         key: 1,
-        size: e.badgeSize ?? `sm`
+        size: props.badgeSize ?? `sm`
       }, null, 8, [`size`])) : createCommentVNode(``, true)], 2));
     }
   }), [[`__scopeId`, `data-v-41c5d7d2`]]),
@@ -120293,7 +120293,7 @@ var bIt = {
       async function Se(e) {
         ge.value = false, _(e), await vueRt(), r.value = true;
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`aside`, xIt, [unref(false) ? (openBlock(), createElementBlock(`p`, SIt, ` 预览模式：按会话随机展示 App 手机角标（确认后关闭 preview-platform-origin.ts） `)) : createCommentVNode(``, true), createElementVNode(`div`, CIt, [createElementVNode(`div`, wIt, [createElementVNode(`div`, TIt, [createElementVNode(`h2`, null, toDisplayString(unref(t)(`xiaoheiBot.conversations`)), 1), createElementVNode(`span`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`aside`, xIt, [unref(false) ? (openBlock(), createElementBlock(`p`, SIt, ` 预览模式：按会话随机展示 App 手机角标（确认后关闭 preview-platform-origin.ts） `)) : createCommentVNode(``, true), createElementVNode(`div`, CIt, [createElementVNode(`div`, wIt, [createElementVNode(`div`, TIt, [createElementVNode(`h2`, null, toDisplayString(unref(t)(`xiaoheiBot.conversations`)), 1), createElementVNode(`span`, {
         class: `contact-panel__count`,
         "aria-label": unref(i) ? unref(t)(`xiaoheiBot.contactCount`, {
           count: unref(l).length
@@ -120673,17 +120673,17 @@ var bIt = {
       }
     },
     emits: [`update:modelValue`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (e, t) => (openBlock(), createBlock(unref(StepperRoot), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperRoot), vueNt({
         class: unref(uiSwitchXt)(`flex gap-2`, n.class)
       }, unref(a)), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`class`]));
     }
@@ -120699,14 +120699,14 @@ var bIt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(StepperIndicator), vueNt(unref(i), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperIndicator), vueNt(unref(i), {
         class: unref(uiSwitchXt)(`inline-flex items-center justify-center rounded-full text-muted-foreground/50 w-8 h-8`, `group-data-[disabled]:text-muted-foreground group-data-[disabled]:opacity-50`, `group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground`, `group-data-[state=completed]:bg-accent group-data-[state=completed]:text-accent-foreground`, t.class)
       }), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`class`]));
     }
@@ -120729,14 +120729,14 @@ var bIt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(StepperItem), vueNt(unref(i), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperItem), vueNt(unref(i), {
         class: unref(uiSwitchXt)(`flex items-center gap-2 group data-[disabled]:pointer-events-none`, t.class)
       }), {
-        default: H(t => [withCtx(e.$slots, `default`, vueTr(vueV(t)))]),
+        default: H(t => [withCtx(ctx.$slots, `default`, vueTr(vueV(t)))]),
         _: 3
       }, 16, [`class`]));
     }
@@ -120752,14 +120752,14 @@ var bIt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(StepperTitle), vueNt(unref(i), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperTitle), vueNt(unref(i), {
         class: unref(uiSwitchXt)(`text-md font-semibold whitespace-nowrap`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -120775,14 +120775,14 @@ var bIt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(StepperTrigger), vueNt(unref(i), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(StepperTrigger), vueNt(unref(i), {
         class: unref(uiSwitchXt)(`p-1 flex flex-col items-center text-center gap-1 rounded-md`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -120958,7 +120958,7 @@ var bIt = {
       function j(e) {
         e.preventDefault(), vueRt(() => document.getElementById(`bot-capability-tutorial-title`)?.focus());
       }
-      return (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: unref(c),
         "onUpdate:open": renderCache[9] ||= e => {
           e || unref(_)();
@@ -121410,7 +121410,7 @@ var bIt = {
   },
   XiaoheiBotConversationLogDialog = _export_sfc(defineComponent({
     __name: `XiaoheiBotConversationLogDialog`,
-    setup(e) {
+    setup(props) {
       let {
         t,
         logDialogOpen: n,
@@ -121439,7 +121439,7 @@ var bIt = {
         selectRelatedLogEvent: T,
         logDiagnostics: E
       } = M5();
-      return (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: unref(n),
         "onUpdate:open": renderCache[4] ||= e => vueFn(n) ? n.value = e : null
       }, {
@@ -121774,7 +121774,7 @@ var bIt = {
   },
   XiaoheiBotRechargeCard = _export_sfc(defineComponent({
     __name: `XiaoheiBotRechargeCard`,
-    setup(e) {
+    setup(props) {
       let {
           t,
           locale: n
@@ -122006,7 +122006,7 @@ var bIt = {
   },
   XiaoheiComposerPet = _export_sfc(defineComponent({
     __name: `XiaoheiComposerPet`,
-    setup(e) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -122219,8 +122219,8 @@ var bIt = {
       botName: {}
     },
     emits: [`close`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
@@ -122254,8 +122254,8 @@ var bIt = {
             });
         }
       }
-      let s = e,
-        c = t,
+      let s = props,
+        c = emit,
         l = ref([]),
         u = ref(null),
         d = ref([]),
@@ -122654,7 +122654,7 @@ var bIt = {
       }, toDisplayString(e.summary || unref(i18nTranslate)(`botUi.runningHint`)), 9, rzt)]))), 128))])) : createCommentVNode(``, true)])) : createCommentVNode(``, true)], 64)) : (openBlock(), createElementBlock(Fragment, {
         key: 2
       }, [createElementVNode(`div`, ERt, [createElementVNode(`h3`, null, toDisplayString(unref(i18nTranslate)(`botUi.onTime`, {
-        name: e.botName
+        name: props.botName
       })), 1), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`botUi.backgroundHint`)), 1)]), createElementVNode(`div`, DRt, [createElementVNode(`span`, null, [createTextVNode(toDisplayString(unref(i18nTranslate)(`botUi.taskList`)) + ` `, 1), createElementVNode(`small`, null, toDisplayString(l.value.length), 1)]), resolveComponent(unref(uiSwitchR), {
         size: `sm`,
         class: `schedule-new`,
@@ -122856,12 +122856,12 @@ var bIt = {
       openModifiers: {}
     }),
     emits: vueTt([`copy`, `add`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = vueLt(e, `open`),
-        i = t,
+      let n = props,
+        r = vueLt(props, `open`),
+        i = emit,
         a = ref(`overview`),
         {
           t: i18nTranslate
@@ -122901,7 +122901,7 @@ var bIt = {
             class: `sr-only`
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.templateTitle`, {
-              name: e.card.template.name
+              name: props.card.template.name
             })), 1)]),
             _: 1
           })])), (openBlock(), createElementBlock(`div`, {
@@ -122914,24 +122914,24 @@ var bIt = {
           }, [createElementVNode(`header`, czt, [createElementVNode(`div`, {
             class: `share-detail-avatar overflow-hidden`,
             style: vueNr({
-              backgroundColor: e.card.template.avatarColor
+              backgroundColor: props.card.template.avatarColor
             })
-          }, [e.card.template.avatar || e.avatar ? (openBlock(), createElementBlock(`img`, {
+          }, [props.card.template.avatar || props.avatar ? (openBlock(), createElementBlock(`img`, {
             key: 0,
-            src: e.card.template.avatar || e.avatar,
-            alt: e.card.template.name,
+            src: props.card.template.avatar || props.avatar,
+            alt: props.card.template.name,
             class: `size-full object-cover`,
             referrerpolicy: `no-referrer`
           }, null, 8, lzt)) : (openBlock(), createElementBlock(Fragment, {
             key: 1
-          }, [createTextVNode(toDisplayString(e.card.template.name.slice(0, 1)), 1)], 64))], 4), resolveComponent(unref(dialogT), {
+          }, [createTextVNode(toDisplayString(props.card.template.name.slice(0, 1)), 1)], 64))], 4), resolveComponent(unref(dialogT), {
             class: `mt-4 text-base font-semibold`
           }, {
             default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.templateTitle`, {
-              name: e.card.template.name
+              name: props.card.template.name
             })), 1)]),
             _: 1
-          }), createElementVNode(`p`, uzt, toDisplayString(e.importing ? unref(i18nTranslate)(`roleShare.sharedByOthers`) : unref(i18nTranslate)(`roleShare.createdByYou`)), 1), resolveComponent(unref(DialogDescription), {
+          }), createElementVNode(`p`, uzt, toDisplayString(props.importing ? unref(i18nTranslate)(`roleShare.sharedByOthers`) : unref(i18nTranslate)(`roleShare.createdByYou`)), 1), resolveComponent(unref(DialogDescription), {
             class: `share-detail-introduction`
           }, {
             default: H(() => [createTextVNode(toDisplayString(u.value), 1)]),
@@ -122950,8 +122950,8 @@ var bIt = {
             type: `button`,
             class: `share-detail-option`,
             onClick: renderCache[2] ||= e => a.value = `schedules`
-          }, [createElementVNode(`span`, mzt, [createElementVNode(`strong`, null, toDisplayString(unref(i18nTranslate)(`roleShare.schedules`)), 1), createElementVNode(`span`, hzt, toDisplayString(e.card.template.schedules.length ? unref(i18nTranslate)(`roleShare.scheduleCount`, {
-            count: e.card.template.schedules.length
+          }, [createElementVNode(`span`, mzt, [createElementVNode(`strong`, null, toDisplayString(unref(i18nTranslate)(`roleShare.schedules`)), 1), createElementVNode(`span`, hzt, toDisplayString(props.card.template.schedules.length ? unref(i18nTranslate)(`roleShare.scheduleCount`, {
+            count: props.card.template.schedules.length
           }) : unref(i18nTranslate)(`roleShare.noSchedules`)), 1)]), resolveComponent(unref(popoverA), {
             size: 15,
             class: `shrink-0 text-muted-foreground`
@@ -122960,17 +122960,17 @@ var bIt = {
           }, [createElementVNode(`div`, {
             class: `share-detail-avatar share-detail-avatar--small overflow-hidden`,
             style: vueNr({
-              backgroundColor: e.card.template.avatarColor
+              backgroundColor: props.card.template.avatarColor
             })
-          }, [e.card.template.avatar || e.avatar ? (openBlock(), createElementBlock(`img`, {
+          }, [props.card.template.avatar || props.avatar ? (openBlock(), createElementBlock(`img`, {
             key: 0,
-            src: e.card.template.avatar || e.avatar,
-            alt: e.card.template.name,
+            src: props.card.template.avatar || props.avatar,
+            alt: props.card.template.name,
             class: `size-full object-cover`,
             referrerpolicy: `no-referrer`
           }, null, 8, gzt)) : (openBlock(), createElementBlock(Fragment, {
             key: 1
-          }, [createTextVNode(toDisplayString(e.card.template.name.slice(0, 1)), 1)], 64))], 4), a.value === `context` ? (openBlock(), createElementBlock(`section`, _zt, [createElementVNode(`h3`, vzt, toDisplayString(unref(i18nTranslate)(`roleShare.instructions`)), 1), createElementVNode(`div`, yzt, [createTextVNode(toDisplayString(e.card.template.description), 1), createElementVNode(`p`, bzt, toDisplayString(unref(i18nTranslate)(`roleShare.styleLine`, {
+          }, [createTextVNode(toDisplayString(props.card.template.name.slice(0, 1)), 1)], 64))], 4), a.value === `context` ? (openBlock(), createElementBlock(`section`, _zt, [createElementVNode(`h3`, vzt, toDisplayString(unref(i18nTranslate)(`roleShare.instructions`)), 1), createElementVNode(`div`, yzt, [createTextVNode(toDisplayString(props.card.template.description), 1), createElementVNode(`p`, bzt, toDisplayString(unref(i18nTranslate)(`roleShare.styleLine`, {
             style: computedResult.value
           })), 1)]), createElementVNode(`h3`, xzt, toDisplayString(unref(i18nTranslate)(`roleShare.memory`)), 1), createElementVNode(`div`, Szt, [createElementVNode(`details`, Czt, [createElementVNode(`summary`, null, [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.styleLine`, {
             style: computedResult.value
@@ -122978,23 +122978,23 @@ var bIt = {
             size: 14
           })]), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`roleShare.styleDescription`, {
             style: computedResult.value
-          })), 1)]), e.card.template.tags.length ? (openBlock(), createElementBlock(`details`, wzt, [createElementVNode(`summary`, null, [createElementVNode(`span`, Tzt, toDisplayString(unref(i18nTranslate)(`roleShare.tagsLine`, {
+          })), 1)]), props.card.template.tags.length ? (openBlock(), createElementBlock(`details`, wzt, [createElementVNode(`summary`, null, [createElementVNode(`span`, Tzt, toDisplayString(unref(i18nTranslate)(`roleShare.tagsLine`, {
             tags: computedData.value
           })), 1), resolveComponent(unref(popoverA), {
             size: 14
           })]), createElementVNode(`p`, null, toDisplayString(computedData.value), 1)])) : createCommentVNode(``, true), createElementVNode(`details`, Ezt, [createElementVNode(`summary`, null, [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.privacyTitle`)), 1), resolveComponent(unref(popoverA), {
             size: 14
-          })]), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`roleShare.privacyDescription`)), 1)])])])) : (openBlock(), createElementBlock(`section`, Dzt, [e.card.template.schedules.length ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, Ozt, toDisplayString(unref(i18nTranslate)(`roleShare.templateNoSchedules`)), 1)), (openBlock(true), createElementBlock(Fragment, null, renderList(e.card.template.schedules, (e, t) => (openBlock(), createElementBlock(`article`, {
+          })]), createElementVNode(`p`, null, toDisplayString(unref(i18nTranslate)(`roleShare.privacyDescription`)), 1)])])])) : (openBlock(), createElementBlock(`section`, Dzt, [props.card.template.schedules.length ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`p`, Ozt, toDisplayString(unref(i18nTranslate)(`roleShare.templateNoSchedules`)), 1)), (openBlock(true), createElementBlock(Fragment, null, renderList(props.card.template.schedules, (e, t) => (openBlock(), createElementBlock(`article`, {
             key: t,
             class: `rounded-xl bg-muted/60 p-3`
-          }, [createElementVNode(`strong`, kzt, toDisplayString(e.name), 1), createElementVNode(`p`, Azt, toDisplayString(e.schedule) + ` · ` + toDisplayString(unref(i18nTranslate)(`roleShare.offByDefault`)), 1), createElementVNode(`p`, jzt, toDisplayString(e.instruction), 1)]))), 128))]))], 64))], 2)), createElementVNode(`footer`, Mzt, [e.error ? (openBlock(), createElementBlock(`p`, Nzt, toDisplayString(e.error), 1)) : createCommentVNode(``, true), e.importing ? (openBlock(), createBlock(unref(uiSwitchR), {
+          }, [createElementVNode(`strong`, kzt, toDisplayString(e.name), 1), createElementVNode(`p`, Azt, toDisplayString(e.schedule) + ` · ` + toDisplayString(unref(i18nTranslate)(`roleShare.offByDefault`)), 1), createElementVNode(`p`, jzt, toDisplayString(e.instruction), 1)]))), 128))]))], 64))], 2)), createElementVNode(`footer`, Mzt, [props.error ? (openBlock(), createElementBlock(`p`, Nzt, toDisplayString(props.error), 1)) : createCommentVNode(``, true), props.importing ? (openBlock(), createBlock(unref(uiSwitchR), {
             key: 1,
             size: `sm`,
             class: `shrink-0 bg-foreground text-background hover:bg-foreground/90`,
-            disabled: e.busy,
+            disabled: props.busy,
             onClick: renderCache[3] ||= e => i(`add`)
           }, {
-            default: H(() => [createTextVNode(toDisplayString(e.busy ? unref(i18nTranslate)(`roleShare.adding`) : unref(i18nTranslate)(`roleShare.addBot`)), 1)]),
+            default: H(() => [createTextVNode(toDisplayString(props.busy ? unref(i18nTranslate)(`roleShare.adding`) : unref(i18nTranslate)(`roleShare.addBot`)), 1)]),
             _: 1
           }, 8, [`disabled`])) : (openBlock(), createBlock(unref(uiSwitchR), {
             key: 2,
@@ -123002,7 +123002,7 @@ var bIt = {
             class: `shrink-0 bg-foreground text-background hover:bg-foreground/90`,
             onClick: renderCache[4] ||= e => i(`copy`)
           }, {
-            default: H(() => [createTextVNode(toDisplayString(e.copied ? unref(i18nTranslate)(`roleShare.copied`) : unref(i18nTranslate)(`roleShare.copyLink`)), 1)]),
+            default: H(() => [createTextVNode(toDisplayString(props.copied ? unref(i18nTranslate)(`roleShare.copied`) : unref(i18nTranslate)(`roleShare.copyLink`)), 1)]),
             _: 1
           }))])]),
           _: 1
@@ -123122,11 +123122,11 @@ var Lzt = {
       avatar: {}
     },
     emits: [`retry`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -123143,12 +123143,12 @@ var Lzt = {
           u.value = i18nTranslate(`roleShare.copyFailed`);
         }
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [computedData.value && !computedResult.value ? (openBlock(), createElementBlock(`p`, Lzt, toDisplayString(unref(i18nTranslate)(`roleShare.preparing`)), 1)) : createCommentVNode(``, true), c.value && !computedResult.value ? (openBlock(), createBlock(unref(uiSwitchR), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [computedData.value && !computedResult.value ? (openBlock(), createElementBlock(`p`, Lzt, toDisplayString(unref(i18nTranslate)(`roleShare.preparing`)), 1)) : createCommentVNode(``, true), c.value && !computedResult.value ? (openBlock(), createBlock(unref(uiSwitchR), {
         key: 1,
         class: `mt-2`,
         variant: `outline`,
         size: `sm`,
-        disabled: e.retryDisabled,
+        disabled: props.retryDisabled,
         onClick: renderCache[0] ||= e => r(`retry`)
       }, {
         default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.regenerate`)), 1)]),
@@ -123160,9 +123160,9 @@ var Lzt = {
         style: vueNr({
           "--cover": computedResult.value.template.avatarColor
         })
-      }, [createElementVNode(`span`, Hzt, [computedResult.value.template.avatar || e.avatar ? (openBlock(), createElementBlock(`img`, {
+      }, [createElementVNode(`span`, Hzt, [computedResult.value.template.avatar || props.avatar ? (openBlock(), createElementBlock(`img`, {
         key: 0,
-        src: computedResult.value.template.avatar || e.avatar,
+        src: computedResult.value.template.avatar || props.avatar,
         alt: computedResult.value.template.name,
         class: `size-full object-cover`,
         referrerpolicy: `no-referrer`
@@ -123190,11 +123190,11 @@ var Lzt = {
         open: o.value,
         "onUpdate:open": renderCache[2] ||= e => o.value = e,
         card: computedResult.value,
-        avatar: e.avatar,
+        avatar: props.avatar,
         copied: l.value,
         error: u.value,
         onCopy: d
-      }, null, 8, [`open`, `card`, `avatar`, `copied`, `error`])])) : createCommentVNode(``, true), computedResult.value ? withCtx(t.$slots, `after`, {}, undefined, true, 3) : createCommentVNode(``, true)], 64));
+      }, null, 8, [`open`, `card`, `avatar`, `copied`, `error`])])) : createCommentVNode(``, true), computedResult.value ? withCtx(ctx.$slots, `after`, {}, undefined, true, 3) : createCommentVNode(``, true)], 64));
     }
   }), [[`__scopeId`, `data-v-9f1395fd`]]),
   Yzt = [`aria-label`],
@@ -123312,10 +123312,10 @@ var Lzt = {
     },
     emits: [`close`, `openTodo`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i18nTranslate,
           locale: a
@@ -123973,11 +123973,11 @@ var PBt = [`aria-label`],
       id: {}
     },
     emits: [`close`],
-    setup(row, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = row,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i,
           messages: a,
@@ -124289,10 +124289,10 @@ var PBt = [`aria-label`],
     },
     emits: [`close`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           t: i,
           messages: a,
@@ -124554,11 +124554,11 @@ var PBt = [`aria-label`],
     },
     emits: [`update:open`, `select`, `close`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
         computedResult = computed(() => eventAlias.anchor?.querySelector(`.composer`) ?? undefined),
-        i = t,
+        i = emit,
         {
           t: a
         } = vueN(),
@@ -124602,7 +124602,7 @@ var PBt = [`aria-label`],
             icon: Yo
           }]
         }];
-      return (t, renderCache) => (openBlock(), createBlock(unref(DropdownMenuTriggerR), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(DropdownMenuTriggerR), {
         open: event.open,
         "onUpdate:open": renderCache[1] ||= e => i(`update:open`, e)
       }, {
@@ -124916,14 +124916,14 @@ var ContextMenu = defineComponent({
       }
     },
     emits: [`update:open`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = uiSwitchZ(e, t);
-      return (e, t) => (openBlock(), createBlock(unref(ContextMenuRoot), vueNt({
+      let n = uiSwitchZ(props, emit);
+      return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuRoot), vueNt({
         "data-slot": `context-menu`
       }, unref(n)), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -124975,23 +124975,23 @@ var ContextMenu = defineComponent({
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `closeAutoFocus`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (e, t) => (openBlock(), createBlock(unref(ContextMenuPortal), null, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuPortal), null, {
         default: H(() => [resolveComponent(unref(ContextMenuContent), vueNt({
           "data-slot": `context-menu-content`
         }, {
-          ...e.$attrs,
+          ...ctx.$attrs,
           ...unref(a)
         }, {
           class: unref(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 bg-popover text-popover-foreground min-w-36 rounded-lg p-1 shadow-md ring-1 duration-100 cn-menu-translucent z-50 max-h-(--reka-context-menu-content-available-height) origin-(--reka-context-menu-content-transform-origin) overflow-x-hidden overflow-y-auto`, n.class)
         }), {
-          default: H(() => [withCtx(e.$slots, `default`)]),
+          default: H(() => [withCtx(ctx.$slots, `default`)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
@@ -125006,12 +125006,12 @@ var ContextMenu = defineComponent({
       },
       as: {}
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(ContextMenuGroup), vueNt({
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuGroup), vueNt({
         "data-slot": `context-menu-group`
       }, t), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16));
     }
@@ -125038,21 +125038,21 @@ var ContextMenu = defineComponent({
       }
     },
     emits: [`select`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = uiSwitchLt(n, `class`),
         a = uiSwitchZ(i, r);
-      return (t, r) => (openBlock(), createBlock(unref(ContextMenuItem), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuItem), vueNt({
         "data-slot": `context-menu-item`,
-        "data-inset": e.inset ? `` : undefined,
-        "data-variant": e.variant
+        "data-inset": props.inset ? `` : undefined,
+        "data-variant": props.variant
       }, unref(a), {
         class: unref(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive focus:*:[svg]:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 group/context-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class)
       }), {
-        default: H(() => [withCtx(t.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`data-inset`, `data-variant`, `class`]));
     }
@@ -125071,16 +125071,16 @@ var ContextMenu = defineComponent({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         r = uiSwitchLt(t, `class`),
         i = uiSwitchB(r);
-      return (e, n) => (openBlock(), createBlock(unref(ContextMenuTrigger), vueNt({
+      return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenuTrigger), vueNt({
         "data-slot": `context-menu-trigger`
       }, unref(i), {
         class: unref(uiSwitchXt)(`select-none`, t.class)
       }), {
-        default: H(() => [withCtx(e.$slots, `default`)]),
+        default: H(() => [withCtx(ctx.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
@@ -125180,8 +125180,8 @@ var _Ht = [`src`],
       },
       fallbackColor: {}
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = ref(),
         r = ref(false),
         i = Ee(),
@@ -125219,21 +125219,21 @@ var _Ht = [`src`],
       }, {
         immediate: true
       }), (t, renderCache) => (openBlock(), createElementBlock(`span`, {
-        class: normalizeClass([`avatar-effect`, [e.stage && `avatar-effect--${e.stage}`, {
+        class: normalizeClass([`avatar-effect`, [props.stage && `avatar-effect--${props.stage}`, {
           "avatar-effect--collapsed": r.value
         }]]),
         style: vueNr(computedResult.value),
         "aria-hidden": `true`
       }, [createElementVNode(`img`, {
         class: `avatar-effect__image`,
-        src: e.src,
+        src: props.src,
         alt: ``
-      }, null, 8, _Ht), e.stage ? (openBlock(), createElementBlock(`svg`, {
-        key: e.stage,
+      }, null, 8, _Ht), props.stage ? (openBlock(), createElementBlock(`svg`, {
+        key: props.stage,
         class: `avatar-effect__motion`,
         viewBox: `0 0 180 180`,
         fill: `currentColor`
-      }, [e.stage === `loading` ? (openBlock(), createElementBlock(`g`, vHt, [...(renderCache[0] ||= [createElementVNode(`circle`, {
+      }, [props.stage === `loading` ? (openBlock(), createElementBlock(`g`, vHt, [...(renderCache[0] ||= [createElementVNode(`circle`, {
         class: `avatar-effect__loading-dot avatar-effect__loading-dot--1`,
         cx: `50`,
         cy: `94`,
@@ -125248,7 +125248,7 @@ var _Ht = [`src`],
         cx: `130`,
         cy: `94`,
         r: `13`
-      }, null, -1)])])) : e.stage === `tool` ? (openBlock(), createElementBlock(`g`, yHt, [...(renderCache[1] ||= [vueD(`<g transform="translate(90 100) scale(2.65) translate(-90 -100)" data-v-c3a40817><circle class="avatar-effect__tool-center" cx="90" cy="100" r="8.5" data-v-c3a40817></circle><g class="avatar-effect__tool-particles" data-v-c3a40817><circle cx="90" cy="76" r="4.6" opacity=".8" data-v-c3a40817></circle><circle cx="117" cy="96" r="5.1" data-v-c3a40817></circle><circle cx="101" cy="118" r="2.5" opacity=".3" data-v-c3a40817></circle><circle cx="73" cy="118" r="3.5" opacity=".5" data-v-c3a40817></circle><circle cx="65" cy="93" r="3.4" opacity=".65" data-v-c3a40817></circle></g></g>`, 1)])])) : e.stage === `writing` ? (openBlock(), createElementBlock(`g`, bHt, [createElementVNode(`g`, null, [unref(i) === `reduce` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`animate`, {
+      }, null, -1)])])) : props.stage === `tool` ? (openBlock(), createElementBlock(`g`, yHt, [...(renderCache[1] ||= [vueD(`<g transform="translate(90 100) scale(2.65) translate(-90 -100)" data-v-c3a40817><circle class="avatar-effect__tool-center" cx="90" cy="100" r="8.5" data-v-c3a40817></circle><g class="avatar-effect__tool-particles" data-v-c3a40817><circle cx="90" cy="76" r="4.6" opacity=".8" data-v-c3a40817></circle><circle cx="117" cy="96" r="5.1" data-v-c3a40817></circle><circle cx="101" cy="118" r="2.5" opacity=".3" data-v-c3a40817></circle><circle cx="73" cy="118" r="3.5" opacity=".5" data-v-c3a40817></circle><circle cx="65" cy="93" r="3.4" opacity=".65" data-v-c3a40817></circle></g></g>`, 1)])])) : props.stage === `writing` ? (openBlock(), createElementBlock(`g`, bHt, [createElementVNode(`g`, null, [unref(i) === `reduce` ? createCommentVNode(``, true) : (openBlock(), createElementBlock(`animate`, {
         key: 0,
         attributeName: `opacity`,
         values: `0;1;1;1;0`,
@@ -125339,7 +125339,7 @@ var _Ht = [`src`],
           l.value = i18nTranslate(`xiaoheiBot.copyNicknameFailed`);
         }
       }
-      return (t, i) => (openBlock(), createBlock(unref(ContextMenu), null, {
+      return (ctx, cache) => (openBlock(), createBlock(unref(ContextMenu), null, {
         default: H(() => [resolveComponent(unref(ContextMenuTriggerComponent), {
           "as-child": ``,
           disabled: !computedResult.value
@@ -125354,7 +125354,7 @@ var _Ht = [`src`],
             }),
             title: event.effect ? unref(i18nTranslate)(event.effect === `done` ? `xiaoheiBot.process.replyComplete` : event.effect === `tool` ? `xiaoheiBot.process.toolActive` : event.effect === `writing` ? `xiaoheiBot.process.outputActive` : `xiaoheiBot.process.thinkingActive`) : undefined,
             onClick: m,
-            onContextmenuCapture: i[0] ||= (...e) => unref(s) && unref(s)(...e)
+            onContextmenuCapture: cache[0] ||= (...e) => unref(s) && unref(s)(...e)
           }, [(event.message.authorKind ?? unref(r).kind) === `xiaohei` ? (openBlock(), createBlock(XiaoheiBotAvatarEffect, {
             key: 0,
             src: unref(o)(event.message),
@@ -125376,7 +125376,7 @@ var _Ht = [`src`],
             default: H(() => [resolveComponent(unref(ContextMenuItemComponent), {
               "aria-label": `@${f.value}`,
               disabled: !computedData.value,
-              onSelect: i[1] ||= e => vueFn(setIntervalResult) ? setIntervalResult.value = computedData.value : setIntervalResult = computedData.value
+              onSelect: cache[1] ||= e => vueFn(setIntervalResult) ? setIntervalResult.value = computedData.value : setIntervalResult = computedData.value
             }, {
               default: H(() => [resolveComponent(unref(_a)), createElementVNode(`span`, null, toDisplayString(f.value), 1)]),
               _: 1
@@ -125659,7 +125659,7 @@ var kHt = {
     },
     emits: [`openTodo`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           vBotFunnel: n,
@@ -125930,7 +125930,7 @@ var kHt = {
       function Et(e) {
         return h.value.find(item => item.botId === e)?.avatarColor ?? C.value.members?.find(t => t.id === e)?.avatarColor;
       }
-      let Dt = t,
+      let Dt = emit,
         Ot = ref(false),
         kt = ref(false),
         At = ref(null),
@@ -126952,7 +126952,7 @@ var kHt = {
   },
   XiaoheiBotCreationDialogs = _export_sfc(defineComponent({
     __name: `XiaoheiBotCreationDialogs`,
-    setup(e) {
+    setup(props) {
       let {
         t,
         openAvatarEditor: n,
@@ -126976,7 +126976,7 @@ var kHt = {
         cancelCreateGroupMobileSync: b,
         createGroup: x
       } = M5();
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: unref(r),
         "onUpdate:open": renderCache[14] ||= e => vueFn(r) ? r.value = e : null
       }, {
@@ -127439,7 +127439,7 @@ var FWt = {
       function v() {
         t.value = false, f();
       }
-      return (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: unref(t),
         "onUpdate:open": renderCache[7] ||= e => vueFn(t) ? t.value = e : null
       }, {
@@ -127646,12 +127646,12 @@ var FWt = {
       openModifiers: {}
     }),
     emits: vueTt([`add`], [`update:open`]),
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = vueLt(e, `open`),
-        i = t,
+      let n = props,
+        r = vueLt(props, `open`),
+        i = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -127704,7 +127704,7 @@ var FWt = {
           keepSchedules: o.keep.flatMap((item, t) => item ? [t] : [])
         }));
       }
-      return (t, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: r.value,
         "onUpdate:open": renderCache[4] ||= e => r.value = e
       }, {
@@ -127728,7 +127728,7 @@ var FWt = {
             size: `icon-sm`,
             class: `share-import-close`,
             "aria-label": unref(i18nTranslate)(`common.close`),
-            disabled: e.busy,
+            disabled: props.busy,
             onClick: renderCache[0] ||= e => r.value = false
           }, {
             default: H(() => [resolveComponent(unref(lucideT), {
@@ -127738,17 +127738,17 @@ var FWt = {
           }, 8, [`aria-label`, `disabled`])]), createElementVNode(`div`, oGt, [createElementVNode(`div`, {
             class: `share-import-avatar overflow-hidden`,
             style: vueNr({
-              backgroundColor: e.card.template.avatarColor
+              backgroundColor: props.card.template.avatarColor
             })
           }, [computedData.value ? (openBlock(), createElementBlock(`img`, {
             key: 0,
             src: computedData.value,
-            alt: e.card.template.name,
+            alt: props.card.template.name,
             class: `size-full object-cover`,
             referrerpolicy: `no-referrer`
           }, null, 8, sGt)) : (openBlock(), createElementBlock(Fragment, {
             key: 1
-          }, [createTextVNode(toDisplayString((o.name || e.card.template.name).slice(0, 1)), 1)], 64))], 4), resolveComponent(unref(FieldGroup), {
+          }, [createTextVNode(toDisplayString((o.name || props.card.template.name).slice(0, 1)), 1)], 64))], 4), resolveComponent(unref(FieldGroup), {
             class: `share-import-fields`
           }, {
             default: H(() => [resolveComponent(unref(Field), null, {
@@ -127762,7 +127762,7 @@ var FWt = {
                 modelValue: o.name,
                 "onUpdate:modelValue": renderCache[1] ||= e => o.name = e,
                 maxlength: `80`,
-                disabled: e.busy,
+                disabled: props.busy,
                 placeholder: unref(i18nTranslate)(`roleShare.namePlaceholder`)
               }, null, 8, [`modelValue`, `disabled`, `placeholder`])]),
               _: 1
@@ -127779,7 +127779,7 @@ var FWt = {
                 rows: `7`,
                 maxlength: `8000`,
                 class: `share-import-textarea`,
-                disabled: e.busy,
+                disabled: props.busy,
                 placeholder: unref(i18nTranslate)(`roleShare.instructionsPlaceholder`)
               }, null, 8, [`modelValue`, `disabled`, `placeholder`]), resolveComponent(unref(FieldDescription), {
                 class: `text-right`
@@ -127804,7 +127804,7 @@ var FWt = {
                 class: normalizeClass([`share-import-style`, {
                   "is-active": o.responseStyle === t
                 }]),
-                disabled: e.busy,
+                disabled: props.busy,
                 onClick: e => o.responseStyle = t
               }, toDisplayString(unref(i18nTranslate)(`xiaoheiBot.responseStyles.${t}.label`)), 11, lGt))), 128))], 8, cGt), resolveComponent(unref(FieldDescription), null, {
                 default: H(() => [createTextVNode(toDisplayString(f.value), 1)]),
@@ -127826,7 +127826,7 @@ var FWt = {
                 "aria-label": unref(i18nTranslate)(`roleShare.removeTag`, {
                   tag: t
                 }),
-                disabled: e.busy,
+                disabled: props.busy,
                 onClick: e => m(t)
               }, [resolveComponent(unref(lucideT), {
                 size: 12
@@ -127835,13 +127835,13 @@ var FWt = {
                 modelValue: s.value,
                 "onUpdate:modelValue": renderCache[3] ||= e => s.value = e,
                 maxlength: `80`,
-                disabled: e.busy,
+                disabled: props.busy,
                 placeholder: unref(i18nTranslate)(`roleShare.tagPlaceholder`),
                 onKeydown: playerT(withDirectives(p, [`prevent`]), [`enter`])
               }, null, 8, [`modelValue`, `disabled`, `placeholder`, `onKeydown`]), resolveComponent(unref(uiSwitchR), {
                 type: `button`,
                 variant: `outline`,
-                disabled: e.busy || !s.value.trim(),
+                disabled: props.busy || !s.value.trim(),
                 onClick: p
               }, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.addTag`)), 1)]),
@@ -127854,13 +127854,13 @@ var FWt = {
                 _: 1
               })) : createCommentVNode(``, true)]),
               _: 1
-            }), e.card.template.schedules.length ? (openBlock(), createBlock(unref(Field), {
+            }), props.card.template.schedules.length ? (openBlock(), createBlock(unref(Field), {
               key: 0
             }, {
               default: H(() => [resolveComponent(unref(FieldLabel), null, {
                 default: H(() => [createTextVNode(toDisplayString(unref(i18nTranslate)(`roleShare.schedules`)), 1)]),
                 _: 1
-              }), (openBlock(true), createElementBlock(Fragment, null, renderList(e.card.template.schedules, (t, n) => (openBlock(), createElementBlock(`article`, {
+              }), (openBlock(true), createElementBlock(Fragment, null, renderList(props.card.template.schedules, (t, n) => (openBlock(), createElementBlock(`article`, {
                 key: n,
                 class: normalizeClass([`share-import-task`, {
                   "is-removed": !o.keep[n]
@@ -127870,7 +127870,7 @@ var FWt = {
                 variant: `ghost`,
                 size: `sm`,
                 class: `shrink-0`,
-                disabled: e.busy,
+                disabled: props.busy,
                 onClick: e => o.keep[n] = !o.keep[n]
               }, {
                 default: H(() => [createTextVNode(toDisplayString(o.keep[n] ? unref(i18nTranslate)(`roleShare.removeTask`) : unref(i18nTranslate)(`roleShare.restoreTask`)), 1)]),
@@ -127879,13 +127879,13 @@ var FWt = {
               _: 1
             })) : createCommentVNode(``, true), createElementVNode(`p`, yGt, toDisplayString(unref(i18nTranslate)(`roleShare.privacyDescription`)), 1)]),
             _: 1
-          })]), createElementVNode(`footer`, bGt, [e.error ? (openBlock(), createElementBlock(`p`, xGt, toDisplayString(e.error), 1)) : createCommentVNode(``, true), resolveComponent(unref(uiSwitchR), {
+          })]), createElementVNode(`footer`, bGt, [props.error ? (openBlock(), createElementBlock(`p`, xGt, toDisplayString(props.error), 1)) : createCommentVNode(``, true), resolveComponent(unref(uiSwitchR), {
             size: `sm`,
             class: `shrink-0 bg-foreground text-background hover:bg-foreground/90`,
-            disabled: e.busy || !computedResult.value,
+            disabled: props.busy || !computedResult.value,
             onClick: h
           }, {
-            default: H(() => [createTextVNode(toDisplayString(e.busy ? unref(i18nTranslate)(`roleShare.adding`) : unref(i18nTranslate)(`roleShare.addBot`)), 1)]),
+            default: H(() => [createTextVNode(toDisplayString(props.busy ? unref(i18nTranslate)(`roleShare.adding`) : unref(i18nTranslate)(`roleShare.addBot`)), 1)]),
             _: 1
           }, 8, [`disabled`])])]),
           _: 1
@@ -127904,7 +127904,7 @@ var FWt = {
   },
   XiaoheiBotImagePreviewDialog = defineComponent({
     __name: `XiaoheiBotImagePreviewDialog`,
-    setup(e) {
+    setup(props) {
       let {
         t,
         imagePreviewOpen: n,
@@ -127921,7 +127921,7 @@ var FWt = {
       function p(e) {
         l.value = e instanceof HTMLElement ? e : null;
       }
-      return (e, renderCache) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createBlock(unref(dialogA), {
         open: unref(n),
         "onUpdate:open": renderCache[7] ||= e => vueFn(n) ? n.value = e : null
       }, {
@@ -128051,9 +128051,9 @@ var FWt = {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(e) {
-      let t = e;
-      return (e, n) => (openBlock(), createBlock(unref(beautifier), {
+    setup(props) {
+      let t = props;
+      return (ctx, cache) => (openBlock(), createBlock(unref(beautifier), {
         role: `status`,
         "aria-label": `Loading`,
         class: normalizeClass(unref(uiSwitchXt)(`size-4 animate-spin`, t.class))
@@ -128121,9 +128121,9 @@ var FWt = {
       openModifiers: {}
     }),
     emits: [`update:open`],
-    setup(row) {
-      let t = row,
-        n = vueLt(row, `open`),
+    setup(props) {
+      let t = props,
+        n = vueLt(props, `open`),
         {
           t: r
         } = vueN(),
@@ -128267,7 +128267,7 @@ var FWt = {
               class: `truncate`
             }, {
               default: H(() => [createTextVNode(toDisplayString(unref(r)(`xiaoheiBot.memory.owner`, {
-                name: row.botName
+                name: props.botName
               })), 1)]),
               _: 1
             })]), resolveComponent(unref(DialogClose), {
@@ -128645,7 +128645,7 @@ var FWt = {
   },
   XiaoheiBotProfileDrawer = _export_sfc(defineComponent({
     __name: `XiaoheiBotProfileDrawer`,
-    setup(e) {
+    setup(props) {
       let {
           t,
           wechat: n,
@@ -129525,7 +129525,7 @@ var FWt = {
         } = M5(),
         b = qB(c),
         x = qB(n);
-      return (e, renderCache) => {
+      return (ctx, renderCache) => {
         let C = vueWt(`ShieldCheck`),
           w = vueWt(`AlertTitle`),
           T = vueWt(`AlertDescription`),
@@ -130277,7 +130277,7 @@ var oqt = {
           }
         }, null, 2),
         E = (e, n) => i18nTranslate(`xiaoheiBot.settings.mcp.${e}`, n ?? {});
-      return (e, t) => (openBlock(), createElementBlock(`div`, oqt, [createElementVNode(`div`, sqt, [createElementVNode(`span`, cqt, toDisplayString(E(`count`, {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, oqt, [createElementVNode(`div`, sqt, [createElementVNode(`span`, cqt, toDisplayString(E(`count`, {
         count: unref(n).servers.length
       })), 1), createElementVNode(`div`, lqt, [resolveComponent(unref(uiSwitchR), {
         variant: `ghost`,
@@ -130325,7 +130325,7 @@ var oqt = {
         }), resolveComponent(unref(CardContent), null, {
           default: H(() => [createElementVNode(`form`, {
             class: `flex flex-col gap-3`,
-            onSubmit: t[1] ||= withDirectives((...e) => unref(x) && unref(x)(...e), [`prevent`])
+            onSubmit: cache[1] ||= withDirectives((...e) => unref(x) && unref(x)(...e), [`prevent`])
           }, [resolveComponent(unref(Field), null, {
             default: H(() => [resolveComponent(unref(FieldLabel), {
               for: `mcp-import`
@@ -130335,7 +130335,7 @@ var oqt = {
             }), resolveComponent(unref(Textarea), {
               id: `mcp-import`,
               modelValue: unref(m),
-              "onUpdate:modelValue": t[0] ||= e => vueFn(m) ? m.value = e : null,
+              "onUpdate:modelValue": cache[0] ||= e => vueFn(m) ? m.value = e : null,
               disabled: unref(s),
               class: `mcp-json mcp-json--import`,
               spellcheck: `false`,
@@ -130396,7 +130396,7 @@ var oqt = {
           }, 1032, [`title`]), createElementVNode(`div`, mqt, [createElementVNode(`span`, {
             class: `mcp-status`,
             "data-status": unref(w)(e)
-          }, [t[3] ||= createElementVNode(`span`, {
+          }, [cache[3] ||= createElementVNode(`span`, {
             class: `mcp-status-dot`
           }, null, -1), createTextVNode(toDisplayString(E(`status.${unref(w)(e)}`)), 1)], 8, hqt), createElementVNode(`span`, null, toDisplayString(e.type === `stdio` ? `stdio` : e.type === `sse` ? `SSE` : `HTTP`), 1)])]), resolveComponent(unref(uiSwitchT), {
             "model-value": e.enabled,
@@ -130462,7 +130462,7 @@ var oqt = {
             variant: `ghost`,
             size: `xs`,
             disabled: unref(c).has(e.name),
-            onClick: t[2] ||= e => u.value = ``
+            onClick: cache[2] ||= e => u.value = ``
           }, {
             default: H(() => [createTextVNode(toDisplayString(E(`cancel`)), 1)]),
             _: 1
@@ -130667,7 +130667,7 @@ var Oqt = {
   },
   XiaoheiBotSharedWorkspace = defineComponent({
     __name: `XiaoheiBotSharedWorkspace`,
-    setup(row) {
+    setup(props) {
       let {
           t
         } = vueN(),
@@ -130693,7 +130693,7 @@ var Oqt = {
           openDirectory: x,
           changeDirectory: S
         } = Dqt();
-      return (e, C) => (openBlock(), createElementBlock(`div`, Oqt, [unref(s) ? (openBlock(), createBlock(unref(defineComponentResult), {
+      return (ctx, cache) => (openBlock(), createElementBlock(`div`, Oqt, [unref(s) ? (openBlock(), createBlock(unref(defineComponentResult), {
         key: 0,
         variant: `destructive`
       }, {
@@ -130772,7 +130772,7 @@ var Oqt = {
           }), resolveComponent(unref(Select), {
             "model-value": unref(i),
             disabled: unref(c),
-            "onUpdate:modelValue": C[0] ||= e => unref(p)(String(e))
+            "onUpdate:modelValue": cache[0] ||= e => unref(p)(String(e))
           }, {
             default: H(() => [resolveComponent(unref(SelectTriggerComponent), {
               id: `shared-workspace-file`
@@ -130852,7 +130852,7 @@ var Oqt = {
           }, [resolveComponent(unref(Textarea), {
             id: `shared-workspace-content`,
             modelValue: unref(o),
-            "onUpdate:modelValue": C[1] ||= e => vueFn(o) ? o.value = e : null,
+            "onUpdate:modelValue": cache[1] ||= e => vueFn(o) ? o.value = e : null,
             disabled: unref(c),
             class: `h-64 min-h-48 resize-y field-sizing-fixed`
           }, null, 8, [`modelValue`, `disabled`]), createElementVNode(`div`, Mqt, [resolveComponent(unref(uiSwitchR), {
@@ -131063,7 +131063,7 @@ var Oqt = {
   },
   XiaoheiBotSettingsDialog = _export_sfc(defineComponent({
     __name: `XiaoheiBotSettingsDialog`,
-    setup(e) {
+    setup(props) {
       let {
           captureGrowthObservation: t
         } = growthTelT(),
@@ -131157,7 +131157,7 @@ var Oqt = {
           crossConversationHistoryRoundLimit: Number(counter.value)
         });
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(unref(dialogA), {
         open: unref(r),
         "onUpdate:open": renderCache[14] ||= e => vueFn(r) ? r.value = e : null
       }, {
@@ -136716,21 +136716,21 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
       }
     },
     emits: [`open-todo`, `contact-panel-width-change`, `open-bot-conversation`],
-    setup(e, {
-      expose: t,
-      emit: n
+    setup(props, {
+      expose: expose,
+      emit: emit
     }) {
       let {
           vBotFunnel: r
         } = km(),
-        i = e,
-        a = n,
+        i = props,
+        a = emit,
         {
           isOpen: o,
           close: s
         } = am(`bot`),
         c = ZJt(() => i.active && !o.value, () => i.active);
-      EPt(c), t({
+      EPt(c), expose({
         openSharedRole: c.openSharedRole,
         attachLocalFiles: e => c.importLocalAttachmentPaths(e),
         openNotificationConversation: async e => {
@@ -136757,7 +136757,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
       function y(e) {
         f.value = e instanceof HTMLElement ? e : null;
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [unref(c).sharedRole.value ? (openBlock(), createBlock(XiaoheiBotShareImportDialog, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [unref(c).sharedRole.value ? (openBlock(), createBlock(XiaoheiBotShareImportDialog, {
         key: 0,
         open: unref(c).sharedRoleOpen.value,
         "onUpdate:open": renderCache[0] ||= e => unref(c).sharedRoleOpen.value = e,
@@ -136928,13 +136928,13 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
     },
     emits: [`open`, `reload`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let {
           captureGrowthObservation: n
         } = growthTelT(),
         eventAlias = event,
-        i = t,
+        i = emit,
         {
           locale: a,
           t: i18nTranslate
@@ -137019,7 +137019,7 @@ var QJt = [`aria-label`, `aria-valuemin`, `aria-valuemax`, `aria-valuenow`],
           backgroundColor: `color-mix(in srgb, ${e.accentColor} 10%, var(--card))`
         };
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(`section`, nYt, [createElementVNode(`h2`, rYt, toDisplayString(unref(i18nTranslate)(`toolboxNative.toolList`)), 1), createElementVNode(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`section`, nYt, [createElementVNode(`h2`, rYt, toDisplayString(unref(i18nTranslate)(`toolboxNative.toolList`)), 1), createElementVNode(`div`, {
         ref_key: `toolbarRef`,
         ref: f,
         class: normalizeClass([`sticky top-0 z-10 flex items-center justify-between gap-4 pb-3 pt-2.5`, p.value ? `bg-background` : `bg-transparent`])
@@ -137455,10 +137455,10 @@ var KYt = {
     },
     emits: [`openTodo`, `milestoneOpenRequestHandled`, `toolOpenRequestHandled`, `workspaceActiveChange`, `navigate`],
     setup(items, {
-      emit: t
+      emit: emit
     }) {
       let itemsAlias = items,
-        r = t,
+        r = emit,
         {
           locale: i,
           t: i18nTranslate,
@@ -137707,11 +137707,11 @@ var rXt = {
       toolOpenRequest: {}
     },
     emits: [`openTodo`, `milestoneOpenRequestHandled`, `toolOpenRequestHandled`, `workspaceActiveChange`, `navigate`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         i = ref(true),
         a = null;
       function o() {
@@ -137897,7 +137897,7 @@ var lXt = {
   kXt = [`onClick`],
   BadgeListPage = _export_sfc(defineComponent({
     __name: `BadgeListPage`,
-    setup(e) {
+    setup(props) {
       let {
           t: i18nTranslate,
           te: n
@@ -137969,7 +137969,7 @@ var lXt = {
         let r = `badgeDefinitions.${e.id}.description`;
         return n(r) ? i18nTranslate(r) : e.description ?? ``;
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(`div`, lXt, [createElementVNode(`div`, uXt, [(openBlock(), createElementBlock(Fragment, null, renderList(c, e => createElementVNode(`button`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`div`, lXt, [createElementVNode(`div`, uXt, [(openBlock(), createElementBlock(Fragment, null, renderList(c, e => createElementVNode(`button`, {
         key: e.id,
         class: normalizeClass([`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all`, a.value === e.id ? `bg-black/[0.06] text-(--foreground)` : `text-[#999] hover:bg-black/[0.03]`]),
         onClick: t => a.value = e.id
@@ -139109,8 +139109,8 @@ var xZt = [`src`],
         type: Boolean
       }
     },
-    setup(e, {
-      expose: t
+    setup(props, {
+      expose: expose
     }) {
       let n = `wf-${We().replace(/[^\w-]/g, ``)}`,
         r = ref(null),
@@ -139165,11 +139165,11 @@ var xZt = [`src`],
           easing: `cubic-bezier(0.2, 0.7, 0.3, 1)`
         }));
       }
-      return t({
+      return expose({
         strike: c
       }), (t, renderCache) => (openBlock(), createElementBlock(`div`, {
-        class: normalizeClass([`wooden-fish-figure`, [`tone-${e.tone}`, {
-          "is-large": e.large
+        class: normalizeClass([`wooden-fish-figure`, [`tone-${props.tone}`, {
+          "is-large": props.large
         }]])
       }, [(openBlock(), createElementBlock(`svg`, MZt, [createElementVNode(`defs`, null, [createElementVNode(`radialGradient`, {
         id: `${n}-ground`,
@@ -139337,7 +139337,7 @@ var xZt = [`src`],
         ry: `1.8`,
         fill: `#FFFFFF`,
         opacity: `0.45`
-      }, null, -1)], 512)])), createElementVNode(`div`, UZt, [(openBlock(true), createElementBlock(Fragment, null, renderList(e.texts, e => (openBlock(), createElementBlock(`span`, {
+      }, null, -1)], 512)])), createElementVNode(`div`, UZt, [(openBlock(true), createElementBlock(Fragment, null, renderList(props.texts, e => (openBlock(), createElementBlock(`span`, {
         key: e.id,
         class: normalizeClass([`merit-text`, `merit-${e.variant}`]),
         style: vueNr({
@@ -139855,10 +139855,10 @@ var aQt = {
     },
     emits: [`update:open`, `open-todo`, `open-report-cc`, `open-update`, `open-share-card`],
     setup(event, {
-      emit: t
+      emit: emit
     }) {
       let eventAlias = event,
-        r = t,
+        r = emit,
         {
           notifications: i,
           unreadCount: a,
@@ -140023,7 +140023,7 @@ var aQt = {
       function pe() {
         c(), m.value = false;
       }
-      return (t, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(playerR, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [resolveComponent(playerR, {
         name: `fade`
       }, {
         default: H(() => [event.open ? (openBlock(), createElementBlock(`div`, {
@@ -140412,7 +140412,7 @@ var LQt = {
         !e && n.value && !c.value && a();
       }
       let E = computed(() => f.value ? p.value ? [p.value] : [] : computedResult.value);
-      return (e, i) => (openBlock(), createBlock(unref(dialogA), {
+      return (ctx, cache) => (openBlock(), createBlock(unref(dialogA), {
         open: unref(r),
         "onUpdate:open": T
       }, {
@@ -140651,11 +140651,11 @@ var LQt = {
       state: {}
     },
     emits: [`state-changed`],
-    setup(e, {
-      emit: t
+    setup(props, {
+      emit: emit
     }) {
-      let n = e,
-        r = t,
+      let n = props,
+        r = emit,
         {
           t: i18nTranslate
         } = vueN(),
@@ -141801,7 +141801,7 @@ var V$t = {
           entry: `settings`
         });
       }
-      return (e, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, {
         class: normalizeClass([`app-layout`, {
           "app-layout--win": unref(fallbackValue) === `win32`,
           "app-layout--maximized": unref(fallbackValue) === `win32` && r.value
@@ -142202,8 +142202,8 @@ var V$t = {
         default: 0
       }
     },
-    setup(e) {
-      let t = e,
+    setup(props) {
+      let t = props,
         n = `todo-ball-${We().replace(/:/g, ``)}`,
         r = [{
           y: 53,
@@ -142216,7 +142216,7 @@ var V$t = {
           lineWidth: 20
         }],
         computedResult = computed(() => Math.max(0, Math.min(r.length, Math.round(t.checkedRows))));
-      return (e, renderCache) => (openBlock(), createElementBlock(`svg`, u1t, [createElementVNode(`defs`, null, [createElementVNode(`linearGradient`, {
+      return (ctx, renderCache) => (openBlock(), createElementBlock(`svg`, u1t, [createElementVNode(`defs`, null, [createElementVNode(`linearGradient`, {
         id: `${n}-cover`,
         x1: `0`,
         y1: `0`,

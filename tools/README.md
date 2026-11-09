@@ -113,6 +113,30 @@ screenshot-beautifier→beautifier、en-US-player→player 等）。
 
 这三类在本项目共 2315 个候选、实际应用 765 个（其余因作用域冲突跳过）。
 
+## Vue setup 语义命名（覆盖量最大的一类）
+
+Vue 组件的 `setup` 签名是固定的：`setup(props, context) { ... return (ctx, cache) => render() }`。
+压缩后表现为：
+
+```js
+setup(e) { let t = e; return (n, r) => (openBlock(), createElementBlock(...)) }
+setup(t, { emit: n }) { let r = t; ... }
+```
+
+因此可确定地命名（本项目 458 个 setup、298 个首参为短名）：
+
+| 位置 | 命名 |
+|---|---|
+| `setup` 首参 | `props` |
+| `setup` 第二参（非解构） | `context` |
+| 第二参解构键（`emit`/`attrs`/`slots`） | 与键同名 |
+| `setup` 内 `return (A, B) =>` 的 A / B | `ctx` / `renderCache` |
+
+**关键教训**：`props`/`ctx`/`cache`/`emit` 不是 JS 全局对象，**不能放进 GLOBALS
+黑名单**——否则目标名被自己拦掉（本轮首次运行 0 个 `setup(props` 就是这个原因）。
+
+实测：458 个 setup 中 305 个变为 `setup(props, ...)`；`ctx` 597 处、`renderCache` 1671 处。
+
 ## 尚未安全的操作
 
 - **组件级物理拆分**：实测顶层 9986 声明零重复，但一条 `var` 逗号链常含多个组件；
