@@ -17742,7 +17742,7 @@ var soe = {
     }) {
       let n = items,
         r = t,
-        i = Fe(() => At(() => import(`./DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
+        i = Fe(() => At(() => import(`../pages/DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
         a = ref(null);
       function o() {
         m.value = null, a.value = Xg(new Date());
@@ -38535,7 +38535,7 @@ var EO = defineComponent({
         class: `absolute inset-0 -z-10 size-full object-contain object-right dark:hidden`,
         draggable: `false`
       }, null, -1), t[12] ||= createElementVNode(`img`, {
-        src: `` + new URL(`../invite-credits-banner-dark.png`, import.meta.url).href,
+        src: `` + new URL(`../assets/invite-credits-banner-dark.png`, import.meta.url).href,
         alt: ``,
         class: `absolute inset-0 -z-10 hidden size-full object-contain object-right dark:block`,
         draggable: `false`
@@ -77816,7 +77816,7 @@ var pZ = Fe(() => gX(null, null, function* () {
       }
     }));
     try {
-      if (yield uZ()) return (yield At(() => import(`./math-inline.js`), __vite__mapDeps([17, 1, 2]), import.meta.url)).default;
+      if (yield uZ()) return (yield At(() => import(`../blocks/math-inline.js`), __vite__mapDeps([17, 1, 2]), import.meta.url)).default;
     } catch (e) {
       console.warn(`[markstream-vue] Optional peer dependencies for MathInlineNode are missing. Falling back to text rendering. To enable full math rendering features, please install "katex".`, e);
     }
@@ -77830,7 +77830,7 @@ var pZ = Fe(() => gX(null, null, function* () {
   })),
   mZ = Fe(() => gX(null, null, function* () {
     try {
-      if (yield uZ()) return (yield At(() => import(`./math-block.js`), __vite__mapDeps([18, 1, 2]), import.meta.url)).default;
+      if (yield uZ()) return (yield At(() => import(`../blocks/math-block.js`), __vite__mapDeps([18, 1, 2]), import.meta.url)).default;
     } catch (e) {
       console.warn(`[markstream-vue] Optional peer dependencies for MathBlockNode are missing. Falling back to text rendering. To enable full math rendering features, please install "katex".`, e);
     }
@@ -82269,7 +82269,7 @@ var n3e = defineComponent({
       }
       let Nt = Fe(() => gX(null, null, function* () {
           try {
-            return (yield At(() => import(`./CodeBlockNode.js`), __vite__mapDeps([19, 1, 2]), import.meta.url)).default;
+            return (yield At(() => import(`../ui/CodeBlockNode.js`), __vite__mapDeps([19, 1, 2]), import.meta.url)).default;
           } catch (e) {
             return console.warn(`[markstream-vue] Optional peer dependencies for CodeBlockNode are missing. Falling back to inline-code rendering (no Monaco). To enable full code block features, please install "stream-monaco".`, e), FZ;
           }
@@ -82930,7 +82930,7 @@ var n3e = defineComponent({
       let hn = Fe({
           loader: () => gX(null, null, function* () {
             try {
-              return (yield At(() => import(`./mermaid-block.js`), __vite__mapDeps([20, 1, 2]), import.meta.url)).default;
+              return (yield At(() => import(`../blocks/mermaid-block.js`), __vite__mapDeps([20, 1, 2]), import.meta.url)).default;
             } catch (e) {
               return console.warn(`[markstream-vue] Optional peer dependencies for MermaidBlockNode are missing. Falling back to preformatted code rendering. To enable Mermaid rendering, please install "mermaid".`, e), FZ;
             }
@@ -82941,7 +82941,7 @@ var n3e = defineComponent({
         gn = Fe({
           loader: () => gX(null, null, function* () {
             try {
-              return (yield At(() => import(`./infographic-block.js`), __vite__mapDeps([21, 1, 2, 3, 4]), import.meta.url)).default;
+              return (yield At(() => import(`../blocks/infographic-block.js`), __vite__mapDeps([21, 1, 2, 3, 4]), import.meta.url)).default;
             } catch (e) {
               return console.warn(`[markstream-vue] Optional peer dependencies for InfographicBlockNode are missing. Falling back to preformatted code rendering. To enable Infographic rendering, please install "@antv/infographic".`, e), FZ;
             }
@@ -82951,7 +82951,7 @@ var n3e = defineComponent({
         }),
         _n = Fe(() => gX(null, null, function* () {
           try {
-            return (yield At(() => import(`./douyin-d2-block.js`), __vite__mapDeps([22, 1, 2]), import.meta.url)).default;
+            return (yield At(() => import(`../blocks/douyin-d2-block.js`), __vite__mapDeps([22, 1, 2]), import.meta.url)).default;
           } catch (e) {
             return console.warn(`[markstream-vue] Optional peer dependencies for D2BlockNode are missing. Falling back to preformatted code rendering. To enable D2 rendering, please install "@terrastruct/d2".`, e), FZ;
           }
@@ -83755,7 +83755,7 @@ function k3e() {
     T$ = null;
   }
 }
-Fe(() => At(() => import(`./placeholder.js`), __vite__mapDeps([23, 19, 1, 2]), import.meta.url)), Fe(() => At(() => import(`./math-block.js`), __vite__mapDeps([18, 1, 2]), import.meta.url)), Fe(() => At(() => import(`./math-inline.js`), __vite__mapDeps([17, 1, 2]), import.meta.url)), Fe(() => At(() => import(`./mermaid-block.js`), __vite__mapDeps([20, 1, 2]), import.meta.url)), Fe(() => At(() => import(`./infographic-block.js`), __vite__mapDeps([21, 1, 2, 3, 4]), import.meta.url)), Fe(() => At(() => import(`./douyin-d2-block.js`), __vite__mapDeps([22, 1, 2]), import.meta.url));
+Fe(() => At(() => import(`../blocks/placeholder.js`), __vite__mapDeps([23, 19, 1, 2]), import.meta.url)), Fe(() => At(() => import(`../blocks/math-block.js`), __vite__mapDeps([18, 1, 2]), import.meta.url)), Fe(() => At(() => import(`../blocks/math-inline.js`), __vite__mapDeps([17, 1, 2]), import.meta.url)), Fe(() => At(() => import(`../blocks/mermaid-block.js`), __vite__mapDeps([20, 1, 2]), import.meta.url)), Fe(() => At(() => import(`../blocks/infographic-block.js`), __vite__mapDeps([21, 1, 2, 3, 4]), import.meta.url)), Fe(() => At(() => import(`../blocks/douyin-d2-block.js`), __vite__mapDeps([22, 1, 2]), import.meta.url));
 function A$(e) {
   return j$(new DOMParser().parseFromString(e, `text/html`).body).trim();
 }
@@ -101026,7 +101026,7 @@ var Ylt = {
         return `${C(date.getHours())}:${C(date.getMinutes())}`;
       }
       let O = computed(() => w(f.value) !== w(p.value)),
-        k = Fe(() => At(() => import(`./DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
+        k = Fe(() => At(() => import(`../pages/DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
         A = ref(null),
         j = ref(null),
         ee = ref(`all`);
@@ -107070,10 +107070,10 @@ var D_t = {
         v = ref(ug(A8)),
         y = ref(false),
         b = computed(() => v.value && !y.value),
-        x = Fe(() => At(() => import(`./Barcode3D.js`), __vite__mapDeps([24, 1, 13, 14]), import.meta.url).catch(err => {
+        x = Fe(() => At(() => import(`../vendors/Barcode3D.js`), __vite__mapDeps([24, 1, 13, 14]), import.meta.url).catch(err => {
           throw y.value = true, err;
         })),
-        S = Fe(() => At(() => import(`./DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
+        S = Fe(() => At(() => import(`../pages/DayReplayPlayer.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]), import.meta.url)),
         C = ref(null);
       function w(e) {
         let t = d.value?.days[e]?.date;
@@ -137259,67 +137259,67 @@ function z7(e, t) {
 var zYt = {
   seedream: {
     generatorType: `seedream`,
-    component: Fe(() => At(() => import(`./seedream.js`), __vite__mapDeps([25, 26, 1, 2, 5, 27, 28, 7, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([25, 26, 1, 2, 5, 27, 28, 7, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "gpt-image-2": {
     generatorType: `gpt-image-2`,
-    component: Fe(() => At(() => import(`./gpt-image-2.js`), __vite__mapDeps([40, 26, 1, 2, 5, 27, 28, 7, 29, 41, 42, 12, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([40, 26, 1, 2, 5, 27, 28, 7, 29, 41, 42, 12, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "seedance-2": {
     generatorType: `seedance-2`,
-    component: Fe(() => At(() => import(`./seedance-2.js`), __vite__mapDeps([43, 26, 1, 2, 5, 27, 28, 6, 7, 29, 32, 41, 42, 12, 30, 31, 33, 34, 36, 37, 38, 39]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([43, 26, 1, 2, 5, 27, 28, 6, 7, 29, 32, 41, 42, 12, 30, 31, 33, 34, 36, 37, 38, 39]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "voice-clone": {
     generatorType: `voice-clone`,
-    component: Fe(() => At(() => import(`./voice-clone.js`), __vite__mapDeps([44, 26, 1, 2, 5, 27, 28, 45, 7, 29, 46, 9, 47, 33, 34, 48, 49, 50, 51, 41, 42, 12, 30, 37, 39, 36, 38]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([44, 26, 1, 2, 5, 27, 28, 45, 7, 29, 46, 9, 47, 33, 34, 48, 49, 50, 51, 41, 42, 12, 30, 37, 39, 36, 38]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "voice-synthesis": {
     generatorType: `voice-synthesis`,
-    component: Fe(() => At(() => import(`./voice-synthesis.js`), __vite__mapDeps([52, 46, 26, 1, 2, 5, 27, 28, 45, 7, 9, 29, 47, 33, 34, 48, 49, 50, 51, 41, 42, 12, 30, 37, 39]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([52, 46, 26, 1, 2, 5, 27, 28, 45, 7, 9, 29, 47, 33, 34, 48, 49, 50, 51, 41, 42, 12, 30, 37, 39]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   whiteboard: {
     generatorType: `whiteboard`,
-    component: Fe(() => At(() => import(`./whiteboard.js`), __vite__mapDeps([53, 26, 1, 2, 5, 27, 28, 54, 55, 56, 57, 29, 33, 34, 48, 10, 41, 42, 12, 58, 59]), import.meta.url))
+    component: Fe(() => At(() => import(`../pages/whiteboard.js`), __vite__mapDeps([53, 26, 1, 2, 5, 27, 28, 54, 55, 56, 57, 29, 33, 34, 48, 10, 41, 42, 12, 58, 59]), import.meta.url))
   },
   "pdf-compress": {
     generatorType: `pdf-compress`,
-    component: Fe(() => At(() => import(`./pdf-compress.js`), __vite__mapDeps([60, 26, 1, 2, 5, 27, 28, 45, 7, 61, 29, 48, 34, 10, 41, 42, 12, 30, 36, 37, 38, 39, 58, 62]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([60, 26, 1, 2, 5, 27, 28, 45, 7, 61, 29, 48, 34, 10, 41, 42, 12, 30, 36, 37, 38, 39, 58, 62]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "image-compress": {
     generatorType: `image-compress`,
-    component: Fe(() => At(() => import(`./image-compress.js`), __vite__mapDeps([63, 26, 1, 2, 5, 27, 28, 45, 7, 55, 29, 48, 34, 10, 41, 42, 12, 30, 36, 37, 38, 39, 58, 62]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([63, 26, 1, 2, 5, 27, 28, 45, 7, 55, 29, 48, 34, 10, 41, 42, 12, 30, 36, 37, 38, 39, 58, 62]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "multi-platform-publisher": {
     generatorType: `multi-platform-publisher`,
-    component: Fe(() => At(() => import(`./multi-platform-publisher.js`), __vite__mapDeps([64, 26, 1, 2, 5, 27, 28, 45, 7, 65, 29, 33, 34, 48, 51, 66, 41, 42, 12, 30, 38, 39]), import.meta.url)),
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([64, 26, 1, 2, 5, 27, 28, 45, 7, 65, 29, 33, 34, 48, 51, 66, 41, 42, 12, 30, 38, 39]), import.meta.url)),
     capabilities: {
       recharge: true
     }
   },
   "markdown-reader": {
     generatorType: `markdown-reader`,
-    component: Fe(() => At(() => import(`./markdown-reader.js`), __vite__mapDeps([67, 26, 1, 2, 5, 27, 28, 68, 45, 69, 50, 70, 7, 71, 72, 73, 57, 29, 74, 48, 34, 10, 11, 12, 41, 42, 59, 75]), import.meta.url)),
+    component: Fe(() => At(() => import(`../pages/markdown-reader.js`), __vite__mapDeps([67, 26, 1, 2, 5, 27, 28, 68, 45, 69, 50, 70, 7, 71, 72, 73, 57, 29, 74, 48, 34, 10, 11, 12, 41, 42, 59, 75]), import.meta.url)),
     capabilities: {
       externalOpen: `markdown`
     }
@@ -137330,31 +137330,31 @@ var zYt = {
   },
   "screenshot-beautifier": {
     generatorType: `screenshot-beautifier`,
-    component: Fe(() => At(() => import(`./screenshot-beautifier-page.js`), __vite__mapDeps([80, 26, 1, 2, 5, 27, 28, 81, 7, 29, 82, 48, 34, 10, 79, 30, 36]), import.meta.url))
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([80, 26, 1, 2, 5, 27, 28, 81, 7, 29, 82, 48, 34, 10, 79, 30, 36]), import.meta.url))
   },
   "wooden-fish": {
     generatorType: `wooden-fish`,
-    component: Fe(() => At(() => import(`./WoodenFishTool.js`), __vite__mapDeps([83, 26, 1, 2, 5, 27, 28, 45, 84, 81, 6, 77, 7, 65, 61, 85, 55, 8, 32, 86, 29, 82]), import.meta.url))
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([83, 26, 1, 2, 5, 27, 28, 45, 84, 81, 6, 77, 7, 65, 61, 85, 55, 8, 32, 86, 29, 82]), import.meta.url))
   },
   "keyboard-sound": {
     generatorType: `keyboard-sound`,
-    component: Fe(() => At(() => import(`./KeyboardSoundTool.js`), __vite__mapDeps([87, 26, 1, 2, 5, 27, 28, 45, 84, 81, 6, 77, 7, 65, 61, 85, 55, 8, 32, 47, 49, 50, 88, 66, 86, 29, 82]), import.meta.url))
+    component: Fe(() => At(() => import(`../pages/KeyboardSoundTool.js`), __vite__mapDeps([87, 26, 1, 2, 5, 27, 28, 45, 84, 81, 6, 77, 7, 65, 61, 85, 55, 8, 32, 47, 49, 50, 88, 66, 86, 29, 82]), import.meta.url))
   },
   "keyboard-heatmap": {
     generatorType: `keyboard-heatmap`,
-    component: Fe(() => At(() => import(`./KeyboardHeatmapTool.js`), __vite__mapDeps([89, 26, 1, 2, 5, 90, 27, 28, 45, 69, 50, 91, 65, 84, 81, 6, 77, 7, 61, 85, 55, 8, 32, 12, 88, 66, 86, 29, 82]), import.meta.url))
+    component: Fe(() => At(() => import(`../pages/KeyboardHeatmapTool.js`), __vite__mapDeps([89, 26, 1, 2, 5, 90, 27, 28, 45, 69, 50, 91, 65, 84, 81, 6, 77, 7, 61, 85, 55, 8, 32, 12, 88, 66, 86, 29, 82]), import.meta.url))
   },
   "mouse-heatmap": {
     generatorType: `mouse-heatmap`,
-    component: Fe(() => At(() => import(`./MouseHeatmapTool.js`), __vite__mapDeps([92, 26, 1, 2, 5, 90, 27, 28, 45, 69, 50, 91, 65, 84, 81, 6, 77, 7, 61, 85, 55, 8, 32, 88, 66, 86, 29, 82]), import.meta.url))
+    component: Fe(() => At(() => import(`../pages/MouseHeatmapTool.js`), __vite__mapDeps([92, 26, 1, 2, 5, 90, 27, 28, 45, 69, 50, 91, 65, 84, 81, 6, 77, 7, 61, 85, 55, 8, 32, 88, 66, 86, 29, 82]), import.meta.url))
   },
   "work-motivator": {
     generatorType: `work-motivator`,
-    component: Fe(() => At(() => import(`./WorkMotivatorTool.js`), __vite__mapDeps([93, 26, 1, 2, 5, 27, 28, 45, 65, 84, 81, 6, 77, 7, 61, 85, 55, 8, 32, 49, 50, 79, 94, 30, 86, 29, 82]), import.meta.url))
+    component: Fe(() => At(() => Promise.resolve({}), __vite__mapDeps([93, 26, 1, 2, 5, 27, 28, 45, 65, 84, 81, 6, 77, 7, 61, 85, 55, 8, 32, 49, 50, 79, 94, 30, 86, 29, 82]), import.meta.url))
   },
   milestone: {
     generatorType: `milestone`,
-    component: Fe(() => At(() => import(`./milestone.js`), __vite__mapDeps([95, 26, 1, 2, 5, 68, 45, 70, 7, 85, 71, 72, 69, 50, 73, 29, 27, 28, 33, 34, 48, 12, 41, 42, 36]), import.meta.url)),
+    component: Fe(() => At(() => import(`../pages/milestone.js`), __vite__mapDeps([95, 26, 1, 2, 5, 68, 45, 70, 7, 85, 71, 72, 69, 50, 73, 29, 27, 28, 33, 34, 48, 12, 41, 42, 36]), import.meta.url)),
     capabilities: {
       externalOpen: `milestone`
     }

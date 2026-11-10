@@ -20,7 +20,7 @@ var _ = (event, t, n) => new Promise((r, i) => {
       a = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, te);
     a((n = n.apply(event, t)).next());
   }),
-  ge = () => le(() => import(`./infographic_markstream-vue.js`), [], import.meta.url),
+  ge = () => le(() => import(`../chunks/infographic_markstream-vue.js`), [], import.meta.url),
   v = null,
   _e = ge;
 function ve() {

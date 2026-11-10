@@ -31,10 +31,10 @@ function u(event) {
   return l ? event.metaKey : event.ctrlKey;
 }
 var d = {
-    overlay: () => i(() => import(`./OverlayApp.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5]), import.meta.url),
-    editor: () => i(() => import(`./EditorApp.js`), __vite__mapDeps([6, 7, 1, 2, 3, 8, 9, 10, 4, 11, 12, 13, 14, 5, 15]), import.meta.url),
-    pin: () => i(() => import(`./PinApp.js`), __vite__mapDeps([16, 1]), import.meta.url),
-    toast: () => i(() => import(`./ToastApp.js`), __vite__mapDeps([17, 1, 3, 8, 18]), import.meta.url)
+    overlay: () => i(() => import(`../pages/OverlayApp.js`), __vite__mapDeps([0, 1, 2, 3, 4, 5]), import.meta.url),
+    editor: () => i(() => import(`../pages/EditorApp.js`), __vite__mapDeps([6, 7, 1, 2, 3, 8, 9, 10, 4, 11, 12, 13, 14, 5, 15]), import.meta.url),
+    pin: () => i(() => import(`../pages/PinApp.js`), __vite__mapDeps([16, 1]), import.meta.url),
+    toast: () => i(() => import(`../pages/ToastApp.js`), __vite__mapDeps([17, 1, 3, 8, 18]), import.meta.url)
   },
   f = window.location.hash.replace(/^#/, ``),
   p = f in d ? f : `editor`;

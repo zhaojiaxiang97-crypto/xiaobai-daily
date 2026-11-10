@@ -1717,7 +1717,7 @@ async function yr(e, t, n, r, i) {
   if (typeof VideoEncoder > `u`) return null;
   let a;
   try {
-    a = await O(() => import(`./matrix-math.js`), __vite__mapDeps([0, 1, 2, 3, 4]), import.meta.url);
+    a = await O(() => import(`../ui/icons/matrix-math.js`), __vite__mapDeps([0, 1, 2, 3, 4]), import.meta.url);
   } catch (e) {
     return console.warn(`[DayReplay] 视频封装模块加载失败，改用实时录制:`, e), null;
   }
