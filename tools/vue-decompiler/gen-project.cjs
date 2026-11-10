@@ -35,20 +35,31 @@ const inComp = pos => ranges.some(([a,b]) => pos >= a && pos < b);
 // 区间重叠判断：声明整体是否与组件区间相交（var X = defineComponent({...}) 的 start 在调用之前）
 const overlapsComp = (start, end) => ranges.some(([a,b]) => start < b && end > a);
 
-// 2) 提取所有非组件的顶层声明
-const sharedParts = [];
+// 2) 按 declarator 粒度提取顶层声明（组件归 .vue，其余进 shared）
+const kept = [];
+const allSharedNames = new Set();
+let droppedDecls = 0;
 T(ast, {
   VariableDeclaration(p) {
-    if (overlapsComp(p.node.start, p.node.end)) return;   // 该声明包含组件定义 → 归 .vue
     if (!p.parentPath.isProgram()) return;
-    sharedParts.push({ code: src.slice(p.node.start, p.node.end), names: p.node.declarations.map(d => t.isIdentifier(d.id) ? d.id.name : null).filter(Boolean) });
+    const normal = p.node.declarations.filter(d => !overlapsComp(d.start, d.end));
+    const comps = p.node.declarations.filter(d => overlapsComp(d.start, d.end));
+    droppedDecls += comps.length;
+    if (!normal.length) return;
+    try {
+      const clone = t.variableDeclaration(p.node.kind, normal.map(d => t.cloneNode(d, true, true)));
+      kept.push(G(clone, { compact: false, comments: true, jsescOption: { minimal: true } }).code);
+      for (const d of normal) if (t.isIdentifier(d.id)) allSharedNames.add(d.id.name);
+    } catch {}
   },
   FunctionDeclaration(p) {
-    if (inComp(p.node.start) || !p.node.id) return;
-    if (!p.parentPath.isProgram()) return;
-    sharedParts.push({ code: src.slice(p.node.start, p.node.end), names: [p.node.id.name] });
+    if (!p.parentPath.isProgram() || !p.node.id) return;
+    if (overlapsComp(p.node.start, p.node.end)) { droppedDecls++; return; }
+    kept.push(src.slice(p.node.start, p.node.end));
+    allSharedNames.add(p.node.id.name);
   },
 });
+console.error('shared 符号:', allSharedNames.size, '| 剔除组件声明:', droppedDecls);
 
 // 2.5) 收集 main.js 的全部 import（跨 chunk 依赖也在此）
 const importMap = {};   // localName -> { imported, from }
@@ -75,7 +86,7 @@ for (const sp of sharedParts) sp.names.forEach(n => allSharedNames.add(n));
 console.error('共享符号:', allSharedNames.size);
 
 // 3) 写 shared.js（全部导出）
-let body = sharedParts.map(sp => sp.code).join('\n\n');
+let body = kept.join('\n\n');
 // 建立 basename → 真实相对路径 索引（renderer 内）
 const baseIndex = {};
 (function walkIdx(d, rel) {
