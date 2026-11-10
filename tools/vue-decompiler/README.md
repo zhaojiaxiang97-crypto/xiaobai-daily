@@ -103,3 +103,74 @@ template 语法，生成 `.vue`，用 `@vue/compiler-sfc` 编译验证。
 | 3.3 | v-for / v-if / 动态组件的指令化 | 部分 |
 | 4 | 418 组件全量生成 + 逐组件编译验证 | 待做 |
 | 5 | 工程组装（package.json / vite.config / 入口） | 待做 |
+
+---
+
+## 阶段 2.5：运行时指纹探测（关键突破）
+
+**问题**：静态 AST 分析无法可靠判定 167 个导出的语义（压缩后函数形态多样，
+实测 118 个有定义里只识别出 6 个，且多处错误）。
+
+**解法**：在渲染进程里**直接 import 运行时模块**，逐个导出做**行为探测**：
+
+```js
+// 例：判定 createElementVNode
+fn('div', { id: 'p' }, ['PROBE'])   // → vnode.type === 'div' 且 arity === 3
+
+// 判定 normalizeClass
+fn(['a','b']) === 'a b'
+
+// 判定 toDisplayString
+fn(null) === '' && fn(123) === '123'
+
+// 判定 unref
+fn({ __v_isRef: true, value: 'X' }) === 'X'
+
+// 判定 openBlock
+fn() === undefined        // 注意：openBlock 返回 undefined，不是数组！
+```
+
+### 探测结果（16 项，修正了静态分析的 5 处错误）
+
+| 短名 | 语义 | 证据 |
+|---|---|---|
+| `j` | defineComponent | `j({name:'P'})` 原样返回 |
+| `gt` | openBlock | arity 0，返回 undefined |
+| `H` | **createElementVNode** | arity 3，`('div',{...},[...])` → type==='div' |
+| `S` | createElementBlock | arity 6 |
+| `b` | createBlock | arity 5 |
+| `k`/`y` | createVNode | arity 1 |
+| `O` | createTextVNode | 返回 type===Symbol(v-txt) |
+| `x` | createCommentVNode | 返回 Symbol(v-cmt) |
+| `D` | createStaticVNode | 返回 Symbol(v-stc) |
+| `$n` | normalizeClass | `(['a','b'])` → `'a b'` |
+| `rr` | toDisplayString | `null`→`''`, `123`→`'123'` |
+| `An` | unref | ref 对象 → value |
+| `Bn` | isArray | 函数名未被压缩 |
+| `Ct` | renderSlot | 用法恒为 `(ctx.$slots,'name')` |
+| `A` | defineAsyncComponent | 返回 `__asyncLoader` |
+
+### 静态分析的 5 处错误
+
+| 短名 | 静态猜测 | 实际 |
+|---|---|---|
+| `y` | createElementVNode | createVNode（真正的 createElementVNode 是 `H`） |
+| `H` | 未识别 | createElementVNode |
+| `St` | renderList | 非 renderList（renderList 是 `h`） |
+| `gt` | 曾怀疑被 `St` 取代 | openBlock（探测确认） |
+| `Ct` | withCtx | renderSlot |
+
+## 阶段 3.1：引号规范化（解决模板解析失败）
+
+表达式内的双引号（如 `{ "pointer-events": \`auto\` }`）与外层属性引号冲突，
+导致 `@vue/compiler-sfc` 报 `Unexpected token`。修复：表达式内双引号统一为
+单引号（JS 表达式内等价）。
+
+## 当前转换成功率
+
+| 批次 | 结果 |
+|---|---|
+| 首批 5 个（Kbd / AlertDialogMedia / DialogRoot / MermaidBlockNode / SliderHorizontal） | **5/5 全部编译通过** |
+| ui + blocks 批量 20 个 | **20/20 全部编译通过** |
+
+（对比：阶段 3 首次试点为 2/4）

@@ -1,29 +1,33 @@
 {
-  "_comment": "vue-i18n.runtime.js 导出短名 → Vue API。来源：AST 绑定分析 + 全库签名交叉验证。",
-  "_verified": "17/19 通过签名验证；Ct/k 已修正，suspicious 标注需进一步确认",
+  "_source": "运行时行为探测（CDP 在渲染进程直接 import 运行时模块，逐个导出做行为测试）。比静态 AST 推断可靠。",
+  "_verify_method": "每项都通过特征行为断言：createElementVNode('div',{id},[]) 返回 type==='div' 的 vnode；normalizeClass(['a','b'])==='a b'；toDisplayString(null)==='' && toDisplayString(123)==='123'；unref({__v_isRef:true,value:'X'})==='X'；openBlock() 返回 undefined；createTextVNode() 返回 type===Symbol(v-txt) 的 vnode。",
   "map": {
-    "$n": "normalizeClass",
-    "An": "unref",
-    "Ct": "renderSlot",
-    "O": "createTextVNode",
-    "S": "createElementBlock",
-    "St": "renderList",
-    "Wt": "watch",
-    "b": "createBlock",
-    "c": "Fragment",
+    "j":  "defineComponent",
     "gt": "openBlock",
-    "j": "defineComponent",
-    "mt": "onUnmounted",
-    "ot": "onMounted",
+    "H":  "createElementVNode",
+    "S":  "createElementBlock",
+    "b":  "createBlock",
+    "k":  "createVNode",
+    "y":  "createVNodeVariant",
+    "O":  "createTextVNode",
+    "x":  "createCommentVNode",
+    "D":  "createStaticVNode",
+    "$n": "normalizeClass",
     "rr": "toDisplayString",
-    "ut": "onBeforeMount",
-    "v": "computed",
-    "x": "createCommentVNode",
-    "y": "createElementVNode",
-    "k": "resolveComponent_or_createBlock"
+    "An": "unref",
+    "Bn": "isArray",
+    "Ct": "renderSlot",
+    "A":  "defineAsyncComponent"
   },
-  "corrections": [
-    { "short": "Ct", "was": "withCtx", "now": "renderSlot", "evidence": "调用签名 (member,str) 共 290/385 次，形如 n(i.$slots, 'header-left', {}, undefined, true)" },
-    { "short": "k", "was": "resolveComponent", "now": "resolveComponent_or_createBlock", "evidence": "调用签名 (call,obj,obj) 达 1061 次，形如 re(se, {name:'...',appear:''}, {...})——更像直接渲染组件" }
-  ]
+  "corrections_vs_static": [
+    {"short": "y",  "static_guess": "createElementVNode", "actual": "createVNodeVariant", "evidence": "arity 1 且 fn() 直接返回 vnode；真正 createElementVNode 是 H（arity 3）"},
+    {"short": "H",  "static_guess": "(未识别)", "actual": "createElementVNode", "evidence": "fn('div',{id:'p'},['x']) → vnode.type==='div' 且 arity===3"},
+    {"short": "St", "static_guess": "renderList", "actual": "(待查/非 renderList)", "evidence": "arity 4；renderList 是 h（fn([1,2],i=>i) 返回 2 元素数组）"},
+    {"short": "gt", "static_guess": "openBlock (曾怀疑被 St 取代)", "actual": "openBlock", "evidence": "openBlock 返回 undefined（blockStack.push 后无返回值），不是返回数组；gt 符合"},
+    {"short": "Ct", "static_guess": "withCtx", "actual": "renderSlot", "evidence": "用法恒为 (ctx.$slots, 'name')；withCtx 的签名是 (fn)→fn"}
+  ],
+  "unresolved": {
+    "Yt": "疑似 withCtx 但 _n 未设置，待进一步确认",
+    "St": "arity 4 返回 array，需更多样本"
+  }
 }

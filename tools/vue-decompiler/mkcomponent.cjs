@@ -4,7 +4,8 @@ const { execSync } = require('child_process');
 const file = process.argv[2];
 const tplFile = '/tmp/tpl.txt';
 // 复用转换器输出
-try { execSync(`node benv/render2tpl.cjs "${file}" > ${tplFile} 2>/dev/null`); } catch {}
+const path = require('path');
+try { execSync(`node "${path.join(__dirname,'render2tpl.cjs')}" "${file}" > ${tplFile} 2>/dev/null`); } catch {}
 const tpl = fs.readFileSync(tplFile, 'utf8').trim();
 if (!tpl || tpl === '(未转换)') { console.error('无模板'); process.exit(1); }
 // 组件名

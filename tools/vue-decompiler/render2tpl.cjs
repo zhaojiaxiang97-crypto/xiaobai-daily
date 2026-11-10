@@ -10,11 +10,22 @@ const ast = P.parse(src, { sourceType: 'unambiguous' });
 
 // 1) 收集本文件的 Vue API 本地名
 const VUE_API_MAP = {
-  '$n': 'normalizeClass', 'An': 'unref', 'Ct': 'renderSlot', 'O': 'createTextVNode',
-  'S': 'createElementBlock', 'St': 'renderList', 'Wt': 'watch', 'b': 'createBlock',
-  'c': 'Fragment', 'gt': 'openBlock', 'j': 'defineComponent', 'k': 'resolveComponent',
-  'mt': 'onUnmounted', 'ot': 'onMounted', 'rr': 'toDisplayString', 'ut': 'onBeforeMount',
-  'v': 'computed', 'x': 'createCommentVNode', 'y': 'createElementVNode',
+  'j': 'defineComponent',
+  'gt': 'openBlock',
+  'H': 'createElementVNode',
+  'S': 'createElementBlock',
+  'b': 'createBlock',
+  'k': 'createVNode',
+  'y': 'createVNodeVariant',
+  'O': 'createTextVNode',
+  'x': 'createCommentVNode',
+  'D': 'createStaticVNode',
+  '$n': 'normalizeClass',
+  'rr': 'toDisplayString',
+  'An': 'unref',
+  'Bn': 'isArray',
+  'Ct': 'renderSlot',
+  'A': 'defineAsyncComponent'
 };
 const API = {};
 const VUE_API = new Set(['normalizeClass','unref','renderSlot','createTextVNode','createElementBlock',
@@ -65,8 +76,12 @@ function strVal(node) {
   if (t.isTemplateLiteral(n) && n.expressions.length === 0) return n.quasis[0].value.cooked;
   return null;
 }
+function normalizeQuotes(e) {
+  // 表达式内双引号统一为单引号，避免与外层属性引号冲突
+  return e.replace(/"/g, "'");
+}
 function dynamicVal(node) {
-  return exprText(unwrap(node));
+  return normalizeQuotes(exprText(unwrap(node)));
 }
 // 处理 class: normalizeClass(a, b) → 合并
 function classExpr(node) {
