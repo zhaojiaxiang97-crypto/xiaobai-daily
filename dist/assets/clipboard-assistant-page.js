@@ -1,4 +1,0 @@
-var e = [0, 7, 30, 90, 180, 365],
-  t = 2e4,
-  n = 2e4;
-export { t as n, n as r, e as t };
