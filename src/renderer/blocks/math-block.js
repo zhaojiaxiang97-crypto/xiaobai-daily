@@ -2,7 +2,7 @@ import { $n as e, S as t, Wt as n, Yt as r, bn as i, gt as a, j as o, k as s, ot
 import { r as m } from "../i18n/en-US-player.js";
 import { H as h, L as g, O as _, S as v, X as y, v as b, w as x } from "../chunks/main.js";
 var S = (e, t, n) => new Promise((r, i) => {
-    var a = e => {
+    var handler = e => {
         try {
           s(n.next(e));
         } catch (e) {
@@ -16,7 +16,7 @@ var S = (e, t, n) => new Promise((r, i) => {
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, o);
     s((n = n.apply(e, t)).next());
   }),
   C = [`data-markstream-mode`],
@@ -101,11 +101,11 @@ var S = (e, t, n) => new Promise((r, i) => {
               let e = yield v();
               if (e) {
                 try {
-                  let t = e.renderToString(O.value, {
+                  let toString = e.renderToString(O.value, {
                     throwOnError: b.node.loading,
                     displayMode: true
                   });
-                  A.value = t, j.value = ``, M = true, R.value = false, x(O.value, true, t);
+                  A.value = toString, j.value = ``, M = true, R.value = false, x(O.value, true, toString);
                 } catch {}
                 return;
               }

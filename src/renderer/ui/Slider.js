@@ -129,8 +129,8 @@ var U = [`PageUp`, `PageDown`],
         },
         onStepKeyDown: t[3] ||= e => {
           let t = _.value ? `from-left` : `from-right`,
-            n = d(G)[t].includes(e.key);
-          i(`stepKeyDown`, e, n ? -1 : 1);
+            includes = d(G)[t].includes(e.key);
+          i(`stepKeyDown`, e, includes ? -1 : 1);
         },
         onEndKeyDown: t[4] ||= e => i(`endKeyDown`, e),
         onHomeKeyDown: t[5] ||= e => i(`homeKeyDown`, e)
@@ -208,8 +208,8 @@ var U = [`PageUp`, `PageDown`],
         },
         onStepKeyDown: t[3] ||= e => {
           let t = g.value ? `from-bottom` : `from-top`,
-            n = d(G)[t].includes(e.key);
-          i(`stepKeyDown`, e, n ? -1 : 1);
+            includesResult = d(G)[t].includes(e.key);
+          i(`stepKeyDown`, e, includesResult ? -1 : 1);
         },
         onEndKeyDown: t[4] ||= e => i(`endKeyDown`, e),
         onHomeKeyDown: t[5] ||= e => i(`homeKeyDown`, e)

@@ -21,18 +21,18 @@ var _e = class e extends ie {
         segments: r,
         radius: i
       }, a === 1) return;
-      let o = this.toNonIndexed();
-      this.index = null, this.attributes.position = o.attributes.position, this.attributes.normal = o.attributes.normal, this.attributes.uv = o.attributes.uv;
+      let toNonIndexed = this.toNonIndexed();
+      this.index = null, this.attributes.position = toNonIndexed.attributes.position, this.attributes.normal = toNonIndexed.attributes.normal, this.attributes.uv = toNonIndexed.attributes.uv;
       let s = new _(),
         c = new _(),
-        l = new _(e, t, n).divideScalar(2).subScalar(i),
+        subScalar = new _(e, t, n).divideScalar(2).subScalar(i),
         array = this.attributes.position.array,
         d = this.attributes.normal.array,
         f = this.attributes.uv.array,
         p = array.length / 6,
         m = new _(),
         h = .5 / a;
-      for (let r = 0, a = 0; r < array.length; r += 3, a += 2) switch (s.fromArray(array, r), c.copy(s), c.x -= Math.sign(c.x) * h, c.y -= Math.sign(c.y) * h, c.z -= Math.sign(c.z) * h, c.normalize(), array[r + 0] = l.x * Math.sign(s.x) + c.x * i, array[r + 1] = l.y * Math.sign(s.y) + c.y * i, array[r + 2] = l.z * Math.sign(s.z) + c.z * i, d[r + 0] = c.x, d[r + 1] = c.y, d[r + 2] = c.z, Math.floor(r / p)) {
+      for (let r = 0, a = 0; r < array.length; r += 3, a += 2) switch (s.fromArray(array, r), c.copy(s), c.x -= Math.sign(c.x) * h, c.y -= Math.sign(c.y) * h, c.z -= Math.sign(c.z) * h, c.normalize(), array[r + 0] = subScalar.x * Math.sign(s.x) + c.x * i, array[r + 1] = subScalar.y * Math.sign(s.y) + c.y * i, array[r + 2] = subScalar.z * Math.sign(s.z) + c.z * i, d[r + 0] = c.x, d[r + 1] = c.y, d[r + 2] = c.z, Math.floor(r / p)) {
         case 0:
           m.set(1, 0, 0), f[a + 0] = x(m, c, `z`, `y`, i, n), f[a + 1] = 1 - x(m, c, `y`, `z`, i, t);
           break;
@@ -119,10 +119,10 @@ var _e = class e extends ie {
         Ue = h(() => Math.max(3, He.value * .125)),
         We = h(() => x.rows.some(item => item.label)),
         Ge = h(() => x.rows.some(item => item.summary)),
-        A = [],
+        emptyItems = [],
         Ke = h(() => {
           if (!O.value) return ``;
-          let e = A[O.value.index];
+          let e = emptyItems[O.value.index];
           return e ? X(e)?.tooltip ?? `` : ``;
         }),
         qe = o(false),
@@ -138,7 +138,7 @@ var _e = class e extends ie {
         j = new ne(),
         M = new ge(14, 1, .5, 600),
         N = new ge(),
-        Ye = new _e(be, 1, be, Se, xe).translate(0, .5, 0),
+        translate = new _e(be, 1, be, Se, xe).translate(0, .5, 0),
         P = new me();
       P.onBeforeCompile = e => {
         e.vertexShader = e.vertexShader.replace(`#include <common>`, `#include <common>
@@ -157,7 +157,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         et = new _(),
         tt = new y(),
         nt = new y(),
-        rt = new _().setFromSphericalCoords(1, De, Oe),
+        setFromSphericalCoords = new _().setFromSphericalCoords(1, De, Oe),
         I = null,
         L = null,
         R = null,
@@ -169,7 +169,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         ot = [],
         H = -1,
         U = false,
-        W = null,
+        payload = null,
         G = 0,
         st = 0,
         K = false,
@@ -228,7 +228,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             front: r
           } = xt(),
           i = [];
-        for (let a of [e, t]) for (let e of [0, Ue.value]) for (let t of [n, r]) i.push(new _(a, e, t));
+        for (let count of [e, t]) for (let value of [0, Ue.value]) for (let t of [n, r]) i.push(new _(count, value, t));
         return i;
       }
       function wt() {
@@ -252,19 +252,19 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         return new y().setRGB(i / 255, a / 255, o / 255, v);
       }
       function Dt() {
-        let e = document.createElement(`canvas`);
-        e.width = 1, e.height = 1;
-        let t = e.getContext(`2d`, {
+        let element = document.createElement(`canvas`);
+        element.width = 1, element.height = 1;
+        let context = element.getContext(`2d`, {
           willReadFrequently: true
         });
-        if (!t) {
+        if (!context) {
           V = Re.map(() => new y(1483594));
           return;
         }
-        let n = getComputedStyle(document.documentElement);
-        V = Re.map(item => Et(t, n, item, `#16a34a`)), tt.copy(Et(t, n, `--foreground`, `#333333`));
+        let computedStyle = getComputedStyle(document.documentElement);
+        V = Re.map(item => Et(context, computedStyle, item, `#16a34a`)), tt.copy(Et(context, computedStyle, `--foreground`, `#333333`));
       }
-      let Z = {
+      let options = {
           r: 0,
           g: 0,
           b: 0
@@ -276,7 +276,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         };
       function Ot() {
         let e = V[0];
-        ot = x.rows.map(item => !item.color || !e ? null : (e.getRGB(Z, v), new y(item.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(Z.r + (Q.r - Z.r) * e, Z.g + (Q.g - Z.g) * e, Z.b + (Q.b - Z.b) * e, v))]));
+        ot = x.rows.map(item => !item.color || !e ? null : (e.getRGB(options, v), new y(item.color).getRGB(Q, v), [e, ...ze.map(e => new y().setRGB(options.r + (Q.r - options.r) * e, options.g + (Q.g - options.g) * e, options.b + (Q.b - options.b) * e, v))]));
       }
       function kt(e, t) {
         if (e <= 0) return 0;
@@ -289,14 +289,14 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         return e;
       }
       function jt(e, t) {
-        let n = A[e],
+        let n = emptyItems[e],
           r = n ? (ot[n.row] ?? V)[kt(X(n)?.value ?? 0, t)] : undefined;
         R && r && R.setColorAt(e, e === H ? nt.copy(r).lerp(tt, .28) : r);
       }
       function Mt() {
         if (!R) return;
         let e = At();
-        for (let t = 0; t < A.length; t++) jt(t, e);
+        for (let t = 0; t < emptyItems.length; t++) jt(t, e);
         R.instanceColor && (R.instanceColor.needsUpdate = true);
       }
       function Nt(e) {
@@ -310,23 +310,23 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         R && (j.remove(R), R.geometry.dispose(), R.dispose(), R = null, B = null);
       }
       function Ft() {
-        if (Pt(), A = [], x.rows.forEach((item, t) => {
+        if (Pt(), emptyItems = [], x.rows.forEach((item, t) => {
           item.cells.forEach((e, n) => {
-            e && A.push({
+            e && emptyItems.push({
               row: t,
               column: n
             });
           });
-        }), it = new Float32Array(A.length).fill(S), at = new Float32Array(A.length).fill(S), z = new Float32Array(A.length).fill(S), H = -1, O.value = null, !A.length) return;
-        let e = Ye.clone();
-        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, A.length), R.frustumCulled = false, A.forEach((item, t) => {
+        }), it = new Float32Array(emptyItems.length).fill(S), at = new Float32Array(emptyItems.length).fill(S), z = new Float32Array(emptyItems.length).fill(S), H = -1, O.value = null, !emptyItems.length) return;
+        let e = translate.clone();
+        B = new ue(z, 1), B.setUsage(pe), e.setAttribute(`barHeight`, B), R = new ce(e, P, emptyItems.length), R.frustumCulled = false, emptyItems.forEach((item, t) => {
           Qe.makeTranslation(_t(item.column), 0, vt(item.row)), R?.setMatrixAt(t, Qe);
         }), R.instanceMatrix.needsUpdate = true, j.add(R);
       }
       function It() {
         let e = At(),
           value = Ue.value;
-        A.forEach((item, r) => {
+        emptyItems.forEach((item, r) => {
           let i = X(item)?.value ?? 0;
           it[r] = z[r] ?? S, at[r] = i > 0 ? Ce + i / e * (value - Ce) : S;
         }), Mt(), st = performance.now(), K = true, $();
@@ -334,7 +334,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       function Lt(e) {
         let t = Math.min(1, Math.max(0, (e - st) / we)),
           n = 1 - (1 - t) ** 3;
-        for (let e = 0; e < A.length; e++) {
+        for (let e = 0; e < emptyItems.length; e++) {
           let t = it[e] ?? S;
           z[e] = t + ((at[e] ?? S) - t) * n;
         }
@@ -344,7 +344,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         N.copy(M), N.aspect = e, N.far = 1e5, N.updateProjectionMatrix();
       }
       function zt(e, t) {
-        N.position.copy(e).addScaledVector(rt, t), N.lookAt(e), N.updateMatrixWorld();
+        N.position.copy(e).addScaledVector(setFromSphericalCoords, t), N.lookAt(e), N.updateMatrixWorld();
       }
       function Bt(e) {
         let t = St(),
@@ -375,14 +375,14 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         if (!L) return;
         let t = St(),
           n = Bt(M.aspect),
-          r = t.clone().addScaledVector(rt, n);
+          scaledVector = t.clone().addScaledVector(setFromSphericalCoords, n);
         L.minDistance = n * .35, L.maxDistance = n * 1.8, M.far = Math.max(600, n * 3), M.updateProjectionMatrix(), q = false, ct = true, e ? J = {
           fromPosition: M.position.clone(),
-          toPosition: r,
+          toPosition: scaledVector,
           fromTarget: L.target.clone(),
           toTarget: t,
           startedAt: performance.now()
-        } : (J = null, L.target.copy(t), M.position.copy(r), L.update()), $();
+        } : (J = null, L.target.copy(t), M.position.copy(scaledVector), L.update()), $();
       }
       function Ut(e) {
         if (!J || !L) return false;
@@ -454,10 +454,10 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         let value = T.value;
         if (!I || !value || !ct) return null;
         K &&= Lt(1 / 0), Ut(1 / 0), L?.update(), I.setPixelRatio(e), I.render(j, M);
-        let n = value.toDataURL(`image/png`);
+        let toDataURL = value.toDataURL(`image/png`);
         Jt(), I.render(j, M), Kt();
         let r = new Image();
-        r.className = `block h-full w-full`, r.src = n, await r.decode(), value.style.display = `none`, value.after(r);
+        r.className = `block h-full w-full`, r.src = toDataURL, await r.decode(), value.style.display = `none`, value.after(r);
         let i = Be.value;
         return i && (i.style.display = `none`), () => {
           r.remove(), value.style.display = ``, i && (i.style.display = ``);
@@ -468,22 +468,22 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       });
       function Qt(event) {
         let value = T.value;
-        if (!value || !A.length) return -1;
-        let n = value.getBoundingClientRect();
-        Ze.set((event.clientX - n.left) / n.width * 2 - 1, -((event.clientY - n.top) / n.height) * 2 + 1), Xe.setFromCamera(Ze, M);
+        if (!value || !emptyItems.length) return -1;
+        let boundingClientRect = value.getBoundingClientRect();
+        Ze.set((event.clientX - boundingClientRect.left) / boundingClientRect.width * 2 - 1, -((event.clientY - boundingClientRect.top) / boundingClientRect.height) * 2 + 1), Xe.setFromCamera(Ze, M);
         let r = be / 2,
           i = -1,
           a = 1 / 0;
-        return A.forEach((item, t) => {
+        return emptyItems.forEach((item, t) => {
           let n = _t(item.column),
             o = vt(item.row);
           if ($e.min.set(n - r, 0, o - r), $e.max.set(n + r, z[t] ?? S, o + r), !Xe.ray.intersectBox($e, et)) return;
-          let s = et.distanceToSquared(Xe.ray.origin);
-          s < a && (a = s, i = t);
+          let distanceToSquared = et.distanceToSquared(Xe.ray.origin);
+          distanceToSquared < a && (a = distanceToSquared, i = t);
         }), i;
       }
       function $t(e) {
-        let t = A[e],
+        let t = emptyItems[e],
           n = t ? X(t) : null,
           r = t ? x.rows[t.row] : undefined;
         return t && n && r ? {
@@ -501,7 +501,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           y: event.clientY - n.top
         } : null;
         let r = $t(t);
-        qe.value = x.clickable && t >= 0 && (X(A[t])?.value ?? 0) > 0, r ? (C(`cell-hover`, {
+        qe.value = x.clickable && t >= 0 && (X(emptyItems[t])?.value ?? 0) > 0, r ? (C(`cell-hover`, {
           ...r,
           event: event
         }), U = true) : U &&= (C(`cell-hover`, null), false), Nt(t);
@@ -510,7 +510,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         O.value = null, qe.value = false, U &&= (C(`cell-hover`, null), false), Nt(-1);
       }
       function nn(event) {
-        k.value = true, W = {
+        k.value = true, payload = {
           x: event.clientX,
           y: event.clientY
         }, tn();
@@ -519,19 +519,19 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         k.value = false;
       }
       function an(event) {
-        if (!W) return;
-        let t = Math.hypot(event.clientX - W.x, event.clientY - W.y);
-        if (W = null, t > Ie) return;
+        if (!payload) return;
+        let t = Math.hypot(event.clientX - payload.x, event.clientY - payload.y);
+        if (payload = null, t > Ie) return;
         let n = Qt(event),
           r = $t(n),
           value = T.value;
         if (!r || !value) return;
-        let a = value.getBoundingClientRect(),
-          o = event.clientX - a.left,
-          s = event.clientY - a.top;
+        let boundingClientRectResult = value.getBoundingClientRect(),
+          o = event.clientX - boundingClientRectResult.left,
+          s = event.clientY - boundingClientRectResult.top;
         C(`cell-click`, {
           ...r,
-          value: X(A[n])?.value ?? 0,
+          value: X(emptyItems[n])?.value ?? 0,
           anchor: {
             getBoundingClientRect: () => {
               let e = value.getBoundingClientRect();
@@ -580,7 +580,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }), f(() => {
         G && cancelAnimationFrame(G), G = 0, lt?.disconnect(), ut?.disconnect(), w.value?.removeEventListener(`wheel`, on, {
           capture: true
-        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), A = [], Ye.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
+        }), T.value?.removeEventListener(`webglcontextrestored`, $), window.removeEventListener(`pointerup`, rn), window.removeEventListener(`pointercancel`, rn), U && C(`cell-hover`, null), L?.dispose(), L = null, Pt(), emptyItems = [], translate.dispose(), P.dispose(), I?.dispose(), I?.forceContextLoss(), I = null;
       }), (i, o) => (c(), n(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: w,

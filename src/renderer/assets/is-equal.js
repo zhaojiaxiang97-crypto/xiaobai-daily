@@ -13,12 +13,12 @@ function n(count, n) {
     i = 0;
   for (let a = 0; a < r; a++) {
     let charCodeAtResult = count.charCodeAt(a),
-      o = n.charCodeAt(a);
-    if (charCodeAtResult === o) continue;
+      charCodeAt = n.charCodeAt(a);
+    if (charCodeAtResult === charCodeAt) continue;
     let s = charCodeAtResult < 128 && t[charCodeAtResult] ? t[charCodeAtResult] : charCodeAtResult + 128,
-      c = o < 128 && t[o] ? t[o] : o + 128;
+      c = charCodeAt < 128 && t[charCodeAt] ? t[charCodeAt] : charCodeAt + 128;
     if (s !== c) return s < c ? -1 : 1;
-    i === 0 && (i = charCodeAtResult > o ? -1 : 1);
+    i === 0 && (i = charCodeAtResult > charCodeAt ? -1 : 1);
   }
   return count.length === n.length ? i : count.length < n.length ? -1 : 1;
 }

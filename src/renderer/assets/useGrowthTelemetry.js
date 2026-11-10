@@ -10,10 +10,10 @@ function a() {
   t(() => {
     o = true;
   });
-  let c = () => {
+  let handler = () => {
     o = false, s += 1;
   };
-  e(c), n(c);
+  e(handler), n(handler);
   function l() {
     let e = a.value?.userId,
       t = a.value?.token,

@@ -29,7 +29,7 @@ var e = `today-work`,
     update_action_click: `feature_map_update_click`
   };
 function a(t, n, r) {
-  let a = {
+  let options = {
     type: t,
     name: n,
     eventId: crypto.randomUUID(),
@@ -42,10 +42,10 @@ function a(t, n, r) {
     props: r,
     ts: Date.now()
   };
-  window.electronAPI?.telemetry?.track(a);
+  window.electronAPI?.telemetry?.track(options);
   let o = n === `page_view` ? r?.title === `timeline` ? `feature_map_timeline_expose` : r?.title === `toolbox` ? `feature_map_toolbox_expose` : `` : n === `report_copy_success` ? r?.entry === `history` ? `feature_map_history_result` : `` : n === `report_template_select` && r?.template_source !== `template_market` ? `` : i[n];
   o && window.electronAPI?.telemetry?.track({
-    ...a,
+    ...options,
     type: `action`,
     name: o,
     eventId: crypto.randomUUID(),
@@ -56,7 +56,7 @@ function a(t, n, r) {
   });
   let s = n === `order_create_start` ? `journey_subscribe_order_start` : n === `report_copy_success` && r?.entry === `generate_report` ? `journey_report_copy` : ``;
   s && window.electronAPI?.telemetry?.track({
-    ...a,
+    ...options,
     type: `action`,
     name: s,
     eventId: crypto.randomUUID(),

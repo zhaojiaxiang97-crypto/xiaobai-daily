@@ -412,9 +412,9 @@ function jt(items, t, n, r) {
   } = Ot(items, t, t);
   if (n > a) return null;
   let o = items.slice(i, a);
-  for (let e of o.matchAll(At(r))) {
-    let r = i + (e.index ?? 0),
-      a = r + e[0].length;
+  for (let filePath of o.matchAll(At(r))) {
+    let r = i + (filePath.index ?? 0),
+      a = r + filePath[0].length;
     if (r <= t && n <= a) return {
       start: r,
       end: a
@@ -519,14 +519,14 @@ function Pt(items, t) {
       start: r,
       end: i
     } = items,
-    a = n.slice(r, i).includes(`
+    includes = n.slice(r, i).includes(`
 `),
     {
       lineStart: o,
       lineEnd: s
     } = Ot(n, r, i),
     c = n.slice(o, s);
-  if (!t && !a && !Et.test(c)) return {
+  if (!t && !includes && !Et.test(c)) return {
     start: r,
     end: i,
     replacement: Tt,
@@ -543,7 +543,7 @@ function Pt(items, t) {
       return n === 0 && (u = Math.min(i, r - o)), d -= i, item.slice(i);
     }).join(`
 `);
-  return d === 0 ? null : a ? {
+  return d === 0 ? null : includes ? {
     start: o,
     end: s,
     replacement: f,
@@ -1040,23 +1040,23 @@ function hn(e) {
   return /^data:image\/(png|jpeg|gif|webp|bmp);base64,/i.test(e);
 }
 function gn(text, t) {
-  let n = [],
+  let emptyItems = [],
     r = text.split(`
 `),
     i = 0,
-    a = null;
+    resolvedValue = null;
   for (let [e, o] of r.entries()) {
     let s = /^\s*(?:>\s?)*\s*(`{3,}|~{3,})/.exec(o);
     if (s) {
       let e = s[1][0];
-      a ? a === e && (a = null) : a = e;
-    } else if (!a) {
+      resolvedValue ? resolvedValue === e && (resolvedValue = null) : resolvedValue = e;
+    } else if (!resolvedValue) {
       let a = t(o, r[e + 1]);
-      a !== null && n.push(i + a);
+      a !== null && emptyItems.push(i + a);
     }
     i += o.length + 1;
   }
-  return n;
+  return emptyItems;
 }
 function _n(text) {
   return gn(text, (e, t) => /^\s{0,3}(?:>\s?)*\s{0,3}#{1,6}(?:\s|$)/.test(e) || /<h[1-6][\s>]/i.test(e) || e.trim() && t !== undefined && /^\s{0,3}(?:>\s?)*\s{0,3}(?:=+|-{2,})\s*$/.test(t) ? 0 : null);
@@ -1071,42 +1071,42 @@ function yn(e) {
 var bn = /\*\*(?=[^\s*])([^*\n]*?[^\s*])\*\*/g;
 function xn(el) {
   let ownerDocument = el.ownerDocument,
-    n = ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT),
-    r = [];
-  for (; n.nextNode();) {
-    let currentNode = n.currentNode;
-    currentNode.data.includes(`**`) && !currentNode.parentElement?.closest(`code, pre, kbd`) && r.push(currentNode);
+    treeWalker = ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT),
+    count = [];
+  for (; treeWalker.nextNode();) {
+    let currentNode = treeWalker.currentNode;
+    currentNode.data.includes(`**`) && !currentNode.parentElement?.closest(`code, pre, kbd`) && count.push(currentNode);
   }
-  for (let e of r) {
+  for (let e of count) {
     let data = e.data,
       r = Array.from(data.matchAll(bn));
     if (!r.length) continue;
-    let i = ownerDocument.createDocumentFragment(),
+    let documentFragment = ownerDocument.createDocumentFragment(),
       a = 0;
     for (let e of r) {
       let r = e.index ?? 0;
-      i.append(data.slice(a, r));
-      let o = ownerDocument.createElement(`strong`);
-      o.textContent = e[1], i.append(o), a = r + e[0].length;
+      documentFragment.append(data.slice(a, r));
+      let element = ownerDocument.createElement(`strong`);
+      element.textContent = e[1], documentFragment.append(element), a = r + e[0].length;
     }
-    i.append(data.slice(a)), e.replaceWith(i);
+    documentFragment.append(data.slice(a)), e.replaceWith(documentFragment);
   }
 }
 function Sn(el, t) {
   let ownerDocument = el.ownerDocument;
-  for (let r of Array.from(el.querySelectorAll(`pre > code`))) {
-    let parentElement = r.parentElement;
+  for (let length of Array.from(el.querySelectorAll(`pre > code`))) {
+    let parentElement = length.parentElement;
     if (!parentElement) continue;
-    let i = Array.from(r.classList).find(text => text.startsWith(`language-`))?.slice(9) || ``,
-      a = r.textContent || ``;
-    r.textContent = ``;
+    let i = Array.from(length.classList).find(text => text.startsWith(`language-`))?.slice(9) || ``,
+      a = length.textContent || ``;
+    length.textContent = ``;
     for (let e of Jt(a, i)) {
       if (!e.type) {
-        r.append(e.text);
+        length.append(e.text);
         continue;
       }
-      let t = ownerDocument.createElement(`span`);
-      t.className = `hl-${e.type}`, t.textContent = e.text, r.append(t);
+      let elementResult = ownerDocument.createElement(`span`);
+      elementResult.className = `hl-${e.type}`, elementResult.textContent = e.text, length.append(elementResult);
     }
     parentElement.classList.add(`markdown-code-block`);
     let o = ownerDocument.createElement(`div`);
@@ -1122,17 +1122,17 @@ function Sn(el, t) {
 }
 function Cn(el, t, n) {
   let r = t.parser([el]),
-    i = me.sanitize(r, {
+    sanitize = me.sanitize(r, {
       ALLOWED_TAGS: tn,
       ALLOWED_ATTR: nn,
       ALLOW_DATA_ATTR: false,
       ALLOW_UNKNOWN_PROTOCOLS: false
     }),
-    a = new DOMParser().parseFromString(`<body>${String(i)}</body>`, `text/html`),
-    body = a.body,
+    fromString = new DOMParser().parseFromString(`<body>${String(sanitize)}</body>`, `text/html`),
+    body = fromString.body,
     s = el.type === `heading` ? [0] : _n(el.raw),
-    c = [];
-  for (let [e, t] of Array.from(body.querySelectorAll(`h1, h2, h3, h4, h5, h6`)).entries()) t.removeAttribute(`id`), t.setAttribute(`data-heading-slot`, String(e)), c.push({
+    flag = [];
+  for (let [e, t] of Array.from(body.querySelectorAll(`h1, h2, h3, h4, h5, h6`)).entries()) t.removeAttribute(`id`), t.setAttribute(`data-heading-slot`, String(e)), flag.push({
     text: t.textContent?.trim() || ``,
     level: Number(t.tagName.slice(1)),
     offset: s[e] ?? 0
@@ -1160,12 +1160,12 @@ function Cn(el, t, n) {
     d = l.length > 0 && l.length === u.length;
   for (let [e, t] of l.entries()) t.classList.add(`markdown-task-checkbox`), t.closest(`li`)?.classList.add(`markdown-task-item`), d ? (t.removeAttribute(`disabled`), t.setAttribute(`data-task-index`, String(e))) : t.setAttribute(`disabled`, ``);
   for (let e of Array.from(body.querySelectorAll(`table`))) {
-    let t = a.createElement(`div`);
+    let t = fromString.createElement(`div`);
     t.className = `markdown-table-wrap`, e.replaceWith(t), t.append(e);
   }
   return Sn(body, n.copyLabel), xn(body), {
     html: body.innerHTML,
-    headings: c,
+    headings: flag,
     taskOffsets: d ? u : []
   };
 }
@@ -1229,10 +1229,10 @@ function Tn(el, t) {
   try {
     n = decodeURIComponent(t);
   } catch {}
-  for (let r of [t, n, sn(n)]) {
-    if (!r) continue;
-    let t = el.querySelector(`#${CSS.escape(r)}`);
-    if (t) return t;
+  for (let diff of [t, n, sn(n)]) {
+    if (!diff) continue;
+    let selector = el.querySelector(`#${CSS.escape(diff)}`);
+    if (selector) return selector;
   }
   return null;
 }
@@ -1388,22 +1388,22 @@ body { margin: 0; background: #fff; }
           let e = r.findMatches || [];
           if (!e.length) return [];
           let modelValue = r.modelValue,
-            n = [],
+            line = [],
             i = 0;
-          for (let [a, o] of e.entries()) o.start < i || o.end > modelValue.length || (o.start > i && n.push({
+          for (let [a, o] of e.entries()) o.start < i || o.end > modelValue.length || (o.start > i && line.push({
             text: modelValue.slice(i, o.start),
             mark: false,
             current: false
-          }), n.push({
+          }), line.push({
             text: modelValue.slice(o.start, o.end),
             mark: true,
             current: a === r.findCurrent
           }), i = o.end);
-          return n.push({
+          return line.push({
             text: `${modelValue.slice(i)}null`,
             mark: false,
             current: false
-          }), n;
+          }), line;
         }),
         se = M(() => {
           let modifierLabel = r.modifierLabel;
@@ -1466,15 +1466,15 @@ body { margin: 0; background: #fff; }
             t = R(),
             n = l.value - Q - 200,
             i = l.value + p.value + 200,
-            a = [];
+            total = [];
           if (!value.length) {
             let e = Math.max(0, Math.floor(n / t)),
               r = Math.min(k.value - 1, Math.ceil(i / t));
-            for (let n = e; n <= r; n += 1) a.push({
+            for (let n = e; n <= r; n += 1) total.push({
               line: n,
               top: n * t + Q - l.value
             });
-            return a;
+            return total;
           }
           let o = 0,
             s = value.length - 1;
@@ -1482,11 +1482,11 @@ body { margin: 0; background: #fff; }
             let t = o + s >> 1;
             value[t] < n ? o = t + 1 : s = t;
           }
-          for (let t = Math.max(0, o - 1); t < value.length && value[t] <= i; t += 1) a.push({
+          for (let t = Math.max(0, o - 1); t < value.length && value[t] <= i; t += 1) total.push({
             line: t,
             top: value[t] + Q - l.value
           });
-          return a;
+          return total;
         });
       function R() {
         let value = o.value;
@@ -1560,8 +1560,8 @@ body { margin: 0; background: #fff; }
           return;
         }
         if (!t || e.altKey) return;
-        let n = e.key.toLowerCase(),
-          r = n === `b` && !e.shiftKey ? `bold` : n === `i` && !e.shiftKey ? `italic` : n === `k` && !e.shiftKey ? `link` : n === `x` && e.shiftKey ? `strike` : null;
+        let toLowerCase = e.key.toLowerCase(),
+          r = toLowerCase === `b` && !e.shiftKey ? `bold` : toLowerCase === `i` && !e.shiftKey ? `italic` : toLowerCase === `k` && !e.shiftKey ? `link` : toLowerCase === `x` && e.shiftKey ? `strike` : null;
         r && (e.preventDefault(), e.stopPropagation(), ve(r));
       }
       function be() {
@@ -1578,15 +1578,15 @@ body { margin: 0; background: #fff; }
           c.value = [];
           return;
         }
-        let i = window.getComputedStyle(value),
-          a = value.clientWidth - Number.parseFloat(i.paddingLeft) - Number.parseFloat(i.paddingRight);
+        let computedStyle = window.getComputedStyle(value),
+          a = value.clientWidth - Number.parseFloat(computedStyle.paddingLeft) - Number.parseFloat(computedStyle.paddingRight);
         t.style.width = `${Math.max(0, a)}px`;
-        let l = document.createDocumentFragment();
+        let documentFragmentResult = document.createDocumentFragment();
         for (let e of n) {
           let t = document.createElement(`div`);
-          t.textContent = e || `​`, l.append(t);
+          t.textContent = e || `​`, documentFragmentResult.append(t);
         }
-        t.replaceChildren(l);
+        t.replaceChildren(documentFragmentResult);
         let u = [];
         for (let e of Array.from(t.children)) u.push(e.offsetTop);
         t.replaceChildren(), c.value = u;
@@ -2204,8 +2204,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         s = S(null),
         c = M(() => i?.value || `zh-CN`),
         l = M(() => {
-          let e = o.value.trim().toLocaleLowerCase(c.value);
-          return e ? n.recentFiles.filter(item => `${item.name} ${item.filePath}`.toLocaleLowerCase(c.value).includes(e)) : n.recentFiles;
+          let toLocaleLowerCase = o.value.trim().toLocaleLowerCase(c.value);
+          return toLocaleLowerCase ? n.recentFiles.filter(item => `${item.name} ${item.filePath}`.toLocaleLowerCase(c.value).includes(toLocaleLowerCase)) : n.recentFiles;
         }),
         f = M(() => n.headings.length ? Math.min(...n.headings.map(item => item.level)) : 1);
       function p(e) {
@@ -2232,9 +2232,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         let value = s.value,
           t = value?.querySelector(`[aria-current="location"]`);
         if (!value || !t) return;
-        let n = value.getBoundingClientRect(),
-          r = t.getBoundingClientRect();
-        r.top < n.top ? value.scrollTop += r.top - n.top - 8 : r.bottom > n.bottom && (value.scrollTop += r.bottom - n.bottom + 8);
+        let boundingClientRect = value.getBoundingClientRect(),
+          boundingClientRectResult = t.getBoundingClientRect();
+        boundingClientRectResult.top < boundingClientRect.top ? value.scrollTop += boundingClientRectResult.top - boundingClientRect.top - 8 : boundingClientRectResult.bottom > boundingClientRect.bottom && (value.scrollTop += boundingClientRectResult.bottom - boundingClientRect.bottom + 8);
       }), (e, t) => (T(), g(`aside`, sr, [D(d(nt), {
         class: `shrink-0 px-2 pt-2`,
         "model-value": n.tab,
@@ -2346,15 +2346,15 @@ function Dr(el) {
   }
   function d(e, t) {
     let n = [],
-      r = document.createTreeWalker(e, NodeFilter.SHOW_TEXT, {
+      treeWalkerResult = document.createTreeWalker(e, NodeFilter.SHOW_TEXT, {
         acceptNode: e => e.parentElement?.closest(`.markdown-code-toolbar`) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
       });
-    for (; r.nextNode() && n.length < Tr;) {
-      let currentNode = r.currentNode,
-        i = currentNode.data.toLocaleLowerCase();
-      for (let r = i.indexOf(t); r >= 0 && n.length < Tr; r = i.indexOf(t, r + t.length)) {
-        let i = document.createRange();
-        i.setStart(currentNode, r), i.setEnd(currentNode, Math.min(currentNode.length, r + t.length)), n.push(i);
+    for (; treeWalkerResult.nextNode() && n.length < Tr;) {
+      let currentNode = treeWalkerResult.currentNode,
+        toLocaleLowerCaseResult = currentNode.data.toLocaleLowerCase();
+      for (let r = toLocaleLowerCaseResult.indexOf(t); r >= 0 && n.length < Tr; r = toLocaleLowerCaseResult.indexOf(t, r + t.length)) {
+        let range = document.createRange();
+        range.setStart(currentNode, r), range.setEnd(currentNode, Math.min(currentNode.length, r + t.length)), n.push(range);
       }
     }
     return n;
@@ -2368,11 +2368,11 @@ function Dr(el) {
       let n = Er(),
         i = a[r.value];
       if (n && i && (n.registry.set(`markdown-find`, new n.Highlight(...a)), n.registry.set(`markdown-find-current`, new n.Highlight(i))), !t) return;
-      let o = el.previewScroller();
-      if (i && o) {
+      let previewScroller = el.previewScroller();
+      if (i && previewScroller) {
         let e = i.getBoundingClientRect(),
-          t = o.getBoundingClientRect();
-        (e.top < t.top + 24 || e.bottom > t.bottom - 24) && (o.scrollTop += e.top - t.top - o.clientHeight / 3);
+          t = previewScroller.getBoundingClientRect();
+        (e.top < t.top + 24 || e.bottom > t.bottom - 24) && (previewScroller.scrollTop += e.top - t.top - previewScroller.clientHeight / 3);
       }
       return;
     }
@@ -2381,12 +2381,12 @@ function Dr(el) {
   }
   function m(t = false) {
     let l = n.value.toLocaleLowerCase(),
-      f = el.previewRoot();
-    if (c = !!f, a = [], o = [], !l) {
+      previewRoot = el.previewRoot();
+    if (c = !!previewRoot, a = [], o = [], !l) {
       i.value = 0, r.value = 0, s.value = [], u();
       return;
     }
-    if (f) a = d(f, l), i.value = a.length;else {
+    if (previewRoot) a = d(previewRoot, l), i.value = a.length;else {
       let t = el.sourceText().toLocaleLowerCase();
       for (let e = t.indexOf(l); e >= 0 && o.length < Tr; e = t.indexOf(l, e + l.length)) o.push({
         start: e,
@@ -2515,7 +2515,7 @@ var Or = {
       let r = event,
         i = n,
         a = [`.md`, `.markdown`, `.mdown`, `.mkd`, `.mkdn`, `.mdwn`, `.txt`],
-        o = {
+        options = {
           FILE_ACCESS_DENIED: `markdownErrorAccessDenied`,
           FILE_NOT_FOUND: `markdownErrorFileNotFound`,
           INVALID_FILE: `markdownErrorFileNotFound`,
@@ -2644,7 +2644,7 @@ var Or = {
           selectSource: (e, t) => K.value?.selectRange(e, t, false)
         });
       function cn(e, t) {
-        return e instanceof it && o[e.code] ? l(`toolboxNative.${o[e.code]}`) : l(t);
+        return e instanceof it && options[e.code] ? l(`toolboxNative.${options[e.code]}`) : l(t);
       }
       function ln() {
         et !== null && (window.clearTimeout(et), et = null);
@@ -2917,8 +2917,8 @@ var Or = {
           n = decodeURIComponent(t);
         } catch {}
         let r = n.split(/[\\/]/).pop() || ``,
-          i = r.lastIndexOf(`.`);
-        return i > 0 ? r.slice(i).toLowerCase() : ``;
+          lastIndexOf = r.lastIndexOf(`.`);
+        return lastIndexOf > 0 ? r.slice(lastIndexOf).toLowerCase() : ``;
       }
       async function Wn(text) {
         let value = j.value;
@@ -2948,17 +2948,17 @@ var Or = {
             name: value.name,
             scroll: yn()
           },
-          s = null;
+          anchor = null;
         if ((await kn(async () => {
           let linked = await q.openLinked({
             documentPath: value.filePath,
             source: text
           });
-          return s = linked.anchor, linked.document;
+          return anchor = linked.anchor, linked.document;
         }, `toolboxNative.markdownLinkedOpenFailed`, {
           keepHistory: true
-        })) && (H.value = [...H.value.slice(-19), o], s)) {
-          let e = s;
+        })) && (H.value = [...H.value.slice(-19), o], anchor)) {
+          let e = anchor;
           await ie(), window.requestAnimationFrame(() => qn(e));
         }
       }
@@ -3015,9 +3015,9 @@ var Or = {
         let r = t.scrollTop + 48,
           i = value[0].id;
         for (let t of value) {
-          let e = n.querySelector(`#${CSS.escape(t.id)}`);
-          if (e) {
-            if (e.offsetTop <= r) i = t.id;else break;
+          let selectorResult = n.querySelector(`#${CSS.escape(t.id)}`);
+          if (selectorResult) {
+            if (selectorResult.offsetTop <= r) i = t.id;else break;
           }
         }
         me.value = i;
@@ -3060,16 +3060,16 @@ var Or = {
           t.scrollTop = n;
           return;
         }
-        let r = value.lineAtScrollTop(),
+        let lineAtScrollTop = value.lineAtScrollTop(),
           i = nr(),
           a = 0;
-        for (; a + 1 < i.length && i[a + 1].line <= r;) a += 1;
+        for (; a + 1 < i.length && i[a + 1].line <= lineAtScrollTop;) a += 1;
         let o = i[a],
           s = i[a + 1] ?? {
             line: Math.max(Ht.value, o.line + 1),
             top: n
           },
-          c = (r - o.line) / Math.max(1, s.line - o.line);
+          c = (lineAtScrollTop - o.line) / Math.max(1, s.line - o.line);
         t.scrollTop = o.top + Math.min(1, Math.max(0, c)) * (s.top - o.top);
       }
       function ir() {
@@ -3247,12 +3247,12 @@ var Or = {
           W(l(`toolboxNative.markdownDropUnsupported`));
           return;
         }
-        let n = q.getPathForFile(t);
-        if (!n) {
+        let pathForFile = q.getPathForFile(t);
+        if (!pathForFile) {
           W(l(`toolboxNative.markdownOpenFailed`));
           return;
         }
-        await kn(() => q.openDropped(n), `toolboxNative.markdownOpenFailed`);
+        await kn(() => q.openDropped(pathForFile), `toolboxNative.markdownOpenFailed`);
       }
       function ai() {
         return r.active !== false && !!Ve.value?.offsetParent && !Re.value;
@@ -3273,11 +3273,11 @@ var Or = {
           return;
         }
         if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
-        let t = e.key.toLowerCase();
-        if (t === `s`) {
+        let toLowerCaseResult = e.key.toLowerCase();
+        if (toLowerCaseResult === `s`) {
           if (e.preventDefault(), !F.value) return;
           e.shiftKey ? In() : Q();
-        } else t === `o` ? (e.preventDefault(), An()) : t === `n` ? (e.preventDefault(), Nn()) : t === `f` && F.value ? (e.preventDefault(), Cr()) : t === `\\` && (e.preventDefault(), dr());
+        } else toLowerCaseResult === `o` ? (e.preventDefault(), An()) : toLowerCaseResult === `n` ? (e.preventDefault(), Nn()) : toLowerCaseResult === `f` && F.value ? (e.preventDefault(), Cr()) : toLowerCaseResult === `\\` && (e.preventDefault(), dr());
       }
       async function si() {
         return await vn();

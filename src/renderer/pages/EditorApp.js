@@ -374,7 +374,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         o = S(false),
         s = S(``),
         c = S(null),
-        u = {
+        options = {
           image: `BackgroundImage`,
           blur: `BackgroundBlur`,
           solid: `BackgroundSolid`,
@@ -600,7 +600,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         onClick: t => T({
           backgroundKind: e
         })
-      }, k(f(G)(u[e])), 11, Q))), 128))]), result.current.backgroundKind === `image` ? (w(), g(`div`, ft, [N(`div`, pt, [N(`button`, {
+      }, k(f(G)(options[e])), 11, Q))), 128))]), result.current.backgroundKind === `image` ? (w(), g(`div`, ft, [N(`div`, pt, [N(`button`, {
         type: `button`,
         class: `text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-50`,
         disabled: O.value,
@@ -961,8 +961,8 @@ function pn(e) {
         color: o.value,
         size: ln(value, s.value, p)
       },
-      v;
-    return v = value === `rect` || value === `ellipse` || value === `mosaic` ? {
+      resolvedValue;
+    return resolvedValue = value === `rect` || value === `ellipse` || value === `mosaic` ? {
       ...g,
       kind: value,
       x: c.x,
@@ -980,9 +980,9 @@ function pn(e) {
       ...g,
       kind: value,
       points: [c.x, c.y]
-    }, r.value = null, n.value = v, u = {
+    }, r.value = null, n.value = resolvedValue, u = {
       type: `draw`,
-      annotation: v,
+      annotation: resolvedValue,
       startX: c.x,
       startY: c.y
     }, true;
@@ -1190,7 +1190,7 @@ var mn = {
         J = null,
         Xe = 0,
         Ze = null,
-        Qe = [],
+        emptyItems = [],
         Y = j(() => T.value ? Me({
           source: T.value,
           scale: W.value,
@@ -1355,21 +1355,21 @@ var mn = {
         let value = Y.value,
           r = K.selected.value;
         if (!value || !r || K.editingTextId.value === r.id) return;
-        let i = e => e * $e.value,
+        let handler = e => e * $e.value,
           a = je(r),
-          o = i(4);
-        e.save(), e.setTransform(t, 0, 0, t, value.origin.x * t, value.origin.y * t), e.setLineDash([i(4), i(3)]), e.lineWidth = i(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
-        for (let t of Ce(r)) e.beginPath(), e.arc(t.x, t.y, i(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = i(1.5), e.stroke();
+          o = handler(4);
+        e.save(), e.setTransform(t, 0, 0, t, value.origin.x * t, value.origin.y * t), e.setLineDash([handler(4), handler(3)]), e.lineWidth = handler(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
+        for (let t of Ce(r)) e.beginPath(), e.arc(t.x, t.y, handler(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = handler(1.5), e.stroke();
         e.restore();
       }
       function mt(e) {
         let value = ue.value,
           n = Y.value;
         if (!value || !n) return null;
-        let r = value.getBoundingClientRect();
-        return r.width <= 0 || r.height <= 0 ? null : {
-          x: (e.clientX - r.left) / r.width * n.width - n.origin.x,
-          y: (e.clientY - r.top) / r.height * n.height - n.origin.y
+        let boundingClientRect = value.getBoundingClientRect();
+        return boundingClientRect.width <= 0 || boundingClientRect.height <= 0 ? null : {
+          x: (e.clientX - boundingClientRect.left) / boundingClientRect.width * n.width - n.origin.x,
+          y: (e.clientY - boundingClientRect.top) / boundingClientRect.height * n.height - n.origin.y
         };
       }
       function ht() {
@@ -1534,7 +1534,7 @@ var mn = {
         if (!l.value || e.isComposing) return;
         let target = e.target;
         if (target && (target.tagName === `INPUT` || target.tagName === `TEXTAREA` || target.isContentEditable)) return;
-        let n = e.key.toLowerCase(),
+        let toLowerCase = e.key.toLowerCase(),
           r = Re(e);
         if (e.key === `Escape`) {
           e.preventDefault(), K.cancelDraft() ? Q() : K.selectedId.value ? (K.select(null), Q()) : Mt();
@@ -1544,19 +1544,19 @@ var mn = {
           e.preventDefault(), Dt(true);
           return;
         }
-        if (r && n === `c`) {
+        if (r && toLowerCase === `c`) {
           e.preventDefault(), Dt(false);
           return;
         }
-        if (r && n === `s`) {
+        if (r && toLowerCase === `s`) {
           e.preventDefault(), Ot(e.shiftKey);
           return;
         }
-        if (r && n === `z`) {
+        if (r && toLowerCase === `z`) {
           e.preventDefault(), e.shiftKey ? K.redo() : K.undo(), Q();
           return;
         }
-        if (r && n === `y`) {
+        if (r && toLowerCase === `y`) {
           e.preventDefault(), K.redo(), Q();
           return;
         }
@@ -1564,14 +1564,14 @@ var mn = {
           e.preventDefault(), K.deleteSelected(), Q();
           return;
         }
-        !r && !e.altKey && !e.ctrlKey && !e.metaKey && on[n] && (e.preventDefault(), Ct(on[n]));
+        !r && !e.altKey && !e.ctrlKey && !e.metaKey && on[toLowerCase] && (e.preventDefault(), Ct(on[toLowerCase]));
       }
       function It(e) {
         let t = Math.min(1, 96 / Math.max(e.width, e.height)),
           n = Ee(e.width * t, e.height * t);
         ke(n).drawImage(e, 0, 0, n.width, n.height);
-        let r = n.toDataURL(`image/jpeg`, .7);
-        return Ne(n), r;
+        let toDataURL = n.toDataURL(`image/jpeg`, .7);
+        return Ne(n), toDataURL;
       }
       async function Lt(el) {
         $(), ze(el);
@@ -1601,7 +1601,7 @@ var mn = {
         Je || (V.value += 1, jt(), Q());
       }), v([() => K.selectedId.value, () => K.draft.value, () => K.editingTextId.value, X], () => Q()), A(() => {
         let screenshotToolAPI = window.screenshotToolAPI;
-        Qe.push(editor.onOpen(e => {
+        emptyItems.push(editor.onOpen(e => {
           Lt(e);
         }), editor.onReset(Rt), screenshotToolAPI.onTheme(({
           dark: e
@@ -1613,7 +1613,7 @@ var mn = {
           });
         }), Ze.observe(le.value)), screenshotToolAPI.ready();
       }), O(() => {
-        for (let e of Qe) e();
+        for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, Ft), window.removeEventListener(`beforeunload`, $), Ze?.disconnect(), Xe && cancelAnimationFrame(Xe), J !== null && window.clearTimeout(J), $();
       }), (e, t) => (w(), g(`div`, mn, [N(`header`, {
         class: `screenshot-drag-region flex h-12 shrink-0 items-center gap-3 border-b border-border bg-[#fafafa] dark:bg-[#18181b]`,

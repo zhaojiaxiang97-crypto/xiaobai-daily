@@ -154,7 +154,7 @@ function I(e) {
     items.length > a && (n.value = e.t(`toolboxNative.youCanAddCountMoreReferenceImages`, {
       count: a
     }));
-    let o = [];
+    let emptyItems = [];
     for (let i of items.slice(0, a)) {
       if (!F(i)) {
         n.value = e.t(`toolboxNative.nameIsNotASupportedImageFormat`, {
@@ -180,13 +180,13 @@ function I(e) {
         uploading: true,
         error: ``
       });
-      t.value.push(r), o.push(r);
+      t.value.push(r), emptyItems.push(r);
     }
-    await Promise.all(o.map(c));
+    await Promise.all(emptyItems.map(c));
   }
   function u(e) {
-    let i = t.value.findIndex(item => item.id === e);
-    i < 0 || (r.get(e)?.abort(), r.delete(e), URL.revokeObjectURL(t.value[i].previewUrl), t.value.splice(i, 1), n.value = ``);
+    let index = t.value.findIndex(item => item.id === e);
+    index < 0 || (r.get(e)?.abort(), r.delete(e), URL.revokeObjectURL(t.value[index].previewUrl), t.value.splice(index, 1), n.value = ``);
   }
   function f() {
     r.forEach(item => item.abort()), r.clear(), t.value.forEach(item => URL.revokeObjectURL(item.previewUrl)), t.value = [], n.value = ``;

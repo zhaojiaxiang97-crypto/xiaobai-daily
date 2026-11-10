@@ -594,10 +594,10 @@ var b = {
         if (!value || (event.preventDefault(), value === e.id)) return;
         let r = [...O.value],
           indexResult = r.findIndex(item => item.id === value),
-          a = r.findIndex(item => item.id === e.id);
-        if (indexResult < 0 || a < 0) return;
+          index = r.findIndex(item => item.id === e.id);
+        if (indexResult < 0 || index < 0) return;
         let [o] = r.splice(indexResult, 1);
-        r.splice(a, 0, o), O.value = r, H = true;
+        r.splice(index, 0, o), O.value = r, H = true;
       }
       async function Ln() {
         let e = H;

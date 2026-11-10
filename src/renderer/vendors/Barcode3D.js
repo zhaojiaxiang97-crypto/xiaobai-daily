@@ -37,7 +37,7 @@ var I = class {
     }
     markAll() {
       this.fullPending = true;
-      for (let e of this.meshes) e.instanceColor && (e.instanceColor.clearUpdateRanges(), e.instanceColor.needsUpdate = true);
+      for (let count of this.meshes) count.instanceColor && (count.instanceColor.clearUpdateRanges(), count.instanceColor.needsUpdate = true);
     }
     markOne(e, t) {
       !e.instanceColor || t < 0 || (this.fullPending || e.instanceColor.addUpdateRange(t * 3, 3), e.instanceColor.needsUpdate = true);
@@ -139,11 +139,11 @@ var oe = class {
         p = z + 1,
         m = -d,
         h = d + 8,
-        g = [];
-      for (let e of [f, p]) for (let t of [0, u]) for (let n of [m, h]) g.push(new _(e, t, n));
+        emptyItems = [];
+      for (let e of [f, p]) for (let t of [0, u]) for (let n of [m, h]) emptyItems.push(new _(e, t, n));
       this.framing = {
         target: new _((f + p) / 2, u * .2, (m + h) / 2),
-        corners: g,
+        corners: emptyItems,
         homeView: {
           polar: .98,
           azimuth: .22
@@ -250,8 +250,8 @@ var oe = class {
             s = (n.start + n.end) / 2 - z,
             c = this.heights[o] * (this.dims[o] ? W : 1);
           if (this.hitBox.min.set(s - r, 0, i - h), this.hitBox.max.set(s + r, c, i + h), !e.intersectBox(this.hitBox, this.hitPoint)) continue;
-          let l = this.hitPoint.distanceToSquared(a);
-          l < _ && (_ = l, g = o, v = this.hitPoint.x);
+          let distanceToSquared = this.hitPoint.distanceToSquared(a);
+          distanceToSquared < _ && (_ = distanceToSquared, g = o, v = this.hitPoint.x);
         }
       }
       if (g < 0) return null;
@@ -300,30 +300,30 @@ function ye(e) {
   let t = [],
     n = [],
     r = [],
-    i = (e, r, i, a, o, s) => (t.push(e, r, i), n.push(a, o, s), t.length / 3 - 1),
+    handler = (e, r, i, a, o, s) => (t.push(e, r, i), n.push(a, o, s), t.length / 3 - 1),
     a = [],
     o = [],
     s = [],
-    c = [],
+    ratio = [],
     l = [],
     u = [];
   for (let t = 0; t <= e; t += 1) {
     let n = t / e;
-    a.push(i(n, 1, 0, 0, 1, 0)), o.push(i(n, 1, 1, 0, 1, 0)), s.push(i(n, 0, 1, 0, 0, 1)), c.push(i(n, 1, 1, 0, 0, 1)), l.push(i(n, 0, 0, 0, 0, -1)), u.push(i(n, 1, 0, 0, 0, -1));
+    a.push(handler(n, 1, 0, 0, 1, 0)), o.push(handler(n, 1, 1, 0, 1, 0)), s.push(handler(n, 0, 1, 0, 0, 1)), ratio.push(handler(n, 1, 1, 0, 0, 1)), l.push(handler(n, 0, 0, 0, 0, -1)), u.push(handler(n, 1, 0, 0, 0, -1));
   }
   for (let t = 0; t < e; t += 1) {
     let e = t + 1;
-    r.push(a[t], a[e], o[e], a[t], o[e], o[t]), r.push(s[t], c[t], c[e], s[t], c[e], s[e]), r.push(l[t], u[e], u[t], l[t], l[e], u[e]);
+    r.push(a[t], a[e], o[e], a[t], o[e], o[t]), r.push(s[t], ratio[t], ratio[e], s[t], ratio[e], s[e]), r.push(l[t], u[e], u[t], l[t], l[e], u[e]);
   }
-  let d = i(0, 0, 0, -1, 0, 0),
-    f = i(0, 1, 0, -1, 0, 0),
-    p = i(0, 1, 1, -1, 0, 0),
-    m = i(0, 0, 1, -1, 0, 0);
+  let d = handler(0, 0, 0, -1, 0, 0),
+    f = handler(0, 1, 0, -1, 0, 0),
+    p = handler(0, 1, 1, -1, 0, 0),
+    m = handler(0, 0, 1, -1, 0, 0);
   r.push(d, f, p, d, p, m);
-  let h = i(1, 0, 0, 1, 0, 0),
-    g = i(1, 0, 1, 1, 0, 0),
-    _ = i(1, 1, 1, 1, 0, 0),
-    v = i(1, 1, 0, 1, 0, 0);
+  let h = handler(1, 0, 0, 1, 0, 0),
+    g = handler(1, 0, 1, 1, 0, 0),
+    _ = handler(1, 1, 1, 1, 0, 0),
+    v = handler(1, 1, 0, 1, 0, 0);
   r.push(h, g, _, h, _, v);
   let y = new D();
   return y.setAttribute(`position`, new x(t, 3)), y.setAttribute(`normal`, new x(n, 3)), y.setIndex(r), y;
@@ -392,8 +392,8 @@ var xe = class {
         let n = P(item) ? ce : Q + se * M(item);
         this.outerRadii[t] = Z + n, s = Math.max(s, this.outerRadii[t]);
         let r = item.end - item.start,
-          i = $.findIndex(e => r <= e.maxSpan);
-        this.tierOf[t] = i, this.instanceOf[t] = o[i], o[i] += 1, this.cellBlocks.fill(t, item.dayIndex * Y + item.start, item.dayIndex * Y + item.end);
+          index = $.findIndex(e => r <= e.maxSpan);
+        this.tierOf[t] = index, this.instanceOf[t] = o[index], o[index] += 1, this.cellBlocks.fill(t, item.dayIndex * Y + item.start, item.dayIndex * Y + item.end);
       }), this.maxRadius = s, this.material = be(this.clock);
       let c = 0;
       $.forEach((item, t) => {
@@ -544,15 +544,15 @@ var xe = class {
         u = -1,
         d = 0;
       for (let e = 0; e < t; e += 1) {
-        let t = this.layerBottom(e),
-          a = t + this.layout.layerHeight,
+        let layerBottom = this.layerBottom(e),
+          a = layerBottom + this.layout.layerHeight,
           o = s,
           f = c;
         if (Math.abs(r.y) > 1e-9) {
-          let e = (t - n.y) / r.y,
+          let e = (layerBottom - n.y) / r.y,
             i = (a - n.y) / r.y;
           o = Math.max(o, Math.min(e, i)), f = Math.min(f, Math.max(e, i));
-        } else if (n.y < t || n.y > a) continue;
+        } else if (n.y < layerBottom || n.y > a) continue;
         if (f < o || o >= l) continue;
         let p = Math.sqrt(i) * (f - o),
           m = Math.min(64, Math.max(2, Math.ceil(p / .5)));
@@ -631,14 +631,14 @@ var xe = class {
         D = [],
         O = h(() => b.shape === `tower` ? 500 : b.result.days.length > 62 ? 480 : 420),
         k = null,
-        A = null,
+        resolvedValue = null,
         j = null,
         M = false,
         N = 0,
         P = null,
         F = -1,
         I = false,
-        L = null,
+        payload = null,
         R = null,
         z = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
         B = new _();
@@ -650,12 +650,12 @@ var xe = class {
       }
       function U(e) {
         if (!k) return;
-        A && (k.scene.remove(A.root), A.dispose());
+        resolvedValue && (k.scene.remove(resolvedValue.root), resolvedValue.dispose());
         let t = {
           dayLabels: b.dayLabels,
           monthMarks: b.monthMarks
         };
-        A = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), A.setColors(b.colors, b.theme), A.setHighlight(H()), k.scene.add(A.root), k.setFraming(A.framing), F = -1, D.length = 0, E.value = A.labels, A.startGrowth(e && !z);
+        resolvedValue = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), resolvedValue.setColors(b.colors, b.theme), resolvedValue.setHighlight(H()), k.scene.add(resolvedValue.root), k.setFraming(resolvedValue.framing), F = -1, D.length = 0, E.value = resolvedValue.labels, resolvedValue.startGrowth(e && !z);
       }
       function W() {
         let value = C.value;
@@ -678,13 +678,13 @@ var xe = class {
         e ? (I = true, x(`hover`, e)) : I && (I = false, x(`hover`, null));
       }
       function K(e) {
-        A && e !== F && (F = e, A.setHovered(e), k?.requestRender());
+        resolvedValue && e !== F && (F = e, resolvedValue.setHovered(e), k?.requestRender());
       }
       function te() {
         N = 0;
         let e = P;
-        if (!e || !k || !A || T.value) return;
-        let t = A.pick(k.rayFromEvent(e));
+        if (!e || !k || !resolvedValue || T.value) return;
+        let t = resolvedValue.pick(k.rayFromEvent(e));
         K(t?.blockIndex ?? -1), G(t ? {
           dayIndex: t.dayIndex,
           bucket: t.bucket,
@@ -699,7 +699,7 @@ var xe = class {
         P = null, N && cancelAnimationFrame(N), N = 0, K(-1), G(null);
       }
       function re(e) {
-        T.value = true, L = {
+        T.value = true, payload = {
           x: e.clientX,
           y: e.clientY
         }, q();
@@ -708,10 +708,10 @@ var xe = class {
         T.value = false;
       }
       function ie(e) {
-        if (!L || !k || !A) return;
-        let t = Math.hypot(e.clientX - L.x, e.clientY - L.y);
-        if (L = null, t > Ae) return;
-        let n = A.pick(k.rayFromEvent(e));
+        if (!payload || !k || !resolvedValue) return;
+        let t = Math.hypot(e.clientX - payload.x, e.clientY - payload.y);
+        if (payload = null, t > Ae) return;
+        let n = resolvedValue.pick(k.rayFromEvent(e));
         R && clearTimeout(R), R = null, !(!n || e.detail > 1) && (R = setTimeout(() => {
           R = null, x(`select`, n.dayIndex);
         }, je));
@@ -740,15 +740,15 @@ var xe = class {
       }), a(() => b.result, () => {
         k && (q(), U(true), k.resetHome(true));
       }), a([() => b.colors, () => b.theme], () => {
-        A?.setColors(b.colors, b.theme), k?.requestRender();
+        resolvedValue?.setColors(b.colors, b.theme), k?.requestRender();
       }), a(() => b.highlight, () => {
-        A?.setHighlight(H()), k?.requestRender();
+        resolvedValue?.setHighlight(H()), k?.requestRender();
       }), m(() => {
         let value = w.value,
           t = C.value;
         if (value && t) {
           if (k = ee.create(value, b.shape === `tower` ? De : Ee, {
-            onFrame: e => A?.stepGrowth(e) ?? false,
+            onFrame: e => resolvedValue?.stepGrowth(e) ?? false,
             onRendered: W
           }), !k) {
             x(`unavailable`);
@@ -762,7 +762,7 @@ var xe = class {
       }), f(() => {
         N && cancelAnimationFrame(N), N = 0, R && clearTimeout(R), R = null, j?.disconnect(), j = null, C.value?.removeEventListener(`wheel`, Y, {
           capture: true
-        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), A?.dispose(), A = null, k?.dispose(), k = null;
+        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), resolvedValue?.dispose(), resolvedValue = null, k?.dispose(), k = null;
       }), (n, a) => (c(), r(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: C,

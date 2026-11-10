@@ -19,7 +19,7 @@ var g = Object.defineProperty,
     return e;
   },
   y = (e, t, n) => new Promise((r, i) => {
-    var a = e => {
+    var handler = e => {
         try {
           s(n.next(e));
         } catch (e) {
@@ -33,7 +33,7 @@ var g = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, o);
     s((n = n.apply(e, t)).next());
   }),
   je = [`data-markstream-mode`],
@@ -231,7 +231,7 @@ var g = Object.defineProperty,
     }) {
       let g = te,
         _ = we,
-        Oe = {
+        options = {
           USE_PROFILES: {
             svg: true
           },
@@ -247,7 +247,7 @@ var g = Object.defineProperty,
         rt = p(() => ({
           startOnLoad: false,
           securityLevel: b.value,
-          dompurifyConfig: b.value === `strict` ? Oe : undefined,
+          dompurifyConfig: b.value === `strict` ? options : undefined,
           flowchart: b.value === `strict` ? {
             htmlLabels: false
           } : undefined
@@ -284,29 +284,29 @@ var g = Object.defineProperty,
             return function (e) {
               let t = new Set([`script`]),
                 n = [e, ...Array.from(e.querySelectorAll(`*`))];
-              for (let e of n) {
-                if (t.has(e.tagName.toLowerCase())) {
-                  e.remove();
+              for (let initialize of n) {
+                if (t.has(initialize.tagName.toLowerCase())) {
+                  initialize.remove();
                   continue;
                 }
-                let n = Array.from(e.attributes);
-                for (let t of n) {
-                  let name = t.name;
-                  if (/^on/i.test(name)) e.removeAttribute(name);else {
-                    if (name === `style` && t.value) {
-                      let value = t.value;
+                let n = Array.from(initialize.attributes);
+                for (let payload of n) {
+                  let name = payload.name;
+                  if (/^on/i.test(name)) initialize.removeAttribute(name);else {
+                    if (name === `style` && payload.value) {
+                      let value = payload.value;
                       if (it.some(item => item.test(value))) {
-                        e.removeAttribute(name);
+                        initialize.removeAttribute(name);
                         continue;
                       }
                     }
-                    if ((name === `href` || name === `xlink:href`) && t.value) {
-                      let r = ot(t.value);
+                    if ((name === `href` || name === `xlink:href`) && payload.value) {
+                      let r = ot(payload.value);
                       if (!r) {
-                        e.removeAttribute(name);
+                        initialize.removeAttribute(name);
                         continue;
                       }
-                      r !== t.value && e.setAttribute(name, r);
+                      r !== payload.value && initialize.setAttribute(name, r);
                     }
                   }
                 }
@@ -331,17 +331,17 @@ var g = Object.defineProperty,
         if (!e || typeof DOMParser > `u`) return !e;
         let documentElement = new DOMParser().parseFromString(e, `image/svg+xml`).documentElement;
         if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return true;
-        let n = documentElement.getAttribute(`viewBox`);
-        if (n) {
-          let e = n.trim().split(/[\s,]+/);
+        let attribute = documentElement.getAttribute(`viewBox`);
+        if (attribute) {
+          let e = attribute.trim().split(/[\s,]+/);
           if (e.length === 4) {
-            let t = Number.parseFloat(e[2] || ``),
-              n = Number.parseFloat(e[3] || ``);
-            if (!Number.isFinite(t) || !Number.isFinite(n) || t <= 0 || n <= 0) return true;
+            let float = Number.parseFloat(e[2] || ``),
+              floatResult = Number.parseFloat(e[3] || ``);
+            if (!Number.isFinite(float) || !Number.isFinite(floatResult) || float <= 0 || floatResult <= 0) return true;
           }
         }
         let r = [documentElement, ...Array.from(documentElement.querySelectorAll(`*`))];
-        for (let e of r) for (let t of Array.from(e.attributes)) if (/\bNaN\b/i.test(t.value) || t.name === `style` && /max-width:\s*0(?:px)?/i.test(t.value)) return true;
+        for (let e of r) for (let clientX of Array.from(e.attributes)) if (/\bNaN\b/i.test(clientX.value) || clientX.name === `style` && /max-width:\s*0(?:px)?/i.test(clientX.value)) return true;
         return false;
       }
       let {
@@ -489,10 +489,10 @@ var g = Object.defineProperty,
       function qt(e) {
         if (typeof document > `u` || !E.value) return;
         if (typeof g.onRenderError == `function` && true === g.onRenderError(e, O.value, E.value)) return H.value = true, void $();
-        let t = document.createElement(`div`);
-        t.style.padding = `var(--ms-inset-panel-body)`, t.style.color = `hsl(var(--ms-destructive))`, t.textContent = `Failed to render diagram: `;
-        let n = document.createElement(`span`);
-        n.textContent = e instanceof Error ? e.message : `Unknown error`, t.appendChild(n), x(E.value), E.value.appendChild(t);
+        let element = document.createElement(`div`);
+        element.style.padding = `var(--ms-inset-panel-body)`, element.style.color = `hsl(var(--ms-destructive))`, element.textContent = `Failed to render diagram: `;
+        let elementResult = document.createElement(`span`);
+        elementResult.textContent = e instanceof Error ? e.message : `Unknown error`, element.appendChild(elementResult), x(E.value), E.value.appendChild(element);
         let r = E.value ? getComputedStyle(E.value).getPropertyValue(`--ms-size-diagram-min-height`).trim() : ``;
         I.value = r || `360px`, H.value = true, $();
       }
@@ -667,20 +667,20 @@ var g = Object.defineProperty,
       }
       function on(e) {
         if (!T.value || !E.value) return;
-        let t = E.value.querySelector(`svg`);
-        if (!t) return;
+        let selector = E.value.querySelector(`svg`);
+        if (!selector) return;
         let n = 0,
           r = 0,
-          i = t.getAttribute(`viewBox`),
-          a = t.getAttribute(`width`),
-          o = t.getAttribute(`height`);
-        if (i) {
-          let e = i.split(` `);
+          attributeResult = selector.getAttribute(`viewBox`),
+          a = selector.getAttribute(`width`),
+          o = selector.getAttribute(`height`);
+        if (attributeResult) {
+          let e = attributeResult.split(` `);
           e.length === 4 && (n = Number.parseFloat(e[2]), r = Number.parseFloat(e[3]));
         }
         if (n && r || a && o && (n = Number.parseFloat(a), r = Number.parseFloat(o)), Number.isNaN(n) || Number.isNaN(r) || n <= 0 || r <= 0) try {
-          let e = t.getBBox();
-          e && e.width > 0 && e.height > 0 && (n = e.width, r = e.height);
+          let bBox = selector.getBBox();
+          bBox && bBox.width > 0 && bBox.height > 0 && (n = bBox.width, r = bBox.height);
         } catch (e) {
           console.error(`Failed to get SVG BBox:`, e);
           return;
@@ -728,8 +728,8 @@ var g = Object.defineProperty,
       }
       function mn(e) {
         if (!gt.value) return;
-        let t, n;
-        e instanceof MouseEvent ? (t = e.clientX, n = e.clientY) : (t = e.touches[0].clientX, n = e.touches[0].clientY), A.value = t - _t.value.x, j.value = n - _t.value.y;
+        let t, width;
+        e instanceof MouseEvent ? (t = e.clientX, width = e.clientY) : (t = e.touches[0].clientX, width = e.touches[0].clientY), A.value = t - _t.value.x, j.value = width - _t.value.y;
       }
       function Z() {
         gt.value = false;
@@ -737,11 +737,11 @@ var g = Object.defineProperty,
       function hn(e) {
         if (g.enableWheelZoom && (e.ctrlKey || e.metaKey)) {
           if (e.preventDefault(), !T.value) return;
-          let t = T.value.getBoundingClientRect(),
-            n = e.clientX - t.left,
-            r = e.clientY - t.top,
-            i = n - t.width / 2,
-            a = r - t.height / 2,
+          let boundingClientRect = T.value.getBoundingClientRect(),
+            n = e.clientX - boundingClientRect.left,
+            r = e.clientY - boundingClientRect.top,
+            i = n - boundingClientRect.width / 2,
+            a = r - boundingClientRect.height / 2,
             o = (i - A.value) / k.value,
             s = (a - j.value) / k.value,
             c = -e.deltaY * .01,
@@ -775,7 +775,7 @@ var g = Object.defineProperty,
       function _n() {
         let e = E.value?.querySelector(`svg`);
         if (!e) return void console.error(`SVG element not found`);
-        let t = new XMLSerializer().serializeToString(e),
+        let toString = new XMLSerializer().serializeToString(e),
           n = {
             payload: {
               type: `export`
@@ -785,7 +785,7 @@ var g = Object.defineProperty,
               this.defaultPrevented = true;
             },
             svgElement: e,
-            svgString: t
+            svgString: toString
           };
         _(`export`, n), n.defaultPrevented || function (e, t = null) {
           y(this, null, function* () {
@@ -794,20 +794,20 @@ var g = Object.defineProperty,
                 r = new Blob([n], {
                   type: `image/svg+xml;charset=utf-8`
                 }),
-                i = URL.createObjectURL(r);
+                objectURL = URL.createObjectURL(r);
               if (typeof document < `u`) {
                 let e = document.createElement(`a`);
-                e.href = i, e.download = `mermaid-diagram-${Date.now()}.svg`;
+                e.href = objectURL, e.download = `mermaid-diagram-${Date.now()}.svg`;
                 try {
                   document.body.appendChild(e), e.click(), document.body.removeChild(e);
                 } catch {}
-                URL.revokeObjectURL(i);
+                URL.revokeObjectURL(objectURL);
               }
             } catch (e) {
               console.error(`Failed to export SVG:`, e);
             }
           });
-        }(e, t);
+        }(e, toString);
       }
       function vn() {
         let e = E.value?.querySelector(`svg`) ?? null,
@@ -831,10 +831,10 @@ var g = Object.defineProperty,
           } catch {}
           f(() => {
             if (T.value && D.value) {
-              let e = T.value.cloneNode(true);
-              e.classList.add(`fullscreen`), e.style.height = `100%`, e.style.maxHeight = `100%`;
-              let t = e.querySelector(`[data-mermaid-wrapper]`);
-              t && (ut.value = t, t.style.transform = sn.value.transform), x(D.value), D.value.appendChild(e);
+              let cloneNode = T.value.cloneNode(true);
+              cloneNode.classList.add(`fullscreen`), cloneNode.style.height = `100%`, cloneNode.style.maxHeight = `100%`;
+              let selectorResult = cloneNode.querySelector(`[data-mermaid-wrapper]`);
+              selectorResult && (ut.value = selectorResult, selectorResult.style.transform = sn.value.transform), x(D.value), D.value.appendChild(cloneNode);
             }
           });
         }();
@@ -872,14 +872,14 @@ var g = Object.defineProperty,
       function xn() {
         return y(this, null, function* () {
           return N.value ? yt.value : E.value || (yield f(), E.value) ? (N.value = true, yt.value = y(null, null, function* () {
-            var e, t, n;
+            var e, t, clientY;
             try {
               let r = yield ct();
               if (!r) return;
               let i = `mermaid-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-              R.value || It.value || (e = r.initialize) == null || e.call(r, (t = Ae({}, rt.value), n = {
-                dompurifyConfig: Ae({}, Oe)
-              }, Ee(t, De(n))));
+              R.value || It.value || (e = r.initialize) == null || e.call(r, (t = Ae({}, rt.value), clientY = {
+                dompurifyConfig: Ae({}, options)
+              }, Ee(t, De(clientY))));
               let a = function (e, t = O.value) {
                   let n = t,
                     r = `%%{init: {"theme": "${e === `dark` ? `dark` : `default`}"}}%%\n`;

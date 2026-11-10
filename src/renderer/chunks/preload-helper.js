@@ -5,9 +5,9 @@ var e = function (e, t) {
   n = function (n, r, i) {
     let a = Promise.resolve();
     if (r && r.length > 0) {
-      let n = document.getElementsByTagName(`link`),
-        o = document.querySelector(`meta[property=csp-nonce]`),
-        s = o?.nonce || o?.getAttribute(`nonce`);
+      let elementsByTagName = document.getElementsByTagName(`link`),
+        selector = document.querySelector(`meta[property=csp-nonce]`),
+        s = selector?.nonce || selector?.getAttribute(`nonce`);
       function c(e) {
         return Promise.all(e.map(item => Promise.resolve(item).then(result => ({
           status: `fulfilled`,
@@ -23,14 +23,14 @@ var e = function (e, t) {
       a = c(r.map(item => {
         if (item = e(item, i), item = l(item), item in t) return;
         t[item] = true;
-        let a = item.endsWith(`.css`);
-        for (let e = n.length - 1; e >= 0; e--) {
-          let t = n[e];
-          if (t.href === item && (!a || t.rel === `stylesheet`)) return;
+        let endsWith = item.endsWith(`.css`);
+        for (let e = elementsByTagName.length - 1; e >= 0; e--) {
+          let t = elementsByTagName[e];
+          if (t.href === item && (!endsWith || t.rel === `stylesheet`)) return;
         }
-        let o = document.createElement(`link`);
-        if (o.rel = a ? `stylesheet` : `modulepreload`, a || (o.as = `script`), o.crossOrigin = ``, o.href = item, s && o.setAttribute(`nonce`, s), document.head.appendChild(o), a) return new Promise((e, t) => {
-          o.addEventListener(`load`, e), o.addEventListener(`error`, () => t(Error(`Unable to preload CSS for ${item}`)));
+        let element = document.createElement(`link`);
+        if (element.rel = endsWith ? `stylesheet` : `modulepreload`, endsWith || (element.as = `script`), element.crossOrigin = ``, element.href = item, s && element.setAttribute(`nonce`, s), document.head.appendChild(element), endsWith) return new Promise((e, t) => {
+          element.addEventListener(`load`, e), element.addEventListener(`error`, () => t(Error(`Unable to preload CSS for ${item}`)));
         });
       }).filter(item => item !== undefined));
     }

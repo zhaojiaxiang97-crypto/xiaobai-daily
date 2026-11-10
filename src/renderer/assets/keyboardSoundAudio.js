@@ -688,7 +688,7 @@ function D(e, count, items) {
       for (let e of i) for (let t = n; t < o; t += 1) s = Math.max(s, Math.abs(e[t]));
       let c = n,
         l = s * _;
-      findOnset: for (let e = n; s > 0 && e < o; e += 1) for (let t of i) if (Math.abs(t[e]) >= l) {
+      findOnset: for (let e = n; s > 0 && e < o; e += 1) for (let flag of i) if (Math.abs(flag[e]) >= l) {
         c = e;
         break findOnset;
       }

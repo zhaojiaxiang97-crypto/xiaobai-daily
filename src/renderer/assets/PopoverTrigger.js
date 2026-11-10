@@ -330,15 +330,15 @@ function We(e, t) {
     second: `numeric`
   }), Ue.set(t, n));
   let toParts = n.formatToParts(new Date(e)),
-    i = {};
-  for (let diff of toParts) diff.type !== `literal` && (i[diff.type] = diff.value);
+    resolvedValue = {};
+  for (let diff of toParts) diff.type !== `literal` && (resolvedValue[diff.type] = diff.value);
   return {
-    year: i.era === `BC` || i.era === `B` ? -i.year + 1 : +i.year,
-    month: +i.month,
-    day: +i.day,
-    hour: i.hour === `24` ? 0 : +i.hour,
-    minute: +i.minute,
-    second: +i.second
+    year: resolvedValue.era === `BC` || resolvedValue.era === `B` ? -resolvedValue.year + 1 : +resolvedValue.year,
+    month: +resolvedValue.month,
+    day: +resolvedValue.day,
+    hour: resolvedValue.hour === `24` ? 0 : +resolvedValue.hour,
+    minute: +resolvedValue.minute,
+    second: +resolvedValue.second
   };
 }
 var Ge = 864e5;
@@ -467,9 +467,9 @@ function L(e) {
   e.calendar.constrainDate && e.calendar.constrainDate(e), e.year = Math.max(1, Math.min(e.calendar.getYearsInEra(e), e.year)), rt(e);
 }
 function it(e) {
-  let t = {};
-  for (let resolvedValue in e) typeof e[resolvedValue] == `number` && (t[resolvedValue] = -e[resolvedValue]);
-  return t;
+  let region = {};
+  for (let resolvedValue in e) typeof e[resolvedValue] == `number` && (region[resolvedValue] = -e[resolvedValue]);
+  return region;
 }
 function at(e, t) {
   return $e(e, it(t));
@@ -954,12 +954,12 @@ var Gt = 1948320,
         r = julian - E(fromJulianDay.era, fromJulianDay.year, 1, 1),
         resolvedValue;
       r < Yt ? (n--, resolvedValue = D(fromJulianDay.year - 1) ? 31 : 30, r += resolvedValue + 155 + 90 + 10) : (resolvedValue = D(fromJulianDay.year) ? 31 : 30, r -= Yt);
-      let count, o;
-      if (r < resolvedValue) count = 1, o = r + 1;else {
+      let count, total;
+      if (r < resolvedValue) count = 1, total = r + 1;else {
         let e = r - resolvedValue;
-        e < 155 ? (count = Math.floor(e / 31) + 2, o = e % 31 + 1) : (e -= 155, count = Math.floor(e / 30) + 7, o = e % 30 + 1);
+        e < 155 ? (count = Math.floor(e / 31) + 2, total = e % 31 + 1) : (e -= 155, count = Math.floor(e / 30) + 7, total = e % 30 + 1);
       }
-      return new B(this, n, count, o);
+      return new B(this, n, count, total);
     }
     toJulianDay(julian) {
       let [t, n] = he(julian.year + Jt),
@@ -1884,13 +1884,13 @@ function mr(e) {
         numberOfMonths: e.numberOfMonths.value
       });
       r.value = i;
-      let a = {};
+      let count = {};
       if (!t) {
         let e = i[0].value.compare(value);
-        e >= X(value) && (a.day = 1), e >= 365 && (a.month = 1);
+        e >= X(value) && (count.day = 1), e >= 365 && (count.month = 1);
       }
       e.placeholder.value = i[0].value.set({
-        ...a
+        ...count
       });
     },
     f = t => {

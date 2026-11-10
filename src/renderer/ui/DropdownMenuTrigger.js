@@ -32,9 +32,9 @@ function J(e, t, n, r = {}) {
 function Y(e, t, n, r = e.includes(t) ? e.length : e.length + 1) {
   if (--r === 0) return null;
   let i = e.indexOf(t),
-    a;
-  if (a = i === -1 ? n.goForward ? 0 : e.length - 1 : n.goForward ? i + 1 : i - 1, !n.loop && (a < 0 || a >= e.length)) return null;
-  let o = e[(a + e.length) % e.length];
+    resolvedValue;
+  if (resolvedValue = i === -1 ? n.goForward ? 0 : e.length - 1 : n.goForward ? i + 1 : i - 1, !n.loop && (resolvedValue < 0 || resolvedValue >= e.length)) return null;
+  let o = e[(resolvedValue + e.length) % e.length];
   return o ? o.hasAttribute(`disabled`) && o.getAttribute(`disabled`) !== `false` ? Y(e, o, n, r) : o : null;
 }
 var X = F({
@@ -310,7 +310,7 @@ var ue = v(le),
         if (e.defaultPrevented) return;
         let target = e.target,
           n = target.closest(`[data-reka-menu-content]`) === e.currentTarget,
-          r = [`input`, `textarea`].includes(target.tagName.toLowerCase()),
+          includes = [`input`, `textarea`].includes(target.tagName.toLowerCase()),
           i = e.ctrlKey || e.altKey || e.metaKey,
           a = e.key.length === 1,
           o = J(e, b(), F.value, {
@@ -323,7 +323,7 @@ var ue = v(le),
         if (o) return o?.focus();
         if (e.code === `Space`) return;
         let s = N.value?.getItems() ?? [];
-        if (n && (e.key === `Tab` && f.modal.value && e.preventDefault(), !i && a && !r && L(e.key, s)), e.target !== F.value || !y.includes(e.key)) return;
+        if (n && (e.key === `Tab` && f.modal.value && e.preventDefault(), !i && a && !includes && L(e.key, s)), e.target !== F.value || !y.includes(e.key)) return;
         e.preventDefault();
         let c = [...s.map(item => item.ref)];
         m.includes(e.key) && c.reverse(), l(c);

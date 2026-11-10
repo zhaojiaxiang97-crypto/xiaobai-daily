@@ -28,16 +28,16 @@ var b = {
     setup(a) {
       let toast = window.screenshotToolAPI.toast,
         A = t(null),
-        j = [],
+        emptyItems = [],
         M = u(() => A.value?.kind === `saved` ? _(`ToastCardSaved`) : _(`ToastCardCopied`));
       return l(() => {
-        j.push(toast.onOpen(e => {
+        emptyItems.push(toast.onOpen(e => {
           v(e), A.value = e;
         }), window.screenshotToolAPI.onTheme(({
           dark: e
         }) => y(e))), window.screenshotToolAPI.ready();
       }), s(() => {
-        for (let e of j) e();
+        for (let e of emptyItems) e();
       }), (t, a) => (i(), r(`div`, {
         class: `fixed inset-0 p-3`,
         onMouseenter: a[4] ||= t => e(toast).hover(true),

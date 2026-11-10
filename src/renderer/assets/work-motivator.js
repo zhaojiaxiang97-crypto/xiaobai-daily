@@ -47,9 +47,9 @@ var t = e(`eye-off`, [[`path`, {
     throw Error();
   }
   items.assertNever = n, items.arrayToEnum = e => {
-    let t = {};
-    for (let resolvedValue of e) t[resolvedValue] = resolvedValue;
-    return t;
+    let value = {};
+    for (let resolvedValue of e) value[resolvedValue] = resolvedValue;
+    return value;
   }, items.getValidEnumValues = t => {
     let filtered = items.objectKeys(t).filter(item => typeof t[t[item]] != `number`),
       r = {};
@@ -149,15 +149,15 @@ var arrayToEnum = payload.arrayToEnum([`string`, `nan`, `number`, `integer`, `fl
       return this.issues.length === 0;
     }
     flatten(e = e => e.message) {
-      let t = {},
+      let innerType = {},
         emptyItems = [];
       for (let r of this.issues) if (r.path.length > 0) {
         let n = r.path[0];
-        t[n] = t[n] || [], t[n].push(e(r));
+        innerType[n] = innerType[n] || [], innerType[n].push(e(r));
       } else emptyItems.push(e(r));
       return {
         formErrors: emptyItems,
-        fieldErrors: t
+        fieldErrors: innerType
       };
     }
     get formErrors() {
@@ -434,7 +434,7 @@ var b = class {
       throw safeParse.error;
     }
     safeParse(safe, parse) {
-      let n = {
+      let result = {
         common: {
           issues: [],
           async: parse?.async ?? false,
@@ -446,10 +446,10 @@ var b = class {
         data: safe,
         parsedType: handler(safe)
       };
-      return oe(n, this._parseSync({
+      return oe(result, this._parseSync({
         data: safe,
-        path: n.path,
-        parent: n
+        path: result.path,
+        parent: result
       }));
     }
     "~validate"(state) {

@@ -26,10 +26,10 @@ function U(e, t) {
   }
   return w(n => {
     if (e.value && t.value) {
-      let r = e => o(e, t.value),
+      let handler = e => o(e, t.value),
         i = t => o(t, e.value);
-      e.value.addEventListener(`pointerleave`, r), t.value.addEventListener(`pointerleave`, i), n(() => {
-        e.value?.removeEventListener(`pointerleave`, r), t.value?.removeEventListener(`pointerleave`, i);
+      e.value.addEventListener(`pointerleave`, handler), t.value.addEventListener(`pointerleave`, i), n(() => {
+        e.value?.removeEventListener(`pointerleave`, handler), t.value?.removeEventListener(`pointerleave`, i);
       });
     }
   }), w(n => {
@@ -72,10 +72,10 @@ function W(e, t) {
   }
 }
 function G(e, t, n = 5) {
-  let r = [];
+  let emptyItems = [];
   switch (t) {
     case `top`:
-      r.push({
+      emptyItems.push({
         x: e.x - n,
         y: e.y + n
       }, {
@@ -84,7 +84,7 @@ function G(e, t, n = 5) {
       });
       break;
     case `bottom`:
-      r.push({
+      emptyItems.push({
         x: e.x - n,
         y: e.y - n
       }, {
@@ -93,7 +93,7 @@ function G(e, t, n = 5) {
       });
       break;
     case `left`:
-      r.push({
+      emptyItems.push({
         x: e.x + n,
         y: e.y - n
       }, {
@@ -102,7 +102,7 @@ function G(e, t, n = 5) {
       });
       break;
     case `right`:
-      r.push({
+      emptyItems.push({
         x: e.x - n,
         y: e.y - n
       }, {
@@ -110,7 +110,7 @@ function G(e, t, n = 5) {
         y: e.y + n
       });
   }
-  return r;
+  return emptyItems;
 }
 function K(e) {
   let {

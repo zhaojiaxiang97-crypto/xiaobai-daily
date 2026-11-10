@@ -59,7 +59,7 @@ function x(event) {
       settings: h
     } = l(),
     v = a(() => c.value || d.value),
-    x = [],
+    emptyItems = [],
     S = [],
     C = t(0),
     w = t(false),
@@ -134,12 +134,12 @@ function x(event) {
   }), n(() => {
     R?.();
   });
-  let z = {
+  let options = {
     controlsDisabled: v,
     growthSettingsLoaded: event.growthSettingsLoaded,
     highlightedItem: event.highlightedItem,
     refresh: event.refresh,
-    onRefresh: e => b(x, e),
+    onRefresh: e => b(emptyItems, e),
     onLocalDataChanged: e => b(S, e),
     notifyLocalDataChanged: () => {
       S.forEach(item => item());
@@ -162,10 +162,10 @@ function x(event) {
     enterKeyComponentState: I,
     enterKeyComponentBusy: L
   };
-  return o(y, z), {
-    ...z,
+  return o(y, options), {
+    ...options,
     runRefreshLoaders: () => {
-      x.forEach(item => item());
+      emptyItems.forEach(item => item());
     }
   };
 }

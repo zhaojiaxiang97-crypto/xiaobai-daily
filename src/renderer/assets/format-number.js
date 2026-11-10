@@ -55,9 +55,9 @@ function h(e, t) {
   }));
 }
 function g(e, t, n) {
-  let r = new Date(t, n + 1, 0).getDate(),
+  let date = new Date(t, n + 1, 0).getDate(),
     i = 0;
-  for (let a = 1; a <= r; a++) f(e, new Date(t, n, a)) && i++;
+  for (let a = 1; a <= date; a++) f(e, new Date(t, n, a)) && i++;
   return i;
 }
 function _(e, t) {
@@ -93,13 +93,13 @@ function b(e, t = Date.now()) {
     d = m(e) * n,
     p = y(e, i, t),
     g = p === null ? 0 : p - t,
-    b = {
+    options = {
       day: s,
       hourlyRate: c * r,
       nextStartAt: p
     };
   if (!f(e, s)) return {
-    ...b,
+    ...options,
     status: `rest`,
     earnedToday: 0,
     earningPerMs: 0,
@@ -109,7 +109,7 @@ function b(e, t = Date.now()) {
   };
   let x = h(e, s);
   if (!x.length) return {
-    ...b,
+    ...options,
     status: `rest`,
     earnedToday: 0,
     earningPerMs: 0,
@@ -122,7 +122,7 @@ function b(e, t = Date.now()) {
     w = x[x.length - 1].end,
     T = S * c;
   if (t < start) return {
-    ...b,
+    ...options,
     status: `before`,
     earnedToday: 0,
     earningPerMs: 0,
@@ -136,7 +136,7 @@ function b(e, t = Date.now()) {
       let e = Math.min(t - w, a),
         r = e * c * n;
       return t - w < 216e5 ? {
-        ...b,
+        ...options,
         status: `overtime`,
         earnedToday: T + r,
         earningPerMs: c * n,
@@ -144,7 +144,7 @@ function b(e, t = Date.now()) {
         scheduledMs: d,
         countdownMs: e
       } : {
-        ...b,
+        ...options,
         status: `off`,
         earnedToday: T + r,
         earningPerMs: 0,
@@ -154,7 +154,7 @@ function b(e, t = Date.now()) {
       };
     }
     return {
-      ...b,
+      ...options,
       status: `off`,
       earnedToday: T,
       earningPerMs: 0,
@@ -164,7 +164,7 @@ function b(e, t = Date.now()) {
     };
   }
   if (x.find(item => t >= item.start && t < item.end)) return {
-    ...b,
+    ...options,
     status: `working`,
     earnedToday: T,
     earningPerMs: c,
@@ -174,7 +174,7 @@ function b(e, t = Date.now()) {
   };
   let E = x.find(item => item.start > t);
   return {
-    ...b,
+    ...options,
     status: `lunch`,
     earnedToday: T,
     earningPerMs: 0,
@@ -262,9 +262,9 @@ function A(e, t = Date.now()) {
     return null;
   }
   if (e.countdownShown === `payday`) {
-    let t = (t, n) => new Date(t, n, Math.min(e.payday, new Date(t, n + 1, 0).getDate())),
-      r = t(n.getFullYear(), n.getMonth());
-    return r.getTime() < n.getTime() && (r = t(n.getFullYear(), n.getMonth() + 1)), {
+    let handler = (t, n) => new Date(t, n, Math.min(e.payday, new Date(t, n + 1, 0).getDate())),
+      r = handler(n.getFullYear(), n.getMonth());
+    return r.getTime() < n.getTime() && (r = handler(n.getFullYear(), n.getMonth() + 1)), {
       kind: `payday`,
       days: k(n, r)
     };
@@ -280,11 +280,11 @@ function A(e, t = Date.now()) {
 }
 var j = 6e4;
 function M(e, t, n, r = 2) {
-  let i = Math.max(0, t).toLocaleString(n, {
+  let toLocaleString = Math.max(0, t).toLocaleString(n, {
     minimumFractionDigits: r,
     maximumFractionDigits: r
   });
-  return `${e.currency}${i}`;
+  return `${e.currency}${toLocaleString}`;
 }
 function N(fn, t, n = true) {
   let r = Math.max(0, Math.ceil(t / j)),

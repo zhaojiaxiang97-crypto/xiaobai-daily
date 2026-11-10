@@ -80,7 +80,7 @@ var ce = {
           t: v,
           locale: y
         } = ne(),
-        b = (e, t = {}) => v(`toolboxNative.clipboardPicker${e}`, t),
+        handler = (e, t = {}) => v(`toolboxNative.clipboardPicker${e}`, t),
         x = o([]),
         S = o([]),
         C = o(``),
@@ -103,7 +103,7 @@ var ce = {
         B = null,
         V = f(() => T.value.trim().toLocaleLowerCase()),
         H = f(() => w.value === `history` ? V.value ? E.value ?? [] : x.value : V.value ? S.value.filter(item => `${item.title}\n${item.preview}`.toLocaleLowerCase().includes(V.value)) : S.value),
-        Me = f(() => V.value ? b(`NoMatch`) : w.value === `history` ? b(`EmptyHistory`) : b(`EmptyPhrases`)),
+        Me = f(() => V.value ? handler(`NoMatch`) : w.value === `history` ? handler(`EmptyHistory`) : handler(`EmptyPhrases`)),
         Ne = f(() => _ ? `⌘1–9` : `Ctrl+1–9`),
         U = f(() => H.value[D.value] ?? null),
         W = f(() => {
@@ -116,12 +116,12 @@ var ce = {
         Fe = f(() => {
           let value = W.value;
           if (!value) return ``;
-          let t = [b(`Characters`, {
+          let t = [handler(`Characters`, {
             n: value.characterCount.toLocaleString()
           })];
-          return value.kind === `history` ? (value.count > 1 && t.push(b(`CopyCount`, {
+          return value.kind === `history` ? (value.count > 1 && t.push(handler(`CopyCount`, {
             n: value.count
-          })), value.copiedAt && t.push(K(value.copiedAt, true))) : value.count > 0 && t.push(b(`UseCount`, {
+          })), value.copiedAt && t.push(K(value.copiedAt, true))) : value.count > 0 && t.push(handler(`UseCount`, {
             n: value.count
           })), t.join(` · `);
         });
@@ -135,8 +135,8 @@ var ce = {
             minute: `2-digit`,
             hour12: false
           }).format(n),
-          a = new Date(r.getFullYear(), r.getMonth(), r.getDate()).getTime();
-        return n.getTime() >= a ? i : n.getTime() >= a - 864e5 ? t ? `${b(`Yesterday`)} ${i}` : b(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
+          time = new Date(r.getFullYear(), r.getMonth(), r.getDate()).getTime();
+        return n.getTime() >= time ? i : n.getTime() >= time - 864e5 ? t ? `${handler(`Yesterday`)} ${i}` : handler(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
           ...(t && n.getFullYear() !== r.getFullYear() ? {
             year: `numeric`
           } : {}),
@@ -206,9 +206,9 @@ var ce = {
               kind: e.kind,
               id: e.id
             });
-            t.ok || J(t.error.message || b(`CopyFailed`));
+            t.ok || J(t.error.message || handler(`CopyFailed`));
           } catch {
-            J(b(`CopyFailed`));
+            J(handler(`CopyFailed`));
           } finally {
             O.value = false;
           }
@@ -293,7 +293,7 @@ var ce = {
         type: `text`,
         autocomplete: `off`,
         spellcheck: `false`,
-        placeholder: w.value === `history` ? b(`SearchHistory`) : b(`SearchPhrases`)
+        placeholder: w.value === `history` ? handler(`SearchHistory`) : handler(`SearchPhrases`)
       }, null, 8, ue), [[ae, T.value]]), C.value ? (c(), r(`kbd`, de, l(t(se)(C.value, t(g))), 1)) : p(``, true)]), m(`div`, fe, [m(`button`, {
         type: `button`,
         role: `tab`,
@@ -303,7 +303,7 @@ var ce = {
         }),
         onMousedown: o[1] ||= h(() => {}, [`prevent`]),
         onClick: o[2] ||= e => Q(`history`)
-      }, [n(l(b(`TabHistory`)), 1), m(`span`, null, l(x.value.length), 1)], 42, pe), m(`button`, {
+      }, [n(l(handler(`TabHistory`)), 1), m(`span`, null, l(x.value.length), 1)], 42, pe), m(`button`, {
         type: `button`,
         role: `tab`,
         "aria-selected": w.value === `phrases`,
@@ -312,9 +312,9 @@ var ce = {
         }),
         onMousedown: o[3] ||= h(() => {}, [`prevent`]),
         onClick: o[4] ||= e => Q(`phrases`)
-      }, [n(l(b(`TabPhrases`)), 1), m(`span`, null, l(S.value.length), 1)], 42, me), m(`kbd`, {
+      }, [n(l(handler(`TabPhrases`)), 1), m(`span`, null, l(S.value.length), 1)], 42, me), m(`kbd`, {
         class: `picker__tab-key`,
-        title: b(`HintSwitch`)
+        title: handler(`HintSwitch`)
       }, `Tab`, 8, he)])]), m(`div`, ge, [m(`div`, {
         ref_key: `listRef`,
         ref: j,
@@ -341,18 +341,18 @@ var ce = {
         datetime: t.copiedAt
       }, l(K(t.copiedAt)), 9, we)) : p(``, true)])], 42, ve))), 128))], 512), m(`aside`, {
         class: `picker__preview`,
-        "aria-label": b(`PreviewLabel`)
+        "aria-label": handler(`PreviewLabel`)
       }, [U.value ? (c(), r(s, {
         key: 0
       }, [G.value ? (c(), r(`strong`, Ee, l(G.value), 1)) : p(``, true), m(`div`, {
         ref_key: `previewBodyRef`,
         ref: M,
         class: `picker__preview-body`
-      }, l(Pe.value), 513), W.value?.truncated ? (c(), r(`p`, De, l(b(`PreviewTruncated`, {
+      }, l(Pe.value), 513), W.value?.truncated ? (c(), r(`p`, De, l(handler(`PreviewTruncated`, {
         n: t(oe).toLocaleString()
-      })), 1)) : p(``, true), m(`p`, Oe, l(Fe.value), 1)], 64)) : (c(), r(`p`, ke, l(b(`PreviewEmpty`)), 1))], 8, Te)]), m(`footer`, Ae, [k.value ? (c(), r(`p`, je, l(k.value), 1)) : (c(), r(s, {
+      })), 1)) : p(``, true), m(`p`, Oe, l(Fe.value), 1)], 64)) : (c(), r(`p`, ke, l(handler(`PreviewEmpty`)), 1))], 8, Te)]), m(`footer`, Ae, [k.value ? (c(), r(`p`, je, l(k.value), 1)) : (c(), r(s, {
         key: 1
-      }, [m(`span`, null, [o[8] ||= m(`kbd`, null, `↑↓`, -1), n(l(b(`HintSelect`)), 1)]), m(`span`, null, [o[9] ||= m(`kbd`, null, `Enter`, -1), n(l(b(`HintCopy`)), 1)]), m(`span`, null, [m(`kbd`, null, l(Ne.value), 1), n(l(b(`HintQuick`)), 1)]), m(`span`, null, [o[10] ||= m(`kbd`, null, `Esc`, -1), n(l(b(`HintClose`)), 1)])], 64))])], 2));
+      }, [m(`span`, null, [o[8] ||= m(`kbd`, null, `↑↓`, -1), n(l(handler(`HintSelect`)), 1)]), m(`span`, null, [o[9] ||= m(`kbd`, null, `Enter`, -1), n(l(handler(`HintCopy`)), 1)]), m(`span`, null, [m(`kbd`, null, l(Ne.value), 1), n(l(handler(`HintQuick`)), 1)]), m(`span`, null, [o[10] ||= m(`kbd`, null, `Esc`, -1), n(l(handler(`HintClose`)), 1)])], 64))])], 2));
     }
   }), [[`__scopeId`, `data-v-784c69ae`]]),
   x = d({

@@ -84,9 +84,9 @@ var Ce = E ? e => E.createHTML(e) : e => e,
   },
   je = e => e ? r(e) ? e.some(item => item.length > 1) : e.length > 1 : false;
 function Me(e) {
-  let t = {};
-  for (let n in e) n in Oe || (t[n] = e[n]);
-  if (e.css === false) return t;
+  let payload = {};
+  for (let nextSibling in e) nextSibling in Oe || (payload[nextSibling] = e[nextSibling]);
+  if (e.css === false) return payload;
   let {
       name: n = `v`,
       type: r,
@@ -113,8 +113,8 @@ function Me(e) {
       onBeforeAppear: te = _,
       onAppear: ne = v,
       onAppearCancelled: re = y
-    } = t,
-    S = (e, t, n, r) => {
+    } = payload,
+    handler = (e, t, n, r) => {
       e._enterCancelled = r, P(e, t ? d : c), P(e, t ? u : s), n && n();
     },
     C = (e, t) => {
@@ -122,12 +122,12 @@ function Me(e) {
     },
     w = e => (t, n) => {
       let i = e ? ne : v,
-        o = () => S(t, e, n);
+        o = () => handler(t, e, n);
       j(i, [t, o]), Pe(() => {
         P(t, e ? l : a), N(t, e ? d : c), je(i) || Ie(t, r, ee, o);
       });
     };
-  return o(t, {
+  return o(payload, {
     onBeforeEnter(e) {
       j(_, [e]), N(e, a), N(e, s);
     },
@@ -144,10 +144,10 @@ function Me(e) {
       }), j(b, [e, n]);
     },
     onEnterCancelled(e) {
-      S(e, false, undefined, true), j(y, [e]);
+      handler(e, false, undefined, true), j(y, [e]);
     },
     onAppearCancelled(e) {
-      S(e, true, undefined, true), j(re, [e]);
+      handler(e, true, undefined, true), j(re, [e]);
     },
     onLeaveCancelled(e) {
       C(e), j(x, [e]);
@@ -204,21 +204,21 @@ function Ie(e, t, n, r) {
   }, s + 1), e.addEventListener(l, f);
 }
 function Le(e, t) {
-  let n = window.getComputedStyle(e),
-    r = e => (n[e] || ``).split(`, `),
+  let computedStyle = window.getComputedStyle(e),
+    r = e => (computedStyle[e] || ``).split(`, `),
     i = r(`${O}Delay`),
     a = r(`${O}Duration`),
     o = Re(i, a),
     s = r(`${k}Delay`),
     c = r(`${k}Duration`),
     l = Re(s, c),
-    u = null,
+    resolvedValue = null,
     d = 0,
     f = 0;
-  t === O ? o > 0 && (u = O, d = o, f = a.length) : t === k ? l > 0 && (u = k, d = l, f = c.length) : (d = Math.max(o, l), u = d > 0 ? o > l ? O : k : null, f = u ? u === O ? a.length : c.length : 0);
-  let p = u === O && /\b(?:transform|all)(?:,|$)/.test(r(`${O}Property`).toString());
+  t === O ? o > 0 && (resolvedValue = O, d = o, f = a.length) : t === k ? l > 0 && (resolvedValue = k, d = l, f = c.length) : (d = Math.max(o, l), resolvedValue = d > 0 ? o > l ? O : k : null, f = resolvedValue ? resolvedValue === O ? a.length : c.length : 0);
+  let p = resolvedValue === O && /\b(?:transform|all)(?:,|$)/.test(r(`${O}Property`).toString());
   return {
-    type: u,
+    type: resolvedValue,
     timeout: d,
     propCount: f,
     hasTransform: p
@@ -329,9 +329,9 @@ function B(e, t) {
   if (e.nodeType === 1) {
     let style = e.style,
       r = ``;
-    for (let e in t) {
-      let i = se(t[e]);
-      style.setProperty(`--${e}`, i), r += `--${e}: ${i};`;
+    for (let activeBranch in t) {
+      let i = se(t[activeBranch]);
+      style.setProperty(`--${activeBranch}`, i), r += `--${activeBranch}: ${i};`;
     }
     style[Ue] = r;
   }
@@ -343,8 +343,8 @@ function Ke(e, t, n) {
     a = false;
   if (n && !i) {
     if (t) {
-      if (d(t)) for (let e of t.split(`;`)) {
-        let t = e.slice(0, e.indexOf(`:`)).trim();
+      if (d(t)) for (let subTree of t.split(`;`)) {
+        let t = subTree.slice(0, subTree.indexOf(`:`)).trim();
         n[t] ?? H(style, t, ``);
       } else for (let e in t) n[e] ?? H(style, e, ``);
     }
@@ -429,9 +429,9 @@ function tt(e, t, n, r, i = null) {
 var nt = /(Once|Passive|Capture)$/,
   rt = /^on:?(?:Once|Passive|Capture)$/;
 function it(e) {
-  let t, n;
-  for (; (n = e.match(nt)) && !rt.test(e);) t ||= {}, e = e.slice(0, e.length - n[1].length), t[n[1].toLowerCase()] = true;
-  return [e[2] === `:` ? e.slice(3) : p(e.slice(2)), t];
+  let firstChild, count;
+  for (; (count = e.match(nt)) && !rt.test(e);) firstChild ||= {}, e = e.slice(0, e.length - count[1].length), firstChild[count[1].toLowerCase()] = true;
+  return [e[2] === `:` ? e.slice(3) : p(e.slice(2)), firstChild];
 }
 var at = 0,
   ot = Promise.resolve(),
@@ -532,12 +532,12 @@ var ht = (e, t) => mt(e, t, en),
               props: n,
               styles: i
             } = e,
-            a;
+            flag;
           if (n && !r(n)) for (let e in n) {
             let t = n[e];
-            (t === Number || t && t.type === Number) && (e in this._props && (this._props[e] = ie(this._props[e])), (a ||= Object.create(null))[h(e)] = true);
+            (t === Number || t && t.type === Number) && (e in this._props && (this._props[e] = ie(this._props[e])), (flag ||= Object.create(null))[h(e)] = true);
           }
-          this._numberProps = a, this._resolveProps(e), this.shadowRoot && this._applyStyles(i), this._mount(e);
+          this._numberProps = flag, this._resolveProps(e), this.shadowRoot && this._applyStyles(i), this._mount(e);
         },
         t = this._def.__asyncLoader;
       if (t) return this._pendingResolve = t().then(result => {
@@ -569,10 +569,10 @@ var ht = (e, t) => mt(e, t, en),
     }
     _setAttr(e) {
       if (e.startsWith(`data-v-`)) return;
-      let t = this.hasAttribute(e),
-        n = t ? this.getAttribute(e) : pt,
+      let hasAttribute = this.hasAttribute(e),
+        n = hasAttribute ? this.getAttribute(e) : pt,
         r = h(e);
-      t && this._numberProps && this._numberProps[r] && (n = ie(n)), this._setProp(r, n, false, true);
+      hasAttribute && this._numberProps && this._numberProps[r] && (n = ie(n)), this._setProp(r, n, false, true);
     }
     _getProp(e) {
       return this._props[e];
@@ -616,10 +616,10 @@ var ht = (e, t) => mt(e, t, en),
       let r = this._nonce,
         shadowRoot = this.shadowRoot,
         a = n ? this._getStyleAnchor(n) || this._getStyleAnchor(this._def) : this._getRootStyleInsertionAnchor(shadowRoot),
-        o = null;
+        ratio = null;
       for (let s = e.length - 1; s >= 0; s--) {
-        let c = document.createElement(`style`);
-        r && c.setAttribute(`nonce`, r), c.textContent = e[s], shadowRoot.insertBefore(c, o || a), o = c, s === 0 && (n || this._styleAnchors.set(this._def, c), t && this._styleAnchors.set(t, c));
+        let element = document.createElement(`style`);
+        r && element.setAttribute(`nonce`, r), element.textContent = e[s], shadowRoot.insertBefore(element, ratio || a), ratio = element, s === 0 && (n || this._styleAnchors.set(this._def, element), t && this._styleAnchors.set(t, element));
       }
     }
     _getStyleAnchor(e) {
@@ -653,10 +653,10 @@ var ht = (e, t) => mt(e, t, en),
         if (a) for (let e of a) {
           if (t && e.nodeType === 1) {
             let n = t + `-s`,
-              r = document.createTreeWalker(e, 1);
+              treeWalker = document.createTreeWalker(e, 1);
             e.setAttribute(n, ``);
             let i;
-            for (; i = r.nextNode();) i.setAttribute(n, ``);
+            for (; i = treeWalker.nextNode();) i.setAttribute(n, ``);
           }
           parentNode.insertBefore(e, r);
         } else for (; r.firstChild;) parentNode.insertBefore(r.firstChild, r);
@@ -668,8 +668,8 @@ var ht = (e, t) => mt(e, t, en),
       this._teleportTargets && e.push(...this._teleportTargets);
       let t = new Set();
       for (let n of e) {
-        let e = n.querySelectorAll(`slot`);
-        for (let n = 0; n < e.length; n++) t.add(e[n]);
+        let selectorAll = n.querySelectorAll(`slot`);
+        for (let n = 0; n < selectorAll.length; n++) t.add(selectorAll[n]);
       }
       return Array.from(t);
     }
@@ -770,31 +770,31 @@ function Dt(e) {
   if (r || i) {
     let t = e.el,
       style = t.style,
-      a = t.getBoundingClientRect(),
+      boundingClientRect = t.getBoundingClientRect(),
       o = 1,
       s = 1;
-    return t.offsetWidth && (o = a.width / t.offsetWidth), t.offsetHeight && (s = a.height / t.offsetHeight), (!Number.isFinite(o) || o === 0) && (o = 1), (!Number.isFinite(s) || s === 0) && (s = 1), Math.abs(o - 1) < .01 && (o = 1), Math.abs(s - 1) < .01 && (s = 1), style.transform = style.webkitTransform = `translate(${r / o}px,${i / s}px)`, style.transitionDuration = `0s`, e;
+    return t.offsetWidth && (o = boundingClientRect.width / t.offsetWidth), t.offsetHeight && (s = boundingClientRect.height / t.offsetHeight), (!Number.isFinite(o) || o === 0) && (o = 1), (!Number.isFinite(s) || s === 0) && (s = 1), Math.abs(o - 1) < .01 && (o = 1), Math.abs(s - 1) < .01 && (s = 1), style.transform = style.webkitTransform = `translate(${r / o}px,${i / s}px)`, style.transitionDuration = `0s`, e;
   }
 }
 function Ot(e) {
-  let t = e.getBoundingClientRect();
+  let boundingClientRectResult = e.getBoundingClientRect();
   return {
-    left: t.left,
-    top: t.top
+    left: boundingClientRectResult.left,
+    top: boundingClientRectResult.top
   };
 }
 function kt(e, t, n) {
-  let r = e.cloneNode(),
+  let cloneNode = e.cloneNode(),
     i = e[A];
   i && i.forEach(item => {
-    item.split(/\s+/).forEach(e => e && r.classList.remove(e));
-  }), n.split(/\s+/).forEach(item => item && r.classList.add(item)), r.style.display = `none`;
+    item.split(/\s+/).forEach(e => e && cloneNode.classList.remove(e));
+  }), n.split(/\s+/).forEach(item => item && cloneNode.classList.add(item)), cloneNode.style.display = `none`;
   let a = t.nodeType === 1 ? t : t.parentNode;
-  a.appendChild(r);
+  a.appendChild(cloneNode);
   let {
     hasTransform: o
-  } = Le(r);
-  return a.removeChild(r), o;
+  } = Le(cloneNode);
+  return a.removeChild(cloneNode), o;
 }
 var K = e => {
   let t = e.props[`onUpdate:modelValue`] || false;
@@ -853,8 +853,8 @@ var Y = {
       let s = (a || e.type === `number`) && !/^0\d/.test(e.value) ? g(e.value) : e.value,
         c = t ?? ``;
       if (s === c) return;
-      let l = e.getRootNode();
-      (l instanceof Document || l instanceof ShadowRoot) && l.activeElement === e && e.type !== `range` && (r && t === n || i && e.value.trim() === c) || (e.value = c);
+      let rootNode = e.getRootNode();
+      (rootNode instanceof Document || rootNode instanceof ShadowRoot) && rootNode.activeElement === e && e.type !== `range` && (r && t === n || i && e.value.trim() === c) || (e.value = c);
     }
   },
   Nt = {
@@ -1113,28 +1113,28 @@ var Qt = (...e) => {
     Zt().hydrate(...e);
   },
   $ = (...e) => {
-    let t = Xt().createApp(...e),
+    let createApp = Xt().createApp(...e),
       {
         mount: n
-      } = t;
-    return t.mount = e => {
+      } = createApp;
+    return createApp.mount = e => {
       let r = nn(e);
       if (!r) return;
-      let i = t._component;
+      let i = createApp._component;
       !x(i) && !i.render && !i.template && (i.template = r.innerHTML), r.nodeType === 1 && (r.textContent = ``);
       let a = n(r, false, tn(r));
       return r instanceof Element && (r.removeAttribute(`v-cloak`), r.setAttribute(`data-v-app`, ``)), a;
-    }, t;
+    }, createApp;
   },
   en = (...e) => {
-    let t = Zt().createApp(...e),
+    let createAppResult = Zt().createApp(...e),
       {
         mount: n
-      } = t;
-    return t.mount = e => {
+      } = createAppResult;
+    return createAppResult.mount = e => {
       let t = nn(e);
       if (t) return n(t, true, tn(t));
-    }, t;
+    }, createAppResult;
   };
 function tn(e) {
   if (e instanceof SVGElement) return `svg`;

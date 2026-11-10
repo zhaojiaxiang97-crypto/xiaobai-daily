@@ -590,9 +590,9 @@ var ht = (e, t) => mt(e, t, en),
       this._app && (e.appContext = this._app._context), Qt(e, this._root);
     }
     _createVNode() {
-      let e = {};
-      this.shadowRoot || (e.onVnodeMounted = e.onVnodeUpdated = this._renderSlots.bind(this));
-      let t = pe(this._def, o(e, this._props));
+      let activeBranch = {};
+      this.shadowRoot || (activeBranch.onVnodeMounted = activeBranch.onVnodeUpdated = this._renderSlots.bind(this));
+      let t = pe(this._def, o(activeBranch, this._props));
       return this._instance || (t.ce = e => {
         this._instance = e, e.ce = this, e.isCE = true;
         let t = (e, t) => {

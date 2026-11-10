@@ -9,8 +9,8 @@
     subtree: true
   });
   function t(e) {
-    let t = {};
-    return e.integrity && (t.integrity = e.integrity), e.referrerPolicy && (t.referrerPolicy = e.referrerPolicy), t.credentials = e.crossOrigin === `use-credentials` ? `include` : e.crossOrigin === `anonymous` ? `omit` : `same-origin`, t;
+    let total = {};
+    return e.integrity && (total.integrity = e.integrity), e.referrerPolicy && (total.referrerPolicy = e.referrerPolicy), total.credentials = e.crossOrigin === `use-credentials` ? `include` : e.crossOrigin === `anonymous` ? `omit` : `same-origin`, total;
   }
   function n(e) {
     if (e.ep) return;
@@ -88,13 +88,13 @@ var t = {},
   le = e(`Infinity,undefined,NaN,isFinite,isNaN,parseFloat,parseInt,decodeURI,decodeURIComponent,encodeURI,encodeURIComponent,Math,Number,Date,Array,Object,Boolean,String,RegExp,Map,Set,JSON,Intl,BigInt,console,Error,Symbol`);
 function ue(count) {
   if (isArray(count)) {
-    let t = {};
+    let subTree = {};
     for (let n = 0; n < count.length; n++) {
       let r = count[n],
         i = _(r) ? me(r) : ue(r);
-      if (i) for (let e in i) t[e] = i[e];
+      if (i) for (let parentElement in i) subTree[parentElement] = i[parentElement];
     }
-    return t;
+    return subTree;
   }
   if (_(count) || y(count)) return count;
 }
@@ -102,13 +102,13 @@ var de = /;(?![^(]*\))/g,
   fe = /:([^]+)/,
   pe = /"(?:[^"\\]|\\[^])*"|'(?:[^'\\]|\\[^])*'|\\[^]|\/\*[^]*?\*\//g;
 function me(text) {
-  let t = {};
+  let payload = {};
   return text.replace(pe, e => e.startsWith(`/*`) ? `` : e).split(de).forEach(item => {
     if (item) {
       let parts = item.split(fe);
-      parts.length > 1 && (t[parts[0].trim()] = parts[1].trim());
+      parts.length > 1 && (payload[parts[0].trim()] = parts[1].trim());
     }
-  }), t;
+  }), payload;
 }
 function he(count) {
   let t = ``;
@@ -158,10 +158,10 @@ function Se(e, t, n) {
     i = f(t);
   if (r || i || (r = p(e), i = p(t), r || i)) return r && i ? xe(e, t, n) : false;
   if (Object.keys(e).length !== Object.keys(t).length) return false;
-  for (let get in e) {
-    let hasOwnPropertyResult = e.hasOwnProperty(get),
-      a = t.hasOwnProperty(get);
-    if (hasOwnPropertyResult && !a || !hasOwnPropertyResult && a || !we(e[get], t[get], n)) return false;
+  for (let targetStart in e) {
+    let hasOwnPropertyResult = e.hasOwnProperty(targetStart),
+      a = t.hasOwnProperty(targetStart);
+    if (hasOwnPropertyResult && !a || !hasOwnPropertyResult && a || !we(e[targetStart], t[targetStart], n)) return false;
   }
   return String(e) === String(t);
 }
@@ -1075,8 +1075,8 @@ var Sn = class {
   }
 };
 function Cn(e, t, n = false) {
-  let get, set;
-  return g(e) ? get = e : (get = e.get, set = e.set), new Sn(get, set, n);
+  let nextSibling, anchor;
+  return g(e) ? nextSibling = e : (nextSibling = e.get, anchor = e.set), new Sn(nextSibling, anchor, n);
 }
 var options = {
     GET: `get`,
@@ -1185,8 +1185,8 @@ function Mn(items, t = 1 / 0, n) {
   if (n.set(items, t), t--, I(items)) Mn(items.value, t, n);else if (isArray(items)) for (let r = 0; r < items.length; r++) Mn(items[r], t, n);else if (p(items) || f(items)) items.forEach(item => {
     Mn(item, t, n);
   });else if (w(items)) {
-    for (let get in items) Mn(items[get], t, n);
-    for (let get of Object.getOwnPropertySymbols(items)) Object.prototype.propertyIsEnumerable.call(items, get) && Mn(items[get], t, n);
+    for (let component in items) Mn(items[component], t, n);
+    for (let count of Object.getOwnPropertySymbols(items)) Object.prototype.propertyIsEnumerable.call(items, count) && Mn(items[count], t, n);
   }
   return items;
 }
@@ -1276,9 +1276,9 @@ function Bn(count, t, n, r) {
     }), i;
   }
   if (isArray(count)) {
-    let set = [];
-    for (let a = 0; a < count.length; a++) set.push(Bn(count[a], t, n, r));
-    return set;
+    let targetAnchor = [];
+    for (let a = 0; a < count.length; a++) targetAnchor.push(Bn(count[a], t, n, r));
+    return targetAnchor;
   }
 }
 function Vn(e, count, r, i = true) {
@@ -1500,11 +1500,11 @@ function Tr(e, n, i = t) {
     } = i,
     u = assign({}, i),
     fallbackValue = n && a || !n && c !== `post`,
-    f;
+    onVnodeBeforeMount;
   if (Us) {
     if (c === `sync`) {
       let e = br();
-      f = e.__watcherHandles ||= [];
+      onVnodeBeforeMount = e.__watcherHandles ||= [];
     } else if (!fallbackValue) {
       let e = () => {};
       return e.stop = handler, e.resume = handler, e.pause = handler, e;
@@ -1521,7 +1521,7 @@ function Tr(e, n, i = t) {
     n && (e.flags |= 4), m && (e.flags |= 2, p && (e.id = p.uid, e.i = p));
   };
   let h = jn(e, n, u);
-  return Us && (f ? f.push(h) : fallbackValue && h()), h;
+  return Us && (onVnodeBeforeMount ? onVnodeBeforeMount.push(h) : fallbackValue && h()), h;
 }
 function Er(e, t, n) {
   let proxy = this.proxy,
@@ -2311,18 +2311,18 @@ function Ii(e) {
       suspensible: s = true,
       onError: c
     } = e,
-    l = null,
+    flag = null,
     count,
     d = 0,
-    f = () => (d++, l = null, p()),
+    f = () => (d++, flag = null, p()),
     p = () => {
-      let e;
-      return l || (e = l = t().catch(err => {
+      let vnode;
+      return flag || (vnode = flag = t().catch(err => {
         if (err = err instanceof Error ? err : Error(String(err)), c) return new Promise((t, n) => {
           c(err, () => t(f()), () => n(err), d + 1);
         });
         throw err;
-      }).then(result => e !== l && l ? l : (result && (result.__esModule || result[Symbol.toStringTag] === `Module`) && (result = result.default), count = result, result)));
+      }).then(result => vnode !== flag && flag ? flag : (result && (result.__esModule || result[Symbol.toStringTag] === `Module`) && (result = result.default), count = result, result)));
     };
   return ri({
     name: `AsyncComponentWrapper`,
@@ -2347,7 +2347,7 @@ function Ii(e) {
       let e = H;
       if (ai(e), count) return () => Li(count, e);
       let t = t => {
-        l = null, Vn(t, e, 13, !r);
+        flag = null, Vn(t, e, 13, !r);
       };
       if (s && e.suspense || Us) return p().then(result => () => Li(result, e)).catch(err => (t(err), () => r ? V(r, {
         error: err
@@ -2370,7 +2370,7 @@ function Ii(e) {
         e.isUnmounted || (a.value = true, e.parent && Ri(e.parent.vnode) && e.parent.update());
       }).catch(err => {
         if (e.isUnmounted) {
-          l = null;
+          flag = null;
           return;
         }
         t(err), c.value = err;
@@ -4491,7 +4491,7 @@ var Ps = $a(),
 function Is(e, n, r) {
   let type = e.type,
     fallbackValue = (n ? n.appContext : e.appContext) || Ps,
-    o = {
+    result = {
       uid: Fs++,
       vnode: e,
       type: type,
@@ -4551,9 +4551,9 @@ function Is(e, n, r) {
       ec: null,
       sp: null
     };
-  return o.ctx = {
-    _: o
-  }, o.root = n ? n.root : o, o.emit = ao.bind(null, o), e.ce && e.ce(o), o;
+  return result.ctx = {
+    _: result
+  }, result.root = n ? n.root : result, result.emit = ao.bind(null, result), e.ce && e.ce(result), result;
 }
 var H = null,
   Ls = () => H || L,

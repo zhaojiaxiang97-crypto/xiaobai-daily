@@ -170,7 +170,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   }];
 function x(text, t) {
   if (typeof text != `string`) return t;
-  let n = text.trim().toLowerCase();
-  return /^#[0-9a-f]{6}$/.test(n) ? n : /^#[0-9a-f]{3}$/.test(n) ? `#${n.slice(1).split(``).map(item => item + item).join(``)}` : t;
+  let toLowerCase = text.trim().toLowerCase();
+  return /^#[0-9a-f]{6}$/.test(toLowerCase) ? toLowerCase : /^#[0-9a-f]{3}$/.test(toLowerCase) ? `#${toLowerCase.slice(1).split(``).map(item => item + item).join(``)}` : t;
 }
 export { r as _, f as a, o as c, _ as d, v as f, i as g, u as h, b as i, s as l, x as m, p as n, h as o, m as p, d as r, a as s, y as t, g as u, n as v, t as y };

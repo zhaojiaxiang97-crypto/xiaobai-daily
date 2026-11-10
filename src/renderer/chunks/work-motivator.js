@@ -47,20 +47,20 @@ var t = e(`eye-off`, [[`path`, {
     throw Error();
   }
   items.assertNever = n, items.arrayToEnum = e => {
-    let t = {};
-    for (let n of e) t[n] = n;
-    return t;
+    let value = {};
+    for (let resolvedValue of e) value[resolvedValue] = resolvedValue;
+    return value;
   }, items.getValidEnumValues = t => {
     let n = items.objectKeys(t).filter(item => typeof t[t[item]] != `number`),
       r = {};
-    for (let e of n) r[e] = t[e];
+    for (let payload of n) r[payload] = t[payload];
     return items.objectValues(r);
   }, items.objectValues = t => items.objectKeys(t).map(function (item) {
     return t[item];
   }), items.objectKeys = typeof Object.keys == `function` ? e => Object.keys(e) : e => {
-    let t = [];
-    for (let n in e) Object.prototype.hasOwnProperty.call(e, n) && t.push(n);
-    return t;
+    let emptyItems = [];
+    for (let defaultError in e) Object.prototype.hasOwnProperty.call(e, defaultError) && emptyItems.push(defaultError);
+    return emptyItems;
   }, items.find = (e, fn) => {
     for (let n of e) if (fn(n)) return n;
   }, items.isInteger = typeof Number.isInteger == `function` ? e => Number.isInteger(e) : e => typeof e == `number` && Number.isFinite(e) && Math.floor(e) === e;
@@ -120,8 +120,8 @@ var o = i.arrayToEnum([`string`, `nan`, `number`, `integer`, `float`, `boolean`,
         n = {
           _errors: []
         },
-        r = e => {
-          for (let i of e.issues) if (i.code === `invalid_union`) i.unionErrors.map(r);else if (i.code === `invalid_return_type`) r(i.returnTypeError);else if (i.code === `invalid_arguments`) r(i.argumentsError);else if (i.path.length === 0) n._errors.push(t(i));else {
+        handler = e => {
+          for (let i of e.issues) if (i.code === `invalid_union`) i.unionErrors.map(handler);else if (i.code === `invalid_return_type`) handler(i.returnTypeError);else if (i.code === `invalid_arguments`) handler(i.argumentsError);else if (i.path.length === 0) n._errors.push(t(i));else {
             let e = n,
               r = 0;
             for (; r < i.path.length;) {
@@ -134,7 +134,7 @@ var o = i.arrayToEnum([`string`, `nan`, `number`, `integer`, `float`, `boolean`,
             }
           }
         };
-      return r(this), n;
+      return handler(this), n;
     }
     static assert(t) {
       if (!(t instanceof e)) throw Error(`Not a ZodError: ${t}`);
@@ -149,15 +149,15 @@ var o = i.arrayToEnum([`string`, `nan`, `number`, `integer`, `float`, `boolean`,
       return this.issues.length === 0;
     }
     flatten(e = e => e.message) {
-      let t = {},
+      let innerType = {},
         n = [];
       for (let r of this.issues) if (r.path.length > 0) {
         let n = r.path[0];
-        t[n] = t[n] || [], t[n].push(e(r));
+        innerType[n] = innerType[n] || [], innerType[n].push(e(r));
       } else n.push(e(r));
       return {
         formErrors: n,
-        fieldErrors: t
+        fieldErrors: innerType
       };
     }
     get formErrors() {
@@ -429,12 +429,12 @@ var b = class {
       return Promise.resolve(t);
     }
     parse(e, t) {
-      let n = this.safeParse(e, t);
-      if (n.success) return n.data;
-      throw n.error;
+      let safeParse = this.safeParse(e, t);
+      if (safeParse.success) return safeParse.data;
+      throw safeParse.error;
     }
     safeParse(e, t) {
-      let n = {
+      let result = {
         common: {
           issues: [],
           async: t?.async ?? false,
@@ -446,10 +446,10 @@ var b = class {
         data: e,
         parsedType: s(e)
       };
-      return oe(n, this._parseSync({
+      return oe(result, this._parseSync({
         data: e,
-        path: n.path,
-        parent: n
+        path: result.path,
+        parent: result
       }));
     }
     "~validate"(state) {
@@ -1700,10 +1700,10 @@ var O = class e extends b {
   _getCached() {
     if (this._cached !== null) return this._cached;
     let e = this._def.shape(),
-      t = i.objectKeys(e);
+      objectKeys = i.objectKeys(e);
     return this._cached = {
       shape: e,
-      keys: t
+      keys: objectKeys
     }, this._cached;
   }
   _parse(items) {
@@ -1725,11 +1725,11 @@ var O = class e extends b {
       } = this._getCached(),
       a = [];
     if (!(this._def.catchall instanceof T && this._def.unknownKeys === `strip`)) for (let e in n.data) i.includes(e) || a.push(e);
-    let s = [];
+    let message = [];
     for (let e of i) {
       let t = r[e],
         i = n.data[e];
-      s.push({
+      message.push({
         key: {
           status: `valid`,
           value: e
@@ -1740,7 +1740,7 @@ var O = class e extends b {
     }
     if (this._def.catchall instanceof T) {
       let unknownKeys = this._def.unknownKeys;
-      if (unknownKeys === `passthrough`) for (let e of a) s.push({
+      if (unknownKeys === `passthrough`) for (let e of a) message.push({
         key: {
           status: `valid`,
           value: e
@@ -1757,7 +1757,7 @@ var O = class e extends b {
       let catchall = this._def.catchall;
       for (let t of a) {
         let r = n.data[t];
-        s.push({
+        message.push({
           key: {
             status: `valid`,
             value: t
@@ -1769,7 +1769,7 @@ var O = class e extends b {
     }
     return n.common.async ? Promise.resolve().then(async () => {
       let e = [];
-      for (let t of s) {
+      for (let t of message) {
         let n = await t.key,
           r = await t.value;
         e.push({
@@ -1779,7 +1779,7 @@ var O = class e extends b {
         });
       }
       return e;
-    }).then(result => f.mergeObjectSync(t, result)) : f.mergeObjectSync(t, s);
+    }).then(result => f.mergeObjectSync(t, result)) : f.mergeObjectSync(t, message);
   }
   get shape() {
     return this._def.shape();
@@ -2045,8 +2045,8 @@ function j(e, t) {
     data: e
   };
   if (n === o.object && r === o.object) {
-    let n = i.objectKeys(t),
-      r = i.objectKeys(e).filter(item => n.indexOf(item) !== -1),
+    let objectKeysResult = i.objectKeys(t),
+      r = i.objectKeys(e).filter(item => objectKeysResult.indexOf(item) !== -1),
       a = {
         ...e,
         ...t
@@ -2412,9 +2412,9 @@ var Ve = class e extends b {
       {
         let e = this;
         return m(function (...t) {
-          let o = e._def.args.safeParse(t, i);
-          if (!o.success) throw new l([n(t, o.error)]);
-          let s = Reflect.apply(data, this, o.data),
+          let safeParseResult = e._def.args.safeParse(t, i);
+          if (!safeParseResult.success) throw new l([n(t, safeParseResult.error)]);
+          let s = Reflect.apply(data, this, safeParseResult.data),
             c = e._def.returns.safeParse(s, i);
           if (!c.success) throw new l([r(s, c.error)]);
           return c.data;
@@ -2561,22 +2561,22 @@ var R = class e extends b {
 R.create = He;
 var z = class extends b {
   _parse(e) {
-    let t = i.getValidEnumValues(this._def.values),
+    let validEnumValues = i.getValidEnumValues(this._def.values),
       n = this._getOrReturnCtx(e);
     if (n.parsedType !== o.string && n.parsedType !== o.number) {
-      let e = i.objectValues(t);
+      let objectValues = i.objectValues(validEnumValues);
       return d(n, {
-        expected: i.joinValues(e),
+        expected: i.joinValues(objectValues),
         received: n.parsedType,
         code: c.invalid_type
       }), p;
     }
     if (this._cache ||= new Set(i.getValidEnumValues(this._def.values)), !this._cache.has(e.data)) {
-      let e = i.objectValues(t);
+      let objectValuesResult = i.objectValues(validEnumValues);
       return d(n, {
         received: n.data,
         code: c.invalid_enum_value,
-        options: e
+        options: objectValuesResult
       }), p;
     }
     return m(e.data);
@@ -2635,8 +2635,8 @@ var V = class extends b {
         }
       };
     if (a.addIssue = a.addIssue.bind(a), r.type === `preprocess`) {
-      let e = r.transform(n.data, a);
-      if (n.common.async) return Promise.resolve(e).then(async result => {
+      let transform = r.transform(n.data, a);
+      if (n.common.async) return Promise.resolve(transform).then(async result => {
         if (t.value === `aborted`) return p;
         let r = await this._def.schema._parseAsync({
           data: result,
@@ -2648,7 +2648,7 @@ var V = class extends b {
       {
         if (t.value === `aborted`) return p;
         let r = this._def.schema._parseSync({
-          data: e,
+          data: transform,
           path: n.path,
           parent: n
         });
@@ -2657,9 +2657,9 @@ var V = class extends b {
     }
     if (r.type === `refinement`) {
       let e = e => {
-        let t = r.refinement(e, a);
-        if (n.common.async) return Promise.resolve(t);
-        if (t instanceof Promise) throw Error(`Async refinement encountered during synchronous parse operation. Use .parseAsync instead.`);
+        let refinement = r.refinement(e, a);
+        if (n.common.async) return Promise.resolve(refinement);
+        if (refinement instanceof Promise) throw Error(`Async refinement encountered during synchronous parse operation. Use .parseAsync instead.`);
         return e;
       };
       if (n.common.async === false) {
@@ -2690,11 +2690,11 @@ var V = class extends b {
           parent: n
         });
         if (!h(e)) return p;
-        let i = r.transform(e.value, a);
-        if (i instanceof Promise) throw Error(`Asynchronous transform encountered during synchronous parse operation. Use .parseAsync instead.`);
+        let transformResult = r.transform(e.value, a);
+        if (transformResult instanceof Promise) throw Error(`Asynchronous transform encountered during synchronous parse operation. Use .parseAsync instead.`);
         return {
           status: t.value,
-          value: i
+          value: transformResult
         };
       }
       return this._def.schema._parseAsync({

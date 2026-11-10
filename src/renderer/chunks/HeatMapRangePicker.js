@@ -66,7 +66,7 @@ function ge(e) {
   let t = M(() => e.start.value ? !!e.isDateDisabled(e.start.value) : false),
     n = M(() => e.end.value ? !!e.isDateDisabled(e.end.value) : false),
     r = M(() => !!(t.value || n.value || e.start.value && e.end.value && B(e.end.value, e.start.value))),
-    i = t => e.start.value ? U(e.start.value, t) : false,
+    handler = t => e.start.value ? U(e.start.value, t) : false,
     a = t => e.end.value ? U(e.end.value, t) : false,
     o = t => e.start.value && U(e.start.value, t) || e.end.value && U(e.end.value, t) ? true : e.end.value && e.start.value ? q(t, e.start.value, e.end.value) : false,
     s = t => {
@@ -77,13 +77,13 @@ function ge(e) {
             let length = H(e.start.value, e.end.value).length;
             if (length <= e.maximumDays.value) {
               let r = e.maximumDays.value - length - 1,
-                i = e.start.value.subtract({
+                subtract = e.start.value.subtract({
                   days: r
                 }),
                 a = e.end.value.add({
                   days: r
                 });
-              return !q(t, i, a);
+              return !q(t, subtract, a);
             }
           }
           return false;
@@ -92,10 +92,10 @@ function ge(e) {
           let n = e.start.value.add({
               days: e.maximumDays.value
             }),
-            r = e.start.value.subtract({
+            subtractResult = e.start.value.subtract({
               days: e.maximumDays.value
             });
-          return !q(t, r, n);
+          return !q(t, subtractResult, n);
         }
       }
       return false;
@@ -141,7 +141,7 @@ function ge(e) {
     isSelected: o,
     isDateHighlightable: c,
     highlightedRange: l,
-    isSelectionStart: i,
+    isSelectionStart: handler,
     isSelectionEnd: a,
     isHighlightedStart: u,
     isHighlightedEnd: d,
@@ -688,8 +688,8 @@ var _e = {
             days: n
           });
           if (r.minValue.value && i.compare(r.minValue.value) < 0 || r.maxValue.value && i.compare(r.maxValue.value) > 0) return;
-          let a = value.querySelector(`[data-value='${i.toString()}']:not([data-outside-view])`);
-          if (!a) {
+          let selector = value.querySelector(`[data-value='${i.toString()}']:not([data-outside-view])`);
+          if (!selector) {
             if (n > 0) {
               if (r.isNextButtonDisabled()) return;
               r.nextPage();
@@ -702,8 +702,8 @@ var _e = {
             });
             return;
           }
-          if (a && a.hasAttribute(`data-disabled`)) return o(i, n);
-          r.onPlaceholderChange(i), a?.focus();
+          if (selector && selector.hasAttribute(`data-disabled`)) return o(i, n);
+          r.onPlaceholderChange(i), selector?.focus();
         }
       }
       return (e, t) => (w(), x(d(i), {

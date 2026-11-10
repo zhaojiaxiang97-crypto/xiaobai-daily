@@ -55,14 +55,14 @@ var Se = {
         N = s(false),
         P = s(false),
         F = s(``),
-        I = null,
+        data = null,
         L = null,
         R = false,
-        z = null,
+        payload = null,
         B = null,
         V = 0,
         H = null,
-        Le = [],
+        emptyItems = [],
         U = f(() => w.value ? w.value.width / j.value.width : 1),
         W = f(() => w.value ? w.value.height / j.value.height : 1),
         G = f(() => O.value ?? (D.value === `idle` ? k.value : null)),
@@ -118,7 +118,7 @@ var Se = {
             n = Math.min(w.value.height - 1, Math.max(0, Math.floor(value.y * W.value)));
           return {
             coords: `${t}, ${n}`,
-            color: I ? me(I, (n * w.value.width + t) * 4) : ``
+            color: data ? me(data, (n * w.value.width + t) * 4) : ``
           };
         }),
         We = f(() => w.value?.afterCapture === `copy` ? _(`OverlayBeautifyCopy`) : _(`OverlayBeautify`)),
@@ -239,26 +239,26 @@ var Se = {
             L && (O.value = qe(L, t));
             break;
           case `moving`:
-            if (L && z) {
+            if (L && payload) {
               let {
                   width: e,
                   height: n
                 } = j.value,
-                r = Math.min(Math.max(0, z.x + t.x - L.x), e - z.width),
-                i = Math.min(Math.max(0, z.y + t.y - L.y), n - z.height);
+                r = Math.min(Math.max(0, payload.x + t.x - L.x), e - payload.width),
+                i = Math.min(Math.max(0, payload.y + t.y - L.y), n - payload.height);
               O.value = {
-                ...z,
+                ...payload,
                 x: r,
                 y: i
               };
             }
             break;
           case `resizing`:
-            if (z && B) {
-              let e = z.x,
-                n = z.y,
-                r = z.x + z.width,
-                i = z.y + z.height;
+            if (payload && B) {
+              let e = payload.x,
+                n = payload.y,
+                r = payload.x + payload.width,
+                i = payload.y + payload.height;
               B.includes(`w`) && (e = t.x), B.includes(`e`) && (r = t.x), B.includes(`n`) && (n = t.y), B.includes(`s`) && (i = t.y), O.value = qe({
                 x: e,
                 y: n
@@ -277,13 +277,13 @@ var Se = {
         if (A.value = t, event.currentTarget.setPointerCapture(event.pointerId), D.value === `selected` && O.value) {
           let e = Je(t);
           if (e) {
-            D.value = `resizing`, B = e, z = {
+            D.value = `resizing`, B = e, payload = {
               ...O.value
             };
             return;
           }
           if (q(O.value, t)) {
-            D.value = `moving`, L = t, z = {
+            D.value = `moving`, L = t, payload = {
               ...O.value
             };
             return;
@@ -304,9 +304,9 @@ var Se = {
             break;
           case `moving`:
           case `resizing`:
-            O.value && (O.value.width < v || O.value.height < v) && z && (O.value = z), D.value = `selected`;
+            O.value && (O.value.width < v || O.value.height < v) && payload && (O.value = payload), D.value = `selected`;
         }
-        L = null, z = null, B = null, R = false, Y();
+        L = null, payload = null, B = null, R = false, Y();
       }
       function tt(e) {
         D.value === `selected` && O.value && q(O.value, Q(e)) && $(`beautify`);
@@ -393,12 +393,12 @@ var Se = {
           N.value = true;
           try {
             let i = st(n),
-              a;
+              png;
             if (e === `beautify` && value.afterCapture === `copy`) {
               let e = he(r, i.x, i.y, i.width, i.height);
               try {
                 let n = value.style.enabled && value.style.balance ? fe(e, value.scale) : null;
-                a = (await ge({
+                png = (await ge({
                   source: e,
                   scale: value.scale,
                   style: value.style,
@@ -413,7 +413,7 @@ var Se = {
               sessionId: value.sessionId,
               action: e,
               rect: i,
-              rendered: a
+              rendered: png
             });
             o.ok || console.warn(`[截图美化] 完成截图失败:`, o.error.message);
           } catch (e) {
@@ -424,7 +424,7 @@ var Se = {
         }
       }
       function ct() {
-        w.value = null, I = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
+        w.value = null, data = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
         let value = T.value;
         value && (value.width = 1, value.height = 1), Y();
       }
@@ -437,7 +437,7 @@ var Se = {
         if (value) {
           value.width = e.width, value.height = e.height;
           let n = pe(e.bitmap, e.width, e.height);
-          g(value).putImageData(n, 0, 0), I = n.data;
+          g(value).putImageData(n, 0, 0), data = n.data;
         }
         e.cursor && (A.value = {
           ...e.cursor
@@ -456,7 +456,7 @@ var Se = {
           E.value?.offsetWidth && (M.value = E.value.offsetWidth);
         });
       }), ie(() => {
-        Le.push(overlay.onOpen(e => {
+        emptyItems.push(overlay.onOpen(e => {
           lt(e);
         }), overlay.onReset(ct), overlay.onClear(() => {
           O.value && X(null), D.value = `idle`, k.value = null, A.value = null, Y();
@@ -464,7 +464,7 @@ var Se = {
           O.value && Z();
         })), window.addEventListener(`keydown`, ot), window.addEventListener(`resize`, ut), window.screenshotToolAPI.ready();
       }), ne(() => {
-        for (let e of Le) e();
+        for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, ot), window.removeEventListener(`resize`, ut), V && cancelAnimationFrame(V), H !== null && window.clearTimeout(H);
       }), (t, i) => (c(), r(`div`, {
         class: `fixed inset-0 overflow-hidden select-none`,

@@ -431,8 +431,8 @@ var Qe = [`id`],
           return;
         }
         let e = new Set();
-        for (let t of [`bold`, `insertUnorderedList`, `insertOrderedList`]) try {
-          document.queryCommandState(t) && e.add(t);
+        for (let count of [`bold`, `insertUnorderedList`, `insertOrderedList`]) try {
+          document.queryCommandState(count) && e.add(count);
         } catch {}
         p.value = e;
       }
@@ -1132,7 +1132,7 @@ var Qe = [`id`],
         try {
           let csrfToken = m.user.csrfToken,
             n = X(),
-            r = {
+            record = {
               id: j.value?.id,
               version: j.value?.version,
               title: e,
@@ -1141,19 +1141,19 @@ var Qe = [`id`],
               time: V.time,
               todoIds: H.value.map(item => item.id)
             },
-            i = j.value ? await Q.update(csrfToken, r, n) : await Q.create(csrfToken, r, n),
-            a = [];
-          for (let e of U.value) try {
-            await Q.attachmentDelete(csrfToken, e);
+            i = j.value ? await Q.update(csrfToken, record, n) : await Q.create(csrfToken, record, n),
+            emptyItems = [];
+          for (let token of U.value) try {
+            await Q.attachmentDelete(csrfToken, token);
           } catch (e) {
-            a.push(Ie(e));
+            emptyItems.push(Ie(e));
           }
           x(`saved`, {
             item: i,
             files: W.value.filter(item => !item.error).map(item => item.file),
             isNew: !j.value,
-            warning: a.length ? S(`milestoneTool.errors.attachmentDeleteFailed`, {
-              message: a[0]
+            warning: emptyItems.length ? S(`milestoneTool.errors.attachmentDeleteFailed`, {
+              message: emptyItems[0]
             }) : ``
           }), y.value = false;
         } catch (e) {
@@ -1493,8 +1493,8 @@ function Bn(e) {
         for (;;) {
           let n = t.value.find(item => item.status === `queued`);
           if (!n) break;
-          let r = e.csrfToken();
-          if (!r) {
+          let csrfToken = e.csrfToken();
+          if (!csrfToken) {
             t.value.forEach(item => {
               item.status === `queued` && (item.status = `failed`, item.error = e.errorMessage(null));
             });
@@ -1502,7 +1502,7 @@ function Bn(e) {
           }
           n.status = `uploading`, n.progress = 0, n.error = ``;
           try {
-            await Q.uploadFile(r, n.milestoneId, n.file, e => {
+            await Q.uploadFile(csrfToken, n.milestoneId, n.file, e => {
               n.progress = e;
             }, () => n.cancelRequested), i(n.id), e.onUploaded(n.milestoneId);
           } catch (t) {
@@ -1722,14 +1722,14 @@ var Vn = {
         }),
         Fe = D(() => new Map(O.value.map(item => [item.id, Te(item, z.value)]))),
         Ie = D(() => {
-          let e = {
+          let options = {
             all: 0,
             upcoming: 0,
             overdue: 0,
             completed: 0
           };
-          for (let t of Fe.value.values()) e.all += 1, we(t, `upcoming`) ? e.upcoming += 1 : t === `overdue` ? e.overdue += 1 : t === `completed` && (e.completed += 1);
-          return e;
+          for (let t of Fe.value.values()) options.all += 1, we(t, `upcoming`) ? options.upcoming += 1 : t === `overdue` ? options.overdue += 1 : t === `completed` && (options.completed += 1);
+          return options;
         }),
         Le = D(() => [`all`, `upcoming`, `overdue`, `completed`].map(item => ({
           value: item,
@@ -1760,10 +1760,10 @@ var Vn = {
         return e.content === null && e.contentSummary !== `` || e.todoCount > e.todos.length || e.attachmentCount > e.attachments.length;
       }
       function Ye(e, t = false) {
-        let n = O.value.findIndex(item => item.id === e.id);
-        if (n >= 0) {
+        let index = O.value.findIndex(item => item.id === e.id);
+        if (index >= 0) {
           let t = [...O.value];
-          t[n] = e, O.value = t;
+          t[index] = e, O.value = t;
         } else t && (O.value = [...O.value, e]);
       }
       function Xe(e, t) {

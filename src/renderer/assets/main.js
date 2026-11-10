@@ -9390,11 +9390,11 @@ var Gf = class {
           emptyItems = [];
         for (; parts.length > 0;) {
           let t = false,
-            a = [],
+            resolvedValue = [],
             o = 0;
-          for (; o < parts.length; o++) if (this.rules.other.blockquoteStart.test(parts[o])) a.push(parts[o]), t = true;else if (!t) a.push(parts[o]);else break;
+          for (; o < parts.length; o++) if (this.rules.other.blockquoteStart.test(parts[o])) resolvedValue.push(parts[o]), t = true;else if (!t) resolvedValue.push(parts[o]);else break;
           parts = parts.slice(o);
-          let joined = a.join(`
+          let joined = resolvedValue.join(`
 `),
             replaced = joined.replace(this.rules.other.blockquoteSetextReplace, `
     $1`).replace(this.rules.other.blockquoteSetextReplace2, ``);
@@ -9474,16 +9474,16 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
             for (; text;) {
               let p = text.split(`
 `, 1)[0],
-                m;
-              if (l = p, this.options.pedantic ? (l = l.replace(this.rules.other.listReplaceNesting, `  `), m = l) : m = l.replace(this.rules.other.tabCharGlobal, `    `), fencesBeginRegex.test(l) || headingBeginRegex.test(l) || htmlBeginRegex.test(l) || blockquoteBeginRegex.test(l) || nextBulletRegex.test(l) || n.test(l)) break;
-              if (m.search(this.rules.other.nonSpaceChar) >= d || !l.trim()) s += `
-` + m.slice(d);else {
+                total;
+              if (l = p, this.options.pedantic ? (l = l.replace(this.rules.other.listReplaceNesting, `  `), total = l) : total = l.replace(this.rules.other.tabCharGlobal, `    `), fencesBeginRegex.test(l) || headingBeginRegex.test(l) || htmlBeginRegex.test(l) || blockquoteBeginRegex.test(l) || nextBulletRegex.test(l) || n.test(l)) break;
+              if (total.search(this.rules.other.nonSpaceChar) >= d || !l.trim()) s += `
+` + total.slice(d);else {
                 if (u || c.replace(this.rules.other.tabCharGlobal, `    `).search(this.rules.other.nonSpaceChar) >= 4 || fencesBeginRegex.test(c) || headingBeginRegex.test(c) || n.test(c)) break;
                 s += `
 ` + l;
               }
               u = !l.trim(), r += p + `
-`, text = text.substring(p.length + 1), c = m.slice(d);
+`, text = text.substring(p.length + 1), c = total.slice(d);
             }
           }
           i.loose || (o ? i.loose = true : this.rules.other.doubleBlankLine.test(r) && (o = true)), i.items.push({
@@ -9700,31 +9700,31 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
       let r = this.rules.inline.emStrongLDelim.exec(items);
       if (!(!r || !r[1] && !r[2] && !r[3] && !r[4] || r[4] && n.match(this.rules.other.unicodeAlphaNumeric)) && (!(r[1] || r[3]) || !n || this.rules.inline.punctuation.exec(n))) {
         let i = [...r[0]].length - 1,
-          a,
-          o,
+          length,
+          count,
           s = i,
           c = 0,
           l = r[0][0],
           u = n === l,
           d = l === `*` ? this.rules.inline.emStrongRDelimAst : this.rules.inline.emStrongRDelimUnd;
         for (d.lastIndex = 0, strong = strong.slice(-1 * items.length + i); (r = d.exec(strong)) !== null;) {
-          if (a = r[1] || r[2] || r[3] || r[4] || r[5] || r[6], !a) continue;
-          if (o = [...a].length, r[3] || r[4]) {
-            s += o;
+          if (length = r[1] || r[2] || r[3] || r[4] || r[5] || r[6], !length) continue;
+          if (count = [...length].length, r[3] || r[4]) {
+            s += count;
             continue;
           }
           if (r[5] || r[6]) {
-            if (i % 3 && !((i + o) % 3)) {
-              c += o;
+            if (i % 3 && !((i + count) % 3)) {
+              c += count;
               continue;
             }
             if (u) break;
           }
-          if (s -= o, s > 0) continue;
-          o = Math.min(o, o + s + c);
+          if (s -= count, s > 0) continue;
+          count = Math.min(count, count + s + c);
           let length = [...r[0]][0].length,
-            part = items.slice(0, i + r.index + length + o);
-          if (Math.min(i, o) % 2) {
+            part = items.slice(0, i + r.index + length + count);
+          if (Math.min(i, count) % 2) {
             let e = part.slice(1, -1);
             return {
               type: `em`,
@@ -9768,19 +9768,19 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
       if (r && (!r[1] || !n || this.rules.inline.punctuation.exec(n))) {
         let n = [...r[0]].length - 1,
           count,
-          a,
+          period,
           o = n,
           delRDelim = this.rules.inline.delRDelim;
         for (delRDelim.lastIndex = 0, t = t.slice(-1 * items.length + n); (r = delRDelim.exec(t)) !== null;) {
-          if (count = r[1] || r[2] || r[3] || r[4] || r[5] || r[6], !count || (a = [...count].length, a !== n)) continue;
+          if (count = r[1] || r[2] || r[3] || r[4] || r[5] || r[6], !count || (period = [...count].length, period !== n)) continue;
           if (r[3] || r[4]) {
-            o += a;
+            o += period;
             continue;
           }
-          if (o -= a, o > 0) continue;
-          a = Math.min(a, a + o);
+          if (o -= period, o > 0) continue;
+          period = Math.min(period, period + o);
           let length = [...r[0]][0].length,
-            part = items.slice(0, n + r.index + length + a),
+            part = items.slice(0, n + r.index + length + period),
             c = part.slice(n, -n);
           return {
             type: `del`,
@@ -10041,50 +10041,50 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
           break;
         }
         r || (i = ``), r = false;
-        let o;
-        if (this.options.extensions?.inline?.some(n => (o = n.call({
+        let pos;
+        if (this.options.extensions?.inline?.some(n => (pos = n.call({
           lexer: this
-        }, items, t)) ? (items = items.substring(o.raw.length), t.push(o), true) : false)) continue;
-        if (o = this.tokenizer.escape(items)) {
-          items = items.substring(o.raw.length), t.push(o);
+        }, items, t)) ? (items = items.substring(pos.raw.length), t.push(pos), true) : false)) continue;
+        if (pos = this.tokenizer.escape(items)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.tag(items)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.tag(items)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.link(items)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.link(items)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.reflink(items, this.tokens.links)) {
-          items = items.substring(o.raw.length);
+        if (pos = this.tokenizer.reflink(items, this.tokens.links)) {
+          items = items.substring(pos.raw.length);
           let n = t.at(-1);
-          o.type === `text` && n?.type === `text` ? (n.raw += o.raw, n.text += o.text) : t.push(o);
+          pos.type === `text` && n?.type === `text` ? (n.raw += pos.raw, n.text += pos.text) : t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.emStrong(items, itemsAlias, i)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.emStrong(items, itemsAlias, i)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.codespan(items)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.codespan(items)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.br(items)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.br(items)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.del(items, itemsAlias, i)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.del(items, itemsAlias, i)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (o = this.tokenizer.autolink(items)) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (pos = this.tokenizer.autolink(items)) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
-        if (!this.state.inLink && (o = this.tokenizer.url(items))) {
-          items = items.substring(o.raw.length), t.push(o);
+        if (!this.state.inLink && (pos = this.tokenizer.url(items))) {
+          items = items.substring(pos.raw.length), t.push(pos);
           continue;
         }
         let s = items;
@@ -10098,10 +10098,10 @@ ${a}`, r = r.substring(0, r.length - t.text.length) + blockquote.text;
             }, part), typeof requestAnimationFrameResult == `number` && requestAnimationFrameResult >= 0 && (t = Math.min(t, requestAnimationFrameResult));
           }), t < 1 / 0 && t >= 0 && (s = items.substring(0, t + 1));
         }
-        if (o = this.tokenizer.inlineText(s)) {
-          items = items.substring(o.raw.length), o.raw.slice(-1) !== `_` && (i = o.raw.slice(-1)), r = true;
+        if (pos = this.tokenizer.inlineText(s)) {
+          items = items.substring(pos.raw.length), pos.raw.slice(-1) !== `_` && (i = pos.raw.slice(-1)), r = true;
           let n = t.at(-1);
-          n?.type === `text` ? (n.raw += o.raw, n.text += o.text) : t.push(o);
+          n?.type === `text` ? (n.raw += pos.raw, n.text += pos.text) : t.push(pos);
           continue;
         }
         if (items) {
@@ -10923,22 +10923,22 @@ var Vee = [`innerHTML`],
       }
       let f = ref(eventAlias.content),
         list = ref([...eventAlias.mentions]),
-        m = null;
+        markerChar = null;
       function h() {
-        m = null, f.value = eventAlias.content, list.value = [...eventAlias.mentions];
+        markerChar = null, f.value = eventAlias.content, list.value = [...eventAlias.mentions];
       }
       watch([() => eventAlias.content, () => eventAlias.mentions], () => {
         if (eventAlias.streaming) {
-          m ||= setTimeout(h, Math.min(400, 100 + Math.floor(eventAlias.content.length / 100)));
+          markerChar ||= setTimeout(h, Math.min(400, 100 + Math.floor(eventAlias.content.length / 100)));
           return;
         }
-        m && clearTimeout(m), m = setTimeout(h, 100);
+        markerChar && clearTimeout(markerChar), markerChar = setTimeout(h, 100);
       }, {
         immediate: true
       }), watch(() => eventAlias.streaming, value => {
-        value || (m && clearTimeout(m), h(), b.clear());
+        value || (markerChar && clearTimeout(markerChar), h(), b.clear());
       }), onUnmounted(() => {
-        m && clearTimeout(m);
+        markerChar && clearTimeout(markerChar);
       });
       function g(e) {
         let replaced = e.replace(/(```|~~~)[\s\S]*?(\1|$)/g, ``).replace(/`[^`\n]*`/g, ``);
@@ -12140,7 +12140,7 @@ function Cp() {
     flag = ref(false),
     r = ref(false),
     i = ref(null),
-    a = null,
+    diff = null,
     computedResult = computed(() => e.value.enableMiniProgramSync),
     computedData = computed(() => {
       let value = i.value;
@@ -12168,12 +12168,12 @@ function Cp() {
     } catch {}
   }
   function p() {
-    a ||= (f(), setInterval(() => {
+    diff ||= (f(), setInterval(() => {
       f();
     }, 1e3));
   }
   function m() {
-    a &&= (clearInterval(a), null);
+    diff &&= (clearInterval(diff), null);
   }
   return watch(r, value => {
     value ? p() : i.value?.backfillDone && m();
@@ -12428,9 +12428,9 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
       }));
       let r = Promise.resolve(e instanceof Function ? e() : e),
         i = replaceResult !== undefined,
-        a,
+        product,
         o = r.then(async response => {
-          if (a = [`resolve`, response], Pe(response)) i = false, this.create({
+          if (product = [`resolve`, response], Pe(response)) i = false, this.create({
             id: replaceResult,
             type: `default`,
             message: response
@@ -12478,7 +12478,7 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
             });
           }
         }).catch(async err => {
-          if (a = [`reject`, err], t.error !== undefined) {
+          if (product = [`reject`, err], t.error !== undefined) {
             i = false;
             let r = typeof t.error == `function` ? await t.error(err) : t.error,
               a = typeof t.description == `function` ? await t.description(err) : t.description,
@@ -12496,7 +12496,7 @@ var Mte = new URL(`miniprogram-qrcode-D32nZ91G.jpg`, import.meta.url).href,
         }).finally(() => {
           i && (this.dismiss(replaceResult), replaceResult = undefined), t.finally?.();
         }),
-        s = () => new Promise((e, t) => o.then(() => a[0] === `reject` ? t(a[1]) : e(a[1])).catch(t));
+        s = () => new Promise((e, t) => o.then(() => product[0] === `reject` ? t(product[1]) : e(product[1])).catch(t));
       return typeof replaceResult != `string` && typeof replaceResult != `number` ? {
         unwrap: s
       } : Object.assign(replaceResult, {
@@ -13820,8 +13820,8 @@ var hm = {
   },
   gm = {
     async list(e, t) {
-      let n = {};
-      return e && (n.type = e), t && (n.language = t), mm(await window.electronAPI.reportTemplates.list(Object.keys(n).length > 0 ? n : undefined));
+      let joinedValue = {};
+      return e && (joinedValue.type = e), t && (joinedValue.language = t), mm(await window.electronAPI.reportTemplates.list(Object.keys(joinedValue).length > 0 ? joinedValue : undefined));
     },
     async create(create) {
       return mm(await window.electronAPI.reportTemplates.create(create));
@@ -16245,7 +16245,7 @@ var Vie = [`src`],
         n = ref(null),
         r = ref(null),
         i = 0,
-        a,
+        title,
         computedResult = computed(() => t.height > 0 ? t.height : Math.round(t.width / Uie));
       function s(e) {
         let replaced = e.replace(`#`, ``);
@@ -16302,7 +16302,7 @@ var Vie = [`src`],
         context.putImageData(imageData, 0, 0);
       }
       function f() {
-        d(), !(document.hidden || a?.matches) && (i = requestAnimationFrame(f));
+        d(), !(document.hidden || title?.matches) && (i = requestAnimationFrame(f));
       }
       function p() {
         cancelAnimationFrame(i), i = 0;
@@ -16310,7 +16310,7 @@ var Vie = [`src`],
       async function m() {
         let value = r.value;
         if (value) {
-          if (p(), a?.matches) {
+          if (p(), title?.matches) {
             value.pause(), d();
             return;
           }
@@ -16334,13 +16334,13 @@ var Vie = [`src`],
         m();
       }
       return onBeforeMount(() => {
-        a = matchMedia(`(prefers-reduced-motion: reduce)`), a.addEventListener(`change`, g), document.addEventListener(`visibilitychange`, h);
+        title = matchMedia(`(prefers-reduced-motion: reduce)`), title.addEventListener(`change`, g), document.addEventListener(`visibilitychange`, h);
         let value = r.value;
         value && (value.addEventListener(`loadeddata`, () => {
           m();
         }), value.readyState >= 2 && m());
       }), onUnmounted(() => {
-        p(), a?.removeEventListener(`change`, g), document.removeEventListener(`visibilitychange`, h);
+        p(), title?.removeEventListener(`change`, g), document.removeEventListener(`visibilitychange`, h);
       }), watch(() => [t.src, t.keyMode, t.keyColor, t.threshold, t.smoothness, t.width, t.height], () => {
         p();
         let value = r.value;
@@ -17033,13 +17033,13 @@ function Ng(items) {
     replaceResult = [],
     r = 0,
     i = 0,
-    a = null;
+    type = null;
   items.days.forEach((item, s) => {
     if (item.activeSec < Iae) return;
     r += 1, i += item.activeSec;
     let c = Lae(item.cells, items.bucketMinutes),
       l = Rae(item.cells, items.days[s + 1]?.cells, items.bucketMinutes);
-    c !== null && emptyItems.push(c), l !== null && (replaceResult.push(l), (!a || l >= a.minute) && (a = {
+    c !== null && emptyItems.push(c), l !== null && (replaceResult.push(l), (!type || l >= type.minute) && (type = {
       date: item.date,
       minute: l
     }));
@@ -17052,7 +17052,7 @@ function Ng(items) {
     avgActiveSec: r > 0 ? Math.round(i / r) : 0,
     avgFirstMinute: o(emptyItems),
     avgLastMinute: o(replaceResult),
-    latest: a,
+    latest: type,
     top: c && reduced > 0 ? {
       name: c.name,
       share: c.activeSec / reduced,
@@ -19219,9 +19219,9 @@ var ase = {
         }]),
         counter = ref(0),
         ge = computed(() => me.value[counter.value]),
-        _e = null;
+        screenY = null;
       function ve() {
-        _e = setInterval(() => {
+        screenY = setInterval(() => {
           counter.value = (counter.value + 1) % me.value.length;
         }, 6e4);
       }
@@ -19452,7 +19452,7 @@ var ase = {
           page: `today_work`
         }), await g(), ve()));
       }), onUnmounted(() => {
-        A = false, ++ee, count?.(), onStatusChangedResult?.(), ne && clearTimeout(ne), window.removeEventListener(`focus`, Xe), document.removeEventListener(`visibilitychange`, Ze), He(), setTimeoutResult &&= (clearTimeout(setTimeoutResult), null), _e &&= (clearInterval(_e), null);
+        A = false, ++ee, count?.(), onStatusChangedResult?.(), ne && clearTimeout(ne), window.removeEventListener(`focus`, Xe), document.removeEventListener(`visibilitychange`, Ze), He(), setTimeoutResult &&= (clearTimeout(setTimeoutResult), null), screenY &&= (clearInterval(screenY), null);
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         ref_key: `scrollContainer`,
         ref: C,
@@ -20449,7 +20449,7 @@ var ple = defineComponent({
         r = ref(null),
         i = ref(false),
         a = ref(false),
-        o = null,
+        lineCount = null,
         computedResult = computed(() => {
           let filtered = (itemsAlias.mentionNames ?? []).filter(item => item !== ``);
           if (!filtered.length) return [{
@@ -20469,8 +20469,8 @@ var ple = defineComponent({
         value && !i.value && (a.value = value.scrollHeight > value.clientHeight + 1);
       }
       return onBeforeMount(() => {
-        ut(c), r.value && typeof ResizeObserver < `u` && (o = new ResizeObserver(c), o.observe(r.value));
-      }), onMounted(() => o?.disconnect()), watch(() => itemsAlias.content, () => {
+        ut(c), r.value && typeof ResizeObserver < `u` && (lineCount = new ResizeObserver(c), lineCount.observe(r.value));
+      }), onMounted(() => lineCount?.disconnect()), watch(() => itemsAlias.content, () => {
         i.value = false, ut(c);
       }), (e, t) => (openBlock(), createElementBlock(`div`, null, [createElementVNode(`p`, {
         ref_key: `bodyRef`,
@@ -20542,7 +20542,7 @@ var ple = defineComponent({
           t: i
         } = it(),
         a = ref(false),
-        o = null,
+        nesting = null,
         computedResult = computed(() => itemsAlias.activity.user.remark || itemsAlias.activity.user.nickname || itemsAlias.activity.user.email || i(`todo.activity.unknownUser`)),
         computedData = computed(() => Array.from(computedResult.value)[0]?.toUpperCase() || `?`),
         l = computed(() => xv(itemsAlias.activity.createdAt, itemsAlias.now, i)),
@@ -20553,15 +20553,15 @@ var ple = defineComponent({
         d = computed(() => itemsAlias.showReplyTarget ? itemsAlias.activity.replyTo?.userName ?? `` : ``);
       function f() {
         if (!a.value) {
-          a.value = true, o = setTimeout(() => {
+          a.value = true, nesting = setTimeout(() => {
             a.value = false;
           }, 3e3);
           return;
         }
-        o && clearTimeout(o), a.value = false, r(`remove`, itemsAlias.activity);
+        nesting && clearTimeout(nesting), a.value = false, r(`remove`, itemsAlias.activity);
       }
       return onMounted(() => {
-        o && clearTimeout(o);
+        nesting && clearTimeout(nesting);
       }), (t, n) => (openBlock(), createElementBlock(`div`, {
         id: `todo-comment-${items.activity.id}`,
         class: normalizeClass([`group flex items-start gap-2.5 rounded-lg px-2 py-1.5 transition-colors`, items.active ? `bg-[#f0fdf4]` : `hover:bg-[#f9fafb]`])
@@ -20623,7 +20623,7 @@ var Ole = [`innerHTML`],
         r = ref(null),
         i = ref(false),
         a = ref(false),
-        o = null,
+        barPercentage = null,
         computedResult = computed(() => Tv(t.html)),
         computedData = computed(() => i.value ? {} : {
           display: `-webkit-box`,
@@ -20636,8 +20636,8 @@ var Ole = [`innerHTML`],
         value && !i.value && (a.value = value.scrollHeight > value.clientHeight + 1);
       }
       return onBeforeMount(() => {
-        ut(l), r.value && typeof ResizeObserver < `u` && (o = new ResizeObserver(l), o.observe(r.value));
-      }), onMounted(() => o?.disconnect()), watch(() => t.html, () => {
+        ut(l), r.value && typeof ResizeObserver < `u` && (barPercentage = new ResizeObserver(l), barPercentage.observe(r.value));
+      }), onMounted(() => barPercentage?.disconnect()), watch(() => t.html, () => {
         i.value = false, ut(l);
       }), (e, t) => (openBlock(), createElementBlock(`div`, null, [createElementVNode(`div`, {
         ref_key: `bodyRef`,
@@ -23542,12 +23542,12 @@ function Vfe(items, t) {
           bottom: n
         };
       }).sort((left, right) => left.top - right.top || right.bottom - left.bottom || left.task.id - right.task.id),
-      o = [],
+      ratio = [],
       s = -1,
-      c = [],
+      value = [],
       l = () => {
-        let e = Math.max(1, c.length);
-        o.forEach(item => emptyItems.push({
+        let e = Math.max(1, value.length);
+        ratio.forEach(item => emptyItems.push({
           task: item.task,
           schedule: item.schedule,
           dayIndex: r,
@@ -23555,15 +23555,15 @@ function Vfe(items, t) {
           bottom: item.bottom,
           column: item.column,
           columns: e
-        })), o = [], c = [];
+        })), ratio = [], value = [];
       };
     for (let normalizeResult of a) {
-      o.length && normalizeResult.top >= s && l();
-      let index = c.findIndex(item => item <= normalizeResult.top);
-      index < 0 ? (index = c.length, c.push(normalizeResult.bottom)) : c[index] = normalizeResult.bottom, o.push({
+      ratio.length && normalizeResult.top >= s && l();
+      let index = value.findIndex(item => item <= normalizeResult.top);
+      index < 0 ? (index = value.length, value.push(normalizeResult.bottom)) : value[index] = normalizeResult.bottom, ratio.push({
         ...normalizeResult,
         column: index
-      }), s = o.length === 1 ? normalizeResult.bottom : Math.max(s, normalizeResult.bottom);
+      }), s = ratio.length === 1 ? normalizeResult.bottom : Math.max(s, normalizeResult.bottom);
     }
     l();
   }
@@ -23809,7 +23809,7 @@ var Kfe = {
       function re(e) {
         e.key === `Escape` && u.value !== null && (u.value = null);
       }
-      let ie = null;
+      let createShikiStreamRenderer = null;
       function ae() {
         let value = o.value;
         if (!value) return;
@@ -23817,9 +23817,9 @@ var Kfe = {
         counter.value = Math.max(1, Math.floor((t - ape) / ipe));
       }
       onBeforeMount(() => {
-        ae(), o.value && (ie = new ResizeObserver(ae), ie.observe(o.value)), window.addEventListener(`pointerdown`, N, true), window.addEventListener(`keydown`, re);
+        ae(), o.value && (createShikiStreamRenderer = new ResizeObserver(ae), createShikiStreamRenderer.observe(o.value)), window.addEventListener(`pointerdown`, N, true), window.addEventListener(`keydown`, re);
       }), onMounted(() => {
-        ie?.disconnect(), window.removeEventListener(`pointerdown`, N, true), window.removeEventListener(`keydown`, re);
+        createShikiStreamRenderer?.disconnect(), window.removeEventListener(`pointerdown`, N, true), window.removeEventListener(`keydown`, re);
       });
       function oe(e) {
         return Lv(eventAlias.startDay + e) >= 5;
@@ -27365,11 +27365,11 @@ function Wge(e, t, n) {
   if (t > 0 && /[\da-z:：.每第]/i.test(e[t - 1])) return null;
   let r = gb(Hge, e, t),
     fallbackValue = r?.end ?? t,
-    a,
+    start,
     o = bb(e, fallbackValue, n),
     s = o?.day ?? null;
   if (o) {
-    a = o.period, fallbackValue = o.end;
+    start = o.period, fallbackValue = o.end;
     let r = gb(yb, e, fallbackValue),
       s = r && bb(e, r.end, n);
     if (s) {
@@ -27387,7 +27387,7 @@ function Wge(e, t, n) {
     }
   }
   let c = gb(vb, e, s ? _b(e, fallbackValue) : fallbackValue);
-  c && (a = c.match[1], fallbackValue = c.end);
+  c && (start = c.match[1], fallbackValue = c.end);
   let l = s || c ? _b(e, fallbackValue) : fallbackValue,
     setTimeoutResult = null,
     count = null,
@@ -27398,30 +27398,30 @@ function Wge(e, t, n) {
     minutes: p * 60,
     explicit: p >= 13,
     chineseHourOnly: false
-  }, a), count = hb({
+  }, start), count = hb({
     minutes: m * 60,
     explicit: m >= 13,
     chineseHourOnly: false
-  }, a), fallbackValue = f.end;else {
+  }, start), fallbackValue = f.end;else {
     let clockTimeString = parseClockTimeString(e, l);
-    if (clockTimeString && (!clockTimeString.time.chineseHourOnly || s || a)) {
-      setTimeoutResult = hb(clockTimeString.time, a), fallbackValue = clockTimeString.end;
+    if (clockTimeString && (!clockTimeString.time.chineseHourOnly || s || start)) {
+      setTimeoutResult = hb(clockTimeString.time, start), fallbackValue = clockTimeString.end;
       let n = gb(yb, e, fallbackValue);
       if (n) {
         let t = gb(vb, e, n.end),
           clockTimeStringResult = parseClockTimeString(e, t ? t.end : n.end);
-        clockTimeStringResult && (count = hb(clockTimeStringResult.time, t?.match[1] ?? a), fallbackValue = clockTimeStringResult.end);
+        clockTimeStringResult && (count = hb(clockTimeStringResult.time, t?.match[1] ?? start), fallbackValue = clockTimeStringResult.end);
       }
     }
   }
-  if (!s && !a && setTimeoutResult === null) return null;
+  if (!s && !start && setTimeoutResult === null) return null;
   let h = count === null ? gb(Uge, e, fallbackValue) : null;
   return h && (fallbackValue = h.end), {
     start: t,
     end: fallbackValue,
     day: s,
     endDay: null,
-    period: a,
+    period: start,
     startMinutes: setTimeoutResult,
     endMinutes: count,
     deadline: !!(r || h)
@@ -27561,7 +27561,7 @@ function Tb(text, t) {
     }
     let o = Gge(replaced, requestAnimationFrameResult ? [...emptyItems, requestAnimationFrameResult] : emptyItems),
       trimStartResult = [],
-      c = null,
+      str = null,
       l = ob(t.dayStart ?? `09:30`),
       u = ob(t.dayEnd ?? `18:30`),
       d = false;
@@ -27573,25 +27573,25 @@ function Tb(text, t) {
         h = requestAnimationFrameResult.day;
       h ||= ab(e, +((requestAnimationFrameResult.startMinutes ?? m ?? fallbackValue) <= a));
       let g = rb(h);
-      if (requestAnimationFrameResult.endDay) c = {
+      if (requestAnimationFrameResult.endDay) str = {
         start: `${g}T${ib(l)}`,
         end: `${rb(requestAnimationFrameResult.endDay)}T${ib(u)}`
       };else if (requestAnimationFrameResult.deadline && t.defaultStart) {
         let e = `${g}T${ib(Math.min(requestAnimationFrameResult.startMinutes ?? m ?? u, 1439))}`;
-        c = e > t.defaultStart ? {
+        str = e > t.defaultStart ? {
           start: t.defaultStart,
           end: e
         } : null;
       }
-      c ||= (o && requestAnimationFrameResult.endMinutes === null ? (m = fallbackValue + o.minutes, d = true) : m === null ? m = fallbackValue + 60 : m <= fallbackValue && (m += 1440), fallbackValue = Math.min(fallbackValue, 1439), {
+      str ||= (o && requestAnimationFrameResult.endMinutes === null ? (m = fallbackValue + o.minutes, d = true) : m === null ? m = fallbackValue + 60 : m <= fallbackValue && (m += 1440), fallbackValue = Math.min(fallbackValue, 1439), {
         start: `${g}T${ib(fallbackValue)}`,
         end: sb(g, m)
       }), trimStartResult.push(replaced.slice(requestAnimationFrameResult.start, requestAnimationFrameResult.end).trim()), emptyItems.push(requestAnimationFrameResult);
-    } else o && t.defaultStart && (c = {
+    } else o && t.defaultStart && (str = {
       start: t.defaultStart,
       end: sb(t.defaultStart.slice(0, 10), ob(t.defaultStart.slice(11, 16)) + o.minutes)
     }, d = true);
-    o && d && (trimStartResult.push(replaced.slice(o.span.start, o.span.end)), emptyItems.push(o.span)), record.schedule = c, record.scheduleText = trimStartResult.join(` `);
+    o && d && (trimStartResult.push(replaced.slice(o.span.start, o.span.end)), emptyItems.push(o.span)), record.schedule = str, record.scheduleText = trimStartResult.join(` `);
   }
   return record.title = qge(replaced, emptyItems), record;
 }
@@ -35120,13 +35120,13 @@ var Qge = {
         r = 0,
         i = 0,
         a = 0,
-        o = null,
+        controller = null,
         trimStartResult = null;
       for (let c = 0; c < size; c++) {
-        i = a = 0, o = trimStartResult = null;
+        i = a = 0, controller = trimStartResult = null;
         for (let l = 0; l < size; l++) {
           let n = e.get(c, l);
-          n === o ? i++ : (i >= 5 && (r += t.N1 + (i - 5)), o = n, i = 1), n = e.get(l, c), n === trimStartResult ? a++ : (a >= 5 && (r += t.N1 + (a - 5)), trimStartResult = n, a = 1);
+          n === controller ? i++ : (i >= 5 && (r += t.N1 + (i - 5)), controller = n, i = 1), n = e.get(l, c), n === trimStartResult ? a++ : (a >= 5 && (r += t.N1 + (a - 5)), trimStartResult = n, a = 1);
         }
         i >= 5 && (r += t.N1 + (i - 5)), a >= 5 && (r += t.N1 + (a - 5));
       }
@@ -35513,17 +35513,17 @@ Make sure your charset is UTF-8`);
   jw = m((e, t) => {
     var n = {
       single_source_shortest_paths: function (e, t, r) {
-        var i = {},
-          a = {};
-        a[t] = 0;
+        var activeSec = {},
+          right = {};
+        right[t] = 0;
         var o = n.PriorityQueue.make();
         o.push(t, 0);
-        for (var text, c, expiresAt, intervalMs, count, f, total, m, h; !o.empty();) for (expiresAt in text = o.pop(), c = text.value, intervalMs = text.cost, count = e[c] || {}, count) count.hasOwnProperty(expiresAt) && (f = count[expiresAt], total = intervalMs + f, m = a[expiresAt], h = a[expiresAt] === undefined, (h || m > total) && (a[expiresAt] = total, o.push(expiresAt, total), i[expiresAt] = c));
-        if (r !== undefined && a[r] === undefined) {
+        for (var text, c, expiresAt, intervalMs, count, f, total, m, h; !o.empty();) for (expiresAt in text = o.pop(), c = text.value, intervalMs = text.cost, count = e[c] || {}, count) count.hasOwnProperty(expiresAt) && (f = count[expiresAt], total = intervalMs + f, m = right[expiresAt], h = right[expiresAt] === undefined, (h || m > total) && (right[expiresAt] = total, o.push(expiresAt, total), activeSec[expiresAt] = c));
+        if (r !== undefined && right[r] === undefined) {
           var joined = [`Could not find a path from `, t, ` to `, r, `.`].join(``);
           throw Error(joined);
         }
-        return i;
+        return activeSec;
       },
       extract_shortest_path_from_predecessor_list: function (e, t) {
         for (var emptyItems = [], r = t; r;) emptyItems.push(r), e[r], r = e[r];
@@ -35536,10 +35536,10 @@ Make sure your charset is UTF-8`);
       PriorityQueue: {
         make: function (e) {
           var priorityQueue = n.PriorityQueue,
-            r = {},
+            replacedValue = {},
             count;
-          for (count in e ||= {}, priorityQueue) priorityQueue.hasOwnProperty(count) && (r[count] = priorityQueue[count]);
-          return r.queue = [], r.sorter = e.sorter || priorityQueue.default_sorter, r;
+          for (count in e ||= {}, priorityQueue) priorityQueue.hasOwnProperty(count) && (replacedValue[count] = priorityQueue[count]);
+          return replacedValue.queue = [], replacedValue.sorter = e.sorter || priorityQueue.default_sorter, replacedValue;
         },
         default_sorter: function (e, t) {
           return e.cost - t.cost;
@@ -35588,8 +35588,8 @@ Make sure your charset is UTF-8`);
       let n = u(o.NUMERIC, t.NUMERIC, options),
         r = u(o.ALPHANUMERIC, t.ALPHANUMERIC, options),
         count,
-        a;
-      return s.isKanjiModeEnabled() ? (count = u(o.BYTE, t.BYTE, options), a = u(o.KANJI, t.KANJI, options)) : (count = u(o.BYTE_KANJI, t.BYTE, options), a = []), n.concat(r, count, a).sort(function (item, right) {
+        width;
+      return s.isKanjiModeEnabled() ? (count = u(o.BYTE, t.BYTE, options), width = u(o.KANJI, t.KANJI, options)) : (count = u(o.BYTE_KANJI, t.BYTE, options), width = []), n.concat(r, count, width).sort(function (item, right) {
         return item.index - right.index;
       }).map(function (item) {
         return {
@@ -35658,7 +35658,7 @@ Make sure your charset is UTF-8`);
       return emptyItems;
     }
     function h(count, n) {
-      let r = {},
+      let content = {},
         i = {
           start: {}
         },
@@ -35669,13 +35669,13 @@ Make sure your charset is UTF-8`);
         for (let e = 0; e < s.length; e++) {
           let l = s[e],
             u = `` + o + e;
-          emptyItems.push(u), r[u] = {
+          emptyItems.push(u), content[u] = {
             node: l,
             lastCount: 0
           }, i[u] = {};
           for (let e = 0; e < a.length; e++) {
             let o = a[e];
-            r[o] && r[o].node.mode === l.mode ? (i[o][u] = f(r[o].lastCount + l.length, l.mode) - f(r[o].lastCount, l.mode), r[o].lastCount += l.length) : (r[o] && (r[o].lastCount = l.length), i[o][u] = f(l.length, l.mode) + 4 + t.getCharCountIndicator(l.mode, n));
+            content[o] && content[o].node.mode === l.mode ? (i[o][u] = f(content[o].lastCount + l.length, l.mode) - f(content[o].lastCount, l.mode), content[o].lastCount += l.length) : (content[o] && (content[o].lastCount = l.length), i[o][u] = f(l.length, l.mode) + 4 + t.getCharCountIndicator(l.mode, n));
           }
         }
         a = emptyItems;
@@ -35683,15 +35683,15 @@ Make sure your charset is UTF-8`);
       for (let e = 0; e < a.length; e++) i[a[e]].end = 0;
       return {
         map: i,
-        table: r
+        table: content
       };
     }
     function g(e, o) {
-      let c,
+      let box,
         bestModeForData = t.getBestModeForData(e);
-      if (c = t.from(o, bestModeForData), c !== t.BYTE && c.bit < bestModeForData.bit) throw Error(`"` + e + `" cannot be encoded with mode ` + t.toString(c) + `.
+      if (box = t.from(o, bestModeForData), box !== t.BYTE && box.bit < bestModeForData.bit) throw Error(`"` + e + `" cannot be encoded with mode ` + t.toString(box) + `.
  Suggested mode is: ` + t.toString(bestModeForData));
-      switch (c === t.KANJI && !s.isKanjiModeEnabled() && (c = t.BYTE), c) {
+      switch (box === t.KANJI && !s.isKanjiModeEnabled() && (box = t.BYTE), box) {
         case t.NUMERIC:
           return new n(e);
         case t.ALPHANUMERIC:
@@ -35758,16 +35758,16 @@ Make sure your charset is UTF-8`);
       let size = e.size,
         encodedBits = u.getEncodedBits(t),
         count,
-        a,
-        o;
-      for (let t = 0; t < 18; t++) count = Math.floor(t / 3), a = t % 3 + size - 8 - 3, o = (encodedBits >> t & 1) == 1, e.set(count, a, o, true), e.set(a, count, o, true);
+        activeMs,
+        bottom;
+      for (let t = 0; t < 18; t++) count = Math.floor(t / 3), activeMs = t % 3 + size - 8 - 3, bottom = (encodedBits >> t & 1) == 1, e.set(count, activeMs, bottom, true), e.set(activeMs, count, bottom, true);
     }
     function v(e, t, n) {
       let size = e.size,
         encodedBits = d.getEncodedBits(t, n),
-        a,
-        o;
-      for (a = 0; a < 15; a++) o = (encodedBits >> a & 1) == 1, a < 6 ? e.set(a, 8, o, true) : a < 8 ? e.set(a + 1, 8, o, true) : e.set(size - 15 + a, 8, o, true), a < 8 ? e.set(8, size - a - 1, o, true) : a < 9 ? e.set(8, 15 - a - 1 + 1, o, true) : e.set(8, 15 - a - 1, o, true);
+        fallbackValueValue,
+        titleSpacing;
+      for (fallbackValueValue = 0; fallbackValueValue < 15; fallbackValueValue++) titleSpacing = (encodedBits >> fallbackValueValue & 1) == 1, fallbackValueValue < 6 ? e.set(fallbackValueValue, 8, titleSpacing, true) : fallbackValueValue < 8 ? e.set(fallbackValueValue + 1, 8, titleSpacing, true) : e.set(size - 15 + fallbackValueValue, 8, titleSpacing, true), fallbackValueValue < 8 ? e.set(8, size - fallbackValueValue - 1, titleSpacing, true) : fallbackValueValue < 9 ? e.set(8, 15 - fallbackValueValue - 1 + 1, titleSpacing, true) : e.set(8, 15 - fallbackValueValue - 1, titleSpacing, true);
       e.set(size - 8, 8, 1, true);
     }
     function y(e, t) {
@@ -35826,37 +35826,37 @@ Make sure your charset is UTF-8`);
       return b;
     }
     function S(e, n, r, a) {
-      let o;
-      if (Array.isArray(e)) o = p.fromArray(e);else if (typeof e == `string`) {
+      let attributes;
+      if (Array.isArray(e)) attributes = p.fromArray(e);else if (typeof e == `string`) {
         let t = n;
         if (!t) {
           let rawSplit = p.rawSplit(e);
           t = u.getBestVersionForData(rawSplit, r);
         }
-        o = p.fromString(e, t || 40);
+        attributes = p.fromString(e, t || 40);
       } else throw Error(`Invalid data`);
-      let bestVersionForData = u.getBestVersionForData(o, r);
+      let bestVersionForData = u.getBestVersionForData(attributes, r);
       if (!bestVersionForData) throw Error(`The amount of data is too big to be stored in a QR Code`);
       if (!n) n = bestVersionForData;else if (n < bestVersionForData) throw Error(`
 The chosen QR Code version cannot contain this amount of data.
 Minimum version required to store current data is: ` + bestVersionForData + `.
 `);
-      let l = b(n, r, o),
+      let l = b(n, r, attributes),
         d = new i(t.getSymbolSize(n));
       return m(d, n), h(d), g(d, n), v(d, r, 0), n >= 7 && _(d, n), y(d, l), isNaN(a) && (a = s.getBestMask(d, v.bind(null, d, r))), s.applyMask(a, d), v(d, r, a), {
         modules: d,
         version: n,
         errorCorrectionLevel: r,
         maskPattern: a,
-        segments: o
+        segments: attributes
       };
     }
     count.create = function (e, r) {
       if (e === undefined || e === ``) throw Error(`No input text`);
       let i = n.M,
-        a,
+        clientX,
         o;
-      return r !== undefined && (i = n.from(r.errorCorrectionLevel, n.M), a = u.from(r.version), o = s.from(r.maskPattern), r.toSJISFunc && t.setToSJISFunction(r.toSJISFunc)), S(e, a, i, o);
+      return r !== undefined && (i = n.from(r.errorCorrectionLevel, n.M), clientX = u.from(r.version), o = s.from(r.maskPattern), r.toSJISFunc && t.setToSJISFunction(r.toSJISFunc)), S(e, clientX, i, o);
     };
   }),
   Pw = m(items => {
@@ -58063,14 +58063,14 @@ var DRe = {
         e.ok && e.filePath && (te.value = e, j.value = true);
       }
       function ye() {
-        let e = {};
+        let innerHTML = {};
         for (let t = 0; t < localStorage.length; t += 1) {
           let n = localStorage.key(t);
           if (!n || g.has(n)) continue;
           let item = localStorage.getItem(n);
-          item !== null && item.length <= FBe && (e[n] = item);
+          item !== null && item.length <= FBe && (innerHTML[n] = item);
         }
-        return e;
+        return innerHTML;
       }
       function be(e) {
         x.value || (v.value = e);
@@ -59484,13 +59484,13 @@ function kU() {
       }
     }
   }
-  let _;
+  let lineHeight;
   return onBeforeMount(() => {
-    p(), _ = OU.onStateChanged(e => {
+    p(), lineHeight = OU.onStateChanged(e => {
       c.value = e;
     });
   }), onUnmounted(() => {
-    _?.();
+    lineHeight?.();
   }), {
     controlsDisabled: i,
     highlightedItem: a,
@@ -59985,7 +59985,7 @@ var PU = {
         p = ref([]),
         m = ref(``),
         h = ref(false),
-        g = null,
+        startSegmentIndex = null,
         _ = computed(() => i.value.enableAgentSessionImport),
         computedResult = computed(() => (c.value?.providers ?? []).reduce((acc, cur) => acc + cur.importedCount, 0)),
         computedData = computed(() => h.value || c.value?.running === true),
@@ -60070,11 +60070,11 @@ var PU = {
       return watch(_, value => {
         value || (d.value = false), C();
       }), onBeforeMount(() => {
-        C(), g = PU.onChanged(() => {
+        C(), startSegmentIndex = PU.onChanged(() => {
           C();
         });
       }), onUnmounted(() => {
-        g?.(), g = null;
+        startSegmentIndex?.(), startSegmentIndex = null;
       }), (e, r) => (openBlock(), createElementBlock(Fragment, null, [createElementVNode(`div`, qVe, [createElementVNode(`div`, JVe, [createElementVNode(`div`, YVe, [createElementVNode(`p`, XVe, toDisplayString(unref(n)(`settings.agentSessionImport.title`)), 1), resolveComponent(unref(Pp), {
         variant: `outline`,
         class: `border-amber-200 bg-amber-50 px-1.5 py-0 text-[11px] font-normal text-amber-700`
@@ -61977,9 +61977,9 @@ function FGe(e) {
     a = 0,
     o = null,
     trimStartResult = null;
-  for (let c of e) {
-    let fallbackValue = c.totalRecords ?? 0;
-    a += fallbackValue, fallbackValue > 0 && (t += 1), c.hourlyCounts.slice(0, 6).some(item => item > 0) && (n += 1), c.hourlyCounts.slice(6, 8).some(item => item > 0) && (r += 1), i += c.focusMinutes, (!o || c.focusMinutes > o.focusMinutes) && (o = c), (!trimStartResult || fallbackValue > (trimStartResult.totalRecords ?? 0)) && (trimStartResult = c);
+  for (let maxWidth of e) {
+    let fallbackValue = maxWidth.totalRecords ?? 0;
+    a += fallbackValue, fallbackValue > 0 && (t += 1), maxWidth.hourlyCounts.slice(0, 6).some(item => item > 0) && (n += 1), maxWidth.hourlyCounts.slice(6, 8).some(item => item > 0) && (r += 1), i += maxWidth.focusMinutes, (!o || maxWidth.focusMinutes > o.focusMinutes) && (o = maxWidth), (!trimStartResult || fallbackValue > (trimStartResult.totalRecords ?? 0)) && (trimStartResult = maxWidth);
   }
   return {
     activeDays: t,
@@ -63953,12 +63953,12 @@ var qW = {
     }).exports, t), t.exports;
   },
   ZW = e => {
-    let t = {};
-    for (var joinedValue in e) defineProperty(t, joinedValue, {
+    let defaultChars = {};
+    for (var joinedValue in e) defineProperty(defaultChars, joinedValue, {
       get: e[joinedValue],
       enumerable: true
     });
-    return t;
+    return defaultChars;
   },
   qqe = (e, t, n, r) => {
     if (t && typeof t == `object` || typeof t == `function`) for (var ownPropertyNames = getOwnPropertyNames(t), a = 0, o = ownPropertyNames.length, text; a < o; a++) text = ownPropertyNames[a], !Kqe.call(e, text) && text !== n && defineProperty(e, text, {
@@ -64373,12 +64373,12 @@ var $W = QW(XW({
   })(), 1),
   dJe = Object.defineProperty,
   eG = e => {
-    let t = {};
-    for (var joinedValue in e) dJe(t, joinedValue, {
+    let font = {};
+    for (var joinedValue in e) dJe(font, joinedValue, {
       get: e[joinedValue],
       enumerable: true
     });
-    return t;
+    return font;
   },
   tG = /[\0-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/,
   nG = /[\0-\x1F\x7F-\x9F]/,
@@ -64395,8 +64395,8 @@ var $W = QW(XW({
     Z: () => aG
   });
 function pJe(e) {
-  let t = {};
-  return e ||= {}, t.src_Any = tG.source, t.src_Cc = nG.source, t.src_Z = aG.source, t.src_P = rG.source, t.src_ZPCc = [t.src_Z, t.src_P, t.src_Cc].join(`|`), t.src_ZCc = [t.src_Z, t.src_Cc].join(`|`), t.src_pseudo_letter = `(?:(?![><｜]|` + t.src_ZPCc + `)` + t.src_Any + `)`, t.src_ip4 = `(?:(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`, t.src_auth = `(?:(?:(?!` + t.src_ZCc + `|[@/\\[\\]()]).)+@)?`, t.src_port = `(?::(?:6(?:[0-4]\\d{3}|5(?:[0-4]\\d{2}|5(?:[0-2]\\d|3[0-5])))|[1-5]?\\d{1,4}))?`, t.src_host_terminator = `(?=$|[><｜]|` + t.src_ZPCc + `)(?!` + (e[`---`] ? `-(?!--)|` : `-|`) + `_|:\\d|\\.-|\\.(?!$|` + t.src_ZPCc + `))`, t.src_path = `(?:[/?#](?:(?!` + t.src_ZCc + `|[><｜]|[()[\\]{}.,"'?!\\-;]).|\\[(?:(?!` + t.src_ZCc + `|\\]).)*\\]|\\((?:(?!` + t.src_ZCc + `|[)]).)*\\)|\\{(?:(?!` + t.src_ZCc + `|[}]).)*\\}|\\"(?:(?!` + t.src_ZCc + `|["]).)+\\"|\\'(?:(?!` + t.src_ZCc + `|[']).)+\\'|\\'(?=` + t.src_pseudo_letter + `|[-])|\\.{2,}[a-zA-Z0-9%/&]|\\.(?!` + t.src_ZCc + `|[.]|$)|` + (e[`---`] ? `\\-(?!--(?:[^-]|$))(?:-*)|` : `\\-+|`) + `,(?!` + t.src_ZCc + `|$)|;(?!` + t.src_ZCc + `|$)|\\!+(?!` + t.src_ZCc + `|[!]|$)|\\?(?!` + t.src_ZCc + `|[?]|$))+|\\/)?`, t.src_email_name = `[\\-;:&=\\+\\$,\\.a-zA-Z0-9_][\\-;:&=\\+\\$,\\"\\.a-zA-Z0-9_]*`, t.src_xn = `xn--[a-z0-9\\-]{1,59}`, t.src_domain_root = `(?:` + t.src_xn + `|` + t.src_pseudo_letter + `{1,63})`, t.src_domain = `(?:` + t.src_xn + `|(?:` + t.src_pseudo_letter + `)|(?:` + t.src_pseudo_letter + `(?:-|` + t.src_pseudo_letter + `){0,61}` + t.src_pseudo_letter + `))`, t.src_host = `(?:(?:(?:(?:` + t.src_domain + `)\\.)*` + t.src_domain + `))`, t.tpl_host_fuzzy = `(?:` + t.src_ip4 + `|(?:(?:(?:` + t.src_domain + `)\\.)+(?:%TLDS%)))`, t.tpl_host_no_ip_fuzzy = `(?:(?:(?:` + t.src_domain + `)\\.)+(?:%TLDS%))`, t.src_host_strict = t.src_host + t.src_host_terminator, t.tpl_host_fuzzy_strict = t.tpl_host_fuzzy + t.src_host_terminator, t.src_host_port_strict = t.src_host + t.src_port + t.src_host_terminator, t.tpl_host_port_fuzzy_strict = t.tpl_host_fuzzy + t.src_port + t.src_host_terminator, t.tpl_host_port_no_ip_fuzzy_strict = t.tpl_host_no_ip_fuzzy + t.src_port + t.src_host_terminator, t.tpl_host_fuzzy_test = `localhost|www\\.|\\.\\d{1,3}\\.|(?:\\.(?:%TLDS%)(?:` + t.src_ZPCc + `|>|$))`, t.tpl_email_fuzzy = `(^|[><｜]|"|\\(|` + t.src_ZCc + `)(` + t.src_email_name + `@` + t.tpl_host_fuzzy_strict + `)`, t.tpl_link_fuzzy = "(^|(?![.:/\\-_@])(?:[$+<=>^`|｜]|" + t.src_ZPCc + "))((?![$+<=>^`|｜])" + t.tpl_host_port_fuzzy_strict + t.src_path + `)`, t.tpl_link_no_ip_fuzzy = "(^|(?![.:/\\-_@])(?:[$+<=>^`|｜]|" + t.src_ZPCc + "))((?![$+<=>^`|｜])" + t.tpl_host_port_no_ip_fuzzy_strict + t.src_path + `)`, t;
+  let clientWidth = {};
+  return e ||= {}, clientWidth.src_Any = tG.source, clientWidth.src_Cc = nG.source, clientWidth.src_Z = aG.source, clientWidth.src_P = rG.source, clientWidth.src_ZPCc = [clientWidth.src_Z, clientWidth.src_P, clientWidth.src_Cc].join(`|`), clientWidth.src_ZCc = [clientWidth.src_Z, clientWidth.src_Cc].join(`|`), clientWidth.src_pseudo_letter = `(?:(?![><｜]|` + clientWidth.src_ZPCc + `)` + clientWidth.src_Any + `)`, clientWidth.src_ip4 = `(?:(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)`, clientWidth.src_auth = `(?:(?:(?!` + clientWidth.src_ZCc + `|[@/\\[\\]()]).)+@)?`, clientWidth.src_port = `(?::(?:6(?:[0-4]\\d{3}|5(?:[0-4]\\d{2}|5(?:[0-2]\\d|3[0-5])))|[1-5]?\\d{1,4}))?`, clientWidth.src_host_terminator = `(?=$|[><｜]|` + clientWidth.src_ZPCc + `)(?!` + (e[`---`] ? `-(?!--)|` : `-|`) + `_|:\\d|\\.-|\\.(?!$|` + clientWidth.src_ZPCc + `))`, clientWidth.src_path = `(?:[/?#](?:(?!` + clientWidth.src_ZCc + `|[><｜]|[()[\\]{}.,"'?!\\-;]).|\\[(?:(?!` + clientWidth.src_ZCc + `|\\]).)*\\]|\\((?:(?!` + clientWidth.src_ZCc + `|[)]).)*\\)|\\{(?:(?!` + clientWidth.src_ZCc + `|[}]).)*\\}|\\"(?:(?!` + clientWidth.src_ZCc + `|["]).)+\\"|\\'(?:(?!` + clientWidth.src_ZCc + `|[']).)+\\'|\\'(?=` + clientWidth.src_pseudo_letter + `|[-])|\\.{2,}[a-zA-Z0-9%/&]|\\.(?!` + clientWidth.src_ZCc + `|[.]|$)|` + (e[`---`] ? `\\-(?!--(?:[^-]|$))(?:-*)|` : `\\-+|`) + `,(?!` + clientWidth.src_ZCc + `|$)|;(?!` + clientWidth.src_ZCc + `|$)|\\!+(?!` + clientWidth.src_ZCc + `|[!]|$)|\\?(?!` + clientWidth.src_ZCc + `|[?]|$))+|\\/)?`, clientWidth.src_email_name = `[\\-;:&=\\+\\$,\\.a-zA-Z0-9_][\\-;:&=\\+\\$,\\"\\.a-zA-Z0-9_]*`, clientWidth.src_xn = `xn--[a-z0-9\\-]{1,59}`, clientWidth.src_domain_root = `(?:` + clientWidth.src_xn + `|` + clientWidth.src_pseudo_letter + `{1,63})`, clientWidth.src_domain = `(?:` + clientWidth.src_xn + `|(?:` + clientWidth.src_pseudo_letter + `)|(?:` + clientWidth.src_pseudo_letter + `(?:-|` + clientWidth.src_pseudo_letter + `){0,61}` + clientWidth.src_pseudo_letter + `))`, clientWidth.src_host = `(?:(?:(?:(?:` + clientWidth.src_domain + `)\\.)*` + clientWidth.src_domain + `))`, clientWidth.tpl_host_fuzzy = `(?:` + clientWidth.src_ip4 + `|(?:(?:(?:` + clientWidth.src_domain + `)\\.)+(?:%TLDS%)))`, clientWidth.tpl_host_no_ip_fuzzy = `(?:(?:(?:` + clientWidth.src_domain + `)\\.)+(?:%TLDS%))`, clientWidth.src_host_strict = clientWidth.src_host + clientWidth.src_host_terminator, clientWidth.tpl_host_fuzzy_strict = clientWidth.tpl_host_fuzzy + clientWidth.src_host_terminator, clientWidth.src_host_port_strict = clientWidth.src_host + clientWidth.src_port + clientWidth.src_host_terminator, clientWidth.tpl_host_port_fuzzy_strict = clientWidth.tpl_host_fuzzy + clientWidth.src_port + clientWidth.src_host_terminator, clientWidth.tpl_host_port_no_ip_fuzzy_strict = clientWidth.tpl_host_no_ip_fuzzy + clientWidth.src_port + clientWidth.src_host_terminator, clientWidth.tpl_host_fuzzy_test = `localhost|www\\.|\\.\\d{1,3}\\.|(?:\\.(?:%TLDS%)(?:` + clientWidth.src_ZPCc + `|>|$))`, clientWidth.tpl_email_fuzzy = `(^|[><｜]|"|\\(|` + clientWidth.src_ZCc + `)(` + clientWidth.src_email_name + `@` + clientWidth.tpl_host_fuzzy_strict + `)`, clientWidth.tpl_link_fuzzy = "(^|(?![.:/\\-_@])(?:[$+<=>^`|｜]|" + clientWidth.src_ZPCc + "))((?![$+<=>^`|｜])" + clientWidth.tpl_host_port_fuzzy_strict + clientWidth.src_path + `)`, clientWidth.tpl_link_no_ip_fuzzy = "(^|(?![.:/\\-_@])(?:[$+<=>^`|｜]|" + clientWidth.src_ZPCc + "))((?![$+<=>^`|｜])" + clientWidth.tpl_host_port_no_ip_fuzzy_strict + clientWidth.src_path + `)`, clientWidth;
 }
 function sG(e) {
   return Array.prototype.slice.call(arguments, 1).forEach(function (item) {
@@ -65534,7 +65534,7 @@ function EYe(items, t) {
 }
 var DYe = EYe;
 function uK(count) {
-  let t = {},
+  let dataUrl = {},
     length = count.length;
   if (!length) return;
   let r = 0,
@@ -65543,8 +65543,8 @@ function uK(count) {
   for (let o = 0; o < length; o++) {
     let n = count[o];
     if (emptyItems.push(0), (count[r].marker !== n.marker || i !== n.token - 1) && (r = o), i = n.token, n.length = n.length || 0, !n.close) continue;
-    Object.prototype.hasOwnProperty.call(t, n.marker) || (t[n.marker] = [-1, -1, -1, -1, -1, -1]);
-    let s = t[n.marker][(n.open ? 3 : 0) + n.length % 3],
+    Object.prototype.hasOwnProperty.call(dataUrl, n.marker) || (dataUrl[n.marker] = [-1, -1, -1, -1, -1, -1]);
+    let s = dataUrl[n.marker][(n.open ? 3 : 0) + n.length % 3],
       c = r - emptyItems[r] - 1,
       l = c;
     for (; c > s; c -= emptyItems[c] + 1) {
@@ -65558,7 +65558,7 @@ function uK(count) {
         }
       }
     }
-    l !== -1 && (t[n.marker][(n.open ? 3 : 0) + (n.length || 0) % 3] = l);
+    l !== -1 && (dataUrl[n.marker][(n.open ? 3 : 0) + (n.length || 0) % 3] = l);
   }
 }
 function OYe(e) {
@@ -67059,8 +67059,8 @@ function ZXe(items, t, n, r) {
   let l = false;
   r && items.parentType === `paragraph` && items.sCount[s] >= items.blkIndent && (l = true);
   let setTimeoutResult,
-    d,
-    f,
+    markerLen,
+    scrollTop,
     p = items.src,
     bMarks = items.bMarks,
     tShift = items.tShift,
@@ -67071,18 +67071,18 @@ function ZXe(items, t, n, r) {
   if (y >= eMarks[s]) return false;
   let charCodeAt = p.charCodeAt(y);
   if (charCodeAt >= 48 && charCodeAt <= 57) {
-    if (f = JK(items, s), f < 0 || (setTimeoutResult = true, o = y, d = JXe(items, s, f), l && d !== 1)) return false;
+    if (scrollTop = JK(items, s), scrollTop < 0 || (setTimeoutResult = true, o = y, markerLen = JXe(items, s, scrollTop), l && markerLen !== 1)) return false;
   } else if (charCodeAt === 42 || charCodeAt === 45 || charCodeAt === 43) {
-    if (f = qK(items, s), f < 0) return false;
+    if (scrollTop = qK(items, s), scrollTop < 0) return false;
     setTimeoutResult = false;
   } else return false;
-  if (l && items.skipSpaces(f) >= eMarks[s]) return false;
+  if (l && items.skipSpaces(scrollTop) >= eMarks[s]) return false;
   if (r) return true;
-  let charCodeAtResult = p.charCodeAt(f - 1),
+  let charCodeAtResult = p.charCodeAt(scrollTop - 1),
     fromCharCode = String.fromCharCode(charCodeAtResult);
   if (setTimeoutResult) {
     let t = items.push(`ordered_list_open`, `ol`, 1);
-    d !== undefined && d !== 1 && (t.attrs = [[`start`, String(d)]]);
+    markerLen !== undefined && markerLen !== 1 && (t.attrs = [[`start`, String(markerLen)]]);
   } else items.push(`bullet_list_open`, `ul`, 1);
   let C = [s, 0];
   items.tokens[items.tokens.length - 1].map = C, items.tokens[items.tokens.length - 1].markup = fromCharCode;
@@ -67091,8 +67091,8 @@ function ZXe(items, t, n, r) {
     rulesForState = items.md.block.ruler.getRulesForState(items, `list`),
     parentType = items.parentType;
   for (items.parentType = `list`; s < n;) {
-    a = f, count = eMarks[s];
-    let t = sCount[s] + f - (bMarks[s] + tShift[s]),
+    a = scrollTop, count = eMarks[s];
+    let t = sCount[s] + scrollTop - (bMarks[s] + tShift[s]),
       r = t;
     for (; a < count;) {
       let charCodeAtData = p.charCodeAt(a);
@@ -67106,7 +67106,7 @@ function ZXe(items, t, n, r) {
       b = items.push(`list_item_open`, `li`, 1);
     b.markup = fromCharCode;
     let C = [s, 0];
-    b.map = C, setTimeoutResult && (b.info = f - o - 1 == 1 ? YXe[p.charCodeAt(o) - 48] : p.slice(o, f - 1));
+    b.map = C, setTimeoutResult && (b.info = scrollTop - o - 1 == 1 ? YXe[p.charCodeAt(o) - 48] : p.slice(o, scrollTop - 1));
     let tight = items.tight,
       D = items.tShift[s],
       O = items.sCount[s],
@@ -67118,13 +67118,13 @@ function ZXe(items, t, n, r) {
       if (e < t && p.charCodeAt(e) === charCodeAtResult) {
         let n = e + 1;
         if (n >= t) {
-          f = n;
+          scrollTop = n;
           continue;
         }
         let charCodeAtData = p.charCodeAt(n);
         if (charCodeAtData === 9 || charCodeAtData === 32) {
           if (charCodeAtResult !== 45) {
-            f = n;
+            scrollTop = n;
             continue;
           }
           let e = n + 1;
@@ -67134,7 +67134,7 @@ function ZXe(items, t, n, r) {
             e++;
           }
           if (e >= t || p.charCodeAt(e) !== 45) {
-            f = n;
+            scrollTop = n;
             continue;
           }
         }
@@ -67147,10 +67147,10 @@ function ZXe(items, t, n, r) {
     }
     if (A) break;
     if (setTimeoutResult) {
-      if (f = JK(items, s), f < 0) break;
+      if (scrollTop = JK(items, s), scrollTop < 0) break;
       o = bMarks[s] + tShift[s];
-    } else if (f = qK(items, s), f < 0) break;
-    if (charCodeAtResult !== p.charCodeAt(f - 1)) break;
+    } else if (scrollTop = qK(items, s), scrollTop < 0) break;
+    if (charCodeAtResult !== p.charCodeAt(scrollTop - 1)) break;
   }
   return setTimeoutResult ? items.push(`ordered_list_close`, `ol`, -1).markup = fromCharCode : items.push(`bullet_list_close`, `ul`, -1).markup = fromCharCode, C[1] = s, items.line = s, items.parentType = parentType, c && XXe(items, T), true;
 }
@@ -68162,7 +68162,7 @@ var SZe = class {
         setTimeoutResult,
         intervalMs,
         count,
-        f,
+        screenX,
         p = ``,
         m = ``,
         h = false,
@@ -68195,7 +68195,7 @@ var SZe = class {
         if (type === `inline`) {
           let fallbackValue = n.children || [];
           if (fallbackValue.length === 1) {
-            h ||= (trimStartResult = rules.text, c = rules.text_special, setTimeoutResult = rules.softbreak, intervalMs = rules.hardbreak, count = rules.html_inline, f = rules.code_inline, p = optionsResult.xhtmlOut ? `<br />
+            h ||= (trimStartResult = rules.text, c = rules.text_special, setTimeoutResult = rules.softbreak, intervalMs = rules.hardbreak, count = rules.html_inline, screenX = rules.code_inline, p = optionsResult.xhtmlOut ? `<br />
 ` : `<br>
 `, m = optionsResult.breaks ? p : `
 `, true);
@@ -68232,7 +68232,7 @@ var SZe = class {
                 }
                 break;
               case `code_inline`:
-                if (f === Sq.code_inline) {
+                if (screenX === Sq.code_inline) {
                   g += gq(t);
                   continue;
                 }
@@ -70372,7 +70372,7 @@ function qZe(items) {
     i += t;
   }
   i.trim() && emptyItems.push(i.trim());
-  let s = {};
+  let line = {};
   for (let normalizeResult of emptyItems) {
     if (!normalizeResult) continue;
     let t = false,
@@ -70414,9 +70414,9 @@ function qZe(items) {
     } catch {
       c = a;
     } else c = /^-?\d+(?:\.\d+)?$/.test(a) ? Number(a) : a === `true` || a === `false` ? a === `true` : a === `null` ? null : a;
-    s[o] = c;
+    line[o] = c;
   }
-  return s;
+  return line;
 }
 function JZe(text) {
   [`admonition`, `info`, `warning`, `error`, `tip`, `danger`, `note`, `caution`].forEach(item => {
@@ -76481,32 +76481,32 @@ function tX(event, t, n) {
   return r.add(`noopener`), r.add(`noreferrer`), event.rel = Array.from(r).join(` `), event;
 }
 function nX(text, t = `safe`, n) {
-  let r = {};
+  let index = {};
   for (let [n, i] of Object.entries(text)) {
     let trimmed = n.trim(),
       lowercased = trimmed.toLowerCase();
-    trimmed && qY(trimmed) && (eX(lowercased, i, t) || (r[trimmed] = i));
+    trimmed && qY(trimmed) && (eX(lowercased, i, t) || (index[trimmed] = i));
   }
-  return tX(r, t, n);
+  return tX(index, t, n);
 }
 function rX(text, t) {
   let lowercased = text.toLowerCase();
   return rQe.has(lowercased) ? false : KY(t, lowercased) || KY(t, text);
 }
 function iX(text, t = `safe`, n) {
-  let r = {};
+  let height = {};
   for (let [n, i] of Object.entries(text)) {
     let trimmed = n.trim(),
       lowercased = trimmed.toLowerCase();
-    trimmed && qY(trimmed) && (eX(lowercased, i, t) || (r[trimmed] = i));
+    trimmed && qY(trimmed) && (eX(lowercased, i, t) || (height[trimmed] = i));
   }
-  return tX(r, t, n);
+  return tX(height, t, n);
 }
 function aX(count) {
-  let t = {};
-  if (!Array.isArray(count) || count.length === 0) return t;
-  for (let [n, r] of count) n && (t[String(n)] = r == null ? `` : String(r));
-  return t;
+  let message = {};
+  if (!Array.isArray(count) || count.length === 0) return message;
+  for (let [n, r] of count) n && (message[String(n)] = r == null ? `` : String(r));
+  return message;
 }
 function oX(e, t = `safe`, n) {
   let r = iX(aX(e), t, n),
@@ -76595,20 +76595,20 @@ function O0e(items) {
         replaceResult,
         r = ``;
       e === -1 ? replaceResult = endsWith ? trimmed.slice(0, -1).trim() : trimmed.trim() : (replaceResult = trimmed.slice(0, e).trim(), r = trimmed.slice(e + 1));
-      let i = {};
+      let focusMinutes = {};
       if (r) {
         let e = /([^\s=]+)(?:=(?:"([^"]*)"|'([^']*)'|(\S*)))?/g,
           normalizeResult;
         for (; (normalizeResult = e.exec(r)) !== null;) {
           let e = normalizeResult[1],
             fallbackValue = normalizeResult[2] ?? normalizeResult[3] ?? normalizeResult[4] ?? ``;
-          e && !e.endsWith(`/`) && (i[e] = fallbackValue);
+          e && !e.endsWith(`/`) && (focusMinutes[e] = fallbackValue);
         }
       }
       emptyItems.push({
         type: endsWith || Kq.has(replaceResult.toLowerCase()) ? `self_closing` : `tag_open`,
         tagName: replaceResult,
-        attrs: i
+        attrs: focusMinutes
       });
     }
     n = i + 1;
@@ -78094,9 +78094,9 @@ var p2e = [`href`, `title`, `aria-label`, `aria-hidden`, `target`, `rel`],
         c = computed(() => {
           let e = eventAlias.node?.attrs;
           if (!e || typeof e != `object`) return {};
-          let n = {};
-          if (Array.isArray(e)) for (let normalizeResult of e) Array.isArray(normalizeResult) && normalizeResult[0] && (n[String(normalizeResult[0])] = String(normalizeResult[1] ?? ``));else for (let [t, r] of Object.entries(e)) t && r != null && false !== r && (n[t] = true === r ? `` : String(r));
-          return kX(n);
+          let end = {};
+          if (Array.isArray(e)) for (let normalizeResult of e) Array.isArray(normalizeResult) && normalizeResult[0] && (end[String(normalizeResult[0])] = String(normalizeResult[1] ?? ``));else for (let [t, r] of Object.entries(e)) t && r != null && false !== r && (end[t] = true === r ? `` : String(r));
+          return kX(end);
         }),
         l = computed(() => pX(pX({}, s), c.value)),
         u = computed(() => {
@@ -79503,7 +79503,7 @@ function uQ(e, items, n) {
     let normalizeResult = [],
       replaceResult = [],
       replacedValue = [],
-      i = [];
+      token = [];
     for (let a = 0; a < e.len; a++) {
       let o = e.texts[a],
         s = e.kinds[a],
@@ -79516,23 +79516,23 @@ function uQ(e, items, n) {
           let t = e.texts[l];
           s.push(t), c = sQ.test(t), l++;
         }
-        normalizeResult.push(iQ(s)), replaceResult.push(true), replacedValue.push(`text`), i.push(e.starts[a]), a = l - 1;
+        normalizeResult.push(iQ(s)), replaceResult.push(true), replacedValue.push(`text`), token.push(e.starts[a]), a = l - 1;
         continue;
       }
-      normalizeResult.push(o), replaceResult.push(c), replacedValue.push(s), i.push(e.starts[a]);
+      normalizeResult.push(o), replaceResult.push(c), replacedValue.push(s), token.push(e.starts[a]);
     }
     return {
       len: normalizeResult.length,
       texts: normalizeResult,
       isWordLike: replaceResult,
       kinds: replacedValue,
-      starts: i
+      starts: token
     };
   }(function (e) {
     let normalizeResult = [],
       replaceResult = [],
       replacedValue = [],
-      i = [];
+      kind = [];
     for (let a = 0; a < e.len; a++) {
       let o = e.texts[a];
       if (e.kinds[a] === `text` && o.includes(`-`)) {
@@ -79548,25 +79548,25 @@ function uQ(e, items, n) {
           for (let c = 0; c < parts.length; c++) {
             let l = parts[c],
               u = c < parts.length - 1 ? `${l}-` : l;
-            normalizeResult.push(u), replaceResult.push(true), replacedValue.push(`text`), i.push(e.starts[a] + o), o += u.length;
+            normalizeResult.push(u), replaceResult.push(true), replacedValue.push(`text`), kind.push(e.starts[a] + o), o += u.length;
           }
           continue;
         }
       }
-      normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), replacedValue.push(e.kinds[a]), i.push(e.starts[a]);
+      normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), replacedValue.push(e.kinds[a]), kind.push(e.starts[a]);
     }
     return {
       len: normalizeResult.length,
       texts: normalizeResult,
       isWordLike: replaceResult,
       kinds: replacedValue,
-      starts: i
+      starts: kind
     };
   }(function (e) {
     let normalizeResult = [],
       replaceResult = [],
       replacedValue = [],
-      i = [];
+      row = [];
     for (let a = 0; a < e.len; a++) {
       let o = e.texts[a],
         s = e.kinds[a];
@@ -79574,40 +79574,40 @@ function uQ(e, items, n) {
         let s = [o],
           c = a + 1;
         for (; c < e.len && e.kinds[c] === `text` && lQ(e.texts[c]);) s.push(e.texts[c]), c++;
-        normalizeResult.push(iQ(s)), replaceResult.push(true), replacedValue.push(`text`), i.push(e.starts[a]), a = c - 1;
+        normalizeResult.push(iQ(s)), replaceResult.push(true), replacedValue.push(`text`), row.push(e.starts[a]), a = c - 1;
         continue;
       }
-      normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), replacedValue.push(s), i.push(e.starts[a]);
+      normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), replacedValue.push(s), row.push(e.starts[a]);
     }
     return {
       len: normalizeResult.length,
       texts: normalizeResult,
       isWordLike: replaceResult,
       kinds: replacedValue,
-      starts: i
+      starts: row
     };
   }(function (e) {
     let normalizeResult = [],
       replaceResult = [],
       replacedValue = [],
-      i = [];
+      col = [];
     for (let a = 0; a < e.len; a++) {
       let o = e.texts[a];
-      if (normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), replacedValue.push(e.kinds[a]), i.push(e.starts[a]), !s4e(o)) continue;
+      if (normalizeResult.push(o), replaceResult.push(e.isWordLike[a]), replacedValue.push(e.kinds[a]), col.push(e.starts[a]), !s4e(o)) continue;
       let s = a + 1;
       if (s >= e.len || aQ(e.kinds[s])) continue;
       let c = [],
         l = e.starts[s],
         u = s;
       for (; u < e.len && !aQ(e.kinds[u]);) c.push(e.texts[u]), u++;
-      c.length > 0 && (normalizeResult.push(iQ(c)), replaceResult.push(true), replacedValue.push(`text`), i.push(l), a = u - 1);
+      c.length > 0 && (normalizeResult.push(iQ(c)), replaceResult.push(true), replacedValue.push(`text`), col.push(l), a = u - 1);
     }
     return {
       len: normalizeResult.length,
       texts: normalizeResult,
       isWordLike: replaceResult,
       kinds: replacedValue,
-      starts: i
+      starts: col
     };
   }(function (e) {
     let part = e.texts.slice(),
@@ -79641,7 +79641,7 @@ function uQ(e, items, n) {
     let normalizeResult = [],
       replaceResult = [],
       replacedValue = [],
-      i = [],
+      clientY = [],
       a = 0;
     for (; a < e.len;) {
       let o = [e.texts[a]],
@@ -79654,7 +79654,7 @@ function uQ(e, items, n) {
         for (a++; a < e.len && e.kinds[a] === `glue`;) u.push(e.texts[a]), a++;
         let f = iQ(u);
         if (!(a < e.len && e.kinds[a] === `text`)) {
-          normalizeResult.push(f), replaceResult.push(false), replacedValue.push(`glue`), i.push(d);
+          normalizeResult.push(f), replaceResult.push(false), replacedValue.push(`glue`), clientY.push(d);
           continue;
         }
         o[0] = f, o.push(e.texts[a]), s = e.isWordLike[a], c = `text`, l = d, a++;
@@ -79665,14 +79665,14 @@ function uQ(e, items, n) {
         let n = iQ(payload);
         a < e.len && e.kinds[a] === `text` ? (o.push(n, e.texts[a]), s ||= e.isWordLike[a], a++) : o.push(n);
       }
-      normalizeResult.push(iQ(o)), replaceResult.push(s), replacedValue.push(c), i.push(l);
+      normalizeResult.push(iQ(o)), replaceResult.push(s), replacedValue.push(c), clientY.push(l);
     }
     return {
       len: normalizeResult.length,
       texts: normalizeResult,
       isWordLike: replaceResult,
       kinds: replacedValue,
-      starts: i
+      starts: clientY
     };
   }({
     len: b,
@@ -81375,13 +81375,13 @@ var M4e = {
           return eventAlias.isShowPreview && (lowercased === `html` || lowercased === `svg`);
         }),
         D = computed(() => {
-          let e = {},
+          let inviteLink = {},
             t = e => {
               if (e != null) return typeof e == `number` ? `${e}px` : String(e);
             },
             r = t(eventAlias.minWidth),
             i = t(eventAlias.maxWidth);
-          return r && (e.minWidth = r), i && (e.maxWidth = i), e;
+          return r && (inviteLink.minWidth = r), i && (inviteLink.maxWidth = i), inviteLink;
         }),
         O = computed(() => {
           let estimatedContentHeightPx = eventAlias.estimatedContentHeightPx;
@@ -90298,12 +90298,12 @@ function zit(e, t) {
 }
 var Bit = e => +e || 0;
 function L0(e, t) {
-  let n = {},
+  let offsetParent = {},
     isPlainObjectResult = isPlainObject(t),
     i = isPlainObjectResult ? Object.keys(t) : t,
     a = isPlainObject(e) ? isPlainObjectResult ? n => withDefaultValue(e[n], e[t[n]]) : t => e[t] : () => e;
-  for (let normalizeResult of i) n[normalizeResult] = Bit(a(normalizeResult));
-  return n;
+  for (let normalizeResult of i) offsetParent[normalizeResult] = Bit(a(normalizeResult));
+  return offsetParent;
 }
 function R0(e) {
   return L0(e, {
@@ -90567,13 +90567,13 @@ function Zit(e, t) {
 }
 var Qit = [`top`, `right`, `bottom`, `left`];
 function i2(e, t, n) {
-  let r = {};
+  let maxDate = {};
   n = n ? `-` + n : ``;
   for (let i = 0; i < 4; i++) {
     let a = Qit[i];
-    r[a] = parseFloat(e[t + `-` + a + n]) || 0;
+    maxDate[a] = parseFloat(e[t + `-` + a + n]) || 0;
   }
-  return r.width = r.left + r.right, r.height = r.top + r.bottom, r;
+  return maxDate.width = maxDate.left + maxDate.right, maxDate.height = maxDate.top + maxDate.bottom, maxDate;
 }
 var $it = (e, t, n) => (e > 0 || t > 0) && (!n || !n.shadowRoot);
 function eat(event, t) {
@@ -93414,12 +93414,12 @@ var l4 = class e extends n4 {
         _,
         v,
         diff,
-        b;
+        foreground;
       for (setTimeoutResult = 0; setTimeoutResult < label; setTimeoutResult += s) {
         if (total = e[setTimeoutResult].label, m = this._resolveTickFontOptions(setTimeoutResult), r.font = setIntervalResult = m.string, g = i[setIntervalResult] = i[setIntervalResult] || {
           data: {},
           gc: []
-        }, _ = m.lineHeight, v = diff = 0, !g1(total) && !_1(total)) v = D0(r, g.data, g.gc, v, total), diff = _;else if (_1(total)) for (count = 0, f = total.length; count < f; ++count) b = total[count], !g1(b) && !_1(b) && (v = D0(r, g.data, g.gc, v, b), diff += _);
+        }, _ = m.lineHeight, v = diff = 0, !g1(total) && !_1(total)) v = D0(r, g.data, g.gc, v, total), diff = _;else if (_1(total)) for (count = 0, f = total.length; count < f; ++count) foreground = total[count], !g1(foreground) && !_1(foreground) && (v = D0(r, g.data, g.gc, v, foreground), diff += _);
         emptyItems.push(v), o.push(diff), c = Math.max(v, c), l = Math.max(diff, l);
       }
       got(i, label);
@@ -93517,13 +93517,13 @@ var l4 = class e extends n4 {
         setTimeoutResult,
         count,
         resolvedValue,
-        S,
+        textAlign,
         C,
         total,
         onEventResult,
         E,
         D;
-      if (a === `top`) g = h(this.bottom), resolvedValue = this.bottom - u, C = g - m, onEventResult = h(e.top) + m, D = e.bottom;else if (a === `bottom`) g = h(this.top), onEventResult = e.top, D = h(e.bottom) - m, resolvedValue = g + m, C = this.top + u;else if (a === `left`) g = h(this.right), count = this.right - u, S = g - m, total = h(e.left) + m, E = e.right;else if (a === `right`) g = h(this.left), total = e.left, E = h(e.right) - m, count = g + m, S = this.left + u;else if (axis === `x`) {
+      if (a === `top`) g = h(this.bottom), resolvedValue = this.bottom - u, C = g - m, onEventResult = h(e.top) + m, D = e.bottom;else if (a === `bottom`) g = h(this.top), onEventResult = e.top, D = h(e.bottom) - m, resolvedValue = g + m, C = this.top + u;else if (a === `left`) g = h(this.right), count = this.right - u, textAlign = g - m, total = h(e.left) + m, E = e.right;else if (a === `right`) g = h(this.left), total = e.left, E = h(e.right) - m, count = g + m, textAlign = this.left + u;else if (axis === `x`) {
         if (a === `center`) g = h((e.top + e.bottom) / 2 + 0.5);else if (isPlainObject(a)) {
           let e = Object.keys(a)[0],
             t = a[e];
@@ -93536,7 +93536,7 @@ var l4 = class e extends n4 {
             t = a[e];
           g = h(this.chart.scales[e].getPixelForValue(t));
         }
-        count = g - m, S = count - u, total = e.left, E = e.right;
+        count = g - m, textAlign = count - u, total = e.left, E = e.right;
       }
       let withDefaultValueResult = withDefaultValue(options.ticks.maxTicksLimit, l),
         k = Math.max(1, Math.ceil(l / withDefaultValueResult));
@@ -93552,10 +93552,10 @@ var l4 = class e extends n4 {
           tickColor = setContextResult.tickColor,
           h = setContextResult.tickBorderDash || [],
           tickBorderDashOffset = setContextResult.tickBorderDashOffset;
-        setIntervalResult = hot(this, _, offset), setIntervalResult !== undefined && (setTimeoutResult = O0(chart, setIntervalResult, lineWidth), isHorizontal ? count = S = total = E = setTimeoutResult : resolvedValue = C = onEventResult = D = setTimeoutResult, emptyItems.push({
+        setIntervalResult = hot(this, _, offset), setIntervalResult !== undefined && (setTimeoutResult = O0(chart, setIntervalResult, lineWidth), isHorizontal ? count = textAlign = total = E = setTimeoutResult : resolvedValue = C = onEventResult = D = setTimeoutResult, emptyItems.push({
           tx1: count,
           ty1: resolvedValue,
-          tx2: S,
+          tx2: textAlign,
           ty2: C,
           x1: total,
           y1: onEventResult,
@@ -93599,33 +93599,33 @@ var l4 = class e extends n4 {
         setTimeoutResult,
         count,
         resolvedValue,
-        S,
+        color,
         C,
         total,
         onEventResult,
         E,
         D,
         O = `middle`;
-      if (r === `top`) resolvedValue = this.bottom - p, S = this._getXAxisLabelAlignment();else if (r === `bottom`) resolvedValue = this.top + p, S = this._getXAxisLabelAlignment();else if (r === `left`) {
+      if (r === `top`) resolvedValue = this.bottom - p, color = this._getXAxisLabelAlignment();else if (r === `bottom`) resolvedValue = this.top + p, color = this._getXAxisLabelAlignment();else if (r === `left`) {
         let e = this._getYAxisLabelAlignment(d);
-        S = e.textAlign, count = e.x;
+        color = e.textAlign, count = e.x;
       } else if (r === `right`) {
         let e = this._getYAxisLabelAlignment(d);
-        S = e.textAlign, count = e.x;
+        color = e.textAlign, count = e.x;
       } else if (axis === `x`) {
         if (r === `center`) resolvedValue = (e.top + e.bottom) / 2 + f;else if (isPlainObject(r)) {
           let e = Object.keys(r)[0],
             t = r[e];
           resolvedValue = this.chart.scales[e].getPixelForValue(t) + f;
         }
-        S = this._getXAxisLabelAlignment();
+        color = this._getXAxisLabelAlignment();
       } else if (axis === `y`) {
         if (r === `center`) count = (e.left + e.right) / 2 - f;else if (isPlainObject(r)) {
           let e = Object.keys(r)[0],
             t = r[e];
           count = this.chart.scales[e].getPixelForValue(t);
         }
-        S = this._getYAxisLabelAlignment(d).textAlign;
+        color = this._getYAxisLabelAlignment(d).textAlign;
       }
       axis === `y` && (s === `start` ? O = `top` : s === `end` && (O = `bottom`));
       let k = this._getLabelSizes();
@@ -93637,8 +93637,8 @@ var l4 = class e extends n4 {
           color = setContext.color,
           textStrokeColor = setContext.textStrokeColor,
           textStrokeWidth = setContext.textStrokeWidth,
-          d = S;
-        isHorizontal ? (count = C, S === `inner` && (d = g === _ - 1 ? this.options.reverse ? `left` : `right` : g === 0 ? this.options.reverse ? `right` : `left` : `center`), D = r === `top` ? c === `near` || m !== 0 ? -E * onEventResult + onEventResult / 2 : c === `center` ? -k.highest.height / 2 - t * onEventResult + onEventResult : -k.highest.height + onEventResult / 2 : c === `near` || m !== 0 ? onEventResult / 2 : c === `center` ? k.highest.height / 2 - t * onEventResult : k.highest.height - E * onEventResult, u && (D *= -1), m !== 0 && !setContext.showLabelBackdrop && (count += onEventResult / 2 * Math.sin(m))) : (resolvedValue = C, D = (1 - E) * onEventResult / 2);
+          d = color;
+        isHorizontal ? (count = C, color === `inner` && (d = g === _ - 1 ? this.options.reverse ? `left` : `right` : g === 0 ? this.options.reverse ? `right` : `left` : `center`), D = r === `top` ? c === `near` || m !== 0 ? -E * onEventResult + onEventResult / 2 : c === `center` ? -k.highest.height / 2 - t * onEventResult + onEventResult : -k.highest.height + onEventResult / 2 : c === `near` || m !== 0 ? onEventResult / 2 : c === `center` ? k.highest.height / 2 - t * onEventResult : k.highest.height - E * onEventResult, u && (D *= -1), m !== 0 && !setContext.showLabelBackdrop && (count += onEventResult / 2 * Math.sin(m))) : (resolvedValue = C, D = (1 - E) * onEventResult / 2);
         let f;
         if (setContext.showLabelBackdrop) {
           let t = B0(setContext.backdropPadding),
@@ -93653,7 +93653,7 @@ var l4 = class e extends n4 {
             case `bottom`:
               i -= n;
           }
-          switch (S) {
+          switch (color) {
             case `center`:
               a -= r / 2;
               break;
@@ -96306,9 +96306,9 @@ var t3 = class extends n4 {
         setTimeoutResult,
         count,
         resolvedValue,
-        S;
+        clearImmediate;
       for (body.textAlign = a, body.textBaseline = `middle`, body.font = u.string, draw.x = X4(this, textAlign, bodyValue), body.fillStyle = bodyValue.bodyColor, w1(this.beforeBody, m), f = o && textAlign !== `right` ? a === `center` ? c / 2 + l : c + 2 + l : 0, setTimeoutResult = 0, resolvedValue = r.length; setTimeoutResult < resolvedValue; ++setTimeoutResult) {
-        for (g = r[setTimeoutResult], _ = this.labelTextColors[setTimeoutResult], body.fillStyle = _, w1(g.before, m), setIntervalResult = g.lines, o && setIntervalResult.length && (this._drawColorBox(body, draw, setTimeoutResult, p, bodyValue), lineHeight = Math.max(u.lineHeight, s)), count = 0, S = setIntervalResult.length; count < S; ++count) m(setIntervalResult[count]), lineHeight = u.lineHeight;
+        for (g = r[setTimeoutResult], _ = this.labelTextColors[setTimeoutResult], body.fillStyle = _, w1(g.before, m), setIntervalResult = g.lines, o && setIntervalResult.length && (this._drawColorBox(body, draw, setTimeoutResult, p, bodyValue), lineHeight = Math.max(u.lineHeight, s)), count = 0, clearImmediate = setIntervalResult.length; count < clearImmediate; ++count) m(setIntervalResult[count]), lineHeight = u.lineHeight;
         w1(g.after, m);
       }
       f = 0, lineHeight = u.lineHeight, w1(this.afterBody, m), draw.y -= i;
@@ -97520,14 +97520,14 @@ var b3 = class extends l4 {
       withDefaultValueResult = withDefaultValue(options.ticks.stepSize, 1),
       s = fallbackValue === `week` && time.isoWeekday,
       c = K1(s) || s === true,
-      l = {},
+      expiresAt = {},
       u = t,
       count,
       f;
     if (c && (u = +_adapter.startOf(u, `isoWeek`, s)), u = +_adapter.startOf(u, c ? `day` : fallbackValue), _adapter.diff(n, t, fallbackValue) > 1e5 * withDefaultValueResult) throw Error(t + ` and ` + n + ` are too far apart with stepSize of ` + withDefaultValueResult + ` ` + fallbackValue);
     let p = options.ticks.source === `data` && this.getDataTimestamps();
-    for (count = u, f = 0; count < n; count = +_adapter.add(count, withDefaultValueResult, fallbackValue), f++) v3(l, count, p);
-    return (count === n || options.bounds === `ticks` || f === 1) && v3(l, count, p), Object.keys(l).sort(h3).map(item => +item);
+    for (count = u, f = 0; count < n; count = +_adapter.add(count, withDefaultValueResult, fallbackValue), f++) v3(expiresAt, count, p);
+    return (count === n || options.bounds === `ticks` || f === 1) && v3(expiresAt, count, p), Object.keys(expiresAt).sort(h3).map(item => +item);
   }
   getLabelForValue(label) {
     let _adapter = this._adapter,
@@ -111349,16 +111349,16 @@ var gSt = {
         De.value = true;
         let value = xe.value,
           emptyItems = [],
-          n = {},
+          clientHeight = {},
           requestAnimationFrameResult = [],
           a = [`backgroundColor`, `borderRadius`, `padding`, `boxShadow`, `position`, `width`];
         function o(e, t) {
-          let n = {};
+          let countValue = {};
           Object.keys(t).forEach(item => {
-            n[item] = e.style[item], e.style[item] = t[item];
+            countValue[item] = e.style[item], e.style[item] = t[item];
           }), requestAnimationFrameResult.push({
             element: e,
-            styles: n
+            styles: countValue
           });
         }
         let trimStartResult = null,
@@ -111371,7 +111371,7 @@ var gSt = {
             imageAsBase64.success && imageAsBase64.dataUrl && (replacedValue = imageAsBase64.dataUrl);
           }
           a.forEach(item => {
-            n[item] = value.style[item];
+            clientHeight[item] = value.style[item];
           });
           let u = document.documentElement.classList.contains(`dark`) ? `#14171a` : `#ffffff`;
           value.style.backgroundColor = u, value.style.borderRadius = `16px`, value.style.padding = `40px 20px 36px 20px`, value.style.boxShadow = `0 4px 24px rgba(0,0,0,0.08)`, value.style.position = `relative`, value.querySelectorAll(`[data-share-exclude]`).forEach(item => {
@@ -111436,7 +111436,7 @@ var gSt = {
               e.style[item] = t[item];
             });
           }), a.forEach(item => {
-            value.style[item] = n[item];
+            value.style[item] = clientHeight[item];
           }), De.value = false;
         }
       }
@@ -141399,14 +141399,14 @@ var V$t = {
         }
       }
       let Jt = false,
-        Yt = null;
+        data = null;
       async function Xt() {
         if (!(!se.value || ce.value || !te.value || computedData.value || Jt)) {
           Jt = true;
           try {
             let consumeSharedRole = await window.electronAPI.xiaoheiBot.consumeSharedRole();
-            if (consumeSharedRole.ok && consumeSharedRole.data && (Yt = consumeSharedRole.data), !Yt || (vn(`xiaohei-bot`), u.value = true, ke.value = false, await ut(), !L.value)) return;
-            await L.value.openSharedRole(Yt), Yt = null;
+            if (consumeSharedRole.ok && consumeSharedRole.data && (data = consumeSharedRole.data), !data || (vn(`xiaohei-bot`), u.value = true, ke.value = false, await ut(), !L.value)) return;
+            await L.value.openSharedRole(data), data = null;
           } catch (e) {
             Ai(e instanceof Error ? e.message : N(`appShell.sharedRoleOpenFailed`));
           } finally {

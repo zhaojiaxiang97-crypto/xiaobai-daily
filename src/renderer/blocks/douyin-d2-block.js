@@ -17,7 +17,7 @@ var _ = Object.defineProperty,
     return e;
   },
   C = (e, t, n) => new Promise((r, i) => {
-    var a = e => {
+    var handler = e => {
         try {
           s(n.next(e));
         } catch (e) {
@@ -31,7 +31,7 @@ var _ = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, o);
     s((n = n.apply(e, t)).next());
   }),
   oe = [`data-markstream-mode`],
@@ -186,8 +186,8 @@ var _ = Object.defineProperty,
         W = null,
         G = ``;
       typeof window < `u` && r(() => M.value, e => {
-        var t;
-        if ((t = N.value) == null || t.destroy(), N.value = null, !e) return void (P.value = false);
+        var payload;
+        if ((payload = N.value) == null || payload.destroy(), N.value = null, !e) return void (P.value = false);
         let n = Se(e, {
           rootMargin: `160px`
         });
@@ -197,7 +197,7 @@ var _ = Object.defineProperty,
       }, {
         immediate: true
       });
-      let De = {
+      let options = {
         N1: `#E5E7EB`,
         N2: `#CBD5E1`,
         N3: `#94A3B8`,
@@ -304,7 +304,7 @@ var _ = Object.defineProperty,
               l = S({}, o);
             if (l.themeID = g.isDark && c != null ? c : s, l.darkThemeID = null, l.darkThemeOverrides = null, g.isDark) {
               let e = o.themeOverrides && typeof o.themeOverrides == `object` ? o.themeOverrides : null;
-              l.themeOverrides = S(S({}, De), e || {});
+              l.themeOverrides = S(S({}, options), e || {});
             }
             let u = yield r.render(a, l);
             if (n !== k.value) return;
@@ -381,12 +381,12 @@ var _ = Object.defineProperty,
           let e = new Blob([O.value], {
               type: `image/svg+xml;charset=utf-8`
             }),
-            t = URL.createObjectURL(e);
+            objectURL = URL.createObjectURL(e);
           if (typeof document < `u`) {
-            let e = document.createElement(`a`);
-            e.href = t, e.download = `d2-diagram-${Date.now()}.svg`, document.body.appendChild(e), e.click(), document.body.removeChild(e);
+            let element = document.createElement(`a`);
+            element.href = objectURL, element.download = `d2-diagram-${Date.now()}.svg`, document.body.appendChild(element), element.click(), document.body.removeChild(element);
           }
-          URL.revokeObjectURL(t);
+          URL.revokeObjectURL(objectURL);
         } catch (e) {
           console.error(`Failed to export SVG:`, e);
         }
@@ -416,8 +416,8 @@ var _ = Object.defineProperty,
           $();
         }), A.value && W.observe(A.value));
       }), l(() => {
-        var e;
-        B = true, G = ``, (e = N.value) == null || e.destroy(), N.value = null, H != null && (clearTimeout(H), H = null), W?.disconnect(), W = null;
+        var value;
+        B = true, G = ``, (value = N.value) == null || value.destroy(), N.value = null, H != null && (clearTimeout(H), H = null), W?.disconnect(), W = null;
       }), (r, a) => (o(), n(`div`, {
         ref_key: `viewportTarget`,
         ref: M,

@@ -3,7 +3,7 @@ import { E as oe, r as se, w as ce } from "../i18n/en-US-player.js";
 import { t as le } from "../chunks/preload-helper.js";
 import { N as ue, P as de, V as fe, X as pe, _ as h, k as me, v as g, x as he } from "../chunks/main.js";
 var _ = (e, t, n) => new Promise((r, i) => {
-    var ee = e => {
+    var handler = e => {
         try {
           a(n.next(e));
         } catch (e) {
@@ -17,7 +17,7 @@ var _ = (e, t, n) => new Promise((r, i) => {
           i(e);
         }
       },
-      a = e => e.done ? r(e.value) : Promise.resolve(e.value).then(ee, te);
+      a = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, te);
     a((n = n.apply(e, t)).next());
   }),
   ge = () => le(() => import(`./infographic_markstream-vue.js`), [], import.meta.url),
@@ -198,8 +198,8 @@ var ye = [`data-markstream-mode`],
         k = o(null),
         A = o(typeof window > `u`);
       typeof window < `u` && i(() => Ge.value, e => {
-        var t;
-        if ((t = k.value) == null || t.destroy(), k.value = null, !e) return void (A.value = false);
+        var value;
+        if ((value = k.value) == null || value.destroy(), k.value = null, !e) return void (A.value = false);
         let n = We(e, {
           rootMargin: `160px`
         });
@@ -220,21 +220,21 @@ var ye = [`data-markstream-mode`],
         if (!C.value) return;
         let scrollHeight = C.value.scrollHeight;
         if (scrollHeight > 0) {
-          let t = h(function (e) {
+          let scrollHeightValue = h(function (e) {
             if (g.maxHeight === `none`) return `${e}px`;
             if (g.maxHeight != null) {
-              let t = Number.parseFloat(String(g.maxHeight));
-              if (Number.isFinite(t)) return `${Math.min(e, t)}px`;
+              let float = Number.parseFloat(String(g.maxHeight));
+              if (Number.isFinite(float)) return `${Math.min(e, float)}px`;
             }
             let value = C.value;
             if (value) {
               let n = getComputedStyle(value).getPropertyValue(`--ms-size-code-max-height`).trim(),
-                r = Number.parseFloat(n);
-              if (Number.isFinite(r)) return `${Math.min(e, r)}px`;
+                floatResult = Number.parseFloat(n);
+              if (Number.isFinite(floatResult)) return `${Math.min(e, floatResult)}px`;
             }
             return `${Math.min(e, 500)}px`;
           }(scrollHeight)) ?? scrollHeight;
-          N.value = `${Math.max(t, M.value)}px`;
+          N.value = `${Math.max(scrollHeightValue, M.value)}px`;
         }
       }
       let P = o(1),
@@ -291,18 +291,18 @@ var ye = [`data-markstream-mode`],
         e ? function (e) {
           _(this, null, function* () {
             try {
-              let t = new XMLSerializer().serializeToString(e),
-                n = new Blob([t], {
+              let toString = new XMLSerializer().serializeToString(e),
+                n = new Blob([toString], {
                   type: `image/svg+xml;charset=utf-8`
                 }),
-                r = URL.createObjectURL(n);
+                objectURL = URL.createObjectURL(n);
               if (typeof document < `u`) {
-                let e = document.createElement(`a`);
-                e.href = r, e.download = `infographic-${Date.now()}.svg`;
+                let element = document.createElement(`a`);
+                element.href = objectURL, element.download = `infographic-${Date.now()}.svg`;
                 try {
-                  document.body.appendChild(e), e.click(), document.body.removeChild(e);
+                  document.body.appendChild(element), element.click(), document.body.removeChild(element);
                 } catch {}
-                URL.revokeObjectURL(r);
+                URL.revokeObjectURL(objectURL);
               }
             } catch (e) {
               console.error(`Failed to export SVG:`, e);
@@ -332,10 +332,10 @@ var ye = [`data-markstream-mode`],
           d(() => {
             if (C.value && E.value) {
               E.value.innerHTML = ``;
-              let e = document.createElement(`div`);
-              e.style.transition = `transform 0.1s ease`, e.style.transformOrigin = `center center`, e.style.width = `100%`, e.style.height = `100%`, e.style.display = `flex`, e.style.alignItems = `center`, e.style.justifyContent = `center`;
-              let t = C.value.cloneNode(true);
-              t.classList.add(`fullscreen`), t.style.height = `auto`, e.appendChild(t), E.value.appendChild(e), D.value = e, e.style.transform = `translate(${F.value}px, ${I.value}px) scale(${P.value})`;
+              let elementResult = document.createElement(`div`);
+              elementResult.style.transition = `transform 0.1s ease`, elementResult.style.transformOrigin = `center center`, elementResult.style.width = `100%`, elementResult.style.height = `100%`, elementResult.style.display = `flex`, elementResult.style.alignItems = `center`, elementResult.style.justifyContent = `center`;
+              let cloneNode = C.value.cloneNode(true);
+              cloneNode.classList.add(`fullscreen`), cloneNode.style.height = `auto`, elementResult.appendChild(cloneNode), E.value.appendChild(elementResult), D.value = elementResult, elementResult.style.transform = `translate(${F.value}px, ${I.value}px) scale(${P.value})`;
             }
           });
         })();
@@ -360,8 +360,8 @@ var ye = [`data-markstream-mode`],
       }
       function W(e) {
         if (!L.value) return;
-        let t, n;
-        e instanceof MouseEvent ? (t = e.clientX, n = e.clientY) : (t = e.touches[0].clientX, n = e.touches[0].clientY), F.value = t - R.value.x, I.value = n - R.value.y;
+        let clientX, clientY;
+        e instanceof MouseEvent ? (clientX = e.clientX, clientY = e.clientY) : (clientX = e.touches[0].clientX, clientY = e.touches[0].clientY), F.value = clientX - R.value.x, I.value = clientY - R.value.y;
       }
       function G() {
         L.value = false;
@@ -373,7 +373,7 @@ var ye = [`data-markstream-mode`],
         X = ``;
       function at(e = false) {
         return _(this, null, function* () {
-          var t, n;
+          var destroy, n;
           if (!A.value || !C.value) return;
           if (q) return J = true, void (Y ||= e);
           let value = Ye.value;
@@ -397,7 +397,7 @@ var ye = [`data-markstream-mode`],
                 });
               }();
               if (!e) return void console.warn(`Infographic library failed to load.`);
-              K &&= ((t = K.destroy) == null || t.call(K), null), C.value.innerHTML = ``, K = new e({
+              K &&= ((destroy = K.destroy) == null || destroy.call(K), null), C.value.innerHTML = ``, K = new e({
                 container: C.value,
                 width: `100%`,
                 height: `100%`

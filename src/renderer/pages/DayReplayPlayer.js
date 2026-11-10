@@ -219,7 +219,7 @@ var Ke = {
           1080: `1080p`,
           1440: `2K`
         },
-        m = {
+        options = {
           none: `dayReplay.exportScreenshotNone`,
           corner: `dayReplay.exportScreenshotCorner`,
           main: `dayReplay.exportScreenshotMain`
@@ -233,7 +233,7 @@ var Ke = {
           label: c(`dayReplay.exportScreenshots`),
           choices: B.map(item => ({
             value: item,
-            label: c(m[item]),
+            label: c(options[item]),
             disabled: item !== `none` && !o.hasScreenshots
           })),
           hint: o.hasScreenshots ? undefined : c(`dayReplay.exportNoScreenshots`)
@@ -325,7 +325,7 @@ var Ke = {
       let t = e,
         n = u(null),
         r = u(null),
-        a = null,
+        payload = null,
         s = 0;
       function c() {
         s = 0;
@@ -339,26 +339,26 @@ var Ke = {
           l = Math.round(clientWidth * c),
           u = Math.round(clientHeight * c);
         (value.width !== l || value.height !== u) && (value.width = l, value.height = u);
-        let d = value.getContext(`2d`);
-        if (!d) return;
-        d.clearRect(0, 0, l, u);
+        let context = value.getContext(`2d`);
+        if (!context) return;
+        context.clearRect(0, 0, l, u);
         let bitmap = t.bitmap;
         if (!bitmap) return;
         let p = Math.min(l / bitmap.width, u / bitmap.height),
           m = bitmap.width * p,
           h = bitmap.height * p;
-        d.imageSmoothingQuality = `high`;
+        context.imageSmoothingQuality = `high`;
         try {
-          d.drawImage(bitmap, (l - m) / 2, (u - h) / 2, m, h);
+          context.drawImage(bitmap, (l - m) / 2, (u - h) / 2, m, h);
         } catch {}
       }
       function l() {
         s ||= requestAnimationFrame(c);
       }
       return o(() => t.bitmap, l), b(() => {
-        n.value && (a = new ResizeObserver(l), a.observe(n.value)), l();
+        n.value && (payload = new ResizeObserver(l), payload.observe(n.value)), l();
       }), v(() => {
-        a?.disconnect(), s && cancelAnimationFrame(s);
+        payload?.disconnect(), s && cancelAnimationFrame(s);
       }), (e, t) => (p(), i(`div`, {
         ref_key: `containerRef`,
         ref: n,
@@ -554,11 +554,11 @@ var Et = class {
         opacity: Ct,
         depthWrite: false
       }), this.beam = new Ee(this.beamGeometry, this.beamMaterial), this.beam.scale.y = f * 1.25, this.beam.renderOrder = 1, this.root.add(p, this.buildings, this.beam);
-      let m = [];
-      for (let e of [-n - 2, n + 2]) for (let t of [0, f]) for (let n of [-7, 13]) m.push(new N(e, t, n));
+      let emptyItems = [];
+      for (let count of [-n - 2, n + 2]) for (let t of [0, f]) for (let total of [-7, 13]) emptyItems.push(new N(count, t, total));
       this.framing = {
         target: new N(0, f * .25, 0),
-        corners: m,
+        corners: emptyItems,
         homeView: {
           polar: 1.02,
           azimuth: .3
@@ -613,8 +613,8 @@ var Et = class {
         let a = this.bucketToX(item.start) + Y / 2,
           o = a + Math.max(.3, item.end - item.start - Y);
         if (this.hitBox.min.set(a, 0, -4), this.hitBox.max.set(o, Math.max(wt, this.currentHeight(i)), vt / 2), !e.intersectBox(this.hitBox, this.hitPoint)) return;
-        let s = this.hitPoint.distanceToSquared(e.origin);
-        s < n && (n = s, t = i);
+        let distanceToSquared = this.hitPoint.distanceToSquared(e.origin);
+        distanceToSquared < n && (n = distanceToSquared, t = i);
       }), t < 0 ? null : {
         blockIndex: t,
         minute: this.blocks[t].start * 5
@@ -947,10 +947,10 @@ function rn(e) {
   }
 }
 function an(e, items) {
-  let n = tn(e).getTime();
+  let time = tn(e).getTime();
   return items.map(item => {
-    let t = nn((Date.parse(item.startedAt) - n) / 6e4),
-      r = nn((Date.parse(item.endedAt) - n) / 6e4);
+    let t = nn((Date.parse(item.startedAt) - time) / 6e4),
+      r = nn((Date.parse(item.endedAt) - time) / 6e4);
     return {
       id: item.id,
       startMinute: Math.min(t, r),
@@ -974,9 +974,9 @@ function on(e, t, items) {
   }
   let a = i.indexOf(1);
   if (a < 0) return null;
-  let o = i.lastIndexOf(1),
+  let lastIndexOf = i.lastIndexOf(1),
     s = Math.floor(a / $t) * $t,
-    c = Math.min(Kt, Math.ceil((o + 1) / $t) * $t);
+    c = Math.min(Kt, Math.ceil((lastIndexOf + 1) / $t) * $t);
   c - s < en && (c = Math.min(Kt, s + en), s = Math.max(0, c - en));
   let l = c - s,
     u = new Float32Array(l).fill(1),
@@ -1058,10 +1058,10 @@ function mn(e, text) {
 function hn(e) {
   let t = new Set(),
     n = [];
-  for (let r of e) {
-    let screenshotPath = r.screenshotPath;
+  for (let diff of e) {
+    let screenshotPath = diff.screenshotPath;
     screenshotPath && !t.has(screenshotPath) && (t.add(screenshotPath), n.push({
-      minute: mn(r, screenshotPath),
+      minute: mn(diff, screenshotPath),
       path: screenshotPath
     }));
   }
@@ -1084,12 +1084,12 @@ function _n(e, t) {
 function vn(e) {
   let t = e.street.days[0],
     n = t?.cells ?? [],
-    r = null,
-    i = null,
+    product = null,
+    dataUrl = null,
     a = null;
   for (let e of M(n)) {
     if (e.value < 0) continue;
-    r === null && (r = e.start * Z), i = e.end * Z;
+    product === null && (product = e.start * Z), dataUrl = e.end * Z;
     let t = (e.end - e.start) * Z;
     (!a || t > a.minutes) && (a = {
       value: e.value,
@@ -1098,8 +1098,8 @@ function vn(e) {
   }
   return {
     activeSec: t?.activeSec ?? 0,
-    firstMinute: r,
-    lastMinute: i,
+    firstMinute: product,
+    lastMinute: dataUrl,
     longest: a,
     top: e.street.series.map((item, t) => ({
       value: t,
@@ -1111,21 +1111,21 @@ function vn(e) {
 function yn(e, t, r) {
   let i = n(e()),
     a = 0,
-    s = null;
+    flag = null;
   function c() {
-    s && clearTimeout(s), s = null, i.value = e(), a = performance.now();
+    flag && clearTimeout(flag), flag = null, i.value = e(), a = performance.now();
   }
   return o(e, e => {
     if (Object.is(e, i.value)) {
-      s && clearTimeout(s), s = null;
+      flag && clearTimeout(flag), flag = null;
       return;
     }
     let n = r() ? 0 : t - (performance.now() - a);
-    n <= 0 ? c() : s ||= setTimeout(c, n);
+    n <= 0 ? c() : flag ||= setTimeout(c, n);
   }), o(r, e => {
-    e && s && c();
+    e && flag && c();
   }), v(() => {
-    s && clearTimeout(s), s = null;
+    flag && clearTimeout(flag), flag = null;
   }), i;
 }
 var bn = 100,
@@ -1310,7 +1310,7 @@ function Wn(e, items, n, r) {
     a = [],
     o = ``,
     s = false,
-    c = () => {
+    handler = () => {
       a.push(o.trimEnd()), o = ``;
     };
   for (let t of i) if (!/^\s+$/.test(t) || o) {
@@ -1318,13 +1318,13 @@ function Wn(e, items, n, r) {
       o += t;
       continue;
     }
-    if (o && c(), a.length >= r) {
+    if (o && handler(), a.length >= r) {
       s = true;
       break;
     }
     if (!Un.test(t) && e.measureText(t).width > n) {
       for (let i of t) {
-        if (e.measureText(o + i).width > n && o && (c(), a.length >= r)) {
+        if (e.measureText(o + i).width > n && o && (handler(), a.length >= r)) {
           s = true;
           break;
         }
@@ -1333,7 +1333,7 @@ function Wn(e, items, n, r) {
       if (s) break;
     } else o = t.trimStart();
   }
-  if (!s && o && (a.length >= r ? s = true : c()), s && a.length > 0) {
+  if (!s && o && (a.length >= r ? s = true : handler()), s && a.length > 0) {
     let t = a[a.length - 1];
     for (; t && e.measureText(`${t}…`).width > n;) t = t.slice(0, -1);
     a[a.length - 1] = `${t}…`;
@@ -1624,8 +1624,8 @@ async function vr(e, t, n) {
   await document.fonts?.ready;
   let l = o ? i.screenshots : `none`,
     u = Vn(l),
-    d = document.createElement(`canvas`),
-    f = R.create(d, 30, {}, {
+    element = document.createElement(`canvas`),
+    f = R.create(element, 30, {}, {
       manual: true,
       antialias: true
     });
@@ -1635,10 +1635,10 @@ async function vr(e, t, n) {
       endBucket: r.endBucket
     }),
     m = q(i.resolution),
-    h = document.createElement(`canvas`);
-  h.width = m.width, h.height = m.height;
-  let g = h.getContext(`2d`);
-  if (!g) throw p.dispose(), f.dispose(), o?.dispose(), new pr(`RECORDER_FAILED`);
+    elementResult = document.createElement(`canvas`);
+  elementResult.width = m.width, elementResult.height = m.height;
+  let contextResult = elementResult.getContext(`2d`);
+  if (!contextResult) throw p.dispose(), f.dispose(), o?.dispose(), new pr(`RECORDER_FAILED`);
   p.setColors(e.colors, e.theme), f.scene.add(p.root), f.setFraming(p.framing), f.resize(u.width, u.height, a), f.flyIn(false);
   let _ = new dt(f, p),
     v = {
@@ -1674,7 +1674,7 @@ async function vr(e, t, n) {
       return i.pace === `timelapse` ? n : (n !== E && e - D >= 1e3 && (E = n, D = e), E);
     };
   return {
-    canvas: h,
+    canvas: elementResult,
     renderAt: async (t, n) => {
       let i = Math.min(y, Math.max(0, t - 900)),
         a = sn(r, i / y),
@@ -1706,7 +1706,7 @@ async function vr(e, t, n) {
         screenshot: s,
         screenshotAlpha: l === `corner` ? O : 1
       };
-      er(g, d, E, v);
+      er(contextResult, element, E, v);
     },
     dispose: () => {
       p.dispose(), f.dispose(), o?.dispose();
@@ -1783,8 +1783,8 @@ async function br(e, t, n, r, i) {
   if (!a) throw new pr(`UNSUPPORTED`);
   let o = Math.min(ar, t.frameRate);
   e.renderAt(0, false);
-  let s = e.canvas.captureStream(o),
-    c = new MediaRecorder(s, {
+  let stream = e.canvas.captureStream(o),
+    c = new MediaRecorder(stream, {
       mimeType: a.mimeType,
       videoBitsPerSecond: J(t)
     }),
@@ -1830,7 +1830,7 @@ async function br(e, t, n, r, i) {
       extension: a.extension
     };
   } finally {
-    d && cancelAnimationFrame(d), h && document.removeEventListener(`visibilitychange`, h), c.state !== `inactive` && c.stop(), s.getTracks().forEach(item => item.stop());
+    d && cancelAnimationFrame(d), h && document.removeEventListener(`visibilitychange`, h), c.state !== `inactive` && c.stop(), stream.getTracks().forEach(item => item.stop());
   }
 }
 async function xr(e, t, n) {
@@ -2215,8 +2215,8 @@ var Sr = [`aria-label`],
           U.value = null;
           return;
         }
-        let t = M.bitmapAt(e);
-        (t || !M.isLoaded(e)) && (U.value = t);
+        let bitmapAt = M.bitmapAt(e);
+        (bitmapAt || !M.isLoaded(e)) && (U.value = bitmapAt);
       });
       function wt(e) {
         Le.value = e, e && (B.value = true), j(`feature_map_heat_click`, {

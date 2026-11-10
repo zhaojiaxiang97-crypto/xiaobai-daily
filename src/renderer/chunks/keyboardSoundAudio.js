@@ -627,7 +627,7 @@ function w(e, t, n, r) {
   return (Math.sin(c) * .34 + Math.sin(c * 2) * .08 + r * .025 * Math.exp(-150 * t)) * l;
 }
 function T(e, t) {
-  let n = {
+  let options = {
       "mobile-crisp": .036,
       "mobile-soft": .048,
       digital: .056,
@@ -638,12 +638,12 @@ function T(e, t) {
       "minimal-tick": .024
     },
     sampleRate = e.sampleRate,
-    i = n[t],
+    i = options[t],
     a = Math.ceil(i * sampleRate),
     o = Math.ceil((i + .008) * sampleRate),
-    s = e.createBuffer(1, o * f, sampleRate),
-    c = s.getChannelData(0),
-    l = [];
+    buffer = e.createBuffer(1, o * f, sampleRate),
+    channelData = buffer.getChannelData(0),
+    emptyItems = [];
   for (let e = 0; e < f; e += 1) {
     let n = e * o,
       s = C(1295788826 + e * 7919 + t.length * 104729);
@@ -651,17 +651,17 @@ function T(e, t) {
       let a = o / sampleRate,
         l = Math.min(1, (i - a) / .004),
         u = w(t, a, e, s()) * Math.max(0, l);
-      c[n + o] = Math.max(-.95, Math.min(.95, u));
+      channelData[n + o] = Math.max(-.95, Math.min(.95, u));
     }
-    l.push({
+    emptyItems.push({
       offsetSeconds: n / sampleRate,
       durationSeconds: i
     });
   }
   return {
     type: t,
-    buffer: s,
-    segments: l
+    buffer: buffer,
+    segments: emptyItems
   };
 }
 function E(text) {
@@ -685,10 +685,10 @@ function D(e, t, items) {
       let n = Math.min(t.length, Math.max(0, Math.round(item.offsetSeconds * sampleRate))),
         o = Math.min(t.length, n + Math.round(item.durationSeconds * sampleRate)),
         s = 0;
-      for (let e of i) for (let t = n; t < o; t += 1) s = Math.max(s, Math.abs(e[t]));
+      for (let count of i) for (let t = n; t < o; t += 1) s = Math.max(s, Math.abs(count[t]));
       let c = n,
         l = s * _;
-      findOnset: for (let e = n; s > 0 && e < o; e += 1) for (let t of i) if (Math.abs(t[e]) >= l) {
+      findOnset: for (let e = n; s > 0 && e < o; e += 1) for (let flag of i) if (Math.abs(flag[e]) >= l) {
         c = e;
         break findOnset;
       }
@@ -699,7 +699,7 @@ function D(e, t, items) {
       };
     }).filter(item => item.end > item.start),
     c = s.reduce((acc, cur) => acc + cur.end - cur.start + o, 0),
-    l = e.createBuffer(t.numberOfChannels, Math.max(1, c), sampleRate),
+    bufferResult = e.createBuffer(t.numberOfChannels, Math.max(1, c), sampleRate),
     u = Math.max(1, Math.round(sampleRate * y)),
     d = [],
     f = 0;
@@ -708,11 +708,11 @@ function D(e, t, items) {
       n = e.onset - e.start;
     for (let r = 0; r < i.length; r += 1) {
       let a = i[r],
-        o = l.getChannelData(r);
+        channelDataResult = bufferResult.getChannelData(r);
       for (let r = 0; r < t; r += 1) {
         let i = r < n ? (r + 1) / (n + 1) : 1,
           s = r >= t - u ? Math.max(0, (t - r - 1) / u) : 1;
-        o[f + r] = a[e.start + r] * i * s;
+        channelDataResult[f + r] = a[e.start + r] * i * s;
       }
     }
     d.push({
@@ -721,7 +721,7 @@ function D(e, t, items) {
     }), f += t + o;
   }
   return {
-    buffer: l,
+    buffer: bufferResult,
     segments: d
   };
 }
@@ -759,14 +759,14 @@ var k = class {
   customScope = `guest`;
   async configure(options) {
     if (options.customScope !== undefined && options.customScope !== this.customScope && (this.customScope = options.customScope, this.invalidateCustomSound()), this.enabled = options.enabled, this.switchType = options.switchType, this.volume = Math.max(0, Math.min(100, Math.round(options.volume))), this.applyVolume(), this.enabled) {
-      let e = this.getContext();
-      await Promise.all([e.state === `suspended` ? e.resume() : Promise.resolve(), this.loadPack(this.switchType)]);
+      let context = this.getContext();
+      await Promise.all([context.state === `suspended` ? context.resume() : Promise.resolve(), this.loadPack(this.switchType)]);
     }
   }
   async preview(e = this.switchType) {
     let pack = await this.loadPack(e),
-      n = this.getContext();
-    n.state === `suspended` && (await n.resume()), this.playFromPack(pack);
+      contextResult = this.getContext();
+    contextResult.state === `suspended` && (await contextResult.resume()), this.playFromPack(pack);
   }
   async previewCustomCandidate(e) {
     let customPack = await this.createCustomPack(e),
@@ -803,9 +803,9 @@ var k = class {
       this.context = new AudioContext({
         latencyHint: .005
       });
-      let e = this.context.createGain(),
-        t = this.context.createWaveShaper();
-      t.curve = O(), t.oversample = `none`, e.connect(t), t.connect(this.context.destination), this.masterGain = e, this.outputLimiter = t, this.applyVolume();
+      let gain = this.context.createGain(),
+        waveShaper = this.context.createWaveShaper();
+      waveShaper.curve = O(), waveShaper.oversample = `none`, gain.connect(waveShaper), waveShaper.connect(this.context.destination), this.masterGain = gain, this.outputLimiter = waveShaper, this.applyVolume();
     }
     return this.context;
   }
@@ -921,16 +921,16 @@ var k = class {
     let r = Math.floor(Math.random() * e.segments.length);
     e.segments.length > 1 && r === this.lastSegmentIndex && (r = (r + 1 + Math.floor(Math.random() * (e.segments.length - 1))) % e.segments.length), this.lastSegmentIndex = r;
     let i = e.segments[r],
-      a = t.createBufferSource();
-    a.buffer = e.buffer, a.connect(masterGain);
+      bufferSource = t.createBufferSource();
+    bufferSource.buffer = e.buffer, bufferSource.connect(masterGain);
     let o = {
-      source: a,
+      source: bufferSource,
       startedAt: t.currentTime,
       type: e.type
     };
-    this.activeVoices.push(o), a.onended = () => {
-      this.activeVoices = this.activeVoices.filter(item => item !== o), a.disconnect();
-    }, a.start(0, i.offsetSeconds, i.durationSeconds);
+    this.activeVoices.push(o), bufferSource.onended = () => {
+      this.activeVoices = this.activeVoices.filter(item => item !== o), bufferSource.disconnect();
+    }, bufferSource.start(0, i.offsetSeconds, i.durationSeconds);
   }
 };
 function A(e) {

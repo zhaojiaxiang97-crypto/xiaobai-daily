@@ -23,13 +23,13 @@ var r = e(`scan-text`, [[`path`, {
   key: `1vyc9m`
 }]]);
 function i(e, t) {
-  let n = document.createElement(`canvas`);
-  return n.width = Math.max(1, Math.round(e)), n.height = Math.max(1, Math.round(t)), n;
+  let element = document.createElement(`canvas`);
+  return element.width = Math.max(1, Math.round(e)), element.height = Math.max(1, Math.round(t)), element;
 }
 function a(e, t) {
-  let n = e.getContext(`2d`, t);
-  if (!n) throw Error(`Canvas 2D is not available`);
-  return n;
+  let context = e.getContext(`2d`, t);
+  if (!context) throw Error(`Canvas 2D is not available`);
+  return context;
 }
 function o(items, t, n) {
   let r = t * n,
@@ -94,10 +94,10 @@ function _(e) {
   };
 }
 function v(items) {
-  let t = Number.parseInt(items.slice(1), 16),
-    n = t >> 16 & 255,
-    r = t >> 8 & 255,
-    i = t & 255;
+  let parseIntResult = Number.parseInt(items.slice(1), 16),
+    n = parseIntResult >> 16 & 255,
+    r = parseIntResult >> 8 & 255,
+    i = parseIntResult & 255;
   return (.299 * n + .587 * r + .114 * i) / 255;
 }
 function y(e) {
@@ -395,7 +395,7 @@ function L(e, t) {
   if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(item => I(data, item, o))) return null;
   let s = Math.max(1, Math.floor(n / 1200)),
     c = Math.max(1, Math.floor(r / 1200)),
-    l = e => {
+    handler = e => {
       let t = e * n * 4;
       for (let e = 0; e < n; e += s) if (!I(data, t + e * 4, o)) return false;
       return true;
@@ -407,10 +407,10 @@ function L(e, t) {
     f = Math.floor(r * P),
     p = Math.floor(n * P),
     m = 0;
-  for (; m < f && l(m);) m += 1;
-  if (m >= f && l(Math.floor(r / 2))) return null;
+  for (; m < f && handler(m);) m += 1;
+  if (m >= f && handler(Math.floor(r / 2))) return null;
   let h = 0;
-  for (; h < f && l(r - 1 - h);) h += 1;
+  for (; h < f && handler(r - 1 - h);) h += 1;
   let g = 0;
   for (; g < p && u(g);) g += 1;
   let _ = 0;
@@ -442,7 +442,7 @@ function B(e) {
     } = e,
     r = Math.max(1, e.scale);
   if (!n.enabled) {
-    let e = {
+    let options = {
       x: 0,
       y: 0,
       width: t.width,
@@ -451,10 +451,10 @@ function B(e) {
     return {
       width: t.width,
       height: t.height,
-      window: e,
+      window: options,
       radius: 0,
       frameHeight: 0,
-      image: e,
+      image: options,
       origin: {
         x: 0,
         y: 0
@@ -550,8 +550,8 @@ function G(e, t, r, i) {
     }
   } else if (a.backgroundKind === `solid`) e.fillStyle = a.backgroundColor, e.fillRect(0, 0, o, s);else if (a.backgroundKind === `gradient`) {
     let t = n.find(item => item.id === a.gradientId) ?? n[0],
-      r = e.createLinearGradient(0, 0, o, s);
-    r.addColorStop(0, t.stops[0]), r.addColorStop(1, t.stops[1]), e.fillStyle = r, e.fillRect(0, 0, o, s);
+      linearGradient = e.createLinearGradient(0, 0, o, s);
+    linearGradient.addColorStop(0, t.stops[0]), linearGradient.addColorStop(1, t.stops[1]), e.fillStyle = linearGradient, e.fillRect(0, 0, o, s);
   } else a.backgroundKind === `blur` && H(e, t.source, o, s);
   let c = a.shadow / 100;
   if (c <= 0) return;
@@ -569,14 +569,14 @@ function G(e, t, r, i) {
 }
 function K(e, t, n, r) {
   if (n.frameHeight <= 0) return;
-  let i = t.frame.endsWith(`dark`),
+  let endsWith = t.frame.endsWith(`dark`),
     {
       x: a,
       y: o,
       width: s
     } = n.window,
     frameHeight = n.frameHeight;
-  e.fillStyle = i ? `#2c2c2e` : `#f2f2f3`, e.fillRect(a, o, s, frameHeight), e.fillStyle = i ? `rgba(0,0,0,0.5)` : `rgba(0,0,0,0.08)`, e.fillRect(a, o + frameHeight - Math.max(1, Math.round(r)), s, Math.max(1, Math.round(r)));
+  e.fillStyle = endsWith ? `#2c2c2e` : `#f2f2f3`, e.fillRect(a, o, s, frameHeight), e.fillStyle = endsWith ? `rgba(0,0,0,0.5)` : `rgba(0,0,0,0.08)`, e.fillRect(a, o + frameHeight - Math.max(1, Math.round(r)), s, Math.max(1, Math.round(r)));
   let l = 6 * r,
     u = o + frameHeight / 2;
   if ([`#ff5f57`, `#febc2e`, `#28c840`].forEach((item, n) => {
@@ -588,7 +588,7 @@ function K(e, t, n, r) {
     if (o > 40 * r) {
       let a = 24 * r,
         s = t + Math.max(0, (n - t - o) / 2);
-      e.fillStyle = i ? `#3a3a3d` : `#ffffff`, e.beginPath(), e.roundRect(s, u - a / 2, o, a, a / 2), e.fill(), e.fillStyle = i ? `rgba(255,255,255,0.18)` : `rgba(0,0,0,0.12)`, e.beginPath(), e.roundRect(s + 14 * r, u - 3 * r, Math.min(180 * r, o * .4), 6 * r, 3 * r), e.fill();
+      e.fillStyle = endsWith ? `#3a3a3d` : `#ffffff`, e.beginPath(), e.roundRect(s, u - a / 2, o, a, a / 2), e.fill(), e.fillStyle = endsWith ? `rgba(255,255,255,0.18)` : `rgba(0,0,0,0.12)`, e.beginPath(), e.roundRect(s + 14 * r, u - 3 * r, Math.min(180 * r, o * .4), 6 * r, 3 * r), e.fill();
     }
   }
 }
@@ -601,12 +601,12 @@ function q(e, t, n, r = 1, event) {
     u = Math.round(n.height * r);
   if (e.save(), e.clearRect(0, 0, l, u), c.enabled) {
     let s = c.backgroundKind === `image` && c.backgroundImage ? W(c.backgroundImage) : null,
-      d = JSON.stringify([c.backgroundKind, c.backgroundColor, c.backgroundImage, !!s?.image.naturalWidth, c.gradientId, c.shadow, c.radius, n.window, n.width, n.height, l, u, t.scale]);
+      stringify = JSON.stringify([c.backgroundKind, c.backgroundColor, c.backgroundImage, !!s?.image.naturalWidth, c.gradientId, c.shadow, c.radius, n.window, n.width, n.height, l, u, t.scale]);
     if (event) {
-      if (event.key !== d || !event.canvas) {
+      if (event.key !== stringify || !event.canvas) {
         let e = event.canvas && event.canvas.width === l && event.canvas.height === u ? event.canvas : i(l, u),
           s = a(e);
-        s.clearRect(0, 0, e.width, e.height), G(s, t, n, r), event.canvas = e, event.key = d;
+        s.clearRect(0, 0, e.width, e.height), G(s, t, n, r), event.canvas = e, event.key = stringify;
       }
       e.drawImage(event.canvas, 0, 0);
     } else G(e, t, n, r);

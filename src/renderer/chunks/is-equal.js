@@ -12,13 +12,13 @@ function n(e, n) {
   let r = Math.min(e.length, n.length),
     i = 0;
   for (let a = 0; a < r; a++) {
-    let r = e.charCodeAt(a),
-      o = n.charCodeAt(a);
-    if (r === o) continue;
-    let s = r < 128 && t[r] ? t[r] : r + 128,
-      c = o < 128 && t[o] ? t[o] : o + 128;
+    let charCodeAt = e.charCodeAt(a),
+      charCodeAtResult = n.charCodeAt(a);
+    if (charCodeAt === charCodeAtResult) continue;
+    let s = charCodeAt < 128 && t[charCodeAt] ? t[charCodeAt] : charCodeAt + 128,
+      c = charCodeAtResult < 128 && t[charCodeAtResult] ? t[charCodeAtResult] : charCodeAtResult + 128;
     if (s !== c) return s < c ? -1 : 1;
-    i === 0 && (i = r > o ? -1 : 1);
+    i === 0 && (i = charCodeAt > charCodeAtResult ? -1 : 1);
   }
   return e.length === n.length ? i : e.length < n.length ? -1 : 1;
 }

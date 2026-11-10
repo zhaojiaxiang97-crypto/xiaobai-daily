@@ -5248,8 +5248,8 @@ function H(e) {
   B = e, V(e), localStorage.setItem(R, e);
 }
 function Ne() {
-  let e = localStorage.getItem(R);
-  H(je(e) ? e : `system`);
+  let item = localStorage.getItem(R);
+  H(je(item) ? item : `system`);
 }
 z.addEventListener(`change`, () => {
   B === `system` && V(`system`);

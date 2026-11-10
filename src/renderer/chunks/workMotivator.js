@@ -34,22 +34,22 @@ function je(e, t, n) {
     c = (T - (r + o * i + (t ? D : 0))) / 2,
     l = c;
   c += r;
-  let u = [];
-  for (let n = 0; n < e; n++) u.push({
+  let emptyItems = [];
+  for (let n = 0; n < e; n++) emptyItems.push({
     x: c + E / 2,
     power: t + e - 1 - n,
     decimal: false
   }), c += o;
   let d = null;
   t && (d = c, c += D);
-  for (let e = 0; e < t; e++) u.push({
+  for (let e = 0; e < t; e++) emptyItems.push({
     x: c + E / 2,
     power: t - 1 - e,
     decimal: true
   }), c += o;
   return {
     cellWidth: s,
-    cells: u,
+    cells: emptyItems,
     currencyX: l,
     currencyWidth: r,
     dotX: d
@@ -228,7 +228,7 @@ var k = .5,
           t: ie,
           locale: y
         } = ee(),
-        b = (e, t = {}) => ie(`toolboxNative.workMotivator${e}`, t),
+        handler = (e, t = {}) => ie(`toolboxNative.workMotivator${e}`, t),
         x = Array.from({
           length: 64
         }, (e, t) => t % 10),
@@ -291,7 +291,7 @@ var k = .5,
         N = c(null),
         st = c(null),
         P = c(null),
-        F = window.matchMedia(`(prefers-reduced-motion: reduce)`),
+        matchMedia = window.matchMedia(`(prefers-reduced-motion: reduce)`),
         I = new Me(50),
         L = false,
         R = null,
@@ -301,7 +301,7 @@ var k = .5,
         ct = 0,
         lt = 0,
         ut = null,
-        H = null,
+        pointerId = null,
         U = 0,
         dt = 0,
         W = false,
@@ -318,35 +318,35 @@ var k = .5,
         ht = g(() => !!(O.value && Te(O.value.status))),
         gt = g(() => E.value && O.value ? pe(E.value, O.value) : 0),
         J = g(() => Math.max(0, gt.value * 10 ** G.value)),
-        _t = g(() => ye(b, E.value?.earnedRange ?? `today`)),
+        _t = g(() => ye(handler, E.value?.earnedRange ?? `today`)),
         vt = g(() => !E.value || !O.value ? `` : S(E.value, gt.value, y.value, G.value)),
-        yt = g(() => !E.value || !O.value ? `` : b(`HourlyRate`, {
+        yt = g(() => !E.value || !O.value ? `` : handler(`HourlyRate`, {
           amount: q.value ? `••••` : S(E.value, O.value.hourlyRate, y.value)
         })),
-        bt = g(() => O.value ? De(b, O.value.status) : ``),
-        xt = g(() => O.value ? be(b, O.value) : ``),
-        St = g(() => we(b, new Date(D.value), y.value)),
+        bt = g(() => O.value ? De(handler, O.value.status) : ``),
+        xt = g(() => O.value ? be(handler, O.value) : ``),
+        St = g(() => we(handler, new Date(D.value), y.value)),
         Ct = g(() => Ee(new Date(D.value))),
         Y = g(() => {
           if (!E.value || !O.value) return null;
           let e = ge(E.value);
           return e ? ve(E.value, e, O.value) : null;
         }),
-        wt = g(() => Y.value ? he(b, Y.value) : ``),
+        wt = g(() => Y.value ? he(handler, Y.value) : ``),
         X = g(() => {
           let value = O.value;
           return !value || value.scheduledMs <= 0 ? 0 : value.workedMs / value.scheduledMs;
         }),
         Tt = g(() => {
           let value = O.value;
-          return value ? b(`WorkHoursValue`, {
+          return value ? handler(`WorkHoursValue`, {
             worked: C(value.workedMs),
             total: C(value.scheduledMs)
           }) : ``;
         }),
-        Et = g(() => E.value ? Se(b, Ce(E.value, D.value)) : ``),
+        Et = g(() => E.value ? Se(handler, Ce(E.value, D.value)) : ``),
         Dt = g(() => {
-          if (E.value && N.value && !q.value) return b(`PeriodEarned`, {
+          if (E.value && N.value && !q.value) return handler(`PeriodEarned`, {
             month: S(E.value, N.value.month, y.value),
             year: S(E.value, N.value.year, y.value)
           });
@@ -359,7 +359,7 @@ var k = .5,
           perspective: `${nt}px`,
           zoom: String(de[E.value?.size ?? `medium`])
         })),
-        At = {
+        options = {
           left: `14px`,
           top: `14px`,
           width: `${w}px`
@@ -396,7 +396,7 @@ var k = .5,
         if (!value || !t) return;
         let celebrateAmount = t.celebrateAmount,
           r = Math.floor(value.earnedToday / celebrateAmount + 1e-9);
-        V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !F.matches && zt(r), V = r, ct = celebrateAmount;
+        V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !matchMedia.matches && zt(r), V = r, ct = celebrateAmount;
       }
       function It() {
         let value = O.value;
@@ -409,7 +409,7 @@ var k = .5,
       }
       function Lt() {
         let value = O.value;
-        return !value || q.value || F.matches ? 0 : value.earningPerMs * 10 ** G.value;
+        return !value || q.value || matchMedia.matches ? 0 : value.earningPerMs * 10 ** G.value;
       }
       function Q(e) {
         if (!L) return;
@@ -417,7 +417,7 @@ var k = .5,
           value = J.value,
           r = t > 0 ? `run|${t}|${Math.floor(Date.now() / at)}` : `idle|${Math.floor(value)}`;
         if (!e && r === B) return;
-        let i = B !== `` && !F.matches;
+        let i = B !== `` && !matchMedia.matches;
         B = r, I.sync(value, t, i);
       }
       async function Rt() {
@@ -435,9 +435,9 @@ var k = .5,
         let n = Math.min(6, e),
           r = fe[n - 1],
           i = Number.isInteger(value.celebrateAmount) ? 0 : 2,
-          a = r.text === `burst` ? b(`CelebrateBurst`, {
+          a = r.text === `burst` ? handler(`CelebrateBurst`, {
             amount: S(value, value.celebrateAmount, y.value, i)
-          }) : r.text === `milestone` ? b(`CelebrateMilestone`, {
+          }) : r.text === `milestone` ? handler(`CelebrateMilestone`, {
             amount: S(value, value.celebrateAmount * e, y.value, i)
           }) : ``,
           o = Array.from({
@@ -474,12 +474,12 @@ var k = .5,
       function Vt(event) {
         let value = P.value,
           n = st.value;
-        if (!value || !n || F.matches || A.value) return;
-        let r = n.getBoundingClientRect(),
-          i = Math.max(.01, r.width / (w + 28)),
+        if (!value || !n || matchMedia.matches || A.value) return;
+        let boundingClientRect = n.getBoundingClientRect(),
+          i = Math.max(.01, boundingClientRect.width / (w + 28)),
           a = Math.max(1, value.getBoundingClientRect().height / i),
-          o = Math.max(-1, Math.min(1, ((event.clientX - r.left) / i - 14) / w * 2 - 1)),
-          s = Math.max(-1, Math.min(1, ((event.clientY - r.top) / i - 14) / a * 2 - 1)),
+          o = Math.max(-1, Math.min(1, ((event.clientX - boundingClientRect.left) / i - 14) / w * 2 - 1)),
+          s = Math.max(-1, Math.min(1, ((event.clientY - boundingClientRect.top) / i - 14) / a * 2 - 1)),
           c = w / Math.max(w, a * 2);
         value.style.transform = `rotateX(${(-s * rt * c).toFixed(2)}deg) rotateY(${(o * rt).toFixed(2)}deg)`;
       }
@@ -493,13 +493,13 @@ var k = .5,
         k.value = false, Ht();
       }
       function Gt(event) {
-        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (H = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
+        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (pointerId = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
           screenX: event.screenX,
           screenY: event.screenY
         })));
       }
       function Kt(e) {
-        if (H === e.pointerId) {
+        if (pointerId === e.pointerId) {
           if (!(e.buttons & 1)) {
             $(e);
             return;
@@ -511,9 +511,9 @@ var k = .5,
         }
       }
       function $(event) {
-        if (H === null || event && H !== event.pointerId) return;
-        let t = H;
-        H = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
+        if (pointerId === null || event && pointerId !== event.pointerId) return;
+        let t = pointerId;
+        pointerId = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
       }
       function qt(e) {
         Vt(e), Kt(e);
@@ -578,7 +578,7 @@ var k = .5,
           "is-ready": j.value,
           "is-dragging": A.value
         }]),
-        style: At,
+        style: options,
         onPointerenter: Ut,
         onPointerleave: Wt,
         onPointermove: qt,
@@ -646,7 +646,7 @@ var k = .5,
         class: e([`wm-shutter`, {
           "is-closed": q.value
         }])
-      }, [v(`span`, null, m(b(`AmountHidden`)), 1)], 2)], 14, He), M.value ? (u(), i(l, {
+      }, [v(`span`, null, m(handler(`AmountHidden`)), 1)], 2)], 14, He), M.value ? (u(), i(l, {
         key: 0
       }, [M.value.text ? (u(), i(`span`, {
         key: `burst-${M.value.id}`,
@@ -678,9 +678,9 @@ var k = .5,
         })
       }, null, 4)], 8, Ue), v(`div`, We, [Y.value ? (u(), i(l, {
         key: 0
-      }, [v(`div`, Ge, [v(`strong`, null, m(b(`WishTitle`, {
+      }, [v(`div`, Ge, [v(`strong`, null, m(handler(`WishTitle`, {
         name: Y.value.wish.name
-      })), 1), v(`b`, null, m(t(me)(Y.value.ratio)), 1)]), v(`p`, null, m(q.value ? b(`AmountHidden`) : wt.value), 1), v(`div`, Ke, [v(`i`, {
+      })), 1), v(`b`, null, m(t(me)(Y.value.ratio)), 1)]), v(`p`, null, m(q.value ? handler(`AmountHidden`) : wt.value), 1), v(`div`, Ke, [v(`i`, {
         style: p({
           width: `${Y.value.ratio * 100}%`
         })
@@ -690,7 +690,7 @@ var k = .5,
         class: `wm-empty-wish`,
         "data-no-drag": ``,
         onClick: o[0] ||= e => t(workMotivatorAPI)?.openSettings()
-      }, [v(`strong`, null, m(b(`WishEmpty`)), 1), v(`p`, null, m(b(`WishEmptyHint`)), 1)]))]), v(`div`, qe, [v(`div`, Je, [v(`strong`, null, m(b(`WorkHours`)), 1), v(`b`, null, m(t(me)(X.value)), 1)]), v(`p`, null, m(Tt.value), 1), v(`div`, Ye, [v(`i`, {
+      }, [v(`strong`, null, m(handler(`WishEmpty`)), 1), v(`p`, null, m(handler(`WishEmptyHint`)), 1)]))]), v(`div`, qe, [v(`div`, Je, [v(`strong`, null, m(handler(`WorkHours`)), 1), v(`b`, null, m(t(me)(X.value)), 1)]), v(`p`, null, m(Tt.value), 1), v(`div`, Ye, [v(`i`, {
         style: p({
           width: `${Math.min(1, X.value) * 100}%`
         })
@@ -704,14 +704,14 @@ var k = .5,
         class: e({
           "is-on": E.value.alwaysOnTop
         }),
-        title: E.value.alwaysOnTop ? b(`ButtonUnpin`) : b(`ButtonPin`),
+        title: E.value.alwaysOnTop ? handler(`ButtonUnpin`) : handler(`ButtonPin`),
         onClick: Zt
       }, [f(t(ae), {
         size: 13,
         "stroke-width": 2
       })], 10, Ze), v(`button`, {
         type: `button`,
-        title: q.value ? b(`ButtonShowAmount`) : b(`ButtonHideAmount`),
+        title: q.value ? handler(`ButtonShowAmount`) : handler(`ButtonHideAmount`),
         onClick: Qt
       }, [q.value ? (u(), s(t(se), {
         key: 1,
@@ -723,7 +723,7 @@ var k = .5,
         "stroke-width": 2
       }))], 8, Qe), v(`button`, {
         type: `button`,
-        title: E.value.expanded ? b(`ButtonCollapse`) : b(`ButtonExpand`),
+        title: E.value.expanded ? handler(`ButtonCollapse`) : handler(`ButtonExpand`),
         onClick: Jt
       }, [E.value.expanded ? (u(), s(t(ke), {
         key: 0,
@@ -735,14 +735,14 @@ var k = .5,
         "stroke-width": 2
       }))], 8, $e), v(`button`, {
         type: `button`,
-        title: b(`ButtonSettings`),
+        title: handler(`ButtonSettings`),
         onClick: o[1] ||= e => t(workMotivatorAPI)?.openSettings()
       }, [f(t(ce), {
         size: 13,
         "stroke-width": 2
       })], 8, et), v(`button`, {
         type: `button`,
-        title: b(`ButtonClose`),
+        title: handler(`ButtonClose`),
         onClick: o[2] ||= e => t(workMotivatorAPI)?.hide()
       }, [f(t(oe), {
         size: 13,

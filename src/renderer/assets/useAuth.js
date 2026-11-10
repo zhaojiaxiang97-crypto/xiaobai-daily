@@ -1,35 +1,35 @@
 import { Wt as e, bn as t, n, v as r } from "./vue-i18n.runtime.js";
 function i(t, fn, r) {
-  let i = crypto.randomUUID(),
+  let randomUUID = crypto.randomUUID(),
     a = false,
     desktopSync = window.electronAPI.desktopSync,
-    s = desktopSync.onChanged(async e => {
-      if (e.id !== i || a) return;
+    onChanged = desktopSync.onChanged(async e => {
+      if (e.id !== randomUUID || a) return;
       let t = false;
       try {
         (r?.background || !document.hidden) && (r?.active?.() ?? true) && (t = (await fn()) !== false);
       } catch {} finally {
         desktopSync.ack({
-          id: i,
+          id: randomUUID,
           deliveryId: e.deliveryId,
           applied: t
         });
       }
     }),
     c = false,
-    l = () => {
+    handler = () => {
       let e = !a && (r?.background || !document.hidden) && (r?.active?.() ?? true);
       e !== c && (c = !!e, e ? desktopSync.subscribe({
-        id: i,
+        id: randomUUID,
         topic: t,
         params: r?.params
-      }).catch(() => undefined) : desktopSync.unsubscribe(i).catch(() => undefined));
+      }).catch(() => undefined) : desktopSync.unsubscribe(randomUUID).catch(() => undefined));
     },
-    u = e(() => r?.active?.() ?? true, l, {
+    u = e(() => r?.active?.() ?? true, handler, {
       immediate: true
     });
-  return document.addEventListener(`visibilitychange`, l), () => {
-    a = true, u(), s(), document.removeEventListener(`visibilitychange`, l), l();
+  return document.addEventListener(`visibilitychange`, handler), () => {
+    a = true, u(), onChanged(), document.removeEventListener(`visibilitychange`, handler), handler();
   };
 }
 var a = class extends Error {
