@@ -32,12 +32,14 @@ T(ast, {
   },
 });
 const inComp = pos => ranges.some(([a,b]) => pos >= a && pos < b);
+// 区间重叠判断：声明整体是否与组件区间相交（var X = defineComponent({...}) 的 start 在调用之前）
+const overlapsComp = (start, end) => ranges.some(([a,b]) => start < b && end > a);
 
 // 2) 提取所有非组件的顶层声明
 const sharedParts = [];
 T(ast, {
   VariableDeclaration(p) {
-    if (inComp(p.node.start)) return;
+    if (overlapsComp(p.node.start, p.node.end)) return;   // 该声明包含组件定义 → 归 .vue
     if (!p.parentPath.isProgram()) return;
     sharedParts.push({ code: src.slice(p.node.start, p.node.end), names: p.node.declarations.map(d => t.isIdentifier(d.id) ? d.id.name : null).filter(Boolean) });
   },
@@ -98,7 +100,9 @@ const exportLines = [...allSharedNames].filter(n => /^[A-Za-z_$][\w$]*$/.test(n)
 // 跨 chunk 依赖：在 shared.js 里统一 re-export，组件只需 import shared.js
 const reexportLines = [];
 for (const [local, info] of Object.entries(importMap)) {
-  if (/vue-i18n\.runtime/.test(info.from)) continue;   // Vue API 走 'vue'
+  // vue-i18n.runtime 里：映射表内的算 Vue API，其余（内部工具函数）仍需导入
+  const isRuntime = /vue-i18n\.runtime/.test(info.from || '');
+  if (isRuntime && (VUE_API.has(local) || VUE_API.has(info.imported))) continue;
   // 原路径相对 chunks/main.js → 转成相对工程 src/shared.js
   // 原路径是相对 chunks/main.js；工程里把 renderer 原样复制到 src/vendor/
   // 所以：../ui/X.js（= renderer/ui/X.js）→ ./vendor/ui/X.js
@@ -107,11 +111,40 @@ for (const [local, info] of Object.entries(importMap)) {
   else if (rel.startsWith('./')) rel = './vendor/chunks/' + rel.slice(2);
   else rel = './vendor/' + rel;
   const spec = info.imported === 'default' ? `default as ${local}` : (info.imported === local ? local : `${info.imported} as ${local}`);
-  reexportLines.push(`export { ${spec} } from '${rel}';`);
+  // 关键：export { x } from '...' 不会在当前模块建立绑定，
+  // 而 shared.js 的顶层代码（var oa = Mt(...)）需要本地绑定 → 必须先 import
+  reexportLines.push(`import { ${spec} } from '${rel}';`);
 }
 fs.mkdirSync(outDir + '/src/vendor', { recursive: true });
 fs.writeFileSync(outDir + '/src/vendor/_removed.js', 'export default {};\nexport const __removed = true;\n');
-fs.writeFileSync(outDir + '/src/shared.js', `// 从 main bundle 提取的共享符号（CSS 常量、工具函数等）\n// 共 ${allSharedNames.size} 个顶层声明 + ${reexportLines.length} 个跨 chunk re-export\n${reexportLines.join('\n')}\n\n${body}\n\n${exportLines}\n`);
+// shared.js 里可能用到 Vue API（组件已排除，但辅助代码会引用）
+// 用命名空间导入彻底避免与 main.js 同名声明冲突，再 AST 改写 body 中的 Vue API 引用
+const vueImportLine = "import * as __vue from 'vue';\n";
+try {
+  const ast2 = P.parse(body, { sourceType: 'module' });
+  let renamed = 0;
+  T(ast2, {
+    Identifier(ip) {
+      if (!ip.isReferencedIdentifier()) return;
+      const nm = ip.node.name;
+      if (!VUE_API.has(nm)) return;
+      const par = ip.parentPath;
+      if ((par.isMemberExpression() || par.isOptionalMemberExpression()) && par.node.property === ip.node && !par.node.computed) return;
+      if (par.isObjectProperty() && par.node.key === ip.node && !par.node.computed) return;
+      if (par.isVariableDeclarator() && par.node.id === ip.node) return;
+      ip.replaceWith(t.memberExpression(t.identifier('__vue'), t.identifier(nm)));
+      renamed++;
+    },
+  });
+  if (renamed) body = G(ast2, { compact: false, jsescOption: { minimal: true } }).code;
+} catch (e) { console.error('vue 改写失败:', String(e.message).slice(0, 60)); }
+fs.writeFileSync(outDir + '/src/shared.js', `// 从 main bundle 提取的共享符号（CSS 常量、工具函数等）\n// 共 ${allSharedNames.size} 个顶层声明 + ${reexportLines.length} 个跨 chunk re-export\n${vueImportLine}${reexportLines.join('\n')}
+
+${body}
+
+${exportLines}
+${Object.keys(importMap).filter(k => !/vue-i18n\.runtime/.test(importMap[k].from || '')).map(k => `export { ${k} };`).join('\n')}
+`);
 
 // 4) 生成组件 .vue
 let okCount = 0;
