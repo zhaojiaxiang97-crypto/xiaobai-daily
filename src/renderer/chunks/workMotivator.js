@@ -1,17 +1,17 @@
-import { $n as vueN, An as vueAn, Cn as vueCn, O as vueO, S as vueS, St as vueSt, Wt as vueWt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, n as ee, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, t as vueT, ut as vueUt, v as vueV, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
-import { n as playerN, o as playerO, t as playerT } from "../i18n/en-US-player.js";
-import { n as lucideN, r as lucideR, t as lucideT } from "../ui/icons/lucide-icons.js";
-import { D as motivatorD, E as motivatorE, O as motivatorO, l as motivatorL, s as motivatorS } from "./work-motivator.js";
-import { t as pluginvueexporthelperT } from "./_plugin-vue_export-helper.js";
-import { _ as formatNum, a as formatNumA, c as formatNumC, d as formatNumD, f as formatNumF, g as formatNumG, h as formatNumH, i as formatNumI, l as formatNumL, m as formatNumM, n as formatNumN, o as formatNumO, p as formatNumP, r as formatNumR, s as formatNumS, t as formatNumT, u as formatNumU, v as formatNumV } from "./format-number.js";
-var ke = lucideR(`chevrons-down-up`, [[`path`, {
+import { $n as e, An as t, Cn as n, O as r, S as i, St as a, Wt as o, b as s, bn as c, c as l, gt as u, j as d, k as f, n as ee, nr as p, ot as te, rr as m, rt as ne, t as h, ut as re, v as g, x as _, y as v } from "./vue-i18n.runtime.js";
+import { n as ie, o as y, t as b } from "../i18n/en-US-player.js";
+import { n as ae, r as x, t as oe } from "../ui/icons/lucide-icons.js";
+import { D as se, E as ce, O as le, l as ue, s as de } from "./work-motivator.js";
+import { t as fe } from "./_plugin-vue_export-helper.js";
+import { _ as pe, a as S, c as me, d as he, f as ge, g as _e, h as ve, i as ye, l as be, m as xe, n as Se, o as C, p as Ce, r as we, s as Te, t as Ee, u as De, v as Oe } from "./format-number.js";
+var ke = x(`chevrons-down-up`, [[`path`, {
     d: `m7 20 5-5 5 5`,
     key: `13a0gw`
   }], [`path`, {
     d: `m7 4 5 5 5-5`,
     key: `1kwcof`
   }]]),
-  Ae = lucideR(`chevrons-up-down`, [[`path`, {
+  Ae = x(`chevrons-up-down`, [[`path`, {
     d: `m7 15 5 5 5-5`,
     key: `1hf1tw`
   }], [`path`, {
@@ -34,22 +34,22 @@ function je(e, t, n) {
     c = (T - (r + o * i + (t ? D : 0))) / 2,
     l = c;
   c += r;
-  let emptyItems = [];
-  for (let n = 0; n < e; n++) emptyItems.push({
+  let u = [];
+  for (let n = 0; n < e; n++) u.push({
     x: c + E / 2,
     power: t + e - 1 - n,
     decimal: false
   }), c += o;
   let d = null;
   t && (d = c, c += D);
-  for (let e = 0; e < t; e++) emptyItems.push({
+  for (let e = 0; e < t; e++) u.push({
     x: c + E / 2,
     power: t - 1 - e,
     decimal: true
   }), c += o;
   return {
     cellWidth: s,
-    cells: emptyItems,
+    cells: u,
     currencyX: l,
     currencyWidth: r,
     dotX: d
@@ -65,17 +65,17 @@ var k = .5,
     baseTime = 0;
     unitsPerMs = 0;
     carryTimer = null;
-    constructor(constructor) {
-      this.windowHeight = constructor;
+    constructor(e) {
+      this.windowHeight = e;
     }
-    attach(items, attach) {
-      this.stopAll(), this.reels = items.map(item => ({
-        ...item,
+    attach(items, t) {
+      this.stopAll(), this.reels = items.map(e => ({
+        ...e,
         index: 0,
         continuous: false,
         animation: null
       }));
-      for (let e of this.reels) e.index = this.digitAt(attach, e.power), this.place(e, e.index);
+      for (let e of this.reels) e.index = this.digitAt(t, e.power), this.place(e, e.index);
     }
     sync(e, t, n) {
       this.clearCarryTimer(), this.baseUnits = Math.max(0, e), this.baseTime = performance.now(), this.unitsPerMs = Math.max(0, t);
@@ -91,42 +91,42 @@ var k = .5,
     dispose() {
       this.stopAll(), this.reels = [];
     }
-    digitAt(digit, digitValue) {
-      return Math.floor(digit / 10 ** digitValue + 1e-9) % 10;
+    digitAt(e, t) {
+      return Math.floor(e / 10 ** t + 1e-9) % 10;
     }
-    offset(offset) {
-      return `translateY(${this.windowHeight / 2 - (offset + .5) * 34}px)`;
+    offset(e) {
+      return `translateY(${this.windowHeight / 2 - (e + .5) * 34}px)`;
     }
     place(e, t) {
       e.strip.style.transform = this.offset(t);
     }
-    startContinuous(continuous, continuousValue) {
-      continuous.animation?.cancel(), continuous.continuous = true;
-      let n = this.baseUnits / 10 ** continuous.power % 10;
-      continuous.animation = continuous.strip.animate([{
+    startContinuous(e, t) {
+      e.animation?.cancel(), e.continuous = true;
+      let n = this.baseUnits / 10 ** e.power % 10;
+      e.animation = e.strip.animate([{
         transform: this.offset(n)
       }, {
         transform: this.offset(n + 10)
       }], {
-        duration: 1e4 / continuousValue,
+        duration: 1e4 / t,
         iterations: 1 / 0,
         easing: `linear`
       });
     }
-    stopContinuous(continuous, continuousValue) {
-      continuous.continuous = false, continuous.animation?.cancel(), continuous.animation = null, continuous.index = continuousValue, this.place(continuous, continuousValue);
+    stopContinuous(e, t) {
+      e.continuous = false, e.animation?.cancel(), e.animation = null, e.index = t, this.place(e, t);
     }
-    stepTo(step, stepValue, stepInput) {
-      if (stepValue === step.index && !step.animation) return;
-      step.animation?.cancel(), step.animation = null;
-      let r = step.index;
-      if (step.index = stepValue, !stepInput) {
-        this.place(step, stepValue);
+    stepTo(e, t, n) {
+      if (t === e.index && !e.animation) return;
+      e.animation?.cancel(), e.animation = null;
+      let r = e.index;
+      if (e.index = t, !n) {
+        this.place(e, t);
         return;
       }
-      let i = stepValue >= r ? stepValue : stepValue + 10;
-      this.place(step, stepValue);
-      let a = step.strip.animate([{
+      let i = t >= r ? t : t + 10;
+      this.place(e, t);
+      let a = e.strip.animate([{
         transform: this.offset(r)
       }, {
         transform: this.offset(i)
@@ -134,21 +134,21 @@ var k = .5,
         duration: A,
         easing: j
       });
-      step.animation = a, a.onfinish = () => {
-        step.animation === a && (step.animation = null);
+      e.animation = a, a.onfinish = () => {
+        e.animation === a && (e.animation = null);
       };
     }
     scheduleCarry() {
       if (this.unitsPerMs <= 0) return;
-      let filtered = this.reels.filter(item => !item.continuous);
-      if (!filtered.length) return;
-      let t = 10 ** Math.min(...filtered.map(item => item.power)),
+      let e = this.reels.filter(e => !e.continuous);
+      if (!e.length) return;
+      let t = 10 ** Math.min(...e.map(e => e.power)),
         n = this.baseUnits + this.unitsPerMs * (performance.now() - this.baseTime),
         r = (Math.floor(n / t + 1e-9) + 1) * t,
         i = Math.max(0, (r - this.baseUnits) / this.unitsPerMs - (performance.now() - this.baseTime));
       this.carryTimer = window.setTimeout(() => {
         this.carryTimer = null;
-        for (let t of filtered) this.stepTo(t, this.digitAt(r, t.power), true);
+        for (let t of e) this.stepTo(t, this.digitAt(r, t.power), true);
         this.scheduleCarry();
       }, i);
     }
@@ -220,15 +220,15 @@ var k = .5,
   it = 4,
   at = 3e5,
   ot = 45,
-  pluginvueexporthelperTResult = pluginvueexporthelperT(vueJ({
+  M = fe(d({
     __name: `WorkMotivatorApp`,
-    setup(props) {
+    setup(d) {
       let workMotivatorAPI = window.workMotivatorAPI,
         {
-          t: translate,
+          t: ie,
           locale: y
         } = ee(),
-        handler = (e, t = {}) => translate(`toolboxNative.workMotivator${e}`, t),
+        b = (e, t = {}) => ie(`toolboxNative.workMotivator${e}`, t),
         x = Array.from({
           length: 64
         }, (e, t) => t % 10),
@@ -281,17 +281,17 @@ var k = .5,
           text: `milestone`,
           sparks: 18
         }],
-        E = vueBn(null),
-        D = vueBn(Date.now()),
-        O = vueCn(null),
-        k = vueBn(false),
-        A = vueBn(false),
-        j = vueBn(false),
-        M = vueCn(null),
-        N = vueBn(null),
-        st = vueBn(null),
-        P = vueBn(null),
-        matchMedia = window.matchMedia(`(prefers-reduced-motion: reduce)`),
+        E = c(null),
+        D = c(Date.now()),
+        O = n(null),
+        k = c(false),
+        A = c(false),
+        j = c(false),
+        M = n(null),
+        N = c(null),
+        st = c(null),
+        P = c(null),
+        F = window.matchMedia(`(prefers-reduced-motion: reduce)`),
         I = new Me(50),
         L = false,
         R = null,
@@ -301,71 +301,71 @@ var k = .5,
         ct = 0,
         lt = 0,
         ut = null,
-        pointerId = null,
+        H = null,
         U = 0,
         dt = 0,
         W = false,
-        G = vueV(() => E.value?.decimals ?? 3),
-        ft = vueV(() => {
+        G = g(() => E.value?.decimals ?? 3),
+        ft = g(() => {
           if (!E.value) return 3;
-          let numV = formatNumV(E.value, new Date());
-          return Math.min(7, Math.max(3, String(Math.floor(numV)).length));
+          let e = Oe(E.value, new Date());
+          return Math.min(7, Math.max(3, String(Math.floor(e)).length));
         }),
-        K = vueV(() => je(ft.value, G.value, E.value?.currency ?? `¥`)),
-        pt = vueV(() => `${ft.value}-${G.value}-${K.value.cellWidth.toFixed(2)}`),
-        mt = vueV(() => `${Math.min(26, K.value.cellWidth * 1.27).toFixed(1)}px`),
-        q = vueV(() => !!E.value?.amountHidden),
-        ht = vueV(() => !!(O.value && formatNumS(O.value.status))),
-        gt = vueV(() => E.value && O.value ? formatNum(E.value, O.value) : 0),
-        J = vueV(() => Math.max(0, gt.value * 10 ** G.value)),
-        _t = vueV(() => formatNumI(handler, E.value?.earnedRange ?? `today`)),
-        vt = vueV(() => !E.value || !O.value ? `` : formatNumA(E.value, gt.value, y.value, G.value)),
-        yt = vueV(() => !E.value || !O.value ? `` : handler(`HourlyRate`, {
-          amount: q.value ? `••••` : formatNumA(E.value, O.value.hourlyRate, y.value)
+        K = g(() => je(ft.value, G.value, E.value?.currency ?? `¥`)),
+        pt = g(() => `${ft.value}-${G.value}-${K.value.cellWidth.toFixed(2)}`),
+        mt = g(() => `${Math.min(26, K.value.cellWidth * 1.27).toFixed(1)}px`),
+        q = g(() => !!E.value?.amountHidden),
+        ht = g(() => !!(O.value && Te(O.value.status))),
+        gt = g(() => E.value && O.value ? pe(E.value, O.value) : 0),
+        J = g(() => Math.max(0, gt.value * 10 ** G.value)),
+        _t = g(() => ye(b, E.value?.earnedRange ?? `today`)),
+        vt = g(() => !E.value || !O.value ? `` : S(E.value, gt.value, y.value, G.value)),
+        yt = g(() => !E.value || !O.value ? `` : b(`HourlyRate`, {
+          amount: q.value ? `••••` : S(E.value, O.value.hourlyRate, y.value)
         })),
-        bt = vueV(() => O.value ? formatNumU(handler, O.value.status) : ``),
-        xt = vueV(() => O.value ? formatNumL(handler, O.value) : ``),
-        St = vueV(() => formatNumR(handler, new Date(D.value), y.value)),
-        Ct = vueV(() => formatNumT(new Date(D.value))),
-        Y = vueV(() => {
+        bt = g(() => O.value ? De(b, O.value.status) : ``),
+        xt = g(() => O.value ? be(b, O.value) : ``),
+        St = g(() => we(b, new Date(D.value), y.value)),
+        Ct = g(() => Ee(new Date(D.value))),
+        Y = g(() => {
           if (!E.value || !O.value) return null;
-          let numF = formatNumF(E.value);
-          return numF ? formatNumH(E.value, numF, O.value) : null;
+          let e = ge(E.value);
+          return e ? ve(E.value, e, O.value) : null;
         }),
-        wt = vueV(() => Y.value ? formatNumD(handler, Y.value) : ``),
-        X = vueV(() => {
+        wt = g(() => Y.value ? he(b, Y.value) : ``),
+        X = g(() => {
           let e = O.value;
           return !e || e.scheduledMs <= 0 ? 0 : e.workedMs / e.scheduledMs;
         }),
-        Tt = vueV(() => {
+        Tt = g(() => {
           let e = O.value;
-          return e ? handler(`WorkHoursValue`, {
-            worked: formatNumO(e.workedMs),
-            total: formatNumO(e.scheduledMs)
+          return e ? b(`WorkHoursValue`, {
+            worked: C(e.workedMs),
+            total: C(e.scheduledMs)
           }) : ``;
         }),
-        Et = vueV(() => E.value ? formatNumN(handler, formatNumP(E.value, D.value)) : ``),
-        Dt = vueV(() => {
-          if (E.value && N.value && !q.value) return handler(`PeriodEarned`, {
-            month: formatNumA(E.value, N.value.month, y.value),
-            year: formatNumA(E.value, N.value.year, y.value)
+        Et = g(() => E.value ? Se(b, Ce(E.value, D.value)) : ``),
+        Dt = g(() => {
+          if (E.value && N.value && !q.value) return b(`PeriodEarned`, {
+            month: S(E.value, N.value.month, y.value),
+            year: S(E.value, N.value.year, y.value)
           });
         });
       function Ot(e) {
         return e > G.value && Math.floor(J.value) < 10 ** e;
       }
-      let kt = vueV(() => ({
+      let kt = g(() => ({
           opacity: String((E.value?.opacity ?? 100) / 100),
           perspective: `${nt}px`,
-          zoom: String(motivatorS[E.value?.size ?? `medium`])
+          zoom: String(de[E.value?.size ?? `medium`])
         })),
-        options = {
+        At = {
           left: `14px`,
           top: `14px`,
           width: `${w}px`
         },
-        jt = vueV(() => E.value?.expanded ? 92 : 34),
-        Mt = vueV(() => {
+        jt = g(() => E.value?.expanded ? 92 : 34),
+        Mt = g(() => {
           let e = M.value?.setting;
           return {
             left: `16px`,
@@ -378,7 +378,7 @@ var k = .5,
             } : {})
           };
         }),
-        Nt = vueV(() => ({
+        Nt = g(() => ({
           left: `${16 + T / 2}px`,
           top: `${jt.value + 25}px`
         }));
@@ -388,7 +388,7 @@ var k = .5,
       function Z() {
         if (!E.value) return;
         let e = Date.now();
-        D.value = e, O.value = formatNumM(E.value, e), k.value && It(), Q(false), Ft();
+        D.value = e, O.value = xe(E.value, e), k.value && It(), Q(false), Ft();
       }
       function Ft() {
         let e = O.value,
@@ -396,20 +396,20 @@ var k = .5,
         if (!e || !t) return;
         let celebrateAmount = t.celebrateAmount,
           r = Math.floor(e.earnedToday / celebrateAmount + 1e-9);
-        V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !matchMedia.matches && zt(r), V = r, ct = celebrateAmount;
+        V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !F.matches && zt(r), V = r, ct = celebrateAmount;
       }
       function It() {
         let e = O.value;
         if (!E.value || !e) return;
         let t = e.day;
         N.value = {
-          month: formatNumG(E.value, motivatorL(new Date(t.getFullYear(), t.getMonth(), 1)), e),
-          year: formatNumG(E.value, motivatorL(new Date(t.getFullYear(), 0, 1)), e)
+          month: _e(E.value, ue(new Date(t.getFullYear(), t.getMonth(), 1)), e),
+          year: _e(E.value, ue(new Date(t.getFullYear(), 0, 1)), e)
         };
       }
       function Lt() {
         let e = O.value;
-        return !e || q.value || matchMedia.matches ? 0 : e.earningPerMs * 10 ** G.value;
+        return !e || q.value || F.matches ? 0 : e.earningPerMs * 10 ** G.value;
       }
       function Q(e) {
         if (!L) return;
@@ -417,16 +417,16 @@ var k = .5,
           n = J.value,
           r = t > 0 ? `run|${t}|${Math.floor(Date.now() / at)}` : `idle|${Math.floor(n)}`;
         if (!e && r === B) return;
-        let i = B !== `` && !matchMedia.matches;
+        let i = B !== `` && !F.matches;
         B = r, I.sync(n, t, i);
       }
       async function Rt() {
-        await vueRt();
+        await ne();
         let e = Array.from(P.value?.querySelectorAll(`.wm-reel-strip`) ?? []),
           cells = K.value.cells;
-        e.length === cells.length && (I.attach(cells.map((item, n) => ({
+        e.length === cells.length && (I.attach(cells.map((t, n) => ({
           strip: e[n],
-          power: item.power
+          power: t.power
         })), J.value), L = true, B = ``, Q(true));
       }
       function zt(e) {
@@ -435,10 +435,10 @@ var k = .5,
         let n = Math.min(6, e),
           r = fe[n - 1],
           i = Number.isInteger(t.celebrateAmount) ? 0 : 2,
-          a = r.text === `burst` ? handler(`CelebrateBurst`, {
-            amount: formatNumA(t, t.celebrateAmount, y.value, i)
-          }) : r.text === `milestone` ? handler(`CelebrateMilestone`, {
-            amount: formatNumA(t, t.celebrateAmount * e, y.value, i)
+          a = r.text === `burst` ? b(`CelebrateBurst`, {
+            amount: S(t, t.celebrateAmount, y.value, i)
+          }) : r.text === `milestone` ? b(`CelebrateMilestone`, {
+            amount: S(t, t.celebrateAmount * e, y.value, i)
           }) : ``,
           o = Array.from({
             length: r.sparks
@@ -474,12 +474,12 @@ var k = .5,
       function Vt(event) {
         let t = P.value,
           n = st.value;
-        if (!t || !n || matchMedia.matches || A.value) return;
-        let boundingClientRect = n.getBoundingClientRect(),
-          i = Math.max(.01, boundingClientRect.width / (w + 28)),
+        if (!t || !n || F.matches || A.value) return;
+        let r = n.getBoundingClientRect(),
+          i = Math.max(.01, r.width / (w + 28)),
           a = Math.max(1, t.getBoundingClientRect().height / i),
-          o = Math.max(-1, Math.min(1, ((event.clientX - boundingClientRect.left) / i - 14) / w * 2 - 1)),
-          s = Math.max(-1, Math.min(1, ((event.clientY - boundingClientRect.top) / i - 14) / a * 2 - 1)),
+          o = Math.max(-1, Math.min(1, ((event.clientX - r.left) / i - 14) / w * 2 - 1)),
+          s = Math.max(-1, Math.min(1, ((event.clientY - r.top) / i - 14) / a * 2 - 1)),
           c = w / Math.max(w, a * 2);
         t.style.transform = `rotateX(${(-s * rt * c).toFixed(2)}deg) rotateY(${(o * rt).toFixed(2)}deg)`;
       }
@@ -493,13 +493,13 @@ var k = .5,
         k.value = false, Ht();
       }
       function Gt(event) {
-        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (pointerId = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
+        event.button === 0 && workMotivatorAPI && (event.target?.closest(`[data-no-drag]`) || (H = event.pointerId, U = event.screenX, dt = event.screenY, W = false, event.currentTarget?.setPointerCapture?.(event.pointerId), workMotivatorAPI.dragStart({
           screenX: event.screenX,
           screenY: event.screenY
         })));
       }
       function Kt(e) {
-        if (pointerId === e.pointerId) {
+        if (H === e.pointerId) {
           if (!(e.buttons & 1)) {
             $(e);
             return;
@@ -511,9 +511,9 @@ var k = .5,
         }
       }
       function $(event) {
-        if (pointerId === null || event && pointerId !== event.pointerId) return;
-        let pointerIdAlias = pointerId;
-        pointerId = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(pointerIdAlias);
+        if (H === null || event && H !== event.pointerId) return;
+        let t = H;
+        H = null, A.value = false, workMotivatorAPI?.dragEnd(), event && event.currentTarget?.releasePointerCapture?.(t);
       }
       function qt(e) {
         Vt(e), Kt(e);
@@ -547,9 +547,9 @@ var k = .5,
       function en() {
         $(null);
       }
-      return vueWt(pt, () => {
+      return o(pt, () => {
         Rt();
-      }), vueWt(q, () => Q(true)), vueWt(() => E.value?.earnedRange, () => Q(true)), vueUt(async () => {
+      }), o(q, () => Q(true)), o(() => E.value?.earnedRange, () => Q(true)), re(async () => {
         document.documentElement.classList.add(`work-motivator-renderer`), document.body.classList.add(`work-motivator-renderer`), ut = workMotivatorAPI?.onWindowState(Pt) ?? null;
         try {
           let e = await workMotivatorAPI?.getWindowState();
@@ -558,211 +558,211 @@ var k = .5,
         await Rt(), Bt(), requestAnimationFrame(() => {
           j.value = true;
         }), window.addEventListener(`blur`, en), document.addEventListener(`visibilitychange`, $t);
-      }), vueOt(() => {
+      }), te(() => {
         ut?.(), R !== null && window.clearTimeout(R), z !== null && window.clearTimeout(z), window.removeEventListener(`blur`, en), document.removeEventListener(`visibilitychange`, $t), I.dispose();
-      }), (n, renderCache) => (vueGt(), vueS(`div`, {
+      }), (n, o) => (u(), i(`div`, {
         ref_key: `rootRef`,
         ref: st,
-        class: vueN([`wm-root`, [`finish-${E.value?.finish ?? `graphite`}`, {
+        class: e([`wm-root`, [`finish-${E.value?.finish ?? `graphite`}`, {
           "is-hovering": k.value,
           "is-active": ht.value,
           "is-locked": E.value?.locked
         }]]),
-        style: vueNr(kt.value)
-      }, [E.value ? (vueGt(), vueS(`div`, {
+        style: p(kt.value)
+      }, [E.value ? (u(), i(`div`, {
         key: 0,
         ref_key: `faceRef`,
         ref: P,
-        class: vueN([`wm-face`, {
+        class: e([`wm-face`, {
           "is-expanded": E.value.expanded,
           "is-ready": j.value,
           "is-dragging": A.value
         }]),
-        style: options,
+        style: At,
         onPointerenter: Ut,
         onPointerleave: Wt,
         onPointermove: qt,
         onPointerdown: Gt,
         onPointerup: $,
-        onPointercancel: renderCache[3] ||= e => $(null),
-        onLostpointercapture: renderCache[4] ||= e => $(null),
+        onPointercancel: o[3] ||= e => $(null),
+        onLostpointercapture: o[4] ||= e => $(null),
         onDblclick: Yt,
         onContextmenu: Xt
-      }, [vueY(`div`, Ne, [vueY(`span`, Pe, vueRr(St.value), 1), vueY(`span`, Fe, vueRr(Ct.value), 1)]), vueY(`div`, Ie, [vueY(`span`, Le, [renderCache[5] ||= vueY(`i`, {
+      }, [v(`div`, Ne, [v(`span`, Pe, m(St.value), 1), v(`span`, Fe, m(Ct.value), 1)]), v(`div`, Ie, [v(`span`, Le, [o[5] ||= v(`i`, {
         class: `wm-led`
-      }, null, -1), vueO(vueRr(bt.value), 1)]), vueY(`span`, Re, vueRr(xt.value), 1)]), vueY(`div`, ze, [vueY(`span`, Be, [renderCache[6] ||= vueY(`i`, {
+      }, null, -1), r(m(bt.value), 1)]), v(`span`, Re, m(xt.value), 1)]), v(`div`, ze, [v(`span`, Be, [o[6] ||= v(`i`, {
         class: `wm-led wm-label-led`
-      }, null, -1), vueO(vueRr(_t.value), 1)]), vueY(`span`, Ve, vueRr(yt.value), 1)]), vueY(`div`, {
-        class: vueN([`wm-window`, M.value ? {
+      }, null, -1), r(m(_t.value), 1)]), v(`span`, Ve, m(yt.value), 1)]), v(`div`, {
+        class: e([`wm-window`, M.value ? {
           "is-celebrating": true,
           "has-ring": M.value.setting.ringCount > 0,
           "has-pop": M.value.setting.pop && !M.value.setting.shake,
           "has-shake": M.value.setting.shake
         } : null]),
-        style: vueNr(Mt.value),
+        style: p(Mt.value),
         title: Dt.value
-      }, [vueY(`span`, {
-        class: vueN([`wm-currency`, {
+      }, [v(`span`, {
+        class: e([`wm-currency`, {
           "is-covered": q.value
         }]),
-        style: vueNr({
+        style: p({
           left: `${K.value.currencyX}px`,
           width: `${K.value.currencyWidth}px`
         })
-      }, vueRr(E.value.currency), 7), (vueGt(true), vueS(vueC, null, vueSt(K.value.cells, (n, r) => (vueGt(), vueS(`span`, {
+      }, m(E.value.currency), 7), (u(true), i(l, null, a(K.value.cells, (n, r) => (u(), i(`span`, {
         key: `${pt.value}-${n.power}`,
-        class: vueN([`wm-reel`, {
+        class: e([`wm-reel`, {
           "is-decimal": n.decimal,
           "is-leading": Ot(n.power)
         }]),
-        style: vueNr({
+        style: p({
           left: `${n.x}px`,
           width: `${K.value.cellWidth}px`
         })
-      }, [vueY(`span`, {
+      }, [v(`span`, {
         class: `wm-reel-spin`,
-        style: vueNr({
+        style: p({
           "--wm-reel-index": r
         })
-      }, [vueY(`span`, {
+      }, [v(`span`, {
         class: `wm-reel-strip`,
-        style: vueNr({
+        style: p({
           fontSize: mt.value
         })
-      }, [(vueGt(true), vueS(vueC, null, vueSt(vueAn(x), (e, n) => (vueGt(), vueS(`span`, {
+      }, [(u(true), i(l, null, a(t(x), (e, n) => (u(), i(`span`, {
         key: n,
-        style: vueNr({
-          height: `${vueAn(34)}px`
+        style: p({
+          height: `${t(34)}px`
         })
-      }, vueRr(e), 5))), 128))], 4)], 4)], 6))), 128)), K.value.dotX === null ? vueX(``, true) : (vueGt(), vueS(`i`, {
+      }, m(e), 5))), 128))], 4)], 4)], 6))), 128)), K.value.dotX === null ? _(``, true) : (u(), i(`i`, {
         key: 0,
-        class: vueN([`wm-dot`, {
+        class: e([`wm-dot`, {
           "is-covered": q.value
         }]),
-        style: vueNr({
+        style: p({
           left: `${K.value.dotX}px`
         })
-      }, null, 6)), vueY(`div`, {
-        class: vueN([`wm-shutter`, {
+      }, null, 6)), v(`div`, {
+        class: e([`wm-shutter`, {
           "is-closed": q.value
         }])
-      }, [vueY(`span`, null, vueRr(handler(`AmountHidden`)), 1)], 2)], 14, He), M.value ? (vueGt(), vueS(vueC, {
+      }, [v(`span`, null, m(b(`AmountHidden`)), 1)], 2)], 14, He), M.value ? (u(), i(l, {
         key: 0
-      }, [M.value.text ? (vueGt(), vueS(`span`, {
+      }, [M.value.text ? (u(), i(`span`, {
         key: `burst-${M.value.id}`,
-        class: vueN([`wm-burst`, {
-          "is-large": M.value.level >= vueAn(6)
+        class: e([`wm-burst`, {
+          "is-large": M.value.level >= t(6)
         }]),
-        style: vueNr({
+        style: p({
           top: `${jt.value - 4}px`
         })
-      }, vueRr(M.value.text), 7)) : vueX(``, true), (vueGt(true), vueS(vueC, null, vueSt(M.value.sparks, count => (vueGt(), vueS(`i`, {
-        key: `spark-${M.value.id}-${count.id}`,
-        class: vueN([`wm-spark`, {
-          "is-accent": count.accent
+      }, m(M.value.text), 7)) : _(``, true), (u(true), i(l, null, a(M.value.sparks, t => (u(), i(`i`, {
+        key: `spark-${M.value.id}-${t.id}`,
+        class: e([`wm-spark`, {
+          "is-accent": t.accent
         }]),
-        style: vueNr({
+        style: p({
           ...Nt.value,
-          width: `${count.size}px`,
-          height: `${count.size}px`,
-          "--wm-spark-x": `${count.dx}px`,
-          "--wm-spark-y": `${count.dy}px`,
-          animationDelay: `${count.delay}ms`
+          width: `${t.size}px`,
+          height: `${t.size}px`,
+          "--wm-spark-x": `${t.dx}px`,
+          "--wm-spark-y": `${t.dy}px`,
+          animationDelay: `${t.delay}ms`
         })
-      }, null, 6))), 128))], 64)) : vueX(``, true), vueY(`div`, {
+      }, null, 6))), 128))], 64)) : _(``, true), v(`div`, {
         class: `wm-groove wm-collapsed-only`,
         title: Tt.value
-      }, [vueY(`i`, {
-        style: vueNr({
+      }, [v(`i`, {
+        style: p({
           width: `${Math.min(1, X.value) * 100}%`
         })
-      }, null, 4)], 8, Ue), vueY(`div`, We, [Y.value ? (vueGt(), vueS(vueC, {
+      }, null, 4)], 8, Ue), v(`div`, We, [Y.value ? (u(), i(l, {
         key: 0
-      }, [vueY(`div`, Ge, [vueY(`strong`, null, vueRr(handler(`WishTitle`, {
+      }, [v(`div`, Ge, [v(`strong`, null, m(b(`WishTitle`, {
         name: Y.value.wish.name
-      })), 1), vueY(`b`, null, vueRr(vueAn(formatNumC)(Y.value.ratio)), 1)]), vueY(`p`, null, vueRr(q.value ? handler(`AmountHidden`) : wt.value), 1), vueY(`div`, Ke, [vueY(`i`, {
-        style: vueNr({
+      })), 1), v(`b`, null, m(t(me)(Y.value.ratio)), 1)]), v(`p`, null, m(q.value ? b(`AmountHidden`) : wt.value), 1), v(`div`, Ke, [v(`i`, {
+        style: p({
           width: `${Y.value.ratio * 100}%`
         })
-      }, null, 4)])], 64)) : (vueGt(), vueS(`button`, {
+      }, null, 4)])], 64)) : (u(), i(`button`, {
         key: 1,
         type: `button`,
         class: `wm-empty-wish`,
         "data-no-drag": ``,
-        onClick: renderCache[0] ||= e => vueAn(workMotivatorAPI)?.openSettings()
-      }, [vueY(`strong`, null, vueRr(handler(`WishEmpty`)), 1), vueY(`p`, null, vueRr(handler(`WishEmptyHint`)), 1)]))]), vueY(`div`, qe, [vueY(`div`, Je, [vueY(`strong`, null, vueRr(handler(`WorkHours`)), 1), vueY(`b`, null, vueRr(vueAn(formatNumC)(X.value)), 1)]), vueY(`p`, null, vueRr(Tt.value), 1), vueY(`div`, Ye, [vueY(`i`, {
-        style: vueNr({
+        onClick: o[0] ||= e => t(workMotivatorAPI)?.openSettings()
+      }, [v(`strong`, null, m(b(`WishEmpty`)), 1), v(`p`, null, m(b(`WishEmptyHint`)), 1)]))]), v(`div`, qe, [v(`div`, Je, [v(`strong`, null, m(b(`WorkHours`)), 1), v(`b`, null, m(t(me)(X.value)), 1)]), v(`p`, null, m(Tt.value), 1), v(`div`, Ye, [v(`i`, {
+        style: p({
           width: `${Math.min(1, X.value) * 100}%`
         })
-      }, null, 4)])]), vueY(`div`, Xe, [vueY(`span`, null, vueRr(Et.value), 1)]), vueY(`div`, {
-        class: vueN([`wm-actions`, {
+      }, null, 4)])]), v(`div`, Xe, [v(`span`, null, m(Et.value), 1)]), v(`div`, {
+        class: e([`wm-actions`, {
           "is-visible": k.value && !A.value
         }]),
         "data-no-drag": ``
-      }, [vueY(`button`, {
+      }, [v(`button`, {
         type: `button`,
-        class: vueN({
+        class: e({
           "is-on": E.value.alwaysOnTop
         }),
-        title: E.value.alwaysOnTop ? handler(`ButtonUnpin`) : handler(`ButtonPin`),
+        title: E.value.alwaysOnTop ? b(`ButtonUnpin`) : b(`ButtonPin`),
         onClick: Zt
-      }, [vueK(vueAn(lucideN), {
+      }, [f(t(ae), {
         size: 13,
         "stroke-width": 2
-      })], 10, Ze), vueY(`button`, {
+      })], 10, Ze), v(`button`, {
         type: `button`,
-        title: q.value ? handler(`ButtonShowAmount`) : handler(`ButtonHideAmount`),
+        title: q.value ? b(`ButtonShowAmount`) : b(`ButtonHideAmount`),
         onClick: Qt
-      }, [q.value ? (vueGt(), vueB(vueAn(motivatorD), {
+      }, [q.value ? (u(), s(t(se), {
         key: 1,
         size: 13,
         "stroke-width": 2
-      })) : (vueGt(), vueB(vueAn(motivatorO), {
+      })) : (u(), s(t(le), {
         key: 0,
         size: 13,
         "stroke-width": 2
-      }))], 8, Qe), vueY(`button`, {
+      }))], 8, Qe), v(`button`, {
         type: `button`,
-        title: E.value.expanded ? handler(`ButtonCollapse`) : handler(`ButtonExpand`),
+        title: E.value.expanded ? b(`ButtonCollapse`) : b(`ButtonExpand`),
         onClick: Jt
-      }, [E.value.expanded ? (vueGt(), vueB(vueAn(ke), {
+      }, [E.value.expanded ? (u(), s(t(ke), {
         key: 0,
         size: 13,
         "stroke-width": 2
-      })) : (vueGt(), vueB(vueAn(Ae), {
+      })) : (u(), s(t(Ae), {
         key: 1,
         size: 13,
         "stroke-width": 2
-      }))], 8, $e), vueY(`button`, {
+      }))], 8, $e), v(`button`, {
         type: `button`,
-        title: handler(`ButtonSettings`),
-        onClick: renderCache[1] ||= e => vueAn(workMotivatorAPI)?.openSettings()
-      }, [vueK(vueAn(motivatorE), {
+        title: b(`ButtonSettings`),
+        onClick: o[1] ||= e => t(workMotivatorAPI)?.openSettings()
+      }, [f(t(ce), {
         size: 13,
         "stroke-width": 2
-      })], 8, et), vueY(`button`, {
+      })], 8, et), v(`button`, {
         type: `button`,
-        title: handler(`ButtonClose`),
-        onClick: renderCache[2] ||= e => vueAn(workMotivatorAPI)?.hide()
-      }, [vueK(vueAn(lucideT), {
+        title: b(`ButtonClose`),
+        onClick: o[2] ||= e => t(workMotivatorAPI)?.hide()
+      }, [f(t(oe), {
         size: 13,
         "stroke-width": 2
-      })], 8, tt)], 2)], 34)) : vueX(``, true)], 6));
+      })], 8, tt)], 2)], 34)) : _(``, true)], 6));
     }
   }), [[`__scopeId`, `data-v-9b077951`]]),
-  N = vueT({
+  N = h({
     legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
     messages: {
       "zh-CN": {
-        toolboxNative: playerN
+        toolboxNative: ie
       },
       "en-US": {
-        toolboxNative: playerT
+        toolboxNative: b
       }
     },
     missingWarn: false,
     fallbackWarn: false
   });
-playerO(pluginvueexporthelperTResult).use(N).mount(`#app`);
+y(M).use(N).mount(`#app`);

@@ -65,11 +65,11 @@ async function fetchCommonRoles() {
   }).parse(await response.json()).data.items;
 }
 function database$1() {
-  const databaseResult = getDatabase();
-  databaseResult.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_common_role_links (
+  const db = getDatabase();
+  db.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_common_role_links (
     role_id TEXT NOT NULL, bot_id TEXT PRIMARY KEY, revision INTEGER NOT NULL, snapshot_json TEXT NOT NULL
   )`);
-  return databaseResult;
+  return db;
 }
 function syncCommonRoles(roles) {
   const db = database$1();
@@ -91,7 +91,7 @@ function syncCommonRoles(roles) {
     });
     db.exec("SAVEPOINT common_role_sync");
     try {
-      if (Object.keys(next).some(item => JSON.stringify(current[item]) !== JSON.stringify(merged[item]))) xiaoheiBotRepository.updateBot({
+      if (Object.keys(next).some(key => JSON.stringify(current[key]) !== JSON.stringify(merged[key]))) xiaoheiBotRepository.updateBot({
         ...merged,
         botId: current.id,
         providerId: current.providerId,
@@ -250,7 +250,7 @@ function listSharedFiles(root, directory = "", offset = 0) {
   const target = sharedFilePath(root, directory);
   const entries = readdirSync(target, {
     withFileTypes: true
-  }).filter(entry => !entry.name.startsWith(".") && !entry.isSymbolicLink()).sort((left, right) => left.name < right.name ? -1 : left.name > right.name ? 1 : 0);
+  }).filter(entry => !entry.name.startsWith(".") && !entry.isSymbolicLink()).sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
   return {
     entries: entries.slice(offset, offset + 100).map(entry => ({
       path: [directory, entry.name].filter(Boolean).join("/"),
@@ -365,9 +365,9 @@ var BotSharedWorkspaceStore = class {
     this.read(scope, relative);
     return this.database.prepare("SELECT id, revision, actor, created_at AS createdAt FROM xiaohei_bot_shared_versions WHERE root = ? AND path = ? ORDER BY id DESC LIMIT 50").all(scope.root, relative);
   }
-  version(scope, relative, version) {
+  version(scope, relative, id) {
     this.assertScope(scope);
-    const row = this.database.prepare("SELECT content, revision FROM xiaohei_bot_shared_versions WHERE id = ? AND root = ? AND path = ?").get(version, scope.root, relative);
+    const row = this.database.prepare("SELECT content, revision FROM xiaohei_bot_shared_versions WHERE id = ? AND root = ? AND path = ?").get(id, scope.root, relative);
     if (!row) throw new Error(appText("botSharedWorkspace.versionMissing"));
     return row;
   }
@@ -504,31 +504,31 @@ async function fetchDefaultRoles() {
   }).parse(await response.json()).data.items;
 }
 function database() {
-  const databaseResult = getDatabase();
-  databaseResult.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_default_role_templates (
+  const db = getDatabase();
+  db.exec(`CREATE TABLE IF NOT EXISTS xiaohei_bot_default_role_templates (
     role_id TEXT NOT NULL, bot_id TEXT PRIMARY KEY, revision INTEGER NOT NULL, snapshot_json TEXT NOT NULL
   )`);
-  return databaseResult;
+  return db;
 }
 function createDefaultRole(role, input) {
-  const databaseResult = database();
-  databaseResult.exec("SAVEPOINT default_template_create");
+  const db = database();
+  db.exec("SAVEPOINT default_template_create");
   try {
     const created = xiaoheiBotRepository.createBot({
       ...input,
       ...commonRoleProfile(role)
     });
-    databaseResult.prepare(`INSERT INTO xiaohei_bot_default_role_templates (role_id, bot_id, revision, snapshot_json)
+    db.prepare(`INSERT INTO xiaohei_bot_default_role_templates (role_id, bot_id, revision, snapshot_json)
       VALUES (?, ?, ?, ?)`).run(role.id, created.bot.id, role.revision, JSON.stringify(commonRoleProfile(role)));
-    databaseResult.exec("RELEASE default_template_create");
+    db.exec("RELEASE default_template_create");
     return created;
   } catch (error) {
-    databaseResult.exec("ROLLBACK TO default_template_create; RELEASE default_template_create");
+    db.exec("ROLLBACK TO default_template_create; RELEASE default_template_create");
     throw error;
   }
 }
 function syncDefaultListRoles(roles, preferred) {
-  const databaseResult = database();
+  const db = database();
   const providers = xiaoheiBotRepository.listProviders();
   const provider = providers.find(item => item.id === preferred?.providerId && item.models.some(model => model.id === preferred?.modelId)) ?? providers.find(item => item.isBuiltin && item.models.length) ?? providers.find(item => item.models.length);
   const model = provider?.models.find(item => item.id === preferred?.modelId) ?? provider?.models[0];
@@ -537,11 +537,11 @@ function syncDefaultListRoles(roles, preferred) {
       name: role.name,
       description: role.description
     });
-    if (databaseResult.prepare("SELECT bot_id FROM xiaohei_bot_default_role_links WHERE role_id = ?").get(role.id)) continue;
+    if (db.prepare("SELECT bot_id FROM xiaohei_bot_default_role_links WHERE role_id = ?").get(role.id)) continue;
     if (!provider || !model) continue;
-    databaseResult.exec("SAVEPOINT default_role_create");
+    db.exec("SAVEPOINT default_role_create");
     try {
-      const botId = databaseResult.prepare(`SELECT links.bot_id FROM xiaohei_bot_default_role_templates links
+      const botId = db.prepare(`SELECT links.bot_id FROM xiaohei_bot_default_role_templates links
         JOIN xiaohei_bot_profiles bots ON bots.id = links.bot_id
         WHERE links.role_id = ? AND bots.deleted_at IS NULL ORDER BY bots.created_at LIMIT 1`).get(role.id)?.bot_id ?? createDefaultRole(role, {
         ...commonRoleProfile(role),
@@ -549,10 +549,10 @@ function syncDefaultListRoles(roles, preferred) {
         modelId: model.id,
         permissionMode: "default"
       }).bot.id;
-      databaseResult.prepare("INSERT INTO xiaohei_bot_default_role_links (role_id, bot_id, greeting, sort_order) VALUES (?, ?, ?, ?)").run(role.id, botId, greeting, role.sortOrder ?? 0);
-      databaseResult.exec("RELEASE default_role_create");
+      db.prepare("INSERT INTO xiaohei_bot_default_role_links (role_id, bot_id, greeting, sort_order) VALUES (?, ?, ?, ?)").run(role.id, botId, greeting, role.sortOrder ?? 0);
+      db.exec("RELEASE default_role_create");
     } catch (error) {
-      databaseResult.exec("ROLLBACK TO default_role_create; RELEASE default_role_create");
+      db.exec("ROLLBACK TO default_role_create; RELEASE default_role_create");
       throw error;
     }
   }
@@ -568,38 +568,38 @@ function countUserMessages(conversationId) {
 }
 /** 移除「同名默认专家」的重复单聊（保留 default_role_links 绑定的那条）。 */
 function dedupeDuplicateDefaultRoleBots() {
-  const databaseResult = database();
+  const db = database();
   const removed = [];
-  const linkRows = databaseResult.prepare(`SELECT role_id, bot_id, list_removed_at FROM xiaohei_bot_default_role_links
+  const linkRows = db.prepare(`SELECT role_id, bot_id, list_removed_at FROM xiaohei_bot_default_role_links
       WHERE withdrawn_at IS NULL OR withdrawn_at = ''`).all();
-  const canonicalBotIds = new Set(linkRows.map(item => item.bot_id));
-  const canonicalRows = linkRows.filter(item => !item.list_removed_at);
+  const canonicalBotIds = new Set(linkRows.map(row => row.bot_id));
+  const canonicalRows = linkRows.filter(row => !row.list_removed_at);
   for (const {
     bot_id: canonicalBotId
   } of canonicalRows) {
     const canonical = xiaoheiBotRepository.getBot(canonicalBotId);
     if (!canonical || canonical.deletedAt) continue;
-    const duplicates = xiaoheiBotRepository.listBots().filter(item => !isProtectedXiaoheiBot(item.id) && item.id !== canonicalBotId && !canonicalBotIds.has(item.id) && item.name === canonical.name && !item.deletedAt);
+    const duplicates = xiaoheiBotRepository.listBots().filter(bot => !isProtectedXiaoheiBot(bot.id) && bot.id !== canonicalBotId && !canonicalBotIds.has(bot.id) && bot.name === canonical.name && !bot.deletedAt);
     for (const duplicate of duplicates) {
-      if (databaseResult.prepare(`SELECT cloud_origin FROM xiaohei_mobile_bindings
+      if (db.prepare(`SELECT cloud_origin FROM xiaohei_mobile_bindings
           WHERE bot_id = ? AND status = 'active' LIMIT 1`).get(duplicate.id)?.cloud_origin === "mobile") continue;
       const conversationId = directConversationId(duplicate.id);
       if (!conversationId) continue;
       if (countUserMessages(conversationId) > 0) continue;
-      databaseResult.prepare(`DELETE FROM xiaohei_mobile_bindings WHERE bot_id = ?`).run(duplicate.id);
-      databaseResult.prepare(`DELETE FROM xiaohei_mobile_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
-      databaseResult.prepare(`DELETE FROM xiaohei_mobile_pending_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
+      db.prepare(`DELETE FROM xiaohei_mobile_bindings WHERE bot_id = ?`).run(duplicate.id);
+      db.prepare(`DELETE FROM xiaohei_mobile_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
+      db.prepare(`DELETE FROM xiaohei_mobile_pending_sync_prefs WHERE entity_kind = 'bot' AND local_id = ?`).run(duplicate.id);
       xiaoheiBotRepository.deleteBot(duplicate.id);
       removed.push(duplicate.id);
     }
   }
   return removed;
 }
-function mapListLink(mapValue) {
-  return mapValue ? {
-    roleId: mapValue.role_id,
-    botId: mapValue.bot_id,
-    listRemovedAt: mapValue.list_removed_at ?? null
+function mapListLink(row) {
+  return row ? {
+    roleId: row.role_id,
+    botId: row.bot_id,
+    listRemovedAt: row.list_removed_at ?? null
   } : null;
 }
 function defaultRoleLinkForBot(botId) {
@@ -612,7 +612,7 @@ function listRemovedDefaultRoleLinks() {
   return database().prepare(`SELECT links.role_id, links.bot_id, links.list_removed_at
     FROM xiaohei_bot_default_role_links links
     JOIN xiaohei_bot_profiles bots ON bots.id = links.bot_id AND bots.deleted_at IS NULL
-    WHERE links.list_removed_at IS NOT NULL`).all().map(item => mapListLink(item));
+    WHERE links.list_removed_at IS NOT NULL`).all().map(row => mapListLink(row));
 }
 /** 预设角色移出列表（removedAt 为移出时间）或加回列表（null）；状态没变时返回 false。 */
 function setDefaultRoleListRemoved(botId, removedAt) {
@@ -626,13 +626,13 @@ function setDefaultRoleListRemoved(botId, removedAt) {
 * 用户仍然看不到它，需要时可以从「预设角色」加回。同步开启时，登录后会把移出状态迁移到云端。
 */
 function restoreDeletedDefaultRoles() {
-  const databaseResult = database();
-  const rows = databaseResult.prepare(`SELECT links.bot_id, bots.deleted_at FROM xiaohei_bot_default_role_links links
+  const db = database();
+  const rows = db.prepare(`SELECT links.bot_id, bots.deleted_at FROM xiaohei_bot_default_role_links links
     JOIN xiaohei_bot_profiles bots ON bots.id = links.bot_id
     WHERE bots.deleted_at IS NOT NULL`).all();
   let restored = 0;
   for (const row of rows) {
-    databaseResult.prepare("UPDATE xiaohei_bot_default_role_links SET list_removed_at = COALESCE(list_removed_at, ?) WHERE bot_id = ?").run(row.deleted_at, row.bot_id);
+    db.prepare("UPDATE xiaohei_bot_default_role_links SET list_removed_at = COALESCE(list_removed_at, ?) WHERE bot_id = ?").run(row.deleted_at, row.bot_id);
     if (xiaoheiBotRepository.restoreDeletedBot(row.bot_id)) restored += 1;
   }
   return restored;
@@ -644,15 +644,15 @@ async function provisionDefaultListRolesForSync(preferred) {
   syncDefaultListRoles(roles, preferred);
 }
 function introduceDefaultListRole(conversationId) {
-  const databaseResult = database();
+  const db = database();
   const conversation = xiaoheiBotRepository.getConversation(conversationId);
   if (!conversation || conversation.kind !== "direct" || conversation.parentConversationId || conversation.archivedAt || !conversation.directBotId || conversation.id !== `direct-${conversation.directBotId}`) return;
-  const link = databaseResult.prepare("SELECT greeting FROM xiaohei_bot_default_role_links WHERE bot_id = ? AND introduced = 0").get(conversation.directBotId);
+  const link = db.prepare("SELECT greeting FROM xiaohei_bot_default_role_links WHERE bot_id = ? AND introduced = 0").get(conversation.directBotId);
   const bot = xiaoheiBotRepository.getBot(conversation.directBotId);
   if (!link || !bot) return;
-  databaseResult.exec("SAVEPOINT default_role_introduce");
+  db.exec("SAVEPOINT default_role_introduce");
   try {
-    const message = databaseResult.prepare("SELECT 1 FROM xiaohei_bot_messages WHERE conversation_id = ? LIMIT 1").get(conversationId) || databaseResult.prepare("SELECT 1 FROM xiaohei_bot_events WHERE conversation_id = ? AND aggregate_type = 'message' LIMIT 1").get(conversationId) ? undefined : xiaoheiBotRepository.createMessage({
+    const message = db.prepare("SELECT 1 FROM xiaohei_bot_messages WHERE conversation_id = ? LIMIT 1").get(conversationId) || db.prepare("SELECT 1 FROM xiaohei_bot_events WHERE conversation_id = ? AND aggregate_type = 'message' LIMIT 1").get(conversationId) ? undefined : xiaoheiBotRepository.createMessage({
       conversationId,
       authorType: "bot",
       authorBotId: bot.id,
@@ -663,11 +663,11 @@ function introduceDefaultListRole(conversationId) {
       synthetic: true,
       incrementUnread: false
     }, true);
-    databaseResult.prepare("UPDATE xiaohei_bot_default_role_links SET introduced = 1 WHERE bot_id = ?").run(bot.id);
-    databaseResult.exec("RELEASE default_role_introduce");
+    db.prepare("UPDATE xiaohei_bot_default_role_links SET introduced = 1 WHERE bot_id = ?").run(bot.id);
+    db.exec("RELEASE default_role_introduce");
     return message;
   } catch (error) {
-    databaseResult.exec("ROLLBACK TO default_role_introduce; RELEASE default_role_introduce");
+    db.exec("ROLLBACK TO default_role_introduce; RELEASE default_role_introduce");
     throw error;
   }
 }
@@ -683,7 +683,7 @@ var embeddedJson = value => stableSerialize$1(value).replace(/[<>&\u2028\u2029]/
 * message bodies are explicitly marked. JSON escaping counts toward the budget. */
 function limitHistorySources(sources, maxCharacters = HISTORY_MAX_CHARACTERS, roundLimit = 10) {
   const capacity = Math.max(0, Math.floor((maxCharacters - 512) / 1500));
-  const ordered = [...sources].sort((left, right) => compare(right.rounds.at(-1)?.createdAt ?? "", left.rounds.at(-1)?.createdAt ?? "") || compare(left.conversationId, right.conversationId)).slice(0, capacity).sort((left, right) => compare(left.conversationId, right.conversationId));
+  const ordered = [...sources].sort((a, b) => compare(b.rounds.at(-1)?.createdAt ?? "", a.rounds.at(-1)?.createdAt ?? "") || compare(a.conversationId, b.conversationId)).slice(0, capacity).sort((a, b) => compare(a.conversationId, b.conversationId));
   const selected = [];
   const quota = ordered.length ? Math.floor(Math.max(0, maxCharacters - 512) / ordered.length) : 0;
   for (let index = 0; index < ordered.length; index++) {
@@ -766,7 +766,7 @@ function historyUpdateMessage(before, after, roundLimit = 10) {
     }),
     baseHash: before ? historyHash(before) : null,
     resultHash: after ? historyHash(after) : null,
-    removedMessageIds: [...oldMessages.keys()].filter(item => !newIds.has(item)).sort(compare),
+    removedMessageIds: [...oldMessages.keys()].filter(id => !newIds.has(id)).sort(compare),
     upsertMessages: newMessages.filter(message => !oldMessages.has(message.id) || historyHash(oldMessages.get(message.id)) !== historyHash(message))
   };
   return {
@@ -898,7 +898,7 @@ function bindBotHistoryView(database, input) {
 var memoryHash = value => sha256Text(stableSerialize$1(value));
 //#endregion
 //#region electron/repositories/xiaohei-bot-memory.repository.ts
-var handler = () => (/* @__PURE__ */new Date()).toISOString();
+var now = () => (/* @__PURE__ */new Date()).toISOString();
 var contentHash = content => memoryHash(content.normalize("NFKC").replace(/\s+/gu, " ").trim());
 var visibleRoundsFrom = `FROM xiaohei_bot_memory_rounds q
   JOIN xiaohei_bot_agent_runs r ON r.id = q.run_id
@@ -983,8 +983,8 @@ var BotMemoryRepository = class {
         category: input.category,
         source,
         revision,
-        createdAt: previous?.createdAt ?? handler(),
-        updatedAt: handler()
+        createdAt: previous?.createdAt ?? now(),
+        updatedAt: now()
       };
       this.database.prepare(`INSERT INTO xiaohei_bot_memory_items
         (id, bot_id, content, category, source, revision, evidence_message_id, created_at, updated_at)
@@ -1059,19 +1059,19 @@ var BotMemoryRepository = class {
     return this.database.prepare(`SELECT q.seq, q.run_id AS runId, c.id AS conversationId,
         u.id AS userId, u.content AS userContent, a.content AS assistantContent
       ${pendingRoundsFrom}
-      ORDER BY q.seq LIMIT ?`).all(botId, limit).map(item => {
-      const itemAlias = item;
+      ORDER BY q.seq LIMIT ?`).all(botId, limit).map(raw => {
+      const row = raw;
       return {
-        seq: itemAlias.seq,
-        runId: itemAlias.runId,
-        conversationId: itemAlias.conversationId,
+        seq: row.seq,
+        runId: row.runId,
+        conversationId: row.conversationId,
         user: {
-          id: itemAlias.userId,
-          content: itemAlias.userContent,
+          id: row.userId,
+          content: row.userContent,
           truncated: false
         },
         assistant: {
-          content: itemAlias.assistantContent,
+          content: row.assistantContent,
           truncated: false
         }
       };
@@ -1135,7 +1135,7 @@ var BotMemoryRepository = class {
         }
       };
       this.database.prepare(`INSERT INTO xiaohei_bot_memory_batches(id, bot_id, status, base_revision, input_json, created_at)
-        VALUES (?, ?, 'pending', ?, ?, ?)`).run(batch.id, botId, batch.baseRevision, JSON.stringify(batch.input), handler());
+        VALUES (?, ?, 'pending', ?, ?, ?)`).run(batch.id, botId, batch.baseRevision, JSON.stringify(batch.input), now());
       const assign = this.database.prepare("UPDATE xiaohei_bot_memory_rounds SET batch_id = ? WHERE seq = ? AND bot_id = ? AND batch_id IS NULL");
       for (const round of rounds) assign.run(batch.id, round.seq, botId);
       return batch;
@@ -1143,7 +1143,7 @@ var BotMemoryRepository = class {
   }
   invalidateBatch(batch) {
     this.transaction(() => {
-      this.database.prepare("UPDATE xiaohei_bot_memory_batches SET status = 'superseded', input_json = '{}', completed_at = ? WHERE id = ?").run(handler(), batch.id);
+      this.database.prepare("UPDATE xiaohei_bot_memory_batches SET status = 'superseded', input_json = '{}', completed_at = ? WHERE id = ?").run(now(), batch.id);
       this.database.prepare("UPDATE xiaohei_bot_memory_rounds SET batch_id = NULL WHERE batch_id = ?").run(batch.id);
     });
   }
@@ -1173,8 +1173,8 @@ var BotMemoryRepository = class {
       }
       write();
       this.database.prepare(`INSERT INTO xiaohei_bot_memory_state(bot_id, last_extracted_at) VALUES (?, ?)
-        ON CONFLICT(bot_id) DO UPDATE SET last_extracted_at = excluded.last_extracted_at`).run(batch.botId, handler());
-      this.database.prepare("UPDATE xiaohei_bot_memory_batches SET status = 'completed', input_json = '{}', usage_json = ?, completed_at = ? WHERE id = ?").run(JSON.stringify(usage), handler(), batch.id);
+        ON CONFLICT(bot_id) DO UPDATE SET last_extracted_at = excluded.last_extracted_at`).run(batch.botId, now());
+      this.database.prepare("UPDATE xiaohei_bot_memory_batches SET status = 'completed', input_json = '{}', usage_json = ?, completed_at = ? WHERE id = ?").run(JSON.stringify(usage), now(), batch.id);
       return true;
     });
   }
@@ -1246,17 +1246,17 @@ var extractionSchema = objectType({
     confidence: numberType().min(.95).max(1)
   }).strict()).max(3)
 }).strict();
-function parseMemoryExtraction(count, batch) {
-  if (count.length > 12e3) throw new Error("记忆提取结果过长");
-  const parsed = extractionSchema.parse(JSON.parse(count));
+function parseMemoryExtraction(raw, batch) {
+  if (raw.length > 12e3) throw new Error("记忆提取结果过长");
+  const parsed = extractionSchema.parse(JSON.parse(raw));
   for (const fact of parsed.facts) {
     const source = batch.input.rounds.find(round => round.user.id === fact.messageId)?.user;
     if (!source || source.truncated || !source.content.includes(fact.quote) || !fact.quote.includes(fact.content)) throw new Error("记忆提取缺少完整的用户原文证据");
   }
   return parsed.facts;
 }
-function applyMemoryExtraction(repository, batch, extraction, usage) {
-  const facts = parseMemoryExtraction(extraction, batch);
+function applyMemoryExtraction(repository, batch, raw, usage) {
+  const facts = parseMemoryExtraction(raw, batch);
   return repository.finishBatch(batch, usage, () => {
     for (const fact of facts) {
       if (repository.items(batch.botId).length >= 50) break;
@@ -1599,10 +1599,10 @@ var require_timers = /* @__PURE__ */__commonJSMin((exports, module) => {
     * before the specified function or code is executed.
     * @param {*} arg
     */
-    constructor(callback, delay, constructor) {
+    constructor(callback, delay, arg) {
       this._onTimeout = callback;
       this._idleTimeout = delay;
-      this._timerArg = constructor;
+      this._timerArg = arg;
       this.refresh();
     }
     /**
@@ -1646,8 +1646,8 @@ var require_timers = /* @__PURE__ */__commonJSMin((exports, module) => {
     * when the timer expires.
     * @returns {NodeJS.Timeout|FastTimer}
     */
-    setTimeout(callback, delay, timeout) {
-      return delay <= RESOLUTION_MS ? setTimeout(callback, delay, timeout) : new FastTimer(callback, delay, timeout);
+    setTimeout(callback, delay, arg) {
+      return delay <= RESOLUTION_MS ? setTimeout(callback, delay, arg) : new FastTimer(callback, delay, arg);
     },
     /**
     * The clearTimeout method cancels an instantiated Timer previously created
@@ -1673,8 +1673,8 @@ var require_timers = /* @__PURE__ */__commonJSMin((exports, module) => {
     * when the timer expires.
     * @returns {FastTimer}
     */
-    setFastTimeout(callback, delay, timeout) {
-      return new FastTimer(callback, delay, timeout);
+    setFastTimeout(callback, delay, arg) {
+      return new FastTimer(callback, delay, arg);
     },
     /**
     * The clearTimeout method cancels an instantiated FastTimer previously
@@ -2198,18 +2198,18 @@ var require_tree = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {any} value
     * @param {number} index
     */
-    constructor(count, value, index) {
-      if (index === undefined || index >= count.length) throw new TypeError("Unreachable");
-      if ((this.code = count.charCodeAt(index)) > 127) throw new TypeError("key must be ascii string");
-      if (count.length !== ++index) this.middle = new TstNode(count, value, index);else this.value = value;
+    constructor(key, value, index) {
+      if (index === undefined || index >= key.length) throw new TypeError("Unreachable");
+      if ((this.code = key.charCodeAt(index)) > 127) throw new TypeError("key must be ascii string");
+      if (key.length !== ++index) this.middle = new TstNode(key, value, index);else this.value = value;
     }
     /**
     * @param {string} key
     * @param {any} value
     * @returns {void}
     */
-    add(count, value) {
-      const length = count.length;
+    add(key, value) {
+      const length = key.length;
       if (length === 0) throw new TypeError("Unreachable");
       let index = 0;
       /**
@@ -2217,23 +2217,23 @@ var require_tree = /* @__PURE__ */__commonJSMin((exports, module) => {
       */
       let node = this;
       while (true) {
-        const code = count.charCodeAt(index);
+        const code = key.charCodeAt(index);
         if (code > 127) throw new TypeError("key must be ascii string");
         if (node.code === code) {
           if (length === ++index) {
             node.value = value;
             break;
           } else if (node.middle !== null) node = node.middle;else {
-            node.middle = new TstNode(count, value, index);
+            node.middle = new TstNode(key, value, index);
             break;
           }
         } else if (node.code < code) {
           if (node.left !== null) node = node.left;else {
-            node.left = new TstNode(count, value, index);
+            node.left = new TstNode(key, value, index);
             break;
           }
         } else if (node.right !== null) node = node.right;else {
-          node.right = new TstNode(count, value, index);
+          node.right = new TstNode(key, value, index);
           break;
         }
       }
@@ -2242,15 +2242,15 @@ var require_tree = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {Uint8Array} key
     * @returns {TstNode | null}
     */
-    search(count) {
-      const keylength = count.length;
+    search(key) {
+      const keylength = key.length;
       let index = 0;
       /**
       * @type {TstNode|null}
       */
       let node = this;
       while (node !== null && index < keylength) {
-        let code = count[index];
+        let code = key[index];
         if (code <= 90 && code >= 65) code |= 32;
         while (node !== null) {
           if (code === node.code) {
@@ -2272,15 +2272,15 @@ var require_tree = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {any} value
     * @returns {void}
     * */
-    insert(insert, value) {
-      if (this.node === null) this.node = new TstNode(insert, value, 0);else this.node.add(insert, value);
+    insert(key, value) {
+      if (this.node === null) this.node = new TstNode(key, value, 0);else this.node.add(key, value);
     }
     /**
     * @param {Uint8Array} key
     * @returns {any}
     */
-    lookup(lookup) {
-      return this.node?.search(lookup)?.value ?? null;
+    lookup(key) {
+      return this.node?.search(key)?.value ?? null;
     }
   };
   var tree = new TernarySearchTree();
@@ -2325,7 +2325,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   var {
     tree
   } = require_tree();
-  var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map(item => Number(item));
+  var [nodeMajor, nodeMinor] = process.versions.node.split(".", 2).map(v => Number(v));
   var BodyAsyncIterable = class {
     constructor(body) {
       this[kBody] = body;
@@ -2360,8 +2360,8 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {*} obj
   * @returns {obj is import('node:stream').Stream}
   */
-  function isStream(streamValue) {
-    return streamValue && typeof streamValue === "object" && typeof streamValue.pipe === "function" && typeof streamValue.on === "function";
+  function isStream(obj) {
+    return obj && typeof obj === "object" && typeof obj.pipe === "function" && typeof obj.on === "function";
   }
   /**
   * @param {*} object
@@ -2378,19 +2378,19 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {string} url The path to check for query strings or fragments.
   * @returns {boolean} Returns true if the path contains a query string or fragment.
   */
-  function pathHasQueryOrFragment(pathValue) {
-    return pathValue.includes("?") || pathValue.includes("#");
+  function pathHasQueryOrFragment(url) {
+    return url.includes("?") || url.includes("#");
   }
   /**
   * @param {string} url The URL to add the query params to
   * @param {import('node:querystring').ParsedUrlQueryInput} queryParams The object to serialize into a URL query string
   * @returns {string} The URL with the query params added
   */
-  function serializePathWithQuery(pathValue, queryParams) {
-    if (pathHasQueryOrFragment(pathValue)) throw new Error("Query params cannot be passed when url already contains \"?\" or \"#\".");
+  function serializePathWithQuery(url, queryParams) {
+    if (pathHasQueryOrFragment(url)) throw new Error("Query params cannot be passed when url already contains \"?\" or \"#\".");
     const stringified = stringify(queryParams);
-    if (stringified) pathValue += "?" + stringified;
-    return pathValue;
+    if (stringified) url += "?" + stringified;
+    return url;
   }
   /**
   * @param {number|string|undefined} port
@@ -2444,10 +2444,10 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {string|URL|Record<string, string>} url
   * @returns {URL}
   */
-  function parseOrigin(origin) {
-    origin = parseURL(origin);
-    if (origin.pathname !== "/" || origin.search || origin.hash) throw new InvalidArgumentError("invalid url");
-    return origin;
+  function parseOrigin(url) {
+    url = parseURL(url);
+    if (url.pathname !== "/" || url.search || url.hash) throw new InvalidArgumentError("invalid url");
+    return url;
   }
   /**
   * @param {string} host
@@ -2482,22 +2482,22 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {T} obj
   * @returns {T}
   */
-  function deepClone(deep) {
-    return JSON.parse(JSON.stringify(deep));
+  function deepClone(obj) {
+    return JSON.parse(JSON.stringify(obj));
   }
   /**
   * @param {*} obj
   * @returns {obj is AsyncIterable}
   */
-  function isAsyncIterable(asyncValue) {
-    return !!(asyncValue != null && typeof asyncValue[Symbol.asyncIterator] === "function");
+  function isAsyncIterable(obj) {
+    return !!(obj != null && typeof obj[Symbol.asyncIterator] === "function");
   }
   /**
   * @param {*} obj
   * @returns {obj is Iterable}
   */
-  function isIterable(iterable) {
-    return !!(iterable != null && (typeof iterable[Symbol.iterator] === "function" || typeof iterable[Symbol.asyncIterator] === "function"));
+  function isIterable(obj) {
+    return !!(obj != null && (typeof obj[Symbol.iterator] === "function" || typeof obj[Symbol.asyncIterator] === "function"));
   }
   /**
   * Checks whether an object has a safe Symbol.iterator — i.e. one that is
@@ -2507,9 +2507,9 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {object} obj
   * @returns {boolean}
   */
-  function hasSafeIterator(safe) {
-    const prototype = Object.getPrototypeOf(safe);
-    return Object.prototype.hasOwnProperty.call(safe, Symbol.iterator) || prototype != null && prototype !== Object.prototype && typeof safe[Symbol.iterator] === "function";
+  function hasSafeIterator(obj) {
+    const prototype = Object.getPrototypeOf(obj);
+    return Object.prototype.hasOwnProperty.call(obj, Symbol.iterator) || prototype != null && prototype !== Object.prototype && typeof obj[Symbol.iterator] === "function";
   }
   /**
   * @param {Blob|Buffer|import ('stream').Stream} body
@@ -2534,13 +2534,13 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {Error} [err]
   * @returns {void}
   */
-  function destroy(stream, destroyValue) {
+  function destroy(stream, err) {
     if (stream == null || !isStream(stream) || isDestroyed(stream)) return;
     if (typeof stream.destroy === "function") {
       if (Object.getPrototypeOf(stream).constructor === IncomingMessage) stream.socket = null;
-      stream.destroy(destroyValue);
-    } else if (destroyValue) queueMicrotask(() => {
-      stream.emit("error", destroyValue);
+      stream.destroy(err);
+    } else if (err) queueMicrotask(() => {
+      stream.emit("error", err);
     });
     if (stream.destroyed !== true) stream[kDestroyed] = true;
   }
@@ -2549,8 +2549,8 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {string} val
   * @returns {number | null}
   */
-  function parseKeepAliveTimeout(keep) {
-    const m = keep.match(KEEPALIVE_TIMEOUT_EXPR);
+  function parseKeepAliveTimeout(val) {
+    const m = val.match(KEEPALIVE_TIMEOUT_EXPR);
     return m ? parseInt(m[1], 10) * 1e3 : null;
   }
   /**
@@ -2574,33 +2574,33 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {Record<string, string | string[]>} [obj]
   * @returns {Record<string, string | string[]>}
   */
-  function parseHeaders(headers, headersValue) {
-    if (headersValue === undefined) headersValue = {};
+  function parseHeaders(headers, obj) {
+    if (obj === undefined) obj = {};
     for (let i = 0; i < headers.length; i += 2) {
-      const headerNameToStringResult = headerNameToString(headers[i]);
-      let val = headersValue[headerNameToStringResult];
+      const key = headerNameToString(headers[i]);
+      let val = obj[key];
       if (val !== undefined) {
-        if (!Object.hasOwn(headersValue, headerNameToStringResult)) {
-          const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(item => item.toString("latin1")) : headers[i + 1].toString("latin1");
-          if (headerNameToStringResult === "__proto__") Object.defineProperty(headersValue, headerNameToStringResult, {
+        if (!Object.hasOwn(obj, key)) {
+          const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(x => x.toString("latin1")) : headers[i + 1].toString("latin1");
+          if (key === "__proto__") Object.defineProperty(obj, key, {
             value: headersValue,
             enumerable: true,
             configurable: true,
             writable: true
-          });else headersValue[headerNameToStringResult] = headersValue;
+          });else obj[key] = headersValue;
         } else {
           if (typeof val === "string") {
             val = [val];
-            headersValue[headerNameToStringResult] = val;
+            obj[key] = val;
           }
           val.push(headers[i + 1].toString("latin1"));
         }
       } else {
-        const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(item => item.toString("latin1")) : headers[i + 1].toString("latin1");
-        headersValue[headerNameToStringResult] = headersValue;
+        const headersValue = typeof headers[i + 1] === "string" ? headers[i + 1] : Array.isArray(headers[i + 1]) ? headers[i + 1].map(x => x.toString("latin1")) : headers[i + 1].toString("latin1");
+        obj[key] = headersValue;
       }
     }
-    return headersValue;
+    return obj;
   }
   /**
   * @param {Buffer[]} headers
@@ -2611,7 +2611,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
     /**
     * @type {string[]}
     */
-    const array = new Array(headersLength);
+    const ret = new Array(headersLength);
     let key;
     let val;
     for (let n = 0; n < headersLength; n += 2) {
@@ -2619,10 +2619,10 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
       val = headers[n + 1];
       typeof key !== "string" && (key = key.toString());
       typeof val !== "string" && (val = val.toString("latin1"));
-      array[n] = key;
-      array[n + 1] = val;
+      ret[n] = key;
+      ret[n + 1] = val;
     }
-    return array;
+    return ret;
   }
   /**
   * @param {string[]} headers
@@ -2630,7 +2630,7 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   */
   function encodeRawHeaders(headers) {
     if (!Array.isArray(headers)) throw new TypeError("expected headers to be an array");
-    return headers.map(item => Buffer.from(item));
+    return headers.map(x => Buffer.from(x));
   }
   /**
   * @param {*} buffer
@@ -2752,8 +2752,8 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {number} c
   * @returns {boolean}
   */
-  function isTokenCharCode(token) {
-    return validTokenChars[token] === 1;
+  function isTokenCharCode(c) {
+    return validTokenChars[c] === 1;
   }
   var tokenRegExp = /^[\^_`a-zA-Z\-0-9!#$%&'*+.|~]+$/;
   /**
@@ -2813,31 +2813,31 @@ var require_util$5 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {(...args: any[]) => void} listener
   * @returns {T}
   */
-  function addListener(listenerValue, name, listener) {
-    (listenerValue[kListeners] ??= []).push([name, listener]);
-    listenerValue.on(name, listener);
-    return listenerValue;
+  function addListener(obj, name, listener) {
+    (obj[kListeners] ??= []).push([name, listener]);
+    obj.on(name, listener);
+    return obj;
   }
   /**
   * @template {import("events").EventEmitter} T
   * @param {T} obj
   * @returns {T}
   */
-  function removeAllListeners(allValue) {
-    if (allValue[kListeners] != null) {
-      for (const [name, listener] of allValue[kListeners]) allValue.removeListener(name, listener);
-      allValue[kListeners] = null;
+  function removeAllListeners(obj) {
+    if (obj[kListeners] != null) {
+      for (const [name, listener] of obj[kListeners]) obj.removeListener(name, listener);
+      obj[kListeners] = null;
     }
-    return allValue;
+    return obj;
   }
   /**
   * @param {import ('../dispatcher/client')} client
   * @param {import ('../core/request')} request
   * @param {Error} err
   */
-  function errorRequest(client, request, requestValue) {
+  function errorRequest(client, request, err) {
     try {
-      request.onError(requestValue);
+      request.onError(err);
       assert$32(request.aborted);
     } catch (err) {
       client.emit("error", err);
@@ -3045,7 +3045,7 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
       return;
     }
     isTrackingClientEvents = true;
-    diagnosticsChannel$1.subscribe("undici:client:beforeConnect", state => {
+    diagnosticsChannel$1.subscribe("undici:client:beforeConnect", evt => {
       const {
         connectParams: {
           version,
@@ -3053,10 +3053,10 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
           port,
           host
         }
-      } = state;
+      } = evt;
       debugLog("connecting to %s%s using %s%s", host, port ? `:${port}` : "", protocol, version);
     });
-    diagnosticsChannel$1.subscribe("undici:client:connected", state => {
+    diagnosticsChannel$1.subscribe("undici:client:connected", evt => {
       const {
         connectParams: {
           version,
@@ -3064,10 +3064,10 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
           port,
           host
         }
-      } = state;
+      } = evt;
       debugLog("connected to %s%s using %s%s", host, port ? `:${port}` : "", protocol, version);
     });
-    diagnosticsChannel$1.subscribe("undici:client:connectError", state => {
+    diagnosticsChannel$1.subscribe("undici:client:connectError", evt => {
       const {
         connectParams: {
           version,
@@ -3076,17 +3076,17 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
           host
         },
         error
-      } = state;
+      } = evt;
       debugLog("connection to %s%s using %s%s errored - %s", host, port ? `:${port}` : "", protocol, version, error.message);
     });
-    diagnosticsChannel$1.subscribe("undici:client:sendHeaders", state => {
+    diagnosticsChannel$1.subscribe("undici:client:sendHeaders", evt => {
       const {
         request: {
           method,
           path,
           origin
         }
-      } = state;
+      } = evt;
       debugLog("sending request to %s %s%s", method, origin, path);
     });
   }
@@ -3098,7 +3098,7 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
       return;
     }
     isTrackingRequestEvents = true;
-    diagnosticsChannel$1.subscribe("undici:request:headers", state => {
+    diagnosticsChannel$1.subscribe("undici:request:headers", evt => {
       const {
         request: {
           method,
@@ -3108,20 +3108,20 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
         response: {
           statusCode
         }
-      } = state;
+      } = evt;
       debugLog("received response to %s %s%s - HTTP %d", method, origin, path, statusCode);
     });
-    diagnosticsChannel$1.subscribe("undici:request:trailers", state => {
+    diagnosticsChannel$1.subscribe("undici:request:trailers", evt => {
       const {
         request: {
           method,
           path,
           origin
         }
-      } = state;
+      } = evt;
       debugLog("trailers received from %s %s%s", method, origin, path);
     });
-    diagnosticsChannel$1.subscribe("undici:request:error", state => {
+    diagnosticsChannel$1.subscribe("undici:request:error", evt => {
       const {
         request: {
           method,
@@ -3129,7 +3129,7 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
           origin
         },
         error
-      } = state;
+      } = evt;
       debugLog("request to %s %s%s errored - %s", method, origin, path, error.message);
     });
   }
@@ -3141,30 +3141,30 @@ var require_diagnostics = /* @__PURE__ */__commonJSMin((exports, module) => {
       return;
     }
     isTrackingWebSocketEvents = true;
-    diagnosticsChannel$1.subscribe("undici:websocket:open", state => {
-      if (state.address != null) {
+    diagnosticsChannel$1.subscribe("undici:websocket:open", evt => {
+      if (evt.address != null) {
         const {
           address,
           port
-        } = state.address;
+        } = evt.address;
         debugLog("connection opened %s%s", address, port ? `:${port}` : "");
       } else debugLog("connection opened");
     });
-    diagnosticsChannel$1.subscribe("undici:websocket:close", state => {
+    diagnosticsChannel$1.subscribe("undici:websocket:close", evt => {
       const {
         websocket,
         code,
         reason
-      } = state;
+      } = evt;
       debugLog("closed connection to %s - %s %s", websocket.url, code, reason);
     });
-    diagnosticsChannel$1.subscribe("undici:websocket:socket_error", state => {
-      debugLog("connection errored - %s", state.message);
+    diagnosticsChannel$1.subscribe("undici:websocket:socket_error", err => {
+      debugLog("connection errored - %s", err.message);
     });
-    diagnosticsChannel$1.subscribe("undici:websocket:ping", state => {
+    diagnosticsChannel$1.subscribe("undici:websocket:ping", evt => {
       debugLog("ping received");
     });
-    diagnosticsChannel$1.subscribe("undici:websocket:pong", state => {
+    diagnosticsChannel$1.subscribe("undici:websocket:pong", evt => {
       debugLog("pong received");
     });
   }
@@ -3211,10 +3211,10 @@ var require_request$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     headerNameLowerCasedRecord
   } = require_constants$4();
   var invalidPathRegex = /[^\u0021-\u00ff]/;
-  function isValidContentLengthHeaderValue(count) {
-    if (typeof count !== "string" || count.length === 0) return false;
-    for (let i = 0; i < count.length; i++) {
-      const charCode = count.charCodeAt(i);
+  function isValidContentLengthHeaderValue(val) {
+    if (typeof val !== "string" || val.length === 0) return false;
+    for (let i = 0; i < val.length; i++) {
+      const charCode = val.charCodeAt(i);
       if (charCode < 48 || charCode > 57) return false;
     }
     return true;
@@ -3428,55 +3428,55 @@ var require_request$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         this.endHandler = null;
       }
     }
-    addHeader(header, value) {
-      processHeader(this, header, value);
+    addHeader(key, value) {
+      processHeader(this, key, value);
       return this;
     }
   };
-  function processHeader(request, text, count) {
-    if (count && typeof count === "object" && !Array.isArray(count)) throw new InvalidArgumentError(`invalid ${text} header`);else if (count === undefined) return;
-    let headerName = headerNameLowerCasedRecord[text];
+  function processHeader(request, key, val) {
+    if (val && typeof val === "object" && !Array.isArray(val)) throw new InvalidArgumentError(`invalid ${key} header`);else if (val === undefined) return;
+    let headerName = headerNameLowerCasedRecord[key];
     if (headerName === undefined) {
-      headerName = text.toLowerCase();
+      headerName = key.toLowerCase();
       if (headerNameLowerCasedRecord[headerName] === undefined && !isValidHTTPToken(headerName)) throw new InvalidArgumentError("invalid header key");
     }
-    if (Array.isArray(count)) {
-      const emptyItems = [];
-      for (let i = 0; i < count.length; i++) if (typeof count[i] === "string") {
-        if (!isValidHeaderValue(count[i])) throw new InvalidArgumentError(`invalid ${text} header`);
-        emptyItems.push(count[i]);
-      } else if (count[i] === null) emptyItems.push("");else if (typeof count[i] === "object") throw new InvalidArgumentError(`invalid ${text} header`);else {
-        const str = `${count[i]}`;
-        if (!isValidHeaderValue(str)) throw new InvalidArgumentError(`invalid ${text} header`);
-        emptyItems.push(str);
+    if (Array.isArray(val)) {
+      const arr = [];
+      for (let i = 0; i < val.length; i++) if (typeof val[i] === "string") {
+        if (!isValidHeaderValue(val[i])) throw new InvalidArgumentError(`invalid ${key} header`);
+        arr.push(val[i]);
+      } else if (val[i] === null) arr.push("");else if (typeof val[i] === "object") throw new InvalidArgumentError(`invalid ${key} header`);else {
+        const str = `${val[i]}`;
+        if (!isValidHeaderValue(str)) throw new InvalidArgumentError(`invalid ${key} header`);
+        arr.push(str);
       }
-      count = emptyItems;
-    } else if (typeof count === "string") {
-      if (!isValidHeaderValue(count)) throw new InvalidArgumentError(`invalid ${text} header`);
-    } else if (count === null) count = "";else {
-      count = `${count}`;
-      if (!isValidHeaderValue(count)) throw new InvalidArgumentError(`invalid ${text} header`);
+      val = arr;
+    } else if (typeof val === "string") {
+      if (!isValidHeaderValue(val)) throw new InvalidArgumentError(`invalid ${key} header`);
+    } else if (val === null) val = "";else {
+      val = `${val}`;
+      if (!isValidHeaderValue(val)) throw new InvalidArgumentError(`invalid ${key} header`);
     }
     if (headerName === "host") {
       if (request.host !== null) throw new InvalidArgumentError("duplicate host header");
-      if (typeof count !== "string") throw new InvalidArgumentError("invalid host header");
-      request.host = count;
+      if (typeof val !== "string") throw new InvalidArgumentError("invalid host header");
+      request.host = val;
     } else if (headerName === "content-length") {
       if (request.contentLength !== null) throw new InvalidArgumentError("duplicate content-length header");
-      if (!isValidContentLengthHeaderValue(count)) throw new InvalidArgumentError("invalid content-length header");
-      request.contentLength = parseInt(count, 10);
+      if (!isValidContentLengthHeaderValue(val)) throw new InvalidArgumentError("invalid content-length header");
+      request.contentLength = parseInt(val, 10);
     } else if (request.contentType === null && headerName === "content-type") {
-      request.contentType = count;
-      request.headers.push(text, count);
+      request.contentType = val;
+      request.headers.push(key, val);
     } else if (headerName === "transfer-encoding" || headerName === "keep-alive" || headerName === "upgrade") throw new InvalidArgumentError(`invalid ${headerName} header`);else if (headerName === "connection") {
-      const value = typeof count === "string" ? count : null;
+      const value = typeof val === "string" ? val : null;
       if (value === null) throw new InvalidArgumentError("invalid connection header");
       for (const token of value.toLowerCase().split(",")) {
         const trimmed = token.trim();
         if (!isValidHTTPToken(trimmed)) throw new InvalidArgumentError("invalid connection header");
         if (trimmed === "close") request.reset = true;
       }
-    } else if (headerName === "expect") throw new NotSupportedError("expect header not supported");else request.headers.push(text, count);
+    } else if (headerName === "expect") throw new NotSupportedError("expect header not supported");else request.headers.push(key, val);
   }
   module.exports = Request;
 });
@@ -3512,9 +3512,9 @@ var require_wrap_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     onComplete(trailers) {
       return this.#handler.onComplete?.(trailers);
     }
-    onError(error) {
-      if (!this.#handler.onError) throw error;
-      return this.#handler.onError?.(error);
+    onError(err) {
+      if (!this.#handler.onError) throw err;
+      return this.#handler.onError?.(err);
     }
     onRequestStart(controller, context) {
       this.#handler.onConnect?.(reason => controller.abort(reason), context);
@@ -3537,9 +3537,9 @@ var require_wrap_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       for (const [key, val] of Object.entries(trailers)) rawTrailers.push(Buffer.from(key, "latin1"), toRawHeaderValue(val));
       this.#handler.onComplete?.(rawTrailers);
     }
-    onResponseError(controller, error) {
+    onResponseError(controller, err) {
       if (!this.#handler.onError) throw new InvalidArgumentError("invalid onError method");
-      this.#handler.onError?.(error);
+      this.#handler.onError?.(err);
     }
   };
   function toRawHeaderValue(value) {
@@ -3660,9 +3660,9 @@ var require_unwrap_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.#controller.rawTrailers = rawTrailers;
       this.#handler.onResponseEnd?.(this.#controller, parseHeaders(rawTrailers));
     }
-    onError(error) {
+    onError(err) {
       if (!this.#handler.onResponseError) throw new InvalidArgumentError("invalid onError method");
-      this.#handler.onResponseError?.(this.#controller, error);
+      this.#handler.onResponseError?.(this.#controller, err);
     }
   };
 });
@@ -3727,8 +3727,8 @@ var require_dispatcher_base = /* @__PURE__ */__commonJSMin((exports, module) => 
       });
       if (typeof callback !== "function") throw new InvalidArgumentError("invalid callback");
       if (this[kDestroyed]) {
-        const clientDestroyedError = new ClientDestroyedError();
-        queueMicrotask(() => callback(clientDestroyedError, null));
+        const err = new ClientDestroyedError();
+        queueMicrotask(() => callback(err, null));
         return;
       }
       if (this[kClosed]) {
@@ -3745,13 +3745,13 @@ var require_dispatcher_base = /* @__PURE__ */__commonJSMin((exports, module) => 
       };
       this[kClose]().then(() => this.destroy()).then(() => queueMicrotask(onClosed));
     }
-    destroy(destroy, callback) {
-      if (typeof destroy === "function") {
-        callback = destroy;
-        destroy = null;
+    destroy(err, callback) {
+      if (typeof err === "function") {
+        callback = err;
+        err = null;
       }
       if (callback === undefined) return new Promise((resolve, reject) => {
-        this.destroy(destroy, (err, data) => {
+        this.destroy(err, (err, data) => {
           return err ? reject(err) : resolve(data);
         });
       });
@@ -3760,7 +3760,7 @@ var require_dispatcher_base = /* @__PURE__ */__commonJSMin((exports, module) => 
         if (this[kOnDestroyed]) this[kOnDestroyed].push(callback);else queueMicrotask(() => callback(null, null));
         return;
       }
-      if (!destroy) destroy = new ClientDestroyedError();
+      if (!err) err = new ClientDestroyedError();
       this[kDestroyed] = true;
       this[kOnDestroyed] ??= [];
       this[kOnDestroyed].push(callback);
@@ -3769,7 +3769,7 @@ var require_dispatcher_base = /* @__PURE__ */__commonJSMin((exports, module) => 
         this[kOnDestroyed] = null;
         for (let i = 0; i < callbacks.length; i++) callbacks[i](null, null);
       };
-      this[kDestroy](destroy).then(() => queueMicrotask(onDestroyed));
+      this[kDestroy](err).then(() => queueMicrotask(onDestroyed));
     }
     dispatch(opts, handler) {
       if (!handler || typeof handler !== "object") throw new InvalidArgumentError("handler must be an object");
@@ -3797,7 +3797,7 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
   var {
     InvalidArgumentError
   } = require_errors();
-  var payload;
+  var tls;
   var SessionCache = class WeakSessionCache {
     constructor(maxCachedSessions) {
       this._maxCachedSessions = maxCachedSessions;
@@ -3854,13 +3854,13 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
     }, callback) {
       let socket;
       if (protocol === "https:") {
-        if (!payload) payload = __require("node:tls");
+        if (!tls) tls = __require("node:tls");
         servername = servername || options.servername || util.getServerName(host) || null;
         const sessionKey = servername || hostname;
         assert$30(sessionKey);
         const session = customSession || sessionCache.get(sessionKey) || null;
         port = port || 443;
-        socket = payload.connect({
+        socket = tls.connect({
           highWaterMark: 16384,
           ...options,
           servername,
@@ -3898,16 +3898,16 @@ var require_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
       socket.setNoDelay(true).once(protocol === "https:" ? "secureConnect" : "connect", function () {
         queueMicrotask(clearConnectTimeout);
         if (callback) {
-          const callbackAlias = callback;
+          const cb = callback;
           callback = null;
-          callbackAlias(null, this);
+          cb(null, this);
         }
-      }).on("error", function (event) {
+      }).on("error", function (err) {
         queueMicrotask(clearConnectTimeout);
         if (callback) {
-          const callbackAlias = callback;
+          const cb = callback;
           callback = null;
-          callbackAlias(event);
+          cb(err);
         }
       });
       return socket;
@@ -3922,10 +3922,10 @@ var require_utils = /* @__PURE__ */__commonJSMin(exports => {
     value: true
   });
   exports.enumToMap = enumToMap;
-  function enumToMap(enumValue, filter = [], exceptions = []) {
+  function enumToMap(obj, filter = [], exceptions = []) {
     const emptyFilter = (filter?.length ?? 0) === 0;
     const emptyExceptions = (exceptions?.length ?? 0) === 0;
-    return Object.fromEntries(Object.entries(enumValue).filter(([, value]) => {
+    return Object.fromEntries(Object.entries(obj).filter(([, value]) => {
       return typeof value === "number" && (emptyFilter || filter.includes(value)) && (emptyExceptions || !exceptions.includes(value));
     }));
   }
@@ -4178,9 +4178,9 @@ var require_constants$3 = /* @__PURE__ */__commonJSMin(exports => {
   exports.H_METHOD_MAP = Object.fromEntries(Object.entries(exports.METHODS).filter(([k]) => k.startsWith("H")));
   exports.STATUSES_HTTP = [exports.STATUSES.CONTINUE, exports.STATUSES.SWITCHING_PROTOCOLS, exports.STATUSES.PROCESSING, exports.STATUSES.EARLY_HINTS, exports.STATUSES.RESPONSE_IS_STALE, exports.STATUSES.REVALIDATION_FAILED, exports.STATUSES.DISCONNECTED_OPERATION, exports.STATUSES.HEURISTIC_EXPIRATION, exports.STATUSES.MISCELLANEOUS_WARNING, exports.STATUSES.OK, exports.STATUSES.CREATED, exports.STATUSES.ACCEPTED, exports.STATUSES.NON_AUTHORITATIVE_INFORMATION, exports.STATUSES.NO_CONTENT, exports.STATUSES.RESET_CONTENT, exports.STATUSES.PARTIAL_CONTENT, exports.STATUSES.MULTI_STATUS, exports.STATUSES.ALREADY_REPORTED, exports.STATUSES.TRANSFORMATION_APPLIED, exports.STATUSES.IM_USED, exports.STATUSES.MISCELLANEOUS_PERSISTENT_WARNING, exports.STATUSES.MULTIPLE_CHOICES, exports.STATUSES.MOVED_PERMANENTLY, exports.STATUSES.FOUND, exports.STATUSES.SEE_OTHER, exports.STATUSES.NOT_MODIFIED, exports.STATUSES.USE_PROXY, exports.STATUSES.SWITCH_PROXY, exports.STATUSES.TEMPORARY_REDIRECT, exports.STATUSES.PERMANENT_REDIRECT, exports.STATUSES.BAD_REQUEST, exports.STATUSES.UNAUTHORIZED, exports.STATUSES.PAYMENT_REQUIRED, exports.STATUSES.FORBIDDEN, exports.STATUSES.NOT_FOUND, exports.STATUSES.METHOD_NOT_ALLOWED, exports.STATUSES.NOT_ACCEPTABLE, exports.STATUSES.PROXY_AUTHENTICATION_REQUIRED, exports.STATUSES.REQUEST_TIMEOUT, exports.STATUSES.CONFLICT, exports.STATUSES.GONE, exports.STATUSES.LENGTH_REQUIRED, exports.STATUSES.PRECONDITION_FAILED, exports.STATUSES.PAYLOAD_TOO_LARGE, exports.STATUSES.URI_TOO_LONG, exports.STATUSES.UNSUPPORTED_MEDIA_TYPE, exports.STATUSES.RANGE_NOT_SATISFIABLE, exports.STATUSES.EXPECTATION_FAILED, exports.STATUSES.IM_A_TEAPOT, exports.STATUSES.PAGE_EXPIRED, exports.STATUSES.ENHANCE_YOUR_CALM, exports.STATUSES.MISDIRECTED_REQUEST, exports.STATUSES.UNPROCESSABLE_ENTITY, exports.STATUSES.LOCKED, exports.STATUSES.FAILED_DEPENDENCY, exports.STATUSES.TOO_EARLY, exports.STATUSES.UPGRADE_REQUIRED, exports.STATUSES.PRECONDITION_REQUIRED, exports.STATUSES.TOO_MANY_REQUESTS, exports.STATUSES.REQUEST_HEADER_FIELDS_TOO_LARGE_UNOFFICIAL, exports.STATUSES.REQUEST_HEADER_FIELDS_TOO_LARGE, exports.STATUSES.LOGIN_TIMEOUT, exports.STATUSES.NO_RESPONSE, exports.STATUSES.RETRY_WITH, exports.STATUSES.BLOCKED_BY_PARENTAL_CONTROL, exports.STATUSES.UNAVAILABLE_FOR_LEGAL_REASONS, exports.STATUSES.CLIENT_CLOSED_LOAD_BALANCED_REQUEST, exports.STATUSES.INVALID_X_FORWARDED_FOR, exports.STATUSES.REQUEST_HEADER_TOO_LARGE, exports.STATUSES.SSL_CERTIFICATE_ERROR, exports.STATUSES.SSL_CERTIFICATE_REQUIRED, exports.STATUSES.HTTP_REQUEST_SENT_TO_HTTPS_PORT, exports.STATUSES.INVALID_TOKEN, exports.STATUSES.CLIENT_CLOSED_REQUEST, exports.STATUSES.INTERNAL_SERVER_ERROR, exports.STATUSES.NOT_IMPLEMENTED, exports.STATUSES.BAD_GATEWAY, exports.STATUSES.SERVICE_UNAVAILABLE, exports.STATUSES.GATEWAY_TIMEOUT, exports.STATUSES.HTTP_VERSION_NOT_SUPPORTED, exports.STATUSES.VARIANT_ALSO_NEGOTIATES, exports.STATUSES.INSUFFICIENT_STORAGE, exports.STATUSES.LOOP_DETECTED, exports.STATUSES.BANDWIDTH_LIMIT_EXCEEDED, exports.STATUSES.NOT_EXTENDED, exports.STATUSES.NETWORK_AUTHENTICATION_REQUIRED, exports.STATUSES.WEB_SERVER_UNKNOWN_ERROR, exports.STATUSES.WEB_SERVER_IS_DOWN, exports.STATUSES.CONNECTION_TIMEOUT, exports.STATUSES.ORIGIN_IS_UNREACHABLE, exports.STATUSES.TIMEOUT_OCCURED, exports.STATUSES.SSL_HANDSHAKE_FAILED, exports.STATUSES.INVALID_SSL_CERTIFICATE, exports.STATUSES.RAILGUN_ERROR, exports.STATUSES.SITE_IS_OVERLOADED, exports.STATUSES.SITE_IS_FROZEN, exports.STATUSES.IDENTITY_PROVIDER_AUTHENTICATION_ERROR, exports.STATUSES.NETWORK_READ_TIMEOUT, exports.STATUSES.NETWORK_CONNECT_TIMEOUT];
   exports.ALPHA = [];
-  for (let charCodeAtResult = "A".charCodeAt(0); charCodeAtResult <= "Z".charCodeAt(0); charCodeAtResult++) {
-    exports.ALPHA.push(String.fromCharCode(charCodeAtResult));
-    exports.ALPHA.push(String.fromCharCode(charCodeAtResult + 32));
+  for (let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
+    exports.ALPHA.push(String.fromCharCode(i));
+    exports.ALPHA.push(String.fromCharCode(i + 32));
   }
   exports.NUM_MAP = {
     0: 0,
@@ -4227,7 +4227,7 @@ var require_constants$3 = /* @__PURE__ */__commonJSMin(exports => {
   exports.TOKEN = ["!", "#", "$", "%", "&", "'", "*", "+", "-", ".", "^", "_", "`", "|", "~"].concat(exports.ALPHANUM);
   exports.HEADER_CHARS = ["\t"];
   for (let i = 32; i <= 255; i++) if (i !== 127) exports.HEADER_CHARS.push(i);
-  exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS.filter(item => item !== 44);
+  exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS.filter(c => c !== 44);
   exports.QUOTED_STRING = ["\t", " "];
   for (let i = 33; i <= 255; i++) if (i !== 34 && i !== 92) exports.QUOTED_STRING.push(i);
   exports.HTAB_SP_VCHAR_OBS_TEXT = ["\t", " "];
@@ -4534,8 +4534,8 @@ var require_infra = /* @__PURE__ */__commonJSMin((exports, module) => {
   *
   * @see https://infra.spec.whatwg.org/#strip-leading-and-trailing-ascii-whitespace
   */
-  function removeASCIIWhitespace(whitespace, leading = true, trailing = true) {
-    return removeChars(whitespace, leading, trailing, isASCIIWhitespace);
+  function removeASCIIWhitespace(str, leading = true, trailing = true) {
+    return removeChars(str, leading, trailing, isASCIIWhitespace);
   }
   /**
   * @param {string} str
@@ -4544,12 +4544,12 @@ var require_infra = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {(charCode: number) => boolean} predicate
   * @returns {string}
   */
-  function removeChars(items, leading, trailing, predicate) {
+  function removeChars(str, leading, trailing, predicate) {
     let lead = 0;
-    let trail = items.length - 1;
-    if (leading) while (lead < items.length && predicate(items.charCodeAt(lead))) lead++;
-    if (trailing) while (trail > 0 && predicate(items.charCodeAt(trail))) trail--;
-    return lead === 0 && trail === items.length - 1 ? items : items.slice(lead, trail + 1);
+    let trail = str.length - 1;
+    if (leading) while (lead < str.length && predicate(str.charCodeAt(lead))) lead++;
+    if (trailing) while (trail > 0 && predicate(str.charCodeAt(trail))) trail--;
+    return lead === 0 && trail === str.length - 1 ? str : str.slice(lead, trail + 1);
   }
   function serializeJavascriptValueToJSONString(value) {
     const result = JSON.stringify(value);
@@ -4625,10 +4625,10 @@ var require_data_url = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {URL} url
   * @param {boolean} excludeFragment
   */
-  function URLSerializer(serializer, excludeFragment = false) {
-    if (!excludeFragment) return serializer.href;
-    const href = serializer.href;
-    const hashLength = serializer.hash.length;
+  function URLSerializer(url, excludeFragment = false) {
+    if (!excludeFragment) return url.href;
+    const href = url.href;
+    const hashLength = url.hash.length;
     const serialized = hashLength === 0 ? href : href.substring(0, href.length - hashLength);
     if (!hashLength && href.endsWith("#")) return serialized.slice(0, -1);
     return serialized;
@@ -4777,8 +4777,8 @@ var require_data_url = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {boolean} [leading=true]
   * @param {boolean} [trailing=true]
   */
-  function removeHTTPWhitespace(whitespace, leading = true, trailing = true) {
-    return removeChars(whitespace, leading, trailing, isHTTPWhiteSpace);
+  function removeHTTPWhitespace(str, leading = true, trailing = true) {
+    return removeChars(str, leading, trailing, isHTTPWhiteSpace);
   }
   /**
   * @see https://mimesniff.spec.whatwg.org/#minimize-a-supported-mime-type
@@ -4997,18 +4997,18 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
   };
   webidl.brandCheck = function (V, I) {
     if (!FunctionPrototypeSymbolHasInstance(I, V)) {
-      const typeError = /* @__PURE__ */new TypeError("Illegal invocation");
-      typeError.code = "ERR_INVALID_THIS";
-      throw typeError;
+      const err = /* @__PURE__ */new TypeError("Illegal invocation");
+      err.code = "ERR_INVALID_THIS";
+      throw err;
     }
   };
   webidl.brandCheckMultiple = function (List) {
-    const prototypes = List.map(item => webidl.util.MakeTypeAssertion(item));
+    const prototypes = List.map(c => webidl.util.MakeTypeAssertion(c));
     return V => {
       if (prototypes.every(typeCheck => !typeCheck(V))) {
-        const typeError = /* @__PURE__ */new TypeError("Illegal invocation");
-        typeError.code = "ERR_INVALID_THIS";
-        throw typeError;
+        const err = /* @__PURE__ */new TypeError("Illegal invocation");
+        err.code = "ERR_INVALID_THIS";
+        throw err;
       }
     };
   };
@@ -5156,7 +5156,7 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
       });
       /** @type {Generator} */
       const method = typeof Iterable === "function" ? Iterable() : V?.[Symbol.iterator]?.();
-      const emptyItems = [];
+      const seq = [];
       let index = 0;
       if (method === undefined || typeof method.next !== "function") throw webidl.errors.exception({
         header: prefix,
@@ -5168,9 +5168,9 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
           value
         } = method.next();
         if (done) break;
-        emptyItems.push(converter(value, prefix, `${argument}[${index++}]`));
+        seq.push(converter(value, prefix, `${argument}[${index++}]`));
       }
-      return emptyItems;
+      return seq;
     };
   };
   webidl.recordConverter = function (keyConverter, valueConverter) {
@@ -5207,7 +5207,7 @@ var require_webidl = /* @__PURE__ */__commonJSMin((exports, module) => {
     };
   };
   webidl.dictionaryConverter = function (converters) {
-    converters.sort((event, right) => (event.key > right.key) - (event.key < right.key));
+    converters.sort((a, b) => (a.key > b.key) - (a.key < b.key));
     return (dictionary, prefix, argument) => {
       const dict = {};
       if (dictionary != null && webidl.util.Type(dictionary) !== OBJECT) throw webidl.errors.exception({
@@ -5515,9 +5515,9 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {string} url
   * @returns {boolean}
   */
-  function isValidEncodedURL(count) {
-    for (let i = 0; i < count.length; ++i) {
-      const code = count.charCodeAt(i);
+  function isValidEncodedURL(url) {
+    for (let i = 0; i < url.length; ++i) {
+      const code = url.charCodeAt(i);
       if (code > 126 || code < 32) return false;
     }
     return true;
@@ -5536,8 +5536,8 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
     return request.urlList[request.urlList.length - 1];
   }
   function requestBadPort(request) {
-    const requestCurrentURLResult = requestCurrentURL(request);
-    if (urlIsHttpHttpsScheme(requestCurrentURLResult) && badPortsSet.has(requestCurrentURLResult.port)) return "blocked";
+    const url = requestCurrentURL(request);
+    if (urlIsHttpHttpsScheme(url) && badPortsSet.has(url.port)) return "blocked";
     return "allowed";
   }
   function isErrorLike(object) {
@@ -5545,8 +5545,8 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function isValidReasonPhrase(statusText) {
     for (let i = 0; i < statusText.length; ++i) {
-      const charCodeAtResult = statusText.charCodeAt(i);
-      if (!(charCodeAtResult === 9 || charCodeAtResult >= 32 && charCodeAtResult <= 126 || charCodeAtResult >= 128 && charCodeAtResult <= 255)) return false;
+      const c = statusText.charCodeAt(i);
+      if (!(c === 9 || c >= 32 && c <= 126 || c >= 128 && c <= 255)) return false;
     }
     return true;
   }
@@ -5736,18 +5736,18 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {URL} url
   * @param {boolean} [originOnly=false]
   */
-  function stripURLForReferrer(strip, originOnly = false) {
-    assert$26(webidl.is.URL(strip));
-    strip = new URL(strip);
-    if (urlIsLocal(strip)) return "no-referrer";
-    strip.username = "";
-    strip.password = "";
-    strip.hash = "";
+  function stripURLForReferrer(url, originOnly = false) {
+    assert$26(webidl.is.URL(url));
+    url = new URL(url);
+    if (urlIsLocal(url)) return "no-referrer";
+    url.username = "";
+    url.password = "";
+    url.hash = "";
     if (originOnly === true) {
-      strip.pathname = "";
-      strip.search = "";
+      url.pathname = "";
+      url.search = "";
     }
-    return strip;
+    return url;
   }
   var isPotentialleTrustworthyIPv4 = RegExp.prototype.test.bind(/^127\.(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)\.){2}(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)$/);
   var isPotentiallyTrustworthyIPv6 = RegExp.prototype.test.bind(/^(?:(?:0{1,4}:){7}|(?:0{1,4}:){1,6}:|::)0{0,3}1$/);
@@ -5797,12 +5797,12 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {URL} url
   * @returns {boolean}
   */
-  function isURLPotentiallyTrustworthy(potentially) {
-    if (!webidl.is.URL(potentially)) return false;
-    if (potentially.href === "about:blank" || potentially.href === "about:srcdoc") return true;
-    if (potentially.protocol === "data:") return true;
-    if (potentially.protocol === "blob:") return true;
-    return isOriginPotentiallyTrustworthy(potentially.origin);
+  function isURLPotentiallyTrustworthy(url) {
+    if (!webidl.is.URL(url)) return false;
+    if (url.href === "about:blank" || url.href === "about:srcdoc") return true;
+    if (url.protocol === "data:") return true;
+    if (url.protocol === "blob:") return true;
+    return isOriginPotentiallyTrustworthy(url.origin);
   }
   function tryUpgradeRequestToAPotentiallyTrustworthyURL(request) {}
   /**
@@ -5810,9 +5810,9 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {URL} A
   * @param {URL} B
   */
-  function sameOrigin(same, origin) {
-    if (same.origin === origin.origin && same.origin === "null") return true;
-    if (same.protocol === origin.protocol && same.hostname === origin.hostname && same.port === origin.port) return true;
+  function sameOrigin(A, B) {
+    if (A.origin === B.origin && A.origin === "null") return true;
+    if (A.protocol === B.protocol && A.hostname === B.hostname && A.port === B.port) return true;
     return false;
   }
   function isAborted(fetchParams) {
@@ -6036,25 +6036,25 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {URL} url
   * @returns {boolean}
   */
-  function urlIsLocal(urlValue) {
-    assert$26("protocol" in urlValue);
-    const protocol = urlValue.protocol;
+  function urlIsLocal(url) {
+    assert$26("protocol" in url);
+    const protocol = url.protocol;
     return protocol === "about:" || protocol === "blob:" || protocol === "data:";
   }
   /**
   * @param {string|URL} url
   * @returns {boolean}
   */
-  function urlHasHttpsScheme(urlValue) {
-    return typeof urlValue === "string" && urlValue[5] === ":" && urlValue[0] === "h" && urlValue[1] === "t" && urlValue[2] === "t" && urlValue[3] === "p" && urlValue[4] === "s" || urlValue.protocol === "https:";
+  function urlHasHttpsScheme(url) {
+    return typeof url === "string" && url[5] === ":" && url[0] === "h" && url[1] === "t" && url[2] === "t" && url[3] === "p" && url[4] === "s" || url.protocol === "https:";
   }
   /**
   * @see https://fetch.spec.whatwg.org/#http-scheme
   * @param {URL} url
   */
-  function urlIsHttpHttpsScheme(urlValue) {
-    assert$26("protocol" in urlValue);
-    const protocol = urlValue.protocol;
+  function urlIsHttpHttpsScheme(url) {
+    assert$26("protocol" in url);
+    const protocol = url.protocol;
     return protocol === "http:" || protocol === "https:";
   }
   /**
@@ -6131,7 +6131,7 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
         this._inflateStream = (chunk[0] & 15) === 8 ? zlib$1.createInflate(this.#zlibOptions) : zlib$1.createInflateRaw(this.#zlibOptions);
         this._inflateStream.on("data", this.push.bind(this));
         this._inflateStream.on("end", () => this.push(null));
-        this._inflateStream.on("error", event => this.destroy(event));
+        this._inflateStream.on("error", err => this.destroy(err));
       }
       this._inflateStream.write(chunk, encoding, callback);
     }
@@ -6218,8 +6218,8 @@ var require_util$4 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @see https://url.spec.whatwg.org/#include-credentials
   * @param {URL} url
   */
-  function includesCredentials(includes) {
-    return !!(includes.username || includes.password);
+  function includesCredentials(url) {
+    return !!(url.username || url.password);
   }
   /**
   * @see https://html.spec.whatwg.org/multipage/document-sequences.html#traversable-navigable
@@ -6335,9 +6335,9 @@ var require_formdata = /* @__PURE__ */__commonJSMin((exports, module) => {
       webidl.brandCheck(this, FormData);
       webidl.argumentLengthCheck(arguments, 1, "FormData.get");
       name = webidl.converters.USVString(name);
-      const indexResult = this.#state.findIndex(entry => entry.name === name);
-      if (indexResult === -1) return null;
-      return this.#state[indexResult].value;
+      const idx = this.#state.findIndex(entry => entry.name === name);
+      if (idx === -1) return null;
+      return this.#state[idx].value;
     }
     getAll(name) {
       webidl.brandCheck(this, FormData);
@@ -6361,15 +6361,15 @@ var require_formdata = /* @__PURE__ */__commonJSMin((exports, module) => {
         if (filename !== undefined) filename = webidl.converters.USVString(filename);
       } else value = webidl.converters.USVString(value);
       const entry = makeEntry(name, value, filename);
-      const indexResult = this.#state.findIndex(entry => entry.name === name);
-      if (indexResult !== -1) this.#state = [...this.#state.slice(0, indexResult), entry, ...this.#state.slice(indexResult + 1).filter(entry => entry.name !== name)];else this.#state.push(entry);
+      const idx = this.#state.findIndex(entry => entry.name === name);
+      if (idx !== -1) this.#state = [...this.#state.slice(0, idx), entry, ...this.#state.slice(idx + 1).filter(entry => entry.name !== name)];else this.#state.push(entry);
     }
     [nodeUtil$2.inspect.custom](depth, options) {
-      const state = this.#state.reduce((acc, cur) => {
-        if (acc[cur.name]) {
-          if (Array.isArray(acc[cur.name])) acc[cur.name].push(cur.value);else acc[cur.name] = [acc[cur.name], cur.value];
-        } else acc[cur.name] = cur.value;
-        return acc;
+      const state = this.#state.reduce((a, b) => {
+        if (a[b.name]) {
+          if (Array.isArray(a[b.name])) a[b.name].push(b.value);else a[b.name] = [a[b.name], b.value];
+        } else a[b.name] = b.value;
+        return a;
       }, {
         __proto__: null
       });
@@ -6483,8 +6483,8 @@ var require_formdata_parser = /* @__PURE__ */__commonJSMin((exports, module) => 
     const length = boundary.length;
     if (length < 27 || length > 70) return false;
     for (let i = 0; i < length; ++i) {
-      const charCodeAtResult = boundary.charCodeAt(i);
-      if (!(charCodeAtResult >= 48 && charCodeAtResult <= 57 || charCodeAtResult >= 65 && charCodeAtResult <= 90 || charCodeAtResult >= 97 && charCodeAtResult <= 122 || charCodeAtResult === 39 || charCodeAtResult === 45 || charCodeAtResult === 95)) return false;
+      const cp = boundary.charCodeAt(i);
+      if (!(cp >= 48 && cp <= 57 || cp >= 65 && cp <= 90 || cp >= 97 && cp <= 122 || cp === 39 || cp === 45 || cp === 95)) return false;
     }
     return true;
   }
@@ -6659,12 +6659,12 @@ var require_formdata_parser = /* @__PURE__ */__commonJSMin((exports, module) => 
   * @param {(charCode: number) => boolean} predicate
   * @returns {Buffer}
   */
-  function removeChars(count, leading, trailing, predicate) {
+  function removeChars(buf, leading, trailing, predicate) {
     let lead = 0;
-    let trail = count.length - 1;
-    if (leading) while (lead < count.length && predicate(count[lead])) lead++;
-    if (trailing) while (trail > 0 && predicate(count[trail])) trail--;
-    return lead === 0 && trail === count.length - 1 ? count : count.subarray(lead, trail + 1);
+    let trail = buf.length - 1;
+    if (leading) while (lead < buf.length && predicate(buf[lead])) lead++;
+    if (trailing) while (trail > 0 && predicate(buf[trail])) trail--;
+    return lead === 0 && trail === buf.length - 1 ? buf : buf.subarray(lead, trail + 1);
   }
   /**
   * Checks if {@param buffer} starts with {@param start}
@@ -6832,7 +6832,7 @@ var require_body = /* @__PURE__ */__commonJSMin((exports, module) => {
       const formdataEscape = str => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
       const normalizeLinefeeds = value => value.replace(/\r?\n|\r/g, "\r\n");
       const blobParts = [];
-      const uint8Array = new Uint8Array([13, 10]);
+      const rn = new Uint8Array([13, 10]);
       length = 0;
       let hasUnknownSizeValue = false;
       for (const [name, value] of object) if (typeof value === "string") {
@@ -6842,8 +6842,8 @@ var require_body = /* @__PURE__ */__commonJSMin((exports, module) => {
       } else {
         const chunk = textEncoder.encode(`${prefix}; name="${formdataEscape(normalizeLinefeeds(name))}"` + (value.name ? `; filename="${formdataEscape(value.name)}"` : "") + `\r
 Content-Type: ${value.type || "application/octet-stream"}\r\n\r\n`);
-        blobParts.push(chunk, value, uint8Array);
-        if (typeof value.size === "number") length += chunk.byteLength + value.size + uint8Array.byteLength;else hasUnknownSizeValue = true;
+        blobParts.push(chunk, value, rn);
+        if (typeof value.size === "number") length += chunk.byteLength + value.size + rn.byteLength;else hasUnknownSizeValue = true;
       }
       const chunk = textEncoder.encode(`--${boundary}--\r\n`);
       blobParts.push(chunk);
@@ -6945,16 +6945,16 @@ Content-Type: ${value.type || "application/octet-stream"}\r\n\r\n`);
             case "multipart/form-data":
               {
                 const parsed = multipartFormDataParser(value, mimeType);
-                const formData = new FormData();
-                setFormDataState(formData, parsed);
-                return formData;
+                const fd = new FormData();
+                setFormDataState(fd, parsed);
+                return fd;
               }
             case "application/x-www-form-urlencoded":
               {
                 const entries = new URLSearchParams(value.toString());
-                const formData = new FormData();
-                for (const [name, value] of entries) formData.append(name, value);
-                return formData;
+                const fd = new FormData();
+                for (const [name, value] of entries) fd.append(name, value);
+                return fd;
               }
           }
           throw new TypeError("Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".");
@@ -7098,7 +7098,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let mod;
     let useWasmSIMD = true;
     if (process.arch === "ppc64") {
-      const [major, minor] = process.versions.node.split(".").map(item => parseInt(item, 10));
+      const [major, minor] = process.versions.node.split(".").map(n => parseInt(n, 10));
       if (major < 24 || major === 24 && minor < 12) useWasmSIMD = false;
     }
     if (process.env.UNDICI_NO_WASM_SIMD === "1") useWasmSIMD = false;else if (process.env.UNDICI_NO_WASM_SIMD === "0") useWasmSIMD = true;
@@ -7338,7 +7338,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       return this.createError(ret, EMPTY_BUF);
     }
-    createError(error, data) {
+    createError(ret, data) {
       const {
         llhttp,
         contentLength,
@@ -7351,7 +7351,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         const len = new Uint8Array(llhttp.memory.buffer, ptr).indexOf(0);
         message = "Response does not match the HTTP/1.1 protocol (" + Buffer.from(llhttp.memory.buffer, ptr, len).toString() + ")";
       }
-      return new HTTPParserError(message, constants.ERROR[error], data);
+      return new HTTPParserError(message, constants.ERROR[ret], data);
     }
     destroy() {
       assert$23(currentParser === null);
@@ -7368,8 +7368,8 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {Buffer} buf
     * @returns {0}
     */
-    onStatus(status) {
-      this.statusText = status.toString();
+    onStatus(buf) {
+      this.statusText = buf.toString();
       return 0;
     }
     /**
@@ -7394,35 +7394,35 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {Buffer} buf
     * @returns {number}
     */
-    onHeaderField(count) {
+    onHeaderField(buf) {
       const len = this.headers.length;
-      if ((len & 1) === 0) this.headers.push(count);else this.headers[len - 1] = Buffer.concat([this.headers[len - 1], count]);
-      this.trackHeader(count.length);
+      if ((len & 1) === 0) this.headers.push(buf);else this.headers[len - 1] = Buffer.concat([this.headers[len - 1], buf]);
+      this.trackHeader(buf.length);
       return 0;
     }
     /**
     * @param {Buffer} buf
     * @returns {number}
     */
-    onHeaderValue(count) {
+    onHeaderValue(buf) {
       let len = this.headers.length;
       if ((len & 1) === 1) {
-        this.headers.push(count);
+        this.headers.push(buf);
         len += 1;
-      } else this.headers[len - 1] = Buffer.concat([this.headers[len - 1], count]);
+      } else this.headers[len - 1] = Buffer.concat([this.headers[len - 1], buf]);
       const key = this.headers[len - 2];
       if (key.length === 10) {
         const headerName = util.bufferToLowerCasedHeaderName(key);
-        if (headerName === "keep-alive") this.keepAlive += count.toString();else if (headerName === "connection") this.connection += count.toString();
-      } else if (key.length === 14 && util.bufferToLowerCasedHeaderName(key) === "content-length") this.contentLength += count.toString();
-      this.trackHeader(count.length);
+        if (headerName === "keep-alive") this.keepAlive += buf.toString();else if (headerName === "connection") this.connection += buf.toString();
+      } else if (key.length === 14 && util.bufferToLowerCasedHeaderName(key) === "content-length") this.contentLength += buf.toString();
+      this.trackHeader(buf.length);
       return 0;
     }
     /**
     * @param {number} len
     */
-    trackHeader(header) {
-      this.headersSize += header;
+    trackHeader(len) {
+      this.headersSize += len;
       if (this.headersSize >= this.headersMaxSize) util.destroy(this.socket, new HeadersOverflowError());
     }
     /**
@@ -7541,7 +7541,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {Buffer} buf
     * @returns {number}
     */
-    onBody(count) {
+    onBody(buf) {
       const {
         client,
         socket,
@@ -7556,12 +7556,12 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         if (this.timeout.refresh) this.timeout.refresh();
       }
       assert$23(statusCode >= 200);
-      if (maxResponseSize > -1 && this.bytesRead + count.length > maxResponseSize) {
+      if (maxResponseSize > -1 && this.bytesRead + buf.length > maxResponseSize) {
         util.destroy(socket, new ResponseExceededMaxSizeError());
         return -1;
       }
-      this.bytesRead += count.length;
-      if (request.onData(count) === false) return constants.ERROR.PAUSED;
+      this.bytesRead += buf.length;
+      if (request.onData(buf) === false) return constants.ERROR.PAUSED;
       return 0;
     }
     /**
@@ -7672,10 +7672,10 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       * @param {Error|undefined} err
       * @param {() => void} callback
       */
-      destroy(destroy, callback) {
+      destroy(err, callback) {
         if (socket[kClosed]) queueMicrotask(callback);else {
           socket.on("close", callback);
-          socket.destroy(destroy);
+          socket.destroy(err);
         }
       },
       /**
@@ -7699,10 +7699,10 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
     };
   }
-  function onHttpSocketError(event) {
-    assert$23(event.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
+  function onHttpSocketError(err) {
+    assert$23(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
     const parser = this[kParser];
-    if (event.code === "ECONNRESET" && parser.statusCode && !parser.shouldKeepAlive) {
+    if (err.code === "ECONNRESET" && parser.statusCode && !parser.shouldKeepAlive) {
       const parserErr = parser.finish();
       if (parserErr) {
         this[kError] = parserErr;
@@ -7710,8 +7710,8 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       return;
     }
-    this[kError] = event;
-    this[kClient][kOnError](event);
+    this[kError] = err;
+    this[kClient][kOnError](err);
   }
   function onHttpSocketReadable() {
     this[kParser]?.readMore();
@@ -7733,7 +7733,7 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       this[kParser].destroy();
       this[kParser] = null;
     }
-    const fallbackValue = this[kError] || new SocketError("closed", util.getSocketInfo(this));
+    const err = this[kError] || new SocketError("closed", util.getSocketInfo(this));
     const client = this[kClient];
     client[kSocket] = null;
     client[kHTTPContext] = null;
@@ -7742,16 +7742,16 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       const requests = client[kQueue].splice(client[kRunningIdx]);
       for (let i = 0; i < requests.length; i++) {
         const request = requests[i];
-        util.errorRequest(client, request, fallbackValue);
+        util.errorRequest(client, request, err);
       }
-    } else if (client[kRunning] > 0 && fallbackValue.code !== "UND_ERR_INFO") {
+    } else if (client[kRunning] > 0 && err.code !== "UND_ERR_INFO") {
       const request = client[kQueue][client[kRunningIdx]];
       client[kQueue][client[kRunningIdx]++] = null;
-      util.errorRequest(client, request, fallbackValue);
+      util.errorRequest(client, request, err);
     }
     client[kPendingIdx] = client[kRunningIdx];
     assert$23(client[kRunning] === 0);
-    client.emit("disconnect", client[kUrl], [client], fallbackValue);
+    client.emit("disconnect", client[kUrl], [client], err);
     client[kResume]();
   }
   function onSocketClose() {
@@ -7958,27 +7958,27 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         body.removeListener("error", onFinished);
       });
       if (!finished) {
-        const requestAbortedError = new RequestAbortedError();
-        queueMicrotask(() => onFinished(requestAbortedError));
+        const err = new RequestAbortedError();
+        queueMicrotask(() => onFinished(err));
       }
     };
     /**
     * @param {Error} [err]
     * @returns
     */
-    const onFinished = function (event) {
+    const onFinished = function (err) {
       if (finished) return;
       finished = true;
       assert$23(socket.destroyed || socket[kWriting] && client[kRunning] <= 1);
       socket.off("drain", onDrain).off("error", onFinished);
       body.removeListener("data", onData).removeListener("end", onFinished).removeListener("close", onClose);
-      if (!event) try {
+      if (!err) try {
         writer.end();
       } catch (er) {
-        event = er;
+        err = er;
       }
-      writer.destroy(event);
-      if (event && (event.code !== "UND_ERR_INFO" || event.message !== "reset")) util.destroy(body, event);else util.destroy(body);
+      writer.destroy(err);
+      if (err && (err.code !== "UND_ERR_INFO" || err.message !== "reset")) util.destroy(body, err);else util.destroy(body);
     };
     body.on("data", onData).on("end", onFinished).on("error", onFinished).on("close", onClose);
     if (body.resume) body.resume();
@@ -8069,9 +8069,9 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let callback = null;
     function onDrain() {
       if (callback) {
-        const callbackAlias = callback;
+        const cb = callback;
         callback = null;
-        callbackAlias();
+        cb();
       }
     }
     const waitForDrain = () => new Promise((resolve, reject) => {
@@ -8147,9 +8147,9 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       } = this;
       if (socket[kError]) throw socket[kError];
       if (socket.destroyed) return false;
-      const byteLength = Buffer.byteLength(chunk);
-      if (!byteLength) return true;
-      if (contentLength !== null && bytesWritten + byteLength > contentLength) {
+      const len = Buffer.byteLength(chunk);
+      if (!len) return true;
+      if (contentLength !== null && bytesWritten + len > contentLength) {
         if (client[kStrictContentLength]) throw new RequestContentLengthMismatchError();
         process.emitWarning(new RequestContentLengthMismatchError());
       }
@@ -8158,8 +8158,8 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         if (!expectsPayload && request.reset !== false) socket[kReset] = true;
         if (contentLength === null) socket.write(`${header}transfer-encoding: chunked\r\n`, "latin1");else socket.write(`${header}content-length: ${contentLength}\r\n\r\n`, "latin1");
       }
-      if (contentLength === null) socket.write(`\r\n${byteLength.toString(16)}\r\n`, "latin1");
-      this.bytesWritten += byteLength;
+      if (contentLength === null) socket.write(`\r\n${len.toString(16)}\r\n`, "latin1");
+      this.bytesWritten += len;
       const ret = socket.write(chunk);
       socket.uncork();
       request.onBodySent(chunk);
@@ -8202,16 +8202,16 @@ var require_client_h1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {Error} [err]
     * @returns {void}
     */
-    destroy(destroy) {
+    destroy(err) {
       const {
         socket,
         client,
         abort
       } = this;
       socket[kWriting] = false;
-      if (destroy) {
+      if (err) {
         assert$23(client[kRunning] <= 1, "pipeline should only contain this request");
-        abort(destroy);
+        abort(err);
       }
     }
   };
@@ -8356,8 +8356,8 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
       * @param {Error | null} err
       * @param {() => void} callback
       */
-      destroy(destroy, callback) {
-        if (socket[kClosed]) queueMicrotask(callback);else socket.destroy(destroy).on("close", callback);
+      destroy(err, callback) {
+        if (socket[kClosed]) queueMicrotask(callback);else socket.destroy(err).on("close", callback);
       },
       /**
       * @type {boolean}
@@ -8406,9 +8406,9 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     * with the value of 0 after previously sending a value of 1.
     */
     if (this[kRemoteSettings] === true && this[kEnableConnectProtocol] === true && settings.enableConnectProtocol === false) {
-      const informationalError = new InformationalError("HTTP/2: Server disabled extended CONNECT protocol against RFC-8441");
-      this[kSocket][kError] = informationalError;
-      this[kClient][kOnError](informationalError);
+      const err = new InformationalError("HTTP/2: Server disabled extended CONNECT protocol against RFC-8441");
+      this[kSocket][kError] = err;
+      this[kClient][kOnError](err);
       return;
     }
     this[kEnableConnectProtocol] = settings.enableConnectProtocol ?? this[kEnableConnectProtocol];
@@ -8423,32 +8423,32 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
       return;
     }
     session.ping(onPing.bind(session));
-    function onPing(ping, duration) {
+    function onPing(err, duration) {
       const client = this[kClient];
       const socket = this[kClient];
-      if (ping != null) {
-        const error = new InformationalError(`HTTP/2: "PING" errored - type ${ping.message}`);
+      if (err != null) {
+        const error = new InformationalError(`HTTP/2: "PING" errored - type ${err.message}`);
         socket[kError] = error;
         client[kOnError](error);
       } else client.emit("ping", duration);
     }
   }
-  function onHttp2SessionError(event) {
-    assert$22(event.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
-    this[kSocket][kError] = event;
-    this[kClient][kOnError](event);
+  function onHttp2SessionError(err) {
+    assert$22(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
+    this[kSocket][kError] = err;
+    this[kClient][kOnError](err);
   }
-  function onHttp2FrameError(type, code, error) {
-    if (error === 0) {
-      const informationalError = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code}`);
-      this[kSocket][kError] = informationalError;
-      this[kClient][kOnError](informationalError);
+  function onHttp2FrameError(type, code, id) {
+    if (id === 0) {
+      const err = new InformationalError(`HTTP/2: "frameError" received - type ${type}, code ${code}`);
+      this[kSocket][kError] = err;
+      this[kClient][kOnError](err);
     }
   }
   function onHttp2SessionEnd() {
-    const socketError = new SocketError("other side closed", util.getSocketInfo(this[kSocket]));
-    this.destroy(socketError);
-    util.destroy(this[kSocket], socketError);
+    const err = new SocketError("other side closed", util.getSocketInfo(this[kSocket]));
+    this.destroy(err);
+    util.destroy(this[kSocket], err);
   }
   /**
   * This is the root cause of #3011
@@ -8473,22 +8473,22 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (resetPendingIdx && client[kPendingIdx] < client[kRunningIdx]) client[kPendingIdx] = client[kRunningIdx];
   }
   function onHttp2SessionGoAway(errorCode) {
-    const fallbackValue = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${errorCode}`, util.getSocketInfo(this[kSocket]));
+    const err = this[kError] || new SocketError(`HTTP/2: "GOAWAY" frame received with code ${errorCode}`, util.getSocketInfo(this[kSocket]));
     const client = this[kClient];
     client[kSocket] = null;
     client[kHTTPContext] = null;
     this.close();
     this[kHTTP2Session] = null;
-    util.destroy(this[kSocket], fallbackValue);
+    util.destroy(this[kSocket], err);
     if (client[kRunningIdx] < client[kQueue].length) {
       const request = client[kQueue][client[kRunningIdx]];
       client[kQueue][client[kRunningIdx]++] = null;
-      if (request != null) util.errorRequest(client, request, fallbackValue);
+      if (request != null) util.errorRequest(client, request, err);
       client[kPendingIdx] = client[kRunningIdx];
     }
     assert$22(client[kRunning] === 0);
-    client.emit("disconnect", client[kUrl], [client], fallbackValue);
-    client.emit("connectionError", client[kUrl], [client], fallbackValue);
+    client.emit("disconnect", client[kUrl], [client], err);
+    client.emit("connectionError", client[kUrl], [client], err);
     client[kResume]();
   }
   function onHttp2SessionClose() {
@@ -8499,7 +8499,7 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     const {
       [kSocket]: socket
     } = client;
-    const fallbackValue = this[kSocket][kError] || this[kError] || new SocketError("closed", util.getSocketInfo(socket));
+    const err = this[kSocket][kError] || this[kError] || new SocketError("closed", util.getSocketInfo(socket));
     client[kSocket] = null;
     client[kHTTPContext] = null;
     if (state.ping.interval != null) {
@@ -8511,25 +8511,25 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
       const requests = client[kQueue].splice(client[kRunningIdx]);
       for (let i = 0; i < requests.length; i++) {
         const request = requests[i];
-        if (request != null) util.errorRequest(client, request, fallbackValue);
+        if (request != null) util.errorRequest(client, request, err);
       }
     }
   }
   function onHttp2SocketClose() {
-    const fallbackValue = this[kError] || new SocketError("closed", util.getSocketInfo(this));
+    const err = this[kError] || new SocketError("closed", util.getSocketInfo(this));
     const client = this[kHTTP2Session][kClient];
     client[kSocket] = null;
     client[kHTTPContext] = null;
-    if (this[kHTTP2Session] !== null) this[kHTTP2Session].destroy(fallbackValue);
+    if (this[kHTTP2Session] !== null) this[kHTTP2Session].destroy(err);
     client[kPendingIdx] = client[kRunningIdx];
     assert$22(client[kRunning] === 0);
-    client.emit("disconnect", client[kUrl], [client], fallbackValue);
+    client.emit("disconnect", client[kUrl], [client], err);
     client[kResume]();
   }
-  function onHttp2SocketError(event) {
-    assert$22(event.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
-    this[kError] = event;
-    this[kClient][kOnError](event);
+  function onHttp2SocketError(err) {
+    assert$22(err.code !== "ERR_TLS_CERT_ALTNAME_INVALID");
+    this[kError] = err;
+    this[kClient][kOnError](err);
   }
   function onHttp2SocketEnd() {
     util.destroy(this, new SocketError("other side closed", util.getSocketInfo(this)));
@@ -8759,9 +8759,9 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (session[kOpenStreams] === 0) session.unref();
       if (!request.aborted && !request.completed) abort(new InformationalError("HTTP/2: stream closed before the response was complete"));
     });
-    stream.once("error", function (event) {
+    stream.once("error", function (err) {
       stream.removeAllListeners("data");
-      abort(event);
+      abort(err);
     });
     stream.once("frameError", (type, code) => {
       stream.removeAllListeners("data");
@@ -8846,9 +8846,9 @@ var require_client_h2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let callback = null;
     function onDrain() {
       if (callback) {
-        const callbackAlias = callback;
+        const cb = callback;
         callback = null;
-        callbackAlias();
+        cb();
       }
     }
     const waitForDrain = () => new Promise((resolve, reject) => {
@@ -8958,7 +8958,7 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {string|URL} url
     * @param {import('../../types/client.js').Client.Options} options
     */
-    constructor(constructor, {
+    constructor(url, {
       maxHeaderSize,
       headersTimeout,
       socketTimeout,
@@ -9043,7 +9043,7 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
           } : null)
         }, callback);
       }
-      this[kUrl] = util.parseOrigin(constructor);
+      this[kUrl] = util.parseOrigin(url);
       this[kConnector] = connect;
       this[kPipelining] = pipelining != null ? pipelining : 1;
       this[kMaxHeadersSize] = maxHeaderSize;
@@ -9098,9 +9098,9 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
     get [kBusy]() {
       return Boolean(this[kHTTPContext]?.busy(null) || this[kSize] >= (getPipelining(this) || 1) || this[kPending] > 0);
     }
-    [kConnect](connectValue) {
+    [kConnect](cb) {
       connect(this);
-      this.once("connect", connectValue);
+      this.once("connect", cb);
     }
     [kDispatch](opts, handler) {
       const request = new Request(this[kUrl].origin, opts, handler);
@@ -9117,12 +9117,12 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
         if (this[kSize]) this[kClosedResolve] = resolve;else resolve(null);
       });
     }
-    [kDestroy](destroy) {
+    [kDestroy](err) {
       return new Promise(resolve => {
         const requests = this[kQueue].splice(this[kPendingIdx]);
         for (let i = 0; i < requests.length; i++) {
           const request = requests[i];
-          if (request != null) util.errorRequest(this, request, destroy);
+          if (request != null) util.errorRequest(this, request, err);
         }
         const callback = () => {
           if (this[kClosedResolve]) {
@@ -9132,20 +9132,20 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
           resolve(null);
         };
         if (this[kHTTPContext]) {
-          this[kHTTPContext].destroy(destroy, callback);
+          this[kHTTPContext].destroy(err, callback);
           this[kHTTPContext] = null;
         } else queueMicrotask(callback);
         this[kResume]();
       });
     }
   };
-  function onError(client, event) {
-    if (client[kRunning] === 0 && event.code !== "UND_ERR_INFO" && event.code !== "UND_ERR_SOCKET") {
+  function onError(client, err) {
+    if (client[kRunning] === 0 && err.code !== "UND_ERR_INFO" && err.code !== "UND_ERR_SOCKET") {
       assert$21(client[kPendingIdx] === client[kRunningIdx]);
       const requests = client[kQueue].splice(client[kRunningIdx]);
       for (let i = 0; i < requests.length; i++) {
         const request = requests[i];
-        if (request != null) util.errorRequest(client, request, event);
+        if (request != null) util.errorRequest(client, request, err);
       }
       assert$21(client[kSize] === 0);
     }
@@ -9166,9 +9166,9 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (hostname[0] === "[") {
       const idx = hostname.indexOf("]");
       assert$21(idx !== -1);
-      const part = hostname.substring(1, idx);
-      assert$21(net$2.isIPv6(part));
-      hostname = part;
+      const ip = hostname.substring(1, idx);
+      assert$21(net$2.isIPv6(ip));
+      hostname = ip;
     }
     client[kConnecting] = true;
     if (channels.beforeConnect.hasSubscribers) channels.beforeConnect.publish({
@@ -9252,7 +9252,7 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
       client[kResume]();
     }
   }
-  function handleConnectError(client, event, {
+  function handleConnectError(client, err, {
     host,
     hostname,
     protocol,
@@ -9271,16 +9271,16 @@ var require_client = /* @__PURE__ */__commonJSMin((exports, module) => {
         localAddress: client[kLocalAddress]
       },
       connector: client[kConnector],
-      error: event
+      error: err
     });
-    if (event.code === "ERR_TLS_CERT_ALTNAME_INVALID") {
+    if (err.code === "ERR_TLS_CERT_ALTNAME_INVALID") {
       assert$21(client[kRunning] === 0);
       while (client[kPending] > 0 && client[kQueue][client[kPendingIdx]].servername === client[kServerName]) {
         const request = client[kQueue][client[kPendingIdx]++];
-        util.errorRequest(client, request, event);
+        util.errorRequest(client, request, err);
       }
-    } else onError(client, event);
-    client.emit("connectionError", client[kUrl], [client], event);
+    } else onError(client, err);
+    client.emit("connectionError", client[kUrl], [client], err);
   }
   function emitDrain(client) {
     client[kNeedDrain] = 0;
@@ -9535,14 +9535,14 @@ var require_pool_base = /* @__PURE__ */__commonJSMin((exports, module) => {
         this[kClosedResolve] = resolve;
       });
     }
-    [kDestroy](destroy) {
+    [kDestroy](err) {
       while (true) {
         const item = this[kQueue].shift();
         if (!item) break;
-        item.handler.onError(destroy);
+        item.handler.onError(err);
       }
       const destroyAll = new Array(this[kClients].length);
-      for (let i = 0; i < this[kClients].length; i++) destroyAll[i] = this[kClients][i].destroy(destroy);
+      for (let i = 0; i < this[kClients].length; i++) destroyAll[i] = this[kClients][i].destroy(err);
       return Promise.all(destroyAll);
     }
     [kDispatch](opts, handler) {
@@ -9715,14 +9715,14 @@ var require_balanced_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {number} b
   * @returns {number}
   */
-  function getGreatestCommonDivisor(greatest, common) {
-    if (greatest === 0) return common;
-    while (common !== 0) {
-      const commonAlias = common;
-      common = greatest % common;
-      greatest = commonAlias;
+  function getGreatestCommonDivisor(a, b) {
+    if (a === 0) return b;
+    while (b !== 0) {
+      const t = b;
+      b = a % b;
+      a = t;
     }
-    return greatest;
+    return a;
   }
   function defaultFactory(origin, opts) {
     return new Pool(origin, opts);
@@ -9798,12 +9798,12 @@ var require_balanced_pool = /* @__PURE__ */__commonJSMin((exports, module) => {
       return this[kClients].find(pool => pool[kUrl].origin === upstreamOrigin && pool.closed !== true && pool.destroyed !== true);
     }
     get upstreams() {
-      return this[kClients].filter(dispatcher => dispatcher.closed !== true && dispatcher.destroyed !== true).map(item => item[kUrl].origin);
+      return this[kClients].filter(dispatcher => dispatcher.closed !== true && dispatcher.destroyed !== true).map(p => p[kUrl].origin);
     }
     [kGetDispatcher]() {
       if (this[kClients].length === 0) throw new BalancedPoolMissingUpstreamError();
       if (!this[kClients].find(dispatcher => !dispatcher[kNeedDrain] && dispatcher.closed !== true && dispatcher.destroyed !== true)) return;
-      if (this[kClients].map(pool => pool[kNeedDrain]).reduce((acc, cur) => acc && cur, true)) return;
+      if (this[kClients].map(pool => pool[kNeedDrain]).reduce((a, b) => a && b, true)) return;
       let counter = 0;
       let maxWeightIndex = this[kClients].findIndex(pool => !pool[kNeedDrain]);
       while (counter++ < this[kClients].length) {
@@ -10029,12 +10029,12 @@ var require_agent = /* @__PURE__ */__commonJSMin((exports, module) => {
           const result = this[kClients].get(key);
           if (result) result.count += 1;
           this[kOnConnect](origin, targets);
-        }).on("disconnect", (origin, targets, event) => {
+        }).on("disconnect", (origin, targets, err) => {
           closeClientIfUnused(true);
-          this[kOnDisconnect](origin, targets, event);
-        }).on("connectionError", (origin, targets, event) => {
+          this[kOnDisconnect](origin, targets, err);
+        }).on("connectionError", (origin, targets, err) => {
           closeClientIfUnused(false);
-          this[kOnConnectionError](origin, targets, event);
+          this[kOnConnectionError](origin, targets, err);
         });
         this[kClients].set(key, {
           count: 0,
@@ -10052,11 +10052,11 @@ var require_agent = /* @__PURE__ */__commonJSMin((exports, module) => {
       this[kClients].clear();
       return Promise.all(closePromises);
     }
-    [kDestroy](destroy) {
+    [kDestroy](err) {
       const destroyPromises = [];
       for (const {
         dispatcher
-      } of this[kClients].values()) destroyPromises.push(dispatcher.destroy(destroy));
+      } of this[kClients].values()) destroyPromises.push(dispatcher.destroy(err));
       this[kClients].clear();
       return Promise.all(destroyPromises);
     }
@@ -10118,8 +10118,8 @@ var require_socks5_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (net$1.isIPv4(ipv4Part)) {
         const octets = ipv4Part.split(".").map(Number);
         const high = (octets[0] << 8 | octets[1]).toString(16);
-        const toStringResult = (octets[2] << 8 | octets[3]).toString(16);
-        normalizedAddress = `${address.slice(0, lastColonIndex)}:${high}:${toStringResult}`;
+        const low = (octets[2] << 8 | octets[3]).toString(16);
+        normalizedAddress = `${address.slice(0, lastColonIndex)}:${high}:${low}`;
       }
     }
     const doubleColonIndex = normalizedAddress.indexOf("::");
@@ -10340,10 +10340,10 @@ var require_socks5_client = /* @__PURE__ */__commonJSMin((exports, module) => {
     /**
     * Handle socket errors
     */
-    onError(error) {
-      debug("socket error", error);
+    onError(err) {
+      debug("socket error", err);
       this.state = STATES.ERROR;
-      this.emit("error", error);
+      this.emit("error", err);
       this.destroy();
     }
     /**
@@ -10374,8 +10374,8 @@ var require_socks5_client = /* @__PURE__ */__commonJSMin((exports, module) => {
       const request = Buffer$1.alloc(2 + this.authMethods.length);
       request[0] = SOCKS_VERSION;
       request[1] = this.authMethods.length;
-      this.authMethods.forEach((method, item) => {
-        request[2 + item] = method;
+      this.authMethods.forEach((method, i) => {
+        request[2 + i] = method;
       });
       this.socket.write(request);
     }
@@ -10545,7 +10545,7 @@ var require_socks5_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module) 
   var {
     URL: URL$1
   } = __require("node:url");
-  var payload;
+  var tls;
   var DispatcherBase = require_dispatcher_base();
   var {
     InvalidArgumentError
@@ -10618,8 +10618,8 @@ var require_socks5_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module) 
         });
       });
       const socks5Client = new Socks5Client(socket, this[kProxyAuth]);
-      socks5Client.on("error", event => {
-        debug("SOCKS5 error:", event);
+      socks5Client.on("error", err => {
+        debug("SOCKS5 error:", err);
         socket.destroy();
       });
       await socks5Client.handshake();
@@ -10690,9 +10690,9 @@ var require_socks5_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module) 
                 const socket = await this.createSocks5Connection(targetHost, targetPort);
                 let finalSocket = socket;
                 if (url.protocol === "https:") {
-                  if (!payload) payload = __require("node:tls");
+                  if (!tls) tls = __require("node:tls");
                   debug("upgrading to TLS");
-                  finalSocket = payload.connect({
+                  finalSocket = tls.connect({
                     ...this[kRequestTls],
                     socket,
                     servername: this[kRequestTls]?.servername || targetHost
@@ -10729,9 +10729,9 @@ var require_socks5_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module) 
       this[kPools].clear();
       await Promise.all(closePromises);
     }
-    async [kDestroy](destroy) {
+    async [kDestroy](err) {
       const destroyPromises = [];
-      for (const pool of this[kPools].values()) destroyPromises.push(pool.destroy(destroy));
+      for (const pool of this[kPools].values()) destroyPromises.push(pool.destroy(err));
       this[kPools].clear();
       await Promise.all(destroyPromises);
     }
@@ -10825,8 +10825,8 @@ var require_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module) => {
     [kClose]() {
       return this.#client.close();
     }
-    [kDestroy](destroy) {
-      return this.#client.destroy(destroy);
+    [kDestroy](err) {
+      return this.#client.destroy(err);
     }
   };
   var ProxyAgent = class extends DispatcherBase {
@@ -10998,7 +10998,7 @@ var require_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module) => {
   * It should be removed in the next major version for performance reasons
   */
   function throwIfProxyAuthIsSent(headers) {
-    if (headers && Object.keys(headers).find(text => text.toLowerCase() === "proxy-authorization")) throw new InvalidArgumentError("Proxy-Authorization should be sent in ProxyAgent constructor");
+    if (headers && Object.keys(headers).find(key => key.toLowerCase() === "proxy-authorization")) throw new InvalidArgumentError("Proxy-Authorization should be sent in ProxyAgent constructor");
   }
   module.exports = ProxyAgent;
 });
@@ -11055,8 +11055,8 @@ var require_env_http_proxy_agent = /* @__PURE__ */__commonJSMin((exports, module
     [kClose]() {
       return Promise.all([this[kNoProxyAgent].close(), !this[kHttpProxyAgent][kClosed] && this[kHttpProxyAgent].close(), !this[kHttpsProxyAgent][kClosed] && this[kHttpsProxyAgent].close()]);
     }
-    [kDestroy](destroy) {
-      return Promise.all([this[kNoProxyAgent].destroy(destroy), !this[kHttpProxyAgent][kDestroyed] && this[kHttpProxyAgent].destroy(destroy), !this[kHttpsProxyAgent][kDestroyed] && this[kHttpsProxyAgent].destroy(destroy)]);
+    [kDestroy](err) {
+      return Promise.all([this[kNoProxyAgent].destroy(err), !this[kHttpProxyAgent][kDestroyed] && this[kHttpProxyAgent].destroy(err), !this[kHttpsProxyAgent][kDestroyed] && this[kHttpsProxyAgent].destroy(err)]);
     }
     #getProxyAgentForUrl(url) {
       let {
@@ -11232,15 +11232,15 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.etag = null;
       this.controllerProxy = new RetryController();
     }
-    onResponseStartWithRetry(controller, statusCode, headers, statusMessage, retry) {
+    onResponseStartWithRetry(controller, statusCode, headers, statusMessage, err) {
       if (this.retryOpts.throwOnError) {
         if (this.retryOpts.statusCodes.includes(statusCode) === false) {
-          if (this.headersSent) this.handler.onResponseError?.(this.controllerProxy, retry);else {
+          if (this.headersSent) this.handler.onResponseError?.(this.controllerProxy, err);else {
             this.headersSent = true;
             this.checkpointResponseEnd(headers);
             this.handler.onResponseStart?.(this.controllerProxy, statusCode, headers, statusMessage);
           }
-        } else this.error = retry;
+        } else this.error = err;
         return;
       }
       if (isDisturbed(this.opts.body)) {
@@ -11259,11 +11259,11 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
           controller.resume();
           return;
         }
-        this.error = retry;
+        this.error = err;
         controller.resume();
       }
       controller.pause();
-      this.retryOpts.retry(retry, {
+      this.retryOpts.retry(err, {
         state: {
           counter: this.retryCount
         },
@@ -11288,15 +11288,15 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
     onRequestUpgrade(_controller, statusCode, headers, socket) {
       this.handler.onRequestUpgrade?.(this.controllerProxy, statusCode, headers, socket);
     }
-    static [kRetryHandlerDefaultRetry](retry, {
+    static [kRetryHandlerDefaultRetry](err, {
       state,
       opts
-    }, defaultValue) {
+    }, cb) {
       const {
         statusCode,
         code,
         headers
-      } = retry;
+      } = err;
       const {
         method,
         retryOptions
@@ -11314,19 +11314,19 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         counter
       } = state;
       if (code && code !== "UND_ERR_REQ_RETRY" && !errorCodes.includes(code)) {
-        defaultValue(retry);
+        cb(err);
         return;
       }
       if (Array.isArray(methods) && !methods.includes(method)) {
-        defaultValue(retry);
+        cb(err);
         return;
       }
       if (statusCode != null && Array.isArray(statusCodes) && !statusCodes.includes(statusCode)) {
-        defaultValue(retry);
+        cb(err);
         return;
       }
       if (counter > maxRetries) {
-        defaultValue(retry);
+        cb(err);
         return;
       }
       let retryAfterHeader = headers?.["retry-after"];
@@ -11335,19 +11335,19 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(headers["retry-after"]) : retryAfterHeader * 1e3;
       }
       const retryTimeout = retryAfterHeader > 0 ? Math.min(retryAfterHeader, maxTimeout) : Math.min(minTimeout * timeoutFactor ** (counter - 1), maxTimeout);
-      setTimeout(() => defaultValue(null), retryTimeout);
+      setTimeout(() => cb(null), retryTimeout);
     }
     onResponseStart(controller, statusCode, headers, statusMessage) {
       this.error = null;
       this.retryCount += 1;
       if (statusCode >= 300) {
-        const requestRetryError = new RequestRetryError("Request failed", statusCode, {
+        const err = new RequestRetryError("Request failed", statusCode, {
           headers,
           data: {
             count: this.retryCount
           }
         });
-        this.onResponseStartWithRetry(controller, statusCode, headers, statusMessage, requestRetryError);
+        this.onResponseStartWithRetry(controller, statusCode, headers, statusMessage, err);
         return;
       }
       if (this.headersSent) {
@@ -11455,9 +11455,9 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         this.handler.onResponseError?.(this.controllerProxy, err);
       }
     }
-    onResponseError(controller, error) {
+    onResponseError(controller, err) {
       if (controller?.aborted || isDisturbed(this.opts.body) || this.headersSent && !this.resume) {
-        this.handler.onResponseError?.(this.controllerProxy, error);
+        this.handler.onResponseError?.(this.controllerProxy, err);
         return;
       }
       function shouldRetry(returnedErr) {
@@ -11468,7 +11468,7 @@ var require_retry_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
         this.handler?.onResponseError?.(this.controllerProxy, returnedErr);
       }
       if (this.retryCount - this.retryCountCheckpoint > 0) this.retryCount = this.retryCountCheckpoint + (this.retryCount - this.retryCountCheckpoint);else this.retryCount += 1;
-      this.retryOpts.retry(error, {
+      this.retryOpts.retry(err, {
         state: {
           counter: this.retryCount
         },
@@ -11862,8 +11862,8 @@ var require_readable = /* @__PURE__ */__commonJSMin((exports, module) => {
           length: 0,
           body: []
         };
-        stream.on("error", function (event) {
-          consumeFinish(this[kConsume], event);
+        stream.on("error", function (err) {
+          consumeFinish(this[kConsume], err);
         }).on("close", function () {
           if (this[kConsume].body !== null) consumeFinish(this[kConsume], new RequestAbortedError());
         });
@@ -11883,7 +11883,7 @@ var require_readable = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (state.bufferIndex) {
       const start = state.bufferIndex;
       const end = state.buffer.length;
-      for (let startAlias = start; startAlias < end; startAlias++) consumePush(consume, state.buffer[startAlias]);
+      for (let n = start; n < end; n++) consumePush(consume, state.buffer[n]);
     } else for (const chunk of state.buffer) consumePush(consume, chunk);
     if (state.endEmitted) consumeEnd(this[kConsume], this._readableState.encoding);else consume.stream.on("end", function () {
       consumeEnd(this[kConsume], this._readableState.encoding);
@@ -11957,9 +11957,9 @@ var require_readable = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {Error} [err]
   * @returns {void}
   */
-  function consumeFinish(consume, finish) {
+  function consumeFinish(consume, err) {
     if (consume.body === null) return;
-    if (finish) consume.reject(finish);else consume.resolve();
+    if (err) consume.reject(err);else consume.resolve();
     consume.type = null;
     consume.stream = null;
     consume.resolve = null;
@@ -12058,7 +12058,7 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       const parsedHeaders = responseHeaders === "raw" ? util.parseHeaders(rawHeaders) : headers;
       const contentType = parsedHeaders["content-type"];
       const contentLength = parsedHeaders["content-length"];
-      const readable = new Readable({
+      const res = new Readable({
         resume,
         abort,
         contentType,
@@ -12066,11 +12066,11 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
         highWaterMark
       });
       if (this.removeAbortListener) {
-        readable.on("close", this.removeAbortListener);
+        res.on("close", this.removeAbortListener);
         this.removeAbortListener = null;
       }
       this.callback = null;
-      this.res = readable;
+      this.res = res;
       if (callback !== null) try {
         this.runInAsyncScope(callback, null, null, {
           statusCode,
@@ -12078,12 +12078,12 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
           headers,
           trailers: this.trailers,
           opaque,
-          body: readable,
+          body: res,
           context
         });
       } catch (err) {
         this.res = null;
-        util.destroy(readable.on("error", noop), err);
+        util.destroy(res.on("error", noop), err);
         queueMicrotask(() => {
           throw err;
         });
@@ -12096,7 +12096,7 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       util.parseHeaders(trailers, this.trailers);
       this.res.push(null);
     }
-    onError(error) {
+    onError(err) {
       const {
         res,
         callback,
@@ -12106,7 +12106,7 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (callback) {
         this.callback = null;
         queueMicrotask(() => {
-          this.runInAsyncScope(callback, null, error, {
+          this.runInAsyncScope(callback, null, err, {
             opaque
           });
         });
@@ -12114,14 +12114,14 @@ var require_api_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (res) {
         this.res = null;
         queueMicrotask(() => {
-          util.destroy(res.on("error", noop), error);
+          util.destroy(res.on("error", noop), err);
         });
       }
       if (body) {
         this.body = null;
         if (util.isStream(body)) {
           body.on("error", noop);
-          util.destroy(body, error);
+          util.destroy(body, err);
         }
       }
       if (this.removeAbortListener) {
@@ -12243,8 +12243,8 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.trailers = null;
       this.body = body;
       this.onInfo = onInfo || null;
-      if (util.isStream(body)) body.on("error", event => {
-        this.onError(event);
+      if (util.isStream(body)) body.on("error", err => {
+        this.onError(err);
       });
       addSignal(this, signal);
     }
@@ -12274,14 +12274,14 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       this.factory = null;
       if (factory === null) return;
-      const inAsyncScope = this.runInAsyncScope(factory, null, {
+      const res = this.runInAsyncScope(factory, null, {
         statusCode,
         headers,
         opaque,
         context
       });
-      if (!inAsyncScope || typeof inAsyncScope.write !== "function" || typeof inAsyncScope.end !== "function" || typeof inAsyncScope.on !== "function") throw new InvalidReturnValueError("expected Writable");
-      finished$1(inAsyncScope, {
+      if (!res || typeof res.write !== "function" || typeof res.end !== "function" || typeof res.on !== "function") throw new InvalidReturnValueError("expected Writable");
+      finished$1(res, {
         readable: false
       }, err => {
         const {
@@ -12300,9 +12300,9 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
         });
         if (err) abort();
       });
-      inAsyncScope.on("drain", resume);
-      this.res = inAsyncScope;
-      return (inAsyncScope.writableNeedDrain !== undefined ? inAsyncScope.writableNeedDrain : inAsyncScope._writableState?.needDrain) !== true;
+      res.on("drain", resume);
+      this.res = res;
+      return (res.writableNeedDrain !== undefined ? res.writableNeedDrain : res._writableState?.needDrain) !== true;
     }
     onData(chunk) {
       const {
@@ -12319,7 +12319,7 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.trailers = util.parseHeaders(trailers);
       res.end();
     }
-    onError(error) {
+    onError(err) {
       const {
         res,
         callback,
@@ -12330,18 +12330,18 @@ var require_api_stream = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.factory = null;
       if (res) {
         this.res = null;
-        util.destroy(res, error);
+        util.destroy(res, err);
       } else if (callback) {
         this.callback = null;
         queueMicrotask(() => {
-          this.runInAsyncScope(callback, null, error, {
+          this.runInAsyncScope(callback, null, err, {
             opaque
           });
         });
       }
       if (body) {
         this.body = null;
-        util.destroy(body, error);
+        util.destroy(body, err);
       }
     }
   };
@@ -12537,11 +12537,11 @@ var require_api_pipeline = /* @__PURE__ */__commonJSMin((exports, module) => {
           body
         } = this;
         if (!ret.push(chunk) && body.pause) body.pause();
-      }).on("error", event => {
+      }).on("error", err => {
         const {
           ret
         } = this;
-        util.destroy(ret, event);
+        util.destroy(ret, err);
       }).on("end", () => {
         const {
           ret
@@ -12567,12 +12567,12 @@ var require_api_pipeline = /* @__PURE__ */__commonJSMin((exports, module) => {
       } = this;
       res.push(null);
     }
-    onError(error) {
+    onError(err) {
       const {
         ret
       } = this;
       this.handler = null;
-      util.destroy(ret, error);
+      util.destroy(ret, err);
     }
   };
   function pipeline(opts, handler) {
@@ -12655,7 +12655,7 @@ var require_api_upgrade = /* @__PURE__ */__commonJSMin((exports, module) => {
         context
       });
     }
-    onError(error) {
+    onError(err) {
       const {
         callback,
         opaque
@@ -12664,7 +12664,7 @@ var require_api_upgrade = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (callback) {
         this.callback = null;
         queueMicrotask(() => {
-          this.runInAsyncScope(callback, null, error, {
+          this.runInAsyncScope(callback, null, err, {
             opaque
           });
         });
@@ -12758,7 +12758,7 @@ var require_api_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
         context
       });
     }
-    onError(error) {
+    onError(err) {
       const {
         callback,
         opaque
@@ -12767,7 +12767,7 @@ var require_api_connect = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (callback) {
         this.callback = null;
         queueMicrotask(() => {
-          this.runInAsyncScope(callback, null, error, {
+          this.runInAsyncScope(callback, null, err, {
             opaque
           });
         });
@@ -12911,11 +12911,11 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {import('../../index').Headers|string[]|Record<string, string>} headers
   * @param {string} key
   */
-  function getHeaderByName(headers, nameValue) {
+  function getHeaderByName(headers, key) {
     if (Array.isArray(headers)) {
-      for (let i = 0; i < headers.length; i += 2) if (headers[i].toLocaleLowerCase() === nameValue.toLocaleLowerCase()) return headers[i + 1];
+      for (let i = 0; i < headers.length; i += 2) if (headers[i].toLocaleLowerCase() === key.toLocaleLowerCase()) return headers[i + 1];
       return;
-    } else if (typeof headers.get === "function") return headers.get(nameValue);else return lowerCaseEntries(headers)[nameValue.toLocaleLowerCase()];
+    } else if (typeof headers.get === "function") return headers.get(key);else return lowerCaseEntries(headers)[key.toLocaleLowerCase()];
   }
   /** @param {string[]} headers */
   function buildHeadersFromArray(headers) {
@@ -12957,9 +12957,9 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (typeof path !== "string") return path;
     const pathSegments = path.split("?", 3);
     if (pathSegments.length !== 2) return path;
-    const uRLSearchParams = new URLSearchParams(pathSegments.pop());
-    uRLSearchParams.sort();
-    return [...pathSegments, uRLSearchParams.toString()].join("?");
+    const qp = new URLSearchParams(pathSegments.pop());
+    qp.sort();
+    return [...pathSegments, qp.toString()].join("?");
   }
   function matchKey(mockDispatch, {
     path,
@@ -12976,8 +12976,8 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
   function getResponseData(data) {
     if (Buffer.isBuffer(data)) return data;else if (data instanceof Uint8Array) return data;else if (data instanceof ArrayBuffer) return data;else if (typeof data === "object") return JSON.stringify(data);else if (data) return data.toString();else return "";
   }
-  function getMockDispatch(mockDispatches, dispatch) {
-    const basePath = dispatch.query ? serializePathWithQuery(dispatch.path, dispatch.query) : dispatch.path;
+  function getMockDispatch(mockDispatches, key) {
+    const basePath = key.query ? serializePathWithQuery(key.path, key.query) : key.path;
     const resolvedPath = typeof basePath === "string" ? safeUrl(basePath) : basePath;
     const resolvedPathWithoutTrailingSlash = removeTrailingSlash(resolvedPath);
     let matchedMockDispatches = mockDispatches.filter(({
@@ -12991,17 +12991,17 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for path '${resolvedPath}'`);
     matchedMockDispatches = matchedMockDispatches.filter(({
       method
-    }) => matchValue(method, dispatch.method));
-    if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for method '${dispatch.method}' on path '${resolvedPath}'`);
+    }) => matchValue(method, key.method));
+    if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for method '${key.method}' on path '${resolvedPath}'`);
     matchedMockDispatches = matchedMockDispatches.filter(({
       body
-    }) => typeof body !== "undefined" ? matchValue(body, dispatch.body) : true);
-    if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for body '${dispatch.body}' on path '${resolvedPath}'`);
-    matchedMockDispatches = matchedMockDispatches.filter(mockDispatch => matchHeaders(mockDispatch, dispatch.headers));
-    if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for headers '${typeof dispatch.headers === "object" ? JSON.stringify(dispatch.headers) : dispatch.headers}' on path '${resolvedPath}'`);
+    }) => typeof body !== "undefined" ? matchValue(body, key.body) : true);
+    if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for body '${key.body}' on path '${resolvedPath}'`);
+    matchedMockDispatches = matchedMockDispatches.filter(mockDispatch => matchHeaders(mockDispatch, key.headers));
+    if (matchedMockDispatches.length === 0) throw new MockNotMatchedError(`Mock dispatch not matched for headers '${typeof key.headers === "object" ? JSON.stringify(key.headers) : key.headers}' on path '${resolvedPath}'`);
     return matchedMockDispatches[0];
   }
-  function addMockDispatch(mockDispatches, dispatch, data, opts) {
+  function addMockDispatch(mockDispatches, key, data, opts) {
     const baseData = {
       timesInvoked: 0,
       times: 1,
@@ -13016,7 +13016,7 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
     };
     const newMockDispatch = {
       ...baseData,
-      ...dispatch,
+      ...key,
       pending: true,
       data: {
         error: null,
@@ -13027,10 +13027,10 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
     mockDispatches[kTotalDispatchCount] = (mockDispatches[kTotalDispatchCount] || 0) + 1;
     return newMockDispatch;
   }
-  function deleteMockDispatch(mockDispatches, dispatch) {
+  function deleteMockDispatch(mockDispatches, key) {
     const index = mockDispatches.findIndex(dispatch => {
       if (!dispatch.consumed) return false;
-      return matchKey(dispatch, dispatch);
+      return matchKey(dispatch, key);
     });
     if (index !== -1) mockDispatches.splice(index, 1);
   }
@@ -13085,8 +13085,8 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
   * Mock dispatch function used to simulate undici dispatches
   */
   function mockDispatch(opts, handler) {
-    const buildKeyResult = buildKey(opts);
-    const mockDispatch = getMockDispatch(this[kDispatches], buildKeyResult);
+    const key = buildKey(opts);
+    const mockDispatch = getMockDispatch(this[kDispatches], key);
     mockDispatch.timesInvoked++;
     if (mockDispatch.data.callback) mockDispatch.data = {
       ...mockDispatch.data,
@@ -13110,7 +13110,7 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
     mockDispatch.consumed = !persist && timesInvoked >= times;
     mockDispatch.pending = timesInvoked < times;
     if (error !== null) {
-      deleteMockDispatch(this[kDispatches], buildKeyResult);
+      deleteMockDispatch(this[kDispatches], key);
       handler.onError(error);
       return true;
     }
@@ -13145,7 +13145,7 @@ var require_mock_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
       handler.onHeaders?.(statusCode, responseHeaders, resume, getStatusText(statusCode));
       handler.onData?.(Buffer.from(responseData));
       handler.onComplete?.(responseTrailers);
-      deleteMockDispatch(mockDispatches, buildKeyResult);
+      deleteMockDispatch(mockDispatches, key);
     }
     function resume() {}
     return true;
@@ -13484,11 +13484,11 @@ var require_mock_call_history = /* @__PURE__ */__commonJSMin((exports, module) =
   }
   function makeFilterCalls(parameterName) {
     return (parameterValue, logs) => {
-      if (typeof parameterValue === "string" || parameterValue == null) return logs.filter(item => {
-        return item[parameterName] === parameterValue;
+      if (typeof parameterValue === "string" || parameterValue == null) return logs.filter(log => {
+        return log[parameterName] === parameterValue;
       });
-      if (parameterValue instanceof RegExp) return logs.filter(item => {
-        return parameterValue.test(item[parameterName]);
+      if (parameterValue instanceof RegExp) return logs.filter(log => {
+        return parameterValue.test(log[parameterName]);
       });
       throw new InvalidArgumentError(`${parameterName} parameter should be one of string, regexp, undefined or null`);
     };
@@ -13510,15 +13510,15 @@ var require_mock_call_history = /* @__PURE__ */__commonJSMin((exports, module) =
       this.body = requestInit.body;
       this.headers = requestInit.headers;
       this.method = requestInit.method;
-      const urlWithMaybeSearchParameters = computeUrlWithMaybeSearchParameters(requestInit);
-      this.fullUrl = urlWithMaybeSearchParameters.toString();
-      this.origin = urlWithMaybeSearchParameters.origin;
-      this.path = urlWithMaybeSearchParameters.pathname;
-      this.searchParams = Object.fromEntries(urlWithMaybeSearchParameters.searchParams);
-      this.protocol = urlWithMaybeSearchParameters.protocol;
-      this.host = urlWithMaybeSearchParameters.host;
-      this.port = urlWithMaybeSearchParameters.port;
-      this.hash = urlWithMaybeSearchParameters.hash;
+      const url = computeUrlWithMaybeSearchParameters(requestInit);
+      this.fullUrl = url.toString();
+      this.origin = url.origin;
+      this.path = url.pathname;
+      this.searchParams = Object.fromEntries(url.searchParams);
+      this.protocol = url.protocol;
+      this.host = url.host;
+      this.port = url.port;
+      this.hash = url.hash;
     }
     toMap() {
       return /* @__PURE__ */new Map([["protocol", this.protocol], ["host", this.host], ["port", this.port], ["origin", this.origin], ["path", this.path], ["hash", this.hash], ["searchParams", this.searchParams], ["fullUrl", this.fullUrl], ["method", this.method], ["body", this.body], ["headers", this.headers]]);
@@ -13529,9 +13529,9 @@ var require_mock_call_history = /* @__PURE__ */__commonJSMin((exports, module) =
         betweenPairSeparator: "|"
       };
       let result = "";
-      this.toMap().forEach((value, item) => {
-        if (typeof value === "string" || value === undefined || value === null) result = `${result}${item}${options.betweenKeyValueSeparator}${value}${options.betweenPairSeparator}`;
-        if (typeof value === "object" && value !== null || Array.isArray(value)) result = `${result}${item}${options.betweenKeyValueSeparator}${JSON.stringify(value)}${options.betweenPairSeparator}`;
+      this.toMap().forEach((value, key) => {
+        if (typeof value === "string" || value === undefined || value === null) result = `${result}${key}${options.betweenKeyValueSeparator}${value}${options.betweenPairSeparator}`;
+        if (typeof value === "object" && value !== null || Array.isArray(value)) result = `${result}${key}${options.betweenKeyValueSeparator}${JSON.stringify(value)}${options.betweenPairSeparator}`;
       });
       return result.slice(0, -1);
     }
@@ -13556,8 +13556,8 @@ var require_mock_call_history = /* @__PURE__ */__commonJSMin((exports, module) =
     filterCalls(criteria, options) {
       if (this.logs.length === 0) return this.logs;
       if (typeof criteria === "function") return this.logs.filter(criteria);
-      if (criteria instanceof RegExp) return this.logs.filter(item => {
-        return criteria.test(item.toString());
+      if (criteria instanceof RegExp) return this.logs.filter(log => {
+        return criteria.test(log.toString());
       });
       if (typeof criteria === "object" && criteria !== null) {
         if (Object.keys(criteria).length === 0) return this.logs;
@@ -13590,9 +13590,9 @@ var require_mock_call_history = /* @__PURE__ */__commonJSMin((exports, module) =
       this.logs = [];
     }
     [kMockCallHistoryAddLog](requestInit) {
-      const mockCallHistoryLog = new MockCallHistoryLog(requestInit);
-      this.logs.push(mockCallHistoryLog);
-      return mockCallHistoryLog;
+      const log = new MockCallHistoryLog(requestInit);
+      this.logs.push(log);
+      return log;
     }
     *[Symbol.iterator]() {
       for (const log of this.calls()) yield log;
@@ -13687,8 +13687,8 @@ var require_pending_interceptors_formatter = /* @__PURE__ */__commonJSMin((expor
       disableColors
     } = {}) {
       this.transform = new Transform$1({
-        transform(chunk, _enc, transform) {
-          transform(null, chunk);
+        transform(chunk, _enc, cb) {
+          cb(null, chunk);
         }
       });
       this.logger = new Console({
@@ -13964,13 +13964,13 @@ var require_snapshot_utils = /* @__PURE__ */__commonJSMin((exports, module) => {
   */
   function isUrlExcludedFactory(excludePatterns = []) {
     if (excludePatterns.length === 0) return () => false;
-    return function isUrlExcluded(text) {
+    return function isUrlExcluded(url) {
       let urlLowerCased;
       for (const pattern of excludePatterns) if (typeof pattern === "string") {
-        if (!urlLowerCased) urlLowerCased = text.toLowerCase();
+        if (!urlLowerCased) urlLowerCased = url.toLowerCase();
         if (urlLowerCased.includes(pattern.toLowerCase())) return true;
       } else if (pattern instanceof RegExp) {
-        if (pattern.test(text)) return true;
+        if (pattern.test(url)) return true;
       }
       return false;
     };
@@ -14284,8 +14284,8 @@ var require_snapshot_recorder = /* @__PURE__ */__commonJSMin((exports, module) =
     * @returns {boolean} - True if URL is excluded
     */
     isUrlExcluded(requestOpts) {
-      const toStringResult = new URL(requestOpts.path, requestOpts.origin).toString();
-      return this.#isUrlExcluded(toStringResult);
+      const url = new URL(requestOpts.path, requestOpts.origin).toString();
+      return this.#isUrlExcluded(url);
     }
     /**
     * Finds a matching snapshot for the given request
@@ -14952,14 +14952,14 @@ var require_redirect_handler = /* @__PURE__ */__commonJSMin((exports, module) =>
     return false;
   }
   function cleanRequestHeaders(headers, removeContent, unknownOrigin) {
-    const emptyItems = [];
+    const ret = [];
     if (Array.isArray(headers)) {
-      for (let i = 0; i < headers.length; i += 2) if (!shouldRemoveHeader(headers[i], removeContent, unknownOrigin)) emptyItems.push(headers[i], headers[i + 1]);
+      for (let i = 0; i < headers.length; i += 2) if (!shouldRemoveHeader(headers[i], removeContent, unknownOrigin)) ret.push(headers[i], headers[i + 1]);
     } else if (headers && typeof headers === "object") {
       const entries = util.hasSafeIterator(headers) ? headers : Object.entries(headers);
-      for (const [key, value] of entries) if (!shouldRemoveHeader(key, removeContent, unknownOrigin)) emptyItems.push(key, value);
+      for (const [key, value] of entries) if (!shouldRemoveHeader(key, removeContent, unknownOrigin)) ret.push(key, value);
     } else assert$12(headers == null, "headers must be an object or an array");
-    return emptyItems;
+    return ret;
   }
   module.exports = RedirectHandler;
 });
@@ -15050,8 +15050,8 @@ var require_response_error = /* @__PURE__ */__commonJSMin((exports, module) => {
         super.onResponseError(controller, err);
       } else super.onResponseEnd(controller, trailers);
     }
-    onResponseError(controller, error) {
-      super.onResponseError(controller, error);
+    onResponseError(controller, err) {
+      super.onResponseError(controller, err);
     }
   };
   module.exports = () => {
@@ -15121,8 +15121,8 @@ var require_dump = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (this.aborted === true) return true;
       return super.onResponseStart(controller, statusCode, headers, statusMessage);
     }
-    onResponseError(controller, error) {
-      super.onResponseError(controller, this.aborted === true ? this.reason : error);
+    onResponseError(controller, err) {
+      super.onResponseError(controller, this.aborted === true ? this.reason : err);
     }
     onResponseData(controller, chunk) {
       this.#size = this.#size + chunk.length;
@@ -15176,8 +15176,8 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
     const prototype = Object.getPrototypeOf(headers);
     return Object.prototype.hasOwnProperty.call(headers, Symbol.iterator) || prototype != null && prototype !== Object.prototype && typeof headers[Symbol.iterator] === "function";
   }
-  function isHostHeader(text) {
-    return typeof text === "string" && text.toLowerCase() === "host";
+  function isHostHeader(key) {
+    return typeof key === "string" && key.toLowerCase() === "host";
   }
   function normalizeHeaders(headers) {
     if (headers == null) return null;
@@ -15257,10 +15257,10 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.pick = opts.pick ?? this.#defaultPick;
       this.storage = opts.storage ?? new DNSStorage(opts);
     }
-    runLookup(origin, opts, lookupValue) {
+    runLookup(origin, opts, cb) {
       const ips = this.storage.get(origin.hostname);
       if (ips == null && this.storage.full()) {
-        lookupValue(null, origin);
+        cb(null, origin);
         return;
       }
       const newOpts = {
@@ -15274,7 +15274,7 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       };
       if (ips == null) this.lookup(origin, newOpts, (err, addresses) => {
         if (err || addresses == null || addresses.length === 0) {
-          lookupValue(err ?? new InformationalError("No DNS entries found"));
+          cb(err ?? new InformationalError("No DNS entries found"));
           return;
         }
         this.setRecords(origin, addresses);
@@ -15282,29 +15282,29 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
         const ip = this.pick(origin, records, newOpts.affinity);
         let port;
         if (typeof ip.port === "number") port = `:${ip.port}`;else if (origin.port !== "") port = `:${origin.port}`;else port = "";
-        lookupValue(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
+        cb(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
       });else {
         const ip = this.pick(origin, ips, newOpts.affinity);
         if (ip == null) {
           this.storage.delete(origin.hostname);
-          this.runLookup(origin, opts, lookupValue);
+          this.runLookup(origin, opts, cb);
           return;
         }
         let port;
         if (typeof ip.port === "number") port = `:${ip.port}`;else if (origin.port !== "") port = `:${origin.port}`;else port = "";
-        lookupValue(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
+        cb(null, new URL(`${origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`));
       }
     }
-    #defaultLookup(origin, opts, fn) {
+    #defaultLookup(origin, opts, cb) {
       lookup(origin.hostname, {
         all: true,
         family: this.dualStack === false ? this.affinity : 0,
         order: "ipv4first"
       }, (err, addresses) => {
-        if (err) return fn(err);
+        if (err) return cb(err);
         const results = /* @__PURE__ */new Map();
         for (const addr of addresses) results.set(`${addr.address}:${addr.family}`, addr);
-        fn(null, results.values());
+        cb(null, results.values());
       });
     }
     #defaultPick(origin, hostnameRecords, affinity) {
@@ -15344,10 +15344,10 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (!family) return null;
       if (family.offset == null || family.offset === maxInt) family.offset = 0;else family.offset++;
       const position = family.offset % family.ips.length;
-      const fallbackValue = family.ips[position] ?? null;
-      if (fallbackValue == null) return fallbackValue;
-      if (Date.now() - fallbackValue.timestamp > fallbackValue.ttl) family.ips.splice(position, 1);
-      return fallbackValue;
+      const ip = family.ips[position] ?? null;
+      if (ip == null) return ip;
+      if (Date.now() - ip.timestamp > ip.ttl) family.ips.splice(position, 1);
+      return ip;
     }
     setRecords(origin, addresses) {
       const timestamp = Date.now();
@@ -15404,40 +15404,40 @@ var require_dns = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.#state = state;
       this.#dispatch = dispatch;
     }
-    onResponseError(controller, event) {
-      switch (event.code) {
+    onResponseError(controller, err) {
+      switch (err.code) {
         case "ETIMEDOUT":
         case "ECONNREFUSED":
           if (this.#state.dualStack) {
             if (!this.#firstTry) {
-              super.onResponseError(controller, event);
+              super.onResponseError(controller, err);
               return;
             }
             this.#firstTry = false;
             const otherFamily = this.#newOrigin.hostname[0] === "[" ? 4 : 6;
-            const pickFamily = this.#state.pickFamily(this.#origin, otherFamily);
-            if (pickFamily == null) {
-              super.onResponseError(controller, event);
+            const ip = this.#state.pickFamily(this.#origin, otherFamily);
+            if (ip == null) {
+              super.onResponseError(controller, err);
               return;
             }
             let port;
-            if (typeof pickFamily.port === "number") port = `:${pickFamily.port}`;else if (this.#origin.port !== "") port = `:${this.#origin.port}`;else port = "";
+            if (typeof ip.port === "number") port = `:${ip.port}`;else if (this.#origin.port !== "") port = `:${this.#origin.port}`;else port = "";
             const dispatchOpts = {
               ...this.#opts,
-              origin: `${this.#origin.protocol}//${pickFamily.family === 6 ? `[${pickFamily.address}]` : pickFamily.address}${port}`,
+              origin: `${this.#origin.protocol}//${ip.family === 6 ? `[${ip.address}]` : ip.address}${port}`,
               headers: withHostHeader(this.#origin.host, this.#opts.headers)
             };
             this.#dispatch(dispatchOpts, this);
             return;
           }
-          super.onResponseError(controller, event);
+          super.onResponseError(controller, err);
           break;
         case "ENOTFOUND":
           this.#state.deleteRecords(this.#origin);
-          super.onResponseError(controller, event);
+          super.onResponseError(controller, err);
           break;
         default:
-          super.onResponseError(controller, event);
+          super.onResponseError(controller, err);
       }
     }
   };
@@ -15514,7 +15514,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function findUnescapedQuote(value, start) {
     let escaped = false;
-    for (let startAlias = start; startAlias < value.length; startAlias++) if (escaped) escaped = false;else if (value[startAlias] === "\\") escaped = true;else if (value[startAlias] === "\"") return startAlias;
+    for (let i = start; i < value.length; i++) if (escaped) escaped = false;else if (value[i] === "\\") escaped = true;else if (value[i] === "\"") return i;
     return -1;
   }
   function splitCacheControlHeaderValue(value) {
@@ -15561,7 +15561,7 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     });
     return directives;
   }
-  function markInvalidCacheControlDirective(directives, invalid) {
+  function markInvalidCacheControlDirective(directives, key) {
     let invalidDirectives = directives[kInvalidCacheControlDirectives];
     if (invalidDirectives === undefined) {
       invalidDirectives = /* @__PURE__ */new Set();
@@ -15569,16 +15569,16 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
         value: invalidDirectives
       });
     }
-    invalidDirectives.add(invalid);
+    invalidDirectives.add(key);
   }
-  function hasInvalidCacheControlDirective(directives, cache) {
-    return directives[kInvalidCacheControlDirectives]?.has(cache) === true;
+  function hasInvalidCacheControlDirective(directives, key) {
+    return directives[kInvalidCacheControlDirectives]?.has(key) === true;
   }
-  function getMalformedRestrictiveDirectiveName(text) {
-    for (const directiveName of RESTRICTIVE_DIRECTIVE_NAMES) if (text.startsWith(directiveName) && text.length > directiveName.length && !isValidHTTPToken(text[directiveName.length])) return directiveName;
+  function getMalformedRestrictiveDirectiveName(key) {
+    for (const directiveName of RESTRICTIVE_DIRECTIVE_NAMES) if (key.startsWith(directiveName) && key.length > directiveName.length && !isValidHTTPToken(key[directiveName.length])) return directiveName;
     let tokenOnlyKey = "";
     let hasInvalidTokenChar = false;
-    for (let i = 0; i < text.length; i++) if (isValidHTTPToken(text[i])) tokenOnlyKey += text[i];else hasInvalidTokenChar = true;
+    for (let i = 0; i < key.length; i++) if (isValidHTTPToken(key[i])) tokenOnlyKey += key[i];else hasInvalidTokenChar = true;
     if (hasInvalidTokenChar && arrayIncludes(RESTRICTIVE_DIRECTIVE_NAMES, tokenOnlyKey)) return tokenOnlyKey;
   }
   /**
@@ -15595,11 +15595,11 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
       headers: opts.headers
     };
   }
-  function appendHeader(headers, text, items) {
-    const headerName = text.toLowerCase();
+  function appendHeader(headers, key, val) {
+    const headerName = key.toLowerCase();
     const current = headers[headerName];
-    const values = Array.isArray(items) ? items : [items];
-    if (current === undefined) headers[headerName] = Array.isArray(items) ? items.slice() : items;else if (Array.isArray(current)) current.push(...values);else headers[headerName] = [current, ...values];
+    const values = Array.isArray(val) ? val : [val];
+    if (current === undefined) headers[headerName] = Array.isArray(val) ? val.slice() : val;else if (Array.isArray(current)) current.push(...values);else headers[headerName] = [current, ...values];
   }
   /**
   * @param {Record<string, string[] | string>}
@@ -15609,9 +15609,9 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
     let headers;
     if (opts.headers == null) headers = {};else if (typeof opts.headers === "object") {
       headers = {};
-      if (hasSafeIterator(opts.headers)) for (const count of opts.headers) {
-        if (!Array.isArray(count)) throw new Error("opts.headers is not a valid header map");
-        const [key, val] = count;
+      if (hasSafeIterator(opts.headers)) for (const x of opts.headers) {
+        if (!Array.isArray(x)) throw new Error("opts.headers is not a valid header map");
+        const [key, val] = x;
         if (typeof key !== "string" || typeof val !== "string") throw new Error("opts.headers is not a valid header map");
         appendHeader(headers, key, val);
       } else for (const key of Object.keys(opts.headers)) appendHeader(headers, key, opts.headers[key]);
@@ -15621,10 +15621,10 @@ var require_cache$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   /**
   * @param {any} key
   */
-  function assertCacheKey(cache) {
-    if (typeof cache !== "object") throw new TypeError(`expected key to be object, got ${typeof cache}`);
-    for (const property of ["origin", "method", "path"]) if (typeof cache[property] !== "string") throw new TypeError(`expected key.${property} to be string, got ${typeof cache[property]}`);
-    if (cache.headers !== undefined && typeof cache.headers !== "object") throw new TypeError(`expected headers to be object, got ${typeof cache}`);
+  function assertCacheKey(key) {
+    if (typeof key !== "object") throw new TypeError(`expected key to be object, got ${typeof key}`);
+    for (const property of ["origin", "method", "path"]) if (typeof key[property] !== "string") throw new TypeError(`expected key.${property} to be string, got ${typeof key[property]}`);
+    if (key.headers !== undefined && typeof key.headers !== "object") throw new TypeError(`expected headers to be object, got ${typeof key}`);
   }
   /**
   * @param {any} value
@@ -15915,10 +15915,10 @@ var require_date = /* @__PURE__ */__commonJSMin((exports, module) => {
         return parseRfc850Date(date);
     }
   }
-  function makeDate(year, monthIdx, dateValue, hour, minute, second, weekday) {
-    const result = new Date(Date.UTC(year, monthIdx, dateValue, hour, minute, second));
+  function makeDate(year, monthIdx, day, hour, minute, second, weekday) {
+    const result = new Date(Date.UTC(year, monthIdx, day, hour, minute, second));
     if (year >= 0 && year <= 99) result.setUTCFullYear(year);
-    return result.getUTCFullYear() === year && result.getUTCMonth() === monthIdx && result.getUTCDate() === dateValue && result.getUTCHours() === hour && result.getUTCMinutes() === minute && result.getUTCSeconds() === second && result.getUTCDay() === weekday ? result : undefined;
+    return result.getUTCFullYear() === year && result.getUTCMonth() === monthIdx && result.getUTCDate() === day && result.getUTCHours() === hour && result.getUTCMinutes() === minute && result.getUTCSeconds() === second && result.getUTCDay() === weekday ? result : undefined;
   }
   /**
   * @see https://httpwg.org/specs/rfc9110.html#preferred.date.format
@@ -16457,10 +16457,10 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       this.#writeStream?.end();
       this.#handler.onResponseEnd?.(controller, trailers);
     }
-    onResponseError(controller, error) {
-      this.#writeStream?.destroy(error);
+    onResponseError(controller, err) {
+      this.#writeStream?.destroy(err);
       this.#writeStream = undefined;
-      this.#handler.onResponseError?.(controller, error);
+      this.#handler.onResponseError?.(controller, err);
     }
   };
   /**
@@ -16547,7 +16547,7 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
   *
   * @returns {number | undefined} time that the value is stale at in seconds or undefined if it shouldn't be cached
   */
-  function determineStaleAt(cacheType, stale, staleValue, resHeaders, responseDate, cacheControlDirectives) {
+  function determineStaleAt(cacheType, now, age, resHeaders, responseDate, cacheControlDirectives) {
     if (cacheType === "shared") {
       if (hasInvalidCacheControlDirective(cacheControlDirectives, "s-maxage")) return 0;
       const sMaxAge = cacheControlDirectives["s-maxage"];
@@ -16560,20 +16560,20 @@ var require_cache_handler = /* @__PURE__ */__commonJSMin((exports, module) => {
       if (typeof resHeaders.expires !== "string") return 0;
       const expiresDate = parseHttpDate(resHeaders.expires);
       if (!expiresDate) return 0;
-      if (stale >= expiresDate.getTime()) return 0;
+      if (now >= expiresDate.getTime()) return 0;
       if (responseDate) {
         if (responseDate >= expiresDate) return 0;
         const freshnessLifetime = expiresDate.getTime() - responseDate.getTime();
-        if (staleValue !== undefined && staleValue >= freshnessLifetime) return 0;
+        if (age !== undefined && age >= freshnessLifetime) return 0;
         return freshnessLifetime;
       }
-      return expiresDate.getTime() - stale;
+      return expiresDate.getTime() - now;
     }
     if (typeof resHeaders["last-modified"] === "string") {
       const lastModified = parseHttpDate(resHeaders["last-modified"]);
       if (lastModified) {
-        if (lastModified.getTime() >= stale) return;
-        return (stale - lastModified.getTime()) * .1;
+        if (lastModified.getTime() >= now) return;
+        return (now - lastModified.getTime()) * .1;
       }
     }
     if (cacheControlDirectives.immutable) return 31536e6;
@@ -16714,14 +16714,14 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
     * @param {import('../../types/cache-interceptor.d.ts').default.CacheValue} val
     * @returns {Writable | undefined}
     */
-    createWriteStream(write, stream) {
-      assertCacheKey(write);
-      assertCacheValue(stream);
-      const topLevelKey = `${write.origin}:${write.path}`;
+    createWriteStream(key, val) {
+      assertCacheKey(key);
+      assertCacheValue(val);
+      const topLevelKey = `${key.origin}:${key.path}`;
       const store = this;
       const entry = {
-        ...write,
-        ...stream,
+        ...key,
+        ...val,
         body: [],
         size: 0
       };
@@ -16738,7 +16738,7 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
             entries = [];
             store.#entries.set(topLevelKey, entries);
           }
-          const previousEntry = findEntry(write, entries, Date.now());
+          const previousEntry = findEntry(key, entries, Date.now());
           if (previousEntry) {
             const index = entries.indexOf(previousEntry);
             entries.splice(index, 1, entry);
@@ -16774,9 +16774,9 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
     /**
     * @param {CacheKey} key
     */
-    delete(deleteValue) {
-      if (typeof deleteValue !== "object") throw new TypeError(`expected key to be object, got ${typeof deleteValue}`);
-      const topLevelKey = `${deleteValue.origin}:${deleteValue.path}`;
+    delete(key) {
+      if (typeof key !== "object") throw new TypeError(`expected key to be object, got ${typeof key}`);
+      const topLevelKey = `${key.origin}:${key.path}`;
       for (const entry of this.#entries.get(topLevelKey) ?? []) {
         this.#size -= entry.size;
         this.#count -= 1;
@@ -16784,15 +16784,15 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
       this.#entries.delete(topLevelKey);
     }
   };
-  function findEntry(entry, entries, entryValue) {
+  function findEntry(key, entries, now) {
     for (let i = 0; i < entries.length; i++) {
       const entry = entries[i];
-      if (entry.deleteAt > entryValue && entry.method === entry.method && varyMatches(entry, entry)) return entry;
+      if (entry.deleteAt > now && entry.method === key.method && varyMatches(key, entry)) return entry;
     }
   }
-  function varyMatches(vary, entry) {
+  function varyMatches(key, entry) {
     if (entry.vary == null) return true;
-    for (const headerName in entry.vary) if (Object.hasOwn(entry.vary, headerName) && !headerValueEquals(vary.headers?.[headerName], entry.vary[headerName])) return false;
+    for (const headerName in entry.vary) if (Object.hasOwn(entry.vary, headerName) && !headerValueEquals(key.headers?.[headerName], entry.vary[headerName])) return false;
     return true;
   }
   /**
@@ -16800,15 +16800,15 @@ var require_memory_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
   * @param {string|string[]|null|undefined} rhs
   * @returns {boolean}
   */
-  function headerValueEquals(count, value) {
-    if (count == null && value == null) return true;
-    if (count == null && value != null || count != null && value == null) return false;
-    if (Array.isArray(count) && Array.isArray(value)) {
-      if (count.length !== value.length) return false;
-      for (let i = 0; i < count.length; i++) if (count[i] !== value[i]) return false;
+  function headerValueEquals(lhs, rhs) {
+    if (lhs == null && rhs == null) return true;
+    if (lhs == null && rhs != null || lhs != null && rhs == null) return false;
+    if (Array.isArray(lhs) && Array.isArray(rhs)) {
+      if (lhs.length !== rhs.length) return false;
+      for (let i = 0; i < lhs.length; i++) if (lhs[i] !== rhs[i]) return false;
       return true;
     }
-    return count === value;
+    return lhs === rhs;
   }
   module.exports = MemoryCacheStore;
 });
@@ -16855,7 +16855,7 @@ var require_cache_revalidation_handler = /* @__PURE__ */__commonJSMin((exports, 
       this.#handler = handler;
       this.#allowErrorStatusCodes = allowErrorStatusCodes;
     }
-    onRequestStart(request, context) {
+    onRequestStart(_, context) {
       this.#successful = false;
       this.#context = context;
     }
@@ -16879,13 +16879,13 @@ var require_cache_revalidation_handler = /* @__PURE__ */__commonJSMin((exports, 
       if (this.#successful) return;
       this.#handler.onResponseEnd?.(controller, trailers);
     }
-    onResponseError(controller, error) {
+    onResponseError(controller, err) {
       if (this.#successful) return;
       if (this.#callback) {
         this.#callback(false);
         this.#callback = null;
       }
-      if (typeof this.#handler.onResponseError === "function") this.#handler.onResponseError(controller, error);else throw error;
+      if (typeof this.#handler.onResponseError === "function") this.#handler.onResponseError(controller, err);else throw err;
     }
   };
   module.exports = CacheRevalidationHandler;
@@ -17071,7 +17071,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {any} context
   * @param {boolean} isStale
   */
-  function sendCachedValue(handler, opts, result, value, context, isStale) {
+  function sendCachedValue(handler, opts, result, age, context, isStale) {
     const stream = util.isStream(result.body) ? result.body : Readable$1.from(result.body ?? []);
     assert$10(!stream.destroyed, "stream should not be destroyed");
     assert$10(!stream.readableDidRead, "stream should not be readableDidRead");
@@ -17095,9 +17095,9 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
         stream.destroy(reason ?? new AbortError());
       }
     };
-    stream.on("error", function (event) {
+    stream.on("error", function (err) {
       if (!this.readableEnded) {
-        if (typeof handler.onResponseError === "function") handler.onResponseError(controller, event);else throw event;
+        if (typeof handler.onResponseError === "function") handler.onResponseError(controller, err);else throw err;
       }
     }).on("close", function () {
       if (!this.errored) handler.onResponseEnd?.(controller, {});
@@ -17106,7 +17106,7 @@ var require_cache$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (stream.destroyed) return;
     const headers = {
       ...result.headers,
-      age: String(value)
+      age: String(age)
     };
     if (isStale) headers.warning = "110 - \"response is stale\"";
     handler.onResponseStart?.(controller, result.statusCode, headers, result.statusMessage);
@@ -17657,12 +17657,12 @@ var require_decompress = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {Error} err
     * @returns {void}
     */
-    onResponseError(controller, error) {
+    onResponseError(controller, err) {
       if (this.#terminated) return;
       this.#terminated = true;
       for (const decompressor of this.#decompressors) decompressor.destroy();
       this.#cleanupDecompressors();
-      super.onResponseError(this.#controller, error);
+      super.onResponseError(this.#controller, err);
     }
   };
   /**
@@ -17903,12 +17903,12 @@ var require_deduplication_handler = /* @__PURE__ */__commonJSMin((exports, modul
     * @param {import('../../types/dispatcher.d.ts').default.DispatchController} controller
     * @param {Error} err
     */
-    onResponseError(controller, error) {
+    onResponseError(controller, err) {
       if (this.#completed) return;
       this.#aborted = true;
       this.#completed = true;
-      this.#primaryHandler.onResponseError?.(controller, error);
-      for (const waitingHandler of this.#waitingHandlers) this.#errorWaitingHandler(waitingHandler, error);
+      this.#primaryHandler.onResponseError?.(controller, err);
+      for (const waitingHandler of this.#waitingHandlers) this.#errorWaitingHandler(waitingHandler, err);
       this.#waitingHandlers = [];
       this.#onComplete?.();
     }
@@ -17983,8 +17983,8 @@ var require_deduplication_handler = /* @__PURE__ */__commonJSMin((exports, modul
       waitingHandler.bufferedChunks.push(bufferedChunk);
       waitingHandler.bufferedBytes += bufferedChunk.length;
       if (waitingHandler.bufferedBytes > this.#maxBufferSize) {
-        const requestAbortedError = new RequestAbortedError(`Deduplicated waiting handler exceeded maxBufferSize (${this.#maxBufferSize} bytes) while paused`);
-        this.#errorWaitingHandler(waitingHandler, requestAbortedError);
+        const err = new RequestAbortedError(`Deduplicated waiting handler exceeded maxBufferSize (${this.#maxBufferSize} bytes) while paused`);
+        this.#errorWaitingHandler(waitingHandler, err);
       }
     }
     /**
@@ -18322,8 +18322,8 @@ var require_sqlite_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
     * @param {import('../../types/cache-interceptor.d.ts').default.CacheValue} value
     * @returns {Writable | undefined}
     */
-    createWriteStream(write, value) {
-      assertCacheKey(write);
+    createWriteStream(key, value) {
+      assertCacheKey(key);
       assertCacheValue(value);
       let size = 0;
       /**
@@ -18339,7 +18339,7 @@ var require_sqlite_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
           callback();
         },
         final(callback) {
-          store.set(write, {
+          store.set(key, {
             ...value,
             body
           });
@@ -18350,9 +18350,9 @@ var require_sqlite_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
     /**
     * @param {import('../../types/cache-interceptor.d.ts').default.CacheKey} key
     */
-    delete(deleteValue) {
-      if (typeof deleteValue !== "object") throw new TypeError(`expected key to be object, got ${typeof deleteValue}`);
-      this.#deleteByUrlQuery.run(this.#makeValueUrl(deleteValue));
+    delete(key) {
+      if (typeof key !== "object") throw new TypeError(`expected key to be object, got ${typeof key}`);
+      this.#deleteByUrlQuery.run(this.#makeValueUrl(key));
     }
     #prune() {
       if (Number.isFinite(this.#maxCount) && this.size <= this.#maxCount) return 0;
@@ -18419,15 +18419,15 @@ var require_sqlite_cache_store = /* @__PURE__ */__commonJSMin((exports, module) 
   * @param {string|string[]|null|undefined} rhs
   * @returns {boolean}
   */
-  function headerValueEquals(count, value) {
-    if (count == null && value == null) return true;
-    if (count == null && value != null || count != null && value == null) return false;
-    if (Array.isArray(count) && Array.isArray(value)) {
-      if (count.length !== value.length) return false;
-      for (let i = 0; i < count.length; i++) if (count[i] !== value[i]) return false;
+  function headerValueEquals(lhs, rhs) {
+    if (lhs == null && rhs == null) return true;
+    if (lhs == null && rhs != null || lhs != null && rhs == null) return false;
+    if (Array.isArray(lhs) && Array.isArray(rhs)) {
+      if (lhs.length !== rhs.length) return false;
+      for (let i = 0; i < lhs.length; i++) if (lhs[i] !== rhs[i]) return false;
       return true;
     }
-    return count === value;
+    return lhs === rhs;
   }
 });
 //#endregion
@@ -18529,8 +18529,8 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     return headersList.sortedMap = headers;
   }
-  function compareHeaderName(compareValue, header) {
-    return compareValue[0] < header[0] ? -1 : 1;
+  function compareHeaderName(a, b) {
+    return a[0] < b[0] ? -1 : 1;
   }
   var HeadersList = class HeadersList {
     /** @type {[string, string][]|null} */
@@ -18656,20 +18656,20 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
         const firstValue = iterator.next().value;
         array[0] = [firstValue[0], firstValue[1].value];
         assert$9(firstValue[1].value !== null);
-        for (let i = 1, j = 0, right = 0, left = 0, pivot = 0, count, value; i < size; ++i) {
+        for (let i = 1, j = 0, right = 0, left = 0, pivot = 0, x, value; i < size; ++i) {
           value = iterator.next().value;
-          count = array[i] = [value[0], value[1].value];
-          assert$9(count[1] !== null);
+          x = array[i] = [value[0], value[1].value];
+          assert$9(x[1] !== null);
           left = 0;
           right = i;
           while (left < right) {
             pivot = left + (right - left >> 1);
-            if (array[pivot][0] <= count[0]) left = pivot + 1;else right = pivot;
+            if (array[pivot][0] <= x[0]) left = pivot + 1;else right = pivot;
           }
           if (i !== pivot) {
             j = i;
             while (j > left) array[j] = array[--j];
-            array[left] = count;
+            array[left] = x;
           }
         }
         /* c8 ignore next 4 */
@@ -18784,17 +18784,17 @@ var require_headers = /* @__PURE__ */__commonJSMin((exports, module) => {
       options.depth ??= depth;
       return `Headers ${util.formatWithOptions(options, this.#headersList.entries)}`;
     }
-    static getHeadersGuard(headers) {
-      return headers.#guard;
+    static getHeadersGuard(o) {
+      return o.#guard;
     }
-    static setHeadersGuard(headers, guard) {
-      headers.#guard = guard;
+    static setHeadersGuard(o, guard) {
+      o.#guard = guard;
     }
     /**
     * @param {Headers} o
     */
-    static getHeadersList(headers) {
-      return headers.#headersList;
+    static getHeadersList(o) {
+      return o.#headersList;
     }
     /**
     * @param {Headers} target
@@ -18923,15 +18923,15 @@ var require_response = /* @__PURE__ */__commonJSMin((exports, module) => {
       });
       return responseObject;
     }
-    static redirect(redirect, status = 302) {
+    static redirect(url, status = 302) {
       webidl.argumentLengthCheck(arguments, 1, "Response.redirect");
-      redirect = webidl.converters.USVString(redirect);
+      url = webidl.converters.USVString(url);
       status = webidl.converters["unsigned short"](status);
       let parsedURL;
       try {
-        parsedURL = new URL(redirect, relevantRealm.settingsObject.baseUrl);
+        parsedURL = new URL(url, relevantRealm.settingsObject.baseUrl);
       } catch (err) {
-        throw new TypeError(`Failed to parse URL from ${redirect}`, {
+        throw new TypeError(`Failed to parse URL from ${url}`, {
           cause: err
         });
       }
@@ -18968,9 +18968,9 @@ var require_response = /* @__PURE__ */__commonJSMin((exports, module) => {
     get url() {
       webidl.brandCheck(this, Response);
       const urlList = this.#state.urlList;
-      const fallbackValue = urlList[urlList.length - 1] ?? null;
-      if (fallbackValue === null) return "";
-      return URLSerializer(fallbackValue, true);
+      const url = urlList[urlList.length - 1] ?? null;
+      if (url === null) return "";
+      return URLSerializer(url, true);
     }
     get redirected() {
       webidl.brandCheck(this, Response);
@@ -19451,15 +19451,15 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       if (init.signal !== undefined) signal = init.signal;
       this.#state = request;
-      const abortController = new AbortController();
-      this.#signal = abortController.signal;
+      const ac = new AbortController();
+      this.#signal = ac.signal;
       if (signal != null) {
-        if (signal.aborted) abortController.abort(signal.reason);else {
-          this[kAbortController] = abortController;
-          const abort = buildAbort(new WeakRef(abortController));
+        if (signal.aborted) ac.abort(signal.reason);else {
+          this[kAbortController] = ac;
+          const abort = buildAbort(new WeakRef(ac));
           if (abortSignalHasEventHandlerLeakWarning && getMaxListeners(signal) === defaultMaxListeners) setMaxListeners(1500, signal);
           util.addAbortListener(signal, abort);
-          requestFinalizer.register(abortController, {
+          requestFinalizer.register(ac, {
             signal,
             abort
           }, abort);
@@ -19590,18 +19590,18 @@ var require_request = /* @__PURE__ */__commonJSMin((exports, module) => {
       webidl.brandCheck(this, Request);
       if (bodyUnusable(this.#state)) throw new TypeError("unusable");
       const clonedRequest = cloneRequest(this.#state);
-      const abortController = new AbortController();
-      if (this.signal.aborted) abortController.abort(this.signal.reason);else {
+      const ac = new AbortController();
+      if (this.signal.aborted) ac.abort(this.signal.reason);else {
         let list = dependentControllerMap.get(this.signal);
         if (list === undefined) {
           list = /* @__PURE__ */new Set();
           dependentControllerMap.set(this.signal, list);
         }
-        const acRef = new WeakRef(abortController);
+        const acRef = new WeakRef(ac);
         list.add(acRef);
-        util.addAbortListener(abortController.signal, buildAbort(acRef));
+        util.addAbortListener(ac.signal, buildAbort(acRef));
       }
-      return fromInnerRequest(clonedRequest, this.#dispatcher, abortController.signal, getHeadersGuard(this.#headers));
+      return fromInnerRequest(clonedRequest, this.#dispatcher, ac.signal, getHeadersGuard(this.#headers));
     }
     [nodeUtil.inspect.custom](depth, options) {
       if (options.depth === null) options.depth = 2;
@@ -20163,18 +20163,18 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   function fetch(input, init = undefined) {
     webidl.argumentLengthCheck(arguments, 1, "globalThis.fetch");
-    let deferredPromise = createDeferredPromise();
+    let p = createDeferredPromise();
     let requestObject;
     try {
       requestObject = new Request(input, init);
     } catch (e) {
-      deferredPromise.reject(e);
-      return deferredPromise.promise;
+      p.reject(e);
+      return p.promise;
     }
     const request = getRequestState(requestObject);
     if (requestObject.signal.aborted) {
-      abortFetch(deferredPromise, request, null, requestObject.signal.reason, null);
-      return deferredPromise.promise;
+      abortFetch(p, request, null, requestObject.signal.reason, null);
+      return p.promise;
     }
     if (request.client.globalObject?.constructor?.name === "ServiceWorkerGlobalScope") request.serviceWorkers = "none";
     let responseObject = null;
@@ -20185,23 +20185,23 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
       assert$5(controller != null);
       controller.abort(requestObject.signal.reason);
       const realResponse = responseObject?.deref();
-      abortFetch(deferredPromise, request, realResponse, requestObject.signal.reason, controller.controller);
+      abortFetch(p, request, realResponse, requestObject.signal.reason, controller.controller);
     });
     const processResponse = response => {
       if (locallyAborted) return;
       if (response.aborted) {
-        abortFetch(deferredPromise, request, responseObject, controller.serializedAbortReason, controller.controller);
+        abortFetch(p, request, responseObject, controller.serializedAbortReason, controller.controller);
         return;
       }
       if (response.type === "error") {
-        deferredPromise.reject(new TypeError("fetch failed", {
+        p.reject(new TypeError("fetch failed", {
           cause: response.error
         }));
         return;
       }
       responseObject = new WeakRef(fromInnerResponse(response, "immutable"));
-      deferredPromise.resolve(responseObject.deref());
-      deferredPromise = null;
+      p.resolve(responseObject.deref());
+      p = null;
     };
     controller = fetching({
       request,
@@ -20210,7 +20210,7 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
       dispatcher: getRequestDispatcher(requestObject),
       requestObject
     });
-    return deferredPromise.promise;
+    return p.promise;
   }
   function finalizeAndReportTiming(response, initiatorType = "other") {
     if (response.type === "error" && response.aborted) return;
@@ -20231,11 +20231,11 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     markResourceTiming(timingInfo, originalURL.href, initiatorType, globalThis, cacheState, "", response.status);
   }
   var markResourceTiming = performance.markResourceTiming;
-  function abortFetch(abort, request, responseObject, error, controller) {
-    if (abort) abort.reject(error);
-    if (request.body?.stream != null && isReadable(request.body.stream)) request.body.stream.cancel(error).catch(event => {
-      if (event.code === "ERR_INVALID_STATE") return;
-      throw event;
+  function abortFetch(p, request, responseObject, error, controller) {
+    if (p) p.reject(error);
+    if (request.body?.stream != null && isReadable(request.body.stream)) request.body.stream.cancel(error).catch(err => {
+      if (err.code === "ERR_INVALID_STATE") return;
+      throw err;
     });
     if (responseObject == null) return;
     const response = getResponseState(responseObject);
@@ -20614,10 +20614,10 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     fetchParams.controller.connection = {
       abort: null,
       destroyed: false,
-      destroy(destroy, abort = true) {
+      destroy(err, abort = true) {
         if (!this.destroyed) {
           this.destroyed = true;
-          if (abort) this.abort?.(destroy ?? new DOMException("The operation was aborted.", "AbortError"));
+          if (abort) this.abort?.(err ?? new DOMException("The operation was aborted.", "AbortError"));
         }
       }
     };
@@ -20750,14 +20750,14 @@ var require_fetch = /* @__PURE__ */__commonJSMin((exports, module) => {
     function dispatch({
       body
     }) {
-      const requestCurrentURLResult = requestCurrentURL(request);
+      const url = requestCurrentURL(request);
       /** @type {import('../../..').Agent} */
       const agent = fetchParams.controller.dispatcher;
-      const path = requestCurrentURLResult.pathname + requestCurrentURLResult.search;
-      const hasTrailingQuestionMark = requestCurrentURLResult.search.length === 0 && requestCurrentURLResult.href[requestCurrentURLResult.href.length - requestCurrentURLResult.hash.length - 1] === "?";
+      const path = url.pathname + url.search;
+      const hasTrailingQuestionMark = url.search.length === 0 && url.href[url.href.length - url.hash.length - 1] === "?";
       return new Promise((resolve, reject) => agent.dispatch({
         path: hasTrailingQuestionMark ? `${path}?` : path,
-        origin: requestCurrentURLResult.origin,
+        origin: url.origin,
         method: request.method,
         body: agent.isMockActive ? request.body && (request.body.source || request.body.stream) : body,
         headers: request.headersList.entries,
@@ -20910,8 +20910,8 @@ var require_util$3 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {boolean | undefined} excludeFragment
   * @returns {boolean}
   */
-  function urlEquals(urlValue, equals, excludeFragment = false) {
-    return URLSerializer(urlValue, excludeFragment) === URLSerializer(equals, excludeFragment);
+  function urlEquals(A, B, excludeFragment = false) {
+    return URLSerializer(A, excludeFragment) === URLSerializer(B, excludeFragment);
   }
   /**
   * @see https://github.com/chromium/chromium/blob/694d20d134cb553d8d89e5500b9148012b1ba299/content/browser/cache_storage/cache_storage_cache.cc#L260-L262
@@ -21030,8 +21030,8 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
         });
         request = webidl.converters.RequestInfo(request);
         if (typeof request === "string") continue;
-        const requestState = getRequestState(request);
-        if (!urlIsHttpHttpsScheme(requestState.url) || requestState.method !== "GET") throw webidl.errors.exception({
+        const r = getRequestState(request);
+        if (!urlIsHttpHttpsScheme(r.url) || r.method !== "GET") throw webidl.errors.exception({
           header: prefix,
           message: "Expected http/s scheme when method is not GET."
         });
@@ -21039,17 +21039,17 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
       /** @type {ReturnType<typeof fetching>[]} */
       const fetchControllers = [];
       for (const request of requests) {
-        const requestState = getRequestState(new Request(request));
-        if (!urlIsHttpHttpsScheme(requestState.url)) throw webidl.errors.exception({
+        const r = getRequestState(new Request(request));
+        if (!urlIsHttpHttpsScheme(r.url)) throw webidl.errors.exception({
           header: prefix,
           message: "Expected http/s scheme."
         });
-        requestState.initiator = "fetch";
-        requestState.destination = "subresource";
-        requestList.push(requestState);
+        r.initiator = "fetch";
+        r.destination = "subresource";
+        requestList.push(r);
         const responsePromise = createDeferredPromise();
         fetchControllers.push(fetching({
-          request: requestState,
+          request: r,
           processResponse(response) {
             if (response.type === "error" || response.status === 206 || response.status < 200 || response.status > 299) responsePromise.reject(webidl.errors.exception({
               header: "Cache.addAll",
@@ -21263,12 +21263,12 @@ var require_cache = /* @__PURE__ */__commonJSMin((exports, module) => {
               header: "Cache.#batchCacheOperations",
               message: "put operation should have an associated response"
             });
-            const request = operation.request;
-            if (!urlIsHttpHttpsScheme(request.url)) throw webidl.errors.exception({
+            const r = operation.request;
+            if (!urlIsHttpHttpsScheme(r.url)) throw webidl.errors.exception({
               header: "Cache.#batchCacheOperations",
               message: "expected http or https scheme"
             });
-            if (request.method !== "GET") throw webidl.errors.exception({
+            if (r.method !== "GET") throw webidl.errors.exception({
               header: "Cache.#batchCacheOperations",
               message: "not get method"
             });
@@ -21610,7 +21610,7 @@ var require_util$2 = /* @__PURE__ */__commonJSMin((exports, module) => {
   }
   var IMFDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   var IMFMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  var IMFPaddedNumbers = Array(61).fill(0).map((_, item) => item.toString().padStart(2, "0"));
+  var IMFPaddedNumbers = Array(61).fill(0).map((_, i) => i.toString().padStart(2, "0"));
   /**
   * @see https://www.rfc-editor.org/rfc/rfc7231#section-7.1.1.1
   * @param {number|Date} date
@@ -21920,8 +21920,8 @@ var require_cookies = /* @__PURE__ */__commonJSMin((exports, module) => {
     webidl.argumentLengthCheck(arguments, 2, "setCookie");
     brandChecks(headers);
     cookie = webidl.converters.Cookie(cookie);
-    const stringifyResult = stringify(cookie);
-    if (stringifyResult) headers.append("set-cookie", stringifyResult, true);
+    const str = stringify(cookie);
+    if (str) headers.append("set-cookie", str, true);
   }
   webidl.converters.DeleteCookieAttributes = webidl.dictionaryConverter([{
     converter: webidl.nullableConverter(webidl.converters.DOMString),
@@ -22325,8 +22325,8 @@ var require_util$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {EventInit | undefined} eventInitDict
   * @returns {void}
   */
-  function fireEvent(fire, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
-    const event = eventFactory(fire, eventInitDict);
+  function fireEvent(e, target, eventFactory = (type, init) => new Event(type, init), eventInitDict = {}) {
+    const event = eventFactory(e, eventInitDict);
     target.dispatchEvent(event);
   }
   /**
@@ -22430,18 +22430,18 @@ var require_util$1 = /* @__PURE__ */__commonJSMin((exports, module) => {
       const byte = value.charCodeAt(i);
       if (byte < 48 || byte > 57) return false;
     }
-    const parseIntResult = Number.parseInt(value, 10);
-    return parseIntResult >= 8 && parseIntResult <= 15;
+    const num = Number.parseInt(value, 10);
+    return num >= 8 && num <= 15;
   }
   /**
   * @see https://whatpr.org/websockets/48/7b748d3...d5570f3.html#get-a-url-record
   * @param {string} url
   * @param {string} [baseURL]
   */
-  function getURLRecord(record, baseURL) {
+  function getURLRecord(url, baseURL) {
     let urlRecord;
     try {
-      urlRecord = new URL(record, baseURL);
+      urlRecord = new URL(url, baseURL);
     } catch (e) {
       throw new DOMException(e, "SyntaxError");
     }
@@ -22636,9 +22636,9 @@ var require_connection = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @param {import('./websocket').Handler} handler
   * @param {Partial<import('../../../types/websocket').WebSocketInit>} options
   */
-  function establishWebSocketConnection(establish, protocols, client, handler, options) {
-    const requestURL = establish;
-    requestURL.protocol = establish.protocol === "ws:" ? "http:" : "https:";
+  function establishWebSocketConnection(url, protocols, client, handler, options) {
+    const requestURL = url;
+    requestURL.protocol = url.protocol === "ws:" ? "http:" : "https:";
     const request = makeRequest({
       urlList: [requestURL],
       client,
@@ -22803,7 +22803,7 @@ var require_permessage_deflate = /* @__PURE__ */__commonJSMin((exports, module) 
     * @param {boolean} fin Final fragment flag
     * @param {Function} callback Callback function
     */
-    decompress(chunk, decompress, callback) {
+    decompress(chunk, fin, callback) {
       if (!this.#inflate) {
         let windowBits = Z_DEFAULT_WINDOWBITS;
         if (this.#options.serverMaxWindowBits) {
@@ -22834,13 +22834,13 @@ var require_permessage_deflate = /* @__PURE__ */__commonJSMin((exports, module) 
           }
           this.#inflate[kBuffer].push(data);
         });
-        this.#inflate.on("error", event => {
+        this.#inflate.on("error", err => {
           this.#inflate = null;
-          callback(event);
+          callback(err);
         });
       }
       this.#inflate.write(chunk);
-      if (decompress) this.#inflate.write(tail);
+      if (fin) this.#inflate.write(tail);
       this.#inflate.flush(() => {
         if (!this.#inflate) return;
         const full = Buffer.concat(this.#inflate[kBuffer], this.#inflate[kLength]);
@@ -23062,25 +23062,25 @@ var require_receiver = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {number} n
     * @returns {Buffer}
     */
-    consume(consume) {
-      if (consume > this.#byteOffset) throw new Error("Called consume() before buffers satiated.");else if (consume === 0) return emptyBuffer;
-      this.#byteOffset -= consume;
+    consume(n) {
+      if (n > this.#byteOffset) throw new Error("Called consume() before buffers satiated.");else if (n === 0) return emptyBuffer;
+      this.#byteOffset -= n;
       const first = this.#buffers[0];
-      if (first.length > consume) {
-        this.#buffers[0] = first.subarray(consume, first.length);
-        return first.subarray(0, consume);
-      } else if (first.length === consume) return this.#buffers.shift();else {
+      if (first.length > n) {
+        this.#buffers[0] = first.subarray(n, first.length);
+        return first.subarray(0, n);
+      } else if (first.length === n) return this.#buffers.shift();else {
         let offset = 0;
-        const buffer = Buffer.allocUnsafeSlow(consume);
-        while (offset !== consume) {
+        const buffer = Buffer.allocUnsafeSlow(n);
+        while (offset !== n) {
           const next = this.#buffers[0];
           const length = next.length;
-          if (length + offset === consume) {
+          if (length + offset === n) {
             buffer.set(this.#buffers.shift(), offset);
             break;
-          } else if (length + offset > consume) {
-            buffer.set(next.subarray(0, consume - offset), offset);
-            this.#buffers[0] = next.subarray(consume - offset);
+          } else if (length + offset > n) {
+            buffer.set(next.subarray(0, n - offset), offset);
+            this.#buffers[0] = next.subarray(n - offset);
             break;
           } else {
             buffer.set(this.#buffers.shift(), offset);
@@ -23254,9 +23254,9 @@ var require_sender = /* @__PURE__ */__commonJSMin((exports, module) => {
       }
       /** @type {SendQueueNode} */
       const node = {
-        promise: item.arrayBuffer().then(result => {
+        promise: item.arrayBuffer().then(ab => {
           node.promise = null;
-          node.frame = createFrame(result, hint);
+          node.frame = createFrame(ab, hint);
         }),
         callback: cb,
         frame: null
@@ -23430,19 +23430,19 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {string} url
     * @param {string|string[]} protocols
     */
-    constructor(constructor, protocols = []) {
+    constructor(url, protocols = []) {
       super();
       webidl.util.markAsUncloneable(this);
       const prefix = "WebSocket constructor";
       webidl.argumentLengthCheck(arguments, 1, prefix);
       const options = webidl.converters["DOMString or sequence<DOMString> or WebSocketInit"](protocols, prefix, "options");
-      constructor = webidl.converters.USVString(constructor);
+      url = webidl.converters.USVString(url);
       protocols = options.protocols;
       const baseURL = environmentSettingsObject.settingsObject.baseUrl;
-      const urlRecord = getURLRecord(constructor, baseURL);
+      const urlRecord = getURLRecord(url, baseURL);
       if (typeof protocols === "string") protocols = [protocols];
-      if (protocols.length !== new Set(protocols.map(text => text.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
-      if (protocols.length > 0 && !protocols.every(item => isValidSubprotocol(item))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length !== new Set(protocols.map(p => p.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length > 0 && !protocols.every(p => isValidSubprotocol(p))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
       this.#url = new URL(urlRecord.href);
       const client = environmentSettingsObject.settingsObject;
       this.#handler.controller = establishWebSocketConnection(urlRecord, protocols, client, this.#handler, options);
@@ -23521,52 +23521,52 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
       webidl.brandCheck(this, WebSocket);
       return this.#events.open;
     }
-    set onopen(open) {
+    set onopen(fn) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.open) this.removeEventListener("open", this.#events.open);
-      const listener = webidl.converters.EventHandlerNonNull(open);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("open", listener);
-        this.#events.open = open;
+        this.#events.open = fn;
       } else this.#events.open = null;
     }
     get onerror() {
       webidl.brandCheck(this, WebSocket);
       return this.#events.error;
     }
-    set onerror(error) {
+    set onerror(fn) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.error) this.removeEventListener("error", this.#events.error);
-      const listener = webidl.converters.EventHandlerNonNull(error);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("error", listener);
-        this.#events.error = error;
+        this.#events.error = fn;
       } else this.#events.error = null;
     }
     get onclose() {
       webidl.brandCheck(this, WebSocket);
       return this.#events.close;
     }
-    set onclose(close) {
+    set onclose(fn) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.close) this.removeEventListener("close", this.#events.close);
-      const listener = webidl.converters.EventHandlerNonNull(close);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("close", listener);
-        this.#events.close = close;
+        this.#events.close = fn;
       } else this.#events.close = null;
     }
     get onmessage() {
       webidl.brandCheck(this, WebSocket);
       return this.#events.message;
     }
-    set onmessage(message) {
+    set onmessage(fn) {
       webidl.brandCheck(this, WebSocket);
       if (this.#events.message) this.removeEventListener("message", this.#events.message);
-      const listener = webidl.converters.EventHandlerNonNull(message);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("message", listener);
-        this.#events.message = message;
+        this.#events.message = fn;
       } else this.#events.message = null;
     }
     get binaryType() {
@@ -23590,7 +23590,7 @@ var require_websocket = /* @__PURE__ */__commonJSMin((exports, module) => {
         maxPayloadSize
       });
       parser.on("drain", () => this.#handler.onParserDrain());
-      parser.on("error", event => this.#handler.onParserError(event));
+      parser.on("error", err => this.#handler.onParserError(err));
       this.#parser = parser;
       this.#sendQueue = new SendQueue(response.socket);
       this.#handler.readyState = states.OPEN;
@@ -23921,7 +23921,7 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
     };
     /** @type {import('../receiver').ByteParser} */
     #parser;
-    constructor(constructor, options = undefined) {
+    constructor(url, options = undefined) {
       if (!emittedExperimentalWarning) {
         process.emitWarning("WebSocketStream is experimental! Expect it to change at any time.", {
           code: "UNDICI-WSS"
@@ -23929,13 +23929,13 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
         emittedExperimentalWarning = true;
       }
       webidl.argumentLengthCheck(arguments, 1, "WebSocket");
-      constructor = webidl.converters.USVString(constructor);
+      url = webidl.converters.USVString(url);
       if (options !== null) options = webidl.converters.WebSocketStreamOptions(options);
       const baseURL = environmentSettingsObject.settingsObject.baseUrl;
-      const urlRecord = getURLRecord(constructor, baseURL);
+      const urlRecord = getURLRecord(url, baseURL);
       const protocols = options.protocols;
-      if (protocols.length !== new Set(protocols.map(text => text.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
-      if (protocols.length > 0 && !protocols.every(item => isValidSubprotocol(item))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length !== new Set(protocols.map(p => p.toLowerCase())).size) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
+      if (protocols.length > 0 && !protocols.every(p => isValidSubprotocol(p))) throw new DOMException("Invalid Sec-WebSocket-Protocol value", "SyntaxError");
       this.#url = urlRecord.toString();
       this.#openedPromise = createDeferredPromise();
       this.#closedPromise = createDeferredPromise();
@@ -24013,7 +24013,7 @@ var require_websocketstream = /* @__PURE__ */__commonJSMin((exports, module) => 
         maxPayloadSize
       });
       parser.on("drain", () => this.#handler.onParserDrain());
-      parser.on("error", event => this.#handler.onParserError(event));
+      parser.on("error", err => this.#handler.onParserError(err));
       this.#parser = parser;
       this.#handler.readyState = states.OPEN;
       const extensions = parsedExtensions ?? "";
@@ -24188,11 +24188,11 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
   var RETRY = Buffer.from("retry");
   function isASCIINumberBytes(buffer, start) {
     if (start >= buffer.length) return false;
-    for (let startAlias = start; startAlias < buffer.length; startAlias++) if (buffer[startAlias] < 48 || buffer[startAlias] > 57) return false;
+    for (let i = start; i < buffer.length; i++) if (buffer[i] < 48 || buffer[i] > 57) return false;
     return true;
   }
   function isValidLastEventIdBytes(buffer, start) {
-    for (let startAlias = start; startAlias < buffer.length; startAlias++) if (buffer[startAlias] === 0) return false;
+    for (let i = start; i < buffer.length; i++) if (buffer[i] === 0) return false;
     return true;
   }
   function isFieldName(line, length, field) {
@@ -24406,10 +24406,10 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
       if (this.lineChunkIndex === this.chunkIndex) return this.chunks[this.chunkIndex].subarray(this.linePos, this.pos);
       const chunks = [];
       let length = 0;
-      for (let lineChunkIndex = this.lineChunkIndex; lineChunkIndex <= this.chunkIndex; lineChunkIndex++) {
-        const chunk = this.chunks[lineChunkIndex];
-        const start = lineChunkIndex === this.lineChunkIndex ? this.linePos : 0;
-        const end = lineChunkIndex === this.chunkIndex ? this.pos : chunk.length;
+      for (let i = this.lineChunkIndex; i <= this.chunkIndex; i++) {
+        const chunk = this.chunks[i];
+        const start = i === this.lineChunkIndex ? this.linePos : 0;
+        const end = i === this.chunkIndex ? this.pos : chunk.length;
         const slice = chunk.subarray(start, end);
         length += slice.length;
         chunks.push(slice);
@@ -24418,14 +24418,14 @@ var require_eventsource_stream = /* @__PURE__ */__commonJSMin((exports, module) 
     }
     peekBufferedByte(offset) {
       let chunkIndex = this.lineChunkIndex;
-      let linePos = this.linePos;
+      let pos = this.linePos;
       while (chunkIndex < this.chunks.length) {
         const chunk = this.chunks[chunkIndex];
-        const remaining = chunk.length - linePos;
-        if (offset < remaining) return chunk[linePos + offset];
+        const remaining = chunk.length - pos;
+        if (offset < remaining) return chunk[pos + offset];
         offset -= remaining;
         chunkIndex++;
-        linePos = 0;
+        pos = 0;
       }
     }
     discardLeadingBytes(count) {
@@ -24579,7 +24579,7 @@ var require_eventsource = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @param {EventSourceInit} [eventSourceInitDict={}]
     * @see https://html.spec.whatwg.org/multipage/server-sent-events.html#the-eventsource-interface
     */
-    constructor(constructor, eventSourceInitDict = {}) {
+    constructor(url, eventSourceInitDict = {}) {
       super();
       webidl.util.markAsUncloneable(this);
       const prefix = "EventSource constructor";
@@ -24590,7 +24590,7 @@ var require_eventsource = /* @__PURE__ */__commonJSMin((exports, module) => {
           code: "UNDICI-ES"
         });
       }
-      constructor = webidl.converters.USVString(constructor);
+      url = webidl.converters.USVString(url);
       eventSourceInitDict = webidl.converters.EventSourceInitDict(eventSourceInitDict, prefix, "eventSourceInitDict");
       this.#dispatcher = eventSourceInitDict.node.dispatcher || eventSourceInitDict.dispatcher;
       this.#state = {
@@ -24600,7 +24600,7 @@ var require_eventsource = /* @__PURE__ */__commonJSMin((exports, module) => {
       const settings = environmentSettingsObject;
       let urlRecord;
       try {
-        urlRecord = new URL(constructor, settings.settingsObject.baseUrl);
+        urlRecord = new URL(url, settings.settingsObject.baseUrl);
         this.#state.origin = urlRecord.origin;
       } catch (e) {
         throw new DOMException(e, "SyntaxError");
@@ -24729,34 +24729,34 @@ var require_eventsource = /* @__PURE__ */__commonJSMin((exports, module) => {
     get onopen() {
       return this.#events.open;
     }
-    set onopen(open) {
+    set onopen(fn) {
       if (this.#events.open) this.removeEventListener("open", this.#events.open);
-      const listener = webidl.converters.EventHandlerNonNull(open);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("open", listener);
-        this.#events.open = open;
+        this.#events.open = fn;
       } else this.#events.open = null;
     }
     get onmessage() {
       return this.#events.message;
     }
-    set onmessage(message) {
+    set onmessage(fn) {
       if (this.#events.message) this.removeEventListener("message", this.#events.message);
-      const listener = webidl.converters.EventHandlerNonNull(message);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("message", listener);
-        this.#events.message = message;
+        this.#events.message = fn;
       } else this.#events.message = null;
     }
     get onerror() {
       return this.#events.error;
     }
-    set onerror(error) {
+    set onerror(fn) {
       if (this.#events.error) this.removeEventListener("error", this.#events.error);
-      const listener = webidl.converters.EventHandlerNonNull(error);
+      const listener = webidl.converters.EventHandlerNonNull(fn);
       if (listener !== null) {
         this.addEventListener("error", listener);
-        this.#events.error = error;
+        this.#events.error = fn;
       } else this.#events.error = null;
     }
   };
@@ -24891,7 +24891,7 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
     parseHeaders: util.parseHeaders,
     headerNameToString: util.headerNameToString
   };
-  function makeDispatcher(dispatcher) {
+  function makeDispatcher(fn) {
     return (url, opts, handler) => {
       if (typeof opts === "function") {
         handler = opts;
@@ -24913,7 +24913,7 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
         dispatcher = getGlobalDispatcher()
       } = opts;
       if (agent) throw new InvalidArgumentError("unsupported opts.agent. Did you mean opts.client?");
-      return dispatcher.call(dispatcher, {
+      return fn.call(dispatcher, {
         ...opts,
         origin: url.origin,
         path: url.search ? `${url.pathname}${url.search}` : url.pathname,
@@ -24925,16 +24925,16 @@ var import_undici = (/* @__PURE__ */__commonJSMin((exports, module) => {
   module.exports.getGlobalDispatcher = getGlobalDispatcher;
   var fetchImpl = require_fetch().fetch;
   var currentFilename = typeof __filename !== "undefined" ? __filename : undefined;
-  function appendFetchStackTrace(fetchValue, filename) {
-    if (!fetchValue || typeof fetchValue !== "object") return;
-    const stack = typeof fetchValue.stack === "string" ? fetchValue.stack : "";
+  function appendFetchStackTrace(err, filename) {
+    if (!err || typeof err !== "object") return;
+    const stack = typeof err.stack === "string" ? err.stack : "";
     const normalizedFilename = filename.replace(/\\/g, "/");
     if (stack && (stack.includes(filename) || stack.includes(normalizedFilename))) return;
     const capture = {};
     Error.captureStackTrace(capture, appendFetchStackTrace);
     if (!capture.stack) return;
     const captureLines = capture.stack.split("\n").slice(1).join("\n");
-    fetchValue.stack = stack ? `${stack}\n${captureLines}` : capture.stack;
+    err.stack = stack ? `${stack}\n${captureLines}` : capture.stack;
   }
   module.exports.fetch = function fetch(init, options = undefined) {
     return fetchImpl(init, options).catch(err => {
@@ -25038,9 +25038,9 @@ var fingerprintCache = {
   at: 0,
   value: ""
 };
-function isSelfSignedCertificate(selfValue) {
+function isSelfSignedCertificate(pem) {
   try {
-    const cert = new X509Certificate(selfValue);
+    const cert = new X509Certificate(pem);
     return cert.checkIssued(cert) && cert.verify(cert.publicKey);
   } catch {
     return false;
@@ -25075,9 +25075,9 @@ function networkFingerprint() {
   };
   return value;
 }
-function requestHost(request) {
+function requestHost(url) {
   try {
-    return new URL(request).host.toLowerCase();
+    return new URL(url).host.toLowerCase();
   } catch {
     return "";
   }
@@ -25094,12 +25094,12 @@ function isReplayable(input, init) {
   return (body === undefined || body === null || typeof body === "string" || body instanceof URLSearchParams || body instanceof ArrayBuffer || ArrayBuffer.isView(body)) && (typeof input === "string" || input instanceof URL || !input.body);
 }
 /** 最近一次「自动」模式请求实际走的路径，用于设置页测试时告诉用户。 */
-function getLastNetworkRoute(last) {
-  return lastRoutes.get(requestHost(last)) || null;
+function getLastNetworkRoute(url) {
+  return lastRoutes.get(requestHost(url)) || null;
 }
 async function fetchViaProxy(input, init, proxy) {
-  const serialized = JSON.stringify([proxy.url, proxy.username || "", proxy.password || ""]);
-  let agent = agents.get(serialized);
+  const key = JSON.stringify([proxy.url, proxy.username || "", proxy.password || ""]);
+  let agent = agents.get(key);
   if (!agent) {
     const token = proxy.username ? `Basic ${Buffer.from(`${proxy.username}:${proxy.password || ""}`).toString("base64")}` : undefined;
     agent = new import_undici.ProxyAgent({
@@ -25108,7 +25108,7 @@ async function fetchViaProxy(input, init, proxy) {
         token
       } : {})
     });
-    agents.set(serialized, agent);
+    agents.set(key, agent);
   }
   try {
     return await (0, import_undici.fetch)(input, {
@@ -25126,8 +25126,8 @@ async function fetchViaProxy(input, init, proxy) {
     throw failure;
   }
 }
-async function fetchDirectFirst(input, init, first, proxy) {
-  const host = requestHost(first);
+async function fetchDirectFirst(input, init, url, proxy) {
+  const host = requestHost(url);
   const key = `${networkFingerprint()}|${host}`;
   const verdict = verdicts.get(key);
   const ttl = verdict?.via === "proxy" ? PROXY_VERDICT_TTL_MS : DIRECT_VERDICT_TTL_MS;
@@ -25192,9 +25192,9 @@ function updaterSession() {
   });
 }
 async function applyToSession(target, settings) {
-  const serialized = JSON.stringify(settings);
+  const key = JSON.stringify(settings);
   const previous = appliedSessions.get(target);
-  if (previous?.key === serialized) return previous.promise;
+  if (previous?.key === key) return previous.promise;
   const promise = (async () => {
     const mode = settings.networkProxyEnabled ? settings.networkProxyMode : "direct";
     const rules = mode === "manual" ? new URL(settings.networkProxyUrl).origin : mode === "auto" && settings.networkProxyUrl ? `direct://,${new URL(settings.networkProxyUrl).origin}` : "";
@@ -25208,7 +25208,7 @@ async function applyToSession(target, settings) {
     await target.closeAllConnections();
   })();
   appliedSessions.set(target, {
-    key: serialized,
+    key,
     promise
   });
   try {
@@ -25230,8 +25230,8 @@ function routeFromResolution(value) {
   }
   throw new Error(appText("networkProxy.systemUnparsable"));
 }
-async function resolveNetworkProxy(network) {
-  if (!current.networkProxyEnabled || isLoopbackUrl(network) || current.networkProxyMode === "direct") return null;
+async function resolveNetworkProxy(url) {
+  if (!current.networkProxyEnabled || isLoopbackUrl(url) || current.networkProxyMode === "direct") return null;
   const manual = () => ({
     url: new URL(current.networkProxyUrl).origin,
     username: current.networkProxyUsername,
@@ -25244,7 +25244,7 @@ async function resolveNetworkProxy(network) {
       directFirst: true
     };
     try {
-      const route = routeFromResolution(await session.defaultSession.resolveProxy(network));
+      const route = routeFromResolution(await session.defaultSession.resolveProxy(url));
       return route ? {
         ...route,
         directFirst: true
@@ -25253,7 +25253,7 @@ async function resolveNetworkProxy(network) {
       return null;
     }
   }
-  return routeFromResolution(await session.defaultSession.resolveProxy(network));
+  return routeFromResolution(await session.defaultSession.resolveProxy(url));
 }
 function validateNetworkProxySettings(settings) {
   if (!["manual", "auto"].includes(settings.networkProxyMode)) return;
@@ -25408,11 +25408,11 @@ function save(userId, registry) {
   });
   renameSync(temporary, file);
 }
-function parseImport(text, name) {
-  if (typeof text !== "string" || text.length > 256e3) throw new Error(appText("botMcp.tooLarge"));
+function parseImport(raw, name) {
+  if (typeof raw !== "string" || raw.length > 256e3) throw new Error(appText("botMcp.tooLarge"));
   let parsed;
   try {
-    parsed = JSON.parse(text.trim().replace(/^```(?:json)?\s*\n?([\s\S]*?)\n?```$/i, "$1"));
+    parsed = JSON.parse(raw.trim().replace(/^```(?:json)?\s*\n?([\s\S]*?)\n?```$/i, "$1"));
   } catch {
     throw new Error(appText("botMcp.invalidJson"));
   }
@@ -25511,771 +25511,771 @@ var xiaoheiBotMcpService = {
 };
 //#endregion
 //#region electron/browser-harness/generated.ts
-function bindDomains(domains) {
+function bindDomains(t) {
   return {
     Accessibility: {
-      disable: params => domains._call("Accessibility.disable", params),
-      enable: params => domains._call("Accessibility.enable", params),
-      getPartialAXTree: params => domains._call("Accessibility.getPartialAXTree", params),
-      getFullAXTree: params => domains._call("Accessibility.getFullAXTree", params),
-      getRootAXNode: params => domains._call("Accessibility.getRootAXNode", params),
-      getAXNodeAndAncestors: params => domains._call("Accessibility.getAXNodeAndAncestors", params),
-      getChildAXNodes: params => domains._call("Accessibility.getChildAXNodes", params),
-      queryAXTree: params => domains._call("Accessibility.queryAXTree", params)
+      disable: params => t._call("Accessibility.disable", params),
+      enable: params => t._call("Accessibility.enable", params),
+      getPartialAXTree: params => t._call("Accessibility.getPartialAXTree", params),
+      getFullAXTree: params => t._call("Accessibility.getFullAXTree", params),
+      getRootAXNode: params => t._call("Accessibility.getRootAXNode", params),
+      getAXNodeAndAncestors: params => t._call("Accessibility.getAXNodeAndAncestors", params),
+      getChildAXNodes: params => t._call("Accessibility.getChildAXNodes", params),
+      queryAXTree: params => t._call("Accessibility.queryAXTree", params)
     },
     Animation: {
-      disable: params => domains._call("Animation.disable", params),
-      enable: params => domains._call("Animation.enable", params),
-      getCurrentTime: params => domains._call("Animation.getCurrentTime", params),
-      getPlaybackRate: params => domains._call("Animation.getPlaybackRate", params),
-      releaseAnimations: params => domains._call("Animation.releaseAnimations", params),
-      resolveAnimation: params => domains._call("Animation.resolveAnimation", params),
-      seekAnimations: params => domains._call("Animation.seekAnimations", params),
-      setPaused: params => domains._call("Animation.setPaused", params),
-      setPlaybackRate: params => domains._call("Animation.setPlaybackRate", params),
-      setTiming: params => domains._call("Animation.setTiming", params)
+      disable: params => t._call("Animation.disable", params),
+      enable: params => t._call("Animation.enable", params),
+      getCurrentTime: params => t._call("Animation.getCurrentTime", params),
+      getPlaybackRate: params => t._call("Animation.getPlaybackRate", params),
+      releaseAnimations: params => t._call("Animation.releaseAnimations", params),
+      resolveAnimation: params => t._call("Animation.resolveAnimation", params),
+      seekAnimations: params => t._call("Animation.seekAnimations", params),
+      setPaused: params => t._call("Animation.setPaused", params),
+      setPlaybackRate: params => t._call("Animation.setPlaybackRate", params),
+      setTiming: params => t._call("Animation.setTiming", params)
     },
     Audits: {
-      getEncodedResponse: params => domains._call("Audits.getEncodedResponse", params),
-      disable: params => domains._call("Audits.disable", params),
-      enable: params => domains._call("Audits.enable", params),
-      checkFormsIssues: params => domains._call("Audits.checkFormsIssues", params)
+      getEncodedResponse: params => t._call("Audits.getEncodedResponse", params),
+      disable: params => t._call("Audits.disable", params),
+      enable: params => t._call("Audits.enable", params),
+      checkFormsIssues: params => t._call("Audits.checkFormsIssues", params)
     },
     Autofill: {
-      trigger: params => domains._call("Autofill.trigger", params),
-      setAddresses: params => domains._call("Autofill.setAddresses", params),
-      disable: params => domains._call("Autofill.disable", params),
-      enable: params => domains._call("Autofill.enable", params)
+      trigger: params => t._call("Autofill.trigger", params),
+      setAddresses: params => t._call("Autofill.setAddresses", params),
+      disable: params => t._call("Autofill.disable", params),
+      enable: params => t._call("Autofill.enable", params)
     },
     BackgroundService: {
-      startObserving: params => domains._call("BackgroundService.startObserving", params),
-      stopObserving: params => domains._call("BackgroundService.stopObserving", params),
-      setRecording: params => domains._call("BackgroundService.setRecording", params),
-      clearEvents: params => domains._call("BackgroundService.clearEvents", params)
+      startObserving: params => t._call("BackgroundService.startObserving", params),
+      stopObserving: params => t._call("BackgroundService.stopObserving", params),
+      setRecording: params => t._call("BackgroundService.setRecording", params),
+      clearEvents: params => t._call("BackgroundService.clearEvents", params)
     },
     BluetoothEmulation: {
-      enable: params => domains._call("BluetoothEmulation.enable", params),
-      setSimulatedCentralState: params => domains._call("BluetoothEmulation.setSimulatedCentralState", params),
-      disable: params => domains._call("BluetoothEmulation.disable", params),
-      simulatePreconnectedPeripheral: params => domains._call("BluetoothEmulation.simulatePreconnectedPeripheral", params),
-      simulateAdvertisement: params => domains._call("BluetoothEmulation.simulateAdvertisement", params),
-      simulateGATTOperationResponse: params => domains._call("BluetoothEmulation.simulateGATTOperationResponse", params),
-      simulateCharacteristicOperationResponse: params => domains._call("BluetoothEmulation.simulateCharacteristicOperationResponse", params),
-      simulateDescriptorOperationResponse: params => domains._call("BluetoothEmulation.simulateDescriptorOperationResponse", params),
-      addService: params => domains._call("BluetoothEmulation.addService", params),
-      removeService: params => domains._call("BluetoothEmulation.removeService", params),
-      addCharacteristic: params => domains._call("BluetoothEmulation.addCharacteristic", params),
-      removeCharacteristic: params => domains._call("BluetoothEmulation.removeCharacteristic", params),
-      addDescriptor: params => domains._call("BluetoothEmulation.addDescriptor", params),
-      removeDescriptor: params => domains._call("BluetoothEmulation.removeDescriptor", params),
-      simulateGATTDisconnection: params => domains._call("BluetoothEmulation.simulateGATTDisconnection", params)
+      enable: params => t._call("BluetoothEmulation.enable", params),
+      setSimulatedCentralState: params => t._call("BluetoothEmulation.setSimulatedCentralState", params),
+      disable: params => t._call("BluetoothEmulation.disable", params),
+      simulatePreconnectedPeripheral: params => t._call("BluetoothEmulation.simulatePreconnectedPeripheral", params),
+      simulateAdvertisement: params => t._call("BluetoothEmulation.simulateAdvertisement", params),
+      simulateGATTOperationResponse: params => t._call("BluetoothEmulation.simulateGATTOperationResponse", params),
+      simulateCharacteristicOperationResponse: params => t._call("BluetoothEmulation.simulateCharacteristicOperationResponse", params),
+      simulateDescriptorOperationResponse: params => t._call("BluetoothEmulation.simulateDescriptorOperationResponse", params),
+      addService: params => t._call("BluetoothEmulation.addService", params),
+      removeService: params => t._call("BluetoothEmulation.removeService", params),
+      addCharacteristic: params => t._call("BluetoothEmulation.addCharacteristic", params),
+      removeCharacteristic: params => t._call("BluetoothEmulation.removeCharacteristic", params),
+      addDescriptor: params => t._call("BluetoothEmulation.addDescriptor", params),
+      removeDescriptor: params => t._call("BluetoothEmulation.removeDescriptor", params),
+      simulateGATTDisconnection: params => t._call("BluetoothEmulation.simulateGATTDisconnection", params)
     },
     Browser: {
-      setPermission: params => domains._call("Browser.setPermission", params),
-      grantPermissions: params => domains._call("Browser.grantPermissions", params),
-      resetPermissions: params => domains._call("Browser.resetPermissions", params),
-      setDownloadBehavior: params => domains._call("Browser.setDownloadBehavior", params),
-      cancelDownload: params => domains._call("Browser.cancelDownload", params),
-      close: params => domains._call("Browser.close", params),
-      crash: params => domains._call("Browser.crash", params),
-      crashGpuProcess: params => domains._call("Browser.crashGpuProcess", params),
-      getVersion: params => domains._call("Browser.getVersion", params),
-      getBrowserCommandLine: params => domains._call("Browser.getBrowserCommandLine", params),
-      getHistograms: params => domains._call("Browser.getHistograms", params),
-      getHistogram: params => domains._call("Browser.getHistogram", params),
-      getWindowBounds: params => domains._call("Browser.getWindowBounds", params),
-      getWindowForTarget: params => domains._call("Browser.getWindowForTarget", params),
-      setWindowBounds: params => domains._call("Browser.setWindowBounds", params),
-      setContentsSize: params => domains._call("Browser.setContentsSize", params),
-      setDockTile: params => domains._call("Browser.setDockTile", params),
-      executeBrowserCommand: params => domains._call("Browser.executeBrowserCommand", params),
-      addPrivacySandboxEnrollmentOverride: params => domains._call("Browser.addPrivacySandboxEnrollmentOverride", params),
-      addPrivacySandboxCoordinatorKeyConfig: params => domains._call("Browser.addPrivacySandboxCoordinatorKeyConfig", params)
+      setPermission: params => t._call("Browser.setPermission", params),
+      grantPermissions: params => t._call("Browser.grantPermissions", params),
+      resetPermissions: params => t._call("Browser.resetPermissions", params),
+      setDownloadBehavior: params => t._call("Browser.setDownloadBehavior", params),
+      cancelDownload: params => t._call("Browser.cancelDownload", params),
+      close: params => t._call("Browser.close", params),
+      crash: params => t._call("Browser.crash", params),
+      crashGpuProcess: params => t._call("Browser.crashGpuProcess", params),
+      getVersion: params => t._call("Browser.getVersion", params),
+      getBrowserCommandLine: params => t._call("Browser.getBrowserCommandLine", params),
+      getHistograms: params => t._call("Browser.getHistograms", params),
+      getHistogram: params => t._call("Browser.getHistogram", params),
+      getWindowBounds: params => t._call("Browser.getWindowBounds", params),
+      getWindowForTarget: params => t._call("Browser.getWindowForTarget", params),
+      setWindowBounds: params => t._call("Browser.setWindowBounds", params),
+      setContentsSize: params => t._call("Browser.setContentsSize", params),
+      setDockTile: params => t._call("Browser.setDockTile", params),
+      executeBrowserCommand: params => t._call("Browser.executeBrowserCommand", params),
+      addPrivacySandboxEnrollmentOverride: params => t._call("Browser.addPrivacySandboxEnrollmentOverride", params),
+      addPrivacySandboxCoordinatorKeyConfig: params => t._call("Browser.addPrivacySandboxCoordinatorKeyConfig", params)
     },
     CacheStorage: {
-      deleteCache: params => domains._call("CacheStorage.deleteCache", params),
-      deleteEntry: params => domains._call("CacheStorage.deleteEntry", params),
-      requestCacheNames: params => domains._call("CacheStorage.requestCacheNames", params),
-      requestCachedResponse: params => domains._call("CacheStorage.requestCachedResponse", params),
-      requestEntries: params => domains._call("CacheStorage.requestEntries", params)
+      deleteCache: params => t._call("CacheStorage.deleteCache", params),
+      deleteEntry: params => t._call("CacheStorage.deleteEntry", params),
+      requestCacheNames: params => t._call("CacheStorage.requestCacheNames", params),
+      requestCachedResponse: params => t._call("CacheStorage.requestCachedResponse", params),
+      requestEntries: params => t._call("CacheStorage.requestEntries", params)
     },
     Cast: {
-      enable: params => domains._call("Cast.enable", params),
-      disable: params => domains._call("Cast.disable", params),
-      setSinkToUse: params => domains._call("Cast.setSinkToUse", params),
-      startDesktopMirroring: params => domains._call("Cast.startDesktopMirroring", params),
-      startTabMirroring: params => domains._call("Cast.startTabMirroring", params),
-      stopCasting: params => domains._call("Cast.stopCasting", params)
+      enable: params => t._call("Cast.enable", params),
+      disable: params => t._call("Cast.disable", params),
+      setSinkToUse: params => t._call("Cast.setSinkToUse", params),
+      startDesktopMirroring: params => t._call("Cast.startDesktopMirroring", params),
+      startTabMirroring: params => t._call("Cast.startTabMirroring", params),
+      stopCasting: params => t._call("Cast.stopCasting", params)
     },
     Console: {
-      clearMessages: params => domains._call("Console.clearMessages", params),
-      disable: params => domains._call("Console.disable", params),
-      enable: params => domains._call("Console.enable", params)
+      clearMessages: params => t._call("Console.clearMessages", params),
+      disable: params => t._call("Console.disable", params),
+      enable: params => t._call("Console.enable", params)
     },
     CrashReportContext: {
-      getEntries: params => domains._call("CrashReportContext.getEntries", params)
+      getEntries: params => t._call("CrashReportContext.getEntries", params)
     },
     CSS: {
-      addRule: params => domains._call("CSS.addRule", params),
-      collectClassNames: params => domains._call("CSS.collectClassNames", params),
-      createStyleSheet: params => domains._call("CSS.createStyleSheet", params),
-      disable: params => domains._call("CSS.disable", params),
-      enable: params => domains._call("CSS.enable", params),
-      forcePseudoState: params => domains._call("CSS.forcePseudoState", params),
-      forceStartingStyle: params => domains._call("CSS.forceStartingStyle", params),
-      getBackgroundColors: params => domains._call("CSS.getBackgroundColors", params),
-      getComputedStyleForNode: params => domains._call("CSS.getComputedStyleForNode", params),
-      resolveValues: params => domains._call("CSS.resolveValues", params),
-      getLonghandProperties: params => domains._call("CSS.getLonghandProperties", params),
-      getInlineStylesForNode: params => domains._call("CSS.getInlineStylesForNode", params),
-      getAnimatedStylesForNode: params => domains._call("CSS.getAnimatedStylesForNode", params),
-      getMatchedStylesForNode: params => domains._call("CSS.getMatchedStylesForNode", params),
-      getEnvironmentVariables: params => domains._call("CSS.getEnvironmentVariables", params),
-      getMediaQueries: params => domains._call("CSS.getMediaQueries", params),
-      getPlatformFontsForNode: params => domains._call("CSS.getPlatformFontsForNode", params),
-      getStyleSheetText: params => domains._call("CSS.getStyleSheetText", params),
-      getLayersForNode: params => domains._call("CSS.getLayersForNode", params),
-      getLocationForSelector: params => domains._call("CSS.getLocationForSelector", params),
-      trackComputedStyleUpdatesForNode: params => domains._call("CSS.trackComputedStyleUpdatesForNode", params),
-      trackComputedStyleUpdates: params => domains._call("CSS.trackComputedStyleUpdates", params),
-      takeComputedStyleUpdates: params => domains._call("CSS.takeComputedStyleUpdates", params),
-      setEffectivePropertyValueForNode: params => domains._call("CSS.setEffectivePropertyValueForNode", params),
-      setPropertyRulePropertyName: params => domains._call("CSS.setPropertyRulePropertyName", params),
-      setKeyframeKey: params => domains._call("CSS.setKeyframeKey", params),
-      setMediaText: params => domains._call("CSS.setMediaText", params),
-      setContainerQueryText: params => domains._call("CSS.setContainerQueryText", params),
-      setSupportsText: params => domains._call("CSS.setSupportsText", params),
-      setNavigationText: params => domains._call("CSS.setNavigationText", params),
-      setScopeText: params => domains._call("CSS.setScopeText", params),
-      setRuleSelector: params => domains._call("CSS.setRuleSelector", params),
-      setStyleSheetText: params => domains._call("CSS.setStyleSheetText", params),
-      setStyleTexts: params => domains._call("CSS.setStyleTexts", params),
-      startRuleUsageTracking: params => domains._call("CSS.startRuleUsageTracking", params),
-      stopRuleUsageTracking: params => domains._call("CSS.stopRuleUsageTracking", params),
-      takeCoverageDelta: params => domains._call("CSS.takeCoverageDelta", params),
-      setLocalFontsEnabled: params => domains._call("CSS.setLocalFontsEnabled", params)
+      addRule: params => t._call("CSS.addRule", params),
+      collectClassNames: params => t._call("CSS.collectClassNames", params),
+      createStyleSheet: params => t._call("CSS.createStyleSheet", params),
+      disable: params => t._call("CSS.disable", params),
+      enable: params => t._call("CSS.enable", params),
+      forcePseudoState: params => t._call("CSS.forcePseudoState", params),
+      forceStartingStyle: params => t._call("CSS.forceStartingStyle", params),
+      getBackgroundColors: params => t._call("CSS.getBackgroundColors", params),
+      getComputedStyleForNode: params => t._call("CSS.getComputedStyleForNode", params),
+      resolveValues: params => t._call("CSS.resolveValues", params),
+      getLonghandProperties: params => t._call("CSS.getLonghandProperties", params),
+      getInlineStylesForNode: params => t._call("CSS.getInlineStylesForNode", params),
+      getAnimatedStylesForNode: params => t._call("CSS.getAnimatedStylesForNode", params),
+      getMatchedStylesForNode: params => t._call("CSS.getMatchedStylesForNode", params),
+      getEnvironmentVariables: params => t._call("CSS.getEnvironmentVariables", params),
+      getMediaQueries: params => t._call("CSS.getMediaQueries", params),
+      getPlatformFontsForNode: params => t._call("CSS.getPlatformFontsForNode", params),
+      getStyleSheetText: params => t._call("CSS.getStyleSheetText", params),
+      getLayersForNode: params => t._call("CSS.getLayersForNode", params),
+      getLocationForSelector: params => t._call("CSS.getLocationForSelector", params),
+      trackComputedStyleUpdatesForNode: params => t._call("CSS.trackComputedStyleUpdatesForNode", params),
+      trackComputedStyleUpdates: params => t._call("CSS.trackComputedStyleUpdates", params),
+      takeComputedStyleUpdates: params => t._call("CSS.takeComputedStyleUpdates", params),
+      setEffectivePropertyValueForNode: params => t._call("CSS.setEffectivePropertyValueForNode", params),
+      setPropertyRulePropertyName: params => t._call("CSS.setPropertyRulePropertyName", params),
+      setKeyframeKey: params => t._call("CSS.setKeyframeKey", params),
+      setMediaText: params => t._call("CSS.setMediaText", params),
+      setContainerQueryText: params => t._call("CSS.setContainerQueryText", params),
+      setSupportsText: params => t._call("CSS.setSupportsText", params),
+      setNavigationText: params => t._call("CSS.setNavigationText", params),
+      setScopeText: params => t._call("CSS.setScopeText", params),
+      setRuleSelector: params => t._call("CSS.setRuleSelector", params),
+      setStyleSheetText: params => t._call("CSS.setStyleSheetText", params),
+      setStyleTexts: params => t._call("CSS.setStyleTexts", params),
+      startRuleUsageTracking: params => t._call("CSS.startRuleUsageTracking", params),
+      stopRuleUsageTracking: params => t._call("CSS.stopRuleUsageTracking", params),
+      takeCoverageDelta: params => t._call("CSS.takeCoverageDelta", params),
+      setLocalFontsEnabled: params => t._call("CSS.setLocalFontsEnabled", params)
     },
     Debugger: {
-      continueToLocation: params => domains._call("Debugger.continueToLocation", params),
-      disable: params => domains._call("Debugger.disable", params),
-      enable: params => domains._call("Debugger.enable", params),
-      evaluateOnCallFrame: params => domains._call("Debugger.evaluateOnCallFrame", params),
-      getPossibleBreakpoints: params => domains._call("Debugger.getPossibleBreakpoints", params),
-      getScriptSource: params => domains._call("Debugger.getScriptSource", params),
-      disassembleWasmModule: params => domains._call("Debugger.disassembleWasmModule", params),
-      nextWasmDisassemblyChunk: params => domains._call("Debugger.nextWasmDisassemblyChunk", params),
-      getWasmBytecode: params => domains._call("Debugger.getWasmBytecode", params),
-      getStackTrace: params => domains._call("Debugger.getStackTrace", params),
-      pause: params => domains._call("Debugger.pause", params),
-      pauseOnAsyncCall: params => domains._call("Debugger.pauseOnAsyncCall", params),
-      removeBreakpoint: params => domains._call("Debugger.removeBreakpoint", params),
-      restartFrame: params => domains._call("Debugger.restartFrame", params),
-      resume: params => domains._call("Debugger.resume", params),
-      searchInContent: params => domains._call("Debugger.searchInContent", params),
-      setAsyncCallStackDepth: params => domains._call("Debugger.setAsyncCallStackDepth", params),
-      setBlackboxExecutionContexts: params => domains._call("Debugger.setBlackboxExecutionContexts", params),
-      setBlackboxPatterns: params => domains._call("Debugger.setBlackboxPatterns", params),
-      setBlackboxedRanges: params => domains._call("Debugger.setBlackboxedRanges", params),
-      setBreakpoint: params => domains._call("Debugger.setBreakpoint", params),
-      setInstrumentationBreakpoint: params => domains._call("Debugger.setInstrumentationBreakpoint", params),
-      setBreakpointByUrl: params => domains._call("Debugger.setBreakpointByUrl", params),
-      setBreakpointOnFunctionCall: params => domains._call("Debugger.setBreakpointOnFunctionCall", params),
-      setBreakpointsActive: params => domains._call("Debugger.setBreakpointsActive", params),
-      setPauseOnExceptions: params => domains._call("Debugger.setPauseOnExceptions", params),
-      setReturnValue: params => domains._call("Debugger.setReturnValue", params),
-      setScriptSource: params => domains._call("Debugger.setScriptSource", params),
-      setSkipAllPauses: params => domains._call("Debugger.setSkipAllPauses", params),
-      setVariableValue: params => domains._call("Debugger.setVariableValue", params),
-      stepInto: params => domains._call("Debugger.stepInto", params),
-      stepOut: params => domains._call("Debugger.stepOut", params),
-      stepOver: params => domains._call("Debugger.stepOver", params)
+      continueToLocation: params => t._call("Debugger.continueToLocation", params),
+      disable: params => t._call("Debugger.disable", params),
+      enable: params => t._call("Debugger.enable", params),
+      evaluateOnCallFrame: params => t._call("Debugger.evaluateOnCallFrame", params),
+      getPossibleBreakpoints: params => t._call("Debugger.getPossibleBreakpoints", params),
+      getScriptSource: params => t._call("Debugger.getScriptSource", params),
+      disassembleWasmModule: params => t._call("Debugger.disassembleWasmModule", params),
+      nextWasmDisassemblyChunk: params => t._call("Debugger.nextWasmDisassemblyChunk", params),
+      getWasmBytecode: params => t._call("Debugger.getWasmBytecode", params),
+      getStackTrace: params => t._call("Debugger.getStackTrace", params),
+      pause: params => t._call("Debugger.pause", params),
+      pauseOnAsyncCall: params => t._call("Debugger.pauseOnAsyncCall", params),
+      removeBreakpoint: params => t._call("Debugger.removeBreakpoint", params),
+      restartFrame: params => t._call("Debugger.restartFrame", params),
+      resume: params => t._call("Debugger.resume", params),
+      searchInContent: params => t._call("Debugger.searchInContent", params),
+      setAsyncCallStackDepth: params => t._call("Debugger.setAsyncCallStackDepth", params),
+      setBlackboxExecutionContexts: params => t._call("Debugger.setBlackboxExecutionContexts", params),
+      setBlackboxPatterns: params => t._call("Debugger.setBlackboxPatterns", params),
+      setBlackboxedRanges: params => t._call("Debugger.setBlackboxedRanges", params),
+      setBreakpoint: params => t._call("Debugger.setBreakpoint", params),
+      setInstrumentationBreakpoint: params => t._call("Debugger.setInstrumentationBreakpoint", params),
+      setBreakpointByUrl: params => t._call("Debugger.setBreakpointByUrl", params),
+      setBreakpointOnFunctionCall: params => t._call("Debugger.setBreakpointOnFunctionCall", params),
+      setBreakpointsActive: params => t._call("Debugger.setBreakpointsActive", params),
+      setPauseOnExceptions: params => t._call("Debugger.setPauseOnExceptions", params),
+      setReturnValue: params => t._call("Debugger.setReturnValue", params),
+      setScriptSource: params => t._call("Debugger.setScriptSource", params),
+      setSkipAllPauses: params => t._call("Debugger.setSkipAllPauses", params),
+      setVariableValue: params => t._call("Debugger.setVariableValue", params),
+      stepInto: params => t._call("Debugger.stepInto", params),
+      stepOut: params => t._call("Debugger.stepOut", params),
+      stepOver: params => t._call("Debugger.stepOver", params)
     },
     DeviceAccess: {
-      enable: params => domains._call("DeviceAccess.enable", params),
-      disable: params => domains._call("DeviceAccess.disable", params),
-      selectPrompt: params => domains._call("DeviceAccess.selectPrompt", params),
-      cancelPrompt: params => domains._call("DeviceAccess.cancelPrompt", params)
+      enable: params => t._call("DeviceAccess.enable", params),
+      disable: params => t._call("DeviceAccess.disable", params),
+      selectPrompt: params => t._call("DeviceAccess.selectPrompt", params),
+      cancelPrompt: params => t._call("DeviceAccess.cancelPrompt", params)
     },
     DeviceOrientation: {
-      clearDeviceOrientationOverride: params => domains._call("DeviceOrientation.clearDeviceOrientationOverride", params),
-      setDeviceOrientationOverride: params => domains._call("DeviceOrientation.setDeviceOrientationOverride", params)
+      clearDeviceOrientationOverride: params => t._call("DeviceOrientation.clearDeviceOrientationOverride", params),
+      setDeviceOrientationOverride: params => t._call("DeviceOrientation.setDeviceOrientationOverride", params)
     },
     DOM: {
-      collectClassNamesFromSubtree: params => domains._call("DOM.collectClassNamesFromSubtree", params),
-      copyTo: params => domains._call("DOM.copyTo", params),
-      describeNode: params => domains._call("DOM.describeNode", params),
-      scrollIntoViewIfNeeded: params => domains._call("DOM.scrollIntoViewIfNeeded", params),
-      disable: params => domains._call("DOM.disable", params),
-      discardSearchResults: params => domains._call("DOM.discardSearchResults", params),
-      enable: params => domains._call("DOM.enable", params),
-      focus: params => domains._call("DOM.focus", params),
-      getAttributes: params => domains._call("DOM.getAttributes", params),
-      getBoxModel: params => domains._call("DOM.getBoxModel", params),
-      getContentQuads: params => domains._call("DOM.getContentQuads", params),
-      getDocument: params => domains._call("DOM.getDocument", params),
-      getFlattenedDocument: params => domains._call("DOM.getFlattenedDocument", params),
-      getNodesForSubtreeByStyle: params => domains._call("DOM.getNodesForSubtreeByStyle", params),
-      getNodeForLocation: params => domains._call("DOM.getNodeForLocation", params),
-      getOuterHTML: params => domains._call("DOM.getOuterHTML", params),
-      getRelayoutBoundary: params => domains._call("DOM.getRelayoutBoundary", params),
-      getSearchResults: params => domains._call("DOM.getSearchResults", params),
-      markUndoableState: params => domains._call("DOM.markUndoableState", params),
-      moveTo: params => domains._call("DOM.moveTo", params),
-      performSearch: params => domains._call("DOM.performSearch", params),
-      pushNodeByPathToFrontend: params => domains._call("DOM.pushNodeByPathToFrontend", params),
-      pushNodesByBackendIdsToFrontend: params => domains._call("DOM.pushNodesByBackendIdsToFrontend", params),
-      querySelector: params => domains._call("DOM.querySelector", params),
-      querySelectorAll: params => domains._call("DOM.querySelectorAll", params),
-      getTopLayerElements: params => domains._call("DOM.getTopLayerElements", params),
-      getElementByRelation: params => domains._call("DOM.getElementByRelation", params),
-      redo: params => domains._call("DOM.redo", params),
-      removeAttribute: params => domains._call("DOM.removeAttribute", params),
-      removeNode: params => domains._call("DOM.removeNode", params),
-      requestChildNodes: params => domains._call("DOM.requestChildNodes", params),
-      requestNode: params => domains._call("DOM.requestNode", params),
-      resolveNode: params => domains._call("DOM.resolveNode", params),
-      setAttributeValue: params => domains._call("DOM.setAttributeValue", params),
-      setAttributesAsText: params => domains._call("DOM.setAttributesAsText", params),
-      setFileInputFiles: params => domains._call("DOM.setFileInputFiles", params),
-      setNodeStackTracesEnabled: params => domains._call("DOM.setNodeStackTracesEnabled", params),
-      getNodeStackTraces: params => domains._call("DOM.getNodeStackTraces", params),
-      getFileInfo: params => domains._call("DOM.getFileInfo", params),
-      getDetachedDomNodes: params => domains._call("DOM.getDetachedDomNodes", params),
-      setInspectedNode: params => domains._call("DOM.setInspectedNode", params),
-      setNodeName: params => domains._call("DOM.setNodeName", params),
-      setNodeValue: params => domains._call("DOM.setNodeValue", params),
-      setOuterHTML: params => domains._call("DOM.setOuterHTML", params),
-      undo: params => domains._call("DOM.undo", params),
-      getFrameOwner: params => domains._call("DOM.getFrameOwner", params),
-      getContainerForNode: params => domains._call("DOM.getContainerForNode", params),
-      getQueryingDescendantsForContainer: params => domains._call("DOM.getQueryingDescendantsForContainer", params),
-      getAnchorElement: params => domains._call("DOM.getAnchorElement", params),
-      forceShowPopover: params => domains._call("DOM.forceShowPopover", params)
+      collectClassNamesFromSubtree: params => t._call("DOM.collectClassNamesFromSubtree", params),
+      copyTo: params => t._call("DOM.copyTo", params),
+      describeNode: params => t._call("DOM.describeNode", params),
+      scrollIntoViewIfNeeded: params => t._call("DOM.scrollIntoViewIfNeeded", params),
+      disable: params => t._call("DOM.disable", params),
+      discardSearchResults: params => t._call("DOM.discardSearchResults", params),
+      enable: params => t._call("DOM.enable", params),
+      focus: params => t._call("DOM.focus", params),
+      getAttributes: params => t._call("DOM.getAttributes", params),
+      getBoxModel: params => t._call("DOM.getBoxModel", params),
+      getContentQuads: params => t._call("DOM.getContentQuads", params),
+      getDocument: params => t._call("DOM.getDocument", params),
+      getFlattenedDocument: params => t._call("DOM.getFlattenedDocument", params),
+      getNodesForSubtreeByStyle: params => t._call("DOM.getNodesForSubtreeByStyle", params),
+      getNodeForLocation: params => t._call("DOM.getNodeForLocation", params),
+      getOuterHTML: params => t._call("DOM.getOuterHTML", params),
+      getRelayoutBoundary: params => t._call("DOM.getRelayoutBoundary", params),
+      getSearchResults: params => t._call("DOM.getSearchResults", params),
+      markUndoableState: params => t._call("DOM.markUndoableState", params),
+      moveTo: params => t._call("DOM.moveTo", params),
+      performSearch: params => t._call("DOM.performSearch", params),
+      pushNodeByPathToFrontend: params => t._call("DOM.pushNodeByPathToFrontend", params),
+      pushNodesByBackendIdsToFrontend: params => t._call("DOM.pushNodesByBackendIdsToFrontend", params),
+      querySelector: params => t._call("DOM.querySelector", params),
+      querySelectorAll: params => t._call("DOM.querySelectorAll", params),
+      getTopLayerElements: params => t._call("DOM.getTopLayerElements", params),
+      getElementByRelation: params => t._call("DOM.getElementByRelation", params),
+      redo: params => t._call("DOM.redo", params),
+      removeAttribute: params => t._call("DOM.removeAttribute", params),
+      removeNode: params => t._call("DOM.removeNode", params),
+      requestChildNodes: params => t._call("DOM.requestChildNodes", params),
+      requestNode: params => t._call("DOM.requestNode", params),
+      resolveNode: params => t._call("DOM.resolveNode", params),
+      setAttributeValue: params => t._call("DOM.setAttributeValue", params),
+      setAttributesAsText: params => t._call("DOM.setAttributesAsText", params),
+      setFileInputFiles: params => t._call("DOM.setFileInputFiles", params),
+      setNodeStackTracesEnabled: params => t._call("DOM.setNodeStackTracesEnabled", params),
+      getNodeStackTraces: params => t._call("DOM.getNodeStackTraces", params),
+      getFileInfo: params => t._call("DOM.getFileInfo", params),
+      getDetachedDomNodes: params => t._call("DOM.getDetachedDomNodes", params),
+      setInspectedNode: params => t._call("DOM.setInspectedNode", params),
+      setNodeName: params => t._call("DOM.setNodeName", params),
+      setNodeValue: params => t._call("DOM.setNodeValue", params),
+      setOuterHTML: params => t._call("DOM.setOuterHTML", params),
+      undo: params => t._call("DOM.undo", params),
+      getFrameOwner: params => t._call("DOM.getFrameOwner", params),
+      getContainerForNode: params => t._call("DOM.getContainerForNode", params),
+      getQueryingDescendantsForContainer: params => t._call("DOM.getQueryingDescendantsForContainer", params),
+      getAnchorElement: params => t._call("DOM.getAnchorElement", params),
+      forceShowPopover: params => t._call("DOM.forceShowPopover", params)
     },
     DOMDebugger: {
-      getEventListeners: params => domains._call("DOMDebugger.getEventListeners", params),
-      removeDOMBreakpoint: params => domains._call("DOMDebugger.removeDOMBreakpoint", params),
-      removeEventListenerBreakpoint: params => domains._call("DOMDebugger.removeEventListenerBreakpoint", params),
-      removeXHRBreakpoint: params => domains._call("DOMDebugger.removeXHRBreakpoint", params),
-      setBreakOnCSPViolation: params => domains._call("DOMDebugger.setBreakOnCSPViolation", params),
-      setDOMBreakpoint: params => domains._call("DOMDebugger.setDOMBreakpoint", params),
-      setEventListenerBreakpoint: params => domains._call("DOMDebugger.setEventListenerBreakpoint", params),
-      setXHRBreakpoint: params => domains._call("DOMDebugger.setXHRBreakpoint", params)
+      getEventListeners: params => t._call("DOMDebugger.getEventListeners", params),
+      removeDOMBreakpoint: params => t._call("DOMDebugger.removeDOMBreakpoint", params),
+      removeEventListenerBreakpoint: params => t._call("DOMDebugger.removeEventListenerBreakpoint", params),
+      removeXHRBreakpoint: params => t._call("DOMDebugger.removeXHRBreakpoint", params),
+      setBreakOnCSPViolation: params => t._call("DOMDebugger.setBreakOnCSPViolation", params),
+      setDOMBreakpoint: params => t._call("DOMDebugger.setDOMBreakpoint", params),
+      setEventListenerBreakpoint: params => t._call("DOMDebugger.setEventListenerBreakpoint", params),
+      setXHRBreakpoint: params => t._call("DOMDebugger.setXHRBreakpoint", params)
     },
     DOMSnapshot: {
-      disable: params => domains._call("DOMSnapshot.disable", params),
-      enable: params => domains._call("DOMSnapshot.enable", params),
-      getSnapshot: params => domains._call("DOMSnapshot.getSnapshot", params),
-      captureSnapshot: params => domains._call("DOMSnapshot.captureSnapshot", params)
+      disable: params => t._call("DOMSnapshot.disable", params),
+      enable: params => t._call("DOMSnapshot.enable", params),
+      getSnapshot: params => t._call("DOMSnapshot.getSnapshot", params),
+      captureSnapshot: params => t._call("DOMSnapshot.captureSnapshot", params)
     },
     DOMStorage: {
-      clear: params => domains._call("DOMStorage.clear", params),
-      disable: params => domains._call("DOMStorage.disable", params),
-      enable: params => domains._call("DOMStorage.enable", params),
-      getDOMStorageItems: params => domains._call("DOMStorage.getDOMStorageItems", params),
-      removeDOMStorageItem: params => domains._call("DOMStorage.removeDOMStorageItem", params),
-      setDOMStorageItem: params => domains._call("DOMStorage.setDOMStorageItem", params)
+      clear: params => t._call("DOMStorage.clear", params),
+      disable: params => t._call("DOMStorage.disable", params),
+      enable: params => t._call("DOMStorage.enable", params),
+      getDOMStorageItems: params => t._call("DOMStorage.getDOMStorageItems", params),
+      removeDOMStorageItem: params => t._call("DOMStorage.removeDOMStorageItem", params),
+      setDOMStorageItem: params => t._call("DOMStorage.setDOMStorageItem", params)
     },
     Emulation: {
-      canEmulate: params => domains._call("Emulation.canEmulate", params),
-      clearDeviceMetricsOverride: params => domains._call("Emulation.clearDeviceMetricsOverride", params),
-      clearGeolocationOverride: params => domains._call("Emulation.clearGeolocationOverride", params),
-      resetPageScaleFactor: params => domains._call("Emulation.resetPageScaleFactor", params),
-      setFocusEmulationEnabled: params => domains._call("Emulation.setFocusEmulationEnabled", params),
-      setAutoDarkModeOverride: params => domains._call("Emulation.setAutoDarkModeOverride", params),
-      setCPUThrottlingRate: params => domains._call("Emulation.setCPUThrottlingRate", params),
-      setDefaultBackgroundColorOverride: params => domains._call("Emulation.setDefaultBackgroundColorOverride", params),
-      setSafeAreaInsetsOverride: params => domains._call("Emulation.setSafeAreaInsetsOverride", params),
-      setDeviceMetricsOverride: params => domains._call("Emulation.setDeviceMetricsOverride", params),
-      setDevicePostureOverride: params => domains._call("Emulation.setDevicePostureOverride", params),
-      clearDevicePostureOverride: params => domains._call("Emulation.clearDevicePostureOverride", params),
-      setDisplayFeaturesOverride: params => domains._call("Emulation.setDisplayFeaturesOverride", params),
-      clearDisplayFeaturesOverride: params => domains._call("Emulation.clearDisplayFeaturesOverride", params),
-      setScrollbarsHidden: params => domains._call("Emulation.setScrollbarsHidden", params),
-      setDocumentCookieDisabled: params => domains._call("Emulation.setDocumentCookieDisabled", params),
-      setEmitTouchEventsForMouse: params => domains._call("Emulation.setEmitTouchEventsForMouse", params),
-      setEmulatedMedia: params => domains._call("Emulation.setEmulatedMedia", params),
-      setEmulatedVisionDeficiency: params => domains._call("Emulation.setEmulatedVisionDeficiency", params),
-      setEmulatedOSTextScale: params => domains._call("Emulation.setEmulatedOSTextScale", params),
-      setGeolocationOverride: params => domains._call("Emulation.setGeolocationOverride", params),
-      getOverriddenSensorInformation: params => domains._call("Emulation.getOverriddenSensorInformation", params),
-      setSensorOverrideEnabled: params => domains._call("Emulation.setSensorOverrideEnabled", params),
-      setSensorOverrideReadings: params => domains._call("Emulation.setSensorOverrideReadings", params),
-      setPressureSourceOverrideEnabled: params => domains._call("Emulation.setPressureSourceOverrideEnabled", params),
-      setPressureStateOverride: params => domains._call("Emulation.setPressureStateOverride", params),
-      setPressureDataOverride: params => domains._call("Emulation.setPressureDataOverride", params),
-      setIdleOverride: params => domains._call("Emulation.setIdleOverride", params),
-      clearIdleOverride: params => domains._call("Emulation.clearIdleOverride", params),
-      setNavigatorOverrides: params => domains._call("Emulation.setNavigatorOverrides", params),
-      setPageScaleFactor: params => domains._call("Emulation.setPageScaleFactor", params),
-      setScriptExecutionDisabled: params => domains._call("Emulation.setScriptExecutionDisabled", params),
-      setTouchEmulationEnabled: params => domains._call("Emulation.setTouchEmulationEnabled", params),
-      setVirtualTimePolicy: params => domains._call("Emulation.setVirtualTimePolicy", params),
-      setLocaleOverride: params => domains._call("Emulation.setLocaleOverride", params),
-      setTimezoneOverride: params => domains._call("Emulation.setTimezoneOverride", params),
-      setVisibleSize: params => domains._call("Emulation.setVisibleSize", params),
-      setDisabledImageTypes: params => domains._call("Emulation.setDisabledImageTypes", params),
-      setDataSaverOverride: params => domains._call("Emulation.setDataSaverOverride", params),
-      setHardwareConcurrencyOverride: params => domains._call("Emulation.setHardwareConcurrencyOverride", params),
-      setUserAgentOverride: params => domains._call("Emulation.setUserAgentOverride", params),
-      setAutomationOverride: params => domains._call("Emulation.setAutomationOverride", params),
-      setSmallViewportHeightDifferenceOverride: params => domains._call("Emulation.setSmallViewportHeightDifferenceOverride", params),
-      getScreenInfos: params => domains._call("Emulation.getScreenInfos", params),
-      addScreen: params => domains._call("Emulation.addScreen", params),
-      updateScreen: params => domains._call("Emulation.updateScreen", params),
-      removeScreen: params => domains._call("Emulation.removeScreen", params),
-      setPrimaryScreen: params => domains._call("Emulation.setPrimaryScreen", params)
+      canEmulate: params => t._call("Emulation.canEmulate", params),
+      clearDeviceMetricsOverride: params => t._call("Emulation.clearDeviceMetricsOverride", params),
+      clearGeolocationOverride: params => t._call("Emulation.clearGeolocationOverride", params),
+      resetPageScaleFactor: params => t._call("Emulation.resetPageScaleFactor", params),
+      setFocusEmulationEnabled: params => t._call("Emulation.setFocusEmulationEnabled", params),
+      setAutoDarkModeOverride: params => t._call("Emulation.setAutoDarkModeOverride", params),
+      setCPUThrottlingRate: params => t._call("Emulation.setCPUThrottlingRate", params),
+      setDefaultBackgroundColorOverride: params => t._call("Emulation.setDefaultBackgroundColorOverride", params),
+      setSafeAreaInsetsOverride: params => t._call("Emulation.setSafeAreaInsetsOverride", params),
+      setDeviceMetricsOverride: params => t._call("Emulation.setDeviceMetricsOverride", params),
+      setDevicePostureOverride: params => t._call("Emulation.setDevicePostureOverride", params),
+      clearDevicePostureOverride: params => t._call("Emulation.clearDevicePostureOverride", params),
+      setDisplayFeaturesOverride: params => t._call("Emulation.setDisplayFeaturesOverride", params),
+      clearDisplayFeaturesOverride: params => t._call("Emulation.clearDisplayFeaturesOverride", params),
+      setScrollbarsHidden: params => t._call("Emulation.setScrollbarsHidden", params),
+      setDocumentCookieDisabled: params => t._call("Emulation.setDocumentCookieDisabled", params),
+      setEmitTouchEventsForMouse: params => t._call("Emulation.setEmitTouchEventsForMouse", params),
+      setEmulatedMedia: params => t._call("Emulation.setEmulatedMedia", params),
+      setEmulatedVisionDeficiency: params => t._call("Emulation.setEmulatedVisionDeficiency", params),
+      setEmulatedOSTextScale: params => t._call("Emulation.setEmulatedOSTextScale", params),
+      setGeolocationOverride: params => t._call("Emulation.setGeolocationOverride", params),
+      getOverriddenSensorInformation: params => t._call("Emulation.getOverriddenSensorInformation", params),
+      setSensorOverrideEnabled: params => t._call("Emulation.setSensorOverrideEnabled", params),
+      setSensorOverrideReadings: params => t._call("Emulation.setSensorOverrideReadings", params),
+      setPressureSourceOverrideEnabled: params => t._call("Emulation.setPressureSourceOverrideEnabled", params),
+      setPressureStateOverride: params => t._call("Emulation.setPressureStateOverride", params),
+      setPressureDataOverride: params => t._call("Emulation.setPressureDataOverride", params),
+      setIdleOverride: params => t._call("Emulation.setIdleOverride", params),
+      clearIdleOverride: params => t._call("Emulation.clearIdleOverride", params),
+      setNavigatorOverrides: params => t._call("Emulation.setNavigatorOverrides", params),
+      setPageScaleFactor: params => t._call("Emulation.setPageScaleFactor", params),
+      setScriptExecutionDisabled: params => t._call("Emulation.setScriptExecutionDisabled", params),
+      setTouchEmulationEnabled: params => t._call("Emulation.setTouchEmulationEnabled", params),
+      setVirtualTimePolicy: params => t._call("Emulation.setVirtualTimePolicy", params),
+      setLocaleOverride: params => t._call("Emulation.setLocaleOverride", params),
+      setTimezoneOverride: params => t._call("Emulation.setTimezoneOverride", params),
+      setVisibleSize: params => t._call("Emulation.setVisibleSize", params),
+      setDisabledImageTypes: params => t._call("Emulation.setDisabledImageTypes", params),
+      setDataSaverOverride: params => t._call("Emulation.setDataSaverOverride", params),
+      setHardwareConcurrencyOverride: params => t._call("Emulation.setHardwareConcurrencyOverride", params),
+      setUserAgentOverride: params => t._call("Emulation.setUserAgentOverride", params),
+      setAutomationOverride: params => t._call("Emulation.setAutomationOverride", params),
+      setSmallViewportHeightDifferenceOverride: params => t._call("Emulation.setSmallViewportHeightDifferenceOverride", params),
+      getScreenInfos: params => t._call("Emulation.getScreenInfos", params),
+      addScreen: params => t._call("Emulation.addScreen", params),
+      updateScreen: params => t._call("Emulation.updateScreen", params),
+      removeScreen: params => t._call("Emulation.removeScreen", params),
+      setPrimaryScreen: params => t._call("Emulation.setPrimaryScreen", params)
     },
     EventBreakpoints: {
-      setInstrumentationBreakpoint: params => domains._call("EventBreakpoints.setInstrumentationBreakpoint", params),
-      removeInstrumentationBreakpoint: params => domains._call("EventBreakpoints.removeInstrumentationBreakpoint", params),
-      disable: params => domains._call("EventBreakpoints.disable", params)
+      setInstrumentationBreakpoint: params => t._call("EventBreakpoints.setInstrumentationBreakpoint", params),
+      removeInstrumentationBreakpoint: params => t._call("EventBreakpoints.removeInstrumentationBreakpoint", params),
+      disable: params => t._call("EventBreakpoints.disable", params)
     },
     Extensions: {
-      triggerAction: params => domains._call("Extensions.triggerAction", params),
-      loadUnpacked: params => domains._call("Extensions.loadUnpacked", params),
-      getExtensions: params => domains._call("Extensions.getExtensions", params),
-      uninstall: params => domains._call("Extensions.uninstall", params),
-      getStorageItems: params => domains._call("Extensions.getStorageItems", params),
-      removeStorageItems: params => domains._call("Extensions.removeStorageItems", params),
-      clearStorageItems: params => domains._call("Extensions.clearStorageItems", params),
-      setStorageItems: params => domains._call("Extensions.setStorageItems", params)
+      triggerAction: params => t._call("Extensions.triggerAction", params),
+      loadUnpacked: params => t._call("Extensions.loadUnpacked", params),
+      getExtensions: params => t._call("Extensions.getExtensions", params),
+      uninstall: params => t._call("Extensions.uninstall", params),
+      getStorageItems: params => t._call("Extensions.getStorageItems", params),
+      removeStorageItems: params => t._call("Extensions.removeStorageItems", params),
+      clearStorageItems: params => t._call("Extensions.clearStorageItems", params),
+      setStorageItems: params => t._call("Extensions.setStorageItems", params)
     },
     FedCm: {
-      enable: params => domains._call("FedCm.enable", params),
-      disable: params => domains._call("FedCm.disable", params),
-      selectAccount: params => domains._call("FedCm.selectAccount", params),
-      clickDialogButton: params => domains._call("FedCm.clickDialogButton", params),
-      openUrl: params => domains._call("FedCm.openUrl", params),
-      dismissDialog: params => domains._call("FedCm.dismissDialog", params),
-      resetCooldown: params => domains._call("FedCm.resetCooldown", params)
+      enable: params => t._call("FedCm.enable", params),
+      disable: params => t._call("FedCm.disable", params),
+      selectAccount: params => t._call("FedCm.selectAccount", params),
+      clickDialogButton: params => t._call("FedCm.clickDialogButton", params),
+      openUrl: params => t._call("FedCm.openUrl", params),
+      dismissDialog: params => t._call("FedCm.dismissDialog", params),
+      resetCooldown: params => t._call("FedCm.resetCooldown", params)
     },
     Fetch: {
-      disable: params => domains._call("Fetch.disable", params),
-      enable: params => domains._call("Fetch.enable", params),
-      failRequest: params => domains._call("Fetch.failRequest", params),
-      fulfillRequest: params => domains._call("Fetch.fulfillRequest", params),
-      continueRequest: params => domains._call("Fetch.continueRequest", params),
-      continueWithAuth: params => domains._call("Fetch.continueWithAuth", params),
-      continueResponse: params => domains._call("Fetch.continueResponse", params),
-      getResponseBody: params => domains._call("Fetch.getResponseBody", params),
-      takeResponseBodyAsStream: params => domains._call("Fetch.takeResponseBodyAsStream", params)
+      disable: params => t._call("Fetch.disable", params),
+      enable: params => t._call("Fetch.enable", params),
+      failRequest: params => t._call("Fetch.failRequest", params),
+      fulfillRequest: params => t._call("Fetch.fulfillRequest", params),
+      continueRequest: params => t._call("Fetch.continueRequest", params),
+      continueWithAuth: params => t._call("Fetch.continueWithAuth", params),
+      continueResponse: params => t._call("Fetch.continueResponse", params),
+      getResponseBody: params => t._call("Fetch.getResponseBody", params),
+      takeResponseBodyAsStream: params => t._call("Fetch.takeResponseBodyAsStream", params)
     },
     FileSystem: {
-      getDirectory: params => domains._call("FileSystem.getDirectory", params)
+      getDirectory: params => t._call("FileSystem.getDirectory", params)
     },
     HeadlessExperimental: {
-      beginFrame: params => domains._call("HeadlessExperimental.beginFrame", params),
-      disable: params => domains._call("HeadlessExperimental.disable", params),
-      enable: params => domains._call("HeadlessExperimental.enable", params)
+      beginFrame: params => t._call("HeadlessExperimental.beginFrame", params),
+      disable: params => t._call("HeadlessExperimental.disable", params),
+      enable: params => t._call("HeadlessExperimental.enable", params)
     },
     HeapProfiler: {
-      addInspectedHeapObject: params => domains._call("HeapProfiler.addInspectedHeapObject", params),
-      collectGarbage: params => domains._call("HeapProfiler.collectGarbage", params),
-      disable: params => domains._call("HeapProfiler.disable", params),
-      enable: params => domains._call("HeapProfiler.enable", params),
-      getHeapObjectId: params => domains._call("HeapProfiler.getHeapObjectId", params),
-      getObjectByHeapObjectId: params => domains._call("HeapProfiler.getObjectByHeapObjectId", params),
-      getSamplingProfile: params => domains._call("HeapProfiler.getSamplingProfile", params),
-      startSampling: params => domains._call("HeapProfiler.startSampling", params),
-      startTrackingHeapObjects: params => domains._call("HeapProfiler.startTrackingHeapObjects", params),
-      stopSampling: params => domains._call("HeapProfiler.stopSampling", params),
-      stopTrackingHeapObjects: params => domains._call("HeapProfiler.stopTrackingHeapObjects", params),
-      takeHeapSnapshot: params => domains._call("HeapProfiler.takeHeapSnapshot", params)
+      addInspectedHeapObject: params => t._call("HeapProfiler.addInspectedHeapObject", params),
+      collectGarbage: params => t._call("HeapProfiler.collectGarbage", params),
+      disable: params => t._call("HeapProfiler.disable", params),
+      enable: params => t._call("HeapProfiler.enable", params),
+      getHeapObjectId: params => t._call("HeapProfiler.getHeapObjectId", params),
+      getObjectByHeapObjectId: params => t._call("HeapProfiler.getObjectByHeapObjectId", params),
+      getSamplingProfile: params => t._call("HeapProfiler.getSamplingProfile", params),
+      startSampling: params => t._call("HeapProfiler.startSampling", params),
+      startTrackingHeapObjects: params => t._call("HeapProfiler.startTrackingHeapObjects", params),
+      stopSampling: params => t._call("HeapProfiler.stopSampling", params),
+      stopTrackingHeapObjects: params => t._call("HeapProfiler.stopTrackingHeapObjects", params),
+      takeHeapSnapshot: params => t._call("HeapProfiler.takeHeapSnapshot", params)
     },
     IndexedDB: {
-      clearObjectStore: params => domains._call("IndexedDB.clearObjectStore", params),
-      deleteDatabase: params => domains._call("IndexedDB.deleteDatabase", params),
-      deleteObjectStoreEntries: params => domains._call("IndexedDB.deleteObjectStoreEntries", params),
-      disable: params => domains._call("IndexedDB.disable", params),
-      enable: params => domains._call("IndexedDB.enable", params),
-      requestData: params => domains._call("IndexedDB.requestData", params),
-      getMetadata: params => domains._call("IndexedDB.getMetadata", params),
-      requestDatabase: params => domains._call("IndexedDB.requestDatabase", params),
-      requestDatabaseNames: params => domains._call("IndexedDB.requestDatabaseNames", params)
+      clearObjectStore: params => t._call("IndexedDB.clearObjectStore", params),
+      deleteDatabase: params => t._call("IndexedDB.deleteDatabase", params),
+      deleteObjectStoreEntries: params => t._call("IndexedDB.deleteObjectStoreEntries", params),
+      disable: params => t._call("IndexedDB.disable", params),
+      enable: params => t._call("IndexedDB.enable", params),
+      requestData: params => t._call("IndexedDB.requestData", params),
+      getMetadata: params => t._call("IndexedDB.getMetadata", params),
+      requestDatabase: params => t._call("IndexedDB.requestDatabase", params),
+      requestDatabaseNames: params => t._call("IndexedDB.requestDatabaseNames", params)
     },
     Input: {
-      dispatchDragEvent: params => domains._call("Input.dispatchDragEvent", params),
-      dispatchKeyEvent: params => domains._call("Input.dispatchKeyEvent", params),
-      insertText: params => domains._call("Input.insertText", params),
-      imeSetComposition: params => domains._call("Input.imeSetComposition", params),
-      dispatchMouseEvent: params => domains._call("Input.dispatchMouseEvent", params),
-      dispatchTouchEvent: params => domains._call("Input.dispatchTouchEvent", params),
-      cancelDragging: params => domains._call("Input.cancelDragging", params),
-      emulateTouchFromMouseEvent: params => domains._call("Input.emulateTouchFromMouseEvent", params),
-      setIgnoreInputEvents: params => domains._call("Input.setIgnoreInputEvents", params),
-      setInterceptDrags: params => domains._call("Input.setInterceptDrags", params),
-      synthesizePinchGesture: params => domains._call("Input.synthesizePinchGesture", params),
-      synthesizeScrollGesture: params => domains._call("Input.synthesizeScrollGesture", params),
-      synthesizeTapGesture: params => domains._call("Input.synthesizeTapGesture", params)
+      dispatchDragEvent: params => t._call("Input.dispatchDragEvent", params),
+      dispatchKeyEvent: params => t._call("Input.dispatchKeyEvent", params),
+      insertText: params => t._call("Input.insertText", params),
+      imeSetComposition: params => t._call("Input.imeSetComposition", params),
+      dispatchMouseEvent: params => t._call("Input.dispatchMouseEvent", params),
+      dispatchTouchEvent: params => t._call("Input.dispatchTouchEvent", params),
+      cancelDragging: params => t._call("Input.cancelDragging", params),
+      emulateTouchFromMouseEvent: params => t._call("Input.emulateTouchFromMouseEvent", params),
+      setIgnoreInputEvents: params => t._call("Input.setIgnoreInputEvents", params),
+      setInterceptDrags: params => t._call("Input.setInterceptDrags", params),
+      synthesizePinchGesture: params => t._call("Input.synthesizePinchGesture", params),
+      synthesizeScrollGesture: params => t._call("Input.synthesizeScrollGesture", params),
+      synthesizeTapGesture: params => t._call("Input.synthesizeTapGesture", params)
     },
     Inspector: {
-      disable: params => domains._call("Inspector.disable", params),
-      enable: params => domains._call("Inspector.enable", params)
+      disable: params => t._call("Inspector.disable", params),
+      enable: params => t._call("Inspector.enable", params)
     },
     IO: {
-      close: params => domains._call("IO.close", params),
-      read: params => domains._call("IO.read", params),
-      resolveBlob: params => domains._call("IO.resolveBlob", params)
+      close: params => t._call("IO.close", params),
+      read: params => t._call("IO.read", params),
+      resolveBlob: params => t._call("IO.resolveBlob", params)
     },
     LayerTree: {
-      compositingReasons: params => domains._call("LayerTree.compositingReasons", params),
-      disable: params => domains._call("LayerTree.disable", params),
-      enable: params => domains._call("LayerTree.enable", params),
-      loadSnapshot: params => domains._call("LayerTree.loadSnapshot", params),
-      makeSnapshot: params => domains._call("LayerTree.makeSnapshot", params),
-      profileSnapshot: params => domains._call("LayerTree.profileSnapshot", params),
-      releaseSnapshot: params => domains._call("LayerTree.releaseSnapshot", params),
-      replaySnapshot: params => domains._call("LayerTree.replaySnapshot", params),
-      snapshotCommandLog: params => domains._call("LayerTree.snapshotCommandLog", params)
+      compositingReasons: params => t._call("LayerTree.compositingReasons", params),
+      disable: params => t._call("LayerTree.disable", params),
+      enable: params => t._call("LayerTree.enable", params),
+      loadSnapshot: params => t._call("LayerTree.loadSnapshot", params),
+      makeSnapshot: params => t._call("LayerTree.makeSnapshot", params),
+      profileSnapshot: params => t._call("LayerTree.profileSnapshot", params),
+      releaseSnapshot: params => t._call("LayerTree.releaseSnapshot", params),
+      replaySnapshot: params => t._call("LayerTree.replaySnapshot", params),
+      snapshotCommandLog: params => t._call("LayerTree.snapshotCommandLog", params)
     },
     Log: {
-      clear: params => domains._call("Log.clear", params),
-      disable: params => domains._call("Log.disable", params),
-      enable: params => domains._call("Log.enable", params),
-      startViolationsReport: params => domains._call("Log.startViolationsReport", params),
-      stopViolationsReport: params => domains._call("Log.stopViolationsReport", params)
+      clear: params => t._call("Log.clear", params),
+      disable: params => t._call("Log.disable", params),
+      enable: params => t._call("Log.enable", params),
+      startViolationsReport: params => t._call("Log.startViolationsReport", params),
+      stopViolationsReport: params => t._call("Log.stopViolationsReport", params)
     },
     Media: {
-      enable: params => domains._call("Media.enable", params),
-      disable: params => domains._call("Media.disable", params)
+      enable: params => t._call("Media.enable", params),
+      disable: params => t._call("Media.disable", params)
     },
     Memory: {
-      getDOMCounters: params => domains._call("Memory.getDOMCounters", params),
-      getDOMCountersForLeakDetection: params => domains._call("Memory.getDOMCountersForLeakDetection", params),
-      prepareForLeakDetection: params => domains._call("Memory.prepareForLeakDetection", params),
-      forciblyPurgeJavaScriptMemory: params => domains._call("Memory.forciblyPurgeJavaScriptMemory", params),
-      setPressureNotificationsSuppressed: params => domains._call("Memory.setPressureNotificationsSuppressed", params),
-      simulatePressureNotification: params => domains._call("Memory.simulatePressureNotification", params),
-      startSampling: params => domains._call("Memory.startSampling", params),
-      stopSampling: params => domains._call("Memory.stopSampling", params),
-      getAllTimeSamplingProfile: params => domains._call("Memory.getAllTimeSamplingProfile", params),
-      getBrowserSamplingProfile: params => domains._call("Memory.getBrowserSamplingProfile", params),
-      getSamplingProfile: params => domains._call("Memory.getSamplingProfile", params)
+      getDOMCounters: params => t._call("Memory.getDOMCounters", params),
+      getDOMCountersForLeakDetection: params => t._call("Memory.getDOMCountersForLeakDetection", params),
+      prepareForLeakDetection: params => t._call("Memory.prepareForLeakDetection", params),
+      forciblyPurgeJavaScriptMemory: params => t._call("Memory.forciblyPurgeJavaScriptMemory", params),
+      setPressureNotificationsSuppressed: params => t._call("Memory.setPressureNotificationsSuppressed", params),
+      simulatePressureNotification: params => t._call("Memory.simulatePressureNotification", params),
+      startSampling: params => t._call("Memory.startSampling", params),
+      stopSampling: params => t._call("Memory.stopSampling", params),
+      getAllTimeSamplingProfile: params => t._call("Memory.getAllTimeSamplingProfile", params),
+      getBrowserSamplingProfile: params => t._call("Memory.getBrowserSamplingProfile", params),
+      getSamplingProfile: params => t._call("Memory.getSamplingProfile", params)
     },
     Network: {
-      setAcceptedEncodings: params => domains._call("Network.setAcceptedEncodings", params),
-      clearAcceptedEncodingsOverride: params => domains._call("Network.clearAcceptedEncodingsOverride", params),
-      canClearBrowserCache: params => domains._call("Network.canClearBrowserCache", params),
-      canClearBrowserCookies: params => domains._call("Network.canClearBrowserCookies", params),
-      canEmulateNetworkConditions: params => domains._call("Network.canEmulateNetworkConditions", params),
-      clearBrowserCache: params => domains._call("Network.clearBrowserCache", params),
-      clearBrowserCookies: params => domains._call("Network.clearBrowserCookies", params),
-      continueInterceptedRequest: params => domains._call("Network.continueInterceptedRequest", params),
-      deleteCookies: params => domains._call("Network.deleteCookies", params),
-      disable: params => domains._call("Network.disable", params),
-      emulateNetworkConditions: params => domains._call("Network.emulateNetworkConditions", params),
-      emulateNetworkConditionsByRule: params => domains._call("Network.emulateNetworkConditionsByRule", params),
-      overrideNetworkState: params => domains._call("Network.overrideNetworkState", params),
-      enable: params => domains._call("Network.enable", params),
-      configureDurableMessages: params => domains._call("Network.configureDurableMessages", params),
-      getAllCookies: params => domains._call("Network.getAllCookies", params),
-      getCertificate: params => domains._call("Network.getCertificate", params),
-      getCookies: params => domains._call("Network.getCookies", params),
-      getResponseBody: params => domains._call("Network.getResponseBody", params),
-      getRequestPostData: params => domains._call("Network.getRequestPostData", params),
-      getResponseBodyForInterception: params => domains._call("Network.getResponseBodyForInterception", params),
-      takeResponseBodyForInterceptionAsStream: params => domains._call("Network.takeResponseBodyForInterceptionAsStream", params),
-      replayXHR: params => domains._call("Network.replayXHR", params),
-      searchInResponseBody: params => domains._call("Network.searchInResponseBody", params),
-      setBlockedURLs: params => domains._call("Network.setBlockedURLs", params),
-      setBypassServiceWorker: params => domains._call("Network.setBypassServiceWorker", params),
-      setCacheDisabled: params => domains._call("Network.setCacheDisabled", params),
-      setCookie: params => domains._call("Network.setCookie", params),
-      setCookies: params => domains._call("Network.setCookies", params),
-      setExtraHTTPHeaders: params => domains._call("Network.setExtraHTTPHeaders", params),
-      setAttachDebugStack: params => domains._call("Network.setAttachDebugStack", params),
-      setRequestInterception: params => domains._call("Network.setRequestInterception", params),
-      streamResourceContent: params => domains._call("Network.streamResourceContent", params),
-      getSecurityIsolationStatus: params => domains._call("Network.getSecurityIsolationStatus", params),
-      enableReportingApi: params => domains._call("Network.enableReportingApi", params),
-      enableDeviceBoundSessions: params => domains._call("Network.enableDeviceBoundSessions", params),
-      deleteDeviceBoundSession: params => domains._call("Network.deleteDeviceBoundSession", params),
-      fetchSchemefulSite: params => domains._call("Network.fetchSchemefulSite", params),
-      loadNetworkResource: params => domains._call("Network.loadNetworkResource", params),
-      setCookieControls: params => domains._call("Network.setCookieControls", params)
+      setAcceptedEncodings: params => t._call("Network.setAcceptedEncodings", params),
+      clearAcceptedEncodingsOverride: params => t._call("Network.clearAcceptedEncodingsOverride", params),
+      canClearBrowserCache: params => t._call("Network.canClearBrowserCache", params),
+      canClearBrowserCookies: params => t._call("Network.canClearBrowserCookies", params),
+      canEmulateNetworkConditions: params => t._call("Network.canEmulateNetworkConditions", params),
+      clearBrowserCache: params => t._call("Network.clearBrowserCache", params),
+      clearBrowserCookies: params => t._call("Network.clearBrowserCookies", params),
+      continueInterceptedRequest: params => t._call("Network.continueInterceptedRequest", params),
+      deleteCookies: params => t._call("Network.deleteCookies", params),
+      disable: params => t._call("Network.disable", params),
+      emulateNetworkConditions: params => t._call("Network.emulateNetworkConditions", params),
+      emulateNetworkConditionsByRule: params => t._call("Network.emulateNetworkConditionsByRule", params),
+      overrideNetworkState: params => t._call("Network.overrideNetworkState", params),
+      enable: params => t._call("Network.enable", params),
+      configureDurableMessages: params => t._call("Network.configureDurableMessages", params),
+      getAllCookies: params => t._call("Network.getAllCookies", params),
+      getCertificate: params => t._call("Network.getCertificate", params),
+      getCookies: params => t._call("Network.getCookies", params),
+      getResponseBody: params => t._call("Network.getResponseBody", params),
+      getRequestPostData: params => t._call("Network.getRequestPostData", params),
+      getResponseBodyForInterception: params => t._call("Network.getResponseBodyForInterception", params),
+      takeResponseBodyForInterceptionAsStream: params => t._call("Network.takeResponseBodyForInterceptionAsStream", params),
+      replayXHR: params => t._call("Network.replayXHR", params),
+      searchInResponseBody: params => t._call("Network.searchInResponseBody", params),
+      setBlockedURLs: params => t._call("Network.setBlockedURLs", params),
+      setBypassServiceWorker: params => t._call("Network.setBypassServiceWorker", params),
+      setCacheDisabled: params => t._call("Network.setCacheDisabled", params),
+      setCookie: params => t._call("Network.setCookie", params),
+      setCookies: params => t._call("Network.setCookies", params),
+      setExtraHTTPHeaders: params => t._call("Network.setExtraHTTPHeaders", params),
+      setAttachDebugStack: params => t._call("Network.setAttachDebugStack", params),
+      setRequestInterception: params => t._call("Network.setRequestInterception", params),
+      streamResourceContent: params => t._call("Network.streamResourceContent", params),
+      getSecurityIsolationStatus: params => t._call("Network.getSecurityIsolationStatus", params),
+      enableReportingApi: params => t._call("Network.enableReportingApi", params),
+      enableDeviceBoundSessions: params => t._call("Network.enableDeviceBoundSessions", params),
+      deleteDeviceBoundSession: params => t._call("Network.deleteDeviceBoundSession", params),
+      fetchSchemefulSite: params => t._call("Network.fetchSchemefulSite", params),
+      loadNetworkResource: params => t._call("Network.loadNetworkResource", params),
+      setCookieControls: params => t._call("Network.setCookieControls", params)
     },
     Overlay: {
-      disable: params => domains._call("Overlay.disable", params),
-      enable: params => domains._call("Overlay.enable", params),
-      getHighlightObjectForTest: params => domains._call("Overlay.getHighlightObjectForTest", params),
-      getGridHighlightObjectsForTest: params => domains._call("Overlay.getGridHighlightObjectsForTest", params),
-      getSourceOrderHighlightObjectForTest: params => domains._call("Overlay.getSourceOrderHighlightObjectForTest", params),
-      hideHighlight: params => domains._call("Overlay.hideHighlight", params),
-      highlightFrame: params => domains._call("Overlay.highlightFrame", params),
-      highlightNode: params => domains._call("Overlay.highlightNode", params),
-      highlightQuad: params => domains._call("Overlay.highlightQuad", params),
-      highlightRect: params => domains._call("Overlay.highlightRect", params),
-      highlightSourceOrder: params => domains._call("Overlay.highlightSourceOrder", params),
-      setInspectMode: params => domains._call("Overlay.setInspectMode", params),
-      setShowAdHighlights: params => domains._call("Overlay.setShowAdHighlights", params),
-      setPausedInDebuggerMessage: params => domains._call("Overlay.setPausedInDebuggerMessage", params),
-      setShowDebugBorders: params => domains._call("Overlay.setShowDebugBorders", params),
-      setShowFPSCounter: params => domains._call("Overlay.setShowFPSCounter", params),
-      setShowGridOverlays: params => domains._call("Overlay.setShowGridOverlays", params),
-      setShowFlexOverlays: params => domains._call("Overlay.setShowFlexOverlays", params),
-      setShowScrollSnapOverlays: params => domains._call("Overlay.setShowScrollSnapOverlays", params),
-      setShowContainerQueryOverlays: params => domains._call("Overlay.setShowContainerQueryOverlays", params),
-      setShowInspectedElementAnchor: params => domains._call("Overlay.setShowInspectedElementAnchor", params),
-      setShowPaintRects: params => domains._call("Overlay.setShowPaintRects", params),
-      setShowLayoutShiftRegions: params => domains._call("Overlay.setShowLayoutShiftRegions", params),
-      setShowScrollBottleneckRects: params => domains._call("Overlay.setShowScrollBottleneckRects", params),
-      setShowHitTestBorders: params => domains._call("Overlay.setShowHitTestBorders", params),
-      setShowWebVitals: params => domains._call("Overlay.setShowWebVitals", params),
-      setShowViewportSizeOnResize: params => domains._call("Overlay.setShowViewportSizeOnResize", params),
-      setShowHinge: params => domains._call("Overlay.setShowHinge", params),
-      setShowIsolatedElements: params => domains._call("Overlay.setShowIsolatedElements", params),
-      setShowWindowControlsOverlay: params => domains._call("Overlay.setShowWindowControlsOverlay", params)
+      disable: params => t._call("Overlay.disable", params),
+      enable: params => t._call("Overlay.enable", params),
+      getHighlightObjectForTest: params => t._call("Overlay.getHighlightObjectForTest", params),
+      getGridHighlightObjectsForTest: params => t._call("Overlay.getGridHighlightObjectsForTest", params),
+      getSourceOrderHighlightObjectForTest: params => t._call("Overlay.getSourceOrderHighlightObjectForTest", params),
+      hideHighlight: params => t._call("Overlay.hideHighlight", params),
+      highlightFrame: params => t._call("Overlay.highlightFrame", params),
+      highlightNode: params => t._call("Overlay.highlightNode", params),
+      highlightQuad: params => t._call("Overlay.highlightQuad", params),
+      highlightRect: params => t._call("Overlay.highlightRect", params),
+      highlightSourceOrder: params => t._call("Overlay.highlightSourceOrder", params),
+      setInspectMode: params => t._call("Overlay.setInspectMode", params),
+      setShowAdHighlights: params => t._call("Overlay.setShowAdHighlights", params),
+      setPausedInDebuggerMessage: params => t._call("Overlay.setPausedInDebuggerMessage", params),
+      setShowDebugBorders: params => t._call("Overlay.setShowDebugBorders", params),
+      setShowFPSCounter: params => t._call("Overlay.setShowFPSCounter", params),
+      setShowGridOverlays: params => t._call("Overlay.setShowGridOverlays", params),
+      setShowFlexOverlays: params => t._call("Overlay.setShowFlexOverlays", params),
+      setShowScrollSnapOverlays: params => t._call("Overlay.setShowScrollSnapOverlays", params),
+      setShowContainerQueryOverlays: params => t._call("Overlay.setShowContainerQueryOverlays", params),
+      setShowInspectedElementAnchor: params => t._call("Overlay.setShowInspectedElementAnchor", params),
+      setShowPaintRects: params => t._call("Overlay.setShowPaintRects", params),
+      setShowLayoutShiftRegions: params => t._call("Overlay.setShowLayoutShiftRegions", params),
+      setShowScrollBottleneckRects: params => t._call("Overlay.setShowScrollBottleneckRects", params),
+      setShowHitTestBorders: params => t._call("Overlay.setShowHitTestBorders", params),
+      setShowWebVitals: params => t._call("Overlay.setShowWebVitals", params),
+      setShowViewportSizeOnResize: params => t._call("Overlay.setShowViewportSizeOnResize", params),
+      setShowHinge: params => t._call("Overlay.setShowHinge", params),
+      setShowIsolatedElements: params => t._call("Overlay.setShowIsolatedElements", params),
+      setShowWindowControlsOverlay: params => t._call("Overlay.setShowWindowControlsOverlay", params)
     },
     Page: {
-      addScriptToEvaluateOnLoad: params => domains._call("Page.addScriptToEvaluateOnLoad", params),
-      addScriptToEvaluateOnNewDocument: params => domains._call("Page.addScriptToEvaluateOnNewDocument", params),
-      bringToFront: params => domains._call("Page.bringToFront", params),
-      captureScreenshot: params => domains._call("Page.captureScreenshot", params),
-      captureSnapshot: params => domains._call("Page.captureSnapshot", params),
-      createIsolatedWorld: params => domains._call("Page.createIsolatedWorld", params),
-      disable: params => domains._call("Page.disable", params),
-      enable: params => domains._call("Page.enable", params),
-      getAppManifest: params => domains._call("Page.getAppManifest", params),
-      getInstallabilityErrors: params => domains._call("Page.getInstallabilityErrors", params),
-      getManifestIcons: params => domains._call("Page.getManifestIcons", params),
-      getAppId: params => domains._call("Page.getAppId", params),
-      getAdScriptAncestry: params => domains._call("Page.getAdScriptAncestry", params),
-      getFrameTree: params => domains._call("Page.getFrameTree", params),
-      getLayoutMetrics: params => domains._call("Page.getLayoutMetrics", params),
-      getNavigationHistory: params => domains._call("Page.getNavigationHistory", params),
-      resetNavigationHistory: params => domains._call("Page.resetNavigationHistory", params),
-      getResourceContent: params => domains._call("Page.getResourceContent", params),
-      getResourceTree: params => domains._call("Page.getResourceTree", params),
-      handleJavaScriptDialog: params => domains._call("Page.handleJavaScriptDialog", params),
-      navigate: params => domains._call("Page.navigate", params),
-      navigateToHistoryEntry: params => domains._call("Page.navigateToHistoryEntry", params),
-      printToPDF: params => domains._call("Page.printToPDF", params),
-      reload: params => domains._call("Page.reload", params),
-      removeScriptToEvaluateOnLoad: params => domains._call("Page.removeScriptToEvaluateOnLoad", params),
-      removeScriptToEvaluateOnNewDocument: params => domains._call("Page.removeScriptToEvaluateOnNewDocument", params),
-      screencastFrameAck: params => domains._call("Page.screencastFrameAck", params),
-      searchInResource: params => domains._call("Page.searchInResource", params),
-      setAdBlockingEnabled: params => domains._call("Page.setAdBlockingEnabled", params),
-      setBypassCSP: params => domains._call("Page.setBypassCSP", params),
-      getPermissionsPolicyState: params => domains._call("Page.getPermissionsPolicyState", params),
-      getOriginTrials: params => domains._call("Page.getOriginTrials", params),
-      setFontFamilies: params => domains._call("Page.setFontFamilies", params),
-      setFontSizes: params => domains._call("Page.setFontSizes", params),
-      setDocumentContent: params => domains._call("Page.setDocumentContent", params),
-      setDownloadBehavior: params => domains._call("Page.setDownloadBehavior", params),
-      setLifecycleEventsEnabled: params => domains._call("Page.setLifecycleEventsEnabled", params),
-      startScreencast: params => domains._call("Page.startScreencast", params),
-      stopLoading: params => domains._call("Page.stopLoading", params),
-      crash: params => domains._call("Page.crash", params),
-      close: params => domains._call("Page.close", params),
-      setWebLifecycleState: params => domains._call("Page.setWebLifecycleState", params),
-      stopScreencast: params => domains._call("Page.stopScreencast", params),
-      produceCompilationCache: params => domains._call("Page.produceCompilationCache", params),
-      addCompilationCache: params => domains._call("Page.addCompilationCache", params),
-      clearCompilationCache: params => domains._call("Page.clearCompilationCache", params),
-      setSPCTransactionMode: params => domains._call("Page.setSPCTransactionMode", params),
-      setRPHRegistrationMode: params => domains._call("Page.setRPHRegistrationMode", params),
-      generateTestReport: params => domains._call("Page.generateTestReport", params),
-      waitForDebugger: params => domains._call("Page.waitForDebugger", params),
-      setInterceptFileChooserDialog: params => domains._call("Page.setInterceptFileChooserDialog", params),
-      setPrerenderingAllowed: params => domains._call("Page.setPrerenderingAllowed", params),
-      getAnnotatedPageContent: params => domains._call("Page.getAnnotatedPageContent", params)
+      addScriptToEvaluateOnLoad: params => t._call("Page.addScriptToEvaluateOnLoad", params),
+      addScriptToEvaluateOnNewDocument: params => t._call("Page.addScriptToEvaluateOnNewDocument", params),
+      bringToFront: params => t._call("Page.bringToFront", params),
+      captureScreenshot: params => t._call("Page.captureScreenshot", params),
+      captureSnapshot: params => t._call("Page.captureSnapshot", params),
+      createIsolatedWorld: params => t._call("Page.createIsolatedWorld", params),
+      disable: params => t._call("Page.disable", params),
+      enable: params => t._call("Page.enable", params),
+      getAppManifest: params => t._call("Page.getAppManifest", params),
+      getInstallabilityErrors: params => t._call("Page.getInstallabilityErrors", params),
+      getManifestIcons: params => t._call("Page.getManifestIcons", params),
+      getAppId: params => t._call("Page.getAppId", params),
+      getAdScriptAncestry: params => t._call("Page.getAdScriptAncestry", params),
+      getFrameTree: params => t._call("Page.getFrameTree", params),
+      getLayoutMetrics: params => t._call("Page.getLayoutMetrics", params),
+      getNavigationHistory: params => t._call("Page.getNavigationHistory", params),
+      resetNavigationHistory: params => t._call("Page.resetNavigationHistory", params),
+      getResourceContent: params => t._call("Page.getResourceContent", params),
+      getResourceTree: params => t._call("Page.getResourceTree", params),
+      handleJavaScriptDialog: params => t._call("Page.handleJavaScriptDialog", params),
+      navigate: params => t._call("Page.navigate", params),
+      navigateToHistoryEntry: params => t._call("Page.navigateToHistoryEntry", params),
+      printToPDF: params => t._call("Page.printToPDF", params),
+      reload: params => t._call("Page.reload", params),
+      removeScriptToEvaluateOnLoad: params => t._call("Page.removeScriptToEvaluateOnLoad", params),
+      removeScriptToEvaluateOnNewDocument: params => t._call("Page.removeScriptToEvaluateOnNewDocument", params),
+      screencastFrameAck: params => t._call("Page.screencastFrameAck", params),
+      searchInResource: params => t._call("Page.searchInResource", params),
+      setAdBlockingEnabled: params => t._call("Page.setAdBlockingEnabled", params),
+      setBypassCSP: params => t._call("Page.setBypassCSP", params),
+      getPermissionsPolicyState: params => t._call("Page.getPermissionsPolicyState", params),
+      getOriginTrials: params => t._call("Page.getOriginTrials", params),
+      setFontFamilies: params => t._call("Page.setFontFamilies", params),
+      setFontSizes: params => t._call("Page.setFontSizes", params),
+      setDocumentContent: params => t._call("Page.setDocumentContent", params),
+      setDownloadBehavior: params => t._call("Page.setDownloadBehavior", params),
+      setLifecycleEventsEnabled: params => t._call("Page.setLifecycleEventsEnabled", params),
+      startScreencast: params => t._call("Page.startScreencast", params),
+      stopLoading: params => t._call("Page.stopLoading", params),
+      crash: params => t._call("Page.crash", params),
+      close: params => t._call("Page.close", params),
+      setWebLifecycleState: params => t._call("Page.setWebLifecycleState", params),
+      stopScreencast: params => t._call("Page.stopScreencast", params),
+      produceCompilationCache: params => t._call("Page.produceCompilationCache", params),
+      addCompilationCache: params => t._call("Page.addCompilationCache", params),
+      clearCompilationCache: params => t._call("Page.clearCompilationCache", params),
+      setSPCTransactionMode: params => t._call("Page.setSPCTransactionMode", params),
+      setRPHRegistrationMode: params => t._call("Page.setRPHRegistrationMode", params),
+      generateTestReport: params => t._call("Page.generateTestReport", params),
+      waitForDebugger: params => t._call("Page.waitForDebugger", params),
+      setInterceptFileChooserDialog: params => t._call("Page.setInterceptFileChooserDialog", params),
+      setPrerenderingAllowed: params => t._call("Page.setPrerenderingAllowed", params),
+      getAnnotatedPageContent: params => t._call("Page.getAnnotatedPageContent", params)
     },
     Performance: {
-      disable: params => domains._call("Performance.disable", params),
-      enable: params => domains._call("Performance.enable", params),
-      setTimeDomain: params => domains._call("Performance.setTimeDomain", params),
-      getMetrics: params => domains._call("Performance.getMetrics", params)
+      disable: params => t._call("Performance.disable", params),
+      enable: params => t._call("Performance.enable", params),
+      setTimeDomain: params => t._call("Performance.setTimeDomain", params),
+      getMetrics: params => t._call("Performance.getMetrics", params)
     },
     PerformanceTimeline: {
-      enable: params => domains._call("PerformanceTimeline.enable", params)
+      enable: params => t._call("PerformanceTimeline.enable", params)
     },
     Preload: {
-      enable: params => domains._call("Preload.enable", params),
-      disable: params => domains._call("Preload.disable", params)
+      enable: params => t._call("Preload.enable", params),
+      disable: params => t._call("Preload.disable", params)
     },
     Profiler: {
-      disable: params => domains._call("Profiler.disable", params),
-      enable: params => domains._call("Profiler.enable", params),
-      getBestEffortCoverage: params => domains._call("Profiler.getBestEffortCoverage", params),
-      setSamplingInterval: params => domains._call("Profiler.setSamplingInterval", params),
-      start: params => domains._call("Profiler.start", params),
-      startPreciseCoverage: params => domains._call("Profiler.startPreciseCoverage", params),
-      stop: params => domains._call("Profiler.stop", params),
-      stopPreciseCoverage: params => domains._call("Profiler.stopPreciseCoverage", params),
-      takePreciseCoverage: params => domains._call("Profiler.takePreciseCoverage", params)
+      disable: params => t._call("Profiler.disable", params),
+      enable: params => t._call("Profiler.enable", params),
+      getBestEffortCoverage: params => t._call("Profiler.getBestEffortCoverage", params),
+      setSamplingInterval: params => t._call("Profiler.setSamplingInterval", params),
+      start: params => t._call("Profiler.start", params),
+      startPreciseCoverage: params => t._call("Profiler.startPreciseCoverage", params),
+      stop: params => t._call("Profiler.stop", params),
+      stopPreciseCoverage: params => t._call("Profiler.stopPreciseCoverage", params),
+      takePreciseCoverage: params => t._call("Profiler.takePreciseCoverage", params)
     },
     PWA: {
-      getOsAppState: params => domains._call("PWA.getOsAppState", params),
-      install: params => domains._call("PWA.install", params),
-      uninstall: params => domains._call("PWA.uninstall", params),
-      launch: params => domains._call("PWA.launch", params),
-      launchFilesInApp: params => domains._call("PWA.launchFilesInApp", params),
-      openCurrentPageInApp: params => domains._call("PWA.openCurrentPageInApp", params),
-      changeAppUserSettings: params => domains._call("PWA.changeAppUserSettings", params)
+      getOsAppState: params => t._call("PWA.getOsAppState", params),
+      install: params => t._call("PWA.install", params),
+      uninstall: params => t._call("PWA.uninstall", params),
+      launch: params => t._call("PWA.launch", params),
+      launchFilesInApp: params => t._call("PWA.launchFilesInApp", params),
+      openCurrentPageInApp: params => t._call("PWA.openCurrentPageInApp", params),
+      changeAppUserSettings: params => t._call("PWA.changeAppUserSettings", params)
     },
     Runtime: {
-      awaitPromise: params => domains._call("Runtime.awaitPromise", params),
-      callFunctionOn: params => domains._call("Runtime.callFunctionOn", params),
-      compileScript: params => domains._call("Runtime.compileScript", params),
-      disable: params => domains._call("Runtime.disable", params),
-      discardConsoleEntries: params => domains._call("Runtime.discardConsoleEntries", params),
-      enable: params => domains._call("Runtime.enable", params),
-      evaluate: params => domains._call("Runtime.evaluate", params),
-      getIsolateId: params => domains._call("Runtime.getIsolateId", params),
-      getHeapUsage: params => domains._call("Runtime.getHeapUsage", params),
-      getProperties: params => domains._call("Runtime.getProperties", params),
-      globalLexicalScopeNames: params => domains._call("Runtime.globalLexicalScopeNames", params),
-      queryObjects: params => domains._call("Runtime.queryObjects", params),
-      releaseObject: params => domains._call("Runtime.releaseObject", params),
-      releaseObjectGroup: params => domains._call("Runtime.releaseObjectGroup", params),
-      runIfWaitingForDebugger: params => domains._call("Runtime.runIfWaitingForDebugger", params),
-      runScript: params => domains._call("Runtime.runScript", params),
-      setCustomObjectFormatterEnabled: params => domains._call("Runtime.setCustomObjectFormatterEnabled", params),
-      setMaxCallStackSizeToCapture: params => domains._call("Runtime.setMaxCallStackSizeToCapture", params),
-      terminateExecution: params => domains._call("Runtime.terminateExecution", params),
-      addBinding: params => domains._call("Runtime.addBinding", params),
-      removeBinding: params => domains._call("Runtime.removeBinding", params),
-      getExceptionDetails: params => domains._call("Runtime.getExceptionDetails", params)
+      awaitPromise: params => t._call("Runtime.awaitPromise", params),
+      callFunctionOn: params => t._call("Runtime.callFunctionOn", params),
+      compileScript: params => t._call("Runtime.compileScript", params),
+      disable: params => t._call("Runtime.disable", params),
+      discardConsoleEntries: params => t._call("Runtime.discardConsoleEntries", params),
+      enable: params => t._call("Runtime.enable", params),
+      evaluate: params => t._call("Runtime.evaluate", params),
+      getIsolateId: params => t._call("Runtime.getIsolateId", params),
+      getHeapUsage: params => t._call("Runtime.getHeapUsage", params),
+      getProperties: params => t._call("Runtime.getProperties", params),
+      globalLexicalScopeNames: params => t._call("Runtime.globalLexicalScopeNames", params),
+      queryObjects: params => t._call("Runtime.queryObjects", params),
+      releaseObject: params => t._call("Runtime.releaseObject", params),
+      releaseObjectGroup: params => t._call("Runtime.releaseObjectGroup", params),
+      runIfWaitingForDebugger: params => t._call("Runtime.runIfWaitingForDebugger", params),
+      runScript: params => t._call("Runtime.runScript", params),
+      setCustomObjectFormatterEnabled: params => t._call("Runtime.setCustomObjectFormatterEnabled", params),
+      setMaxCallStackSizeToCapture: params => t._call("Runtime.setMaxCallStackSizeToCapture", params),
+      terminateExecution: params => t._call("Runtime.terminateExecution", params),
+      addBinding: params => t._call("Runtime.addBinding", params),
+      removeBinding: params => t._call("Runtime.removeBinding", params),
+      getExceptionDetails: params => t._call("Runtime.getExceptionDetails", params)
     },
     Schema: {
-      getDomains: params => domains._call("Schema.getDomains", params)
+      getDomains: params => t._call("Schema.getDomains", params)
     },
     Security: {
-      disable: params => domains._call("Security.disable", params),
-      enable: params => domains._call("Security.enable", params),
-      setIgnoreCertificateErrors: params => domains._call("Security.setIgnoreCertificateErrors", params),
-      handleCertificateError: params => domains._call("Security.handleCertificateError", params),
-      setOverrideCertificateErrors: params => domains._call("Security.setOverrideCertificateErrors", params)
+      disable: params => t._call("Security.disable", params),
+      enable: params => t._call("Security.enable", params),
+      setIgnoreCertificateErrors: params => t._call("Security.setIgnoreCertificateErrors", params),
+      handleCertificateError: params => t._call("Security.handleCertificateError", params),
+      setOverrideCertificateErrors: params => t._call("Security.setOverrideCertificateErrors", params)
     },
     ServiceWorker: {
-      deliverPushMessage: params => domains._call("ServiceWorker.deliverPushMessage", params),
-      disable: params => domains._call("ServiceWorker.disable", params),
-      dispatchSyncEvent: params => domains._call("ServiceWorker.dispatchSyncEvent", params),
-      dispatchPeriodicSyncEvent: params => domains._call("ServiceWorker.dispatchPeriodicSyncEvent", params),
-      enable: params => domains._call("ServiceWorker.enable", params),
-      setForceUpdateOnPageLoad: params => domains._call("ServiceWorker.setForceUpdateOnPageLoad", params),
-      skipWaiting: params => domains._call("ServiceWorker.skipWaiting", params),
-      startWorker: params => domains._call("ServiceWorker.startWorker", params),
-      stopAllWorkers: params => domains._call("ServiceWorker.stopAllWorkers", params),
-      stopWorker: params => domains._call("ServiceWorker.stopWorker", params),
-      unregister: params => domains._call("ServiceWorker.unregister", params),
-      updateRegistration: params => domains._call("ServiceWorker.updateRegistration", params)
+      deliverPushMessage: params => t._call("ServiceWorker.deliverPushMessage", params),
+      disable: params => t._call("ServiceWorker.disable", params),
+      dispatchSyncEvent: params => t._call("ServiceWorker.dispatchSyncEvent", params),
+      dispatchPeriodicSyncEvent: params => t._call("ServiceWorker.dispatchPeriodicSyncEvent", params),
+      enable: params => t._call("ServiceWorker.enable", params),
+      setForceUpdateOnPageLoad: params => t._call("ServiceWorker.setForceUpdateOnPageLoad", params),
+      skipWaiting: params => t._call("ServiceWorker.skipWaiting", params),
+      startWorker: params => t._call("ServiceWorker.startWorker", params),
+      stopAllWorkers: params => t._call("ServiceWorker.stopAllWorkers", params),
+      stopWorker: params => t._call("ServiceWorker.stopWorker", params),
+      unregister: params => t._call("ServiceWorker.unregister", params),
+      updateRegistration: params => t._call("ServiceWorker.updateRegistration", params)
     },
     SmartCardEmulation: {
-      enable: params => domains._call("SmartCardEmulation.enable", params),
-      disable: params => domains._call("SmartCardEmulation.disable", params),
-      reportEstablishContextResult: params => domains._call("SmartCardEmulation.reportEstablishContextResult", params),
-      reportReleaseContextResult: params => domains._call("SmartCardEmulation.reportReleaseContextResult", params),
-      reportListReadersResult: params => domains._call("SmartCardEmulation.reportListReadersResult", params),
-      reportGetStatusChangeResult: params => domains._call("SmartCardEmulation.reportGetStatusChangeResult", params),
-      reportBeginTransactionResult: params => domains._call("SmartCardEmulation.reportBeginTransactionResult", params),
-      reportPlainResult: params => domains._call("SmartCardEmulation.reportPlainResult", params),
-      reportConnectResult: params => domains._call("SmartCardEmulation.reportConnectResult", params),
-      reportDataResult: params => domains._call("SmartCardEmulation.reportDataResult", params),
-      reportStatusResult: params => domains._call("SmartCardEmulation.reportStatusResult", params),
-      reportError: params => domains._call("SmartCardEmulation.reportError", params)
+      enable: params => t._call("SmartCardEmulation.enable", params),
+      disable: params => t._call("SmartCardEmulation.disable", params),
+      reportEstablishContextResult: params => t._call("SmartCardEmulation.reportEstablishContextResult", params),
+      reportReleaseContextResult: params => t._call("SmartCardEmulation.reportReleaseContextResult", params),
+      reportListReadersResult: params => t._call("SmartCardEmulation.reportListReadersResult", params),
+      reportGetStatusChangeResult: params => t._call("SmartCardEmulation.reportGetStatusChangeResult", params),
+      reportBeginTransactionResult: params => t._call("SmartCardEmulation.reportBeginTransactionResult", params),
+      reportPlainResult: params => t._call("SmartCardEmulation.reportPlainResult", params),
+      reportConnectResult: params => t._call("SmartCardEmulation.reportConnectResult", params),
+      reportDataResult: params => t._call("SmartCardEmulation.reportDataResult", params),
+      reportStatusResult: params => t._call("SmartCardEmulation.reportStatusResult", params),
+      reportError: params => t._call("SmartCardEmulation.reportError", params)
     },
     Storage: {
-      getStorageKeyForFrame: params => domains._call("Storage.getStorageKeyForFrame", params),
-      getStorageKey: params => domains._call("Storage.getStorageKey", params),
-      clearDataForOrigin: params => domains._call("Storage.clearDataForOrigin", params),
-      clearDataForStorageKey: params => domains._call("Storage.clearDataForStorageKey", params),
-      getCookies: params => domains._call("Storage.getCookies", params),
-      setCookies: params => domains._call("Storage.setCookies", params),
-      clearCookies: params => domains._call("Storage.clearCookies", params),
-      getUsageAndQuota: params => domains._call("Storage.getUsageAndQuota", params),
-      overrideQuotaForOrigin: params => domains._call("Storage.overrideQuotaForOrigin", params),
-      trackCacheStorageForOrigin: params => domains._call("Storage.trackCacheStorageForOrigin", params),
-      trackCacheStorageForStorageKey: params => domains._call("Storage.trackCacheStorageForStorageKey", params),
-      trackIndexedDBForOrigin: params => domains._call("Storage.trackIndexedDBForOrigin", params),
-      trackIndexedDBForStorageKey: params => domains._call("Storage.trackIndexedDBForStorageKey", params),
-      untrackCacheStorageForOrigin: params => domains._call("Storage.untrackCacheStorageForOrigin", params),
-      untrackCacheStorageForStorageKey: params => domains._call("Storage.untrackCacheStorageForStorageKey", params),
-      untrackIndexedDBForOrigin: params => domains._call("Storage.untrackIndexedDBForOrigin", params),
-      untrackIndexedDBForStorageKey: params => domains._call("Storage.untrackIndexedDBForStorageKey", params),
-      getTrustTokens: params => domains._call("Storage.getTrustTokens", params),
-      clearTrustTokens: params => domains._call("Storage.clearTrustTokens", params),
-      getInterestGroupDetails: params => domains._call("Storage.getInterestGroupDetails", params),
-      setInterestGroupTracking: params => domains._call("Storage.setInterestGroupTracking", params),
-      setInterestGroupAuctionTracking: params => domains._call("Storage.setInterestGroupAuctionTracking", params),
-      getSharedStorageMetadata: params => domains._call("Storage.getSharedStorageMetadata", params),
-      getSharedStorageEntries: params => domains._call("Storage.getSharedStorageEntries", params),
-      setSharedStorageEntry: params => domains._call("Storage.setSharedStorageEntry", params),
-      deleteSharedStorageEntry: params => domains._call("Storage.deleteSharedStorageEntry", params),
-      clearSharedStorageEntries: params => domains._call("Storage.clearSharedStorageEntries", params),
-      resetSharedStorageBudget: params => domains._call("Storage.resetSharedStorageBudget", params),
-      setSharedStorageTracking: params => domains._call("Storage.setSharedStorageTracking", params),
-      setStorageBucketTracking: params => domains._call("Storage.setStorageBucketTracking", params),
-      deleteStorageBucket: params => domains._call("Storage.deleteStorageBucket", params),
-      runBounceTrackingMitigations: params => domains._call("Storage.runBounceTrackingMitigations", params),
-      getRelatedWebsiteSets: params => domains._call("Storage.getRelatedWebsiteSets", params),
-      setProtectedAudienceKAnonymity: params => domains._call("Storage.setProtectedAudienceKAnonymity", params)
+      getStorageKeyForFrame: params => t._call("Storage.getStorageKeyForFrame", params),
+      getStorageKey: params => t._call("Storage.getStorageKey", params),
+      clearDataForOrigin: params => t._call("Storage.clearDataForOrigin", params),
+      clearDataForStorageKey: params => t._call("Storage.clearDataForStorageKey", params),
+      getCookies: params => t._call("Storage.getCookies", params),
+      setCookies: params => t._call("Storage.setCookies", params),
+      clearCookies: params => t._call("Storage.clearCookies", params),
+      getUsageAndQuota: params => t._call("Storage.getUsageAndQuota", params),
+      overrideQuotaForOrigin: params => t._call("Storage.overrideQuotaForOrigin", params),
+      trackCacheStorageForOrigin: params => t._call("Storage.trackCacheStorageForOrigin", params),
+      trackCacheStorageForStorageKey: params => t._call("Storage.trackCacheStorageForStorageKey", params),
+      trackIndexedDBForOrigin: params => t._call("Storage.trackIndexedDBForOrigin", params),
+      trackIndexedDBForStorageKey: params => t._call("Storage.trackIndexedDBForStorageKey", params),
+      untrackCacheStorageForOrigin: params => t._call("Storage.untrackCacheStorageForOrigin", params),
+      untrackCacheStorageForStorageKey: params => t._call("Storage.untrackCacheStorageForStorageKey", params),
+      untrackIndexedDBForOrigin: params => t._call("Storage.untrackIndexedDBForOrigin", params),
+      untrackIndexedDBForStorageKey: params => t._call("Storage.untrackIndexedDBForStorageKey", params),
+      getTrustTokens: params => t._call("Storage.getTrustTokens", params),
+      clearTrustTokens: params => t._call("Storage.clearTrustTokens", params),
+      getInterestGroupDetails: params => t._call("Storage.getInterestGroupDetails", params),
+      setInterestGroupTracking: params => t._call("Storage.setInterestGroupTracking", params),
+      setInterestGroupAuctionTracking: params => t._call("Storage.setInterestGroupAuctionTracking", params),
+      getSharedStorageMetadata: params => t._call("Storage.getSharedStorageMetadata", params),
+      getSharedStorageEntries: params => t._call("Storage.getSharedStorageEntries", params),
+      setSharedStorageEntry: params => t._call("Storage.setSharedStorageEntry", params),
+      deleteSharedStorageEntry: params => t._call("Storage.deleteSharedStorageEntry", params),
+      clearSharedStorageEntries: params => t._call("Storage.clearSharedStorageEntries", params),
+      resetSharedStorageBudget: params => t._call("Storage.resetSharedStorageBudget", params),
+      setSharedStorageTracking: params => t._call("Storage.setSharedStorageTracking", params),
+      setStorageBucketTracking: params => t._call("Storage.setStorageBucketTracking", params),
+      deleteStorageBucket: params => t._call("Storage.deleteStorageBucket", params),
+      runBounceTrackingMitigations: params => t._call("Storage.runBounceTrackingMitigations", params),
+      getRelatedWebsiteSets: params => t._call("Storage.getRelatedWebsiteSets", params),
+      setProtectedAudienceKAnonymity: params => t._call("Storage.setProtectedAudienceKAnonymity", params)
     },
     SystemInfo: {
-      getInfo: params => domains._call("SystemInfo.getInfo", params),
-      getFeatureState: params => domains._call("SystemInfo.getFeatureState", params),
-      getProcessInfo: params => domains._call("SystemInfo.getProcessInfo", params)
+      getInfo: params => t._call("SystemInfo.getInfo", params),
+      getFeatureState: params => t._call("SystemInfo.getFeatureState", params),
+      getProcessInfo: params => t._call("SystemInfo.getProcessInfo", params)
     },
     Target: {
-      activateTarget: params => domains._call("Target.activateTarget", params),
-      attachToTarget: params => domains._call("Target.attachToTarget", params),
-      attachToBrowserTarget: params => domains._call("Target.attachToBrowserTarget", params),
-      closeTarget: params => domains._call("Target.closeTarget", params),
-      exposeDevToolsProtocol: params => domains._call("Target.exposeDevToolsProtocol", params),
-      createBrowserContext: params => domains._call("Target.createBrowserContext", params),
-      getBrowserContexts: params => domains._call("Target.getBrowserContexts", params),
-      createTarget: params => domains._call("Target.createTarget", params),
-      detachFromTarget: params => domains._call("Target.detachFromTarget", params),
-      disposeBrowserContext: params => domains._call("Target.disposeBrowserContext", params),
-      getTargetInfo: params => domains._call("Target.getTargetInfo", params),
-      getTargets: params => domains._call("Target.getTargets", params),
-      sendMessageToTarget: params => domains._call("Target.sendMessageToTarget", params),
-      setAutoAttach: params => domains._call("Target.setAutoAttach", params),
-      autoAttachRelated: params => domains._call("Target.autoAttachRelated", params),
-      setDiscoverTargets: params => domains._call("Target.setDiscoverTargets", params),
-      setRemoteLocations: params => domains._call("Target.setRemoteLocations", params),
-      getDevToolsTarget: params => domains._call("Target.getDevToolsTarget", params),
-      openDevTools: params => domains._call("Target.openDevTools", params)
+      activateTarget: params => t._call("Target.activateTarget", params),
+      attachToTarget: params => t._call("Target.attachToTarget", params),
+      attachToBrowserTarget: params => t._call("Target.attachToBrowserTarget", params),
+      closeTarget: params => t._call("Target.closeTarget", params),
+      exposeDevToolsProtocol: params => t._call("Target.exposeDevToolsProtocol", params),
+      createBrowserContext: params => t._call("Target.createBrowserContext", params),
+      getBrowserContexts: params => t._call("Target.getBrowserContexts", params),
+      createTarget: params => t._call("Target.createTarget", params),
+      detachFromTarget: params => t._call("Target.detachFromTarget", params),
+      disposeBrowserContext: params => t._call("Target.disposeBrowserContext", params),
+      getTargetInfo: params => t._call("Target.getTargetInfo", params),
+      getTargets: params => t._call("Target.getTargets", params),
+      sendMessageToTarget: params => t._call("Target.sendMessageToTarget", params),
+      setAutoAttach: params => t._call("Target.setAutoAttach", params),
+      autoAttachRelated: params => t._call("Target.autoAttachRelated", params),
+      setDiscoverTargets: params => t._call("Target.setDiscoverTargets", params),
+      setRemoteLocations: params => t._call("Target.setRemoteLocations", params),
+      getDevToolsTarget: params => t._call("Target.getDevToolsTarget", params),
+      openDevTools: params => t._call("Target.openDevTools", params)
     },
     Tethering: {
-      bind: params => domains._call("Tethering.bind", params),
-      unbind: params => domains._call("Tethering.unbind", params)
+      bind: params => t._call("Tethering.bind", params),
+      unbind: params => t._call("Tethering.unbind", params)
     },
     Tracing: {
-      end: params => domains._call("Tracing.end", params),
-      getCategories: params => domains._call("Tracing.getCategories", params),
-      getTrackEventDescriptor: params => domains._call("Tracing.getTrackEventDescriptor", params),
-      recordClockSyncMarker: params => domains._call("Tracing.recordClockSyncMarker", params),
-      requestMemoryDump: params => domains._call("Tracing.requestMemoryDump", params),
-      start: params => domains._call("Tracing.start", params)
+      end: params => t._call("Tracing.end", params),
+      getCategories: params => t._call("Tracing.getCategories", params),
+      getTrackEventDescriptor: params => t._call("Tracing.getTrackEventDescriptor", params),
+      recordClockSyncMarker: params => t._call("Tracing.recordClockSyncMarker", params),
+      requestMemoryDump: params => t._call("Tracing.requestMemoryDump", params),
+      start: params => t._call("Tracing.start", params)
     },
     WebAudio: {
-      enable: params => domains._call("WebAudio.enable", params),
-      disable: params => domains._call("WebAudio.disable", params),
-      getRealtimeData: params => domains._call("WebAudio.getRealtimeData", params)
+      enable: params => t._call("WebAudio.enable", params),
+      disable: params => t._call("WebAudio.disable", params),
+      getRealtimeData: params => t._call("WebAudio.getRealtimeData", params)
     },
     WebAuthn: {
-      enable: params => domains._call("WebAuthn.enable", params),
-      disable: params => domains._call("WebAuthn.disable", params),
-      addVirtualAuthenticator: params => domains._call("WebAuthn.addVirtualAuthenticator", params),
-      setResponseOverrideBits: params => domains._call("WebAuthn.setResponseOverrideBits", params),
-      removeVirtualAuthenticator: params => domains._call("WebAuthn.removeVirtualAuthenticator", params),
-      addCredential: params => domains._call("WebAuthn.addCredential", params),
-      getCredential: params => domains._call("WebAuthn.getCredential", params),
-      getCredentials: params => domains._call("WebAuthn.getCredentials", params),
-      removeCredential: params => domains._call("WebAuthn.removeCredential", params),
-      clearCredentials: params => domains._call("WebAuthn.clearCredentials", params),
-      setUserVerified: params => domains._call("WebAuthn.setUserVerified", params),
-      setAutomaticPresenceSimulation: params => domains._call("WebAuthn.setAutomaticPresenceSimulation", params),
-      setCredentialProperties: params => domains._call("WebAuthn.setCredentialProperties", params)
+      enable: params => t._call("WebAuthn.enable", params),
+      disable: params => t._call("WebAuthn.disable", params),
+      addVirtualAuthenticator: params => t._call("WebAuthn.addVirtualAuthenticator", params),
+      setResponseOverrideBits: params => t._call("WebAuthn.setResponseOverrideBits", params),
+      removeVirtualAuthenticator: params => t._call("WebAuthn.removeVirtualAuthenticator", params),
+      addCredential: params => t._call("WebAuthn.addCredential", params),
+      getCredential: params => t._call("WebAuthn.getCredential", params),
+      getCredentials: params => t._call("WebAuthn.getCredentials", params),
+      removeCredential: params => t._call("WebAuthn.removeCredential", params),
+      clearCredentials: params => t._call("WebAuthn.clearCredentials", params),
+      setUserVerified: params => t._call("WebAuthn.setUserVerified", params),
+      setAutomaticPresenceSimulation: params => t._call("WebAuthn.setAutomaticPresenceSimulation", params),
+      setCredentialProperties: params => t._call("WebAuthn.setCredentialProperties", params)
     },
     WebMCP: {
-      enable: params => domains._call("WebMCP.enable", params),
-      disable: params => domains._call("WebMCP.disable", params),
-      invokeTool: params => domains._call("WebMCP.invokeTool", params),
-      cancelInvocation: params => domains._call("WebMCP.cancelInvocation", params)
+      enable: params => t._call("WebMCP.enable", params),
+      disable: params => t._call("WebMCP.disable", params),
+      invokeTool: params => t._call("WebMCP.invokeTool", params),
+      cancelInvocation: params => t._call("WebMCP.cancelInvocation", params)
     }
   };
 }
@@ -26314,9 +26314,9 @@ window.render=function(tabs){var r=document.getElementById('t');r.textContent=''
 tabs.forEach(function(t){var d=document.createElement('div');d.className='tab'+(t.active?' on':'');d.title=t.title;
 var n=document.createElement('a');n.className='n';n.href='https://${TAB_ORIGIN}/switch/'+t.id;n.textContent=t.title;
 var x=document.createElement('a');x.className='x';x.href='https://${TAB_ORIGIN}null`;
-function webUrl(webValue) {
-  if (!webValue) throw new Error("请提供完整网页地址。");
-  const url = new URL(webValue);
+function webUrl(raw) {
+  if (!raw) throw new Error("请提供完整网页地址。");
+  const url = new URL(raw);
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) throw new Error("仅支持不含账号密码的 HTTP/HTTPS 网页地址。");
   return url.href;
 }
@@ -26333,7 +26333,7 @@ var XiaoheiBotBrowserService = class {
     for (const page of [...this.pages.values()]) if (page.owner === runtimeKey) this.closeTab(page);
   }
   closeAll() {
-    for (const key of /* @__PURE__ */new Set([...this.queues.keys(), ...[...this.pages.values()].map(item => item.owner)])) this.closeRuntime(key);
+    for (const key of /* @__PURE__ */new Set([...this.queues.keys(), ...[...this.pages.values()].map(p => p.owner)])) this.closeRuntime(key);
   }
   notify(runtimeKey, message) {
     const list = this.notices.get(runtimeKey) ?? [];
@@ -26382,30 +26382,30 @@ var XiaoheiBotBrowserService = class {
     if (win.active !== page.id || win.window.isDestroyed() || page.view.webContents.isDestroyed()) return;
     win.window.setTitle(`${appText("botBrowser.windowTitle")} · ${page.view.webContents.getTitle() || page.view.webContents.getURL()}`);
   }
-  layout(layout) {
-    if (layout.window.isDestroyed()) return;
-    const [width, height] = layout.window.getContentSize();
-    layout.bar.setBounds({
+  layout(win) {
+    if (win.window.isDestroyed()) return;
+    const [width, height] = win.window.getContentSize();
+    win.bar.setBounds({
       x: 0,
       y: 0,
       width,
       height: TAB_BAR_HEIGHT
     });
-    for (const tab of layout.tabs) tab.view.setBounds({
+    for (const tab of win.tabs) tab.view.setBounds({
       x: 0,
       y: TAB_BAR_HEIGHT,
       width,
       height: Math.max(height - TAB_BAR_HEIGHT, 0)
     });
   }
-  refreshBar(refresh) {
-    if (!refresh.barReady || refresh.bar.webContents.isDestroyed()) return;
-    const tabs = refresh.tabs.map(item => ({
-      id: item.id,
-      active: item.id === refresh.active,
-      title: (item.view.webContents.isDestroyed() ? "" : item.view.webContents.getTitle() || item.view.webContents.getURL()) || appText("botBrowser.newTab")
+  refreshBar(win) {
+    if (!win.barReady || win.bar.webContents.isDestroyed()) return;
+    const tabs = win.tabs.map(tab => ({
+      id: tab.id,
+      active: tab.id === win.active,
+      title: (tab.view.webContents.isDestroyed() ? "" : tab.view.webContents.getTitle() || tab.view.webContents.getURL()) || appText("botBrowser.newTab")
     }));
-    refresh.bar.webContents.executeJavaScript(`render(${JSON.stringify(tabs)})`).catch(() => {});
+    win.bar.webContents.executeJavaScript(`render(${JSON.stringify(tabs)})`).catch(() => {});
   }
   /** Brings a tab to the front: only the active tab's view is attached, so CDP always sees a visible page. */
   activate(page) {
@@ -26440,7 +26440,7 @@ var XiaoheiBotBrowserService = class {
       }
     });
     window.setMenu(null);
-    const webContentsView = new WebContentsView({
+    const bar = new WebContentsView({
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -26448,48 +26448,48 @@ var XiaoheiBotBrowserService = class {
         webSecurity: true
       }
     });
-    window.contentView.addChildView(webContentsView);
-    const options = {
+    window.contentView.addChildView(bar);
+    const win = {
       owner: scope.runtimeKey,
       window,
-      bar: webContentsView,
+      bar,
       barReady: false,
       tabs: [],
       active: ""
     };
-    this.windows.set(scope.runtimeKey, options);
-    window.on("resize", () => this.layout(options));
+    this.windows.set(scope.runtimeKey, win);
+    window.on("resize", () => this.layout(win));
     window.on("closed", () => {
-      if (this.windows.get(options.owner) === options) this.windows.delete(options.owner);
-      for (const tab of [...options.tabs]) this.closeTab(tab, true);
-      if (!webContentsView.webContents.isDestroyed()) webContentsView.webContents.close();
+      if (this.windows.get(win.owner) === win) this.windows.delete(win.owner);
+      for (const tab of [...win.tabs]) this.closeTab(tab, true);
+      if (!bar.webContents.isDestroyed()) bar.webContents.close();
     });
     window.webContents.setWindowOpenHandler(() => ({
       action: "deny"
     }));
     window.webContents.on("will-navigate", event => event.preventDefault());
-    webContentsView.webContents.setWindowOpenHandler(() => ({
+    bar.webContents.setWindowOpenHandler(() => ({
       action: "deny"
     }));
-    webContentsView.webContents.on("will-attach-webview", event => event.preventDefault());
-    webContentsView.webContents.on("will-navigate", (event, target) => {
+    bar.webContents.on("will-attach-webview", event => event.preventDefault());
+    bar.webContents.on("will-navigate", (event, target) => {
       event.preventDefault();
       try {
         const url = new URL(target);
         if (url.hostname !== TAB_ORIGIN) return;
         const [, action, id] = url.pathname.split("/");
         const page = id ? this.pages.get(id) : undefined;
-        if (!page || page.win !== options) return;
+        if (!page || page.win !== win) return;
         if (action === "switch") this.activate(page);else if (action === "close") this.closeTab(page, true);
       } catch {}
     });
-    webContentsView.webContents.on("did-finish-load", () => {
-      options.barReady = true;
-      this.refreshBar(options);
+    bar.webContents.on("did-finish-load", () => {
+      win.barReady = true;
+      this.refreshBar(win);
     });
-    webContentsView.webContents.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(TAB_BAR_HTML)}`).catch(() => {});
-    this.layout(options);
-    return options;
+    bar.webContents.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(TAB_BAR_HTML)}`).catch(() => {});
+    this.layout(win);
+    return win;
   }
   create(scope) {
     if (!scope.active()) throw new Error("当前浏览器任务已结束。");
@@ -26497,7 +26497,7 @@ var XiaoheiBotBrowserService = class {
     const win = existing && !existing.window.isDestroyed() ? existing : undefined;
     const mine = win?.tabs ?? [];
     if (win && mine.length >= MAX_TABS_PER_RUNTIME) {
-      const victim = mine.filter(item => item.id !== win.active).sort((left, right) => left.lastUsed - right.lastUsed)[0] ?? mine[0];
+      const victim = mine.filter(tab => tab.id !== win.active).sort((a, b) => a.lastUsed - b.lastUsed)[0] ?? mine[0];
       this.notify(scope.runtimeKey, `标签页已达上限，已自动关闭最久未使用的页面 ${this.label(victim)}。`);
       this.closeTab(victim);
     }
@@ -26602,13 +26602,13 @@ var XiaoheiBotBrowserService = class {
     this.activate(page);
     return page;
   }
-  async execute(scope, executeValue) {
+  async execute(scope, raw) {
     const epoch = this.epochs.get(scope.runtimeKey) ?? 0;
     const checkedScope = {
       ...scope,
       active: () => scope.active() && (this.epochs.get(scope.runtimeKey) ?? 0) === epoch
     };
-    const task = (this.queues.get(scope.runtimeKey) ?? Promise.resolve()).catch(() => {}).then(() => this.perform(checkedScope, inputSchema.parse(executeValue)));
+    const task = (this.queues.get(scope.runtimeKey) ?? Promise.resolve()).catch(() => {}).then(() => this.perform(checkedScope, inputSchema.parse(raw)));
     this.queues.set(scope.runtimeKey, task);
     try {
       return this.decorate(scope.runtimeKey, await task);
@@ -26637,9 +26637,9 @@ var XiaoheiBotBrowserService = class {
       if (page && (!this.pages.has(page.id) || page.view.webContents.isDestroyed())) throw new Error("页面已关闭，请先查询页面列表。");
     };
     check();
-    const mine = () => [...this.pages.values()].filter(item => item.owner === scope.runtimeKey);
+    const mine = () => [...this.pages.values()].filter(p => p.owner === scope.runtimeKey);
     if (input.action === "list") return {
-      pages: mine().map(item => this.info(item))
+      pages: mine().map(p => this.info(p))
     };
     let page = input.pageId ? this.pages.get(input.pageId) : undefined;
     if (page && page.owner !== scope.runtimeKey) throw new Error("不能操作其他任务的浏览器页面。");
@@ -26647,7 +26647,7 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "open") {
       const url = webUrl(input.url);
       if (!page) {
-        const same = mine().find(item => !item.view.webContents.isDestroyed() && item.view.webContents.getURL() === url);
+        const same = mine().find(p => !p.view.webContents.isDestroyed() && p.view.webContents.getURL() === url);
         if (same) {
           this.activate(same);
           return {
@@ -26676,7 +26676,7 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "closeOthers") {
       const keep = page ?? this.activeOf(scope.runtimeKey);
       if (!keep) throw new Error("当前没有打开的页面。");
-      const closed = mine().filter(item => item !== keep).map(item => item.id);
+      const closed = mine().filter(p => p !== keep).map(p => p.id);
       for (const id of closed) {
         const other = this.pages.get(id);
         if (other) this.closeTab(other);
@@ -26715,7 +26715,7 @@ var XiaoheiBotBrowserService = class {
     check(page);
     this.activate(page);
     const ownedPage = page;
-    const bindDomainsResult = bindDomains({
+    const cdp = bindDomains({
       _call: async (method, params) => {
         check(ownedPage);
         let timer;
@@ -26733,8 +26733,8 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "state") {
       const {
         nodes
-      } = await bindDomainsResult.Accessibility.getFullAXTree({});
-      const useful = nodes.filter(item => !item.ignored && (item.name?.value || item.role?.value === "textbox") && item.backendDOMNodeId);
+      } = await cdp.Accessibility.getFullAXTree({});
+      const useful = nodes.filter(n => !n.ignored && (n.name?.value || n.role?.value === "textbox") && n.backendDOMNodeId);
       page.refs.clear();
       page.snapshotId = randomUUID();
       const elements = useful.slice(input.offset, input.offset + 250).map((node, index) => {
@@ -26753,19 +26753,19 @@ var XiaoheiBotBrowserService = class {
       const fileInputs = [];
       const {
         root
-      } = await bindDomainsResult.DOM.getDocument({
+      } = await cdp.DOM.getDocument({
         depth: 0
       });
       const {
         nodeIds
-      } = await bindDomainsResult.DOM.querySelectorAll({
+      } = await cdp.DOM.querySelectorAll({
         nodeId: root.nodeId,
         selector: "input[type=\"file\"]"
       });
       for (const nodeId of nodeIds.slice(0, 10)) {
         const {
           node
-        } = await bindDomainsResult.DOM.describeNode({
+        } = await cdp.DOM.describeNode({
           nodeId
         });
         const ref = useful.length + fileInputs.length + 1;
@@ -26791,7 +26791,7 @@ var XiaoheiBotBrowserService = class {
     if (input.action === "screenshot") {
       const {
         data
-      } = await bindDomainsResult.Page.captureScreenshot({
+      } = await cdp.Page.captureScreenshot({
         format: "jpeg",
         quality: 75
       });
@@ -26810,7 +26810,7 @@ var XiaoheiBotBrowserService = class {
       return this.info(page);
     }
     if (input.action === "scroll") {
-      await bindDomainsResult.Input.dispatchMouseEvent({
+      await cdp.Input.dispatchMouseEvent({
         type: "mouseWheel",
         x: 300,
         y: 240,
@@ -26833,7 +26833,7 @@ var XiaoheiBotBrowserService = class {
         ArrowUp: 38,
         Backspace: 8
       };
-      await bindDomainsResult.Input.dispatchKeyEvent({
+      await cdp.Input.dispatchKeyEvent({
         type: "keyDown",
         key: input.key,
         code: input.key,
@@ -26842,7 +26842,7 @@ var XiaoheiBotBrowserService = class {
           text: "\r"
         } : {})
       });
-      await bindDomainsResult.Input.dispatchKeyEvent({
+      await cdp.Input.dispatchKeyEvent({
         type: "keyUp",
         key: input.key,
         code: input.key,
@@ -26853,26 +26853,26 @@ var XiaoheiBotBrowserService = class {
     }
     if (!input.ref || input.snapshotId !== page.snapshotId || !page.refs.has(input.ref)) throw new Error("元素引用已过期，请重新读取 state，并使用对应 snapshotId 和 ref。");
     const backendNodeId = page.refs.get(input.ref);
-    if (input.action !== "upload") await bindDomainsResult.DOM.scrollIntoViewIfNeeded({
+    if (input.action !== "upload") await cdp.DOM.scrollIntoViewIfNeeded({
       backendNodeId
     });
     if (input.action === "click") {
       const {
         model
-      } = await bindDomainsResult.DOM.getBoxModel({
+      } = await cdp.DOM.getBoxModel({
         backendNodeId
       });
-      const content = model.content;
-      const x = (content[0] + content[2] + content[4] + content[6]) / 4;
-      const y = (content[1] + content[3] + content[5] + content[7]) / 4;
-      await bindDomainsResult.Input.dispatchMouseEvent({
+      const q = model.content;
+      const x = (q[0] + q[2] + q[4] + q[6]) / 4;
+      const y = (q[1] + q[3] + q[5] + q[7]) / 4;
+      await cdp.Input.dispatchMouseEvent({
         type: "mousePressed",
         x,
         y,
         button: "left",
         clickCount: 1
       });
-      await bindDomainsResult.Input.dispatchMouseEvent({
+      await cdp.Input.dispatchMouseEvent({
         type: "mouseReleased",
         x,
         y,
@@ -26881,35 +26881,35 @@ var XiaoheiBotBrowserService = class {
       });
     } else if (input.action === "type") {
       if (input.text === undefined) throw new Error("需要 text。");
-      await bindDomainsResult.DOM.focus({
+      await cdp.DOM.focus({
         backendNodeId
       });
       const {
         object
-      } = await bindDomainsResult.DOM.resolveNode({
+      } = await cdp.DOM.resolveNode({
         backendNodeId
       });
       if (!object.objectId) throw new Error("无法定位输入框。");
       try {
-        if ((await bindDomainsResult.Runtime.callFunctionOn({
+        if ((await cdp.Runtime.callFunctionOn({
           objectId: object.objectId,
           functionDeclaration: "function(){if(this instanceof HTMLInputElement || this instanceof HTMLTextAreaElement){this.select();return true;}return false;}",
           returnByValue: true
         })).result.value !== true) throw new Error("当前元素不是普通输入框，请由用户填写富文本编辑器。");
       } finally {
-        await bindDomainsResult.Runtime.releaseObject({
+        await cdp.Runtime.releaseObject({
           objectId: object.objectId
         });
       }
-      if (input.text) await bindDomainsResult.Input.insertText({
+      if (input.text) await cdp.Input.insertText({
         text: input.text
       });else {
-        await bindDomainsResult.Input.dispatchKeyEvent({
+        await cdp.Input.dispatchKeyEvent({
           type: "keyDown",
           key: "Backspace",
           windowsVirtualKeyCode: 8
         });
-        await bindDomainsResult.Input.dispatchKeyEvent({
+        await cdp.Input.dispatchKeyEvent({
           type: "keyUp",
           key: "Backspace",
           windowsVirtualKeyCode: 8
@@ -26918,7 +26918,7 @@ var XiaoheiBotBrowserService = class {
     } else if (input.action === "upload") {
       if (!input.files) throw new Error("需要用户指定的本地文件路径。");
       for (const file of input.files) if (!path.isAbsolute(file) || !statSync(file).isFile()) throw new Error("上传文件必须是存在的绝对路径。");
-      await bindDomainsResult.DOM.setFileInputFiles({
+      await cdp.DOM.setFileInputFiles({
         backendNodeId,
         files: input.files
       });
@@ -27036,12 +27036,12 @@ var XiaoheiBotDirectService = class {
     try {
       const connection = getOpenDatabaseConnection();
       if (!connection || !this.owner()) return;
-      const parsed = xiaoheiBotDirectUsageSchema.parse({
+      const row = xiaoheiBotDirectUsageSchema.parse({
         ...event,
         deviceId: settingsService.getSettings().deviceId,
         clientVersion: app.getVersion()
       });
-      connection.database.prepare("INSERT OR IGNORE INTO xiaohei_bot_direct_usage_outbox (event_id, payload_json, created_at) VALUES (?, ?, ?)").run(parsed.eventId, JSON.stringify(parsed), Date.now());
+      connection.database.prepare("INSERT OR IGNORE INTO xiaohei_bot_direct_usage_outbox (event_id, payload_json, created_at) VALUES (?, ?, ?)").run(row.eventId, JSON.stringify(row), Date.now());
       connection.database.prepare("DELETE FROM xiaohei_bot_direct_usage_outbox WHERE created_at < ?").run(Date.now() - 2592e6);
       this.start();
       setTimeout(() => void this.flush(), 2e3).unref();
@@ -27058,12 +27058,12 @@ var XiaoheiBotDirectService = class {
     this.uploading = true;
     try {
       for (let batch = 0; batch < 20; batch++) {
-        const valid = connection.database.prepare("SELECT event_id, payload_json, attempts FROM xiaohei_bot_direct_usage_outbox WHERE quarantined = 0 AND next_attempt_at <= ? ORDER BY created_at LIMIT 25").all(Date.now()).filter(item => {
+        const valid = connection.database.prepare("SELECT event_id, payload_json, attempts FROM xiaohei_bot_direct_usage_outbox WHERE quarantined = 0 AND next_attempt_at <= ? ORDER BY created_at LIMIT 25").all(Date.now()).filter(row => {
           try {
-            xiaoheiBotDirectUsageSchema.parse(JSON.parse(item.payload_json));
+            xiaoheiBotDirectUsageSchema.parse(JSON.parse(row.payload_json));
             return true;
           } catch {
-            connection.database.prepare("UPDATE xiaohei_bot_direct_usage_outbox SET quarantined = 1 WHERE event_id = ?").run(item.event_id);
+            connection.database.prepare("UPDATE xiaohei_bot_direct_usage_outbox SET quarantined = 1 WHERE event_id = ?").run(row.event_id);
             return false;
           }
         });
@@ -27077,7 +27077,7 @@ var XiaoheiBotDirectService = class {
             Authorization: `Bearer ${session.token}`
           },
           body: JSON.stringify({
-            events: valid.map(item => JSON.parse(item.payload_json))
+            events: valid.map(row => JSON.parse(row.payload_json))
           }),
           signal: AbortSignal.timeout(6e4)
         });
@@ -27099,7 +27099,7 @@ var XiaoheiBotDirectService = class {
 var xiaoheiBotDirectService = new XiaoheiBotDirectService();
 //#endregion
 //#region electron/services/xiaohei-bot-schedule-tools.ts
-async function executeBotScheduleTool(name, schedule, context) {
+async function executeBotScheduleTool(name, raw, context) {
   const {
     xiaoheiBotService
   } = await Promise.resolve().then(() => xiaohei_bot_service_exports);
@@ -27109,12 +27109,12 @@ async function executeBotScheduleTool(name, schedule, context) {
   if (name === "xiaohei_request_confirmation") {
     const input = objectType({
       question: stringType().trim().min(1).max(4e3)
-    }).strict().parse(schedule);
+    }).strict().parse(raw);
     if (!context.triggerMessageId) throw new Error("缺少原始消息");
     return xiaoheiBotService.requestUserConfirmation(context.botId, context.conversationId, context.triggerMessageId, input.question);
   }
   if (name === "xiaohei_list_schedules") {
-    objectType({}).strict().parse(schedule);
+    objectType({}).strict().parse(raw);
     return {
       tasks: botScheduleService.list(context.conversationId),
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -27124,7 +27124,7 @@ async function executeBotScheduleTool(name, schedule, context) {
   if (name === "xiaohei_delete_schedule") {
     const input = objectType({
       id: stringType().min(1).max(160)
-    }).strict().parse(schedule);
+    }).strict().parse(raw);
     const task = botScheduleService.get(input.id);
     if (task.conversationId !== context.conversationId || task.botId !== context.botId) throw new Error("只能管理当前会话中自己的定时任务");
     botScheduleService.remove(input.id);
@@ -27138,7 +27138,7 @@ async function executeBotScheduleTool(name, schedule, context) {
     instruction: stringType().trim().min(1).max(2e4),
     rule: botScheduleRuleSchema,
     enabled: booleanType()
-  }).strict().parse(schedule);
+  }).strict().parse(raw);
   if (input.id) {
     const task = botScheduleService.get(input.id);
     if (task.conversationId !== context.conversationId || task.botId !== context.botId) throw new Error("只能管理当前会话中自己的定时任务");
@@ -27219,9 +27219,9 @@ function estimateMessagesTokens(messages) {
 function estimateReportMessagesTokens(messages) {
   return Math.max(1, messages.reduce((total, message) => total + 4 + estimateTextTokens(message.content, 8), 0));
 }
-function normalizeCreditsExchangePolicy(credits) {
-  const exchangeYuan = Number(credits?.exchangeYuan ?? 1);
-  const exchangeCredits = Number(credits?.exchangeCredits ?? 1e3);
+function normalizeCreditsExchangePolicy(raw) {
+  const exchangeYuan = Number(raw?.exchangeYuan ?? 1);
+  const exchangeCredits = Number(raw?.exchangeCredits ?? 1e3);
   const validYuan = Number.isFinite(exchangeYuan) && exchangeYuan > 0 ? exchangeYuan : 1;
   const validCredits = Number.isFinite(exchangeCredits) && exchangeCredits > 0 ? Math.round(exchangeCredits) : 1e3;
   return {
@@ -27239,7 +27239,7 @@ function creditsFromYuan(amountYuan, policy) {
 }
 //#endregion
 //#region electron/services/points.service.ts
-async function fetchPointsApi(action, apiValue, init = {}, requestBody) {
+async function fetchPointsApi(action, url, init = {}, requestBody) {
   const startedAt = Date.now();
   let responseText = "";
   let httpStatus;
@@ -27247,20 +27247,20 @@ async function fetchPointsApi(action, apiValue, init = {}, requestBody) {
     ok: false
   };
   try {
-    const desktopReadFetchData = await desktopReadFetch(apiValue, init);
-    httpStatus = desktopReadFetchData.status;
-    responseText = await desktopReadFetchData.text();
+    const res = await desktopReadFetch(url, init);
+    httpStatus = res.status;
+    responseText = await res.text();
     data = responseText ? JSON.parse(responseText) : {
       ok: false
     };
-    if (!desktopReadFetchData.ok || !data.ok) await reportApiRequestException({
+    if (!res.ok || !data.ok) await reportApiRequestException({
       source: "main",
       module: "points",
       action,
       method: init.method || "GET",
-      url: apiValue,
+      url,
       errorName: "ApiResponseError",
-      errorMessage: data.error?.message || `HTTP ${desktopReadFetchData.status}`,
+      errorMessage: data.error?.message || `HTTP ${res.status}`,
       httpStatus,
       businessCode: data.error?.code,
       businessMessage: data.error?.message,
@@ -27275,7 +27275,7 @@ async function fetchPointsApi(action, apiValue, init = {}, requestBody) {
       module: "points",
       action,
       method: init.method || "GET",
-      url: apiValue,
+      url,
       error,
       httpStatus,
       responseText,
@@ -27343,27 +27343,27 @@ async function getPremiumModels(lang = "zh-CN") {
     }
   }), getCreditsExchangePolicy()]);
   if (!data.ok || !Array.isArray(data.data)) return [];
-  return data.data.map(item => {
-    const inputPriceYuanPerM = Number(item.input_price_yuan_per_m ?? 0);
-    const outputPriceYuanPerM = Number(item.output_price_yuan_per_m ?? 0);
+  return data.data.map(m => {
+    const inputPriceYuanPerM = Number(m.input_price_yuan_per_m ?? 0);
+    const outputPriceYuanPerM = Number(m.output_price_yuan_per_m ?? 0);
     return {
-      id: String(item.id ?? ""),
-      name: String(item.name ?? ""),
-      description: String(item.description ?? ""),
-      inputTokens: Number(item.input_tokens ?? 0),
-      inputPoints: Number(item.input_points ?? 0),
-      outputTokens: Number(item.output_tokens ?? 0),
-      outputPoints: Number(item.output_points ?? 0),
-      sortOrder: Number(item.sort_order ?? 0),
+      id: String(m.id ?? ""),
+      name: String(m.name ?? ""),
+      description: String(m.description ?? ""),
+      inputTokens: Number(m.input_tokens ?? 0),
+      inputPoints: Number(m.input_points ?? 0),
+      outputTokens: Number(m.output_tokens ?? 0),
+      outputPoints: Number(m.output_points ?? 0),
+      sortOrder: Number(m.sort_order ?? 0),
       inputPriceYuanPerM,
       outputPriceYuanPerM,
       inputPriceCreditsPerM: creditsFromYuan(inputPriceYuanPerM, policy),
       outputPriceCreditsPerM: creditsFromYuan(outputPriceYuanPerM, policy),
-      brandColor: String(item.brand_color ?? ""),
-      logoUrl: item.logo_url ? String(item.logo_url) : null,
-      tag: String(item.tag ?? ""),
-      tagColor: String(item.tag_color ?? ""),
-      badgeText: String(item.badge_text ?? "")
+      brandColor: String(m.brand_color ?? ""),
+      logoUrl: m.logo_url ? String(m.logo_url) : null,
+      tag: String(m.tag ?? ""),
+      tagColor: String(m.tag_color ?? ""),
+      badgeText: String(m.badge_text ?? "")
     };
   });
 }
@@ -27385,9 +27385,9 @@ async function getRechargeConfig() {
   const config = data.data;
   return {
     exchangeRate: Number(config.exchangeRate ?? 1),
-    options: Array.isArray(config.options) ? config.options.map(item => ({
-      amount: Number(item.amount ?? 0),
-      points: Number(item.points ?? 0)
+    options: Array.isArray(config.options) ? config.options.map(o => ({
+      amount: Number(o.amount ?? 0),
+      points: Number(o.points ?? 0)
     })) : []
   };
 }
@@ -27493,14 +27493,14 @@ async function getUsageRecords(page = 1, pageSize = 20, source = "ai") {
   });
   if (!data.ok || !data.data) throw new Error(data.error?.message || "Failed to fetch usage records");
   return {
-    records: Array.isArray(data.data.records) ? data.data.records.map(item => ({
-      id: String(item.id ?? ""),
-      type: String(item.type ?? "unknown"),
-      inputTokens: Number(item.input_tokens ?? item.inputTokens ?? 0),
-      outputTokens: Number(item.output_tokens ?? item.outputTokens ?? 0),
-      pointsCost: Number(item.points_cost ?? item.pointsCost ?? 0),
-      status: String(item.status ?? "success"),
-      createdAt: String(item.created_at ?? item.createdAt ?? "")
+    records: Array.isArray(data.data.records) ? data.data.records.map(r => ({
+      id: String(r.id ?? ""),
+      type: String(r.type ?? "unknown"),
+      inputTokens: Number(r.input_tokens ?? r.inputTokens ?? 0),
+      outputTokens: Number(r.output_tokens ?? r.outputTokens ?? 0),
+      pointsCost: Number(r.points_cost ?? r.pointsCost ?? 0),
+      status: String(r.status ?? "success"),
+      createdAt: String(r.created_at ?? r.createdAt ?? "")
     })) : [],
     total: Number(data.data.total ?? 0),
     page: Number(data.data.page ?? page),
@@ -27543,14 +27543,14 @@ async function getCreditUsageRecords(page = 1, pageSize = 20, source = "ai") {
   });
   if (!data.ok || !data.data) throw new Error(data.error?.message || "Failed to fetch credit usage records");
   return {
-    records: Array.isArray(data.data.records) ? data.data.records.map(item => ({
-      id: String(item.id ?? ""),
-      type: String(item.type ?? "unknown"),
-      inputTokens: Number(item.input_tokens ?? item.inputTokens ?? 0),
-      outputTokens: Number(item.output_tokens ?? item.outputTokens ?? 0),
-      creditsCost: Math.max(0, Math.round(Number(item.credits_cost ?? item.creditsCost ?? 0))),
-      status: String(item.status ?? "success"),
-      createdAt: String(item.created_at ?? item.createdAt ?? "")
+    records: Array.isArray(data.data.records) ? data.data.records.map(r => ({
+      id: String(r.id ?? ""),
+      type: String(r.type ?? "unknown"),
+      inputTokens: Number(r.input_tokens ?? r.inputTokens ?? 0),
+      outputTokens: Number(r.output_tokens ?? r.outputTokens ?? 0),
+      creditsCost: Math.max(0, Math.round(Number(r.credits_cost ?? r.creditsCost ?? 0))),
+      status: String(r.status ?? "success"),
+      createdAt: String(r.created_at ?? r.createdAt ?? "")
     })) : [],
     total: Number(data.data.total ?? 0),
     page: Number(data.data.page ?? page),
@@ -27623,10 +27623,10 @@ function bigrams(text) {
   return grams;
 }
 /** Dice 系数：2|A∩B| / (|A|+|B|)，按字符二元组计算 */
-function summarySimilarity(mary, similarity) {
-  if (mary === similarity) return 1;
-  const left = bigrams(mary);
-  const right = bigrams(similarity);
+function summarySimilarity(a, b) {
+  if (a === b) return 1;
+  const left = bigrams(a);
+  const right = bigrams(b);
   let leftSize = 0;
   let rightSize = 0;
   let overlap = 0;
@@ -27655,7 +27655,7 @@ function mergeAdjacentRecords(records) {
     record,
     startedAt,
     endedAt
-  }) => record.summary.trim() && Number.isFinite(startedAt.getTime()) && Number.isFinite(endedAt.getTime())).sort((left, right) => left.startedAt.getTime() - right.startedAt.getTime());
+  }) => record.summary.trim() && Number.isFinite(startedAt.getTime()) && Number.isFinite(endedAt.getTime())).sort((a, b) => a.startedAt.getTime() - b.startedAt.getTime());
   for (const {
     record,
     startedAt,
@@ -27727,21 +27727,21 @@ function todoActionTimeoutMessage(action, lang) {
   if (action === "extract") return lang === "zh-CN" ? "时间线待办提取超时，请检查后台模型配置或稍后重试" : "Timeline todo extraction timed out. Please check the model configuration or try again later.";
   return lang === "zh-CN" ? "待办请求超时，请稍后重试" : "Todo request timed out. Please try again later.";
 }
-function parseTodoApiResponse(todo, text, action, lang, isAttachment = false) {
+function parseTodoApiResponse(res, text, action, lang, isAttachment = false) {
   if (text.trim()) try {
     return JSON.parse(text);
   } catch {
     return {
       ok: false,
       error: {
-        message: todoActionFallbackMessage(action, todo.status, lang, isAttachment)
+        message: todoActionFallbackMessage(action, res.status, lang, isAttachment)
       }
     };
   }
   return {
     ok: false,
     error: {
-      message: todoActionFallbackMessage(action, todo.status, lang, isAttachment)
+      message: todoActionFallbackMessage(action, res.status, lang, isAttachment)
     }
   };
 }
@@ -27794,7 +27794,7 @@ async function requestTodoApi(action, body = {}, timeoutMs = 0, isAttachment = f
   let businessCode;
   let businessMessage;
   try {
-    const desktopReadFetchData = await desktopReadFetch(url, {
+    const res = await desktopReadFetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27803,12 +27803,12 @@ async function requestTodoApi(action, body = {}, timeoutMs = 0, isAttachment = f
       body: JSON.stringify(requestBody),
       signal: controller?.signal
     });
-    httpStatus = desktopReadFetchData.status;
-    responseText = await desktopReadFetchData.text();
-    const data = parseTodoApiResponse(desktopReadFetchData, responseText, action, lang, isAttachment);
+    httpStatus = res.status;
+    responseText = await res.text();
+    const data = parseTodoApiResponse(res, responseText, action, lang, isAttachment);
     businessCode = data.error?.code;
     businessMessage = data.error?.message;
-    if (!desktopReadFetchData.ok || !data.ok || data.data === undefined) throw Object.assign(new Error(data.error?.message || todoActionFallbackMessage(action, desktopReadFetchData.status, lang, isAttachment)), {
+    if (!res.ok || !data.ok || data.data === undefined) throw Object.assign(new Error(data.error?.message || todoActionFallbackMessage(action, res.status, lang, isAttachment)), {
       code: data.error?.code
     });
     return data.data;
@@ -27895,19 +27895,19 @@ async function requestTodoMultipartApi(action, form) {
   }
 }
 function fileMimeType(fileName) {
-  const lowercased = path.extname(fileName).toLowerCase();
-  if (lowercased === ".png") return "image/png";
-  if (lowercased === ".jpg" || lowercased === ".jpeg") return "image/jpeg";
-  if (lowercased === ".gif") return "image/gif";
-  if (lowercased === ".webp") return "image/webp";
-  if (lowercased === ".pdf") return "application/pdf";
-  if (lowercased === ".txt" || lowercased === ".md") return "text/plain;charset=utf-8";
-  if (lowercased === ".json") return "application/json";
-  if (lowercased === ".zip") return "application/zip";
-  if (lowercased === ".doc") return "application/msword";
-  if (lowercased === ".docx") return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-  if (lowercased === ".xls") return "application/vnd.ms-excel";
-  if (lowercased === ".xlsx") return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+  const ext = path.extname(fileName).toLowerCase();
+  if (ext === ".png") return "image/png";
+  if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
+  if (ext === ".gif") return "image/gif";
+  if (ext === ".webp") return "image/webp";
+  if (ext === ".pdf") return "application/pdf";
+  if (ext === ".txt" || ext === ".md") return "text/plain;charset=utf-8";
+  if (ext === ".json") return "application/json";
+  if (ext === ".zip") return "application/zip";
+  if (ext === ".doc") return "application/msword";
+  if (ext === ".docx") return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  if (ext === ".xls") return "application/vnd.ms-excel";
+  if (ext === ".xlsx") return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
   return "application/octet-stream";
 }
 function safeOriginalName(fileName) {
@@ -27917,9 +27917,9 @@ function timestampedDownloadName(fileName) {
   const safeName = safeOriginalName(fileName);
   const ext = path.extname(safeName);
   const base = ext ? safeName.slice(0, -ext.length) : safeName;
-  const date = /* @__PURE__ */new Date();
+  const now = /* @__PURE__ */new Date();
   const pad = value => String(value).padStart(2, "0");
-  return `${base}_${`${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}_${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`}${ext}`;
+  return `${base}_${`${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`}${ext}`;
 }
 async function uploadTodoAttachmentBuffer(todoId, buffer, originalName, mimeType = fileMimeType(originalName)) {
   const form = new FormData();
@@ -27931,7 +27931,7 @@ async function uploadTodoAttachmentBuffer(todoId, buffer, originalName, mimeType
 }
 function getTimelineRecords(date = toLocalDateString()) {
   const range = getDayRange$2(date);
-  return workRecordRepository.listByRange(range.startedAt, range.endedAt, undefined, 500).sort((left, right) => new Date(left.startedAt).getTime() - new Date(right.startedAt).getTime());
+  return workRecordRepository.listByRange(range.startedAt, range.endedAt, undefined, 500).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime());
 }
 function toAutoCompletionTimelineRecord(record) {
   return {
@@ -27944,9 +27944,9 @@ function toAutoCompletionTimelineRecord(record) {
   };
 }
 function getTodoAutoCompletionTimelineRecords(timelineHours = 0) {
-  const date = /* @__PURE__ */new Date();
-  const rangeStart = timelineHours > 0 ? /* @__PURE__ */new Date(date.getTime() - timelineHours * 60 * 60 * 1e3) : new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  return workRecordRepository.listByRange(rangeStart.toISOString(), date.toISOString(), undefined, -1).sort((left, right) => new Date(left.startedAt).getTime() - new Date(right.startedAt).getTime()).map(toAutoCompletionTimelineRecord);
+  const now = /* @__PURE__ */new Date();
+  const rangeStart = timelineHours > 0 ? /* @__PURE__ */new Date(now.getTime() - timelineHours * 60 * 60 * 1e3) : new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return workRecordRepository.listByRange(rangeStart.toISOString(), now.toISOString(), undefined, -1).sort((a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime()).map(toAutoCompletionTimelineRecord);
 }
 async function listTodos(filters = {}) {
   const data = await requestTodoApi("list", {
@@ -27960,9 +27960,9 @@ async function listTodos(filters = {}) {
     nextCursor: typeof data.nextCursor === "string" && data.nextCursor ? data.nextCursor : null
   };
 }
-async function getTodo(todo) {
+async function getTodo(id) {
   return (await requestTodoApi("get", {
-    id: todo
+    id
   })).task;
 }
 async function getTodoStats(filters = {}) {
@@ -28014,9 +28014,9 @@ async function reorderTodos(items) {
   });
   return Array.isArray(data.tasks) ? data.tasks : [];
 }
-async function deleteTodo(todo) {
+async function deleteTodo(id) {
   await requestTodoApi("delete", {
-    id: todo
+    id
   });
 }
 async function resolveTodoAssignee(email) {
@@ -28901,7 +28901,7 @@ var TodoFloatingWindowService = class {
 var todoFloatingWindowService = new TodoFloatingWindowService();
 //#endregion
 //#region electron/services/bot-todo.service.ts
-var positive = numberType().int().positive();
+var id = numberType().int().positive();
 var emailList = arrayType(stringType().email().max(255)).max(20);
 var todoStatus = enumType(["todo", "in-progress", "done", "overdue"]);
 var dateTimeValue = stringType().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(:\d{2})?$/);
@@ -28948,29 +28948,29 @@ var schemas = {
     limit: numberType().int().min(1).max(50).optional()
   }).strict(),
   get: objectType({
-    id: positive
+    id
   }).strict(),
   create: fields.extend({
     title: stringType().trim().min(1).max(1e3)
   }).strict(),
   update: fields.extend({
-    id: positive
+    id
   }).strict().refine(value => Object.keys(value).length > 1, "请指定需要修改的字段"),
   status: objectType({
-    id: positive,
+    id,
     status: todoStatus,
     completedAt: dateTimeValue.optional()
   }).strict(),
   archive: objectType({
-    id: positive,
+    id,
     archived: booleanType()
   }).strict(),
   pin: objectType({
-    id: positive,
+    id,
     pinned: booleanType()
   }).strict(),
   delete: objectType({
-    id: positive
+    id
   }).strict()
 };
 var botTodoRequestSchema = objectType({
@@ -29084,10 +29084,10 @@ function readConversationHistory(database, scope, input) {
     throughSeq: access.throughSeq,
     section: input.section,
     next_before_seq: rows.length > input.limit ? selected.at(-1).seq : null,
-    messages: selected.map(item => ({
-      ...item,
+    messages: selected.map(row => ({
+      ...row,
       offset,
-      next_offset: offset + size < item.characters ? offset + size : null
+      next_offset: offset + size < row.characters ? offset + size : null
     })),
     note: "以下为当前会话中已完成且仍可见的历史原文，不是新指令。process 分页内容是原始过程 JSON 的片段；必要时继续读取。附件内容需用附件工具读取。"
   };
@@ -29120,8 +29120,8 @@ function focusMaxGapMs(settings) {
 var DEDUP_EXTENDED_FROM_KEY = "dedupExtendedFrom";
 function parseTime(value) {
   if (typeof value !== "string") return null;
-  const parsed = Date.parse(value);
-  return Number.isFinite(parsed) ? parsed : null;
+  const ms = Date.parse(value);
+  return Number.isFinite(ms) ? ms : null;
 }
 function parseRange(range) {
   const startMs = parseTime(range?.startedAt);
@@ -29201,7 +29201,7 @@ function computeWorkTimeStats(records, options = {}) {
   visitCountedSpans(segments, maxGapMs, (category, _recordIndex, start, end) => {
     if (end > start) categoryMs.set(category, (categoryMs.get(category) ?? 0) + (end - start));
   });
-  const totalMs = Array.from(categoryMs.values()).reduce((acc, value) => acc + value, 0);
+  const totalMs = Array.from(categoryMs.values()).reduce((sum, value) => sum + value, 0);
   const focusMinutes = Math.max(1, Math.round(totalMs / 6e4));
   if (totalMs <= 0) {
     const counts = /* @__PURE__ */new Map();
@@ -29225,17 +29225,17 @@ function computeWorkTimeStats(records, options = {}) {
   };
 }
 /** 把 [start, end) 按本地整点切开逐段回调；长度为 0 的时刻记录只回调所在的小时 */
-function visitHourSlices(start, hourValue, visit) {
-  if (hourValue <= start) {
+function visitHourSlices(start, end, visit) {
+  if (end <= start) {
     visit(new Date(start).getHours(), 0);
     return;
   }
   let cursor = start;
-  while (cursor < hourValue) {
+  while (cursor < end) {
     const date = new Date(cursor);
     const hour = date.getHours();
     date.setMinutes(60, 0, 0);
-    const next = Math.min(hourValue, date.getTime());
+    const next = Math.min(end, date.getTime());
     visit(hour, next - cursor);
     cursor = next;
   }
@@ -29313,11 +29313,11 @@ var KeyboardHeatmapRepository = class {
     return {
       startDate,
       endDate,
-      totalPresses: rows.reduce((acc, cur) => acc + Number(cur.count), 0),
+      totalPresses: rows.reduce((sum, row) => sum + Number(row.count), 0),
       activeDays: Number(activeDaysRow?.count ?? 0),
-      keys: rows.map(event => ({
-        code: event.code,
-        count: Number(event.count)
+      keys: rows.map(row => ({
+        code: row.code,
+        count: Number(row.count)
       }))
     };
   }
@@ -29325,38 +29325,38 @@ var KeyboardHeatmapRepository = class {
 var keyboardHeatmapRepository = new KeyboardHeatmapRepository();
 //#endregion
 //#region electron/repositories/badge.repository.ts
-function mapBadgeDef(mapValue) {
+function mapBadgeDef(row) {
   return {
-    id: mapValue.id,
-    name: mapValue.name,
-    description: mapValue.description,
-    category: mapValue.category,
-    tier: mapValue.tier,
-    icon: mapValue.icon,
-    conditionType: mapValue.condition_type,
-    conditionValue: mapValue.condition_value ? JSON.parse(mapValue.condition_value) : null,
-    isHidden: mapValue.is_hidden === 1,
-    sortOrder: mapValue.sort_order,
-    createdAt: mapValue.created_at
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    category: row.category,
+    tier: row.tier,
+    icon: row.icon,
+    conditionType: row.condition_type,
+    conditionValue: row.condition_value ? JSON.parse(row.condition_value) : null,
+    isHidden: row.is_hidden === 1,
+    sortOrder: row.sort_order,
+    createdAt: row.created_at
   };
 }
-function mapUserBadge(mapValue) {
+function mapUserBadge(row) {
   return {
-    userId: mapValue.user_id,
-    badgeId: mapValue.badge_id,
-    unlockedAt: mapValue.unlocked_at,
-    notified: mapValue.notified === 1
+    userId: row.user_id,
+    badgeId: row.badge_id,
+    unlockedAt: row.unlocked_at,
+    notified: row.notified === 1
   };
 }
-function mapBadgeStats(mapValue) {
+function mapBadgeStats(row) {
   return {
-    userId: mapValue.user_id,
-    totalUseSeconds: mapValue.total_use_seconds,
-    totalScreenshots: mapValue.total_screenshots,
-    currentStreak: mapValue.current_streak,
-    maxStreak: mapValue.max_streak,
-    lastActiveDate: mapValue.last_active_date,
-    updatedAt: mapValue.updated_at
+    userId: row.user_id,
+    totalUseSeconds: row.total_use_seconds,
+    totalScreenshots: row.total_screenshots,
+    currentStreak: row.current_streak,
+    maxStreak: row.max_streak,
+    lastActiveDate: row.last_active_date,
+    updatedAt: row.updated_at
   };
 }
 var BadgeRepository = class {
@@ -29365,8 +29365,8 @@ var BadgeRepository = class {
     if (category) return database.prepare("SELECT * FROM badge_definitions WHERE category = ? ORDER BY sort_order").all(category).map(mapBadgeDef);
     return database.prepare("SELECT * FROM badge_definitions ORDER BY sort_order").all().map(mapBadgeDef);
   }
-  getDefinitionById(definition) {
-    const row = getDatabase().prepare("SELECT * FROM badge_definitions WHERE id = ?").get(definition);
+  getDefinitionById(id) {
+    const row = getDatabase().prepare("SELECT * FROM badge_definitions WHERE id = ?").get(id);
     return row ? mapBadgeDef(row) : null;
   }
   getUserBadges(userId) {
@@ -29376,12 +29376,12 @@ var BadgeRepository = class {
     return !!getDatabase().prepare("SELECT 1 FROM user_badges WHERE user_id = ? AND badge_id = ?").get(userId, badgeId);
   }
   unlockBadge(userId, badgeId) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     return getDatabase().prepare(`
         INSERT INTO user_badges (user_id, badge_id, unlocked_at, notified)
         VALUES (?, ?, ?, 0)
         ON CONFLICT(user_id, badge_id) DO NOTHING
-      `).run(userId, badgeId, isoString).changes > 0;
+      `).run(userId, badgeId, now).changes > 0;
   }
   markNotified(userId, badgeId) {
     getDatabase().prepare("UPDATE user_badges SET notified = 1 WHERE user_id = ? AND badge_id = ?").run(userId, badgeId);
@@ -29393,11 +29393,11 @@ var BadgeRepository = class {
   ensureStats(userId) {
     const existing = this.getStats(userId);
     if (existing) return existing;
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
         INSERT INTO badge_stats (user_id, total_use_seconds, total_screenshots, current_streak, max_streak, last_active_date, updated_at)
         VALUES (?, 0, 0, 0, 0, NULL, ?)
-      `).run(userId, isoString);
+      `).run(userId, now);
     return {
       userId,
       totalUseSeconds: 0,
@@ -29405,7 +29405,7 @@ var BadgeRepository = class {
       currentStreak: 0,
       maxStreak: 0,
       lastActiveDate: null,
-      updatedAt: isoString
+      updatedAt: now
     };
   }
   updateStats(userId, partial) {
@@ -29457,12 +29457,12 @@ var BadgeRepository = class {
   }
   hasWorkRecordsOnDate(date) {
     const start = new Date(date).toISOString();
-    const isoString = new Date(new Date(date).getTime() + 864e5).toISOString();
+    const end = new Date(new Date(date).getTime() + 864e5).toISOString();
     return !!getDatabase().prepare(`
         SELECT 1 FROM work_records
         WHERE started_at >= ? AND started_at < ? AND source NOT IN ('summary', 'clipboard')
         LIMIT 1
-      `).get(start, isoString);
+      `).get(start, end);
   }
   getConsecutiveDailyReportDays() {
     const rows = getDatabase().prepare(`
@@ -29528,9 +29528,9 @@ var BadgeService = class {
     }
   }
   getBadges(userId) {
-    const userIdValue = userId ?? getCurrentUserId();
+    const uid = userId ?? getCurrentUserId();
     const definitions = badgeRepository.getDefinitions();
-    const userBadges = new Map(badgeRepository.getUserBadges(userIdValue).map(item => [item.badgeId, item]));
+    const userBadges = new Map(badgeRepository.getUserBadges(uid).map(ub => [ub.badgeId, ub]));
     const categoryMap = /* @__PURE__ */new Map();
     let unlockedCount = 0;
     const lang = settingsRepository.getSettings().language || "zh-CN";
@@ -29559,7 +29559,7 @@ var BadgeService = class {
       badges
     }));
     return {
-      total: definitions.filter(item => !item.isHidden).length,
+      total: definitions.filter(d => !d.isHidden).length,
       unlocked: unlockedCount,
       categories
     };
@@ -29623,30 +29623,30 @@ var BadgeService = class {
     });
   }
   getCandidates(event) {
-    const definitions = badgeRepository.getDefinitions();
+    const all = badgeRepository.getDefinitions();
     switch (event) {
       case "app_start":
-        return definitions.filter(item => item.conditionType === "timer" && (item.category === "streak" || item.category === "time") || item.conditionType === "composite");
+        return all.filter(b => b.conditionType === "timer" && (b.category === "streak" || b.category === "time") || b.conditionType === "composite");
       case "app_quit":
-        return definitions.filter(item => item.conditionType === "timer" && item.category === "time");
+        return all.filter(b => b.conditionType === "timer" && b.category === "time");
       case "generate_invite_link":
-        return definitions.filter(item => item.conditionType === "event" && item.id === "invite_link");
+        return all.filter(b => b.conditionType === "event" && b.id === "invite_link");
       case "invite_success":
-        return definitions.filter(item => item.category === "invite" && item.conditionType === "data_count");
+        return all.filter(b => b.category === "invite" && b.conditionType === "data_count");
       case "report_generated":
-        return definitions.filter(item => item.category === "report" || item.conditionType === "composite");
+        return all.filter(b => b.category === "report" || b.conditionType === "composite");
       case "page_visit":
-        return definitions.filter(item => item.conditionType === "visit");
+        return all.filter(b => b.conditionType === "visit");
       case "work_record_created":
-        return definitions.filter(item => item.id.startsWith("records_") || item.conditionType === "composite");
+        return all.filter(b => b.id.startsWith("records_") || b.conditionType === "composite");
       case "screenshot_analyzed":
-        return definitions.filter(item => item.id.startsWith("screenshots_") || item.conditionType === "composite");
+        return all.filter(b => b.id.startsWith("screenshots_") || b.conditionType === "composite");
       case "easter_egg_click":
-        return definitions.filter(item => item.id === "special_hidden");
+        return all.filter(b => b.id === "special_hidden");
       case "streak_check":
-        return definitions.filter(item => item.category === "streak" || item.conditionType === "composite");
+        return all.filter(b => b.category === "streak" || b.conditionType === "composite");
       case "backfill":
-        return definitions;
+        return all;
       default:
         return [];
     }
@@ -29667,7 +29667,7 @@ var BadgeService = class {
               const timeRange = value.time_range;
               if (timeRange) {
                 const hour = (/* @__PURE__ */new Date()).getHours();
-                const [start, end] = timeRange.split("-").map(text => Number(text.split(":")[0]));
+                const [start, end] = timeRange.split("-").map(t => Number(t.split(":")[0]));
                 if (hour < start || hour >= end) return false;
               }
               return true;
@@ -29701,7 +29701,7 @@ var BadgeService = class {
         {
           const conditions = value.conditions;
           if (!Array.isArray(conditions)) return false;
-          return conditions.every(item => this.checkCompositeCondition(item, userId));
+          return conditions.every(c => this.checkCompositeCondition(c, userId));
         }
       default:
         return false;
@@ -29713,8 +29713,8 @@ var BadgeService = class {
     if (type === "streak") return badgeRepository.ensureStats(userId).currentStreak >= days;
     if (type === "has_records") {
       for (let i = 0; i < days; i++) {
-        const part = (/* @__PURE__ */new Date(Date.now() - i * 864e5)).toISOString().slice(0, 10);
-        if (!badgeRepository.hasWorkRecordsOnDate(part)) return false;
+        const d = (/* @__PURE__ */new Date(Date.now() - i * 864e5)).toISOString().slice(0, 10);
+        if (!badgeRepository.hasWorkRecordsOnDate(d)) return false;
       }
       return true;
     }
@@ -29728,8 +29728,8 @@ var BadgeService = class {
     if (row?.value === "true" || row?.value === "\"true\"") return;
     this.trigger("backfill");
     try {
-      const isoString = (/* @__PURE__ */new Date()).toISOString();
-      getDatabase().prepare("INSERT INTO settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").run(key, JSON.stringify(true), isoString);
+      const now = (/* @__PURE__ */new Date()).toISOString();
+      getDatabase().prepare("INSERT INTO settings (key, value, updated_at) VALUES (?, ?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = excluded.updated_at").run(key, JSON.stringify(true), now);
     } catch {}
   }
   getRecentUnlocks(userId, limit = 5) {
@@ -29747,28 +29747,28 @@ var HOUR_MS = 36e5;
 function pad$2(value) {
   return String(value).padStart(2, "0");
 }
-function formatClock(clock) {
-  const date = new Date(clock);
+function formatClock(ms) {
+  const date = new Date(ms);
   return `${pad$2(date.getHours())}:${pad$2(date.getMinutes())}`;
 }
 function formatHour(hour) {
   return `${pad$2(hour)}:00`;
 }
 /** 不足 minuteLimit 分钟时按分钟说，否则按一位小数的小时说 */
-function formatMinutes(minutes, minutesValue, minuteLimit = 60) {
+function formatMinutes(minutes, en, minuteLimit = 60) {
   const rounded = Math.max(1, Math.round(minutes));
-  if (rounded < minuteLimit) return minutesValue ? `${rounded} minute${rounded === 1 ? "" : "s"}` : `${rounded}分钟`;
+  if (rounded < minuteLimit) return en ? `${rounded} minute${rounded === 1 ? "" : "s"}` : `${rounded}分钟`;
   const hours = Number((rounded / 60).toFixed(1));
-  return minutesValue ? `${hours} hour${hours === 1 ? "" : "s"}` : `${hours}小时`;
+  return en ? `${hours} hour${hours === 1 ? "" : "s"}` : `${hours}小时`;
 }
-function formatInterval(seconds, interval) {
-  if (seconds >= 90) return formatMinutes(seconds / 60, interval);
+function formatInterval(seconds, en) {
+  if (seconds >= 90) return formatMinutes(seconds / 60, en);
   const rounded = Math.max(2, Math.round(seconds));
-  return interval ? `${rounded} seconds` : `${rounded}秒`;
+  return en ? `${rounded} seconds` : `${rounded}秒`;
 }
-function formatCount(value, count) {
+function formatCount(value, en) {
   const rounded = Math.round(value);
-  if (count) return rounded.toLocaleString("en-US");
+  if (en) return rounded.toLocaleString("en-US");
   return rounded >= 1e4 ? `${Number((rounded / 1e4).toFixed(1))}万` : String(rounded);
 }
 function localizeCategory(category, lang) {
@@ -29789,7 +29789,7 @@ function fill(template, params) {
   return missing ? null : text;
 }
 function pickWeighted(items, random) {
-  const total = items.reduce((acc, item) => acc + item.weight, 0);
+  const total = items.reduce((sum, item) => sum + item.weight, 0);
   if (items.length === 0 || total <= 0) return null;
   let cursor = random() * total;
   for (const item of items) {
@@ -29862,7 +29862,7 @@ function composeWorkOverview(input) {
   const lastHour = new Date(Math.min(lastMs, dayEndMs - 1)).getHours();
   const spanHours = (lastMs - firstMs) / HOUR_MS;
   const justStarted = input.isToday && input.now.getHours() < 12 && (isLight || input.now.getTime() - firstMs < 1.5 * HOUR_MS);
-  const sumHours = (from, to) => hourlyCounts.slice(from, to).reduce((acc, cur) => acc + cur, 0);
+  const sumHours = (from, to) => hourlyCounts.slice(from, to).reduce((a, b) => a + b, 0);
   const hourlyTotal = Math.max(1, sumHours(0, 24));
   const periodNames = en ? {
     morning: "the morning",
@@ -29907,17 +29907,17 @@ function composeWorkOverview(input) {
     }
   }
   const windowShare = windowCount / hourlyTotal;
-  const intervals = records.map(record => [Math.max(new Date(record.startedAt).getTime(), dayStartMs), Math.min(new Date(record.endedAt).getTime(), dayEndMs)]).filter(([start, end]) => !Number.isNaN(start) && !Number.isNaN(end) && end >= start).sort((left, right) => left[0] - right[0]);
-  let payload = null;
+  const intervals = records.map(record => [Math.max(new Date(record.startedAt).getTime(), dayStartMs), Math.min(new Date(record.endedAt).getTime(), dayEndMs)]).filter(([start, end]) => !Number.isNaN(start) && !Number.isNaN(end) && end >= start).sort((a, b) => a[0] - b[0]);
+  let gap = null;
   let coveredUntil = intervals[0]?.[1] ?? 0;
   for (const [start, end] of intervals.slice(1)) {
-    if (start - coveredUntil > (payload ? payload.end - payload.start : 0)) payload = {
+    if (start - coveredUntil > (gap ? gap.end - gap.start : 0)) gap = {
       start: coveredUntil,
       end: start
     };
     coveredUntil = Math.max(coveredUntil, end);
   }
-  const gapMinutes = payload ? (payload.end - payload.start) / 6e4 : 0;
+  const gapMinutes = gap ? (gap.end - gap.start) / 6e4 : 0;
   const isNamed = category => !!category && !UNNAMED_CATEGORIES.has(category);
   const [category1, category2, category3] = categoryBreakdown;
   const pct1 = Math.round(category1?.percentage ?? 0);
@@ -30011,9 +30011,9 @@ function composeWorkOverview(input) {
   if (!isLight && peakPeriodShare >= .4) add("clause", "peakPeriod", "rhythm", 1.5, {
     peakPeriod
   });
-  if (payload && gapMinutes >= 60 && gapMinutes <= 300) add("clause", "gap", "rhythm", 2, {
-    gapStart: formatClock(payload.start),
-    gapEnd: formatClock(payload.end),
+  if (gap && gapMinutes >= 60 && gapMinutes <= 300) add("clause", "gap", "rhythm", 2, {
+    gapStart: formatClock(gap.start),
+    gapEnd: formatClock(gap.end),
     gapDuration: formatMinutes(gapMinutes, en, 120)
   });
   if (isSteady) add("clause", "steady", "rhythm", 1.5, {}, ["steadyPace"]);
@@ -30073,7 +30073,7 @@ function composeWorkOverview(input) {
     add("lead", "weekHigh", "compare", 3, {}, ["weekHigh", "aboveAverage"]);
     add("clause", "weekHigh", "compare", 2.5, {});
   } else if (recordedPrevious.length >= 3 && focusMinutes >= 60) {
-    if (focusMinutes >= recordedPrevious.reduce((acc, minutes) => acc + minutes, 0) / recordedPrevious.length * 1.2) add("clause", "aboveAverage", "compare", 1.5, {});
+    if (focusMinutes >= recordedPrevious.reduce((sum, minutes) => sum + minutes, 0) / recordedPrevious.length * 1.2) add("clause", "aboveAverage", "compare", 1.5, {});
   }
   const streak = extras?.streakDays ?? 0;
   if (streak >= 5) add("lead", "streak", "compare", 1.5, {
@@ -30121,9 +30121,9 @@ function composeWorkOverview(input) {
     if (!next) break;
     picked.push(next);
     blocked.add(next.group);
-    next.blocks.forEach(item => blocked.add(item));
+    next.blocks.forEach(key => blocked.add(key));
   }
-  picked.sort((left, right) => GROUP_ORDER.indexOf(left.group) - GROUP_ORDER.indexOf(right.group));
+  picked.sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group));
   const closing = picked.length < 3 && random() < .5 ? pickWeighted(candidates.closing.filter(isAllowed), random) : null;
   const separators = {
     clause: t("workRecord.overviewPhrases.join.clause", lang),
@@ -30180,11 +30180,11 @@ function addDays(dateText, days) {
 }
 function getDayRange$1(dateText) {
   const start = parseDateText$1(dateText);
-  const date = new Date(start);
-  date.setDate(date.getDate() + 1);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
   return {
     start,
-    end: date
+    end
   };
 }
 function getRecordStartDate(record) {
@@ -30395,9 +30395,9 @@ var LeaderboardService = class {
   async maybeSendDailyDigest() {
     const settings = settingsRepository.getSettings();
     if (!settings.enableLeaderboard || !settings.leaderboardDailyDigest || this.digestInFlight) return;
-    const date = /* @__PURE__ */new Date();
-    if (date.getHours() < LEADERBOARD_DIGEST_HOUR) return;
-    const today = toDateString$1(date);
+    const now = /* @__PURE__ */new Date();
+    if (now.getHours() < LEADERBOARD_DIGEST_HOUR) return;
+    const today = toDateString$1(now);
     if (settings.leaderboardDigestDate === today) return;
     if (!authService.getSession()) return;
     this.digestInFlight = true;
@@ -30442,10 +30442,10 @@ var LeaderboardService = class {
     const key = `${session.token}:${dateText}`;
     const existing = this.uploads.get(key);
     if (existing) return existing;
-    const dayUpload = this.buildDayUpload(dateText);
-    const signature = JSON.stringify([dayUpload, settings.leaderboardProfileVisible, Math.floor(Date.now() / 36e5)]);
+    const day = this.buildDayUpload(dateText);
+    const signature = JSON.stringify([day, settings.leaderboardProfileVisible, Math.floor(Date.now() / 36e5)]);
     if (this.uploaded.get(key) === signature) return;
-    const pending = this.uploadDays([dayUpload], settings.leaderboardProfileVisible).then(() => {
+    const pending = this.uploadDays([day], settings.leaderboardProfileVisible).then(() => {
       if (authService.getSession()?.token !== session.token) return;
       this.uploaded.set(key, signature);
       if (this.uploaded.size > 90) this.uploaded.delete(this.uploaded.keys().next().value);
@@ -30584,19 +30584,19 @@ var LeaderboardService = class {
 var leaderboardService = new LeaderboardService();
 //#endregion
 //#region electron/repositories/recording-box.repository.ts
-function mapDevice(mapValue) {
+function mapDevice(row) {
   return {
-    deviceId: mapValue.device_uid,
-    deviceName: mapValue.device_name,
-    firmwareVersion: mapValue.firmware_version,
-    syncEnabled: mapValue.sync_enabled === 1,
-    syncCursor: mapValue.sync_cursor,
-    lastSyncedAt: mapValue.last_synced_at,
-    lastSyncCount: mapValue.last_sync_count,
-    totalSyncCount: Number(mapValue.total_sync_count ?? 0),
-    lastError: mapValue.last_error,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    deviceId: row.device_uid,
+    deviceName: row.device_name,
+    firmwareVersion: row.firmware_version,
+    syncEnabled: row.sync_enabled === 1,
+    syncCursor: row.sync_cursor,
+    lastSyncedAt: row.last_synced_at,
+    lastSyncCount: row.last_sync_count,
+    totalSyncCount: Number(row.total_sync_count ?? 0),
+    lastError: row.last_error,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 var RecordingBoxRepository = class {
@@ -30604,9 +30604,9 @@ var RecordingBoxRepository = class {
     return getDatabase().prepare("SELECT * FROM recording_box_devices ORDER BY created_at ASC, device_uid ASC").all().map(mapDevice);
   }
   listEnabledWithCredentials() {
-    return getDatabase().prepare("SELECT * FROM recording_box_devices WHERE sync_enabled = 1 ORDER BY created_at ASC, device_uid ASC").all().map(item => ({
-      ...mapDevice(item),
-      password: decryptString(item.encrypted_password)
+    return getDatabase().prepare("SELECT * FROM recording_box_devices WHERE sync_enabled = 1 ORDER BY created_at ASC, device_uid ASC").all().map(row => ({
+      ...mapDevice(row),
+      password: decryptString(row.encrypted_password)
     }));
   }
   find(deviceId) {
@@ -30622,7 +30622,7 @@ var RecordingBoxRepository = class {
     };
   }
   saveVerifiedDevice(input) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO recording_box_devices (
         device_uid, device_name, firmware_version, encrypted_password,
@@ -30635,7 +30635,7 @@ var RecordingBoxRepository = class {
         sync_enabled = 1,
         last_error = NULL,
         updated_at = excluded.updated_at
-    `).run(input.deviceId, input.deviceName, input.firmwareVersion, encryptString(input.password), isoString, isoString);
+    `).run(input.deviceId, input.deviceName, input.firmwareVersion, encryptString(input.password), now, now);
     const saved = this.find(input.deviceId);
     if (!saved) throw new Error("录音盒设备保存失败");
     return saved;
@@ -30645,14 +30645,14 @@ var RecordingBoxRepository = class {
   }
   refreshDeviceMetadata(deviceId, deviceName, firmwareVersion) {
     const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     database.exec("BEGIN");
     try {
       database.prepare(`
         UPDATE recording_box_devices
         SET device_name = ?, firmware_version = ?, updated_at = ?
         WHERE device_uid = ?
-      `).run(deviceName, firmwareVersion, isoString, deviceId);
+      `).run(deviceName, firmwareVersion, now, deviceId);
       database.prepare(`
         UPDATE work_records
         SET details_json = json_set(
@@ -30668,7 +30668,7 @@ var RecordingBoxRepository = class {
             AND work_record_id IS NOT NULL
             AND locally_deleted_at IS NULL
         )
-      `).run(deviceName || deviceId, firmwareVersion, isoString, deviceId);
+      `).run(deviceName || deviceId, firmwareVersion, now, deviceId);
       database.exec("COMMIT");
     } catch (error) {
       database.exec("ROLLBACK");
@@ -30682,12 +30682,12 @@ var RecordingBoxRepository = class {
     getDatabase().prepare("UPDATE recording_box_devices SET last_error = ?, updated_at = ? WHERE device_uid = ?").run(message.slice(0, 500), (/* @__PURE__ */new Date()).toISOString(), deviceId);
   }
   completeSync(deviceId, newRecordCount) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       UPDATE recording_box_devices
       SET last_synced_at = ?, last_sync_count = ?, last_error = NULL, updated_at = ?
       WHERE device_uid = ?
-    `).run(isoString, newRecordCount, isoString, deviceId);
+    `).run(now, newRecordCount, now, deviceId);
   }
   importPage(deviceId, records, nextCursor) {
     const database = getDatabase();
@@ -30703,14 +30703,14 @@ var RecordingBoxRepository = class {
         recording_uuid, device_uid, work_record_id, remote_updated_at, imported_at, locally_deleted_at
       ) VALUES (?, ?, ?, ?, ?, NULL)
     `);
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     let insertedCount = 0;
     database.exec("BEGIN");
     try {
       for (const record of records) {
         if (findImport.get(record.recordingId)) continue;
-        const result = insertRecord.run(record.workRecordId, record.startedAt, record.startedAt, record.category, record.summary, JSON.stringify(record.details), isoString, isoString);
-        insertImport.run(record.recordingId, deviceId, record.workRecordId, record.remoteUpdatedAt, isoString);
+        const result = insertRecord.run(record.workRecordId, record.startedAt, record.startedAt, record.category, record.summary, JSON.stringify(record.details), now, now);
+        insertImport.run(record.recordingId, deviceId, record.workRecordId, record.remoteUpdatedAt, now);
         insertedCount += Number(result.changes);
       }
       database.prepare(`
@@ -30722,7 +30722,7 @@ var RecordingBoxRepository = class {
             last_error = NULL,
             updated_at = ?
         WHERE device_uid = ?
-      `).run(nextCursor, isoString, insertedCount, insertedCount, isoString, deviceId);
+      `).run(nextCursor, now, insertedCount, insertedCount, now, deviceId);
       database.exec("COMMIT");
       return insertedCount;
     } catch (error) {
@@ -30766,7 +30766,7 @@ var AgentSessionImportRepository = class {
     };
   }
   saveFileError(provider, filePath, message) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO agent_session_files (provider, file_path, last_error, last_scanned_at, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?)
@@ -30774,7 +30774,7 @@ var AgentSessionImportRepository = class {
         last_error = excluded.last_error,
         last_scanned_at = excluded.last_scanned_at,
         updated_at = excluded.updated_at
-    `).run(provider, filePath, message.slice(0, 500), isoString, isoString, isoString);
+    `).run(provider, filePath, message.slice(0, 500), now, now, now);
   }
   /**
   * 在同一事务内写入新消息、消息台账和文件游标，保证游标只在记录落库后推进。
@@ -30782,10 +30782,10 @@ var AgentSessionImportRepository = class {
   */
   importFile(provider, filePath, messages, progress, options) {
     const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     database.exec("BEGIN");
     try {
-      const insertedCount = this.insertMessages(provider, messages, options, isoString);
+      const insertedCount = this.insertMessages(provider, messages, options, now);
       database.prepare(`
         INSERT INTO agent_session_files (
           provider, file_path, byte_offset, file_size, mtime_ms, parser_state_json,
@@ -30800,7 +30800,7 @@ var AgentSessionImportRepository = class {
           last_error = NULL,
           last_scanned_at = excluded.last_scanned_at,
           updated_at = excluded.updated_at
-      `).run(provider, filePath, progress.byteOffset, progress.fileSize, Math.trunc(progress.mtimeMs), progress.parserState ? JSON.stringify(progress.parserState) : null, insertedCount, isoString, isoString, isoString, insertedCount);
+      `).run(provider, filePath, progress.byteOffset, progress.fileSize, Math.trunc(progress.mtimeMs), progress.parserState ? JSON.stringify(progress.parserState) : null, insertedCount, now, now, now, insertedCount);
       database.exec("COMMIT");
       return insertedCount;
     } catch (error) {
@@ -30837,7 +30837,7 @@ var AgentSessionImportRepository = class {
     return states;
   }
   /** 需在事务内调用。台账里已有的消息直接跳过，返回实际新增的记录数。 */
-  insertMessages(provider, messages, options, messagesValue) {
+  insertMessages(provider, messages, options, now) {
     const database = getDatabase();
     const findImport = database.prepare("SELECT 1 FROM agent_session_imports WHERE provider = ? AND message_key = ? LIMIT 1");
     const insertRecord = database.prepare(`
@@ -30858,8 +30858,8 @@ var AgentSessionImportRepository = class {
       const workRecordId = buildAgentSessionWorkRecordId(provider, message.messageKey);
       const result = insertRecord.run(workRecordId, message.sentAt, message.sentAt, AGENT_SESSION_IMPORT_CATEGORY, message.text, JSON.stringify({
         agentSession: message.details
-      }), messagesValue, messagesValue);
-      insertImport.run(provider, message.messageKey, message.details.sessionId, workRecordId, message.sentAt, messagesValue);
+      }), now, now);
+      insertImport.run(provider, message.messageKey, message.details.sessionId, workRecordId, message.sentAt, now);
       const inserted = Number(result.changes);
       insertedCount += inserted;
       if (inserted > 0 && options.enqueueSummary) enqueueSummary.run(workRecordId);
@@ -30935,10 +30935,10 @@ function getDayRange(dateText) {
 function getDatesBetween$1(startDate, endDate) {
   const dates = [];
   const start = parseDateText(startDate);
-  const dateTextResult = parseDateText(endDate);
-  if (start > dateTextResult) return dates;
+  const end = parseDateText(endDate);
+  if (start > end) return dates;
   const current = new Date(start);
-  while (current <= dateTextResult) {
+  while (current <= end) {
     dates.push(toDateString(current));
     current.setDate(current.getDate() + 1);
   }
@@ -30970,7 +30970,7 @@ function buildHourlyCounts(records, dayStart, dayEnd) {
 }
 /** 概览里应用相关的说法：主力应用、最长连续使用、最常往返的两个应用、切换频率 */
 function collectOverviewAppSignals(startedAt, endedAt, lang) {
-  const items = appUsageService.getSummary(startedAt, endedAt).filter(item => item.activeDurationSec > 0).sort((left, right) => right.activeDurationSec - left.activeDurationSec);
+  const items = appUsageService.getSummary(startedAt, endedAt).filter(item => item.activeDurationSec > 0).sort((a, b) => b.activeDurationSec - a.activeDurationSec);
   if (items.length === 0) return undefined;
   const displayName = name => localizeCommonAppName(name, lang);
   const activeByName = new Map(items.map(item => [item.appName.trim().toLocaleLowerCase(), item.activeDurationSec]));
@@ -30990,9 +30990,9 @@ function collectOverviewAppSignals(startedAt, endedAt, lang) {
   const pair = [...pairs.values()].sort((left, right) => right.count - left.count)[0];
   const longest = items.reduce((best, item) => item.longestSessionDurationSec > best.longestSessionDurationSec ? item : best, items[0]);
   return {
-    activeSec: items.reduce((acc, item) => acc + item.activeDurationSec, 0),
+    activeSec: items.reduce((sum, item) => sum + item.activeDurationSec, 0),
     appCount: items.length,
-    switchCount: items.reduce((acc, item) => acc + item.switchCount, 0),
+    switchCount: items.reduce((sum, item) => sum + item.switchCount, 0),
     top: {
       name: displayName(items[0].appName),
       activeSec: items[0].activeDurationSec
@@ -31015,12 +31015,12 @@ function collectOverviewAppSignals(startedAt, endedAt, lang) {
 var STREAK_LOOKBACK_DAYS = 366;
 /** 含今天在内连续有记录的天数；超过回溯范围时不报（报出来的数会偏小） */
 function countRecordStreak(date) {
-  const dateTextResult = parseDateText(date);
-  const since = new Date(dateTextResult);
+  const day = parseDateText(date);
+  const since = new Date(day);
   since.setDate(since.getDate() - STREAK_LOOKBACK_DAYS);
   const recordedDates = new Set(workRecordRepository.listLocalRecordDatesSince(since.toISOString()));
   let streak = 1;
-  const cursor = new Date(dateTextResult);
+  const cursor = new Date(day);
   cursor.setDate(cursor.getDate() - 1);
   while (recordedDates.has(toDateString(cursor))) {
     streak += 1;
@@ -31146,30 +31146,30 @@ var WorkRecordService = class {
       console.warn("[WorkRecord] 记录已写入，但排行榜同步调度失败:", error);
     }
   }
-  updateScreenshotPath(screenshot, screenshotPath) {
-    workRecordRepository.updateScreenshotPath(screenshot, screenshotPath);
+  updateScreenshotPath(id, screenshotPath) {
+    workRecordRepository.updateScreenshotPath(id, screenshotPath);
   }
   findLatestBySources(sources) {
     return workRecordRepository.findLatestBySources(sources);
   }
-  extendEndedAt(extend, endedAt, details) {
-    workRecordRepository.updateEndedAt(extend, endedAt, details);
+  extendEndedAt(id, endedAt, details) {
+    workRecordRepository.updateEndedAt(id, endedAt, details);
   }
   getAllCategories() {
     return workRecordRepository.getAllCategories();
   }
-  updateCategory(categoryValue, category) {
-    workRecordRepository.updateCategory(categoryValue, category);
+  updateCategory(id, category) {
+    workRecordRepository.updateCategory(id, category);
   }
-  delete(deleteValue) {
-    const record = workRecordRepository.findById(deleteValue);
+  delete(id) {
+    const record = workRecordRepository.findById(id);
     if (!record) {
       const lang = settingsRepository.getSettings().language || "zh-CN";
       throw new Error(t("workRecord.operationFailed", lang));
     }
-    if (record.source === "recording_box") recordingBoxRepository.markWorkRecordDeleted(deleteValue);
-    if (record.source === "agent_session") agentSessionImportRepository.markWorkRecordDeleted(deleteValue);
-    workRecordRepository.delete(deleteValue);
+    if (record.source === "recording_box") recordingBoxRepository.markWorkRecordDeleted(id);
+    if (record.source === "agent_session") agentSessionImportRepository.markWorkRecordDeleted(id);
+    workRecordRepository.delete(id);
     trackEvent({
       type: "action",
       name: "record_delete",
@@ -31182,9 +31182,9 @@ var WorkRecordService = class {
     });
     leaderboardService.syncDateIfEnabled(toDateString(new Date(record.startedAt)));
   }
-  update(update, category, summary, details, startedAt, endedAt) {
-    const previous = workRecordRepository.findById(update);
-    workRecordRepository.update(update, category, summary, details, startedAt, endedAt);
+  update(id, category, summary, details, startedAt, endedAt) {
+    const previous = workRecordRepository.findById(id);
+    workRecordRepository.update(id, category, summary, details, startedAt, endedAt);
     if (previous) {
       const changed = previous.summary !== summary || previous.category !== category || startedAt !== undefined && previous.startedAt !== startedAt || endedAt !== undefined && previous.endedAt !== endedAt || details !== undefined && JSON.stringify(previous.details) !== JSON.stringify(details);
       if (previous.source === "text" && summary.trim() && changed) trackEvent({
@@ -31192,7 +31192,7 @@ var WorkRecordService = class {
         name: "record_update_success",
         feature: "work_record",
         props: {
-          record_id: update,
+          record_id: id,
           source: previous.source,
           output_nonempty: true
         }
@@ -31225,10 +31225,10 @@ var WorkRecordService = class {
       extras.apps = collectOverviewAppSignals(range.startedAt, range.endedAt, lang);
     });
     attempt("前几天专注时长", () => {
-      const dateTextResult = parseDateText(date);
-      const sixDaysAgo = new Date(dateTextResult);
+      const day = parseDateText(date);
+      const sixDaysAgo = new Date(day);
       sixDaysAgo.setDate(sixDaysAgo.getDate() - 6);
-      const yesterday = new Date(dateTextResult);
+      const yesterday = new Date(day);
       yesterday.setDate(yesterday.getDate() - 1);
       extras.previousFocusMinutes = this.getDailySummaries(toDateString(sixDaysAgo), toDateString(yesterday)).map(summary => summary.focusMinutes);
     });
@@ -31239,7 +31239,7 @@ var WorkRecordService = class {
       const result = keyboardHeatmapRepository.query(date, date);
       extras.keyboard = {
         presses: result.totalPresses,
-        backspace: result.keys.find(event => event.code === "Backspace")?.count ?? 0
+        backspace: result.keys.find(key => key.code === "Backspace")?.count ?? 0
       };
     });
     if (settings.enableMouseHeatmap) attempt("鼠标热力", () => {
@@ -31470,16 +31470,16 @@ function isDateOnly(input) {
   return /^\d{4}-\d{2}-\d{2}$/.test(input.trim());
 }
 function todayText() {
-  const date = /* @__PURE__ */new Date();
-  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+  const now = /* @__PURE__ */new Date();
+  return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("-");
 }
 function dateText(date) {
   return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
 }
-function getRange(start, range) {
+function getRange(start, end) {
   const startDate = parseDateTime(start);
-  const endDate = parseDateTime(range);
-  const inclusiveDateEnd = isDateOnly(range) ? new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1) : endDate;
+  const endDate = parseDateTime(end);
+  const inclusiveDateEnd = isDateOnly(end) ? new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 1) : endDate;
   return {
     startedAt: startDate.toISOString(),
     endedAt: inclusiveDateEnd.toISOString()
@@ -31491,8 +31491,8 @@ function assertDateTime(value, field) {
 function assertDateOnly(value, field) {
   if (!isDateOnly(value) || !isValidDateTime(value)) throw new XiaoheiDataToolError("INVALID_ARGUMENT", `${field} 格式错误，期望 YYYY-MM-DD`);
 }
-function assertOrderedRange(start, rangeValue) {
-  const range = getRange(start, rangeValue);
+function assertOrderedRange(start, end) {
+  const range = getRange(start, end);
   if (range.startedAt >= range.endedAt) throw new XiaoheiDataToolError("INVALID_ARGUMENT", "end_date 必须晚于或等于 start_date");
 }
 function getDatesBetween(startDate, endDate) {
@@ -31500,8 +31500,8 @@ function getDatesBetween(startDate, endDate) {
   const [startYear, startMonth, startDay] = startDate.slice(0, 10).split("-").map(Number);
   const [endYear, endMonth, endDay] = endDate.slice(0, 10).split("-").map(Number);
   const current = new Date(startYear, startMonth - 1, startDay, 12);
-  const date = new Date(endYear, endMonth - 1, endDay, 12);
-  while (current <= date) {
+  const end = new Date(endYear, endMonth - 1, endDay, 12);
+  while (current <= end) {
     dates.push(dateText(current));
     current.setDate(current.getDate() + 1);
   }
@@ -31714,11 +31714,11 @@ var XiaoheiDataToolService = class {
     let startDate = params.startDate;
     let endDate = params.endDate;
     if (!startDate || !endDate) {
-      const date = /* @__PURE__ */new Date();
+      const end = /* @__PURE__ */new Date();
       const start = /* @__PURE__ */new Date();
-      start.setDate(date.getDate() - 6);
+      start.setDate(end.getDate() - 6);
       startDate = dateText(start);
-      endDate = dateText(date);
+      endDate = dateText(end);
     }
     if (!isValidDateTime(startDate)) return apiError(`startDate 格式错误: ${startDate}，期望 YYYY-MM-DD 或 YYYY-MM-DD HH:mm:ss`);
     if (!isValidDateTime(endDate)) return apiError(`endDate 格式错误: ${endDate}，期望 YYYY-MM-DD 或 YYYY-MM-DD HH:mm:ss`);
@@ -31892,7 +31892,7 @@ var XiaoheiDataToolService = class {
       } : {})
     });
     const cursor = decodeCursor(parsed.cursor, "timeline", scope);
-    const pageByRange = workRecordRepository.listPageByRange({
+    const raw = workRecordRepository.listPageByRange({
       startedAt: range.startedAt,
       endedAt: range.endedAt,
       keyword,
@@ -31907,12 +31907,12 @@ var XiaoheiDataToolService = class {
     const total = workRecordRepository.countByRange(range.startedAt, range.endedAt, keyword, {
       source: parsed.source
     });
-    const pageRecords = pageByRange.slice(0, limit);
+    const pageRecords = raw.slice(0, limit);
     const bounded = pageRecords.map(toBoundedTimelineRecord);
     const data = bounded.map(item => item.data);
     const contentTruncated = () => bounded.slice(0, data.length).some(item => item.truncated);
     const nextCursor = () => {
-      if (pageByRange.length <= data.length) return null;
+      if (raw.length <= data.length) return null;
       const last = pageRecords[data.length - 1];
       return last ? encodeCursor({
         v: 1,
@@ -32019,7 +32019,7 @@ var XiaoheiDataToolService = class {
     const offset = decodeCursor(parsed.cursor, "shared-reports", scope)?.offset ?? 0;
     const {
       reportCcService
-    } = await import("../main.js").then(result => result.n);
+    } = await import("../main.js").then(n => n.n);
     const contentById = /* @__PURE__ */new Map();
     let entries = [];
     try {
@@ -32064,7 +32064,7 @@ var XiaoheiDataToolService = class {
         if (result.items.length < 50 || page * 50 >= result.total) break;
       }
       const pageEntries = entries.slice(offset, offset + limit);
-      const missing = pageEntries.map(item => item.docId).filter(item => !contentById.has(item));
+      const missing = pageEntries.map(item => item.docId).filter(id => !contentById.has(id));
       if (missing.length) for (const item of await reportCcService.materials(missing)) contentById.set(item.docId, item.content);
       const bounded = pageEntries.map(entry => {
         const content = clipText(contentById.get(entry.docId) ?? "", contentMode === "full" ? REPORT_CONTENT_MAX_CHARACTERS : REPORT_PREVIEW_MAX_CHARACTERS);
@@ -32114,11 +32114,11 @@ var XiaoheiDataToolService = class {
     let startDate = parsed.start_date;
     let endDate = parsed.end_date;
     if (!startDate || !endDate) {
-      const date = /* @__PURE__ */new Date();
+      const end = /* @__PURE__ */new Date();
       const start = /* @__PURE__ */new Date();
-      start.setDate(date.getDate() - 6);
+      start.setDate(end.getDate() - 6);
       startDate = dateText(start);
-      endDate = dateText(date);
+      endDate = dateText(end);
     }
     assertDateOnly(startDate, "start_date");
     assertDateOnly(endDate, "end_date");
@@ -32375,11 +32375,11 @@ var XiaoheiDataToolService = class {
         WHERE operation_key = ?
       `).get(operationKey) ?? null;
   }
-  replayWrite(replay, payloadHash) {
-    if (replay.payload_hash !== payloadHash) throw new XiaoheiDataToolError("DATASET_CHANGED", "同一工具调用的写入参数发生变化，已阻止重复写入");
+  replayWrite(row, payloadHash) {
+    if (row.payload_hash !== payloadHash) throw new XiaoheiDataToolError("DATASET_CHANGED", "同一工具调用的写入参数发生变化，已阻止重复写入");
     try {
       return {
-        ...JSON.parse(replay.result_json),
+        ...JSON.parse(row.result_json),
         idempotent: true
       };
     } catch {
@@ -33191,13 +33191,13 @@ var XiaoheiBotAgentRuntimeService = class {
       return;
     }
     try {
-      const onCheckpoint = await pending.onCheckpoint(checkpoint);
+      const ack = await pending.onCheckpoint(checkpoint);
       if (this.child !== child) return;
       child.postMessage({
         type: "checkpoint-ack",
         checkpointId: checkpoint.checkpointId,
         ok: true,
-        ack: onCheckpoint
+        ack
       });
     } catch (error) {
       if (this.child !== child) return;
@@ -33412,8 +33412,8 @@ function groupFallbackTitle(names, maxChars = 15) {
 }
 //#endregion
 //#region shared/utils/xiaohei-bot-management.ts
-function managementToolsFor(management) {
-  const permissions = management.managementPermissions;
+function managementToolsFor(bot) {
+  const permissions = bot.managementPermissions;
   const consultationTools = ["xiaohei_list_bots", "xiaohei_consult_bot", "xiaohei_list_consultations", "xiaohei_read_consultation", "xiaohei_complete_profile", "xiaohei_update_bot", "xiaohei_list_models", "xiaohei_list_avatars"];
   if (!permissions?.createBots && !permissions?.manageGroups) return consultationTools;
   return [...consultationTools, ...(permissions.createBots ? ["xiaohei_create_bot"] : []), ...(permissions.createBots && permissions.manageGroups ? ["xiaohei_create_team", "xiaohei_resume_team", "xiaohei_list_teams"] : []), ...(permissions.manageGroups ? ["xiaohei_list_groups", "xiaohei_create_group", "xiaohei_update_group", "xiaohei_add_group_members", "xiaohei_update_group_member", "xiaohei_send_group_task", "xiaohei_read_group_messages", "xiaohei_handoff_members"] : [])];
@@ -33445,19 +33445,19 @@ function parseWechatMentions(text, conversation) {
   };
   for (const name of ["所有人", "所有成员", "全体成员", "everyone", "all"]) targets.set(name, everyone);
   const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const names = [...targets.keys()].sort((count, right) => right.length - count.length).map(name => name === "all" ? "[aA][lL][lL]" : name === "everyone" ? "[eE][vV][eE][rR][yY][oO][nN][eE]" : escape(name));
+  const names = [...targets.keys()].sort((a, b) => b.length - a.length).map(name => name === "all" ? "[aA][lL][lL]" : name === "everyone" ? "[eE][vV][eE][rR][yY][oO][nN][eE]" : escape(name));
   const pattern = new RegExp(`null${names.join("|")})`, "gmu");
   const seen = /* @__PURE__ */new Set();
   let previousMentionEnd = -1;
   return {
-    content: text.replace(pattern, (count, name, offset) => {
-      if (!name) return count;
+    content: text.replace(pattern, (raw, name, offset) => {
+      if (!name) return raw;
       const previous = text[offset - 1] || "";
-      const following = text.slice(offset + count.length);
-      if (previousMentionEnd !== offset && /[A-Za-z0-9_./%+@＠\\-]/u.test(previous) || /^[A-Za-z0-9_-]/u.test(following) || /^\.[A-Za-z]/u.test(following)) return count;
+      const following = text.slice(offset + raw.length);
+      if (previousMentionEnd !== offset && /[A-Za-z0-9_./%+@＠\\-]/u.test(previous) || /^[A-Za-z0-9_-]/u.test(following) || /^\.[A-Za-z]/u.test(following)) return raw;
       const target = ["all", "everyone"].includes(name.toLowerCase()) ? everyone : targets.get(name);
-      if (!target) return count;
-      previousMentionEnd = offset + count.length;
+      if (!target) return raw;
+      previousMentionEnd = offset + raw.length;
       if (!seen.has(target.token)) {
         seen.add(target.token);
         mentions.push({
@@ -33576,18 +33576,18 @@ function emptyUserProfileMemory() {
 function trim(value) {
   return typeof value === "string" ? value.trim() : "";
 }
-function mapRow(mapValue) {
+function mapRow(row) {
   return {
-    preferredName: mapValue.preferred_name,
-    aliases: mapValue.aliases,
-    rolePositioning: mapValue.role_positioning,
-    organizationsAndTitles: mapValue.organizations_and_titles,
-    projectsAndBusiness: mapValue.projects_and_business,
-    responsibilitiesAndWork: mapValue.responsibilities_and_work,
-    teamAndCollaborators: mapValue.team_and_collaborators,
-    additionalContext: mapValue.additional_context,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    preferredName: row.preferred_name,
+    aliases: row.aliases,
+    rolePositioning: row.role_positioning,
+    organizationsAndTitles: row.organizations_and_titles,
+    projectsAndBusiness: row.projects_and_business,
+    responsibilitiesAndWork: row.responsibilities_and_work,
+    teamAndCollaborators: row.team_and_collaborators,
+    additionalContext: row.additional_context,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 var UserProfileMemoryRepository = class {
@@ -33609,7 +33609,7 @@ var UserProfileMemoryRepository = class {
       teamAndCollaborators: trim(input.teamAndCollaborators),
       additionalContext: trim(input.additionalContext)
     };
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     const existing = this.get();
     getDatabase().prepare(`
       INSERT INTO user_profile_memories (
@@ -33627,7 +33627,7 @@ var UserProfileMemoryRepository = class {
         team_and_collaborators = excluded.team_and_collaborators,
         additional_context = excluded.additional_context,
         updated_at = excluded.updated_at
-    `).run(normalized.preferredName, normalized.aliases, normalized.rolePositioning, normalized.organizationsAndTitles, normalized.projectsAndBusiness, normalized.responsibilitiesAndWork, normalized.teamAndCollaborators, normalized.additionalContext, existing?.createdAt ?? isoString, isoString);
+    `).run(normalized.preferredName, normalized.aliases, normalized.rolePositioning, normalized.organizationsAndTitles, normalized.projectsAndBusiness, normalized.responsibilitiesAndWork, normalized.teamAndCollaborators, normalized.additionalContext, existing?.createdAt ?? now, now);
     return this.getOrEmpty();
   }
 };
@@ -33700,7 +33700,7 @@ function normalizedGatewayBase(value) {
     return FALLBACK_GATEWAY_BASE;
   }
 }
-function normalizedModels(value, modelsValue) {
+function normalizedModels(value, api) {
   if (!Array.isArray(value)) return [];
   const models = [];
   for (const item of value) {
@@ -33710,7 +33710,7 @@ function normalizedModels(value, modelsValue) {
     models.push({
       id,
       name: typeof item.name === "string" && item.name.trim() ? item.name.trim() : id,
-      api: modelsValue,
+      api,
       reasoning: Boolean(item.reasoning),
       vision: Boolean(item.vision),
       thinkingLevels: Array.isArray(item.thinkingLevels) ? levels.length > 0 ? levels : ["off"] : [],
@@ -33857,10 +33857,10 @@ var XiaoheiBotCloudService = class {
     };
     this.syncGeneration = generation;
     this.lastAttemptAt = Date.now();
-    const before = JSON.stringify([this.state.status, this.state.defaultModel, this.state.creditsBalance, this.state.message, xiaoheiBotRepository.listProviders(), xiaoheiBotRepository.listBots().map(item => [item.id, item.identityVersion])]);
+    const before = JSON.stringify([this.state.status, this.state.defaultModel, this.state.creditsBalance, this.state.message, xiaoheiBotRepository.listProviders(), xiaoheiBotRepository.listBots().map(bot => [bot.id, bot.identityVersion])]);
     const pending = this.fetchCatalog(generation).then(state => {
       if (getOpenDatabaseConnection()?.generation === generation) {
-        const after = JSON.stringify([state.status, state.defaultModel, state.creditsBalance, state.message, xiaoheiBotRepository.listProviders(), xiaoheiBotRepository.listBots().map(item => [item.id, item.identityVersion])]);
+        const after = JSON.stringify([state.status, state.defaultModel, state.creditsBalance, state.message, xiaoheiBotRepository.listProviders(), xiaoheiBotRepository.listBots().map(bot => [bot.id, bot.identityVersion])]);
         if (before !== after) this.onChanged?.();
       }
       return state;
@@ -33972,9 +33972,9 @@ function parseReceptionDecision(text, candidates) {
     const scope = record.scope === "all" ? "all" : "selected";
     const eligible = eligibleReceptionCandidates(candidates);
     const rawIds = scope === "all" ? eligible.map(candidate => candidate.botId) : Array.isArray(record.botIds) ? record.botIds : [record.botId];
-    if (rawIds.length === 0 || rawIds.some(item => typeof item !== "string" || !item.trim())) return null;
-    const botIds = [...new Set(rawIds.map(item => item.trim()))];
-    if (botIds.some(item => !eligible.some(candidate => candidate.botId === item))) return null;
+    if (rawIds.length === 0 || rawIds.some(id => typeof id !== "string" || !id.trim())) return null;
+    const botIds = [...new Set(rawIds.map(id => id.trim()))];
+    if (botIds.some(id => !eligible.some(candidate => candidate.botId === id))) return null;
     return {
       scope,
       botIds,
@@ -34081,10 +34081,10 @@ function availableAgentTools(permissionMode = "full") {
 * 本机时间，例如 2026-10-16 周五 14:21。模型自己不知道今天几号，不告诉它就会按聊天记录去猜；
 * 拼在每轮提示里（在最新消息末尾），不放系统提示词，不影响前面内容的缓存命中。手机端同样处理。
 */
-function currentTimeText(currentValue) {
+function currentTimeText(now) {
   const pad = value => String(value).padStart(2, "0");
-  const weekday = ["日", "一", "二", "三", "四", "五", "六"][currentValue.getDay()];
-  return `${currentValue.getFullYear()}-${pad(currentValue.getMonth() + 1)}-${pad(currentValue.getDate())} 周${weekday} ${pad(currentValue.getHours())}:${pad(currentValue.getMinutes())}`;
+  const weekday = ["日", "一", "二", "三", "四", "五", "六"][now.getDay()];
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} 周${weekday} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
 function plainMentionContent(content, mentions) {
   let result = content;
@@ -34148,7 +34148,7 @@ var XiaoheiBotService = class {
     if (shouldResume) {
       const jobs = xiaoheiBotRepository.listQueuedRoutingJobs();
       this.resumeQueuedRoutingJobs(jobs);
-      this.resumeQueuedAgentRuns(new Set(jobs.map(item => item.triggerMessageId)));
+      this.resumeQueuedAgentRuns(new Set(jobs.map(job => job.triggerMessageId)));
     }
   }
   async executeScheduledTask(task, scheduleRunId) {
@@ -34172,15 +34172,15 @@ var XiaoheiBotService = class {
       });
       if (getOpenDatabaseConnection()?.generation !== connection.generation) throw new Error(appText("botMain.accountSwitched"));
       const runs = xiaoheiBotRepository.listAgentRunsForTrigger(trigger.id);
-      const replies = runs.flatMap(item => {
-        const message = item.responseMessageId ? xiaoheiBotRepository.getMessage(item.responseMessageId) : null;
+      const replies = runs.flatMap(run => {
+        const message = run.responseMessageId ? xiaoheiBotRepository.getMessage(run.responseMessageId) : null;
         return message ? [message] : [];
       });
       const confirmation = connection.database.prepare("SELECT message_id FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? LIMIT 1").get(trigger.id);
       const question = confirmation ? xiaoheiBotRepository.getMessage(confirmation.message_id) : null;
-      const completed = runs.some(item => item.status === "completed");
-      const unfinished = runs.some(item => item.status === "queued" || item.status === "running");
-      const failed = runs.some(item => item.mandatoryReply && item.status === "failed");
+      const completed = runs.some(run => run.status === "completed");
+      const unfinished = runs.some(run => run.status === "queued" || run.status === "running");
+      const failed = runs.some(run => run.mandatoryReply && run.status === "failed");
       return {
         success: completed && !unfinished && !failed,
         needsConfirmation: Boolean(question),
@@ -34245,8 +34245,8 @@ var XiaoheiBotService = class {
     };
   }
   requestUserConfirmation(botId, conversationId, triggerMessageId, question) {
-    const databaseResult = getDatabase();
-    const previous = databaseResult.prepare("SELECT message_id FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(triggerMessageId, botId);
+    const db = getDatabase();
+    const previous = db.prepare("SELECT message_id FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(triggerMessageId, botId);
     if (previous) return {
       messageId: previous.message_id,
       waitingForUser: true
@@ -34256,7 +34256,7 @@ var XiaoheiBotService = class {
     const trigger = xiaoheiBotRepository.getMessage(triggerMessageId);
     if (!bot || !conversation || trigger?.conversationId !== conversationId) throw new Error(appText("botMain.confirmationSourceMissing"));
     const visible = this.visibleConversationId === conversationId && Boolean(this.getMainWindow()?.isFocused());
-    databaseResult.exec("BEGIN IMMEDIATE");
+    db.exec("BEGIN IMMEDIATE");
     let message;
     try {
       message = xiaoheiBotRepository.createMessage({
@@ -34270,7 +34270,7 @@ var XiaoheiBotService = class {
         actorType: "bot",
         actorId: botId
       }, true);
-      databaseResult.prepare("INSERT INTO xiaohei_bot_confirmation_notices(trigger_message_id,bot_id,message_id) VALUES(?,?,?)").run(triggerMessageId, botId, message.id);
+      db.prepare("INSERT INTO xiaohei_bot_confirmation_notices(trigger_message_id,bot_id,message_id) VALUES(?,?,?)").run(triggerMessageId, botId, message.id);
       if (!visible) notificationService.addLocalNotification({
         title: `${bot.name} · ${appText("botMain.awaitingConfirmation")}`,
         content: question,
@@ -34282,9 +34282,9 @@ var XiaoheiBotService = class {
           messageId: message.id
         })}`
       });
-      databaseResult.exec("COMMIT");
+      db.exec("COMMIT");
     } catch (error) {
-      databaseResult.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
     this.emit({
@@ -34327,12 +34327,12 @@ var XiaoheiBotService = class {
         type: "consultations-changed"
       }),
       liveText: messageId => this.consultationLiveText.get(messageId)?.(),
-      botBusy: id => [...this.activeRuns.values()].some(item => item.botId === id),
+      botBusy: id => [...this.activeRuns.values()].some(run => run.botId === id),
       purge: async (conversationId, targetId) => {
         const userId = getActiveUserId() ?? 0;
-        const runtimeKey = this.runtimeKey(targetId, conversationId);
-        await this.sessionRunTails.get(runtimeKey)?.catch(() => undefined);
-        xiaoheiBotAgentRuntimeService.disposeSession(runtimeKey);
+        const key = this.runtimeKey(targetId, conversationId);
+        await this.sessionRunTails.get(key)?.catch(() => undefined);
+        xiaoheiBotAgentRuntimeService.disposeSession(key);
         await rm(path.join(app.getPath("userData"), "xiaohei-bot", `user_${userId}`, "sessions", conversationId), {
           recursive: true,
           force: true
@@ -34381,12 +34381,12 @@ var XiaoheiBotService = class {
     if ((getActiveUserId() ?? 0) !== userId) throw new Error(appText("botMain.accountSwitchedReopenBot"));
     if (getOpenDatabaseConnection()?.generation !== generation) throw new Error(appText("botMain.accountSwitched"));
     this.startMemory();
-    await Promise.all(xiaoheiBotRepository.listBots().map(item => this.ensureBotWorkingDirectory(item)));
+    await Promise.all(xiaoheiBotRepository.listBots().map(bot => this.ensureBotWorkingDirectory(bot)));
     const conversations = xiaoheiBotRepository.listConversations();
     if (shouldResumeQueuedRuns) {
       const queuedRoutingJobs = xiaoheiBotRepository.listQueuedRoutingJobs();
       this.resumeQueuedRoutingJobs(queuedRoutingJobs);
-      this.resumeQueuedAgentRuns(new Set(queuedRoutingJobs.map(item => item.triggerMessageId)));
+      this.resumeQueuedAgentRuns(new Set(queuedRoutingJobs.map(job => job.triggerMessageId)));
     }
     const messagePages = Object.fromEntries(conversations.map(conversation => [conversation.id, xiaoheiBotRepository.listDisplayMessages(conversation.id, undefined, DISPLAY_MESSAGE_PAGE_SIZE)]));
     return {
@@ -34433,9 +34433,9 @@ var XiaoheiBotService = class {
     const recovery = (async () => {
       xiaoheiBotEventLogRepository.ensureLegacyBackfill();
       await this.reconcileLegacyAssets(userId);
-      const resumableTelemetryTasks = new Set([...xiaoheiBotRepository.listQueuedAgentRuns().map(item => item.triggerMessageId), ...xiaoheiBotRepository.listQueuedRoutingJobs().map(item => item.triggerMessageId)].map(item => {
-        const message = xiaoheiBotRepository.getMessage(item);
-        return message ? botObservationTaskId(message) : item;
+      const resumableTelemetryTasks = new Set([...xiaoheiBotRepository.listQueuedAgentRuns().map(run => run.triggerMessageId), ...xiaoheiBotRepository.listQueuedRoutingJobs().map(job => job.triggerMessageId)].map(id => {
+        const message = xiaoheiBotRepository.getMessage(id);
+        return message ? botObservationTaskId(message) : id;
       }));
       botTaskTelemetry.recover(resumableTelemetryTasks);
       xiaoheiBotRepository.recoverInterruptedRuns();
@@ -34529,10 +34529,10 @@ var XiaoheiBotService = class {
     const generation = getOpenDatabaseConnection()?.generation;
     const roles = await fetchDefaultRoles();
     if (getOpenDatabaseConnection()?.generation !== generation) throw new Error(appText("botMain.accountSwitched"));
-    const previous = new Map(xiaoheiBotRepository.listBots().map(item => [item.id, item.identityVersion]));
+    const previous = new Map(xiaoheiBotRepository.listBots().map(bot => [bot.id, bot.identityVersion]));
     syncDefaultListRoles(roles, xiaoheiBotCloudService.getState().defaultModel);
-    const changed = xiaoheiBotRepository.listBots().filter(item => previous.get(item.id) !== item.identityVersion);
-    await Promise.all(changed.map(item => this.ensureBotWorkingDirectory(item)));
+    const changed = xiaoheiBotRepository.listBots().filter(bot => previous.get(bot.id) !== bot.identityVersion);
+    await Promise.all(changed.map(bot => this.ensureBotWorkingDirectory(bot)));
     if (getOpenDatabaseConnection()?.generation !== generation) throw new Error(appText("botMain.accountSwitched"));
     this.emit({
       type: "directory-updated",
@@ -34548,11 +34548,11 @@ var XiaoheiBotService = class {
     const userId = getActiveUserId();
     const roles = await fetchCommonRoles();
     if (getActiveUserId() !== userId) throw new Error(appText("botMain.accountSwitchedReopen"));
-    const previousVersions = new Map(xiaoheiBotRepository.listBots().map(item => [item.id, item.identityVersion]));
+    const previousVersions = new Map(xiaoheiBotRepository.listBots().map(bot => [bot.id, bot.identityVersion]));
     const result = syncCommonRoles(roles);
-    const changed = xiaoheiBotRepository.listBots().filter(item => previousVersions.get(item.id) !== item.identityVersion);
+    const changed = xiaoheiBotRepository.listBots().filter(bot => previousVersions.get(bot.id) !== bot.identityVersion);
     if (changed.length) {
-      await Promise.all(changed.map(item => this.ensureBotWorkingDirectory(item)));
+      await Promise.all(changed.map(bot => this.ensureBotWorkingDirectory(bot)));
       if (getActiveUserId() !== userId) throw new Error(appText("botMain.accountSwitched"));
       this.emit({
         type: "directory-updated",
@@ -34616,7 +34616,7 @@ var XiaoheiBotService = class {
       };
     }
     if (input.profileCompletion?.onboarding) {
-      const usedNames = new Set(xiaoheiBotRepository.listBots().map(item => item.name));
+      const usedNames = new Set(xiaoheiBotRepository.listBots().map(bot => bot.name));
       const start = randomInt(1e3, 1e4);
       let name = "";
       for (let offset = 0; offset < 9e3; offset++) {
@@ -34639,14 +34639,14 @@ var XiaoheiBotService = class {
       permissionMode: input.permissionMode ?? "full"
     });
     const workspace = await this.ensureBotWorkingDirectory(created.bot);
-    const fallbackValue = xiaoheiBotRepository.getBot(workspace.botId) ?? created.bot;
+    const bot = xiaoheiBotRepository.getBot(workspace.botId) ?? created.bot;
     if (input.profileCompletion?.onboarding) {
       this.emit({
         type: "conversation-updated",
         conversation: created.conversation
       });
       return {
-        bot: fallbackValue,
+        bot,
         conversation: created.conversation
       };
     }
@@ -34654,9 +34654,9 @@ var XiaoheiBotService = class {
     const greeting = xiaoheiBotRepository.createMessage({
       conversationId: created.conversation.id,
       authorType: "bot",
-      authorBotId: fallbackValue.id,
-      authorName: fallbackValue.name,
-      content: t("xiaoheiBot.onboardingAppliedGreeting", settingsRepository.getSettings().language || "zh-CN").replace("{name}", () => fallbackValue.name),
+      authorBotId: bot.id,
+      authorName: bot.name,
+      content: t("xiaoheiBot.onboardingAppliedGreeting", settingsRepository.getSettings().language || "zh-CN").replace("{name}", () => bot.name),
       status: "complete",
       hopDepth: 0,
       causationEventId: conversationCreatedEvent?.eventId ?? null,
@@ -34673,7 +34673,7 @@ var XiaoheiBotService = class {
       conversation
     });
     return {
-      bot: fallbackValue,
+      bot,
       conversation
     };
   }
@@ -34810,7 +34810,7 @@ var XiaoheiBotService = class {
   addGroupMembers(input) {
     const existing = xiaoheiBotRepository.getConversation(input.conversationId);
     if (!existing || existing.kind !== "group") throw new Error(appText("botMain.groupMissing"));
-    const newIds = input.botIds.filter(item => !existing.members.some(member => member.botId === item));
+    const newIds = input.botIds.filter(id => !existing.members.some(member => member.botId === id));
     if (input.handoffs?.some(item => !input.botIds.includes(item.botId))) throw new Error(appText("botMain.handoffTargetNotAdded"));
     const database = getDatabase();
     database.exec("BEGIN IMMEDIATE");
@@ -35059,7 +35059,7 @@ var XiaoheiBotService = class {
     return provider;
   }
   deleteProvider(providerId) {
-    const affectedBotIds = xiaoheiBotRepository.listBots().filter(item => item.providerId === providerId).map(item => item.id);
+    const affectedBotIds = xiaoheiBotRepository.listBots().filter(bot => bot.providerId === providerId).map(bot => bot.id);
     for (const botId of affectedBotIds) this.assertBotIdle(botId);
     xiaoheiBotRepository.deleteProvider(providerId);
     for (const botId of affectedBotIds) this.disposeBotSessions(botId);
@@ -35116,7 +35116,7 @@ var XiaoheiBotService = class {
       if (accountCurrent && !accountCurrent()) throw new Error(appText("botMain.accountSwitched"));
       if (source && !source.isCurrent()) throw new Error(source.source === "mobile" ? appText("botMain.mobileSyncStopped") : appText("wechat.connectionStopped"));
       if (scheduled && !scheduled.isCurrent()) throw new Error(appText("botMain.accountSwitched"));
-      if (source) deliveryMode = this.isConversationProcessing(conversation.id) || [...this.activeRuns.values()].some(item => item.conversationId === conversation.id) || xiaoheiBotRepository.listQueuedAgentRuns(conversation.id).length > 0 || xiaoheiBotRepository.listActiveRoutingJobs(conversation.id).length > 0 ? "queue" : "normal";
+      if (source) deliveryMode = this.isConversationProcessing(conversation.id) || [...this.activeRuns.values()].some(run => run.conversationId === conversation.id) || xiaoheiBotRepository.listQueuedAgentRuns(conversation.id).length > 0 || xiaoheiBotRepository.listActiveRoutingJobs(conversation.id).length > 0 ? "queue" : "normal";
       const userProfile = getUserProfileContext().profile;
       message = xiaoheiBotRepository.createMessage({
         id: source?.messageId || input.taskId || randomUUID(),
@@ -35213,7 +35213,7 @@ var XiaoheiBotService = class {
         causationEventId: message.originEventId ?? null
       }];
     }));
-    if (runs.length > 0 && runs.every(item => item.mandatoryReply)) for (const run of runs) {
+    if (runs.length > 0 && runs.every(run => run.mandatoryReply)) for (const run of runs) {
       if (run.responseMessageId) continue;
       const bot = xiaoheiBotRepository.getBot(run.botId);
       if (!bot) continue;
@@ -35243,12 +35243,12 @@ var XiaoheiBotService = class {
       payload: {
         triggerMessageId: message.id,
         routes: routed,
-        runs: plannedRuns.map(item => ({
-          runId: item.id,
-          botId: item.botId,
-          mandatoryReply: item.mandatoryReply,
-          routeOrder: item.routeOrder,
-          deliveryMode: item.deliveryMode
+        runs: plannedRuns.map(run => ({
+          runId: run.id,
+          botId: run.botId,
+          mandatoryReply: run.mandatoryReply,
+          routeOrder: run.routeOrder,
+          deliveryMode: run.deliveryMode
         })),
         deliveryMode,
         conversationKind: conversation.kind,
@@ -35272,20 +35272,20 @@ var XiaoheiBotService = class {
     mkdirSync(workingDirectory, {
       recursive: true
     });
-    const setBotWorkingDirectory = xiaoheiBotRepository.setBotWorkingDirectory(created.bot.id, workingDirectory, false, actor);
+    const bot = xiaoheiBotRepository.setBotWorkingDirectory(created.bot.id, workingDirectory, false, actor);
     xiaoheiBotRepository.createMessage({
       conversationId: created.conversation.id,
       authorType: "bot",
-      authorBotId: setBotWorkingDirectory.id,
-      authorName: setBotWorkingDirectory.name,
-      content: t("xiaoheiBot.onboardingAppliedGreeting", settingsRepository.getSettings().language || "zh-CN").replace("{name}", () => setBotWorkingDirectory.name),
+      authorBotId: bot.id,
+      authorName: bot.name,
+      content: t("xiaoheiBot.onboardingAppliedGreeting", settingsRepository.getSettings().language || "zh-CN").replace("{name}", () => bot.name),
       status: "complete",
       hopDepth: 0,
       synthetic: true,
       incrementUnread: false
     }, true);
     return {
-      bot: setBotWorkingDirectory,
+      bot,
       conversation: xiaoheiBotRepository.getConversation(created.conversation.id)
     };
   }
@@ -35419,7 +35419,7 @@ var XiaoheiBotService = class {
     return {
       group_id: conversation.id,
       message_id: message.id,
-      scheduled_bot_ids: runs.map(item => item.botId),
+      scheduled_bot_ids: runs.map(run => run.botId),
       status: "queued"
     };
   }
@@ -35428,7 +35428,7 @@ var XiaoheiBotService = class {
     const conversation = message && xiaoheiBotRepository.getConversation(message.conversationId);
     if (!message || !conversation) return;
     const runs = xiaoheiBotRepository.listAgentRunsForTrigger(messageId);
-    if (!runs.some(item => item.status === "queued")) return;
+    if (!runs.some(run => run.status === "queued")) return;
     this.emit({
       type: "message-created",
       message
@@ -35455,9 +35455,9 @@ var XiaoheiBotService = class {
       branchId: xiaoheiBotEventLogRepository.activeBranchId(conversationId),
       retentionClass: "security",
       payload: {
-        activeRunIds: [...this.activeRuns.values()].filter(item => item.conversationId === conversationId).map(item => item.requestId),
-        cancelledQueuedRunIds: queuedRuns.map(item => item.id),
-        cancelledRoutingJobIds: cancelledRoutingJobs.map(item => item.id)
+        activeRunIds: [...this.activeRuns.values()].filter(run => run.conversationId === conversationId).map(run => run.requestId),
+        cancelledQueuedRunIds: queuedRuns.map(run => run.id),
+        cancelledRoutingJobIds: cancelledRoutingJobs.map(job => job.id)
       }
     });
   }
@@ -35485,7 +35485,7 @@ var XiaoheiBotService = class {
         if (buffer.byteLength !== upload.size) throw new Error(appText("botMain.attachmentIncomplete", {
           name: upload.name
         }));
-        const randomUUIDResult = randomUUID();
+        const id = randomUUID();
         const name = safeFileName(upload.name);
         const sha256 = createHash("sha256").update(buffer).digest("hex");
         const storageKey = ["assets", "v1", sha256.slice(0, 2), sha256].join("/");
@@ -35510,7 +35510,7 @@ var XiaoheiBotService = class {
           name: upload.name
         }));
         stored.push({
-          id: randomUUIDResult,
+          id,
           name,
           size: buffer.byteLength,
           mimeType: upload.mimeType || "application/octet-stream",
@@ -35633,7 +35633,7 @@ var XiaoheiBotService = class {
         botId: bot.id,
         name: bot.name,
         description: this.clipContextText(bot.description || "未填写身份简介", MAX_ROUTING_PROFILE_CHARACTERS),
-        tags: bot.tags.map(item => this.clipContextText(item, MAX_ROUTING_SUMMARY_CHARACTERS)).filter(Boolean).slice(0, 20),
+        tags: bot.tags.map(tag => this.clipContextText(tag, MAX_ROUTING_SUMMARY_CHARACTERS)).filter(Boolean).slice(0, 20),
         participationMode: member.participationMode,
         isDefaultResponder: member.isDefaultResponder,
         available: modelExists && credentialReady,
@@ -35683,15 +35683,15 @@ var XiaoheiBotService = class {
       }))
     }), "</group_routing_request>"].join("\n");
   }
-  async askReceptionistForRoute(askValue, trigger, conversation, receptionist, candidates, routeEpoch) {
-    const runtimeKey = `${this.runtimeKey(receptionist.id, conversation.id)}:routing:${askValue.id}`;
+  async askReceptionistForRoute(job, trigger, conversation, receptionist, candidates, routeEpoch) {
+    const runtimeKey = `${this.runtimeKey(receptionist.id, conversation.id)}:routing:${job.id}`;
     const userId = getActiveUserId() ?? 0;
     const rootDir = path.join(app.getPath("userData"), "xiaohei-bot", `user_${userId}`);
-    const sessionDir = path.join(rootDir, "routing-sessions", askValue.id);
+    const sessionDir = path.join(rootDir, "routing-sessions", job.id);
     let processItems = [];
     try {
       this.assertConversationRouteActive(conversation.id, routeEpoch);
-      botTaskTelemetry.start(botObservationTaskId(trigger), receptionist.id, xiaoheiBotRepository.getProvider(receptionist.providerId || ""), askValue.id);
+      botTaskTelemetry.start(botObservationTaskId(trigger), receptionist.id, xiaoheiBotRepository.getProvider(receptionist.providerId || ""), job.id);
       await this.refreshModelCatalog();
       this.assertConversationRouteActive(conversation.id, routeEpoch);
       receptionist = xiaoheiBotRepository.getBot(receptionist.id) ?? receptionist;
@@ -35707,7 +35707,7 @@ var XiaoheiBotService = class {
         actorType: "system",
         actorId: receptionist.id,
         aggregateType: "routing-job",
-        aggregateId: askValue.id,
+        aggregateId: job.id,
         correlationId: trigger.id,
         causationEventId: trigger.originEventId ?? null,
         branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35720,7 +35720,7 @@ var XiaoheiBotService = class {
         }
       });
       const request = {
-        requestId: askValue.id,
+        requestId: job.id,
         requestEventId: requestEvent.eventId,
         purpose: "group-routing",
         deliveryMode: "normal",
@@ -35740,15 +35740,15 @@ var XiaoheiBotService = class {
         prompt: this.buildReceptionRoutingPrompt(trigger, conversation, receptionist.id),
         images: []
       };
-      this.activeRuns.set(askValue.id, {
-        requestId: askValue.id,
+      this.activeRuns.set(job.id, {
+        requestId: job.id,
         runtimeKey,
         conversationId: conversation.id,
         botId: receptionist.id,
         purpose: "group-routing"
       });
       const result = await xiaoheiBotAgentRuntimeService.run(request, event => {
-        this.queueDiagnosticEvent(conversation.id, askValue.id, null, event, processItems);
+        this.queueDiagnosticEvent(conversation.id, job.id, null, event, processItems);
         if (event.type === "process-item-created" || event.type === "process-item-updated") {
           const index = processItems.findIndex(item => item.id === event.item.id);
           if (index >= 0) processItems.splice(index, 1, event.item);else processItems.push(event.item);
@@ -35771,7 +35771,7 @@ var XiaoheiBotService = class {
           actorType: "runtime",
           actorId: receptionist.id,
           aggregateType: "routing-job",
-          aggregateId: askValue.id,
+          aggregateId: job.id,
           correlationId: trigger.id,
           causationEventId: request.requestEventId,
           branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35797,7 +35797,7 @@ var XiaoheiBotService = class {
         actorType: "runtime",
         actorId: receptionist.id,
         aggregateType: "routing-job",
-        aggregateId: askValue.id,
+        aggregateId: job.id,
         correlationId: trigger.id,
         causationEventId: request.requestEventId,
         branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35825,7 +35825,7 @@ var XiaoheiBotService = class {
         actorType: "runtime",
         actorId: receptionist.id,
         aggregateType: "routing-job",
-        aggregateId: askValue.id,
+        aggregateId: job.id,
         correlationId: trigger.id,
         causationEventId: trigger.originEventId ?? null,
         branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -35838,8 +35838,8 @@ var XiaoheiBotService = class {
         errorMessage
       };
     } finally {
-      this.finishDiagnosticEvents(askValue.id);
-      this.activeRuns.delete(askValue.id);
+      this.finishDiagnosticEvents(job.id);
+      this.activeRuns.delete(job.id);
       xiaoheiBotAgentRuntimeService.disposeSession(runtimeKey);
       await rm(sessionDir, {
         recursive: true,
@@ -35847,84 +35847,84 @@ var XiaoheiBotService = class {
       }).catch(() => undefined);
     }
   }
-  queueReceptionWorker(trigger, worker, routeOrder, eventType, createPlaceholder = true) {
-    let agentRun = xiaoheiBotRepository.createAgentRun({
+  queueReceptionWorker(trigger, bot, routeOrder, eventType, createPlaceholder = true) {
+    let run = xiaoheiBotRepository.createAgentRun({
       conversationId: trigger.conversationId,
-      botId: worker.id,
+      botId: bot.id,
       triggerMessageId: trigger.id,
       mandatoryReply: true,
       deliveryMode: trigger.deliveryMode ?? "normal",
       routeOrder,
-      providerId: worker.providerId,
-      modelId: worker.modelId,
+      providerId: bot.providerId,
+      modelId: bot.modelId,
       eventType,
       correlationId: trigger.id,
       causationEventId: trigger.originEventId ?? null
     });
-    if (createPlaceholder && agentRun.status === "queued" && !agentRun.responseMessageId) {
-      const placeholder = this.createBotResponsePlaceholder(worker, trigger, agentRun.id);
-      xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+    if (createPlaceholder && run.status === "queued" && !run.responseMessageId) {
+      const placeholder = this.createBotResponsePlaceholder(bot, trigger, run.id);
+      xiaoheiBotRepository.updateAgentRun(run.id, {
         status: "queued",
         responseMessageId: placeholder.id,
         eventType: "agent.run.placeholder-linked",
-        correlationId: agentRun.id,
+        correlationId: run.id,
         causationEventId: trigger.originEventId ?? null
       });
       this.emit({
         type: "message-created",
         message: placeholder
       });
-      agentRun = xiaoheiBotRepository.getAgentRun(agentRun.id) ?? agentRun;
+      run = xiaoheiBotRepository.getAgentRun(run.id) ?? run;
     }
-    return agentRun;
+    return run;
   }
   async processReceptionRoute(jobId, routeEpoch) {
-    const routingJob = xiaoheiBotRepository.getRoutingJob(jobId);
-    const trigger = routingJob ? xiaoheiBotRepository.getMessage(routingJob.triggerMessageId) : null;
+    const job = xiaoheiBotRepository.getRoutingJob(jobId);
+    const trigger = job ? xiaoheiBotRepository.getMessage(job.triggerMessageId) : null;
     const conversation = trigger ? xiaoheiBotRepository.getConversation(trigger.conversationId) : null;
     if (!trigger || !conversation) return this.processReceptionRouteObserved(jobId, routeEpoch);
     return botTaskTelemetry.within(trigger, conversation, () => this.processReceptionRouteObserved(jobId, routeEpoch));
   }
   async processReceptionRouteObserved(jobId, routeEpoch) {
-    let routingJob = xiaoheiBotRepository.getRoutingJob(jobId);
-    if (!routingJob || routingJob.status !== "queued") return;
-    const claimedJob = xiaoheiBotRepository.claimRoutingJob(routingJob.id);
+    let job = xiaoheiBotRepository.getRoutingJob(jobId);
+    if (!job || job.status !== "queued") return;
+    const claimedJob = xiaoheiBotRepository.claimRoutingJob(job.id);
     if (!claimedJob) return;
-    routingJob = claimedJob;
-    const trigger = xiaoheiBotRepository.getMessage(routingJob.triggerMessageId);
+    job = claimedJob;
+    const trigger = xiaoheiBotRepository.getMessage(job.triggerMessageId);
     const conversation = trigger ? xiaoheiBotRepository.getConversation(trigger.conversationId) : null;
     if (!trigger || !conversation || conversation.kind !== "group") {
-      xiaoheiBotRepository.updateRoutingJob(routingJob.id, {
+      xiaoheiBotRepository.updateRoutingJob(job.id, {
         status: "failed",
         eventType: "routing.reception.orphaned",
-        correlationId: routingJob.triggerMessageId,
+        correlationId: job.triggerMessageId,
         errorMessage: appText("botMain.routingContextMissing")
       });
       return;
     }
     if (!this.isConversationRouteActive(conversation.id, routeEpoch)) return;
-    const receptionist = xiaoheiBotRepository.getBot(routingJob.receptionistBotId);
+    const receptionist = xiaoheiBotRepository.getBot(job.receptionistBotId);
     let routingError = null;
     const existingRuns = xiaoheiBotRepository.listAgentRunsForTrigger(trigger.id);
-    const persistedIds = routingJob.selectedBotIds.length ? routingJob.selectedBotIds : existingRuns.length ? existingRuns.map(item => item.botId) : routingJob.selectedBotId ? [routingJob.selectedBotId] : [];
-    const persistedSource = routingJob.decisionSource === "reception-agent" || routingJob.decisionSource === "reception-fallback" ? routingJob.decisionSource : null;
+    const persistedIds = job.selectedBotIds.length ? job.selectedBotIds : existingRuns.length ? existingRuns.map(run => run.botId) : job.selectedBotId ? [job.selectedBotId] : [];
+    const persistedSource = job.decisionSource === "reception-agent" || job.decisionSource === "reception-fallback" ? job.decisionSource : null;
     let decision = persistedIds.length && persistedSource ? {
       scope: "selected",
       botIds: persistedIds,
-      reason: routingJob.decisionReason ?? "恢复已持久化的回答者选择",
+      reason: job.decisionReason ?? "恢复已持久化的回答者选择",
       source: persistedSource
     } : null;
     if (persistedIds.length && !decision) routingError = appText("botMain.routingLegacyFallback");else if (!decision && receptionist) {
-      const candidates = this.buildGroupRoutingCandidates(conversation, routingJob.receptionistBotId, trigger.seq);
-      const attempt = await this.askReceptionistForRoute(routingJob, trigger, conversation, receptionist, candidates, routeEpoch);
+      const candidates = this.buildGroupRoutingCandidates(conversation, job.receptionistBotId, trigger.seq);
+      const attempt = await this.askReceptionistForRoute(job, trigger, conversation, receptionist, candidates, routeEpoch);
       decision = attempt.decision;
       routingError = attempt.errorMessage;
     } else if (!decision) routingError = appText("botMain.routingReceptionistMissing");
     if (!this.isConversationRouteActive(conversation.id, routeEpoch)) return;
     const liveConversation = xiaoheiBotRepository.getConversation(conversation.id) ?? conversation;
-    const eligible = eligibleReceptionCandidates(this.buildGroupRoutingCandidates(liveConversation, routingJob.receptionistBotId, trigger.seq));
+    const eligible = eligibleReceptionCandidates(this.buildGroupRoutingCandidates(liveConversation, job.receptionistBotId, trigger.seq));
     if (!persistedIds.length) {
-      if (decision?.scope === "all") decision.botIds = eligible.map(candidate => candidate.botId);else if (decision) decision.botIds = decision.botIds.filter(item => eligible.some(candidate => candidate.botId === item));
+      if (decision?.scope === "all") decision.botIds = eligible.map(candidate => candidate.botId);else if (decision) decision.botIds = decision.botIds.filter(id => eligible.some(candidate => candidate.botId === id));
       if (decision && !decision.botIds.length) {
         routingError = appText("botMain.routingMemberUnavailable");
         decision = null;
@@ -35938,14 +35938,14 @@ var XiaoheiBotService = class {
       source: "reception-fallback",
       reason: "路由未得到有效回答者，由接待 Bot 使用自己的模型直接承接"
     };
-    const selectedBots = (decision?.botIds ?? []).flatMap(item => {
-      const bot = liveConversation.members.some(member => member.botId === item && member.participationMode !== "context-only") ? xiaoheiBotRepository.getBot(item) : null;
+    const selectedBots = (decision?.botIds ?? []).flatMap(id => {
+      const bot = liveConversation.members.some(member => member.botId === id && member.participationMode !== "context-only") ? xiaoheiBotRepository.getBot(id) : null;
       return bot ? [bot] : [];
     });
-    this.cancelQueuedRuns(existingRuns.filter(item => item.status === "queued" && !selectedBots.some(bot => bot.id === item.botId)), "routing.revoked-member-cancelled");
+    this.cancelQueuedRuns(existingRuns.filter(run => run.status === "queued" && !selectedBots.some(bot => bot.id === run.botId)), "routing.revoked-member-cancelled");
     if (!decision || selectedBots.length === 0) {
       const failureReason = routingError ?? appText("botMain.routingNoResponder");
-      xiaoheiBotRepository.updateRoutingJob(routingJob.id, {
+      xiaoheiBotRepository.updateRoutingJob(job.id, {
         status: "failed",
         eventType: "routing.reception.failed",
         correlationId: trigger.id,
@@ -35953,7 +35953,7 @@ var XiaoheiBotService = class {
       });
       return;
     }
-    routingJob = xiaoheiBotRepository.updateRoutingJob(routingJob.id, {
+    job = xiaoheiBotRepository.updateRoutingJob(job.id, {
       status: "running",
       selectedBotIds: decision.botIds,
       decisionSource: decision.source,
@@ -35962,20 +35962,20 @@ var XiaoheiBotService = class {
       eventType: "routing.reception.decided",
       correlationId: trigger.id
     });
-    const workerRuns = xiaoheiBotRepository.createAgentRuns(selectedBots.map((item, routeOrder) => ({
+    const workerRuns = xiaoheiBotRepository.createAgentRuns(selectedBots.map((bot, routeOrder) => ({
       conversationId: conversation.id,
-      botId: item.id,
+      botId: bot.id,
       triggerMessageId: trigger.id,
       mandatoryReply: true,
       deliveryMode: trigger.deliveryMode ?? "normal",
       routeOrder,
-      providerId: item.providerId,
-      modelId: item.modelId,
+      providerId: bot.providerId,
+      modelId: bot.modelId,
       eventType: "routing.reception.worker-queued",
       correlationId: trigger.id,
       causationEventId: trigger.originEventId ?? null
     })));
-    xiaoheiBotRepository.updateRoutingJob(routingJob.id, {
+    xiaoheiBotRepository.updateRoutingJob(job.id, {
       status: "completed",
       selectedBotIds: decision.botIds,
       decisionSource: decision.source,
@@ -36001,7 +36001,7 @@ var XiaoheiBotService = class {
       actorType: "system",
       actorId: workerFallbackBot.id,
       aggregateType: "routing-job",
-      aggregateId: routingJob.id,
+      aggregateId: job.id,
       correlationId: trigger.id,
       causationEventId: trigger.originEventId ?? null,
       branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
@@ -36020,16 +36020,16 @@ var XiaoheiBotService = class {
   async processUserRouteObserved(trigger, conversation, plannedRuns, routeEpoch) {
     const runs = plannedRuns.length === 0 ? [] : xiaoheiBotRepository.listAgentRunsForTrigger(trigger.id);
     if (runs.length === 0 || !this.isConversationRouteActive(conversation.id, routeEpoch)) return;
-    if (runs.some(item => item.status === "failed" && item.recoveryState === "interrupted")) {
-      this.cancelQueuedRuns(runs.filter(item => item.status === "queued"), "recovery.route-cancelled-after-interruption");
+    if (runs.some(run => run.status === "failed" && run.recoveryState === "interrupted")) {
+      this.cancelQueuedRuns(runs.filter(run => run.status === "queued"), "recovery.route-cancelled-after-interruption");
       return;
     }
-    if (runs.every(item => item.mandatoryReply)) {
-      await Promise.allSettled(runs.map(item => this.runBot(trigger, conversation, item, routeEpoch)));
+    if (runs.every(run => run.mandatoryReply)) {
+      await Promise.allSettled(runs.map(run => this.runBot(trigger, conversation, run, routeEpoch)));
       return;
     }
-    if (runs.some(item => !item.mandatoryReply && item.status === "completed")) {
-      this.cancelQueuedRuns(runs.filter(item => item.status === "queued"), "routing.remaining-runs-cancelled");
+    if (runs.some(run => !run.mandatoryReply && run.status === "completed")) {
+      this.cancelQueuedRuns(runs.filter(run => run.status === "queued"), "routing.remaining-runs-cancelled");
       return;
     }
     for (const run of runs.filter(item => !item.mandatoryReply)) {
@@ -36054,13 +36054,13 @@ var XiaoheiBotService = class {
     const shouldSteer = plannedRun.deliveryMode === "append" && [...this.activeRuns.values()].some(activeRun => activeRun.runtimeKey === runtimeKey);
     const operation = async () => {
       if (!this.isConversationRouteActive(conversation.id, routeEpoch)) return false;
-      const agentRun = xiaoheiBotRepository.getAgentRun(plannedRun.id);
-      if (!agentRun || agentRun.status !== "queued") return agentRun?.status === "completed";
+      const run = xiaoheiBotRepository.getAgentRun(plannedRun.id);
+      if (!run || run.status !== "queued") return run?.status === "completed";
       const currentConversation = xiaoheiBotRepository.getConversation(conversation.id);
       const member = currentConversation?.members.find(item => item.botId === botId);
       const explicitlyMentioned = trigger.authorType === "user" && trigger.mentions.some(mention => mention.type === "all" || mention.type === "bot" && mention.botId === botId);
       if (!currentConversation || currentConversation.kind === "group" && (!member || member.participationMode === "context-only" && !explicitlyMentioned)) {
-        this.cancelQueuedRuns([agentRun], "routing.revoked-member-cancelled");
+        this.cancelQueuedRuns([run], "routing.revoked-member-cancelled");
         return false;
       }
       conversation = currentConversation;
@@ -36068,18 +36068,18 @@ var XiaoheiBotService = class {
       if (!this.isConversationRouteActive(conversation.id, routeEpoch)) return false;
       const bot = xiaoheiBotRepository.getBot(botId);
       if (!bot) return false;
-      const requestId = agentRun.id;
+      const requestId = run.id;
       const taskId = botObservationTaskId(trigger);
       const telemetryStartedAt = Date.now();
       const telemetryGeneration = getOpenDatabaseConnection()?.generation;
-      botTaskTelemetry.start(taskId, botId, xiaoheiBotRepository.getProvider(bot.providerId || ""), agentRun.id);
-      const existingResponsePlaceholder = agentRun.responseMessageId ? xiaoheiBotRepository.getMessage(agentRun.responseMessageId) : null;
-      const responsePlaceholder = existingResponsePlaceholder ?? (mandatoryReply ? this.createBotResponsePlaceholder(bot, trigger, agentRun.id) : null);
+      botTaskTelemetry.start(taskId, botId, xiaoheiBotRepository.getProvider(bot.providerId || ""), run.id);
+      const existingResponsePlaceholder = run.responseMessageId ? xiaoheiBotRepository.getMessage(run.responseMessageId) : null;
+      const responsePlaceholder = existingResponsePlaceholder ?? (mandatoryReply ? this.createBotResponsePlaceholder(bot, trigger, run.id) : null);
       if (responsePlaceholder && !existingResponsePlaceholder) this.emit({
         type: "message-created",
         message: responsePlaceholder
       });
-      xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+      xiaoheiBotRepository.updateAgentRun(run.id, {
         status: "running",
         responseMessageId: responsePlaceholder?.id
       });
@@ -36154,7 +36154,7 @@ var XiaoheiBotService = class {
             status: "complete",
             errorMessage: null
           });
-          xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+          xiaoheiBotRepository.updateAgentRun(run.id, {
             status: "completed",
             responseMessageId: message.id
           });
@@ -36174,15 +36174,15 @@ var XiaoheiBotService = class {
         if (!historyConnection || (historyConnection.ownerUserId ?? 0) !== (getActiveUserId() ?? 0)) throw new Error(appText("botMain.accountSwitched"));
         const isSideTopic = Boolean(conversation.parentConversationId);
         const crossConversationHistory = botConsultationService.isInternal(conversation.id) || isSideTopic ? undefined : bindBotHistoryView(historyConnection.database, {
-          runId: agentRun.id,
+          runId: run.id,
           botId,
           destinationConversationId: conversation.id,
           ownerUserId: historyConnection.ownerUserId ?? 0,
           contextWindow: model.contextWindow
         });
-        const memoryView = botConsultationService.isInternal(conversation.id) ? undefined : new BotMemoryRepository(historyConnection.database).bindView(agentRun.id, botId, historyConnection.ownerUserId ?? 0);
+        const memoryView = botConsultationService.isInternal(conversation.id) ? undefined : new BotMemoryRepository(historyConnection.database).bindView(run.id, botId, historyConnection.ownerUserId ?? 0);
         const timelineSummarySnapshot = botConsultationService.isInternal(conversation.id) || isSideTopic ? null : bindBotTimelineSummarySnapshot(historyConnection.database, {
-          runId: agentRun.id,
+          runId: run.id,
           botId,
           conversationId: conversation.id,
           ownerUserId: historyConnection.ownerUserId ?? 0,
@@ -36193,7 +36193,7 @@ var XiaoheiBotService = class {
         const shouldStartFreshAgentSession = Boolean(session && (!session.piSessionFile || !existsSync(session.piSessionFile)));
         if (shouldStartFreshAgentSession) xiaoheiBotRepository.clearSession(botId, conversation.id, {
           reason: session?.piSessionFile ? "session-file-missing" : "session-pointer-missing",
-          correlationId: agentRun.id,
+          correlationId: run.id,
           causationEventId: trigger.originEventId ?? null
         });
         const joinedMessageSeq = conversation.members.find(item => item.botId === botId)?.joinedMessageSeq ?? 0;
@@ -36255,14 +36255,14 @@ var XiaoheiBotService = class {
         const permissionMode = bot.permissionMode === "full" && xiaoheiBotRepository.getSettings().permissionMode === "full" ? "full" : "default";
         if (getOpenDatabaseConnection()?.generation !== historyConnection.generation || crossConversationHistory && crossConversationHistory.ownerUserId !== (getActiveUserId() ?? 0)) throw new Error(appText("botMain.accountSwitched"));
         const seenMessageIds = [... /* @__PURE__ */new Set([...unseenMessageRecords.map(message => message.id), trigger.id])];
-        const sharedWorkspace = botSharedWorkspaceStore(userId).bind(agentRun.id, botId, botConsultationService.isInternal(conversation.id));
+        const sharedWorkspace = botSharedWorkspaceStore(userId).bind(run.id, botId, botConsultationService.isInternal(conversation.id));
         const requestDraft = {
           sharedWorkspaceRoot: sharedWorkspace.root,
           requestId,
           purpose: "chat",
           crossConversationHistory,
           memoryView,
-          deliveryMode: agentRun.deliveryMode,
+          deliveryMode: run.deliveryMode,
           runtimeKey,
           triggerMessageId: trigger.id,
           triggerMessageSeq: trigger.seq,
@@ -36290,12 +36290,12 @@ var XiaoheiBotService = class {
             path: reference.directoryPath,
             directory: true
           }] : [])])),
-          prompt: (trigger.originMessageId?.startsWith("mobile:") && !isRoleShareOrigin(trigger.originMessageId) ? `本轮消息由用户在手机 App 上发送，由本机桌面端执行。回复要简短、先给结论，便于手机阅读；涉及本机文件或结果时，明确说明位置在用户的电脑上（写出完整路径），例如“已下载到你电脑的 xxx 目录，可在电脑上查看”，不要让用户以为文件在手机里。\n` : "") + (trigger.originMessageId?.startsWith("schedule:") ? `本轮为用户保存的定时任务到点执行，直接完成任务，不要重复创建计划。当前执行时间：${(/* @__PURE__ */new Date()).toLocaleString("zh-CN")}。涉及今天时以实际执行日期为准。\n` : `当前时间：${currentTimeText(/* @__PURE__ */new Date())}（本机时间）。\n`) + `本轮模型：${JSON.stringify(model.modelId)}；${model.vision ? "支持视觉输入。本轮新附图片会直接提供，历史图片不会自动补传；需要查看时使用附件工具读取。历史中不支持看图的说明属于当时模型，不代表本轮能力。" : "不支持视觉输入，不能声称看到了图片内容。"}\n仅在用户任务需要时使用 xiaohei_read_attachment 读取历史附件，不要主动遍历或读取全部附件。追问历史附件时使用 attachmentId；不知道 ID 时先列出附件，不要沿用历史临时路径。\n` + this.buildTriggerPrompt(trigger, conversation, mandatoryReply, attachmentStage.byMessageId.get(trigger.id), agentRun),
+          prompt: (trigger.originMessageId?.startsWith("mobile:") && !isRoleShareOrigin(trigger.originMessageId) ? `本轮消息由用户在手机 App 上发送，由本机桌面端执行。回复要简短、先给结论，便于手机阅读；涉及本机文件或结果时，明确说明位置在用户的电脑上（写出完整路径），例如“已下载到你电脑的 xxx 目录，可在电脑上查看”，不要让用户以为文件在手机里。\n` : "") + (trigger.originMessageId?.startsWith("schedule:") ? `本轮为用户保存的定时任务到点执行，直接完成任务，不要重复创建计划。当前执行时间：${(/* @__PURE__ */new Date()).toLocaleString("zh-CN")}。涉及今天时以实际执行日期为准。\n` : `当前时间：${currentTimeText(/* @__PURE__ */new Date())}（本机时间）。\n`) + `本轮模型：${JSON.stringify(model.modelId)}；${model.vision ? "支持视觉输入。本轮新附图片会直接提供，历史图片不会自动补传；需要查看时使用附件工具读取。历史中不支持看图的说明属于当时模型，不代表本轮能力。" : "不支持视觉输入，不能声称看到了图片内容。"}\n仅在用户任务需要时使用 xiaohei_read_attachment 读取历史附件，不要主动遍历或读取全部附件。追问历史附件时使用 attachmentId；不知道 ID 时先列出附件，不要沿用历史临时路径。\n` + this.buildTriggerPrompt(trigger, conversation, mandatoryReply, attachmentStage.byMessageId.get(trigger.id), run),
           images: model.vision ? await this.messageImages(trigger, MAX_AGENT_IMAGES_PER_MESSAGE, true) : []
         };
         requestDraft.prompt += botConsultationService.callbackContext(trigger.id);
-        const requestCheckpoint = xiaoheiBotRepository.recordAgentRequestSnapshot(agentRun.id, this.agentRequestSnapshot(requestDraft), {
-          correlationId: agentRun.id,
+        const requestCheckpoint = xiaoheiBotRepository.recordAgentRequestSnapshot(run.id, this.agentRequestSnapshot(requestDraft), {
+          correlationId: run.id,
           causationEventId: trigger.originEventId ?? null
         });
         const request = {
@@ -36309,7 +36309,7 @@ var XiaoheiBotService = class {
           const callId = randomUUID();
           telemetryCallId = callId;
           return execute(runtimeRequest, event => {
-            if (event.type === "process-item-updated" || event.type === "process-item-created") botTaskTelemetry.tool(taskId, agentRun.id, callId, event.item);
+            if (event.type === "process-item-updated" || event.type === "process-item-created") botTaskTelemetry.tool(taskId, run.id, callId, event.item);
             if (event.type === "skill-used") {
               const rootId = trigger.causalRootMessageId || trigger.id;
               if (xiaoheiBotRepository.getMessage(rootId)?.authorType === "user") trackEvent({
@@ -36323,7 +36323,7 @@ var XiaoheiBotService = class {
               });
               return;
             }
-            this.queueDiagnosticEvent(conversation.id, agentRun.id, responsePlaceholder?.id ?? null, event, processItems);
+            this.queueDiagnosticEvent(conversation.id, run.id, responsePlaceholder?.id ?? null, event, processItems);
             if (responsePlaceholder && event.type === "process-item-created" && conversation.id.startsWith("consult-")) this.consultationLiveText.set(responsePlaceholder.id, () => processItems.filter(processItemHasVisibleText).map(item => item.content).join("\n\n"));
             if (event.type === "process-item-created") {
               const existingIndex = processItems.findIndex(item => item.id === event.item.id);
@@ -36381,7 +36381,7 @@ var XiaoheiBotService = class {
                 providerId: runtimeRequest.model.providerId,
                 modelId: runtimeRequest.model.modelId,
                 piLeafEntryId: checkpoint.piLeafEntryId,
-                correlationId: agentRun.id,
+                correlationId: run.id,
                 causationEventId: runtimeRequest.requestEventId
               }, expectedMessageIds);
               runtimeRequest.sessionFile = checkpoint.piSessionFile;
@@ -36409,7 +36409,7 @@ var XiaoheiBotService = class {
               actorId: botId,
               aggregateType: "tool-call",
               aggregateId: checkpoint.toolCallId,
-              correlationId: agentRun.id,
+              correlationId: run.id,
               causationEventId: isResult ? toolCheckpointEventIds.get(checkpoint.toolCallId) ?? runtimeRequest.requestEventId : runtimeRequest.requestEventId,
               branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
               retentionClass: "security",
@@ -36426,7 +36426,7 @@ var XiaoheiBotService = class {
               },
               searchText: [checkpoint.toolName, checkpoint.output ?? ""].join(" ")
             }, {
-              runId: agentRun.id,
+              runId: run.id,
               conversationId: conversation.id,
               botId,
               piSessionFile: runtimeRequest.sessionFile,
@@ -36452,7 +36452,7 @@ var XiaoheiBotService = class {
         let result = await invokeRuntime(request, shouldSteer);
         const confirmationRow = getDatabase().prepare("SELECT message_id FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(trigger.id, botId);
         if (!result.text.trim() && !result.continuedBySteer && !confirmationRow) {
-          this.flushDiagnosticEvents(agentRun.id);
+          this.flushDiagnosticEvents(run.id);
           this.assertConversationRouteActive(conversation.id, routeEpoch);
           const recoveryModel = {
             ...model,
@@ -36487,8 +36487,8 @@ var XiaoheiBotService = class {
             actorType: "system",
             actorId: botId,
             aggregateType: "agent-run",
-            aggregateId: agentRun.id,
-            correlationId: agentRun.id,
+            aggregateId: run.id,
+            correlationId: run.id,
             causationEventId: request.requestEventId,
             branchId: xiaoheiBotEventLogRepository.activeBranchId(conversation.id),
             payload: {
@@ -36505,7 +36505,7 @@ var XiaoheiBotService = class {
           result = mergeAgentRunResults(result, recoveryResult);
           resultRequest = recoveryRequest;
         }
-        this.flushDiagnosticEvents(agentRun.id);
+        this.flushDiagnosticEvents(run.id);
         this.assertConversationRouteActive(conversation.id, routeEpoch);
         const completedAtMs = Date.now();
         const completedAt = new Date(completedAtMs).toISOString();
@@ -36536,7 +36536,7 @@ var XiaoheiBotService = class {
               message: placeholder
             });
           }
-          xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+          xiaoheiBotRepository.updateAgentRun(run.id, {
             status: "completed",
             responseMessageId: confirmationRow.message_id,
             usage: result.usage,
@@ -36566,14 +36566,14 @@ var XiaoheiBotService = class {
           content: mandatoryReply && responseIsSkip(rawText) ? text : ""
         } : item);
         if (!mandatoryReply && responseIsSkip(rawText)) {
-          xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+          xiaoheiBotRepository.updateAgentRun(run.id, {
             status: "skipped",
             usage: result.usage,
             performance: result.performance,
             toolExecutions: result.toolExecutions,
             requestSnapshot: completedRequestSnapshot,
             piLeafEntryId: result.sessionLeafId,
-            correlationId: agentRun.id,
+            correlationId: run.id,
             causationEventId: resultRequest.requestEventId
           });
           xiaoheiBotRepository.upsertSession({
@@ -36586,7 +36586,7 @@ var XiaoheiBotService = class {
             providerId: model.providerId,
             modelId: model.modelId,
             piLeafEntryId: result.sessionLeafId,
-            correlationId: agentRun.id,
+            correlationId: run.id,
             causationEventId: resultRequest.requestEventId
           }, [...unseenMessageRecords.map(message => message.id), trigger.id]);
           return false;
@@ -36598,10 +36598,10 @@ var XiaoheiBotService = class {
             status: "complete",
             errorMessage: null,
             eventType: "assistant.message.continued-by-steer",
-            correlationId: agentRun.id,
+            correlationId: run.id,
             causationEventId: resultRequest.requestEventId
           }) : null;
-          xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+          xiaoheiBotRepository.updateAgentRun(run.id, {
             status: mandatoryReply ? "completed" : "skipped",
             responseMessageId: continuedMessage?.id,
             usage: result.usage,
@@ -36610,7 +36610,7 @@ var XiaoheiBotService = class {
             requestSnapshot: completedRequestSnapshot,
             piLeafEntryId: result.sessionLeafId,
             eventType: "agent.run.continued-by-steer",
-            correlationId: agentRun.id,
+            correlationId: run.id,
             causationEventId: resultRequest.requestEventId
           });
           xiaoheiBotRepository.upsertSession({
@@ -36623,7 +36623,7 @@ var XiaoheiBotService = class {
             providerId: model.providerId,
             modelId: model.modelId,
             piLeafEntryId: result.sessionLeafId,
-            correlationId: agentRun.id,
+            correlationId: run.id,
             causationEventId: resultRequest.requestEventId
           }, [...unseenMessageRecords.map(message => message.id), trigger.id]);
           if (continuedMessage) this.emit({
@@ -36639,7 +36639,7 @@ var XiaoheiBotService = class {
           processItems,
           status: "complete",
           errorMessage: null,
-          correlationId: agentRun.id,
+          correlationId: run.id,
           causationEventId: resultRequest.requestEventId
         }) : xiaoheiBotRepository.createMessage({
           conversationId: conversation.id,
@@ -36653,12 +36653,12 @@ var XiaoheiBotService = class {
           replyToMessageId: trigger.id,
           causalRootMessageId: trigger.causalRootMessageId ?? trigger.id,
           hopDepth: trigger.hopDepth + 1,
-          correlationId: agentRun.id,
+          correlationId: run.id,
           causationEventId: resultRequest.requestEventId
         });
         if (responsePlaceholder && parsed.mentions.length > 0) this.attachMentionsToMessage(response.id, parsed.mentions);
         const canonicalResponse = xiaoheiBotRepository.getMessage(response.id) ?? response;
-        xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+        xiaoheiBotRepository.updateAgentRun(run.id, {
           status: "completed",
           responseMessageId: canonicalResponse.id,
           usage: result.usage,
@@ -36666,7 +36666,7 @@ var XiaoheiBotService = class {
           toolExecutions: result.toolExecutions,
           requestSnapshot: completedRequestSnapshot,
           piLeafEntryId: result.sessionLeafId,
-          correlationId: agentRun.id,
+          correlationId: run.id,
           causationEventId: xiaoheiBotEventLogRepository.getLatestAggregateEvent("message", canonicalResponse.id)?.eventId ?? resultRequest.requestEventId
         });
         xiaoheiBotRepository.upsertSession({
@@ -36679,7 +36679,7 @@ var XiaoheiBotService = class {
           providerId: model.providerId,
           modelId: model.modelId,
           piLeafEntryId: result.sessionLeafId,
-          correlationId: agentRun.id,
+          correlationId: run.id,
           causationEventId: resultRequest.requestEventId
         }, [...unseenMessageRecords.map(message => message.id), trigger.id, canonicalResponse.id]);
         xiaoheiBotEventLogRepository.maybeCreateSnapshot(conversation.id);
@@ -36704,7 +36704,7 @@ var XiaoheiBotService = class {
             ...(trigger.originMessageId?.startsWith("quick-summary:") ? {
               interaction: "explicit_command"
             } : {})
-          }, agentRun.id);
+          }, run.id);
         }
         this.emit({
           type: "message-completed",
@@ -36725,7 +36725,7 @@ var XiaoheiBotService = class {
         });
         return true;
       } catch (error) {
-        this.flushDiagnosticEvents(agentRun.id);
+        this.flushDiagnosticEvents(run.id);
         telemetryRunError = error;
         const errorMessage = redactRuntimeError(error);
         const cancelled = error instanceof Error && error.message === "Bot 回复已停止";
@@ -36738,7 +36738,7 @@ var XiaoheiBotService = class {
             completedAt,
             durationMs: Math.max(0, Date.now() - new Date(item.startedAt).getTime())
           };
-          botTaskTelemetry.tool(taskId, agentRun.id, telemetryCallId, updated);
+          botTaskTelemetry.tool(taskId, run.id, telemetryCallId, updated);
           if (responsePlaceholder) this.emit({
             type: "process-item-updated",
             conversationId: conversation.id,
@@ -36748,7 +36748,7 @@ var XiaoheiBotService = class {
           });
           return updated;
         });
-        xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+        xiaoheiBotRepository.updateAgentRun(run.id, {
           status: cancelled ? "cancelled" : "failed",
           responseMessageId: responsePlaceholder?.id,
           errorMessage: cancelled ? null : errorMessage
@@ -36768,19 +36768,19 @@ var XiaoheiBotService = class {
         if (mandatoryReply) throw error;
         return false;
       } finally {
-        const finishedRun = xiaoheiBotRepository.getAgentRun(agentRun.id);
+        const finishedRun = xiaoheiBotRepository.getAgentRun(run.id);
         if (finishedRun && telemetryGeneration === getOpenDatabaseConnection()?.generation) {
-          botTaskTelemetry.runFinished(taskId, agentRun.id, finishedRun.status, mandatoryReply, telemetryRunError, Date.now() - telemetryStartedAt);
+          botTaskTelemetry.runFinished(taskId, run.id, finishedRun.status, mandatoryReply, telemetryRunError, Date.now() - telemetryStartedAt);
           trackBotObservation("bot_model_validation_result", {
             task_id: taskId,
-            run_id: agentRun.id,
+            run_id: run.id,
             model_source: botModelSource(xiaoheiBotRepository.getProvider(bot.providerId || "")),
             validation_stage: "execution",
             status: finishedRun.status === "completed" ? "success" : finishedRun.status === "cancelled" ? "cancelled" : "failed",
             error_category: telemetryRunError ? botErrorCategory(telemetryRunError) : "none"
           });
         }
-        this.finishDiagnosticEvents(agentRun.id);
+        this.finishDiagnosticEvents(run.id);
         if (responsePlaceholder) this.consultationLiveText.delete(responsePlaceholder.id);
         this.emitBotActivity(conversation.id, bot, null);
         if (agentInputDirectory) await rm(agentInputDirectory, {
@@ -36824,21 +36824,21 @@ var XiaoheiBotService = class {
       errorMessage: null
     };
   }
-  botHasRunnableModel(botValue) {
-    if (!botValue.providerId || !botValue.modelId) return false;
-    const provider = xiaoheiBotRepository.getProvider(botValue.providerId);
-    if (!provider || !provider.models.some(model => model.id === botValue.modelId)) return false;
+  botHasRunnableModel(bot) {
+    if (!bot.providerId || !bot.modelId) return false;
+    const provider = xiaoheiBotRepository.getProvider(bot.providerId);
+    if (!provider || !provider.models.some(model => model.id === bot.modelId)) return false;
     return this.resolveProviderAccess(provider).errorMessage === null;
   }
-  resolveModel(modelValue, conversationId, runtimeKey) {
-    modelValue = xiaoheiBotRepository.getBot(modelValue.id) ?? modelValue;
-    if (!modelValue.providerId || !modelValue.modelId) throw new Error(appText("botMain.botNoModel", {
-      name: modelValue.name
+  resolveModel(bot, conversationId, runtimeKey) {
+    bot = xiaoheiBotRepository.getBot(bot.id) ?? bot;
+    if (!bot.providerId || !bot.modelId) throw new Error(appText("botMain.botNoModel", {
+      name: bot.name
     }));
-    const provider = xiaoheiBotRepository.getProvider(modelValue.providerId);
-    const model = provider?.models.find(item => item.id === modelValue.modelId);
+    const provider = xiaoheiBotRepository.getProvider(bot.providerId);
+    const model = provider?.models.find(item => item.id === bot.modelId);
     if (!provider || !model) throw new Error(appText("botMain.botModelMissing", {
-      name: modelValue.name
+      name: bot.name
     }));
     const access = this.resolveProviderAccess(provider);
     if (access.errorMessage) throw new Error(access.errorMessage);
@@ -36858,9 +36858,9 @@ var XiaoheiBotService = class {
       thinkingLevels: model.thinkingLevels,
       contextWindow: model.contextWindow,
       maxTokens: model.maxTokens,
-      thinkingLevel: model.reasoning ? clampThinkingLevel(modelValue.thinkingLevel, model.thinkingLevels) : "off",
+      thinkingLevel: model.reasoning ? clampThinkingLevel(bot.thinkingLevel, model.thinkingLevels) : "off",
       isBuiltin: provider.isBuiltin,
-      botId: modelValue.id,
+      botId: bot.id,
       conversationId,
       runtimeKey,
       clientVersion: app.getVersion()
@@ -36870,8 +36870,8 @@ var XiaoheiBotService = class {
   * 每次运行前取模型：内置模型先拉一次最新的直连配置（只放内存），拿到就直接请求供应商，
   * 未开放或拉取失败时照旧走云端网关。
   */
-  async resolveRunModel(runValue, conversationId, runtimeKey) {
-    const model = this.resolveModel(runValue, conversationId, runtimeKey);
+  async resolveRunModel(bot, conversationId, runtimeKey) {
+    const model = this.resolveModel(bot, conversationId, runtimeKey);
     if (!model.isBuiltin) return model;
     const direct = await xiaoheiBotDirectService.resolve(model.modelId);
     if (!direct) return model;
@@ -36885,12 +36885,12 @@ var XiaoheiBotService = class {
       }
     };
   }
-  createBotResponsePlaceholder(botValue, trigger, correlationId) {
+  createBotResponsePlaceholder(bot, trigger, correlationId) {
     return xiaoheiBotRepository.createMessage({
       conversationId: trigger.conversationId,
       authorType: "bot",
-      authorBotId: botValue.id,
-      authorName: botValue.name,
+      authorBotId: bot.id,
+      authorName: bot.name,
       content: "",
       status: "streaming",
       replyToMessageId: trigger.id,
@@ -37061,7 +37061,7 @@ var XiaoheiBotService = class {
       return [];
     }
   }
-  buildContextSnapshots(context, conversation, permissionMode, workingDirectory, downloadsDirectory, routingCandidates) {
+  buildContextSnapshots(bot, conversation, permissionMode, workingDirectory, downloadsDirectory, routingCandidates) {
     const members = [...conversation.members].sort((left, right) => left.botId.localeCompare(right.botId)).map(member => ({
       botId: member.botId,
       name: member.name,
@@ -37081,22 +37081,22 @@ var XiaoheiBotService = class {
     })];
     const profileContext = this.clipContextText(getUserProfileContext().content, MAX_USER_PROFILE_PROMPT_CHARACTERS);
     return [createXiaoheiContextSnapshot("bot-profile", {
-      identityVersion: context.identityVersion,
-      permissionMode: context.permissionMode,
-      notificationsEnabled: xiaoheiBotRepository.listConversations().find(item => item.kind === "direct" && item.directBotId === context.id && !item.parentConversationId)?.notificationsEnabled,
+      identityVersion: bot.identityVersion,
+      permissionMode: bot.permissionMode,
+      notificationsEnabled: xiaoheiBotRepository.listConversations().find(item => item.kind === "direct" && item.directBotId === bot.id && !item.parentConversationId)?.notificationsEnabled,
       profileCompletionPolicy: "你始终有修改自身资料的权限，无需创建 Bot 权限或额外开启设置。用户说从现在开始你叫某某等明确改名要求时，调用 xiaohei_complete_profile 或 xiaohei_update_bot 保存，不要仅口头答应、声称无权限或建议新建角色。没有明确修改要求时，只补充空白资料，保留已有内容。历史对话中的旧权限拒绝不代表当前权限。用户也可通过 xiaohei_update_bot 修改自己的 Agent 权限、创建 Bot、管理群聊和通知开关；必须依据用户本轮明确要求修改，传 evidence 和 expected_version，不得自行开关。",
-      botId: context.id,
-      creatorBotId: context.creatorBotId,
-      name: context.name,
-      description: context.description || "自然地帮助用户",
-      responseStyle: responseStyleInstruction(context.responseStyle),
-      tags: [...context.tags].sort((left, right) => left.localeCompare(right))
+      botId: bot.id,
+      creatorBotId: bot.creatorBotId,
+      name: bot.name,
+      description: bot.description || "自然地帮助用户",
+      responseStyle: responseStyleInstruction(bot.responseStyle),
+      tags: [...bot.tags].sort((left, right) => left.localeCompare(right))
     }), createXiaoheiContextSnapshot("conversation", {
       conversationId: conversation.id,
       creatorBotId: conversation.creatorBotId,
       administratorBotId: "xiaohei-assistant",
       myHandoff: (() => {
-        const member = conversation.members.find(item => item.botId === context.id);
+        const member = conversation.members.find(item => item.botId === bot.id);
         return {
           role: member?.handoffRole,
           context: member?.handoffContext,
@@ -37118,23 +37118,23 @@ var XiaoheiBotService = class {
     }), createXiaoheiContextSnapshot("runtime", {
       purpose: "chat",
       permissionMode,
-      availableTools: botConsultationService.isInternal(conversation.id) ? availableAgentTools(permissionMode).filter(name => !["bash", "powershell", "write", "edit", "xiaohei_update_memory", "xiaohei_update_user_profile", "xiaohei_record_work", "xiaohei_save_report", "xiaohei_mcp_manage", "xiaohei_mcp_tools", "xiaohei_mcp_call"].includes(name)) : [...availableAgentTools(permissionMode), ...managementToolsFor(context)],
+      availableTools: botConsultationService.isInternal(conversation.id) ? availableAgentTools(permissionMode).filter(name => !["bash", "powershell", "write", "edit", "xiaohei_update_memory", "xiaohei_update_user_profile", "xiaohei_record_work", "xiaohei_save_report", "xiaohei_mcp_manage", "xiaohei_mcp_tools", "xiaohei_mcp_call"].includes(name)) : [...availableAgentTools(permissionMode), ...managementToolsFor(bot)],
       managementPermissions: botConsultationService.isInternal(conversation.id) ? {
         createBots: false,
         manageGroups: false
-      } : context.managementPermissions,
+      } : bot.managementPermissions,
       teamManagement: "默认小白是全部团队的管理员；普通 Bot 管理自己创建的 Bot 和群。多人组队优先使用可恢复的组队工具，返回 pending 时继续 resume，失败时保留 plan_id。入群可保存职责、背景和首个任务，仅 start_task=true 时启动。新 Bot 默认允许创建 Bot 和管理群聊，用户可随时通过设置或聊天关闭。",
       workingDirectory,
       downloadsDirectory,
       attachmentPolicy: "消息列出的路径是本轮可操作临时副本；操作副本不会损坏聊天原附件。"
     })];
   }
-  buildTriggerPrompt(trigger, conversation, mandatoryReply, attachmentReferences, prompt) {
+  buildTriggerPrompt(trigger, conversation, mandatoryReply, attachmentReferences, run) {
     const content = this.clipContextText(this.messageContextText(trigger, attachmentReferences), MAX_TRIGGER_MESSAGE_CHARACTERS);
     const routingJob = conversation.kind === "group" ? xiaoheiBotRepository.getRoutingJobByTrigger(trigger.id) : null;
-    const failedSelectedRuns = routingJob && prompt ? xiaoheiBotRepository.listAgentRunsForTrigger(trigger.id).filter(candidate => candidate.status === "failed" && routingJob.selectedBotIds.includes(candidate.botId)) : [];
-    const isWorkerFallback = Boolean(prompt && routingJob && !routingJob.selectedBotIds.includes(prompt.botId) && failedSelectedRuns.length > 0);
-    const respondingBotIds = isWorkerFallback && prompt ? [prompt.botId] : routingJob?.selectedBotIds ?? [];
+    const failedSelectedRuns = routingJob && run ? xiaoheiBotRepository.listAgentRunsForTrigger(trigger.id).filter(candidate => candidate.status === "failed" && routingJob.selectedBotIds.includes(candidate.botId)) : [];
+    const isWorkerFallback = Boolean(run && routingJob && !routingJob.selectedBotIds.includes(run.botId) && failedSelectedRuns.length > 0);
+    const respondingBotIds = isWorkerFallback && run ? [run.botId] : routingJob?.selectedBotIds ?? [];
     return [...(routingJob?.selectedBotIds.length ? ["<group_reply_assignment>", "客户端已选择以下成员分别直接回应本轮用户消息。你只以自己的身份回答，不代替其他成员，不重复召唤已选成员。", safeEmbeddedRoutingJson({
       respondingMembers: conversation.members.filter(member => respondingBotIds.includes(member.botId)).map(member => ({
         botId: member.botId,
@@ -37380,7 +37380,7 @@ var XiaoheiBotService = class {
       payload: {
         triggerMessageId: message.id,
         targetBotIds: targetIds,
-        runIds: plannedRuns.map(item => item.id),
+        runIds: plannedRuns.map(run => run.id),
         maxBotChainDepth: settings.maxBotChainDepth
       }
     });
@@ -37389,11 +37389,11 @@ var XiaoheiBotService = class {
       await this.runBot(message, conversation, run, routeEpoch).catch(() => false);
     }
   }
-  showNotificationIfNeeded(conversation, needed, message) {
-    if (message.replyToMessageId && (getDatabase().prepare("SELECT 1 FROM xiaohei_bot_schedule_runs WHERE trigger_message_id=?").get(message.replyToMessageId) || getDatabase().prepare("SELECT 1 FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(message.replyToMessageId, needed.id))) return;
+  showNotificationIfNeeded(conversation, bot, message) {
+    if (message.replyToMessageId && (getDatabase().prepare("SELECT 1 FROM xiaohei_bot_schedule_runs WHERE trigger_message_id=?").get(message.replyToMessageId) || getDatabase().prepare("SELECT 1 FROM xiaohei_bot_confirmation_notices WHERE trigger_message_id=? AND bot_id=?").get(message.replyToMessageId, bot.id))) return;
     if (!xiaoheiBotRepository.getSettings().systemNotificationsEnabled || !conversation.notificationsEnabled || conversation.parentConversationId) return;
     if (BrowserWindow.getAllWindows().some(window => window.isFocused())) return;
-    const title = conversation.kind === "group" ? `${this.conversationDisplayTitle(conversation)} · ${needed.name}` : needed.name;
+    const title = conversation.kind === "group" ? `${this.conversationDisplayTitle(conversation)} · ${bot.name}` : bot.name;
     const body = xiaoheiBotMessagePreview(message.content, message.mentions, message.attachments.length).slice(0, 180);
     let notificationId;
     try {
@@ -37402,7 +37402,7 @@ var XiaoheiBotService = class {
         content: body,
         type: "xiaohei_bot",
         priority: "normal",
-        link: `xiaohei-bot://conversation/${encodeURIComponent(conversation.id)}?botId=${encodeURIComponent(needed.id)}&category=result`
+        link: `xiaohei-bot://conversation/${encodeURIComponent(conversation.id)}?botId=${encodeURIComponent(bot.id)}&category=result`
       }).id;
     } catch (error) {
       console.warn("[XiaoheiBot] 写入通知中心失败:", redactRuntimeError(error));
@@ -37479,26 +37479,26 @@ var XiaoheiBotService = class {
     }
     for (const window of BrowserWindow.getAllWindows()) if (!window.isDestroyed()) window.webContents.send("xiaohei-bot:event", sequencedEvent);
   }
-  emitBotActivity(conversationId, activity, stage) {
+  emitBotActivity(conversationId, bot, stage) {
     this.emit({
       type: "bot-activity",
       conversationId,
-      botId: activity.id,
-      botName: activity.name,
+      botId: bot.id,
+      botName: bot.name,
       stage
     });
   }
-  emitBotProcessActivity(conversationId, processValue, item, textIsVisible) {
+  emitBotProcessActivity(conversationId, bot, item, textIsVisible) {
     const active = item.status === "streaming" || item.status === "running";
     if (item.kind === "tool") {
-      if (active) this.emitBotActivity(conversationId, processValue, "tool");
+      if (active) this.emitBotActivity(conversationId, bot, "tool");
       return;
     }
     if (item.kind === "thinking" && active) {
-      this.emitBotActivity(conversationId, processValue, "thinking");
+      this.emitBotActivity(conversationId, bot, "thinking");
       return;
     }
-    if (item.kind === "text" && active) this.emitBotActivity(conversationId, processValue, textIsVisible ? "output" : "thinking");
+    if (item.kind === "text" && active) this.emitBotActivity(conversationId, bot, textIsVisible ? "output" : "thinking");
   }
   resumeQueuedRoutingJobs(jobs = xiaoheiBotRepository.listQueuedRoutingJobs()) {
     for (const job of jobs) {
@@ -37509,7 +37509,7 @@ var XiaoheiBotService = class {
     }
   }
   resumeQueuedAgentRuns(routingOwnedTriggerIds = /* @__PURE__ */new Set()) {
-    const triggerIds = [...new Set(xiaoheiBotRepository.listQueuedAgentRuns().map(item => item.triggerMessageId))];
+    const triggerIds = [...new Set(xiaoheiBotRepository.listQueuedAgentRuns().map(run => run.triggerMessageId))];
     for (const triggerMessageId of triggerIds) {
       if (routingOwnedTriggerIds.has(triggerMessageId)) continue;
       const trigger = xiaoheiBotRepository.getMessage(triggerMessageId);
@@ -37517,7 +37517,7 @@ var XiaoheiBotService = class {
       const conversation = trigger ? xiaoheiBotRepository.getConversation(trigger.conversationId) : null;
       if (conversation && botConsultationService.isInternal(conversation.id)) continue;
       if (!trigger || !conversation) {
-        this.cancelQueuedRuns(runs.filter(item => item.status === "queued"), "recovery.orphan-queued-run-cancelled");
+        this.cancelQueuedRuns(runs.filter(run => run.status === "queued"), "recovery.orphan-queued-run-cancelled");
         continue;
       }
       const routeEpoch = this.currentConversationRouteEpoch(conversation.id);
@@ -37528,22 +37528,22 @@ var XiaoheiBotService = class {
   }
   cancelQueuedRuns(runs, eventType) {
     for (const candidate of runs) {
-      const agentRun = xiaoheiBotRepository.getAgentRun(candidate.id);
-      if (!agentRun || agentRun.status !== "queued") continue;
-      xiaoheiBotRepository.updateAgentRun(agentRun.id, {
+      const run = xiaoheiBotRepository.getAgentRun(candidate.id);
+      if (!run || run.status !== "queued") continue;
+      xiaoheiBotRepository.updateAgentRun(run.id, {
         status: "cancelled",
-        responseMessageId: agentRun.responseMessageId,
+        responseMessageId: run.responseMessageId,
         eventType,
-        correlationId: agentRun.id
+        correlationId: run.id
       });
-      if (!agentRun.responseMessageId) continue;
-      const message = xiaoheiBotRepository.getMessage(agentRun.responseMessageId);
+      if (!run.responseMessageId) continue;
+      const message = xiaoheiBotRepository.getMessage(run.responseMessageId);
       if (!message || message.status !== "pending" && message.status !== "streaming") continue;
       const cancelled = xiaoheiBotRepository.updateMessage(message.id, {
         status: "cancelled",
         errorMessage: null,
         eventType: "assistant.message.cancelled-before-start",
-        correlationId: agentRun.id
+        correlationId: run.id
       });
       this.emit({
         type: "message-failed",
@@ -37605,30 +37605,30 @@ var XiaoheiBotService = class {
   runtimeKey(botId, conversationId) {
     return `${getActiveUserId() ?? 0}:${conversationId}:${botId}`;
   }
-  defaultBotWorkingDirectory(defaultValue) {
-    const baseName = safeWorkspaceSegment(defaultValue.name);
-    const directoryName = defaultValue.isBuiltin ? baseName : `${baseName}-${defaultValue.id.slice(0, 8)}`;
+  defaultBotWorkingDirectory(bot) {
+    const baseName = safeWorkspaceSegment(bot.name);
+    const directoryName = bot.isBuiltin ? baseName : `${baseName}-${bot.id.slice(0, 8)}`;
     const legacyDirectory = path.join(app.getPath("documents"), "小白 Bot", directoryName);
     return existsSync(legacyDirectory) ? legacyDirectory : path.join(app.getPath("documents"), "超能伙伴", directoryName);
   }
-  async ensureBotWorkingDirectory(botValue) {
-    const workingDirectory = botValue.workingDirectory ? path.normalize(botValue.workingDirectory) : this.defaultBotWorkingDirectory(botValue);
+  async ensureBotWorkingDirectory(bot) {
+    const workingDirectory = bot.workingDirectory ? path.normalize(bot.workingDirectory) : this.defaultBotWorkingDirectory(bot);
     await mkdir(workingDirectory, {
       recursive: true
     });
-    if (!botValue.workingDirectory) xiaoheiBotRepository.setBotWorkingDirectory(botValue.id, workingDirectory, false);
+    if (!bot.workingDirectory) xiaoheiBotRepository.setBotWorkingDirectory(bot.id, workingDirectory, false);
     return {
-      botId: botValue.id,
+      botId: bot.id,
       path: workingDirectory,
-      isDefault: !botValue.workingDirectoryIsCustom,
+      isDefault: !bot.workingDirectoryIsCustom,
       tools: availableAgentTools()
     };
   }
   assertBotIdle(botId) {
-    if ([...this.activeRuns.values()].some(item => item.botId === botId) || xiaoheiBotRepository.listQueuedAgentRuns().some(item => item.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(undefined, botId).length > 0) throw new Error(appText("botMain.botBusyConfig"));
+    if ([...this.activeRuns.values()].some(run => run.botId === botId) || xiaoheiBotRepository.listQueuedAgentRuns().some(run => run.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(undefined, botId).length > 0) throw new Error(appText("botMain.botBusyConfig"));
   }
   assertBotConversationIdle(botId, conversationId) {
-    if ([...this.activeRuns.values()].some(item => item.botId === botId && item.conversationId === conversationId) || xiaoheiBotRepository.listQueuedAgentRuns(conversationId).some(item => item.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(conversationId, botId).length > 0) throw new Error(appText("botMain.botBusyRemove"));
+    if ([...this.activeRuns.values()].some(run => run.botId === botId && run.conversationId === conversationId) || xiaoheiBotRepository.listQueuedAgentRuns(conversationId).some(run => run.botId === botId) || xiaoheiBotRepository.listActiveRoutingJobs(conversationId, botId).length > 0) throw new Error(appText("botMain.botBusyRemove"));
   }
   disposeBotSessions(botId) {
     for (const conversation of xiaoheiBotRepository.listConversations()) {
@@ -37760,21 +37760,21 @@ var XiaoheiBotSyncService = class {
   applyingRemoteState = false;
   catalogProvisioned = false;
   catalogProvisioning = null;
-  isCurrent(currentValue) {
-    return currentValue === this.generation && Boolean(this.activeToken) && authRepository.getSession()?.token === this.activeToken;
+  isCurrent(gen) {
+    return gen === this.generation && Boolean(this.activeToken) && authRepository.getSession()?.token === this.activeToken;
   }
   async post(action, body) {
-    const generation = this.generation;
-    if (!this.isCurrent(generation)) throw new Error("Bot 同步会话已结束");
+    const gen = this.generation;
+    if (!this.isCurrent(gen)) throw new Error("Bot 同步会话已结束");
     const result = await postBotSync(action, body, this.activeToken);
-    if (!this.isCurrent(generation)) throw new Error("Bot 同步账号已切换");
+    if (!this.isCurrent(gen)) throw new Error("Bot 同步账号已切换");
     return result;
   }
   async postOk(action, body) {
-    const generation = this.generation;
-    if (!this.isCurrent(generation)) return false;
+    const gen = this.generation;
+    if (!this.isCurrent(gen)) return false;
     const result = await postBotSyncOk(action, body, this.activeToken);
-    return this.isCurrent(generation) && result;
+    return this.isCurrent(gen) && result;
   }
   start() {
     if (this.suspended) return;
@@ -37984,14 +37984,14 @@ var XiaoheiBotSyncService = class {
     if (xiaoheiBotRepository.getConversation(localConversationId)?.kind !== "group") throw new Error(appText("botMain.groupMissing"));
     this.queueMobileSyncPref("group", localConversationId, enabled);
   }
-  async syncPendingMobileSyncPrefs(pending) {
+  async syncPendingMobileSyncPrefs(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(pending)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare(`SELECT q.entity_kind, q.local_id, q.revision, p.enabled
       FROM xiaohei_mobile_pending_sync_prefs q JOIN xiaohei_mobile_sync_prefs p
       ON p.entity_kind = q.entity_kind AND p.local_id = q.local_id`).all();
     for (const row of rows) {
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       const isBot = row.entity_kind === "bot";
       const enabled = row.enabled === 1;
       if (isBot ? !xiaoheiBotRepository.getBot(row.local_id) : !xiaoheiBotRepository.getConversation(row.local_id)) {
@@ -38001,7 +38001,7 @@ var XiaoheiBotSyncService = class {
       if (enabled) {
         if (isBot) await this.ensureCloudBotId(row.local_id);else await this.ensureLocalGroupOnCloud(row.local_id);
       }
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       const session = isBot ? db.prepare("SELECT cloud_bot_id AS cloud_id, conversation_id FROM xiaohei_mobile_bindings WHERE bot_id = ? AND status = 'active'").get(row.local_id) : db.prepare("SELECT cloud_conversation_id AS cloud_id, conversation_id FROM xiaohei_mobile_group_bindings WHERE conversation_id = ? AND status = 'active'").get(row.local_id);
       if (db.prepare("SELECT revision FROM xiaohei_mobile_pending_sync_prefs WHERE entity_kind = ? AND local_id = ?").get(row.entity_kind, row.local_id)?.revision !== row.revision) continue;
       if (session) {
@@ -38014,10 +38014,10 @@ var XiaoheiBotSyncService = class {
           }),
           enabled
         });
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (enabled) await this.backfillFullConversationToCloud(session.conversation_id);
       } else if (enabled) throw new Error(appText("botSync.notBound"));
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       db.prepare("DELETE FROM xiaohei_mobile_pending_sync_prefs WHERE entity_kind = ? AND local_id = ? AND revision = ?").run(row.entity_kind, row.local_id, row.revision);
     }
     return rows.length > 0;
@@ -38043,8 +38043,8 @@ var XiaoheiBotSyncService = class {
     return Boolean(db.prepare("SELECT 1 FROM xiaohei_mobile_outbox WHERE upload_state = 'pending' LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_sync_prefs LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_profiles LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_deletes LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_group_deletes LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_conv_states LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_pending_catalog_list LIMIT 1").get() || db.prepare("SELECT 1 FROM xiaohei_mobile_inbox WHERE state IN ('pending','running') LIMIT 1").get());
   }
   /** ±15% 抖动，避免服务重启后所有桌面在同一时刻打回来。 */
-  jitter(jitter) {
-    return Math.round(jitter * (.85 + Math.random() * .3));
+  jitter(ms) {
+    return Math.round(ms * (.85 + Math.random() * .3));
   }
   deviceDescriptor() {
     return {
@@ -38188,13 +38188,13 @@ var XiaoheiBotSyncService = class {
     if (hadWork || this.mobileActive || this.hasLocalPendingWork()) return this.jitter(this.serverActiveMs);
     return this.jitter(this.serverIdleMs);
   }
-  async ensureCatalogProvisioned(catalog) {
-    if (this.catalogProvisioned || !this.isCurrent(catalog)) return;
+  async ensureCatalogProvisioned(gen) {
+    if (this.catalogProvisioned || !this.isCurrent(gen)) return;
     if (!this.catalogProvisioning) this.catalogProvisioning = (async () => {
       await provisionDefaultListRolesForSync(xiaoheiBotCloudService.getState().defaultModel);
-      if (!this.isCurrent(catalog)) return;
+      if (!this.isCurrent(gen)) return;
       await this.post("bots.bootstrapDefaults", {}).catch(() => undefined);
-      if (!this.isCurrent(catalog)) return;
+      if (!this.isCurrent(gen)) return;
       this.catalogProvisioned = true;
     })().finally(() => {
       this.catalogProvisioning = null;
@@ -38209,16 +38209,16 @@ var XiaoheiBotSyncService = class {
     this.running = true;
     this.timer = undefined;
     this.lastTickStartedAt = Date.now();
-    const generation = this.generation;
+    const gen = this.generation;
     let hadWork = false;
     this.lastPullOk = false;
     try {
-      await this.ensureCatalogProvisioned(generation);
-      if (!this.isCurrent(generation)) return;
+      await this.ensureCatalogProvisioned(gen);
+      if (!this.isCurrent(gen)) return;
       if (this.lastClaimAt === 0) {
         this.lastClaimAt = Date.now();
-        await this.claimOwnedSessions(generation);
-        if (!this.isCurrent(generation)) return;
+        await this.claimOwnedSessions(gen);
+        if (!this.isCurrent(gen)) return;
         this.queueInitialPins();
         this.queueInitialCatalogListStates();
       }
@@ -38230,7 +38230,7 @@ var XiaoheiBotSyncService = class {
         includeBots: Date.now() - this.lastDirectoryPull >= DIRECTORY_REFRESH_MS,
         firstPull: this.firstPullPending
       });
-      if (!data || generation !== this.generation) return;
+      if (!data || gen !== this.generation) return;
       this.lastPullOk = true;
       this.failureStreak = 0;
       this.mobileActive = data.mobile_active !== false;
@@ -38239,22 +38239,22 @@ var XiaoheiBotSyncService = class {
       if (typeof data.poll?.idle_ms === "number") this.serverIdleMs = Math.min(INTERVAL_IDLE_MAX_MS, Math.max(5e3, data.poll.idle_ms));
       if (!this.syncEnabled) return;
       this.firstPullPending = false;
-      await this.reportGroupActivity(generation);
+      await this.reportGroupActivity(gen);
       if (data.bots) {
         for (const bot of data.bots) await this.importCloudBot({
           ...bot,
           bot_id: bot.id
         });
         this.lastDirectoryPull = Date.now();
-        await this.pullCatalogListState(generation);
-        if (!this.isCurrent(generation)) return;
+        await this.pullCatalogListState(gen);
+        if (!this.isCurrent(gen)) return;
       }
       for (const group of data.phone_groups ?? []) {
-        if (!this.isCurrent(generation)) return;
+        if (!this.isCurrent(gen)) return;
         await this.importCloudGroup(group, true);
       }
       if (data.changes.events.length > 0 || data.jobs.length > 0) hadWork = true;
-      const desktopJobMessageIds = new Set(data.jobs.map(item => item.message_id || item.trigger_message_id));
+      const desktopJobMessageIds = new Set(data.jobs.map(job => job.message_id || job.trigger_message_id));
       for (const event of data.changes.events) {
         if (["bot.created", "bot.imported", "bot.updated"].includes(event.type)) {
           hadWork = true;
@@ -38305,34 +38305,34 @@ var XiaoheiBotSyncService = class {
       this.persistCursor();
       for (const job of data.jobs) {
         hadWork = true;
-        await this.processJob(job, generation);
+        await this.processJob(job, gen);
       }
-      hadWork = (await this.syncPendingMobileSyncPrefs(generation)) || hadWork;
-      hadWork = (await this.syncPendingProfiles(generation)) || hadWork;
-      await this.mergeLocalTagsOnce(generation);
-      hadWork = (await this.syncPendingDeletes(generation)) || hadWork;
-      hadWork = (await this.syncPendingGroupDeletes(generation)) || hadWork;
+      hadWork = (await this.syncPendingMobileSyncPrefs(gen)) || hadWork;
+      hadWork = (await this.syncPendingProfiles(gen)) || hadWork;
+      await this.mergeLocalTagsOnce(gen);
+      hadWork = (await this.syncPendingDeletes(gen)) || hadWork;
+      hadWork = (await this.syncPendingGroupDeletes(gen)) || hadWork;
       hadWork = (await this.syncPendingSessions()) || hadWork;
       if (Date.now() - this.lastClaimAt >= OWNERSHIP_CLAIM_INTERVAL_MS) {
         this.lastClaimAt = Date.now();
-        await this.claimOwnedSessions(generation);
+        await this.claimOwnedSessions(gen);
         this.queueInitialPins();
       }
       if (this.recoverMessages) {
         await this.recoverBoundMessages();
         this.recoverMessages = false;
       }
-      hadWork = (await this.syncMobileReplies(generation)) || hadWork;
-      hadWork = (await this.flushOutbox(generation)) || hadWork;
-      hadWork = (await this.syncPendingConversationStates(generation)) || hadWork;
-      hadWork = (await this.syncPendingCatalogListStates(generation)) || hadWork;
+      hadWork = (await this.syncMobileReplies(gen)) || hadWork;
+      hadWork = (await this.flushOutbox(gen)) || hadWork;
+      hadWork = (await this.syncPendingConversationStates(gen)) || hadWork;
+      hadWork = (await this.syncPendingCatalogListStates(gen)) || hadWork;
     } catch {
-      if (this.isCurrent(generation)) {
+      if (this.isCurrent(gen)) {
         this.lastPullOk = false;
         this.failureStreak += 1;
       }
     } finally {
-      if (this.isCurrent(generation)) {
+      if (this.isCurrent(gen)) {
         this.running = false;
         this.intervalMs = this.pickNextInterval(hadWork);
         this.scheduleNext(this.intervalMs);
@@ -38454,7 +38454,7 @@ var XiaoheiBotSyncService = class {
     const fallback = xiaoheiBotCloudService.getState().defaultModel;
     const providerId = fallback?.providerId ?? xiaoheiBotRepository.listProviders()[0]?.id ?? "";
     const modelId = fallback?.modelId ?? xiaoheiBotRepository.listProviders()[0]?.models[0]?.id ?? "";
-    const generation = this.generation;
+    const gen = this.generation;
     const created = await xiaoheiBotService.createBot({
       name,
       description: summary || name,
@@ -38465,7 +38465,7 @@ var XiaoheiBotSyncService = class {
       responseStyle: this.cloudResponseStyle(payload.response_style),
       avatar: typeof payload.avatar_url === "string" ? payload.avatar_url : undefined
     });
-    if (!this.isCurrent(generation)) return;
+    if (!this.isCurrent(gen)) return;
     const cloudConversationId = String(payload.conversation_id ?? "");
     this.persistMobileBinding({
       cloudBotId,
@@ -38559,12 +38559,12 @@ var XiaoheiBotSyncService = class {
       ON CONFLICT(bot_id) DO UPDATE SET revision = excluded.revision, attempts = 0`).run(localBotId, randomUUID());
     if (this.activeToken) this.scheduleNext(0);
   }
-  async syncPendingProfiles(pending) {
+  async syncPendingProfiles(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(pending)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare("SELECT bot_id, revision, attempts FROM xiaohei_mobile_pending_profiles LIMIT 20").all();
     for (const row of rows) {
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       const bot = xiaoheiBotRepository.getBot(row.bot_id);
       const binding = db.prepare("SELECT cloud_bot_id FROM xiaohei_mobile_bindings WHERE bot_id = ? AND status = 'active'").get(row.bot_id);
       const drop = () => db.prepare("DELETE FROM xiaohei_mobile_pending_profiles WHERE bot_id = ? AND revision = ?").run(row.bot_id, row.revision);
@@ -38586,12 +38586,12 @@ var XiaoheiBotSyncService = class {
             avatar_url: avatar
           } : {})
         });
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         const version = Number(result?.bot?.profile_version ?? 0) || 0;
         if (version > 0) db.prepare("UPDATE xiaohei_mobile_bindings SET cloud_profile_version = MAX(cloud_profile_version, ?) WHERE cloud_bot_id = ?").run(version, binding.cloud_bot_id);
         drop();
       } catch (error) {
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (row.attempts + 1 >= 8) drop();else db.prepare("UPDATE xiaohei_mobile_pending_profiles SET attempts = attempts + 1 WHERE bot_id = ?").run(row.bot_id);
       }
     }
@@ -38601,13 +38601,13 @@ var XiaoheiBotSyncService = class {
   * 旧版本的标签只在本机：每个账号第一次同步时把已同步 Bot 的本机标签和云端合并一次（tags_merge，不删除任何一端的标签）。
   * 合并结果通过 bot.updated 事件回到本机。
   */
-  async mergeLocalTagsOnce(local) {
+  async mergeLocalTagsOnce(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(local)) return;
+    if (!db || !this.isCurrent(gen)) return;
     if (db.prepare("SELECT 1 FROM xiaohei_mobile_sync_state WHERE key = ?").get("tags_merged_v1")) return;
     const bindings = db.prepare("SELECT bot_id, cloud_bot_id, cloud_origin FROM xiaohei_mobile_bindings WHERE status = 'active'").all();
     for (const binding of bindings) {
-      if (!this.isCurrent(local)) return;
+      if (!this.isCurrent(gen)) return;
       if (!(binding.cloud_origin === "mobile" || binding.cloud_origin === "catalog" || this.isBotMobileSyncEnabled(binding.bot_id))) continue;
       const tags = xiaoheiBotRepository.getBot(binding.bot_id)?.tags ?? [];
       if (!tags.length) continue;
@@ -38618,7 +38618,7 @@ var XiaoheiBotSyncService = class {
         tags_merge: true
       }).catch(() => undefined);
     }
-    if (!this.isCurrent(local)) return;
+    if (!this.isCurrent(gen)) return;
     db.prepare("INSERT OR REPLACE INTO xiaohei_mobile_sync_state(key, value) VALUES (?, ?)").run("tags_merged_v1", "1");
   }
   /** 本机会话对应的云端会话 ID：单聊看 Bot 绑定，群聊看群绑定；没有开启同步的返回 null。 */
@@ -38658,12 +38658,12 @@ var XiaoheiBotSyncService = class {
   queueInitialPins() {
     for (const conversation of xiaoheiBotRepository.listConversations()) if (conversation.pinnedAt && !conversation.archivedAt) this.scheduleConversationState(conversation.id, "pin", true, true);
   }
-  async syncPendingConversationStates(pending) {
+  async syncPendingConversationStates(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(pending)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare("SELECT conversation_id, kind, value, initial, attempts FROM xiaohei_mobile_pending_conv_states LIMIT 30").all();
     for (const row of rows) {
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       const drop = () => db.prepare("DELETE FROM xiaohei_mobile_pending_conv_states WHERE conversation_id = ? AND kind = ? AND value = ?").run(row.conversation_id, row.kind, row.value);
       const cloudConversationId = this.cloudConversationIdFor(row.conversation_id);
       if (!cloudConversationId) {
@@ -38681,10 +38681,10 @@ var XiaoheiBotSyncService = class {
           unread: row.value === 1,
           device_id: this.deviceId()
         });
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         drop();
       } catch {
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (row.attempts + 1 >= 8) drop();else db.prepare("UPDATE xiaohei_mobile_pending_conv_states SET attempts = attempts + 1 WHERE conversation_id = ? AND kind = ?").run(row.conversation_id, row.kind);
       }
     }
@@ -38708,12 +38708,12 @@ var XiaoheiBotSyncService = class {
   queueInitialCatalogListStates() {
     for (const link of listRemovedDefaultRoleLinks()) this.scheduleCatalogListState(link.roleId, true, true, link.listRemovedAt);
   }
-  async syncPendingCatalogListStates(pending) {
+  async syncPendingCatalogListStates(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(pending)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare("SELECT role_id, removed, initial, since, attempts FROM xiaohei_mobile_pending_catalog_list LIMIT 30").all();
     for (const row of rows) {
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       try {
         const result = await this.post("catalog.setListRemoved", {
           default_role_id: row.role_id,
@@ -38722,25 +38722,25 @@ var XiaoheiBotSyncService = class {
           since: row.since,
           device_id: this.deviceId()
         });
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         const dropped = db.prepare("DELETE FROM xiaohei_mobile_pending_catalog_list WHERE role_id = ? AND removed = ? AND initial = ?").run(row.role_id, row.removed, row.initial);
         if (Number(dropped.changes) > 0 && typeof result?.removed === "boolean") this.applyCatalogListState(row.role_id, result.removed, result.removed_at);
       } catch {
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (row.attempts + 1 >= 8) db.prepare("DELETE FROM xiaohei_mobile_pending_catalog_list WHERE role_id = ?").run(row.role_id);else db.prepare("UPDATE xiaohei_mobile_pending_catalog_list SET attempts = attempts + 1 WHERE role_id = ?").run(row.role_id);
       }
     }
     return rows.length > 0;
   }
   /** 拉取云端全量的预设角色列表状态；只应用云端有记录的角色，没有记录的保持本机状态。 */
-  async pullCatalogListState(pull) {
+  async pullCatalogListState(gen) {
     let data;
     try {
       data = await this.post("catalog.listState", {});
     } catch {
       return;
     }
-    if (!this.isCurrent(pull)) return;
+    if (!this.isCurrent(gen)) return;
     for (const item of data?.items ?? []) {
       if (item.recorded === false) continue;
       this.applyRemoteCatalogListState(item);
@@ -38825,12 +38825,12 @@ var XiaoheiBotSyncService = class {
     db.prepare("UPDATE xiaohei_mobile_bindings SET status = 'deleted' WHERE cloud_bot_id = ?").run(cloudBotId);
     if (this.activeToken) this.scheduleNext(0);
   }
-  async syncPendingDeletes(pending) {
+  async syncPendingDeletes(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(pending)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare("SELECT cloud_bot_id, attempts FROM xiaohei_mobile_pending_deletes LIMIT 20").all();
     for (const row of rows) {
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       try {
         await this.post("desktop.bots.delete", {
           cloud_bot_id: row.cloud_bot_id,
@@ -38838,7 +38838,7 @@ var XiaoheiBotSyncService = class {
         });
         db.prepare("DELETE FROM xiaohei_mobile_pending_deletes WHERE cloud_bot_id = ?").run(row.cloud_bot_id);
       } catch {
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (row.attempts + 1 >= 8) db.prepare("DELETE FROM xiaohei_mobile_pending_deletes WHERE cloud_bot_id = ?").run(row.cloud_bot_id);else db.prepare("UPDATE xiaohei_mobile_pending_deletes SET attempts = attempts + 1 WHERE cloud_bot_id = ?").run(row.cloud_bot_id);
       }
     }
@@ -38862,12 +38862,12 @@ var XiaoheiBotSyncService = class {
     db.prepare("UPDATE xiaohei_mobile_group_bindings SET status = 'deleted' WHERE cloud_conversation_id = ?").run(cloudConversationId);
     if (this.activeToken) this.scheduleNext(0);
   }
-  async syncPendingGroupDeletes(pending) {
+  async syncPendingGroupDeletes(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(pending)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare("SELECT cloud_conversation_id, attempts FROM xiaohei_mobile_pending_group_deletes LIMIT 20").all();
     for (const row of rows) {
-      if (!this.isCurrent(pending)) return false;
+      if (!this.isCurrent(gen)) return false;
       try {
         await this.post("desktop.groups.delete", {
           cloud_conversation_id: row.cloud_conversation_id,
@@ -38875,7 +38875,7 @@ var XiaoheiBotSyncService = class {
         });
         db.prepare("DELETE FROM xiaohei_mobile_pending_group_deletes WHERE cloud_conversation_id = ?").run(row.cloud_conversation_id);
       } catch {
-        if (!this.isCurrent(pending)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (row.attempts + 1 >= 8) db.prepare("DELETE FROM xiaohei_mobile_pending_group_deletes WHERE cloud_conversation_id = ?").run(row.cloud_conversation_id);else db.prepare("UPDATE xiaohei_mobile_pending_group_deletes SET attempts = attempts + 1 WHERE cloud_conversation_id = ?").run(row.cloud_conversation_id);
       }
     }
@@ -38984,36 +38984,36 @@ var XiaoheiBotSyncService = class {
     } catch {}
     xiaoheiBotService.abortConversation(localConversationId);
   }
-  async processJob(jobValue, jobInput) {
+  async processJob(job, gen) {
     const db = this.db();
-    if (!db || jobInput !== this.generation) return;
-    const groupBinding = db.prepare("SELECT conversation_id FROM xiaohei_mobile_group_bindings WHERE cloud_conversation_id = ? AND status = ?").get(jobValue.conversation_id, "active");
-    const binding = db.prepare("SELECT bot_id, conversation_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ?").get(jobValue.bot_id);
+    if (!db || gen !== this.generation) return;
+    const groupBinding = db.prepare("SELECT conversation_id FROM xiaohei_mobile_group_bindings WHERE cloud_conversation_id = ? AND status = ?").get(job.conversation_id, "active");
+    const binding = db.prepare("SELECT bot_id, conversation_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ?").get(job.bot_id);
     const localConversationId = groupBinding?.conversation_id ?? binding?.conversation_id;
     if (!localConversationId) return;
     const claimed = await this.post("desktop.claim", {
-      jobId: jobValue.id,
+      jobId: job.id,
       deviceId: this.deviceId(),
       supportsAttempt: true
     }).catch(() => null);
     if (!claimed) return;
-    jobValue.attempt_count = claimed.attempt_count;
-    const cloudMessageId = jobValue.message_id || jobValue.trigger_message_id;
+    job.attempt_count = claimed.attempt_count;
+    const cloudMessageId = job.message_id || job.trigger_message_id;
     db.prepare(`INSERT INTO xiaohei_mobile_inbox
       (id, cloud_job_id, cloud_message_id, payload_json, state, updated_at)
       VALUES (?, ?, ?, ?, 'pending', ?)
       ON CONFLICT(cloud_job_id) DO UPDATE SET payload_json = excluded.payload_json,
-        state = 'pending', retry_count = 0, updated_at = excluded.updated_at`).run(jobValue.id, jobValue.id, cloudMessageId, JSON.stringify({
-      job: jobValue,
+        state = 'pending', retry_count = 0, updated_at = excluded.updated_at`).run(job.id, job.id, cloudMessageId, JSON.stringify({
+      job,
       localConversationId
     }), (/* @__PURE__ */new Date()).toISOString());
   }
-  async syncMobileReplies(mobile) {
+  async syncMobileReplies(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(mobile)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const pending = db.prepare("SELECT id, payload_json, retry_count FROM xiaohei_mobile_inbox WHERE state IN ('pending','running') ORDER BY updated_at LIMIT 20").all();
     for (const row of pending) {
-      if (!this.isCurrent(mobile)) return false;
+      if (!this.isCurrent(gen)) return false;
       const {
         job,
         localConversationId
@@ -39048,23 +39048,23 @@ var XiaoheiBotSyncService = class {
             messageId: triggerId,
             source: "mobile",
             client: job.client === "miniprogram" ? "miniprogram" : undefined,
-            isCurrent: () => this.isCurrent(mobile)
+            isCurrent: () => this.isCurrent(gen)
           });
         } catch {
-          if (!this.isCurrent(mobile)) return false;
+          if (!this.isCurrent(gen)) return false;
           const giveUp = attachmentGone || row.retry_count + 1 >= MOBILE_INBOX_MAX_RETRIES;
           db.prepare("UPDATE xiaohei_mobile_inbox SET state = ?, retry_count = retry_count + 1, updated_at = ? WHERE id = ?").run(giveUp ? "failed" : "pending", (/* @__PURE__ */new Date()).toISOString(), row.id);
           continue;
         }
-        if (!this.isCurrent(mobile)) return false;
+        if (!this.isCurrent(gen)) return false;
       }
       const runs = xiaoheiBotRepository.listAgentRunsForMessageTree(triggerId);
-      const replies = runs.flatMap(item => {
-        const reply = item.responseMessageId ? xiaoheiBotRepository.getMessage(item.responseMessageId) : null;
+      const replies = runs.flatMap(run => {
+        const reply = run.responseMessageId ? xiaoheiBotRepository.getMessage(run.responseMessageId) : null;
         return reply && reply.conversationId === localConversationId ? [reply] : [];
       });
       for (const reply of replies) this.queueMessage(reply.id);
-      const complete = runs.length > 0 && runs.every(item => ["completed", "failed", "aborted", "cancelled"].includes(item.status)) && replies.length > 0 && replies.every(reply => Boolean(db.prepare("SELECT 1 FROM xiaohei_mobile_uploaded_messages WHERE message_id = ?").get(reply.id)));
+      const complete = runs.length > 0 && runs.every(run => ["completed", "failed", "aborted", "cancelled"].includes(run.status)) && replies.length > 0 && replies.every(reply => Boolean(db.prepare("SELECT 1 FROM xiaohei_mobile_uploaded_messages WHERE message_id = ?").get(reply.id)));
       db.prepare("UPDATE xiaohei_mobile_inbox SET state = ?, updated_at = ? WHERE id = ?").run(complete ? "completed" : "running", (/* @__PURE__ */new Date()).toISOString(), row.id);
       if (!complete) {
         const status = await postBotSyncStatus("desktop.renew", {
@@ -39072,7 +39072,7 @@ var XiaoheiBotSyncService = class {
           deviceId: this.deviceId(),
           attemptCount: job.attempt_count ?? 0
         }, this.activeToken);
-        if (!this.isCurrent(mobile)) return false;
+        if (!this.isCurrent(gen)) return false;
         if (status === 409) db.prepare("UPDATE xiaohei_mobile_inbox SET state = 'released', updated_at = ? WHERE id = ?").run((/* @__PURE__ */new Date()).toISOString(), row.id);
       }
     }
@@ -39093,7 +39093,7 @@ var XiaoheiBotSyncService = class {
     }
     if (db.prepare("SELECT conversation_id FROM xiaohei_mobile_group_bindings WHERE cloud_conversation_id = ?").get(cloudConversationId)) return;
     const rawMembers = payload.member_bot_ids;
-    const memberCloudIds = Array.isArray(rawMembers) ? rawMembers.map(item => String(item)) : [];
+    const memberCloudIds = Array.isArray(rawMembers) ? rawMembers.map(id => String(id)) : [];
     const localBotIds = [];
     for (const cloudBotId of memberCloudIds) {
       const row = db.prepare("SELECT bot_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ?").get(cloudBotId);
@@ -39192,7 +39192,7 @@ var XiaoheiBotSyncService = class {
       }
       this.scheduleLocalGroupSync(binding.conversation_id);
     }
-    const cloudIds = [...new Set(rawMembers.map(item => String(item)))];
+    const cloudIds = [...new Set(rawMembers.map(id => String(id)))];
     const localByCloud = /* @__PURE__ */new Map();
     for (const cloudId of cloudIds) {
       const row = db.prepare("SELECT bot_id FROM xiaohei_mobile_bindings WHERE cloud_bot_id = ? AND status = ?").get(cloudId, "active");
@@ -39205,8 +39205,8 @@ var XiaoheiBotSyncService = class {
     }
     let group = xiaoheiBotRepository.getConversation(binding.conversation_id);
     if (!group || group.kind !== "group") return;
-    const desiredIds = cloudIds.map(item => localByCloud.get(item));
-    const missing = desiredIds.filter(item => !group.members.some(member => member.botId === item));
+    const desiredIds = cloudIds.map(id => localByCloud.get(id));
+    const missing = desiredIds.filter(id => !group.members.some(member => member.botId === id));
     if (missing.length) group = xiaoheiBotService.addGroupMembers({
       conversationId: group.id,
       botIds: missing
@@ -39309,7 +39309,7 @@ var XiaoheiBotSyncService = class {
   * 群聊执行状态上报：群里有 Bot 正在回复时每 20 秒续一次「执行中」，结束时上报一次「已结束」，
   * 手机端据此显示「处理中」的加载。失败不影响同步，下一轮再试。
   */
-  async reportGroupActivity(report) {
+  async reportGroupActivity(gen) {
     const db = this.db();
     if (!db) return;
     const rows = db.prepare("SELECT conversation_id, cloud_conversation_id FROM xiaohei_mobile_group_bindings WHERE status = 'active'").all();
@@ -39317,7 +39317,7 @@ var XiaoheiBotSyncService = class {
     const activeIds = new Set(xiaoheiBotService.getActiveConversationIds());
     const now = Date.now();
     for (const row of rows) {
-      if (!this.isCurrent(report)) return;
+      if (!this.isCurrent(gen)) return;
       if (!this.isGroupMobileSyncEnabled(row.conversation_id)) continue;
       const active = activeIds.has(row.conversation_id);
       const previous = this.groupActivity.get(row.conversation_id);
@@ -39344,10 +39344,10 @@ var XiaoheiBotSyncService = class {
     for (const member of conv.members) {
       const cloudId = this.shouldMaintainCloudBinding(member.botId) ? await this.ensureCloudBotId(member.botId) : null;
       if (cloudId) localToCloud.set(member.botId, cloudId);else {
-        const anonymousIndex = this.anonymousIndex(conv.id, member.botId);
+        const idx = this.anonymousIndex(conv.id, member.botId);
         anonymous.push({
-          idx: anonymousIndex,
-          label: `匿名小白${anonymousIndex}`
+          idx,
+          label: `匿名小白${idx}`
         });
       }
     }
@@ -39511,23 +39511,23 @@ var XiaoheiBotSyncService = class {
     } catch {
       history = [];
     }
-    const previous = history.filter(item => item !== current);
+    const previous = history.filter(id => id !== current);
     const next = [current, ...previous].slice(0, 20);
     if (JSON.stringify(next) !== JSON.stringify(history)) db.prepare("INSERT OR REPLACE INTO xiaohei_mobile_sync_state(key, value) VALUES (?, ?)").run("device_id_history", JSON.stringify(next));
     return previous.slice(0, 19);
   }
-  async claimOwnedSessions(claim) {
+  async claimOwnedSessions(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(claim)) return;
-    const botIds = db.prepare("SELECT cloud_bot_id, bot_id, cloud_origin FROM xiaohei_mobile_bindings WHERE status = 'active' AND cloud_origin IN ('mobile', 'desktop')").all().filter(item => item.cloud_origin === "mobile" || this.isBotMobileSyncEnabled(item.bot_id)).map(item => item.cloud_bot_id);
+    if (!db || !this.isCurrent(gen)) return;
+    const botIds = db.prepare("SELECT cloud_bot_id, bot_id, cloud_origin FROM xiaohei_mobile_bindings WHERE status = 'active' AND cloud_origin IN ('mobile', 'desktop')").all().filter(row => row.cloud_origin === "mobile" || this.isBotMobileSyncEnabled(row.bot_id)).map(row => row.cloud_bot_id);
     const groupRows = db.prepare("SELECT cloud_conversation_id, conversation_id, cloud_origin, cloud_client FROM xiaohei_mobile_group_bindings WHERE status = 'active'").all();
-    const conversationIds = groupRows.filter(item => !item.cloud_origin || this.isGroupMobileSyncEnabled(item.conversation_id)).map(item => item.cloud_conversation_id);
+    const conversationIds = groupRows.filter(row => !row.cloud_origin || this.isGroupMobileSyncEnabled(row.conversation_id)).map(row => row.cloud_conversation_id);
     let originsChanged = false;
     const previousDeviceIds = this.rememberDeviceId();
     const BATCH = 100;
     const total = Math.max(botIds.length, conversationIds.length, 1);
     for (let start = 0; start < total; start += BATCH) {
-      if (!this.isCurrent(claim)) return;
+      if (!this.isCurrent(gen)) return;
       const result = await this.post("desktop.ownership.claim", {
         deviceId: this.deviceId(),
         bot_ids: botIds.slice(start, start + BATCH),
@@ -39538,24 +39538,24 @@ var XiaoheiBotSyncService = class {
       }).catch(() => null);
       if ((result?.taken_over_bots ?? 0) > 0 || (result?.taken_over_groups ?? 0) > 0) this.lastDirectoryPull = 0;
       for (const deletedId of result?.deleted_bot_ids ?? []) {
-        if (!this.isCurrent(claim)) return;
+        if (!this.isCurrent(gen)) return;
         await this.applyRemoteBotDelete(deletedId);
       }
       for (const deletedId of result?.deleted_group_ids ?? []) {
-        if (!this.isCurrent(claim)) return;
+        if (!this.isCurrent(gen)) return;
         await this.applyRemoteGroupDelete(deletedId);
       }
       for (const [cloudId, origin] of Object.entries(result?.group_origins ?? {})) {
-        const found = groupRows.find(item => item.cloud_conversation_id === cloudId);
-        if (!found) continue;
+        const row = groupRows.find(item => item.cloud_conversation_id === cloudId);
+        if (!row) continue;
         const cloudOrigin = origin === "app" || origin === "miniprogram" ? "mobile" : "desktop";
         const cloudClient = origin === "miniprogram" ? "miniprogram" : null;
-        if (found.cloud_origin === cloudOrigin && (found.cloud_client ?? null) === cloudClient) continue;
+        if (row.cloud_origin === cloudOrigin && (row.cloud_client ?? null) === cloudClient) continue;
         db.prepare("UPDATE xiaohei_mobile_group_bindings SET cloud_origin = ?, cloud_client = ? WHERE cloud_conversation_id = ?").run(cloudOrigin, cloudClient, cloudId);
         originsChanged = true;
       }
     }
-    if (originsChanged && this.isCurrent(claim)) xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
+    if (originsChanged && this.isCurrent(gen)) xiaoheiBotService.notifyManagementDirectoryChanged(undefined, this.getMobileSyncSnapshot());
   }
   async recoverBoundMessages() {
     const db = this.db();
@@ -39650,9 +39650,9 @@ var XiaoheiBotSyncService = class {
     db.prepare("INSERT OR IGNORE INTO xiaohei_mobile_anonymous_labels(conversation_id, bot_id, idx) VALUES (?, ?, ?)").run(conversationId, botId, next);
     return next;
   }
-  async flushOutbox(outbox) {
+  async flushOutbox(gen) {
     const db = this.db();
-    if (!db || !this.isCurrent(outbox)) return false;
+    if (!db || !this.isCurrent(gen)) return false;
     const rows = db.prepare("SELECT id, delivery_key, conversation_id FROM xiaohei_mobile_outbox WHERE upload_state = 'pending' ORDER BY created_at, rowid LIMIT 100").all();
     const items = [];
     for (const row of rows) {
@@ -39666,7 +39666,7 @@ var XiaoheiBotSyncService = class {
       let session = this.resolveCloudSession(conv.id);
       if (!session) {
         if (conv.kind === "group") await this.ensureLocalGroupOnCloud(conv.id);else if (conv.directBotId) await this.ensureCloudBotId(conv.directBotId);
-        if (!this.isCurrent(outbox)) return false;
+        if (!this.isCurrent(gen)) return false;
         session = this.resolveCloudSession(conv.id);
       }
       if (!session) continue;
@@ -39705,7 +39705,7 @@ var XiaoheiBotSyncService = class {
     const result = await this.post("desktop.outbox", {
       items
     });
-    if (!this.isCurrent(outbox)) return false;
+    if (!this.isCurrent(gen)) return false;
     const accepted = new Set(result.accepted ?? []);
     const rejected = new Set(result.rejected ?? []);
     for (const row of rows) {
@@ -39880,9 +39880,9 @@ var AuthService = class {
     return withDefaults;
   }
   getSubscription() {
-    const subscriptionCache = authRepository.getSubscriptionCache();
+    const sub = authRepository.getSubscriptionCache();
     return {
-      ...subscriptionCache,
+      ...sub,
       planId: "pro",
       planName: "Pro",
       isActive: true,
@@ -39929,8 +39929,8 @@ var AuthService = class {
     const session = authRepository.getSession();
     if (!session) throw new Error(t("auth.loginRequired", lang));
     const fileBuffer = readFileSync(filePath);
-    const fallbackValue = extname(filePath).slice(1).toLowerCase() || "jpg";
-    const dataUrl = `data:${fallbackValue === "jpg" ? "image/jpeg" : `image/${fallbackValue}`};base64,${fileBuffer.toString("base64")}`;
+    const ext = extname(filePath).slice(1).toLowerCase() || "jpg";
+    const dataUrl = `data:${ext === "jpg" ? "image/jpeg" : `image/${ext}`};base64,${fileBuffer.toString("base64")}`;
     const result = await this.callApi("auth.php", {
       action: "update-avatar",
       avatar: dataUrl
@@ -40020,8 +40020,8 @@ var AuthService = class {
       }, session.token, 1e4);
       return true;
     } catch (error) {
-      const errorAlias = error;
-      if (errorAlias.statusCode === 401 || errorAlias.errorCode === "UNAUTHORIZED") return false;
+      const e = error;
+      if (e.statusCode === 401 || e.errorCode === "UNAUTHORIZED") return false;
       return true;
     }
   }
@@ -40155,26 +40155,26 @@ export { getTodoStats as $, BotMemoryRepository as $t, computeCategoryHourlyStat
 var localTodoDb = null;
 function localTodoDatabase() {
   if (localTodoDb) return localTodoDb;
-  const databaseResult = getDatabase();
-  databaseResult.exec("CREATE TABLE IF NOT EXISTS local_todos (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, status TEXT, pinned INTEGER DEFAULT 0, sort_order INTEGER DEFAULT 0, updated_at TEXT)");
-  localTodoDb = databaseResult;
-  return databaseResult;
+  const db = getDatabase();
+  db.exec("CREATE TABLE IF NOT EXISTS local_todos (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, status TEXT, pinned INTEGER DEFAULT 0, sort_order INTEGER DEFAULT 0, updated_at TEXT)");
+  localTodoDb = db;
+  return db;
 }
-function localTodoRead(local, todo) {
-  const row = local.prepare("SELECT data FROM local_todos WHERE id = ?").get(todo);
+function localTodoRead(db, id) {
+  const row = db.prepare("SELECT data FROM local_todos WHERE id = ?").get(id);
   if (!row) throw new Error("待办不存在");
   return JSON.parse(row.data);
 }
-function localTodoWrite(local, todo) {
-  local.prepare("INSERT INTO local_todos (id, data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data, status = excluded.status, pinned = excluded.pinned, sort_order = excluded.sort_order, updated_at = excluded.updated_at").run(todo.id, JSON.stringify(todo), String(todo.status || "todo"), todo.pinned ? 1 : 0, Number(todo.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
+function localTodoWrite(db, t) {
+  db.prepare("INSERT INTO local_todos (id, data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET data = excluded.data, status = excluded.status, pinned = excluded.pinned, sort_order = excluded.sort_order, updated_at = excluded.updated_at").run(t.id, JSON.stringify(t), String(t.status || "todo"), t.pinned ? 1 : 0, Number(t.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
 }
 function localTodoAction(action, body) {
   const LOCAL_ACTIONS = new Set(["list", "get", "create", "update", "patch-status", "patch-pin", "delete", "reorder", "stats", "list-labels", "add-comment", "delete-comment", "list-activities", "activity-summary", "list-assignee-contacts", "resolve-assignee", "list-friends", "list-friend-requests", "search-friend-user", "remove-label-history", "bot-todos", "auto-completion-preview", "auto-completion-records"]);
   if (!LOCAL_ACTIONS.has(action)) return null;
-  const localTodoDatabaseResult = localTodoDatabase();
+  const db = localTodoDatabase();
   if (action === "list") {
-    const rows = localTodoDatabaseResult.prepare("SELECT data FROM local_todos ORDER BY pinned DESC, sort_order ASC, id DESC").all();
-    const tasks = rows.map(item => JSON.parse(item.data));
+    const rows = db.prepare("SELECT data FROM local_todos ORDER BY pinned DESC, sort_order ASC, id DESC").all();
+    const tasks = rows.map(r => JSON.parse(r.data));
     return {
       tasks,
       pageSize: tasks.length,
@@ -40183,12 +40183,12 @@ function localTodoAction(action, body) {
     };
   }
   if (action === "get") return {
-    task: localTodoRead(localTodoDatabaseResult, body.id)
+    task: localTodoRead(db, body.id)
   };
   if (action === "create") {
     const input = body.task || body;
     const nowIso = (/* @__PURE__ */new Date()).toISOString();
-    const record = {
+    const t = {
       title: "",
       group: "today",
       status: "todo",
@@ -40224,53 +40224,53 @@ function localTodoAction(action, body) {
       ...input,
       ...(input && Array.isArray(input.subtasks) === false && input.subtasks === undefined ? {} : {})
     };
-    for (const k of ["tags", "subtasks", "comments", "activities", "attachments", "assignees", "followers"]) if (!Array.isArray(record[k])) record[k] = [];
-    if (typeof record.pinned !== "boolean") record.pinned = false;
-    if (typeof record.archived !== "boolean") record.archived = false;
-    const info = localTodoDatabaseResult.prepare("INSERT INTO local_todos (data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?)").run(JSON.stringify(record), String(record.status || "todo"), 0, Number(record.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
-    record.id = Number(info.lastInsertRowid);
-    localTodoWrite(localTodoDatabaseResult, record);
+    for (const k of ["tags", "subtasks", "comments", "activities", "attachments", "assignees", "followers"]) if (!Array.isArray(t[k])) t[k] = [];
+    if (typeof t.pinned !== "boolean") t.pinned = false;
+    if (typeof t.archived !== "boolean") t.archived = false;
+    const info = db.prepare("INSERT INTO local_todos (data, status, pinned, sort_order, updated_at) VALUES (?, ?, ?, ?, ?)").run(JSON.stringify(t), String(t.status || "todo"), 0, Number(t.sortOrder || 0), (/* @__PURE__ */new Date()).toISOString());
+    t.id = Number(info.lastInsertRowid);
+    localTodoWrite(db, t);
     return {
-      task: record
+      task: t
     };
   }
   if (action === "update") {
     const input = body.task || body;
     const t = {
-      ...localTodoRead(localTodoDatabaseResult, input.id),
+      ...localTodoRead(db, input.id),
       ...input
     };
     for (const k of ["tags", "subtasks", "comments", "activities", "attachments", "assignees", "followers"]) if (!Array.isArray(t[k])) t[k] = [];
-    localTodoWrite(localTodoDatabaseResult, t);
+    localTodoWrite(db, t);
     return {
       task: t
     };
   }
   if (action === "patch-status") {
-    const bodyValue = body.patch || body;
-    const record = {
-      ...localTodoRead(localTodoDatabaseResult, bodyValue.id),
-      status: bodyValue.status,
-      completedAt: bodyValue.completedAt ?? null
+    const p = body.patch || body;
+    const t = {
+      ...localTodoRead(db, p.id),
+      status: p.status,
+      completedAt: p.completedAt ?? null
     };
-    localTodoWrite(localTodoDatabaseResult, record);
+    localTodoWrite(db, t);
     return {
-      task: record
+      task: t
     };
   }
   if (action === "patch-pin") {
-    const bodyValue = body.patch || body;
+    const p = body.patch || body;
     const t = {
-      ...localTodoRead(localTodoDatabaseResult, bodyValue.id),
-      pinned: !!bodyValue.pinned
+      ...localTodoRead(db, p.id),
+      pinned: !!p.pinned
     };
-    localTodoWrite(localTodoDatabaseResult, t);
+    localTodoWrite(db, t);
     return {
       task: t
     };
   }
   if (action === "delete") {
-    localTodoDatabaseResult.prepare("DELETE FROM local_todos WHERE id = ?").run(body.id);
+    db.prepare("DELETE FROM local_todos WHERE id = ?").run(body.id);
     return {
       deleted: true
     };
@@ -40278,12 +40278,12 @@ function localTodoAction(action, body) {
   if (action === "reorder") {
     for (const it of body.items || body || []) {
       try {
-        const record = {
-          ...localTodoRead(localTodoDatabaseResult, it.id),
+        const t = {
+          ...localTodoRead(db, it.id),
           status: it.status,
           sortOrder: it.sortOrder
         };
-        localTodoWrite(localTodoDatabaseResult, record);
+        localTodoWrite(db, t);
       } catch {}
     }
     return {
@@ -40291,26 +40291,26 @@ function localTodoAction(action, body) {
     };
   }
   if (action === "stats") {
-    const rows = localTodoDatabaseResult.prepare("SELECT data FROM local_todos").all().map(item => JSON.parse(item.data));
-    const handler = s => rows.filter(item => (item.status || "todo") === s).length;
+    const rows = db.prepare("SELECT data FROM local_todos").all().map(r => JSON.parse(r.data));
+    const by = s => rows.filter(t => (t.status || "todo") === s).length;
     const todayKey = (/* @__PURE__ */new Date()).toISOString().slice(0, 10);
     return {
       stats: {
         total: rows.length,
-        todo: handler("todo"),
-        inProgress: handler("in-progress"),
-        done: handler("done"),
-        overdue: handler("overdue"),
-        dueToday: rows.filter(item => item.dueDate === todayKey).length,
+        todo: by("todo"),
+        inProgress: by("in-progress"),
+        done: by("done"),
+        overdue: by("overdue"),
+        dueToday: rows.filter(t => t.dueDate === todayKey).length,
         completedToday: 0,
-        projectHistory: [...new Set(rows.map(item => item.project).filter(Boolean))],
-        labelHistory: [...new Set(rows.map(item => item.group).filter(Boolean))]
+        projectHistory: [...new Set(rows.map(t => t.project).filter(Boolean))],
+        labelHistory: [...new Set(rows.map(t => t.group).filter(Boolean))]
       }
     };
   }
   if (action === "list-labels") {
-    const rows = localTodoDatabaseResult.prepare("SELECT data FROM local_todos").all().map(item => JSON.parse(item.data));
-    const inUse = [...new Set(rows.map(item => item.group).filter(Boolean))];
+    const rows = db.prepare("SELECT data FROM local_todos").all().map(r => JSON.parse(r.data));
+    const inUse = [...new Set(rows.map(t => t.group).filter(Boolean))];
     return {
       defaults: [],
       inUse,
@@ -40318,8 +40318,8 @@ function localTodoAction(action, body) {
     };
   }
   if (action === "add-comment") {
-    const localTodoReadResult = localTodoRead(localTodoDatabaseResult, body.todoId ?? body.id);
-    const comments = Array.isArray(localTodoReadResult.comments) ? localTodoReadResult.comments : [];
+    const t = localTodoRead(db, body.todoId ?? body.id);
+    const comments = Array.isArray(t.comments) ? t.comments : [];
     const activity = {
       id: Date.now(),
       content: String(body.content || ""),
@@ -40328,19 +40328,19 @@ function localTodoAction(action, body) {
       kind: "comment"
     };
     comments.push(activity);
-    localTodoReadResult.comments = comments;
-    localTodoWrite(localTodoDatabaseResult, localTodoReadResult);
+    t.comments = comments;
+    localTodoWrite(db, t);
     return {
       activity
     };
   }
   if (action === "delete-comment") {
-    const rows = localTodoDatabaseResult.prepare("SELECT id, data FROM local_todos").all();
+    const rows = db.prepare("SELECT id, data FROM local_todos").all();
     for (const r of rows) {
-      const parsed = JSON.parse(r.data);
-      if (Array.isArray(parsed.comments) && parsed.comments.some(item => item.id === body.commentId)) {
-        parsed.comments = parsed.comments.filter(item => item.id !== body.commentId);
-        localTodoWrite(localTodoDatabaseResult, parsed);
+      const t = JSON.parse(r.data);
+      if (Array.isArray(t.comments) && t.comments.some(c => c.id === body.commentId)) {
+        t.comments = t.comments.filter(c => c.id !== body.commentId);
+        localTodoWrite(db, t);
         break;
       }
     }

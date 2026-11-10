@@ -14,11 +14,11 @@ var toolSchema = objectType({
   team_and_collaborators: stringType().trim().max(4e3).optional(),
   additional_context: stringType().trim().max(4e3).optional(),
   request_quote: stringType().trim().min(1).max(2e3)
-}).strict().refine(value => Object.keys(value).some(item => item !== "request_quote"), {
+}).strict().refine(value => Object.keys(value).some(key => key !== "request_quote"), {
   message: "至少提供一个要更新的资料字段"
 });
-async function executeBotUserProfileTool(botValue, context) {
-  const parsed = toolSchema.safeParse(botValue);
+async function executeBotUserProfileTool(raw, context) {
+  const parsed = toolSchema.safeParse(raw);
   if (!parsed.success) throw new XiaoheiDataToolError("INVALID_ARGUMENT", parsed.error.issues.map(issue => issue.message).join("；"));
   context.assertActive();
   const connection = getOpenDatabaseConnection();
@@ -56,7 +56,7 @@ async function executeBotUserProfileTool(botValue, context) {
         }
       }
       if (!merged.preferredName.trim()) throw new Error("资料中缺少称呼，请在 preferred_name 中提供用户希望使用的称呼");
-      if (assignments.map(([target]) => merged[target]).reduce((acc, field) => acc + field.length, 0) > PROFILE_TOTAL_LIMIT) throw new Error("用户资料总长度超过 12000 字，请压缩内容");
+      if (assignments.map(([target]) => merged[target]).reduce((sum, field) => sum + field.length, 0) > PROFILE_TOTAL_LIMIT) throw new Error("用户资料总长度超过 12000 字，请压缩内容");
       const value = {
         saved: {
           updatedFields,

@@ -117,30 +117,30 @@ function parseDetails(detailsJson) {
     return null;
   }
 }
-function mapRow(mapValue) {
+function mapRow(row) {
   return {
-    id: mapValue.id,
-    startedAt: mapValue.started_at,
-    endedAt: mapValue.ended_at,
-    category: mapValue.category,
-    summary: mapValue.summary,
-    details: parseDetails(mapValue.details_json),
-    confidence: mapValue.confidence,
-    source: mapValue.source,
-    screenshotPath: mapValue.screenshot_path,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    id: row.id,
+    startedAt: row.started_at,
+    endedAt: row.ended_at,
+    category: row.category,
+    summary: row.summary,
+    details: parseDetails(row.details_json),
+    confidence: row.confidence,
+    source: row.source,
+    screenshotPath: row.screenshot_path,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 var WorkRecordRepository = class {
   replaceText(input) {
-    const database = getDatabase();
-    const find = database.prepare("SELECT * FROM work_records WHERE id = ?");
-    const update = database.prepare("UPDATE work_records SET summary = ?, details_json = ?, updated_at = ? WHERE id = ? AND updated_at = ?");
+    const db = getDatabase();
+    const find = db.prepare("SELECT * FROM work_records WHERE id = ?");
+    const update = db.prepare("UPDATE work_records SET summary = ?, details_json = ?, updated_at = ? WHERE id = ? AND updated_at = ?");
     let recordCount = 0;
     let matchCount = 0;
     let updatedRecord;
-    database.exec("SAVEPOINT work_record_text_replace");
+    db.exec("SAVEPOINT work_record_text_replace");
     try {
       for (const target of input.targets) {
         const row = find.get(target.id);
@@ -159,14 +159,14 @@ var WorkRecordRepository = class {
           updatedAt
         };
       }
-      database.exec("RELEASE work_record_text_replace");
+      db.exec("RELEASE work_record_text_replace");
       return {
         recordCount,
         matchCount,
         updatedRecord
       };
     } catch (error) {
-      database.exec("ROLLBACK TO work_record_text_replace; RELEASE work_record_text_replace");
+      db.exec("ROLLBACK TO work_record_text_replace; RELEASE work_record_text_replace");
       throw error;
     }
   }
@@ -255,7 +255,7 @@ var WorkRecordRepository = class {
         SELECT DISTINCT date(started_at, 'localtime') AS day
         FROM work_records
         WHERE updated_at > ?
-      `).all(sinceIso).flatMap(item => item.day ? [item.day] : []);
+      `).all(sinceIso).flatMap(row => row.day ? [row.day] : []);
   }
   /** 指定时间之后有记录的本地日期（不含 AI 汇总记录），用于计算连续记录天数 */
   listLocalRecordDatesSince(sinceIso) {
@@ -263,7 +263,7 @@ var WorkRecordRepository = class {
         SELECT DISTINCT date(started_at, 'localtime') AS day
         FROM work_records
         WHERE started_at >= ? AND source <> 'summary'
-      `).all(sinceIso).flatMap(item => item.day ? [item.day] : []);
+      `).all(sinceIso).flatMap(row => row.day ? [row.day] : []);
   }
   listUpdatedSince(sinceIso, limit = 500) {
     return getDatabase().prepare(`
@@ -275,7 +275,7 @@ var WorkRecordRepository = class {
       `).all(sinceIso, limit).map(mapRow);
   }
   getAllCategories() {
-    return getDatabase().prepare("SELECT DISTINCT category FROM work_records ORDER BY category").all().map(item => item.category);
+    return getDatabase().prepare("SELECT DISTINCT category FROM work_records ORDER BY category").all().map(row => row.category);
   }
   findLatestBySources(sources) {
     if (sources.length === 0) return null;
@@ -289,21 +289,21 @@ var WorkRecordRepository = class {
       `).get(...sources);
     return row ? mapRow(row) : null;
   }
-  updateEndedAt(ended, endedAt, details) {
+  updateEndedAt(id, endedAt, details) {
     if (details !== undefined) {
-      getDatabase().prepare("UPDATE work_records SET ended_at = ?, details_json = ?, updated_at = ? WHERE id = ?").run(endedAt, details ? JSON.stringify(details) : null, (/* @__PURE__ */new Date()).toISOString(), ended);
+      getDatabase().prepare("UPDATE work_records SET ended_at = ?, details_json = ?, updated_at = ? WHERE id = ?").run(endedAt, details ? JSON.stringify(details) : null, (/* @__PURE__ */new Date()).toISOString(), id);
       return;
     }
-    getDatabase().prepare("UPDATE work_records SET ended_at = ?, updated_at = ? WHERE id = ?").run(endedAt, (/* @__PURE__ */new Date()).toISOString(), ended);
+    getDatabase().prepare("UPDATE work_records SET ended_at = ?, updated_at = ? WHERE id = ?").run(endedAt, (/* @__PURE__ */new Date()).toISOString(), id);
   }
   findById(id) {
     const row = getDatabase().prepare("SELECT * FROM work_records WHERE id = ?").get(id);
     return row ? mapRow(row) : null;
   }
-  updateCategory(categoryValue, category) {
-    getDatabase().prepare("UPDATE work_records SET category = ?, updated_at = ? WHERE id = ?").run(category, (/* @__PURE__ */new Date()).toISOString(), categoryValue);
+  updateCategory(id, category) {
+    getDatabase().prepare("UPDATE work_records SET category = ?, updated_at = ? WHERE id = ?").run(category, (/* @__PURE__ */new Date()).toISOString(), id);
   }
-  update(update, category, summary, details, startedAt, endedAt) {
+  update(id, category, summary, details, startedAt, endedAt) {
     const fields = ["category = ?", "summary = ?"];
     const values = [category, summary];
     if (details !== undefined) {
@@ -320,21 +320,21 @@ var WorkRecordRepository = class {
     }
     fields.push("updated_at = ?");
     values.push((/* @__PURE__ */new Date()).toISOString());
-    values.push(update);
+    values.push(id);
     getDatabase().prepare(`UPDATE work_records SET ${fields.join(", ")} WHERE id = ?`).run(...values);
   }
-  updateScreenshotPath(screenshot, screenshotPath) {
-    getDatabase().prepare("UPDATE work_records SET screenshot_path = ?, updated_at = ? WHERE id = ?").run(screenshotPath, (/* @__PURE__ */new Date()).toISOString(), screenshot);
+  updateScreenshotPath(id, screenshotPath) {
+    getDatabase().prepare("UPDATE work_records SET screenshot_path = ?, updated_at = ? WHERE id = ?").run(screenshotPath, (/* @__PURE__ */new Date()).toISOString(), id);
   }
   create(input) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const fallbackValue = input.id ?? crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const id = input.id ?? crypto.randomUUID();
     const source = input.source ?? "screenshot";
-    const database = getDatabase();
+    const db = getDatabase();
     const enqueue = source !== "summary" && source !== "import" && source !== "clipboard" && isTimelineSummaryEnabled(settingsRepository.getSettings());
-    database.exec("SAVEPOINT work_record_create");
+    db.exec("SAVEPOINT work_record_create");
     try {
-      database.prepare(`
+      db.prepare(`
         INSERT INTO work_records (
           id,
           started_at,
@@ -349,15 +349,15 @@ var WorkRecordRepository = class {
           updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(fallbackValue, input.startedAt, input.endedAt, input.category, input.summary, input.details ? JSON.stringify(input.details) : null, input.confidence ?? null, source, input.screenshotPath ?? null, isoString, isoString);
-      if (enqueue) database.prepare("INSERT OR IGNORE INTO timeline_summary_queue (record_id) VALUES (?)").run(fallbackValue);
-      database.exec("RELEASE work_record_create");
+      `).run(id, input.startedAt, input.endedAt, input.category, input.summary, input.details ? JSON.stringify(input.details) : null, input.confidence ?? null, source, input.screenshotPath ?? null, now, now);
+      if (enqueue) db.prepare("INSERT OR IGNORE INTO timeline_summary_queue (record_id) VALUES (?)").run(id);
+      db.exec("RELEASE work_record_create");
     } catch (error) {
-      database.exec("ROLLBACK TO work_record_create; RELEASE work_record_create");
+      db.exec("ROLLBACK TO work_record_create; RELEASE work_record_create");
       throw error;
     }
     return {
-      id: fallbackValue,
+      id,
       startedAt: input.startedAt,
       endedAt: input.endedAt,
       category: input.category,
@@ -366,18 +366,18 @@ var WorkRecordRepository = class {
       confidence: input.confidence ?? null,
       source,
       screenshotPath: input.screenshotPath ?? null,
-      createdAt: isoString,
-      updatedAt: isoString
+      createdAt: now,
+      updatedAt: now
     };
   }
-  delete(deleteValue) {
-    getDatabase().prepare("DELETE FROM work_records WHERE id = ?").run(deleteValue);
+  delete(id) {
+    getDatabase().prepare("DELETE FROM work_records WHERE id = ?").run(id);
   }
   batchCreate(inputs) {
     if (inputs.length === 0) return [];
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const insert = database.prepare(`
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const insert = db.prepare(`
       INSERT INTO work_records (
         id,
         started_at,
@@ -395,15 +395,15 @@ var WorkRecordRepository = class {
     `);
     const records = [];
     const enqueue = isTimelineSummaryEnabled(settingsRepository.getSettings());
-    database.exec("BEGIN");
+    db.exec("BEGIN");
     try {
       for (const input of inputs) {
-        const fallbackValue = input.id ?? crypto.randomUUID();
+        const id = input.id ?? crypto.randomUUID();
         const source = input.source ?? "screenshot";
-        insert.run(fallbackValue, input.startedAt, input.endedAt, input.category, input.summary, input.details ? JSON.stringify(input.details) : null, input.confidence ?? null, source, input.screenshotPath ?? null, isoString, isoString);
-        if (enqueue && source !== "import" && source !== "summary") database.prepare("INSERT OR IGNORE INTO timeline_summary_queue (record_id) VALUES (?)").run(fallbackValue);
+        insert.run(id, input.startedAt, input.endedAt, input.category, input.summary, input.details ? JSON.stringify(input.details) : null, input.confidence ?? null, source, input.screenshotPath ?? null, now, now);
+        if (enqueue && source !== "import" && source !== "summary") db.prepare("INSERT OR IGNORE INTO timeline_summary_queue (record_id) VALUES (?)").run(id);
         records.push({
-          id: fallbackValue,
+          id,
           startedAt: input.startedAt,
           endedAt: input.endedAt,
           category: input.category,
@@ -412,13 +412,13 @@ var WorkRecordRepository = class {
           confidence: input.confidence ?? null,
           source,
           screenshotPath: input.screenshotPath ?? null,
-          createdAt: isoString,
-          updatedAt: isoString
+          createdAt: now,
+          updatedAt: now
         });
       }
-      database.exec("COMMIT");
+      db.exec("COMMIT");
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
     return records;

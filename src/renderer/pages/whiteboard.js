@@ -1,21 +1,21 @@
-import { Ct as uiSwitchCt, Ot as uiSwitchOt, Tt as uiSwitchTt, jt as uiSwitchJt, kt as uiSwitchKt, r as uiSwitchR, wt as uiSwitchWt } from "../ui/Switch.js";
-import { $n as vueN, An as vueAn, Et as vueEt, O as vueO, S as vueS, St as vueSt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, vn as vueVn, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
-import { C as playerC, E as playerE, r as playerR } from "../i18n/en-US-player.js";
-import { r as lucideR, t as lucideT } from "../ui/icons/lucide-icons.js";
-import { t as i18nT } from "../i18n/i18n-helper.js";
-import { t as circlequestionmarkT } from "../chunks/circle-question-mark.js";
-import { t as imagedownT } from "../chunks/image-down.js";
-import { n as undo2N, t as undo2T } from "../chunks/undo-2.js";
-import { t as penlineT } from "../chunks/pen-line.js";
-import { t as ToolboxWorkspaceHeaderT } from "./ToolboxWorkspaceHeader.js";
-import { a as dialogA, i as dialogI, n as dialogN, t as dialogT } from "../chunks/dialog.js";
-import { a as alertDialogA, c as alertDialogC, i as alertDialogI, n as alertDialogN, r as alertDialogR, t as alertDialogT } from "../ui/alert-dialog.js";
-import { n as alertN } from "../chunks/alert.js";
-import { t as growthTelT } from "../chunks/useGrowthTelemetry.js";
-import { In as mainIn, On as mainOn, bn as mainBn, gn as mainGn } from "../chunks/main.js";
-import { t as toolboxlocalT } from "../chunks/toolbox-local.js";
-import { t as KbdT } from "../ui/Kbd.js";
-var Fe = lucideR(`circle-dashed`, [[`path`, {
+import { Ct as e, Ot as t, Tt as n, jt as r, kt as i, r as a, wt as o } from "../ui/Switch.js";
+import { $n as s, An as c, Et as l, O as u, S as d, St as f, Yt as p, Zt as ee, b as te, bn as m, c as ne, gt as h, j as re, k as g, nr as _, ot as ie, rr as v, rt as ae, ut as oe, v as y, vn as se, x as b, y as x } from "../chunks/vue-i18n.runtime.js";
+import { C as ce, E as S, r as le } from "../i18n/en-US-player.js";
+import { r as C, t as ue } from "../ui/icons/lucide-icons.js";
+import { t as de } from "../i18n/i18n-helper.js";
+import { t as fe } from "../chunks/circle-question-mark.js";
+import { t as pe } from "../chunks/image-down.js";
+import { n as me, t as he } from "../chunks/undo-2.js";
+import { t as ge } from "../chunks/pen-line.js";
+import { t as _e } from "./ToolboxWorkspaceHeader.js";
+import { a as ve, i as ye, n as be, t as xe } from "../chunks/dialog.js";
+import { a as Se, c as Ce, i as we, n as Te, r as Ee, t as De } from "../ui/alert-dialog.js";
+import { n as Oe } from "../chunks/alert.js";
+import { t as ke } from "../chunks/useGrowthTelemetry.js";
+import { In as Ae, On as je, bn as Me, gn as Ne } from "../chunks/main.js";
+import { t as Pe } from "../chunks/toolbox-local.js";
+import { t as w } from "../ui/Kbd.js";
+var Fe = C(`circle-dashed`, [[`path`, {
     d: `M10.1 2.182a10 10 0 0 1 3.8 0`,
     key: `5ilxe3`
   }], [`path`, {
@@ -40,22 +40,22 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
     d: `M6.391 20.279a10 10 0 0 1-2.69-2.7`,
     key: `1fvljs`
   }]]),
-  Ie = lucideR(`diamond`, [[`path`, {
+  Ie = C(`diamond`, [[`path`, {
     d: `M2.7 10.3a2.41 2.41 0 0 0 0 3.41l7.59 7.59a2.41 2.41 0 0 0 3.41 0l7.59-7.59a2.41 2.41 0 0 0 0-3.41l-7.59-7.59a2.41 2.41 0 0 0-3.41 0Z`,
     key: `1f1r0c`
   }]]),
-  Le = lucideR(`eraser`, [[`path`, {
+  Le = C(`eraser`, [[`path`, {
     d: `M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21`,
     key: `g5wo59`
   }], [`path`, {
     d: `m5.082 11.09 8.828 8.828`,
     key: `1wx5vj`
   }]]),
-  Re = lucideR(`pentagon`, [[`path`, {
+  Re = C(`pentagon`, [[`path`, {
     d: `M10.83 2.38a2 2 0 0 1 2.34 0l8 5.74a2 2 0 0 1 .73 2.25l-3.04 9.26a2 2 0 0 1-1.9 1.37H7.04a2 2 0 0 1-1.9-1.37L2.1 10.37a2 2 0 0 1 .73-2.25z`,
     key: `2hea0t`
   }]]),
-  ze = lucideR(`shapes`, [[`path`, {
+  ze = C(`shapes`, [[`path`, {
     d: `M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z`,
     key: `1bo67w`
   }], [`rect`, {
@@ -71,7 +71,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
     r: `3.5`,
     key: `w3z12y`
   }]]),
-  Be = lucideR(`spline`, [[`circle`, {
+  Be = C(`spline`, [[`circle`, {
     cx: `19`,
     cy: `5`,
     r: `2`,
@@ -85,11 +85,11 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
     d: `M5 17A12 12 0 0 1 17 5`,
     key: `1okkup`
   }]]),
-  Ve = lucideR(`triangle`, [[`path`, {
+  Ve = C(`triangle`, [[`path`, {
     d: `M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z`,
     key: `14u9p9`
   }]]),
-  He = lucideR(`zoom-in`, [[`circle`, {
+  He = C(`zoom-in`, [[`circle`, {
     cx: `11`,
     cy: `11`,
     r: `8`,
@@ -113,7 +113,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
     y2: `11`,
     key: `durymu`
   }]]),
-  Ue = lucideR(`zoom-out`, [[`circle`, {
+  Ue = C(`zoom-out`, [[`circle`, {
     cx: `11`,
     cy: `11`,
     r: `8`,
@@ -140,7 +140,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
   qe = [`aria-label`],
   Je = [`aria-label`, `onPointerdown`],
   Ye = [`onPointerdown`],
-  options = {
+  Xe = {
     key: 4,
     class: `pointer-events-none absolute left-1/2 top-[47%] flex -translate-x-1/2 -translate-y-1/2 flex-col items-center text-center opacity-80`,
     "aria-hidden": `true`
@@ -270,24 +270,24 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
   Qt = 12,
   $t = 72,
   en = 2,
-  tn = vueJ({
+  tn = re({
     __name: `WhiteboardWorkspace`,
-    setup(props, {
-      expose: expose
+    setup(re, {
+      expose: C
     }) {
       let {
           captureGrowthObservation: _e
-        } = growthTelT(),
+        } = ke(),
         {
           locale: tn,
-          t: translate
-        } = i18nT(),
-        handler = (e, t = {}) => translate(`toolboxNative.whiteboard${e}`, t);
+          t: nn
+        } = de(),
+        T = (e, t = {}) => nn(`toolboxNative.whiteboard${e}`, t);
       function rn(e) {
         let t = window.atob(String(e || ``).split(`,`)[1] || ``),
-          uint8Array = new Uint8Array(t.length);
-        for (let e = 0; e < t.length; e += 1) uint8Array[e] = t.charCodeAt(e);
-        return uint8Array.buffer;
+          n = new Uint8Array(t.length);
+        for (let e = 0; e < t.length; e += 1) n[e] = t.charCodeAt(e);
+        return n.buffer;
       }
       function an(e = new Date()) {
         let t = (e, t = 2) => String(e).padStart(t, `0`);
@@ -295,24 +295,24 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       }
       let on = {
           async openBoard() {
-            let whiteboard = await toolboxlocalT.openWhiteboard(tn?.value === `en-US` ? `en-US` : `zh-CN`);
-            return whiteboard.cancelled || !whiteboard.content ? {
+            let e = await Pe.openWhiteboard(tn?.value === `en-US` ? `en-US` : `zh-CN`);
+            return e.cancelled || !e.content ? {
               canceled: true
             } : {
               canceled: false,
-              imageDataUrl: whiteboard.content,
-              fileName: whiteboard.fileName,
-              filePath: whiteboard.filePath
+              imageDataUrl: e.content,
+              fileName: e.fileName,
+              filePath: e.filePath
             };
           },
           async saveBoard(options) {
             let t = options?.mode === `image`,
               n = t ? rn(options.pngDataUrl) : new TextEncoder().encode(JSON.stringify(options.board)).buffer,
               r = t ? `png` : `whiteboard`,
-              fallbackValue = options?.name || handler(`UntitledBoard`),
+              i = options?.name || T(`UntitledBoard`),
               a = an(),
-              o = options?.filePath ? `${fallbackValue}.${r}` : options?.openedImageFile ? `${fallbackValue}_${a}.${r}` : `XHDW${a}.${r}`,
-              saveFile = await toolboxlocalT.saveFile({
+              o = options?.filePath ? `${i}.${r}` : options?.openedImageFile ? `${i}_${a}.${r}` : `XHDW${a}.${r}`,
+              s = await Pe.saveFile({
                 kind: t ? `png` : `whiteboard`,
                 suggestedName: o,
                 data: n,
@@ -320,15 +320,15 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
                 locale: tn?.value === `en-US` ? `en-US` : `zh-CN`
               });
             return {
-              canceled: saveFile.cancelled,
+              canceled: s.cancelled,
               type: t ? `image` : `board`,
-              filePath: saveFile.filePath
+              filePath: s.filePath
             };
           }
         },
         sn = [`#171717`, `#ffffff`, `#ef4444`, `#f97316`, `#eab308`, `#16a34a`, `#06b6d4`, `#2563eb`, `#7c3aed`, `#db2777`],
         cn = [`top-left`, `top-right`, `bottom-left`, `bottom-right`],
-        options = {
+        ln = {
           "top-left": `-left-[5px] -top-[5px] cursor-nwse-resize`,
           "top-right": `-right-[5px] -top-[5px] cursor-nesw-resize`,
           "bottom-left": `-bottom-[5px] -left-[5px] cursor-nesw-resize`,
@@ -337,7 +337,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         un = [{
           key: `P`,
           label: `Draw`,
-          icon: penlineT
+          icon: ge
         }, {
           key: `E`,
           label: `EraseElements`,
@@ -349,11 +349,11 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }, {
           key: `T`,
           label: `AddText`,
-          icon: uiSwitchCt
+          icon: e
         }, {
           key: `V`,
           label: `SelectContent`,
-          icon: undo2N
+          icon: me
         }],
         dn = [{
           value: `board`,
@@ -372,7 +372,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         E = e => JSON.parse(JSON.stringify(e)),
         hn = e => ({
           id: mn(),
-          name: handler(`BoardNumber`, {
+          name: T(`BoardNumber`, {
             number: e
           }),
           strokes: []
@@ -384,11 +384,11 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       function _n() {
         return gn();
       }
-      function D(e, count) {
+      function D(e, t) {
         let n = false;
-        for (let r = 0, i = count.length - 1; r < count.length; i = r++) {
-          let a = count[r],
-            o = count[i];
+        for (let r = 0, i = t.length - 1; r < t.length; i = r++) {
+          let a = t[r],
+            o = t[i];
           a.y > e.y != o.y > e.y && e.x < (o.x - a.x) * (e.y - a.y) / (o.y - a.y || 2 ** -52) + a.x && (n = !n);
         }
         return n;
@@ -410,33 +410,33 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           f = (l * a - u * i) / c;
         return d >= 0 && d <= 1 && f >= 0 && f <= 1 ? d : null;
       }
-      function bn(count, items) {
-        if (count.length < 2) return count.length ? [{
-          inside: D(count[0], items),
-          points: count
+      function bn(e, items) {
+        if (e.length < 2) return e.length ? [{
+          inside: D(e[0], items),
+          points: e
         }] : [];
-        let emptyItems = [];
-        for (let r = 1; r < count.length; r += 1) {
-          let i = count[r - 1],
-            a = count[r],
+        let n = [];
+        for (let r = 1; r < e.length; r += 1) {
+          let i = e[r - 1],
+            a = e[r],
             o = [0, 1];
-          items.forEach((item, n) => {
-            let r = yn(i, a, item, items[(n + 1) % items.length]);
+          items.forEach((e, n) => {
+            let r = yn(i, a, e, items[(n + 1) % items.length]);
             r !== null && r > 1e-6 && r < .999999 && o.push(r);
           });
-          let filtered = o.sort((left, right) => left - right).filter((item, t, n) => t === 0 || Math.abs(item - n[t - 1]) > 1e-6);
-          for (let e = 1; e < filtered.length; e += 1) {
-            let r = vn(i, a, filtered[e - 1]),
-              o = vn(i, a, filtered[e]),
+          let s = o.sort((e, t) => e - t).filter((e, t, n) => t === 0 || Math.abs(e - n[t - 1]) > 1e-6);
+          for (let e = 1; e < s.length; e += 1) {
+            let r = vn(i, a, s[e - 1]),
+              o = vn(i, a, s[e]),
               c = D(vn(r, o, .5), items),
-              l = emptyItems[emptyItems.length - 1];
-            l?.inside === c ? l.points.push(o) : emptyItems.push({
+              l = n[n.length - 1];
+            l?.inside === c ? l.points.push(o) : n.push({
               inside: c,
               points: [r, o]
             });
           }
         }
-        return emptyItems;
+        return n;
       }
       function xn(e, t, n) {
         let r = n.x - t.x,
@@ -459,22 +459,22 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           };
         });
         let a = Math.atan2(i, r),
-          emptyItems = [];
+          o = [];
         for (let t = 0; t <= 12; t += 1) {
           let r = a + Math.PI / 2 + t / 12 * Math.PI;
-          emptyItems.push({
+          o.push({
             x: e.x + Math.cos(r) * n,
             y: e.y + Math.sin(r) * n
           });
         }
         for (let e = 0; e <= 12; e += 1) {
           let r = a - Math.PI / 2 + e / 12 * Math.PI;
-          emptyItems.push({
+          o.push({
             x: t.x + Math.cos(r) * n,
             y: t.y + Math.sin(r) * n
           });
         }
-        return emptyItems;
+        return o;
       }
       function Cn(e, t, n, r) {
         return yn(e, t, n, r) !== null;
@@ -483,19 +483,19 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         return Cn(e, t, n, r) ? 0 : Math.min(xn(e, n, r), xn(t, n, r), xn(n, e, t), xn(r, e, t));
       }
       function Tn(items, t) {
-        let fallbackValue = t.offset || {
+        let n = t.offset || {
           x: 0,
           y: 0
         };
-        return items.map(item => ({
-          x: item.x + fallbackValue.x,
-          y: item.y + fallbackValue.y
+        return items.map(e => ({
+          x: e.x + n.x,
+          y: e.y + n.y
         }));
       }
       function En(e) {
-        let fallbackValue = Number(e.fontSize) || 22,
-          n = fallbackValue * 1.4,
-          parts = String(e.text || ``).split(`
+        let t = Number(e.fontSize) || 22,
+          n = t * 1.4,
+          r = String(e.text || ``).split(`
 `),
           i = e.points?.[0] || {
             x: 0,
@@ -506,18 +506,18 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             y: 0
           };
         pn ||= document.createElement(`canvas`).getContext(`2d`);
-        let o = `500 ${fallbackValue}px ${Zt}`;
+        let o = `500 ${t}px ${Zt}`;
         pn.font = o;
-        let s = Math.max(fallbackValue * .5, ...parts.map(item => pn.measureText(item || ` `).width));
+        let s = Math.max(t * .5, ...r.map(e => pn.measureText(e || ` `).width));
         return {
           x: i.x + a.x,
           y: i.y + a.y,
           width: s,
-          height: Math.max(n, parts.length * n),
+          height: Math.max(n, r.length * n),
           font: o,
-          fontSize: fallbackValue,
+          fontSize: t,
           lineHeight: n,
-          lines: parts
+          lines: r
         };
       }
       function Dn(e) {
@@ -530,40 +530,40 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         };
       }
       function On(e, t) {
-        let fallbackValue = e.offset || {
+        let n = e.offset || {
             x: 0,
             y: 0
           },
           r = {
-            x: t.x - fallbackValue.x,
-            y: t.y - fallbackValue.y
+            x: t.x - n.x,
+            y: t.y - n.y
           };
-        return (e.clips || []).every(item => D(r, item.polygon) === item.include);
+        return (e.clips || []).every(e => D(r, e.polygon) === e.include);
       }
       function kn(e) {
-        return (e.clips || []).map(item => ({
-          ...item,
-          polygon: Tn(item.polygon, e)
+        return (e.clips || []).map(t => ({
+          ...t,
+          polygon: Tn(t.polygon, e)
         }));
       }
       function An(e, t) {
-        let fallbackValue = t.offset || {
+        let n = t.offset || {
           x: 0,
           y: 0
         };
-        (t.clips || []).forEach(item => {
-          if (!item.polygon?.length) return;
-          let mapped = item.polygon.map(e => ({
-            x: e.x + fallbackValue.x,
-            y: e.y + fallbackValue.y
+        (t.clips || []).forEach(r => {
+          if (!r.polygon?.length) return;
+          let i = r.polygon.map(e => ({
+            x: e.x + n.x,
+            y: e.y + n.y
           }));
-          if (e.beginPath(), !item.include) {
-            let n = Rn(In([...Nn(t), ...mapped]), Math.max(16, t.width * 2));
+          if (e.beginPath(), !r.include) {
+            let n = Rn(In([...Nn(t), ...i]), Math.max(16, t.width * 2));
             e.rect(n.left, n.top, n.right - n.left, n.bottom - n.top);
           }
-          e.moveTo(mapped[0].x, mapped[0].y);
-          for (let t = 1; t < mapped.length; t += 1) e.lineTo(mapped[t].x, mapped[t].y);
-          e.closePath(), e.clip(item.include ? `nonzero` : `evenodd`);
+          e.moveTo(i[0].x, i[0].y);
+          for (let t = 1; t < i.length; t += 1) e.lineTo(i[t].x, i[t].y);
+          e.closePath(), e.clip(r.include ? `nonzero` : `evenodd`);
         });
       }
       function jn(e, t, n, r, i, a = 1) {
@@ -878,21 +878,21 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             x: i.left,
             y: i.bottom
           }];
-          return o.some((item, r) => Cn(t, n, item, o[(r + 1) % o.length]));
+          return o.some((e, r) => Cn(t, n, e, o[(r + 1) % o.length]));
         }
         let i = Nn(e);
         if (i.length === 1) return xn(i[0], t, n) <= r + e.width / 2;
         for (let a = 1; a < i.length; a += 1) if (wn(i[a - 1], i[a], t, n) <= r + e.width / 2) return true;
         return false;
       }
-      function Fn(e, count) {
+      function Fn(e, t) {
         let n = Nn(e),
-          r = In(count);
+          r = In(t);
         if (!Ln(Rn(In(n), e.width / 2), r)) return false;
-        if (n.some(item => On(e, item) && D(item, count))) return true;
+        if (n.some(n => On(e, n) && D(n, t))) return true;
         for (let r = 1; r < n.length; r += 1) {
           let i = vn(n[r - 1], n[r], .5);
-          for (let a = 0; a < count.length; a += 1) if (wn(n[r - 1], n[r], count[a], count[(a + 1) % count.length]) <= e.width / 2 && On(e, i)) return true;
+          for (let a = 0; a < t.length; a += 1) if (wn(n[r - 1], n[r], t[a], t[(a + 1) % t.length]) <= e.width / 2 && On(e, i)) return true;
         }
         return false;
       }
@@ -901,8 +901,8 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           n = -1 / 0,
           r = 1 / 0,
           i = -1 / 0;
-        return items.forEach(item => {
-          t = Math.min(t, item.x), n = Math.max(n, item.x), r = Math.min(r, item.y), i = Math.max(i, item.y);
+        return items.forEach(e => {
+          t = Math.min(t, e.x), n = Math.max(n, e.x), r = Math.min(r, e.y), i = Math.max(i, e.y);
         }), {
           left: t,
           right: n,
@@ -940,114 +940,114 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         return o.slice(0, -1).concat(s);
       }
       function Vn(items, t) {
-        let emptyItems = [],
-          count = [];
-        return items.forEach(item => {
-          if (item.kind === `pen` || item.kind === `shape`) {
-            let i = bn(Nn(item), t);
+        let n = [],
+          r = [];
+        return items.forEach(e => {
+          if (e.kind === `pen` || e.kind === `shape`) {
+            let i = bn(Nn(e), t);
             if (i.length > 1 || i.some(e => e.inside)) {
               i.filter(e => e.points.length > 1).forEach(i => {
                 let a = {
                   id: mn(),
                   kind: `pen`,
-                  color: item.color,
-                  width: item.width,
+                  color: e.color,
+                  width: e.width,
                   points: i.points,
                   offset: {
                     x: 0,
                     y: 0
                   },
-                  clips: [...kn(item), {
+                  clips: [...kn(e), {
                     include: i.inside,
                     polygon: E(t)
                   }]
                 };
-                emptyItems.push(a), i.inside && count.push(a.id);
+                n.push(a), i.inside && r.push(a.id);
               });
               return;
             }
           }
-          let i = E(item);
-          emptyItems.push(i), Fn(item, t) && count.push(i.id);
+          let i = E(e);
+          n.push(i), Fn(e, t) && r.push(i.id);
         }), {
-          strokes: emptyItems,
-          ids: count
+          strokes: n,
+          ids: r
         };
       }
-      let Hn = vueBn(_n());
+      let Hn = m(_n());
       function Un(e = Hn.value) {
-        return JSON.stringify(e.pages.map(item => ({
-          id: item.id,
-          name: item.name,
-          backgroundImage: item.backgroundImage ? {
+        return JSON.stringify(e.pages.map(e => ({
+          id: e.id,
+          name: e.name,
+          backgroundImage: e.backgroundImage ? {
             present: true,
-            x: item.backgroundImage.x || 0,
-            y: item.backgroundImage.y || 0,
-            width: item.backgroundImage.width || 0,
-            height: item.backgroundImage.height || 0,
-            fitStage: !!item.backgroundImage.fitStage
+            x: e.backgroundImage.x || 0,
+            y: e.backgroundImage.y || 0,
+            width: e.backgroundImage.width || 0,
+            height: e.backgroundImage.height || 0,
+            fitStage: !!e.backgroundImage.fitStage
           } : null,
-          strokes: item.strokes
+          strokes: e.strokes
         })));
       }
       let Wn = Un(),
-        O = vueV(() => Hn.value.pages[Hn.value.pageIndex]),
-        k = vueBn(null),
-        A = vueBn(null),
-        Gn = vueBn(null),
-        Kn = vueBn(null),
-        qn = vueBn(null),
-        Jn = vueBn(null),
-        Yn = vueBn(null),
-        j = vueBn(null),
-        M = vueBn(`#171717`),
-        Xn = vueBn(4),
-        Zn = vueBn(28),
-        Qn = vueBn(24),
-        $n = vueBn(`line`),
-        N = vueBn(1),
-        P = vueVn({
+        O = y(() => Hn.value.pages[Hn.value.pageIndex]),
+        k = m(null),
+        A = m(null),
+        Gn = m(null),
+        Kn = m(null),
+        qn = m(null),
+        Jn = m(null),
+        Yn = m(null),
+        j = m(null),
+        M = m(`#171717`),
+        Xn = m(4),
+        Zn = m(28),
+        Qn = m(24),
+        $n = m(`line`),
+        N = m(1),
+        P = se({
           x: 0,
           y: 0
         }),
-        F = vueVn({
+        F = se({
           visible: false,
           down: false,
           x: 0,
           y: 0
         }),
-        I = vueBn(null),
-        er = vueBn(false),
-        L = vueBn([]),
-        tr = vueBn(false),
-        nr = vueBn(false),
-        rr = vueBn(null),
-        R = vueBn(null),
-        ir = vueBn(null),
-        z = vueVn({
+        I = m(null),
+        er = m(false),
+        L = m([]),
+        tr = m(false),
+        nr = m(false),
+        rr = m(null),
+        R = m(null),
+        ir = m(null),
+        z = se({
           open: false,
           value: ``,
           x: 0,
           y: 0,
           fontSize: 24
         }),
-        ar = vueBn(null),
-        B = vueBn(null),
-        or = vueVn({
+        ar = m(null),
+        B = m(null),
+        or = se({
           left: `12px`,
           bottom: `99px`,
           transform: `none`
         }),
-        sr = vueBn(false),
-        cr = vueBn(false),
-        lr = vueBn(null),
-        ur = vueBn(`white`),
-        dr = vueBn(false),
-        fr = vueBn(false),
-        V = vueBn(true),
-        H = vueVn({}),
-        U = vueVn({}),
-        W = vueVn({
+        sr = m(false),
+        cr = m(false),
+        lr = m(null),
+        ur = m(`white`),
+        dr = m(false),
+        fr = m(false),
+        V = m(true),
+        H = se({}),
+        U = se({}),
+        W = se({
           drawing: false,
           mode: null,
           last: null,
@@ -1071,57 +1071,57 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         br = null,
         G = null,
         xr = null,
-        Sr = vueV(() => [[`line`, handler(`ShapeLine`), uiSwitchKt], [`curve`, handler(`ShapeCurve`), Be], [`ellipse`, handler(`ShapeEllipse`), uiSwitchJt], [`rectangle`, handler(`ShapeRectangle`), uiSwitchTt], [`triangle`, handler(`ShapeTriangle`), Ve], [`diamond`, handler(`ShapeDiamond`), Ie], [`pentagon`, handler(`ShapePentagon`), Re], [`star`, handler(`ShapeStar`), mainBn], [`speech`, handler(`ShapeSpeech`), mainOn], [`cloud`, handler(`ShapeCloud`), mainIn]]),
-        Cr = vueV(() => B.value === `pen` ? [{
+        Sr = y(() => [[`line`, T(`ShapeLine`), i], [`curve`, T(`ShapeCurve`), Be], [`ellipse`, T(`ShapeEllipse`), r], [`rectangle`, T(`ShapeRectangle`), n], [`triangle`, T(`ShapeTriangle`), Ve], [`diamond`, T(`ShapeDiamond`), Ie], [`pentagon`, T(`ShapePentagon`), Re], [`star`, T(`ShapeStar`), Me], [`speech`, T(`ShapeSpeech`), je], [`cloud`, T(`ShapeCloud`), Ae]]),
+        Cr = y(() => B.value === `pen` ? [{
           value: 2,
-          label: handler(`SizeThin`),
+          label: T(`SizeThin`),
           previewSize: 4
         }, {
           value: 4,
-          label: handler(`SizeMedium`),
+          label: T(`SizeMedium`),
           previewSize: 8
         }, {
           value: 8,
-          label: handler(`SizeThick`),
+          label: T(`SizeThick`),
           previewSize: 12
         }] : B.value === `text` ? [{
           value: 16,
-          label: handler(`SizeSmall`),
+          label: T(`SizeSmall`),
           previewSize: 4
         }, {
           value: 24,
-          label: handler(`SizeMedium`),
+          label: T(`SizeMedium`),
           previewSize: 8
         }, {
           value: 32,
-          label: handler(`SizeLarge`),
+          label: T(`SizeLarge`),
           previewSize: 12
         }] : [{
           value: 16,
-          label: handler(`SizeSmall`),
+          label: T(`SizeSmall`),
           previewSize: 10
         }, {
           value: 28,
-          label: handler(`SizeMedium`),
+          label: T(`SizeMedium`),
           previewSize: 17
         }, {
           value: 48,
-          label: handler(`SizeLarge`),
+          label: T(`SizeLarge`),
           previewSize: 24
         }]),
-        wr = vueV(() => B.value === `pen` ? Xn.value : B.value === `text` ? Qn.value : Zn.value),
-        Tr = vueV(() => `${Math.round(N.value * 100)}%`),
-        K = vueV(() => {
+        wr = y(() => B.value === `pen` ? Xn.value : B.value === `text` ? Qn.value : Zn.value),
+        Tr = y(() => `${Math.round(N.value * 100)}%`),
+        K = y(() => {
           let fontSize = z.fontSize,
-            parts = String(z.value || ``).split(`
+            t = String(z.value || ``).split(`
 `);
           pn ||= document.createElement(`canvas`).getContext(`2d`), pn.font = `500 ${fontSize}px ${Zt}`;
-          let n = z.value ? Math.max(...parts.map(item => pn.measureText(item || ` `).width)) : 8,
+          let n = z.value ? Math.max(...t.map(e => pn.measureText(e || ` `).width)) : 8,
             r = z.x * N.value + P.x,
             i = z.y * N.value + P.y,
             a = Math.max(30, (k.value?.clientWidth || 520) - r - 10),
             o = Math.min(Math.max(30, n * N.value + 12), a),
-            s = Math.max(32, parts.length * fontSize * 1.4 * N.value + 8);
+            s = Math.max(32, t.length * fontSize * 1.4 * N.value + 8);
           return {
             left: `${r - 5}px`,
             top: `${i - 4}px`,
@@ -1132,14 +1132,14 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             lineHeight: 1.4
           };
         }),
-        Er = vueV(() => ({
+        Er = y(() => ({
           left: K.value.left,
           top: K.value.top,
           width: K.value.width,
           height: K.value.height,
           color: K.value.color
         })),
-        Dr = vueV(() => {
+        Dr = y(() => {
           if (F.visible && [`pen`, `eraser`].includes(j.value)) return `none`;
           if (j.value === `pen`) return `crosshair`;
           if (j.value === `eraser`) return `cell`;
@@ -1151,8 +1151,8 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         let t = `flex h-[34px] min-w-[34px] items-center justify-center rounded-lg px-1 transition-[background-color,color,transform] disabled:cursor-default disabled:text-muted-foreground/40`;
         return e ? `${t} bg-primary/10 text-primary` : `${t} text-foreground hover:-translate-y-px hover:bg-primary/[0.06] disabled:hover:translate-y-0 disabled:hover:bg-transparent`;
       }
-      let Or = vueV(() => O.value.strokes.find(item => item.id === R.value && item.kind === `shape`) || null),
-        kr = vueV(() => {
+      let Or = y(() => O.value.strokes.find(e => e.id === R.value && e.kind === `shape`) || null),
+        kr = y(() => {
           let e = Or.value;
           if (!e) return {};
           let t = In(Mn(e)),
@@ -1176,7 +1176,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         });
       }
       function jr() {
-        return Hn.value.pages.some(item => !!item.backgroundImage || item.strokes.some(oi));
+        return Hn.value.pages.some(e => !!e.backgroundImage || e.strokes.some(oi));
       }
       function Mr() {
         let e = !!z.value.trim();
@@ -1185,8 +1185,8 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       function Nr(e) {
         if (!e) return null;
         if (fn.has(e)) return fn.get(e);
-        let image = new Image();
-        return fn.set(e, image), image.onload = J, image.src = e, image;
+        let t = new Image();
+        return fn.set(e, t), t.onload = J, t.src = e, t;
       }
       function Pr(e, t, n, r) {
         let i = Nr(t?.dataUrl);
@@ -1199,7 +1199,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }
       }
       function Y(e) {
-        alertN(e);
+        Oe(e);
       }
       function X() {
         let e = O.value.id;
@@ -1226,8 +1226,8 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }), Fr(U[e].pop()), Z(), J());
       }
       function Rr() {
-        let fallbackValue = O.value.strokes.length > 0 || !!O.value.backgroundImage;
-        (fallbackValue || z.open) && (fallbackValue && X(), Xr(), O.value.strokes = [], O.value.backgroundImage = null, R.value = null, jr() || (Wn = Un()), Z(), J(), Y(handler(`ClearedUndoAvailable`)));
+        let e = O.value.strokes.length > 0 || !!O.value.backgroundImage;
+        (e || z.open) && (e && X(), Xr(), O.value.strokes = [], O.value.backgroundImage = null, R.value = null, jr() || (Wn = Un()), Z(), J(), Y(T(`ClearedUndoAvailable`)));
       }
       function Z() {
         I.value = null, er.value = false, L.value = [], tr.value = false, J();
@@ -1238,13 +1238,13 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       function Q(e) {
         if (j.value === e) {
           if ([`pen`, `eraser`, `shape`, `text`].includes(e)) {
-            B.value = B.value === e ? null : e, B.value && vueRt(() => Vr(e));
+            B.value = B.value === e ? null : e, B.value && ae(() => Vr(e));
             return;
           }
           zr();
           return;
         }
-        z.open && $(), j.value = e, e !== `shape` && (R.value = null), B.value = [`pen`, `eraser`, `shape`, `text`].includes(e) ? e : null, e !== `select` && Z(), B.value && vueRt(() => Vr(e));
+        z.open && $(), j.value = e, e !== `shape` && (R.value = null), B.value = [`pen`, `eraser`, `shape`, `text`].includes(e) ? e : null, e !== `select` && Z(), B.value && ae(() => Vr(e));
       }
       function Br(e) {
         M.value = e, B.value = null, z.open && requestAnimationFrame(() => Gn.value?.focus());
@@ -1257,14 +1257,14 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           text: Yn.value
         }[e];
         if (!t) return;
-        let boundingClientRect = t.getBoundingClientRect(),
+        let n = t.getBoundingClientRect(),
           r = t.closest(`[data-whiteboard-shell]`)?.getBoundingClientRect(),
           i = e === `shape` ? 326 : 130,
-          fallbackValue = r?.left ?? 0,
+          a = r?.left ?? 0,
           o = r?.width ?? window.innerWidth,
-          s = boundingClientRect.left - fallbackValue + boundingClientRect.width / 2,
+          s = n.left - a + n.width / 2,
           c = Math.max(12, Math.min(o - i - 12, s - i / 2));
-        or.left = `${Math.round(c)}px`, or.bottom = `${Math.round((r?.bottom ?? window.innerHeight) - boundingClientRect.top + 9)}px`;
+        or.left = `${Math.round(c)}px`, or.bottom = `${Math.round((r?.bottom ?? window.innerHeight) - n.top + 9)}px`;
       }
       function Hr() {
         V.value = !V.value, !V.value && (B.value = null, fr.value = false);
@@ -1305,14 +1305,14 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             top: Math.min(t.fixedPoint.y, i.y),
             bottom: Math.max(t.fixedPoint.y, i.y)
           },
-          fallbackValue = t.originalStroke.offset || {
+          o = t.originalStroke.offset || {
             x: 0,
             y: 0
           },
           s = e => {
             let n = {
-                x: e.x + fallbackValue.x,
-                y: e.y + fallbackValue.y
+                x: e.x + o.x,
+                y: e.y + o.y
               },
               r = t.originalBounds.right - t.originalBounds.left,
               i = t.originalBounds.bottom - t.originalBounds.top;
@@ -1321,7 +1321,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
               y: i > .001 ? a.top + (n.y - t.originalBounds.top) / i * (a.bottom - a.top) : (a.top + a.bottom) / 2
             };
           };
-        O.value.strokes = O.value.strokes.map(item => item.id === t.strokeId ? {
+        O.value.strokes = O.value.strokes.map(e => e.id === t.strokeId ? {
           ...t.originalStroke,
           points: t.originalStroke.points.map(s),
           offset: {
@@ -1332,7 +1332,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             ...e,
             polygon: e.polygon.map(s)
           }))
-        } : item), J();
+        } : e), J();
       }
       function Kr(event) {
         let t = br;
@@ -1344,13 +1344,13 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }
       }
       function qr(e) {
-        ar.value = null, z.open = true, z.value = ``, z.x = e.x, z.y = e.y, z.fontSize = Qn.value, vueRt(() => {
+        ar.value = null, z.open = true, z.value = ``, z.x = e.x, z.y = e.y, z.fontSize = Qn.value, ae(() => {
           requestAnimationFrame(() => Gn.value?.focus());
         });
       }
       function Jr(e) {
         let t = En(e);
-        ar.value = e.id, z.open = true, z.value = e.text, z.x = t.x, z.y = t.y, z.fontSize = e.fontSize, M.value = e.color, J(), vueRt(() => {
+        ar.value = e.id, z.open = true, z.value = e.text, z.x = t.x, z.y = t.y, z.fontSize = e.fontSize, M.value = e.color, J(), ae(() => {
           requestAnimationFrame(() => {
             Gn.value?.focus(), Gn.value?.setSelectionRange(z.value.length, z.value.length);
           });
@@ -1366,16 +1366,16 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       }
       function $() {
         if (!z.open) return;
-        let trimmed = z.value.replace(/\r/g, ``).trim(),
+        let e = z.value.replace(/\r/g, ``).trim(),
           t = {
             x: z.x,
             y: z.y
           },
           fontSize = z.fontSize,
           r = ar.value;
-        yr = null, z.open = false, z.value = ``, ar.value = null, (trimmed || r) && (X(), r ? O.value.strokes = O.value.strokes.flatMap(item => item.id === r ? trimmed ? [{
-          ...item,
-          text: trimmed,
+        yr = null, z.open = false, z.value = ``, ar.value = null, (e || r) && (X(), r ? O.value.strokes = O.value.strokes.flatMap(i => i.id === r ? e ? [{
+          ...i,
+          text: e,
           color: M.value,
           fontSize: fontSize,
           points: [t],
@@ -1384,10 +1384,10 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             y: 0
           },
           clips: []
-        }] : [] : [item]) : O.value.strokes.push({
+        }] : [] : [i]) : O.value.strokes.push({
           id: mn(),
           kind: `text`,
-          text: trimmed,
+          text: e,
           color: M.value,
           fontSize: fontSize,
           width: 1,
@@ -1400,7 +1400,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       }
       function Zr(event, t) {
         if (!z.open) return;
-        let boundingClientRect = event.currentTarget.parentElement.getBoundingClientRect();
+        let n = event.currentTarget.parentElement.getBoundingClientRect();
         yr = {
           pointerId: event.pointerId,
           corner: t,
@@ -1409,9 +1409,9 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           startFontSize: z.fontSize,
           startX: z.x,
           startY: z.y,
-          startWidth: boundingClientRect.width,
-          startHeight: boundingClientRect.height,
-          diagonal: Math.max(1, Math.hypot(boundingClientRect.width, boundingClientRect.height))
+          startWidth: n.width,
+          startHeight: n.height,
+          diagonal: Math.max(1, Math.hypot(n.width, n.height))
         }, event.currentTarget.setPointerCapture(event.pointerId);
       }
       function Qr(event) {
@@ -1422,9 +1422,9 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           i = ((event.clientX - t.startClientX) * n * t.startWidth + (event.clientY - t.startClientY) * r * t.startHeight) / t.diagonal,
           a = Math.max(.1, (t.diagonal + i) / t.diagonal);
         z.fontSize = Math.max(Qt, Math.min($t, t.startFontSize * a));
-        let float = Number.parseFloat(K.value.width),
-          floatResult = Number.parseFloat(K.value.height);
-        z.x = t.corner.includes(`left`) ? t.startX + (t.startWidth - float) / N.value : t.startX, z.y = t.corner.includes(`top`) ? t.startY + (t.startHeight - floatResult) / N.value : t.startY;
+        let o = Number.parseFloat(K.value.width),
+          s = Number.parseFloat(K.value.height);
+        z.x = t.corner.includes(`left`) ? t.startX + (t.startWidth - o) / N.value : t.startX, z.y = t.corner.includes(`top`) ? t.startY + (t.startHeight - s) / N.value : t.startY;
       }
       function $r(event) {
         if (yr && yr.pointerId === event.pointerId) {
@@ -1442,10 +1442,10 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         if (event.key === `Enter` && !event.isComposing) {
           event.preventDefault();
           let t = Gn.value,
-            fallbackValue = t?.selectionStart ?? z.value.length,
-            fallbackValueValue = t?.selectionEnd ?? fallbackValue;
-          z.value = `${z.value.slice(0, fallbackValue)}\n${z.value.slice(fallbackValueValue)}`, vueRt(() => {
-            t?.focus(), t?.setSelectionRange(fallbackValue + 1, fallbackValue + 1);
+            n = t?.selectionStart ?? z.value.length,
+            r = t?.selectionEnd ?? n;
+          z.value = `${z.value.slice(0, n)}\n${z.value.slice(r)}`, ae(() => {
+            t?.focus(), t?.setSelectionRange(n + 1, n + 1);
           });
         }
       }
@@ -1470,17 +1470,17 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         return null;
       }
       function ri(event) {
-        let boundingClientRect = k.value.getBoundingClientRect();
+        let t = k.value.getBoundingClientRect();
         return {
-          x: (event.clientX - boundingClientRect.left - P.x) / N.value,
-          y: (event.clientY - boundingClientRect.top - P.y) / N.value
+          x: (event.clientX - t.left - P.x) / N.value,
+          y: (event.clientY - t.top - P.y) / N.value
         };
       }
       function ii(event) {
-        let boundingClientRect = k.value.getBoundingClientRect();
+        let t = k.value.getBoundingClientRect();
         return {
-          x: event.clientX - boundingClientRect.left,
-          y: event.clientY - boundingClientRect.top
+          x: event.clientX - t.left,
+          y: event.clientY - t.top
         };
       }
       function ai(e, t) {
@@ -1488,10 +1488,10 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           let n = En(t);
           e.save(), e.fillStyle = t.color, e.font = n.font, e.textAlign = `left`, e.textBaseline = `top`, An(e, t);
           let r = (n.lineHeight - n.fontSize) / 2 + en / N.value;
-          n.lines.forEach((item, i) => e.fillText(item, n.x, n.y + r + i * n.lineHeight)), e.restore();
+          n.lines.forEach((t, i) => e.fillText(t, n.x, n.y + r + i * n.lineHeight)), e.restore();
           return;
         }
-        let fallbackValue = t.offset || {
+        let n = t.offset || {
             x: 0,
             y: 0
           },
@@ -1503,14 +1503,14 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           o = i !== a;
         e.lineCap = o ? `butt` : i, e.lineJoin = `round`, An(e, t), e.beginPath();
         let s = t.kind !== `shape`,
-          mapped = r.map(item => ({
-            x: item.x + (s ? fallbackValue.x : 0),
-            y: item.y + (s ? fallbackValue.y : 0)
+          c = r.map(e => ({
+            x: e.x + (s ? n.x : 0),
+            y: e.y + (s ? n.y : 0)
           }));
-        e.moveTo(mapped[0].x, mapped[0].y);
-        for (let t = 1; t < r.length; t += 1) e.lineTo(mapped[t].x, mapped[t].y);
-        r.length === 1 && e.lineTo(mapped[0].x + .01, mapped[0].y + .01), e.stroke(), o && (e.fillStyle = t.color, [i === `round` ? mapped[0] : null, a === `round` ? mapped[mapped.length - 1] : null].filter(Boolean).forEach(item => {
-          e.beginPath(), e.arc(item.x, item.y, t.width / 2, 0, Math.PI * 2), e.fill();
+        e.moveTo(c[0].x, c[0].y);
+        for (let t = 1; t < r.length; t += 1) e.lineTo(c[t].x, c[t].y);
+        r.length === 1 && e.lineTo(c[0].x + .01, c[0].y + .01), e.stroke(), o && (e.fillStyle = t.color, [i === `round` ? c[0] : null, a === `round` ? c[c.length - 1] : null].filter(Boolean).forEach(n => {
+          e.beginPath(), e.arc(n.x, n.y, t.width / 2, 0, Math.PI * 2), e.fill();
         })), e.restore();
       }
       function oi(e) {
@@ -1521,13 +1521,13 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           i = Math.max(1, r.right - r.left),
           a = Math.max(1, r.bottom - r.top),
           o = Math.min(1, 1024 / i, 1024 / a),
-          element = document.createElement(`canvas`);
-        element.width = Math.max(1, Math.ceil(i * o)), element.height = Math.max(1, Math.ceil(a * o));
-        let context = element.getContext(`2d`, {
+          s = document.createElement(`canvas`);
+        s.width = Math.max(1, Math.ceil(i * o)), s.height = Math.max(1, Math.ceil(a * o));
+        let c = s.getContext(`2d`, {
           willReadFrequently: true
         });
-        context.setTransform(o, 0, 0, o, -r.left * o, -r.top * o), ai(context, e);
-        let l = context.getImageData(0, 0, element.width, element.height).data,
+        c.setTransform(o, 0, 0, o, -r.left * o, -r.top * o), ai(c, e);
+        let l = c.getImageData(0, 0, s.width, s.height).data,
           u = 0;
         for (let e = 3; e < l.length; e += 4) if (l[e] > 12 && ++u >= 2) return true;
         return false;
@@ -1536,14 +1536,14 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         if (!e || !k.value) return null;
         let clientWidth = k.value.clientWidth,
           clientHeight = k.value.clientHeight,
-          fallbackValue = window.devicePixelRatio || 1;
-        (e.width !== Math.round(clientWidth * fallbackValue) || e.height !== Math.round(clientHeight * fallbackValue)) && (e.width = Math.round(clientWidth * fallbackValue), e.height = Math.round(clientHeight * fallbackValue));
-        let context = e.getContext(`2d`);
-        return context.setTransform(1, 0, 0, 1, 0, 0), context.globalAlpha = 1, context.globalCompositeOperation = `source-over`, context.clearRect(0, 0, e.width, e.height), context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), {
-          ctx: context,
+          r = window.devicePixelRatio || 1;
+        (e.width !== Math.round(clientWidth * r) || e.height !== Math.round(clientHeight * r)) && (e.width = Math.round(clientWidth * r), e.height = Math.round(clientHeight * r));
+        let i = e.getContext(`2d`);
+        return i.setTransform(1, 0, 0, 1, 0, 0), i.globalAlpha = 1, i.globalCompositeOperation = `source-over`, i.clearRect(0, 0, e.width, e.height), i.setTransform(r, 0, 0, r, 0, 0), {
+          ctx: i,
           width: clientWidth,
           height: clientHeight,
-          dpr: fallbackValue
+          dpr: r
         };
       }
       function ci() {
@@ -1555,18 +1555,18 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           height: r,
           dpr: i
         } = e;
-        gr && W.mode === `move-selection` && W.historyRecorded ? (t.save(), t.setTransform(1, 0, 0, 1, 0, 0), t.drawImage(gr.background, 0, 0), t.drawImage(gr.selected, vr.x * N.value * i, vr.y * N.value * i), t.restore()) : (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), Pr(t, O.value.backgroundImage, n, r), O.value.strokes.forEach(item => {
-          (!z.open || item.id !== ar.value) && ai(t, item);
-        }), t.restore()), I.value?.length > 1 && (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), t.strokeStyle = `#2f7dff`, t.lineWidth = 1.25 / N.value, t.setLineDash([6 / N.value, 5 / N.value]), t.beginPath(), t.moveTo(I.value[0].x, I.value[0].y), I.value.slice(1).forEach(item => t.lineTo(item.x, item.y)), er.value && t.lineTo(I.value[0].x, I.value[0].y), t.stroke(), t.restore());
+        gr && W.mode === `move-selection` && W.historyRecorded ? (t.save(), t.setTransform(1, 0, 0, 1, 0, 0), t.drawImage(gr.background, 0, 0), t.drawImage(gr.selected, vr.x * N.value * i, vr.y * N.value * i), t.restore()) : (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), Pr(t, O.value.backgroundImage, n, r), O.value.strokes.forEach(e => {
+          (!z.open || e.id !== ar.value) && ai(t, e);
+        }), t.restore()), I.value?.length > 1 && (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), t.strokeStyle = `#2f7dff`, t.lineWidth = 1.25 / N.value, t.setLineDash([6 / N.value, 5 / N.value]), t.beginPath(), t.moveTo(I.value[0].x, I.value[0].y), I.value.slice(1).forEach(e => t.lineTo(e.x, e.y)), er.value && t.lineTo(I.value[0].x, I.value[0].y), t.stroke(), t.restore());
       }
       function li(items, t = false) {
         let n = A.value;
         if (!n) return null;
-        let element = document.createElement(`canvas`);
-        element.width = n.width, element.height = n.height;
-        let context = element.getContext(`2d`),
-          fallbackValue = window.devicePixelRatio || 1;
-        return context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.translate(P.x, P.y), context.scale(N.value, N.value), t && Pr(context, O.value.backgroundImage, n.width / fallbackValue, n.height / fallbackValue), items.forEach(item => ai(context, item)), element;
+        let r = document.createElement(`canvas`);
+        r.width = n.width, r.height = n.height;
+        let i = r.getContext(`2d`),
+          a = window.devicePixelRatio || 1;
+        return i.setTransform(a, 0, 0, a, 0, 0), i.translate(P.x, P.y), i.scale(N.value, N.value), t && Pr(i, O.value.backgroundImage, n.width / a, n.height / a), items.forEach(e => ai(i, e)), r;
       }
       function ui(e, t) {
         return {
@@ -1577,21 +1577,21 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       function di(e, t) {
         let n = Zn.value / 2 / N.value,
           r = Sn(e, t, n);
-        O.value.strokes = O.value.strokes.map(item => {
-          if (!Pn(item, e, t, n)) return item;
-          let fallbackValue = item.offset || {
+        O.value.strokes = O.value.strokes.map(i => {
+          if (!Pn(i, e, t, n)) return i;
+          let a = i.offset || {
               x: 0,
               y: 0
             },
-            mapped = r.map(e => ({
-              x: e.x - fallbackValue.x,
-              y: e.y - fallbackValue.y
+            o = r.map(e => ({
+              x: e.x - a.x,
+              y: e.y - a.y
             }));
           return {
-            ...item,
-            clips: [...(item.clips || []), {
+            ...i,
+            clips: [...(i.clips || []), {
               include: false,
-              polygon: mapped
+              polygon: o
             }]
           };
         });
@@ -1619,8 +1619,8 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
               x: 0,
               y: 0
             };
-            let filtered = W.baseStrokes.filter(item => _r.has(item.id));
-            gr = ui(W.baseStrokes.filter(item => !_r.has(item.id)), filtered), nr.value = true;
+            let t = W.baseStrokes.filter(e => _r.has(e.id));
+            gr = ui(W.baseStrokes.filter(e => !_r.has(e.id)), t), nr.value = true;
           } else W.mode = `lasso`, I.value = [n], er.value = false, L.value = [];
           J();
           return;
@@ -1694,9 +1694,9 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             x: n.x - W.start.x,
             y: n.y - W.start.y
           };
-          !W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded && Math.hypot(n.x - W.last.x, n.y - W.last.y) >= .75 / N.value && (vr = e, L.value = [...W.dragIds], I.value = W.originalSelection.map(item => ({
-            x: item.x + e.x,
-            y: item.y + e.y
+          !W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded && Math.hypot(n.x - W.last.x, n.y - W.last.y) >= .75 / N.value && (vr = e, L.value = [...W.dragIds], I.value = W.originalSelection.map(t => ({
+            x: t.x + e.x,
+            y: t.y + e.y
           })), W.last = n, J());
         } else if (W.mode === `move-text` || W.mode === `move-shape`) {
           let e = {
@@ -1705,39 +1705,39 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           };
           if (!W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded) {
             let t = W.dragIds[0];
-            O.value.strokes = W.baseStrokes.map(item => t === item.id ? {
-              ...item,
+            O.value.strokes = W.baseStrokes.map(n => t === n.id ? {
+              ...n,
               offset: {
-                x: (item.offset?.x || 0) + e.x,
-                y: (item.offset?.y || 0) + e.y
+                x: (n.offset?.x || 0) + e.x,
+                y: (n.offset?.y || 0) + e.y
               }
-            } : item), W.last = n, J();
+            } : n), W.last = n, J();
           }
         }
       }
-      function mi(count) {
+      function mi(e) {
         if (!W.drawing) return;
         let mode = W.mode;
         if (mode === `eraser` && W.last) {
-          let t = ri(count);
+          let t = ri(e);
           Math.hypot(t.x - W.last.x, t.y - W.last.y) > .01 / N.value && di(W.last, t);
         }
         if (W.mode === `lasso`) {
           let e = Bn(I.value || [], Math.max(1.25, 2 / N.value));
-          e.length >= 3 ? (I.value = e, er.value = true, L.value = O.value.strokes.filter(item => Fn(item, e)).map(item => item.id), L.value.length || Y(handler(`SelectionEmpty`))) : Z();
+          e.length >= 3 ? (I.value = e, er.value = true, L.value = O.value.strokes.filter(t => Fn(t, e)).map(e => e.id), L.value.length || Y(T(`SelectionEmpty`))) : Z();
         }
-        mode === `move-selection` && W.historyRecorded && W.baseStrokes && _r && (O.value.strokes = W.baseStrokes.map(item => _r.has(item.id) ? {
-          ...item,
+        mode === `move-selection` && W.historyRecorded && W.baseStrokes && _r && (O.value.strokes = W.baseStrokes.map(e => _r.has(e.id) ? {
+          ...e,
           offset: {
-            x: (item.offset?.x || 0) + vr.x,
-            y: (item.offset?.y || 0) + vr.y
+            x: (e.offset?.x || 0) + vr.x,
+            y: (e.offset?.y || 0) + vr.y
           }
-        } : item), Z()), W.drawing = false, W.mode = null, W.baseStrokes = null, W.dragIds = null, W.originalSelection = null, gr = null, _r = null, vr = {
+        } : e), Z()), W.drawing = false, W.mode = null, W.baseStrokes = null, W.dragIds = null, W.originalSelection = null, gr = null, _r = null, vr = {
           x: 0,
           y: 0
         }, nr.value = false, rr.value = null, F.down = false, mode === `eraser` && (O.value.strokes = O.value.strokes.filter(oi)), [`pen`, `shape`, `eraser`].includes(mode) || [`move-selection`, `move-text`, `move-shape`].includes(mode) && W.historyRecorded, J();
         try {
-          A.value.releasePointerCapture(count.pointerId);
+          A.value.releasePointerCapture(e.pointerId);
         } catch {}
       }
       function hi(e) {
@@ -1749,12 +1749,12 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       function _i(e, t = null) {
         let n = Math.max(.05, Math.min(2, Number(e.toFixed(2))));
         if (n === N.value || !k.value) return;
-        let fallbackValue = t || {
+        let r = t || {
             x: k.value.clientWidth / 2,
             y: k.value.clientHeight / 2
           },
           i = n / N.value;
-        P.x = fallbackValue.x - (fallbackValue.x - P.x) * i, P.y = fallbackValue.y - (fallbackValue.y - P.y) * i, N.value = n, J();
+        P.x = r.x - (r.x - P.x) * i, P.y = r.y - (r.y - P.y) * i, N.value = n, J();
       }
       function vi(event) {
         if (event.ctrlKey || event.metaKey) {
@@ -1776,18 +1776,18 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }
       }
       function yi() {
-        L.value.length && (X(), O.value.strokes = O.value.strokes.filter(item => !L.value.includes(item.id)), Z(), J());
+        L.value.length && (X(), O.value.strokes = O.value.strokes.filter(e => !L.value.includes(e.id)), Z(), J());
       }
       async function bi() {
-        if (!on) return Y(handler(`DesktopOpenRequired`));
-        let board = await on.openBoard();
-        if (board?.canceled || !board?.imageDataUrl) return;
+        if (!on) return Y(T(`DesktopOpenRequired`));
+        let e = await on.openBoard();
+        if (e?.canceled || !e?.imageDataUrl) return;
         fn.clear();
-        let t = Nr(board.imageDataUrl);
+        let t = Nr(e.imageDataUrl);
         await t.decode();
         let n = hn(1);
-        n.name = String(board.fileName || handler(`UntitledBoard`)).replace(/\.png$/i, ``), n.backgroundImage = {
-          dataUrl: board.imageDataUrl,
+        n.name = String(e.fileName || T(`UntitledBoard`)).replace(/\.png$/i, ``), n.backgroundImage = {
+          dataUrl: e.imageDataUrl,
           fitStage: false,
           x: 0,
           y: 0,
@@ -1796,11 +1796,11 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }, Hn.value = {
           pages: [n],
           pageIndex: 0
-        }, R.value = null, lr.value = board.filePath || null, ur.value = `board`, dr.value = true;
-        let fallbackValue = k.value?.clientWidth || t.naturalWidth,
+        }, R.value = null, lr.value = e.filePath || null, ur.value = `board`, dr.value = true;
+        let r = k.value?.clientWidth || t.naturalWidth,
           i = k.value?.clientHeight || t.naturalHeight,
-          a = Math.max(.05, Math.min(1, (fallbackValue - 48) / t.naturalWidth, (i - 48) / t.naturalHeight));
-        N.value = a, P.x = (fallbackValue - t.naturalWidth * a) / 2, P.y = (i - t.naturalHeight * a) / 2, Object.keys(H).forEach(item => delete H[item]), Object.keys(U).forEach(item => delete U[item]), Z(), Wn = Un(), Ar(), J(), Y(handler(`PngOpened`));
+          a = Math.max(.05, Math.min(1, (r - 48) / t.naturalWidth, (i - 48) / t.naturalHeight));
+        N.value = a, P.x = (r - t.naturalWidth * a) / 2, P.y = (i - t.naturalHeight * a) / 2, Object.keys(H).forEach(e => delete H[e]), Object.keys(U).forEach(e => delete U[e]), Z(), Wn = Un(), Ar(), J(), Y(T(`PngOpened`));
       }
       function xi() {
         let backgroundImage = O.value.backgroundImage,
@@ -1810,10 +1810,10 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             right: (backgroundImage.x || 0) + backgroundImage.width,
             bottom: (backgroundImage.y || 0) + backgroundImage.height
           };
-        for (let count of O.value.strokes) {
-          let n = Nn(count);
-          if (!n.length || !oi(count)) continue;
-          let r = count.kind === `text` ? 2 : Math.max(2, Number(count.width || 1) / 2 + 1),
+        for (let e of O.value.strokes) {
+          let n = Nn(e);
+          if (!n.length || !oi(e)) continue;
+          let r = e.kind === `text` ? 2 : Math.max(2, Number(e.width || 1) / 2 + 1),
             i = Rn(In(n), r);
           t = {
             left: Math.min(t.left, i.left),
@@ -1831,39 +1831,39 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       }
       function Si(e) {
         let t = xi(),
-          element = document.createElement(`canvas`);
-        element.width = Math.max(1, t.right - t.left), element.height = Math.max(1, t.bottom - t.top);
-        let context = element.getContext(`2d`);
-        if (context.fillStyle = e === `board` ? `#fcfdfc` : `#ffffff`, context.fillRect(0, 0, element.width, element.height), e === `board`) {
+          n = document.createElement(`canvas`);
+        n.width = Math.max(1, t.right - t.left), n.height = Math.max(1, t.bottom - t.top);
+        let r = n.getContext(`2d`);
+        if (r.fillStyle = e === `board` ? `#fcfdfc` : `#ffffff`, r.fillRect(0, 0, n.width, n.height), e === `board`) {
           let e = (-t.left % 24 + 24) % 24,
             i = (-t.top % 24 + 24) % 24;
-          context.fillStyle = `rgba(110,142,122,.19)`;
-          for (let t = e; t < element.width; t += 24) for (let e = i; e < element.height; e += 24) context.beginPath(), context.arc(t, e, 1, 0, Math.PI * 2), context.fill();
+          r.fillStyle = `rgba(110,142,122,.19)`;
+          for (let t = e; t < n.width; t += 24) for (let e = i; e < n.height; e += 24) r.beginPath(), r.arc(t, e, 1, 0, Math.PI * 2), r.fill();
         }
-        return context.translate(-t.left, -t.top), Pr(context, O.value.backgroundImage, element.width, element.height), O.value.strokes.forEach(item => ai(context, item)), element.toDataURL(`image/png`);
+        return r.translate(-t.left, -t.top), Pr(r, O.value.backgroundImage, n.width, n.height), O.value.strokes.forEach(e => ai(r, e)), n.toDataURL(`image/png`);
       }
       function Ci(e) {
         if (dr.value && O.value.backgroundImage) return Si(e);
         let t = A.value,
-          element = document.createElement(`canvas`);
-        element.width = t.width, element.height = t.height;
-        let fallbackValue = window.devicePixelRatio || 1,
-          context = element.getContext(`2d`);
-        if (context.fillStyle = e === `board` ? `#fcfdfc` : `#ffffff`, context.fillRect(0, 0, element.width, element.height), e === `board`) {
-          let e = 24 * N.value * fallbackValue,
-            t = (P.x * fallbackValue % e + e) % e,
-            a = (P.y * fallbackValue % e + e) % e;
-          context.fillStyle = `rgba(110,142,122,.19)`;
-          for (let o = t; o < element.width; o += e) for (let t = a; t < element.height; t += e) context.beginPath(), context.arc(o, t, Math.max(1, fallbackValue), 0, Math.PI * 2), context.fill();
+          n = document.createElement(`canvas`);
+        n.width = t.width, n.height = t.height;
+        let r = window.devicePixelRatio || 1,
+          i = n.getContext(`2d`);
+        if (i.fillStyle = e === `board` ? `#fcfdfc` : `#ffffff`, i.fillRect(0, 0, n.width, n.height), e === `board`) {
+          let e = 24 * N.value * r,
+            t = (P.x * r % e + e) % e,
+            a = (P.y * r % e + e) % e;
+          i.fillStyle = `rgba(110,142,122,.19)`;
+          for (let o = t; o < n.width; o += e) for (let t = a; t < n.height; t += e) i.beginPath(), i.arc(o, t, Math.max(1, r), 0, Math.PI * 2), i.fill();
         }
-        return context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.translate(P.x, P.y), context.scale(N.value, N.value), Pr(context, O.value.backgroundImage, t.width / fallbackValue, t.height / fallbackValue), O.value.strokes.forEach(item => ai(context, item)), element.toDataURL(`image/png`);
+        return i.setTransform(r, 0, 0, r, 0, 0), i.translate(P.x, P.y), i.scale(N.value, N.value), Pr(i, O.value.backgroundImage, t.width / r, t.height / r), O.value.strokes.forEach(e => ai(i, e)), n.toDataURL(`image/png`);
       }
       async function wi(e, t = `image`, n = null) {
         let r = _e(),
           i = !!(O.value.strokes.length || O.value.backgroundImage);
-        if (!on) return Y(handler(`DesktopSaveRequired`)), `failed`;
+        if (!on) return Y(T(`DesktopSaveRequired`)), `failed`;
         try {
-          let saveBoard = await on.saveBoard({
+          let a = await on.saveBoard({
             name: O.value.name,
             board: t === `image` ? null : E(Hn.value),
             mode: t,
@@ -1872,11 +1872,11 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
             filePath: n,
             openedImageFile: dr.value
           });
-          return saveBoard?.canceled ? `cancelled` : (saveBoard?.filePath && i && r(`tool_action_success`, {
+          return a?.canceled ? `cancelled` : (a?.filePath && i && r(`tool_action_success`, {
             action: `whiteboard_saved`
-          }), t === `image` && (lr.value = saveBoard.filePath || n || null, ur.value = e), Wn = Un(), sr.value = false, Y(saveBoard.type === `image` ? handler(`ImageSaved`) : handler(`ProjectSaved`)), `saved`);
+          }), t === `image` && (lr.value = a.filePath || n || null, ur.value = e), Wn = Un(), sr.value = false, Y(a.type === `image` ? T(`ImageSaved`) : T(`ProjectSaved`)), `saved`);
         } catch {
-          return Y(handler(`SaveFailed`)), `failed`;
+          return Y(T(`SaveFailed`)), `failed`;
         }
       }
       async function Ti(e) {
@@ -1892,7 +1892,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         G = null, e(`cancelled`);
       }
       function Di() {
-        Xr(), Hn.value = gn(), R.value = null, Wn = Un(), lr.value = null, ur.value = `white`, dr.value = false, Object.keys(H).forEach(item => delete H[item]), Object.keys(U).forEach(item => delete U[item]), Z(), Ar(), J();
+        Xr(), Hn.value = gn(), R.value = null, Wn = Un(), lr.value = null, ur.value = `white`, dr.value = false, Object.keys(H).forEach(e => delete H[e]), Object.keys(U).forEach(e => delete U[e]), Z(), Ar(), J();
       }
       async function Oi() {
         if ($(), lr.value) {
@@ -1929,8 +1929,8 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         }));
       }
       function Fi(event) {
-        let fallbackValue = event.composedPath?.().find(e => e instanceof HTMLInputElement || e instanceof HTMLTextAreaElement || e?.isContentEditable) || event.target;
-        if (fallbackValue instanceof HTMLInputElement || fallbackValue instanceof HTMLTextAreaElement || fallbackValue?.isContentEditable) return;
+        let t = event.composedPath?.().find(e => e instanceof HTMLInputElement || e instanceof HTMLTextAreaElement || e?.isContentEditable) || event.target;
+        if (t instanceof HTMLInputElement || t instanceof HTMLTextAreaElement || t?.isContentEditable) return;
         if (event.key === `Escape` && V.value) {
           B.value = null, fr.value = false, V.value = false;
           return;
@@ -1944,44 +1944,44 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
           return;
         }
         if (event.key === `Delete` || event.key === `Backspace`) {
-          L.value.length ? (event.preventDefault(), yi()) : R.value && (event.preventDefault(), X(), O.value.strokes = O.value.strokes.filter(item => item.id !== R.value), R.value = null, J());
+          L.value.length ? (event.preventDefault(), yi()) : R.value && (event.preventDefault(), X(), O.value.strokes = O.value.strokes.filter(e => e.id !== R.value), R.value = null, J());
           return;
         }
         if (event.ctrlKey || event.metaKey || event.altKey) return;
-        let lowercased = event.key.toLowerCase();
-        lowercased === `p` && Q(`pen`), lowercased === `e` && Q(`eraser`), lowercased === `s` && Q(`shape`), lowercased === `t` && Q(`text`), lowercased === `v` && Q(`select`);
+        let n = event.key.toLowerCase();
+        n === `p` && Q(`pen`), n === `e` && Q(`eraser`), n === `s` && Q(`shape`), n === `t` && Q(`text`), n === `v` && Q(`select`);
       }
-      vueUt(() => {
-        Wn = Un(), pr = new ResizeObserver(J), pr.observe(k.value), window.addEventListener(`keydown`, Fi), window.addEventListener(`resize`, Vr), window.addEventListener(`beforeunload`, Ar), vueRt(J);
-      }), vueOt(() => {
+      oe(() => {
+        Wn = Un(), pr = new ResizeObserver(J), pr.observe(k.value), window.addEventListener(`keydown`, Fi), window.addEventListener(`resize`, Vr), window.addEventListener(`beforeunload`, Ar), ae(J);
+      }), ie(() => {
         xr && ki(false), G &&= (G(`cancelled`), null), pr?.disconnect(), window.removeEventListener(`keydown`, Fi), window.removeEventListener(`resize`, Vr), window.removeEventListener(`beforeunload`, Ar), hr && cancelAnimationFrame(hr), Ar();
       });
       async function Ii() {
-        return $(), lr.value ? Mr() ? wi(dr.value ? `board` : ur.value, `image`, lr.value) : (Y(handler(`AlreadySaved`)), `saved`) : (Li(), `pending`);
+        return $(), lr.value ? Mr() ? wi(dr.value ? `board` : ur.value, `image`, lr.value) : (Y(T(`AlreadySaved`)), `saved`) : (Li(), `pending`);
       }
       async function Li() {
         return $(), dr.value ? wi(`board`, `image`, null) : (sr.value = true, `pending`);
       }
-      return expose({
+      return C({
         requestClose: Pi,
         openBoard: bi,
         saveCurrentBoard: Ii,
         openSaveAsDialog: Li
-      }), (n, renderCache) => (vueGt(), vueS(`main`, We, [vueY(`section`, {
+      }), (n, r) => (h(), d(`main`, We, [x(`section`, {
         ref_key: `stageRef`,
         ref: k,
         class: `absolute inset-0 touch-none overflow-hidden bg-background bg-[radial-gradient(circle,color-mix(in_srgb,var(--muted-foreground)_24%,transparent)_1px,transparent_1.15px)]`,
-        style: vueNr({
+        style: _({
           backgroundPosition: `${P.x}px ${P.y}px`,
           backgroundSize: `${24 * N.value}px ${24 * N.value}px`
         }),
-        "aria-label": handler(`CanvasAriaLabel`),
+        "aria-label": T(`CanvasAriaLabel`),
         onWheel: vi
-      }, [vueY(`canvas`, {
+      }, [x(`canvas`, {
         ref_key: `canvasRef`,
         ref: A,
         class: `absolute inset-0 size-full touch-none select-none dark:hue-rotate-180 dark:invert-[.9]`,
-        style: vueNr({
+        style: _({
           cursor: Dr.value
         }),
         onPointerdown: fi,
@@ -1991,391 +1991,391 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
         onPointerenter: hi,
         onPointerleave: gi,
         onDblclick: Yr,
-        onContextmenu: renderCache[0] ||= playerE(() => {}, [`prevent`])
-      }, null, 36), z.open ? vueZt((vueGt(), vueS(`textarea`, {
+        onContextmenu: r[0] ||= S(() => {}, [`prevent`])
+      }, null, 36), z.open ? ee((h(), d(`textarea`, {
         key: 0,
         ref_key: `textInputRef`,
         ref: Gn,
-        "onUpdate:modelValue": renderCache[1] ||= e => z.value = e,
+        "onUpdate:modelValue": r[1] ||= e => z.value = e,
         class: `absolute z-[16] m-0 cursor-text resize-none overflow-hidden rounded-[2px] border border-dashed border-current/65 bg-white/10 px-1 py-[3px] font-medium shadow-none outline-none [caret-color:currentColor] [font-family:'PingFang_SC','Microsoft_YaHei',sans-serif] dark:bg-black/15`,
-        style: vueNr(K.value),
-        "aria-label": handler(`TextInputAriaLabel`),
+        style: _(K.value),
+        "aria-label": T(`TextInputAriaLabel`),
         wrap: `off`,
         onKeydown: ei,
         onBlur: $,
-        onPointerdown: renderCache[2] ||= playerE(() => {}, [`stop`])
-      }, null, 44, Ke)), [[playerC, z.value]]) : vueX(``, true), z.open ? (vueGt(), vueS(`div`, {
+        onPointerdown: r[2] ||= S(() => {}, [`stop`])
+      }, null, 44, Ke)), [[ce, z.value]]) : b(``, true), z.open ? (h(), d(`div`, {
         key: 1,
         class: `pointer-events-none absolute z-[17]`,
-        style: vueNr(Er.value),
-        "aria-label": handler(`EditingTextAriaLabel`)
-      }, [(vueGt(), vueS(vueC, null, vueSt(cn, e => vueY(`span`, {
+        style: _(Er.value),
+        "aria-label": T(`EditingTextAriaLabel`)
+      }, [(h(), d(ne, null, f(cn, e => x(`span`, {
         key: e,
-        class: vueN([`pointer-events-auto absolute z-[2] block size-[9px] touch-none rounded-full border-[1.5px] border-primary bg-background shadow-[0_1px_3px_rgb(22_163_74/0.22)]`, options[e]]),
+        class: s([`pointer-events-auto absolute z-[2] block size-[9px] touch-none rounded-full border-[1.5px] border-primary bg-background shadow-[0_1px_3px_rgb(22_163_74/0.22)]`, ln[e]]),
         role: `button`,
-        "aria-label": handler(`ResizeTextAriaLabel`),
-        onPointerdown: playerE(t => Zr(t, e), [`prevent`, `stop`]),
-        onPointermove: playerE(Qr, [`prevent`, `stop`]),
-        onPointerup: playerE($r, [`prevent`, `stop`]),
-        onPointercancel: playerE($r, [`prevent`, `stop`])
-      }, null, 42, Je)), 64))], 12, qe)) : vueX(``, true), Or.value && j.value === `shape` ? (vueGt(), vueS(`div`, {
+        "aria-label": T(`ResizeTextAriaLabel`),
+        onPointerdown: S(t => Zr(t, e), [`prevent`, `stop`]),
+        onPointermove: S(Qr, [`prevent`, `stop`]),
+        onPointerup: S($r, [`prevent`, `stop`]),
+        onPointercancel: S($r, [`prevent`, `stop`])
+      }, null, 42, Je)), 64))], 12, qe)) : b(``, true), Or.value && j.value === `shape` ? (h(), d(`div`, {
         key: 2,
         class: `pointer-events-none absolute z-[17] border border-dashed border-primary`,
-        style: vueNr(kr.value),
+        style: _(kr.value),
         "aria-hidden": `true`
-      }, [(vueGt(), vueS(vueC, null, vueSt(cn, e => vueY(`span`, {
+      }, [(h(), d(ne, null, f(cn, e => x(`span`, {
         key: e,
-        class: vueN([`pointer-events-auto absolute z-[2] block size-[9px] touch-none rounded-full border-[1.5px] border-primary bg-background shadow-[0_1px_3px_rgb(22_163_74/0.24)]`, options[e]]),
-        onPointerdown: playerE(t => Wr(t, e), [`prevent`, `stop`]),
-        onPointermove: playerE(Gr, [`prevent`, `stop`]),
-        onPointerup: playerE(Kr, [`prevent`, `stop`]),
-        onPointercancel: playerE(Kr, [`prevent`, `stop`])
-      }, null, 42, Ye)), 64))], 4)) : vueX(``, true), F.visible && (j.value === `pen` || j.value === `eraser`) ? (vueGt(), vueS(`div`, {
+        class: s([`pointer-events-auto absolute z-[2] block size-[9px] touch-none rounded-full border-[1.5px] border-primary bg-background shadow-[0_1px_3px_rgb(22_163_74/0.24)]`, ln[e]]),
+        onPointerdown: S(t => Wr(t, e), [`prevent`, `stop`]),
+        onPointermove: S(Gr, [`prevent`, `stop`]),
+        onPointerup: S(Kr, [`prevent`, `stop`]),
+        onPointercancel: S(Kr, [`prevent`, `stop`])
+      }, null, 42, Ye)), 64))], 4)) : b(``, true), F.visible && (j.value === `pen` || j.value === `eraser`) ? (h(), d(`div`, {
         key: 3,
         class: `pointer-events-none absolute z-[12] size-0 text-gray-800 will-change-[left,top] dark:text-gray-100`,
-        style: vueNr({
+        style: _({
           left: `${F.x}px`,
           top: `${F.y}px`
         }),
         "aria-hidden": `true`
-      }, [j.value === `pen` ? (vueGt(), vueS(`span`, {
+      }, [j.value === `pen` ? (h(), d(`span`, {
         key: 0,
-        class: vueN([`absolute -bottom-px -left-0.5 grid origin-bottom-left place-items-center dark:drop-shadow-[0_0_1px_rgb(255_255_255/0.95)]`, {
+        class: s([`absolute -bottom-px -left-0.5 grid origin-bottom-left place-items-center dark:drop-shadow-[0_0_1px_rgb(255_255_255/0.95)]`, {
           "dark:!text-white": M.value === sn[0]
         }]),
-        style: vueNr({
+        style: _({
           color: M.value,
           transform: `scale(${Math.min(1.25, .68 + Xn.value / 20)})`
         })
-      }, [vueK(vueAn(uiSwitchOt), {
+      }, [g(c(t), {
         size: 17,
         "stroke-width": 1.9
-      })], 6)) : (vueGt(), vueS(`span`, {
+      })], 6)) : (h(), d(`span`, {
         key: 1,
-        class: vueN([`absolute left-0 top-0 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[1.5px] border-primary/70 text-primary transition-[width,height]`, F.down ? `scale-[.94] bg-primary/20` : `bg-primary/10`]),
-        style: vueNr({
+        class: s([`absolute left-0 top-0 grid -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-[1.5px] border-primary/70 text-primary transition-[width,height]`, F.down ? `scale-[.94] bg-primary/20` : `bg-primary/10`]),
+        style: _({
           width: `${Zn.value * N.value}px`,
           height: `${Zn.value * N.value}px`
         })
-      }, [vueK(vueAn(Le), {
+      }, [g(c(Le), {
         size: `62%`
-      })], 6))], 4)) : vueX(``, true), !O.value.strokes.length && !O.value.backgroundImage && !z.open ? (vueGt(), vueS(`div`, options, [renderCache[15] ||= vueY(`div`, {
+      })], 6))], 4)) : b(``, true), !O.value.strokes.length && !O.value.backgroundImage && !z.open ? (h(), d(`div`, Xe, [r[15] ||= x(`div`, {
         class: `relative mb-2 h-[37px] w-[50px]`
-      }, [vueY(`span`, {
+      }, [x(`span`, {
         class: `absolute left-[5px] top-2.5 block h-[3px] w-[38px] -rotate-[9deg] rounded-full bg-muted-foreground/35`
-      }), vueY(`span`, {
+      }), x(`span`, {
         class: `absolute left-0 top-[19px] block h-[3px] w-[45px] rotate-[5deg] rounded-full bg-muted-foreground/35`
-      }), vueY(`span`, {
+      }), x(`span`, {
         class: `absolute left-[11px] top-7 block h-[3px] w-[29px] -rotate-3 rounded-full bg-muted-foreground/35`
-      })], -1), vueY(`strong`, Ze, vueRr(handler(`StartDrawing`)), 1), vueY(`p`, Qe, vueRr(handler(`StartDrawingDescription`)), 1)])) : vueX(``, true)], 44, Ge), B.value === `pen` || B.value === `eraser` || B.value === `text` ? (vueGt(), vueS(`aside`, {
+      })], -1), x(`strong`, Ze, v(T(`StartDrawing`)), 1), x(`p`, Qe, v(T(`StartDrawingDescription`)), 1)])) : b(``, true)], 44, Ge), B.value === `pen` || B.value === `eraser` || B.value === `text` ? (h(), d(`aside`, {
         key: 0,
         class: `absolute z-[32] flex min-h-[42px] min-w-[130px] items-center rounded-[10px] border border-border bg-card p-1 shadow-[0_8px_24px_rgb(20_28_23/0.10)] animate-in fade-in-0 slide-in-from-bottom-1`,
-        style: vueNr(or),
-        "aria-label": B.value === `pen` ? handler(`PenSize`) : B.value === `eraser` ? handler(`EraserSize`) : handler(`Text`)
-      }, [vueY(`div`, et, [(vueGt(true), vueS(vueC, null, vueSt(Cr.value, state => (vueGt(), vueS(`button`, {
+        style: _(or),
+        "aria-label": B.value === `pen` ? T(`PenSize`) : B.value === `eraser` ? T(`EraserSize`) : T(`Text`)
+      }, [x(`div`, et, [(h(true), d(ne, null, f(Cr.value, state => (h(), d(`button`, {
         key: state.value,
         type: `button`,
-        class: vueN([`flex h-8 w-[38px] items-center justify-center rounded-[7px] border transition-colors`, wr.value === state.value ? `border-primary/20 bg-primary/10` : `border-transparent hover:bg-muted`]),
+        class: s([`flex h-8 w-[38px] items-center justify-center rounded-[7px] border transition-colors`, wr.value === state.value ? `border-primary/20 bg-primary/10` : `border-transparent hover:bg-muted`]),
         "aria-label": state.label,
         onClick: t => Ur(state.value)
-      }, [vueY(`span`, nt, [vueY(`i`, {
+      }, [x(`span`, nt, [x(`i`, {
         class: `block rounded-full bg-primary transition-[width,height]`,
-        style: vueNr({
+        style: _({
           width: `${state.previewSize}px`,
           height: `${state.previewSize}px`
         })
-      }, null, 4)])], 10, tt))), 128))])], 12, $e)) : vueX(``, true), B.value === `shape` ? (vueGt(), vueS(`aside`, {
+      }, null, 4)])], 10, tt))), 128))])], 12, $e)) : b(``, true), B.value === `shape` ? (h(), d(`aside`, {
         key: 1,
         class: `absolute z-[32] w-[326px] max-w-[calc(100%-20px)] rounded-[10px] border border-border bg-card p-1 shadow-[0_8px_24px_rgb(20_28_23/0.10)] animate-in fade-in-0 slide-in-from-bottom-1`,
-        style: vueNr(or),
-        "aria-label": handler(`ChooseShape`)
-      }, [vueY(`div`, it, [(vueGt(true), vueS(vueC, null, vueSt(Sr.value, ([e, t, n]) => (vueGt(), vueS(`button`, {
+        style: _(or),
+        "aria-label": T(`ChooseShape`)
+      }, [x(`div`, it, [(h(true), d(ne, null, f(Sr.value, ([e, t, n]) => (h(), d(`button`, {
         key: e,
         type: `button`,
-        class: vueN([`grid h-8 w-full place-items-center rounded-[7px] border transition-colors`, $n.value === e ? `border-primary/20 bg-primary/10 text-primary` : `border-transparent text-muted-foreground hover:bg-muted hover:text-primary`]),
+        class: s([`grid h-8 w-full place-items-center rounded-[7px] border transition-colors`, $n.value === e ? `border-primary/20 bg-primary/10 text-primary` : `border-transparent text-muted-foreground hover:bg-muted hover:text-primary`]),
         title: t,
         onClick: t => $n.value = e
-      }, [(vueGt(), vueB(vueEt(n), {
+      }, [(h(), te(l(n), {
         size: 20
-      }))], 10, at))), 128))])], 12, rt)) : vueX(``, true), vueK(playerR, {
+      }))], 10, at))), 128))])], 12, rt)) : b(``, true), g(le, {
         "enter-active-class": `origin-left transition duration-200 ease-[cubic-bezier(.22,1,.36,1)]`,
         "leave-active-class": `origin-left transition duration-200 ease-[cubic-bezier(.22,1,.36,1)]`,
         "enter-from-class": `-translate-x-4 scale-x-[.96] opacity-0`,
         "leave-to-class": `-translate-x-4 scale-x-[.96] opacity-0`
       }, {
-        default: vueYt(() => [V.value ? (vueGt(), vueS(`footer`, {
+        default: p(() => [V.value ? (h(), d(`footer`, {
           key: 0,
           class: `no-scrollbar absolute bottom-2.5 left-[66px] z-20 flex h-[46px] w-max max-w-[calc(100%-78px)] items-center overflow-x-auto rounded-[10px] border border-border bg-card px-1.5 shadow-[0_8px_24px_rgb(20_28_23/0.10)]`,
-          "aria-label": handler(`Toolbar`)
-        }, [vueY(`div`, st, [vueY(`button`, {
+          "aria-label": T(`Toolbar`)
+        }, [x(`div`, st, [x(`button`, {
           type: `button`,
           class: `grid size-[27px] place-items-center rounded-lg hover:bg-primary/10 hover:text-primary`,
-          "aria-label": handler(`ZoomOut`),
-          onClick: renderCache[3] ||= e => {
+          "aria-label": T(`ZoomOut`),
+          onClick: r[3] ||= e => {
             B.value = null, _i(N.value - .1);
           }
-        }, [vueK(vueAn(Ue), {
+        }, [g(c(Ue), {
           size: 16
-        })], 8, ct), vueY(`span`, lt, vueRr(Tr.value), 1), vueY(`button`, {
+        })], 8, ct), x(`span`, lt, v(Tr.value), 1), x(`button`, {
           type: `button`,
           class: `grid size-[27px] place-items-center rounded-lg hover:bg-primary/10 hover:text-primary`,
-          "aria-label": handler(`ZoomIn`),
-          onClick: renderCache[4] ||= e => {
+          "aria-label": T(`ZoomIn`),
+          onClick: r[4] ||= e => {
             B.value = null, _i(N.value + .1);
           }
-        }, [vueK(vueAn(He), {
+        }, [g(c(He), {
           size: 16
-        })], 8, ut)]), renderCache[16] ||= vueY(`div`, {
+        })], 8, ut)]), r[16] ||= x(`div`, {
           class: `mx-[5px] h-[22px] w-px shrink-0 bg-border`
-        }, null, -1), vueY(`div`, {
+        }, null, -1), x(`div`, {
           class: `flex shrink-0 items-center gap-[7px]`,
-          "aria-label": handler(`PenColor`)
-        }, [(vueGt(), vueS(vueC, null, vueSt(sn, e => vueY(`button`, {
+          "aria-label": T(`PenColor`)
+        }, [(h(), d(ne, null, f(sn, e => x(`button`, {
           key: e,
           type: `button`,
-          class: vueN([`relative grid size-[17px] place-items-center rounded-full border transition-transform hover:scale-110`, [e === `#ffffff` ? `border-[#cfd4d1] dark:border-[#69716c]` : `border-transparent`, M.value === e ? `outline-2 outline-offset-1 hover:scale-100` : ``, M.value === e && (e === `#ffffff` || e === `#171717`) ? `dark:!outline-white` : ``]]),
-          style: vueNr({
+          class: s([`relative grid size-[17px] place-items-center rounded-full border transition-transform hover:scale-110`, [e === `#ffffff` ? `border-[#cfd4d1] dark:border-[#69716c]` : `border-transparent`, M.value === e ? `outline-2 outline-offset-1 hover:scale-100` : ``, M.value === e && (e === `#ffffff` || e === `#171717`) ? `dark:!outline-white` : ``]]),
+          style: _({
             backgroundColor: e,
             outlineColor: M.value === e ? e === `#ffffff` ? `#171717` : e : undefined
           }),
-          "aria-label": handler(`ChooseColor`, {
+          "aria-label": T(`ChooseColor`, {
             color: e
           }),
           onClick: t => Br(e)
-        }, null, 14, ft)), 64))], 8, dt), renderCache[17] ||= vueY(`div`, {
+        }, null, 14, ft)), 64))], 8, dt), r[17] ||= x(`div`, {
           class: `mx-[5px] h-[22px] w-px shrink-0 bg-border`
-        }, null, -1), vueY(`div`, pt, [vueY(`button`, {
+        }, null, -1), x(`div`, pt, [x(`button`, {
           ref_key: `penToolRef`,
           ref: Kn,
-          class: vueN(q(j.value === `pen`)),
+          class: s(q(j.value === `pen`)),
           type: `button`,
-          title: `${handler(`Pen`)} P`,
-          "aria-label": handler(`Pen`),
-          onClick: renderCache[5] ||= playerE(e => Q(`pen`), [`stop`])
-        }, [vueK(vueAn(penlineT), {
+          title: `${T(`Pen`)} P`,
+          "aria-label": T(`Pen`),
+          onClick: r[5] ||= S(e => Q(`pen`), [`stop`])
+        }, [g(c(ge), {
           size: 19
-        })], 10, mt), vueY(`button`, {
+        })], 10, mt), x(`button`, {
           ref_key: `eraserToolRef`,
           ref: qn,
-          class: vueN(q(j.value === `eraser`)),
+          class: s(q(j.value === `eraser`)),
           type: `button`,
-          title: `${handler(`Eraser`)} E`,
-          "aria-label": handler(`Eraser`),
-          onClick: renderCache[6] ||= playerE(e => Q(`eraser`), [`stop`])
-        }, [vueK(vueAn(Le), {
+          title: `${T(`Eraser`)} E`,
+          "aria-label": T(`Eraser`),
+          onClick: r[6] ||= S(e => Q(`eraser`), [`stop`])
+        }, [g(c(Le), {
           size: 19
-        })], 10, ht), vueY(`button`, {
+        })], 10, ht), x(`button`, {
           ref_key: `shapeToolRef`,
           ref: Jn,
-          class: vueN(q(j.value === `shape`)),
+          class: s(q(j.value === `shape`)),
           type: `button`,
-          title: `${handler(`Shape`)} S`,
-          "aria-label": handler(`Shape`),
-          onClick: renderCache[7] ||= playerE(e => Q(`shape`), [`stop`])
-        }, [vueK(vueAn(ze), {
+          title: `${T(`Shape`)} S`,
+          "aria-label": T(`Shape`),
+          onClick: r[7] ||= S(e => Q(`shape`), [`stop`])
+        }, [g(c(ze), {
           size: 19
-        })], 10, gt), vueY(`button`, {
+        })], 10, gt), x(`button`, {
           ref_key: `textToolRef`,
           ref: Yn,
-          class: vueN(q(j.value === `text`)),
+          class: s(q(j.value === `text`)),
           type: `button`,
-          title: `${handler(`Text`)} T`,
-          "aria-label": handler(`Text`),
-          onClick: renderCache[8] ||= playerE(e => Q(`text`), [`stop`])
-        }, [vueK(vueAn(uiSwitchCt), {
+          title: `${T(`Text`)} T`,
+          "aria-label": T(`Text`),
+          onClick: r[8] ||= S(e => Q(`text`), [`stop`])
+        }, [g(c(e), {
           size: 19
-        })], 10, _t), vueY(`button`, {
-          class: vueN(q(j.value === `select`)),
+        })], 10, _t), x(`button`, {
+          class: s(q(j.value === `select`)),
           type: `button`,
-          title: `${handler(`Select`)} V`,
-          "aria-label": handler(`Select`),
-          onClick: renderCache[9] ||= playerE(e => Q(`select`), [`stop`])
-        }, [vueK(vueAn(Fe), {
+          title: `${T(`Select`)} V`,
+          "aria-label": T(`Select`),
+          onClick: r[9] ||= S(e => Q(`select`), [`stop`])
+        }, [g(c(Fe), {
           size: 19
-        })], 10, vt)]), renderCache[18] ||= vueY(`div`, {
+        })], 10, vt)]), r[18] ||= x(`div`, {
           class: `mx-[5px] h-[22px] w-px shrink-0 bg-border`
-        }, null, -1), vueY(`div`, yt, [vueY(`button`, {
-          class: vueN(q(false)),
+        }, null, -1), x(`div`, yt, [x(`button`, {
+          class: s(q(false)),
           type: `button`,
-          title: `${handler(`Undo`)} Ctrl+Z`,
-          "aria-label": handler(`Undo`),
+          title: `${T(`Undo`)} Ctrl+Z`,
+          "aria-label": T(`Undo`),
           disabled: !H[O.value.id]?.length,
-          onClick: renderCache[10] ||= e => {
+          onClick: r[10] ||= e => {
             B.value = null, Ir();
           }
-        }, [vueK(vueAn(undo2T), {
+        }, [g(c(he), {
           size: 18
-        })], 10, bt), vueY(`button`, {
-          class: vueN(q(false)),
+        })], 10, bt), x(`button`, {
+          class: s(q(false)),
           type: `button`,
-          title: handler(`ClearBoard`),
-          "aria-label": handler(`ClearBoard`),
-          onClick: renderCache[11] ||= e => {
+          title: T(`ClearBoard`),
+          "aria-label": T(`ClearBoard`),
+          onClick: r[11] ||= e => {
             B.value = null, Rr();
           }
-        }, [vueK(vueAn(uiSwitchWt), {
+        }, [g(c(o), {
           size: 18
-        })], 10, xt), L.value.length ? (vueGt(), vueS(`button`, {
+        })], 10, xt), L.value.length ? (h(), d(`button`, {
           key: 0,
-          class: vueN(q(false)),
+          class: s(q(false)),
           type: `button`,
-          title: `${handler(`DeleteSelected`)} Delete`,
-          "aria-label": handler(`DeleteSelected`),
-          onClick: renderCache[12] ||= e => {
+          title: `${T(`DeleteSelected`)} Delete`,
+          "aria-label": T(`DeleteSelected`),
+          onClick: r[12] ||= e => {
             B.value = null, yi();
           }
-        }, [vueK(vueAn(uiSwitchWt), {
+        }, [g(c(o), {
           size: 18
-        })], 10, St)) : vueX(``, true), vueY(`button`, {
-          class: vueN(q(fr.value)),
+        })], 10, St)) : b(``, true), x(`button`, {
+          class: s(q(fr.value)),
           type: `button`,
-          title: handler(`Help`),
-          "aria-label": handler(`Help`),
-          onClick: renderCache[13] ||= e => {
+          title: T(`Help`),
+          "aria-label": T(`Help`),
+          onClick: r[13] ||= e => {
             B.value = null, fr.value = !fr.value;
           }
-        }, [vueK(vueAn(circlequestionmarkT), {
+        }, [g(c(fe), {
           size: 18
-        })], 10, Ct)])], 8, ot)) : vueX(``, true)]),
+        })], 10, Ct)])], 8, ot)) : b(``, true)]),
         _: 1
-      }), vueY(`button`, {
+      }), x(`button`, {
         class: `absolute bottom-2.5 left-3 z-[24] grid size-[46px] place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_8px_20px_rgb(22_163_74/0.26)] transition-[transform,background-color] hover:-translate-x-px hover:bg-primary/90 active:scale-[.96]`,
         type: `button`,
-        "aria-label": V.value ? handler(`CollapseToolbar`) : handler(`ExpandToolbar`),
+        "aria-label": V.value ? T(`CollapseToolbar`) : T(`ExpandToolbar`),
         "aria-expanded": V.value,
-        title: handler(`Toolbar`),
+        title: T(`Toolbar`),
         onClick: Hr
-      }, [V.value ? (vueGt(), vueB(vueAn(lucideT), {
+      }, [V.value ? (h(), te(c(ue), {
         key: 0,
         size: 18,
         "stroke-width": 2
-      })) : (vueGt(), vueB(vueAn(uiSwitchOt), {
+      })) : (h(), te(c(t), {
         key: 1,
         size: 21,
         "stroke-width": 1.9
-      }))], 8, wt), fr.value ? (vueGt(), vueS(`aside`, Tt, [vueY(`div`, Et, [vueY(`strong`, Dt, vueRr(handler(`QuickStart`)), 1), vueY(`span`, Ot, vueRr(handler(`DesktopShortcuts`)), 1)]), vueY(`div`, kt, [(vueGt(), vueS(vueC, null, vueSt(un, event => vueY(`p`, {
+      }))], 8, wt), fr.value ? (h(), d(`aside`, Tt, [x(`div`, Et, [x(`strong`, Dt, v(T(`QuickStart`)), 1), x(`span`, Ot, v(T(`DesktopShortcuts`)), 1)]), x(`div`, kt, [(h(), d(ne, null, f(un, event => x(`p`, {
         key: event.key,
         class: `flex items-center justify-between border-b border-border/60 px-0.5 py-[9px]`
-      }, [vueY(`span`, At, [(vueGt(), vueB(vueEt(event.icon), {
+      }, [x(`span`, At, [(h(), te(l(event.icon), {
         size: 16
-      })), vueO(vueRr(handler(event.label)), 1)]), vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [vueO(vueRr(event.key), 1)]),
+      })), u(v(T(event.label)), 1)]), g(c(w), null, {
+        default: p(() => [u(v(event.key), 1)]),
         _: 2
-      }, 1024)])), 64)), vueY(`p`, jt, [vueY(`span`, Mt, [vueK(vueAn(undo2N), {
+      }, 1024)])), 64)), x(`p`, jt, [x(`span`, Mt, [g(c(me), {
         size: 16
-      }), vueO(vueRr(handler(`MoveCanvas`)), 1)]), vueY(`span`, Nt, [vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [...(renderCache[19] ||= [vueO(`Ctrl`, -1)])]),
+      }), u(v(T(`MoveCanvas`)), 1)]), x(`span`, Nt, [g(c(w), null, {
+        default: p(() => [...(r[19] ||= [u(`Ctrl`, -1)])]),
         _: 1
-      }), renderCache[21] ||= vueY(`i`, {
+      }), r[21] ||= x(`i`, {
         class: `not-italic`
-      }, `+`, -1), vueY(`span`, {
+      }, `+`, -1), x(`span`, {
         class: `relative block h-[27px] w-5 overflow-hidden rounded-[9px_9px_8px_8px] border border-b-2 border-border bg-muted before:absolute before:inset-x-0 before:top-[9px] before:h-px before:bg-border before:content-[''] after:absolute after:left-1/2 after:top-0 after:h-[9px] after:w-px after:bg-border after:content-['']`,
         role: `img`,
-        "aria-label": handler(`LeftMouseButton`)
-      }, [...(renderCache[20] ||= [vueY(`span`, {
+        "aria-label": T(`LeftMouseButton`)
+      }, [...(r[20] ||= [x(`span`, {
         class: `absolute left-px top-px block h-2 w-[calc(50%-1px)] rounded-[7px_0_1px_1px] bg-muted-foreground/70`
-      }, null, -1)])], 8, Pt)])]), vueY(`p`, Ft, [vueY(`span`, It, [vueK(vueAn(He), {
+      }, null, -1)])], 8, Pt)])]), x(`p`, Ft, [x(`span`, It, [g(c(He), {
         size: 16
-      }), vueO(vueRr(handler(`ZoomCanvas`)), 1)]), vueY(`span`, Lt, [vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [...(renderCache[22] ||= [vueO(`Ctrl`, -1)])]),
+      }), u(v(T(`ZoomCanvas`)), 1)]), x(`span`, Lt, [g(c(w), null, {
+        default: p(() => [...(r[22] ||= [u(`Ctrl`, -1)])]),
         _: 1
-      }), renderCache[23] ||= vueY(`i`, {
+      }), r[23] ||= x(`i`, {
         class: `not-italic`
-      }, `+`, -1), vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [vueO(vueRr(handler(`MouseWheel`)), 1)]),
+      }, `+`, -1), g(c(w), null, {
+        default: p(() => [u(v(T(`MouseWheel`)), 1)]),
         _: 1
-      })])]), vueY(`p`, Rt, [vueY(`span`, zt, [vueK(vueAn(undo2N), {
+      })])]), x(`p`, Rt, [x(`span`, zt, [g(c(me), {
         size: 16
-      }), vueO(vueRr(handler(`HorizontalScroll`)), 1)]), vueY(`span`, Bt, [vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [...(renderCache[24] ||= [vueO(`Shift`, -1)])]),
+      }), u(v(T(`HorizontalScroll`)), 1)]), x(`span`, Bt, [g(c(w), null, {
+        default: p(() => [...(r[24] ||= [u(`Shift`, -1)])]),
         _: 1
-      }), renderCache[25] ||= vueY(`i`, {
+      }), r[25] ||= x(`i`, {
         class: `not-italic`
-      }, `+`, -1), vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [vueO(vueRr(handler(`MouseWheel`)), 1)]),
+      }, `+`, -1), g(c(w), null, {
+        default: p(() => [u(v(T(`MouseWheel`)), 1)]),
         _: 1
-      })])]), vueY(`p`, Vt, [vueY(`span`, Ht, [vueK(vueAn(undo2T), {
+      })])]), x(`p`, Vt, [x(`span`, Ht, [g(c(he), {
         size: 16
-      }), vueO(vueRr(handler(`Undo`)), 1)]), vueY(`span`, Ut, [vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [...(renderCache[26] ||= [vueO(`Ctrl`, -1)])]),
+      }), u(v(T(`Undo`)), 1)]), x(`span`, Ut, [g(c(w), null, {
+        default: p(() => [...(r[26] ||= [u(`Ctrl`, -1)])]),
         _: 1
-      }), renderCache[28] ||= vueY(`i`, {
+      }), r[28] ||= x(`i`, {
         class: `not-italic`
-      }, `+`, -1), vueK(vueAn(KbdT), null, {
-        default: vueYt(() => [...(renderCache[27] ||= [vueO(`Z`, -1)])]),
+      }, `+`, -1), g(c(w), null, {
+        default: p(() => [...(r[27] ||= [u(`Z`, -1)])]),
         _: 1
-      })])])])])) : vueX(``, true), vueK(vueAn(dialogA), {
+      })])])])])) : b(``, true), g(c(ve), {
         open: sr.value,
-        "onUpdate:open": renderCache[14] ||= e => {
+        "onUpdate:open": r[14] ||= e => {
           e || Ei();
         }
       }, {
-        default: vueYt(() => [vueK(vueAn(dialogI), {
+        default: p(() => [g(c(ye), {
           class: `sm:max-w-[420px]`
         }, {
-          default: vueYt(() => [vueK(vueAn(dialogN), {
+          default: p(() => [g(c(be), {
             class: `flex-row items-center gap-[11px] pr-8`
           }, {
-            default: vueYt(() => [vueY(`span`, Wt, [vueK(vueAn(imagedownT), {
+            default: p(() => [x(`span`, Wt, [g(c(pe), {
               size: 20
-            })]), vueY(`div`, Gt, [vueK(vueAn(dialogT), {
+            })]), x(`div`, Gt, [g(c(xe), {
               class: `text-base font-semibold`
             }, {
-              default: vueYt(() => [vueO(vueRr(handler(`SaveAsImage`)), 1)]),
+              default: p(() => [u(v(T(`SaveAsImage`)), 1)]),
               _: 1
-            }), vueK(vueAn(mainGn), {
+            }), g(c(Ne), {
               class: `mt-1 text-sm`
             }, {
-              default: vueYt(() => [vueO(vueRr(handler(`SaveAsDescription`)), 1)]),
+              default: p(() => [u(v(T(`SaveAsDescription`)), 1)]),
               _: 1
             })])]),
             _: 1
-          }), vueY(`div`, Kt, [(vueGt(), vueS(vueC, null, vueSt(dn, e => vueY(`button`, {
+          }), x(`div`, Kt, [(h(), d(ne, null, f(dn, e => x(`button`, {
             key: e.value,
             type: `button`,
             class: `flex flex-col gap-[9px] rounded-[10px] border border-border bg-card p-2.5 text-left transition-[border-color,background-color,transform] hover:-translate-y-px hover:border-primary/50 hover:bg-primary/[0.04]`,
             onClick: t => Ti(e.value)
-          }, [vueY(`span`, {
-            class: vueN([`relative h-[76px] w-full overflow-hidden rounded-[9px] border border-black/10`, e.previewClass])
-          }, [...(renderCache[29] ||= [vueY(`i`, {
+          }, [x(`span`, {
+            class: s([`relative h-[76px] w-full overflow-hidden rounded-[9px] border border-black/10`, e.previewClass])
+          }, [...(r[29] ||= [x(`i`, {
             class: `absolute left-[26%] top-[48%] h-[3px] w-[48%] -rotate-[8deg] rounded-full bg-[#1d2420]`
-          }, null, -1), vueY(`i`, {
+          }, null, -1), x(`i`, {
             class: `absolute left-[56%] top-[36%] h-[3px] w-[17%] rotate-[40deg] rounded-full bg-[#1d2420]`
-          }, null, -1)])], 2), vueY(`span`, Jt, [vueY(`strong`, Yt, vueRr(handler(e.title)), 1), vueY(`small`, Xt, vueRr(handler(e.description)), 1)])], 8, qt)), 64))])]),
+          }, null, -1)])], 2), x(`span`, Jt, [x(`strong`, Yt, v(T(e.title)), 1), x(`small`, Xt, v(T(e.description)), 1)])], 8, qt)), 64))])]),
           _: 1
         })]),
         _: 1
-      }, 8, [`open`]), vueK(vueAn(alertDialogC), {
+      }, 8, [`open`]), g(c(Ce), {
         open: cr.value,
         "onUpdate:open": Ni
       }, {
-        default: vueYt(() => [vueK(vueAn(alertDialogA), null, {
-          default: vueYt(() => [vueK(vueAn(alertDialogN), null, {
-            default: vueYt(() => [vueK(vueAn(alertDialogT), null, {
-              default: vueYt(() => [vueO(vueRr(handler(`UnsavedTitle`)), 1)]),
+        default: p(() => [g(c(Se), null, {
+          default: p(() => [g(c(Te), null, {
+            default: p(() => [g(c(De), null, {
+              default: p(() => [u(v(T(`UnsavedTitle`)), 1)]),
               _: 1
-            }), vueK(vueAn(alertDialogI), null, {
-              default: vueYt(() => [vueO(vueRr(handler(`UnsavedDescription`)), 1)]),
+            }), g(c(we), null, {
+              default: p(() => [u(v(T(`UnsavedDescription`)), 1)]),
               _: 1
             })]),
             _: 1
-          }), vueK(vueAn(alertDialogR), null, {
-            default: vueYt(() => [vueK(vueAn(uiSwitchR), {
+          }), g(c(Ee), null, {
+            default: p(() => [g(c(a), {
               variant: `outline`,
               onClick: Mi
             }, {
-              default: vueYt(() => [vueO(vueRr(handler(`Cancel`)), 1)]),
+              default: p(() => [u(v(T(`Cancel`)), 1)]),
               _: 1
-            }), vueK(vueAn(uiSwitchR), {
+            }), g(c(a), {
               variant: `destructive`,
               onClick: ji
             }, {
-              default: vueYt(() => [vueO(vueRr(handler(`DiscardAndLeave`)), 1)]),
+              default: p(() => [u(v(T(`DiscardAndLeave`)), 1)]),
               _: 1
-            }), vueK(vueAn(uiSwitchR), {
+            }), g(c(a), {
               onClick: Ai
             }, {
-              default: vueYt(() => [vueO(vueRr(handler(`SaveAndLeave`)), 1)]),
+              default: p(() => [u(v(T(`SaveAndLeave`)), 1)]),
               _: 1
             })]),
             _: 1
@@ -2389,7 +2389,7 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
   nn = {
     class: `flex h-full min-h-0 w-full flex-col overflow-hidden bg-background`
   },
-  T = vueJ({
+  T = re({
     __name: `WhiteboardTool`,
     props: {
       tool: {},
@@ -2402,32 +2402,32 @@ var Fe = lucideR(`circle-dashed`, [[`path`, {
       openRequest: {}
     },
     emits: [`back`, `recharge`],
-    setup(props, {
-      expose: expose,
-      emit: emit
+    setup(e, {
+      expose: t,
+      emit: n
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
-        a = vueBn(null);
+      let r = e,
+        i = n,
+        a = m(null);
       async function o() {
         return (await a.value?.requestClose()) ?? true;
       }
-      return expose({
+      return t({
         requestClose: o
-      }), (e, t) => (vueGt(), vueS(`div`, nn, [vueK(ToolboxWorkspaceHeaderT, {
-        tool: propsAlias.tool,
-        user: propsAlias.user,
-        "credits-balance": propsAlias.creditsBalance,
+      }), (e, t) => (h(), d(`div`, nn, [g(_e, {
+        tool: r.tool,
+        user: r.user,
+        "credits-balance": r.creditsBalance,
         "voice-tool": false,
         "local-tool": ``,
         "whiteboard-tool": ``,
         "show-history": false,
-        onBack: t[0] ||= e => emitAlias(`back`),
-        onRecharge: t[1] ||= e => emitAlias(`recharge`),
+        onBack: t[0] ||= e => i(`back`),
+        onRecharge: t[1] ||= e => i(`recharge`),
         onWhiteboardOpen: t[2] ||= e => a.value?.openBoard(),
         onWhiteboardSave: t[3] ||= e => a.value?.saveCurrentBoard(),
         onWhiteboardSaveAs: t[4] ||= e => a.value?.openSaveAsDialog()
-      }, null, 8, [`tool`, `user`, `credits-balance`]), vueK(tn, {
+      }, null, 8, [`tool`, `user`, `credits-balance`]), g(tn, {
         ref_key: `workspace`,
         ref: a
       }, null, 512)]));

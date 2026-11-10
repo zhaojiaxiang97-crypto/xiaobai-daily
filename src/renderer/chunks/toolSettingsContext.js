@@ -1,6 +1,6 @@
-import { X as vueX, bn as vueBn, mt as vueMt, n as vueN, ut as vueUt, v as vueV, vt as vueVt, z as vueZ } from "./vue-i18n.runtime.js";
-import { n as toolIconN, r as toolIconR } from "./tool-icons.js";
-import { t as pointsT } from "./points.js";
+import { X as e, bn as t, mt as n, n as r, ut as i, v as a, vt as o, z as s } from "./vue-i18n.runtime.js";
+import { n as c, r as l } from "./tool-icons.js";
+import { t as u } from "./points.js";
 function d(result) {
   if (result.ok) return result.data;
   throw Error(result.error.message);
@@ -9,8 +9,8 @@ var f = {
   async getMacStatus() {
     return d(await window.electronAPI.permissions.getMacStatus());
   },
-  async openMacSettings(macValue) {
-    return d(await window.electronAPI.permissions.openMacSettings(macValue));
+  async openMacSettings(e) {
+    return d(await window.electronAPI.permissions.openMacSettings(e));
   }
 };
 function p(result) {
@@ -33,51 +33,51 @@ var m = {
     async retry() {
       return p(await window.electronAPI.enterKeyComponent.retry());
     },
-    onStatusChanged(status) {
-      return window.electronAPI.enterKeyComponent.onStatusChanged(status);
+    onStatusChanged(e) {
+      return window.electronAPI.enterKeyComponent.onStatusChanged(e);
     }
   },
-  h = vueV(() => window.electronAPI?.platform === `win32`),
-  g = vueV(() => window.electronAPI?.platform === `darwin`),
-  _ = vueV(() => h.value || g.value),
-  v = vueV(() => h.value || g.value),
+  h = a(() => window.electronAPI?.platform === `win32`),
+  g = a(() => window.electronAPI?.platform === `darwin`),
+  _ = a(() => h.value || g.value),
+  v = a(() => h.value || g.value),
   y = Symbol(`settings-page-context`);
 function b(items, t) {
-  items.push(t), vueZ() && vueMt(() => {
+  items.push(t), s() && n(() => {
     let n = items.indexOf(t);
     n >= 0 && items.splice(n, 1);
   });
 }
 function x(event) {
   let {
-      t: translate
-    } = vueN(),
+      t: s
+    } = r(),
     {
       isLoading: c,
       isSaving: d,
       loadSettings: p,
       settings: h
-    } = toolIconR(),
-    v = vueV(() => c.value || d.value),
-    emptyItems = [],
+    } = l(),
+    v = a(() => c.value || d.value),
+    x = [],
     S = [],
-    C = vueBn(0),
-    w = vueBn(false),
-    T = vueBn(false);
+    C = t(0),
+    w = t(false),
+    T = t(false);
   async function E() {
     try {
-      w.value = true, C.value = await pointsT.getCreditsBalance();
+      w.value = true, C.value = await u.getCreditsBalance();
     } catch {
       C.value = 0;
     } finally {
       w.value = false;
     }
   }
-  let D = vueBn(null),
-    O = vueBn(false),
-    k = vueBn(``),
-    A = vueBn(null),
-    j = vueBn(false);
+  let D = t(null),
+    O = t(false),
+    k = t(``),
+    A = t(null),
+    j = t(false);
   async function M() {
     if (g.value) try {
       A.value = await window.electronAPI.checkAccessibility();
@@ -93,13 +93,13 @@ function x(event) {
       O.value = true, k.value = ``;
       try {
         D.value = await f.getMacStatus();
-        let found = D.value.items.find(item => item.key === `accessibility`);
-        found && (A.value = {
-          required: found.required,
-          granted: found.granted
+        let e = D.value.items.find(e => e.key === `accessibility`);
+        e && (A.value = {
+          required: e.required,
+          granted: e.granted
         });
       } catch (e) {
-        k.value = e instanceof Error ? e.message : translate(`settings.permissionCheck.loadFailed`);
+        k.value = e instanceof Error ? e.message : s(`settings.permissionCheck.loadFailed`);
       } finally {
         O.value = false;
       }
@@ -107,10 +107,10 @@ function x(event) {
   }
   async function P() {
     if (g.value) try {
-      let requestAccessibility = await window.electronAPI.requestAccessibility();
+      let e = await window.electronAPI.requestAccessibility();
       A.value = {
         required: true,
-        granted: requestAccessibility
+        granted: e
       }, N();
     } catch {
       A.value = {
@@ -122,27 +122,27 @@ function x(event) {
   function F() {
     g.value && (j.value = true, N());
   }
-  let I = vueBn(null),
-    L = vueV(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
+  let I = t(null),
+    L = a(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
     R;
-  vueUt(() => {
-    M(), N(), _.value ? (m.getStatus().then(result => {
-      I.value = result;
+  i(() => {
+    M(), N(), _.value ? (m.getStatus().then(e => {
+      I.value = e;
     }), R = m.onStatusChanged(e => {
       I.value = e;
     })) : (h.value.enableEnterKeyListener || !h.value.enterKeyLegacyMigrationHandled) && m.disable().then(() => p());
-  }), vueMt(() => {
+  }), n(() => {
     R?.();
   });
-  let options = {
+  let z = {
     controlsDisabled: v,
     growthSettingsLoaded: event.growthSettingsLoaded,
     highlightedItem: event.highlightedItem,
     refresh: event.refresh,
-    onRefresh: e => b(emptyItems, e),
+    onRefresh: e => b(x, e),
     onLocalDataChanged: e => b(S, e),
     notifyLocalDataChanged: () => {
-      S.forEach(item => item());
+      S.forEach(fn => fn());
     },
     navigate: event.navigate,
     openUpdate: event.openUpdate,
@@ -162,55 +162,55 @@ function x(event) {
     enterKeyComponentState: I,
     enterKeyComponentBusy: L
   };
-  return vueVt(y, options), {
-    ...options,
+  return o(y, z), {
+    ...z,
     runRefreshLoaders: () => {
-      emptyItems.forEach(item => item());
+      x.forEach(fn => fn());
     }
   };
 }
 function S() {
-  let t = vueX(y);
+  let t = e(y);
   if (!t) throw Error(`useSettingsPageContext() 只能在设置页分区组件中使用`);
   return t;
 }
 function C() {
-  return vueX(y, null);
+  return e(y, null);
 }
 var w = Symbol(`app-navigate`);
 function T(e) {
-  vueVt(w, e);
+  o(w, e);
 }
 function E() {
-  return vueX(w, () => undefined);
+  return e(w, () => undefined);
 }
 var D = [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`];
 function O() {
   let {
       isLoading: e,
       isSaving: r
-    } = toolIconR(),
+    } = l(),
     o = E(),
     {
       check: s
-    } = toolIconN(),
-    u = vueBn(null),
+    } = c(),
+    u = t(null),
     d;
-  return vueUt(() => {
-    _.value && (m.getStatus().then(result => {
-      u.value = result;
+  return i(() => {
+    _.value && (m.getStatus().then(e => {
+      u.value = e;
     }).catch(() => undefined), d = m.onStatusChanged(e => {
       u.value = e;
     }));
-  }), vueMt(() => {
+  }), n(() => {
     d?.();
   }), {
-    controlsDisabled: vueV(() => e.value || r.value),
-    highlightedItem: vueBn(null),
+    controlsDisabled: a(() => e.value || r.value),
+    highlightedItem: t(null),
     navigate: o,
     checkAccessibility: s,
     enterKeyComponentState: u,
-    enterKeyComponentBusy: vueV(() => D.includes(u.value?.status || ``))
+    enterKeyComponentBusy: a(() => D.includes(u.value?.status || ``))
   };
 }
 function k() {

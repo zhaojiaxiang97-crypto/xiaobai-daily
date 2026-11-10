@@ -39,9 +39,9 @@ function sanitizeLabels(labels) {
   if (!labels) return undefined;
   const entries = Object.entries(labels).slice(0, 8).flatMap(([rawKey, rawValue]) => {
     if (rawValue === undefined) return [];
-    const metricName = sanitizeMetricName(rawKey);
-    if (!metricName) return [];
-    return [[metricName, typeof rawValue === "string" ? rawValue.slice(0, 80) : rawValue]];
+    const key = sanitizeMetricName(rawKey);
+    if (!key) return [];
+    return [[key, typeof rawValue === "string" ? rawValue.slice(0, 80) : rawValue]];
   });
   return entries.length > 0 ? Object.fromEntries(entries) : undefined;
 }
@@ -259,9 +259,9 @@ var DevPerformanceMonitorService = class {
         idleWakeupsPerSecond: round(metric.cpu.idleWakeupsPerSecond),
         workingSetMb: kbToMb(metric.memory.workingSetSize)
       }));
-      const totalCpuPercent = metrics.reduce((acc, metric) => acc + metric.cpuPercent, 0);
-      const totalIdleWakeupsPerSecond = metrics.reduce((acc, metric) => acc + metric.idleWakeupsPerSecond, 0);
-      const totalWorkingSetMb = metrics.reduce((acc, metric) => acc + metric.workingSetMb, 0);
+      const totalCpuPercent = metrics.reduce((sum, metric) => sum + metric.cpuPercent, 0);
+      const totalIdleWakeupsPerSecond = metrics.reduce((sum, metric) => sum + metric.idleWakeupsPerSecond, 0);
+      const totalWorkingSetMb = metrics.reduce((sum, metric) => sum + metric.workingSetMb, 0);
       const currentCpuUsage = process.cpuUsage();
       const currentCpuSampleAt = performance.now();
       const elapsedMicros = Math.max(1, (currentCpuSampleAt - this.previousCpuSampleAt) * 1e3);
@@ -321,7 +321,7 @@ var DevPerformanceMonitorService = class {
         },
         eventLoop: {
           lagSampleCount: eventLoopLagSamples.length,
-          lagMeanMs: round(eventLoopLagSamples.length > 0 ? eventLoopLagSamples.reduce((acc, value) => acc + value, 0) / eventLoopLagSamples.length : 0),
+          lagMeanMs: round(eventLoopLagSamples.length > 0 ? eventLoopLagSamples.reduce((sum, value) => sum + value, 0) / eventLoopLagSamples.length : 0),
           lagP50Ms: round(percentile(eventLoopLagSamples, 50)),
           lagP95Ms: round(percentile(eventLoopLagSamples, 95)),
           lagP99Ms: round(percentile(eventLoopLagSamples, 99)),
@@ -346,8 +346,8 @@ var DevPerformanceMonitorService = class {
         monitorOverhead: {
           wallTimeMs: round(performance.now() - collectionStartedAt),
           cpuTimeMs: (() => {
-            const cpuUsage = process.cpuUsage(collectionCpuStartedAt);
-            return round((cpuUsage.user + cpuUsage.system) / 1e3);
+            const cpu = process.cpuUsage(collectionCpuStartedAt);
+            return round((cpu.user + cpu.system) / 1e3);
           })()
         }
       });
@@ -493,7 +493,7 @@ function isFiniteBounds(value) {
   if (value === null) return true;
   if (!value || typeof value !== "object") return false;
   const bounds = value;
-  return ["x", "y", "width", "height"].every(item => typeof bounds[item] === "number" && Number.isFinite(bounds[item]));
+  return ["x", "y", "width", "height"].every(key => typeof bounds[key] === "number" && Number.isFinite(bounds[key]));
 }
 function parseMessage(line) {
   try {

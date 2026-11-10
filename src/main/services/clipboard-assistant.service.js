@@ -15,17 +15,17 @@ function parseKeywords(value) {
     return [];
   }
 }
-function mapRow(mapValue) {
+function mapRow(row) {
   return {
-    id: mapValue.id,
-    name: mapValue.name,
-    keywords: parseKeywords(mapValue.keywords_json),
-    color: mapValue.color,
-    enabled: mapValue.enabled === 1,
-    sortOrder: mapValue.sort_order,
-    isBuiltin: mapValue.is_builtin === 1,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    id: row.id,
+    name: row.name,
+    keywords: parseKeywords(row.keywords_json),
+    color: row.color,
+    enabled: row.enabled === 1,
+    sortOrder: row.sort_order,
+    isBuiltin: row.is_builtin === 1,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 var WorkRecordCategoryRepository = class {
@@ -49,8 +49,8 @@ var WorkRecordCategoryRepository = class {
     return getDatabase().prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_sort_order FROM work_record_categories").get()?.next_sort_order ?? 1;
   }
   create(input) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const randomUUID = crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const id = crypto.randomUUID();
     const color = input.color ?? "zinc";
     const enabled = input.enabled === false ? 0 : 1;
     getDatabase().prepare(`
@@ -66,17 +66,17 @@ var WorkRecordCategoryRepository = class {
           updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).run(randomUUID, input.name, JSON.stringify(input.keywords), color, enabled, input.sortOrder, 0, isoString, isoString);
+      `).run(id, input.name, JSON.stringify(input.keywords), color, enabled, input.sortOrder, 0, now, now);
     return {
-      id: randomUUID,
+      id,
       name: input.name,
       keywords: input.keywords,
       color,
       enabled: enabled === 1,
       sortOrder: input.sortOrder,
       isBuiltin: false,
-      createdAt: isoString,
-      updatedAt: isoString
+      createdAt: now,
+      updatedAt: now
     };
   }
   update(input) {
@@ -101,8 +101,8 @@ var WorkRecordCategoryRepository = class {
       `).run(next.name, JSON.stringify(next.keywords), next.color, next.enabled ? 1 : 0, next.updatedAt, next.id);
     return next;
   }
-  delete(deleteValue) {
-    return getDatabase().prepare("DELETE FROM work_record_categories WHERE id = ?").run(deleteValue).changes > 0;
+  delete(id) {
+    return getDatabase().prepare("DELETE FROM work_record_categories WHERE id = ?").run(id).changes > 0;
   }
   /**
   * 补齐缺失的内置分类行（切到学生模式前调用）：导入旧版本备份会清空分类表，用户也可能删过内置分类。
@@ -118,11 +118,11 @@ var WorkRecordCategoryRepository = class {
       )
       VALUES (?, ?, ?, ?, ?, ?, 1, ?, ?)
     `);
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     let inserted = 0;
     for (const preset of presets) {
       if (findById.get(preset.id) || findByName.get(preset.name)) continue;
-      inserted += Number(insert.run(preset.id, preset.name, JSON.stringify(preset.keywords), preset.color, enabled ? 1 : 0, preset.sortOrder, isoString, isoString).changes);
+      inserted += Number(insert.run(preset.id, preset.name, JSON.stringify(preset.keywords), preset.color, enabled ? 1 : 0, preset.sortOrder, now, now).changes);
     }
     return inserted;
   }
@@ -143,16 +143,16 @@ var WorkRecordCategoryRepository = class {
     return this.ensureBuiltinPresets([...presets.filter(preset => enabledIds.has(preset.id)), clipboardPreset], true) + this.ensureBuiltinPresets(presets.filter(preset => !enabledIds.has(preset.id)), false);
   }
   /** 批量启停内置分类（切换使用模式用）；只动 is_builtin=1 的行，用户自定义分类不受影响 */
-  setBuiltinEnabled(count, enabled) {
-    if (count.length === 0) return 0;
+  setBuiltinEnabled(ids, enabled) {
+    if (ids.length === 0) return 0;
     const statement = getDatabase().prepare(`
       UPDATE work_record_categories
       SET enabled = ?, updated_at = ?
       WHERE id = ? AND is_builtin = 1
     `);
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     let changed = 0;
-    for (const id of count) changed += Number(statement.run(enabled ? 1 : 0, isoString, id).changes);
+    for (const id of ids) changed += Number(statement.run(enabled ? 1 : 0, now, id).changes);
     return changed;
   }
 };
@@ -181,29 +181,29 @@ var HISTORY_COLUMNS = `
   id, preview, character_count, copy_count, use_count, is_pinned,
   first_copied_at, copied_at, last_used_at
 `;
-function mapHistoryRow(mapValue) {
+function mapHistoryRow(row) {
   return {
-    id: mapValue.id,
-    preview: mapValue.preview,
-    characterCount: mapValue.character_count,
-    copyCount: mapValue.copy_count,
-    useCount: mapValue.use_count,
-    isPinned: mapValue.is_pinned === 1,
-    firstCopiedAt: mapValue.first_copied_at,
-    copiedAt: mapValue.copied_at,
-    lastUsedAt: mapValue.last_used_at
+    id: row.id,
+    preview: row.preview,
+    characterCount: row.character_count,
+    copyCount: row.copy_count,
+    useCount: row.use_count,
+    isPinned: row.is_pinned === 1,
+    firstCopiedAt: row.first_copied_at,
+    copiedAt: row.copied_at,
+    lastUsedAt: row.last_used_at
   };
 }
-function mapPhraseRow(mapValue) {
+function mapPhraseRow(row) {
   return {
-    id: mapValue.id,
-    title: mapValue.title,
-    content: mapValue.content,
-    sortOrder: mapValue.sort_order,
-    useCount: mapValue.use_count,
-    lastUsedAt: mapValue.last_used_at,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    sortOrder: row.sort_order,
+    useCount: row.use_count,
+    lastUsedAt: row.last_used_at,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 function escapeLikePattern(value) {
@@ -249,8 +249,8 @@ var ClipboardAssistantRepository = class {
       LIMIT ?
     `).all(...values, options.limit).map(mapHistoryRow);
   }
-  findHistoryDetail(historyValue) {
-    const row = getDatabase().prepare("SELECT content_text, character_count, copy_count, copied_at FROM clipboard_history WHERE id = ?").get(historyValue);
+  findHistoryDetail(id) {
+    const row = getDatabase().prepare("SELECT content_text, character_count, copy_count, copied_at FROM clipboard_history WHERE id = ?").get(id);
     return row ? {
       text: row.content_text,
       characterCount: row.character_count,
@@ -258,23 +258,23 @@ var ClipboardAssistantRepository = class {
       copiedAt: row.copied_at
     } : null;
   }
-  findHistoryText(historyValue) {
-    return getDatabase().prepare("SELECT content_text FROM clipboard_history WHERE id = ?").get(historyValue)?.content_text ?? null;
+  findHistoryText(id) {
+    return getDatabase().prepare("SELECT content_text FROM clipboard_history WHERE id = ?").get(id)?.content_text ?? null;
   }
   /** 从历史里重新复制：顶到最前面并累计使用次数 */
-  markHistoryUsed(mark, usedAt) {
+  markHistoryUsed(id, usedAt) {
     getDatabase().prepare(`
       UPDATE clipboard_history
       SET copied_at = ?, last_used_at = ?, use_count = use_count + 1, updated_at = ?
       WHERE id = ?
-    `).run(usedAt, usedAt, usedAt, mark);
+    `).run(usedAt, usedAt, usedAt, id);
   }
-  setHistoryPinned(historyValue, pinned) {
-    const result = getDatabase().prepare("UPDATE clipboard_history SET is_pinned = ?, updated_at = ? WHERE id = ?").run(pinned ? 1 : 0, (/* @__PURE__ */new Date()).toISOString(), historyValue);
+  setHistoryPinned(id, pinned) {
+    const result = getDatabase().prepare("UPDATE clipboard_history SET is_pinned = ?, updated_at = ? WHERE id = ?").run(pinned ? 1 : 0, (/* @__PURE__ */new Date()).toISOString(), id);
     return Number(result.changes) > 0;
   }
-  deleteHistory(historyValue) {
-    const result = getDatabase().prepare("DELETE FROM clipboard_history WHERE id = ?").run(historyValue);
+  deleteHistory(id) {
+    const result = getDatabase().prepare("DELETE FROM clipboard_history WHERE id = ?").run(id);
     return Number(result.changes) > 0;
   }
   /** 清空未置顶的历史，置顶的保留 */
@@ -303,12 +303,12 @@ var ClipboardAssistantRepository = class {
       ORDER BY sort_order ASC, created_at ASC
     `).all().map(mapPhraseRow);
   }
-  findPhrase(phrase) {
+  findPhrase(id) {
     const row = getDatabase().prepare(`
       SELECT id, title, content, sort_order, use_count, last_used_at, created_at, updated_at
       FROM clipboard_phrases
       WHERE id = ?
-    `).get(phrase);
+    `).get(id);
     return row ? mapPhraseRow(row) : null;
   }
   countPhrases() {
@@ -316,44 +316,44 @@ var ClipboardAssistantRepository = class {
   }
   createPhrase(input) {
     const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const randomUUID = crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const id = crypto.randomUUID();
     const nextSortOrder = database.prepare("SELECT COALESCE(MAX(sort_order), 0) + 1 AS next FROM clipboard_phrases").get().next;
     database.prepare(`
       INSERT INTO clipboard_phrases (id, title, content, sort_order, use_count, last_used_at, created_at, updated_at)
       VALUES (?, ?, ?, ?, 0, NULL, ?, ?)
-    `).run(randomUUID, input.title, input.content, nextSortOrder, isoString, isoString);
-    return this.findPhrase(randomUUID);
+    `).run(id, input.title, input.content, nextSortOrder, now, now);
+    return this.findPhrase(id);
   }
-  updatePhrase(phrase, input) {
-    getDatabase().prepare("UPDATE clipboard_phrases SET title = ?, content = ?, updated_at = ? WHERE id = ?").run(input.title, input.content, (/* @__PURE__ */new Date()).toISOString(), phrase);
-    return this.findPhrase(phrase);
+  updatePhrase(id, input) {
+    getDatabase().prepare("UPDATE clipboard_phrases SET title = ?, content = ?, updated_at = ? WHERE id = ?").run(input.title, input.content, (/* @__PURE__ */new Date()).toISOString(), id);
+    return this.findPhrase(id);
   }
-  deletePhrase(phrase) {
-    const result = getDatabase().prepare("DELETE FROM clipboard_phrases WHERE id = ?").run(phrase);
+  deletePhrase(id) {
+    const result = getDatabase().prepare("DELETE FROM clipboard_phrases WHERE id = ?").run(id);
     return Number(result.changes) > 0;
   }
   /** 按传入顺序重排；未出现在列表里的常用语排在后面，保持原有先后 */
-  reorderPhrases(items) {
+  reorderPhrases(ids) {
     const database = getDatabase();
     const existing = this.listPhrases().map(phrase => phrase.id);
     const known = new Set(existing);
-    const ordered = [...new Set(items.filter(item => known.has(item)))];
+    const ordered = [...new Set(ids.filter(id => known.has(id)))];
     const orderedSet = new Set(ordered);
-    const finalOrder = [...ordered, ...existing.filter(item => !orderedSet.has(item))];
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const finalOrder = [...ordered, ...existing.filter(id => !orderedSet.has(id))];
+    const now = (/* @__PURE__ */new Date()).toISOString();
     const statement = database.prepare("UPDATE clipboard_phrases SET sort_order = ?, updated_at = ? WHERE id = ?");
     database.exec("BEGIN");
     try {
-      finalOrder.forEach((item, index) => statement.run(index + 1, isoString, item));
+      finalOrder.forEach((id, index) => statement.run(index + 1, now, id));
       database.exec("COMMIT");
     } catch (error) {
       database.exec("ROLLBACK");
       throw error;
     }
   }
-  markPhraseUsed(mark, usedAt) {
-    getDatabase().prepare("UPDATE clipboard_phrases SET use_count = use_count + 1, last_used_at = ? WHERE id = ?").run(usedAt, mark);
+  markPhraseUsed(id, usedAt) {
+    getDatabase().prepare("UPDATE clipboard_phrases SET use_count = use_count + 1, last_used_at = ? WHERE id = ?").run(usedAt, id);
   }
 };
 var clipboardAssistantRepository = new ClipboardAssistantRepository();
@@ -384,8 +384,8 @@ function language() {
     return "zh-CN";
   }
 }
-function message(messageValue) {
-  return t(`clipboardAssistant.${messageValue}`, language());
+function message(key) {
+  return t(`clipboardAssistant.${key}`, language());
 }
 /** 截图美化开启时它的快捷键，用来避免两边设成同一个组合键 */
 function screenshotShortcutOf(settings) {
@@ -397,11 +397,11 @@ function countCharacters(text) {
   return count;
 }
 /** 按 Unicode 字符截断，避免切开代理对 */
-function truncateCharacters(text, characters) {
+function truncateCharacters(text, max) {
   let count = 0;
   let end = 0;
   for (const char of text) {
-    if (count >= characters) break;
+    if (count >= max) break;
     count += 1;
     end += char.length;
   }
@@ -594,26 +594,26 @@ var ClipboardAssistantService = class {
       nextCursor: hasMore && last ? encodeCursor(last) : null
     };
   }
-  copyHistory(historyValue) {
-    const text = clipboardAssistantRepository.findHistoryText(historyValue);
+  copyHistory(id) {
+    const text = clipboardAssistantRepository.findHistoryText(id);
     if (text === null) throw new Error(message("historyNotFound"));
     this.writeToClipboard(text);
-    clipboardAssistantRepository.markHistoryUsed(historyValue, (/* @__PURE__ */new Date()).toISOString());
+    clipboardAssistantRepository.markHistoryUsed(id, (/* @__PURE__ */new Date()).toISOString());
     this.queueChanged("history");
   }
-  copyPhrase(phraseValue) {
-    const phrase = clipboardAssistantRepository.findPhrase(phraseValue);
+  copyPhrase(id) {
+    const phrase = clipboardAssistantRepository.findPhrase(id);
     if (!phrase) throw new Error(message("phraseNotFound"));
     this.writeToClipboard(phrase.content);
-    clipboardAssistantRepository.markPhraseUsed(phraseValue, (/* @__PURE__ */new Date()).toISOString());
+    clipboardAssistantRepository.markPhraseUsed(id, (/* @__PURE__ */new Date()).toISOString());
     this.queueChanged("phrases");
   }
-  setHistoryPinned(historyValue, pinned) {
-    if (!clipboardAssistantRepository.setHistoryPinned(historyValue, pinned)) throw new Error(message("historyNotFound"));
+  setHistoryPinned(id, pinned) {
+    if (!clipboardAssistantRepository.setHistoryPinned(id, pinned)) throw new Error(message("historyNotFound"));
     this.queueChanged("history");
   }
-  deleteHistory(historyValue) {
-    clipboardAssistantRepository.deleteHistory(historyValue);
+  deleteHistory(id) {
+    clipboardAssistantRepository.deleteHistory(id);
     this.queueChanged("history");
   }
   clearHistory() {
@@ -646,12 +646,12 @@ var ClipboardAssistantService = class {
     this.queueChanged("phrases");
     return phrase;
   }
-  deletePhrase(phrase) {
-    clipboardAssistantRepository.deletePhrase(phrase);
+  deletePhrase(id) {
+    clipboardAssistantRepository.deletePhrase(id);
     this.queueChanged("phrases");
   }
-  reorderPhrases(reorder) {
-    clipboardAssistantRepository.reorderPhrases(reorder);
+  reorderPhrases(ids) {
+    clipboardAssistantRepository.reorderPhrases(ids);
     this.queueChanged("phrases");
     return clipboardAssistantRepository.listPhrases();
   }
@@ -679,14 +679,14 @@ var ClipboardAssistantService = class {
     }));
   }
   /** 浮窗右侧预览：读取完整内容，超长时只取前一段 */
-  pickerDetail(kind, detail) {
+  pickerDetail(kind, id) {
     if (kind === "history") {
-      const history = clipboardAssistantRepository.findHistoryDetail(detail);
+      const history = clipboardAssistantRepository.findHistoryDetail(id);
       if (!history) return null;
       const content = truncateCharacters(history.text, CLIPBOARD_PICKER_PREVIEW_MAX_LENGTH);
       return {
         kind,
-        id: detail,
+        id,
         title: "",
         content,
         truncated: content.length < history.text.length,
@@ -695,11 +695,11 @@ var ClipboardAssistantService = class {
         copiedAt: history.copiedAt
       };
     }
-    const phrase = clipboardAssistantRepository.findPhrase(detail);
+    const phrase = clipboardAssistantRepository.findPhrase(id);
     if (!phrase) return null;
     return {
       kind,
-      id: detail,
+      id,
       title: phrase.title,
       content: phrase.content,
       truncated: false,
@@ -806,21 +806,21 @@ var ClipboardAssistantService = class {
     }
   }
   record(text) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     const contentHash = hashText(text);
     clipboardAssistantRepository.recordText({
       text,
       contentHash,
       preview: buildPreview(text),
       characterCount: countCharacters(text),
-      copiedAt: isoString
+      copiedAt: now
     });
     this.cleanupRetention(false);
     this.queueChanged("history");
-    if (this.syncToTimeline) this.writeTimelineRecord(text, contentHash, isoString);
+    if (this.syncToTimeline) this.writeTimelineRecord(text, contentHash, now);
   }
   /** 时间线里另存一份，不进时间线概括、不占记录次数；暂停记录时不写 */
-  writeTimelineRecord(text, contentHash, record) {
+  writeTimelineRecord(text, contentHash, now) {
     if (!settingsRepository.getSettings().enableRecording) return;
     const normalized = text.replace(/\r\n?/g, "\n").replace(/\0/g, "").trim();
     const characterCount = countCharacters(normalized);
@@ -829,8 +829,8 @@ var ClipboardAssistantService = class {
     if (workRecordRepository.hasClipboardRecordSince(contentHash, since)) return;
     const truncated = characterCount > TIMELINE_MAX_CHARACTERS;
     workRecordRepository.create({
-      startedAt: record,
-      endedAt: record,
+      startedAt: now,
+      endedAt: now,
       category: workRecordCategoryRepository.findById(CLIPBOARD_WORK_RECORD_CATEGORY_ID)?.name ?? "剪贴板记录",
       summary: truncated ? `${truncateCharacters(normalized, TIMELINE_MAX_CHARACTERS)}…` : normalized,
       details: {

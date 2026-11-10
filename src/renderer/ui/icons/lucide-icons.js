@@ -1,17 +1,17 @@
 import { H as e } from "../../chunks/vue-i18n.runtime.js";
-var handler = e => {
+var t = e => {
     for (let t in e) if (t.startsWith(`aria-`) || t === `role` || t === `title`) return true;
     return false;
   },
   n = e => e === ``,
-  r = (...e) => e.filter((text, item, items) => !!text && text.trim() !== `` && items.indexOf(text) === item).join(` `).trim(),
+  r = (...e) => e.filter((e, t, n) => !!e && e.trim() !== `` && n.indexOf(e) === t).join(` `).trim(),
   i = e => e.replace(/([a-z0-9])([A-Z])/g, `$1-$2`).toLowerCase(),
-  a = e => e.replace(/^([A-Z])|[\s-_]+(\w)/g, (e, text, n) => n ? n.toUpperCase() : text.toLowerCase()),
+  a = e => e.replace(/^([A-Z])|[\s-_]+(\w)/g, (e, t, n) => n ? n.toUpperCase() : t.toLowerCase()),
   o = e => {
     let t = a(e);
     return t.charAt(0).toUpperCase() + t.slice(1);
   },
-  options = {
+  s = {
     xmlns: `http://www.w3.org/2000/svg`,
     width: 24,
     height: 24,
@@ -29,23 +29,23 @@ var handler = e => {
     "absolute-stroke-width": u,
     strokeWidth: d,
     "stroke-width": f,
-    size: p = options.width,
-    color: m = options.stroke,
+    size: p = s.width,
+    color: m = s.stroke,
     ...h
   }, {
     slots: g
   }) => e(`svg`, {
-    ...options,
+    ...s,
     ...h,
     width: p,
     height: p,
     stroke: m,
-    "stroke-width": n(l) || n(u) || l === true || u === true ? Number(d || f || options[`stroke-width`]) * 24 / Number(p) : d || f || options[`stroke-width`],
+    "stroke-width": n(l) || n(u) || l === true || u === true ? Number(d || f || s[`stroke-width`]) * 24 / Number(p) : d || f || s[`stroke-width`],
     class: r(`lucide`, h.class, ...(a ? [`lucide-${i(o(a))}-icon`, `lucide-${i(a)}`] : [`lucide-icon`])),
-    ...(!g.default && !handler(h) && {
+    ...(!g.default && !t(h) && {
       "aria-hidden": `true`
     })
-  }, [...c.map(item => e(...item)), ...(g.default ? [g.default()] : [])]),
+  }, [...c.map(t => e(...t)), ...(g.default ? [g.default()] : [])]),
   l = (t, n) => (r, {
     slots: i,
     attrs: a

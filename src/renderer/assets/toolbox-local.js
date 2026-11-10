@@ -1,0 +1,54 @@
+function e(result) {
+  if (!result.ok) throw Error(result.error.message);
+  return result.data;
+}
+var t = {
+  async openWhiteboard(t) {
+    return e(await window.electronAPI.toolboxLocal.openWhiteboard({
+      locale: t
+    }));
+  },
+  async saveFile(t) {
+    return e(await window.electronAPI.toolboxLocal.saveFile(t));
+  },
+  async saveFiles(t) {
+    return e(await window.electronAPI.toolboxLocal.saveFiles(t));
+  },
+  async storeImageJob(t) {
+    return e(await window.electronAPI.toolboxLocal.storeImageJob(t));
+  },
+  async latestImageJob(t) {
+    return e(await window.electronAPI.toolboxLocal.latestImageJob({
+      ownerId: t
+    }));
+  },
+  async clearImageJob(t, n) {
+    e(await window.electronAPI.toolboxLocal.clearImageJob({
+      jobId: t,
+      ownerId: n
+    }));
+  },
+  async selectPdfs(t) {
+    return e(await window.electronAPI.toolboxLocal.selectPdfs({
+      locale: t
+    }));
+  },
+  async importPdfs(t, n) {
+    return e(await window.electronAPI.toolboxLocal.importPdfs(t, n));
+  },
+  async compressPdfs(t) {
+    return e(await window.electronAPI.toolboxLocal.compressPdfs(t));
+  },
+  async savePdfResult(t) {
+    return e(await window.electronAPI.toolboxLocal.savePdfResult(t));
+  },
+  async savePdfResults(t) {
+    return e(await window.electronAPI.toolboxLocal.savePdfResults(t));
+  },
+  async clearPdfJob(t) {
+    e(await window.electronAPI.toolboxLocal.clearPdfJob({
+      jobId: t
+    }));
+  }
+};
+export { t };

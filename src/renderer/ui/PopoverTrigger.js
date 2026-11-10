@@ -1,9 +1,9 @@
-import { B as uiSwitchB, I as uiSwitchI, K as uiSwitchK, L as uiSwitchL, N as uiSwitchN, O as uiSwitchO, V as uiSwitchV, W as uiSwitchW, _ as uiSwitch, at as uiSwitchAt, j as uiSwitchJ, k as d, lt as uiSwitchLt, xt as uiSwitchXt, yt as uiSwitchYt, z as uiSwitchZ } from "./Switch.js";
-import { An as vueAn, Ct as vueCt, Dn as vueDn, Et as vueEt, V as vueV, Wt as vueWt, Yt as vueYt, b as vueB, bn as vueBn, gt as vueGt, j as vueJ, k as vueK, nt as vueNt, tr as vueTr, ut as vueUt, v as w } from "../chunks/vue-i18n.runtime.js";
-import { E as playerE } from "../i18n/en-US-player.js";
-import { r as lucideR } from "./icons/lucide-icons.js";
-import { a as PopperContentA, i as PopperContentI, n as PopperContentN, o as PopperContentO } from "./PopperContent.js";
-var pe = lucideR(`chevron-right`, [[`path`, {
+import { B as e, I as t, K as n, L as r, N as i, O as a, V as o, W as s, _ as c, at as l, j as u, k as d, lt as f, xt as p, yt as m, z as h } from "./Switch.js";
+import { An as g, Ct as _, Dn as ee, Et as te, V as ne, Wt as re, Yt as v, b as y, bn as b, gt as x, j as S, k as ie, nt as C, tr as ae, ut as oe, v as w } from "../chunks/vue-i18n.runtime.js";
+import { E as se } from "../i18n/en-US-player.js";
+import { r as ce } from "./icons/lucide-icons.js";
+import { a as le, i as ue, n as de, o as fe } from "./PopperContent.js";
+var pe = ce(`chevron-right`, [[`path`, {
   d: `m9 18 6-6-6-6`,
   key: `mthhwq`
 }]]);
@@ -32,9 +32,9 @@ var ge = {
     leapyear: [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
   },
   k = class {
-    fromJulianDay(julian) {
-      let julianAlias = julian,
-        n = julianAlias - me,
+    fromJulianDay(e) {
+      let t = e,
+        n = t - me,
         r = Math.floor(n / 146097),
         i = T(n, 146097),
         a = Math.floor(i / 36524),
@@ -43,23 +43,23 @@ var ge = {
         c = T(o, 1461),
         l = Math.floor(c / 365),
         [u, d] = he(r * 400 + a * 100 + s * 4 + l + +(a !== 4 && l !== 4)),
-        f = julianAlias - E(u, d, 1, 1),
+        f = t - E(u, d, 1, 1),
         p = 2;
-      julianAlias < E(u, d, 3, 1) ? p = 0 : D(d) && (p = 1);
+      t < E(u, d, 3, 1) ? p = 0 : D(d) && (p = 1);
       let m = Math.floor(((f + p) * 12 + 373) / 367);
-      return new B(u, d, m, julianAlias - E(u, d, m, 1) + 1);
+      return new B(u, d, m, t - E(u, d, m, 1) + 1);
     }
-    toJulianDay(julian) {
-      return E(julian.era, julian.year, julian.month, julian.day);
+    toJulianDay(e) {
+      return E(e.era, e.year, e.month, e.day);
     }
-    getDaysInMonth(days) {
-      return ge[D(days.year) ? `leapyear` : `standard`][days.month - 1];
+    getDaysInMonth(e) {
+      return ge[D(e.year) ? `leapyear` : `standard`][e.month - 1];
     }
-    getMonthsInYear(months) {
+    getMonthsInYear(e) {
       return 12;
     }
-    getDaysInYear(days) {
-      return D(days.year) ? 366 : 365;
+    getDaysInYear(e) {
+      return D(e.year) ? 366 : 365;
     }
     getMaximumMonthsInYear() {
       return 12;
@@ -67,17 +67,17 @@ var ge = {
     getMaximumDaysInMonth() {
       return 31;
     }
-    getYearsInEra(years) {
+    getYearsInEra(e) {
       return 9999;
     }
     getEras() {
       return [`BC`, `AD`];
     }
-    isInverseEra(inverse) {
-      return inverse.era === `BC`;
+    isInverseEra(e) {
+      return e.era === `BC`;
     }
-    balanceDate(balance) {
-      balance.year <= 0 && (balance.era = balance.era === `BC` ? `AD` : `BC`, balance.year = 1 - balance.year);
+    balanceDate(e) {
+      e.year <= 0 && (e.era = e.era === `BC` ? `AD` : `BC`, e.year = 1 - e.year);
     }
     constructor() {
       this.identifier = `gregory`;
@@ -198,7 +198,7 @@ function Se(e, t) {
 function Ce(e, t) {
   return ve(e, De(t));
 }
-var options = {
+var we = {
   sun: 0,
   mon: 1,
   tue: 2,
@@ -208,9 +208,9 @@ var options = {
   sat: 6
 };
 function Te(e, t, n) {
-  let toJulianDay = e.calendar.toJulianDay(e),
-    i = n ? options[n] : Be(t),
-    a = Math.ceil(toJulianDay + 1 - i) % 7;
+  let r = e.calendar.toJulianDay(e),
+    i = n ? we[n] : Be(t),
+    a = Math.ceil(r + 1 - i) % 7;
   return a < 0 && (a += 7), a;
 }
 function Ee(e) {
@@ -228,10 +228,10 @@ function ke(e, t) {
 function Ae(e) {
   return e.hour * 36e5 + e.minute * 6e4 + e.second * 1e3 + e.millisecond;
 }
-var timeZone = null,
+var je = null,
   Me = false;
 function Ne() {
-  return timeZone ??= new Intl.DateTimeFormat().resolvedOptions().timeZone, timeZone;
+  return je ??= new Intl.DateTimeFormat().resolvedOptions().timeZone, je;
 }
 function Pe() {
   return Me;
@@ -253,24 +253,24 @@ function Ie(e) {
 }
 var Le = new Map(),
   Re = new Map();
-function ze(text) {
+function ze(e) {
   if (Intl.Locale) {
-    let t = Le.get(text);
-    return t || (t = new Intl.Locale(text).maximize().region, t && Le.set(text, t)), t;
+    let t = Le.get(e);
+    return t || (t = new Intl.Locale(e).maximize().region, t && Le.set(e, t)), t;
   }
-  let t = text.split(`-`)[1];
+  let t = e.split(`-`)[1];
   return t === `u` ? undefined : t;
 }
-function Be(text) {
-  let t = Re.get(text);
+function Be(e) {
+  let t = Re.get(e);
   if (!t) {
     if (Intl.Locale) {
-      let n = new Intl.Locale(text);
-      if (`getWeekInfo` in n && (t = n.getWeekInfo(), t)) return Re.set(text, t), t.firstDay;
+      let n = new Intl.Locale(e);
+      if (`getWeekInfo` in n && (t = n.getWeekInfo(), t)) return Re.set(e, t), t.firstDay;
     }
-    let n = ze(text);
-    if (text.includes(`-fw-`)) {
-      let n = text.split(`-fw-`)[1].split(`-`)[0];
+    let n = ze(e);
+    if (e.includes(`-fw-`)) {
+      let n = e.split(`-fw-`)[1].split(`-`)[0];
       t = n === `mon` ? {
         firstDay: 1
       } : n === `tue` ? {
@@ -286,12 +286,12 @@ function Be(text) {
       } : {
         firstDay: 0
       };
-    } else t = text.includes(`-ca-iso8601`) ? {
+    } else t = e.includes(`-ca-iso8601`) ? {
       firstDay: 1
     } : {
       firstDay: n && _e[n] || 0
     };
-    Re.set(text, t);
+    Re.set(e, t);
   }
   return t.firstDay;
 }
@@ -299,8 +299,8 @@ function j(e) {
   return e = F(e, new k()), Ve(O(e.era, e.year), e.month, e.day, e.hour, e.minute, e.second, e.millisecond);
 }
 function Ve(e, t, n, r, i, a, o) {
-  let date = new Date();
-  return date.setUTCHours(r, i, a, o), date.setUTCFullYear(e, t - 1, n), date.getTime();
+  let s = new Date();
+  return s.setUTCHours(r, i, a, o), s.setUTCFullYear(e, t - 1, n), s.getTime();
 }
 function He(e, t) {
   if (t === `UTC`) return 0;
@@ -329,9 +329,9 @@ function We(e, t) {
     minute: `numeric`,
     second: `numeric`
   }), Ue.set(t, n));
-  let toParts = n.formatToParts(new Date(e)),
+  let r = n.formatToParts(new Date(e)),
     i = {};
-  for (let diff of toParts) diff.type !== `literal` && (i[diff.type] = diff.value);
+  for (let e of r) e.type !== `literal` && (i[e.type] = e.value);
   return {
     year: i.era === `BC` || i.era === `B` ? -i.year + 1 : +i.year,
     month: +i.month,
@@ -343,7 +343,7 @@ function We(e, t) {
 }
 var Ge = 864e5;
 function Ke(e, t, n, r) {
-  return (n === r ? [n] : [n, r]).filter(item => qe(e, t, item));
+  return (n === r ? [n] : [n, r]).filter(n => qe(e, t, n));
 }
 function qe(e, t, n) {
   let r = We(n, t);
@@ -354,9 +354,9 @@ function M(e, t, n = `compatible`) {
   if (t === `UTC`) return j(r);
   if (t === Ne() && n === `compatible` && !Pe()) {
     r = F(r, new k());
-    let date = new Date(),
+    let e = new Date(),
       t = O(r.era, r.year);
-    return date.setFullYear(t, r.month - 1, r.day), date.setHours(r.hour, r.minute, r.second, r.millisecond), date.getTime();
+    return e.setFullYear(t, r.month - 1, r.day), e.setHours(r.hour, r.minute, r.second, r.millisecond), e.getTime();
   }
   let i = j(r),
     a = He(i - Ge, t),
@@ -387,15 +387,15 @@ function Je(e, t, n = `compatible`) {
 }
 function N(e, t) {
   let n = He(e, t),
-    date = new Date(e + n),
-    uTCFullYear = date.getUTCFullYear(),
-    a = date.getUTCMonth() + 1,
-    uTCDate = date.getUTCDate(),
-    uTCHours = date.getUTCHours(),
-    uTCMinutes = date.getUTCMinutes(),
-    uTCSeconds = date.getUTCSeconds(),
-    uTCMilliseconds = date.getUTCMilliseconds();
-  return new At(uTCFullYear < 1 ? `BC` : `AD`, uTCFullYear < 1 ? -uTCFullYear + 1 : uTCFullYear, a, uTCDate, t, n, uTCHours, uTCMinutes, uTCSeconds, uTCMilliseconds);
+    r = new Date(e + n),
+    i = r.getUTCFullYear(),
+    a = r.getUTCMonth() + 1,
+    o = r.getUTCDate(),
+    s = r.getUTCHours(),
+    c = r.getUTCMinutes(),
+    l = r.getUTCSeconds(),
+    u = r.getUTCMilliseconds();
+  return new At(i < 1 ? `BC` : `AD`, i < 1 ? -i + 1 : i, a, o, t, n, s, c, l, u);
 }
 function Ye(e) {
   return new B(e.calendar, e.era, e.year, e.month, e.day);
@@ -420,9 +420,9 @@ function P(e, t) {
 }
 function F(e, t) {
   if (Se(e.calendar, t)) return e;
-  let fromJulianDay = t.fromJulianDay(e.calendar.toJulianDay(e)),
+  let n = t.fromJulianDay(e.calendar.toJulianDay(e)),
     r = e.copy();
-  return r.calendar = t, r.era = fromJulianDay.era, r.year = fromJulianDay.year, r.month = fromJulianDay.month, r.day = fromJulianDay.day, L(r), r;
+  return r.calendar = t, r.era = n.era, r.year = n.year, r.month = n.month, r.day = n.day, L(r), r;
 }
 function Xe(e, t, n) {
   return e instanceof At ? e.timeZone === t ? e : Qe(e, t) : N(M(e, t, n), t);
@@ -439,14 +439,14 @@ function $e(e, t) {
   let n = e.copy(),
     r = `hour` in n ? dt(n, t) : 0;
   et(n, t.years || 0), n.calendar.balanceYearMonth && n.calendar.balanceYearMonth(n, e), n.month += t.months || 0, tt(n), rt(n), n.day += (t.weeks || 0) * 7, n.day += t.days || 0, n.day += r, nt(n), n.calendar.balanceDate && n.calendar.balanceDate(n), n.year < 1 && (n.year = 1, n.month = 1, n.day = 1);
-  let yearsInEra = n.calendar.getYearsInEra(n);
-  if (n.year > yearsInEra) {
-    let isInverseEra = n.calendar.isInverseEra?.(n);
-    n.year = yearsInEra, n.month = isInverseEra ? 1 : n.calendar.getMonthsInYear(n), n.day = isInverseEra ? 1 : n.calendar.getDaysInMonth(n);
+  let i = n.calendar.getYearsInEra(n);
+  if (n.year > i) {
+    let e = n.calendar.isInverseEra?.(n);
+    n.year = i, n.month = e ? 1 : n.calendar.getMonthsInYear(n), n.day = e ? 1 : n.calendar.getDaysInMonth(n);
   }
   n.month < 1 && (n.month = 1, n.day = 1);
-  let monthsInYear = n.calendar.getMonthsInYear(n);
-  return n.month > monthsInYear && (n.month = monthsInYear, n.day = n.calendar.getDaysInMonth(n)), n.day = Math.max(1, Math.min(n.calendar.getDaysInMonth(n), n.day)), n;
+  let a = n.calendar.getMonthsInYear(n);
+  return n.month > a && (n.month = a, n.day = n.calendar.getDaysInMonth(n)), n.day = Math.max(1, Math.min(n.calendar.getDaysInMonth(n), n.day)), n;
 }
 function et(e, t) {
   e.calendar.isInverseEra?.(e) && (t = -t), e.year += t;
@@ -468,7 +468,7 @@ function L(e) {
 }
 function it(e) {
   let t = {};
-  for (let resolvedValue in e) typeof e[resolvedValue] == `number` && (t[resolvedValue] = -e[resolvedValue]);
+  for (let n in e) typeof e[n] == `number` && (t[n] = -e[n]);
   return t;
 }
 function at(e, t) {
@@ -497,15 +497,15 @@ function ut(e, t) {
 function dt(e, t) {
   return e.hour += t.hours || 0, e.minute += t.minutes || 0, e.second += t.seconds || 0, e.millisecond += t.milliseconds || 0, ct(e);
 }
-function ft(e, items, n, r) {
+function ft(e, t, n, r) {
   let i = e.copy();
-  switch (items) {
+  switch (t) {
     case `era`:
       {
-        let eras = e.calendar.getEras(),
-          a = eras.indexOf(e.era);
+        let t = e.calendar.getEras(),
+          a = t.indexOf(e.era);
         if (a < 0) throw Error(`Invalid era: ` + e.era);
-        a = R(a, n, 0, eras.length - 1, r?.round), i.era = eras[a], L(i);
+        a = R(a, n, 0, t.length - 1, r?.round), i.era = t[a], L(i);
         break;
       }
     case `year`:
@@ -518,7 +518,7 @@ function ft(e, items, n, r) {
       i.day = R(e.day, n, 1, e.calendar.getDaysInMonth(e), r?.round);
       break;
     default:
-      throw Error(`Unsupported field ` + items);
+      throw Error(`Unsupported field ` + t);
   }
   return e.calendar.balanceDate && e.calendar.balanceDate(i), L(i), i;
 }
@@ -527,14 +527,14 @@ function pt(e, t, n, r) {
   switch (t) {
     case `hour`:
       {
-        let hour = e.hour,
+        let t = e.hour,
           a = 0,
           o = 23;
         if (r?.hourCycle === 12) {
-          let e = hour >= 12;
+          let e = t >= 12;
           a = e ? 12 : 0, o = e ? 23 : 11;
         }
-        i.hour = R(hour, n, a, o, r?.round);
+        i.hour = R(t, n, a, o, r?.round);
         break;
       }
     case `minute`:
@@ -560,13 +560,13 @@ function R(e, t, n, r, i = false) {
   return e;
 }
 function mt(e, t) {
-  let resolvedValue;
-  return resolvedValue = t.years != null && t.years !== 0 || t.months != null && t.months !== 0 || t.weeks != null && t.weeks !== 0 || t.days != null && t.days !== 0 ? M($e(P(e), {
+  let n;
+  return n = t.years != null && t.years !== 0 || t.months != null && t.months !== 0 || t.weeks != null && t.weeks !== 0 || t.days != null && t.days !== 0 ? M($e(P(e), {
     years: t.years,
     months: t.months,
     weeks: t.weeks,
     days: t.days
-  }), e.timeZone) : j(e) - e.offset, resolvedValue += t.milliseconds || 0, resolvedValue += (t.seconds || 0) * 1e3, resolvedValue += (t.minutes || 0) * 6e4, resolvedValue += (t.hours || 0) * 36e5, F(N(resolvedValue, e.timeZone), e.calendar);
+  }), e.timeZone) : j(e) - e.offset, n += t.milliseconds || 0, n += (t.seconds || 0) * 1e3, n += (t.minutes || 0) * 6e4, n += (t.hours || 0) * 36e5, F(N(n, e.timeZone), e.calendar);
 }
 function ht(e, t) {
   return mt(e, it(t));
@@ -585,11 +585,11 @@ function gt(e, t, n, r) {
           o = F(st(a, {
             hour: t
           }), new k()),
-          s = [M(o, e.timeZone, `earlier`), M(o, e.timeZone, `later`)].filter(item => N(item, e.timeZone).day === o.day)[0],
+          s = [M(o, e.timeZone, `earlier`), M(o, e.timeZone, `later`)].filter(t => N(t, e.timeZone).day === o.day)[0],
           c = F(st(a, {
             hour: i
           }), new k()),
-          l = [M(c, e.timeZone, `earlier`), M(c, e.timeZone, `later`)].filter(item => N(item, e.timeZone).day === c.day).pop(),
+          l = [M(c, e.timeZone, `earlier`), M(c, e.timeZone, `later`)].filter(t => N(t, e.timeZone).day === c.day).pop(),
           u = j(e) - e.offset,
           d = Math.floor(u / I),
           f = u % I;
@@ -639,8 +639,8 @@ function Ct(e) {
 }
 function wt(e) {
   let t = F(e, new k()),
-    resolvedValue;
-  return resolvedValue = t.era === `BC` ? t.year === 1 ? `0000` : `-` + String(Math.abs(1 - t.year)).padStart(6, `00`) : String(t.year).padStart(4, `0`), `${resolvedValue}-${String(t.month).padStart(2, `0`)}-${String(t.day).padStart(2, `0`)}`;
+    n;
+  return n = t.era === `BC` ? t.year === 1 ? `0000` : `-` + String(Math.abs(1 - t.year)).padStart(6, `00`) : String(t.year).padStart(4, `0`), `${n}-${String(t.month).padStart(2, `0`)}-${String(t.day).padStart(2, `0`)}`;
 }
 function Tt(e) {
   return `${wt(e)}T${Ct(e)}`;
@@ -657,17 +657,17 @@ function Et(e) {
 function Dt(e) {
   return `${Tt(e)}${Et(e.offset)}[${e.timeZone}]`;
 }
-function Ot(count) {
-  let t = typeof count[0] == `object` ? count.shift() : new k(),
-    resolvedValue;
-  if (typeof count[0] == `string`) resolvedValue = count.shift();else {
-    let eras = t.getEras();
-    resolvedValue = eras[eras.length - 1];
+function Ot(e) {
+  let t = typeof e[0] == `object` ? e.shift() : new k(),
+    n;
+  if (typeof e[0] == `string`) n = e.shift();else {
+    let e = t.getEras();
+    n = e[e.length - 1];
   }
-  let r = count.shift(),
-    i = count.shift(),
-    a = count.shift();
-  return [t, resolvedValue, r, i, a];
+  let r = e.shift(),
+    i = e.shift(),
+    a = e.shift();
+  return [t, n, r, i, a];
 }
 var B = class e {
     constructor(...e) {
@@ -680,8 +680,8 @@ var B = class e {
     add(e) {
       return $e(this, e);
     }
-    subtract(subtract) {
-      return at(this, subtract);
+    subtract(e) {
+      return at(this, e);
     }
     set(e) {
       return ot(this, e);
@@ -689,14 +689,14 @@ var B = class e {
     cycle(e, t, n) {
       return ft(this, e, t, n);
     }
-    toDate(date) {
-      return Je(this, date);
+    toDate(e) {
+      return Je(this, e);
     }
     toString() {
       return wt(this);
     }
-    compare(compare) {
-      return Oe(this, compare);
+    compare(e) {
+      return Oe(this, e);
     }
   },
   kt = class e {
@@ -710,8 +710,8 @@ var B = class e {
     add(e) {
       return $e(this, e);
     }
-    subtract(subtract) {
-      return at(this, subtract);
+    subtract(e) {
+      return at(this, e);
     }
     set(e) {
       return ot(st(this, e), e);
@@ -727,15 +727,15 @@ var B = class e {
           return pt(this, e, t, n);
       }
     }
-    toDate(date, dateValue) {
-      return Je(this, date, dateValue);
+    toDate(e, t) {
+      return Je(this, e, t);
     }
     toString() {
       return Tt(this);
     }
-    compare(compare) {
-      let t = Oe(this, compare);
-      return t === 0 ? ke(this, P(compare)) : t;
+    compare(e) {
+      let t = Oe(this, e);
+      return t === 0 ? ke(this, P(e)) : t;
     }
   },
   At = class e {
@@ -751,8 +751,8 @@ var B = class e {
     add(e) {
       return mt(this, e);
     }
-    subtract(subtract) {
-      return ht(this, subtract);
+    subtract(e) {
+      return ht(this, e);
     }
     set(e, t) {
       return _t(this, e, t);
@@ -769,8 +769,8 @@ var B = class e {
     toAbsoluteString() {
       return this.toDate().toISOString();
     }
-    compare(compare) {
-      return this.toDate().getTime() - Xe(compare, this.timeZone).toDate().getTime();
+    compare(e) {
+      return this.toDate().getTime() - Xe(e, this.timeZone).toDate().getTime();
     }
   },
   V = [[1868, 9, 8], [1912, 7, 30], [1926, 12, 25], [1989, 1, 8], [2019, 5, 1]],
@@ -778,8 +778,8 @@ var B = class e {
   Mt = [1867, 1911, 1925, 1988, 2018],
   H = [`meiji`, `taisho`, `showa`, `heisei`, `reiwa`];
 function Nt(e) {
-  let indexResult = V.findIndex(([t, n, r]) => e.year < t || e.year === t && e.month < n || e.year === t && e.month === n && e.day < r);
-  return indexResult === -1 ? V.length - 1 : indexResult === 0 ? 0 : indexResult - 1;
+  let t = V.findIndex(([t, n, r]) => e.year < t || e.year === t && e.month < n || e.year === t && e.month === n && e.day < r);
+  return t === -1 ? V.length - 1 : t === 0 ? 0 : t - 1;
 }
 function Pt(e) {
   let t = Mt[H.indexOf(e.era)];
@@ -787,53 +787,53 @@ function Pt(e) {
   return new B(e.year + t, e.month, e.day);
 }
 var Ft = class extends k {
-  fromJulianDay(julian) {
-    let fromJulianDay = super.fromJulianDay(julian),
-      n = Nt(fromJulianDay);
-    return new B(this, H[n], fromJulianDay.year - Mt[n], fromJulianDay.month, fromJulianDay.day);
-  }
-  toJulianDay(julian) {
-    return super.toJulianDay(Pt(julian));
-  }
-  balanceDate(balance) {
-    let t = Pt(balance),
+  fromJulianDay(e) {
+    let t = super.fromJulianDay(e),
       n = Nt(t);
-    H[n] !== balance.era && (balance.era = H[n], balance.year = t.year - Mt[n]), this.constrainDate(balance);
+    return new B(this, H[n], t.year - Mt[n], t.month, t.day);
   }
-  constrainDate(constrain) {
-    let t = H.indexOf(constrain.era),
+  toJulianDay(e) {
+    return super.toJulianDay(Pt(e));
+  }
+  balanceDate(e) {
+    let t = Pt(e),
+      n = Nt(t);
+    H[n] !== e.era && (e.era = H[n], e.year = t.year - Mt[n]), this.constrainDate(e);
+  }
+  constrainDate(e) {
+    let t = H.indexOf(e.era),
       n = jt[t];
     if (n != null) {
       let [r, i, a] = n,
         o = r - Mt[t];
-      constrain.year = Math.max(1, Math.min(o, constrain.year)), constrain.year === o && (constrain.month = Math.min(i, constrain.month), constrain.month === i && (constrain.day = Math.min(a, constrain.day)));
+      e.year = Math.max(1, Math.min(o, e.year)), e.year === o && (e.month = Math.min(i, e.month), e.month === i && (e.day = Math.min(a, e.day)));
     }
-    if (constrain.year === 1 && t >= 0) {
+    if (e.year === 1 && t >= 0) {
       let [, n, r] = V[t];
-      constrain.month = Math.max(n, constrain.month), constrain.month === n && (constrain.day = Math.max(r, constrain.day));
+      e.month = Math.max(n, e.month), e.month === n && (e.day = Math.max(r, e.day));
     }
   }
   getEras() {
     return H;
   }
-  getYearsInEra(years) {
-    let t = H.indexOf(years.era),
+  getYearsInEra(e) {
+    let t = H.indexOf(e.era),
       n = V[t],
       r = V[t + 1];
     if (r == null) return 9999 - n[0] + 1;
     let i = r[0] - n[0];
-    return (years.month < r[1] || years.month === r[1] && years.day < r[2]) && i++, i;
+    return (e.month < r[1] || e.month === r[1] && e.day < r[2]) && i++, i;
   }
-  getDaysInMonth(days) {
-    return super.getDaysInMonth(Pt(days));
+  getDaysInMonth(e) {
+    return super.getDaysInMonth(Pt(e));
   }
-  getMinimumMonthInYear(minimum) {
-    let t = It(minimum);
+  getMinimumMonthInYear(e) {
+    let t = It(e);
     return t ? t[1] : 1;
   }
-  getMinimumDayInMonth(minimum) {
-    let t = It(minimum);
-    return t && minimum.month === t[1] ? t[2] : 1;
+  getMinimumDayInMonth(e) {
+    let t = It(e);
+    return t && e.month === t[1] ? t[2] : 1;
   }
   constructor(...e) {
     super(...e), this.identifier = `japanese`;
@@ -844,19 +844,19 @@ function It(e) {
 }
 var Lt = -543,
   Rt = class extends k {
-    fromJulianDay(julian) {
-      let fromJulianDay = super.fromJulianDay(julian),
-        n = O(fromJulianDay.era, fromJulianDay.year);
-      return new B(this, n - Lt, fromJulianDay.month, fromJulianDay.day);
+    fromJulianDay(e) {
+      let t = super.fromJulianDay(e),
+        n = O(t.era, t.year);
+      return new B(this, n - Lt, t.month, t.day);
     }
-    toJulianDay(julian) {
-      return super.toJulianDay(zt(julian));
+    toJulianDay(e) {
+      return super.toJulianDay(zt(e));
     }
     getEras() {
       return [`BE`];
     }
-    getDaysInMonth(days) {
-      return super.getDaysInMonth(zt(days));
+    getDaysInMonth(e) {
+      return super.getDaysInMonth(zt(e));
     }
     balanceDate() {}
     constructor(...e) {
@@ -876,29 +876,29 @@ function Ht(e) {
   return t > 0 ? [`minguo`, t] : [`before_minguo`, 1 - t];
 }
 var Ut = class extends k {
-  fromJulianDay(julian) {
-    let fromJulianDay = super.fromJulianDay(julian),
-      [n, r] = Ht(O(fromJulianDay.era, fromJulianDay.year));
-    return new B(this, n, r, fromJulianDay.month, fromJulianDay.day);
+  fromJulianDay(e) {
+    let t = super.fromJulianDay(e),
+      [n, r] = Ht(O(t.era, t.year));
+    return new B(this, n, r, t.month, t.day);
   }
-  toJulianDay(julian) {
-    return super.toJulianDay(Wt(julian));
+  toJulianDay(e) {
+    return super.toJulianDay(Wt(e));
   }
   getEras() {
     return [`before_minguo`, `minguo`];
   }
-  balanceDate(balance) {
-    let [t, n] = Ht(Vt(balance));
-    balance.era = t, balance.year = n;
+  balanceDate(e) {
+    let [t, n] = Ht(Vt(e));
+    e.era = t, e.year = n;
   }
-  isInverseEra(inverse) {
-    return inverse.era === `before_minguo`;
+  isInverseEra(e) {
+    return e.era === `before_minguo`;
   }
-  getDaysInMonth(days) {
-    return super.getDaysInMonth(Wt(days));
+  getDaysInMonth(e) {
+    return super.getDaysInMonth(Wt(e));
   }
-  getYearsInEra(years) {
-    return years.era === `before_minguo` ? 9999 : 8088;
+  getYearsInEra(e) {
+    return e.era === `before_minguo` ? 9999 : 8088;
   }
   constructor(...e) {
     super(...e), this.identifier = `roc`;
@@ -911,23 +911,23 @@ function Wt(e) {
 var Gt = 1948320,
   Kt = [0, 31, 62, 93, 124, 155, 186, 216, 246, 276, 306, 336],
   qt = class {
-    fromJulianDay(julian) {
-      let t = julian - Gt,
+    fromJulianDay(e) {
+      let t = e - Gt,
         n = 1 + Math.floor((33 * t + 3) / 12053),
         r = t - (365 * (n - 1) + Math.floor((8 * n + 21) / 33)),
         i = Math.floor(r < 216 ? r / 31 : (r - 6) / 30),
         a = r - Kt[i] + 1;
       return new B(this, n, i + 1, a);
     }
-    toJulianDay(julian) {
-      let t = 1948319 + 365 * (julian.year - 1) + Math.floor((8 * julian.year + 21) / 33);
-      return t += Kt[julian.month - 1], t += julian.day, t;
+    toJulianDay(e) {
+      let t = 1948319 + 365 * (e.year - 1) + Math.floor((8 * e.year + 21) / 33);
+      return t += Kt[e.month - 1], t += e.day, t;
     }
     getMonthsInYear() {
       return 12;
     }
-    getDaysInMonth(days) {
-      return days.month <= 6 ? 31 : days.month <= 11 || T(25 * days.year + 11, 33) < 8 ? 30 : 29;
+    getDaysInMonth(e) {
+      return e.month <= 6 ? 31 : e.month <= 11 || T(25 * e.year + 11, 33) < 8 ? 30 : 29;
     }
     getMaximumMonthsInYear() {
       return 12;
@@ -948,27 +948,27 @@ var Gt = 1948320,
   Jt = 78,
   Yt = 80,
   Xt = class extends k {
-    fromJulianDay(julian) {
-      let fromJulianDay = super.fromJulianDay(julian),
-        n = fromJulianDay.year - Jt,
-        r = julian - E(fromJulianDay.era, fromJulianDay.year, 1, 1),
-        resolvedValue;
-      r < Yt ? (n--, resolvedValue = D(fromJulianDay.year - 1) ? 31 : 30, r += resolvedValue + 155 + 90 + 10) : (resolvedValue = D(fromJulianDay.year) ? 31 : 30, r -= Yt);
-      let count, o;
-      if (r < resolvedValue) count = 1, o = r + 1;else {
-        let e = r - resolvedValue;
-        e < 155 ? (count = Math.floor(e / 31) + 2, o = e % 31 + 1) : (e -= 155, count = Math.floor(e / 30) + 7, o = e % 30 + 1);
+    fromJulianDay(e) {
+      let t = super.fromJulianDay(e),
+        n = t.year - Jt,
+        r = e - E(t.era, t.year, 1, 1),
+        i;
+      r < Yt ? (n--, i = D(t.year - 1) ? 31 : 30, r += i + 155 + 90 + 10) : (i = D(t.year) ? 31 : 30, r -= Yt);
+      let a, o;
+      if (r < i) a = 1, o = r + 1;else {
+        let e = r - i;
+        e < 155 ? (a = Math.floor(e / 31) + 2, o = e % 31 + 1) : (e -= 155, a = Math.floor(e / 30) + 7, o = e % 30 + 1);
       }
-      return new B(this, n, count, o);
+      return new B(this, n, a, o);
     }
-    toJulianDay(julian) {
-      let [t, n] = he(julian.year + Jt),
-        total,
-        resolvedValue;
-      return D(n) ? (total = 31, resolvedValue = E(t, n, 3, 21)) : (total = 30, resolvedValue = E(t, n, 3, 22)), julian.month === 1 ? resolvedValue + julian.day - 1 : (resolvedValue += total + Math.min(julian.month - 2, 5) * 31, julian.month >= 8 && (resolvedValue += (julian.month - 7) * 30), resolvedValue += julian.day - 1, resolvedValue);
+    toJulianDay(e) {
+      let [t, n] = he(e.year + Jt),
+        r,
+        i;
+      return D(n) ? (r = 31, i = E(t, n, 3, 21)) : (r = 30, i = E(t, n, 3, 22)), e.month === 1 ? i + e.day - 1 : (i += r + Math.min(e.month - 2, 5) * 31, e.month >= 8 && (i += (e.month - 7) * 30), i += e.day - 1, i);
     }
-    getDaysInMonth(days) {
-      return days.month === 1 && D(days.year + Jt) || days.month >= 2 && days.month <= 6 ? 31 : 30;
+    getDaysInMonth(e) {
+      return e.month === 1 && D(e.year + Jt) || e.month >= 2 && e.month <= 6 ? 31 : 30;
     }
     getYearsInEra() {
       return 9919;
@@ -998,21 +998,21 @@ function nn(e) {
   return (14 + 11 * e) % 30 < 11;
 }
 var rn = class {
-    fromJulianDay(julian) {
-      return tn(this, Zt, julian);
+    fromJulianDay(e) {
+      return tn(this, Zt, e);
     }
-    toJulianDay(julian) {
-      return en(Zt, julian.year, julian.month, julian.day);
+    toJulianDay(e) {
+      return en(Zt, e.year, e.month, e.day);
     }
-    getDaysInMonth(days) {
-      let t = 29 + days.month % 2;
-      return days.month === 12 && nn(days.year) && t++, t;
+    getDaysInMonth(e) {
+      let t = 29 + e.month % 2;
+      return e.month === 12 && nn(e.year) && t++, t;
     }
     getMonthsInYear() {
       return 12;
     }
-    getDaysInYear(days) {
-      return nn(days.year) ? 355 : 354;
+    getDaysInYear(e) {
+      return nn(e.year) ? 355 : 354;
     }
     getMaximumMonthsInYear() {
       return 12;
@@ -1031,11 +1031,11 @@ var rn = class {
     }
   },
   an = class extends rn {
-    fromJulianDay(julian) {
-      return tn(this, Qt, julian);
+    fromJulianDay(e) {
+      return tn(this, Qt, e);
     }
-    toJulianDay(julian) {
-      return en(Qt, julian.year, julian.month, julian.day);
+    toJulianDay(e) {
+      return en(Qt, e.year, e.month, e.day);
     }
     constructor(...e) {
       super(...e), this.identifier = `islamic-tbla`;
@@ -1071,11 +1071,11 @@ var fn = class extends rn {
         }
       }
     }
-    fromJulianDay(julian) {
-      let t = julian - Zt,
+    fromJulianDay(e) {
+      let t = e - Zt,
         n = cn(U),
         r = cn(W);
-      if (t < n || t > r) return super.fromJulianDay(julian);
+      if (t < n || t > r) return super.fromJulianDay(e);
       {
         let e = 1299,
           n = 1,
@@ -1096,14 +1096,14 @@ var fn = class extends rn {
         return new B(this, e, n, t - un(e, n) + 1);
       }
     }
-    toJulianDay(julian) {
-      return julian.year < U || julian.year > W ? super.toJulianDay(julian) : Zt + un(julian.year, julian.month) + (julian.day - 1);
+    toJulianDay(e) {
+      return e.year < U || e.year > W ? super.toJulianDay(e) : Zt + un(e.year, e.month) + (e.day - 1);
     }
-    getDaysInMonth(days) {
-      return days.year < U || days.year > W ? super.getDaysInMonth(days) : ln(days.year, days.month);
+    getDaysInMonth(e) {
+      return e.year < U || e.year > W ? super.getDaysInMonth(e) : ln(e.year, e.month);
     }
-    getDaysInYear(days) {
-      return days.year < U || days.year > W ? super.getDaysInYear(days) : dn(days.year);
+    getDaysInYear(e) {
+      return e.year < U || e.year > W ? super.getDaysInYear(e) : dn(e.year);
     }
   },
   pn = 347997,
@@ -1146,8 +1146,8 @@ function bn(e, t) {
   return t === 2 ? n === 2 ? 30 : 29 : t === 3 ? n === 0 ? 29 : 30 : t === 6 ? K(e) ? 30 : 0 : 30;
 }
 var xn = class {
-    fromJulianDay(julian) {
-      let t = julian - pn,
+    fromJulianDay(e) {
+      let t = e - pn,
         n = t * mn / hn,
         r = Math.floor((19 * n + 234) / 235) + 1,
         i = q(r),
@@ -1160,19 +1160,19 @@ var xn = class {
       let c = a - s;
       return new B(this, r, o, c);
     }
-    toJulianDay(julian) {
-      let t = q(julian.year);
-      for (let n = 1; n < julian.month; n++) t += bn(julian.year, n);
-      return t + julian.day + pn;
+    toJulianDay(e) {
+      let t = q(e.year);
+      for (let n = 1; n < e.month; n++) t += bn(e.year, n);
+      return t + e.day + pn;
     }
-    getDaysInMonth(days) {
-      return bn(days.year, days.month);
+    getDaysInMonth(e) {
+      return bn(e.year, e.month);
     }
-    getMonthsInYear(months) {
-      return K(months.year) ? 13 : 12;
+    getMonthsInYear(e) {
+      return K(e.year) ? 13 : 12;
     }
-    getDaysInYear(days) {
-      return vn(days.year);
+    getDaysInYear(e) {
+      return vn(e.year);
     }
     getMaximumMonthsInYear() {
       return 13;
@@ -1186,8 +1186,8 @@ var xn = class {
     getEras() {
       return [`AM`];
     }
-    balanceYearMonth(balance, year) {
-      year.year !== balance.year && (K(year.year) && !K(balance.year) && year.month > 6 ? balance.month-- : !K(year.year) && K(balance.year) && year.month > 6 && balance.month++);
+    balanceYearMonth(e, t) {
+      t.year !== e.year && (K(t.year) && !K(e.year) && t.month > 6 ? e.month-- : !K(t.year) && K(e.year) && t.month > 6 && e.month++);
     }
     constructor() {
       this.identifier = `hebrew`;
@@ -1213,23 +1213,23 @@ function On(e, t) {
   return t % 13 == 0 ? Dn(e) + 5 : 30;
 }
 var kn = class {
-    fromJulianDay(julian) {
-      let [t, n, r] = En(Sn, julian),
+    fromJulianDay(e) {
+      let [t, n, r] = En(Sn, e),
         i = `AM`;
       return t <= 0 && (i = `AA`, t += wn), new B(this, i, t, n, r);
     }
-    toJulianDay(julian) {
-      let year = julian.year;
-      return julian.era === `AA` && (year -= wn), Tn(Sn, year, julian.month, julian.day);
+    toJulianDay(e) {
+      let t = e.year;
+      return e.era === `AA` && (t -= wn), Tn(Sn, t, e.month, e.day);
     }
-    getDaysInMonth(days) {
-      return On(days.year, days.month);
+    getDaysInMonth(e) {
+      return On(e.year, e.month);
     }
     getMonthsInYear() {
       return 13;
     }
-    getDaysInYear(days) {
-      return 365 + Dn(days.year);
+    getDaysInYear(e) {
+      return 365 + Dn(e.year);
     }
     getMaximumMonthsInYear() {
       return 13;
@@ -1237,8 +1237,8 @@ var kn = class {
     getMaximumDaysInMonth() {
       return 30;
     }
-    getYearsInEra(years) {
-      return years.era === `AA` ? 9999 : 9991;
+    getYearsInEra(e) {
+      return e.era === `AA` ? 9999 : 9991;
     }
     getEras() {
       return [`AA`, `AM`];
@@ -1248,8 +1248,8 @@ var kn = class {
     }
   },
   An = class extends kn {
-    fromJulianDay(julian) {
-      let [t, n, r] = En(Sn, julian);
+    fromJulianDay(e) {
+      let [t, n, r] = En(Sn, e);
       return t += wn, new B(this, `AA`, t, n, r);
     }
     getEras() {
@@ -1263,30 +1263,30 @@ var kn = class {
     }
   },
   jn = class extends kn {
-    fromJulianDay(julian) {
-      let [t, n, r] = En(Cn, julian),
+    fromJulianDay(e) {
+      let [t, n, r] = En(Cn, e),
         i = `CE`;
       return t <= 0 && (i = `BCE`, t = 1 - t), new B(this, i, t, n, r);
     }
-    toJulianDay(julian) {
-      let year = julian.year;
-      return julian.era === `BCE` && (year = 1 - year), Tn(Cn, year, julian.month, julian.day);
+    toJulianDay(e) {
+      let t = e.year;
+      return e.era === `BCE` && (t = 1 - t), Tn(Cn, t, e.month, e.day);
     }
-    getDaysInMonth(days) {
-      let year = days.year;
-      return days.era === `BCE` && (year = 1 - year), On(year, days.month);
+    getDaysInMonth(e) {
+      let t = e.year;
+      return e.era === `BCE` && (t = 1 - t), On(t, e.month);
     }
-    isInverseEra(inverse) {
-      return inverse.era === `BCE`;
+    isInverseEra(e) {
+      return e.era === `BCE`;
     }
-    balanceDate(balance) {
-      balance.year <= 0 && (balance.era = balance.era === `BCE` ? `CE` : `BCE`, balance.year = 1 - balance.year);
+    balanceDate(e) {
+      e.year <= 0 && (e.era = e.era === `BCE` ? `CE` : `BCE`, e.year = 1 - e.year);
     }
     getEras() {
       return [`BCE`, `CE`];
     }
-    getYearsInEra(years) {
-      return years.era === `BCE` ? 9999 : 9715;
+    getYearsInEra(e) {
+      return e.era === `BCE` ? 9999 : 9715;
     }
     constructor(...e) {
       super(...e), this.identifier = `coptic`;
@@ -1324,40 +1324,40 @@ function Mn(e) {
 }
 var Nn = new Map(),
   J = class {
-    constructor(constructor, t = {}) {
-      this.formatter = Fn(constructor, t), this.options = t;
+    constructor(e, t = {}) {
+      this.formatter = Fn(e, t), this.options = t;
     }
-    format(format) {
-      return this.formatter.format(format);
+    format(e) {
+      return this.formatter.format(e);
     }
-    formatToParts(parts) {
-      return this.formatter.formatToParts(parts);
+    formatToParts(e) {
+      return this.formatter.formatToParts(e);
     }
-    formatRange(range, rangeValue) {
-      if (typeof this.formatter.formatRange == `function`) return this.formatter.formatRange(range, rangeValue);
-      if (rangeValue < range) throw RangeError(`End date must be >= start date`);
-      return `${this.formatter.format(range)}null${this.formatter.format(rangeValue)}`;
+    formatRange(e, t) {
+      if (typeof this.formatter.formatRange == `function`) return this.formatter.formatRange(e, t);
+      if (t < e) throw RangeError(`End date must be >= start date`);
+      return `${this.formatter.format(e)}null${this.formatter.format(t)}`;
     }
-    formatRangeToParts(range, parts) {
-      if (typeof this.formatter.formatRangeToParts == `function`) return this.formatter.formatRangeToParts(range, parts);
-      if (parts < range) throw RangeError(`End date must be >= start date`);
-      let toParts = this.formatter.formatToParts(range),
-        toPartsResult = this.formatter.formatToParts(parts);
-      return [...toParts.map(item => ({
-        ...item,
+    formatRangeToParts(e, t) {
+      if (typeof this.formatter.formatRangeToParts == `function`) return this.formatter.formatRangeToParts(e, t);
+      if (t < e) throw RangeError(`End date must be >= start date`);
+      let n = this.formatter.formatToParts(e),
+        r = this.formatter.formatToParts(t);
+      return [...n.map(e => ({
+        ...e,
         source: `startRange`
       })), {
         type: `literal`,
         value: ` – `,
         source: `shared`
-      }, ...toPartsResult.map(item => ({
-        ...item,
+      }, ...r.map(e => ({
+        ...e,
         source: `endRange`
       }))];
     }
     resolvedOptions() {
-      let resolvedOptions = this.formatter.resolvedOptions();
-      return zn() && (this.resolvedHourCycle ||= Bn(resolvedOptions.locale, this.options), resolvedOptions.hourCycle = this.resolvedHourCycle, resolvedOptions.hour12 = this.resolvedHourCycle === `h11` || this.resolvedHourCycle === `h12`), resolvedOptions.calendar === `ethiopic-amete-alem` && (resolvedOptions.calendar = `ethioaa`), resolvedOptions;
+      let e = this.formatter.resolvedOptions();
+      return zn() && (this.resolvedHourCycle ||= Bn(e.locale, this.options), e.hourCycle = this.resolvedHourCycle, e.hour12 = this.resolvedHourCycle === `h11` || this.resolvedHourCycle === `h12`), e.calendar === `ethiopic-amete-alem` && (e.calendar = `ethioaa`), e;
     }
   },
   Pn = {
@@ -1366,18 +1366,18 @@ var Nn = new Map(),
     },
     false: {}
   };
-function Fn(text, t = {}) {
+function Fn(e, t = {}) {
   if (typeof t.hour12 == `boolean` && Ln()) {
     t = {
       ...t
     };
-    let n = Pn[String(t.hour12)][text.split(`-`)[0]],
+    let n = Pn[String(t.hour12)][e.split(`-`)[0]],
       r = t.hour12 ? `h12` : `h23`;
     t.hourCycle = n ?? r, delete t.hour12;
   }
-  let n = text + (t ? Object.entries(t).sort((left, right) => left[0] < right[0] ? -1 : 1).join() : ``);
+  let n = e + (t ? Object.entries(t).sort((e, t) => e[0] < t[0] ? -1 : 1).join() : ``);
   if (Nn.has(n)) return Nn.get(n);
-  let r = new Intl.DateTimeFormat(text, t);
+  let r = new Intl.DateTimeFormat(e, t);
   return Nn.set(n, r), r;
 }
 var In = null;
@@ -1401,12 +1401,12 @@ function Bn(e, t) {
       ...t,
       timeZone: undefined
     }),
-    parseIntResult = parseInt(n.formatToParts(new Date(2020, 2, 3, 0)).find(item => item.type === `hour`).value, 10),
-    i = parseInt(n.formatToParts(new Date(2020, 2, 3, 23)).find(item => item.type === `hour`).value, 10);
-  if (parseIntResult === 0 && i === 23) return `h23`;
-  if (parseIntResult === 24 && i === 23) return `h24`;
-  if (parseIntResult === 0 && i === 11) return `h11`;
-  if (parseIntResult === 12 && i === 11) return `h12`;
+    r = parseInt(n.formatToParts(new Date(2020, 2, 3, 0)).find(e => e.type === `hour`).value, 10),
+    i = parseInt(n.formatToParts(new Date(2020, 2, 3, 23)).find(e => e.type === `hour`).value, 10);
+  if (r === 0 && i === 23) return `h23`;
+  if (r === 24 && i === 23) return `h24`;
+  if (r === 0 && i === 11) return `h11`;
+  if (r === 12 && i === 11) return `h12`;
   throw Error(`Unexpected hour cycle result`);
 }
 function Y(e, t = Ne()) {
@@ -1423,9 +1423,9 @@ function Un(e) {
 }
 function X(e) {
   if (e instanceof Date) {
-    let fullYear = e.getFullYear(),
+    let t = e.getFullYear(),
       n = e.getMonth() + 1;
-    return new Date(fullYear, n, 0).getDate();
+    return new Date(t, n, 0).getDate();
   }
   return e.set({
     day: 100
@@ -1488,37 +1488,37 @@ function Qn(e) {
   if (Array.isArray(t) && t.length) return t.at(-1).copy();
   if (t && !Array.isArray(t)) return t.copy();
   if (n) return n.copy();
-  let date = new Date(),
-    fullYear = date.getFullYear(),
-    s = date.getMonth() + 1,
-    dateResult = date.getDate(),
+  let a = new Date(),
+    o = a.getFullYear(),
+    s = a.getMonth() + 1,
+    c = a.getDate(),
     l = [`hour`, `minute`, `second`],
     u = Mn(new J(i).resolvedOptions().calendar);
-  return l.includes(r ?? `day`) ? F(new kt(fullYear, s, dateResult, 0, 0, 0), u) : F(new B(fullYear, s, dateResult), u);
+  return l.includes(r ?? `day`) ? F(new kt(o, s, c, 0, 0, 0), u) : F(new B(o, s, c), u);
 }
-function $n(items, t) {
-  let emptyItems = [];
-  for (let r = 0; r < items.length; r += t) emptyItems.push(items.slice(r, r + t));
-  return emptyItems;
+function $n(e, t) {
+  let n = [];
+  for (let r = 0; r < e.length; r += t) n.push(e.slice(r, r + t));
+  return n;
 }
-function er(el) {
-  let selector = el.querySelector(`[data-selected]`);
-  if (selector) return selector.focus();
-  let selectorResult = el.querySelector(`[data-today]`);
-  if (selectorResult) return selectorResult.focus();
-  let r = el.querySelector(`[data-value]:not([data-outside-view]):not([data-disabled])`);
+function er(e) {
+  let t = e.querySelector(`[data-selected]`);
+  if (t) return t.focus();
+  let n = e.querySelector(`[data-today]`);
+  if (n) return n.focus();
+  let r = e.querySelector(`[data-value]:not([data-outside-view]):not([data-disabled])`);
   if (r) return r.focus();
 }
 function tr(e, t) {
-  let emptyItems = [],
+  let n = [],
     r = e.add({
       days: 1
     }),
     i = t;
-  for (; r.compare(i) < 0;) emptyItems.push(r), r = r.add({
+  for (; r.compare(i) < 0;) n.push(r), r = r.add({
     days: 1
   });
-  return emptyItems;
+  return n;
 }
 function nr(e) {
   let {
@@ -1558,11 +1558,11 @@ function nr(e) {
     });
     f.push(...r);
   }
-  let combined = d.concat(o, f);
+  let m = d.concat(o, f);
   return {
     value: t,
-    cells: combined,
-    rows: $n(combined, 7)
+    cells: m,
+    rows: $n(m, 7)
   };
 }
 function rr(e) {
@@ -1587,12 +1587,12 @@ function Q(e) {
       dateObj: n,
       ...r
     } = e,
-    emptyItems = [];
-  if (!t || t === 1) return emptyItems.push(nr({
+    i = [];
+  if (!t || t === 1) return i.push(nr({
     ...r,
     dateObj: n
-  })), emptyItems;
-  emptyItems.push(nr({
+  })), i;
+  i.push(nr({
     ...r,
     dateObj: n
   }));
@@ -1600,30 +1600,30 @@ function Q(e) {
     let t = n.add({
       months: e
     });
-    emptyItems.push(nr({
+    i.push(nr({
       ...r,
       dateObj: t
     }));
   }
-  return emptyItems;
+  return i;
 }
 function ir({
   start: e,
   end: t
 }) {
-  let emptyItems = [];
-  if (!e || !t) return emptyItems;
+  let n = [];
+  if (!e || !t) return n;
   let r = Ie(e);
-  for (; r.compare(t) <= 0;) emptyItems.push(r), r = Ie(r.add({
+  for (; r.compare(t) <= 0;) n.push(r), r = Ie(r.add({
     years: 1
   }));
-  return emptyItems;
+  return n;
 }
 function ar(e) {
   return (1 - Te(new B(2025, 1, 6), e) + 7) % 7;
 }
 function or(e, t = {}) {
-  let n = vueBn(e);
+  let n = b(e);
   function r() {
     return n.value;
   }
@@ -1661,11 +1661,11 @@ function or(e, t = {}) {
   }
   function l() {
     let e = De(Ne());
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(item => ({
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(t => ({
       label: c(Y(e.set({
-        month: item
+        month: t
       }))),
-      value: item
+      value: t
     }));
   }
   function u(e, r = {}) {
@@ -1696,7 +1696,7 @@ function or(e, t = {}) {
       ...t,
       hour: `numeric`,
       minute: `numeric`
-    }).formatToParts(e).find(item => item.type === `dayPeriod`)?.value;
+    }).formatToParts(e).find(e => e.type === `dayPeriod`)?.value;
     return r === `PM` || r === `pm` || r === `p.m.` ? `PM` : `AM`;
   }
   let m = {
@@ -1708,11 +1708,11 @@ function or(e, t = {}) {
     second: `numeric`
   };
   function h(e, t, n = {}) {
-    let found = d(e, {
+    let r = d(e, {
       ...m,
       ...n
-    }).find(item => item.type === t);
-    return found ? found.value : ``;
+    }).find(e => e.type === t);
+    return r ? r.value : ``;
   }
   return {
     setLocale: i,
@@ -1768,21 +1768,21 @@ function sr() {
   };
 }
 function cr(e) {
-  let uiSwitchKResult = uiSwitchK({
-    locale: vueBn(`en`)
+  let t = n({
+    locale: b(`en`)
   });
-  return w(() => e?.value || uiSwitchKResult.locale?.value || `en`);
+  return w(() => e?.value || t.locale?.value || `en`);
 }
 function lr(e) {
   function t(t) {
-    return Array.isArray(e.date.value) ? e.date.value.some(item => ve(item, t)) : e.date.value ? ve(e.date.value, t) : false;
+    return Array.isArray(e.date.value) ? e.date.value.some(e => ve(e, t)) : e.date.value ? ve(e.date.value, t) : false;
   }
   return {
     isDateSelected: t,
     isInvalid: w(() => {
       if (Array.isArray(e.date.value)) {
         if (!e.date.value.length) return false;
-        for (let region of e.date.value) if (e.isDateDisabled?.(region) || e.isDateUnavailable?.(region)) return true;
+        for (let t of e.date.value) if (e.isDateDisabled?.(t) || e.isDateUnavailable?.(t)) return true;
       } else {
         if (!e.date.value) return false;
         if (e.isDateDisabled?.(e.date.value) || e.isDateUnavailable?.(e.date.value)) return true;
@@ -1790,7 +1790,7 @@ function lr(e) {
       return false;
     }),
     hasSelectedDate: w(() => Array.isArray(e.date.value) ? e.date.value.length > 0 : !!e.date.value),
-    isSelectedDateDisabled: w(() => Array.isArray(e.date.value) ? e.date.value.length ? e.date.value.some(item => e.isDateDisabled?.(item)) : false : e.date.value ? !!e.isDateDisabled?.(e.date.value) : false)
+    isSelectedDateDisabled: w(() => Array.isArray(e.date.value) ? e.date.value.length ? e.date.value.some(t => e.isDateDisabled?.(t)) : false : e.date.value ? !!e.isDateDisabled?.(e.date.value) : false)
   };
 }
 function ur(e, t) {
@@ -1823,18 +1823,18 @@ function mr(e) {
       };
       return e.placeholder.value.calendar.identifier === `gregory` && e.placeholder.value.era === `BC` && (t.era = `short`), t;
     }),
-    r = vueBn(Q({
+    r = b(Q({
       dateObj: e.placeholder.value,
       weekStartsOn: e.weekStartsOn.value,
       locale: e.locale.value,
       fixedWeeks: e.fixedWeeks.value,
       numberOfMonths: e.numberOfMonths.value
     })),
-    i = w(() => r.value.map(item => item.value));
+    i = w(() => r.value.map(e => e.value));
   function a(e) {
-    return !i.value.some(item => xe(e, item));
+    return !i.value.some(t => xe(e, t));
   }
-  let handler = t => {
+  let o = t => {
       if (!e.maxValue.value || !r.value.length) return false;
       if (e.disabled.value) return true;
       let n = r.value.at(-1).value;
@@ -1858,7 +1858,7 @@ function mr(e) {
     return !!(e.isDateDisabled?.(t) || e.disabled.value || e.maxValue.value && Wn(t, e.maxValue.value) || e.minValue.value && Z(t, e.minValue.value));
   }
   let l = t => !!e.isDateUnavailable?.(t),
-    u = w(() => r.value.length ? r.value[0].rows[0].map(item => t.dayOfWeek(Y(item), e.weekdayFormat.value)) : []),
+    u = w(() => r.value.length ? r.value[0].rows[0].map(n => t.dayOfWeek(Y(n), e.weekdayFormat.value)) : []),
     d = t => {
       let n = r.value[0].value;
       if (!t && !e.nextPage.value) {
@@ -1927,15 +1927,15 @@ function mr(e) {
         ...a
       });
     };
-  vueWt(e.placeholder, t => {
-    i.value.some(item => xe(item, t)) || (r.value = Q({
+  re(e.placeholder, t => {
+    i.value.some(e => xe(e, t)) || (r.value = Q({
       dateObj: t,
       weekStartsOn: e.weekStartsOn.value,
       locale: e.locale.value,
       fixedWeeks: e.fixedWeeks.value,
       numberOfMonths: e.numberOfMonths.value
     }));
-  }), vueWt([e.locale, e.weekStartsOn, e.fixedWeeks, e.numberOfMonths], () => {
+  }), re([e.locale, e.weekStartsOn, e.fixedWeeks, e.numberOfMonths], () => {
     r.value = Q({
       dateObj: e.placeholder.value,
       weekStartsOn: e.weekStartsOn.value,
@@ -1952,16 +1952,16 @@ function mr(e) {
     }
     let i = Y(r.value[0].value),
       a = Y(r.value.at(-1).value),
-      fullMonth = t.fullMonth(i, n.value),
-      fullMonthResult = t.fullMonth(a, n.value),
-      fullYear = t.fullYear(i, n.value),
-      fullYearResult = t.fullYear(a, n.value);
-    return fullYear === fullYearResult ? `${fullMonth} - ${fullMonthResult} ${fullYearResult}` : `${fullMonth} ${fullYear} - ${fullMonthResult} ${fullYearResult}`;
+      o = t.fullMonth(i, n.value),
+      s = t.fullMonth(a, n.value),
+      c = t.fullYear(i, n.value),
+      l = t.fullYear(a, n.value);
+    return c === l ? `${o} - ${s} ${l}` : `${o} ${c} - ${s} ${l}`;
   });
   return {
     isDateDisabled: c,
     isDateUnavailable: l,
-    isNextButtonDisabled: handler,
+    isNextButtonDisabled: o,
     isPrevButtonDisabled: s,
     grid: r,
     weekdays: u,
@@ -1974,12 +1974,12 @@ function mr(e) {
     fullCalendarLabel: w(() => `${e.calendarLabel.value ?? `Event Date`}, ${p.value}`),
     isPlaceholderFocusable: w(() => !(c(e.placeholder.value) || l(e.placeholder.value) || a(e.placeholder.value))),
     firstFocusableDate: w(() => {
-      for (let region of r.value) {
-        if (e.minValue.value && Z(region.value, e.minValue.value)) continue;
-        let n = X(region.value),
-          r = e.minValue.value && ye(e.minValue.value, region.value) ? e.minValue.value.day : 1;
+      for (let t of r.value) {
+        if (e.minValue.value && Z(t.value, e.minValue.value)) continue;
+        let n = X(t.value),
+          r = e.minValue.value && ye(e.minValue.value, t.value) ? e.minValue.value.day : 1;
         for (let e = r; e <= n; e++) {
-          let n = region.value.set({
+          let n = t.value.set({
             day: e
           });
           if (!(c(n) || l(n))) return n;
@@ -1988,8 +1988,8 @@ function mr(e) {
     })
   };
 }
-var [$, hr] = uiSwitchYt(`PopoverRoot`),
-  gr = vueJ({
+var [$, hr] = m(`PopoverRoot`),
+  gr = S({
     __name: `PopoverRoot`,
     props: {
       defaultOpen: {
@@ -2009,41 +2009,41 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`update:open`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
+      let n = e,
+        r = t,
         {
           modal: i
-        } = vueDn(propsAlias),
-        uiSwitchAtResult = uiSwitchAt(propsAlias, `open`, emitAlias, {
-          defaultValue: propsAlias.defaultOpen,
-          passive: propsAlias.open === undefined
+        } = ee(n),
+        a = l(n, `open`, r, {
+          defaultValue: n.defaultOpen,
+          passive: n.open === undefined
         });
       return hr({
         contentId: ``,
         triggerId: ``,
         modal: i,
-        open: uiSwitchAtResult,
+        open: a,
         onOpenChange: e => {
-          uiSwitchAtResult.value = e;
+          a.value = e;
         },
         onOpenToggle: () => {
-          uiSwitchAtResult.value = !uiSwitchAtResult.value;
+          a.value = !a.value;
         },
-        triggerElement: vueBn(),
-        hasCustomAnchor: vueBn(false)
-      }), (e, t) => (vueGt(), vueB(vueAn(PopperContentA), null, {
-        default: vueYt(() => [vueCt(e.$slots, `default`, {
-          open: vueAn(uiSwitchAtResult),
-          close: () => uiSwitchAtResult.value = false
+        triggerElement: b(),
+        hasCustomAnchor: b(false)
+      }), (e, t) => (x(), y(g(le), null, {
+        default: v(() => [_(e.$slots, `default`, {
+          open: g(a),
+          close: () => a.value = false
         })]),
         _: 3
       }));
     }
   }),
-  _r = vueJ({
+  _r = S({
     __name: `PopoverContentImpl`,
     props: {
       trapFocus: {
@@ -2144,37 +2144,37 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(props, {
-      emit: emit
+    setup(t, {
+      emit: n
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
-        uiSwitchBResult = uiSwitchB(uiSwitchLt(propsAlias, `trapFocus`, `disableOutsidePointerEvents`)),
+      let r = t,
+        i = n,
+        s = e(f(r, `trapFocus`, `disableOutsidePointerEvents`)),
         {
           forwardRef: c
-        } = uiSwitchV(),
+        } = o(),
         l = $();
-      return PopperContentO(), (e, renderCache) => (vueGt(), vueB(vueAn(uiSwitchO), {
+      return fe(), (e, t) => (x(), y(g(a), {
         "as-child": ``,
         loop: ``,
         trapped: e.trapFocus,
-        onMountAutoFocus: renderCache[5] ||= e => emitAlias(`openAutoFocus`, e),
-        onUnmountAutoFocus: renderCache[6] ||= e => emitAlias(`closeAutoFocus`, e)
+        onMountAutoFocus: t[5] ||= e => i(`openAutoFocus`, e),
+        onUnmountAutoFocus: t[6] ||= e => i(`closeAutoFocus`, e)
       }, {
-        default: vueYt(() => [vueK(vueAn(d), {
+        default: v(() => [ie(g(d), {
           "as-child": ``,
           "disable-outside-pointer-events": e.disableOutsidePointerEvents,
-          onPointerDownOutside: renderCache[0] ||= e => emitAlias(`pointerDownOutside`, e),
-          onInteractOutside: renderCache[1] ||= e => emitAlias(`interactOutside`, e),
-          onEscapeKeyDown: renderCache[2] ||= e => emitAlias(`escapeKeyDown`, e),
-          onFocusOutside: renderCache[3] ||= e => emitAlias(`focusOutside`, e),
-          onDismiss: renderCache[4] ||= e => vueAn(l).onOpenChange(false)
+          onPointerDownOutside: t[0] ||= e => i(`pointerDownOutside`, e),
+          onInteractOutside: t[1] ||= e => i(`interactOutside`, e),
+          onEscapeKeyDown: t[2] ||= e => i(`escapeKeyDown`, e),
+          onFocusOutside: t[3] ||= e => i(`focusOutside`, e),
+          onDismiss: t[4] ||= e => g(l).onOpenChange(false)
         }, {
-          default: vueYt(() => [vueK(vueAn(PopperContentN), vueNt(vueAn(uiSwitchBResult), {
-            id: vueAn(l).contentId,
-            ref: vueAn(c),
-            "data-state": vueAn(l).open.value ? `open` : `closed`,
-            "aria-labelledby": vueAn(l).triggerId,
+          default: v(() => [ie(g(de), C(g(s), {
+            id: g(l).contentId,
+            ref: g(c),
+            "data-state": g(l).open.value ? `open` : `closed`,
+            "aria-labelledby": g(l).triggerId,
             style: {
               "--reka-popover-content-transform-origin": `var(--reka-popper-transform-origin)`,
               "--reka-popover-content-available-width": `var(--reka-popper-available-width)`,
@@ -2184,7 +2184,7 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
             },
             role: `dialog`
           }), {
-            default: vueYt(() => [vueCt(e.$slots, `default`)]),
+            default: v(() => [_(e.$slots, `default`)]),
             _: 3
           }, 16, [`id`, `data-state`, `aria-labelledby`])]),
           _: 3
@@ -2193,7 +2193,7 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }, 8, [`trapped`]));
     }
   }),
-  vr = vueJ({
+  vr = S({
     __name: `PopoverContentModal`,
     props: {
       memoDependencies: {
@@ -2290,41 +2290,41 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
+      let n = e,
+        i = t,
         a = $(),
-        c = vueBn(false);
-      uiSwitchW(true);
-      let uiSwitchZResult = uiSwitchZ(propsAlias, emitAlias),
+        c = b(false);
+      s(true);
+      let l = h(n, i),
         {
           forwardRef: u,
           currentElement: d
-        } = uiSwitchV();
-      return uiSwitchL(d), (e, event) => (vueGt(), vueB(_r, vueNt(vueAn(uiSwitchZResult), {
-        ref: vueAn(u),
-        "trap-focus": vueAn(a).open.value,
+        } = o();
+      return r(d), (e, t) => (x(), y(_r, C(g(l), {
+        ref: g(u),
+        "trap-focus": g(a).open.value,
         "disable-outside-pointer-events": ``,
-        onCloseAutoFocus: event[0] ||= playerE(e => {
-          emitAlias(`closeAutoFocus`, e), c.value || vueAn(a).triggerElement.value?.focus();
+        onCloseAutoFocus: t[0] ||= se(e => {
+          i(`closeAutoFocus`, e), c.value || g(a).triggerElement.value?.focus();
         }, [`prevent`]),
-        onPointerDownOutside: event[1] ||= e => {
-          emitAlias(`pointerDownOutside`, e);
-          let originalEvent = e.detail.originalEvent,
-            n = originalEvent.button === 0 && originalEvent.ctrlKey === true,
-            fallbackValue = originalEvent.button === 2 || n;
-          c.value = fallbackValue;
+        onPointerDownOutside: t[1] ||= e => {
+          i(`pointerDownOutside`, e);
+          let t = e.detail.originalEvent,
+            n = t.button === 0 && t.ctrlKey === true,
+            r = t.button === 2 || n;
+          c.value = r;
         },
-        onFocusOutside: event[2] ||= playerE(() => {}, [`prevent`])
+        onFocusOutside: t[2] ||= se(() => {}, [`prevent`])
       }), {
-        default: vueYt(() => [vueCt(e.$slots, `default`)]),
+        default: v(() => [_(e.$slots, `default`)]),
         _: 3
       }, 16, [`trap-focus`]));
     }
   }),
-  yr = vueJ({
+  yr = S({
     __name: `PopoverContentNonModal`,
     props: {
       memoDependencies: {
@@ -2421,33 +2421,33 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(event, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let eventAlias = event,
-        emitAlias = emit,
+      let n = e,
+        r = t,
         i = $(),
-        a = vueBn(false),
-        o = vueBn(false),
-        uiSwitchZResult = uiSwitchZ(eventAlias, emitAlias);
-      return (ctx, renderCache) => (vueGt(), vueB(_r, vueNt(vueAn(uiSwitchZResult), {
+        a = b(false),
+        o = b(false),
+        s = h(n, r);
+      return (e, t) => (x(), y(_r, C(g(s), {
         "trap-focus": false,
         "disable-outside-pointer-events": false,
-        onCloseAutoFocus: renderCache[0] ||= e => {
-          emitAlias(`closeAutoFocus`, e), e.defaultPrevented || (a.value || vueAn(i).triggerElement.value?.focus(), e.preventDefault()), a.value = false, o.value = false;
+        onCloseAutoFocus: t[0] ||= e => {
+          r(`closeAutoFocus`, e), e.defaultPrevented || (a.value || g(i).triggerElement.value?.focus(), e.preventDefault()), a.value = false, o.value = false;
         },
-        onInteractOutside: renderCache[1] ||= async e => {
-          emitAlias(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
+        onInteractOutside: t[1] ||= async e => {
+          r(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
           let t = e.target;
-          vueAn(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
+          g(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
         }
       }), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+        default: v(() => [_(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  br = vueJ({
+  br = S({
     __name: `PopoverContent`,
     props: {
       forceMount: {
@@ -2548,39 +2548,39 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: n
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
+      let r = e,
+        a = n,
         s = $(),
-        uiSwitchZResult = uiSwitchZ(propsAlias, emitAlias),
+        c = h(r, a),
         {
           forwardRef: l
-        } = uiSwitchV();
-      return s.contentId ||= uiSwitchI(undefined, `reka-popover-content`), (e, t) => (vueGt(), vueB(vueAn(uiSwitchN), {
-        present: e.forceMount || vueAn(s).open.value
+        } = o();
+      return s.contentId ||= t(undefined, `reka-popover-content`), (e, t) => (x(), y(g(i), {
+        present: e.forceMount || g(s).open.value
       }, {
-        default: vueYt(() => [vueAn(s).modal.value ? (vueGt(), vueB(vr, vueNt({
+        default: v(() => [g(s).modal.value ? (x(), y(vr, C({
           key: 0
-        }, vueAn(uiSwitchZResult), {
-          ref: vueAn(l)
+        }, g(c), {
+          ref: g(l)
         }), {
-          default: vueYt(() => [vueCt(e.$slots, `default`)]),
+          default: v(() => [_(e.$slots, `default`)]),
           _: 3
-        }, 16)) : (vueGt(), vueB(yr, vueNt({
+        }, 16)) : (x(), y(yr, C({
           key: 1
-        }, vueAn(uiSwitchZResult), {
-          ref: vueAn(l)
+        }, g(c), {
+          ref: g(l)
         }), {
-          default: vueYt(() => [vueCt(e.$slots, `default`)]),
+          default: v(() => [_(e.$slots, `default`)]),
           _: 3
         }, 16))]),
         _: 3
       }, 8, [`present`]));
     }
   }),
-  xr = vueJ({
+  xr = S({
     __name: `PopoverPortal`,
     props: {
       to: {
@@ -2600,15 +2600,15 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
         required: false
       }
     },
-    setup(props) {
-      let propsAlias = props;
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitch), vueTr(vueV(propsAlias)), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+    setup(e) {
+      let t = e;
+      return (e, n) => (x(), y(g(c), ae(ne(t)), {
+        default: v(() => [_(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  Sr = vueJ({
+  Sr = S({
     __name: `PopoverTrigger`,
     props: {
       asChild: {
@@ -2621,38 +2621,38 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
         default: `button`
       }
     },
-    setup(props) {
-      let propsAlias = props,
+    setup(e) {
+      let n = e,
         r = $(),
         {
           forwardRef: i,
           currentElement: a
-        } = uiSwitchV();
-      return r.triggerId ||= uiSwitchI(undefined, `reka-popover-trigger`), r.contentId ||= uiSwitchI(undefined, `reka-popover-content`), vueUt(() => {
+        } = o();
+      return r.triggerId ||= t(undefined, `reka-popover-trigger`), r.contentId ||= t(undefined, `reka-popover-content`), oe(() => {
         r.triggerElement.value = a.value;
-      }), (e, t) => (vueGt(), vueB(vueEt(vueAn(r).hasCustomAnchor.value ? vueAn(uiSwitchJ) : vueAn(PopperContentI)), {
+      }), (e, t) => (x(), y(te(g(r).hasCustomAnchor.value ? g(u) : g(ue)), {
         "as-child": ``
       }, {
-        default: vueYt(() => [vueK(vueAn(uiSwitchJ), {
-          id: vueAn(r).triggerId,
-          ref: vueAn(i),
+        default: v(() => [ie(g(u), {
+          id: g(r).triggerId,
+          ref: g(i),
           type: e.as === `button` ? `button` : undefined,
           "aria-haspopup": `dialog`,
-          "aria-expanded": vueAn(r).open.value,
-          "aria-controls": vueAn(r).open.value ? vueAn(r).contentId : undefined,
-          "data-state": vueAn(r).open.value ? `open` : `closed`,
+          "aria-expanded": g(r).open.value,
+          "aria-controls": g(r).open.value ? g(r).contentId : undefined,
+          "data-state": g(r).open.value ? `open` : `closed`,
           as: e.as,
-          "as-child": propsAlias.asChild,
-          onClick: vueAn(r).onOpenToggle
+          "as-child": n.asChild,
+          onClick: g(r).onOpenToggle
         }, {
-          default: vueYt(() => [vueCt(e.$slots, `default`)]),
+          default: v(() => [_(e.$slots, `default`)]),
           _: 3
         }, 8, [`id`, `type`, `aria-expanded`, `aria-controls`, `data-state`, `as`, `as-child`, `onClick`])]),
         _: 3
       }));
     }
   }),
-  Cr = vueJ({
+  Cr = S({
     __name: `Popover`,
     props: {
       defaultOpen: {
@@ -2666,19 +2666,19 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`update:open`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let uiSwitchZResult = uiSwitchZ(props, emit);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(gr), vueNt({
+      let n = h(e, t);
+      return (e, t) => (x(), y(g(gr), C({
         "data-slot": `popover`
-      }, vueAn(uiSwitchZResult)), {
-        default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
+      }, g(n)), {
+        default: v(t => [_(e.$slots, `default`, ae(ne(t)))]),
         _: 3
       }, 16));
     }
   }),
-  wr = vueJ({
+  wr = S({
     inheritAttrs: false,
     __name: `PopoverContent`,
     props: {
@@ -2735,30 +2735,30 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
-        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
-        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(xr), null, {
-        default: vueYt(() => [vueK(vueAn(br), vueNt({
+      let n = e,
+        r = t,
+        i = f(n, `class`),
+        a = h(i, r);
+      return (e, t) => (x(), y(g(xr), null, {
+        default: v(() => [ie(g(br), C({
           "data-slot": `popover-content`
         }, {
-          ...ctx.$attrs,
-          ...vueAn(uiSwitchZResult)
+          ...e.$attrs,
+          ...g(a)
         }, {
-          class: vueAn(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, propsAlias.class)
+          class: g(p)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 ring-foreground/10 flex flex-col gap-2.5 rounded-lg p-2.5 text-sm shadow-md ring-1 duration-100 z-50 w-72 origin-(--reka-popover-content-transform-origin) outline-hidden`, n.class)
         }), {
-          default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+          default: v(() => [_(e.$slots, `default`)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
       }));
     }
   }),
-  Tr = vueJ({
+  Tr = S({
     __name: `PopoverTrigger`,
     props: {
       asChild: {
@@ -2766,12 +2766,12 @@ var [$, hr] = uiSwitchYt(`PopoverRoot`),
       },
       as: {}
     },
-    setup(props) {
-      let propsAlias = props;
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(Sr), vueNt({
+    setup(e) {
+      let t = e;
+      return (e, n) => (x(), y(g(Sr), C({
         "data-slot": `popover-trigger`
-      }, propsAlias), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+      }, t), {
+        default: v(() => [_(e.$slots, `default`)]),
         _: 3
       }, 16));
     }

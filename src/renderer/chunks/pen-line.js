@@ -1,5 +1,5 @@
-import { r as lucideR } from "../ui/icons/lucide-icons.js";
-var t = lucideR(`pen-line`, [[`path`, {
+import { r as e } from "../ui/icons/lucide-icons.js";
+var t = e(`pen-line`, [[`path`, {
   d: `M13 21h8`,
   key: `1jsn5i`
 }], [`path`, {

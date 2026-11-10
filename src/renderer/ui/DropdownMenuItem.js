@@ -1,8 +1,8 @@
-import { B as uiSwitchB, U as uiSwitchU, V as uiSwitchV, lt as uiSwitchLt, xt as uiSwitchXt } from "./Switch.js";
-import { An as vueAn, Ct as vueCt, V as vueV, Yt as vueYt, b as vueB, gt as vueGt, j as vueJ, nt as vueNt, tr as vueTr } from "../chunks/vue-i18n.runtime.js";
-import { r as lucideR } from "./icons/lucide-icons.js";
-import { o as DropdownMenuTriggerO } from "./DropdownMenuTrigger.js";
-var g = lucideR(`list-ordered`, [[`path`, {
+import { B as e, U as t, V as n, lt as r, xt as i } from "./Switch.js";
+import { An as a, Ct as o, V as s, Yt as c, b as l, gt as u, j as d, nt as f, tr as p } from "../chunks/vue-i18n.runtime.js";
+import { r as m } from "./icons/lucide-icons.js";
+import { o as h } from "./DropdownMenuTrigger.js";
+var g = m(`list-ordered`, [[`path`, {
     d: `M11 5h10`,
     key: `1cz7ny`
   }], [`path`, {
@@ -21,7 +21,7 @@ var g = lucideR(`list-ordered`, [[`path`, {
     d: `M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02`,
     key: `xtkcd5`
   }]]),
-  _ = vueJ({
+  _ = d({
     __name: `DropdownMenuItem`,
     props: {
       disabled: {
@@ -42,21 +42,21 @@ var g = lucideR(`list-ordered`, [[`path`, {
       }
     },
     emits: [`select`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: r
     }) {
-      let propsAlias = props,
-        uiSwitchUResult = uiSwitchU(emit);
-      return uiSwitchV(), (e, t) => (vueGt(), vueB(vueAn(DropdownMenuTriggerO), vueTr(vueV({
-        ...propsAlias,
-        ...vueAn(uiSwitchUResult)
+      let i = e,
+        d = t(r);
+      return n(), (e, t) => (u(), l(a(h), p(s({
+        ...i,
+        ...a(d)
       })), {
-        default: vueYt(() => [vueCt(e.$slots, `default`)]),
+        default: c(() => [o(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  v = vueJ({
+  v = d({
     __name: `DropdownMenuItem`,
     props: {
       disabled: {
@@ -77,18 +77,18 @@ var g = lucideR(`list-ordered`, [[`path`, {
         default: `default`
       }
     },
-    setup(props) {
-      let propsAlias = props,
-        uiSwitchLtResult = uiSwitchLt(propsAlias, `inset`, `variant`, `class`),
-        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(_), vueNt({
+    setup(t) {
+      let n = t,
+        s = r(n, `inset`, `variant`, `class`),
+        d = e(s);
+      return (e, r) => (u(), l(a(_), f({
         "data-slot": `dropdown-menu-item`,
-        "data-inset": props.inset ? `` : undefined,
-        "data-variant": props.variant
-      }, vueAn(uiSwitchBResult), {
-        class: vueAn(uiSwitchXt)(`focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 group/dropdown-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, propsAlias.class)
+        "data-inset": t.inset ? `` : undefined,
+        "data-variant": t.variant
+      }, a(d), {
+        class: a(i)(`focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:text-destructive not-data-[variant=destructive]:focus:**:text-accent-foreground gap-1.5 rounded-md px-1.5 py-1 text-sm data-inset:pl-7 [&_svg:not([class*=size-])]:size-4 group/dropdown-menu-item relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0`, n.class)
       }), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+        default: c(() => [o(e.$slots, `default`)]),
         _: 3
       }, 16, [`data-inset`, `data-variant`, `class`]));
     }

@@ -1,8 +1,8 @@
-import { $n as vueN, An as vueAn, O as vueO, S as vueS, St as vueSt, Wt as vueWt, Zt as vueZt, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, n as ne, ot as vueOt, rr as vueRr, rt as vueRt, t as vueT, ut as vueUt, v as vueV, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
-import { C as playerC, E as playerE, n as playerN, o as playerO, t as playerT } from "../i18n/en-US-player.js";
-import { t as pluginvueexporthelperT } from "./_plugin-vue_export-helper.js";
-import { r as clipboardassistantpageR } from "./clipboard-assistant-page.js";
-import { t as shortcutlabelT } from "./shortcut-label.js";
+import { $n as e, An as t, O as n, S as r, St as i, Wt as a, Zt as ee, bn as o, c as s, gt as c, j as te, n as ne, ot as re, rr as l, rt as u, t as d, ut as ie, v as f, x as p, y as m } from "./vue-i18n.runtime.js";
+import { C as ae, E as h, n as g, o as _, t as v } from "../i18n/en-US-player.js";
+import { t as y } from "./_plugin-vue_export-helper.js";
+import { r as oe } from "./clipboard-assistant-page.js";
+import { t as se } from "./shortcut-label.js";
 var ce = {
     class: `picker__header`
   },
@@ -65,35 +65,35 @@ var ce = {
   Ae = {
     class: `picker__footer`
   },
-  options = {
+  je = {
     key: 0,
     class: `picker__error`,
     role: `alert`
   },
-  pluginvueexporthelperTResult = pluginvueexporthelperT(vueJ({
+  b = y(te({
     __name: `ClipboardPickerApp`,
-    setup(props) {
+    setup(te) {
       let clipboardPickerAPI = window.clipboardPickerAPI,
-        fallbackValue = clipboardPickerAPI?.platform || `win32`,
-        _ = fallbackValue === `darwin`,
+        g = clipboardPickerAPI?.platform || `win32`,
+        _ = g === `darwin`,
         {
-          t: translate,
+          t: v,
           locale: y
         } = ne(),
-        handler = (e, t = {}) => translate(`toolboxNative.clipboardPicker${e}`, t),
-        x = vueBn([]),
-        S = vueBn([]),
-        C = vueBn(``),
-        w = vueBn(`history`),
-        T = vueBn(``),
-        E = vueBn(null),
-        D = vueBn(0),
-        O = vueBn(false),
-        k = vueBn(``),
-        A = vueBn(null),
-        j = vueBn(null),
-        M = vueBn(null),
-        N = vueBn(null),
+        b = (e, t = {}) => v(`toolboxNative.clipboardPicker${e}`, t),
+        x = o([]),
+        S = o([]),
+        C = o(``),
+        w = o(`history`),
+        T = o(``),
+        E = o(null),
+        D = o(0),
+        O = o(false),
+        k = o(``),
+        A = o(null),
+        j = o(null),
+        M = o(null),
+        N = o(null),
         P = new Map(),
         F = null,
         I = null,
@@ -101,43 +101,43 @@ var ce = {
         R = 0,
         z = 0,
         B = null,
-        V = vueV(() => T.value.trim().toLocaleLowerCase()),
-        H = vueV(() => w.value === `history` ? V.value ? E.value ?? [] : x.value : V.value ? S.value.filter(item => `${item.title}\n${item.preview}`.toLocaleLowerCase().includes(V.value)) : S.value),
-        Me = vueV(() => V.value ? handler(`NoMatch`) : w.value === `history` ? handler(`EmptyHistory`) : handler(`EmptyPhrases`)),
-        Ne = vueV(() => _ ? `⌘1–9` : `Ctrl+1–9`),
-        U = vueV(() => H.value[D.value] ?? null),
-        W = vueV(() => {
+        V = f(() => T.value.trim().toLocaleLowerCase()),
+        H = f(() => w.value === `history` ? V.value ? E.value ?? [] : x.value : V.value ? S.value.filter(e => `${e.title}\n${e.preview}`.toLocaleLowerCase().includes(V.value)) : S.value),
+        Me = f(() => V.value ? b(`NoMatch`) : w.value === `history` ? b(`EmptyHistory`) : b(`EmptyPhrases`)),
+        Ne = f(() => _ ? `⌘1–9` : `Ctrl+1–9`),
+        U = f(() => H.value[D.value] ?? null),
+        W = f(() => {
           let e = U.value,
             t = N.value;
           return e && t && t.kind === e.kind && t.id === e.id ? t : null;
         }),
-        G = vueV(() => W.value?.title || U.value?.title || ``),
-        Pe = vueV(() => W.value?.content ?? U.value?.preview ?? ``),
-        Fe = vueV(() => {
+        G = f(() => W.value?.title || U.value?.title || ``),
+        Pe = f(() => W.value?.content ?? U.value?.preview ?? ``),
+        Fe = f(() => {
           let e = W.value;
           if (!e) return ``;
-          let t = [handler(`Characters`, {
+          let t = [b(`Characters`, {
             n: e.characterCount.toLocaleString()
           })];
-          return e.kind === `history` ? (e.count > 1 && t.push(handler(`CopyCount`, {
+          return e.kind === `history` ? (e.count > 1 && t.push(b(`CopyCount`, {
             n: e.count
-          })), e.copiedAt && t.push(K(e.copiedAt, true))) : e.count > 0 && t.push(handler(`UseCount`, {
+          })), e.copiedAt && t.push(K(e.copiedAt, true))) : e.count > 0 && t.push(b(`UseCount`, {
             n: e.count
           })), t.join(` · `);
         });
       function K(e, t = false) {
         if (!e) return ``;
-        let date = new Date(e);
-        if (Number.isNaN(date.getTime())) return ``;
+        let n = new Date(e);
+        if (Number.isNaN(n.getTime())) return ``;
         let r = new Date(),
           i = new Intl.DateTimeFormat(y.value, {
             hour: `2-digit`,
             minute: `2-digit`,
             hour12: false
-          }).format(date),
-          time = new Date(r.getFullYear(), r.getMonth(), r.getDate()).getTime();
-        return date.getTime() >= time ? i : date.getTime() >= time - 864e5 ? t ? `${handler(`Yesterday`)} ${i}` : handler(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
-          ...(t && date.getFullYear() !== r.getFullYear() ? {
+          }).format(n),
+          a = new Date(r.getFullYear(), r.getMonth(), r.getDate()).getTime();
+        return n.getTime() >= a ? i : n.getTime() >= a - 864e5 ? t ? `${b(`Yesterday`)} ${i}` : b(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
+          ...(t && n.getFullYear() !== r.getFullYear() ? {
             year: `numeric`
           } : {}),
           month: `2-digit`,
@@ -147,7 +147,7 @@ var ce = {
             minute: `2-digit`,
             hour12: false
           } : {})
-        }).format(date);
+        }).format(n);
       }
       function q() {
         let e = U.value;
@@ -165,17 +165,17 @@ var ce = {
         L = window.setTimeout(async () => {
           L = null;
           try {
-            let detail = await clipboardPickerAPI.detail({
+            let r = await clipboardPickerAPI.detail({
                 kind: e.kind,
                 id: e.id
               }),
-              i = detail.ok ? detail.data : null;
+              i = r.ok ? r.data : null;
             P.set(n, i), t === z && (N.value = i);
           } catch {}
         }, 60);
       }
       function Ie(e) {
-        x.value = e.history, S.value = e.phrases, C.value = e.shortcut, y.value = e.language === `en-US` ? `en-US` : `zh-CN`, document.documentElement.lang = y.value, document.title = translate(`toolboxNative.clipboardAssistantToolName`), document.documentElement.classList.toggle(`dark`, e.dark), T.value = ``, E.value = null, D.value = 0, O.value = false, k.value = ``, P.clear(), N.value = null, e.tab ? w.value = e.tab : w.value === `phrases` && e.phrases.length === 0 && (w.value = `history`), vueRt(() => {
+        x.value = e.history, S.value = e.phrases, C.value = e.shortcut, y.value = e.language === `en-US` ? `en-US` : `zh-CN`, document.documentElement.lang = y.value, document.title = v(`toolboxNative.clipboardAssistantToolName`), document.documentElement.classList.toggle(`dark`, e.dark), T.value = ``, E.value = null, D.value = 0, O.value = false, k.value = ``, P.clear(), N.value = null, e.tab ? w.value = e.tab : w.value === `phrases` && e.phrases.length === 0 && (w.value = `history`), u(() => {
           j.value?.scrollTo({
             top: 0
           }), A.value?.focus(), q();
@@ -188,15 +188,15 @@ var ce = {
       }
       async function Y() {
         let e = ++R,
-          trimmed = T.value.trim();
-        if (!trimmed || !clipboardPickerAPI) {
+          t = T.value.trim();
+        if (!t || !clipboardPickerAPI) {
           E.value = null;
           return;
         }
-        let searchData = await clipboardPickerAPI.search({
-          keyword: trimmed
+        let n = await clipboardPickerAPI.search({
+          keyword: t
         });
-        e === R && (E.value = searchData.ok ? searchData.data : [], D.value = 0);
+        e === R && (E.value = n.ok ? n.data : [], D.value = 0);
       }
       async function X(e) {
         if (e && clipboardPickerAPI && !O.value) {
@@ -206,9 +206,9 @@ var ce = {
               kind: e.kind,
               id: e.id
             });
-            t.ok || J(t.error.message || handler(`CopyFailed`));
+            t.ok || J(t.error.message || b(`CopyFailed`));
           } catch {
-            J(handler(`CopyFailed`));
+            J(b(`CopyFailed`));
           } finally {
             O.value = false;
           }
@@ -216,7 +216,7 @@ var ce = {
       }
       function Z(e) {
         let t = H.value.length;
-        t !== 0 && (D.value = Math.min(t - 1, Math.max(0, D.value + e)), vueRt(() => {
+        t !== 0 && (D.value = Math.min(t - 1, Math.max(0, D.value + e)), u(() => {
           j.value?.querySelector(`[data-index="${D.value}"]`)?.scrollIntoView({
             block: `nearest`
           });
@@ -250,7 +250,7 @@ var ce = {
         let t = event.code.match(/^(?:Digit|Numpad)([1-9])$/)?.[1];
         t && (_ ? event.metaKey : event.ctrlKey) && !event.altKey && !event.shiftKey && (event.preventDefault(), X(H.value[Number(t) - 1]));
       }
-      return vueWt(T, () => {
+      return a(T, () => {
         if (D.value = 0, w.value === `history`) {
           if (F !== null && window.clearTimeout(F), !T.value.trim()) {
             R += 1, E.value = null;
@@ -260,114 +260,114 @@ var ce = {
             F = null, Y();
           }, 120);
         }
-      }), vueWt(w, e => {
+      }), a(w, e => {
         D.value = 0, j.value?.scrollTo({
           top: 0
         }), e === `history` && T.value.trim() && Y();
-      }), vueWt(() => U.value ? `${U.value.kind}:${U.value.id}` : ``, () => {
+      }), a(() => U.value ? `${U.value.kind}:${U.value.id}` : ``, () => {
         M.value?.scrollTo({
           top: 0
         }), q();
-      }), vueUt(() => {
+      }), ie(() => {
         B = clipboardPickerAPI?.onOpen(Ie) ?? null, window.addEventListener(`keydown`, $);
-      }), vueOt(() => {
+      }), re(() => {
         B?.(), window.removeEventListener(`keydown`, $);
         for (let e of [F, I, L]) e !== null && window.clearTimeout(e);
-      }), (a, renderCache) => (vueGt(), vueS(`div`, {
-        class: vueN([`picker`, {
+      }), (a, o) => (c(), r(`div`, {
+        class: e([`picker`, {
           "is-mac": _
         }])
-      }, [vueY(`header`, ce, [vueY(`div`, le, [renderCache[6] ||= vueY(`svg`, {
+      }, [m(`header`, ce, [m(`div`, le, [o[6] ||= m(`svg`, {
         viewBox: `0 0 24 24`,
         "aria-hidden": `true`
-      }, [vueY(`circle`, {
+      }, [m(`circle`, {
         cx: `11`,
         cy: `11`,
         r: `7`
-      }), vueY(`path`, {
+      }), m(`path`, {
         d: `m20 20-3.5-3.5`
-      })], -1), vueZt(vueY(`input`, {
+      })], -1), ee(m(`input`, {
         ref_key: `inputRef`,
         ref: A,
-        "onUpdate:modelValue": renderCache[0] ||= e => T.value = e,
+        "onUpdate:modelValue": o[0] ||= e => T.value = e,
         type: `text`,
         autocomplete: `off`,
         spellcheck: `false`,
-        placeholder: w.value === `history` ? handler(`SearchHistory`) : handler(`SearchPhrases`)
-      }, null, 8, ue), [[playerC, T.value]]), C.value ? (vueGt(), vueS(`kbd`, de, vueRr(vueAn(shortcutlabelT)(C.value, vueAn(fallbackValue))), 1)) : vueX(``, true)]), vueY(`div`, fe, [vueY(`button`, {
+        placeholder: w.value === `history` ? b(`SearchHistory`) : b(`SearchPhrases`)
+      }, null, 8, ue), [[ae, T.value]]), C.value ? (c(), r(`kbd`, de, l(t(se)(C.value, t(g))), 1)) : p(``, true)]), m(`div`, fe, [m(`button`, {
         type: `button`,
         role: `tab`,
         "aria-selected": w.value === `history`,
-        class: vueN({
+        class: e({
           active: w.value === `history`
         }),
-        onMousedown: renderCache[1] ||= playerE(() => {}, [`prevent`]),
-        onClick: renderCache[2] ||= e => Q(`history`)
-      }, [vueO(vueRr(handler(`TabHistory`)), 1), vueY(`span`, null, vueRr(x.value.length), 1)], 42, pe), vueY(`button`, {
+        onMousedown: o[1] ||= h(() => {}, [`prevent`]),
+        onClick: o[2] ||= e => Q(`history`)
+      }, [n(l(b(`TabHistory`)), 1), m(`span`, null, l(x.value.length), 1)], 42, pe), m(`button`, {
         type: `button`,
         role: `tab`,
         "aria-selected": w.value === `phrases`,
-        class: vueN({
+        class: e({
           active: w.value === `phrases`
         }),
-        onMousedown: renderCache[3] ||= playerE(() => {}, [`prevent`]),
-        onClick: renderCache[4] ||= e => Q(`phrases`)
-      }, [vueO(vueRr(handler(`TabPhrases`)), 1), vueY(`span`, null, vueRr(S.value.length), 1)], 42, me), vueY(`kbd`, {
+        onMousedown: o[3] ||= h(() => {}, [`prevent`]),
+        onClick: o[4] ||= e => Q(`phrases`)
+      }, [n(l(b(`TabPhrases`)), 1), m(`span`, null, l(S.value.length), 1)], 42, me), m(`kbd`, {
         class: `picker__tab-key`,
-        title: handler(`HintSwitch`)
-      }, `Tab`, 8, he)])]), vueY(`div`, ge, [vueY(`div`, {
+        title: b(`HintSwitch`)
+      }, `Tab`, 8, he)])]), m(`div`, ge, [m(`div`, {
         ref_key: `listRef`,
         ref: j,
         class: `picker__list`,
         role: `listbox`
-      }, [H.value.length === 0 ? (vueGt(), vueS(`p`, _e, vueRr(Me.value), 1)) : vueX(``, true), (vueGt(true), vueS(vueC, null, vueSt(H.value, (t, n) => (vueGt(), vueS(`button`, {
+      }, [H.value.length === 0 ? (c(), r(`p`, _e, l(Me.value), 1)) : p(``, true), (c(true), r(s, null, i(H.value, (t, n) => (c(), r(`button`, {
         key: `${t.kind}:${t.id}`,
         type: `button`,
         role: `option`,
-        class: vueN([`picker__item`, {
+        class: e([`picker__item`, {
           selected: n === D.value
         }]),
         "aria-selected": n === D.value,
         "data-index": n,
-        onMousedown: renderCache[5] ||= playerE(() => {}, [`prevent`]),
+        onMousedown: o[5] ||= h(() => {}, [`prevent`]),
         onMousemove: e => D.value = n,
         onClick: e => X(t)
-      }, [vueY(`span`, ye, vueRr(n < 9 ? n + 1 : ``), 1), vueY(`span`, be, [t.title ? (vueGt(), vueS(`strong`, xe, vueRr(t.title), 1)) : vueX(``, true), vueY(`span`, null, vueRr(t.preview), 1)]), vueY(`span`, Se, [t.isPinned ? (vueGt(), vueS(`svg`, Ce, [...(renderCache[7] ||= [vueY(`path`, {
+      }, [m(`span`, ye, l(n < 9 ? n + 1 : ``), 1), m(`span`, be, [t.title ? (c(), r(`strong`, xe, l(t.title), 1)) : p(``, true), m(`span`, null, l(t.preview), 1)]), m(`span`, Se, [t.isPinned ? (c(), r(`svg`, Ce, [...(o[7] ||= [m(`path`, {
         d: `M12 17v5`
-      }, null, -1), vueY(`path`, {
+      }, null, -1), m(`path`, {
         d: `M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z`
-      }, null, -1)])])) : vueX(``, true), t.copiedAt ? (vueGt(), vueS(`time`, {
+      }, null, -1)])])) : p(``, true), t.copiedAt ? (c(), r(`time`, {
         key: 1,
         datetime: t.copiedAt
-      }, vueRr(K(t.copiedAt)), 9, we)) : vueX(``, true)])], 42, ve))), 128))], 512), vueY(`aside`, {
+      }, l(K(t.copiedAt)), 9, we)) : p(``, true)])], 42, ve))), 128))], 512), m(`aside`, {
         class: `picker__preview`,
-        "aria-label": handler(`PreviewLabel`)
-      }, [U.value ? (vueGt(), vueS(vueC, {
+        "aria-label": b(`PreviewLabel`)
+      }, [U.value ? (c(), r(s, {
         key: 0
-      }, [G.value ? (vueGt(), vueS(`strong`, Ee, vueRr(G.value), 1)) : vueX(``, true), vueY(`div`, {
+      }, [G.value ? (c(), r(`strong`, Ee, l(G.value), 1)) : p(``, true), m(`div`, {
         ref_key: `previewBodyRef`,
         ref: M,
         class: `picker__preview-body`
-      }, vueRr(Pe.value), 513), W.value?.truncated ? (vueGt(), vueS(`p`, De, vueRr(handler(`PreviewTruncated`, {
-        n: vueAn(clipboardassistantpageR).toLocaleString()
-      })), 1)) : vueX(``, true), vueY(`p`, Oe, vueRr(Fe.value), 1)], 64)) : (vueGt(), vueS(`p`, ke, vueRr(handler(`PreviewEmpty`)), 1))], 8, Te)]), vueY(`footer`, Ae, [k.value ? (vueGt(), vueS(`p`, options, vueRr(k.value), 1)) : (vueGt(), vueS(vueC, {
+      }, l(Pe.value), 513), W.value?.truncated ? (c(), r(`p`, De, l(b(`PreviewTruncated`, {
+        n: t(oe).toLocaleString()
+      })), 1)) : p(``, true), m(`p`, Oe, l(Fe.value), 1)], 64)) : (c(), r(`p`, ke, l(b(`PreviewEmpty`)), 1))], 8, Te)]), m(`footer`, Ae, [k.value ? (c(), r(`p`, je, l(k.value), 1)) : (c(), r(s, {
         key: 1
-      }, [vueY(`span`, null, [renderCache[8] ||= vueY(`kbd`, null, `↑↓`, -1), vueO(vueRr(handler(`HintSelect`)), 1)]), vueY(`span`, null, [renderCache[9] ||= vueY(`kbd`, null, `Enter`, -1), vueO(vueRr(handler(`HintCopy`)), 1)]), vueY(`span`, null, [vueY(`kbd`, null, vueRr(Ne.value), 1), vueO(vueRr(handler(`HintQuick`)), 1)]), vueY(`span`, null, [renderCache[10] ||= vueY(`kbd`, null, `Esc`, -1), vueO(vueRr(handler(`HintClose`)), 1)])], 64))])], 2));
+      }, [m(`span`, null, [o[8] ||= m(`kbd`, null, `↑↓`, -1), n(l(b(`HintSelect`)), 1)]), m(`span`, null, [o[9] ||= m(`kbd`, null, `Enter`, -1), n(l(b(`HintCopy`)), 1)]), m(`span`, null, [m(`kbd`, null, l(Ne.value), 1), n(l(b(`HintQuick`)), 1)]), m(`span`, null, [o[10] ||= m(`kbd`, null, `Esc`, -1), n(l(b(`HintClose`)), 1)])], 64))])], 2));
     }
   }), [[`__scopeId`, `data-v-784c69ae`]]),
-  x = vueT({
+  x = d({
     legacy: false,
     locale: `zh-CN`,
     fallbackLocale: `zh-CN`,
     messages: {
       "zh-CN": {
-        toolboxNative: playerN
+        toolboxNative: g
       },
       "en-US": {
-        toolboxNative: playerT
+        toolboxNative: v
       }
     },
     missingWarn: false,
     fallbackWarn: false
   });
-playerO(pluginvueexporthelperTResult).use(x).mount(`#app`);
+_(b).use(x).mount(`#app`);

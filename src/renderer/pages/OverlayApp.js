@@ -1,9 +1,9 @@
-import { An as vueAn, Cn as vueCn, O as vueO, S as vueS, Wt as vueWt, Zt as vueZt, b as vueB, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, k as vueK, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
-import { E as playerE, w as playerW } from "../i18n/en-US-player.js";
-import { n as lucideN, t as lucideT } from "../ui/icons/lucide-icons.js";
-import { _ as beautifier, g as beautifierG, v as beautifierV, y as beautifierY } from "../chunks/screenshot-beautifier.js";
-import { a as composeA, f as composeF, g as composeG, h as composeH, p as composeP, r as composeR, v as composeV, y as composeY } from "../chunks/compose.js";
-import { a as screenshotToolA, i as screenshotToolI, n as screenshotToolN, r as screenshotToolR } from "../chunks/screenshotTool.js";
+import { An as e, Cn as t, O as n, S as r, Wt as i, Zt as a, b as o, bn as s, c as ee, gt as c, j as te, k as l, nr as u, ot as ne, rr as d, rt as re, ut as ie, v as f, x as p, y as m } from "../chunks/vue-i18n.runtime.js";
+import { E as h, w as ae } from "../i18n/en-US-player.js";
+import { n as oe, t as se } from "../ui/icons/lucide-icons.js";
+import { _ as ce, g as le, v as ue, y as de } from "../chunks/screenshot-beautifier.js";
+import { a as fe, f as pe, g as me, h as he, p as g, r as ge, v as _e, y as ve } from "../chunks/compose.js";
+import { a as _, i as ye, n as be, r as xe } from "../chunks/screenshotTool.js";
 var Se = {
     key: 1,
     class: `pointer-events-none absolute left-1/2 top-5 -translate-x-1/2 rounded-full bg-black/75 px-3.5 py-1.5 text-xs text-white shadow-lg`
@@ -34,45 +34,45 @@ var Se = {
   Pe = 8,
   x = 40,
   S = 8,
-  C = vueJ({
+  C = te({
     __name: `OverlayApp`,
-    setup(props) {
+    setup(te) {
       let overlay = window.screenshotToolAPI.overlay,
-        w = vueCn(null),
-        T = vueBn(null),
-        Fe = vueBn(null),
-        Ie = vueBn(null),
-        E = vueBn(null),
-        D = vueBn(`idle`),
-        O = vueBn(null),
-        k = vueBn(null),
-        A = vueBn(null),
-        j = vueBn({
+        w = t(null),
+        T = s(null),
+        Fe = s(null),
+        Ie = s(null),
+        E = s(null),
+        D = s(`idle`),
+        O = s(null),
+        k = s(null),
+        A = s(null),
+        j = s({
           width: window.innerWidth,
           height: window.innerHeight
         }),
-        M = vueBn(320),
-        N = vueBn(false),
-        P = vueBn(false),
-        F = vueBn(``),
-        data = null,
+        M = s(320),
+        N = s(false),
+        P = s(false),
+        F = s(``),
+        I = null,
         L = null,
         R = false,
-        payload = null,
+        z = null,
         B = null,
         V = 0,
         H = null,
-        emptyItems = [],
-        U = vueV(() => w.value ? w.value.width / j.value.width : 1),
-        W = vueV(() => w.value ? w.value.height / j.value.height : 1),
-        G = vueV(() => O.value ?? (D.value === `idle` ? k.value : null)),
-        Re = vueV(() => D.value === `selected` && O.value !== null),
-        ze = vueV(() => !!(w.value && A.value && [`idle`, `pending`, `drawing`, `resizing`].includes(D.value))),
-        Be = vueV(() => {
+        Le = [],
+        U = f(() => w.value ? w.value.width / j.value.width : 1),
+        W = f(() => w.value ? w.value.height / j.value.height : 1),
+        G = f(() => O.value ?? (D.value === `idle` ? k.value : null)),
+        Re = f(() => D.value === `selected` && O.value !== null),
+        ze = f(() => !!(w.value && A.value && [`idle`, `pending`, `drawing`, `resizing`].includes(D.value))),
+        Be = f(() => {
           let e = G.value;
           return e ? `${Math.round(e.width * U.value)} × ${Math.round(e.height * W.value)}` : ``;
         }),
-        Ve = vueV(() => {
+        Ve = f(() => {
           let e = G.value;
           if (!e) return {};
           let t = e.y >= 28 ? e.y - 26 : e.y + 6;
@@ -81,7 +81,7 @@ var Se = {
             top: `${t}px`
           };
         }),
-        He = vueV(() => {
+        He = f(() => {
           let e = O.value;
           if (!e) return {};
           let {
@@ -94,7 +94,7 @@ var Se = {
             top: `${r}px`
           };
         }),
-        Ue = vueV(() => {
+        Ue = f(() => {
           let e = A.value;
           if (!e) return {};
           let {
@@ -108,7 +108,7 @@ var Se = {
             top: `${Math.max(4, i)}px`
           };
         }),
-        K = vueV(() => {
+        K = f(() => {
           let e = A.value;
           if (!e || !w.value) return {
             coords: ``,
@@ -118,11 +118,11 @@ var Se = {
             n = Math.min(w.value.height - 1, Math.max(0, Math.floor(e.y * W.value)));
           return {
             coords: `${t}, ${n}`,
-            color: data ? composeG(data, (n * w.value.width + t) * 4) : ``
+            color: I ? me(I, (n * w.value.width + t) * 4) : ``
           };
         }),
-        We = vueV(() => w.value?.afterCapture === `copy` ? screenshotToolA(`OverlayBeautifyCopy`) : screenshotToolA(`OverlayBeautify`)),
-        Ge = screenshotToolR ? `⌘` : `Ctrl+`;
+        We = f(() => w.value?.afterCapture === `copy` ? _(`OverlayBeautifyCopy`) : _(`OverlayBeautify`)),
+        Ge = xe ? `⌘` : `Ctrl+`;
       function Ke(e) {
         let {
             width: t,
@@ -149,8 +149,8 @@ var Se = {
         return t.x >= e.x && t.x <= e.x + e.width && t.y >= e.y && t.y <= e.y + e.height;
       }
       function J(e) {
-        let found = (w.value?.windows ?? []).find(item => q(item, e));
-        return found ? Ke(found) : {
+        let t = (w.value?.windows ?? []).find(t => q(t, e));
+        return t ? Ke(t) : {
           x: 0,
           y: 0,
           width: j.value.width,
@@ -168,7 +168,7 @@ var Se = {
           s = e.y >= t.y - y && e.y <= t.y + t.height + y;
         return i && n ? `nw` : i && r ? `ne` : a && n ? `sw` : a && r ? `se` : i && o ? `n` : a && o ? `s` : n && s ? `w` : r && s ? `e` : null;
       }
-      let Ye = vueV(() => {
+      let Ye = f(() => {
         if (N.value) return `progress`;
         if (D.value === `moving`) return `move`;
         if (D.value !== `selected` || !A.value) return `crosshair`;
@@ -183,18 +183,18 @@ var Se = {
       function Xe() {
         let e = Fe.value;
         if (!e) return;
-        let fallbackValue = window.devicePixelRatio || 1,
+        let t = window.devicePixelRatio || 1,
           {
             width: n,
             height: r
           } = j.value;
-        (e.width !== Math.round(n * fallbackValue) || e.height !== Math.round(r * fallbackValue)) && (e.width = Math.round(n * fallbackValue), e.height = Math.round(r * fallbackValue));
-        let composePResult = composeP(e);
-        if (composePResult.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), composePResult.clearRect(0, 0, n, r), !w.value) return;
+        (e.width !== Math.round(n * t) || e.height !== Math.round(r * t)) && (e.width = Math.round(n * t), e.height = Math.round(r * t));
+        let i = g(e);
+        if (i.setTransform(t, 0, 0, t, 0, 0), i.clearRect(0, 0, n, r), !w.value) return;
         let a = G.value;
-        if (composePResult.fillStyle = `rgba(0,0,0,0.42)`, composePResult.beginPath(), composePResult.rect(0, 0, n, r), a && a.width > 0 && a.height > 0 && composePResult.rect(a.x, a.y, a.width, a.height), composePResult.fill(`evenodd`), !(!a || a.width <= 0 || a.height <= 0) && (composePResult.strokeStyle = `#10b981`, composePResult.lineWidth = O.value ? 1.5 : 2, composePResult.strokeRect(a.x + .5, a.y + .5, Math.max(0, a.width - 1), Math.max(0, a.height - 1)), D.value === `selected` || D.value === `moving` || D.value === `resizing`)) {
+        if (i.fillStyle = `rgba(0,0,0,0.42)`, i.beginPath(), i.rect(0, 0, n, r), a && a.width > 0 && a.height > 0 && i.rect(a.x, a.y, a.width, a.height), i.fill(`evenodd`), !(!a || a.width <= 0 || a.height <= 0) && (i.strokeStyle = `#10b981`, i.lineWidth = O.value ? 1.5 : 2, i.strokeRect(a.x + .5, a.y + .5, Math.max(0, a.width - 1), Math.max(0, a.height - 1)), D.value === `selected` || D.value === `moving` || D.value === `resizing`)) {
           let e = [[a.x, a.y], [a.x + a.width / 2, a.y], [a.x + a.width, a.y], [a.x, a.y + a.height / 2], [a.x + a.width, a.y + a.height / 2], [a.x, a.y + a.height], [a.x + a.width / 2, a.y + a.height], [a.x + a.width, a.y + a.height]];
-          for (let [t, n] of e) composePResult.fillStyle = `#ffffff`, composePResult.strokeStyle = `#10b981`, composePResult.lineWidth = 1.5, composePResult.beginPath(), composePResult.arc(t, n, 4, 0, Math.PI * 2), composePResult.fill(), composePResult.stroke();
+          for (let [t, n] of e) i.fillStyle = `#ffffff`, i.strokeStyle = `#10b981`, i.lineWidth = 1.5, i.beginPath(), i.arc(t, n, 4, 0, Math.PI * 2), i.fill(), i.stroke();
         }
       }
       function Ze() {
@@ -202,15 +202,15 @@ var Se = {
           t = T.value,
           n = A.value;
         if (!e || !t || !n || !ze.value) return;
-        let fallbackValue = window.devicePixelRatio || 1,
-          i = Math.round(b * fallbackValue);
+        let r = window.devicePixelRatio || 1,
+          i = Math.round(b * r);
         e.width !== i && (e.width = i, e.height = i);
-        let composePResult = composeP(e);
-        composePResult.imageSmoothingEnabled = false, composePResult.fillStyle = `#000`, composePResult.fillRect(0, 0, i, i);
+        let a = g(e);
+        a.imageSmoothingEnabled = false, a.fillStyle = `#000`, a.fillRect(0, 0, i, i);
         let o = b / Pe * U.value,
           s = n.x * U.value,
           ee = n.y * W.value;
-        composePResult.drawImage(t, s - o / 2, ee - o / 2, o, o, 0, 0, i, i), composePResult.strokeStyle = `rgba(16,185,129,0.9)`, composePResult.lineWidth = Math.max(1, fallbackValue), composePResult.beginPath(), composePResult.moveTo(i / 2, 0), composePResult.lineTo(i / 2, i), composePResult.moveTo(0, i / 2), composePResult.lineTo(i, i / 2), composePResult.stroke();
+        a.drawImage(t, s - o / 2, ee - o / 2, o, o, 0, 0, i, i), a.strokeStyle = `rgba(16,185,129,0.9)`, a.lineWidth = Math.max(1, r), a.beginPath(), a.moveTo(i / 2, 0), a.lineTo(i / 2, i), a.moveTo(0, i / 2), a.lineTo(i, i / 2), a.stroke();
       }
       function X(e) {
         let t = O.value !== null;
@@ -239,26 +239,26 @@ var Se = {
             L && (O.value = qe(L, t));
             break;
           case `moving`:
-            if (L && payload) {
+            if (L && z) {
               let {
                   width: e,
                   height: n
                 } = j.value,
-                r = Math.min(Math.max(0, payload.x + t.x - L.x), e - payload.width),
-                i = Math.min(Math.max(0, payload.y + t.y - L.y), n - payload.height);
+                r = Math.min(Math.max(0, z.x + t.x - L.x), e - z.width),
+                i = Math.min(Math.max(0, z.y + t.y - L.y), n - z.height);
               O.value = {
-                ...payload,
+                ...z,
                 x: r,
                 y: i
               };
             }
             break;
           case `resizing`:
-            if (payload && B) {
-              let e = payload.x,
-                n = payload.y,
-                r = payload.x + payload.width,
-                i = payload.y + payload.height;
+            if (z && B) {
+              let e = z.x,
+                n = z.y,
+                r = z.x + z.width,
+                i = z.y + z.height;
               B.includes(`w`) && (e = t.x), B.includes(`e`) && (r = t.x), B.includes(`n`) && (n = t.y), B.includes(`s`) && (i = t.y), O.value = qe({
                 x: e,
                 y: n
@@ -277,13 +277,13 @@ var Se = {
         if (A.value = t, event.currentTarget.setPointerCapture(event.pointerId), D.value === `selected` && O.value) {
           let e = Je(t);
           if (e) {
-            D.value = `resizing`, B = e, payload = {
+            D.value = `resizing`, B = e, z = {
               ...O.value
             };
             return;
           }
           if (q(O.value, t)) {
-            D.value = `moving`, L = t, payload = {
+            D.value = `moving`, L = t, z = {
               ...O.value
             };
             return;
@@ -304,9 +304,9 @@ var Se = {
             break;
           case `moving`:
           case `resizing`:
-            O.value && (O.value.width < v || O.value.height < v) && payload && (O.value = payload), D.value = `selected`;
+            O.value && (O.value.width < v || O.value.height < v) && z && (O.value = z), D.value = `selected`;
         }
-        L = null, payload = null, B = null, R = false, Y();
+        L = null, z = null, B = null, R = false, Y();
       }
       function tt(e) {
         D.value === `selected` && O.value && q(O.value, Q(e)) && $(`beautify`);
@@ -336,7 +336,7 @@ var Se = {
       }
       function at() {
         let color = K.value.color;
-        color && (overlay.copyColor(color), F.value = screenshotToolA(`OverlayColorCopied`, {
+        color && (overlay.copyColor(color), F.value = _(`OverlayColorCopied`, {
           color: color
         }), H !== null && window.clearTimeout(H), H = window.setTimeout(() => {
           F.value = ``, H = null;
@@ -353,11 +353,11 @@ var Se = {
           event.preventDefault(), O.value && $(`beautify`);
           return;
         }
-        if (screenshotToolI(event) && t.toLowerCase() === `c`) {
+        if (ye(event) && t.toLowerCase() === `c`) {
           event.preventDefault(), O.value && $(`copy`);
           return;
         }
-        if (screenshotToolI(event) && t.toLowerCase() === `s`) {
+        if (ye(event) && t.toLowerCase() === `s`) {
           event.preventDefault(), O.value && $(`save`);
           return;
         }
@@ -393,29 +393,29 @@ var Se = {
           N.value = true;
           try {
             let i = st(n),
-              png;
+              a;
             if (e === `beautify` && t.afterCapture === `copy`) {
-              let composeHResult = composeH(r, i.x, i.y, i.width, i.height);
+              let e = he(r, i.x, i.y, i.width, i.height);
               try {
-                let n = t.style.enabled && t.style.balance ? composeA(composeHResult, t.scale) : null;
-                png = (await composeR({
-                  source: composeHResult,
+                let n = t.style.enabled && t.style.balance ? fe(e, t.scale) : null;
+                a = (await ge({
+                  source: e,
                   scale: t.scale,
                   style: t.style,
                   annotations: [],
                   balance: n
                 })).png;
               } finally {
-                composeV(composeHResult);
+                _e(e);
               }
             }
-            let finish = await overlay.finish({
+            let o = await overlay.finish({
               sessionId: t.sessionId,
               action: e,
               rect: i,
-              rendered: png
+              rendered: a
             });
-            finish.ok || console.warn(`[截图美化] 完成截图失败:`, finish.error.message);
+            o.ok || console.warn(`[截图美化] 完成截图失败:`, o.error.message);
           } catch (e) {
             console.warn(`[截图美化] 完成截图失败:`, e);
           } finally {
@@ -424,24 +424,24 @@ var Se = {
         }
       }
       function ct() {
-        w.value = null, data = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
+        w.value = null, I = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
         let e = T.value;
         e && (e.width = 1, e.height = 1), Y();
       }
       async function lt(e) {
-        screenshotToolN(e), ct(), j.value = {
+        be(e), ct(), j.value = {
           width: window.innerWidth,
           height: window.innerHeight
         }, w.value = e;
         let t = T.value;
         if (t) {
           t.width = e.width, t.height = e.height;
-          let composeFResult = composeF(e.bitmap, e.width, e.height);
-          composeP(t).putImageData(composeFResult, 0, 0), data = composeFResult.data;
+          let n = pe(e.bitmap, e.width, e.height);
+          g(t).putImageData(n, 0, 0), I = n.data;
         }
         e.cursor && (A.value = {
           ...e.cursor
-        }, k.value = J(e.cursor)), await vueRt(), Xe(), Ze(), requestAnimationFrame(() => requestAnimationFrame(() => {
+        }, k.value = J(e.cursor)), await re(), Xe(), Ze(), requestAnimationFrame(() => requestAnimationFrame(() => {
           w.value === e && overlay.painted(e.sessionId);
         }));
       }
@@ -451,129 +451,129 @@ var Se = {
           height: window.innerHeight
         }, Y();
       }
-      return vueWt(Re, e => {
-        e && vueRt(() => {
+      return i(Re, e => {
+        e && re(() => {
           E.value?.offsetWidth && (M.value = E.value.offsetWidth);
         });
-      }), vueUt(() => {
-        emptyItems.push(overlay.onOpen(e => {
+      }), ie(() => {
+        Le.push(overlay.onOpen(e => {
           lt(e);
         }), overlay.onReset(ct), overlay.onClear(() => {
           O.value && X(null), D.value = `idle`, k.value = null, A.value = null, Y();
         }), overlay.onEscape(() => {
           O.value && Z();
         })), window.addEventListener(`keydown`, ot), window.addEventListener(`resize`, ut), window.screenshotToolAPI.ready();
-      }), vueOt(() => {
-        for (let e of emptyItems) e();
+      }), ne(() => {
+        for (let e of Le) e();
         window.removeEventListener(`keydown`, ot), window.removeEventListener(`resize`, ut), V && cancelAnimationFrame(V), H !== null && window.clearTimeout(H);
-      }), (t, renderCache) => (vueGt(), vueS(`div`, {
+      }), (t, i) => (c(), r(`div`, {
         class: `fixed inset-0 overflow-hidden select-none`,
-        style: vueNr({
+        style: u({
           cursor: Ye.value
         }),
         onPointermove: Qe,
         onPointerdown: $e,
         onPointerup: et,
-        onPointerenter: renderCache[10] ||= t => vueAn(overlay).focus(),
+        onPointerenter: i[10] ||= t => e(overlay).focus(),
         onDblclick: tt,
         onContextmenu: nt
-      }, [vueY(`canvas`, {
+      }, [m(`canvas`, {
         ref_key: `baseCanvas`,
         ref: T,
         class: `pointer-events-none absolute inset-0 h-full w-full`
-      }, null, 512), vueY(`canvas`, {
+      }, null, 512), m(`canvas`, {
         ref_key: `maskCanvas`,
         ref: Fe,
         class: `pointer-events-none absolute inset-0 h-full w-full`
-      }, null, 512), w.value ? (vueGt(), vueS(vueC, {
+      }, null, 512), w.value ? (c(), r(ee, {
         key: 0
-      }, [G.value && Be.value ? (vueGt(), vueS(`div`, {
+      }, [G.value && Be.value ? (c(), r(`div`, {
         key: 0,
         class: `pointer-events-none absolute rounded-md bg-black/75 px-2 py-0.5 text-[11px] font-medium tabular-nums text-white`,
-        style: vueNr(Ve.value)
-      }, vueRr(Be.value), 5)) : vueX(``, true), D.value === `idle` && !P.value ? (vueGt(), vueS(`div`, Se, vueRr(vueAn(screenshotToolA)(`OverlayHint`)), 1)) : vueX(``, true), vueZt(vueY(`div`, {
+        style: u(Ve.value)
+      }, d(Be.value), 5)) : p(``, true), D.value === `idle` && !P.value ? (c(), r(`div`, Se, d(e(_)(`OverlayHint`)), 1)) : p(``, true), a(m(`div`, {
         class: `pointer-events-none absolute overflow-hidden rounded-lg border border-white/80 bg-black/80 text-[11px] text-white shadow-xl`,
-        style: vueNr([Ue.value, {
+        style: u([Ue.value, {
           width: `${b}px`
         }])
-      }, [vueY(`canvas`, {
+      }, [m(`canvas`, {
         ref_key: `magnifierCanvas`,
         ref: Ie,
         class: `block`,
-        style: vueNr({
+        style: u({
           width: `${b}px`,
           height: `${b}px`
         })
-      }, null, 4), vueY(`div`, Ce, [vueY(`span`, null, vueRr(K.value.coords), 1), vueY(`span`, we, [vueY(`i`, {
+      }, null, 4), m(`div`, Ce, [m(`span`, null, d(K.value.coords), 1), m(`span`, we, [m(`i`, {
         class: `inline-block size-2.5 rounded-sm border border-white/60`,
-        style: vueNr({
+        style: u({
           background: K.value.color
         })
-      }, null, 4), vueO(vueRr(K.value.color.toUpperCase()), 1)]), vueY(`span`, Te, vueRr(vueAn(screenshotToolA)(`OverlayCopyColorHint`)), 1)])], 4), [[playerW, ze.value]]), F.value ? (vueGt(), vueS(`div`, Ee, vueRr(F.value), 1)) : vueX(``, true), vueZt(vueY(`div`, {
+      }, null, 4), n(d(K.value.color.toUpperCase()), 1)]), m(`span`, Te, d(e(_)(`OverlayCopyColorHint`)), 1)])], 4), [[ae, ze.value]]), F.value ? (c(), r(`div`, Ee, d(F.value), 1)) : p(``, true), a(m(`div`, {
         ref_key: `toolbarRef`,
         ref: E,
         class: `absolute flex h-10 items-center gap-0.5 rounded-xl border border-black/10 bg-white px-1 text-zinc-700 shadow-[0_8px_28px_rgb(0_0_0/0.28)] dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-200`,
-        style: vueNr(He.value),
-        onPointerdown: renderCache[6] ||= playerE(() => {}, [`stop`]),
-        onPointerup: renderCache[7] ||= playerE(() => {}, [`stop`]),
-        onDblclick: renderCache[8] ||= playerE(() => {}, [`stop`]),
-        onContextmenu: renderCache[9] ||= playerE(() => {}, [`stop`, `prevent`])
-      }, [vueY(`button`, {
+        style: u(He.value),
+        onPointerdown: i[6] ||= h(() => {}, [`stop`]),
+        onPointerup: i[7] ||= h(() => {}, [`stop`]),
+        onDblclick: i[8] ||= h(() => {}, [`stop`]),
+        onContextmenu: i[9] ||= h(() => {}, [`stop`, `prevent`])
+      }, [m(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg hover:bg-black/[0.06] dark:hover:bg-white/10`,
-        title: `${vueAn(screenshotToolA)(`OverlayCancel`)} (Esc)`,
+        title: `${e(_)(`OverlayCancel`)} (Esc)`,
         disabled: N.value,
-        onClick: renderCache[0] ||= t => vueAn(overlay).cancel()
-      }, [vueK(vueAn(lucideT), {
+        onClick: i[0] ||= t => e(overlay).cancel()
+      }, [l(e(se), {
         size: 17
-      })], 8, De), renderCache[11] ||= vueY(`span`, {
+      })], 8, De), i[11] ||= m(`span`, {
         class: `mx-0.5 h-4 w-px bg-black/10 dark:bg-white/15`
-      }, null, -1), vueY(`button`, {
+      }, null, -1), m(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg hover:bg-black/[0.06] dark:hover:bg-white/10`,
-        title: vueAn(screenshotToolA)(`OverlayPin`),
+        title: e(_)(`OverlayPin`),
         disabled: N.value,
-        onClick: renderCache[1] ||= e => $(`pin`)
-      }, [vueK(vueAn(lucideN), {
+        onClick: i[1] ||= e => $(`pin`)
+      }, [l(e(oe), {
         size: 16
-      })], 8, Oe), vueY(`button`, {
+      })], 8, Oe), m(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg hover:bg-black/[0.06] dark:hover:bg-white/10`,
-        title: vueAn(screenshotToolA)(`OverlayOcr`),
+        title: e(_)(`OverlayOcr`),
         disabled: N.value,
-        onClick: renderCache[2] ||= e => $(`ocr`)
-      }, [vueK(vueAn(composeY), {
+        onClick: i[2] ||= e => $(`ocr`)
+      }, [l(e(ve), {
         size: 16
-      })], 8, ke), vueY(`button`, {
+      })], 8, ke), m(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg hover:bg-black/[0.06] dark:hover:bg-white/10`,
-        title: `${vueAn(screenshotToolA)(`OverlaySave`)} (${vueAn(Ge)}S)`,
+        title: `${e(_)(`OverlaySave`)} (${e(Ge)}S)`,
         disabled: N.value,
-        onClick: renderCache[3] ||= e => $(`save`)
-      }, [vueK(vueAn(beautifierV), {
+        onClick: i[3] ||= e => $(`save`)
+      }, [l(e(ue), {
         size: 16
-      })], 8, Ae), vueY(`button`, {
+      })], 8, Ae), m(`button`, {
         type: `button`,
         class: `inline-flex size-8 items-center justify-center rounded-lg hover:bg-black/[0.06] dark:hover:bg-white/10`,
-        title: `${vueAn(screenshotToolA)(`OverlayCopy`)} (${vueAn(Ge)}C)`,
+        title: `${e(_)(`OverlayCopy`)} (${e(Ge)}C)`,
         disabled: N.value,
-        onClick: renderCache[4] ||= e => $(`copy`)
-      }, [vueK(vueAn(beautifierY), {
+        onClick: i[4] ||= e => $(`copy`)
+      }, [l(e(de), {
         size: 16
-      })], 8, je), vueY(`button`, {
+      })], 8, je), m(`button`, {
         type: `button`,
         class: `ml-1 inline-flex h-8 items-center gap-1.5 rounded-lg bg-emerald-600 px-3 text-xs font-semibold text-white hover:bg-emerald-700 disabled:opacity-70`,
         title: `${We.value} (Enter)`,
         disabled: N.value,
-        onClick: renderCache[5] ||= e => $(`beautify`)
-      }, [N.value ? (vueGt(), vueB(vueAn(beautifier), {
+        onClick: i[5] ||= e => $(`beautify`)
+      }, [N.value ? (c(), o(e(ce), {
         key: 0,
         size: 15,
         class: `animate-spin`
-      })) : (vueGt(), vueB(vueAn(beautifierG), {
+      })) : (c(), o(e(le), {
         key: 1,
         size: 15
-      })), vueO(vueRr(We.value), 1)], 8, Me)], 36), [[playerW, Re.value]])], 64)) : vueX(``, true)], 36));
+      })), n(d(We.value), 1)], 8, Me)], 36), [[ae, Re.value]])], 64)) : p(``, true)], 36));
     }
   });
 export { C as default };

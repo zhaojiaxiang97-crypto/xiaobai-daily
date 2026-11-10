@@ -674,12 +674,12 @@ var EbmlIterator = class {
           if (element.id === 524531317) {}
           debug$1(`Read element: name=${getElementPath(child)}{id=0x${element.id.toString(16)}, container=${!!child.container}} at position=${elementPosition}`);
           if (child.container) {
-            const container = await this.parseContainer(child, element.len >= 0 ? this.tokenizer.position + element.len : -1, listener);
+            const res = await this.parseContainer(child, element.len >= 0 ? this.tokenizer.position + element.len : -1, listener);
             if (child.multiple) {
               if (!tree[child.name]) tree[child.name] = [];
-              tree[child.name].push(container);
-            } else tree[child.name] = container;
-            await listener.elementValue(child, container, elementPosition);
+              tree[child.name].push(res);
+            } else tree[child.name] = res;
+            await listener.elementValue(child, res, elementPosition);
           } else {
             const parser = this.parserMap.get(child.value);
             if (typeof parser === "function") {
@@ -715,29 +715,29 @@ var EbmlIterator = class {
     return tree;
   }
   async readVintData(maxLength) {
-    const peekNumber = await this.tokenizer.peekNumber(UINT8);
+    const msb = await this.tokenizer.peekNumber(UINT8);
     let mask = 128;
     let oc = 1;
-    while ((peekNumber & mask) === 0) {
+    while ((msb & mask) === 0) {
       if (oc > maxLength) throw new EbmlContentError("VINT value exceeding maximum size");
       ++oc;
       mask >>= 1;
     }
-    const uint8Array = new Uint8Array(oc);
-    await this.tokenizer.readBuffer(uint8Array);
-    return uint8Array;
+    const id = new Uint8Array(oc);
+    await this.tokenizer.readBuffer(id);
+    return id;
   }
   async readElement() {
-    const vintData = await this.readVintData(this.ebmlMaxIDLength);
+    const id = await this.readVintData(this.ebmlMaxIDLength);
     const lenField = await this.readVintData(this.ebmlMaxSizeLength);
     lenField[0] ^= 128 >> lenField.length - 1;
     return {
-      id: readUIntBE(vintData, vintData.length),
+      id: readUIntBE(id, id.length),
       len: readUIntBE(lenField, lenField.length)
     };
   }
-  async readFloat(float) {
-    switch (float.len) {
+  async readFloat(e) {
+    switch (e.len) {
       case 0:
         return 0;
       case 4:
@@ -747,26 +747,26 @@ var EbmlIterator = class {
       case 10:
         return this.tokenizer.readNumber(Float64_BE);
       default:
-        throw new EbmlContentError(`Invalid IEEE-754 float length: ${float.len}`);
+        throw new EbmlContentError(`Invalid IEEE-754 float length: ${e.len}`);
     }
   }
-  async readFlag(flag) {
-    return (await this.readUint(flag)) === 1;
+  async readFlag(e) {
+    return (await this.readUint(e)) === 1;
   }
-  async readUint(uint) {
-    return readUIntBE(await this.readBuffer(uint), uint.len);
+  async readUint(e) {
+    return readUIntBE(await this.readBuffer(e), e.len);
   }
-  async readString(string) {
-    return (await this.tokenizer.readToken(new StringType(string.len, "utf-8"))).replace(/\x00.*$/g, "");
+  async readString(e) {
+    return (await this.tokenizer.readToken(new StringType(e.len, "utf-8"))).replace(/\x00.*$/g, "");
   }
-  async readBuffer(buffer) {
-    const uint8Array = new Uint8Array(buffer.len);
-    await this.tokenizer.readBuffer(uint8Array);
-    return uint8Array;
+  async readBuffer(e) {
+    const buf = new Uint8Array(e.len);
+    await this.tokenizer.readBuffer(buf);
+    return buf;
   }
 };
-function readUIntBE(intInput, intValue) {
-  return Number(readUIntBeAsBigInt(intInput, intValue));
+function readUIntBE(buf, len) {
+  return Number(readUIntBeAsBigInt(buf, len));
 }
 /**
 * Reeds an unsigned integer from a big endian buffer of length `len`
@@ -774,20 +774,20 @@ function readUIntBE(intInput, intValue) {
 * @param len Number of bytes
 * @private
 */
-function readUIntBeAsBigInt(intValue, bigValue) {
+function readUIntBeAsBigInt(buf, len) {
   const normalizedNumber = /* @__PURE__ */new Uint8Array(8);
-  const cleanNumber = intValue.subarray(0, bigValue);
+  const cleanNumber = buf.subarray(0, len);
   try {
-    normalizedNumber.set(cleanNumber, 8 - bigValue);
+    normalizedNumber.set(cleanNumber, 8 - len);
     return UINT64_BE.get(normalizedNumber, 0);
   } catch (_error) {
     return BigInt(-1);
   }
 }
 function linkParents(element) {
-  if (element.container) Object.keys(element.container).map(item => {
-    const child = element.container[item];
-    child.id = Number.parseInt(item, 10);
+  if (element.container) Object.keys(element.container).map(id => {
+    const child = element.container[id];
+    child.id = Number.parseInt(id, 10);
     return child;
   }).forEach(child => {
     child.parent = element;
@@ -902,10 +902,10 @@ var MatroskaParser = class extends BasicParser {
           case 307544935:
             {
               const tags = value;
-              await Promise.all(tags.tag.map(async event => {
-                const target = event.target;
+              await Promise.all(tags.tag.map(async tag => {
+                const target = tag.target;
                 const targetType = target?.targetTypeValue ? TargetType[target.targetTypeValue] : target?.targetType ? target.targetType : "track";
-                await Promise.all(event.simpleTags.map(async simpleTag => {
+                await Promise.all(tag.simpleTags.map(async simpleTag => {
                   const value = simpleTag.string ? simpleTag.string : simpleTag.binary;
                   await this.addTag(`${targetType}:${simpleTag.name}`, value);
                 }));

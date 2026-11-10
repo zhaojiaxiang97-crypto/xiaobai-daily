@@ -209,11 +209,11 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String|Number}
   * @api public
   */
-  module.exports = function (count, options) {
+  module.exports = function (val, options) {
     options = options || {};
-    var type = typeof count;
-    if (type === "string" && count.length > 0) return parse(count);else if (type === "number" && isFinite(count)) return options.long ? fmtLong(count) : fmtShort(count);
-    throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(count));
+    var type = typeof val;
+    if (type === "string" && val.length > 0) return parse(val);else if (type === "number" && isFinite(val)) return options.long ? fmtLong(val) : fmtShort(val);
+    throw new Error("val is not a non-empty string or a valid number. val=" + JSON.stringify(val));
   };
   /**
   * Parse the given `str` and return milliseconds.
@@ -222,51 +222,51 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {Number}
   * @api private
   */
-  function parse(count) {
-    count = String(count);
-    if (count.length > 100) return;
-    var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(count);
+  function parse(str) {
+    str = String(str);
+    if (str.length > 100) return;
+    var match = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(str);
     if (!match) return;
-    var float = parseFloat(match[1]);
+    var n = parseFloat(match[1]);
     switch ((match[2] || "ms").toLowerCase()) {
       case "years":
       case "year":
       case "yrs":
       case "yr":
       case "y":
-        return float * y;
+        return n * y;
       case "weeks":
       case "week":
       case "w":
-        return float * w;
+        return n * w;
       case "days":
       case "day":
       case "d":
-        return float * d;
+        return n * d;
       case "hours":
       case "hour":
       case "hrs":
       case "hr":
       case "h":
-        return float * h;
+        return n * h;
       case "minutes":
       case "minute":
       case "mins":
       case "min":
       case "m":
-        return float * m;
+        return n * m;
       case "seconds":
       case "second":
       case "secs":
       case "sec":
       case "s":
-        return float * s;
+        return n * s;
       case "milliseconds":
       case "millisecond":
       case "msecs":
       case "msec":
       case "ms":
-        return float;
+        return n;
       default:
         return;
     }
@@ -278,13 +278,13 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String}
   * @api private
   */
-  function fmtShort(fmtValue) {
-    var msAbs = Math.abs(fmtValue);
-    if (msAbs >= d) return Math.round(fmtValue / d) + "d";
-    if (msAbs >= h) return Math.round(fmtValue / h) + "h";
-    if (msAbs >= m) return Math.round(fmtValue / m) + "m";
-    if (msAbs >= s) return Math.round(fmtValue / s) + "s";
-    return fmtValue + "ms";
+  function fmtShort(ms) {
+    var msAbs = Math.abs(ms);
+    if (msAbs >= d) return Math.round(ms / d) + "d";
+    if (msAbs >= h) return Math.round(ms / h) + "h";
+    if (msAbs >= m) return Math.round(ms / m) + "m";
+    if (msAbs >= s) return Math.round(ms / s) + "s";
+    return ms + "ms";
   }
   /**
   * Long format for `ms`.
@@ -293,20 +293,20 @@ var require_ms = /* @__PURE__ */__commonJSMin((exports, module) => {
   * @return {String}
   * @api private
   */
-  function fmtLong(fmtValue) {
-    var msAbs = Math.abs(fmtValue);
-    if (msAbs >= d) return plural(fmtValue, msAbs, d, "day");
-    if (msAbs >= h) return plural(fmtValue, msAbs, h, "hour");
-    if (msAbs >= m) return plural(fmtValue, msAbs, m, "minute");
-    if (msAbs >= s) return plural(fmtValue, msAbs, s, "second");
-    return fmtValue + " ms";
+  function fmtLong(ms) {
+    var msAbs = Math.abs(ms);
+    if (msAbs >= d) return plural(ms, msAbs, d, "day");
+    if (msAbs >= h) return plural(ms, msAbs, h, "hour");
+    if (msAbs >= m) return plural(ms, msAbs, m, "minute");
+    if (msAbs >= s) return plural(ms, msAbs, s, "second");
+    return ms + " ms";
   }
   /**
   * Pluralization helper.
   */
-  function plural(pluralValue, msAbs, pluralInput, name) {
-    var isPlural = msAbs >= pluralInput * 1.5;
-    return Math.round(pluralValue / pluralInput) + " " + name + (isPlural ? "s" : "");
+  function plural(ms, msAbs, n, name) {
+    var isPlural = msAbs >= n * 1.5;
+    return Math.round(ms / n) + " " + name + (isPlural ? "s" : "");
   }
 });
 //#endregion
@@ -325,8 +325,8 @@ var require_common = /* @__PURE__ */__commonJSMin((exports, module) => {
     createDebug.enabled = enabled;
     createDebug.humanize = require_ms();
     createDebug.destroy = destroy;
-    Object.keys(env).forEach(item => {
-      createDebug[item] = env[item];
+    Object.keys(env).forEach(key => {
+      createDebug[key] = env[key];
     });
     /**
     * The currently active debug mode names, and names to skip.
@@ -495,9 +495,9 @@ var require_common = /* @__PURE__ */__commonJSMin((exports, module) => {
     * @return {Mixed}
     * @api private
     */
-    function coerce(coerceValue) {
-      if (coerceValue instanceof Error) return coerceValue.stack || coerceValue.message;
-      return coerceValue;
+    function coerce(val) {
+      if (val instanceof Error) return val.stack || val.message;
+      return val;
     }
     /**
     * XXX DO NOT USE. This is a temporary stub function.
@@ -545,8 +545,8 @@ var require_browser = /* @__PURE__ */__commonJSMin((exports, module) => {
   function useColors() {
     if (typeof window !== "undefined" && window.process && (window.process.type === "renderer" || window.process.__nwjs)) return true;
     if (typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/(edge|trident)\/(\d+)/)) return false;
-    let total;
-    return typeof document !== "undefined" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || typeof window !== "undefined" && window.console && (window.console.firebug || window.console.exception && window.console.table) || typeof navigator !== "undefined" && navigator.userAgent && (total = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(total[1], 10) >= 31 || typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
+    let m;
+    return typeof document !== "undefined" && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance || typeof window !== "undefined" && window.console && (window.console.firebug || window.console.exception && window.console.table) || typeof navigator !== "undefined" && navigator.userAgent && (m = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/)) && parseInt(m[1], 10) >= 31 || typeof navigator !== "undefined" && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/);
   }
   /**
   * Colorize log arguments if enabled.
@@ -669,8 +669,8 @@ var require_supports_color = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (hasFlag("color=16m") || hasFlag("color=full") || hasFlag("color=truecolor")) return 3;
     if (hasFlag("color=256")) return 2;
     if (haveStream && !streamIsTTY && forceColor === undefined) return 0;
-    const forceColorValue = forceColor || 0;
-    if (env.TERM === "dumb") return forceColorValue;
+    const min = forceColor || 0;
+    if (env.TERM === "dumb") return min;
     if (process.platform === "win32") {
       const osRelease = os.release().split(".");
       if (Number(osRelease[0]) >= 10 && Number(osRelease[2]) >= 10586) return Number(osRelease[2]) >= 14931 ? 3 : 2;
@@ -678,7 +678,7 @@ var require_supports_color = /* @__PURE__ */__commonJSMin((exports, module) => {
     }
     if ("CI" in env) {
       if (["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS", "BUILDKITE"].some(sign => sign in env) || env.CI_NAME === "codeship") return 1;
-      return forceColorValue;
+      return min;
     }
     if ("TEAMCITY_VERSION" in env) return /^(9\.(0*[1-9]\d*)\.|\d{2,}\.)/.test(env.TEAMCITY_VERSION) ? 1 : 0;
     if (env.COLORTERM === "truecolor") return 3;
@@ -694,7 +694,7 @@ var require_supports_color = /* @__PURE__ */__commonJSMin((exports, module) => {
     if (/-256(color)?$/i.test(env.TERM)) return 2;
     if (/^screen|^xterm|^vt100|^vt220|^rxvt|color|ansi|cygwin|linux/i.test(env.TERM)) return 1;
     if ("COLORTERM" in env) return 1;
-    return forceColorValue;
+    return min;
   }
   function getSupportLevel(stream) {
     return translateLevel(supportsColor(stream, stream && stream.isTTY));
@@ -736,16 +736,16 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
   *
   *   $ DEBUG_COLORS=no DEBUG_DEPTH=10 DEBUG_SHOW_HIDDEN=enabled node script.js
   */
-  exports.inspectOpts = Object.keys(process.env).filter(item => {
-    return /^debug_/i.test(item);
-  }).reduce((acc, cur) => {
-    const prop = cur.substring(6).toLowerCase().replace(/_([a-z])/g, (_, text) => {
-      return text.toUpperCase();
+  exports.inspectOpts = Object.keys(process.env).filter(key => {
+    return /^debug_/i.test(key);
+  }).reduce((obj, key) => {
+    const prop = key.substring(6).toLowerCase().replace(/_([a-z])/g, (_, k) => {
+      return k.toUpperCase();
     });
-    let val = process.env[cur];
+    let val = process.env[key];
     if (/^(yes|on|true|enabled)$/i.test(val)) val = true;else if (/^(no|off|false|disabled)$/i.test(val)) val = false;else if (val === "null") val = null;else val = Number(val);
-    acc[prop] = val;
-    return acc;
+    obj[prop] = val;
+    return obj;
   }, {});
   /**
   * Is stdout a TTY? Colored output is enabled when `true`.
@@ -764,8 +764,8 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
       useColors
     } = this;
     if (useColors) {
-      const color = this.color;
-      const colorCode = "[3" + (color < 8 ? color : "8;5;" + color);
+      const c = this.color;
+      const colorCode = "[3" + (c < 8 ? c : "8;5;" + c);
       const prefix = `  ${colorCode};1m${name}null`;
       args[0] = prefix + args[0].split("\n").join("\n" + prefix);
       args.push(colorCode + "m+" + module.exports.humanize(this.diff) + "[0m");
@@ -819,7 +819,7 @@ var require_node = /* @__PURE__ */__commonJSMin((exports, module) => {
   */
   formatters.o = function (v) {
     this.inspectOpts.colors = this.useColors;
-    return util.inspect(v, this.inspectOpts).split("\n").map(text => text.trim()).join(" ");
+    return util.inspect(v, this.inspectOpts).split("\n").map(str => str.trim()).join(" ");
   };
   /**
   * Map %O to `util.inspect()`, allowing multiple lines if needed.
@@ -843,7 +843,7 @@ var require_src = /* @__PURE__ */__commonJSMin((exports, module) => {
 //#region node_modules/@borewit/text-codec/lib/index.js
 var import_ieee754 = /* @__PURE__ */__toESM((/* @__PURE__ */__commonJSMin(exports => {
   exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-    var total, m;
+    var e, m;
     var eLen = nBytes * 8 - mLen - 1;
     var eMax = (1 << eLen) - 1;
     var eBias = eMax >> 1;
@@ -852,22 +852,22 @@ var import_ieee754 = /* @__PURE__ */__toESM((/* @__PURE__ */__commonJSMin(export
     var d = isLE ? -1 : 1;
     var s = buffer[offset + i];
     i += d;
-    total = s & (1 << -nBits) - 1;
+    e = s & (1 << -nBits) - 1;
     s >>= -nBits;
     nBits += eLen;
-    for (; nBits > 0; total = total * 256 + buffer[offset + i], i += d, nBits -= 8);
-    m = total & (1 << -nBits) - 1;
-    total >>= -nBits;
+    for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
+    m = e & (1 << -nBits) - 1;
+    e >>= -nBits;
     nBits += mLen;
     for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
-    if (total === 0) total = 1 - eBias;else if (total === eMax) return m ? NaN : (s ? -1 : 1) * Infinity;else {
+    if (e === 0) e = 1 - eBias;else if (e === eMax) return m ? NaN : (s ? -1 : 1) * Infinity;else {
       m = m + Math.pow(2, mLen);
-      total = total - eBias;
+      e = e - eBias;
     }
-    return (s ? -1 : 1) * m * Math.pow(2, total - mLen);
+    return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
   };
   exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-    var total, m, count;
+    var e, m, c;
     var eLen = nBytes * 8 - mLen - 1;
     var eMax = (1 << eLen) - 1;
     var eBias = eMax >> 1;
@@ -878,33 +878,33 @@ var import_ieee754 = /* @__PURE__ */__toESM((/* @__PURE__ */__commonJSMin(export
     value = Math.abs(value);
     if (isNaN(value) || value === Infinity) {
       m = isNaN(value) ? 1 : 0;
-      total = eMax;
+      e = eMax;
     } else {
-      total = Math.floor(Math.log(value) / Math.LN2);
-      if (value * (count = Math.pow(2, -total)) < 1) {
-        total--;
-        count *= 2;
+      e = Math.floor(Math.log(value) / Math.LN2);
+      if (value * (c = Math.pow(2, -e)) < 1) {
+        e--;
+        c *= 2;
       }
-      if (total + eBias >= 1) value += rt / count;else value += rt * Math.pow(2, 1 - eBias);
-      if (value * count >= 2) {
-        total++;
-        count /= 2;
+      if (e + eBias >= 1) value += rt / c;else value += rt * Math.pow(2, 1 - eBias);
+      if (value * c >= 2) {
+        e++;
+        c /= 2;
       }
-      if (total + eBias >= eMax) {
+      if (e + eBias >= eMax) {
         m = 0;
-        total = eMax;
-      } else if (total + eBias >= 1) {
-        m = (value * count - 1) * Math.pow(2, mLen);
-        total = total + eBias;
+        e = eMax;
+      } else if (e + eBias >= 1) {
+        m = (value * c - 1) * Math.pow(2, mLen);
+        e = e + eBias;
       } else {
         m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-        total = 0;
+        e = 0;
       }
     }
     for (; mLen >= 8; buffer[offset + i] = m & 255, i += d, m /= 256, mLen -= 8);
-    total = total << mLen | m;
+    e = e << mLen | m;
     eLen += mLen;
-    for (; eLen > 0; buffer[offset + i] = total & 255, i += d, total /= 256, eLen -= 8);
+    for (; eLen > 0; buffer[offset + i] = e & 255, i += d, e /= 256, eLen -= 8);
     buffer[offset + i - d] |= s * 128;
   };
 }))(), 1);
@@ -959,8 +959,8 @@ function textDecode(bytes, encoding = "utf-8") {
     case "utf-8":
     case "utf8":
       {
-        const utf8DecoderResult = utf8Decoder();
-        return utf8DecoderResult ? utf8DecoderResult.decode(bytes) : decodeUTF8(bytes);
+        const dec = utf8Decoder();
+        return dec ? dec.decode(bytes) : decodeUTF8(bytes);
       }
     case "utf-16le":
       return decodeUTF16LE(bytes);
@@ -981,8 +981,8 @@ function textEncode(input = "", encoding = "utf-8") {
     case "utf-8":
     case "utf8":
       {
-        const utf8EncoderResult = utf8Encoder();
-        return utf8EncoderResult ? utf8EncoderResult.encode(input) : encodeUTF8(input);
+        const enc = utf8Encoder();
+        return enc ? enc.encode(input) : encodeUTF8(input);
       }
     case "utf-16le":
       return encodeUTF16LE(input);
@@ -1007,14 +1007,14 @@ function pushCodeUnit(parts, chunk, codeUnit) {
   chunk.push(codeUnit);
   if (chunk.length >= CHUNK) flushChunk(parts, chunk);
 }
-function pushCodePoint(parts, chunk, point) {
-  if (point <= 65535) {
-    pushCodeUnit(parts, chunk, point);
+function pushCodePoint(parts, chunk, cp) {
+  if (cp <= 65535) {
+    pushCodeUnit(parts, chunk, cp);
     return;
   }
-  point -= 65536;
-  pushCodeUnit(parts, chunk, 55296 + (point >> 10));
-  pushCodeUnit(parts, chunk, 56320 + (point & 1023));
+  cp -= 65536;
+  pushCodeUnit(parts, chunk, 55296 + (cp >> 10));
+  pushCodeUnit(parts, chunk, 56320 + (cp & 1023));
 }
 function decodeUTF8(bytes) {
   const parts = [];
@@ -1149,78 +1149,78 @@ function decodeWindows1252(bytes) {
   if (out) parts.push(out);
   return parts.join("");
 }
-function encodeUTF8(count) {
-  const emptyItems = [];
-  for (let i = 0; i < count.length; i++) {
-    let charCodeAtResult = count.charCodeAt(i);
-    if (charCodeAtResult >= 55296 && charCodeAtResult <= 56319) {
-      if (i + 1 < count.length) {
-        const lo = count.charCodeAt(i + 1);
+function encodeUTF8(str) {
+  const out = [];
+  for (let i = 0; i < str.length; i++) {
+    let cp = str.charCodeAt(i);
+    if (cp >= 55296 && cp <= 56319) {
+      if (i + 1 < str.length) {
+        const lo = str.charCodeAt(i + 1);
         if (lo >= 56320 && lo <= 57343) {
-          charCodeAtResult = 65536 + (charCodeAtResult - 55296 << 10) + (lo - 56320);
+          cp = 65536 + (cp - 55296 << 10) + (lo - 56320);
           i++;
-        } else charCodeAtResult = REPLACEMENT;
-      } else charCodeAtResult = REPLACEMENT;
-    } else if (charCodeAtResult >= 56320 && charCodeAtResult <= 57343) charCodeAtResult = REPLACEMENT;
-    if (charCodeAtResult < 128) emptyItems.push(charCodeAtResult);else if (charCodeAtResult < 2048) emptyItems.push(192 | charCodeAtResult >> 6, 128 | charCodeAtResult & 63);else if (charCodeAtResult < 65536) emptyItems.push(224 | charCodeAtResult >> 12, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);else emptyItems.push(240 | charCodeAtResult >> 18, 128 | charCodeAtResult >> 12 & 63, 128 | charCodeAtResult >> 6 & 63, 128 | charCodeAtResult & 63);
+        } else cp = REPLACEMENT;
+      } else cp = REPLACEMENT;
+    } else if (cp >= 56320 && cp <= 57343) cp = REPLACEMENT;
+    if (cp < 128) out.push(cp);else if (cp < 2048) out.push(192 | cp >> 6, 128 | cp & 63);else if (cp < 65536) out.push(224 | cp >> 12, 128 | cp >> 6 & 63, 128 | cp & 63);else out.push(240 | cp >> 18, 128 | cp >> 12 & 63, 128 | cp >> 6 & 63, 128 | cp & 63);
   }
-  return new Uint8Array(emptyItems);
+  return new Uint8Array(out);
 }
-function encodeUTF16LE(count) {
+function encodeUTF16LE(str) {
   const units = [];
-  for (let i = 0; i < count.length; i++) {
-    const charCodeAtResult = count.charCodeAt(i);
-    if (charCodeAtResult >= 55296 && charCodeAtResult <= 56319) {
-      if (i + 1 < count.length) {
-        const lo = count.charCodeAt(i + 1);
+  for (let i = 0; i < str.length; i++) {
+    const u = str.charCodeAt(i);
+    if (u >= 55296 && u <= 56319) {
+      if (i + 1 < str.length) {
+        const lo = str.charCodeAt(i + 1);
         if (lo >= 56320 && lo <= 57343) {
-          units.push(charCodeAtResult, lo);
+          units.push(u, lo);
           i++;
         } else units.push(REPLACEMENT);
       } else units.push(REPLACEMENT);
       continue;
     }
-    if (charCodeAtResult >= 56320 && charCodeAtResult <= 57343) {
+    if (u >= 56320 && u <= 57343) {
       units.push(REPLACEMENT);
       continue;
     }
-    units.push(charCodeAtResult);
+    units.push(u);
   }
-  const uint8Array = new Uint8Array(units.length * 2);
+  const out = new Uint8Array(units.length * 2);
   for (let i = 0; i < units.length; i++) {
     const code = units[i];
     const o = i * 2;
-    uint8Array[o] = code & 255;
-    uint8Array[o + 1] = code >>> 8;
+    out[o] = code & 255;
+    out[o + 1] = code >>> 8;
   }
-  return uint8Array;
+  return out;
 }
-function encodeASCII(count) {
-  const uint8Array = new Uint8Array(count.length);
-  for (let i = 0; i < count.length; i++) uint8Array[i] = count.charCodeAt(i) & 127;
-  return uint8Array;
+function encodeASCII(str) {
+  const out = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 127;
+  return out;
 }
-function encodeLatin1(count) {
-  const uint8Array = new Uint8Array(count.length);
-  for (let i = 0; i < count.length; i++) uint8Array[i] = count.charCodeAt(i) & 255;
-  return uint8Array;
+function encodeLatin1(str) {
+  const out = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) out[i] = str.charCodeAt(i) & 255;
+  return out;
 }
-function encodeWindows1252(count) {
-  const uint8Array = new Uint8Array(count.length);
-  for (let i = 0; i < count.length; i++) {
-    const ch = count[i];
+function encodeWindows1252(str) {
+  const out = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
     const code = ch.charCodeAt(0);
     if (WINDOWS_1252_REVERSE[ch] !== undefined) {
-      uint8Array[i] = WINDOWS_1252_REVERSE[ch];
+      out[i] = WINDOWS_1252_REVERSE[ch];
       continue;
     }
     if (code >= 0 && code <= 127 || code >= 160 && code <= 255) {
-      uint8Array[i] = code;
+      out[i] = code;
       continue;
     }
-    uint8Array[i] = 63;
+    out[i] = 63;
   }
-  return uint8Array;
+  return out;
 }
 //#endregion
 //#region node_modules/token-types/lib/index.js
@@ -1613,14 +1613,14 @@ var IgnoreType = class {
   /**
   * @param len number of bytes to ignore
   */
-  constructor(constructor) {
-    this.len = constructor;
+  constructor(len) {
+    this.len = len;
   }
   get(_array, _off) {}
 };
 var Uint8ArrayType = class {
-  constructor(constructor) {
-    this.len = constructor;
+  constructor(len) {
+    this.len = len;
   }
   get(array, offset) {
     return array.subarray(offset, offset + this.len);
@@ -1631,8 +1631,8 @@ var Uint8ArrayType = class {
 * Supports all encodings supported by TextDecoder, plus 'windows-1252'.
 */
 var StringType = class {
-  constructor(constructor, encoding) {
-    this.len = constructor;
+  constructor(len, encoding) {
+    this.len = len;
     this.encoding = encoding;
   }
   get(data, offset = 0) {
@@ -1644,8 +1644,8 @@ var StringType = class {
 * Windows-1252 is a superset of ISO 8859-1 / Latin-1.
 */
 var AnsiStringType = class extends StringType {
-  constructor(constructor) {
-    super(constructor, "windows-1252");
+  constructor(len) {
+    super(len, "windows-1252");
   }
 };
 //#endregion

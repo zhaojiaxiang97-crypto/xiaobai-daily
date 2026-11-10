@@ -1,6 +1,6 @@
-import { vn as vueVn } from "./vue-i18n.runtime.js";
+import { vn as e } from "./vue-i18n.runtime.js";
 var t = 0,
-  n = vueVn([]);
+  n = e([]);
 function r(e) {
   let r = {
     id: ++t,

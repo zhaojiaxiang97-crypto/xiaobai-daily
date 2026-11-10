@@ -12,35 +12,35 @@ var import_src = /* @__PURE__ */__toESM(require_src(), 1);
 * into Windows / CFBF byte order.
 */
 function parseWindowsGuid(guid) {
-  let trimmed = guid.trim();
-  if (trimmed.length !== 36 || trimmed[8] !== "-" || trimmed[13] !== "-" || trimmed[18] !== "-" || trimmed[23] !== "-") throw new Error(`Invalid GUID format: ${guid}`);
+  let s = guid.trim();
+  if (s.length !== 36 || s[8] !== "-" || s[13] !== "-" || s[18] !== "-" || s[23] !== "-") throw new Error(`Invalid GUID format: ${guid}`);
   let v;
-  const uint8Array = /* @__PURE__ */new Uint8Array(16);
-  v = parseInt(trimmed.slice(0, 8), 16);
-  uint8Array[0] = v & 255;
-  uint8Array[1] = v >>> 8 & 255;
-  uint8Array[2] = v >>> 16 & 255;
-  uint8Array[3] = v >>> 24 & 255;
-  v = parseInt(trimmed.slice(9, 13), 16);
-  uint8Array[4] = v & 255;
-  uint8Array[5] = v >>> 8 & 255;
-  v = parseInt(trimmed.slice(14, 18), 16);
-  uint8Array[6] = v & 255;
-  uint8Array[7] = v >>> 8 & 255;
-  v = parseInt(trimmed.slice(19, 23), 16);
-  uint8Array[8] = v >>> 8 & 255;
-  uint8Array[9] = v & 255;
-  v = parseInt(trimmed.slice(24, 32), 16);
-  uint8Array[10] = v >>> 24 & 255;
-  uint8Array[11] = v >>> 16 & 255;
-  uint8Array[12] = v >>> 8 & 255;
-  uint8Array[13] = v & 255;
-  v = parseInt(trimmed.slice(32, 36), 16);
-  uint8Array[14] = v >>> 8 & 255;
-  uint8Array[15] = v & 255;
-  for (let i = 0; i < 16; i++) if (!Number.isFinite(uint8Array[i])) throw new Error(`Invalid GUID format: ${guid}`);
-  if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(trimmed)) throw new Error(`Invalid GUID format: ${guid}`);
-  return uint8Array;
+  const out = /* @__PURE__ */new Uint8Array(16);
+  v = parseInt(s.slice(0, 8), 16);
+  out[0] = v & 255;
+  out[1] = v >>> 8 & 255;
+  out[2] = v >>> 16 & 255;
+  out[3] = v >>> 24 & 255;
+  v = parseInt(s.slice(9, 13), 16);
+  out[4] = v & 255;
+  out[5] = v >>> 8 & 255;
+  v = parseInt(s.slice(14, 18), 16);
+  out[6] = v & 255;
+  out[7] = v >>> 8 & 255;
+  v = parseInt(s.slice(19, 23), 16);
+  out[8] = v >>> 8 & 255;
+  out[9] = v & 255;
+  v = parseInt(s.slice(24, 32), 16);
+  out[10] = v >>> 24 & 255;
+  out[11] = v >>> 16 & 255;
+  out[12] = v >>> 8 & 255;
+  out[13] = v & 255;
+  v = parseInt(s.slice(32, 36), 16);
+  out[14] = v >>> 8 & 255;
+  out[15] = v & 255;
+  for (let i = 0; i < 16; i++) if (!Number.isFinite(out[i])) throw new Error(`Invalid GUID format: ${guid}`);
+  if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(s)) throw new Error(`Invalid GUID format: ${guid}`);
+  return out;
 }
 var Guid = class Guid {
   constructor(bytes) {
@@ -55,18 +55,18 @@ var Guid = class Guid {
   * xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
   */
   toString() {
-    const bytes = this.bytes;
-    const handler = n => n.toString(16).padStart(2, "0");
-    return `${handler(bytes[3]) + handler(bytes[2]) + handler(bytes[1]) + handler(bytes[0])}-${handler(bytes[5]) + handler(bytes[4])}-${handler(bytes[7]) + handler(bytes[6])}-${handler(bytes[8]) + handler(bytes[9])}-${handler(bytes[10]) + handler(bytes[11]) + handler(bytes[12]) + handler(bytes[13]) + handler(bytes[14]) + handler(bytes[15])}`.toUpperCase();
+    const b = this.bytes;
+    const hx = n => n.toString(16).padStart(2, "0");
+    return `${hx(b[3]) + hx(b[2]) + hx(b[1]) + hx(b[0])}-${hx(b[5]) + hx(b[4])}-${hx(b[7]) + hx(b[6])}-${hx(b[8]) + hx(b[9])}-${hx(b[10]) + hx(b[11]) + hx(b[12]) + hx(b[13]) + hx(b[14]) + hx(b[15])}`.toUpperCase();
   }
   /**
   * Compare against a Uint8Array containing GUID bytes
   * in Windows / CFBF layout.
   */
-  equals(count, offset = 0) {
-    if (offset < 0 || count.length - offset < 16) return false;
-    const bytes = this.bytes;
-    for (let i = 0; i < 16; i++) if (count[offset + i] !== bytes[i]) return false;
+  equals(buf, offset = 0) {
+    if (offset < 0 || buf.length - offset < 16) return false;
+    const a = this.bytes;
+    for (let i = 0; i < 16; i++) if (buf[offset + i] !== a[i]) return false;
     return true;
   }
 };
@@ -87,8 +87,8 @@ var Guid = class Guid {
 * - https://github.com/dji-sdk/FFmpeg/blob/master/libavformat/asf.c
 */
 var AsfGuid = class AsfGuid {
-  static fromBin(binValue, offset = 0) {
-    return new AsfGuid(AsfGuid.decode(binValue, offset));
+  static fromBin(bin, offset = 0) {
+    return new AsfGuid(AsfGuid.decode(bin, offset));
   }
   /**
   * Decode GUID in format like "B503BF5F-2EA9-CF11-8EE3-00C00C205365"
@@ -128,8 +128,8 @@ var AsfGuid = class AsfGuid {
   static encode(guid) {
     return parseWindowsGuid(guid);
   }
-  constructor(constructor) {
-    this.str = constructor;
+  constructor(str) {
+    this.str = str;
   }
   equals(guid) {
     return this.str === guid.str;
@@ -183,27 +183,27 @@ AsfGuid.BinaryMedia = new AsfGuid("3AFB65E2-47EF-40F2-AC2C-70A90D71D343");
 AsfGuid.ASF_Index_Placeholder_Object = new AsfGuid("D9AADE20-7C17-4F9C-BC28-8555DD98E2A2");
 //#endregion
 //#region node_modules/music-metadata/lib/asf/AsfUtil.js
-function getParserForAttr(parser) {
-  return attributeParsers[parser];
+function getParserForAttr(i) {
+  return attributeParsers[i];
 }
 function parseUnicodeAttr(uint8Array) {
   return stripNulls(decodeString(uint8Array, "utf-16le"));
 }
 var attributeParsers = [parseUnicodeAttr, parseByteArrayAttr, parseBoolAttr, parseDWordAttr, parseQWordAttr, parseWordAttr, parseByteArrayAttr];
-function parseByteArrayAttr(byte) {
-  return new Uint8Array(byte);
+function parseByteArrayAttr(buf) {
+  return new Uint8Array(buf);
 }
-function parseBoolAttr(bool, offset = 0) {
-  return parseWordAttr(bool, offset) === 1;
+function parseBoolAttr(buf, offset = 0) {
+  return parseWordAttr(buf, offset) === 1;
 }
-function parseDWordAttr(word, offset = 0) {
-  return UINT32_LE.get(word, offset);
+function parseDWordAttr(buf, offset = 0) {
+  return UINT32_LE.get(buf, offset);
 }
-function parseQWordAttr(word, offset = 0) {
-  return UINT64_LE.get(word, offset);
+function parseQWordAttr(buf, offset = 0) {
+  return UINT64_LE.get(buf, offset);
 }
-function parseWordAttr(word, offset = 0) {
-  return UINT16_LE.get(word, offset);
+function parseWordAttr(buf, offset = 0) {
+  return UINT16_LE.get(buf, offset);
 }
 //#endregion
 //#region node_modules/music-metadata/lib/asf/AsfObject.js
@@ -513,8 +513,8 @@ var WmPictureToken = class WmPictureToken {
   static fromBuffer(buffer) {
     return new WmPictureToken(buffer.length).get(buffer, 0);
   }
-  constructor(constructor) {
-    this.len = constructor;
+  constructor(len) {
+    this.len = len;
   }
   get(buffer, offset) {
     const view = new DataView(buffer.buffer, offset);
@@ -568,16 +568,16 @@ var AsfParser = class extends BasicParser {
         case FilePropertiesObject.guid.str:
           {
             this.validateAllocationSize(payloadSize, "File Properties Object");
-            const token = await this.tokenizer.readToken(new FilePropertiesObject(header));
-            this.metadata.setFormat("duration", Number(token.playDuration / BigInt(1e3)) / 1e4 - Number(token.preroll) / 1e3);
-            this.metadata.setFormat("bitrate", token.maximumBitrate);
+            const fpo = await this.tokenizer.readToken(new FilePropertiesObject(header));
+            this.metadata.setFormat("duration", Number(fpo.playDuration / BigInt(1e3)) / 1e4 - Number(fpo.preroll) / 1e3);
+            this.metadata.setFormat("bitrate", fpo.maximumBitrate);
             break;
           }
         case StreamPropertiesObject.guid.str:
           {
             this.validateAllocationSize(payloadSize, "Stream Properties Object");
-            const token = await this.tokenizer.readToken(new StreamPropertiesObject(header));
-            this.metadata.setFormat("container", `ASF/${token.streamType}`);
+            const spo = await this.tokenizer.readToken(new StreamPropertiesObject(header));
+            this.metadata.setFormat("container", `ASF/${spo.streamType}`);
             break;
           }
         case HeaderExtensionObject.guid.str:

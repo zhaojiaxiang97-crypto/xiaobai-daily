@@ -1,25 +1,25 @@
-import { $n as vueN, An as vueAn, Ct as vueCt, E as vueE, S as vueS, Wt as vueWt, Yt as vueYt, Zt as vueZt, b as vueB, bn as vueBn, f as vueF, gt as vueGt, j as vueJ, k as vueK, mt as vueMt, nr as vueNr, ot as vueOt, rr as vueRr, rt as vueRt, ut as vueUt, v as vueV, x as vueX, y as vueY, z as vueZ } from "../chunks/vue-i18n.runtime.js";
-import { E as playerE, w as playerW } from "../i18n/en-US-player.js";
-import { D as mainD, E as mainE, F as mainF, I as mainI, J as mainJ, K as mainK, N as mainN, P as mainP, R as mainR, V as mainV, W as mainW, X as mainX, q as mainQ, v as Se, y as mainY, z as mainZ } from "../chunks/main.js";
-var defineProperty = Object.defineProperty,
-  defineProperties = Object.defineProperties,
-  getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors,
-  getOwnPropertySymbols = Object.getOwnPropertySymbols,
-  hasOwnProperty = Object.prototype.hasOwnProperty,
-  propertyIsEnumerable = Object.prototype.propertyIsEnumerable,
-  handler = (e, t, n) => t in e ? defineProperty(e, t, {
+import { $n as e, An as t, Ct as n, E as r, S as i, Wt as a, Yt as o, Zt as s, b as c, bn as l, f as u, gt as d, j as f, k as p, mt as ee, nr as te, ot as ne, rr as re, rt as ie, ut as m, v as h, x as ae, y as g, z as oe } from "../chunks/vue-i18n.runtime.js";
+import { E as se, w as ce } from "../i18n/en-US-player.js";
+import { D as le, E as ue, F as de, I as fe, J as pe, K as me, N as he, P as ge, R as _e, V as ve, W as ye, X as be, q as xe, v as Se, y as _, z as Ce } from "../chunks/main.js";
+var we = Object.defineProperty,
+  Te = Object.defineProperties,
+  v = Object.getOwnPropertyDescriptors,
+  Ee = Object.getOwnPropertySymbols,
+  De = Object.prototype.hasOwnProperty,
+  y = Object.prototype.propertyIsEnumerable,
+  b = (e, t, n) => t in e ? we(e, t, {
     enumerable: true,
     configurable: true,
     writable: true,
     value: n
   }) : e[t] = n,
   x = (e, t) => {
-    for (var n in t ||= {}) hasOwnProperty.call(t, n) && handler(e, n, t[n]);
-    if (getOwnPropertySymbols) for (var n of getOwnPropertySymbols(t)) propertyIsEnumerable.call(t, n) && handler(e, n, t[n]);
+    for (var n in t ||= {}) De.call(t, n) && b(e, n, t[n]);
+    if (Ee) for (var n of Ee(t)) y.call(t, n) && b(e, n, t[n]);
     return e;
   },
-  S = (e, t) => defineProperties(e, getOwnPropertyDescriptors(t)),
-  C = (e, t, n) => new Promise((fn, i) => {
+  S = (e, t) => Te(e, v(t)),
+  C = (e, t, n) => new Promise((r, i) => {
     var a = e => {
         try {
           s(n.next(e));
@@ -34,7 +34,7 @@ var defineProperty = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? fn(e.value) : Promise.resolve(e.value).then(a, o);
+      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(a, o);
     s((n = n.apply(e, t)).next());
   }),
   Oe = {
@@ -47,7 +47,7 @@ var defineProperty = Object.defineProperty,
     class: `html-preview-frame__label`
   },
   E = [`sandbox`, `srcdoc`],
-  ke = Se(vueJ({
+  ke = Se(f({
     __name: `HtmlPreviewFrame`,
     props: {
       code: {},
@@ -63,47 +63,47 @@ var defineProperty = Object.defineProperty,
       },
       title: {}
     },
-    setup(props) {
-      let propsAlias = props,
+    setup(n) {
+      let r = n,
         {
           t: i
-        } = mainP(),
-        a = vueV(() => {
-          let fallbackValue = propsAlias.code || ``,
-            lowercased = fallbackValue.trim().toLowerCase();
-          return lowercased.startsWith(`<!doctype`) || lowercased.startsWith(`<html`) || lowercased.startsWith(`<body`) ? fallbackValue : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${propsAlias.isDark ? `#020617` : `#ffffff`};\n        color: ${propsAlias.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${fallbackValue}\n  </body>\n</html>`;
+        } = ge(),
+        a = h(() => {
+          let e = r.code || ``,
+            t = e.trim().toLowerCase();
+          return t.startsWith(`<!doctype`) || t.startsWith(`<html`) || t.startsWith(`<body`) ? e : `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <style>\n      html, body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n        background-color: ${r.isDark ? `#020617` : `#ffffff`};\n        color: ${r.isDark ? `#e5e7eb` : `#020617`};\n      }\n      body {\n        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', ui-sans-serif, sans-serif;\n      }\n    </style>\n  </head>\n  <body>\n    ${e}\n  </body>\n</html>`;
         }),
-        o = vueV(() => {
-          return htmlPreviewSandbox = propsAlias.htmlPreviewSandbox, payload = propsAlias.htmlPreviewAllowScripts, typeof htmlPreviewSandbox == `string` ? htmlPreviewSandbox : htmlPreviewSandbox === undefined && true === payload ? `allow-scripts` : ``;
-          var htmlPreviewSandbox, payload;
+        o = h(() => {
+          return e = r.htmlPreviewSandbox, t = r.htmlPreviewAllowScripts, typeof e == `string` ? e : e === undefined && true === t ? `allow-scripts` : ``;
+          var e, t;
         });
-      function s(event) {
-        var payload;
-        event.key !== `Escape` && event.key !== `Esc` || (payload = propsAlias.onClose) == null || payload.call(propsAlias);
+      function s(e) {
+        var t;
+        e.key !== `Escape` && e.key !== `Esc` || (t = r.onClose) == null || t.call(r);
       }
-      return vueUt(() => {
+      return m(() => {
         typeof window < `u` && window.addEventListener(`keydown`, s);
-      }), vueMt(() => {
+      }), ee(() => {
         typeof window < `u` && window.removeEventListener(`keydown`, s);
-      }), (n, renderCache) => (vueGt(), vueB(vueF, {
+      }), (n, s) => (d(), c(u, {
         to: `body`
-      }, [vueY(`div`, {
-        class: vueN([`markstream-vue`, {
-          dark: propsAlias.isDark
+      }, [g(`div`, {
+        class: e([`markstream-vue`, {
+          dark: r.isDark
         }])
-      }, [vueY(`div`, {
+      }, [g(`div`, {
         class: `html-preview-frame__backdrop`,
-        onClick: renderCache[2] ||= e => propsAlias.onClose?.call(propsAlias)
-      }, [vueY(`div`, {
+        onClick: s[2] ||= e => r.onClose?.call(r)
+      }, [g(`div`, {
         class: `html-preview-frame`,
-        onClick: renderCache[1] ||= playerE(() => {}, [`stop`])
-      }, [vueY(`div`, Oe, [vueY(`div`, w, [renderCache[3] ||= vueY(`span`, {
+        onClick: s[1] ||= se(() => {}, [`stop`])
+      }, [g(`div`, Oe, [g(`div`, w, [s[3] ||= g(`span`, {
         class: `html-preview-frame__dot`
-      }, null, -1), vueY(`span`, T, vueRr(propsAlias.title || vueAn(i)(`common.preview`) || `Preview`), 1)]), vueY(`button`, {
+      }, null, -1), g(`span`, T, re(r.title || t(i)(`common.preview`) || `Preview`), 1)]), g(`button`, {
         type: `button`,
         class: `html-preview-frame__close`,
-        onClick: renderCache[0] ||= e => propsAlias.onClose?.call(propsAlias)
-      }, ` × `)]), vueY(`iframe`, {
+        onClick: s[0] ||= e => r.onClose?.call(r)
+      }, ` × `)]), g(`iframe`, {
         class: `html-preview-frame__iframe`,
         sandbox: o.value,
         referrerpolicy: `no-referrer`,
@@ -117,7 +117,7 @@ var defineProperty = Object.defineProperty,
   D = null,
   Ne = null,
   Pe = null,
-  weakMap = new WeakMap(),
+  Fe = new WeakMap(),
   Ie = 0,
   Le = [`data-markstream-enhanced`],
   Re = {
@@ -138,7 +138,7 @@ var defineProperty = Object.defineProperty,
     class: `code-editor-layer`
   },
   We = `__markstreamMonacoPassiveTouchState__`,
-  O = Se(vueJ({
+  O = Se(f({
     __name: `CodeBlockNode`,
     props: {
       node: {},
@@ -213,42 +213,42 @@ var defineProperty = Object.defineProperty,
       estimatedContentHeightPx: {}
     },
     emits: [`previewCode`, `copy`],
-    setup(props, {
-      emit: emit
+    setup(u, {
+      emit: f
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
-        Se = vueZ(),
-        we = vueV(() => {
+      let m = u,
+        se = f,
+        Se = oe(),
+        we = h(() => {
           let e = Se?.vnode.props;
           return !(!e || !e.onPreviewCode && !e.onPreviewCode);
         }),
         {
-          t: translate
-        } = mainP(),
-        v = vueBn(null),
-        Ee = vueBn(null),
-        De = vueBn(false),
-        y = vueBn(mainJ(propsAlias.node.language)),
-        b = vueV(() => mainQ(y.value)),
-        Oe = vueV(() => b.value === `plaintext`),
-        w = vueBn(false),
-        T = vueBn(false),
-        E = vueBn(false),
-        O = vueBn(false),
-        Ge = vueBn(false),
+          t: Te
+        } = ge(),
+        v = l(null),
+        Ee = l(null),
+        De = l(false),
+        y = l(pe(m.node.language)),
+        b = h(() => xe(y.value)),
+        Oe = h(() => b.value === `plaintext`),
+        w = l(false),
+        T = l(false),
+        E = l(false),
+        O = l(false),
+        Ge = l(false),
         k = false,
         Ke = null,
-        A = vueBn(null),
-        j = vueBn(null),
+        A = l(null),
+        j = l(null),
         qe = 0,
         Je = 0,
-        Ye = mainX(),
-        Xe = vueBn(null),
-        M = vueBn(typeof window > `u`);
-      typeof window < `u` && vueWt(() => Ee.value, e => {
-        var payload;
-        if ((payload = Xe.value) == null || payload.destroy(), Xe.value = null, !e) return void (M.value = false);
+        Ye = be(),
+        Xe = l(null),
+        M = l(typeof window > `u`);
+      typeof window < `u` && a(() => Ee.value, e => {
+        var t;
+        if ((t = Xe.value) == null || t.destroy(), Xe.value = null, !e) return void (M.value = false);
         let n = Ye(e, {
           rootMargin: `400px`
         });
@@ -257,9 +257,9 @@ var defineProperty = Object.defineProperty,
         });
       }, {
         immediate: true
-      }), vueOt(() => {
-        var htmlPreviewSandbox;
-        k = true, (htmlPreviewSandbox = Xe.value) == null || htmlPreviewSandbox.destroy(), Xe.value = null;
+      }), ne(() => {
+        var e;
+        k = true, (e = Xe.value) == null || e.destroy(), Xe.value = null;
       });
       let N = null,
         Ze = null,
@@ -284,17 +284,17 @@ var defineProperty = Object.defineProperty,
         nt = () => {},
         rt = () => {},
         I = null,
-        it = () => String(propsAlias.node.language ?? `plaintext`),
+        it = () => String(m.node.language ?? `plaintext`),
         at = () => C(null, null, function* () {}),
-        emptyItems = [],
+        L = [],
         ot = [],
         R = null,
-        z = vueV(() => propsAlias.node.diff),
-        B = vueBn({
+        z = h(() => m.node.diff),
+        B = l({
           removed: 0,
           added: 0
         }),
-        st = vueV(() => `-${B.value.removed} +${B.value.added}`),
+        st = h(() => `-${B.value.removed} +${B.value.added}`),
         ct = Object.freeze({
           enabled: false
         }),
@@ -305,12 +305,12 @@ var defineProperty = Object.defineProperty,
           revealLineCount: 5
         });
       function ut(e) {
-        var payload;
+        var t;
         if (typeof e == `boolean`) return e;
         if (e && typeof e == `object`) {
           let n = e;
           return S(x(x({}, lt), n), {
-            enabled: (payload = n.enabled) == null || payload
+            enabled: (t = n.enabled) == null || t
           });
         }
         return x({}, lt);
@@ -321,17 +321,17 @@ var defineProperty = Object.defineProperty,
           updated: String(t ?? ``)
         };
       }
-      let V = vueV(() => {
-          var htmlPreviewSandbox;
-          let t = propsAlias.monacoOptions ? x({}, propsAlias.monacoOptions) : {};
+      let V = h(() => {
+          var e;
+          let t = m.monacoOptions ? x({}, m.monacoOptions) : {};
           if (!z.value) return t;
           let n = t.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(t.diffHideUnchangedRegions),
             r = t.hideUnchangedRegions === undefined ? undefined : ut(t.hideUnchangedRegions),
-            i = false !== propsAlias.stream && false !== propsAlias.loading,
+            i = false !== m.stream && false !== m.loading,
             a = i ? x({}, ct) : n,
             o = i ? x({}, ct) : r,
             s = x({}, t.experimental ?? {}),
-            fallbackValue = t.diffUnchangedRegionStyle ?? `line-info`;
+            c = t.diffUnchangedRegionStyle ?? `line-info`;
           return S(x(S(x(x({}, {
             maxComputationTime: 0,
             diffAlgorithm: `legacy`,
@@ -351,10 +351,10 @@ var defineProperty = Object.defineProperty,
             hideCursorInOverviewRuler: true,
             scrollBeyondLastLine: false,
             diffHideUnchangedRegions: a,
-            useInlineViewWhenSpaceIsLimited: (htmlPreviewSandbox = t.useInlineViewWhenSpaceIsLimited) != null && htmlPreviewSandbox,
+            useInlineViewWhenSpaceIsLimited: (e = t.useInlineViewWhenSpaceIsLimited) != null && e,
             diffLineStyle: `background`,
             diffAppearance: `auto`,
-            diffUnchangedRegionStyle: fallbackValue,
+            diffUnchangedRegionStyle: c,
             diffHunkActionsOnHover: false,
             experimental: s
           }), t), {
@@ -365,74 +365,74 @@ var defineProperty = Object.defineProperty,
             diffHideUnchangedRegions: a
           });
         }),
-        ft = vueV(() => z.value ? `diff` : `single`),
-        pt = vueBn(ft.value),
-        mt = vueBn(false),
-        H = vueBn(false),
-        ht = vueBn(false),
-        gt = vueV(() => {
-          let e = propsAlias.monacoOptions?.wordWrap;
+        ft = h(() => z.value ? `diff` : `single`),
+        pt = l(ft.value),
+        mt = l(false),
+        H = l(false),
+        ht = l(false),
+        gt = h(() => {
+          let e = m.monacoOptions?.wordWrap;
           return e == null || String(e) !== `off`;
         }),
-        _t = vueV(() => !(mt.value || !ht.value && (mainF() || H.value))),
-        vt = vueBn(false);
+        _t = h(() => !(mt.value || !ht.value && (de() || H.value))),
+        vt = l(false);
       typeof window < `u` && C(null, null, function* () {
         try {
-          let e = yield mainZ();
+          let e = yield Ce();
           if (k) return;
           if (!e) return void (mt.value = true);
-          let useMonaco = e.useMonaco,
-            detectLanguage = e.detectLanguage;
-          if (typeof detectLanguage == `function` && (it = detectLanguage), typeof useMonaco == `function`) {
+          let t = e.useMonaco,
+            n = e.detectLanguage;
+          if (typeof n == `function` && (it = n), typeof t == `function`) {
             let e = pn();
-            if (e && propsAlias.themes && Array.isArray(propsAlias.themes) && !propsAlias.themes.includes(e)) throw Error(`Preferred theme not in provided themes array`);
+            if (e && m.themes && Array.isArray(m.themes) && !m.themes.includes(e)) throw Error(`Preferred theme not in provided themes array`);
             R = _n();
-            let useMonacoResult = useMonaco(R);
-            N = useMonacoResult.createEditor || N, Ze = useMonacoResult.createDiffEditor || Ze, Qe = useMonacoResult.updateCode || Qe, $e = useMonacoResult.updateDiff || $e, et = useMonacoResult.getEditor || et, P = useMonacoResult.getEditorView || P, F = useMonacoResult.getDiffEditorView || F, tt = useMonacoResult.cleanupEditor || tt, nt = useMonacoResult.safeClean || useMonacoResult.cleanupEditor || nt, rt = useMonacoResult.refreshDiffPresentation || rt, at = useMonacoResult.setTheme || at, Ge.value = true, !k && v.value && (yield ln(v.value));
+            let n = t(R);
+            N = n.createEditor || N, Ze = n.createDiffEditor || Ze, Qe = n.updateCode || Qe, $e = n.updateDiff || $e, et = n.getEditor || et, P = n.getEditorView || P, F = n.getDiffEditorView || F, tt = n.cleanupEditor || tt, nt = n.safeClean || n.cleanupEditor || nt, rt = n.refreshDiffPresentation || rt, at = n.setTheme || at, Ge.value = true, !k && v.value && (yield ln(v.value));
           }
         } catch {
           if (k) return;
           mt.value = true;
         }
       });
-      let U = vueBn(typeof propsAlias.monacoOptions?.fontSize == `number` ? propsAlias.monacoOptions.fontSize : NaN),
-        W = vueBn(U.value),
-        yt = vueV(() => {
+      let U = l(typeof m.monacoOptions?.fontSize == `number` ? m.monacoOptions.fontSize : NaN),
+        W = l(U.value),
+        yt = h(() => {
           let e = U.value,
             t = W.value;
           return typeof e == `number` && Number.isFinite(e) && e > 0 && typeof t == `number` && Number.isFinite(t) && t > 0;
         }),
-        bt = vueV(() => {
-          let e = propsAlias.monacoOptions?.fontSize;
+        bt = h(() => {
+          let e = m.monacoOptions?.fontSize;
           if (typeof e == `number` && Number.isFinite(e) && e > 0) return e;
           let t = W.value;
           return typeof t == `number` && Number.isFinite(t) && t > 0 ? t : 14;
         }),
-        xt = vueV(() => {
-          let e = propsAlias.monacoOptions?.lineHeight;
+        xt = h(() => {
+          let e = m.monacoOptions?.lineHeight;
           return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : Math.max(12, Math.round(1.35 * bt.value));
         }),
-        St = vueV(() => {
-          let e = propsAlias.monacoOptions?.tabSize;
+        St = h(() => {
+          let e = m.monacoOptions?.tabSize;
           return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : 4;
         }),
-        Ct = vueV(() => {
-          let e = propsAlias.monacoOptions?.padding;
+        Ct = h(() => {
+          let e = m.monacoOptions?.padding;
           return {
             top: typeof e?.top == `number` && Number.isFinite(e.top) && e.top > 0 ? e.top : 0,
             bottom: typeof e?.bottom == `number` && Number.isFinite(e.bottom) && e.bottom > 0 ? e.bottom : 0
           };
         }),
-        G = vueV(() => {
-          let estimatedContentHeightPx = propsAlias.estimatedContentHeightPx;
-          return typeof estimatedContentHeightPx == `number` && Number.isFinite(estimatedContentHeightPx) && estimatedContentHeightPx > 0 ? estimatedContentHeightPx : null;
+        G = h(() => {
+          let e = m.estimatedContentHeightPx;
+          return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : null;
         }),
-        wt = vueV(() => {
-          let estimatedHeightPx = propsAlias.estimatedHeightPx;
-          return typeof estimatedHeightPx == `number` && Number.isFinite(estimatedHeightPx) && estimatedHeightPx > 0 ? estimatedHeightPx : null;
+        wt = h(() => {
+          let e = m.estimatedHeightPx;
+          return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : null;
         }),
-        Tt = vueV(() => {
-          let e = propsAlias.monacoOptions?.fontFamily;
+        Tt = h(() => {
+          let e = m.monacoOptions?.fontFamily;
           return x(x({
             fontSize: `${bt.value}px`,
             lineHeight: `${xt.value}px`,
@@ -449,13 +449,13 @@ var defineProperty = Object.defineProperty,
             "--markstream-code-font-family": e.trim()
           } : {});
         }),
-        Et = vueV(() => G.value != null && (!H.value || K() != null)),
-        Dt = vueV(() => {
+        Et = h(() => G.value != null && (!H.value || K() != null)),
+        Dt = h(() => {
           if (Et.value) return {
             minHeight: `${G.value}px`
           };
         }),
-        Ot = vueBn(null);
+        Ot = l(null);
       function K() {
         let e = Ot.value;
         return typeof e == `number` && Number.isFinite(e) && e > 0 ? Math.round(e) : null;
@@ -467,13 +467,13 @@ var defineProperty = Object.defineProperty,
       }
       function At() {
         return new Promise(e => {
-          mainY(() => e());
+          _(() => e());
         });
       }
       function jt() {
-        var htmlPreviewSandbox;
+        var e;
         try {
-          let t = z.value ? (htmlPreviewSandbox = F())?.getModifiedEditor?.call(htmlPreviewSandbox) ?? F() : P(),
+          let t = z.value ? (e = F())?.getModifiedEditor?.call(e) ?? F() : P(),
             n = et()?.EditorOption?.fontInfo;
           if (t && n != null) {
             let e = t.getOption?.call(t, n)?.fontSize;
@@ -483,11 +483,11 @@ var defineProperty = Object.defineProperty,
         try {
           let e = v.value;
           if (e) {
-            let selector = e.querySelector(`.view-lines .view-line`);
-            if (selector) try {
+            let t = e.querySelector(`.view-lines .view-line`);
+            if (t) try {
               if (typeof window < `u` && typeof window.getComputedStyle == `function`) {
-                let fontSize = window.getComputedStyle(selector).fontSize,
-                  n = fontSize && fontSize.match(/^(\d+(?:\.\d+)?)/);
+                let e = window.getComputedStyle(t).fontSize,
+                  n = e && e.match(/^(\d+(?:\.\d+)?)/);
                 if (n) return Number.parseFloat(n[1]);
               }
             } catch {}
@@ -495,11 +495,11 @@ var defineProperty = Object.defineProperty,
         } catch {}
         return null;
       }
-      function Mt(el) {
+      function Mt(e) {
         try {
           let t = et()?.EditorOption?.lineHeight;
           if (t != null) {
-            let n = el?.getOption?.call(el, t);
+            let n = e?.getOption?.call(e, t);
             if (typeof n == `number` && n > 0) return n;
           }
         } catch {}
@@ -507,9 +507,9 @@ var defineProperty = Object.defineProperty,
           try {
             let e = v.value;
             if (!e) return null;
-            let selector = e.querySelector(`.view-lines .view-line`);
-            if (selector) {
-              let e = Math.ceil(selector.getBoundingClientRect().height);
+            let t = e.querySelector(`.view-lines .view-line`);
+            if (t) {
+              let e = Math.ceil(t.getBoundingClientRect().height);
               if (e > 0) return e;
             }
           } catch {}
@@ -537,10 +537,10 @@ var defineProperty = Object.defineProperty,
       function Pt(e, t) {
         return typeof e != `number` || typeof t != `number` || e < 1 || t < e ? 0 : t - e + 1;
       }
-      function Ft(text) {
-        if (!text) return [];
-        let parts = text.split(/\r?\n/);
-        return parts.length === 1 && parts[0] === `` ? [] : parts;
+      function Ft(e) {
+        if (!e) return [];
+        let t = e.split(/\r?\n/);
+        return t.length === 1 && t[0] === `` ? [] : t;
       }
       function It() {
         z.value ? B.value = function (e, t) {
@@ -555,7 +555,7 @@ var defineProperty = Object.defineProperty,
             removed: Math.max(0, a - i + 1),
             added: Math.max(0, o - i + 1)
           };
-        }(String(propsAlias.node.originalCode ?? ``), String(propsAlias.node.updatedCode ?? ``)) : B.value = {
+        }(String(m.node.originalCode ?? ``), String(m.node.updatedCode ?? ``)) : B.value = {
           removed: 0,
           added: 0
         };
@@ -567,7 +567,7 @@ var defineProperty = Object.defineProperty,
           if (!Array.isArray(t)) return void It();
           let n = 0,
             r = 0;
-          for (let htmlPreviewSandbox of t) n += Pt(htmlPreviewSandbox.originalStartLineNumber, htmlPreviewSandbox.originalEndLineNumber), r += Pt(htmlPreviewSandbox.modifiedStartLineNumber, htmlPreviewSandbox.modifiedEndLineNumber);
+          for (let e of t) n += Pt(e.originalStartLineNumber, e.originalEndLineNumber), r += Pt(e.modifiedStartLineNumber, e.modifiedEndLineNumber);
           B.value = {
             removed: n,
             added: r
@@ -582,7 +582,7 @@ var defineProperty = Object.defineProperty,
       function Rt() {
         if (Number.isFinite(W.value) && W.value > 0 && Number.isFinite(U.value)) return W.value;
         let e = jt();
-        return typeof propsAlias.monacoOptions?.fontSize == `number` ? (U.value = propsAlias.monacoOptions.fontSize, W.value = propsAlias.monacoOptions.fontSize, W.value) : e && e > 0 ? (U.value = e, W.value = e, e) : (U.value = 12, W.value = 12, 12);
+        return typeof m.monacoOptions?.fontSize == `number` ? (U.value = m.monacoOptions.fontSize, W.value = m.monacoOptions.fontSize, W.value) : e && e > 0 ? (U.value = e, W.value = e, e) : (U.value = 12, W.value = 12, 12);
       }
       function zt() {
         let e = Rt(),
@@ -598,7 +598,7 @@ var defineProperty = Object.defineProperty,
         Rt(), Number.isFinite(U.value) && (W.value = U.value);
       }
       function Ht() {
-        var htmlPreviewSandbox, payload, n, parentElement, i;
+        var e, t, n, r, i;
         try {
           let a = z.value ? F() : null,
             o = z.value ? a : P();
@@ -606,21 +606,21 @@ var defineProperty = Object.defineProperty,
           if (a?.getOriginalEditor && a?.getModifiedEditor) {
             let i = a.getOriginalEditor?.call(a),
               o = a.getModifiedEditor?.call(a);
-            (htmlPreviewSandbox = i?.layout) == null || htmlPreviewSandbox.call(i), (payload = o?.layout) == null || payload.call(o);
-            let fallbackValue = i?.getContentHeight?.call(i) || 0,
+            (e = i?.layout) == null || e.call(i), (t = o?.layout) == null || t.call(o);
+            let s = i?.getContentHeight?.call(i) || 0,
               c = o?.getContentHeight?.call(o) || 0,
-              l = Math.max(fallbackValue, c);
+              l = Math.max(s, c);
             if (l > 0) return Math.ceil(l + 1);
             let u = (n = i?.getModel?.call(i))?.getLineCount?.call(n) || 1,
-              d = (parentElement = o?.getModel?.call(o))?.getLineCount?.call(parentElement) || 1,
+              d = (r = o?.getModel?.call(o))?.getLineCount?.call(r) || 1,
               f = Math.max(u, d),
               p = Math.max(Mt(i), Mt(o));
             return Math.ceil(f * (p + 1.5) + 0 + 1);
           }
           if (o?.getContentHeight) {
             (i = o?.layout) == null || i.call(o);
-            let contentHeight = o.getContentHeight();
-            if (contentHeight > 0) return Math.ceil(contentHeight + 1);
+            let e = o.getContentHeight();
+            if (e > 0) return Math.ceil(e + 1);
           }
           let s = o?.getModel?.call(o),
             c = 1;
@@ -631,14 +631,14 @@ var defineProperty = Object.defineProperty,
           return null;
         }
       }
-      function Ut(items) {
-        let trimmed = String(items ?? ``).trim(),
-          n = trimmed.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1];
+      function Ut(e) {
+        let t = String(e ?? ``).trim(),
+          n = t.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1];
         if (n) {
-          let e = n.length === 3 ? n.split(``).map(item => `${item}${item}`).join(``) : n;
+          let e = n.length === 3 ? n.split(``).map(e => `${e}${e}`).join(``) : n;
           return .2126 * Number.parseInt(e.slice(0, 2), 16) + .7152 * Number.parseInt(e.slice(2, 4), 16) + .0722 * Number.parseInt(e.slice(4, 6), 16);
         }
-        let r = trimmed.match(/\d+(?:\.\d+)?/g);
+        let r = t.match(/\d+(?:\.\d+)?/g);
         if (!r || r.length < 3) return null;
         let [i, a, o] = r.slice(0, 3).map(Number);
         return .2126 * i + .7152 * a + .0722 * o;
@@ -648,53 +648,53 @@ var defineProperty = Object.defineProperty,
           t = Ee.value;
         if (!e || !t) return;
         let n = e,
-          fallbackValue = e.querySelector(`.monaco-editor`) || e,
-          fallbackValueValue = fallbackValue.querySelector(`.monaco-editor-background`) || fallbackValue,
-          a = fallbackValue.querySelector(`.view-lines`) || fallbackValue,
+          r = e.querySelector(`.monaco-editor`) || e,
+          i = r.querySelector(`.monaco-editor-background`) || r,
+          a = r.querySelector(`.view-lines`) || r,
           o = null,
-          resolvedValue = null,
+          s = null,
           c = null;
         try {
-          typeof window < `u` && typeof window.getComputedStyle == `function` && (o = window.getComputedStyle(fallbackValue), resolvedValue = fallbackValueValue === fallbackValue ? o : window.getComputedStyle(fallbackValueValue), c = a === fallbackValue ? o : window.getComputedStyle(a));
+          typeof window < `u` && typeof window.getComputedStyle == `function` && (o = window.getComputedStyle(r), s = i === r ? o : window.getComputedStyle(i), c = a === r ? o : window.getComputedStyle(a));
         } catch {
-          o = null, resolvedValue = null, c = null;
+          o = null, s = null, c = null;
         }
-        let trimmed = String(o?.getPropertyValue(`--vscode-editor-foreground`) ?? ``).trim(),
+        let l = String(o?.getPropertyValue(`--vscode-editor-foreground`) ?? ``).trim(),
           u = String(o?.getPropertyValue(`--vscode-editor-background`) ?? ``).trim(),
           d = String(o?.getPropertyValue(`--vscode-editor-selectionBackground`) ?? o?.getPropertyValue(`--vscode-editor-hoverHighlightBackground`) ?? ``).trim(),
-          trimmedValue = trimmed || String(c?.color ?? o?.color ?? ``).trim(),
-          p = u || String(resolvedValue?.backgroundColor ?? o?.backgroundColor ?? ``).trim();
-        z.value ? (trimmedValue ? (t.style.setProperty(`--markstream-diff-editor-fg`, trimmedValue), n.style.setProperty(`--vscode-editor-foreground`, trimmedValue), n.style.setProperty(`--stream-monaco-editor-fg`, trimmedValue)) : (t.style.removeProperty(`--markstream-diff-editor-fg`), n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--stream-monaco-editor-fg`)), p ? (t.style.setProperty(`--markstream-diff-editor-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg-soft`, p), t.style.setProperty(`--markstream-diff-panel-bg-strong`, p), n.style.setProperty(`--vscode-editor-background`, p), n.style.setProperty(`--stream-monaco-editor-bg`, p), n.style.setProperty(`--stream-monaco-fixed-editor-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg-soft`, p), n.style.setProperty(`--stream-monaco-panel-bg-strong`, p), n.style.backgroundColor = p) : (t.style.removeProperty(`--markstream-diff-editor-bg`), t.style.removeProperty(`--markstream-diff-panel-bg`), t.style.removeProperty(`--markstream-diff-panel-bg-soft`), t.style.removeProperty(`--markstream-diff-panel-bg-strong`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--stream-monaco-editor-bg`), n.style.removeProperty(`--stream-monaco-fixed-editor-bg`), n.style.removeProperty(`--stream-monaco-panel-bg`), n.style.removeProperty(`--stream-monaco-panel-bg-soft`), n.style.removeProperty(`--stream-monaco-panel-bg-strong`), n.style.backgroundColor = ``), d ? n.style.setProperty(`--vscode-editor-selectionBackground`, d) : n.style.removeProperty(`--vscode-editor-selectionBackground`)) : function (e, t, n) {
+          f = l || String(c?.color ?? o?.color ?? ``).trim(),
+          p = u || String(s?.backgroundColor ?? o?.backgroundColor ?? ``).trim();
+        z.value ? (f ? (t.style.setProperty(`--markstream-diff-editor-fg`, f), n.style.setProperty(`--vscode-editor-foreground`, f), n.style.setProperty(`--stream-monaco-editor-fg`, f)) : (t.style.removeProperty(`--markstream-diff-editor-fg`), n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--stream-monaco-editor-fg`)), p ? (t.style.setProperty(`--markstream-diff-editor-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg`, p), t.style.setProperty(`--markstream-diff-panel-bg-soft`, p), t.style.setProperty(`--markstream-diff-panel-bg-strong`, p), n.style.setProperty(`--vscode-editor-background`, p), n.style.setProperty(`--stream-monaco-editor-bg`, p), n.style.setProperty(`--stream-monaco-fixed-editor-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg`, p), n.style.setProperty(`--stream-monaco-panel-bg-soft`, p), n.style.setProperty(`--stream-monaco-panel-bg-strong`, p), n.style.backgroundColor = p) : (t.style.removeProperty(`--markstream-diff-editor-bg`), t.style.removeProperty(`--markstream-diff-panel-bg`), t.style.removeProperty(`--markstream-diff-panel-bg-soft`), t.style.removeProperty(`--markstream-diff-panel-bg-strong`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--stream-monaco-editor-bg`), n.style.removeProperty(`--stream-monaco-fixed-editor-bg`), n.style.removeProperty(`--stream-monaco-panel-bg`), n.style.removeProperty(`--stream-monaco-panel-bg-soft`), n.style.removeProperty(`--stream-monaco-panel-bg-strong`), n.style.backgroundColor = ``), d ? n.style.setProperty(`--vscode-editor-selectionBackground`, d) : n.style.removeProperty(`--vscode-editor-selectionBackground`)) : function (e, t, n) {
           if (!Oe.value) return false;
           let r = Ut(e),
             i = Ut(t);
           return n ? r != null && r > 170 || i != null && i < 110 : r != null && r < 85 || i != null && i > 190;
-        }(p, trimmedValue, t.classList.contains(`is-dark`)) ? (n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--vscode-editor-selectionBackground`)) : (trimmedValue && n.style.setProperty(`--vscode-editor-foreground`, trimmedValue), p && n.style.setProperty(`--vscode-editor-background`, p), d && n.style.setProperty(`--vscode-editor-selectionBackground`, d));
+        }(p, f, t.classList.contains(`is-dark`)) ? (n.style.removeProperty(`--vscode-editor-foreground`), n.style.removeProperty(`--vscode-editor-background`), n.style.removeProperty(`--vscode-editor-selectionBackground`)) : (f && n.style.setProperty(`--vscode-editor-foreground`, f), p && n.style.setProperty(`--vscode-editor-background`, p), d && n.style.setProperty(`--vscode-editor-selectionBackground`, d));
       }
       let Gt = /auto|scroll|overlay/i;
-      function q(el, t, n) {
+      function q(e, t, n) {
         if (typeof window > `u` || z.value) return;
         let r = Math.ceil(n) - Math.ceil(t);
         if (!r) return;
         let i = function (e) {
           if (typeof window > `u`) return null;
-          let documentValue = e?.ownerDocument ?? document,
-            fallbackValue = documentValue.scrollingElement || documentValue.documentElement || documentValue.body,
+          let t = e?.ownerDocument ?? document,
+            n = t.scrollingElement || t.documentElement || t.body,
             r = e?.parentElement ?? null;
-          for (; r && r !== documentValue.body && r !== fallbackValue;) {
-            let computedStyle = window.getComputedStyle(r),
-              lowercased = (computedStyle.overflowY || ``).toLowerCase(),
-              toLowerCase = (computedStyle.overflow || ``).toLowerCase();
-            if (Gt.test(lowercased) || Gt.test(toLowerCase)) return r;
+          for (; r && r !== t.body && r !== n;) {
+            let e = window.getComputedStyle(r),
+              t = (e.overflowY || ``).toLowerCase(),
+              n = (e.overflow || ``).toLowerCase();
+            if (Gt.test(t) || Gt.test(n)) return r;
             r = r.parentElement;
           }
-          return fallbackValue;
-        }(el);
+          return n;
+        }(e);
         if (!i) return;
-        let documentValue = el.ownerDocument ?? document,
-          fallbackValue = i === documentValue.body || i === documentValue.documentElement || i === documentValue.scrollingElement,
-          s = fallbackValue ? 0 : i.getBoundingClientRect().top;
-        el.getBoundingClientRect().top - s >= 0 || (fallbackValue && typeof window.scrollBy == `function` ? window.scrollBy(0, r) : i.scrollTop += r);
+        let a = e.ownerDocument ?? document,
+          o = i === a.body || i === a.documentElement || i === a.scrollingElement,
+          s = o ? 0 : i.getBoundingClientRect().top;
+        e.getBoundingClientRect().top - s >= 0 || (o && typeof window.scrollBy == `function` ? window.scrollBy(0, r) : i.scrollTop += r);
       }
       function Kt() {
         try {
@@ -713,14 +713,14 @@ var defineProperty = Object.defineProperty,
         } catch {}
       }
       function qt() {
-        for (var htmlPreviewSandbox, payload; emptyItems.length > 0;) try {
-          (payload = (htmlPreviewSandbox = emptyItems.pop())?.dispose) == null || payload.call(htmlPreviewSandbox);
+        for (var e, t; L.length > 0;) try {
+          (t = (e = L.pop())?.dispose) == null || t.call(e);
         } catch {}
-        Ke != null && (mainD(Ke), Ke = null);
+        Ke != null && (le(Ke), Ke = null);
       }
       function J() {
-        for (var htmlPreviewSandbox; ot.length > 0;) try {
-          (htmlPreviewSandbox = ot.pop()) == null || htmlPreviewSandbox();
+        for (var e; ot.length > 0;) try {
+          (e = ot.pop()) == null || e();
         } catch {}
       }
       function Y(e = false) {
@@ -732,15 +732,15 @@ var defineProperty = Object.defineProperty,
               n = Jt(),
               r = Math.ceil(e.getBoundingClientRect?.call(e).height || 0),
               i = z.value ? function () {
-                var htmlPreviewSandbox, payload;
+                var e, t;
                 try {
                   let n = F(),
                     r = n?.getOriginalEditor?.call(n),
                     i = n?.getModifiedEditor?.call(n);
                   if (!r || !i) return null;
-                  let fallbackValue = (htmlPreviewSandbox = r.getModel?.call(r))?.getLineCount?.call(htmlPreviewSandbox) || 1,
-                    o = (payload = i.getModel?.call(i))?.getLineCount?.call(payload) || 1,
-                    s = Math.max(fallbackValue, o),
+                  let a = (e = r.getModel?.call(r))?.getLineCount?.call(e) || 1,
+                    o = (t = i.getModel?.call(i))?.getLineCount?.call(t) || 1,
+                    s = Math.max(a, o),
                     c = Math.max(Mt(r), Mt(i)),
                     l = Math.max(Nt(r), Nt(i));
                   return Math.ceil(s * (c + 1.5) + l + 0 + 1);
@@ -748,37 +748,37 @@ var defineProperty = Object.defineProperty,
                   return null;
                 }
               }() : null,
-              a = z.value && function (el) {
+              a = z.value && function (e) {
                 if (typeof window > `u`) return false;
-                let selectorAll = el.querySelectorAll(`.editor.modified .diff-hidden-lines .center, .stream-monaco-diff-unchanged-bridge`);
-                for (let htmlPreviewSandbox of Array.from(selectorAll)) {
-                  if (!(htmlPreviewSandbox instanceof HTMLElement)) continue;
-                  let computedStyle = window.getComputedStyle(htmlPreviewSandbox);
-                  if (computedStyle.display === `none` || computedStyle.visibility === `hidden` || Number.parseFloat(computedStyle.opacity || `1`) <= .01) continue;
-                  let boundingClientRect = htmlPreviewSandbox.getBoundingClientRect();
-                  if (!(boundingClientRect.width <= 0 || boundingClientRect.height <= 0)) return true;
+                let t = e.querySelectorAll(`.editor.modified .diff-hidden-lines .center, .stream-monaco-diff-unchanged-bridge`);
+                for (let e of Array.from(t)) {
+                  if (!(e instanceof HTMLElement)) continue;
+                  let t = window.getComputedStyle(e);
+                  if (t.display === `none` || t.visibility === `hidden` || Number.parseFloat(t.opacity || `1`) <= .01) continue;
+                  let n = e.getBoundingClientRect();
+                  if (!(n.width <= 0 || n.height <= 0)) return true;
                 }
                 return false;
               }(e);
             if (a || (j.value = null), Je > 0 && (Je--, A.value != null)) return void q(e, t, Q(e, A.value, n));
-            let o = z.value ? function (el) {
+            let o = z.value ? function (e) {
                 if (typeof window > `u`) return null;
                 try {
-                  let boundingClientRect = el.getBoundingClientRect();
-                  if (boundingClientRect.height <= 0) return null;
+                  let t = e.getBoundingClientRect();
+                  if (t.height <= 0) return null;
                   let n = [`.editor.original .view-lines .view-line`, `.editor.modified .view-lines .view-line`, `.editor.original .view-zones > div`, `.editor.modified .view-zones > div`, `.editor.original .margin-view-zones > div`, `.editor.modified .margin-view-zones > div`, `.editor.original .diff-hidden-lines`, `.editor.modified .diff-hidden-lines`, `.stream-monaco-diff-unchanged-bridge`],
                     r = 0;
-                  for (let i of Array.from(el.querySelectorAll(n.join(`,`)))) {
+                  for (let i of Array.from(e.querySelectorAll(n.join(`,`)))) {
                     if (!(i instanceof HTMLElement)) continue;
-                    let computedStyle = window.getComputedStyle(i);
-                    if (computedStyle.display === `none` || computedStyle.visibility === `hidden` || Number.parseFloat(computedStyle.opacity || `1`) <= .01) continue;
-                    let boundingClientRectResult = i.getBoundingClientRect();
-                    boundingClientRectResult.height <= 0 || boundingClientRectResult.bottom <= boundingClientRect.top || (r = Math.max(r, boundingClientRectResult.bottom - boundingClientRect.top));
+                    let e = window.getComputedStyle(i);
+                    if (e.display === `none` || e.visibility === `hidden` || Number.parseFloat(e.opacity || `1`) <= .01) continue;
+                    let n = i.getBoundingClientRect();
+                    n.height <= 0 || n.bottom <= t.top || (r = Math.max(r, n.bottom - t.top));
                   }
                   if (r > 0) return Math.ceil(r + 1);
-                  let selector = el.querySelector(`.monaco-diff-editor`),
-                    fallbackValue = selector?.getBoundingClientRect?.call(selector).height ?? 0;
-                  return fallbackValue > 0 ? Math.ceil(fallbackValue + 1) : null;
+                  let i = e.querySelector(`.monaco-diff-editor`),
+                    a = i?.getBoundingClientRect?.call(i).height ?? 0;
+                  return a > 0 ? Math.ceil(a + 1) : null;
                 } catch {
                   return null;
                 }
@@ -804,8 +804,8 @@ var defineProperty = Object.defineProperty,
             }
             let l = K();
             if (l != null) return void q(e, t, Q(e, l, n));
-            let float = Number.parseFloat(e.style.height);
-            !Number.isNaN(float) && float > 0 ? q(e, t, Q(e, float, n)) : z.value || q(e, t, Q(e, n, n));
+            let u = Number.parseFloat(e.style.height);
+            !Number.isNaN(u) && u > 0 ? q(e, t, Q(e, u, n)) : z.value || q(e, t, Q(e, n, n));
           } catch {}
         }());
       }
@@ -813,125 +813,125 @@ var defineProperty = Object.defineProperty,
         if (!z.value) return void J();
         let e = v.value;
         if (!e) return void J();
-        let selector = e.querySelector(`.monaco-diff-editor`);
-        if (!selector || selector.classList.contains(`side-by-side`)) return void J();
-        let n = Array.from(selector.querySelectorAll(`.editor.original .diff-hidden-lines`)),
-          r = Array.from(selector.querySelectorAll(`.editor.modified .diff-hidden-lines`)),
+        let t = e.querySelector(`.monaco-diff-editor`);
+        if (!t || t.classList.contains(`side-by-side`)) return void J();
+        let n = Array.from(t.querySelectorAll(`.editor.original .diff-hidden-lines`)),
+          r = Array.from(t.querySelectorAll(`.editor.modified .diff-hidden-lines`)),
           i = Math.min(n.length, r.length);
         for (let e = 0; e < i; e++) {
           let t = r[e],
-            selectorResult = t.querySelector(`a`),
+            n = t.querySelector(`a`),
             i = t.querySelector(`.center > div:first-child`),
             a = t.querySelector(`.center`);
-          if (!selectorResult || !i || !a || a.querySelector(`.markstream-inline-fold-proxy`)) continue;
-          let element = document.createElement(`button`);
-          element.type = `button`, element.className = `markstream-inline-fold-proxy`, element.dataset.markstreamInlineFoldProxy = `true`;
-          let fallbackValue = selectorResult.getAttribute(`title`) || `Show Unchanged Region`;
-          element.title = fallbackValue, element.setAttribute(`aria-label`, fallbackValue);
-          let c = event => {
-              event.preventDefault(), event.stopPropagation();
+          if (!n || !i || !a || a.querySelector(`.markstream-inline-fold-proxy`)) continue;
+          let o = document.createElement(`button`);
+          o.type = `button`, o.className = `markstream-inline-fold-proxy`, o.dataset.markstreamInlineFoldProxy = `true`;
+          let s = n.getAttribute(`title`) || `Show Unchanged Region`;
+          o.title = s, o.setAttribute(`aria-label`, s);
+          let c = e => {
+              e.preventDefault(), e.stopPropagation();
             },
-            l = event => {
-              event.preventDefault(), event.stopPropagation(), selectorResult.click(), mainY(() => Z());
+            l = e => {
+              e.preventDefault(), e.stopPropagation(), n.click(), _(() => Z());
             },
-            u = event => {
-              event.key !== `Enter` && event.key !== ` ` || (event.preventDefault(), event.stopPropagation(), selectorResult.click(), mainY(() => Z()));
+            u = e => {
+              e.key !== `Enter` && e.key !== ` ` || (e.preventDefault(), e.stopPropagation(), n.click(), _(() => Z()));
             };
-          element.addEventListener(`mousedown`, c), element.addEventListener(`click`, l), element.addEventListener(`keydown`, u), a.appendChild(element), ot.push(() => {
-            element.removeEventListener(`mousedown`, c), element.removeEventListener(`click`, l), element.removeEventListener(`keydown`, u), element.parentElement === a && a.removeChild(element);
+          o.addEventListener(`mousedown`, c), o.addEventListener(`click`, l), o.addEventListener(`keydown`, u), a.appendChild(o), ot.push(() => {
+            o.removeEventListener(`mousedown`, c), o.removeEventListener(`click`, l), o.removeEventListener(`keydown`, u), o.parentElement === a && a.removeChild(o);
           });
         }
       }
       function Z(e = false) {
-        Ke ??= mainY(() => {
-          Ke = null, mainY(() => {
+        Ke ??= _(() => {
+          Ke = null, _(() => {
             X(), Y(e);
           });
         });
       }
-      function Q(el, t, n, r = {}) {
+      function Q(e, t, n, r = {}) {
         let i = kt(Math.min(t, n), true === r.clearEstimatedFloor),
           a = K();
-        if (el.style.minHeight = a == null ? `0px` : `${Math.min(a, Math.ceil(n))}px`, el.style.height = `${i}px`, el.style.maxHeight = `${Math.ceil(n)}px`, z.value) el.style.overflow = `hidden`;else {
+        if (e.style.minHeight = a == null ? `0px` : `${Math.min(a, Math.ceil(n))}px`, e.style.height = `${i}px`, e.style.maxHeight = `${Math.ceil(n)}px`, z.value) e.style.overflow = `hidden`;else {
           let r = t > n + 1;
-          el.style.overflow = r ? `auto` : `hidden`;
+          e.style.overflow = r ? `auto` : `hidden`;
         }
         return i;
       }
       function Jt() {
-        let fallbackValue = propsAlias.monacoOptions?.MAX_HEIGHT ?? 500;
-        if (typeof fallbackValue == `number`) return fallbackValue;
-        let t = String(fallbackValue).match(/^(\d+(?:\.\d+)?)/);
+        let e = m.monacoOptions?.MAX_HEIGHT ?? 500;
+        if (typeof e == `number`) return e;
+        let t = String(e).match(/^(\d+(?:\.\d+)?)/);
         return t ? Number.parseFloat(t[1]) : 500;
       }
-      let Yt = vueV(() => propsAlias.isShowPreview && (y.value === `html` || y.value === `svg`));
-      vueWt(() => propsAlias.node.language, e => {
-        y.value = mainJ(e);
-      }), vueWt(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, z.value], () => {
-        It(), mainY(() => Lt());
+      let Yt = h(() => m.isShowPreview && (y.value === `html` || y.value === `svg`));
+      a(() => m.node.language, e => {
+        y.value = pe(e);
+      }), a(() => [m.node.originalCode, m.node.updatedCode, z.value], () => {
+        It(), _(() => Lt());
       }, {
         immediate: true
-      }), vueWt(() => [propsAlias.node.originalCode, propsAlias.node.updatedCode, b.value, z.value], e => C(null, [e], function* ([e, t, n, r]) {
-        if (false === propsAlias.stream || !r) return;
+      }), a(() => [m.node.originalCode, m.node.updatedCode, b.value, z.value], e => C(null, [e], function* ([e, t, n, r]) {
+        if (false === m.stream || !r) return;
         if (N && !E.value && v.value) try {
           yield ln(v.value);
         } catch {}
         let i = dt(String(e ?? ``), String(t ?? ``)),
-          a = false === propsAlias.loading;
+          a = false === m.loading;
         if (a && vn(), yield $e(i.original, i.updated, b.value), a) {
           if (k || !z.value) return;
           rt(), X(), Lt(), Z();
         }
-        w.value && mainY(() => Kt());
-      })), vueWt(() => propsAlias.node.code, e => C(null, null, function* () {
-        if (false !== propsAlias.stream && (y.value ||= mainJ(it(e)), !z.value)) {
+        w.value && _(() => Kt());
+      })), a(() => m.node.code, e => C(null, null, function* () {
+        if (false !== m.stream && (y.value ||= pe(it(e)), !z.value)) {
           if (N && !E.value && v.value) try {
             yield ln(v.value);
           } catch {}
-          Qe(e, b.value), w.value && mainY(() => Kt());
+          Qe(e, b.value), w.value && _(() => Kt());
         }
       }));
-      let Xt = vueV(() => {
+      let Xt = h(() => {
           let e = y.value;
-          return e ? mainW[e] || e.charAt(0).toUpperCase() + e.slice(1) : mainW[``] || `Plain Text`;
+          return e ? ye[e] || e.charAt(0).toUpperCase() + e.slice(1) : ye[``] || `Plain Text`;
         }),
-        Zt = vueV(() => function (items) {
+        Zt = h(() => function (e) {
           let t = function (e) {
-            let fallbackValue = String(e ?? ``).split(/\r?\n/, 1)[0]?.trim() ?? ``;
-            if (fallbackValue.length < 3) return ``;
-            let n = fallbackValue[0];
-            if (n !== "`" && n !== `~` || fallbackValue[1] !== n || fallbackValue[2] !== n) return ``;
+            let t = String(e ?? ``).split(/\r?\n/, 1)[0]?.trim() ?? ``;
+            if (t.length < 3) return ``;
+            let n = t[0];
+            if (n !== "`" && n !== `~` || t[1] !== n || t[2] !== n) return ``;
             let r = 3;
-            for (; fallbackValue[r] === n;) r += 1;
-            return fallbackValue.slice(r).trim();
-          }(items);
+            for (; t[r] === n;) r += 1;
+            return t.slice(r).trim();
+          }(e);
           if (!t) return ``;
-          let filtered = t.split(/\s+/).filter(Boolean);
-          if (!filtered.length) return ``;
-          let r = filtered[0] === `diff` ? filtered.slice(1) : filtered;
-          for (let htmlPreviewSandbox of r) {
-            let t = htmlPreviewSandbox.includes(`:`) ? htmlPreviewSandbox.slice(htmlPreviewSandbox.indexOf(`:`) + 1) : htmlPreviewSandbox;
+          let n = t.split(/\s+/).filter(Boolean);
+          if (!n.length) return ``;
+          let r = n[0] === `diff` ? n.slice(1) : n;
+          for (let e of r) {
+            let t = e.includes(`:`) ? e.slice(e.indexOf(`:`) + 1) : e;
             if (t && /[./\\-]/.test(t)) return t;
           }
           return ``;
-        }(String(propsAlias.node.raw ?? ``))),
-        Qt = vueV(() => Zt.value || Xt.value),
-        $t = vueV(() => Zt.value ? z.value ? `Diff / ${Xt.value}` : Xt.value : ``),
-        en = vueV(() => (mainK.value, mainE(y.value || ``))),
-        tn = vueV(() => {
+        }(String(m.node.raw ?? ``))),
+        Qt = h(() => Zt.value || Xt.value),
+        $t = h(() => Zt.value ? z.value ? `Diff / ${Xt.value}` : Xt.value : ``),
+        en = h(() => (me.value, ue(y.value || ``))),
+        tn = h(() => {
           let e = {},
             t = e => {
               if (e != null) return typeof e == `number` ? `${e}px` : String(e);
             },
-            n = t(propsAlias.minWidth),
-            r = t(propsAlias.maxWidth);
+            n = t(m.minWidth),
+            r = t(m.maxWidth);
           return n && (e.minWidth = n), r && (e.maxWidth = r), Et.value && (e.minHeight = `${wt.value ?? G.value}px`), z.value || (e.color = `var(--vscode-editor-foreground, var(--markstream-code-fallback-fg))`, e.backgroundColor = `var(--vscode-editor-background, var(--markstream-code-fallback-bg))`, e.borderColor = `var(--markstream-code-border-color)`), e;
         }),
-        nn = vueV(() => false !== propsAlias.showTooltips);
+        nn = h(() => false !== m.showTooltips);
       function rn() {
         return C(this, null, function* () {
           try {
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(propsAlias.node.code)), De.value = true, emitAlias(`copy`, propsAlias.node.code), setTimeout(() => {
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(m.node.code)), De.value = true, se(`copy`, m.node.code), setTimeout(() => {
               De.value = false;
             }, 1e3);
           } catch (e) {
@@ -939,15 +939,15 @@ var defineProperty = Object.defineProperty,
           }
         });
       }
-      function an(event) {
-        if (w.value = !w.value, event && nn.value) {
+      function an(e) {
+        if (w.value = !w.value, e && nn.value) {
           let t = function (e) {
-            let fallbackValue = e.currentTarget || e.target;
-            return !fallbackValue || fallbackValue.disabled ? null : fallbackValue;
-          }(event);
+            let t = e.currentTarget || e.target;
+            return !t || t.disabled ? null : t;
+          }(e);
           if (t) {
-            let e = w.value ? translate(`common.collapse`) || `Collapse` : translate(`common.expand`) || `Expand`;
-            mainN(t, e, `top`, false, undefined, propsAlias.isDark);
+            let e = w.value ? Te(`common.collapse`) || `Collapse` : Te(`common.expand`) || `Expand`;
+            he(t, e, `top`, false, undefined, m.isDark);
           }
         }
         let t = z.value ? F() : P(),
@@ -955,10 +955,10 @@ var defineProperty = Object.defineProperty,
         t && n && (w.value ? (cn(true), n.style.maxHeight = `none`, n.style.overflow = `visible`, Y(true)) : (cn(false), n.style.overflow = z.value ? `hidden` : `auto`, Y(true)));
       }
       function on() {
-        var htmlPreviewSandbox, payload;
+        var e, t;
         if (T.value = !T.value, T.value) {
           if (v.value) {
-            let t = Math.ceil((htmlPreviewSandbox = v.value).getBoundingClientRect?.call(htmlPreviewSandbox).height || 0);
+            let t = Math.ceil((e = v.value).getBoundingClientRect?.call(e).height || 0);
             t > 0 && (A.value = t);
           }
           cn(false);
@@ -966,9 +966,9 @@ var defineProperty = Object.defineProperty,
           w.value && cn(true), v.value && A.value != null && (v.value.style.height = `${A.value}px`);
           let e = z.value ? F() : P();
           try {
-            (payload = e?.layout) == null || payload.call(e);
+            (t = e?.layout) == null || t.call(e);
           } catch {}
-          Je = 2, mainY(() => {
+          Je = 2, _(() => {
             Y(true);
           });
         }
@@ -978,9 +978,9 @@ var defineProperty = Object.defineProperty,
         let e = y.value;
         if (we.value) {
           let t = e === `html` ? `text/html` : `image/svg+xml`,
-            n = e === `html` ? translate(`artifacts.htmlPreviewTitle`) || `HTML Preview` : translate(`artifacts.svgPreviewTitle`) || `SVG Preview`;
-          emitAlias(`previewCode`, {
-            node: propsAlias.node,
+            n = e === `html` ? Te(`artifacts.htmlPreviewTitle`) || `HTML Preview` : Te(`artifacts.svgPreviewTitle`) || `SVG Preview`;
+          se(`previewCode`, {
+            node: m.node,
             artifactType: t,
             artifactTitle: n,
             id: `temp-${e}-${Date.now()}`
@@ -990,11 +990,11 @@ var defineProperty = Object.defineProperty,
         e === `html` && (vt.value = !vt.value);
       }
       function cn(e) {
-        var payload, n;
+        var t, n;
         try {
           if (z.value) {
             let n = F();
-            (payload = n?.updateOptions) == null || payload.call(n, {
+            (t = n?.updateOptions) == null || t.call(n, {
               automaticLayout: e
             });
           } else {
@@ -1019,22 +1019,22 @@ var defineProperty = Object.defineProperty,
                   n = t?.addEventListener;
                 if (!t || !n) return yield e();
                 let r = function () {
-                  let windowAlias = window,
-                    t = windowAlias[We];
+                  let e = window,
+                    t = e[We];
                   if (t) return t;
                   let n = {
                     depth: 0,
                     original: null
                   };
-                  return windowAlias[We] = n, n;
+                  return e[We] = n, n;
                 }();
                 r.depth === 0 && (r.original = n, t.addEventListener = function (e, t, i) {
-                  let fallbackValue = r.original ?? n;
+                  let a = r.original ?? n;
                   return e === `touchstart` && function (e, t) {
                     if (!e) return false;
                     let n = e;
                     return !(typeof n.closest != `function` || !n.closest(`.monaco-editor, .monaco-diff-editor`) || t && typeof t == `object` && `passive` in t);
-                  }(this, i) ? fallbackValue.call(this, e, t, function (e) {
+                  }(this, i) ? a.call(this, e, t, function (e) {
                     return e == null ? {
                       passive: true
                     } : typeof e == `boolean` ? {
@@ -1045,7 +1045,7 @@ var defineProperty = Object.defineProperty,
                     }) : {
                       passive: true
                     };
-                  }(i)) : fallbackValue.call(this, e, t, i);
+                  }(i)) : a.call(this, e, t, i);
                 }), r.depth++;
                 try {
                   return yield e();
@@ -1066,21 +1066,21 @@ var defineProperty = Object.defineProperty,
               }(e), k)) return;
               if (z.value) {
                 nt();
-                let t = dt(String(propsAlias.node.originalCode ?? ``), String(propsAlias.node.updatedCode ?? ``));
-                Ze ? yield Ze(e, t.original, t.updated, b.value) : yield N(e, propsAlias.node.code, b.value);
-              } else yield N(e, propsAlias.node.code, b.value);
+                let t = dt(String(m.node.originalCode ?? ``), String(m.node.updatedCode ?? ``));
+                Ze ? yield Ze(e, t.original, t.updated, b.value) : yield N(e, m.node.code, b.value);
+              } else yield N(e, m.node.code, b.value);
               if (k) return;
               let t = z.value ? F() : P();
-              if (typeof propsAlias.monacoOptions?.fontSize == `number`) t?.updateOptions({
-                fontSize: propsAlias.monacoOptions.fontSize,
+              if (typeof m.monacoOptions?.fontSize == `number`) t?.updateOptions({
+                fontSize: m.monacoOptions.fontSize,
                 automaticLayout: false
-              }), U.value = propsAlias.monacoOptions.fontSize, W.value = propsAlias.monacoOptions.fontSize;else {
+              }), U.value = m.monacoOptions.fontSize, W.value = m.monacoOptions.fontSize;else {
                 let e = jt();
                 e && e > 0 ? (U.value = e, W.value = e) : (U.value = 12, W.value = 12);
               }
               w.value || T.value || Y(false), yield function () {
                 return C(this, null, function* () {
-                  K() != null && (X(), Y(false), yield vueRt(), yield At(), X(), Y(false), yield At(), X(), Y(false));
+                  K() != null && (X(), Y(false), yield ie(), yield At(), X(), Y(false), yield At(), X(), Y(false));
                 });
               }(), k || (O.value = true, function () {
                 if (qt(), z.value) {
@@ -1092,14 +1092,14 @@ var defineProperty = Object.defineProperty,
                         let n = e?.[t];
                         if (typeof n != `function`) return;
                         let r = n.call(e, () => Z());
-                        r && emptyItems.push(r);
+                        r && L.push(r);
                       } catch {}
                     };
                   try {
                     let t = e?.onDidUpdateDiff?.call(e, () => {
-                      Z(), mainY(() => Lt());
+                      Z(), _(() => Lt());
                     });
-                    t && emptyItems.push(t);
+                    t && L.push(t);
                   } catch {}
                   r(t, `onDidContentSizeChange`), r(n, `onDidContentSizeChange`), r(t, `onDidLayoutChange`), r(n, `onDidLayoutChange`);
                   return;
@@ -1107,15 +1107,15 @@ var defineProperty = Object.defineProperty,
                 let e = P();
                 try {
                   let t = e?.onDidContentSizeChange?.call(e, () => Z());
-                  t && emptyItems.push(t);
+                  t && L.push(t);
                 } catch {}
                 try {
                   let t = e?.onDidLayoutChange?.call(e, () => Z());
-                  t && emptyItems.push(t);
+                  t && L.push(t);
                 } catch {}
               }(), Wt(), X(), Lt(), Z(), yield function () {
                 return C(this, null, function* () {
-                  X(), Y(false), yield vueRt(), yield At(), X(), Y(false), yield At(), X(), Y(false);
+                  X(), Y(false), yield ie(), yield At(), X(), Y(false), yield At(), X(), Y(false);
                 });
               }(), k || (H.value = true));
             });
@@ -1125,9 +1125,9 @@ var defineProperty = Object.defineProperty,
         });
         return I = t, t;
       }
-      vueWt(nn, e => {
-        e || mainV();
-      }), vueWt(() => W.value, (e, t) => {
+      a(nn, e => {
+        e || ve();
+      }), a(() => W.value, (e, t) => {
         let n = z.value ? F() : P();
         n && typeof e == `number` && Number.isFinite(e) && e > 0 && (n.updateOptions({
           fontSize: e
@@ -1136,7 +1136,7 @@ var defineProperty = Object.defineProperty,
         flush: `post`,
         immediate: false
       });
-      let un = vueWt(() => [v.value, z.value, propsAlias.stream, propsAlias.loading, Ge.value, M.value], e => C(null, [e], function* ([e, t, n, r, i, a]) {
+      let un = a(() => [v.value, z.value, m.stream, m.loading, Ge.value, M.value], e => C(null, [e], function* ([e, t, n, r, i, a]) {
         if (!e || !N || !a || false === n && false !== r) return;
         let o = ln(e);
         if (o) {
@@ -1162,25 +1162,25 @@ var defineProperty = Object.defineProperty,
       }
       function pn() {
         let e = function () {
-            if (propsAlias.theme !== undefined) {
-              let theme = propsAlias.theme;
-              return dn(theme) ? propsAlias.isDark ? theme.dark : theme.light : theme;
+            if (m.theme !== undefined) {
+              let e = m.theme;
+              return dn(e) ? m.isDark ? e.dark : e.light : e;
             }
-            return propsAlias.isDark ? propsAlias.darkTheme : propsAlias.lightTheme;
+            return m.isDark ? m.darkTheme : m.lightTheme;
           }(),
           t = V.value?.theme,
-          fallbackValue = e ?? t;
-        if (typeof fallbackValue == `object` && fallbackValue) return fallbackValue;
-        let r = Array.isArray(propsAlias.themes) ? propsAlias.themes : [];
-        if (!r.length || fallbackValue == null) return fallbackValue;
-        let i = $(fallbackValue),
-          filtered = r.map(item => $(item)).filter(item => !!item);
-        if (!i || filtered.includes(i)) return fallbackValue;
+          n = e ?? t;
+        if (typeof n == `object` && n) return n;
+        let r = Array.isArray(m.themes) ? m.themes : [];
+        if (!r.length || n == null) return n;
+        let i = $(n),
+          a = r.map(e => $(e)).filter(e => !!e);
+        if (!i || a.includes(i)) return n;
         let o = $(t);
-        return t != null && o && filtered.includes(o) ? t : r[0];
+        return t != null && o && a.includes(o) ? t : r[0];
       }
-      vueWt(ft, (e, t) => C(null, null, function* () {
-        if (e === t || (pt.value = e, !N || !v.value) || !E.value || false === propsAlias.stream && false !== propsAlias.loading || !M.value) return;
+      a(ft, (e, t) => C(null, null, function* () {
+        if (e === t || (pt.value = e, !N || !v.value) || !E.value || false === m.stream && false !== m.loading || !M.value) return;
         let n = I;
         if (n) {
           try {
@@ -1189,30 +1189,30 @@ var defineProperty = Object.defineProperty,
           if (k || !v.value) return;
         }
         try {
-          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield vueRt(), yield ln(v.value);
+          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield ie(), yield ln(v.value);
         } catch {
           O.value = false, H.value = false, ht.value = true;
         }
       }));
-      let mn = vueV(() => (propsAlias.theme === undefined ? fn(propsAlias.darkTheme, propsAlias.lightTheme) : !dn(propsAlias.theme)) ? function (e) {
+      let mn = h(() => (m.theme === undefined ? fn(m.darkTheme, m.lightTheme) : !dn(m.theme)) ? function (e) {
           if (e && typeof e == `object` && e.colors?.[`editor.background`]) {
             let t = Ut(e.colors[`editor.background`]);
             if (t != null) return t < 128;
           }
-          let lowercased = ($(e) ?? ``).toLowerCase();
-          return lowercased ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(item => lowercased.includes(item)) && ![`light`, `latte`, `dawn`, `lotus`].some(item => lowercased.includes(item)) : !!propsAlias.isDark;
-        }(pn()) : !!propsAlias.isDark),
-        hn = vueV(() => {
+          let t = ($(e) ?? ``).toLowerCase();
+          return t ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(e => t.includes(e)) && ![`light`, `latte`, `dawn`, `lotus`].some(e => t.includes(e)) : !!m.isDark;
+        }(pn()) : !!m.isDark),
+        hn = h(() => {
           if (!z.value) return mn.value ? `dark` : `light`;
           let e = V.value?.diffAppearance;
           return e === `light` || e === `dark` ? e : mn.value ? `dark` : `light`;
         }),
-        gn = vueV(() => z.value ? hn.value === `dark` : mn.value);
+        gn = h(() => z.value ? hn.value === `dark` : mn.value);
       function _n() {
         return S(x(S(x({
           wordWrap: `on`,
           wrappingIndent: `same`,
-          themes: propsAlias.themes
+          themes: m.themes
         }, V.value || {}), {
           theme: pn()
         }), z.value ? {
@@ -1226,39 +1226,39 @@ var defineProperty = Object.defineProperty,
       function vn() {
         let e = _n();
         if (!R) return R = e, R;
-        for (let payload of Object.keys(R)) payload in e || delete R[payload];
+        for (let t of Object.keys(R)) t in e || delete R[t];
         return Object.assign(R, e), R;
       }
-      let yn = vueV(() => {
-        var htmlPreviewSandbox, payload, n, parentElement, i;
+      let yn = h(() => {
+        var e, t, n, r, i;
         return JSON.stringify({
           diffLineStyle: V.value?.diffLineStyle ?? `background`,
           diffUnchangedRegionStyle: V.value?.diffUnchangedRegionStyle ?? `line-info`,
-          diffHideUnchangedRegions: propsAlias.monacoOptions?.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(propsAlias.monacoOptions.diffHideUnchangedRegions),
-          renderSideBySide: (htmlPreviewSandbox = V.value?.renderSideBySide) == null || htmlPreviewSandbox,
-          useInlineViewWhenSpaceIsLimited: (payload = V.value?.useInlineViewWhenSpaceIsLimited) == null || payload,
+          diffHideUnchangedRegions: m.monacoOptions?.diffHideUnchangedRegions === undefined ? x({}, lt) : ut(m.monacoOptions.diffHideUnchangedRegions),
+          renderSideBySide: (e = V.value?.renderSideBySide) == null || e,
+          useInlineViewWhenSpaceIsLimited: (t = V.value?.useInlineViewWhenSpaceIsLimited) == null || t,
           enableSplitViewResizing: (n = V.value?.enableSplitViewResizing) == null || n,
-          ignoreTrimWhitespace: (parentElement = V.value?.ignoreTrimWhitespace) == null || parentElement,
+          ignoreTrimWhitespace: (r = V.value?.ignoreTrimWhitespace) == null || r,
           originalEditable: (i = V.value?.originalEditable) != null && i
         });
       });
-      return vueWt(() => [propsAlias.monacoOptions, M.value], () => {
-        var htmlPreviewSandbox;
+      return a(() => [m.monacoOptions, M.value], () => {
+        var e;
         if (vn(), !N || !M.value) return;
         let t = z.value ? F() : P(),
-          n = typeof propsAlias.monacoOptions?.fontSize == `number` ? propsAlias.monacoOptions.fontSize : Number.isFinite(W.value) ? W.value : undefined;
-        typeof n == `number` && Number.isFinite(n) && n > 0 && ((htmlPreviewSandbox = t?.updateOptions) == null || htmlPreviewSandbox.call(t, {
+          n = typeof m.monacoOptions?.fontSize == `number` ? m.monacoOptions.fontSize : Number.isFinite(W.value) ? W.value : undefined;
+        typeof n == `number` && Number.isFinite(n) && n > 0 && ((e = t?.updateOptions) == null || e.call(t, {
           fontSize: n
         })), Y(false);
       }, {
         deep: true
-      }), vueWt(() => [pn(), hn.value, Ge.value, E.value, M.value], ([e], t) => {
+      }), a(() => [pn(), hn.value, Ge.value, E.value, M.value], ([e], t) => {
         Ge.value && E.value && M.value && function (e = {}) {
           if (e.appearanceOnly) return;
           vn();
           let t = pn(),
             n = () => {
-              z.value && rt(), mainY(() => {
+              z.value && rt(), _(() => {
                 Wt(), Z();
               });
             };
@@ -1268,14 +1268,14 @@ var defineProperty = Object.defineProperty,
               if (typeof e == `string`) return e;
               if (typeof e == `object` && `name` in e) return String(e.name);
               if (typeof e == `object`) {
-                let t = weakMap.get(e);
+                let t = Fe.get(e);
                 if (t) return t;
                 try {
-                  let serialized = JSON.stringify(e);
-                  if (serialized) return weakMap.set(e, serialized), serialized;
+                  let t = JSON.stringify(e);
+                  if (t) return Fe.set(e, t), t;
                 } catch {}
                 let n = `__theme_` + ++Ie;
-                return weakMap.set(e, n), n;
+                return Fe.set(e, n), n;
               }
               return String(e);
             }(t);
@@ -1290,14 +1290,14 @@ var defineProperty = Object.defineProperty,
             }).finally(() => {
               Ae = null, je = null;
             }), Ae) : Promise.resolve()) : Promise.resolve();
-          }(at, t).then(n).catch(err => {}) : n();
+          }(at, t).then(n).catch(e => {}) : n();
         }({
           appearanceOnly: t != null && fn(e, t[0])
         });
       }, {
         flush: `post`
-      }), vueWt(() => [yn.value, Ge.value, M.value], (e, t) => C(null, [e, t], function* ([e, t, n], [r]) {
-        if (vn(), !t || !n || !N || !v.value || !E.value || e === r || false === propsAlias.stream && false !== propsAlias.loading) return;
+      }), a(() => [yn.value, Ge.value, M.value], (e, t) => C(null, [e, t], function* ([e, t, n], [r]) {
+        if (vn(), !t || !n || !N || !v.value || !E.value || e === r || false === m.stream && false !== m.loading) return;
         let i = I;
         if (i) {
           try {
@@ -1306,17 +1306,17 @@ var defineProperty = Object.defineProperty,
           if (k || !v.value) return;
         }
         try {
-          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield vueRt(), yield ln(v.value);
+          O.value = false, H.value = false, E.value = false, qt(), J(), nt(), yield ie(), yield ln(v.value);
         } catch {
           O.value = false, H.value = false, ht.value = true;
         }
       }), {
         flush: `post`
-      }), vueWt(() => [propsAlias.loading, M.value], (e, t) => C(null, [e, t], function* ([e, t], n) {
+      }), a(() => [m.loading, M.value], (e, t) => C(null, [e, t], function* ([e, t], n) {
         if (!t || e) return;
         let r = n?.[0],
           i = r !== undefined && false !== r;
-        yield vueRt(), mainY(() => {
+        yield ie(), _(() => {
           C(null, null, function* () {
             try {
               if (i && E.value) {
@@ -1326,10 +1326,10 @@ var defineProperty = Object.defineProperty,
                     yield e;
                   } catch {}
                   vn();
-                  let t = dt(String(propsAlias.node.originalCode ?? ``), String(propsAlias.node.updatedCode ?? ``));
+                  let t = dt(String(m.node.originalCode ?? ``), String(m.node.updatedCode ?? ``));
                   if (yield $e(t.original, t.updated, b.value), k || !z.value) return;
                   rt(), X(), Lt();
-                } else Qe(String(propsAlias.node.code ?? ``), b.value);
+                } else Qe(String(m.node.code ?? ``), b.value);
               }
               Y(false);
             } catch {}
@@ -1338,38 +1338,38 @@ var defineProperty = Object.defineProperty,
       }), {
         immediate: true,
         flush: `post`
-      }), vueMt(() => {
+      }), ee(() => {
         qt(), J(), tt();
-      }), (a, l) => mt.value ? (vueGt(), vueB(vueAn(mainI), {
+      }), (a, l) => mt.value ? (d(), c(t(fe), {
         key: 0,
-        node: propsAlias.node,
-        loading: propsAlias.loading
-      }, null, 8, [`node`, `loading`])) : (vueGt(), vueS(`div`, {
+        node: m.node,
+        loading: m.loading
+      }, null, 8, [`node`, `loading`])) : (d(), i(`div`, {
         key: 1,
         ref_key: `container`,
         ref: Ee,
-        style: vueNr(tn.value),
-        class: vueN([`code-block-container rounded-lg border`, [{
-          dark: propsAlias.isDark,
-          "is-rendering": propsAlias.loading,
+        style: te(tn.value),
+        class: e([`code-block-container rounded-lg border`, [{
+          dark: m.isDark,
+          "is-rendering": m.loading,
           "is-dark": gn.value,
           "is-diff": z.value,
           "is-plain-text": Oe.value
         }]]),
         "data-markstream-code-block": `1`,
         "data-markstream-enhanced": H.value && !mt.value ? `true` : `false`
-      }, [vueK(mainR, {
-        "show-header": propsAlias.showHeader,
-        "show-collapse-button": propsAlias.showCollapseButton,
-        "show-font-size-buttons": propsAlias.showFontSizeButtons,
-        "enable-font-size-control": propsAlias.enableFontSizeControl,
-        "show-copy-button": propsAlias.showCopyButton,
-        "show-expand-button": propsAlias.showExpandButton,
-        "show-preview-button": propsAlias.showPreviewButton,
-        "show-tooltips": propsAlias.showTooltips,
-        "is-dark": propsAlias.isDark,
-        loading: propsAlias.loading,
-        stream: props.stream,
+      }, [p(_e, {
+        "show-header": m.showHeader,
+        "show-collapse-button": m.showCollapseButton,
+        "show-font-size-buttons": m.showFontSizeButtons,
+        "enable-font-size-control": m.enableFontSizeControl,
+        "show-copy-button": m.showCopyButton,
+        "show-expand-button": m.showExpandButton,
+        "show-preview-button": m.showPreviewButton,
+        "show-tooltips": m.showTooltips,
+        "is-dark": m.isDark,
+        loading: m.loading,
+        stream: u.stream,
         "is-collapsed": T.value,
         "is-expanded": w.value,
         "copy-text": De.value,
@@ -1388,49 +1388,49 @@ var defineProperty = Object.defineProperty,
         onCopy: rn,
         onToggleExpand: an,
         onPreview: sn
-      }, vueE({
-        "header-left": vueYt(() => [vueCt(a.$slots, `header-left`, {}, () => [vueY(`div`, Re, [vueY(`span`, {
+      }, r({
+        "header-left": o(() => [n(a.$slots, `header-left`, {}, () => [g(`div`, Re, [g(`span`, {
           class: `icon-slot h-4 w-4 flex-shrink-0`,
           innerHTML: en.value
-        }, null, 8, ze), vueY(`div`, Be, [vueY(`div`, Ve, vueRr(Qt.value), 1), $t.value ? (vueGt(), vueS(`div`, He, vueRr($t.value), 1)) : vueX(``, true)])])], true)]),
-        loading: vueYt(() => [vueCt(a.$slots, `loading`, {
-          loading: props.loading,
-          stream: props.stream
-        }, () => [l[0] ||= vueY(`div`, {
+        }, null, 8, ze), g(`div`, Be, [g(`div`, Ve, re(Qt.value), 1), $t.value ? (d(), i(`div`, He, re($t.value), 1)) : ae(``, true)])])], true)]),
+        loading: o(() => [n(a.$slots, `loading`, {
+          loading: u.loading,
+          stream: u.stream
+        }, () => [l[0] ||= g(`div`, {
           class: `loading-skeleton`
-        }, [vueY(`div`, {
+        }, [g(`div`, {
           class: `skeleton-line`
-        }), vueY(`div`, {
+        }), g(`div`, {
           class: `skeleton-line`
-        }), vueY(`div`, {
+        }), g(`div`, {
           class: `skeleton-line short`
         })], -1)], true)]),
-        default: vueYt(() => [vueZt(vueY(`div`, Ue, [vueY(`div`, {
+        default: o(() => [s(g(`div`, Ue, [g(`div`, {
           ref_key: `codeEditor`,
           ref: v,
-          class: vueN([`code-editor-container`, [props.stream ? `` : `code-height-placeholder`, {
+          class: e([`code-editor-container`, [u.stream ? `` : `code-height-placeholder`, {
             "is-hidden": _t.value
           }]]),
-          style: vueNr(Dt.value)
-        }, null, 6), _t.value ? (vueGt(), vueB(vueAn(mainI), {
+          style: te(Dt.value)
+        }, null, 6), _t.value ? (d(), c(t(fe), {
           key: 0,
-          class: vueN([`code-pre-fallback`, {
+          class: e([`code-pre-fallback`, {
             "is-wrap": gt.value
           }]),
-          style: vueNr(Tt.value),
-          node: propsAlias.node
-        }, null, 8, [`class`, `style`, `node`])) : vueX(``, true)], 512), [[playerW, !(T.value || !props.stream && props.loading)]]), vt.value && !we.value && Yt.value && y.value === `html` ? (vueGt(), vueB(ke, {
+          style: te(Tt.value),
+          node: m.node
+        }, null, 8, [`class`, `style`, `node`])) : ae(``, true)], 512), [[ce, !(T.value || !u.stream && u.loading)]]), vt.value && !we.value && Yt.value && y.value === `html` ? (d(), c(ke, {
           key: 0,
-          code: propsAlias.node.code,
-          "html-preview-allow-scripts": propsAlias.htmlPreviewAllowScripts,
-          "html-preview-sandbox": propsAlias.htmlPreviewSandbox,
-          "is-dark": propsAlias.isDark,
+          code: m.node.code,
+          "html-preview-allow-scripts": m.htmlPreviewAllowScripts,
+          "html-preview-sandbox": m.htmlPreviewSandbox,
+          "is-dark": m.isDark,
           "on-close": () => vt.value = false
-        }, null, 8, [`code`, `html-preview-allow-scripts`, `html-preview-sandbox`, `is-dark`, `on-close`])) : vueX(``, true)]),
+        }, null, 8, [`code`, `html-preview-allow-scripts`, `html-preview-sandbox`, `is-dark`, `on-close`])) : ae(``, true)]),
         _: 2
       }, [a.$slots[`header-right`] ? {
         name: `header-right`,
-        fn: vueYt(() => [vueCt(a.$slots, `header-right`, {}, undefined, true)]),
+        fn: o(() => [n(a.$slots, `header-right`, {}, undefined, true)]),
         key: `0`
       } : undefined]), 1032, [`show-header`, `show-collapse-button`, `show-font-size-buttons`, `enable-font-size-control`, `show-copy-button`, `show-expand-button`, `show-preview-button`, `show-tooltips`, `is-dark`, `loading`, `stream`, `is-collapsed`, `is-expanded`, `copy-text`, `is-previewable`, `code-font-size`, `default-code-font-size`, `font-baseline-ready`, `diff-stats`, `diff-stats-aria-label`])], 14, Le));
     }

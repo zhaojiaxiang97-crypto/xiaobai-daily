@@ -25,30 +25,30 @@ function decryptToken(token) {
   if (!token) return "";
   return decryptString(token);
 }
-function mapSessionRow(mapValue) {
+function mapSessionRow(row) {
   return {
-    userId: mapValue.user_id,
-    email: mapValue.email,
-    nickname: mapValue.nickname,
-    jobTitle: mapValue.job_title,
-    avatarUrl: mapValue.avatar_url,
-    token: decryptToken(mapValue.token),
-    loggedInAt: mapValue.logged_in_at,
-    createdAt: mapValue.created_at ?? "",
-    educationVerified: mapValue.education_verified === 1
+    userId: row.user_id,
+    email: row.email,
+    nickname: row.nickname,
+    jobTitle: row.job_title,
+    avatarUrl: row.avatar_url,
+    token: decryptToken(row.token),
+    loggedInAt: row.logged_in_at,
+    createdAt: row.created_at ?? "",
+    educationVerified: row.education_verified === 1
   };
 }
-function mapSubscriptionRow(mapValue) {
+function mapSubscriptionRow(row) {
   return {
-    planId: mapValue.plan_id,
-    planName: mapValue.plan_name,
-    isActive: mapValue.is_active === 1,
-    expiresAt: mapValue.expires_at,
-    paidAt: mapValue.paid_at ?? null,
-    lastCheckedAt: mapValue.last_checked_at ?? "",
-    freeWorkRecordLimit: mapValue.free_work_record_limit ?? 30,
-    freeReportLimit: mapValue.free_report_limit ?? 5,
-    pointsBalance: mapValue.points_balance ?? 0
+    planId: row.plan_id,
+    planName: row.plan_name,
+    isActive: row.is_active === 1,
+    expiresAt: row.expires_at,
+    paidAt: row.paid_at ?? null,
+    lastCheckedAt: row.last_checked_at ?? "",
+    freeWorkRecordLimit: row.free_work_record_limit ?? 30,
+    freeReportLimit: row.free_report_limit ?? 5,
+    pointsBalance: row.points_balance ?? 0
   };
 }
 var AuthRepository = class {
@@ -57,11 +57,11 @@ var AuthRepository = class {
     return row ? mapSessionRow(row) : null;
   }
   saveSession(session) {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    database.exec("BEGIN");
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    db.exec("BEGIN");
     try {
-      database.prepare(`
+      db.prepare(`
         INSERT INTO auth_session (id, user_id, email, nickname, job_title, avatar_url, token, logged_in_at, created_at, updated_at, education_verified)
         VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -75,10 +75,10 @@ var AuthRepository = class {
           created_at = excluded.created_at,
           updated_at = excluded.updated_at,
           education_verified = excluded.education_verified
-      `).run(session.userId, session.email, session.nickname, session.jobTitle, session.avatarUrl, encryptToken(session.token), session.loggedInAt, session.createdAt, isoString, session.educationVerified ? 1 : 0);
-      database.exec("COMMIT");
+      `).run(session.userId, session.email, session.nickname, session.jobTitle, session.avatarUrl, encryptToken(session.token), session.loggedInAt, session.createdAt, now, session.educationVerified ? 1 : 0);
+      db.exec("COMMIT");
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
   }
@@ -100,10 +100,10 @@ var AuthRepository = class {
     };
     return mapSubscriptionRow(row);
   }
-  saveSubscriptionCache(subscription) {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    database.prepare(`
+  saveSubscriptionCache(sub) {
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    db.prepare(`
       INSERT INTO subscription_cache (id, plan_id, plan_name, is_active, expires_at, paid_at, last_checked_at, free_work_record_limit, free_report_limit, points_balance, updated_at)
       VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON CONFLICT(id) DO UPDATE SET
@@ -117,7 +117,7 @@ var AuthRepository = class {
         free_report_limit = excluded.free_report_limit,
         points_balance = excluded.points_balance,
         updated_at = excluded.updated_at
-    `).run(subscription.planId, subscription.planName, subscription.isActive ? 1 : 0, subscription.expiresAt, subscription.paidAt, subscription.lastCheckedAt || isoString, subscription.freeWorkRecordLimit, subscription.freeReportLimit, subscription.pointsBalance, isoString);
+    `).run(sub.planId, sub.planName, sub.isActive ? 1 : 0, sub.expiresAt, sub.paidAt, sub.lastCheckedAt || now, sub.freeWorkRecordLimit, sub.freeReportLimit, sub.pointsBalance, now);
   }
   clearSubscriptionCache() {
     getDatabase().prepare("DELETE FROM subscription_cache WHERE id = 1").run();
@@ -292,8 +292,8 @@ function safeUrl(urlText) {
     return null;
   }
 }
-function summarizeQueryKeys(marize) {
-  return Array.from(new Set(Array.from(marize.searchParams.keys()))).map(item => sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item);
+function summarizeQueryKeys(url) {
+  return Array.from(new Set(Array.from(url.searchParams.keys()))).map(key => sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key);
 }
 function summarizeRequestBody(body) {
   if (body === undefined || body === null) return {};
@@ -307,11 +307,11 @@ function summarizeRequestBody(body) {
   }
   if (typeof FormData !== "undefined" && body instanceof FormData) return {
     requestBodyType: "form-data",
-    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(item => imageKeyPattern.test(item) || sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item)
+    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(key => imageKeyPattern.test(key) || sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key)
   };
   if (typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams) return {
     requestBodyType: "url-search-params",
-    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(item => sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item)
+    requestBodyKeys: Array.from(new Set(Array.from(body.keys()))).map(key => sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key)
   };
   if (typeof body === "string") {
     const result = {
@@ -320,13 +320,13 @@ function summarizeRequestBody(body) {
     };
     try {
       const parsed = JSON.parse(body);
-      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) result.requestBodyKeys = Object.keys(parsed).map(item => imageKeyPattern.test(item) || sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) result.requestBodyKeys = Object.keys(parsed).map(key => imageKeyPattern.test(key) || sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key);
     } catch {}
     return result;
   }
   if (body && typeof body === "object" && !Array.isArray(body)) return {
     requestBodyType: "object",
-    requestBodyKeys: Object.keys(body).map(item => imageKeyPattern.test(item) || sensitiveQueryPattern.test(item) ? `${item}:[redacted]` : item)
+    requestBodyKeys: Object.keys(body).map(key => imageKeyPattern.test(key) || sensitiveQueryPattern.test(key) ? `${key}:[redacted]` : key)
   };
   if (Array.isArray(body)) return {
     requestBodyType: "array",
@@ -409,17 +409,17 @@ var AiModelConfigService = class {
   appStartAt = "";
   lastActivityAt = "";
   screenshotCount = 0;
-  setAppStartAt(appValue) {
-    this.appStartAt = appValue;
+  setAppStartAt(at) {
+    this.appStartAt = at;
   }
-  setLastActivityAt(last) {
-    this.lastActivityAt = last;
+  setLastActivityAt(at) {
+    this.lastActivityAt = at;
   }
   incrementScreenshotCount() {
     this.screenshotCount++;
   }
-  setScreenshotCount(screenshot) {
-    this.screenshotCount = screenshot;
+  setScreenshotCount(n) {
+    this.screenshotCount = n;
   }
   getCache() {
     this.ensureTable();
@@ -456,7 +456,7 @@ var AiModelConfigService = class {
       )
     `);
     const columns = getDatabase().prepare("PRAGMA table_info(ai_model_config_cache)").all();
-    const colSet = new Set(columns.map(item => item.name));
+    const colSet = new Set(columns.map(c => c.name));
     if (!colSet.has("screenshot_provider")) getDatabase().exec(`ALTER TABLE ai_model_config_cache ADD COLUMN screenshot_provider TEXT DEFAULT NULL`);
     if (!colSet.has("report_provider")) getDatabase().exec(`ALTER TABLE ai_model_config_cache ADD COLUMN report_provider TEXT DEFAULT NULL`);
     if (!colSet.has("overview_provider")) getDatabase().exec(`ALTER TABLE ai_model_config_cache ADD COLUMN overview_provider TEXT DEFAULT NULL`);
@@ -588,9 +588,9 @@ var AiModelConfigService = class {
   */
   async getEffectiveModelConfig() {
     const cache = this.getCache();
-    const date = /* @__PURE__ */new Date();
+    const now = /* @__PURE__ */new Date();
     if (cache) {
-      if (date < new Date(cache.expiresAt)) return cache;
+      if (now < new Date(cache.expiresAt)) return cache;
     }
     const fetched = await this.fetchModelConfig();
     if (fetched) return fetched;
@@ -608,7 +608,7 @@ var aiModelConfigService = new AiModelConfigService();
 //#endregion
 //#region electron/services/app-config.service.ts
 var AppConfigService = class {
-  async requestConfig(requestValue, language) {
+  async requestConfig(key, language) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5e3);
     const startedAt = Date.now();
@@ -620,7 +620,7 @@ var AppConfigService = class {
     try {
       const lang = language || settingsRepository.getSettings().language || "zh-CN";
       url = `${API_BASE}/app-config.php?${new URLSearchParams({
-        key: requestValue,
+        key,
         clientVersion: app.getVersion(),
         lang
       }).toString()}`;
@@ -653,7 +653,7 @@ var AppConfigService = class {
         durationMs: Date.now() - startedAt,
         timeoutMs: 5e3,
         context: {
-          key: requestValue,
+          key,
           aborted: controller.signal.aborted
         }
       });
@@ -666,14 +666,14 @@ var AppConfigService = class {
   /**
   * 获取指定 key 的云端配置值。优先使用本地缓存；缓存不存在或已过期时向服务端拉取。
   */
-  async getConfigValue(config, language) {
-    return this.requestConfig(config, language);
+  async getConfigValue(key, language) {
+    return this.requestConfig(key, language);
   }
   /**
   * 强制从云端刷新指定 key 的配置值。
   */
-  async refreshConfigValue(refresh, language) {
-    return this.requestConfig(refresh, language);
+  async refreshConfigValue(key, language) {
+    return this.requestConfig(key, language);
   }
 };
 var appConfigService = new AppConfigService();
@@ -802,22 +802,22 @@ var PipelineLogService = class {
     return logsDirectory();
   }
   async openLogDirectory() {
-    const logsDirectoryResult = logsDirectory();
-    await fs.promises.mkdir(logsDirectoryResult, {
+    const dir = logsDirectory();
+    await fs.promises.mkdir(dir, {
       recursive: true
     });
-    const error = await shell.openPath(logsDirectoryResult);
+    const error = await shell.openPath(dir);
     if (error) throw new Error(error);
   }
   async clear() {
-    const logsDirectoryResult = logsDirectory();
+    const dir = logsDirectory();
     let names = [];
     try {
-      names = await fs.promises.readdir(logsDirectoryResult);
+      names = await fs.promises.readdir(dir);
     } catch {
       return;
     }
-    await Promise.all(names.filter(name => name.startsWith("pipeline") && name.endsWith(".log")).map(name => fs.promises.rm(path.join(logsDirectoryResult, name), {
+    await Promise.all(names.filter(name => name.startsWith("pipeline") && name.endsWith(".log")).map(name => fs.promises.rm(path.join(dir, name), {
       force: true
     })));
   }
@@ -848,11 +848,11 @@ var PipelineLogService = class {
   }
   cleanupExpiredLogs() {
     try {
-      const logsDirectoryResult = logsDirectory();
+      const dir = logsDirectory();
       const threshold = Date.now() - PIPELINE_LOG_RETENTION_MS;
-      for (const name of fs.readdirSync(logsDirectoryResult)) {
+      for (const name of fs.readdirSync(dir)) {
         if (!name.startsWith("pipeline") || !name.endsWith(".log")) continue;
-        const filePath = path.join(logsDirectoryResult, name);
+        const filePath = path.join(dir, name);
         if (fs.statSync(filePath).mtimeMs < threshold) fs.rmSync(filePath, {
           force: true
         });
@@ -1528,11 +1528,11 @@ function createLocalDateTime(value, isEnd = false) {
 }
 function getReportDateTimeRange(input) {
   const start = createLocalDateTime(input.startDate);
-  const localDateTime = createLocalDateTime(input.endDate, true);
-  if (localDateTime.getTime() < start.getTime()) throw new Error("Invalid report date or time range");
+  const end = createLocalDateTime(input.endDate, true);
+  if (end.getTime() < start.getTime()) throw new Error("Invalid report date or time range");
   return {
     startedAt: start.toISOString(),
-    endedAt: new Date(localDateTime.getTime() + 1e3).toISOString()
+    endedAt: new Date(end.getTime() + 1e3).toISOString()
   };
 }
 function formatReportDateTime(value, isEnd = false) {
@@ -1563,36 +1563,36 @@ function parseSummarySources(value) {
 function serializeSummarySources(sources) {
   return sources && sources.length > 0 ? JSON.stringify(sources) : null;
 }
-function mapRow(mapValue) {
+function mapRow(row) {
   return {
-    id: mapValue.id,
-    type: mapValue.type,
-    title: mapValue.title,
-    content: mapValue.content,
-    startDate: normalizeReportDateTime(mapValue.start_date),
-    endDate: normalizeReportDateTime(mapValue.end_date, true),
-    style: mapValue.style,
-    templateId: mapValue.template_id,
-    templateName: mapValue.template_name,
-    templateBody: mapValue.template_body,
-    customInstruction: mapValue.custom_instruction,
-    language: mapValue.language,
-    model: mapValue.model,
-    factSummary: parseFactSummary(mapValue.fact_summary_json),
-    summarySources: parseSummarySources(mapValue.summary_sources),
-    status: mapValue.status,
-    errorMessage: mapValue.error_message,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    id: row.id,
+    type: row.type,
+    title: row.title,
+    content: row.content,
+    startDate: normalizeReportDateTime(row.start_date),
+    endDate: normalizeReportDateTime(row.end_date, true),
+    style: row.style,
+    templateId: row.template_id,
+    templateName: row.template_name,
+    templateBody: row.template_body,
+    customInstruction: row.custom_instruction,
+    language: row.language,
+    model: row.model,
+    factSummary: parseFactSummary(row.fact_summary_json),
+    summarySources: parseSummarySources(row.summary_sources),
+    status: row.status,
+    errorMessage: row.error_message,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 function localDayIsoRange(dateStr) {
   const [year, month, day] = dateStr.split("-").map(Number);
   const start = new Date(year, month - 1, day);
-  const date = new Date(year, month - 1, day + 1);
+  const end = new Date(year, month - 1, day + 1);
   return {
     start: start.toISOString(),
-    end: date.toISOString()
+    end: end.toISOString()
   };
 }
 function buildWhereClause(input) {
@@ -1626,8 +1626,8 @@ function buildWhereClause(input) {
 }
 var ReportRepository = class {
   createPending(input, title, factSummary = null, summarySources = null) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const randomUUIDResult = crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const id = crypto.randomUUID();
     getDatabase().prepare(`
         INSERT INTO reports (
           id, type, title, content, start_date, end_date, style,
@@ -1635,9 +1635,9 @@ var ReportRepository = class {
           summary_sources, status, error_message, created_at, updated_at
         )
         VALUES (?, ?, ?, '', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', NULL, ?, ?)
-      `).run(randomUUIDResult, input.type, title, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), isoString, isoString);
+      `).run(id, input.type, title, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
     return {
-      id: randomUUIDResult,
+      id,
       type: input.type,
       title,
       content: "",
@@ -1654,13 +1654,13 @@ var ReportRepository = class {
       summarySources: summarySources && summarySources.length > 0 ? summarySources : null,
       status: "pending",
       errorMessage: null,
-      createdAt: isoString,
-      updatedAt: isoString
+      createdAt: now,
+      updatedAt: now
     };
   }
   createCompleted(input, title, content, factSummary = null, summarySources = null) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const randomUUIDResult = crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const id = crypto.randomUUID();
     getDatabase().prepare(`
         INSERT INTO reports (
           id, type, title, content, start_date, end_date, style,
@@ -1668,9 +1668,9 @@ var ReportRepository = class {
           summary_sources, status, error_message, created_at, updated_at
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'completed', NULL, ?, ?)
-      `).run(randomUUIDResult, input.type, title, content, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), isoString, isoString);
+      `).run(id, input.type, title, content, input.startDate, input.endDate, input.style, input.templateId ?? null, input.templateName ?? null, input.templateBody ?? "", input.customInstruction?.trim() || null, input.language ?? "zh-CN", input.model ?? null, factSummary ? JSON.stringify(factSummary) : null, serializeSummarySources(summarySources), now, now);
     return {
-      id: randomUUIDResult,
+      id,
       type: input.type,
       title,
       content,
@@ -1687,24 +1687,24 @@ var ReportRepository = class {
       summarySources: summarySources && summarySources.length > 0 ? summarySources : null,
       status: "completed",
       errorMessage: null,
-      createdAt: isoString,
-      updatedAt: isoString
+      createdAt: now,
+      updatedAt: now
     };
   }
-  updateStatus(statusValue, status, errorMessage = null) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET status = ?, error_message = ?, updated_at = ? WHERE id = ?").run(status, errorMessage, isoString, statusValue);
+  updateStatus(id, status, errorMessage = null) {
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    getDatabase().prepare("UPDATE reports SET status = ?, error_message = ?, updated_at = ? WHERE id = ?").run(status, errorMessage, now, id);
   }
-  updateFactSummary(fact, factSummary) {
-    getDatabase().prepare("UPDATE reports SET fact_summary_json = ? WHERE id = ?").run(JSON.stringify(factSummary), fact);
+  updateFactSummary(id, factSummary) {
+    getDatabase().prepare("UPDATE reports SET fact_summary_json = ? WHERE id = ?").run(JSON.stringify(factSummary), id);
   }
-  updateContent(contentValue, title, content) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET title = ?, content = ?, status = 'completed', error_message = NULL, updated_at = ? WHERE id = ?").run(title, content, isoString, contentValue);
+  updateContent(id, title, content) {
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    getDatabase().prepare("UPDATE reports SET title = ?, content = ?, status = 'completed', error_message = NULL, updated_at = ? WHERE id = ?").run(title, content, now, id);
   }
-  updateTitle(titleValue, title) {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    getDatabase().prepare("UPDATE reports SET title = ?, updated_at = ? WHERE id = ?").run(title, isoString, titleValue);
+  updateTitle(id, title) {
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    getDatabase().prepare("UPDATE reports SET title = ?, updated_at = ? WHERE id = ?").run(title, now, id);
   }
   findPending() {
     const row = getDatabase().prepare("SELECT * FROM reports WHERE status = 'pending' ORDER BY created_at ASC LIMIT 1").get();
@@ -1824,21 +1824,21 @@ var ReportRepository = class {
         FROM reports
         WHERE status = 'completed' AND content <> '' AND updated_at > ?
         LIMIT ?
-      `).all(sinceIso, limit).map(item => ({
-      startDate: getReportDate(item.start_date),
-      endDate: getReportDate(item.end_date),
-      createdAt: item.created_at
+      `).all(sinceIso, limit).map(row => ({
+      startDate: getReportDate(row.start_date),
+      endDate: getReportDate(row.end_date),
+      createdAt: row.created_at
     }));
   }
   /** 旧版小程序同步遗漏的事实报告日期，供升级后的增量同步补传。 */
   listLocalFactDates() {
-    return getDatabase().prepare("SELECT start_date, created_at FROM reports WHERE status = 'completed' AND content <> '' AND model = 'local-facts'").all().map(item => ({
-      startDate: getReportDate(item.start_date),
-      createdAt: item.created_at
+    return getDatabase().prepare("SELECT start_date, created_at FROM reports WHERE status = 'completed' AND content <> '' AND model = 'local-facts'").all().map(row => ({
+      startDate: getReportDate(row.start_date),
+      createdAt: row.created_at
     }));
   }
-  delete(deleteValue) {
-    return getDatabase().prepare("DELETE FROM reports WHERE id = ?").run(deleteValue).changes > 0;
+  delete(id) {
+    return getDatabase().prepare("DELETE FROM reports WHERE id = ?").run(id).changes > 0;
   }
   hasSuccessfulReport() {
     return (getDatabase().prepare("SELECT COUNT(*) AS total FROM reports WHERE status = 'completed' AND trim(content) <> ''").get()?.total ?? 0) > 0;
@@ -1875,25 +1875,25 @@ function getNotificationTodoId(link) {
 }
 //#endregion
 //#region electron/repositories/notification.repository.ts
-function mapNotificationRow(mapValue) {
+function mapNotificationRow(row) {
   return {
-    id: mapValue.id,
-    title: mapValue.title,
-    content: mapValue.content,
-    type: mapValue.type,
-    priority: mapValue.priority,
-    link: mapValue.link,
-    startAt: mapValue.start_at,
-    endAt: mapValue.end_at,
-    createdAt: mapValue.created_at,
-    fetchedAt: mapValue.fetched_at
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    type: row.type,
+    priority: row.priority,
+    link: row.link,
+    startAt: row.start_at,
+    endAt: row.end_at,
+    createdAt: row.created_at,
+    fetchedAt: row.fetched_at
   };
 }
-function mapReadRow(mapValue) {
+function mapReadRow(row) {
   return {
-    notificationId: mapValue.notification_id,
-    readAt: mapValue.read_at,
-    synced: mapValue.synced
+    notificationId: row.notification_id,
+    readAt: row.read_at,
+    synced: row.synced
   };
 }
 function parseNotificationTime(value) {
@@ -1905,11 +1905,11 @@ function parseNotificationTime(value) {
   return Number.isFinite(fallback) ? fallback : 0;
 }
 function sortNotificationsDesc(items) {
-  return [...items].sort((left, right) => {
-    const aTime = parseNotificationTime(left.createdAt) || parseNotificationTime(left.startAt) || parseNotificationTime(left.fetchedAt);
-    const bTime = parseNotificationTime(right.createdAt) || parseNotificationTime(right.startAt) || parseNotificationTime(right.fetchedAt);
+  return [...items].sort((a, b) => {
+    const aTime = parseNotificationTime(a.createdAt) || parseNotificationTime(a.startAt) || parseNotificationTime(a.fetchedAt);
+    const bTime = parseNotificationTime(b.createdAt) || parseNotificationTime(b.startAt) || parseNotificationTime(b.fetchedAt);
     if (bTime !== aTime) return bTime - aTime;
-    return right.id - left.id;
+    return b.id - a.id;
   });
 }
 var NotificationRepository = class {
@@ -1920,11 +1920,11 @@ var NotificationRepository = class {
   * 全量同步：保存所有云端通知，并删除本地多余的记录
   */
   syncAll(notifications) {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    database.exec("BEGIN");
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    db.exec("BEGIN");
     try {
-      const saveStmt = database.prepare(`
+      const saveStmt = db.prepare(`
         INSERT INTO notifications (id, title, content, type, priority, link, start_at, end_at, created_at, fetched_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
@@ -1938,39 +1938,39 @@ var NotificationRepository = class {
           created_at = excluded.created_at,
           fetched_at = excluded.fetched_at
       `);
-      for (const n of notifications) saveStmt.run(n.id, n.title, n.content, n.type, n.priority, n.link, n.start_at, n.end_at, n.created_at, isoString);
+      for (const n of notifications) saveStmt.run(n.id, n.title, n.content, n.type, n.priority, n.link, n.start_at, n.end_at, n.created_at, now);
       if (notifications.length > 0) {
-        const joined = notifications.map(item => item.id).join(",");
-        database.prepare(`DELETE FROM notifications WHERE id > 0 AND id NOT IN (${joined})`).run();
-      } else database.prepare("DELETE FROM notifications WHERE id > 0").run();
-      database.exec("COMMIT");
+        const ids = notifications.map(n => n.id).join(",");
+        db.prepare(`DELETE FROM notifications WHERE id > 0 AND id NOT IN (${ids})`).run();
+      } else db.prepare("DELETE FROM notifications WHERE id > 0").run();
+      db.exec("COMMIT");
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
   }
   createLocalNotification(input) {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    const nextLocalNotificationId = this.nextLocalNotificationId();
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    const id = this.nextLocalNotificationId();
     const type = input.type ?? "system";
     const priority = input.priority ?? "normal";
     const link = input.link ?? null;
-    database.prepare(`
+    db.prepare(`
       INSERT INTO notifications (id, title, content, type, priority, link, start_at, end_at, created_at, fetched_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?)
-    `).run(nextLocalNotificationId, input.title, input.content, type, priority, link, isoString, isoString, isoString);
+    `).run(id, input.title, input.content, type, priority, link, now, now, now);
     return {
-      id: nextLocalNotificationId,
+      id,
       title: input.title,
       content: input.content,
       type,
       priority,
       link,
-      startAt: isoString,
+      startAt: now,
       endAt: null,
-      createdAt: isoString,
-      fetchedAt: isoString,
+      createdAt: now,
+      fetchedAt: now,
       isRead: false,
       readAt: null
     };
@@ -1986,7 +1986,7 @@ var NotificationRepository = class {
     `).run((/* @__PURE__ */new Date()).toISOString(), `${UPDATE_NOTIFICATION_LINK_PREFIX}%`, activeLink, activeLink).changes);
   }
   listNotifications() {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     return sortNotificationsDesc(getDatabase().prepare(`
         SELECT
           n.id, n.title, n.content, n.type, n.priority, n.link,
@@ -1997,56 +1997,56 @@ var NotificationRepository = class {
         LEFT JOIN notification_reads r ON n.id = r.notification_id
         WHERE n.start_at <= ? AND (n.end_at IS NULL OR n.end_at > ?)
         ORDER BY datetime(n.created_at) DESC, n.id DESC
-      `).all(isoString, isoString).map(item => ({
-      ...mapNotificationRow(item),
-      isRead: item.is_read === 1,
-      readAt: item.read_at
+      `).all(now, now).map(row => ({
+      ...mapNotificationRow(row),
+      isRead: row.is_read === 1,
+      readAt: row.read_at
     })));
   }
   getUnreadCount() {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     return getDatabase().prepare(`
         SELECT COUNT(*) as cnt
         FROM notifications n
         LEFT JOIN notification_reads r ON n.id = r.notification_id
         WHERE n.start_at <= ? AND (n.end_at IS NULL OR n.end_at > ?)
         AND r.notification_id IS NULL
-      `).get(isoString, isoString)?.cnt ?? 0;
+      `).get(now, now)?.cnt ?? 0;
   }
   markRead(notificationId) {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    database.prepare(`
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    db.prepare(`
       INSERT INTO notification_reads (notification_id, read_at, synced)
       VALUES (?, ?, ?)
       ON CONFLICT(notification_id) DO UPDATE SET
         read_at = excluded.read_at,
         synced = excluded.synced
-    `).run(notificationId, isoString, notificationId > 0 ? 0 : 1);
+    `).run(notificationId, now, notificationId > 0 ? 0 : 1);
   }
   markAllRead() {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
-    database.exec("BEGIN");
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
+    db.exec("BEGIN");
     try {
-      const mapped = database.prepare(`
+      const ids = db.prepare(`
         SELECT n.id
         FROM notifications n
         LEFT JOIN notification_reads r ON n.id = r.notification_id
         WHERE r.notification_id IS NULL
-      `).all().map(item => item.id);
-      const stmt = database.prepare(`
+      `).all().map(r => r.id);
+      const stmt = db.prepare(`
         INSERT INTO notification_reads (notification_id, read_at, synced)
         VALUES (?, ?, ?)
         ON CONFLICT(notification_id) DO UPDATE SET
           read_at = excluded.read_at,
           synced = excluded.synced
       `);
-      for (const id of mapped) stmt.run(id, isoString, id > 0 ? 0 : 1);
-      database.exec("COMMIT");
-      return mapped;
+      for (const id of ids) stmt.run(id, now, id > 0 ? 0 : 1);
+      db.exec("COMMIT");
+      return ids;
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
   }
@@ -2054,37 +2054,37 @@ var NotificationRepository = class {
     return getDatabase().prepare("SELECT notification_id, read_at, synced FROM notification_reads WHERE synced = 0 AND notification_id > 0").all().map(mapReadRow);
   }
   markSynced(notificationIds) {
-    const database = getDatabase();
-    const stmt = database.prepare("UPDATE notification_reads SET synced = 1 WHERE notification_id = ?");
-    database.exec("BEGIN");
+    const db = getDatabase();
+    const stmt = db.prepare("UPDATE notification_reads SET synced = 1 WHERE notification_id = ?");
+    db.exec("BEGIN");
     try {
       for (const id of notificationIds) stmt.run(id);
-      database.exec("COMMIT");
+      db.exec("COMMIT");
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
   }
   importCloudReads(reads) {
-    const database = getDatabase();
-    const stmt = database.prepare(`
+    const db = getDatabase();
+    const stmt = db.prepare(`
       INSERT INTO notification_reads (notification_id, read_at, synced)
       VALUES (?, ?, 1)
       ON CONFLICT(notification_id) DO NOTHING
     `);
-    database.exec("BEGIN");
+    db.exec("BEGIN");
     try {
-      for (const replacedValue of reads) stmt.run(replacedValue.notification_id, replacedValue.read_at);
-      database.exec("COMMIT");
+      for (const r of reads) stmt.run(r.notification_id, r.read_at);
+      db.exec("COMMIT");
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
   }
   clearAll() {
-    const database = getDatabase();
-    database.exec("DELETE FROM notification_reads");
-    database.exec("DELETE FROM notifications");
+    const db = getDatabase();
+    db.exec("DELETE FROM notification_reads");
+    db.exec("DELETE FROM notifications");
   }
 };
 var notificationRepository = new NotificationRepository();
@@ -2127,12 +2127,12 @@ function U(l) {
 var E = {
   exec: () => null
 };
-function I(fn) {
-  let emptyItems = [];
+function I(l) {
+  let e = [];
   return t => {
     let n = Math.max(0, Math.min(3, t - 1)),
-      i = emptyItems[n];
-    return i || (i = fn(n), emptyItems[n] = i), i;
+      i = e[n];
+    return i || (i = l(n), e[n] = i), i;
   };
 }
 function d(l, e = "") {
@@ -2140,7 +2140,7 @@ function d(l, e = "") {
     n = {
       replace: (i, r) => {
         let o = typeof r == "string" ? r : r.source;
-        return o = o.replace(options.caret, "$1"), t = t.replace(i, o), n;
+        return o = o.replace(m.caret, "$1"), t = t.replace(i, o), n;
       },
       getRegex: () => new RegExp(t, e)
     };
@@ -2153,7 +2153,7 @@ var we = ((l = "") => {
     return false;
   }
 })();
-var options = {
+var m = {
   codeRemoveIndent: /^(?: {0,3}\t| {1,4})/gm,
   outputLinkReplace: /\\([\[\]])/g,
   indentCodeCompensation: /^(\s+)(?:```)/,
@@ -2219,28 +2219,28 @@ var v = /^ {0,3}((?:-[\t ]*){3,}|(?:_[ \t]*){3,}|(?:\*[ \t]*){3,})(?:\n+|$)/;
 var _e = /^ {0,3}(#{1,6})(?=\s|$)(.*)(?:\n+|$)/;
 var K = / {0,3}(?:[*+-]|\d{1,9}[.)])/;
 var le = /^(?!bull |blockCode|fences|blockquote|heading|html|table)((?:.|\n(?!\s*?\n|bull |blockCode|fences|blockquote|heading|html|table))+?)\n {0,3}(=+|-+) *(?:\n+|$)/;
-var regex = d(le).replace(/bull/g, K).replace(/blockCode/g, /(?: {4}| {0,3}\t)/).replace(/fences/g, / {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g, / {0,3}>/).replace(/heading/g, / {0,3}#{1,6}(?:\s|$)/).replace(/html/g, / {0,3}<[^\n>]+>\n/).replace(/\|table/g, "").getRegex();
+var ue = d(le).replace(/bull/g, K).replace(/blockCode/g, /(?: {4}| {0,3}\t)/).replace(/fences/g, / {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g, / {0,3}>/).replace(/heading/g, / {0,3}#{1,6}(?:\s|$)/).replace(/html/g, / {0,3}<[^\n>]+>\n/).replace(/\|table/g, "").getRegex();
 var $e = d(le).replace(/bull/g, K).replace(/blockCode/g, /(?: {4}| {0,3}\t)/).replace(/fences/g, / {0,3}(?:`{3,}|~{3,})/).replace(/blockquote/g, / {0,3}>/).replace(/heading/g, / {0,3}#{1,6}(?:\s|$)/).replace(/html/g, / {0,3}<[^\n>]+>\n/).replace(/table/g, / {0,3}\|?(?:[:\- ]*\|)+[\:\- ]*\n/).getRegex();
 var W = /^([^\n]+(?:\n(?!hr|heading|lheading|blockquote|fences|list|html|table|[ \t]+\n)[^\n]+)*)/;
 var Le = /^[^\n]+/;
 var X = /(?!\s*\])(?:\\[\s\S]|[^\[\]\\])+/;
-var regexResult = d(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label", X).replace("title", /(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex();
+var ze = d(/^ {0,3}\[(label)\]: *(?:\n[ \t]*)?([^<\s][^\s]*|<.*?>)(?:(?: +(?:\n[ \t]*)?| *\n[ \t]*)(title))? *(?:\n+|$)/).replace("label", X).replace("title", /(?:"(?:\\"?|[^"\\])*"|'[^'\n]*(?:\n[^'\n]+)*\n?'|\([^()]*\))/).getRegex();
 var Ee = d(/^(bull)([ \t][^\n]*?)?(?:\n|$)/).replace(/bull/g, K).getRegex();
 var H = "address|article|aside|base|basefont|blockquote|body|caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|footer|form|frame|frameset|h[1-6]|head|header|hr|html|iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|option|p|param|search|section|summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul";
 var J = /<!--(?:-?>|[\s\S]*?(?:-->|$))/;
 var Me = d("^ {0,3}(?:<(script|pre|style|textarea)[\\s>][\\s\\S]*?(?:</\\1>[^\\n]*\\n*|$)|comment[^\\n]*(\\n+|$)|<\\?[\\s\\S]*?(?:\\?>[^\\n]*\\n*|$)|<![A-Z][\\s\\S]*?(?:>[^\\n]*\\n*|$)|<!\\[CDATA\\[[\\s\\S]*?(?:\\]\\]>[^\\n]*\\n*|$)|</?(tag)(?: +|\\n|/?>)[\\s\\S]*?(?:(?:\\n[ \t]*)+\\n|$)|<(?!script|pre|style|textarea)([a-z][a-z0-9-]*)(?:attribute)*? */?>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ \t]*)+\\n|$)|</(?!script|pre|style|textarea)[a-z][a-z0-9-]*\\s*>(?=[ \\t]*(?:\\n|$))[\\s\\S]*?(?:(?:\\n[ \t]*)+\\n|$))", "i").replace("comment", J).replace("tag", H).replace("attribute", / +[a-zA-Z:_][\w.:-]*(?: *= *"[^"\n]*"| *= *'[^'\n]*'| *= *[^\s"'=<>`]+)?/).getRegex();
-var handler = l => d(W).replace("hr", v).replace("heading", " {0,3}#{1,6}(?:\\s|$)").replace("|lheading", "").replace("|table", "").replace("blockquote", " {0,3}>").replace("fences", " {0,3}(?:`{3,}(?=[^`\\n]*(?:\\n|$))|~~~)[^\\n]*(?:\\n|$)").replace("list", l).replace("html", "</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag", H).getRegex();
-var Ae = handler(/ {0,3}(?:[*+-]|1[.)])[ \t]+[^ \t\n]/);
-var Ie = handler(/ {0,3}(?:[*+-]|\d{1,9}[.)])(?:[ \t]|\n|$)/);
+var pe = l => d(W).replace("hr", v).replace("heading", " {0,3}#{1,6}(?:\\s|$)").replace("|lheading", "").replace("|table", "").replace("blockquote", " {0,3}>").replace("fences", " {0,3}(?:`{3,}(?=[^`\\n]*(?:\\n|$))|~~~)[^\\n]*(?:\\n|$)").replace("list", l).replace("html", "</?(?:tag)(?: +|\\n|/?>)|<(?:script|pre|style|textarea|!--)").replace("tag", H).getRegex();
+var Ae = pe(/ {0,3}(?:[*+-]|1[.)])[ \t]+[^ \t\n]/);
+var Ie = pe(/ {0,3}(?:[*+-]|\d{1,9}[.)])(?:[ \t]|\n|$)/);
 var V = {
   blockquote: d(/^( {0,3}> ?(paragraph|[^\n]*)(?:\n|$))+/).replace("paragraph", Ie).getRegex(),
   code: Pe,
-  def: regexResult,
+  def: ze,
   fences: Se,
   heading: _e,
   hr: v,
   html: Me,
-  lheading: regex,
+  lheading: ue,
   list: Ee,
   newline: ye,
   paragraph: Ae,
@@ -2262,7 +2262,7 @@ var De = {
   fences: E,
   lheading: /^(.+?)\n {0,3}(=+|-+) *(?:\n+|$)/,
   paragraph: d(W).replace("hr", v).replace("heading", ` *#{1,6} *[^
-]`).replace("lheading", regex).replace("|table", "").replace("blockquote", " {0,3}>").replace("|fences", "").replace("|list", "").replace("|html", "").replace("|tag", "").getRegex()
+]`).replace("lheading", ue).replace("|table", "").replace("blockquote", " {0,3}>").replace("|fences", "").replace("|list", "").replace("|html", "").replace("|tag", "").getRegex()
 };
 var qe = /^\\([!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~])/;
 var ve = /^(`+)([^`]|[^`][\s\S]*?[^`])\1(?!`)/;
@@ -2333,7 +2333,7 @@ var gt = {
   link: d(/^!?\[(label)\]\((.*?)\)/).replace("label", N).getRegex(),
   reflink: d(/^!?\[(label)\]\s*\[([^\]]*)\]/).replace("label", N).getRegex()
 };
-var request = {
+var F = {
   ...Y,
   emStrongRDelimAst: Je,
   emStrongLDelim: Fe,
@@ -2345,9 +2345,9 @@ var request = {
   text: d(/^(`+|~+|[^`~])(?:(?=[`~])|(?= {2,}\n)|(?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)|[\s\S]*?(?:(?=[\\<!\[`*~_]|\b_|protocol:\/\/|www\.|$)|[^ ](?= {2,}\n)|[^a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-](?=[a-zA-Z0-9.!#$%&'*+\/=?_`{\|}~-]+@)))/).replace("protocol", ae).getRegex()
 };
 var ft = {
-  ...request,
+  ...F,
   br: d(ce).replace("{2,}", "*").getRegex(),
-  text: d(request.text).replace("\\b_", "\\b_| {2,}\\n").replace(/\{2,\}/g, "*").getRegex()
+  text: d(F.text).replace("\\b_", "\\b_| {2,}\\n").replace(/\{2,\}/g, "*").getRegex()
 };
 var G = {
   normal: V,
@@ -2356,7 +2356,7 @@ var G = {
 };
 var B = {
   normal: Y,
-  gfm: request,
+  gfm: F,
   breaks: ft,
   pedantic: gt
 };
@@ -2370,80 +2370,80 @@ var mt = {
 var fe = l => mt[l];
 function R(l, e) {
   if (e) {
-    if (options.escapeTest.test(l)) return l.replace(options.escapeReplace, fe);
-  } else if (options.escapeTestNoEncode.test(l)) return l.replace(options.escapeReplaceNoEncode, fe);
+    if (m.escapeTest.test(l)) return l.replace(m.escapeReplace, fe);
+  } else if (m.escapeTestNoEncode.test(l)) return l.replace(m.escapeReplaceNoEncode, fe);
   return l;
 }
 function ee(l) {
   try {
-    l = encodeURI(l).replace(options.percentDecode, "%");
+    l = encodeURI(l).replace(m.percentDecode, "%");
   } catch {
     return null;
   }
   return l;
 }
 function te(l, e) {
-  let parts = l.replace(options.findPipe, (r, o, s) => {
+  let n = l.replace(m.findPipe, (r, o, s) => {
       let u = false,
         a = o;
       for (; --a >= 0 && s[a] === "\\";) u = !u;
       return u ? "|" : " |";
-    }).split(options.splitPipe),
+    }).split(m.splitPipe),
     i = 0;
-  if (parts[0].trim() || parts.shift(), parts.length > 0 && !parts.at(-1)?.trim() && parts.pop(), e) if (parts.length > e) parts.splice(e);else for (; parts.length < e;) parts.push("");
-  for (; i < parts.length; i++) parts[i] = parts[i].trim().replace(options.slashPipe, "|");
-  return parts;
+  if (n[0].trim() || n.shift(), n.length > 0 && !n.at(-1)?.trim() && n.pop(), e) if (n.length > e) n.splice(e);else for (; n.length < e;) n.push("");
+  for (; i < n.length; i++) n[i] = n[i].trim().replace(m.slashPipe, "|");
+  return n;
 }
-function $(items, e, t) {
-  let n = items.length;
+function $(l, e, t) {
+  let n = l.length;
   if (n === 0) return "";
   let i = 0;
   for (; i < n;) {
-    let r = items.charAt(n - i - 1);
+    let r = l.charAt(n - i - 1);
     if (r === e && !t) i++;else if (r !== e && t) i++;else break;
   }
-  return items.slice(0, n - i);
+  return l.slice(0, n - i);
 }
-function ne(text) {
-  let parts = text.split(`
+function ne(l) {
+  let e = l.split(`
 `),
-    t = parts.length - 1;
-  for (; t >= 0 && options.blankLine.test(parts[t]);) t--;
-  return parts.length - t <= 2 ? text : parts.slice(0, t + 1).join(`
+    t = e.length - 1;
+  for (; t >= 0 && m.blankLine.test(e[t]);) t--;
+  return e.length - t <= 2 ? l : e.slice(0, t + 1).join(`
 `);
 }
-function D(text) {
-  return text.toLowerCase().toUpperCase().toLowerCase();
+function D(l) {
+  return l.toLowerCase().toUpperCase().toLowerCase();
 }
-function me(items, e) {
-  if (items.indexOf(e[1]) === -1) return -1;
+function me(l, e) {
+  if (l.indexOf(e[1]) === -1) return -1;
   let t = 0;
-  for (let n = 0; n < items.length; n++) if (items[n] === "\\") n++;else if (items[n] === e[0]) t++;else if (items[n] === e[1] && (t--, t < 0)) return n;
+  for (let n = 0; n < l.length; n++) if (l[n] === "\\") n++;else if (l[n] === e[0]) t++;else if (l[n] === e[1] && (t--, t < 0)) return n;
   return t > 0 ? -2 : -1;
 }
 function xe(l, e = 0) {
   let t = e,
     n = "";
-  for (let diff of l) if (diff === "\t") {
+  for (let i of l) if (i === "\t") {
     let r = 4 - t % 4;
     n += " ".repeat(r), t += r;
-  } else n += diff, t++;
+  } else n += i, t++;
   return n;
 }
 function be(l, e, t, n, i) {
-  let href = e.href,
-    fallbackValue = e.title || null,
-    replaced = l[1].replace(i.other.outputLinkReplace, "$1"),
+  let r = e.href,
+    o = e.title || null,
+    s = l[1].replace(i.other.outputLinkReplace, "$1"),
     u = l[0].charAt(0) === "!";
   n.state.inLink = true;
-  let linkEmitted = n.state.linkEmitted,
-    inRawBlock = n.state.inRawBlock;
+  let a = n.state.linkEmitted,
+    p = n.state.inRawBlock;
   n.state.linkEmitted = false;
-  let inlineTokens = n.inlineTokens(replaced),
+  let c = n.inlineTokens(s),
     h = n.state.linkEmitted;
-  if (n.state.linkEmitted = linkEmitted, n.state.inLink = false, !u) {
+  if (n.state.linkEmitted = a, n.state.inLink = false, !u) {
     if (h) {
-      n.state.inRawBlock = inRawBlock;
+      n.state.inRawBlock = p;
       return;
     }
     n.state.linkEmitted = true;
@@ -2451,26 +2451,26 @@ function be(l, e, t, n, i) {
   return {
     type: u ? "image" : "link",
     raw: t,
-    href: href,
-    title: fallbackValue,
-    text: replaced,
-    tokens: inlineTokens
+    href: r,
+    title: o,
+    text: s,
+    tokens: c
   };
 }
-function xt(l, text, t) {
+function xt(l, e, t) {
   let n = l.match(t.other.indentCodeCompensation);
-  if (n === null) return text;
+  if (n === null) return e;
   let i = n[1];
-  return text.split(`
-`).map(items => {
-    let o = items.match(t.other.beginningSpace);
-    if (o === null) return items;
+  return e.split(`
+`).map(r => {
+    let o = r.match(t.other.beginningSpace);
+    if (o === null) return r;
     let [s] = o;
-    return items.slice(Math.min(s.length, i.length));
+    return r.slice(Math.min(s.length, i.length));
   }).join(`
 `);
 }
-function Re(items, e, t, n) {
+function Re(l, e, t, n) {
   if (!e.includes("<")) return false;
   for (let i = 0; i < e.length; i++) {
     if (e[i] === "\\") {
@@ -2485,11 +2485,11 @@ function Re(items, e, t, n) {
       }
     }
     if (e[i] !== "<") continue;
-    let part = items.slice(t + i),
-      fallbackValue = n.inline.tag.exec(part) || n.inline.autolink.exec(part);
-    if (fallbackValue) {
-      if (fallbackValue[0].length > e.length - i) return true;
-      i += fallbackValue[0].length - 1;
+    let r = l.slice(t + i),
+      o = n.inline.tag.exec(r) || n.inline.autolink.exec(r);
+    if (o) {
+      if (o[0].length > e.length - i) return true;
+      i += o[0].length - 1;
     }
   }
   return false;
@@ -2498,8 +2498,8 @@ var y = class {
   options;
   rules;
   lexer;
-  constructor(constructor) {
-    this.options = constructor || T;
+  constructor(e) {
+    this.options = e || T;
   }
   space(e) {
     let t = this.rules.block.newline.exec(e);
@@ -2520,8 +2520,8 @@ var y = class {
       };
     }
   }
-  fences(fences) {
-    let t = this.rules.block.fences.exec(fences);
+  fences(e) {
+    let t = this.rules.block.fences.exec(e);
     if (t) {
       let n = t[0],
         i = xt(n, t[3] || "", this.rules);
@@ -2533,21 +2533,21 @@ var y = class {
       };
     }
   }
-  heading(heading) {
-    let t = this.rules.block.heading.exec(heading);
+  heading(e) {
+    let t = this.rules.block.heading.exec(e);
     if (t) {
-      let trimmed = t[2].trim();
-      if (this.rules.other.endingHash.test(trimmed)) {
-        let i = $(trimmed, "#");
-        (this.options.pedantic || !i || this.rules.other.endingSpaceTabChar.test(i)) && (trimmed = i.trim());
+      let n = t[2].trim();
+      if (this.rules.other.endingHash.test(n)) {
+        let i = $(n, "#");
+        (this.options.pedantic || !i || this.rules.other.endingSpaceTabChar.test(i)) && (n = i.trim());
       }
       return {
         type: "heading",
         raw: $(t[0], `
 `),
         depth: t[1].length,
-        text: trimmed,
-        tokens: this.lexer.inline(trimmed)
+        text: n,
+        tokens: this.lexer.inline(n)
       };
     }
   }
@@ -2559,49 +2559,49 @@ var y = class {
 `)
     };
   }
-  blockquote(blockquote) {
-    let t = this.rules.block.blockquote.exec(blockquote);
+  blockquote(e) {
+    let t = this.rules.block.blockquote.exec(e);
     if (t) {
-      let parts = $(t[0], `
+      let n = $(t[0], `
 `).split(`
 `),
         i = "",
         r = "",
-        emptyItems = [];
-      for (; parts.length > 0;) {
+        o = [];
+      for (; n.length > 0;) {
         let s = false,
-          length = [],
+          u = [],
           a = 0;
-        for (; a < parts.length; a++) if (this.rules.other.blockquoteStart.test(parts[a])) length.push(parts[a]), s = true;else if (!s) length.push(parts[a]);else break;
-        parts = parts.slice(a);
-        let joined = length.join(`
+        for (; a < n.length; a++) if (this.rules.other.blockquoteStart.test(n[a])) u.push(n[a]), s = true;else if (!s) u.push(n[a]);else break;
+        n = n.slice(a);
+        let p = u.join(`
 `),
-          replaced = joined.replace(this.rules.other.blockquoteSetextReplace, `
+          c = p.replace(this.rules.other.blockquoteSetextReplace, `
     $1`).replace(this.rules.other.blockquoteSetextReplace2, "");
         i = i ? `${i}
-${joined}` : joined, r = r ? `${r}
-${replaced}` : replaced;
+${p}` : p, r = r ? `${r}
+${c}` : c;
         let h = this.lexer.state.top;
-        if (this.lexer.state.top = true, this.lexer.blockTokens(replaced, emptyItems, true), this.lexer.state.top = h, parts.length === 0) break;
-        let k = emptyItems.at(-1);
+        if (this.lexer.state.top = true, this.lexer.blockTokens(c, o, true), this.lexer.state.top = h, n.length === 0) break;
+        let k = o.at(-1);
         if (k?.type === "code") break;
         if (k?.type === "blockquote") {
           let O = k,
-            g = parts.join(`
+            g = n.join(`
 `),
             w = O.raw + `
 ` + g.replace(this.rules.other.blockquoteSetextReplace2, ""),
-            blockquoteResult = this.blockquote(w);
-          emptyItems[emptyItems.length - 1] = blockquoteResult, i = `${i}
-${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
+            z = this.blockquote(w);
+          o[o.length - 1] = z, i = `${i}
+${g}`, r = r.substring(0, r.length - O.text.length) + z.text;
           break;
         } else if (k?.type === "list") {
           let O = k,
             g = O.raw + `
-` + parts.join(`
+` + n.join(`
 `),
             w = this.list(g);
-          emptyItems[emptyItems.length - 1] = w, i = i.substring(0, i.length - k.raw.length) + w.raw, r = r.substring(0, r.length - O.raw.length) + w.raw, parts = g.substring(emptyItems.at(-1).raw.length).split(`
+          o[o.length - 1] = w, i = i.substring(0, i.length - k.raw.length) + w.raw, r = r.substring(0, r.length - O.raw.length) + w.raw, n = g.substring(o.at(-1).raw.length).split(`
 `);
           continue;
         }
@@ -2609,60 +2609,60 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
       return {
         type: "blockquote",
         raw: i,
-        tokens: emptyItems,
+        tokens: o,
         text: r
       };
     }
   }
-  list(text) {
-    let t = this.rules.block.list.exec(text);
+  list(e) {
+    let t = this.rules.block.list.exec(e);
     if (t) {
-      let trimmed = t[1].trim(),
-        i = trimmed.length > 1,
+      let n = t[1].trim(),
+        i = n.length > 1,
         r = {
           type: "list",
           raw: "",
           ordered: i,
-          start: i ? +trimmed.slice(0, -1) : "",
+          start: i ? +n.slice(0, -1) : "",
           loose: false,
           items: []
         };
-      trimmed = i ? `\\d{1,9}\\${trimmed.slice(-1)}` : `\\${trimmed}`, this.options.pedantic && (trimmed = i ? trimmed : "[*+-]");
-      let itemRegex = this.rules.other.listItemRegex(trimmed),
+      n = i ? `\\d{1,9}\\${n.slice(-1)}` : `\\${n}`, this.options.pedantic && (n = i ? n : "[*+-]");
+      let o = this.rules.other.listItemRegex(n),
         s = false;
-      for (; text;) {
+      for (; e;) {
         let a = false,
           p = "",
           c = "";
-        if (!(t = itemRegex.exec(text)) || this.rules.block.hr.test(text)) break;
-        p = t[0], text = text.substring(p.length);
+        if (!(t = o.exec(e)) || this.rules.block.hr.test(e)) break;
+        p = t[0], e = e.substring(p.length);
         let h = xe(t[2].split(`
 `, 1)[0], t[1].length),
-          k = text.split(`
+          k = e.split(`
 `, 1)[0],
           O = !h.trim(),
           g = 0;
         if (this.options.pedantic ? (g = 2, c = h.trimStart()) : O ? g = t[1].length + 1 : (g = h.search(this.rules.other.nonSpaceChar), g = g > 4 ? 1 : g, c = h.slice(g), g += t[1].length), O && this.rules.other.blankLine.test(k) && (p += k + `
-`, text = text.substring(k.length + 1), a = true), !a) {
-          let nextBulletRegex = this.rules.other.nextBulletRegex(g),
+`, e = e.substring(k.length + 1), a = true), !a) {
+          let w = this.rules.other.nextBulletRegex(g),
             z = this.rules.other.hrRegex(g),
-            fencesBeginRegex = this.rules.other.fencesBeginRegex(g),
-            headingBeginRegex = this.rules.other.headingBeginRegex(g),
-            htmlBeginRegex = this.rules.other.htmlBeginRegex(g),
-            blockquoteBeginRegex = this.rules.other.blockquoteBeginRegex(g);
-          for (; text;) {
-            let j = text.split(`
+            re = this.rules.other.fencesBeginRegex(g),
+            se = this.rules.other.headingBeginRegex(g),
+            Te = this.rules.other.htmlBeginRegex(g),
+            Oe = this.rules.other.blockquoteBeginRegex(g);
+          for (; e;) {
+            let j = e.split(`
 `, 1)[0],
               q;
-            if (k = j, this.options.pedantic ? (k = k.replace(this.rules.other.listReplaceNesting, "  "), q = k) : q = k.replace(this.rules.other.tabCharGlobal, "    "), fencesBeginRegex.test(k) || headingBeginRegex.test(k) || htmlBeginRegex.test(k) || blockquoteBeginRegex.test(k) || nextBulletRegex.test(k) || z.test(k)) break;
+            if (k = j, this.options.pedantic ? (k = k.replace(this.rules.other.listReplaceNesting, "  "), q = k) : q = k.replace(this.rules.other.tabCharGlobal, "    "), re.test(k) || se.test(k) || Te.test(k) || Oe.test(k) || w.test(k) || z.test(k)) break;
             if (q.search(this.rules.other.nonSpaceChar) >= g || !k.trim()) c += `
 ` + q.slice(g);else {
-              if (O || h.replace(this.rules.other.tabCharGlobal, "    ").search(this.rules.other.nonSpaceChar) >= 4 || fencesBeginRegex.test(h) || headingBeginRegex.test(h) || z.test(h)) break;
+              if (O || h.replace(this.rules.other.tabCharGlobal, "    ").search(this.rules.other.nonSpaceChar) >= 4 || re.test(h) || se.test(h) || z.test(h)) break;
               c += `
 ` + k;
             }
             O = !k.trim(), p += j + `
-`, text = text.substring(j.length + 1), h = q.slice(g);
+`, e = e.substring(j.length + 1), h = q.slice(g);
           }
         }
         r.loose || (s ? r.loose = true : this.rules.other.doubleBlankLine.test(p) && (s = true)), r.items.push({
@@ -2677,37 +2677,37 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
       let u = r.items.at(-1);
       if (u) u.raw = u.raw.trimEnd(), u.text = u.text.trimEnd();else return;
       r.raw = r.raw.trimEnd();
-      for (let flag of r.items) if (this.lexer.state.top = false, flag.tokens = this.lexer.blockTokens(flag.text, []), !r.loose) {
-        let filtered = flag.tokens.filter(item => item.type === "space");
-        r.loose = filtered.length > 0 && filtered.some(item => this.rules.other.anyLine.test(item.raw));
+      for (let a of r.items) if (this.lexer.state.top = false, a.tokens = this.lexer.blockTokens(a.text, []), !r.loose) {
+        let p = a.tokens.filter(h => h.type === "space");
+        r.loose = p.length > 0 && p.some(h => this.rules.other.anyLine.test(h.raw));
       }
-      for (let flag of r.items) {
-        let p = flag.tokens[0];
-        if (flag.task && (p?.type === "text" || p?.type === "paragraph")) {
-          flag.text = flag.text.replace(this.rules.other.listReplaceTask, ""), p.raw = p.raw.replace(this.rules.other.listReplaceTask, ""), p.text = p.text.replace(this.rules.other.listReplaceTask, "");
+      for (let a of r.items) {
+        let p = a.tokens[0];
+        if (a.task && (p?.type === "text" || p?.type === "paragraph")) {
+          a.text = a.text.replace(this.rules.other.listReplaceTask, ""), p.raw = p.raw.replace(this.rules.other.listReplaceTask, ""), p.text = p.text.replace(this.rules.other.listReplaceTask, "");
           for (let h = this.lexer.inlineQueue.length - 1; h >= 0; h--) if (this.rules.other.listIsTask.test(this.lexer.inlineQueue[h].src)) {
             this.lexer.inlineQueue[h].src = this.lexer.inlineQueue[h].src.replace(this.rules.other.listReplaceTask, "");
             break;
           }
-          let c = this.rules.other.listTaskCheckbox.exec(flag.raw);
+          let c = this.rules.other.listTaskCheckbox.exec(a.raw);
           if (c) {
             let h = {
               type: "checkbox",
               raw: c[0] + " ",
               checked: c[0] !== "[ ]"
             };
-            flag.checked = h.checked, r.loose ? flag.tokens[0] && ["paragraph", "text"].includes(flag.tokens[0].type) && "tokens" in flag.tokens[0] && flag.tokens[0].tokens ? (flag.tokens[0].raw = h.raw + flag.tokens[0].raw, flag.tokens[0].text = h.raw + flag.tokens[0].text, flag.tokens[0].tokens.unshift(h)) : flag.tokens.unshift({
+            a.checked = h.checked, r.loose ? a.tokens[0] && ["paragraph", "text"].includes(a.tokens[0].type) && "tokens" in a.tokens[0] && a.tokens[0].tokens ? (a.tokens[0].raw = h.raw + a.tokens[0].raw, a.tokens[0].text = h.raw + a.tokens[0].text, a.tokens[0].tokens.unshift(h)) : a.tokens.unshift({
               type: "paragraph",
               raw: h.raw,
               text: h.raw,
               tokens: [h]
-            }) : flag.tokens.unshift(h);
+            }) : a.tokens.unshift(h);
           }
-        } else flag.task && (flag.task = false);
+        } else a.task && (a.task = false);
       }
-      if (r.loose) for (let flag of r.items) {
-        flag.loose = true;
-        for (let total of flag.tokens) total.type === "text" && (total.type = "paragraph");
+      if (r.loose) for (let a of r.items) {
+        a.loose = true;
+        for (let p of a.tokens) p.type === "text" && (p.type = "paragraph");
       }
       return r;
     }
@@ -2728,12 +2728,12 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
   def(e) {
     let t = this.rules.block.def.exec(e);
     if (t) {
-      let replaced = D(t[1]).replace(this.rules.other.multipleSpaceGlobal, " "),
+      let n = D(t[1]).replace(this.rules.other.multipleSpaceGlobal, " "),
         i = t[2] ? t[2].replace(this.rules.other.hrefBrackets, "$1").replace(this.rules.inline.anyPunctuation, "$1") : "",
         r = t[3] ? t[3].substring(1, t[3].length - 1).replace(this.rules.inline.anyPunctuation, "$1") : t[3];
       return {
         type: "def",
-        tag: replaced,
+        tag: n,
         raw: $(t[0], `
 `),
         href: i,
@@ -2745,7 +2745,7 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
     let t = this.rules.block.table.exec(e);
     if (!t || !this.rules.other.tableDelimiter.test(t[2])) return;
     let n = te(t[1]),
-      parts = t[2].replace(this.rules.other.tableAlignChars, "").split("|"),
+      i = t[2].replace(this.rules.other.tableAlignChars, "").split("|"),
       r = t[3]?.trim() ? t[3].replace(this.rules.other.tableRowBlankLine, "").split(`
 `) : [],
       o = {
@@ -2756,39 +2756,39 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
         align: [],
         rows: []
       };
-    if (n.length === parts.length) {
-      for (let flag of parts) this.rules.other.tableAlignRight.test(flag) ? o.align.push("right") : this.rules.other.tableAlignCenter.test(flag) ? o.align.push("center") : this.rules.other.tableAlignLeft.test(flag) ? o.align.push("left") : o.align.push(null);
+    if (n.length === i.length) {
+      for (let s of i) this.rules.other.tableAlignRight.test(s) ? o.align.push("right") : this.rules.other.tableAlignCenter.test(s) ? o.align.push("center") : this.rules.other.tableAlignLeft.test(s) ? o.align.push("left") : o.align.push(null);
       for (let s = 0; s < n.length; s++) o.header.push({
         text: n[s],
         tokens: this.lexer.inline(n[s]),
         header: true,
         align: o.align[s]
       });
-      for (let flag of r) o.rows.push(te(flag, o.header.length).map((item, a) => ({
-        text: item,
-        tokens: this.lexer.inline(item),
+      for (let s of r) o.rows.push(te(s, o.header.length).map((u, a) => ({
+        text: u,
+        tokens: this.lexer.inline(u),
         header: false,
         align: o.align[a]
       })));
       return o;
     }
   }
-  lheading(lheading) {
-    let t = this.rules.block.lheading.exec(lheading);
+  lheading(e) {
+    let t = this.rules.block.lheading.exec(e);
     if (t) {
-      let trimmed = t[1].trim();
+      let n = t[1].trim();
       return {
         type: "heading",
         raw: $(t[0], `
 `),
         depth: t[2].charAt(0) === "=" ? 1 : 2,
-        text: trimmed,
-        tokens: this.lexer.inline(trimmed)
+        text: n,
+        tokens: this.lexer.inline(n)
       };
     }
   }
-  paragraph(paragraph) {
-    let t = this.rules.block.paragraph.exec(paragraph);
+  paragraph(e) {
+    let t = this.rules.block.paragraph.exec(e);
     if (t) {
       let n = t[1].charAt(t[1].length - 1) === `
 ` ? t[1].slice(0, -1) : t[1];
@@ -2809,8 +2809,8 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
       tokens: this.lexer.inline(t[0])
     };
   }
-  escape(escapeValue) {
-    let t = this.rules.inline.escape.exec(escapeValue);
+  escape(e) {
+    let t = this.rules.inline.escape.exec(e);
     if (t) return {
       type: "escape",
       raw: t[0],
@@ -2833,11 +2833,11 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
     if (t) {
       let n = t[0].charAt(0) === "!" ? 2 : 1;
       if (!this.options.pedantic && Re(e, t[1], n, this.rules)) return;
-      let trimmed = t[2].trim();
-      if (!this.options.pedantic && this.rules.other.startAngleBracket.test(trimmed)) {
-        if (!this.rules.other.endAngleBracket.test(trimmed)) return;
-        let s = $(trimmed.slice(0, -1), "\\");
-        if ((trimmed.length - s.length) % 2 === 0) return;
+      let i = t[2].trim();
+      if (!this.options.pedantic && this.rules.other.startAngleBracket.test(i)) {
+        if (!this.rules.other.endAngleBracket.test(i)) return;
+        let s = $(i.slice(0, -1), "\\");
+        if ((i.length - s.length) % 2 === 0) return;
       } else {
         let s = me(t[2], "()");
         if (s === -2) return;
@@ -2852,18 +2852,18 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
         let s = this.rules.other.pedanticHrefTitle.exec(r);
         s && (r = s[1], o = s[3]);
       } else o = t[3] ? t[3].slice(1, -1) : "";
-      return r = r.trim(), this.rules.other.startAngleBracket.test(r) && (this.options.pedantic && !this.rules.other.endAngleBracket.test(trimmed) ? r = r.slice(1) : r = r.slice(1, -1)), be(t, {
+      return r = r.trim(), this.rules.other.startAngleBracket.test(r) && (this.options.pedantic && !this.rules.other.endAngleBracket.test(i) ? r = r.slice(1) : r = r.slice(1, -1)), be(t, {
         href: r && r.replace(this.rules.inline.anyPunctuation, "$1"),
         title: o && o.replace(this.rules.inline.anyPunctuation, "$1")
       }, t[0], this.lexer, this.rules);
     }
   }
-  reflink(reflink, reflinkValue) {
+  reflink(e, t) {
     let n;
-    if ((n = this.rules.inline.reflink.exec(reflink)) || (n = this.rules.inline.nolink.exec(reflink))) {
+    if ((n = this.rules.inline.reflink.exec(e)) || (n = this.rules.inline.nolink.exec(e))) {
       let i = n[0].charAt(0) === "!" ? 2 : 1;
-      if (!this.options.pedantic && Re(reflink, n[1], i, this.rules)) return;
-      let o = reflinkValue[D((n[2] || n[1]).replace(this.rules.other.multipleSpaceGlobal, " "))];
+      if (!this.options.pedantic && Re(e, n[1], i, this.rules)) return;
+      let o = t[D((n[2] || n[1]).replace(this.rules.other.multipleSpaceGlobal, " "))];
       if (!o) {
         let s = n[0].charAt(0);
         return {
@@ -2875,63 +2875,63 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
       return be(n, o, n[0], this.lexer, this.rules);
     }
   }
-  emStrong(items, strong, n = "") {
-    let i = this.rules.inline.emStrongLDelim.exec(items);
+  emStrong(e, t, n = "") {
+    let i = this.rules.inline.emStrongLDelim.exec(e);
     if (!i || !i[1] && !i[2] && !i[3] && !i[4] || i[4] && n.match(this.rules.other.unicodeAlphaNumeric)) return;
     if (!(i[1] || i[3] || "") || !n || this.rules.inline.punctuation.exec(n)) {
       let o = [...i[0]].length - 1,
-        flag,
-        length,
+        s,
+        u,
         a = o,
         p = 0,
         c = i[0][0],
         h = n === c,
         k = c === "*" ? this.rules.inline.emStrongRDelimAst : this.rules.inline.emStrongRDelimUnd;
-      for (k.lastIndex = 0, strong = strong.slice(-1 * items.length + o); (i = k.exec(strong)) !== null;) {
-        if (flag = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !flag) continue;
-        if (length = [...flag].length, i[3] || i[4]) {
-          a += length;
+      for (k.lastIndex = 0, t = t.slice(-1 * e.length + o); (i = k.exec(t)) !== null;) {
+        if (s = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !s) continue;
+        if (u = [...s].length, i[3] || i[4]) {
+          a += u;
           continue;
         } else if (i[5] || i[6]) {
-          if (o % 3 && !((o + length) % 3)) {
-            p += length;
+          if (o % 3 && !((o + u) % 3)) {
+            p += u;
             continue;
           }
           if (h) break;
         }
-        if (a -= length, a > 0) continue;
-        length = Math.min(length, length + a + p);
+        if (a -= u, a > 0) continue;
+        u = Math.min(u, u + a + p);
         let O = [...i[0]][0].length,
-          part = items.slice(0, o + i.index + O + length);
-        if (Math.min(o, length) % 2) {
-          let z = part.slice(1, -1);
+          g = e.slice(0, o + i.index + O + u);
+        if (Math.min(o, u) % 2) {
+          let z = g.slice(1, -1);
           return {
             type: "em",
-            raw: part,
+            raw: g,
             text: z,
             tokens: this.lexer.inlineTokens(z)
           };
         }
-        let w = part.slice(2, -2);
+        let w = g.slice(2, -2);
         return {
           type: "strong",
-          raw: part,
+          raw: g,
           text: w,
           tokens: this.lexer.inlineTokens(w)
         };
       }
     }
   }
-  codespan(codespan) {
-    let t = this.rules.inline.code.exec(codespan);
+  codespan(e) {
+    let t = this.rules.inline.code.exec(e);
     if (t) {
-      let replaced = t[2].replace(this.rules.other.newLineCharGlobal, " "),
-        i = this.rules.other.nonSpaceChar.test(replaced),
-        r = this.rules.other.startingSpaceChar.test(replaced) && this.rules.other.endingSpaceChar.test(replaced);
-      return i && r && (replaced = replaced.substring(1, replaced.length - 1)), {
+      let n = t[2].replace(this.rules.other.newLineCharGlobal, " "),
+        i = this.rules.other.nonSpaceChar.test(n),
+        r = this.rules.other.startingSpaceChar.test(n) && this.rules.other.endingSpaceChar.test(n);
+      return i && r && (n = n.substring(1, n.length - 1)), {
         type: "codespan",
         raw: t[0],
-        text: replaced
+        text: n
       };
     }
   }
@@ -2942,44 +2942,44 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
       raw: t[0]
     };
   }
-  del(items, t, n = "") {
-    let i = this.rules.inline.delLDelim.exec(items);
+  del(e, t, n = "") {
+    let i = this.rules.inline.delLDelim.exec(e);
     if (!i) return;
     if (!(i[1] || "") || !n || this.rules.inline.punctuation.exec(n)) {
       let o = [...i[0]].length - 1,
-        flag,
-        length,
+        s,
+        u,
         a = o,
-        delRDelim = this.rules.inline.delRDelim;
-      for (delRDelim.lastIndex = 0, t = t.slice(-1 * items.length + o); (i = delRDelim.exec(t)) !== null;) {
-        if (flag = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !flag || (length = [...flag].length, length !== o)) continue;
+        p = this.rules.inline.delRDelim;
+      for (p.lastIndex = 0, t = t.slice(-1 * e.length + o); (i = p.exec(t)) !== null;) {
+        if (s = i[1] || i[2] || i[3] || i[4] || i[5] || i[6], !s || (u = [...s].length, u !== o)) continue;
         if (i[3] || i[4]) {
-          a += length;
+          a += u;
           continue;
         }
-        if (a -= length, a > 0) continue;
-        length = Math.min(length, length + a);
+        if (a -= u, a > 0) continue;
+        u = Math.min(u, u + a);
         let c = [...i[0]][0].length,
-          part = items.slice(0, o + i.index + c + length),
-          k = part.slice(o, -o);
+          h = e.slice(0, o + i.index + c + u),
+          k = h.slice(o, -o);
         return {
           type: "del",
-          raw: part,
+          raw: h,
           text: k,
           tokens: this.lexer.inlineTokens(k)
         };
       }
     }
   }
-  autolink(autolink) {
-    let t = this.rules.inline.autolink.exec(autolink);
+  autolink(e) {
+    let t = this.rules.inline.autolink.exec(e);
     if (t) {
-      let n, diff;
-      return t[2] === "@" ? (n = t[1], diff = "mailto:" + n) : (n = t[1], diff = n), {
+      let n, i;
+      return t[2] === "@" ? (n = t[1], i = "mailto:" + n) : (n = t[1], i = n), {
         type: "link",
         raw: t[0],
         text: n,
-        href: diff,
+        href: i,
         autolink: true,
         tokens: [{
           type: "text",
@@ -2992,17 +2992,17 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
   url(e) {
     let t;
     if (t = this.rules.inline.url.exec(e)) {
-      let n, diff;
-      if (t[2] === "@") n = t[0], diff = "mailto:" + n;else {
-        let replacedValue;
-        do replacedValue = t[0], t[0] = this.rules.inline._backpedal.exec(t[0])?.[0] ?? ""; while (replacedValue !== t[0]);
-        n = t[0], t[1] === "www." ? diff = "http://" + t[0] : diff = t[0];
+      let n, i;
+      if (t[2] === "@") n = t[0], i = "mailto:" + n;else {
+        let r;
+        do r = t[0], t[0] = this.rules.inline._backpedal.exec(t[0])?.[0] ?? ""; while (r !== t[0]);
+        n = t[0], t[1] === "www." ? i = "http://" + t[0] : i = t[0];
       }
       return {
         type: "link",
         raw: t[0],
         text: n,
-        href: diff,
+        href: i,
         autolink: true,
         tokens: [{
           type: "text",
@@ -3012,15 +3012,15 @@ ${g}`, r = r.substring(0, r.length - O.text.length) + blockquoteResult.text;
       };
     }
   }
-  inlineText(inline) {
-    let t = this.rules.inline.text.exec(inline);
+  inlineText(e) {
+    let t = this.rules.inline.text.exec(e);
     if (t) {
-      let inRawBlock = this.lexer.state.inRawBlock;
+      let n = this.lexer.state.inRawBlock;
       return {
         type: "text",
         raw: t[0],
         text: t[0],
-        escaped: inRawBlock
+        escaped: n
       };
     }
   }
@@ -3031,15 +3031,15 @@ var x = class l {
   state;
   inlineQueue;
   tokenizer;
-  constructor(constructor) {
-    this.tokens = [], this.tokens.links = Object.create(null), this.options = constructor || T, this.options.tokenizer = this.options.tokenizer || new y(), this.tokenizer = this.options.tokenizer, this.tokenizer.options = this.options, this.tokenizer.lexer = this, this.inlineQueue = [], this.state = {
+  constructor(e) {
+    this.tokens = [], this.tokens.links = Object.create(null), this.options = e || T, this.options.tokenizer = this.options.tokenizer || new y(), this.tokenizer = this.options.tokenizer, this.tokenizer.options = this.options, this.tokenizer.lexer = this, this.inlineQueue = [], this.state = {
       inLink: false,
       inRawBlock: false,
       linkEmitted: false,
       top: true
     };
     let t = {
-      other: options,
+      other: m,
       block: G.normal,
       inline: B.normal
     };
@@ -3054,11 +3054,11 @@ var x = class l {
   static lex(e, t) {
     return new l(t).lex(e);
   }
-  static lexInline(lexValue, inline) {
-    return new l(inline).inlineTokens(lexValue);
+  static lexInline(e, t) {
+    return new l(t).inlineTokens(e);
   }
   lex(e) {
-    e = e.replace(options.carriageReturn, `
+    e = e.replace(m.carriageReturn, `
 `), this.blockTokens(e, this.tokens);
     for (let t = 0; t < this.inlineQueue.length; t++) {
       let n = this.inlineQueue[t];
@@ -3066,241 +3066,241 @@ var x = class l {
     }
     return this.inlineQueue = [], this.tokens;
   }
-  blockTokens(items, t = [], n = false) {
-    this.tokenizer.lexer = this, this.options.pedantic && (items = items.replace(options.tabCharGlobal, "    ").replace(options.spaceLine, ""));
+  blockTokens(e, t = [], n = false) {
+    this.tokenizer.lexer = this, this.options.pedantic && (e = e.replace(m.tabCharGlobal, "    ").replace(m.spaceLine, ""));
     let i = 1 / 0;
-    for (; items;) {
-      if (items.length < i) i = items.length;else {
-        this.infiniteLoopError(items.charCodeAt(0));
+    for (; e;) {
+      if (e.length < i) i = e.length;else {
+        this.infiniteLoopError(e.charCodeAt(0));
         break;
       }
-      let replacedValue;
-      if (this.options.extensions?.block?.some(s => (replacedValue = s.call({
+      let r;
+      if (this.options.extensions?.block?.some(s => (r = s.call({
         lexer: this
-      }, items, t)) ? (items = items.substring(replacedValue.raw.length), t.push(replacedValue), true) : false)) continue;
-      if (replacedValue = this.tokenizer.space(items)) {
-        items = items.substring(replacedValue.raw.length);
+      }, e, t)) ? (e = e.substring(r.raw.length), t.push(r), true) : false)) continue;
+      if (r = this.tokenizer.space(e)) {
+        e = e.substring(r.raw.length);
         let s = t.at(-1);
-        replacedValue.raw.length === 1 && s !== undefined ? s.raw += `
-` : t.push(replacedValue);
+        r.raw.length === 1 && s !== undefined ? s.raw += `
+` : t.push(r);
         continue;
       }
-      if (replacedValue = this.tokenizer.code(items)) {
-        items = items.substring(replacedValue.raw.length);
-        let s = t.at(-1);
-        s?.type === "paragraph" || s?.type === "text" ? (s.raw += (s.raw.endsWith(`
-`) ? "" : `
-`) + replacedValue.raw, s.text += `
-` + replacedValue.text, this.inlineQueue.at(-1).src = s.text) : t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.fences(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.heading(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.hr(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.blockquote(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.list(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.html(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
-        continue;
-      }
-      if (replacedValue = this.tokenizer.def(items)) {
-        items = items.substring(replacedValue.raw.length);
+      if (r = this.tokenizer.code(e)) {
+        e = e.substring(r.raw.length);
         let s = t.at(-1);
         s?.type === "paragraph" || s?.type === "text" ? (s.raw += (s.raw.endsWith(`
 `) ? "" : `
-`) + replacedValue.raw, s.text += `
-` + replacedValue.raw, this.inlineQueue.at(-1).src = s.text) : this.tokens.links[replacedValue.tag] || (this.tokens.links[replacedValue.tag] = {
-          href: replacedValue.href,
-          title: replacedValue.title
-        }, t.push(replacedValue));
+`) + r.raw, s.text += `
+` + r.text, this.inlineQueue.at(-1).src = s.text) : t.push(r);
         continue;
       }
-      if (replacedValue = this.tokenizer.table(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+      if (r = this.tokenizer.fences(e)) {
+        e = e.substring(r.raw.length), t.push(r);
         continue;
       }
-      if (replacedValue = this.tokenizer.lheading(items)) {
-        items = items.substring(replacedValue.raw.length), t.push(replacedValue);
+      if (r = this.tokenizer.heading(e)) {
+        e = e.substring(r.raw.length), t.push(r);
         continue;
       }
-      let itemsAlias = items;
+      if (r = this.tokenizer.hr(e)) {
+        e = e.substring(r.raw.length), t.push(r);
+        continue;
+      }
+      if (r = this.tokenizer.blockquote(e)) {
+        e = e.substring(r.raw.length), t.push(r);
+        continue;
+      }
+      if (r = this.tokenizer.list(e)) {
+        e = e.substring(r.raw.length), t.push(r);
+        continue;
+      }
+      if (r = this.tokenizer.html(e)) {
+        e = e.substring(r.raw.length), t.push(r);
+        continue;
+      }
+      if (r = this.tokenizer.def(e)) {
+        e = e.substring(r.raw.length);
+        let s = t.at(-1);
+        s?.type === "paragraph" || s?.type === "text" ? (s.raw += (s.raw.endsWith(`
+`) ? "" : `
+`) + r.raw, s.text += `
+` + r.raw, this.inlineQueue.at(-1).src = s.text) : this.tokens.links[r.tag] || (this.tokens.links[r.tag] = {
+          href: r.href,
+          title: r.title
+        }, t.push(r));
+        continue;
+      }
+      if (r = this.tokenizer.table(e)) {
+        e = e.substring(r.raw.length), t.push(r);
+        continue;
+      }
+      if (r = this.tokenizer.lheading(e)) {
+        e = e.substring(r.raw.length), t.push(r);
+        continue;
+      }
+      let o = e;
       if (this.options.extensions?.startBlock) {
         let s = 1 / 0,
-          part = items.slice(1),
-          flag;
-        this.options.extensions.startBlock.forEach(item => {
-          flag = item.call({
+          u = e.slice(1),
+          a;
+        this.options.extensions.startBlock.forEach(p => {
+          a = p.call({
             lexer: this
-          }, part), typeof flag == "number" && flag >= 0 && (s = Math.min(s, flag));
-        }), s < 1 / 0 && s >= 0 && (itemsAlias = items.substring(0, s + 1));
+          }, u), typeof a == "number" && a >= 0 && (s = Math.min(s, a));
+        }), s < 1 / 0 && s >= 0 && (o = e.substring(0, s + 1));
       }
-      if (this.state.top && (replacedValue = this.tokenizer.paragraph(itemsAlias))) {
+      if (this.state.top && (r = this.tokenizer.paragraph(o))) {
         let s = t.at(-1);
         n && s?.type === "paragraph" ? (s.raw += (s.raw.endsWith(`
 `) ? "" : `
-`) + replacedValue.raw, s.text += `
-` + replacedValue.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(replacedValue), n = itemsAlias.length !== items.length, items = items.substring(replacedValue.raw.length);
+`) + r.raw, s.text += `
+` + r.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(r), n = o.length !== e.length, e = e.substring(r.raw.length);
         continue;
       }
-      if (replacedValue = this.tokenizer.text(items)) {
-        items = items.substring(replacedValue.raw.length);
+      if (r = this.tokenizer.text(e)) {
+        e = e.substring(r.raw.length);
         let s = t.at(-1);
         s?.type === "text" ? (s.raw += (s.raw.endsWith(`
 `) ? "" : `
-`) + replacedValue.raw, s.text += `
-` + replacedValue.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(replacedValue);
+`) + r.raw, s.text += `
+` + r.text, this.inlineQueue.pop(), this.inlineQueue.at(-1).src = s.text) : t.push(r);
         continue;
       }
-      if (items) {
-        this.infiniteLoopError(items.charCodeAt(0));
+      if (e) {
+        this.infiniteLoopError(e.charCodeAt(0));
         break;
       }
     }
     return this.state.top = true, t;
   }
-  inline(inline, t = []) {
+  inline(e, t = []) {
     return this.inlineQueue.push({
-      src: inline,
+      src: e,
       tokens: t
     }), t;
   }
-  linkInText(text) {
-    if (!text.includes("[")) return false;
-    let link = this.tokenizer.rules.inline.link;
-    for (let n of text.matchAll(this.tokenizer.rules.inline.blockSkip)) if (link.test(n[0]) && text.charAt(n.index - 1) !== "!") return true;
-    for (let n of text.matchAll(this.tokenizer.rules.inline.reflinkSearch)) {
+  linkInText(e) {
+    if (!e.includes("[")) return false;
+    let t = this.tokenizer.rules.inline.link;
+    for (let n of e.matchAll(this.tokenizer.rules.inline.blockSkip)) if (t.test(n[0]) && e.charAt(n.index - 1) !== "!") return true;
+    for (let n of e.matchAll(this.tokenizer.rules.inline.reflinkSearch)) {
       let i = n[0],
-        lastIndexOf = i.lastIndexOf("[");
-      if (!(i.charAt(0) === "!" || !Object.hasOwn(this.tokens.links, D(i.slice(lastIndexOf + 1, -1)))) && !(lastIndexOf > 1 && this.linkInText(i.slice(1, lastIndexOf - 1)))) return true;
+        r = i.lastIndexOf("[");
+      if (!(i.charAt(0) === "!" || !Object.hasOwn(this.tokens.links, D(i.slice(r + 1, -1)))) && !(r > 1 && this.linkInText(i.slice(1, r - 1)))) return true;
     }
     return false;
   }
-  inlineTokens(items, t = []) {
+  inlineTokens(e, t = []) {
     this.tokenizer.lexer = this;
-    let itemsAlias = items;
-    if (this.tokens.links && items.includes("[")) {
-      let reflinkSearch = this.tokenizer.rules.inline.reflinkSearch,
+    let n = e;
+    if (this.tokens.links && e.includes("[")) {
+      let s = this.tokenizer.rules.inline.reflinkSearch,
         u = a => {
-          let lastIndexOf = a.lastIndexOf("[");
-          if (!Object.hasOwn(this.tokens.links, D(a.slice(lastIndexOf + 1, -1)))) return a;
-          if (lastIndexOf > 1 && a.charAt(0) !== "!") {
-            let part = a.slice(1, lastIndexOf - 1);
-            if (this.linkInText(part)) return "[" + part.replace(reflinkSearch, u) + "][" + "a".repeat(a.length - lastIndexOf - 2) + "]";
+          let p = a.lastIndexOf("[");
+          if (!Object.hasOwn(this.tokens.links, D(a.slice(p + 1, -1)))) return a;
+          if (p > 1 && a.charAt(0) !== "!") {
+            let c = a.slice(1, p - 1);
+            if (this.linkInText(c)) return "[" + c.replace(s, u) + "][" + "a".repeat(a.length - p - 2) + "]";
           }
           return "[" + "a".repeat(a.length - 2) + "]";
         };
-      itemsAlias = itemsAlias.replace(reflinkSearch, u);
+      n = n.replace(s, u);
     }
-    itemsAlias = itemsAlias.replace(this.tokenizer.rules.inline.anyPunctuation, count => "+".repeat(count.length)), itemsAlias = itemsAlias.replace(this.tokenizer.rules.inline.blockSkip, (s, u, count) => {
-      let p = count ? count.length : 0;
+    n = n.replace(this.tokenizer.rules.inline.anyPunctuation, s => "+".repeat(s.length)), n = n.replace(this.tokenizer.rules.inline.blockSkip, (s, u, a) => {
+      let p = a ? a.length : 0;
       return s.slice(0, p) + "[" + "a".repeat(s.length - p - 2) + "]";
-    }), itemsAlias = this.options.hooks?.emStrongMask?.call({
+    }), n = this.options.hooks?.emStrongMask?.call({
       lexer: this
-    }, itemsAlias) ?? itemsAlias;
+    }, n) ?? n;
     let i = false,
       r = "",
       o = 1 / 0;
-    for (; items;) {
-      if (items.length < o) o = items.length;else {
-        this.infiniteLoopError(items.charCodeAt(0));
+    for (; e;) {
+      if (e.length < o) o = e.length;else {
+        this.infiniteLoopError(e.charCodeAt(0));
         break;
       }
       i || (r = ""), i = false;
-      let flag;
-      if (this.options.extensions?.inline?.some(a => (flag = a.call({
+      let s;
+      if (this.options.extensions?.inline?.some(a => (s = a.call({
         lexer: this
-      }, items, t)) ? (items = items.substring(flag.raw.length), t.push(flag), true) : false)) continue;
-      if (flag = this.tokenizer.escape(items)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      }, e, t)) ? (e = e.substring(s.raw.length), t.push(s), true) : false)) continue;
+      if (s = this.tokenizer.escape(e)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.tag(items)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.tag(e)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.link(items)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.link(e)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.reflink(items, this.tokens.links)) {
-        items = items.substring(flag.raw.length);
+      if (s = this.tokenizer.reflink(e, this.tokens.links)) {
+        e = e.substring(s.raw.length);
         let a = t.at(-1);
-        flag.type === "text" && a?.type === "text" ? (a.raw += flag.raw, a.text += flag.text) : t.push(flag);
+        s.type === "text" && a?.type === "text" ? (a.raw += s.raw, a.text += s.text) : t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.emStrong(items, itemsAlias, r)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.emStrong(e, n, r)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.codespan(items)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.codespan(e)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.br(items)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.br(e)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.del(items, itemsAlias, r)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.del(e, n, r)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (flag = this.tokenizer.autolink(items)) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (s = this.tokenizer.autolink(e)) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      if (!this.state.inLink && (flag = this.tokenizer.url(items))) {
-        items = items.substring(flag.raw.length), t.push(flag);
+      if (!this.state.inLink && (s = this.tokenizer.url(e))) {
+        e = e.substring(s.raw.length), t.push(s);
         continue;
       }
-      let u = items;
+      let u = e;
       if (this.options.extensions?.startInline) {
         let a = 1 / 0,
-          part = items.slice(1),
-          text;
-        this.options.extensions.startInline.forEach(item => {
-          text = item.call({
+          p = e.slice(1),
+          c;
+        this.options.extensions.startInline.forEach(h => {
+          c = h.call({
             lexer: this
-          }, part), typeof text == "number" && text >= 0 && (a = Math.min(a, text));
-        }), a < 1 / 0 && a >= 0 && (u = items.substring(0, a + 1));
+          }, p), typeof c == "number" && c >= 0 && (a = Math.min(a, c));
+        }), a < 1 / 0 && a >= 0 && (u = e.substring(0, a + 1));
       }
-      if (flag = this.tokenizer.inlineText(u)) {
-        items = items.substring(flag.raw.length), flag.raw.slice(-1) !== "_" && (r = flag.raw.slice(-1)), i = true;
+      if (s = this.tokenizer.inlineText(u)) {
+        e = e.substring(s.raw.length), s.raw.slice(-1) !== "_" && (r = s.raw.slice(-1)), i = true;
         let a = t.at(-1);
-        a?.type === "text" ? (a.raw += flag.raw, a.text += flag.text) : t.push(flag);
+        a?.type === "text" ? (a.raw += s.raw, a.text += s.text) : t.push(s);
         continue;
       }
-      if (items) {
-        this.infiniteLoopError(items.charCodeAt(0));
+      if (e) {
+        this.infiniteLoopError(e.charCodeAt(0));
         break;
       }
     }
     return t;
   }
-  infiniteLoopError(infinite) {
-    let t = "Infinite loop on byte: " + infinite;
+  infiniteLoopError(e) {
+    let t = "Infinite loop on byte: " + e;
     if (this.options.silent) console.error(t);else throw new Error(t);
   }
 };
 var P = class {
   options;
   parser;
-  constructor(constructor) {
-    this.options = constructor || T;
+  constructor(e) {
+    this.options = e || T;
   }
   space(e) {
     return "";
@@ -3310,8 +3310,8 @@ var P = class {
     lang: t,
     escaped: n
   }) {
-    let i = (t || "").match(options.notSpaceStart)?.[0],
-      r = e ? e.replace(options.endingNewline, "") + `
+    let i = (t || "").match(m.notSpaceStart)?.[0],
+      r = e ? e.replace(m.endingNewline, "") + `
 ` : "";
     return i ? "<pre><code class=\"language-" + R(i) + "\">" + (n ? r : R(r, true)) + `</code></pre>
 ` : "<pre><code>" + (n ? r : R(r, true)) + `</code></pre>
@@ -3344,21 +3344,21 @@ ${this.parser.parse(e)}</blockquote>
 `;
   }
   list(e) {
-    let ordered = e.ordered,
+    let t = e.ordered,
       n = e.start,
       i = "";
     for (let s = 0; s < e.items.length; s++) {
       let u = e.items[s];
       i += this.listitem(u);
     }
-    let r = ordered ? "ol" : "ul",
-      o = ordered && n !== 1 ? " start=\"" + n + "\"" : "";
+    let r = t ? "ol" : "ul",
+      o = t && n !== 1 ? " start=\"" + n + "\"" : "";
     return "<" + r + o + `>
 ` + i + "</" + r + `>
 `;
   }
-  listitem(item) {
-    return `<li>${this.parser.parse(item.tokens)}</li>
+  listitem(e) {
+    return `<li>${this.parser.parse(e.tokens)}</li>
 `;
   }
   checkbox({
@@ -3401,10 +3401,10 @@ ${this.parser.parse(e)}</blockquote>
 ${e}</tr>
 `;
   }
-  tablecell(tablecell) {
-    let inline = this.parser.parseInline(tablecell.tokens),
-      n = tablecell.header ? "th" : "td";
-    return (tablecell.align ? `<${n} align="${tablecell.align}">` : `<${n}>`) + inline + `</${n}>
+  tablecell(e) {
+    let t = this.parser.parseInline(e.tokens),
+      n = e.header ? "th" : "td";
+    return (e.align ? `<${n} align="${e.align}">` : `<${n}>`) + t + `</${n}>
 `;
   }
   strong({
@@ -3515,20 +3515,20 @@ var b = class l {
   options;
   renderer;
   textRenderer;
-  constructor(constructor) {
-    this.options = constructor || T, this.options.renderer = this.options.renderer || new P(), this.renderer = this.options.renderer, this.renderer.options = this.options, this.renderer.parser = this, this.textRenderer = new L();
+  constructor(e) {
+    this.options = e || T, this.options.renderer = this.options.renderer || new P(), this.renderer = this.options.renderer, this.renderer.options = this.options, this.renderer.parser = this, this.textRenderer = new L();
   }
   static parse(e, t) {
     return new l(t).parse(e);
   }
-  static parseInline(inline, inlineValue) {
-    return new l(inlineValue).parseInline(inline);
+  static parseInline(e, t) {
+    return new l(t).parseInline(e);
   }
-  parse(count) {
+  parse(e) {
     this.renderer.parser = this;
     let t = "";
-    for (let n = 0; n < count.length; n++) {
-      let i = count[n];
+    for (let n = 0; n < e.length; n++) {
+      let i = e[n];
       if (this.options.extensions?.renderers?.[i.type]) {
         let o = i,
           s = this.options.extensions.renderers[o.type].call({
@@ -3587,11 +3587,11 @@ var b = class l {
     }
     return t;
   }
-  parseInline(count, t = this.renderer) {
+  parseInline(e, t = this.renderer) {
     this.renderer.parser = this;
     let n = "";
-    for (let i = 0; i < count.length; i++) {
-      let r = count[i];
+    for (let i = 0; i < e.length; i++) {
+      let r = e[i];
       if (this.options.extensions?.renderers?.[r.type]) {
         let s = this.options.extensions.renderers[r.type].call({
           parser: this
@@ -3650,22 +3650,22 @@ var b = class l {
 var S = class {
   options;
   block;
-  constructor(constructor) {
-    this.options = constructor || T;
+  constructor(e) {
+    this.options = e || T;
   }
   static passThroughHooks = /* @__PURE__ */new Set(["preprocess", "postprocess", "processAllTokens", "emStrongMask"]);
   static passThroughHooksRespectAsync = /* @__PURE__ */new Set(["preprocess", "postprocess", "processAllTokens"]);
-  preprocess(preprocess) {
-    return preprocess;
+  preprocess(e) {
+    return e;
   }
-  postprocess(processValue) {
-    return processValue;
+  postprocess(e) {
+    return e;
   }
-  processAllTokens(allValue) {
-    return allValue;
+  processAllTokens(e) {
+    return e;
   }
-  emStrongMask(strong) {
-    return strong;
+  emStrongMask(e) {
+    return e;
   }
   provideLexer(e = this.block) {
     return e ? x.lex : x.lexInline;
@@ -3688,103 +3688,103 @@ var Q = class {
   constructor(...e) {
     this.use(...e);
   }
-  walkTokens(walk, tokens) {
-    let emptyItems = [];
-    for (let diff of walk) switch (emptyItems = emptyItems.concat(tokens.call(this, diff)), diff.type) {
+  walkTokens(e, t) {
+    let n = [];
+    for (let i of e) switch (n = n.concat(t.call(this, i)), i.type) {
       case "table":
         {
-          let diffAlias = diff;
-          for (let resolvedValue of diffAlias.header) emptyItems = emptyItems.concat(this.walkTokens(resolvedValue.tokens, tokens));
-          for (let resolvedValue of diffAlias.rows) for (let flag of resolvedValue) emptyItems = emptyItems.concat(this.walkTokens(flag.tokens, tokens));
+          let r = i;
+          for (let o of r.header) n = n.concat(this.walkTokens(o.tokens, t));
+          for (let o of r.rows) for (let s of o) n = n.concat(this.walkTokens(s.tokens, t));
           break;
         }
       case "list":
         {
-          let diffAlias = diff;
-          emptyItems = emptyItems.concat(this.walkTokens(diffAlias.items, tokens));
+          let r = i;
+          n = n.concat(this.walkTokens(r.items, t));
           break;
         }
       default:
         {
-          let diffAlias = diff;
-          this.defaults.extensions?.childTokens?.[diffAlias.type] ? this.defaults.extensions.childTokens[diffAlias.type].forEach(item => {
-            let s = diffAlias[item].flat(1 / 0);
-            emptyItems = emptyItems.concat(this.walkTokens(s, tokens));
-          }) : diffAlias.tokens && (emptyItems = emptyItems.concat(this.walkTokens(diffAlias.tokens, tokens)));
+          let r = i;
+          this.defaults.extensions?.childTokens?.[r.type] ? this.defaults.extensions.childTokens[r.type].forEach(o => {
+            let s = r[o].flat(1 / 0);
+            n = n.concat(this.walkTokens(s, t));
+          }) : r.tokens && (n = n.concat(this.walkTokens(r.tokens, t)));
         }
     }
-    return emptyItems;
+    return n;
   }
   use(...e) {
-    let fallbackValue = this.defaults.extensions || {
+    let t = this.defaults.extensions || {
       renderers: {},
       childTokens: {}
     };
-    return e.forEach(item => {
+    return e.forEach(n => {
       let i = {
-        ...item
+        ...n
       };
-      if (i.async = this.defaults.async || i.async || false, item.extensions && (item.extensions.forEach(r => {
+      if (i.async = this.defaults.async || i.async || false, n.extensions && (n.extensions.forEach(r => {
         if (!r.name) throw new Error("extension name required");
         if ("renderer" in r) {
-          let o = fallbackValue.renderers[r.name];
-          o ? fallbackValue.renderers[r.name] = function (...s) {
+          let o = t.renderers[r.name];
+          o ? t.renderers[r.name] = function (...s) {
             let u = r.renderer.apply(this, s);
             return u === false && (u = o.apply(this, s)), u;
-          } : fallbackValue.renderers[r.name] = r.renderer;
+          } : t.renderers[r.name] = r.renderer;
         }
         if ("tokenizer" in r) {
           if (!r.level || r.level !== "block" && r.level !== "inline") throw new Error("extension level must be 'block' or 'inline'");
-          let o = fallbackValue[r.level];
-          o ? o.unshift(r.tokenizer) : fallbackValue[r.level] = [r.tokenizer], r.start && (r.level === "block" ? fallbackValue.startBlock ? fallbackValue.startBlock.push(r.start) : fallbackValue.startBlock = [r.start] : r.level === "inline" && (fallbackValue.startInline ? fallbackValue.startInline.push(r.start) : fallbackValue.startInline = [r.start]));
+          let o = t[r.level];
+          o ? o.unshift(r.tokenizer) : t[r.level] = [r.tokenizer], r.start && (r.level === "block" ? t.startBlock ? t.startBlock.push(r.start) : t.startBlock = [r.start] : r.level === "inline" && (t.startInline ? t.startInline.push(r.start) : t.startInline = [r.start]));
         }
-        "childTokens" in r && r.childTokens && (fallbackValue.childTokens[r.name] = r.childTokens);
-      }), i.extensions = fallbackValue), item.renderer) {
+        "childTokens" in r && r.childTokens && (t.childTokens[r.name] = r.childTokens);
+      }), i.extensions = t), n.renderer) {
         let r = this.defaults.renderer || new P(this.defaults);
-        for (let resolvedValue in item.renderer) {
-          if (!(resolvedValue in r)) throw new Error(`renderer '${resolvedValue}' does not exist`);
-          if (["options", "parser"].includes(resolvedValue)) continue;
-          let resolvedValueAlias = resolvedValue,
-            u = item.renderer[resolvedValueAlias],
-            a = r[resolvedValueAlias];
-          r[resolvedValueAlias] = (...p) => {
+        for (let o in n.renderer) {
+          if (!(o in r)) throw new Error(`renderer '${o}' does not exist`);
+          if (["options", "parser"].includes(o)) continue;
+          let s = o,
+            u = n.renderer[s],
+            a = r[s];
+          r[s] = (...p) => {
             let c = u.apply(r, p);
             return c === false && (c = a.apply(r, p)), c || "";
           };
         }
         i.renderer = r;
       }
-      if (item.tokenizer) {
+      if (n.tokenizer) {
         let r = this.defaults.tokenizer || new y(this.defaults);
-        for (let resolvedValue in item.tokenizer) {
-          if (!(resolvedValue in r)) throw new Error(`tokenizer '${resolvedValue}' does not exist`);
-          if (["options", "rules", "lexer"].includes(resolvedValue)) continue;
-          let resolvedValueAlias = resolvedValue,
-            u = item.tokenizer[resolvedValueAlias],
-            a = r[resolvedValueAlias];
-          r[resolvedValueAlias] = (...p) => {
+        for (let o in n.tokenizer) {
+          if (!(o in r)) throw new Error(`tokenizer '${o}' does not exist`);
+          if (["options", "rules", "lexer"].includes(o)) continue;
+          let s = o,
+            u = n.tokenizer[s],
+            a = r[s];
+          r[s] = (...p) => {
             let c = u.apply(r, p);
             return c === false && (c = a.apply(r, p)), c;
           };
         }
         i.tokenizer = r;
       }
-      if (item.hooks) {
+      if (n.hooks) {
         let r = this.defaults.hooks || new S();
-        for (let resolvedValue in item.hooks) {
-          if (!(resolvedValue in r)) throw new Error(`hook '${resolvedValue}' does not exist`);
-          if (["options", "block"].includes(resolvedValue)) continue;
-          let resolvedValueAlias = resolvedValue,
-            u = item.hooks[resolvedValueAlias],
-            a = r[resolvedValueAlias];
-          S.passThroughHooks.has(resolvedValue) ? r[resolvedValueAlias] = p => {
-            if (this.defaults.async && S.passThroughHooksRespectAsync.has(resolvedValue)) return (async () => {
+        for (let o in n.hooks) {
+          if (!(o in r)) throw new Error(`hook '${o}' does not exist`);
+          if (["options", "block"].includes(o)) continue;
+          let s = o,
+            u = n.hooks[s],
+            a = r[s];
+          S.passThroughHooks.has(o) ? r[s] = p => {
+            if (this.defaults.async && S.passThroughHooksRespectAsync.has(o)) return (async () => {
               let h = await u.call(r, p);
               return a.call(r, h);
             })();
             let c = u.call(r, p);
             return a.call(r, c);
-          } : r[resolvedValueAlias] = (...p) => {
+          } : r[s] = (...p) => {
             if (this.defaults.async) return (async () => {
               let h = await u.apply(r, p);
               return h === false && (h = await a.apply(r, p)), h;
@@ -3795,12 +3795,12 @@ var Q = class {
         }
         i.hooks = r;
       }
-      if (item.walkTokens) {
-        let walkTokens = this.defaults.walkTokens,
-          o = item.walkTokens;
+      if (n.walkTokens) {
+        let r = this.defaults.walkTokens,
+          o = n.walkTokens;
         i.walkTokens = function (s) {
-          let emptyItems = [];
-          return emptyItems.push(o.call(this, s)), walkTokens && (emptyItems = emptyItems.concat(walkTokens.call(this, s))), emptyItems;
+          let u = [];
+          return u.push(o.call(this, s)), r && (u = u.concat(r.call(this, s))), u;
         };
       }
       this.defaults = {
@@ -3809,10 +3809,10 @@ var Q = class {
       };
     }), this;
   }
-  setOptions(options) {
+  setOptions(e) {
     return this.defaults = {
       ...this.defaults,
-      ...options
+      ...e
     }, this;
   }
   lexer(e, t) {
@@ -3821,7 +3821,7 @@ var Q = class {
   parser(e, t) {
     return b.parse(e, t ?? this.defaults);
   }
-  parseMarkdown(markdown) {
+  parseMarkdown(e) {
     return (n, i) => {
       let r = {
           ...i
@@ -3834,33 +3834,33 @@ var Q = class {
       if (this.defaults.async === true && r.async === false) return s(/* @__PURE__ */new Error("marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."));
       if (typeof n > "u" || n === null) return s(/* @__PURE__ */new Error("marked(): input parameter is undefined or null"));
       if (typeof n != "string") return s(/* @__PURE__ */new Error("marked(): input parameter is of type " + Object.prototype.toString.call(n) + ", string expected"));
-      if (o.hooks && (o.hooks.options = o, o.hooks.block = markdown), o.async) return (async () => {
+      if (o.hooks && (o.hooks.options = o, o.hooks.block = e), o.async) return (async () => {
         let u = o.hooks ? await o.hooks.preprocess(n) : n,
-          p = await (o.hooks ? await o.hooks.provideLexer(markdown) : markdown ? x.lex : x.lexInline)(u, o),
+          p = await (o.hooks ? await o.hooks.provideLexer(e) : e ? x.lex : x.lexInline)(u, o),
           c = o.hooks ? await o.hooks.processAllTokens(p) : p;
         o.walkTokens && (await Promise.all(this.walkTokens(c, o.walkTokens)));
-        let k = await (o.hooks ? await o.hooks.provideParser(markdown) : markdown ? b.parse : b.parseInline)(c, o);
+        let k = await (o.hooks ? await o.hooks.provideParser(e) : e ? b.parse : b.parseInline)(c, o);
         return o.hooks ? await o.hooks.postprocess(k) : k;
       })().catch(s);
       try {
         o.hooks && (n = o.hooks.preprocess(n));
-        let a = (o.hooks ? o.hooks.provideLexer(markdown) : markdown ? x.lex : x.lexInline)(n, o);
+        let a = (o.hooks ? o.hooks.provideLexer(e) : e ? x.lex : x.lexInline)(n, o);
         o.hooks && (a = o.hooks.processAllTokens(a)), o.walkTokens && this.walkTokens(a, o.walkTokens);
-        let c = (o.hooks ? o.hooks.provideParser(markdown) : markdown ? b.parse : b.parseInline)(a, o);
+        let c = (o.hooks ? o.hooks.provideParser(e) : e ? b.parse : b.parseInline)(a, o);
         return o.hooks && (c = o.hooks.postprocess(c)), c;
       } catch (u) {
         return s(u);
       }
     };
   }
-  onError(error, errorValue) {
+  onError(e, t) {
     return n => {
       if (n.message += `
-Please report this to https://github.com/markedjs/marked.`, error) {
+Please report this to https://github.com/markedjs/marked.`, e) {
         let i = "<p>An error occurred:</p><pre>" + R(n.message + "", true) + "</pre>";
-        return errorValue ? Promise.resolve(i) : i;
+        return t ? Promise.resolve(i) : i;
       }
-      if (errorValue) return Promise.reject(n);
+      if (t) return Promise.reject(n);
       throw n;
     };
   }
@@ -4068,31 +4068,31 @@ function textFromJson(value, result = [], budget = {
 function eventHashMaterial(input) {
   return stableStringify(redactAndNormalize(input));
 }
-function mapEvent$1(mapValue) {
+function mapEvent$1(row) {
   return {
-    globalSeq: Number(mapValue.global_seq),
-    eventId: mapValue.event_id,
-    streamId: mapValue.stream_id,
-    streamSeq: Number(mapValue.stream_seq),
-    conversationId: mapValue.conversation_id,
-    eventType: mapValue.event_type,
-    schemaVersion: Number(mapValue.schema_version),
-    occurredAt: mapValue.occurred_at,
-    actorType: mapValue.actor_type,
-    actorId: mapValue.actor_id,
-    aggregateType: mapValue.aggregate_type,
-    aggregateId: mapValue.aggregate_id,
-    correlationId: mapValue.correlation_id,
-    causationEventId: mapValue.causation_event_id,
-    parentEventId: mapValue.parent_event_id,
-    branchId: mapValue.branch_id,
-    retentionClass: mapValue.retention_class,
-    sourceEventSeqs: parseNumberArray(mapValue.source_event_seqs_json),
-    payload: parseJsonObject(mapValue.payload_json),
-    payloadSha256: mapValue.payload_sha256,
-    previousEventHash: mapValue.previous_event_hash,
-    eventHash: mapValue.event_hash,
-    synthetic: mapValue.is_synthetic === 1
+    globalSeq: Number(row.global_seq),
+    eventId: row.event_id,
+    streamId: row.stream_id,
+    streamSeq: Number(row.stream_seq),
+    conversationId: row.conversation_id,
+    eventType: row.event_type,
+    schemaVersion: Number(row.schema_version),
+    occurredAt: row.occurred_at,
+    actorType: row.actor_type,
+    actorId: row.actor_id,
+    aggregateType: row.aggregate_type,
+    aggregateId: row.aggregate_id,
+    correlationId: row.correlation_id,
+    causationEventId: row.causation_event_id,
+    parentEventId: row.parent_event_id,
+    branchId: row.branch_id,
+    retentionClass: row.retention_class,
+    sourceEventSeqs: parseNumberArray(row.source_event_seqs_json),
+    payload: parseJsonObject(row.payload_json),
+    payloadSha256: row.payload_sha256,
+    previousEventHash: row.previous_event_hash,
+    eventHash: row.event_hash,
+    synthetic: row.is_synthetic === 1
   };
 }
 function defaultStreamId(input) {
@@ -4451,7 +4451,7 @@ var XiaoheiBotEventLogRepository = class {
     const sequenceRange = eventSequenceRange(rows);
     return {
       ok: false,
-      checkedEvents: rows.findIndex(item => item.event_id === event.eventId) + 1,
+      checkedEvents: rows.findIndex(row => row.event_id === event.eventId) + 1,
       firstGlobalSeq: sequenceRange.first,
       lastGlobalSeq: event.globalSeq,
       brokenEventId: event.eventId,
@@ -4544,19 +4544,19 @@ var XiaoheiBotEventLogRepository = class {
     return getDatabase().prepare(`SELECT trace_id, item_id, kind, chunk_seq, occurred_at,
                 payload_json, payload_sha256
          FROM xiaohei_bot_diagnostic_chunks
-         WHERE run_id = ? ORDER BY chunk_seq ASC`).all(runId).map(item => ({
-      traceId: item.trace_id,
-      itemId: item.item_id,
-      kind: item.kind,
-      chunkSeq: Number(item.chunk_seq),
-      occurredAt: item.occurred_at,
-      payload: parseJsonObject(item.payload_json),
-      payloadSha256: item.payload_sha256
+         WHERE run_id = ? ORDER BY chunk_seq ASC`).all(runId).map(row => ({
+      traceId: row.trace_id,
+      itemId: row.item_id,
+      kind: row.kind,
+      chunkSeq: Number(row.chunk_seq),
+      occurredAt: row.occurred_at,
+      payload: parseJsonObject(row.payload_json),
+      payloadSha256: row.payload_sha256
     }));
   }
   pruneDiagnosticEvents(retentionDays) {
     if (!Number.isFinite(retentionDays) || retentionDays < 1) return 0;
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     const cutoff = (/* @__PURE__ */new Date(Date.now() - retentionDays * 864e5)).toISOString();
     const statement = getDatabase().prepare(`DELETE FROM xiaohei_bot_diagnostic_chunks
        WHERE trace_id IN (
@@ -4567,7 +4567,7 @@ var XiaoheiBotEventLogRepository = class {
        )`);
     let total = 0;
     for (;;) {
-      const changes = Number(statement.run(isoString, cutoff).changes);
+      const changes = Number(statement.run(now, cutoff).changes);
       total += changes;
       if (changes < 2e3) return total;
     }
@@ -4656,17 +4656,17 @@ function parseProcessItems(value) {
     return [];
   }
 }
-function ensureLegacyTimelineText(legacy, items) {
-  if (legacy.author_type !== "bot" || !legacy.content.trim() || items.some(item => item.kind === "text")) return items;
-  const status = legacy.status === "complete" ? "completed" : legacy.status === "failed" || legacy.status === "cancelled" ? legacy.status : "streaming";
+function ensureLegacyTimelineText(row, items) {
+  if (row.author_type !== "bot" || !row.content.trim() || items.some(item => item.kind === "text")) return items;
+  const status = row.status === "complete" ? "completed" : row.status === "failed" || row.status === "cancelled" ? row.status : "streaming";
   const terminal = status !== "streaming";
   return [...items, {
-    id: `legacy-text:${legacy.id}`,
+    id: `legacy-text:${row.id}`,
     kind: "text",
     status,
-    content: legacy.content,
-    startedAt: legacy.updated_at,
-    completedAt: terminal ? legacy.updated_at : null,
+    content: row.content,
+    startedAt: row.updated_at,
+    completedAt: terminal ? row.updated_at : null,
     durationMs: terminal ? 0 : null
   }];
 }
@@ -4694,30 +4694,30 @@ function clampThinkingLevel(requested, supportedLevels) {
   }
   return supportedLevels[0] ?? "off";
 }
-function mapBot(mapValue) {
+function mapBot(row) {
   return {
-    id: mapValue.id,
-    name: mapValue.name,
-    description: mapValue.description,
-    responseStyle: mapValue.response_style,
-    tags: parseStringArray(mapValue.tags_json),
-    providerId: mapValue.provider_id,
-    modelId: mapValue.model_id,
-    thinkingLevel: mapValue.thinking_level,
-    permissionMode: mapValue.permission_mode,
-    managementPermissions: JSON.parse(mapValue.management_permissions_json || "{\"createBots\":true,\"manageGroups\":true}"),
-    creatorBotId: mapValue.creator_bot_id,
-    sourceConversationId: mapValue.source_conversation_id,
-    workingDirectory: mapValue.working_directory,
-    workingDirectoryIsCustom: mapValue.working_directory_is_custom === 1,
-    isBuiltin: mapValue.is_builtin === 1,
-    profileCompletion: JSON.parse(mapValue.profile_completion_json || "{\"name\":false,\"description\":true,\"tags\":true}"),
-    identityVersion: mapValue.identity_version,
-    avatar: mapValue.avatar ?? undefined,
-    avatarColor: mapValue.avatar_color ?? undefined,
-    avatarShape: mapValue.avatar_shape ?? undefined,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    id: row.id,
+    name: row.name,
+    description: row.description,
+    responseStyle: row.response_style,
+    tags: parseStringArray(row.tags_json),
+    providerId: row.provider_id,
+    modelId: row.model_id,
+    thinkingLevel: row.thinking_level,
+    permissionMode: row.permission_mode,
+    managementPermissions: JSON.parse(row.management_permissions_json || "{\"createBots\":true,\"manageGroups\":true}"),
+    creatorBotId: row.creator_bot_id,
+    sourceConversationId: row.source_conversation_id,
+    workingDirectory: row.working_directory,
+    workingDirectoryIsCustom: row.working_directory_is_custom === 1,
+    isBuiltin: row.is_builtin === 1,
+    profileCompletion: JSON.parse(row.profile_completion_json || "{\"name\":false,\"description\":true,\"tags\":true}"),
+    identityVersion: row.identity_version,
+    avatar: row.avatar ?? undefined,
+    avatarColor: row.avatar_color ?? undefined,
+    avatarShape: row.avatar_shape ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 var XiaoheiBotRepository = class {
@@ -5218,7 +5218,7 @@ var XiaoheiBotRepository = class {
     const timestamp = now();
     const directConversationIds = database.prepare(`SELECT id FROM xiaohei_bot_conversations
            WHERE kind = 'direct' AND direct_bot_id = ? AND archived_at IS NULL
-           ORDER BY created_at ASC`).all(botId).map(item => item.id);
+           ORDER BY created_at ASC`).all(botId).map(row => row.id);
     const groupConversationIds = database.prepare(`SELECT DISTINCT conversations.id
            FROM xiaohei_bot_conversations conversations
            JOIN xiaohei_bot_conversation_members members
@@ -5226,7 +5226,7 @@ var XiaoheiBotRepository = class {
            WHERE conversations.kind = 'group'
              AND conversations.archived_at IS NULL
              AND members.bot_id = ?
-           ORDER BY conversations.created_at ASC`).all(botId).map(item => item.id);
+           ORDER BY conversations.created_at ASC`).all(botId).map(row => row.id);
     const groupFallbacks = groupConversationIds.map(conversationId => {
       return {
         conversationId,
@@ -5402,12 +5402,12 @@ var XiaoheiBotRepository = class {
     if (!bot) throw new Error(appText("botRepo.workingDirectorySaveFailed"));
     return bot;
   }
-  createConsultationConversation(consultation, ownerId, targetId) {
-    const database = getDatabase(),
+  createConsultationConversation(id, ownerId, targetId) {
+    const db = getDatabase(),
       timestamp = (/* @__PURE__ */new Date()).toISOString();
-    database.prepare(`INSERT INTO xiaohei_bot_conversations (id, kind, title, description, notifications_enabled, direct_bot_id, default_bot_id, is_consultation, created_at, updated_at) VALUES (?, 'direct', ?, ?, 0, ?, ?, 1, ?, ?)`).run(consultation, appText("botRepo.consultationTitle"), appText("botRepo.consultationDescription"), targetId, targetId, timestamp, timestamp);
-    for (const botId of [ownerId, targetId]) database.prepare(`INSERT INTO xiaohei_bot_conversation_members (conversation_id, bot_id, participation_mode, is_default_responder, joined_message_seq, joined_at) VALUES (?, ?, ?, ?, 0, ?)`).run(consultation, botId, botId === targetId ? "auto" : "context-only", botId === targetId ? 1 : 0, timestamp);
-    ensureMainBranch(database, consultation, timestamp);
+    db.prepare(`INSERT INTO xiaohei_bot_conversations (id, kind, title, description, notifications_enabled, direct_bot_id, default_bot_id, is_consultation, created_at, updated_at) VALUES (?, 'direct', ?, ?, 0, ?, ?, 1, ?, ?)`).run(id, appText("botRepo.consultationTitle"), appText("botRepo.consultationDescription"), targetId, targetId, timestamp, timestamp);
+    for (const botId of [ownerId, targetId]) db.prepare(`INSERT INTO xiaohei_bot_conversation_members (conversation_id, bot_id, participation_mode, is_default_responder, joined_message_seq, joined_at) VALUES (?, ?, ?, ?, 0, ?)`).run(id, botId, botId === targetId ? "auto" : "context-only", botId === targetId ? 1 : 0, timestamp);
+    ensureMainBranch(db, id, timestamp);
   }
   getSideTopicBySource(parentConversationId, sourceMessageId) {
     const row = getDatabase().prepare(`SELECT * FROM xiaohei_bot_conversations
@@ -5427,7 +5427,7 @@ var XiaoheiBotRepository = class {
                 )) AS replyCount
            FROM xiaohei_bot_conversations c
            WHERE c.parent_conversation_id = ? AND c.archived_at IS NULL
-           ORDER BY c.created_at ASC`).all(parentConversationId).filter(item => item.sourceMessageId);
+           ORDER BY c.created_at ASC`).all(parentConversationId).filter(row => row.sourceMessageId);
   }
   createSideTopicConversation(parent, source) {
     const existing = this.getSideTopicBySource(parent.id, source.id);
@@ -5482,59 +5482,59 @@ var XiaoheiBotRepository = class {
            ORDER BY
              CASE WHEN pinned_at IS NULL THEN 1 ELSE 0 END ASC,
              pinned_at DESC,
-             MAX(COALESCE(last_message_at, updated_at), COALESCE(sidebar_restored_at, '')) DESC`).all().map(item => this.mapConversation(item));
+             MAX(COALESCE(last_message_at, updated_at), COALESCE(sidebar_restored_at, '')) DESC`).all().map(row => this.mapConversation(row));
   }
   getUnreadConversationIds() {
     return getDatabase().prepare(`SELECT id FROM xiaohei_bot_conversations
        WHERE archived_at IS NULL AND is_consultation = 0 AND parent_conversation_id IS NULL
          AND sidebar_hidden_at IS NULL AND unread_count > 0
          AND NOT EXISTS (SELECT 1 FROM xiaohei_bot_default_role_links links
-           WHERE links.bot_id = xiaohei_bot_conversations.direct_bot_id AND links.list_removed_at IS NOT NULL)`).all().map(item => item.id);
+           WHERE links.bot_id = xiaohei_bot_conversations.direct_bot_id AND links.list_removed_at IS NOT NULL)`).all().map(row => row.id);
   }
   getConversation(conversationId) {
     const row = getDatabase().prepare(`SELECT * FROM xiaohei_bot_conversations WHERE id = ? AND archived_at IS NULL`).get(conversationId);
     return row ? this.mapConversation(row) : null;
   }
-  mapConversation(mapValue) {
-    const defaultRoleLink = mapValue.kind === "direct" && !mapValue.parent_conversation_id ? getDatabase().prepare("SELECT role_id, greeting, sort_order, list_removed_at FROM xiaohei_bot_default_role_links WHERE bot_id = ?").get(mapValue.direct_bot_id) : undefined;
-    const defaultRole = defaultRoleLink && !mapValue.last_message_at && !mapValue.sidebar_restored_at ? defaultRoleLink : undefined;
+  mapConversation(row) {
+    const defaultRoleLink = row.kind === "direct" && !row.parent_conversation_id ? getDatabase().prepare("SELECT role_id, greeting, sort_order, list_removed_at FROM xiaohei_bot_default_role_links WHERE bot_id = ?").get(row.direct_bot_id) : undefined;
+    const defaultRole = defaultRoleLink && !row.last_message_at && !row.sidebar_restored_at ? defaultRoleLink : undefined;
     const latest = getDatabase().prepare(`
       SELECT seq, author_type, status FROM xiaohei_bot_messages
       WHERE conversation_id = ? AND author_type IN ('user', 'bot')
       ORDER BY seq DESC LIMIT 1
-    `).get(mapValue.id);
+    `).get(row.id);
     return {
       latestMessageSeq: latest?.seq ?? 0,
       latestGenerationStatus: latest?.author_type === "bot" ? latest.status : null,
-      id: mapValue.id,
-      kind: mapValue.kind,
-      title: mapValue.title,
-      description: mapValue.description,
-      notificationsEnabled: mapValue.notifications_enabled === 1,
-      directBotId: mapValue.direct_bot_id,
-      defaultBotId: mapValue.default_bot_id,
-      creatorBotId: mapValue.creator_bot_id,
-      sourceConversationId: mapValue.source_conversation_id,
-      members: this.listConversationMembers(mapValue.id),
-      lastMessagePreview: xiaoheiBotMessagePreview(mapValue.last_message_preview || defaultRole?.greeting || "", []),
+      id: row.id,
+      kind: row.kind,
+      title: row.title,
+      description: row.description,
+      notificationsEnabled: row.notifications_enabled === 1,
+      directBotId: row.direct_bot_id,
+      defaultBotId: row.default_bot_id,
+      creatorBotId: row.creator_bot_id,
+      sourceConversationId: row.source_conversation_id,
+      members: this.listConversationMembers(row.id),
+      lastMessagePreview: xiaoheiBotMessagePreview(row.last_message_preview || defaultRole?.greeting || "", []),
       defaultRoleSortOrder: defaultRole?.sort_order,
       defaultRoleId: defaultRoleLink?.role_id,
       defaultRoleListRemovedAt: defaultRoleLink ? defaultRoleLink.list_removed_at ?? null : undefined,
-      lastMessageAt: mapValue.last_message_at,
-      unreadCount: mapValue.unread_count,
-      pinnedAt: mapValue.pinned_at,
-      sidebarHiddenAt: mapValue.sidebar_hidden_at,
-      sidebarRestoredAt: mapValue.sidebar_restored_at,
-      parentConversationId: mapValue.parent_conversation_id,
-      forkedFromMessageId: mapValue.forked_from_message_id,
-      forkedFromEventId: mapValue.forked_from_event_id,
-      lineageDepth: Number(mapValue.lineage_depth ?? 0),
-      archivedAt: mapValue.archived_at,
-      avatar: mapValue.avatar ?? undefined,
-      avatarColor: mapValue.avatar_color ?? undefined,
-      avatarShape: mapValue.avatar_shape ?? undefined,
-      createdAt: mapValue.created_at,
-      updatedAt: mapValue.updated_at
+      lastMessageAt: row.last_message_at,
+      unreadCount: row.unread_count,
+      pinnedAt: row.pinned_at,
+      sidebarHiddenAt: row.sidebar_hidden_at,
+      sidebarRestoredAt: row.sidebar_restored_at,
+      parentConversationId: row.parent_conversation_id,
+      forkedFromMessageId: row.forked_from_message_id,
+      forkedFromEventId: row.forked_from_event_id,
+      lineageDepth: Number(row.lineage_depth ?? 0),
+      archivedAt: row.archived_at,
+      avatar: row.avatar ?? undefined,
+      avatarColor: row.avatar_color ?? undefined,
+      avatarShape: row.avatar_shape ?? undefined,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
     };
   }
   listConversationMembers(conversationId) {
@@ -5544,19 +5544,19 @@ var XiaoheiBotRepository = class {
       JOIN xiaohei_bot_profiles b ON b.id = m.bot_id
       WHERE m.conversation_id = ? AND b.deleted_at IS NULL
       ORDER BY m.is_default_responder DESC, m.joined_at ASC
-    `).all(conversationId).map(item => ({
-      botId: item.bot_id,
-      name: item.name,
-      participationMode: item.participation_mode,
-      isDefaultResponder: item.is_default_responder === 1,
-      joinedAt: item.joined_at,
-      joinedMessageSeq: item.joined_message_seq,
-      handoffRole: item.handoff_role,
-      handoffContext: item.handoff_context,
-      handoffTask: item.handoff_task,
-      avatar: item.avatar ?? undefined,
-      avatarColor: item.avatar_color ?? undefined,
-      avatarShape: item.avatar_shape ?? undefined
+    `).all(conversationId).map(row => ({
+      botId: row.bot_id,
+      name: row.name,
+      participationMode: row.participation_mode,
+      isDefaultResponder: row.is_default_responder === 1,
+      joinedAt: row.joined_at,
+      joinedMessageSeq: row.joined_message_seq,
+      handoffRole: row.handoff_role,
+      handoffContext: row.handoff_context,
+      handoffTask: row.handoff_task,
+      avatar: row.avatar ?? undefined,
+      avatarColor: row.avatar_color ?? undefined,
+      avatarShape: row.avatar_shape ?? undefined
     }));
   }
   createGroup(input, actor) {
@@ -5660,7 +5660,7 @@ var XiaoheiBotRepository = class {
     const timestamp = now();
     const existing = this.getConversation(input.conversationId);
     if (!existing || existing.kind !== "group") throw new Error(appText("botMain.groupMissing"));
-    const botIds = [...new Set(input.botIds)].filter(item => !existing.members.some(member => member.botId === item));
+    const botIds = [...new Set(input.botIds)].filter(id => !existing.members.some(member => member.botId === id));
     if (botIds.length && existing.members.length + botIds.length > 30) throw new Error(appText("botRepo.groupMaxBots"));
     if (botIds.some(botId => !this.getBot(botId))) throw new Error(appText("botRepo.addingMissingBot"));
     database.exec("SAVEPOINT management_addGroupMembers");
@@ -6030,7 +6030,7 @@ var XiaoheiBotRepository = class {
         LIMIT ?
       ) ORDER BY seq ASC
     `).all(conversationId, ...(hasCursor ? [Number(beforeSeq)] : []), pageSize + 1);
-    const messages = rows.slice(-pageSize).map(item => this.mapMessage(item));
+    const messages = rows.slice(-pageSize).map(row => this.mapMessage(row));
     return {
       messages,
       hasMore: rows.length > pageSize,
@@ -6042,7 +6042,7 @@ var XiaoheiBotRepository = class {
       SELECT * FROM (
         SELECT * FROM xiaohei_bot_messages WHERE conversation_id = ? AND (? IS NULL OR seq < ?) ORDER BY seq DESC LIMIT ?
       ) ORDER BY seq ASC
-    `).all(conversationId, beforeSeq, beforeSeq, Math.min(500, Math.max(1, limit))).map(item => this.mapMessage(item));
+    `).all(conversationId, beforeSeq, beforeSeq, Math.min(500, Math.max(1, limit))).map(row => this.mapMessage(row));
   }
   getMessage(messageId) {
     const row = getDatabase().prepare("SELECT * FROM xiaohei_bot_messages WHERE id = ?").get(messageId);
@@ -6062,7 +6062,7 @@ var XiaoheiBotRepository = class {
         AND m.status = 'complete'
         AND seen.message_id IS NULL
       ORDER BY m.seq ASC
-    `).all(botId, conversationId, joinedMessageSeq, throughSeq).map(item => this.mapMessage(item));
+    `).all(botId, conversationId, joinedMessageSeq, throughSeq).map(row => this.mapMessage(row));
   }
   createMessage(input, withinTransaction = false) {
     const database = getDatabase();
@@ -6286,23 +6286,23 @@ var XiaoheiBotRepository = class {
       throw error;
     }
   }
-  mapMessage(mapValue) {
+  mapMessage(row) {
     const mentions = getDatabase().prepare(`
       SELECT mention_type, bot_id, label, token FROM xiaohei_bot_message_mentions WHERE message_id = ?
-    `).all(mapValue.id);
+    `).all(row.id);
     const attachments = getDatabase().prepare(`
       SELECT id, name, size, mime_type, is_image, local_path,
              asset_id, sha256, integrity_status, verified_at
       FROM xiaohei_bot_attachments WHERE message_id = ?
-    `).all(mapValue.id);
+    `).all(row.id);
     return {
-      id: mapValue.id,
-      conversationId: mapValue.conversation_id,
-      seq: mapValue.seq,
-      authorType: mapValue.author_type,
-      authorBotId: mapValue.author_bot_id,
-      authorName: mapValue.author_name,
-      content: mapValue.content,
+      id: row.id,
+      conversationId: row.conversation_id,
+      seq: row.seq,
+      authorType: row.author_type,
+      authorBotId: row.author_bot_id,
+      authorName: row.author_name,
+      content: row.content,
       mentions: mentions.map(mention => ({
         type: mention.mention_type,
         botId: mention.bot_id ?? undefined,
@@ -6320,19 +6320,19 @@ var XiaoheiBotRepository = class {
         sha256: attachment.sha256,
         integrityStatus: attachment.integrity_status ?? "pending"
       })),
-      processItems: ensureLegacyTimelineText(mapValue, parseProcessItems(mapValue.process_items_json)),
-      status: mapValue.status,
-      deliveryMode: mapValue.delivery_mode ?? "normal",
-      replyToMessageId: mapValue.reply_to_message_id,
-      causalRootMessageId: mapValue.causal_root_message_id,
-      hopDepth: mapValue.hop_depth,
-      errorMessage: mapValue.error_message,
-      originMessageId: mapValue.origin_message_id,
-      originEventId: mapValue.origin_event_id,
-      revision: Number(mapValue.revision ?? 1),
-      withdrawnAt: mapValue.withdrawn_at,
-      createdAt: mapValue.created_at,
-      updatedAt: mapValue.updated_at
+      processItems: ensureLegacyTimelineText(row, parseProcessItems(row.process_items_json)),
+      status: row.status,
+      deliveryMode: row.delivery_mode ?? "normal",
+      replyToMessageId: row.reply_to_message_id,
+      causalRootMessageId: row.causal_root_message_id,
+      hopDepth: row.hop_depth,
+      errorMessage: row.error_message,
+      originMessageId: row.origin_message_id,
+      originEventId: row.origin_event_id,
+      revision: Number(row.revision ?? 1),
+      withdrawnAt: row.withdrawn_at,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
     };
   }
   getAttachmentPath(attachmentId) {
@@ -6355,18 +6355,18 @@ var XiaoheiBotRepository = class {
             OR attachments.sha256 IS NULL
             OR attachments.integrity_status <> 'verified'
             OR attachments.verified_at IS NULL
-         ORDER BY attachments.created_at ASC`).all().map(count => ({
-      id: String(count.id),
-      messageId: String(count.message_id),
-      conversationId: String(count.conversation_id),
-      name: String(count.name),
-      size: Number(count.size),
-      mimeType: String(count.mime_type),
-      localPath: String(count.local_path),
-      assetId: typeof count.asset_id === "string" ? count.asset_id : null,
-      sha256: typeof count.sha256 === "string" ? count.sha256 : null,
-      integrityStatus: count.integrity_status ?? "pending",
-      verifiedAt: typeof count.verified_at === "string" ? count.verified_at : null
+         ORDER BY attachments.created_at ASC`).all().map(row => ({
+      id: String(row.id),
+      messageId: String(row.message_id),
+      conversationId: String(row.conversation_id),
+      name: String(row.name),
+      size: Number(row.size),
+      mimeType: String(row.mime_type),
+      localPath: String(row.local_path),
+      assetId: typeof row.asset_id === "string" ? row.asset_id : null,
+      sha256: typeof row.sha256 === "string" ? row.sha256 : null,
+      integrityStatus: row.integrity_status ?? "pending",
+      verifiedAt: typeof row.verified_at === "string" ? row.verified_at : null
     }));
   }
   reconcileAttachmentAsset(input) {
@@ -6673,26 +6673,26 @@ var XiaoheiBotRepository = class {
   createRoutingJob(input) {
     const database = getDatabase();
     const timestamp = now();
-    const randomUUIDResult = randomUUID();
+    const id = randomUUID();
     database.exec("BEGIN IMMEDIATE");
     try {
       if (database.prepare(`INSERT OR IGNORE INTO xiaohei_bot_routing_jobs (
             id, conversation_id, trigger_message_id, receptionist_bot_id,
             status, candidate_snapshot_json, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, 'queued', ?, ?, ?)`).run(randomUUIDResult, input.conversationId, input.triggerMessageId, input.receptionistBotId, JSON.stringify(input.candidateSnapshot), timestamp, timestamp).changes > 0) appendXiaoheiBotEvent(database, {
+          ) VALUES (?, ?, ?, ?, 'queued', ?, ?, ?)`).run(id, input.conversationId, input.triggerMessageId, input.receptionistBotId, JSON.stringify(input.candidateSnapshot), timestamp, timestamp).changes > 0) appendXiaoheiBotEvent(database, {
         conversationId: input.conversationId,
         eventType: input.eventType ?? "routing.reception.queued",
         occurredAt: timestamp,
         actorType: input.actorType ?? "system",
         actorId: input.actorId ?? input.receptionistBotId,
         aggregateType: "routing-job",
-        aggregateId: randomUUIDResult,
+        aggregateId: id,
         correlationId: input.correlationId ?? input.triggerMessageId,
         causationEventId: input.causationEventId ?? null,
         parentEventId: input.parentEventId ?? null,
         branchId: input.branchId ?? activeBranchId(database, input.conversationId),
         payload: {
-          id: randomUUIDResult,
+          id,
           conversationId: input.conversationId,
           triggerMessageId: input.triggerMessageId,
           receptionistBotId: input.receptionistBotId,
@@ -6705,9 +6705,9 @@ var XiaoheiBotRepository = class {
       database.exec("ROLLBACK");
       throw error;
     }
-    const routingJobByTrigger = this.getRoutingJobByTrigger(input.triggerMessageId);
-    if (!routingJobByTrigger) throw new Error("接待路由任务创建失败");
-    return routingJobByTrigger;
+    const job = this.getRoutingJobByTrigger(input.triggerMessageId);
+    if (!job) throw new Error("接待路由任务创建失败");
+    return job;
   }
   getRoutingJob(jobId) {
     const row = getDatabase().prepare("SELECT * FROM xiaohei_bot_routing_jobs WHERE id = ?").get(jobId);
@@ -6725,14 +6725,14 @@ var XiaoheiBotRepository = class {
          WHERE jobs.status = 'queued'
            ${conversationId ? "AND jobs.conversation_id = ?" : ""}
          ORDER BY jobs.conversation_id ASC, messages.seq ASC,
-                  jobs.created_at ASC, jobs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(item => this.mapRoutingJob(item));
+                  jobs.created_at ASC, jobs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(row => this.mapRoutingJob(row));
   }
   listActiveRoutingJobs(conversationId, botId) {
     return getDatabase().prepare(`SELECT * FROM xiaohei_bot_routing_jobs
          WHERE status IN ('queued', 'running')
            AND (? IS NULL OR conversation_id = ?)
            AND (? IS NULL OR receptionist_bot_id = ? OR selected_bot_id = ?)
-         ORDER BY created_at ASC, id ASC`).all(conversationId ?? null, conversationId ?? null, botId ?? null, botId ?? null, botId ?? null).map(item => this.mapRoutingJob(item));
+         ORDER BY created_at ASC, id ASC`).all(conversationId ?? null, conversationId ?? null, botId ?? null, botId ?? null, botId ?? null).map(row => this.mapRoutingJob(row));
   }
   claimRoutingJob(jobId) {
     const database = getDatabase();
@@ -6776,9 +6776,9 @@ var XiaoheiBotRepository = class {
       throw error;
     }
     if (!claimed) return null;
-    const routingJob = this.getRoutingJob(jobId);
-    if (!routingJob) throw new Error("接待路由任务认领后丢失");
-    return routingJob;
+    const job = this.getRoutingJob(jobId);
+    if (!job) throw new Error("接待路由任务认领后丢失");
+    return job;
   }
   updateRoutingJob(jobId, input) {
     const database = getDatabase();
@@ -6837,20 +6837,20 @@ var XiaoheiBotRepository = class {
     }
   }
   cancelRoutingJobs(conversationId) {
-    return this.listActiveRoutingJobs(conversationId).map(item => this.updateRoutingJob(item.id, {
+    return this.listActiveRoutingJobs(conversationId).map(job => this.updateRoutingJob(job.id, {
       status: "cancelled",
       eventType: "routing.reception.cancelled",
-      correlationId: item.triggerMessageId
+      correlationId: job.triggerMessageId
     }));
   }
   recoverInterruptedRoutingJobs() {
     const jobs = getDatabase().prepare("SELECT * FROM xiaohei_bot_routing_jobs WHERE status = 'running' ORDER BY created_at ASC").all();
     for (const row of jobs) {
-      const mapRoutingJob = this.mapRoutingJob(row);
-      this.updateRoutingJob(mapRoutingJob.id, {
+      const job = this.mapRoutingJob(row);
+      this.updateRoutingJob(job.id, {
         status: "queued",
         eventType: "recovery.routing-requeued",
-        correlationId: mapRoutingJob.triggerMessageId,
+        correlationId: job.triggerMessageId,
         errorMessage: "客户端重启后重新执行无工具接待路由"
       });
     }
@@ -6918,7 +6918,7 @@ var XiaoheiBotRepository = class {
   listAgentRunsForTrigger(triggerMessageId) {
     return getDatabase().prepare(`SELECT * FROM xiaohei_bot_agent_runs
          WHERE trigger_message_id = ?
-         ORDER BY route_order ASC, created_at ASC, id ASC`).all(triggerMessageId).map(item => this.mapAgentRun(item));
+         ORDER BY route_order ASC, created_at ASC, id ASC`).all(triggerMessageId).map(row => this.mapAgentRun(row));
   }
   listAgentRunsForMessageTree(rootMessageId) {
     return getDatabase().prepare(`
@@ -6926,7 +6926,7 @@ var XiaoheiBotRepository = class {
       JOIN xiaohei_bot_messages trigger_message ON trigger_message.id = runs.trigger_message_id
       WHERE trigger_message.id = ? OR trigger_message.causal_root_message_id = ?
       ORDER BY runs.created_at ASC, runs.route_order ASC, runs.id ASC
-    `).all(rootMessageId, rootMessageId).map(item => this.mapAgentRun(item));
+    `).all(rootMessageId, rootMessageId).map(row => this.mapAgentRun(row));
   }
   listQueuedAgentRuns(conversationId) {
     return getDatabase().prepare(`SELECT runs.*
@@ -6936,7 +6936,7 @@ var XiaoheiBotRepository = class {
          WHERE runs.status = 'queued'
            ${conversationId ? "AND runs.conversation_id = ?" : ""}
          ORDER BY runs.conversation_id ASC, messages.seq ASC,
-                  runs.route_order ASC, runs.created_at ASC, runs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(item => this.mapAgentRun(item));
+                  runs.route_order ASC, runs.created_at ASC, runs.id ASC`).all(...(conversationId ? [conversationId] : [])).map(row => this.mapAgentRun(row));
   }
   updateAgentRun(runId, input) {
     const database = getDatabase();
@@ -7165,44 +7165,44 @@ var XiaoheiBotRepository = class {
       recoveredMessages
     };
   }
-  mapAgentRun(mapValue) {
+  mapAgentRun(row) {
     return {
-      id: mapValue.id,
-      conversationId: mapValue.conversation_id,
-      botId: mapValue.bot_id,
-      triggerMessageId: mapValue.trigger_message_id,
-      responseMessageId: mapValue.response_message_id,
-      status: mapValue.status,
-      mandatoryReply: mapValue.mandatory_reply === 1,
-      deliveryMode: mapValue.delivery_mode ?? "normal",
-      routeOrder: Number(mapValue.route_order ?? 0),
-      providerId: mapValue.provider_id,
-      modelId: mapValue.model_id,
-      requestEventId: mapValue.request_event_id,
-      requestHash: mapValue.request_hash,
-      requestSnapshot: parseJsonRecord(mapValue.request_snapshot_json),
-      piLeafEntryId: mapValue.pi_leaf_entry_id,
-      recoveryState: mapValue.recovery_state ?? "clean",
-      createdAt: mapValue.created_at,
-      updatedAt: mapValue.updated_at
+      id: row.id,
+      conversationId: row.conversation_id,
+      botId: row.bot_id,
+      triggerMessageId: row.trigger_message_id,
+      responseMessageId: row.response_message_id,
+      status: row.status,
+      mandatoryReply: row.mandatory_reply === 1,
+      deliveryMode: row.delivery_mode ?? "normal",
+      routeOrder: Number(row.route_order ?? 0),
+      providerId: row.provider_id,
+      modelId: row.model_id,
+      requestEventId: row.request_event_id,
+      requestHash: row.request_hash,
+      requestSnapshot: parseJsonRecord(row.request_snapshot_json),
+      piLeafEntryId: row.pi_leaf_entry_id,
+      recoveryState: row.recovery_state ?? "clean",
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
     };
   }
-  mapRoutingJob(mapValue) {
-    const parsedCandidates = parseJsonValue(mapValue.candidate_snapshot_json);
+  mapRoutingJob(row) {
+    const parsedCandidates = parseJsonValue(row.candidate_snapshot_json);
     return {
-      id: mapValue.id,
-      conversationId: mapValue.conversation_id,
-      triggerMessageId: mapValue.trigger_message_id,
-      receptionistBotId: mapValue.receptionist_bot_id,
-      status: mapValue.status,
+      id: row.id,
+      conversationId: row.conversation_id,
+      triggerMessageId: row.trigger_message_id,
+      receptionistBotId: row.receptionist_bot_id,
+      status: row.status,
       candidateSnapshot: Array.isArray(parsedCandidates) ? parsedCandidates.filter(candidate => Boolean(candidate) && typeof candidate === "object" && !Array.isArray(candidate)) : [],
-      selectedBotId: mapValue.selected_bot_id,
-      selectedBotIds: parseStringArray(mapValue.selected_bot_ids_json ?? "[]"),
-      decisionSource: mapValue.decision_source ?? null,
-      decisionReason: mapValue.decision_reason,
-      errorMessage: mapValue.error_message,
-      createdAt: mapValue.created_at,
-      updatedAt: mapValue.updated_at
+      selectedBotId: row.selected_bot_id,
+      selectedBotIds: parseStringArray(row.selected_bot_ids_json ?? "[]"),
+      decisionSource: row.decision_source ?? null,
+      decisionReason: row.decision_reason,
+      errorMessage: row.error_message,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
     };
   }
 };
@@ -7425,19 +7425,19 @@ var NotificationService = class {
     if (!token) return false;
     const unsynced = notificationRepository.getUnsyncedReads();
     if (unsynced.length === 0) return false;
-    const mapped = unsynced.map(item => item.notificationId);
+    const ids = unsynced.map(r => r.notificationId);
     const clientTarget = this.getClientTarget();
     try {
-      if (mapped.length === 1) await this.callApi("notifications.php", {
+      if (ids.length === 1) await this.callApi("notifications.php", {
         action: "mark-read",
-        notificationId: mapped[0],
+        notificationId: ids[0],
         ...clientTarget
       });else await this.callApi("notifications.php", {
         action: "mark-all-read",
         ...clientTarget
       });
       if (this.getToken() === token) {
-        notificationRepository.markSynced(mapped);
+        notificationRepository.markSynced(ids);
         this.readStatusDirtyToken = token;
         this.readUploadRevision++;
       }
@@ -7487,7 +7487,7 @@ var NotificationService = class {
         return notification;
       }
       if (!botId && conversationId) botId = xiaoheiBotRepository.getConversation(conversationId)?.directBotId ?? null;
-      const matches = botId ? bots.filter(item => item.id === botId) : bots.filter(item => notification.title === item.name || notification.title.endsWith(` · ${item.name}`));
+      const matches = botId ? bots.filter(bot => bot.id === botId) : bots.filter(bot => notification.title === bot.name || notification.title.endsWith(` · ${bot.name}`));
       return {
         ...notification,
         avatar: matches.length === 1 ? matches[0].avatar : undefined
@@ -7519,10 +7519,10 @@ var NotificationService = class {
     if (changed) this.notifyChanged();
   }
   markAllRead() {
-    const markAllRead = notificationRepository.markAllRead();
+    const ids = notificationRepository.markAllRead();
     this.notifyChanged();
     this.syncReadStatusToCloud().catch(() => {});
-    return markAllRead;
+    return ids;
   }
   addLocalNotification(input) {
     const notification = notificationRepository.createLocalNotification(input);
@@ -7566,11 +7566,11 @@ function getMainWindow() {
   return win && !win.isDestroyed() ? win : null;
 }
 function focusMainWindow() {
-  const mainWindow = getMainWindow();
-  if (!mainWindow) return;
-  if (mainWindow.isMinimized()) mainWindow.restore();
-  mainWindow.show();
-  mainWindow.focus();
+  const win = getMainWindow();
+  if (!win) return;
+  if (win.isMinimized()) win.restore();
+  win.show();
+  win.focus();
 }
 var SystemNotificationService = class {
   current = null;
@@ -7967,10 +7967,10 @@ function canReuseWindowsContextCache(options) {
   return true;
 }
 function parseWindowsForegroundContext(stdout) {
-  const trimmed = stdout.trim();
-  if (!trimmed) return emptyWindowsContextInfo();
+  const raw = stdout.trim();
+  if (!raw) return emptyWindowsContextInfo();
   try {
-    const parsed = JSON.parse(trimmed);
+    const parsed = JSON.parse(raw);
     const name = typeof parsed.Name === "string" ? parsed.Name.trim() || null : null;
     const processId = typeof parsed.ProcessId === "number" && Number.isFinite(parsed.ProcessId) ? parsed.ProcessId : null;
     const executablePath = typeof parsed.ExecutablePath === "string" ? parsed.ExecutablePath.trim() || null : null;
@@ -8206,14 +8206,14 @@ function getPowerShellAbsoluteCandidates() {
   return uniqueStrings([path.join(windowsDir, "System32", "WindowsPowerShell", "v1.0", "powershell.exe"), path.join(windowsDir, "Sysnative", "WindowsPowerShell", "v1.0", "powershell.exe"), path.join(windowsDir, "SysWOW64", "WindowsPowerShell", "v1.0", "powershell.exe"), process$1.env.ProgramFiles ? path.join(process$1.env.ProgramFiles, "PowerShell", "7", "pwsh.exe") : null, process$1.env.ProgramW6432 ? path.join(process$1.env.ProgramW6432, "PowerShell", "7", "pwsh.exe") : null]).filter(candidate => existsSync(candidate));
 }
 function formatCommandError(error) {
-  const errorAlias = error;
+  const err = error;
   const parts = [];
-  const stderr = Buffer.isBuffer(errorAlias.stderr) ? errorAlias.stderr.toString("utf8") : errorAlias.stderr;
+  const stderr = Buffer.isBuffer(err.stderr) ? err.stderr.toString("utf8") : err.stderr;
   if (stderr?.trim()) parts.push(stderr.trim());
-  if (errorAlias.code) parts.push(`code=${errorAlias.code}`);
-  if (errorAlias.signal) parts.push(`signal=${errorAlias.signal}`);
-  if (errorAlias.killed) parts.push("timeout");
-  if (errorAlias.message) parts.push(errorAlias.message);
+  if (err.code) parts.push(`code=${err.code}`);
+  if (err.signal) parts.push(`signal=${err.signal}`);
+  if (err.killed) parts.push("timeout");
+  if (err.message) parts.push(err.message);
   return (parts.join("；") || String(error)).slice(0, 600);
 }
 async function execFileUtf8(command, args, timeout) {
@@ -8500,10 +8500,10 @@ function inferDocumentHint(title, appName) {
   if (!title) return null;
   return (title.split(/\s+[—–|-]\s+/).map(part => part.trim()).filter(Boolean).find(part => part.toLowerCase() !== appName.toLowerCase()) ?? null)?.slice(0, 160) ?? null;
 }
-function sanitizeDomain(domain) {
-  if (!domain) return null;
+function sanitizeDomain(url) {
+  if (!url) return null;
   try {
-    const parsed = new URL(domain);
+    const parsed = new URL(url);
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
     return parsed.hostname.toLowerCase().replace(/^www\./, "").slice(0, 253) || null;
   } catch {
@@ -8852,10 +8852,10 @@ function isLegacyApplicationId(applicationId) {
 function mergeEquivalentAppUsageSummaries(source) {
   const merged = /* @__PURE__ */new Map();
   for (const item of source) {
-    const normalizedDisplayKeyResult = normalizedDisplayKey(item.appName);
-    const existing = merged.get(normalizedDisplayKeyResult);
+    const key = normalizedDisplayKey(item.appName);
+    const existing = merged.get(key);
     if (!existing) {
-      merged.set(normalizedDisplayKeyResult, {
+      merged.set(key, {
         ...item
       });
       continue;
@@ -8874,29 +8874,29 @@ function mergeEquivalentAppUsageSummaries(source) {
     if (item.lastUsedAt > existing.lastUsedAt) existing.lastUsedAt = item.lastUsedAt;
     existing.averageSessionDurationSec = Math.round(existing.activeDurationSec / Math.max(1, existing.sessionCount));
   }
-  return Array.from(merged.values()).sort((left, right) => right.activeDurationSec - left.activeDurationSec);
+  return Array.from(merged.values()).sort((a, b) => b.activeDurationSec - a.activeDurationSec);
 }
-function mapSession(mapValue) {
+function mapSession(row) {
   return {
-    id: mapValue.id,
-    applicationId: mapValue.application_id,
-    activityState: mapValue.activity_state,
-    appName: mapValue.display_name ? resolveCommonAppName(mapValue.display_name) : stateDisplayName(mapValue.activity_state),
-    rawName: mapValue.raw_name,
-    startedAt: mapValue.started_at,
-    endedAt: mapValue.ended_at,
-    durationSec: Math.max(0, Math.round(mapValue.duration_ms / 1e3)),
-    activeDurationSec: Math.max(0, Math.round(mapValue.active_duration_ms / 1e3)),
-    idleDurationSec: Math.max(0, Math.round(mapValue.idle_duration_ms / 1e3)),
-    longestActiveDurationSec: Math.max(0, Math.round(mapValue.longest_active_duration_ms / 1e3)),
-    sampleCount: mapValue.sample_count,
-    contextSwitchCount: mapValue.context_switch_count,
-    startReason: mapValue.start_reason,
-    endReason: mapValue.end_reason,
-    detectionSource: mapValue.detection_source,
-    confidence: mapValue.confidence,
-    createdAt: mapValue.created_at,
-    isOpen: mapValue.is_open === 1
+    id: row.id,
+    applicationId: row.application_id,
+    activityState: row.activity_state,
+    appName: row.display_name ? resolveCommonAppName(row.display_name) : stateDisplayName(row.activity_state),
+    rawName: row.raw_name,
+    startedAt: row.started_at,
+    endedAt: row.ended_at,
+    durationSec: Math.max(0, Math.round(row.duration_ms / 1e3)),
+    activeDurationSec: Math.max(0, Math.round(row.active_duration_ms / 1e3)),
+    idleDurationSec: Math.max(0, Math.round(row.idle_duration_ms / 1e3)),
+    longestActiveDurationSec: Math.max(0, Math.round(row.longest_active_duration_ms / 1e3)),
+    sampleCount: row.sample_count,
+    contextSwitchCount: row.context_switch_count,
+    startReason: row.start_reason,
+    endReason: row.end_reason,
+    detectionSource: row.detection_source,
+    confidence: row.confidence,
+    createdAt: row.created_at,
+    isOpen: row.is_open === 1
   };
 }
 function getSqliteCode(error) {
@@ -8907,7 +8907,7 @@ function isForeignKeyError(error) {
   return error instanceof Error && error.message.includes("FOREIGN KEY constraint failed");
 }
 var AppUsageRepository = class {
-  upsertApplication(upsert, observedAt, expectedDatabaseGeneration) {
+  upsertApplication(app, observedAt, expectedDatabaseGeneration) {
     const connection = getOpenDatabaseConnection();
     if (!connection || connection.generation !== expectedDatabaseGeneration) return null;
     const database = connection.database;
@@ -8928,11 +8928,11 @@ var AppUsageRepository = class {
         executable_path = COALESCE(excluded.executable_path, tracked_applications.executable_path),
         last_seen_at = excluded.last_seen_at,
         updated_at = excluded.updated_at
-    `).run(upsert.stableId, process.platform, upsert.stableKey, upsert.rawName, upsert.displayName, upsert.processName, upsert.processId, upsert.bundleIdentifier, upsert.appUserModelId, upsert.packageFamilyName, upsert.executablePath, observedAt, observedAt, observedAt, observedAt);
+    `).run(app.stableId, process.platform, app.stableKey, app.rawName, app.displayName, app.processName, app.processId, app.bundleIdentifier, app.appUserModelId, app.packageFamilyName, app.executablePath, observedAt, observedAt, observedAt, observedAt);
     const row = database.prepare(`
       SELECT id FROM tracked_applications WHERE platform = ? AND stable_key = ?
-    `).get(process.platform, upsert.stableKey);
-    if (upsert.displayName && !upsert.stableKey.startsWith("process:")) {
+    `).get(process.platform, app.stableKey);
+    if (app.displayName && !app.stableKey.startsWith("process:")) {
       database.prepare(`
         UPDATE app_usage_sessions_v2
         SET application_id = ?, updated_at = ?
@@ -8942,7 +8942,7 @@ var AppUsageRepository = class {
             AND lower(trim(COALESCE(display_name, raw_name, ''))) = lower(trim(?))
             AND id != ?
         )
-      `).run(row.id, observedAt, upsert.displayName, row.id);
+      `).run(row.id, observedAt, app.displayName, row.id);
       database.prepare(`
         DELETE FROM tracked_applications
         WHERE (platform = 'legacy' OR stable_key LIKE 'process:%')
@@ -8952,7 +8952,7 @@ var AppUsageRepository = class {
             SELECT 1 FROM app_usage_sessions_v2
             WHERE application_id = tracked_applications.id
           )
-      `).run(upsert.displayName, row.id);
+      `).run(app.displayName, row.id);
     }
     return row.id;
   }
@@ -9095,14 +9095,14 @@ var AppUsageRepository = class {
     `).run(segment.id, segment.sessionId, segment.activityState, segment.startedAt, segment.endedAt, segment.durationMs, segment.startedAt, segment.endedAt);
   }
   closeStaleOpenSessions() {
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       UPDATE app_usage_sessions_v2
       SET is_open = 0,
           end_reason = COALESCE(end_reason, 'crash-recovery'),
           updated_at = ?
       WHERE is_open = 1
-    `).run(isoString);
+    `).run(now);
   }
   listByRange(startedAt, endedAt, limit = 5e4) {
     return getDatabase().prepare(`
@@ -9218,13 +9218,13 @@ var AppUsageRepository = class {
       FROM app_activity_segments
       WHERE session_id IN (${placeholders})
       ORDER BY started_at ASC, id ASC
-    `).all(...sessionIds).map(item => ({
-      id: item.id,
-      sessionId: item.session_id,
-      activityState: item.activity_state,
-      startedAt: item.started_at,
-      endedAt: item.ended_at,
-      durationMs: item.duration_ms
+    `).all(...sessionIds).map(row => ({
+      id: row.id,
+      sessionId: row.session_id,
+      activityState: row.activity_state,
+      startedAt: row.started_at,
+      endedAt: row.ended_at,
+      durationMs: row.duration_ms
     }));
   }
   listContextSegments(sessionIds) {
@@ -9234,24 +9234,24 @@ var AppUsageRepository = class {
       SELECT * FROM app_context_segments
       WHERE session_id IN (${placeholders})
       ORDER BY started_at ASC
-    `).all(...sessionIds).map(item => ({
-      id: item.id,
-      sessionId: item.session_id,
-      windowId: item.window_id,
-      windowTitle: item.window_title,
-      documentHint: item.document_hint,
-      browserName: item.browser_name,
-      browserDomain: item.browser_domain,
-      displayId: item.display_id,
-      bounds: item.window_x === null || item.window_y === null || item.window_width === null || item.window_height === null ? null : {
-        x: item.window_x,
-        y: item.window_y,
-        width: item.window_width,
-        height: item.window_height
+    `).all(...sessionIds).map(row => ({
+      id: row.id,
+      sessionId: row.session_id,
+      windowId: row.window_id,
+      windowTitle: row.window_title,
+      documentHint: row.document_hint,
+      browserName: row.browser_name,
+      browserDomain: row.browser_domain,
+      displayId: row.display_id,
+      bounds: row.window_x === null || row.window_y === null || row.window_width === null || row.window_height === null ? null : {
+        x: row.window_x,
+        y: row.window_y,
+        width: row.window_width,
+        height: row.window_height
       },
-      startedAt: item.started_at,
-      endedAt: item.ended_at,
-      activeDurationMs: item.active_duration_ms
+      startedAt: row.started_at,
+      endedAt: row.ended_at,
+      activeDurationMs: row.active_duration_ms
     }));
   }
   getApplication(applicationId) {
@@ -9287,41 +9287,41 @@ var AppUsageRepository = class {
       JOIN tracked_applications a ON a.id = s.application_id
       GROUP BY a.id
       ORDER BY total_duration_ms DESC
-    `).all().map(item => resolveCommonAppName(item.app_name));
+    `).all().map(row => resolveCommonAppName(row.app_name));
   }
   clearContextData(kind) {
-    const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const db = getDatabase();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     if (kind === "all") {
-      const result = database.prepare("DELETE FROM app_context_segments").run();
+      const result = db.prepare("DELETE FROM app_context_segments").run();
       return Number(result.changes);
     }
-    const result = kind === "window" ? database.prepare(`
+    const result = kind === "window" ? db.prepare(`
           UPDATE app_context_segments
           SET window_title = NULL, document_hint = NULL,
               window_id = NULL, display_id = NULL,
               window_x = NULL, window_y = NULL, window_width = NULL, window_height = NULL,
               updated_at = ?
-        `).run(isoString) : database.prepare(`
+        `).run(now) : db.prepare(`
           UPDATE app_context_segments
           SET browser_name = NULL, browser_domain = NULL, updated_at = ?
-        `).run(isoString);
+        `).run(now);
     return Number(result.changes);
   }
   clearAllUsageData() {
-    const database = getDatabase();
-    database.exec("BEGIN");
+    const db = getDatabase();
+    db.exec("BEGIN");
     try {
-      database.exec(`
+      db.exec(`
         DELETE FROM app_context_segments;
         DELETE FROM app_activity_segments;
         DELETE FROM app_usage_sessions_v2;
         DELETE FROM tracked_applications;
         DELETE FROM app_usage_sessions;
       `);
-      database.exec("COMMIT");
+      db.exec("COMMIT");
     } catch (error) {
-      database.exec("ROLLBACK");
+      db.exec("ROLLBACK");
       throw error;
     }
   }
@@ -9362,37 +9362,37 @@ function parseJson(value, fallback) {
     return fallback;
   }
 }
-function mapEvent(mapValue) {
+function mapEvent(row) {
   return {
-    id: mapValue.id,
-    eventType: mapValue.event_type,
-    observedAt: mapValue.observed_at,
-    appBundleId: mapValue.app_bundle_id,
-    appName: mapValue.app_name,
-    windowId: mapValue.window_id,
-    windowTitle: mapValue.window_title,
-    elementRole: mapValue.element_role,
-    elementSubrole: mapValue.element_subrole,
-    elementLabel: mapValue.element_label,
-    actionName: mapValue.action_name,
-    metadata: parseJson(mapValue.metadata_json, null),
-    createdAt: mapValue.created_at
+    id: row.id,
+    eventType: row.event_type,
+    observedAt: row.observed_at,
+    appBundleId: row.app_bundle_id,
+    appName: row.app_name,
+    windowId: row.window_id,
+    windowTitle: row.window_title,
+    elementRole: row.element_role,
+    elementSubrole: row.element_subrole,
+    elementLabel: row.element_label,
+    actionName: row.action_name,
+    metadata: parseJson(row.metadata_json, null),
+    createdAt: row.created_at
   };
 }
-function mapWindow(mapValue) {
+function mapWindow(row) {
   return {
-    id: mapValue.id,
-    startedAt: mapValue.started_at,
-    endedAt: mapValue.ended_at,
-    trigger: mapValue.trigger,
-    status: mapValue.status,
-    activityBlocks: parseJson(mapValue.activity_blocks_json, []),
-    sourceRefs: parseJson(mapValue.source_refs_json, {
+    id: row.id,
+    startedAt: row.started_at,
+    endedAt: row.ended_at,
+    trigger: row.trigger,
+    status: row.status,
+    activityBlocks: parseJson(row.activity_blocks_json, []),
+    sourceRefs: parseJson(row.source_refs_json, {
       sessionIds: [],
       contextIds: [],
       eventIds: []
     }),
-    coverage: parseJson(mapValue.coverage_json, {
+    coverage: parseJson(row.coverage_json, {
       sessionCount: 0,
       contextCount: 0,
       eventCount: 0,
@@ -9400,45 +9400,45 @@ function mapWindow(mapValue) {
       idleDurationSec: 0,
       appSwitchCount: 0
     }),
-    hasTaskBoundary: mapValue.has_task_boundary === 1,
-    longGap: mapValue.long_gap === 1,
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    hasTaskBoundary: row.has_task_boundary === 1,
+    longGap: row.long_gap === 1,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
-function mapSummary(mapValue) {
+function mapSummary(row) {
   return {
-    id: mapValue.id,
-    level: mapValue.level,
-    trigger: mapValue.trigger,
-    startedAt: mapValue.started_at,
-    endedAt: mapValue.ended_at,
-    title: mapValue.title,
-    summary: mapValue.summary,
-    applications: parseJson(mapValue.applications_json, []),
-    evidenceUsage: parseJson(mapValue.evidence_usage_json, {
+    id: row.id,
+    level: row.level,
+    trigger: row.trigger,
+    startedAt: row.started_at,
+    endedAt: row.ended_at,
+    title: row.title,
+    summary: row.summary,
+    applications: parseJson(row.applications_json, []),
+    evidenceUsage: parseJson(row.evidence_usage_json, {
       usedAccessibilityEvents: false,
       usedWindowTitles: false,
       usedBrowserDomains: false
     }),
-    evidenceWindowIds: parseJson(mapValue.evidence_window_ids_json, []),
-    createdAt: mapValue.created_at,
-    updatedAt: mapValue.updated_at
+    evidenceWindowIds: parseJson(row.evidence_window_ids_json, []),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at
   };
 }
 var ActivityEvidenceRepository = class {
   createEvent(input) {
-    const fallbackValue = input.id ?? crypto.randomUUID();
+    const id = input.id ?? crypto.randomUUID();
     const createdAt = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO mac_activity_events (
         id, event_type, observed_at, app_bundle_id, app_name, window_id, window_title,
         element_role, element_subrole, element_label, action_name, metadata_json, created_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(fallbackValue, input.eventType, input.observedAt, input.appBundleId, input.appName, input.windowId, input.windowTitle, input.elementRole, input.elementSubrole, input.elementLabel, input.actionName, input.metadata ? JSON.stringify(input.metadata) : null, createdAt);
+    `).run(id, input.eventType, input.observedAt, input.appBundleId, input.appName, input.windowId, input.windowTitle, input.elementRole, input.elementSubrole, input.elementLabel, input.actionName, input.metadata ? JSON.stringify(input.metadata) : null, createdAt);
     return {
       ...input,
-      id: fallbackValue,
+      id,
       createdAt
     };
   }
@@ -9460,7 +9460,7 @@ var ActivityEvidenceRepository = class {
   }
   clearContextData(kind) {
     const database = getDatabase();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     let changed = 0;
     database.exec("BEGIN");
     try {
@@ -9505,7 +9505,7 @@ var ActivityEvidenceRepository = class {
           eventIds: []
         } : sourceRefs;
         if (JSON.stringify(redacted) === JSON.stringify(blocks) && JSON.stringify(nextSourceRefs) === JSON.stringify(sourceRefs)) continue;
-        changed += Number(update.run(JSON.stringify(redacted), JSON.stringify(nextSourceRefs), isoString, row.id).changes);
+        changed += Number(update.run(JSON.stringify(redacted), JSON.stringify(nextSourceRefs), now, row.id).changes);
       }
       changed += Number(database.prepare(`
         DELETE FROM work_record_evidence_links WHERE evidence_type = 'activity_summary'
@@ -9544,7 +9544,7 @@ var ActivityEvidenceRepository = class {
       const update = database.prepare(`
         UPDATE capture_evidence_windows SET activity_blocks_json = ?, updated_at = ? WHERE id = ?
       `);
-      const isoString = (/* @__PURE__ */new Date()).toISOString();
+      const now = (/* @__PURE__ */new Date()).toISOString();
       let changed = 0;
       for (const row of rows) {
         const blocks = parseJson(row.activity_blocks_json, []);
@@ -9555,7 +9555,7 @@ var ActivityEvidenceRepository = class {
           browserDomain: null
         }));
         if (JSON.stringify(redacted) === JSON.stringify(blocks)) continue;
-        changed += Number(update.run(JSON.stringify(redacted), isoString, row.id).changes);
+        changed += Number(update.run(JSON.stringify(redacted), now, row.id).changes);
       }
       changed += Number(database.prepare(`
         DELETE FROM work_record_evidence_links
@@ -9571,25 +9571,25 @@ var ActivityEvidenceRepository = class {
     }
   }
   createWindow(input) {
-    const fallbackValue = input.id ?? crypto.randomUUID();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const id = input.id ?? crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO capture_evidence_windows (
         id, started_at, ended_at, trigger, status, activity_blocks_json,
         source_refs_json, coverage_json, has_task_boundary, long_gap, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(fallbackValue, input.startedAt, input.endedAt, input.trigger, input.status, JSON.stringify(input.activityBlocks), JSON.stringify(input.sourceRefs), JSON.stringify(input.coverage), input.hasTaskBoundary ? 1 : 0, input.longGap ? 1 : 0, isoString, isoString);
+    `).run(id, input.startedAt, input.endedAt, input.trigger, input.status, JSON.stringify(input.activityBlocks), JSON.stringify(input.sourceRefs), JSON.stringify(input.coverage), input.hasTaskBoundary ? 1 : 0, input.longGap ? 1 : 0, now, now);
     return {
       ...input,
-      id: fallbackValue,
-      createdAt: isoString,
-      updatedAt: isoString
+      id,
+      createdAt: now,
+      updatedAt: now
     };
   }
-  updateWindowStatus(windowValue, status) {
+  updateWindowStatus(id, status) {
     getDatabase().prepare(`
       UPDATE capture_evidence_windows SET status = ?, updated_at = ? WHERE id = ?
-    `).run(status, (/* @__PURE__ */new Date()).toISOString(), windowValue);
+    `).run(status, (/* @__PURE__ */new Date()).toISOString(), id);
   }
   failPendingWindowsBefore(cutoff) {
     return Number(getDatabase().prepare(`
@@ -9605,8 +9605,8 @@ var ActivityEvidenceRepository = class {
       WHERE status = 'pending'
     `).run((/* @__PURE__ */new Date()).toISOString()).changes);
   }
-  findWindowById(windowValue) {
-    const row = getDatabase().prepare("SELECT * FROM capture_evidence_windows WHERE id = ?").get(windowValue);
+  findWindowById(id) {
+    const row = getDatabase().prepare("SELECT * FROM capture_evidence_windows WHERE id = ?").get(id);
     return row ? mapWindow(row) : null;
   }
   findLatestPendingWindow() {
@@ -9657,8 +9657,8 @@ var ActivityEvidenceRepository = class {
     const uniqueIds = Array.from(new Set(evidenceWindowIds));
     const rows = [];
     for (let offset = 0; offset < uniqueIds.length; offset += SQLITE_ID_QUERY_CHUNK_SIZE) {
-      const part = uniqueIds.slice(offset, offset + SQLITE_ID_QUERY_CHUNK_SIZE);
-      const placeholders = part.map(() => "?").join(", ");
+      const ids = uniqueIds.slice(offset, offset + SQLITE_ID_QUERY_CHUNK_SIZE);
+      const placeholders = ids.map(() => "?").join(", ");
       rows.push(...getDatabase().prepare(`
         SELECT
           work_records.id,
@@ -9670,19 +9670,19 @@ var ActivityEvidenceRepository = class {
         INNER JOIN work_records ON work_records.id = work_record_evidence_links.work_record_id
         WHERE work_record_evidence_links.evidence_type = 'capture_window'
           AND work_record_evidence_links.evidence_id IN (${placeholders})
-      `).all(...part));
+      `).all(...ids));
     }
-    return rows.map(item => ({
-      id: item.id,
-      startedAt: item.started_at,
-      endedAt: item.ended_at,
-      summary: item.summary,
-      evidenceId: item.evidence_id
+    return rows.map(row => ({
+      id: row.id,
+      startedAt: row.started_at,
+      endedAt: row.ended_at,
+      summary: row.summary,
+      evidenceId: row.evidence_id
     })).sort((left, right) => left.startedAt.localeCompare(right.startedAt) || left.id.localeCompare(right.id) || left.evidenceId.localeCompare(right.evidenceId));
   }
   upsertSummary(input) {
-    const randomUUIDResult = crypto.randomUUID();
-    const isoString = (/* @__PURE__ */new Date()).toISOString();
+    const id = crypto.randomUUID();
+    const now = (/* @__PURE__ */new Date()).toISOString();
     getDatabase().prepare(`
       INSERT INTO activity_summaries (
         id, level, trigger, started_at, ended_at, title, summary,
@@ -9696,7 +9696,7 @@ var ActivityEvidenceRepository = class {
         evidence_usage_json = excluded.evidence_usage_json,
         evidence_window_ids_json = excluded.evidence_window_ids_json,
         updated_at = excluded.updated_at
-    `).run(randomUUIDResult, input.level, input.trigger, input.startedAt, input.endedAt, input.title, input.summary, JSON.stringify(input.applications), JSON.stringify(input.evidenceUsage), JSON.stringify(input.evidenceWindowIds), isoString, isoString);
+    `).run(id, input.level, input.trigger, input.startedAt, input.endedAt, input.title, input.summary, JSON.stringify(input.applications), JSON.stringify(input.evidenceUsage), JSON.stringify(input.evidenceWindowIds), now, now);
     return mapSummary(getDatabase().prepare(`
       SELECT * FROM activity_summaries WHERE level = ? AND started_at = ? AND ended_at = ?
     `).get(input.level, input.startedAt, input.endedAt));
@@ -9895,16 +9895,16 @@ var ScreenHeatmapRepository = class {
       SELECT display_key, label, bounds_x, bounds_y, bounds_width, bounds_height,
              scale_factor, is_primary, last_seen_at
       FROM screen_heatmap_displays
-    `).all().map(item => ({
-      displayKey: item.display_key,
-      label: item.label,
-      x: Number(item.bounds_x),
-      y: Number(item.bounds_y),
-      width: Number(item.bounds_width),
-      height: Number(item.bounds_height),
-      scaleFactor: Number(item.scale_factor) || 1,
-      isPrimary: Number(item.is_primary) === 1,
-      lastSeenAt: item.last_seen_at
+    `).all().map(row => ({
+      displayKey: row.display_key,
+      label: row.label,
+      x: Number(row.bounds_x),
+      y: Number(row.bounds_y),
+      width: Number(row.bounds_width),
+      height: Number(row.bounds_height),
+      scaleFactor: Number(row.scale_factor) || 1,
+      isPrimary: Number(row.is_primary) === 1,
+      lastSeenAt: row.last_seen_at
     }));
   }
   /** 区间内按显示器、应用和区域合并后的覆盖时长，按时长从多到少取前 limit 条 */
@@ -9917,15 +9917,15 @@ var ScreenHeatmapRepository = class {
       GROUP BY display_key, app_key, cell_x, cell_y, cell_width, cell_height
       ORDER BY active_ms DESC
       LIMIT ?
-    `).all(startDate, endDate, limit).map(item => ({
-      displayKey: item.display_key,
-      appKey: item.app_key,
-      appName: item.app_name,
-      x: Number(item.cell_x),
-      y: Number(item.cell_y),
-      width: Number(item.cell_width),
-      height: Number(item.cell_height),
-      activeMs: Number(item.active_ms)
+    `).all(startDate, endDate, limit).map(row => ({
+      displayKey: row.display_key,
+      appKey: row.app_key,
+      appName: row.app_name,
+      x: Number(row.cell_x),
+      y: Number(row.cell_y),
+      width: Number(row.cell_width),
+      height: Number(row.cell_height),
+      activeMs: Number(row.active_ms)
     }));
   }
   sumByDisplay(startDate, endDate) {
@@ -9934,9 +9934,9 @@ var ScreenHeatmapRepository = class {
       FROM screen_heatmap_daily
       WHERE stat_date BETWEEN ? AND ?
       GROUP BY display_key
-    `).all(startDate, endDate).map(event => ({
-      key: event.key,
-      activeMs: Number(event.active_ms)
+    `).all(startDate, endDate).map(row => ({
+      key: row.key,
+      activeMs: Number(row.active_ms)
     }));
   }
   sumByApp(startDate, endDate) {
@@ -9945,10 +9945,10 @@ var ScreenHeatmapRepository = class {
       FROM screen_heatmap_daily
       WHERE stat_date BETWEEN ? AND ?
       GROUP BY app_key
-    `).all(startDate, endDate).map(event => ({
-      key: event.key,
-      name: event.name,
-      activeMs: Number(event.active_ms)
+    `).all(startDate, endDate).map(row => ({
+      key: row.key,
+      name: row.name,
+      activeMs: Number(row.active_ms)
     }));
   }
   countActiveDays(startDate, endDate) {
@@ -10026,7 +10026,7 @@ function resolveHeatmapDisplays(connected, stored) {
     row,
     connected: true
   });
-  const orphans = Array.from(stored.values()).filter(item => !connected.has(item.displayKey)).sort((left, right) => right.lastSeenAt.localeCompare(left.lastSeenAt));
+  const orphans = Array.from(stored.values()).filter(row => !connected.has(row.displayKey)).sort((left, right) => right.lastSeenAt.localeCompare(left.lastSeenAt));
   const disconnected = [];
   for (const row of orphans) {
     const live = findSameDisplay(row, liveRows);
@@ -10082,15 +10082,15 @@ function toGridRect(bounds, display) {
   const right = Math.min(bounds.x + bounds.width, display.x + display.width);
   const bottom = Math.min(bounds.y + bounds.height, display.y + display.height);
   if (right - left < 1 || bottom - top < 1) return null;
-  const clampGridResult = clampGrid(Math.floor((left - display.x) / display.width * 200 + GRID_EPSILON));
+  const x0 = clampGrid(Math.floor((left - display.x) / display.width * 200 + GRID_EPSILON));
   const y0 = clampGrid(Math.floor((top - display.y) / display.height * 200 + GRID_EPSILON));
   const x1 = clampGrid(Math.ceil((right - display.x) / display.width * 200 - GRID_EPSILON));
   const y1 = clampGrid(Math.ceil((bottom - display.y) / display.height * 200 - GRID_EPSILON));
-  if (x1 <= clampGridResult || y1 <= y0) return null;
+  if (x1 <= x0 || y1 <= y0) return null;
   return {
-    x: clampGridResult,
+    x: x0,
     y: y0,
-    width: x1 - clampGridResult,
+    width: x1 - x0,
     height: y1 - y0
   };
 }
@@ -10116,8 +10116,8 @@ function listConnectedDisplays() {
   try {
     const primaryId = screen.getPrimaryDisplay().id;
     return new Map(screen.getAllDisplays().map(display => {
-      const toDisplayRowResult = toDisplayRow(display, primaryId, seenAt);
-      return [toDisplayRowResult.displayKey, toDisplayRowResult];
+      const row = toDisplayRow(display, primaryId, seenAt);
+      return [row.displayKey, row];
     }));
   } catch {
     return /* @__PURE__ */new Map();
@@ -10168,9 +10168,9 @@ var ScreenHeatmapService = class {
         ...rect,
         activeMs
       };
-      const incrementKeyResult = incrementKey(entry);
-      const existing = this.pending.get(incrementKeyResult);
-      if (existing) existing.activeMs += activeMs;else this.pending.set(incrementKeyResult, entry);
+      const key = incrementKey(entry);
+      const existing = this.pending.get(key);
+      if (existing) existing.activeMs += activeMs;else this.pending.set(key, entry);
     }
     this.ensureTimer();
   }
@@ -10190,9 +10190,9 @@ var ScreenHeatmapService = class {
       this.pendingGeneration = null;
     } catch (error) {
       for (const entry of entries) {
-        const incrementKeyResult = incrementKey(entry);
-        const existing = this.pending.get(incrementKeyResult);
-        if (existing) existing.activeMs += entry.activeMs;else this.pending.set(incrementKeyResult, entry);
+        const key = incrementKey(entry);
+        const existing = this.pending.get(key);
+        if (existing) existing.activeMs += entry.activeMs;else this.pending.set(key, entry);
       }
       for (const display of displays) if (!this.pendingDisplays.has(display.displayKey)) this.pendingDisplays.set(display.displayKey, display);
       throw error;
@@ -10210,7 +10210,7 @@ var ScreenHeatmapService = class {
   query(input) {
     this.flushSafely("查询");
     const connected = listConnectedDisplays();
-    const stored = new Map(screenHeatmapRepository.listDisplays().map(item => [item.displayKey, item]));
+    const stored = new Map(screenHeatmapRepository.listDisplays().map(row => [row.displayKey, row]));
     const resolved = resolveHeatmapDisplays(connected, stored);
     const totals = /* @__PURE__ */new Map();
     for (const total of screenHeatmapRepository.sumByDisplay(input.startDate, input.endDate)) {
@@ -10250,16 +10250,16 @@ var ScreenHeatmapService = class {
       name: total.name,
       activeMs: total.activeMs
     }));
-    const appIndex = new Map(apps.map((event, index) => [event.key, index]));
+    const appIndex = new Map(apps.map((app, index) => [app.key, index]));
     const rects = /* @__PURE__ */new Map();
     for (const row of screenHeatmapRepository.listRects(input.startDate, input.endDate, MAX_RECTS)) {
       const resolvedKey = resolved.get(row.displayKey)?.key;
       const display = resolvedKey === undefined ? undefined : displayIndex.get(resolvedKey);
       const app = appIndex.get(row.appKey);
       if (display === undefined || app === undefined || row.activeMs <= 0) continue;
-      const joined = [display, app, row.x, row.y, row.width, row.height].join("\0");
-      const existing = rects.get(joined);
-      if (existing) existing.activeMs += row.activeMs;else rects.set(joined, {
+      const key = [display, app, row.x, row.y, row.width, row.height].join("\0");
+      const existing = rects.get(key);
+      if (existing) existing.activeMs += row.activeMs;else rects.set(key, {
         display,
         app,
         x: row.x,
@@ -10276,7 +10276,7 @@ var ScreenHeatmapService = class {
       displays,
       apps,
       rects: Array.from(rects.values()),
-      totalActiveMs: displays.reduce((acc, display) => acc + display.activeMs, 0),
+      totalActiveMs: displays.reduce((sum, display) => sum + display.activeMs, 0),
       activeDays: screenHeatmapRepository.countActiveDays(input.startDate, input.endDate),
       generatedAt: (/* @__PURE__ */new Date()).toISOString()
     };
@@ -10350,10 +10350,10 @@ function forEachEncodedCell(text, visit) {
   };
   let cell = -1;
   while (offset < bytes.length) {
-    const varint = readVarint();
+    const gap = readVarint();
     const count = readVarint();
-    if (varint === null || count === null) return;
-    cell += varint + 1;
+    if (gap === null || count === null) return;
+    cell += gap + 1;
     if (cell >= CELL_COUNT$1) return;
     if (count > 0) visit(cell, count);
   }
@@ -10445,17 +10445,17 @@ var MouseHeatmapRepository = class {
       SELECT display_key, label, bounds_x, bounds_y, bounds_width, bounds_height,
              scale_factor, is_primary, is_internal, last_seen_at
       FROM mouse_heatmap_displays
-    `).all().map(item => ({
-      displayKey: item.display_key,
-      label: item.label,
-      x: Number(item.bounds_x),
-      y: Number(item.bounds_y),
-      width: Number(item.bounds_width),
-      height: Number(item.bounds_height),
-      scaleFactor: Number(item.scale_factor) || 1,
-      isPrimary: Number(item.is_primary) === 1,
-      isInternal: item.is_internal === null || item.is_internal === undefined ? null : Number(item.is_internal) === 1,
-      lastSeenAt: item.last_seen_at
+    `).all().map(row => ({
+      displayKey: row.display_key,
+      label: row.label,
+      x: Number(row.bounds_x),
+      y: Number(row.bounds_y),
+      width: Number(row.bounds_width),
+      height: Number(row.bounds_height),
+      scaleFactor: Number(row.scale_factor) || 1,
+      isPrimary: Number(row.is_primary) === 1,
+      isInternal: row.is_internal === null || row.is_internal === undefined ? null : Number(row.is_internal) === 1,
+      lastSeenAt: row.last_seen_at
     }));
   }
   /** 区间内每天每块屏每个图层的一行格子数据，逐行读出，避免一年的数据一次全放进内存 */
@@ -10746,7 +10746,7 @@ var MouseHeatmapService = class {
   query(input) {
     this.flushSafely("查询");
     const connected = listConnectedDisplays();
-    const stored = new Map(mouseHeatmapRepository.listDisplays().map(item => [item.displayKey, item]));
+    const stored = new Map(mouseHeatmapRepository.listDisplays().map(row => [row.displayKey, row]));
     const resolved = resolveHeatmapDisplays(connected, stored);
     const accumulators = /* @__PURE__ */new Map();
     for (const row of mouseHeatmapRepository.iterateCells(input.startDate, input.endDate)) {
@@ -11200,24 +11200,24 @@ var AppUsageService = class {
       if (this.running && runGeneration !== this.runGeneration) this.detect("restart");
     }
   }
-  handleDetectionFailure(detection, monotonicNow) {
+  handleDetectionFailure(now, monotonicNow) {
     this.consecutiveFailures += 1;
     if (this.failureStartedAt === null) {
-      this.advanceCurrent(detection, monotonicNow);
-      this.failureStartedAt = detection;
+      this.advanceCurrent(now, monotonicNow);
+      this.failureStartedAt = now;
       return;
     }
-    if (detection - this.failureStartedAt < detectionFailureGraceMs) return;
+    if (now - this.failureStartedAt < detectionFailureGraceMs) return;
     if (this.current?.activityState !== "unknown") {
       this.closeCurrent("error");
-      this.beginSession("unknown", null, null, "detection-failed", this.failureStartedAt, monotonicNow - (detection - this.failureStartedAt));
+      this.beginSession("unknown", null, null, "detection-failed", this.failureStartedAt, monotonicNow - (now - this.failureStartedAt));
     }
-    this.advanceCurrent(detection, monotonicNow);
+    this.advanceCurrent(now, monotonicNow);
   }
-  handleSyntheticState(state, snapshot, stateValue, monotonicNow, startReason) {
+  handleSyntheticState(state, snapshot, now, monotonicNow, startReason) {
     if (this.current?.activityState !== state) {
       if (this.current) this.closeCurrent("privacy-excluded");
-      this.beginSession(state, null, null, startReason, stateValue, monotonicNow);
+      this.beginSession(state, null, null, startReason, now, monotonicNow);
     } else this.current.sampleCount += 1;
     this.currentSnapshot = null;
   }
@@ -11227,13 +11227,13 @@ var AppUsageService = class {
       this.resetRuntimeState();
       return;
     }
-    const isoString = new Date(startedAt).toISOString();
+    const iso = new Date(startedAt).toISOString();
     this.current = {
       id: crypto.randomUUID(),
       applicationId,
       activityState: state,
-      startedAt: isoString,
-      endedAt: isoString,
+      startedAt: iso,
+      endedAt: iso,
       durationMs: 0,
       activeDurationMs: 0,
       idleDurationMs: 0,
@@ -11245,8 +11245,8 @@ var AppUsageService = class {
       detectionSource: snapshot?.source ?? "polling-fallback",
       confidence: snapshot?.confidence ?? "low",
       isOpen: true,
-      createdAt: isoString,
-      updatedAt: isoString,
+      createdAt: iso,
+      updatedAt: iso,
       databaseGeneration: this.databaseGeneration,
       lastMonotonicAt: monotonicAt,
       activeStreakMs: 0
@@ -11258,11 +11258,11 @@ var AppUsageService = class {
     }
     if (snapshot) this.updateContext(snapshot, startedAt, monotonicAt);
   }
-  advanceCurrent(advance, monotonicNow) {
+  advanceCurrent(now, monotonicNow) {
     if (!this.current) return;
     const elapsed = Math.max(0, Math.min(maxAccountedIntervalMs, monotonicNow - this.current.lastMonotonicAt));
     this.current.lastMonotonicAt = monotonicNow;
-    this.current.endedAt = new Date(advance).toISOString();
+    this.current.endedAt = new Date(now).toISOString();
     this.current.durationMs += elapsed;
     if (this.current.activityState === "app") {
       const settings = settingsRepository.getSettings();
@@ -11275,7 +11275,7 @@ var AppUsageService = class {
       this.current.activeStreakMs += activePart;
       this.current.longestActiveDurationMs = Math.max(this.current.longestActiveDurationMs, this.current.activeStreakMs);
       if (idlePart > 0) this.current.activeStreakMs = 0;
-      const intervalStartedAt = advance - elapsed;
+      const intervalStartedAt = now - elapsed;
       const windowBounds = this.currentSnapshot?.windowBounds;
       if (activePart > 0 && settings.enableScreenHeatmap && windowBounds) screenHeatmapService.record({
         appName: this.currentSnapshot?.app?.displayName ?? null,
@@ -11286,7 +11286,7 @@ var AppUsageService = class {
         if (!this.current) return;
       }
       if (idlePart > 0) {
-        this.appendActivityDuration("idle", intervalStartedAt + activePart, advance, idlePart, monotonicNow);
+        this.appendActivityDuration("idle", intervalStartedAt + activePart, now, idlePart, monotonicNow);
         if (!this.current) return;
       }
       if (this.currentContext) {
@@ -11311,7 +11311,7 @@ var AppUsageService = class {
     this.persistCurrent("close");
     this.resetRuntimeState();
   }
-  updateContext(snapshot, context, monotonicNow) {
+  updateContext(snapshot, now, monotonicNow) {
     const settings = settingsRepository.getSettings();
     if (process.platform === "darwin" && snapshot.browser?.isPrivate === true) {
       this.closeCurrentContext();
@@ -11321,33 +11321,33 @@ var AppUsageService = class {
       this.closeCurrentContext();
       return;
     }
-    const contextKeyResult = contextKey(snapshot);
-    if (this.currentContext?.key === contextKeyResult) {
+    const key = contextKey(snapshot);
+    if (this.currentContext?.key === key) {
       this.pendingContext = null;
       return;
     }
     if (this.currentContext) {
-      if (this.pendingContext?.key !== contextKeyResult) {
+      if (this.pendingContext?.key !== key) {
         this.pendingContext = {
-          key: contextKeyResult,
+          key,
           snapshot,
-          firstSeenAt: context
+          firstSeenAt: now
         };
         return;
       }
-      if (context - this.pendingContext.firstSeenAt < 3e3) return;
+      if (now - this.pendingContext.firstSeenAt < 3e3) return;
       snapshot = this.pendingContext.snapshot;
       this.pendingContext = null;
     }
     const hadContext = Boolean(this.currentContext);
     this.closeCurrentContext();
     if (!this.current) return;
-    const isoString = new Date(context).toISOString();
+    const iso = new Date(now).toISOString();
     if (hadContext) this.current.contextSwitchCount += 1;
     this.currentContext = {
       id: crypto.randomUUID(),
       sessionId: this.current.id,
-      key: contextKeyResult,
+      key,
       windowId: settings.enableAppWindowContext ? snapshot.window?.id ?? null : null,
       windowTitle: settings.enableAppWindowContext ? snapshot.window?.title ?? null : null,
       documentHint: settings.enableAppWindowContext ? snapshot.window?.documentHint ?? null : null,
@@ -11355,8 +11355,8 @@ var AppUsageService = class {
       browserDomain: settings.enableBrowserDomainTracking ? snapshot.browser?.domain ?? null : null,
       displayId: settings.enableAppWindowContext ? snapshot.window?.displayId ?? null : null,
       bounds: settings.enableAppWindowContext ? snapshot.window?.bounds ?? null : null,
-      startedAt: isoString,
-      endedAt: isoString,
+      startedAt: iso,
+      endedAt: iso,
       activeDurationMs: 0,
       lastMonotonicAt: monotonicNow
     };
@@ -11553,7 +11553,7 @@ var AppUsageService = class {
       if (index >= 0) sessions[index] = live;else sessions.push(live);
     }
     const mergedSessions = [];
-    for (const session of sessions.sort((left, right) => left.startedAt.localeCompare(right.startedAt))) {
+    for (const session of sessions.sort((a, b) => a.startedAt.localeCompare(b.startedAt))) {
       const previous = mergedSessions.at(-1);
       if (previous && previous.detectionSource === "legacy-import" && session.detectionSource === "legacy-import" && previous.applicationId === session.applicationId && Date.parse(session.startedAt) - Date.parse(previous.endedAt) <= 250 && previous) {
         previous.endedAt = session.endedAt > previous.endedAt ? session.endedAt : previous.endedAt;
@@ -11572,7 +11572,7 @@ var AppUsageService = class {
       segments.push(segment);
       activityBySession.set(segment.sessionId, segments);
     }
-    return mergedSessions.map(session => this.clipSession(session, rangeStart, rangeEnd, activityBySession.get(session.id))).filter(session => session !== null).sort((left, right) => left.startedAt.localeCompare(right.startedAt) || left.id.localeCompare(right.id));
+    return mergedSessions.map(session => this.clipSession(session, rangeStart, rangeEnd, activityBySession.get(session.id))).filter(session => session !== null).sort((a, b) => a.startedAt.localeCompare(b.startedAt) || a.id.localeCompare(b.id));
   }
   clipSession(session, rangeStart, rangeEnd, activitySegments) {
     const originalStart = Date.parse(session.startedAt);
@@ -11733,9 +11733,9 @@ var AppUsageService = class {
     const sessionCount = summary.reduce((total, item) => total + item.sessionCount, 0);
     const start = new Date(startedAt);
     const requestedEnd = new Date(endedAt);
-    const date = new Date(Math.min(requestedEnd.getTime(), Date.now()));
+    const end = new Date(Math.min(requestedEnd.getTime(), Date.now()));
     const startDay = Date.UTC(start.getFullYear(), start.getMonth(), start.getDate());
-    const endDay = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    const endDay = Date.UTC(end.getFullYear(), end.getMonth(), end.getDate());
     const elapsedDays = Number.isFinite(startDay) && Number.isFinite(endDay) && endDay >= startDay ? Math.floor((endDay - startDay) / 864e5) + 1 : 1;
     return {
       totalApps: summary.length,
@@ -11753,9 +11753,9 @@ var AppUsageService = class {
     const statisticalTimeline = this.collectSessions(startedAt, endedAt).filter(session => session.activityState !== "app" || session.durationSec >= 2 || session.sampleCount > 1);
     const appNames = /* @__PURE__ */new Map();
     const appKeyOf = session => {
-      const toLocaleLowerCase = session.appName.trim().toLocaleLowerCase();
-      if (!appNames.has(toLocaleLowerCase)) appNames.set(toLocaleLowerCase, session.appName);
-      return toLocaleLowerCase;
+      const key = session.appName.trim().toLocaleLowerCase();
+      if (!appNames.has(key)) appNames.set(key, session.appName);
+      return key;
     };
     const periodOfHour = hour => APP_USAGE_DAY_PERIODS.find(item => hour < item.endHour) ?? APP_USAGE_DAY_PERIODS[APP_USAGE_DAY_PERIODS.length - 1];
     const periodTotals = /* @__PURE__ */new Map();
@@ -11822,15 +11822,15 @@ var AppUsageService = class {
         fromAppName: appNames.get(item.fromKey) ?? item.fromKey,
         toAppName: appNames.get(item.toKey) ?? item.toKey,
         count: item.count
-      })).sort((left, right) => right.count - left.count)
+      })).sort((a, b) => b.count - a.count)
     };
   }
   getDetail(applicationId, startedAt, endedAt) {
-    const application = appUsageRepository.getApplication(applicationId);
-    if (!application) return null;
+    const app = appUsageRepository.getApplication(applicationId);
+    if (!app) return null;
     const timelineSessions = this.collectSessions(startedAt, endedAt);
     const allSessions = timelineSessions.filter(session => session.activityState === "app");
-    const appDisplayKey = application.appName.trim().toLocaleLowerCase();
+    const appDisplayKey = app.appName.trim().toLocaleLowerCase();
     const sessions = allSessions.filter(session => session.appName.trim().toLocaleLowerCase() === appDisplayKey);
     const dailyTotals = /* @__PURE__ */new Map();
     const hourlyActiveDurationSec = Array.from({
@@ -11863,7 +11863,7 @@ var AppUsageService = class {
       const title = context.documentHint || context.windowTitle;
       if (title) contextTotals.set(title, (contextTotals.get(title) ?? 0) + durationSec);
     }
-    const sorted = map => Array.from(map.entries()).sort((left, right) => right[1] - left[1]).slice(0, 10);
+    const sorted = map => Array.from(map.entries()).sort((a, b) => b[1] - a[1]).slice(0, 10);
     for (let index = 1; index < timelineSessions.length; index += 1) {
       const previous = timelineSessions[index - 1];
       const current = timelineSessions[index];
@@ -11871,13 +11871,13 @@ var AppUsageService = class {
       if (previous.applicationId === applicationId) transitionTotals.set(current.appName, (transitionTotals.get(current.appName) ?? 0) + 1);else if (current.applicationId === applicationId) transitionTotals.set(previous.appName, (transitionTotals.get(previous.appName) ?? 0) + 1);
     }
     return {
-      ...application,
-      dailyActiveDuration: Array.from(dailyTotals.entries()).sort((left, right) => left[0].localeCompare(right[0])).map(([date, durationSec]) => ({
+      ...app,
+      dailyActiveDuration: Array.from(dailyTotals.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([date, durationSec]) => ({
         date,
         durationSec: Math.round(durationSec)
       })),
       hourlyActiveDurationSec,
-      recentSessions: [...sessions].sort((left, right) => right.startedAt.localeCompare(left.startedAt)).slice(0, 20),
+      recentSessions: [...sessions].sort((a, b) => b.startedAt.localeCompare(a.startedAt)).slice(0, 20),
       commonDomains: sorted(domainTotals).map(([domain, durationSec]) => ({
         domain,
         durationSec
@@ -12063,14 +12063,14 @@ var growthEventRepository = {
       WHERE owner_user_id = ? ORDER BY created_at, rowid LIMIT ?`).all(owner.userId, Math.max(1, Math.min(50, limit)));
     const first = rows[0];
     if (!first) return [];
-    return rows.filter(item => item.device_id === first.device_id && item.app_version === first.app_version && item.platform === first.platform).map(item => ({
-      eventId: item.event_id,
-      eventName: item.event_name,
-      occurredAt: item.occurred_at,
-      props: JSON.parse(item.props_json),
-      deviceId: item.device_id,
-      appVersion: item.app_version,
-      platform: item.platform
+    return rows.filter(row => row.device_id === first.device_id && row.app_version === first.app_version && row.platform === first.platform).map(row => ({
+      eventId: row.event_id,
+      eventName: row.event_name,
+      occurredAt: row.occurred_at,
+      props: JSON.parse(row.props_json),
+      deviceId: row.device_id,
+      appVersion: row.app_version,
+      platform: row.platform
     }));
   },
   acknowledge(owner, accepted, duplicates, rejected) {
@@ -12270,13 +12270,13 @@ function retry(session, ids, code, minimumDelay = 0) {
   session.nextAttemptAt = Date.now() + Math.max(minimumDelay, backoff);
   growthEventRepository.defer(session.actor, ids, code, session.nextAttemptAt);
 }
-function validResult(input, result) {
+function validResult(input, ids) {
   if (!input || typeof input !== "object") return false;
   const data = input;
   if (!Array.isArray(data.acceptedIds) || !Array.isArray(data.duplicateIds) || !Array.isArray(data.rejected)) return false;
   const seen = /* @__PURE__ */new Set();
   const validId = id => {
-    if (typeof id !== "string" || !result.has(id) || seen.has(id)) return false;
+    if (typeof id !== "string" || !ids.has(id) || seen.has(id)) return false;
     seen.add(id);
     return true;
   };
@@ -12444,9 +12444,9 @@ function schedule() {
     flush();
   }, 25);
 }
-function remember(rememberValue, value) {
-  cache.delete(rememberValue);
-  cache.set(rememberValue, value);
+function remember(key, value) {
+  cache.delete(key);
+  cache.set(key, value);
   while (cache.size > 64) cache.delete(cache.keys().next().value);
 }
 async function fallback(read) {
@@ -12485,11 +12485,11 @@ async function flush() {
       body: JSON.stringify({
         protocolVersion: 2,
         todoAttachmentLinks: true,
-        reads: reads.map((read, item) => ({
-          id: String(item),
+        reads: reads.map((read, i) => ({
+          id: String(i),
           kind: read.kind,
           params: read.params,
-          knownDigest: known[item]?.digest ?? ""
+          knownDigest: known[i]?.digest ?? ""
         })),
         ...(batch ? {
           device: batch.device,
@@ -12520,12 +12520,12 @@ async function flush() {
     if (currentToken() !== token) throw new Error(appText("ipcErrors.syncAccountChanged"));
     if (!body.ok || body.protocolVersion !== 2 || !body.results) throw new Error(appText("ipcErrors.syncProtocolUnavailable"));
     if (body.telemetryAccepted) batch?.accept();
-    await Promise.all(reads.map(async (read, item) => {
+    await Promise.all(reads.map(async (read, i) => {
       try {
-        const result = body.results[String(item)];
+        const result = body.results[String(i)];
         if (!result || result.fallback || !/^[a-f0-9]{64}$/.test(result.digest ?? "")) return fallback(read);
         let payload;
-        if (result.changed && result.payload?.ok === true) payload = result.payload;else if (result.changed === false && known[item]?.digest === result.digest) payload = JSON.parse(known[item].text);else return fallback(read);
+        if (result.changed && result.payload?.ok === true) payload = result.payload;else if (result.changed === false && known[i]?.digest === result.digest) payload = JSON.parse(known[i].text);else return fallback(read);
         if (result.volatile) {
           const {
             campaignLinks,
@@ -12704,22 +12704,22 @@ var DesktopSyncService = class {
       this.schedule();
     };
   }
-  acknowledge(acknowledge, deliveryId) {
+  acknowledge(key, deliveryId) {
     if ((authRepository.getSession()?.token ?? null) !== this.ownerToken) return;
-    const c = this.consumers.get(acknowledge);
+    const c = this.consumers.get(key);
     if (c?.pending?.id === deliveryId) c.pending = undefined;
   }
   align(time) {
     return this.anchor + Math.ceil((time - this.anchor) / GRID) * GRID;
   }
-  advance(advance, interval, advanceValue) {
-    return advance + Math.max(1, Math.floor((advanceValue - advance) / interval) + 1) * interval;
+  advance(due, interval, now) {
+    return due + Math.max(1, Math.floor((now - due) / interval) + 1) * interval;
   }
   schedule() {
     if (this.timer) clearTimeout(this.timer);
     this.timer = undefined;
     if (this.running || !this.consumers.size && !this.pulse) return;
-    const due = Math.min(this.pulse ? this.pulseDue : Infinity, ...[...this.consumers.values()].map(item => item.due));
+    const due = Math.min(this.pulse ? this.pulseDue : Infinity, ...[...this.consumers.values()].map(c => c.due));
     this.timer = setTimeout(() => void this.tick(), Math.max(1e3, due - Date.now()));
     this.timer.unref?.();
   }
@@ -12731,25 +12731,25 @@ var DesktopSyncService = class {
       const token = authRepository.getSession()?.token ?? null;
       if (token !== this.ownerToken) {
         this.ownerToken = token;
-        for (const text of this.consumers.values()) text.pending = undefined;
+        for (const c of this.consumers.values()) c.pending = undefined;
       }
-      for (const text of this.consumers.values()) {
-        if (text.due > now + 1e3) continue;
-        text.due = this.advance(text.due, text.interval, now);
-        if (!token || text.pending && now - text.pending.at < 6e4) continue;
-        const randomUUIDResult = crypto.randomUUID();
-        text.pending = {
-          id: randomUUIDResult,
+      for (const c of this.consumers.values()) {
+        if (c.due > now + 1e3) continue;
+        c.due = this.advance(c.due, c.interval, now);
+        if (!token || c.pending && now - c.pending.at < 6e4) continue;
+        const id = crypto.randomUUID();
+        c.pending = {
+          id,
           at: now
         };
         try {
-          const result = text.refresh({
-            id: text.key,
-            deliveryId: randomUUIDResult
+          const result = c.refresh({
+            id: c.key,
+            deliveryId: id
           });
-          if (result instanceof Promise) result.then(() => this.acknowledge(text.key, randomUUIDResult), () => this.acknowledge(text.key, randomUUIDResult));
+          if (result instanceof Promise) result.then(() => this.acknowledge(c.key, id), () => this.acknowledge(c.key, id));
         } catch {
-          this.acknowledge(text.key, randomUUIDResult);
+          this.acknowledge(c.key, id);
         }
       }
       if (this.pulse && this.pulseDue <= now + 1e3) {
@@ -12935,9 +12935,9 @@ function safeProperties(input) {
   if (!input) return undefined;
   const result = {};
   for (const [rawKey, value] of Object.entries(input).slice(0, 32)) {
-    const part = rawKey.trim().slice(0, 64);
-    if (!part) continue;
-    if (value === null || typeof value === "number" || typeof value === "boolean") result[part] = value;else if (typeof value === "string") result[part] = value.slice(0, 256);
+    const key = rawKey.trim().slice(0, 64);
+    if (!key) continue;
+    if (value === null || typeof value === "number" || typeof value === "boolean") result[key] = value;else if (typeof value === "string") result[key] = value.slice(0, 256);
   }
   return Object.keys(result).length > 0 ? result : undefined;
 }
@@ -12949,9 +12949,9 @@ function summarizeTelemetryBody(body) {
     hasDevice: Boolean(record.device)
   };
 }
-function safeCount(safe) {
+function safeCount(fn) {
   try {
-    return safe();
+    return fn();
   } catch {
     return 0;
   }
@@ -13106,13 +13106,13 @@ function handleForcedLogout(reason) {
   macActivityEventService.applyRetentionPolicy();
   appUsageService.applyRetentionPolicy();
   if (settingsRepository.getSettings().enableAppUsageTracking) appUsageService.start("forced-logout");
-  import("./clipboard-assistant.service.js").then(result => result.n).then(({
+  import("./clipboard-assistant.service.js").then(n => n.n).then(({
     clipboardAssistantService
   }) => clipboardAssistantService.sync());
-  import("./screenshot-beautifier.service.js").then(result => result.n).then(({
+  import("./screenshot-beautifier.service.js").then(n => n.n).then(({
     screenshotBeautifierService
   }) => screenshotBeautifierService.sync());
-  import("../main.js").then(result => result.t).then(({
+  import("../main.js").then(n => n.t).then(({
     enterKeyComponentService
   }) => enterKeyComponentService.startIfEnabled());
   settingsService.syncDockIcon();

@@ -1,5 +1,5 @@
-import { r as lucideR } from "../ui/icons/lucide-icons.js";
-var t = lucideR(`square-play`, [[`rect`, {
+import { r as e } from "../ui/icons/lucide-icons.js";
+var t = e(`square-play`, [[`rect`, {
   x: `3`,
   y: `3`,
   width: `18`,

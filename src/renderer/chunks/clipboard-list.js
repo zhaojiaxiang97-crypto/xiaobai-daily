@@ -1,5 +1,5 @@
-import { r as lucideR } from "../ui/icons/lucide-icons.js";
-var t = lucideR(`clipboard-list`, [[`rect`, {
+import { r as e } from "../ui/icons/lucide-icons.js";
+var t = e(`clipboard-list`, [[`rect`, {
   width: `8`,
   height: `4`,
   x: `8`,

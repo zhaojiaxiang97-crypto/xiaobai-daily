@@ -1,5 +1,5 @@
-import { r as lucideR } from "../ui/icons/lucide-icons.js";
-var t = lucideR(`copy`, [[`rect`, {
+import { r as e } from "../ui/icons/lucide-icons.js";
+var t = e(`copy`, [[`rect`, {
     width: `14`,
     height: `14`,
     x: `8`,
@@ -11,7 +11,7 @@ var t = lucideR(`copy`, [[`rect`, {
     d: `M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2`,
     key: `zix9uf`
   }]]),
-  n = lucideR(`download`, [[`path`, {
+  n = e(`download`, [[`path`, {
     d: `M12 15V3`,
     key: `m9g1x1`
   }], [`path`, {
@@ -21,11 +21,11 @@ var t = lucideR(`copy`, [[`rect`, {
     d: `m7 10 5 5 5-5`,
     key: `brsn70`
   }]]),
-  r = lucideR(`loader-circle`, [[`path`, {
+  r = e(`loader-circle`, [[`path`, {
     d: `M21 12a9 9 0 1 1-6.219-8.56`,
     key: `13zald`
   }]]),
-  i = lucideR(`sparkles`, [[`path`, {
+  i = e(`sparkles`, [[`path`, {
     d: `M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z`,
     key: `1s2grr`
   }], [`path`, {
@@ -46,19 +46,19 @@ var t = lucideR(`copy`, [[`rect`, {
   c = [`ctrl`, `alt`, `shift`, `command`, `super`],
   l = new Set([`A`, `C`, `F`, `L`, `N`, `P`, `Q`, `R`, `S`, `T`, `V`, `W`, `X`, `Z`]);
 function u(text) {
-  let filtered = text.split(`+`).map(item => item.trim()).filter(Boolean),
-    n = filtered.pop()?.toUpperCase();
+  let t = text.split(`+`).map(e => e.trim()).filter(Boolean),
+    n = t.pop()?.toUpperCase();
   if (!n) return null;
   let r = /^[A-Z]$/.test(n),
     i = /^[0-9]$/.test(n),
     a = /^F([1-9]|1[0-2])$/.test(n);
   if (!r && !i && !a) return null;
-  let mapped = filtered.map(item => item.toLowerCase());
-  if (mapped.length > 3 || new Set(mapped).size !== mapped.length || mapped.some(item => !c.includes(item)) || mapped.includes(`command`) && mapped.includes(`super`)) return null;
-  let s = mapped.some(item => item !== `shift`);
+  let o = t.map(e => e.toLowerCase());
+  if (o.length > 3 || new Set(o).size !== o.length || o.some(e => !c.includes(e)) || o.includes(`command`) && o.includes(`super`)) return null;
+  let s = o.some(e => e !== `shift`);
   if ((r || i) && !s) return null;
-  let u = mapped.length === 1 && (mapped[0] === `ctrl` || mapped[0] === `command`);
-  return u && r && l.has(n) || u && i || mapped.length === 1 && mapped[0] === `alt` && (n === `F` || n === `F4`) ? null : [mapped.includes(`ctrl`) && `Ctrl`, mapped.includes(`alt`) && `Alt`, mapped.includes(`shift`) && `Shift`, mapped.includes(`command`) && `Command`, mapped.includes(`super`) && `Super`, n].filter(Boolean).join(`+`);
+  let u = o.length === 1 && (o[0] === `ctrl` || o[0] === `command`);
+  return u && r && l.has(n) || u && i || o.length === 1 && o[0] === `alt` && (n === `F` || n === `F4`) ? null : [o.includes(`ctrl`) && `Ctrl`, o.includes(`alt`) && `Alt`, o.includes(`shift`) && `Shift`, o.includes(`command`) && `Command`, o.includes(`super`) && `Super`, n].filter(Boolean).join(`+`);
 }
 var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   f = [`none`, `mac-light`, `mac-dark`, `browser-light`, `browser-dark`],
@@ -98,7 +98,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
     min: 0,
     max: 100
   },
-  options = {
+  y = {
     enabled: true,
     backgroundKind: `blur`,
     backgroundColor: `#f4f4f5`,
@@ -115,12 +115,12 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   b = [{
     id: `Soft`,
     style: {
-      ...options
+      ...y
     }
   }, {
     id: `Clean`,
     style: {
-      ...options,
+      ...y,
       backgroundKind: `solid`,
       backgroundColor: `#f4f4f5`,
       padding: 48,
@@ -130,7 +130,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   }, {
     id: `Window`,
     style: {
-      ...options,
+      ...y,
       backgroundKind: `solid`,
       backgroundColor: `#e4e4e7`,
       padding: 64,
@@ -141,7 +141,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   }, {
     id: `Dark`,
     style: {
-      ...options,
+      ...y,
       backgroundKind: `solid`,
       backgroundColor: `#27272a`,
       padding: 56,
@@ -151,7 +151,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   }, {
     id: `Brand`,
     style: {
-      ...options,
+      ...y,
       backgroundKind: `gradient`,
       gradientId: `mint`,
       padding: 56,
@@ -161,7 +161,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   }, {
     id: `Plain`,
     style: {
-      ...options,
+      ...y,
       backgroundKind: `transparent`,
       padding: 32,
       radius: 10,
@@ -170,7 +170,7 @@ var d = [`blur`, `solid`, `gradient`, `transparent`, `image`],
   }];
 function x(text, t) {
   if (typeof text != `string`) return t;
-  let lowercased = text.trim().toLowerCase();
-  return /^#[0-9a-f]{6}$/.test(lowercased) ? lowercased : /^#[0-9a-f]{3}$/.test(lowercased) ? `#${lowercased.slice(1).split(``).map(item => item + item).join(``)}` : t;
+  let n = text.trim().toLowerCase();
+  return /^#[0-9a-f]{6}$/.test(n) ? n : /^#[0-9a-f]{3}$/.test(n) ? `#${n.slice(1).split(``).map(e => e + e).join(``)}` : t;
 }
-export { r as _, f as a, o as c, _ as d, v as f, i as g, u as h, b as i, s as l, x as m, p as n, h as o, m as p, d as r, a as s, options as t, g as u, n as v, t as y };
+export { r as _, f as a, o as c, _ as d, v as f, i as g, u as h, b as i, s as l, x as m, p as n, h as o, m as p, d as r, a as s, y as t, g as u, n as v, t as y };

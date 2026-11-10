@@ -15,9 +15,9 @@ var sharedWorkspaceToolSchema = objectType({
   version_id: numberType().int().positive().optional(),
   request_quote: stringType().min(1).max(2e3).optional()
 }).strict();
-function executeSharedWorkspaceTool(shared, context) {
+function executeSharedWorkspaceTool(raw, context) {
   try {
-    const input = sharedWorkspaceToolSchema.parse(shared);
+    const input = sharedWorkspaceToolSchema.parse(raw);
     context.assertActive();
     const connection = getOpenDatabaseConnection();
     if (!connection || connection.generation !== context.expectedDatabaseGeneration || (connection.ownerUserId ?? 0) !== context.expectedUserId) throw new Error("账号已切换，请重新发起请求");

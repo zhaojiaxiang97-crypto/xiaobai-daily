@@ -1,8 +1,8 @@
-import { Dt as uiSwitchDt } from "../ui/Switch.js";
-import { $n as vueN, An as vueAn, Ct as vueCt, S as vueS, c as vueC, gt as vueGt, j as vueJ, k as vueK, rr as vueRr, v as vueV, x as vueX, y as vueY } from "../chunks/vue-i18n.runtime.js";
-import { r as lucideR } from "../ui/icons/lucide-icons.js";
-import { c as i18nC, d as i18nD, l as i18nL, o as i18nO, s as i18nS, t as i18nT, u as i18nU } from "../i18n/i18n-helper.js";
-var x = lucideR(`save-all`, [[`path`, {
+import { Dt as e } from "../ui/Switch.js";
+import { $n as t, An as n, Ct as r, S as i, c as a, gt as o, j as s, k as c, rr as l, v as u, x as d, y as f } from "../chunks/vue-i18n.runtime.js";
+import { r as p } from "../ui/icons/lucide-icons.js";
+import { c as m, d as h, l as g, o as _, s as v, t as y, u as b } from "../i18n/i18n-helper.js";
+var x = p(`save-all`, [[`path`, {
     d: `M10 2v3a1 1 0 0 0 1 1h5`,
     key: `1xspal`
   }], [`path`, {
@@ -39,7 +39,7 @@ var x = lucideR(`save-all`, [[`path`, {
     class: `text-[13px] font-semibold text-primary`
   },
   F = `inline-flex h-8 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-2.5 text-[11px] text-muted-foreground transition-[background-color,color,transform] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary/40 active:scale-[0.97]`,
-  I = vueJ({
+  I = s({
     __name: `ToolboxWorkspaceHeader`,
     props: {
       tool: {},
@@ -67,89 +67,89 @@ var x = lucideR(`save-all`, [[`path`, {
       }
     },
     emits: [`back`, `history`, `voiceLibrary`, `voiceActivity`, `recharge`, `whiteboardOpen`, `whiteboardSave`, `whiteboardSaveAs`],
-    setup(props, {
-      emit: emit
+    setup(s, {
+      emit: p
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
+      let I = s,
+        L = p,
         {
           t: R
-        } = i18nT(),
-        z = vueV(() => propsAlias.localTool || propsAlias.tool.price > 0 ? !propsAlias.localTool : Object.values(propsAlias.tool.priceOptions || {}).some(item => Number(item) > 0) || Object.values(propsAlias.tool.characterPriceOptions || {}).some(item => Number(item) > 0) ? true : Object.values(propsAlias.tool.tokenRateOptions || {}).some(item => Number(item?.withVideo) > 0 || Number(item?.withoutVideo) > 0)),
+        } = y(),
+        z = u(() => I.localTool || I.tool.price > 0 ? !I.localTool : Object.values(I.tool.priceOptions || {}).some(e => Number(e) > 0) || Object.values(I.tool.characterPriceOptions || {}).some(e => Number(e) > 0) ? true : Object.values(I.tool.tokenRateOptions || {}).some(e => Number(e?.withVideo) > 0 || Number(e?.withoutVideo) > 0)),
         B = `${F} hover:bg-muted hover:text-foreground`,
         V = `${F} hover:bg-primary/10`;
-      return (ctx, renderCache) => (vueGt(), vueS(`header`, S, [vueY(`div`, C, [vueY(`button`, {
+      return (u, p) => (o(), i(`header`, S, [f(`div`, C, [f(`button`, {
         type: `button`,
         class: `inline-flex size-7 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-[background-color,color,transform] hover:bg-muted hover:text-foreground active:scale-[0.96]`,
-        "aria-label": vueAn(R)(`toolboxNative.backToToolbox`),
-        title: vueAn(R)(`toolboxNative.backToToolbox`),
-        onClick: renderCache[0] ||= e => emitAlias(`back`)
-      }, [vueK(vueAn(i18nU), {
+        "aria-label": n(R)(`toolboxNative.backToToolbox`),
+        title: n(R)(`toolboxNative.backToToolbox`),
+        onClick: p[0] ||= e => L(`back`)
+      }, [c(n(b), {
         size: 18
-      })], 8, w), vueCt(ctx.$slots, `title`, {}, () => [vueY(`strong`, T, vueRr(props.tool.name), 1)])]), vueY(`div`, E, [vueCt(ctx.$slots, `actions`), props.whiteboardTool ? (vueGt(), vueS(vueC, {
+      })], 8, w), r(u.$slots, `title`, {}, () => [f(`strong`, T, l(s.tool.name), 1)])]), f(`div`, E, [r(u.$slots, `actions`), s.whiteboardTool ? (o(), i(a, {
         key: 0
-      }, [vueY(`button`, {
+      }, [f(`button`, {
         type: `button`,
-        class: vueN(B),
-        "aria-label": vueAn(R)(`toolboxNative.whiteboardOpen`),
-        title: vueAn(R)(`toolboxNative.whiteboardOpen`),
-        onClick: renderCache[1] ||= e => emitAlias(`whiteboardOpen`)
-      }, [vueK(vueAn(i18nL), {
+        class: t(B),
+        "aria-label": n(R)(`toolboxNative.whiteboardOpen`),
+        title: n(R)(`toolboxNative.whiteboardOpen`),
+        onClick: p[1] ||= e => L(`whiteboardOpen`)
+      }, [c(n(g), {
         size: 15
-      }), vueY(`span`, null, vueRr(vueAn(R)(`toolboxNative.whiteboardOpenShort`)), 1)], 8, D), vueY(`button`, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardOpenShort`)), 1)], 8, D), f(`button`, {
         type: `button`,
-        class: vueN(B),
-        "aria-label": vueAn(R)(`toolboxNative.whiteboardSave`),
-        title: vueAn(R)(`toolboxNative.whiteboardSave`),
-        onClick: renderCache[2] ||= e => emitAlias(`whiteboardSave`)
-      }, [vueK(vueAn(i18nS), {
+        class: t(B),
+        "aria-label": n(R)(`toolboxNative.whiteboardSave`),
+        title: n(R)(`toolboxNative.whiteboardSave`),
+        onClick: p[2] ||= e => L(`whiteboardSave`)
+      }, [c(n(v), {
         size: 15
-      }), vueY(`span`, null, vueRr(vueAn(R)(`toolboxNative.whiteboardSaveShort`)), 1)], 8, O), vueY(`button`, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveShort`)), 1)], 8, O), f(`button`, {
         type: `button`,
-        class: vueN(B),
-        "aria-label": vueAn(R)(`toolboxNative.whiteboardSaveAs`),
-        title: vueAn(R)(`toolboxNative.whiteboardSaveAs`),
-        onClick: renderCache[3] ||= e => emitAlias(`whiteboardSaveAs`)
-      }, [vueK(vueAn(x), {
+        class: t(B),
+        "aria-label": n(R)(`toolboxNative.whiteboardSaveAs`),
+        title: n(R)(`toolboxNative.whiteboardSaveAs`),
+        onClick: p[3] ||= e => L(`whiteboardSaveAs`)
+      }, [c(n(x), {
         size: 15
-      }), vueY(`span`, null, vueRr(vueAn(R)(`toolboxNative.whiteboardSaveAsShort`)), 1)], 8, k)], 64)) : vueX(``, true), props.voiceTool ? (vueGt(), vueS(vueC, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.whiteboardSaveAsShort`)), 1)], 8, k)], 64)) : d(``, true), s.voiceTool ? (o(), i(a, {
         key: 1
-      }, [vueY(`button`, {
+      }, [f(`button`, {
         type: `button`,
-        class: vueN(B),
-        "aria-label": vueAn(R)(`toolboxNative.myVoiceLibrary`),
-        title: vueAn(R)(`toolboxNative.myVoiceLibrary`),
-        onClick: renderCache[4] ||= e => emitAlias(`voiceLibrary`)
-      }, [vueK(vueAn(i18nD), {
+        class: t(B),
+        "aria-label": n(R)(`toolboxNative.myVoiceLibrary`),
+        title: n(R)(`toolboxNative.myVoiceLibrary`),
+        onClick: p[4] ||= e => L(`voiceLibrary`)
+      }, [c(n(h), {
         size: 15
-      }), vueY(`span`, null, vueRr(vueAn(R)(`toolboxNative.myVoiceLibrary`)), 1)], 8, A), vueY(`button`, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.myVoiceLibrary`)), 1)], 8, A), f(`button`, {
         type: `button`,
-        class: vueN(B),
-        "aria-label": vueAn(R)(`toolboxNative.voiceActivity`),
-        title: vueAn(R)(`toolboxNative.voiceActivity`),
-        onClick: renderCache[5] ||= e => emitAlias(`voiceActivity`)
-      }, [vueK(vueAn(i18nC), {
+        class: t(B),
+        "aria-label": n(R)(`toolboxNative.voiceActivity`),
+        title: n(R)(`toolboxNative.voiceActivity`),
+        onClick: p[5] ||= e => L(`voiceActivity`)
+      }, [c(n(m), {
         size: 15
-      }), vueY(`span`, null, vueRr(vueAn(R)(`toolboxNative.voiceActivity`)), 1)], 8, j)], 64)) : props.showHistory && !props.localTool ? (vueGt(), vueS(`button`, {
+      }), f(`span`, null, l(n(R)(`toolboxNative.voiceActivity`)), 1)], 8, j)], 64)) : s.showHistory && !s.localTool ? (o(), i(`button`, {
         key: 2,
         type: `button`,
-        class: vueN(B),
-        "aria-label": props.historyLabel || vueAn(R)(`toolboxNative.generationHistory`),
-        title: props.historyLabel || vueAn(R)(`toolboxNative.generationHistory`),
-        onClick: renderCache[6] ||= e => emitAlias(`history`)
-      }, [vueK(vueAn(i18nC), {
+        class: t(B),
+        "aria-label": s.historyLabel || n(R)(`toolboxNative.generationHistory`),
+        title: s.historyLabel || n(R)(`toolboxNative.generationHistory`),
+        onClick: p[6] ||= e => L(`history`)
+      }, [c(n(m), {
         size: 15
-      }), vueY(`span`, null, vueRr(props.historyLabel || vueAn(R)(`toolboxNative.generationHistory`)), 1)], 8, M)) : vueX(``, true), props.user && props.showBalance && z.value ? (vueGt(), vueS(`button`, {
+      }), f(`span`, null, l(s.historyLabel || n(R)(`toolboxNative.generationHistory`)), 1)], 8, M)) : d(``, true), s.user && s.showBalance && z.value ? (o(), i(`button`, {
         key: 3,
         type: `button`,
-        class: vueN(V),
-        title: `${vueAn(R)(`toolboxNative.balance`)} ${props.creditsBalance.toLocaleString()}`,
-        onClick: renderCache[7] ||= e => emitAlias(`recharge`)
-      }, [vueK(vueAn(i18nO), {
+        class: t(V),
+        title: `${n(R)(`toolboxNative.balance`)} ${s.creditsBalance.toLocaleString()}`,
+        onClick: p[7] ||= e => L(`recharge`)
+      }, [c(n(_), {
         size: 15
-      }), vueY(`span`, null, vueRr(vueAn(R)(`toolboxNative.balance`)), 1), vueY(`strong`, P, vueRr(props.creditsBalance.toLocaleString()), 1), vueK(vueAn(uiSwitchDt), {
+      }), f(`span`, null, l(n(R)(`toolboxNative.balance`)), 1), f(`strong`, P, l(s.creditsBalance.toLocaleString()), 1), c(n(e), {
         size: 13
-      })], 8, N)) : vueX(``, true)])]));
+      })], 8, N)) : d(``, true)])]));
     }
   });
 export { I as t };

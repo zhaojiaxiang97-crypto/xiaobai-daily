@@ -1,7 +1,7 @@
-import { $n as vueN, An as vueAn, Cn as vueCn, S as vueS, St as vueSt, Wt as vueWt, bn as vueBn, c as vueC, gt as vueGt, j as vueJ, n as u, nr as vueNr, ot as vueOt, rr as vueRr, ut as vueUt, v as vueV, y as vueY } from "../chunks/vue-i18n.runtime.js";
+import { $n as e, An as t, Cn as n, S as r, St as i, Wt as a, bn as o, c as s, gt as c, j as l, n as u, nr as d, ot as f, rr as p, ut as m, v as h, y as g } from "../chunks/vue-i18n.runtime.js";
 import "../chunks/main.js";
-import { E as OrbitControlsE, a as OrbitControlsA, b as OrbitControlsB, c as OrbitControlsC, d as OrbitControlsD, f as OrbitControlsF, g as OrbitControlsG, h as OrbitControlsH, i as OrbitControlsI, m as OrbitControlsM, o as OrbitControlsO, p as OrbitControlsP, s as OrbitControlsS, v as OrbitControlsV } from "./OrbitControls.js";
-import { a as threestageA, i as threestageI, n as threestageN, o as threestageO, r as threestageR, t as threestageT } from "./three-stage.js";
+import { E as _, a as v, b as y, c as b, d as x, f as S, g as C, h as w, i as T, m as E, o as D, p as O, s as k, v as A } from "./OrbitControls.js";
+import { a as j, i as M, n as N, o as P, r as F, t as ee } from "./three-stage.js";
 var I = class {
     uniforms = {
       uTime: {
@@ -13,8 +13,8 @@ var I = class {
     };
     startedAt = 0;
     endsAt = 0;
-    constructor(constructor) {
-      this.uniforms.uGrow.value = constructor;
+    constructor(e) {
+      this.uniforms.uGrow.value = e;
     }
     start(e, t) {
       if (!e) {
@@ -32,15 +32,15 @@ var I = class {
   L = class {
     fullPending = false;
     meshes;
-    constructor(constructor) {
-      this.meshes = constructor;
+    constructor(e) {
+      this.meshes = e;
     }
     markAll() {
       this.fullPending = true;
-      for (let count of this.meshes) count.instanceColor && (count.instanceColor.clearUpdateRanges(), count.instanceColor.needsUpdate = true);
+      for (let e of this.meshes) e.instanceColor && (e.instanceColor.clearUpdateRanges(), e.instanceColor.needsUpdate = true);
     }
-    markOne(mark, oneValue) {
-      !mark.instanceColor || oneValue < 0 || (this.fullPending || mark.instanceColor.addUpdateRange(oneValue * 3, 3), mark.instanceColor.needsUpdate = true);
+    markOne(e, t) {
+      !e.instanceColor || t < 0 || (this.fullPending || e.instanceColor.addUpdateRange(t * 3, 3), e.instanceColor.needsUpdate = true);
     }
     frameStarted() {
       this.fullPending = false;
@@ -74,8 +74,8 @@ function ie(e) {
   };
 }
 function ae(e) {
-  let orbitControlsV = new OrbitControlsV();
-  return orbitControlsV.onBeforeCompile = t => {
+  let t = new A();
+  return t.onBeforeCompile = t => {
     t.uniforms.uTime = e.uniforms.uTime, t.uniforms.uGrow = e.uniforms.uGrow, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute float aHeight;
 attribute float aDelay;
@@ -85,10 +85,10 @@ uniform float uGrow;`).replace(`#include <begin_vertex>`, `#include <begin_verte
 float barcodeGrowth = clamp((uTime - aDelay) / uGrow, 0.0, 1.0);
 barcodeGrowth = 1.0 - pow(1.0 - barcodeGrowth, 3.0);
 transformed.y *= max(aHeight * mix(1.0, ${W.toFixed(2)}, aDim) * barcodeGrowth, 0.001);`);
-  }, orbitControlsV.customProgramCacheKey = () => `barcode-city-building`, orbitControlsV;
+  }, t.customProgramCacheKey = () => `barcode-city-building`, t;
 }
 var oe = class {
-    root = new OrbitControlsF();
+    root = new S();
     framing;
     labels;
     set;
@@ -102,48 +102,48 @@ var oe = class {
     buildingMaterial;
     buildings;
     trackGeometry;
-    trackMaterial = new OrbitControlsV();
+    trackMaterial = new A();
     tracks;
     colorSync;
     baseColors = [];
-    groundColor = new OrbitControlsS();
-    hoverColor = new OrbitControlsS();
-    scratchColor = new OrbitControlsS();
-    hitBox = new OrbitControlsI();
-    hitPoint = new OrbitControlsE();
+    groundColor = new k();
+    hoverColor = new k();
+    scratchColor = new k();
+    hitBox = new T();
+    hitPoint = new _();
     hovered = -1;
-    constructor(constructor, constructorValue) {
-      this.set = threestageR(constructor), this.layout = ie(this.set.dayCount);
+    constructor(e, t) {
+      this.set = F(e), this.layout = ie(this.set.dayCount);
       let {
           blocks: n
         } = this.set,
         r = n.length;
       this.heights = new Float32Array(r), this.dims = new Float32Array(r);
-      let float32Array = new Float32Array(r),
-        orbitControlsH = new OrbitControlsH(),
-        orbitControlsE = new OrbitControlsE(),
-        orbitControlsB = new OrbitControlsB(),
-        c = new OrbitControlsE();
-      this.buildingGeometry = new OrbitControlsA(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new OrbitControlsP(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new OrbitControlsP(float32Array, 1)), this.dimAttribute = new OrbitControlsP(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new OrbitControlsM(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new OrbitControlsP(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
+      let i = new Float32Array(r),
+        a = new w(),
+        o = new _(),
+        s = new y(),
+        c = new _();
+      this.buildingGeometry = new v(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new O(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new O(i, 1)), this.dimAttribute = new O(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new E(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new O(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
       let l = 0,
         u = 4;
-      n.forEach((item, t) => {
-        let n = Math.max(U, item.end - item.start - H),
-          r = threestageO(item) ? V : B * threestageI(item);
-        this.heights[t] = r, u = Math.max(u, r), float32Array[t] = threestageA(item, this.set.dayCount, re, J), l = Math.max(l, float32Array[t]), orbitControlsE.set((item.start + item.end) / 2 - z, 0, this.rowZ(item.dayIndex)), c.set(n, 1, this.layout.buildingDepth), orbitControlsH.compose(orbitControlsE, orbitControlsB, c), this.buildings.setMatrixAt(t, orbitControlsH);
-      }), this.buildings.instanceMatrix.needsUpdate = true, this.maxDelay = l, this.trackGeometry = new OrbitControlsA(1, 1, 1).translate(0, -.5, 0), this.tracks = new OrbitControlsM(this.trackGeometry, this.trackMaterial, this.set.dayCount);
-      for (let e = 0; e < this.set.dayCount; e += 1) orbitControlsE.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), orbitControlsH.compose(orbitControlsE, orbitControlsB, c), this.tracks.setMatrixAt(e, orbitControlsH);
+      n.forEach((e, t) => {
+        let n = Math.max(U, e.end - e.start - H),
+          r = P(e) ? V : B * M(e);
+        this.heights[t] = r, u = Math.max(u, r), i[t] = j(e, this.set.dayCount, re, J), l = Math.max(l, i[t]), o.set((e.start + e.end) / 2 - z, 0, this.rowZ(e.dayIndex)), c.set(n, 1, this.layout.buildingDepth), a.compose(o, s, c), this.buildings.setMatrixAt(t, a);
+      }), this.buildings.instanceMatrix.needsUpdate = true, this.maxDelay = l, this.trackGeometry = new v(1, 1, 1).translate(0, -.5, 0), this.tracks = new E(this.trackGeometry, this.trackMaterial, this.set.dayCount);
+      for (let e = 0; e < this.set.dayCount; e += 1) o.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), a.compose(o, s, c), this.tracks.setMatrixAt(e, a);
       this.tracks.instanceMatrix.needsUpdate = true, this.root.add(this.tracks, this.buildings), this.colorSync = new L([this.buildings]);
       let d = this.set.dayCount * this.layout.rowPitch / 2,
         f = -z - this.layout.leftLabelSpace,
         p = z + 1,
         m = -d,
         h = d + 8,
-        emptyItems = [];
-      for (let count of [f, p]) for (let t of [0, u]) for (let n of [m, h]) emptyItems.push(new OrbitControlsE(count, t, n));
+        g = [];
+      for (let e of [f, p]) for (let t of [0, u]) for (let n of [m, h]) g.push(new _(e, t, n));
       this.framing = {
-        target: new OrbitControlsE((f + p) / 2, u * .2, (m + h) / 2),
-        corners: emptyItems,
+        target: new _((f + p) / 2, u * .2, (m + h) / 2),
+        corners: g,
         homeView: {
           polar: .98,
           azimuth: .22
@@ -157,34 +157,34 @@ var oe = class {
           maxPolar: 1.36,
           azimuthRange: Math.PI / 3
         }
-      }, this.labels = this.buildLabels(constructorValue, d);
+      }, this.labels = this.buildLabels(t, d);
     }
     rowZ(e) {
       return (e - (this.set.dayCount - 1) / 2) * this.layout.rowPitch;
     }
-    buildLabels(labels, labelsValue) {
-      let emptyItems = [];
-      for (let e = 0; e <= 24; e += 3) emptyItems.push({
+    buildLabels(e, t) {
+      let n = [];
+      for (let e = 0; e <= 24; e += 3) n.push({
         key: `hour-${e}`,
         text: `${e}:00`,
         kind: `hour`,
-        position: new OrbitControlsE(e / 24 * R - z, 0, labelsValue + 4)
+        position: new _(e / 24 * R - z, 0, t + 4)
       });
       let r = -z - 3;
-      if (this.set.dayCount > 62) for (let count of labels.monthMarks) emptyItems.push({
-        key: `month-${count.dayIndex}`,
-        text: count.label,
+      if (this.set.dayCount > 62) for (let t of e.monthMarks) n.push({
+        key: `month-${t.dayIndex}`,
+        text: t.label,
         kind: `side`,
-        position: new OrbitControlsE(r, 0, this.rowZ(count.dayIndex))
-      });else labels.dayLabels.forEach((item, t) => {
-        item && emptyItems.push({
+        position: new _(r, 0, this.rowZ(t.dayIndex))
+      });else e.dayLabels.forEach((e, t) => {
+        e && n.push({
           key: `day-${t}`,
-          text: item,
+          text: e,
           kind: `side`,
-          position: new OrbitControlsE(r, 0, this.rowZ(t))
+          position: new _(r, 0, this.rowZ(t))
         });
       });
-      return emptyItems;
+      return n;
     }
     paint(e) {
       let t = this.baseColors[e];
@@ -194,24 +194,24 @@ var oe = class {
       for (let e = 0; e < this.baseColors.length; e += 1) this.paint(e);
       this.colorSync.markAll();
     }
-    setColors(colors, colorsValue) {
-      this.baseColors = this.set.blocks.map(item => new OrbitControlsS(threestageN(item, colors, colorsValue))), this.groundColor.set(colorsValue.ground), this.hoverColor.set(colorsValue.textPrimary), this.trackMaterial.color.set(colorsValue.ground), this.paintAll();
+    setColors(e, t) {
+      this.baseColors = this.set.blocks.map(n => new k(N(n, e, t))), this.groundColor.set(t.ground), this.hoverColor.set(t.textPrimary), this.trackMaterial.color.set(t.ground), this.paintAll();
     }
-    setHighlight(highlight) {
-      this.set.blocks.forEach((item, n) => {
-        this.dims[n] = highlight && !highlight.has(item.value) ? 1 : 0;
+    setHighlight(e) {
+      this.set.blocks.forEach((t, n) => {
+        this.dims[n] = e && !e.has(t.value) ? 1 : 0;
       }), this.dimAttribute.needsUpdate = true, this.paintAll();
     }
-    setHovered(hoveredValue) {
-      if (hoveredValue === this.hovered) return;
-      let hovered = this.hovered;
-      this.hovered = hoveredValue, this.paint(hovered), this.paint(hoveredValue), this.colorSync.markOne(this.buildings, hovered), this.colorSync.markOne(this.buildings, hoveredValue);
+    setHovered(e) {
+      if (e === this.hovered) return;
+      let t = this.hovered;
+      this.hovered = e, this.paint(t), this.paint(e), this.colorSync.markOne(this.buildings, t), this.colorSync.markOne(this.buildings, e);
     }
-    startGrowth(growth) {
-      this.clock.start(growth, this.maxDelay);
+    startGrowth(e) {
+      this.clock.start(e, this.maxDelay);
     }
-    stepGrowth(step) {
-      return this.colorSync.frameStarted(), this.clock.step(step);
+    stepGrowth(e) {
+      return this.colorSync.frameStarted(), this.clock.step(e);
     }
     pick(e) {
       let {
@@ -220,7 +220,7 @@ var oe = class {
         dayCount: r
       } = this.set;
       if (t.length === 0) return null;
-      let reduced = this.framing.corners.reduce((acc, cur) => Math.max(acc, cur.y), 0),
+      let i = this.framing.corners.reduce((e, t) => Math.max(e, t.y), 0),
         {
           origin: a,
           direction: o
@@ -229,15 +229,15 @@ var oe = class {
         c = 1e7;
       if (Math.abs(o.y) > 1e-9) {
         let e = -a.y / o.y,
-          t = (reduced - a.y) / o.y;
+          t = (i - a.y) / o.y;
         if (s = Math.max(0, Math.min(e, t)), c = Math.max(e, t), c < s) return null;
-      } else if (a.y < 0 || a.y > reduced) return null;
+      } else if (a.y < 0 || a.y > i) return null;
       let l = a.z + o.z * s,
         u = a.z + o.z * c,
         d = this.rowZ(0),
-        rowPitch = this.layout.rowPitch,
-        p = Math.max(0, Math.floor((Math.min(l, u) - d) / rowPitch) - 1),
-        m = Math.min(r - 1, Math.ceil((Math.max(l, u) - d) / rowPitch) + 1),
+        f = this.layout.rowPitch,
+        p = Math.max(0, Math.floor((Math.min(l, u) - d) / f) - 1),
+        m = Math.min(r - 1, Math.ceil((Math.max(l, u) - d) / f) + 1),
         h = this.layout.buildingDepth / 2,
         g = -1,
         _ = 1 / 0,
@@ -250,8 +250,8 @@ var oe = class {
             s = (n.start + n.end) / 2 - z,
             c = this.heights[o] * (this.dims[o] ? W : 1);
           if (this.hitBox.min.set(s - r, 0, i - h), this.hitBox.max.set(s + r, c, i + h), !e.intersectBox(this.hitBox, this.hitPoint)) continue;
-          let distanceToSquared = this.hitPoint.distanceToSquared(a);
-          distanceToSquared < _ && (_ = distanceToSquared, g = o, v = this.hitPoint.x);
+          let l = this.hitPoint.distanceToSquared(a);
+          l < _ && (_ = l, g = o, v = this.hitPoint.x);
         }
       }
       if (g < 0) return null;
@@ -297,40 +297,40 @@ var oe = class {
     segments: 32
   }];
 function ye(e) {
-  let emptyItems = [],
+  let t = [],
     n = [],
-    count = [],
-    handler = (e, r, i, a, o, s) => (emptyItems.push(e, r, i), n.push(a, o, s), emptyItems.length / 3 - 1),
+    r = [],
+    i = (e, r, i, a, o, s) => (t.push(e, r, i), n.push(a, o, s), t.length / 3 - 1),
     a = [],
     o = [],
     s = [],
-    ratio = [],
+    c = [],
     l = [],
     u = [];
   for (let t = 0; t <= e; t += 1) {
     let n = t / e;
-    a.push(handler(n, 1, 0, 0, 1, 0)), o.push(handler(n, 1, 1, 0, 1, 0)), s.push(handler(n, 0, 1, 0, 0, 1)), ratio.push(handler(n, 1, 1, 0, 0, 1)), l.push(handler(n, 0, 0, 0, 0, -1)), u.push(handler(n, 1, 0, 0, 0, -1));
+    a.push(i(n, 1, 0, 0, 1, 0)), o.push(i(n, 1, 1, 0, 1, 0)), s.push(i(n, 0, 1, 0, 0, 1)), c.push(i(n, 1, 1, 0, 0, 1)), l.push(i(n, 0, 0, 0, 0, -1)), u.push(i(n, 1, 0, 0, 0, -1));
   }
   for (let t = 0; t < e; t += 1) {
     let e = t + 1;
-    count.push(a[t], a[e], o[e], a[t], o[e], o[t]), count.push(s[t], ratio[t], ratio[e], s[t], ratio[e], s[e]), count.push(l[t], u[e], u[t], l[t], l[e], u[e]);
+    r.push(a[t], a[e], o[e], a[t], o[e], o[t]), r.push(s[t], c[t], c[e], s[t], c[e], s[e]), r.push(l[t], u[e], u[t], l[t], l[e], u[e]);
   }
-  let d = handler(0, 0, 0, -1, 0, 0),
-    f = handler(0, 1, 0, -1, 0, 0),
-    p = handler(0, 1, 1, -1, 0, 0),
-    m = handler(0, 0, 1, -1, 0, 0);
-  count.push(d, f, p, d, p, m);
-  let h = handler(1, 0, 0, 1, 0, 0),
-    g = handler(1, 0, 1, 1, 0, 0),
-    _ = handler(1, 1, 1, 1, 0, 0),
-    v = handler(1, 1, 0, 1, 0, 0);
-  count.push(h, g, _, h, _, v);
-  let orbitControlsO = new OrbitControlsO();
-  return orbitControlsO.setAttribute(`position`, new OrbitControlsD(emptyItems, 3)), orbitControlsO.setAttribute(`normal`, new OrbitControlsD(n, 3)), orbitControlsO.setIndex(count), orbitControlsO;
+  let d = i(0, 0, 0, -1, 0, 0),
+    f = i(0, 1, 0, -1, 0, 0),
+    p = i(0, 1, 1, -1, 0, 0),
+    m = i(0, 0, 1, -1, 0, 0);
+  r.push(d, f, p, d, p, m);
+  let h = i(1, 0, 0, 1, 0, 0),
+    g = i(1, 0, 1, 1, 0, 0),
+    _ = i(1, 1, 1, 1, 0, 0),
+    v = i(1, 1, 0, 1, 0, 0);
+  r.push(h, g, _, h, _, v);
+  let y = new D();
+  return y.setAttribute(`position`, new x(t, 3)), y.setAttribute(`normal`, new x(n, 3)), y.setIndex(r), y;
 }
 function be(e) {
-  let orbitControlsV = new OrbitControlsV();
-  return orbitControlsV.onBeforeCompile = t => {
+  let t = new A();
+  return t.onBeforeCompile = t => {
     t.uniforms.uTime = e.uniforms.uTime, t.uniforms.uGrow = e.uniforms.uGrow, t.vertexShader = t.vertexShader.replace(`#include <common>`, `#include <common>
 attribute vec2 aArc;
 attribute vec2 aRadius;
@@ -348,10 +348,10 @@ vec3 barcodeRadial = vec3(sin(barcodeTheta), 0.0, -cos(barcodeTheta));
 vec3 barcodeTangent = vec3(cos(barcodeTheta), 0.0, sin(barcodeTheta));
 vec3 objectNormal = barcodeTangent * normal.x + vec3(0.0, normal.y, 0.0) + barcodeRadial * normal.z;`).replace(`#include <begin_vertex>`, `
 vec3 transformed = barcodeRadial * barcodeRadius + vec3(0.0, aLayer.x + position.y * aLayer.y, 0.0);`);
-  }, orbitControlsV.customProgramCacheKey = () => `barcode-tower-arc`, orbitControlsV;
+  }, t.customProgramCacheKey = () => `barcode-tower-arc`, t;
 }
 var xe = class {
-    root = new OrbitControlsF();
+    root = new S();
     framing;
     labels;
     set;
@@ -366,16 +366,16 @@ var xe = class {
     maxDelay;
     maxRadius;
     baseGeometry;
-    baseMaterial = new OrbitControlsV();
+    baseMaterial = new A();
     colorSync;
     dimmed;
     baseColors = [];
-    groundColor = new OrbitControlsS();
-    hoverColor = new OrbitControlsS();
-    scratchColor = new OrbitControlsS();
+    groundColor = new k();
+    hoverColor = new k();
+    scratchColor = new k();
     hovered = -1;
-    constructor(constructor, constructorValue) {
-      this.set = threestageR(constructor);
+    constructor(e, t) {
+      this.set = F(e);
       let {
           blocks: n,
           dayCount: r
@@ -386,51 +386,51 @@ var xe = class {
         layerPitch: a,
         layerHeight: i ? a : a * pe
       }, this.outerRadii = new Float32Array(n.length), this.tierOf = new Uint8Array(n.length), this.instanceOf = new Int32Array(n.length), this.dimmed = new Uint8Array(n.length), this.cellBlocks = new Int32Array(r * Y).fill(-1);
-      let mapped = $.map(() => 0),
+      let o = $.map(() => 0),
         s = 29;
-      n.forEach((item, t) => {
-        let n = threestageO(item) ? ce : Q + se * threestageI(item);
+      n.forEach((e, t) => {
+        let n = P(e) ? ce : Q + se * M(e);
         this.outerRadii[t] = Z + n, s = Math.max(s, this.outerRadii[t]);
-        let r = item.end - item.start,
-          indexResult = $.findIndex(e => r <= e.maxSpan);
-        this.tierOf[t] = indexResult, this.instanceOf[t] = mapped[indexResult], mapped[indexResult] += 1, this.cellBlocks.fill(t, item.dayIndex * Y + item.start, item.dayIndex * Y + item.end);
+        let r = e.end - e.start,
+          i = $.findIndex(e => r <= e.maxSpan);
+        this.tierOf[t] = i, this.instanceOf[t] = o[i], o[i] += 1, this.cellBlocks.fill(t, e.dayIndex * Y + e.start, e.dayIndex * Y + e.end);
       }), this.maxRadius = s, this.material = be(this.clock);
       let c = 0;
-      $.forEach((item, t) => {
-        let i = mapped[t];
+      $.forEach((e, t) => {
+        let i = o[t];
         if (i === 0) return;
-        let a = ye(item.segments),
-          float32Array = new Float32Array(i * 2),
+        let a = ye(e.segments),
+          s = new Float32Array(i * 2),
           l = new Float32Array(i * 2),
           u = new Float32Array(i * 2),
           d = new Float32Array(i),
           f = new Float32Array(i),
-          int32Array = new Int32Array(i);
+          p = new Int32Array(i);
         n.forEach((e, n) => {
           if (this.tierOf[n] !== t) return;
           let i = this.instanceOf[n];
-          int32Array[i] = n, float32Array[i * 2] = e.start / Y * X, float32Array[i * 2 + 1] = e.end / Y * X, l[i * 2] = Z, l[i * 2 + 1] = this.outerRadii[n], u[i * 2] = this.layerBottom(e.dayIndex), u[i * 2 + 1] = this.layout.layerHeight, d[i] = threestageA(e, r, ge, 0), c = Math.max(c, d[i]);
-        }), a.setAttribute(`aArc`, new OrbitControlsP(float32Array, 2)), a.setAttribute(`aRadius`, new OrbitControlsP(l, 2)), a.setAttribute(`aLayer`, new OrbitControlsP(u, 2)), a.setAttribute(`aDelay`, new OrbitControlsP(d, 1));
-        let orbitControlsP = new OrbitControlsP(f, 1);
-        a.setAttribute(`aDim`, orbitControlsP);
-        let orbitControlsM = new OrbitControlsM(a, this.material, i);
-        orbitControlsM.instanceColor = new OrbitControlsP(new Float32Array(i * 3), 3), orbitControlsM.frustumCulled = false, this.tiers[t] = {
-          mesh: orbitControlsM,
+          p[i] = n, s[i * 2] = e.start / Y * X, s[i * 2 + 1] = e.end / Y * X, l[i * 2] = Z, l[i * 2 + 1] = this.outerRadii[n], u[i * 2] = this.layerBottom(e.dayIndex), u[i * 2 + 1] = this.layout.layerHeight, d[i] = j(e, r, ge, 0), c = Math.max(c, d[i]);
+        }), a.setAttribute(`aArc`, new O(s, 2)), a.setAttribute(`aRadius`, new O(l, 2)), a.setAttribute(`aLayer`, new O(u, 2)), a.setAttribute(`aDelay`, new O(d, 1));
+        let m = new O(f, 1);
+        a.setAttribute(`aDim`, m);
+        let h = new E(a, this.material, i);
+        h.instanceColor = new O(new Float32Array(i * 3), 3), h.frustumCulled = false, this.tiers[t] = {
+          mesh: h,
           geometry: a,
-          blockIndexes: int32Array,
+          blockIndexes: p,
           dims: f,
-          dimAttribute: orbitControlsP
-        }, this.root.add(orbitControlsM);
-      }), this.maxDelay = c, this.colorSync = new L(this.tiers.filter(Boolean).map(item => item.mesh)), this.baseGeometry = new OrbitControlsC(s + 4, s + 4, ve, 96);
-      let orbitControlsG = new OrbitControlsG(this.baseGeometry, this.baseMaterial);
-      orbitControlsG.position.y = _e - ve / 2, this.root.add(orbitControlsG);
+          dimAttribute: m
+        }, this.root.add(h);
+      }), this.maxDelay = c, this.colorSync = new L(this.tiers.filter(Boolean).map(e => e.mesh)), this.baseGeometry = new b(s + 4, s + 4, ve, 96);
+      let l = new C(this.baseGeometry, this.baseMaterial);
+      l.position.y = _e - ve / 2, this.root.add(l);
       let u = this.layerBottom(Math.max(0, r - 1)) + this.layout.layerHeight,
         d = s + 12,
-        emptyItems = [];
-      for (let count of [-d, d]) for (let t of [0, u]) for (let n of [-d, d]) emptyItems.push(new OrbitControlsE(count, t, n));
+        f = [];
+      for (let e of [-d, d]) for (let t of [0, u]) for (let n of [-d, d]) f.push(new _(e, t, n));
       this.framing = {
-        target: new OrbitControlsE(0, u * .45, 0),
-        corners: emptyItems,
+        target: new _(0, u * .45, 0),
+        corners: f,
         homeView: {
           polar: 1.12,
           azimuth: .38
@@ -444,43 +444,43 @@ var xe = class {
           maxPolar: 1.48,
           azimuthRange: null
         }
-      }, this.labels = this.buildLabels(constructorValue, u);
+      }, this.labels = this.buildLabels(t, u);
     }
-    layerBottom(layer) {
-      return layer * this.layout.layerPitch;
+    layerBottom(e) {
+      return e * this.layout.layerPitch;
     }
-    buildLabels(labels, labelsValue) {
-      let emptyItems = [],
+    buildLabels(e, t) {
+      let n = [],
         r = this.maxRadius + 6;
       for (let e = 0; e < 24; e += 3) {
         let i = e / 24 * X,
-          orbitControlsE = new OrbitControlsE(Math.sin(i), 0, -Math.cos(i));
-        emptyItems.push({
+          a = new _(Math.sin(i), 0, -Math.cos(i));
+        n.push({
           key: `hour-${e}`,
           text: `${e}:00`,
           kind: `hour`,
-          position: orbitControlsE.clone().multiplyScalar(r).setY(labelsValue + .5),
-          facing: orbitControlsE
+          position: a.clone().multiplyScalar(r).setY(t + .5),
+          facing: a
         });
       }
-      let orbitControlsE = new OrbitControlsE(-1, 0, 0),
-        handler = e => new OrbitControlsE(-(this.maxRadius + 3), this.layerBottom(e) + this.layout.layerHeight / 2, 0);
-      if (this.set.dayCount > 62) for (let count of labels.monthMarks) emptyItems.push({
-        key: `month-${count.dayIndex}`,
-        text: count.label,
+      let i = new _(-1, 0, 0),
+        a = e => new _(-(this.maxRadius + 3), this.layerBottom(e) + this.layout.layerHeight / 2, 0);
+      if (this.set.dayCount > 62) for (let t of e.monthMarks) n.push({
+        key: `month-${t.dayIndex}`,
+        text: t.label,
         kind: `side`,
-        position: handler(count.dayIndex),
-        facing: orbitControlsE
-      });else labels.dayLabels.forEach((item, t) => {
-        item && emptyItems.push({
+        position: a(t.dayIndex),
+        facing: i
+      });else e.dayLabels.forEach((e, t) => {
+        e && n.push({
           key: `day-${t}`,
-          text: item,
+          text: e,
           kind: `side`,
-          position: handler(t),
-          facing: orbitControlsE
+          position: a(t),
+          facing: i
         });
       });
-      return emptyItems;
+      return n;
     }
     paint(e) {
       let t = this.baseColors[e],
@@ -491,35 +491,35 @@ var xe = class {
       for (let e = 0; e < this.baseColors.length; e += 1) this.paint(e);
       this.colorSync.markAll();
     }
-    setColors(colors, colorsValue) {
-      this.baseColors = this.set.blocks.map(item => new OrbitControlsS(threestageN(item, colors, colorsValue))), this.groundColor.set(colorsValue.ground), this.hoverColor.set(colorsValue.textPrimary), this.baseMaterial.color.set(colorsValue.ground), this.paintAll();
+    setColors(e, t) {
+      this.baseColors = this.set.blocks.map(n => new k(N(n, e, t))), this.groundColor.set(t.ground), this.hoverColor.set(t.textPrimary), this.baseMaterial.color.set(t.ground), this.paintAll();
     }
-    setHighlight(highlight) {
-      this.set.blocks.forEach((item, n) => {
-        let r = highlight && !highlight.has(item.value) ? 1 : 0;
+    setHighlight(e) {
+      this.set.blocks.forEach((t, n) => {
+        let r = e && !e.has(t.value) ? 1 : 0;
         this.dimmed[n] = r;
         let i = this.tiers[this.tierOf[n]];
         i && (i.dims[this.instanceOf[n]] = r);
       });
-      for (let count of this.tiers) count && (count.dimAttribute.needsUpdate = true);
+      for (let e of this.tiers) e && (e.dimAttribute.needsUpdate = true);
       this.paintAll();
     }
-    setHovered(hoveredValue) {
-      if (hoveredValue === this.hovered) return;
-      let hovered = this.hovered;
-      this.hovered = hoveredValue;
-      for (let n of [hovered, hoveredValue]) {
+    setHovered(e) {
+      if (e === this.hovered) return;
+      let t = this.hovered;
+      this.hovered = e;
+      for (let n of [t, e]) {
         if (n < 0) continue;
         this.paint(n);
         let e = this.tiers[this.tierOf[n]];
         e && this.colorSync.markOne(e.mesh, this.instanceOf[n]);
       }
     }
-    startGrowth(growth) {
-      this.clock.start(growth, this.maxDelay);
+    startGrowth(e) {
+      this.clock.start(e, this.maxDelay);
     }
-    stepGrowth(step) {
-      return this.colorSync.frameStarted(), this.clock.step(step);
+    stepGrowth(e) {
+      return this.colorSync.frameStarted(), this.clock.step(e);
     }
     pick(e) {
       let {
@@ -544,15 +544,15 @@ var xe = class {
         u = -1,
         d = 0;
       for (let e = 0; e < t; e += 1) {
-        let layerBottom = this.layerBottom(e),
-          a = layerBottom + this.layout.layerHeight,
+        let t = this.layerBottom(e),
+          a = t + this.layout.layerHeight,
           o = s,
           f = c;
         if (Math.abs(r.y) > 1e-9) {
-          let e = (layerBottom - n.y) / r.y,
+          let e = (t - n.y) / r.y,
             i = (a - n.y) / r.y;
           o = Math.max(o, Math.min(e, i)), f = Math.min(f, Math.max(e, i));
-        } else if (n.y < layerBottom || n.y > a) continue;
+        } else if (n.y < t || n.y > a) continue;
         if (f < o || o >= l) continue;
         let p = Math.sqrt(i) * (f - o),
           m = Math.min(64, Math.max(2, Math.ceil(p / .5)));
@@ -580,7 +580,7 @@ var xe = class {
       };
     }
     dispose() {
-      for (let count of this.tiers) count && (count.mesh.dispose(), count.geometry.dispose());
+      for (let e of this.tiers) e && (e.mesh.dispose(), e.geometry.dispose());
       this.material.dispose(), this.baseGeometry.dispose(), this.baseMaterial.dispose();
     }
   },
@@ -602,7 +602,7 @@ var xe = class {
   ke = .3,
   Ae = 4,
   je = 260,
-  Me = vueJ({
+  Me = l({
     __name: `Barcode3D`,
     props: {
       result: {},
@@ -624,67 +624,67 @@ var xe = class {
         {
           t: S
         } = u(),
-        C = vueBn(null),
-        w = vueBn(null),
-        T = vueBn(false),
-        E = vueCn([]),
-        emptyItems = [],
-        O = vueV(() => b.shape === `tower` ? 500 : b.result.days.length > 62 ? 480 : 420),
+        C = o(null),
+        w = o(null),
+        T = o(false),
+        E = n([]),
+        D = [],
+        O = h(() => b.shape === `tower` ? 500 : b.result.days.length > 62 ? 480 : 420),
         k = null,
-        resolvedValue = null,
+        A = null,
         j = null,
         M = false,
         N = 0,
         P = null,
         F = -1,
         I = false,
-        payload = null,
+        L = null,
         R = null,
         z = typeof window.matchMedia == `function` && window.matchMedia(`(prefers-reduced-motion: reduce)`).matches,
-        orbitControlsE = new OrbitControlsE();
+        B = new _();
       function V(e, t) {
-        emptyItems[t] = e instanceof HTMLElement ? e : null;
+        D[t] = e instanceof HTMLElement ? e : null;
       }
       function H() {
         return b.highlight ? new Set(b.highlight) : null;
       }
       function U(e) {
         if (!k) return;
-        resolvedValue && (k.scene.remove(resolvedValue.root), resolvedValue.dispose());
+        A && (k.scene.remove(A.root), A.dispose());
         let t = {
           dayLabels: b.dayLabels,
           monthMarks: b.monthMarks
         };
-        resolvedValue = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), resolvedValue.setColors(b.colors, b.theme), resolvedValue.setHighlight(H()), k.scene.add(resolvedValue.root), k.setFraming(resolvedValue.framing), F = -1, emptyItems.length = 0, E.value = resolvedValue.labels, resolvedValue.startGrowth(e && !z);
+        A = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), A.setColors(b.colors, b.theme), A.setHighlight(H()), k.scene.add(A.root), k.setFraming(A.framing), F = -1, D.length = 0, E.value = A.labels, A.startGrowth(e && !z);
       }
       function W() {
         let e = C.value;
         if (!k || !e) return;
-        let clientWidth = e.clientWidth,
-          clientHeight = e.clientHeight,
+        let t = e.clientWidth,
+          n = e.clientHeight,
           r = 1 / 0;
         for (let e = E.value.length - 1; e >= 0; --e) {
           let i = E.value[e],
-            a = emptyItems[e];
+            a = D[e];
           if (!i || !a) continue;
-          let o = k.project(i.position, clientWidth, clientHeight),
-            visible = o.visible;
-          visible && i.kind === `side` && (Math.abs(r - o.y) < Oe ? visible = false : r = o.y);
+          let o = k.project(i.position, t, n),
+            s = o.visible;
+          s && i.kind === `side` && (Math.abs(r - o.y) < Oe ? s = false : r = o.y);
           let c = 1;
-          i.facing && (orbitControlsE.copy(k.camera.position).sub(i.position), orbitControlsE.dot(i.facing) < 0 && (c = ke)), a.style.visibility = visible ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
+          i.facing && (B.copy(k.camera.position).sub(i.position), B.dot(i.facing) < 0 && (c = ke)), a.style.visibility = s ? `visible` : `hidden`, a.style.opacity = String(c), a.style.transform = `translate(${o.x}px, ${o.y}px) translate(${i.kind === `side` ? `-100%` : `-50%`}, -50%)`;
         }
       }
       function G(e) {
         e ? (I = true, x(`hover`, e)) : I && (I = false, x(`hover`, null));
       }
       function K(e) {
-        resolvedValue && e !== F && (F = e, resolvedValue.setHovered(e), k?.requestRender());
+        A && e !== F && (F = e, A.setHovered(e), k?.requestRender());
       }
       function te() {
         N = 0;
         let e = P;
-        if (!e || !k || !resolvedValue || T.value) return;
-        let t = resolvedValue.pick(k.rayFromEvent(e));
+        if (!e || !k || !A || T.value) return;
+        let t = A.pick(k.rayFromEvent(e));
         K(t?.blockIndex ?? -1), G(t ? {
           dayIndex: t.dayIndex,
           bucket: t.bucket,
@@ -698,29 +698,29 @@ var xe = class {
       function q() {
         P = null, N && cancelAnimationFrame(N), N = 0, K(-1), G(null);
       }
-      function re(event) {
-        T.value = true, payload = {
-          x: event.clientX,
-          y: event.clientY
+      function re(e) {
+        T.value = true, L = {
+          x: e.clientX,
+          y: e.clientY
         }, q();
       }
       function J() {
         T.value = false;
       }
-      function ie(event) {
-        if (!payload || !k || !resolvedValue) return;
-        let t = Math.hypot(event.clientX - payload.x, event.clientY - payload.y);
-        if (payload = null, t > Ae) return;
-        let n = resolvedValue.pick(k.rayFromEvent(event));
-        R && clearTimeout(R), R = null, !(!n || event.detail > 1) && (R = setTimeout(() => {
+      function ie(e) {
+        if (!L || !k || !A) return;
+        let t = Math.hypot(e.clientX - L.x, e.clientY - L.y);
+        if (L = null, t > Ae) return;
+        let n = A.pick(k.rayFromEvent(e));
+        R && clearTimeout(R), R = null, !(!n || e.detail > 1) && (R = setTimeout(() => {
           R = null, x(`select`, n.dayIndex);
         }, je));
       }
       function ae() {
         R && clearTimeout(R), R = null, Z();
       }
-      function Y(event) {
-        k && (k.controls.enableZoom = event.ctrlKey || event.metaKey);
+      function Y(e) {
+        k && (k.controls.enableZoom = e.ctrlKey || e.metaKey);
       }
       function X() {
         let e = C.value;
@@ -737,18 +737,18 @@ var xe = class {
       }
       return v({
         freezeForExport: se
-      }), vueWt(() => b.result, () => {
+      }), a(() => b.result, () => {
         k && (q(), U(true), k.resetHome(true));
-      }), vueWt([() => b.colors, () => b.theme], () => {
-        resolvedValue?.setColors(b.colors, b.theme), k?.requestRender();
-      }), vueWt(() => b.highlight, () => {
-        resolvedValue?.setHighlight(H()), k?.requestRender();
-      }), vueUt(() => {
+      }), a([() => b.colors, () => b.theme], () => {
+        A?.setColors(b.colors, b.theme), k?.requestRender();
+      }), a(() => b.highlight, () => {
+        A?.setHighlight(H()), k?.requestRender();
+      }), m(() => {
         let e = w.value,
           t = C.value;
         if (e && t) {
-          if (k = threestageT.create(e, b.shape === `tower` ? De : Ee, {
-            onFrame: e => resolvedValue?.stepGrowth(e) ?? false,
+          if (k = ee.create(e, b.shape === `tower` ? De : Ee, {
+            onFrame: e => A?.stepGrowth(e) ?? false,
             onRendered: W
           }), !k) {
             x(`unavailable`);
@@ -759,21 +759,21 @@ var xe = class {
             passive: true
           }), window.addEventListener(`pointerup`, J), window.addEventListener(`pointercancel`, J), j = new ResizeObserver(X), j.observe(t);
         }
-      }), vueOt(() => {
+      }), f(() => {
         N && cancelAnimationFrame(N), N = 0, R && clearTimeout(R), R = null, j?.disconnect(), j = null, C.value?.removeEventListener(`wheel`, Y, {
           capture: true
-        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), resolvedValue?.dispose(), resolvedValue = null, k?.dispose(), k = null;
-      }), (n, renderCache) => (vueGt(), vueS(`div`, null, [vueY(`div`, {
+        }), window.removeEventListener(`pointerup`, J), window.removeEventListener(`pointercancel`, J), I && x(`hover`, null), A?.dispose(), A = null, k?.dispose(), k = null;
+      }), (n, a) => (c(), r(`div`, null, [g(`div`, {
         ref_key: `containerRef`,
         ref: C,
         class: `relative select-none overflow-hidden`,
-        style: vueNr({
+        style: d({
           height: `${O.value}px`
         })
-      }, [vueY(`canvas`, {
+      }, [g(`canvas`, {
         ref_key: `canvasRef`,
         ref: w,
-        class: vueN([`block h-full w-full`, T.value ? `cursor-grabbing` : `cursor-grab`]),
+        class: e([`block h-full w-full`, T.value ? `cursor-grabbing` : `cursor-grab`]),
         role: `img`,
         "aria-label": l.label,
         onPointermove: ne,
@@ -781,23 +781,23 @@ var xe = class {
         onPointerdown: re,
         onClick: ie,
         onDblclick: ae
-      }, null, 42, Se), vueY(`div`, Ce, [(vueGt(true), vueS(vueC, null, vueSt(E.value, (event, n) => (vueGt(), vueS(`span`, {
-        key: event.key,
+      }, null, 42, Se), g(`div`, Ce, [(c(true), r(s, null, i(E.value, (t, n) => (c(), r(`span`, {
+        key: t.key,
         ref_for: true,
         ref: e => V(e, n),
-        class: vueN([`absolute left-0 top-0 whitespace-nowrap text-xs leading-none`, event.kind === `hour` ? `text-[#bbb] dark:text-muted-foreground/70` : `font-medium text-[#888] dark:text-muted-foreground`]),
+        class: e([`absolute left-0 top-0 whitespace-nowrap text-xs leading-none`, t.kind === `hour` ? `text-[#bbb] dark:text-muted-foreground/70` : `font-medium text-[#888] dark:text-muted-foreground`]),
         style: {
           visibility: `hidden`
         }
-      }, vueRr(event.text), 3))), 128))]), vueY(`div`, we, [vueY(`button`, {
+      }, p(t.text), 3))), 128))]), g(`div`, we, [g(`button`, {
         type: `button`,
         class: `h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
-        onClick: renderCache[0] ||= e => Q(`home`)
-      }, vueRr(vueAn(S)(`appBarcode.viewTilt`)), 1), vueY(`button`, {
+        onClick: a[0] ||= e => Q(`home`)
+      }, p(t(S)(`appBarcode.viewTilt`)), 1), g(`button`, {
         type: `button`,
         class: `h-6 rounded-md bg-white/85 px-2 text-xs text-[#666] shadow-sm ring-1 ring-black/5 transition-colors hover:bg-white hover:text-[#222] dark:bg-black/40 dark:text-muted-foreground dark:ring-white/10 dark:hover:text-foreground`,
-        onClick: renderCache[1] ||= e => Q(`top`)
-      }, vueRr(vueAn(S)(`appBarcode.viewTop`)), 1)])], 4), vueY(`p`, Te, vueRr(vueAn(S)(`todayWork.heatmap3dHint`)), 1)]));
+        onClick: a[1] ||= e => Q(`top`)
+      }, p(t(S)(`appBarcode.viewTop`)), 1)])], 4), g(`p`, Te, p(t(S)(`todayWork.heatmap3dHint`)), 1)]));
     }
   });
 export { Me as default };

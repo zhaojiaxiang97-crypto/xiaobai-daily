@@ -1,8 +1,8 @@
-import { B as uiSwitchB, _ as uiSwitch, lt as uiSwitchLt, r as uiSwitchR, xt as uiSwitchXt, z as uiSwitchZ } from "../ui/Switch.js";
-import { $n as vueN, An as vueAn, Ct as vueCt, O as vueO, S as vueS, V as vueV, Yt as vueYt, b as vueB, gt as vueGt, j as vueJ, k as vueK, nt as vueNt, tr as vueTr, x as vueX, y as vueY } from "./vue-i18n.runtime.js";
-import { t as lucideT } from "../ui/icons/lucide-icons.js";
-import { a as DialogTitleA, i as DialogTitleI, n as DialogTitleN, o as DialogTitleO, t as DialogTitleT } from "../ui/DialogTitle.js";
-var D = vueJ({
+import { B as e, _ as t, lt as n, r, xt as i, z as a } from "../ui/Switch.js";
+import { $n as o, An as s, Ct as c, O as l, S as u, V as d, Yt as f, b as p, gt as m, j as h, k as g, nt as _, tr as v, x as y, y as b } from "./vue-i18n.runtime.js";
+import { t as x } from "../ui/icons/lucide-icons.js";
+import { a as S, i as C, n as w, o as T, t as E } from "../ui/DialogTitle.js";
+var D = h({
     __name: `DialogPortal`,
     props: {
       to: {
@@ -22,15 +22,15 @@ var D = vueJ({
         required: false
       }
     },
-    setup(props) {
-      let propsAlias = props;
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(uiSwitch), vueTr(vueV(propsAlias)), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+    setup(e) {
+      let n = e;
+      return (e, r) => (m(), p(s(t), v(d(n)), {
+        default: f(() => [c(e.$slots, `default`)]),
         _: 3
       }, 16));
     }
   }),
-  O = vueJ({
+  O = h({
     __name: `Dialog`,
     props: {
       open: {
@@ -47,19 +47,19 @@ var D = vueJ({
       }
     },
     emits: [`update:open`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let uiSwitchZResult = uiSwitchZ(props, emit);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(DialogTitleO), vueNt({
+      let n = a(e, t);
+      return (e, t) => (m(), p(s(T), _({
         "data-slot": `dialog`
-      }, vueAn(uiSwitchZResult)), {
-        default: vueYt(t => [vueCt(ctx.$slots, `default`, vueTr(vueV(t)))]),
+      }, s(n)), {
+        default: f(t => [c(e.$slots, `default`, v(d(t)))]),
         _: 3
       }, 16));
     }
   }),
-  k = vueJ({
+  k = h({
     __name: `DialogOverlay`,
     props: {
       forceMount: {
@@ -73,23 +73,23 @@ var D = vueJ({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(props) {
-      let propsAlias = props,
-        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(DialogTitleN), vueNt({
+    setup(e) {
+      let t = e,
+        r = n(t, `class`);
+      return (e, n) => (m(), p(s(w), _({
         "data-slot": `dialog-overlay`
-      }, vueAn(uiSwitchLtResult), {
-        class: vueAn(uiSwitchXt)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 pointer-events-auto bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50`, propsAlias.class),
+      }, s(r), {
+        class: s(i)(`data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 pointer-events-auto bg-black/10 dark:bg-black/60 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 isolate z-50`, t.class),
         style: {
           "-webkit-app-region": `no-drag`
         }
       }), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+        default: f(() => [c(e.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }
   }),
-  A = vueJ({
+  A = h({
     inheritAttrs: false,
     __name: `DialogContent`,
     props: {
@@ -115,52 +115,52 @@ var D = vueJ({
       }
     },
     emits: [`escapeKeyDown`, `pointerDownOutside`, `focusOutside`, `interactOutside`, `openAutoFocus`, `closeAutoFocus`],
-    setup(props, {
-      emit: emit
+    setup(e, {
+      emit: t
     }) {
-      let propsAlias = props,
-        emitAlias = emit,
-        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`, `overlayClass`, `showCloseButton`),
-        uiSwitchZResult = uiSwitchZ(uiSwitchLtResult, emitAlias);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(D), null, {
-        default: vueYt(() => [vueK(k, {
-          class: vueN(propsAlias.overlayClass)
-        }, null, 8, [`class`]), vueK(vueAn(DialogTitleI), vueNt({
+      let l = e,
+        u = t,
+        d = n(l, `class`, `overlayClass`, `showCloseButton`),
+        h = a(d, u);
+      return (t, n) => (m(), p(s(D), null, {
+        default: f(() => [g(k, {
+          class: o(l.overlayClass)
+        }, null, 8, [`class`]), g(s(C), _({
           "data-slot": `dialog-content`
         }, {
-          ...ctx.$attrs,
-          ...vueAn(uiSwitchZResult)
+          ...t.$attrs,
+          ...s(h)
         }, {
-          class: vueAn(uiSwitchXt)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none`, propsAlias.class),
+          class: s(i)(`bg-popover text-popover-foreground data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 grid max-w-[calc(100%-2rem)] gap-4 rounded-xl p-4 text-sm ring-1 duration-100 sm:max-w-sm fixed top-1/2 left-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 outline-none`, l.class),
           style: {
             "-webkit-app-region": `no-drag`,
             "pointer-events": `auto`
           }
         }), {
-          default: vueYt(() => [vueCt(ctx.$slots, `default`), props.showCloseButton ? (vueGt(), vueB(vueAn(DialogTitleA), {
+          default: f(() => [c(t.$slots, `default`), e.showCloseButton ? (m(), p(s(S), {
             key: 0,
             "data-slot": `dialog-close`,
             "as-child": ``
           }, {
-            default: vueYt(() => [vueK(vueAn(uiSwitchR), {
+            default: f(() => [g(s(r), {
               variant: `ghost`,
               class: `absolute top-2 right-2 cursor-pointer`,
               size: `icon-sm`
             }, {
-              default: vueYt(() => [vueK(vueAn(lucideT)), renderCache[0] ||= vueY(`span`, {
+              default: f(() => [g(s(x)), n[0] ||= b(`span`, {
                 class: `sr-only`
               }, `Close`, -1)]),
               _: 1
             })]),
             _: 1
-          })) : vueX(``, true)]),
+          })) : y(``, true)]),
           _: 3
         }, 16, [`class`])]),
         _: 3
       }));
     }
   }),
-  j = vueJ({
+  j = h({
     __name: `DialogFooter`,
     props: {
       class: {
@@ -171,41 +171,41 @@ var D = vueJ({
         default: false
       }
     },
-    setup(props) {
-      let propsAlias = props;
-      return (ctx, renderCache) => (vueGt(), vueS(`div`, {
+    setup(e) {
+      let t = e;
+      return (n, a) => (m(), u(`div`, {
         "data-slot": `dialog-footer`,
-        class: vueN(vueAn(uiSwitchXt)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end`, propsAlias.class))
-      }, [vueCt(ctx.$slots, `default`), props.showCloseButton ? (vueGt(), vueB(vueAn(DialogTitleA), {
+        class: o(s(i)(`bg-muted/50 -mx-4 -mb-4 rounded-b-xl border-t p-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end`, t.class))
+      }, [c(n.$slots, `default`), e.showCloseButton ? (m(), p(s(S), {
         key: 0,
         "as-child": ``
       }, {
-        default: vueYt(() => [vueK(vueAn(uiSwitchR), {
+        default: f(() => [g(s(r), {
           variant: `outline`
         }, {
-          default: vueYt(() => [...(renderCache[0] ||= [vueO(` Close `, -1)])]),
+          default: f(() => [...(a[0] ||= [l(` Close `, -1)])]),
           _: 1
         })]),
         _: 1
-      })) : vueX(``, true)], 2));
+      })) : y(``, true)], 2));
     }
   }),
-  M = vueJ({
+  M = h({
     __name: `DialogHeader`,
     props: {
       class: {
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(props) {
-      let propsAlias = props;
-      return (ctx, renderCache) => (vueGt(), vueS(`div`, {
+    setup(e) {
+      let t = e;
+      return (e, n) => (m(), u(`div`, {
         "data-slot": `dialog-header`,
-        class: vueN(vueAn(uiSwitchXt)(`gap-2 flex flex-col`, propsAlias.class))
-      }, [vueCt(ctx.$slots, `default`)], 2));
+        class: o(s(i)(`gap-2 flex flex-col`, t.class))
+      }, [c(e.$slots, `default`)], 2));
     }
   }),
-  N = vueJ({
+  N = h({
     __name: `DialogTitle`,
     props: {
       asChild: {
@@ -216,16 +216,16 @@ var D = vueJ({
         type: [Boolean, null, String, Object, Array]
       }
     },
-    setup(props) {
-      let propsAlias = props,
-        uiSwitchLtResult = uiSwitchLt(propsAlias, `class`),
-        uiSwitchBResult = uiSwitchB(uiSwitchLtResult);
-      return (ctx, renderCache) => (vueGt(), vueB(vueAn(DialogTitleT), vueNt({
+    setup(t) {
+      let r = t,
+        a = n(r, `class`),
+        o = e(a);
+      return (e, t) => (m(), p(s(E), _({
         "data-slot": `dialog-title`
-      }, vueAn(uiSwitchBResult), {
-        class: vueAn(uiSwitchXt)(`text-base leading-none font-medium cn-font-heading`, propsAlias.class)
+      }, s(o), {
+        class: s(i)(`text-base leading-none font-medium cn-font-heading`, r.class)
       }), {
-        default: vueYt(() => [vueCt(ctx.$slots, `default`)]),
+        default: f(() => [c(e.$slots, `default`)]),
         _: 3
       }, 16, [`class`]));
     }

@@ -230,11 +230,11 @@ var ReadStreamTokenizer = class extends AbstractTokenizer {
   async ignore(length) {
     if (length < 0) throw new RangeError("ignore length must be ≥ 0 bytes");
     const bufSize = Math.min(maxBufferSize, length);
-    const uint8Array = new Uint8Array(bufSize);
+    const buf = new Uint8Array(bufSize);
     let totBytesRead = 0;
     while (totBytesRead < length) {
       const remaining = length - totBytesRead;
-      const bytesRead = await this.readBuffer(uint8Array, {
+      const bytesRead = await this.readBuffer(buf, {
         length: Math.min(bufSize, remaining)
       });
       if (bytesRead < 0) return bytesRead;
@@ -404,14 +404,14 @@ var validFourCC = /^[\x21-\x7e©][\x20-\x7e\x00()]{3}/;
 var FourCcToken = {
   len: 4,
   get: (buf, off) => {
-    const textDecodeResult = textDecode(buf.subarray(off, off + FourCcToken.len), "latin1");
-    if (!textDecodeResult.match(validFourCC)) throw new FieldDecodingError(`FourCC contains invalid characters: ${a2hex(textDecodeResult)} "${textDecodeResult}"`);
-    return textDecodeResult;
+    const id = textDecode(buf.subarray(off, off + FourCcToken.len), "latin1");
+    if (!id.match(validFourCC)) throw new FieldDecodingError(`FourCC contains invalid characters: ${a2hex(id)} "${id}"`);
+    return id;
   },
   put: (buffer, offset, id) => {
-    const textEncodeResult = textEncode(id, "latin1");
-    if (textEncodeResult.length !== 4) throw new InternalParserError("Invalid length");
-    buffer.set(textEncodeResult, offset);
+    const str = textEncode(id, "latin1");
+    if (str.length !== 4) throw new InternalParserError("Invalid length");
+    buffer.set(str, offset);
     return offset + 4;
   }
 };
@@ -503,8 +503,8 @@ function parseTagFlags(flags) {
 * @param bit 0 is least significant bit (LSB)
 * @return {boolean} true if bit is 1; otherwise false
 */
-function isBitSet(bitValue, setValue) {
-  return (bitValue & 1 << setValue) !== 0;
+function isBitSet(num, bit) {
+  return (num & 1 << bit) !== 0;
 }
 //#endregion
 //#region node_modules/music-metadata/lib/apev2/APEv2Parser.js
@@ -530,10 +530,10 @@ var APEv2Parser = class APEv2Parser extends BasicParser {
   * @param ah ApeHeader
   * @return {number} duration in seconds
   */
-  static calculateDuration(ulate) {
-    let duration = ulate.totalFrames > 1 ? ulate.blocksPerFrame * (ulate.totalFrames - 1) : 0;
-    duration += ulate.finalFrameBlocks;
-    return duration / ulate.sampleRate;
+  static calculateDuration(ah) {
+    let duration = ah.totalFrames > 1 ? ah.blocksPerFrame * (ah.totalFrames - 1) : 0;
+    duration += ah.finalFrameBlocks;
+    return duration / ah.sampleRate;
   }
   /**
   * Calculates the APEv1 / APEv2 first field offset
@@ -617,14 +617,14 @@ var APEv2Parser = class APEv2Parser extends BasicParser {
         length: Math.min(keyBuffer.length, bytesRemaining)
       });
       let zero = findZero(keyBuffer);
-      const token = await this.tokenizer.readToken(new StringType(zero, "ascii"));
+      const key = await this.tokenizer.readToken(new StringType(zero, "ascii"));
       await this.tokenizer.ignore(1);
-      bytesRemaining -= token.length + 1;
+      bytesRemaining -= key.length + 1;
       switch (tagItemHeader.flags.dataType) {
         case DataType.text_utf8:
           {
             const values = (await this.tokenizer.readToken(new StringType(tagItemHeader.size, "utf8"))).split(/\x00/g);
-            await Promise.all(values.map(item => this.metadata.addTag(tagFormat, token, item)));
+            await Promise.all(values.map(val => this.metadata.addTag(tagFormat, key, val)));
             break;
           }
         case DataType.binary:
@@ -634,19 +634,19 @@ var APEv2Parser = class APEv2Parser extends BasicParser {
             zero = findZero(picData);
             const description = textDecode(picData.subarray(0, zero), "utf-8");
             const data = picData.subarray(zero + 1);
-            await this.metadata.addTag(tagFormat, token, {
+            await this.metadata.addTag(tagFormat, key, {
               description,
               data
             });
           }
           break;
         case DataType.external_info:
-          debug(`Ignore external info ${token}`);
+          debug(`Ignore external info ${key}`);
           await this.tokenizer.ignore(tagItemHeader.size);
           break;
         case DataType.reserved:
-          debug(`Ignore external info ${token}`);
-          this.metadata.addWarning(`APEv2 header declares a reserved datatype for "${token}"`);
+          debug(`Ignore external info ${key}`);
+          this.metadata.addWarning(`APEv2 header declares a reserved datatype for "${key}"`);
           await this.tokenizer.ignore(tagItemHeader.size);
       }
     }

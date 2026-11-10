@@ -186,26 +186,26 @@ function paginate(sourceItems, input) {
     next_offset: nextOffset < filtered.length ? nextOffset : null
   };
 }
-function publicBot(publicValue) {
+function publicBot(bot) {
   return {
-    bot_id: publicValue.id,
-    name: publicValue.name,
-    description: publicValue.description,
-    tags: publicValue.tags,
-    provider_id: publicValue.providerId,
-    model_id: publicValue.modelId,
-    identity_version: publicValue.identityVersion,
-    notifications_enabled: xiaoheiBotRepository.listConversations().find(item => item.kind === "direct" && item.directBotId === publicValue.id && !item.parentConversationId)?.notificationsEnabled,
-    thinking_level: publicValue.thinkingLevel,
-    permission_mode: publicValue.permissionMode,
-    response_style: publicValue.responseStyle,
-    management_permissions: publicValue.managementPermissions,
-    creator_bot_id: publicValue.creatorBotId,
-    avatar: publicValue.avatar?.startsWith("https://") ? publicValue.avatar : undefined,
-    has_custom_avatar: Boolean(publicValue.avatar),
-    avatar_color: publicValue.avatarColor,
-    avatar_shape: publicValue.avatarShape,
-    conversation_id: xiaoheiBotRepository.listConversations().find(conversation => conversation.kind === "direct" && conversation.directBotId === publicValue.id && !conversation.parentConversationId)?.id
+    bot_id: bot.id,
+    name: bot.name,
+    description: bot.description,
+    tags: bot.tags,
+    provider_id: bot.providerId,
+    model_id: bot.modelId,
+    identity_version: bot.identityVersion,
+    notifications_enabled: xiaoheiBotRepository.listConversations().find(item => item.kind === "direct" && item.directBotId === bot.id && !item.parentConversationId)?.notificationsEnabled,
+    thinking_level: bot.thinkingLevel,
+    permission_mode: bot.permissionMode,
+    response_style: bot.responseStyle,
+    management_permissions: bot.managementPermissions,
+    creator_bot_id: bot.creatorBotId,
+    avatar: bot.avatar?.startsWith("https://") ? bot.avatar : undefined,
+    has_custom_avatar: Boolean(bot.avatar),
+    avatar_color: bot.avatarColor,
+    avatar_shape: bot.avatarShape,
+    conversation_id: xiaoheiBotRepository.listConversations().find(conversation => conversation.kind === "direct" && conversation.directBotId === bot.id && !conversation.parentConversationId)?.id
   };
 }
 function publicGroup(group) {
@@ -262,9 +262,9 @@ function chooseModel(input, actor) {
 }
 var XiaoheiBotManagementService = class {
   runningPlans = /* @__PURE__ */new Set();
-  async executeTool(toolName, tool, context, planScope) {
+  async executeTool(toolName, raw, context, planScope) {
     if (!isManagementTool(toolName)) invalid("未知团队管理工具");
-    const parsed = schemas[toolName].safeParse(tool);
+    const parsed = schemas[toolName].safeParse(raw);
     if (!parsed.success) invalid(parsed.error.issues.map(issue => `${issue.path.join(".")}: ${issue.message}`).join("; "));
     const input = parsed.data;
     const assertAccess = () => {
@@ -287,7 +287,7 @@ var XiaoheiBotManagementService = class {
       actor,
       source
     } = assertAccess();
-    if (Object.hasOwn(consultationToolSchemas, toolName)) return botConsultationService.executeTool(toolName, tool, context);
+    if (Object.hasOwn(consultationToolSchemas, toolName)) return botConsultationService.executeTool(toolName, raw, context);
     const ownGroup = groupId => {
       const group = xiaoheiBotRepository.getConversation(groupId);
       if (!group || group.kind !== "group" || group.archivedAt) invalid("群聊不存在或已归档");
@@ -306,7 +306,7 @@ var XiaoheiBotManagementService = class {
       if (xiaoheiBotRepository.listActiveRoutingJobs(undefined, botId).length || connection.database.prepare("SELECT 1 FROM xiaohei_bot_agent_runs WHERE bot_id = ? AND status IN ('queued', 'running') LIMIT 1").get(botId)) invalid("该 Bot 正在执行或等待任务，请待任务结束再修改");
       return bot;
     };
-    if (toolName === "xiaohei_list_teams") return json(paginate(connection.database.prepare("SELECT id, owner_bot_id, status, progress_json, last_error, updated_at FROM xiaohei_bot_team_plans ORDER BY updated_at DESC").all().filter(item => isProtectedXiaoheiBot(actor.id) || item.owner_bot_id === actor.id).map(row => {
+    if (toolName === "xiaohei_list_teams") return json(paginate(connection.database.prepare("SELECT id, owner_bot_id, status, progress_json, last_error, updated_at FROM xiaohei_bot_team_plans ORDER BY updated_at DESC").all().filter(row => isProtectedXiaoheiBot(actor.id) || row.owner_bot_id === actor.id).map(row => {
       const item = row;
       const {
         progress_json,
@@ -339,13 +339,13 @@ var XiaoheiBotManagementService = class {
             if (existing?.members.find(item => item.botId === member.existing_bot_id)?.participationMode === "context-only") invalid("仅上下文成员不能立即执行交接任务");
             if (source.hopDepth >= xiaoheiBotRepository.getSettings().maxBotChainDepth) invalid("已达接力上限，请关闭 start_task");
           }
-          if ((/* @__PURE__ */new Set([...(existing?.members.map(m => m.botId) ?? []), actor.id, "xiaohei-assistant", ...reused])).size + plan.members.filter(item => item.bot).length > 30) invalid("组队后群成员超过 30 人");
+          if ((/* @__PURE__ */new Set([...(existing?.members.map(m => m.botId) ?? []), actor.id, "xiaohei-assistant", ...reused])).size + plan.members.filter(m => m.bot).length > 30) invalid("组队后群成员超过 30 人");
           const planId = randomUUID(),
-            isoString = (/* @__PURE__ */new Date()).toISOString();
+            now = (/* @__PURE__ */new Date()).toISOString();
           db.prepare("INSERT INTO xiaohei_bot_team_plans (id, owner_bot_id, plan_key, root_message_id, source_conversation_id, plan_json, progress_json, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)").run(planId, actor.id, plan.plan_key, source.causalRootMessageId ?? source.id, context.conversationId, JSON.stringify(plan), JSON.stringify({
             bots: {},
             handedOff: {}
-          }), "pending", isoString, isoString);
+          }), "pending", now, now);
           row = db.prepare("SELECT * FROM xiaohei_bot_team_plans WHERE id = ?").get(planId);
         }
       } else row = db.prepare("SELECT * FROM xiaohei_bot_team_plans WHERE id = ?").get(schemas.xiaohei_resume_team.parse(input).plan_id);
@@ -358,10 +358,10 @@ var XiaoheiBotManagementService = class {
         plan_id: row.id,
         status,
         group_id: progress.groupId,
-        members: plan.members.map(event => ({
-          key: event.key,
-          bot_id: progress.bots[event.key],
-          handed_off: Boolean(progress.handedOff[event.key])
+        members: plan.members.map(m => ({
+          key: m.key,
+          bot_id: progress.bots[m.key],
+          handed_off: Boolean(progress.handedOff[m.key])
         })),
         error,
         next_action: status === "completed" ? "组队与交接已完成；已排队的任务需另查执行结果" : "调用 xiaohei_resume_team 并沿用 plan_id；不要重新创建团队"
@@ -432,7 +432,7 @@ var XiaoheiBotManagementService = class {
           save("pending");
         }
         const group = ownGroup(progress.groupId);
-        if (Object.values(progress.bots).some(botId => !group.members.some(item => item.botId === botId))) invalid("已组队成员被移出群聊，请先恢复成员后重试");
+        if (Object.values(progress.bots).some(botId => !group.members.some(m => m.botId === botId))) invalid("已组队成员被移出群聊，请先恢复成员后重试");
         for (const member of plan.members) {
           if (progress.handedOff[member.key]) continue;
           if (member.role || member.context || member.initial_task) {
@@ -465,9 +465,9 @@ var XiaoheiBotManagementService = class {
         this.runningPlans.delete(lock);
       }
     }
-    if (toolName === "xiaohei_list_bots") return json(paginate(xiaoheiBotRepository.listBots().map(item => ({
-      ...publicBot(item),
-      is_self: item.id === actor.id
+    if (toolName === "xiaohei_list_bots") return json(paginate(xiaoheiBotRepository.listBots().map(bot => ({
+      ...publicBot(bot),
+      is_self: bot.id === actor.id
     })), schemas.xiaohei_list_bots.parse(input)));
     if (toolName === "xiaohei_list_models") return json(paginate(configuredProviders().flatMap(provider => provider.models.map(model => ({
       provider_id: provider.id,
@@ -852,7 +852,7 @@ var XiaoheiBotManagementService = class {
     const record = result && typeof result === "object" && !Array.isArray(result) ? result : null;
     const mobileSync = await syncMobileCreatedGroup(result);
     xiaoheiBotService.notifyManagementDirectoryChanged(toolName === "xiaohei_create_bot" && typeof record?.conversation_id === "string" ? record.conversation_id : undefined, mobileSync);
-    if (Array.isArray(record?.handoff_message_ids)) xiaoheiBotService.notifyMemberHandoffs(record.handoff_message_ids.filter(item => typeof item === "string"));
+    if (Array.isArray(record?.handoff_message_ids)) xiaoheiBotService.notifyMemberHandoffs(record.handoff_message_ids.filter(id => typeof id === "string"));
     if (toolName === "xiaohei_send_group_task" && result && typeof result === "object" && !Array.isArray(result) && typeof result.message_id === "string") xiaoheiBotService.resumeManagedGroupTask(result.message_id);
     return result;
   }
