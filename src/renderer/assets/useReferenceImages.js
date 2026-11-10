@@ -61,9 +61,9 @@ var S = {
         return e <= 0 ? `0 KB` : e >= 1048576 ? `${(e / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(e / 1024))} KB`;
       }
       function N(event) {
-        let t = event.target,
-          n = Array.from(t.files || []);
-        t.value = ``, d.addFiles(n);
+        let target = event.target,
+          n = Array.from(target.files || []);
+        target.value = ``, d.addFiles(n);
       }
       return (o, l) => (c(), r(s, null, [g(`input`, {
         ref_key: `input`,

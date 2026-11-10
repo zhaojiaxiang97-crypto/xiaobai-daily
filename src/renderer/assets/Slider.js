@@ -391,9 +391,9 @@ var U = [`PageUp`, `PageDown`],
           onStepKeyDown: t[6] ||= (e, t) => {
             if (!d(C)) {
               let n = d(U).includes(e.key) || e.shiftKey && d(W).includes(e.key) ? 10 : 1,
-                r = B.value,
-                i = R.value[r];
-              Q(i + d(h) * n * t, r, {
+                value = B.value,
+                i = R.value[value];
+              Q(i + d(h) * n * t, value, {
                 commit: true
               });
             }
@@ -443,15 +443,15 @@ var U = [`PageUp`, `PageDown`],
           e.key === `Home` ? (r(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (r(`endKeyDown`, e), e.preventDefault()) : d(U).concat(d(W)).includes(e.key) && (r(`stepKeyDown`, e), e.preventDefault());
         },
         onPointerdown: t[1] ||= e => {
-          let t = e.target;
-          t.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(t) ? t.focus() : r(`slideStart`, e);
+          let target = e.target;
+          target.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(target) ? target.focus() : r(`slideStart`, e);
         },
         onPointermove: t[2] ||= e => {
           e.target.hasPointerCapture(e.pointerId) && r(`slideMove`, e);
         },
         onPointerup: t[3] ||= e => {
-          let t = e.target;
-          t.hasPointerCapture(e.pointerId) && (t.releasePointerCapture(e.pointerId), r(`slideEnd`, e));
+          let target = e.target;
+          target.hasPointerCapture(e.pointerId) && (target.releasePointerCapture(e.pointerId), r(`slideEnd`, e));
         }
       }), {
         default: v(() => [f(e.$slots, `default`)]),

@@ -47,9 +47,9 @@ var r = function () {
     serializeObject(object) {
       let t = Object.prototype.toString.call(object);
       if (t !== `[object Object]`) return this.serializeBuiltInType(t.length < 10 ? `unknown:${t}` : t.slice(8, -1), object);
-      let r = object.constructor,
-        i = r === Object || r === undefined ? `` : r.name;
-      if (i !== `` && globalThis[i] === r) return this.serializeBuiltInType(i, object);
+      let constructor = object.constructor,
+        i = constructor === Object || constructor === undefined ? `` : constructor.name;
+      if (i !== `` && globalThis[i] === constructor) return this.serializeBuiltInType(i, object);
       if (`toJSON` in object && typeof object.toJSON == `function`) {
         let t = object.toJSON();
         return i + (typeof t == `object` && t ? this.$object(t) : `(${this.serialize(t)})`);

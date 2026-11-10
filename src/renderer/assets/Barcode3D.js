@@ -117,14 +117,14 @@ var oe = class {
       let {
           blocks: n
         } = this.set,
-        r = n.length;
-      this.heights = new Float32Array(r), this.dims = new Float32Array(r);
-      let float32Array = new Float32Array(r),
+        length = n.length;
+      this.heights = new Float32Array(length), this.dims = new Float32Array(length);
+      let float32Array = new Float32Array(length),
         a = new w(),
         o = new _(),
         s = new y(),
         c = new _();
-      this.buildingGeometry = new v(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new O(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new O(float32Array, 1)), this.dimAttribute = new O(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new E(this.buildingGeometry, this.buildingMaterial, r), this.buildings.instanceColor = new O(new Float32Array(r * 3), 3), this.buildings.frustumCulled = false;
+      this.buildingGeometry = new v(1, 1, 1).translate(0, .5, 0), this.buildingGeometry.setAttribute(`aHeight`, new O(this.heights, 1)), this.buildingGeometry.setAttribute(`aDelay`, new O(float32Array, 1)), this.dimAttribute = new O(this.dims, 1), this.buildingGeometry.setAttribute(`aDim`, this.dimAttribute), this.buildingMaterial = ae(this.clock), this.buildings = new E(this.buildingGeometry, this.buildingMaterial, length), this.buildings.instanceColor = new O(new Float32Array(length * 3), 3), this.buildings.frustumCulled = false;
       let l = 0,
         u = 4;
       n.forEach((item, t) => {
@@ -658,10 +658,10 @@ var xe = class {
         resolvedValue = b.shape === `tower` ? new xe(b.result, t) : new oe(b.result, t), resolvedValue.setColors(b.colors, b.theme), resolvedValue.setHighlight(H()), k.scene.add(resolvedValue.root), k.setFraming(resolvedValue.framing), F = -1, emptyItems.length = 0, E.value = resolvedValue.labels, resolvedValue.startGrowth(e && !z);
       }
       function W() {
-        let e = C.value;
-        if (!k || !e) return;
-        let clientWidth = e.clientWidth,
-          clientHeight = e.clientHeight,
+        let value = C.value;
+        if (!k || !value) return;
+        let clientWidth = value.clientWidth,
+          clientHeight = value.clientHeight,
           r = 1 / 0;
         for (let e = E.value.length - 1; e >= 0; --e) {
           let i = E.value[e],
@@ -723,8 +723,8 @@ var xe = class {
         k && (k.controls.enableZoom = event.ctrlKey || event.metaKey);
       }
       function X() {
-        let e = C.value;
-        k && e && k.resize(e.clientWidth, e.clientHeight) && (M ? k.refit() : (M = true, k.flyIn(!z)));
+        let value = C.value;
+        k && value && k.resize(value.clientWidth, value.clientHeight) && (M ? k.refit() : (M = true, k.flyIn(!z)));
       }
       function Z() {
         k?.resetHome(true);
@@ -744,10 +744,10 @@ var xe = class {
       }), a(() => b.highlight, () => {
         resolvedValue?.setHighlight(H()), k?.requestRender();
       }), m(() => {
-        let e = w.value,
+        let value = w.value,
           t = C.value;
-        if (e && t) {
-          if (k = ee.create(e, b.shape === `tower` ? De : Ee, {
+        if (value && t) {
+          if (k = ee.create(value, b.shape === `tower` ? De : Ee, {
             onFrame: e => resolvedValue?.stepGrowth(e) ?? false,
             onRendered: W
           }), !k) {

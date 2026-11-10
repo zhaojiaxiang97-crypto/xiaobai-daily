@@ -47,9 +47,9 @@ var r = function () {
     serializeObject(e) {
       let t = Object.prototype.toString.call(e);
       if (t !== `[object Object]`) return this.serializeBuiltInType(t.length < 10 ? `unknown:${t}` : t.slice(8, -1), e);
-      let r = e.constructor,
-        i = r === Object || r === undefined ? `` : r.name;
-      if (i !== `` && globalThis[i] === r) return this.serializeBuiltInType(i, e);
+      let constructor = e.constructor,
+        i = constructor === Object || constructor === undefined ? `` : constructor.name;
+      if (i !== `` && globalThis[i] === constructor) return this.serializeBuiltInType(i, e);
       if (`toJSON` in e && typeof e.toJSON == `function`) {
         let t = e.toJSON();
         return i + (typeof t == `object` && t ? this.$object(t) : `(${this.serialize(t)})`);
@@ -69,7 +69,7 @@ var r = function () {
       throw Error(`Cannot serialize ${e}`);
     }
     serializeObjectEntries(e, t) {
-      let n = Array.from(t).sort((e, t) => this.compare(e[0], t[0])),
+      let n = Array.from(t).sort((left, right) => this.compare(left[0], right[0])),
         r = `${e}{`;
       for (let e = 0; e < n.length; e++) {
         let [t, i] = n[e];
@@ -101,7 +101,7 @@ var r = function () {
       return `ArrayBuffer[${new Uint8Array(e).join(`,`)}]`;
     }
     $Set(e) {
-      return `Set${this.$Array(Array.from(e).sort((e, t) => this.compare(e, t)))}`;
+      return `Set${this.$Array(Array.from(e).sort((left, right) => this.compare(left, right)))}`;
     }
     $Map(e) {
       return this.serializeObjectEntries(`Map`, e.entries());

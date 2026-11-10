@@ -327,39 +327,39 @@ function z(e, t) {
 }
 function B(el, t) {
   if (el.nodeType === 1) {
-    let n = el.style,
+    let style = el.style,
       r = ``;
     for (let activeBranch in t) {
       let i = se(t[activeBranch]);
-      n.setProperty(`--${activeBranch}`, i), r += `--${activeBranch}: ${i};`;
+      style.setProperty(`--${activeBranch}`, i), r += `--${activeBranch}: ${i};`;
     }
-    n[Ue] = r;
+    style[Ue] = r;
   }
 }
 var Ge = /(?:^|;)\s*display\s*:/;
 function Ke(el, text, n) {
-  let r = el.style,
+  let style = el.style,
     i = d(n),
     a = false;
   if (n && !i) {
     if (text) {
       if (d(text)) for (let activeBranch of text.split(`;`)) {
         let trimmed = activeBranch.slice(0, activeBranch.indexOf(`:`)).trim();
-        n[trimmed] ?? H(r, trimmed, ``);
-      } else for (let activeBranch in text) n[activeBranch] ?? H(r, activeBranch, ``);
+        n[trimmed] ?? H(style, trimmed, ``);
+      } else for (let activeBranch in text) n[activeBranch] ?? H(style, activeBranch, ``);
     }
     for (let i in n) {
       i === `display` && (a = true);
       let o = n[i];
-      o == null ? H(r, i, ``) : Ye(el, i, !d(text) && text ? text[i] : undefined, o) || H(r, i, o);
+      o == null ? H(style, i, ``) : Ye(el, i, !d(text) && text ? text[i] : undefined, o) || H(style, i, o);
     }
   } else if (i) {
     if (text !== n) {
-      let e = r[Ue];
-      e && (n += `;` + e), r.cssText = n, a = Ge.test(n);
+      let e = style[Ue];
+      e && (n += `;` + e), style.cssText = n, a = Ge.test(n);
     }
   } else text && el.removeAttribute(`style`);
-  I in el && (el[I] = a ? r.display : ``, el[L] && (r.display = `none`));
+  I in el && (el[I] = a ? style.display : ``, el[L] && (style.display = `none`));
 }
 var V = /\s*!important$/;
 function H(e, text, items) {
@@ -439,19 +439,19 @@ var at = 0,
 function ct(e, t) {
   let n = e => {
     if (!e._vts) e._vts = Date.now();else if (e._vts <= n.attached) return;
-    let i = n.value;
-    if (r(i)) {
+    let value = n.value;
+    if (r(value)) {
       let stopImmediatePropagation = e.stopImmediatePropagation;
       e.stopImmediatePropagation = () => {
         stopImmediatePropagation.call(e), e._stopped = true;
       };
-      let part = i.slice(),
+      let part = value.slice(),
         a = [e];
       for (let n = 0; n < part.length && !e._stopped; n++) {
         let e = part[n];
         e && ce(e, t, 5, a);
       }
-    } else ce(i, t, 5, [e]);
+    } else ce(value, t, 5, [e]);
   };
   return n.value = e, n.attached = st(), n;
 }
@@ -731,8 +731,8 @@ var weakMap = new WeakMap(),
         let filtered = ratio.filter(Dt);
         F(i.vnode.el), filtered.forEach(item => {
           let n = item.el,
-            r = n.style;
-          N(n, fallbackValue), r.transform = r.webkitTransform = r.transitionDuration = ``;
+            style = n.style;
+          N(n, fallbackValue), style.transform = style.webkitTransform = style.transitionDuration = ``;
           let i = n[G] = e => {
             e && e.target !== n || (!e || e.propertyName.endsWith(`transform`)) && (n.removeEventListener(`transitionend`, i), n[G] = null, P(n, fallbackValue));
           };
@@ -769,11 +769,11 @@ function Dt(e) {
     i = t.top - n.top;
   if (r || i) {
     let t = e.el,
-      n = t.style,
+      style = t.style,
       boundingClientRect = t.getBoundingClientRect(),
       o = 1,
       s = 1;
-    return t.offsetWidth && (o = boundingClientRect.width / t.offsetWidth), t.offsetHeight && (s = boundingClientRect.height / t.offsetHeight), (!Number.isFinite(o) || o === 0) && (o = 1), (!Number.isFinite(s) || s === 0) && (s = 1), Math.abs(o - 1) < .01 && (o = 1), Math.abs(s - 1) < .01 && (s = 1), n.transform = n.webkitTransform = `translate(${r / o}px,${i / s}px)`, n.transitionDuration = `0s`, e;
+    return t.offsetWidth && (o = boundingClientRect.width / t.offsetWidth), t.offsetHeight && (s = boundingClientRect.height / t.offsetHeight), (!Number.isFinite(o) || o === 0) && (o = 1), (!Number.isFinite(s) || s === 0) && (s = 1), Math.abs(o - 1) < .01 && (o = 1), Math.abs(s - 1) < .01 && (s = 1), style.transform = style.webkitTransform = `translate(${r / o}px,${i / s}px)`, style.transitionDuration = `0s`, e;
   }
 }
 function Ot(el) {
@@ -804,8 +804,8 @@ function At(event) {
   event.target.composing = true;
 }
 function jt(event) {
-  let t = event.target;
-  t.composing && (t.composing = false, t.dispatchEvent(new Event(`input`)));
+  let target = event.target;
+  target.composing && (target.composing = false, target.dispatchEvent(new Event(`input`)));
 }
 var q = Symbol(`_assign`),
   J = Symbol(`_initialValue`);
@@ -962,7 +962,7 @@ function Rt(options, items) {
   let multiple = options.multiple,
     i = r(items);
   if (!multiple || i || f(items)) {
-    for (let r = 0, a = options.options.length; r < a; r++) {
+    for (let r = 0, length = options.options.length; r < length; r++) {
       let a = options.options[r],
         o = X(a);
       if (multiple) {

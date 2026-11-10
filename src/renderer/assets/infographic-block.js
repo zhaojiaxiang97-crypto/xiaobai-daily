@@ -226,9 +226,9 @@ var ye = [`data-markstream-mode`],
               let float = Number.parseFloat(String(g.maxHeight));
               if (Number.isFinite(float)) return `${Math.min(e, float)}px`;
             }
-            let t = C.value;
-            if (t) {
-              let trimmed = getComputedStyle(t).getPropertyValue(`--ms-size-code-max-height`).trim(),
+            let value = C.value;
+            if (value) {
+              let trimmed = getComputedStyle(value).getPropertyValue(`--ms-size-code-max-height`).trim(),
                 float = Number.parseFloat(trimmed);
               if (Number.isFinite(float)) return `${Math.min(e, float)}px`;
             }
@@ -274,8 +274,8 @@ var ye = [`data-markstream-mode`],
       function Qe() {
         return _(this, null, function* () {
           try {
-            let e = j.value;
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(e)), x.value = true, setTimeout(() => {
+            let value = j.value;
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(value)), x.value = true, setTimeout(() => {
               x.value = false;
             }, 1e3);
           } catch (e) {

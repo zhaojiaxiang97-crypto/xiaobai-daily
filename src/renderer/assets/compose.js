@@ -335,10 +335,10 @@ function k(e, count) {
   }), e.restore();
 }
 function A(e, count) {
-  let n = count.size;
-  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = n * .4, e.shadowOffsetY = n * .12, e.fillStyle = count.color, e.beginPath(), e.arc(count.x, count.y, n, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, n * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(count.color) > .7 ? `#111111` : `#ffffff`;
+  let size = count.size;
+  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = size * .4, e.shadowOffsetY = size * .12, e.fillStyle = count.color, e.beginPath(), e.arc(count.x, count.y, size, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, size * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(count.color) > .7 ? `#111111` : `#ffffff`;
   let r = String(count.value);
-  e.font = `700 ${Math.round(n * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, count.x, count.y + n * .04), e.restore();
+  e.font = `700 ${Math.round(size * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, count.x, count.y + size * .04), e.restore();
 }
 function j(e, count, n, r, o) {
   let s = _(count),
@@ -388,20 +388,20 @@ function L(e, t) {
     height: r
   } = e;
   if (n < 24 || r < 24) return null;
-  let i = a(e, {
+  let data = a(e, {
       willReadFrequently: true
     }).getImageData(0, 0, n, r).data,
-    o = [i[0], i[1], i[2]];
-  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(item => I(i, item, o))) return null;
+    o = [data[0], data[1], data[2]];
+  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(item => I(data, item, o))) return null;
   let s = Math.max(1, Math.floor(n / 1200)),
     c = Math.max(1, Math.floor(r / 1200)),
     handler = e => {
       let t = e * n * 4;
-      for (let e = 0; e < n; e += s) if (!I(i, t + e * 4, o)) return false;
+      for (let e = 0; e < n; e += s) if (!I(data, t + e * 4, o)) return false;
       return true;
     },
     u = e => {
-      for (let t = 0; t < r; t += c) if (!I(i, (t * n + e) * 4, o)) return false;
+      for (let t = 0; t < r; t += c) if (!I(data, (t * n + e) * 4, o)) return false;
       return true;
     },
     f = Math.floor(r * P),
@@ -423,7 +423,7 @@ function L(e, t) {
     bottom: h,
     left: g,
     margin: v,
-    color: d(i, 0)
+    color: d(data, 0)
   };
 }
 var R = {

@@ -119,15 +119,15 @@ var k = .5,
     stepTo(step, stepValue, stepInput) {
       if (stepValue === step.index && !step.animation) return;
       step.animation?.cancel(), step.animation = null;
-      let r = step.index;
+      let index = step.index;
       if (step.index = stepValue, !stepInput) {
         this.place(step, stepValue);
         return;
       }
-      let i = stepValue >= r ? stepValue : stepValue + 10;
+      let i = stepValue >= index ? stepValue : stepValue + 10;
       this.place(step, stepValue);
       let a = step.strip.animate([{
-        transform: this.offset(r)
+        transform: this.offset(index)
       }, {
         transform: this.offset(i)
       }], {
@@ -334,14 +334,14 @@ var k = .5,
         }),
         wt = g(() => Y.value ? he(handler, Y.value) : ``),
         X = g(() => {
-          let e = O.value;
-          return !e || e.scheduledMs <= 0 ? 0 : e.workedMs / e.scheduledMs;
+          let value = O.value;
+          return !value || value.scheduledMs <= 0 ? 0 : value.workedMs / value.scheduledMs;
         }),
         Tt = g(() => {
-          let e = O.value;
-          return e ? handler(`WorkHoursValue`, {
-            worked: C(e.workedMs),
-            total: C(e.scheduledMs)
+          let value = O.value;
+          return value ? handler(`WorkHoursValue`, {
+            worked: C(value.workedMs),
+            total: C(value.scheduledMs)
           }) : ``;
         }),
         Et = g(() => E.value ? Se(handler, Ce(E.value, D.value)) : ``),
@@ -391,34 +391,34 @@ var k = .5,
         D.value = e, O.value = xe(E.value, e), k.value && It(), Q(false), Ft();
       }
       function Ft() {
-        let e = O.value,
+        let value = O.value,
           t = E.value;
-        if (!e || !t) return;
+        if (!value || !t) return;
         let celebrateAmount = t.celebrateAmount,
-          r = Math.floor(e.earnedToday / celebrateAmount + 1e-9);
+          r = Math.floor(value.earnedToday / celebrateAmount + 1e-9);
         V >= 0 && ct === celebrateAmount && r > V && t.celebrate && !q.value && !matchMedia.matches && zt(r), V = r, ct = celebrateAmount;
       }
       function It() {
-        let e = O.value;
-        if (!E.value || !e) return;
-        let t = e.day;
+        let value = O.value;
+        if (!E.value || !value) return;
+        let t = value.day;
         N.value = {
-          month: _e(E.value, ue(new Date(t.getFullYear(), t.getMonth(), 1)), e),
-          year: _e(E.value, ue(new Date(t.getFullYear(), 0, 1)), e)
+          month: _e(E.value, ue(new Date(t.getFullYear(), t.getMonth(), 1)), value),
+          year: _e(E.value, ue(new Date(t.getFullYear(), 0, 1)), value)
         };
       }
       function Lt() {
-        let e = O.value;
-        return !e || q.value || matchMedia.matches ? 0 : e.earningPerMs * 10 ** G.value;
+        let value = O.value;
+        return !value || q.value || matchMedia.matches ? 0 : value.earningPerMs * 10 ** G.value;
       }
       function Q(e) {
         if (!L) return;
         let t = Lt(),
-          n = J.value,
-          r = t > 0 ? `run|${t}|${Math.floor(Date.now() / at)}` : `idle|${Math.floor(n)}`;
+          value = J.value,
+          r = t > 0 ? `run|${t}|${Math.floor(Date.now() / at)}` : `idle|${Math.floor(value)}`;
         if (!e && r === B) return;
         let i = B !== `` && !matchMedia.matches;
-        B = r, I.sync(n, t, i);
+        B = r, I.sync(value, t, i);
       }
       async function Rt() {
         await ne();
@@ -430,15 +430,15 @@ var k = .5,
         })), J.value), L = true, B = ``, Q(true));
       }
       function zt(e) {
-        let t = E.value;
-        if (!t) return;
+        let value = E.value;
+        if (!value) return;
         let n = Math.min(6, e),
           r = fe[n - 1],
-          i = Number.isInteger(t.celebrateAmount) ? 0 : 2,
+          i = Number.isInteger(value.celebrateAmount) ? 0 : 2,
           a = r.text === `burst` ? handler(`CelebrateBurst`, {
-            amount: S(t, t.celebrateAmount, y.value, i)
+            amount: S(value, value.celebrateAmount, y.value, i)
           }) : r.text === `milestone` ? handler(`CelebrateMilestone`, {
-            amount: S(t, t.celebrateAmount * e, y.value, i)
+            amount: S(value, value.celebrateAmount * e, y.value, i)
           }) : ``,
           o = Array.from({
             length: r.sparks
@@ -472,16 +472,16 @@ var k = .5,
         }, 1e3 - Date.now() % 1e3 + 5);
       }
       function Vt(event) {
-        let t = P.value,
+        let value = P.value,
           n = st.value;
-        if (!t || !n || matchMedia.matches || A.value) return;
+        if (!value || !n || matchMedia.matches || A.value) return;
         let boundingClientRect = n.getBoundingClientRect(),
           i = Math.max(.01, boundingClientRect.width / (w + 28)),
-          a = Math.max(1, t.getBoundingClientRect().height / i),
+          a = Math.max(1, value.getBoundingClientRect().height / i),
           o = Math.max(-1, Math.min(1, ((event.clientX - boundingClientRect.left) / i - 14) / w * 2 - 1)),
           s = Math.max(-1, Math.min(1, ((event.clientY - boundingClientRect.top) / i - 14) / a * 2 - 1)),
           c = w / Math.max(w, a * 2);
-        t.style.transform = `rotateX(${(-s * rt * c).toFixed(2)}deg) rotateY(${(o * rt).toFixed(2)}deg)`;
+        value.style.transform = `rotateX(${(-s * rt * c).toFixed(2)}deg) rotateY(${(o * rt).toFixed(2)}deg)`;
       }
       function Ht() {
         P.value && (P.value.style.transform = ``);

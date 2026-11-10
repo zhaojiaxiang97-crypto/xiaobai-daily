@@ -308,9 +308,9 @@ var ue = v(le),
       }
       function W(e) {
         if (e.defaultPrevented) return;
-        let t = e.target,
-          n = t.closest(`[data-reka-menu-content]`) === e.currentTarget,
-          includesResult = [`input`, `textarea`].includes(t.tagName.toLowerCase()),
+        let target = e.target,
+          n = target.closest(`[data-reka-menu-content]`) === e.currentTarget,
+          includesResult = [`input`, `textarea`].includes(target.tagName.toLowerCase()),
           fallbackValue = e.ctrlKey || e.altKey || e.metaKey,
           a = e.key.length === 1,
           o = J(e, b(), F.value, {
@@ -333,9 +333,9 @@ var ue = v(le),
       }
       function K(e) {
         if (!n(e)) return;
-        let t = e.target,
+        let target = e.target,
           r = w.value !== e.clientX;
-        if (e?.currentTarget?.contains(t) && r) {
+        if (e?.currentTarget?.contains(target) && r) {
           let t = e.clientX > w.value ? `right` : `left`;
           C.value = t, w.value = e.clientX;
         }
@@ -463,8 +463,8 @@ var ue = v(le),
       async function l(e) {
         if (!e.defaultPrevented && n(e)) {
           if (eventAlias.disabled) r.onItemLeave(e);else if (!r.onItemEnter(e)) {
-            let t = e.currentTarget;
-            r.highlightedElement.value = t, [`INPUT`, `TEXTAREA`].includes(b()?.tagName || ``) || t.focus({
+            let currentTarget = e.currentTarget;
+            r.highlightedElement.value = currentTarget, [`INPUT`, `TEXTAREA`].includes(b()?.tagName || ``) || currentTarget.focus({
               preventScroll: true
             });
           }
@@ -538,8 +538,8 @@ var ue = v(le),
         s = me(),
         c = M(false);
       async function l() {
-        let e = a.value;
-        if (!eventAlias.disabled && e) {
+        let value = a.value;
+        if (!eventAlias.disabled && value) {
           let customEvent = new CustomEvent(S, {
             bubbles: true,
             cancelable: true

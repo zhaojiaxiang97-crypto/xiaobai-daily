@@ -367,10 +367,10 @@ var b = {
             });
           }
         }),
-        _n = g(() => Ie.map(e => ({
-          value: String(e),
-          label: e === 0 ? x(`RetentionForever`) : e === 365 ? x(`RetentionYear`) : x(`RetentionDays`, {
-            n: e
+        _n = g(() => Ie.map(item => ({
+          value: String(item),
+          label: item === 0 ? x(`RetentionForever`) : item === 365 ? x(`RetentionYear`) : x(`RetentionDays`, {
+            n: item
           })
         }))),
         vn = g(() => {
@@ -482,8 +482,8 @@ var b = {
             });
           if (t !== fn) return;
           if (e.append) {
-            let e = new Set(E.value.map(e => e.id));
-            E.value = [...E.value, ...r.items.filter(t => !e.has(t.id))];
+            let e = new Set(E.value.map(item => item.id));
+            E.value = [...E.value, ...r.items.filter(item => !e.has(item.id))];
           } else E.value = r.items;
           an.value = r.hasMore, on.value = r.nextCursor;
         } catch (e) {
@@ -524,7 +524,7 @@ var b = {
       }
       async function Dn(e) {
         try {
-          await b.deleteHistory(e.id), E.value = E.value.filter(t => t.id !== e.id), Y();
+          await b.deleteHistory(e.id), E.value = E.value.filter(item => item.id !== e.id), Y();
         } catch (e) {
           q(K(e), true);
         }
@@ -581,7 +581,7 @@ var b = {
         let t = await J(`delete-phrase`),
           n = un;
         if (un = null, t && n) try {
-          await b.deletePhrase(n.id), O.value = O.value.filter(e => e.id !== n.id), Y();
+          await b.deletePhrase(n.id), O.value = O.value.filter(item => item.id !== n.id), Y();
         } catch (e) {
           q(K(e), true);
         }
@@ -590,11 +590,11 @@ var b = {
         V.value = e.id, H = false, t.dataTransfer?.setData(`text/plain`, e.id), t.dataTransfer && (t.dataTransfer.effectAllowed = `move`);
       }
       function In(e, event) {
-        let n = V.value;
-        if (!n || (event.preventDefault(), n === e.id)) return;
+        let value = V.value;
+        if (!value || (event.preventDefault(), value === e.id)) return;
         let r = [...O.value],
-          i = r.findIndex(e => e.id === n),
-          a = r.findIndex(t => t.id === e.id);
+          i = r.findIndex(item => item.id === value),
+          a = r.findIndex(item => item.id === e.id);
         if (i < 0 || a < 0) return;
         let [o] = r.splice(i, 1);
         r.splice(a, 0, o), O.value = r, H = true;
@@ -602,7 +602,7 @@ var b = {
       async function Ln() {
         let e = H;
         if (V.value = null, H = false, e) try {
-          O.value = await b.reorderPhrases(O.value.map(e => e.id));
+          O.value = await b.reorderPhrases(O.value.map(item => item.id));
         } catch (e) {
           q(K(e), true), await Q();
         }
@@ -686,8 +686,8 @@ var b = {
       }
       function Hn(event) {
         if (w.value !== `history`) return;
-        let t = event.currentTarget;
-        t.scrollHeight - t.scrollTop - t.clientHeight <= en && Z({
+        let currentTarget = event.currentTarget;
+        currentTarget.scrollHeight - currentTarget.scrollTop - currentTarget.clientHeight <= en && Z({
           append: true
         });
       }

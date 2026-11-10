@@ -170,8 +170,8 @@ var M = y(`hash`, [[`line`, {
           width: 1.5
         }],
         b = D.value ? `⇧` : `Shift`,
-        w = e => [...e].map(e => ({
-          label: e
+        w = e => [...e].map(item => ({
+          label: item
         })),
         T = [[...w("`1234567890-="), {
           label: `⌫`,

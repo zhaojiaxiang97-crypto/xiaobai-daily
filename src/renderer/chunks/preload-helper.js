@@ -9,30 +9,30 @@ var e = function (e, t) {
         o = document.querySelector(`meta[property=csp-nonce]`),
         s = o?.nonce || o?.getAttribute(`nonce`);
       function c(e) {
-        return Promise.all(e.map(e => Promise.resolve(e).then(e => ({
+        return Promise.all(e.map(item => Promise.resolve(item).then(result => ({
           status: `fulfilled`,
-          value: e
-        }), e => ({
+          value: result
+        }), result => ({
           status: `rejected`,
-          reason: e
+          reason: result
         }))));
       }
       function l(e) {
         return import.meta.resolve ? import.meta.resolve(e) : new URL(e, import.meta.url).href;
       }
-      a = c(r.map(r => {
-        if (r = e(r, i), r = l(r), r in t) return;
-        t[r] = true;
-        let a = r.endsWith(`.css`);
+      a = c(r.map(item => {
+        if (item = e(item, i), item = l(item), item in t) return;
+        t[item] = true;
+        let a = item.endsWith(`.css`);
         for (let e = n.length - 1; e >= 0; e--) {
           let t = n[e];
-          if (t.href === r && (!a || t.rel === `stylesheet`)) return;
+          if (t.href === item && (!a || t.rel === `stylesheet`)) return;
         }
         let o = document.createElement(`link`);
-        if (o.rel = a ? `stylesheet` : `modulepreload`, a || (o.as = `script`), o.crossOrigin = ``, o.href = r, s && o.setAttribute(`nonce`, s), document.head.appendChild(o), a) return new Promise((e, t) => {
-          o.addEventListener(`load`, e), o.addEventListener(`error`, () => t(Error(`Unable to preload CSS for ${r}`)));
+        if (o.rel = a ? `stylesheet` : `modulepreload`, a || (o.as = `script`), o.crossOrigin = ``, o.href = item, s && o.setAttribute(`nonce`, s), document.head.appendChild(o), a) return new Promise((e, t) => {
+          o.addEventListener(`load`, e), o.addEventListener(`error`, () => t(Error(`Unable to preload CSS for ${item}`)));
         });
-      }).filter(e => e !== undefined));
+      }).filter(item => item !== undefined));
     }
     function o(e) {
       let t = new Event(`vite:preloadError`, {
@@ -40,8 +40,8 @@ var e = function (e, t) {
       });
       if (t.payload = e, window.dispatchEvent(t), !t.defaultPrevented) throw e;
     }
-    return a.then(e => {
-      for (let t of e || []) t.status === `rejected` && o(t.reason);
+    return a.then(result => {
+      for (let t of result || []) t.status === `rejected` && o(t.reason);
       return n().catch(o);
     });
   };

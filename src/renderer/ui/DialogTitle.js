@@ -230,9 +230,9 @@ var [A, j] = f(`DialogRoot`),
           e.defaultPrevented || (e.preventDefault(), p(s).triggerElement.value?.focus());
         },
         onPointerDownOutside: t[1] ||= e => {
-          let t = e.detail.originalEvent,
-            n = t.button === 0 && t.ctrlKey === true;
-          (t.button === 2 || n) && e.preventDefault();
+          let originalEvent = e.detail.originalEvent,
+            n = originalEvent.button === 0 && originalEvent.ctrlKey === true;
+          (originalEvent.button === 2 || n) && e.preventDefault();
         },
         onFocusOutside: t[2] ||= e => {
           e.preventDefault();
@@ -302,8 +302,8 @@ var [A, j] = f(`DialogRoot`),
         },
         onInteractOutside: t[1] ||= e => {
           e.defaultPrevented || (s.value = true, e.detail.originalEvent.type === `pointerdown` && (c.value = true));
-          let t = e.target;
-          p(o).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && c.value && e.preventDefault();
+          let target = e.target;
+          p(o).triggerElement.value?.contains(target) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && c.value && e.preventDefault();
         }
       }), {
         default: _(() => [m(e.$slots, `default`)]),

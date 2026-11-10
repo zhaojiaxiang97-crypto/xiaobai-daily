@@ -12,6 +12,6 @@ function e(text, t) {
     i = text.split(`+`),
     a = i.pop() || ``,
     o = n ? [`Ctrl`, `Alt`, `Shift`, `Command`] : [`Ctrl`, `Alt`, `Command`, `Super`, `Shift`];
-  return i.sort((e, t) => o.indexOf(e) - o.indexOf(t)), [...i, a].filter(Boolean).map(e => r[e] || e).join(n ? `` : ` + `);
+  return i.sort((left, right) => o.indexOf(left) - o.indexOf(right)), [...i, a].filter(Boolean).map(item => r[item] || item).join(n ? `` : ` + `);
 }
 export { e as t };

@@ -278,9 +278,9 @@ var g = Object.defineProperty,
           let n = function (e) {
             if (typeof window > `u` || typeof DOMParser > `u` || !e) return null;
             let t = e.replace(/["']\s*javascript:/gi, `#`).replace(/\bjavascript:/gi, `#`).replace(/["']\s*vbscript:/gi, `#`).replace(/\bvbscript:/gi, `#`).replace(/\bdata:text\/html/gi, `#`),
-              n = new DOMParser().parseFromString(t, `image/svg+xml`).documentElement;
-            if (!n || n.nodeName.toLowerCase() !== `svg`) return null;
-            let r = n;
+              documentElement = new DOMParser().parseFromString(t, `image/svg+xml`).documentElement;
+            if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return null;
+            let r = documentElement;
             return function (e) {
               let t = new Set([`script`]),
                 n = [e, ...Array.from(e.querySelectorAll(`*`))];
@@ -291,22 +291,22 @@ var g = Object.defineProperty,
                 }
                 let n = Array.from(e.attributes);
                 for (let t of n) {
-                  let n = t.name;
-                  if (/^on/i.test(n)) e.removeAttribute(n);else {
-                    if (n === `style` && t.value) {
-                      let r = t.value;
-                      if (it.some(e => e.test(r))) {
-                        e.removeAttribute(n);
+                  let name = t.name;
+                  if (/^on/i.test(name)) e.removeAttribute(name);else {
+                    if (name === `style` && t.value) {
+                      let value = t.value;
+                      if (it.some(item => item.test(value))) {
+                        e.removeAttribute(name);
                         continue;
                       }
                     }
-                    if ((n === `href` || n === `xlink:href`) && t.value) {
+                    if ((name === `href` || name === `xlink:href`) && t.value) {
                       let r = ot(t.value);
                       if (!r) {
-                        e.removeAttribute(n);
+                        e.removeAttribute(name);
                         continue;
                       }
-                      r !== t.value && e.setAttribute(n, r);
+                      r !== t.value && e.setAttribute(name, r);
                     }
                   }
                 }
@@ -329,9 +329,9 @@ var g = Object.defineProperty,
       }
       function st(e) {
         if (!e || typeof DOMParser > `u`) return !e;
-        let t = new DOMParser().parseFromString(e, `image/svg+xml`).documentElement;
-        if (!t || t.nodeName.toLowerCase() !== `svg`) return true;
-        let n = t.getAttribute(`viewBox`);
+        let documentElement = new DOMParser().parseFromString(e, `image/svg+xml`).documentElement;
+        if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return true;
+        let n = documentElement.getAttribute(`viewBox`);
         if (n) {
           let e = n.trim().split(/[\s,]+/);
           if (e.length === 4) {
@@ -340,7 +340,7 @@ var g = Object.defineProperty,
             if (!Number.isFinite(t) || !Number.isFinite(n) || t <= 0 || n <= 0) return true;
           }
         }
-        let r = [t, ...Array.from(t.querySelectorAll(`*`))];
+        let r = [documentElement, ...Array.from(documentElement.querySelectorAll(`*`))];
         for (let e of r) for (let t of Array.from(e.attributes)) if (/\bNaN\b/i.test(t.value) || t.name === `style` && /max-width:\s*0(?:px)?/i.test(t.value)) return true;
         return false;
       }
@@ -459,7 +459,7 @@ var g = Object.defineProperty,
         Vt = null,
         Ht = null,
         G = false,
-        K = wt.value,
+        value = wt.value,
         q = null,
         Ut = 0,
         Wt = true,
@@ -479,10 +479,10 @@ var g = Object.defineProperty,
             a || (a = true, c(), s(Error(`Operation timed out`)));
           }, n)), r && (o = () => {
             a || (a = true, c(), s(new DOMException(`Aborted`, `AbortError`)));
-          }, r.addEventListener(`abort`, o)), e().then(e => {
-            a || (a = true, c(), t(e));
-          }).catch(e => {
-            a || (a = true, c(), s(e));
+          }, r.addEventListener(`abort`, o)), e().then(result => {
+            a || (a = true, c(), t(result));
+          }).catch(err => {
+            a || (a = true, c(), s(err));
           });
         });
       }
@@ -856,10 +856,10 @@ var g = Object.defineProperty,
         return y(this, null, function* () {
           let t = mt.value;
           if (!t) return vt.value = true, void (M.value = e === `source`);
-          let n = t.getBoundingClientRect().height;
-          t.style.height = `${n}px`, t.style.overflow = `hidden`, vt.value = true, M.value = e === `source`, yield f();
-          let r = t.scrollHeight;
-          t.style.transition = `height var(--ms-duration-standard) var(--ms-ease-standard)`, t.offsetHeight, t.style.height = `${r}px`;
+          let height = t.getBoundingClientRect().height;
+          t.style.height = `${height}px`, t.style.overflow = `hidden`, vt.value = true, M.value = e === `source`, yield f();
+          let scrollHeight = t.scrollHeight;
+          t.style.transition = `height var(--ms-duration-standard) var(--ms-ease-standard)`, t.offsetHeight, t.style.height = `${scrollHeight}px`;
           let i = () => {
             t.style.transition = ``, t.style.height = ``, t.style.overflow = ``, t.removeEventListener(`transitionend`, a);
           };
@@ -950,7 +950,7 @@ var g = Object.defineProperty,
           let e = Date.now(),
             t = ++Rt.value;
           V && V.abort(), V = new AbortController();
-          let n = V.signal,
+          let signal = V.signal,
             r = g.isDark ? `dark` : `light`,
             i = O.value,
             a = i.replace(/\s+/g, ``);
@@ -958,7 +958,7 @@ var g = Object.defineProperty,
           if (a === B.value) return;
           try {
             let o = yield nn(i, r, {
-              signal: n,
+              signal: signal,
               timeoutMs: W.value.worker
             });
             if (o.fullOk) {
@@ -977,7 +977,7 @@ var g = Object.defineProperty,
         });
       }
       function $() {
-        G && (G = false, K = wt.value, Wt = false, q &&= (q.abort(), null), Vt &&= (globalThis.clearTimeout(Vt), null), Ht &&= (Bt(Ht), null), Ut = Date.now());
+        G && (G = false, value = wt.value, Wt = false, q &&= (q.abort(), null), Vt &&= (globalThis.clearTimeout(Vt), null), Ht &&= (Bt(Ht), null), Ut = Date.now());
       }
       function wn() {
         if ($(), Mt(), V) {
@@ -1001,7 +1001,7 @@ var g = Object.defineProperty,
             if (!F() || M.value || R.value) return void $();
             let e = g.isDark ? `dark` : `light`,
               t = O.value;
-            if (!t.trim()) return false === g.loading ? void $() : void Tn(K);
+            if (!t.trim()) return false === g.loading ? void $() : void Tn(value);
             if (Gt++, Gt > Et.value) $();else {
               q && q.abort(), q = new AbortController();
               try {
@@ -1013,7 +1013,7 @@ var g = Object.defineProperty,
                   if ((yield xn()) && R.value) return void $();
                 } else n.prefixOk && n.prefix && Qt() && (yield Sn(n.prefix));
               } catch {}
-              K = Math.min(Math.floor(1.5 * K), Tt.value), Tn(K);
+              value = Math.min(Math.floor(1.5 * value), Tt.value), Tn(value);
             }
           }), {
             timeout: 500
@@ -1021,7 +1021,7 @@ var g = Object.defineProperty,
         }, e)));
       }
       function En() {
-        G || P.value && v.value && F() && (M.value || R.value || (G = true, Ut = 0, Wt = true, Gt = 0, K = wt.value, Tn(K)));
+        G || P.value && v.value && F() && (M.value || R.value || (G = true, Ut = 0, Wt = true, Gt = 0, value = wt.value, Tn(value)));
       }
       return a(sn, e => {
         X.value && ut.value && (ut.value.style.transform = e.transform);
@@ -1033,8 +1033,8 @@ var g = Object.defineProperty,
         if (R.value = false, z.value = {}, !P.value) return $(), void (F() && !M.value && Q());
         F() && Nt(), !M.value && v.value && F() ? En() : $(), function () {
           if (!P.value || !M.value || !v.value) return;
-          let e = O.value.length;
-          e !== bt.value && (xt.value = true, bt.value = e, Dt && clearTimeout(Dt), Dt = setTimeout(() => {
+          let length = O.value.length;
+          length !== bt.value && (xt.value = true, bt.value = length, Dt && clearTimeout(Dt), Dt = setTimeout(() => {
             xt.value && M.value && O.value.trim() && (xt.value = false, bn(`preview`));
           }, Ct.value));
         }();
@@ -1090,8 +1090,8 @@ var g = Object.defineProperty,
       }, {
         immediate: true
       }), se(() => y(null, null, function* () {
-        ct().catch(e => {
-          v.value = false, console.warn(`[markstream-vue] Failed to initialize mermaid renderer. Call enableMermaid() to configure a loader.`, e);
+        ct().catch(err => {
+          v.value = false, console.warn(`[markstream-vue] Failed to initialize mermaid renderer. Call enableMermaid() to configure a loader.`, err);
         }), yield f(), vt.value || (M.value = !v.value), F() && (P.value ? (Nt(), bt.value = O.value.length) : M.value || Q());
       })), a(() => v.value, e => {
         vt.value || (M.value = !e);

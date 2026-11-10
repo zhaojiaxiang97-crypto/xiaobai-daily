@@ -343,7 +343,7 @@ function We(e, t) {
 }
 var Ge = 864e5;
 function Ke(e, t, n, r) {
-  return (n === r ? [n] : [n, r]).filter(n => qe(e, t, n));
+  return (n === r ? [n] : [n, r]).filter(item => qe(e, t, item));
 }
 function qe(e, t, n) {
   let r = We(n, t);
@@ -527,14 +527,14 @@ function pt(e, t, n, r) {
   switch (t) {
     case `hour`:
       {
-        let t = e.hour,
+        let hour = e.hour,
           a = 0,
           o = 23;
         if (r?.hourCycle === 12) {
-          let e = t >= 12;
+          let e = hour >= 12;
           a = e ? 12 : 0, o = e ? 23 : 11;
         }
-        i.hour = R(t, n, a, o, r?.round);
+        i.hour = R(hour, n, a, o, r?.round);
         break;
       }
     case `minute`:
@@ -585,11 +585,11 @@ function gt(e, t, n, r) {
           o = F(st(a, {
             hour: t
           }), new k()),
-          s = [M(o, e.timeZone, `earlier`), M(o, e.timeZone, `later`)].filter(t => N(t, e.timeZone).day === o.day)[0],
+          s = [M(o, e.timeZone, `earlier`), M(o, e.timeZone, `later`)].filter(item => N(item, e.timeZone).day === o.day)[0],
           c = F(st(a, {
             hour: i
           }), new k()),
-          l = [M(c, e.timeZone, `earlier`), M(c, e.timeZone, `later`)].filter(t => N(t, e.timeZone).day === c.day).pop(),
+          l = [M(c, e.timeZone, `earlier`), M(c, e.timeZone, `later`)].filter(item => N(item, e.timeZone).day === c.day).pop(),
           u = j(e) - e.offset,
           d = Math.floor(u / I),
           f = u % I;
@@ -1219,8 +1219,8 @@ var kn = class {
       return t <= 0 && (i = `AA`, t += wn), new B(this, i, t, n, r);
     }
     toJulianDay(e) {
-      let t = e.year;
-      return e.era === `AA` && (t -= wn), Tn(Sn, t, e.month, e.day);
+      let year = e.year;
+      return e.era === `AA` && (year -= wn), Tn(Sn, year, e.month, e.day);
     }
     getDaysInMonth(e) {
       return On(e.year, e.month);
@@ -1269,12 +1269,12 @@ var kn = class {
       return t <= 0 && (i = `BCE`, t = 1 - t), new B(this, i, t, n, r);
     }
     toJulianDay(e) {
-      let t = e.year;
-      return e.era === `BCE` && (t = 1 - t), Tn(Cn, t, e.month, e.day);
+      let year = e.year;
+      return e.era === `BCE` && (year = 1 - year), Tn(Cn, year, e.month, e.day);
     }
     getDaysInMonth(e) {
-      let t = e.year;
-      return e.era === `BCE` && (t = 1 - t), On(t, e.month);
+      let year = e.year;
+      return e.era === `BCE` && (year = 1 - year), On(year, e.month);
     }
     isInverseEra(e) {
       return e.era === `BCE`;
@@ -1343,15 +1343,15 @@ var Nn = new Map(),
       if (t < e) throw RangeError(`End date must be >= start date`);
       let n = this.formatter.formatToParts(e),
         r = this.formatter.formatToParts(t);
-      return [...n.map(e => ({
-        ...e,
+      return [...n.map(item => ({
+        ...item,
         source: `startRange`
       })), {
         type: `literal`,
         value: ` – `,
         source: `shared`
-      }, ...r.map(e => ({
-        ...e,
+      }, ...r.map(item => ({
+        ...item,
         source: `endRange`
       }))];
     }
@@ -1375,7 +1375,7 @@ function Fn(e, t = {}) {
       r = t.hour12 ? `h12` : `h23`;
     t.hourCycle = n ?? r, delete t.hour12;
   }
-  let n = e + (t ? Object.entries(t).sort((e, t) => e[0] < t[0] ? -1 : 1).join() : ``);
+  let n = e + (t ? Object.entries(t).sort((left, right) => left[0] < right[0] ? -1 : 1).join() : ``);
   if (Nn.has(n)) return Nn.get(n);
   let r = new Intl.DateTimeFormat(e, t);
   return Nn.set(n, r), r;
@@ -1401,8 +1401,8 @@ function Bn(e, t) {
       ...t,
       timeZone: undefined
     }),
-    r = parseInt(n.formatToParts(new Date(2020, 2, 3, 0)).find(e => e.type === `hour`).value, 10),
-    i = parseInt(n.formatToParts(new Date(2020, 2, 3, 23)).find(e => e.type === `hour`).value, 10);
+    r = parseInt(n.formatToParts(new Date(2020, 2, 3, 0)).find(item => item.type === `hour`).value, 10),
+    i = parseInt(n.formatToParts(new Date(2020, 2, 3, 23)).find(item => item.type === `hour`).value, 10);
   if (r === 0 && i === 23) return `h23`;
   if (r === 24 && i === 23) return `h24`;
   if (r === 0 && i === 11) return `h11`;
@@ -1661,11 +1661,11 @@ function or(e, t = {}) {
   }
   function l() {
     let e = De(Ne());
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(t => ({
+    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(item => ({
       label: c(Y(e.set({
-        month: t
+        month: item
       }))),
-      value: t
+      value: item
     }));
   }
   function u(e, r = {}) {
@@ -1696,7 +1696,7 @@ function or(e, t = {}) {
       ...t,
       hour: `numeric`,
       minute: `numeric`
-    }).formatToParts(e).find(e => e.type === `dayPeriod`)?.value;
+    }).formatToParts(e).find(item => item.type === `dayPeriod`)?.value;
     return r === `PM` || r === `pm` || r === `p.m.` ? `PM` : `AM`;
   }
   let m = {
@@ -1711,7 +1711,7 @@ function or(e, t = {}) {
     let r = d(e, {
       ...m,
       ...n
-    }).find(e => e.type === t);
+    }).find(item => item.type === t);
     return r ? r.value : ``;
   }
   return {
@@ -1775,7 +1775,7 @@ function cr(e) {
 }
 function lr(e) {
   function t(t) {
-    return Array.isArray(e.date.value) ? e.date.value.some(e => ve(e, t)) : e.date.value ? ve(e.date.value, t) : false;
+    return Array.isArray(e.date.value) ? e.date.value.some(item => ve(item, t)) : e.date.value ? ve(e.date.value, t) : false;
   }
   return {
     isDateSelected: t,
@@ -1790,7 +1790,7 @@ function lr(e) {
       return false;
     }),
     hasSelectedDate: w(() => Array.isArray(e.date.value) ? e.date.value.length > 0 : !!e.date.value),
-    isSelectedDateDisabled: w(() => Array.isArray(e.date.value) ? e.date.value.length ? e.date.value.some(t => e.isDateDisabled?.(t)) : false : e.date.value ? !!e.isDateDisabled?.(e.date.value) : false)
+    isSelectedDateDisabled: w(() => Array.isArray(e.date.value) ? e.date.value.length ? e.date.value.some(item => e.isDateDisabled?.(item)) : false : e.date.value ? !!e.isDateDisabled?.(e.date.value) : false)
   };
 }
 function ur(e, t) {
@@ -1830,40 +1830,40 @@ function mr(e) {
       fixedWeeks: e.fixedWeeks.value,
       numberOfMonths: e.numberOfMonths.value
     })),
-    i = w(() => r.value.map(e => e.value));
+    i = w(() => r.value.map(item => item.value));
   function a(e) {
-    return !i.value.some(t => xe(e, t));
+    return !i.value.some(item => xe(e, item));
   }
   let o = t => {
       if (!e.maxValue.value || !r.value.length) return false;
       if (e.disabled.value) return true;
-      let n = r.value.at(-1).value;
-      return !t && !e.nextPage.value ? Wn(n.add({
+      let value = r.value.at(-1).value;
+      return !t && !e.nextPage.value ? Wn(value.add({
         months: 1
       }).set({
         day: 1
-      }), e.maxValue.value) : Wn(ur(n, t || e.nextPage.value), e.maxValue.value);
+      }), e.maxValue.value) : Wn(ur(value, t || e.nextPage.value), e.maxValue.value);
     },
     s = t => {
       if (!e.minValue.value || !r.value.length) return false;
       if (e.disabled.value) return true;
-      let n = r.value[0].value;
-      return !t && !e.prevPage.value ? Z(n.subtract({
+      let value = r.value[0].value;
+      return !t && !e.prevPage.value ? Z(value.subtract({
         months: 1
       }).set({
         day: 35
-      }), e.minValue.value) : Z(dr(n, t || e.prevPage.value), e.minValue.value);
+      }), e.minValue.value) : Z(dr(value, t || e.prevPage.value), e.minValue.value);
     };
   function c(t) {
     return !!(e.isDateDisabled?.(t) || e.disabled.value || e.maxValue.value && Wn(t, e.maxValue.value) || e.minValue.value && Z(t, e.minValue.value));
   }
   let l = t => !!e.isDateUnavailable?.(t),
-    u = w(() => r.value.length ? r.value[0].rows[0].map(n => t.dayOfWeek(Y(n), e.weekdayFormat.value)) : []),
+    u = w(() => r.value.length ? r.value[0].rows[0].map(item => t.dayOfWeek(Y(item), e.weekdayFormat.value)) : []),
     d = t => {
-      let n = r.value[0].value;
+      let value = r.value[0].value;
       if (!t && !e.nextPage.value) {
         let t = Q({
-          dateObj: n.add({
+          dateObj: value.add({
             months: e.pagedNavigation.value ? e.numberOfMonths.value : 1
           }),
           weekStartsOn: e.weekStartsOn.value,
@@ -1877,7 +1877,7 @@ function mr(e) {
         return;
       }
       let i = Q({
-        dateObj: fr(n, t || e.nextPage.value),
+        dateObj: fr(value, t || e.nextPage.value),
         weekStartsOn: e.weekStartsOn.value,
         locale: e.locale.value,
         fixedWeeks: e.fixedWeeks.value,
@@ -1886,18 +1886,18 @@ function mr(e) {
       r.value = i;
       let a = {};
       if (!t) {
-        let e = i[0].value.compare(n);
-        e >= X(n) && (a.day = 1), e >= 365 && (a.month = 1);
+        let e = i[0].value.compare(value);
+        e >= X(value) && (a.day = 1), e >= 365 && (a.month = 1);
       }
       e.placeholder.value = i[0].value.set({
         ...a
       });
     },
     f = t => {
-      let n = r.value[0].value;
+      let value = r.value[0].value;
       if (!t && !e.prevPage.value) {
         let t = Q({
-          dateObj: n.subtract({
+          dateObj: value.subtract({
             months: e.pagedNavigation.value ? e.numberOfMonths.value : 1
           }),
           weekStartsOn: e.weekStartsOn.value,
@@ -1911,7 +1911,7 @@ function mr(e) {
         return;
       }
       let i = Q({
-        dateObj: pr(n, t || e.prevPage.value),
+        dateObj: pr(value, t || e.prevPage.value),
         weekStartsOn: e.weekStartsOn.value,
         locale: e.locale.value,
         fixedWeeks: e.fixedWeeks.value,
@@ -1920,15 +1920,15 @@ function mr(e) {
       r.value = i;
       let a = {};
       if (!t) {
-        let e = n.compare(i[0].value);
-        e >= X(n) && (a.day = 1), e >= 365 && (a.month = 1);
+        let e = value.compare(i[0].value);
+        e >= X(value) && (a.day = 1), e >= 365 && (a.month = 1);
       }
       e.placeholder.value = i[0].value.set({
         ...a
       });
     };
   re(e.placeholder, t => {
-    i.value.some(e => xe(e, t)) || (r.value = Q({
+    i.value.some(item => xe(item, t)) || (r.value = Q({
       dateObj: t,
       weekStartsOn: e.weekStartsOn.value,
       locale: e.locale.value,
@@ -1947,8 +1947,8 @@ function mr(e) {
   let p = w(() => {
     if (!r.value.length) return ``;
     if (e.locale.value !== t.getLocale() && t.setLocale(e.locale.value), r.value.length === 1) {
-      let e = r.value[0].value;
-      return `${t.fullMonthAndYear(Y(e), n.value)}`;
+      let value = r.value[0].value;
+      return `${t.fullMonthAndYear(Y(value), n.value)}`;
     }
     let i = Y(r.value[0].value),
       a = Y(r.value.at(-1).value),
@@ -2312,9 +2312,9 @@ var [$, hr] = m(`PopoverRoot`),
         }, [`prevent`]),
         onPointerDownOutside: t[1] ||= e => {
           i(`pointerDownOutside`, e);
-          let t = e.detail.originalEvent,
-            n = t.button === 0 && t.ctrlKey === true,
-            r = t.button === 2 || n;
+          let originalEvent = e.detail.originalEvent,
+            n = originalEvent.button === 0 && originalEvent.ctrlKey === true,
+            r = originalEvent.button === 2 || n;
           c.value = r;
         },
         onFocusOutside: t[2] ||= se(() => {}, [`prevent`])
@@ -2438,8 +2438,8 @@ var [$, hr] = m(`PopoverRoot`),
         },
         onInteractOutside: t[1] ||= async e => {
           r(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
-          let t = e.target;
-          g(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
+          let target = e.target;
+          g(i).triggerElement.value?.contains(target) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
         }
       }), {
         default: v(() => [_(e.$slots, `default`)]),

@@ -389,13 +389,13 @@ var He = I(`grid-3x3`, [[`rect`, {
           "browser-dark": `FrameBrowserDark`
         },
         m = j(() => !B.includes(i.current.backgroundColor)),
-        y = j(() => [...le.map(el => ({
-          id: `builtin:${el.id}`,
-          name: G(`Preset${el.id}`),
-          style: el.style,
+        y = j(() => [...le.map(item => ({
+          id: `builtin:${item.id}`,
+          name: G(`Preset${item.id}`),
+          style: item.style,
           builtin: true
-        })), ...i.presets.map(e => ({
-          ...e,
+        })), ...i.presets.map(item => ({
+          ...item,
           builtin: false
         }))]);
       function T(e) {
@@ -409,11 +409,11 @@ var He = I(`grid-3x3`, [[`rect`, {
         F = S([]),
         te = S(``);
       async function ne(e) {
-        let t = await window.screenshotToolAPI.editor.loadBackground(e.id);
-        if (!t.ok) throw Error(t.error.message);
+        let background = await window.screenshotToolAPI.editor.loadBackground(e.id);
+        if (!background.ok) throw Error(background.error.message);
         te.value = e.id, T({
           backgroundKind: `image`,
-          backgroundImage: t.data,
+          backgroundImage: background.data,
           backgroundImageSource: e.file ?? ``
         });
       }
@@ -423,7 +423,7 @@ var He = I(`grid-3x3`, [[`rect`, {
           te.value = ``;
           return;
         }
-        let t = F.value.find(t => t.file === e);
+        let t = F.value.find(item => item.file === e);
         te.value = t?.id ?? ``;
       }
       v(() => i.backgroundLibrary, e => {
@@ -476,7 +476,7 @@ var He = I(`grid-3x3`, [[`rect`, {
         return JSON.stringify(e) === JSON.stringify(t);
       }
       function me(e) {
-        let t = fe.find(t => t.id === e) ?? fe[0];
+        let t = fe.find(item => item.id === e) ?? fe[0];
         return `linear-gradient(135deg, ${t.stops[0]}, ${t.stops[1]})`;
       }
       function he(e) {
@@ -798,7 +798,7 @@ function pn(e) {
     l = p([]),
     u = null,
     d = null,
-    f = j(() => t.value.find(e => e.id === r.value) ?? null),
+    f = j(() => t.value.find(item => item.id === r.value) ?? null),
     m = j(() => c.value.length > 0),
     h = j(() => l.value.length > 0),
     g = j(() => n.value ? [...t.value, n.value] : t.value);
@@ -812,7 +812,7 @@ function pn(e) {
     v(_()), t.value = e;
   }
   function b(e, n) {
-    t.value = t.value.map(t => t.id === e ? n : t);
+    t.value = t.value.map(item => item.id === e ? n : item);
   }
   function x(e) {
     t.value = e, n.value = null, r.value = null, i.value = null, c.value = [], l.value = [], u = null, d = null;
@@ -820,35 +820,35 @@ function pn(e) {
   function C() {
     F();
     let e = c.value.at(-1);
-    e !== undefined && (l.value = [_(), ...l.value].slice(0, fn), c.value = c.value.slice(0, -1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
+    e !== undefined && (l.value = [_(), ...l.value].slice(0, fn), c.value = c.value.slice(0, -1), t.value = JSON.parse(e), r.value && !t.value.some(item => item.id === r.value) && (r.value = null));
   }
   function w() {
     F();
     let e = l.value[0];
-    e !== undefined && (c.value = [...c.value, _()].slice(-100), l.value = l.value.slice(1), t.value = JSON.parse(e), r.value && !t.value.some(e => e.id === r.value) && (r.value = null));
+    e !== undefined && (c.value = [...c.value, _()].slice(-100), l.value = l.value.slice(1), t.value = JSON.parse(e), r.value && !t.value.some(item => item.id === r.value) && (r.value = null));
   }
   function T() {
-    let e = r.value;
-    return e ? (y(t.value.filter(t => t.id !== e)), r.value = null, true) : false;
+    let value = r.value;
+    return value ? (y(t.value.filter(item => item.id !== value)), r.value = null, true) : false;
   }
   function E(e) {
     F(), a.value = e, e !== `select` && (r.value = null);
   }
   function D(e) {
     o.value = e;
-    let t = f.value;
-    t && t.kind !== `mosaic` && t.color !== e && (v(_()), b(t.id, {
-      ...t,
+    let value = f.value;
+    value && value.kind !== `mosaic` && value.color !== e && (v(_()), b(value.id, {
+      ...value,
       color: e
     }));
   }
   function O(t) {
     s.value = t;
-    let n = f.value;
-    if (!n) return;
-    let r = ln(n.kind, t, e());
-    n.size !== r && (v(_()), b(n.id, {
-      ...n,
+    let value = f.value;
+    if (!value) return;
+    let r = ln(value.kind, t, e());
+    value.size !== r && (v(_()), b(value.id, {
+      ...value,
       size: r
     }));
   }
@@ -860,33 +860,33 @@ function pn(e) {
     return null;
   }
   function ee(e, t) {
-    let n = f.value;
-    return n ? Ce(n).find(n => Math.hypot(n.x - e.x, n.y - e.y) <= t * 1.4)?.handle ?? null : null;
+    let value = f.value;
+    return value ? Ce(value).find(item => Math.hypot(item.x - e.x, item.y - e.y) <= t * 1.4)?.handle ?? null : null;
   }
   function A(t) {
     r.value = t?.id ?? null, t && (t.kind !== `mosaic` && (o.value = t.color), s.value = un(t, e()));
   }
   function M() {
-    return t.value.reduce((e, state) => state.kind === `number` ? Math.max(e, state.value) : e, 0) + 1;
+    return t.value.reduce((acc, state) => state.kind === `number` ? Math.max(acc, state.value) : acc, 0) + 1;
   }
   function N(e) {
     d = _(), r.value = e.id, i.value = e.id;
   }
   function P(e) {
-    let n = i.value,
-      r = t.value.find(e => e.id === n);
+    let value = i.value,
+      r = t.value.find(item => item.id === value);
     r && r.kind === `text` && b(r.id, {
       ...r,
       text: e
     });
   }
   function F() {
-    let e = i.value;
-    if (!e) return;
+    let value = i.value;
+    if (!value) return;
     i.value = null;
-    let n = t.value.find(t => t.id === e),
+    let n = t.value.find(item => item.id === value),
       a = d;
-    d = null, n?.kind === `text` && !n.text.trim() && (t.value = t.value.filter(t => t.id !== e), r.value === e && (r.value = null)), a !== null && a !== _() && v(a);
+    d = null, n?.kind === `text` && !n.text.trim() && (t.value = t.value.filter(item => item.id !== value), r.value === value && (r.value = null)), a !== null && a !== _() && v(a);
   }
   function te(e, t, n, r) {
     if (!r) return t;
@@ -955,30 +955,30 @@ function pn(e) {
       };
       return y([...t.value, e]), r.value = e.id, true;
     }
-    let h = a.value,
+    let value = a.value,
       g = {
         id: dn(),
         color: o.value,
-        size: ln(h, s.value, p)
+        size: ln(value, s.value, p)
       },
       v;
-    return v = h === `rect` || h === `ellipse` || h === `mosaic` ? {
+    return v = value === `rect` || value === `ellipse` || value === `mosaic` ? {
       ...g,
-      kind: h,
+      kind: value,
       x: c.x,
       y: c.y,
       width: 0,
       height: 0
-    } : h === `arrow` || h === `line` ? {
+    } : value === `arrow` || value === `line` ? {
       ...g,
-      kind: h,
+      kind: value,
       x1: c.x,
       y1: c.y,
       x2: c.x,
       y2: c.y
     } : {
       ...g,
-      kind: h,
+      kind: value,
       points: [c.x, c.y]
     }, r.value = null, n.value = v, u = {
       type: `draw`,
@@ -991,29 +991,29 @@ function pn(e) {
     let r = u;
     if (!r) return;
     if (r.type === `draw`) {
-      let i = n.value;
-      if (!i) return;
+      let value = n.value;
+      if (!value) return;
       let a = {
           x: r.startX,
           y: r.startY
         },
-        o = te(a, e, i.kind, t);
-      if (i.kind === `rect` || i.kind === `ellipse` || i.kind === `mosaic`) n.value = {
-        ...i,
+        o = te(a, e, value.kind, t);
+      if (value.kind === `rect` || value.kind === `ellipse` || value.kind === `mosaic`) n.value = {
+        ...value,
         x: a.x,
         y: a.y,
         width: o.x - a.x,
         height: o.y - a.y
-      };else if (i.kind === `arrow` || i.kind === `line`) n.value = {
-        ...i,
+      };else if (value.kind === `arrow` || value.kind === `line`) n.value = {
+        ...value,
         x2: o.x,
         y2: o.y
-      };else if (i.kind === `pen` || i.kind === `highlighter`) {
-        let points = i.points,
+      };else if (value.kind === `pen` || value.kind === `highlighter`) {
+        let points = value.points,
           r = points[points.length - 2],
           a = points[points.length - 1];
-        Math.hypot(e.x - r, e.y - a) >= Math.max(1, i.size * .35) && (n.value = {
-          ...i,
+        Math.hypot(e.x - r, e.y - a) >= Math.max(1, value.size * .35) && (n.value = {
+          ...value,
           points: [...points, e.x, e.y]
         });
       }
@@ -1036,15 +1036,15 @@ function pn(e) {
     let i = u;
     if (u = null, i) {
       if (i.type === `draw`) {
-        let i = n.value;
-        if (n.value = null, !i) return;
-        let a = je(i),
+        let value = n.value;
+        if (n.value = null, !value) return;
+        let a = je(value),
           o = e();
-        if (i.kind !== `pen` && i.kind !== `highlighter` && (i.kind === `arrow` || i.kind === `line` ? Math.hypot(a.width, a.height) < 4 * o : a.width < 3 * o || a.height < 3 * o)) return;
-        let s = i.kind === `rect` || i.kind === `ellipse` || i.kind === `mosaic` ? {
-          ...i,
+        if (value.kind !== `pen` && value.kind !== `highlighter` && (value.kind === `arrow` || value.kind === `line` ? Math.hypot(a.width, a.height) < 4 * o : a.width < 3 * o || a.height < 3 * o)) return;
+        let s = value.kind === `rect` || value.kind === `ellipse` || value.kind === `mosaic` ? {
+          ...value,
           ...a
-        } : i;
+        } : value;
         y([...t.value, s]), r.value = s.id;
         return;
       }
@@ -1198,34 +1198,34 @@ var mn = {
           balance: P.value
         }) : null),
         X = j(() => {
-          let e = Y.value;
-          if (!e) return null;
+          let value = Y.value;
+          if (!value) return null;
           let t = Math.max(40, fe.value.width - Rn),
             n = Math.max(40, fe.value.height - Rn),
-            r = Math.min(t / e.width, n / e.height, 1 / W.value);
+            r = Math.min(t / value.width, n / value.height, 1 / W.value);
           return {
-            width: Math.max(1, Math.round(e.width * r)),
-            height: Math.max(1, Math.round(e.height * r))
+            width: Math.max(1, Math.round(value.width * r)),
+            height: Math.max(1, Math.round(value.height * r))
           };
         }),
         $e = j(() => Y.value && X.value ? Y.value.width / X.value.width : 1),
         et = j(() => {
-          let e = K.editingTextId.value,
-            t = K.annotations.value.find(t => t.id === e);
+          let value = K.editingTextId.value,
+            t = K.annotations.value.find(item => item.id === value);
           return t?.kind === `text` ? t : null;
         }),
         tt = j(() => {
-          let e = et.value,
+          let value = et.value,
             t = Y.value;
-          if (!e || !t) return null;
+          if (!value || !t) return null;
           let n = 1 / $e.value,
-            r = e.size * n;
+            r = value.size * n;
           return {
-            left: `${(t.origin.x + e.x) * n}px`,
-            top: `${(t.origin.y + e.y) * n}px`,
+            left: `${(t.origin.x + value.x) * n}px`,
+            top: `${(t.origin.y + value.y) * n}px`,
             fontSize: `${r}px`,
             lineHeight: `1.3`,
-            color: e.color,
+            color: value.color,
             fontFamily: Oe,
             fontWeight: `600`,
             minWidth: `${Math.max(24, r * 2)}px`
@@ -1330,17 +1330,17 @@ var mn = {
         });
       }
       function ft() {
-        let e = ue.value,
+        let value = ue.value,
           t = Y.value,
           n = T.value,
           r = X.value;
-        if (!e || !t || !n || !r) return;
+        if (!value || !t || !n || !r) return;
         let i = window.devicePixelRatio || 1,
           a = Math.min(1, r.width * i / t.width),
           o = Math.max(1, Math.round(t.width * a)),
           s = Math.max(1, Math.round(t.height * a));
-        (e.width !== o || e.height !== s) && (e.width = o, e.height = s);
-        let c = ke(e);
+        (value.width !== o || value.height !== s) && (value.width = o, value.height = s);
+        let c = ke(value);
         c.setTransform(1, 0, 0, 1, 0, 0), Te(c, {
           source: n,
           scale: W.value,
@@ -1352,21 +1352,21 @@ var mn = {
         }, t, a, Ke), pt(c, a);
       }
       function pt(e, t) {
-        let n = Y.value,
+        let value = Y.value,
           r = K.selected.value;
-        if (!n || !r || K.editingTextId.value === r.id) return;
+        if (!value || !r || K.editingTextId.value === r.id) return;
         let i = e => e * $e.value,
           a = je(r),
           o = i(4);
-        e.save(), e.setTransform(t, 0, 0, t, n.origin.x * t, n.origin.y * t), e.setLineDash([i(4), i(3)]), e.lineWidth = i(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
+        e.save(), e.setTransform(t, 0, 0, t, value.origin.x * t, value.origin.y * t), e.setLineDash([i(4), i(3)]), e.lineWidth = i(1), e.strokeStyle = `#10b981`, e.strokeRect(a.x - o, a.y - o, a.width + o * 2, a.height + o * 2), e.setLineDash([]);
         for (let t of Ce(r)) e.beginPath(), e.arc(t.x, t.y, i(5), 0, Math.PI * 2), e.fillStyle = `#ffffff`, e.fill(), e.lineWidth = i(1.5), e.stroke();
         e.restore();
       }
       function mt(e) {
-        let t = ue.value,
+        let value = ue.value,
           n = Y.value;
-        if (!t || !n) return null;
-        let r = t.getBoundingClientRect();
+        if (!value || !n) return null;
+        let r = value.getBoundingClientRect();
         return r.width <= 0 || r.height <= 0 ? null : {
           x: (e.clientX - r.left) / r.width * n.width - n.origin.x,
           y: (e.clientY - r.top) / r.height * n.height - n.origin.y
@@ -1399,8 +1399,8 @@ var mn = {
       }
       async function bt() {
         await ee();
-        let e = de.value;
-        e && (e.focus(), e.setSelectionRange(e.value.length, e.value.length));
+        let value = de.value;
+        value && (value.focus(), value.setSelectionRange(value.value.length, value.value.length));
       }
       function xt(e) {
         e.stopPropagation(), !e.isComposing && (e.key === `Enter` && !e.shiftKey || e.key === `Escape`) && (e.preventDefault(), K.finishTextEditing(), Q());
@@ -1413,12 +1413,12 @@ var mn = {
       }
       async function wt() {
         K.finishTextEditing();
-        let e = T.value;
-        if (!e) throw Error(G(`ActionFailed`));
+        let value = T.value;
+        if (!value) throw Error(G(`ActionFailed`));
         let {
           png: t
         } = await Ae({
-          source: e,
+          source: value,
           scale: W.value,
           style: I.value,
           annotations: K.annotations.value,
@@ -1427,12 +1427,12 @@ var mn = {
         return t;
       }
       async function Tt(e, t) {
-        let n = l.value;
-        if (n && !B.value) {
+        let value = l.value;
+        if (value && !B.value) {
           B.value = e;
           try {
             let r = V.value;
-            await t(await wt(), n.id), e === `copy` && (we.value = r);
+            await t(await wt(), value.id), e === `copy` && (we.value = r);
           } catch (e) {
             Z(G(`ToastFailed`, {
               reason: ut(e)
@@ -1489,9 +1489,9 @@ var mn = {
       }
       function $() {
         q !== null && (window.clearTimeout(q), q = null);
-        let e = l.value;
-        e && editor.updateState({
-          id: e.id,
+        let value = l.value;
+        value && editor.updateState({
+          id: value.id,
           style: lt(),
           annotations: JSON.parse(JSON.stringify(K.annotations.value))
         });
@@ -1532,8 +1532,8 @@ var mn = {
       }
       function Ft(e) {
         if (!l.value || e.isComposing) return;
-        let t = e.target;
-        if (t && (t.tagName === `INPUT` || t.tagName === `TEXTAREA` || t.isContentEditable)) return;
+        let target = e.target;
+        if (target && (target.tagName === `INPUT` || target.tagName === `TEXTAREA` || target.isContentEditable)) return;
         let n = e.key.toLowerCase(),
           r = Re(e);
         if (e.key === `Escape`) {

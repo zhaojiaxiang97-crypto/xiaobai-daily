@@ -218,22 +218,22 @@ var ye = [`data-markstream-mode`],
         N = o(`${M.value}px`);
       function Je() {
         if (!C.value) return;
-        let e = C.value.scrollHeight;
-        if (e > 0) {
+        let scrollHeight = C.value.scrollHeight;
+        if (scrollHeight > 0) {
           let t = h(function (e) {
             if (g.maxHeight === `none`) return `${e}px`;
             if (g.maxHeight != null) {
               let t = Number.parseFloat(String(g.maxHeight));
               if (Number.isFinite(t)) return `${Math.min(e, t)}px`;
             }
-            let t = C.value;
-            if (t) {
-              let n = getComputedStyle(t).getPropertyValue(`--ms-size-code-max-height`).trim(),
+            let value = C.value;
+            if (value) {
+              let n = getComputedStyle(value).getPropertyValue(`--ms-size-code-max-height`).trim(),
                 r = Number.parseFloat(n);
               if (Number.isFinite(r)) return `${Math.min(e, r)}px`;
             }
             return `${Math.min(e, 500)}px`;
-          }(e)) ?? e;
+          }(scrollHeight)) ?? scrollHeight;
           N.value = `${Math.max(t, M.value)}px`;
         }
       }
@@ -274,8 +274,8 @@ var ye = [`data-markstream-mode`],
       function Qe() {
         return _(this, null, function* () {
           try {
-            let e = j.value;
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(e)), x.value = true, setTimeout(() => {
+            let value = j.value;
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(value)), x.value = true, setTimeout(() => {
               x.value = false;
             }, 1e3);
           } catch (e) {
@@ -376,8 +376,8 @@ var ye = [`data-markstream-mode`],
           var t, n;
           if (!A.value || !C.value) return;
           if (q) return J = true, void (Y ||= e);
-          let r = Ye.value;
-          if (e || r !== X || !O.value) {
+          let value = Ye.value;
+          if (e || value !== X || !O.value) {
             q = true;
             try {
               let e = yield function () {
@@ -404,10 +404,10 @@ var ye = [`data-markstream-mode`],
               });
               let i = ``;
               if ((n = K.on) == null || n.call(K, `error`, e => {
-                i = (Array.isArray(e) ? e : [e]).map(e => e instanceof Error ? e.message : typeof e == `string` ? e : String(e && typeof e == `object` && `message` in e ? e.message ?? `` : e ?? ``)).filter(Boolean).join(`; `);
+                i = (Array.isArray(e) ? e : [e]).map(item => item instanceof Error ? item.message : typeof item == `string` ? item : String(item && typeof item == `object` && `message` in item ? item.message ?? `` : item ?? ``)).filter(Boolean).join(`; `);
               }), K.render(j.value), i) throw Error(i);
               if (!C.value.childNodes.length) throw Error(`Infographic render returned empty output.`);
-              O.value = true, X = r, d(() => {
+              O.value = true, X = value, d(() => {
                 Je();
               });
             } catch (e) {

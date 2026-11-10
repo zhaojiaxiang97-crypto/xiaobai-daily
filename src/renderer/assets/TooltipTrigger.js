@@ -14,12 +14,12 @@ function U(event, el) {
   }
   function o(e, t) {
     if (!t) return;
-    let i = e.currentTarget,
+    let currentTarget = e.currentTarget,
       a = {
         x: e.clientX,
         y: e.clientY
       },
-      o = G(a, W(a, i.getBoundingClientRect()), 1),
+      o = G(a, W(a, currentTarget.getBoundingClientRect()), 1),
       s = K(t.getBoundingClientRect()),
       c = J([...o, ...s]);
     r.value = c, n.value = true;
@@ -36,14 +36,14 @@ function U(event, el) {
     if (r.value) {
       let handler = n => {
         if (!r.value || !(n.target instanceof Element)) return;
-        let o = n.target,
+        let target = n.target,
           s = {
             x: n.clientX,
             y: n.clientY
           },
-          fallbackValue = event.value?.contains(o) || el.value?.contains(o),
+          fallbackValue = event.value?.contains(target) || el.value?.contains(target),
           l = !q(s, r.value),
-          u = !!o.closest(`[data-grace-area-trigger]`);
+          u = !!target.closest(`[data-grace-area-trigger]`);
         fallbackValue ? a() : (l || u) && (a(), i.trigger());
       };
       event.value?.ownerDocument.addEventListener(`pointermove`, handler), n(() => event.value?.ownerDocument.removeEventListener(`pointermove`, handler));

@@ -8,7 +8,7 @@ function r(e) {
     message: e
   };
   n.push(r), setTimeout(() => {
-    let e = n.findIndex(e => e.id === r.id);
+    let e = n.findIndex(item => item.id === r.id);
     e !== -1 && n.splice(e, 1);
   }, 3e3);
 }
@@ -21,7 +21,7 @@ function i(e, r, i = `unknown`) {
     creditTrigger: i
   };
   n.push(a), setTimeout(() => {
-    let e = n.findIndex(e => e.id === a.id);
+    let e = n.findIndex(item => item.id === a.id);
     e !== -1 && n.splice(e, 1);
   }, 3e3);
 }

@@ -291,22 +291,22 @@ var defineProperty = Object.defineProperty,
                 }
                 let n = Array.from(value.attributes);
                 for (let payload of n) {
-                  let n = payload.name;
-                  if (/^on/i.test(n)) value.removeAttribute(n);else {
-                    if (n === `style` && payload.value) {
+                  let name = payload.name;
+                  if (/^on/i.test(name)) value.removeAttribute(name);else {
+                    if (name === `style` && payload.value) {
                       let r = payload.value;
                       if (it.some(item => item.test(r))) {
-                        value.removeAttribute(n);
+                        value.removeAttribute(name);
                         continue;
                       }
                     }
-                    if ((n === `href` || n === `xlink:href`) && payload.value) {
+                    if ((name === `href` || name === `xlink:href`) && payload.value) {
                       let r = ot(payload.value);
                       if (!r) {
-                        value.removeAttribute(n);
+                        value.removeAttribute(name);
                         continue;
                       }
-                      r !== payload.value && value.setAttribute(n, r);
+                      r !== payload.value && value.setAttribute(name, r);
                     }
                   }
                 }
@@ -459,7 +459,7 @@ var defineProperty = Object.defineProperty,
         Vt = null,
         Ht = null,
         G = false,
-        K = wt.value,
+        value = wt.value,
         q = null,
         Ut = 0,
         Wt = true,
@@ -856,8 +856,8 @@ var defineProperty = Object.defineProperty,
         return y(this, null, function* () {
           let t = mt.value;
           if (!t) return vt.value = true, void (M.value = e === `source`);
-          let n = t.getBoundingClientRect().height;
-          t.style.height = `${n}px`, t.style.overflow = `hidden`, vt.value = true, M.value = e === `source`, yield f();
+          let height = t.getBoundingClientRect().height;
+          t.style.height = `${height}px`, t.style.overflow = `hidden`, vt.value = true, M.value = e === `source`, yield f();
           let scrollHeight = t.scrollHeight;
           t.style.transition = `height var(--ms-duration-standard) var(--ms-ease-standard)`, t.offsetHeight, t.style.height = `${scrollHeight}px`;
           let i = () => {
@@ -977,7 +977,7 @@ var defineProperty = Object.defineProperty,
         });
       }
       function $() {
-        G && (G = false, K = wt.value, Wt = false, q &&= (q.abort(), null), Vt &&= (globalThis.clearTimeout(Vt), null), Ht &&= (Bt(Ht), null), Ut = Date.now());
+        G && (G = false, value = wt.value, Wt = false, q &&= (q.abort(), null), Vt &&= (globalThis.clearTimeout(Vt), null), Ht &&= (Bt(Ht), null), Ut = Date.now());
       }
       function wn() {
         if ($(), Mt(), V) {
@@ -1001,7 +1001,7 @@ var defineProperty = Object.defineProperty,
             if (!F() || M.value || R.value) return void $();
             let e = g.isDark ? `dark` : `light`,
               t = O.value;
-            if (!t.trim()) return false === g.loading ? void $() : void Tn(K);
+            if (!t.trim()) return false === g.loading ? void $() : void Tn(value);
             if (Gt++, Gt > Et.value) $();else {
               q && q.abort(), q = new AbortController();
               try {
@@ -1013,7 +1013,7 @@ var defineProperty = Object.defineProperty,
                   if ((yield xn()) && R.value) return void $();
                 } else n.prefixOk && n.prefix && Qt() && (yield Sn(n.prefix));
               } catch {}
-              K = Math.min(Math.floor(1.5 * K), Tt.value), Tn(K);
+              value = Math.min(Math.floor(1.5 * value), Tt.value), Tn(value);
             }
           }), {
             timeout: 500
@@ -1021,7 +1021,7 @@ var defineProperty = Object.defineProperty,
         }, e)));
       }
       function En() {
-        G || P.value && v.value && F() && (M.value || R.value || (G = true, Ut = 0, Wt = true, Gt = 0, K = wt.value, Tn(K)));
+        G || P.value && v.value && F() && (M.value || R.value || (G = true, Ut = 0, Wt = true, Gt = 0, value = wt.value, Tn(value)));
       }
       return a(sn, e => {
         X.value && ut.value && (ut.value.style.transform = e.transform);
@@ -1033,8 +1033,8 @@ var defineProperty = Object.defineProperty,
         if (R.value = false, z.value = {}, !P.value) return $(), void (F() && !M.value && Q());
         F() && Nt(), !M.value && v.value && F() ? En() : $(), function () {
           if (!P.value || !M.value || !v.value) return;
-          let e = O.value.length;
-          e !== bt.value && (xt.value = true, bt.value = e, Dt && clearTimeout(Dt), Dt = setTimeout(() => {
+          let length = O.value.length;
+          length !== bt.value && (xt.value = true, bt.value = length, Dt && clearTimeout(Dt), Dt = setTimeout(() => {
             xt.value && M.value && O.value.trim() && (xt.value = false, bn(`preview`));
           }, Ct.value));
         }();

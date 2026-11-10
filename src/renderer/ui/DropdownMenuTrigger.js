@@ -308,9 +308,9 @@ var ue = v(le),
       }
       function W(e) {
         if (e.defaultPrevented) return;
-        let t = e.target,
-          n = t.closest(`[data-reka-menu-content]`) === e.currentTarget,
-          r = [`input`, `textarea`].includes(t.tagName.toLowerCase()),
+        let target = e.target,
+          n = target.closest(`[data-reka-menu-content]`) === e.currentTarget,
+          r = [`input`, `textarea`].includes(target.tagName.toLowerCase()),
           i = e.ctrlKey || e.altKey || e.metaKey,
           a = e.key.length === 1,
           o = J(e, b(), F.value, {
@@ -325,7 +325,7 @@ var ue = v(le),
         let s = N.value?.getItems() ?? [];
         if (n && (e.key === `Tab` && f.modal.value && e.preventDefault(), !i && a && !r && L(e.key, s)), e.target !== F.value || !y.includes(e.key)) return;
         e.preventDefault();
-        let c = [...s.map(e => e.ref)];
+        let c = [...s.map(item => item.ref)];
         m.includes(e.key) && c.reverse(), l(c);
       }
       function G(e) {
@@ -333,9 +333,9 @@ var ue = v(le),
       }
       function K(e) {
         if (!n(e)) return;
-        let t = e.target,
+        let target = e.target,
           r = w.value !== e.clientX;
-        if (e?.currentTarget?.contains(t) && r) {
+        if (e?.currentTarget?.contains(target) && r) {
           let t = e.clientX > w.value ? `right` : `left`;
           C.value = t, w.value = e.clientX;
         }
@@ -463,8 +463,8 @@ var ue = v(le),
       async function l(e) {
         if (!e.defaultPrevented && n(e)) {
           if (t.disabled) r.onItemLeave(e);else if (!r.onItemEnter(e)) {
-            let t = e.currentTarget;
-            r.highlightedElement.value = t, [`INPUT`, `TEXTAREA`].includes(b()?.tagName || ``) || t.focus({
+            let currentTarget = e.currentTarget;
+            r.highlightedElement.value = currentTarget, [`INPUT`, `TEXTAREA`].includes(b()?.tagName || ``) || currentTarget.focus({
               preventScroll: true
             });
           }
@@ -538,8 +538,8 @@ var ue = v(le),
         s = me(),
         c = M(false);
       async function l() {
-        let e = a.value;
-        if (!n.disabled && e) {
+        let value = a.value;
+        if (!n.disabled && value) {
           let e = new CustomEvent(S, {
             bubbles: true,
             cancelable: true
@@ -1135,9 +1135,9 @@ var ue = v(le),
         onCloseAutoFocus: o,
         onInteractOutside: t[0] ||= e => {
           if (e.defaultPrevented) return;
-          let t = e.detail.originalEvent,
-            n = t.button === 0 && t.ctrlKey === true,
-            r = t.button === 2 || n;
+          let originalEvent = e.detail.originalEvent,
+            n = originalEvent.button === 0 && originalEvent.ctrlKey === true,
+            r = originalEvent.button === 2 || n;
           (!T(i).modal.value || r) && (a.value = true), T(i).triggerElement.value?.contains(e.target) && e.preventDefault();
         }
       }), {

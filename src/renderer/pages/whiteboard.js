@@ -295,14 +295,14 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       let on = {
           async openBoard() {
-            let e = await Pe.openWhiteboard(tn?.value === `en-US` ? `en-US` : `zh-CN`);
-            return e.cancelled || !e.content ? {
+            let whiteboard = await Pe.openWhiteboard(tn?.value === `en-US` ? `en-US` : `zh-CN`);
+            return whiteboard.cancelled || !whiteboard.content ? {
               canceled: true
             } : {
               canceled: false,
-              imageDataUrl: e.content,
-              fileName: e.fileName,
-              filePath: e.filePath
+              imageDataUrl: whiteboard.content,
+              fileName: whiteboard.fileName,
+              filePath: whiteboard.filePath
             };
           },
           async saveBoard(options) {
@@ -420,11 +420,11 @@ var Fe = C(`circle-dashed`, [[`path`, {
           let i = e[r - 1],
             a = e[r],
             o = [0, 1];
-          items.forEach((e, n) => {
-            let r = yn(i, a, e, items[(n + 1) % items.length]);
+          items.forEach((item, n) => {
+            let r = yn(i, a, item, items[(n + 1) % items.length]);
             r !== null && r > 1e-6 && r < .999999 && o.push(r);
           });
-          let s = o.sort((e, t) => e - t).filter((e, t, n) => t === 0 || Math.abs(e - n[t - 1]) > 1e-6);
+          let s = o.sort((left, right) => left - right).filter((item, t, n) => t === 0 || Math.abs(item - n[t - 1]) > 1e-6);
           for (let e = 1; e < s.length; e += 1) {
             let r = vn(i, a, s[e - 1]),
               o = vn(i, a, s[e]),
@@ -487,9 +487,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
           x: 0,
           y: 0
         };
-        return items.map(e => ({
-          x: e.x + n.x,
-          y: e.y + n.y
+        return items.map(item => ({
+          x: item.x + n.x,
+          y: item.y + n.y
         }));
       }
       function En(e) {
@@ -508,7 +508,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         pn ||= document.createElement(`canvas`).getContext(`2d`);
         let o = `500 ${t}px ${Zt}`;
         pn.font = o;
-        let s = Math.max(t * .5, ...r.map(e => pn.measureText(e || ` `).width));
+        let s = Math.max(t * .5, ...r.map(item => pn.measureText(item || ` `).width));
         return {
           x: i.x + a.x,
           y: i.y + a.y,
@@ -538,12 +538,12 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: t.x - n.x,
             y: t.y - n.y
           };
-        return (e.clips || []).every(e => D(r, e.polygon) === e.include);
+        return (e.clips || []).every(item => D(r, item.polygon) === item.include);
       }
       function kn(e) {
-        return (e.clips || []).map(t => ({
-          ...t,
-          polygon: Tn(t.polygon, e)
+        return (e.clips || []).map(item => ({
+          ...item,
+          polygon: Tn(item.polygon, e)
         }));
       }
       function An(e, t) {
@@ -551,19 +551,19 @@ var Fe = C(`circle-dashed`, [[`path`, {
           x: 0,
           y: 0
         };
-        (t.clips || []).forEach(r => {
-          if (!r.polygon?.length) return;
-          let i = r.polygon.map(e => ({
+        (t.clips || []).forEach(item => {
+          if (!item.polygon?.length) return;
+          let i = item.polygon.map(e => ({
             x: e.x + n.x,
             y: e.y + n.y
           }));
-          if (e.beginPath(), !r.include) {
+          if (e.beginPath(), !item.include) {
             let n = Rn(In([...Nn(t), ...i]), Math.max(16, t.width * 2));
             e.rect(n.left, n.top, n.right - n.left, n.bottom - n.top);
           }
           e.moveTo(i[0].x, i[0].y);
           for (let t = 1; t < i.length; t += 1) e.lineTo(i[t].x, i[t].y);
-          e.closePath(), e.clip(r.include ? `nonzero` : `evenodd`);
+          e.closePath(), e.clip(item.include ? `nonzero` : `evenodd`);
         });
       }
       function jn(e, t, n, r, i, a = 1) {
@@ -878,7 +878,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: i.left,
             y: i.bottom
           }];
-          return o.some((e, r) => Cn(t, n, e, o[(r + 1) % o.length]));
+          return o.some((item, r) => Cn(t, n, item, o[(r + 1) % o.length]));
         }
         let i = Nn(e);
         if (i.length === 1) return xn(i[0], t, n) <= r + e.width / 2;
@@ -889,7 +889,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         let n = Nn(e),
           r = In(t);
         if (!Ln(Rn(In(n), e.width / 2), r)) return false;
-        if (n.some(n => On(e, n) && D(n, t))) return true;
+        if (n.some(item => On(e, item) && D(item, t))) return true;
         for (let r = 1; r < n.length; r += 1) {
           let i = vn(n[r - 1], n[r], .5);
           for (let a = 0; a < t.length; a += 1) if (wn(n[r - 1], n[r], t[a], t[(a + 1) % t.length]) <= e.width / 2 && On(e, i)) return true;
@@ -901,8 +901,8 @@ var Fe = C(`circle-dashed`, [[`path`, {
           n = -1 / 0,
           r = 1 / 0,
           i = -1 / 0;
-        return items.forEach(e => {
-          t = Math.min(t, e.x), n = Math.max(n, e.x), r = Math.min(r, e.y), i = Math.max(i, e.y);
+        return items.forEach(item => {
+          t = Math.min(t, item.x), n = Math.max(n, item.x), r = Math.min(r, item.y), i = Math.max(i, item.y);
         }), {
           left: t,
           right: n,
@@ -942,22 +942,22 @@ var Fe = C(`circle-dashed`, [[`path`, {
       function Vn(items, t) {
         let n = [],
           r = [];
-        return items.forEach(e => {
-          if (e.kind === `pen` || e.kind === `shape`) {
-            let i = bn(Nn(e), t);
+        return items.forEach(item => {
+          if (item.kind === `pen` || item.kind === `shape`) {
+            let i = bn(Nn(item), t);
             if (i.length > 1 || i.some(e => e.inside)) {
               i.filter(e => e.points.length > 1).forEach(i => {
                 let a = {
                   id: mn(),
                   kind: `pen`,
-                  color: e.color,
-                  width: e.width,
+                  color: item.color,
+                  width: item.width,
                   points: i.points,
                   offset: {
                     x: 0,
                     y: 0
                   },
-                  clips: [...kn(e), {
+                  clips: [...kn(item), {
                     include: i.inside,
                     polygon: E(t)
                   }]
@@ -967,8 +967,8 @@ var Fe = C(`circle-dashed`, [[`path`, {
               return;
             }
           }
-          let i = E(e);
-          n.push(i), Fn(e, t) && r.push(i.id);
+          let i = E(item);
+          n.push(i), Fn(item, t) && r.push(i.id);
         }), {
           strokes: n,
           ids: r
@@ -976,18 +976,18 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       let Hn = m(_n());
       function Un(e = Hn.value) {
-        return JSON.stringify(e.pages.map(e => ({
-          id: e.id,
-          name: e.name,
-          backgroundImage: e.backgroundImage ? {
+        return JSON.stringify(e.pages.map(item => ({
+          id: item.id,
+          name: item.name,
+          backgroundImage: item.backgroundImage ? {
             present: true,
-            x: e.backgroundImage.x || 0,
-            y: e.backgroundImage.y || 0,
-            width: e.backgroundImage.width || 0,
-            height: e.backgroundImage.height || 0,
-            fitStage: !!e.backgroundImage.fitStage
+            x: item.backgroundImage.x || 0,
+            y: item.backgroundImage.y || 0,
+            width: item.backgroundImage.width || 0,
+            height: item.backgroundImage.height || 0,
+            fitStage: !!item.backgroundImage.fitStage
           } : null,
-          strokes: e.strokes
+          strokes: item.strokes
         })));
       }
       let Wn = Un(),
@@ -1116,7 +1116,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             t = String(z.value || ``).split(`
 `);
           pn ||= document.createElement(`canvas`).getContext(`2d`), pn.font = `500 ${fontSize}px ${Zt}`;
-          let n = z.value ? Math.max(...t.map(e => pn.measureText(e || ` `).width)) : 8,
+          let n = z.value ? Math.max(...t.map(item => pn.measureText(item || ` `).width)) : 8,
             r = z.x * N.value + P.x,
             i = z.y * N.value + P.y,
             a = Math.max(30, (k.value?.clientWidth || 520) - r - 10),
@@ -1151,11 +1151,11 @@ var Fe = C(`circle-dashed`, [[`path`, {
         let t = `flex h-[34px] min-w-[34px] items-center justify-center rounded-lg px-1 transition-[background-color,color,transform] disabled:cursor-default disabled:text-muted-foreground/40`;
         return e ? `${t} bg-primary/10 text-primary` : `${t} text-foreground hover:-translate-y-px hover:bg-primary/[0.06] disabled:hover:translate-y-0 disabled:hover:bg-transparent`;
       }
-      let Or = y(() => O.value.strokes.find(e => e.id === R.value && e.kind === `shape`) || null),
+      let Or = y(() => O.value.strokes.find(item => item.id === R.value && item.kind === `shape`) || null),
         kr = y(() => {
-          let e = Or.value;
-          if (!e) return {};
-          let t = In(Mn(e)),
+          let value = Or.value;
+          if (!value) return {};
+          let t = In(Mn(value)),
             n = t.left * N.value + P.x,
             r = t.top * N.value + P.y,
             i = Math.max(8, (t.right - t.left) * N.value),
@@ -1176,7 +1176,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         });
       }
       function jr() {
-        return Hn.value.pages.some(e => !!e.backgroundImage || e.strokes.some(oi));
+        return Hn.value.pages.some(item => !!item.backgroundImage || item.strokes.some(oi));
       }
       function Mr() {
         let e = !!z.value.trim();
@@ -1273,14 +1273,14 @@ var Fe = C(`circle-dashed`, [[`path`, {
         B.value === `pen` ? Xn.value = e : B.value === `eraser` ? Zn.value = e : Qn.value = e;
       }
       function Wr(event, items) {
-        let n = Or.value;
-        if (!n) return;
-        let r = In(Mn(n));
+        let value = Or.value;
+        if (!value) return;
+        let r = In(Mn(value));
         br = {
           pointerId: event.pointerId,
           corner: items,
-          strokeId: n.id,
-          originalStroke: E(n),
+          strokeId: value.id,
+          originalStroke: E(value),
           originalBounds: r,
           fixedPoint: {
             x: items.includes(`left`) ? r.right : r.left,
@@ -1321,7 +1321,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
               y: i > .001 ? a.top + (n.y - t.originalBounds.top) / i * (a.bottom - a.top) : (a.top + a.bottom) / 2
             };
           };
-        O.value.strokes = O.value.strokes.map(e => e.id === t.strokeId ? {
+        O.value.strokes = O.value.strokes.map(item => item.id === t.strokeId ? {
           ...t.originalStroke,
           points: t.originalStroke.points.map(s),
           offset: {
@@ -1332,7 +1332,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             ...e,
             polygon: e.polygon.map(s)
           }))
-        } : e), J();
+        } : item), J();
       }
       function Kr(event) {
         let t = br;
@@ -1372,9 +1372,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
             y: z.y
           },
           fontSize = z.fontSize,
-          r = ar.value;
-        yr = null, z.open = false, z.value = ``, ar.value = null, (e || r) && (X(), r ? O.value.strokes = O.value.strokes.flatMap(i => i.id === r ? e ? [{
-          ...i,
+          value = ar.value;
+        yr = null, z.open = false, z.value = ``, ar.value = null, (e || value) && (X(), value ? O.value.strokes = O.value.strokes.flatMap(item => item.id === value ? e ? [{
+          ...item,
           text: e,
           color: M.value,
           fontSize: fontSize,
@@ -1384,7 +1384,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
             y: 0
           },
           clips: []
-        }] : [] : [i]) : O.value.strokes.push({
+        }] : [] : [item]) : O.value.strokes.push({
           id: mn(),
           kind: `text`,
           text: e,
@@ -1441,11 +1441,11 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
         if (event.key === `Enter` && !event.isComposing) {
           event.preventDefault();
-          let t = Gn.value,
-            n = t?.selectionStart ?? z.value.length,
-            r = t?.selectionEnd ?? n;
+          let value = Gn.value,
+            n = value?.selectionStart ?? z.value.length,
+            r = value?.selectionEnd ?? n;
           z.value = `${z.value.slice(0, n)}\n${z.value.slice(r)}`, ae(() => {
-            t?.focus(), t?.setSelectionRange(n + 1, n + 1);
+            value?.focus(), value?.setSelectionRange(n + 1, n + 1);
           });
         }
       }
@@ -1488,7 +1488,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           let n = En(t);
           e.save(), e.fillStyle = t.color, e.font = n.font, e.textAlign = `left`, e.textBaseline = `top`, An(e, t);
           let r = (n.lineHeight - n.fontSize) / 2 + en / N.value;
-          n.lines.forEach((t, i) => e.fillText(t, n.x, n.y + r + i * n.lineHeight)), e.restore();
+          n.lines.forEach((item, i) => e.fillText(item, n.x, n.y + r + i * n.lineHeight)), e.restore();
           return;
         }
         let n = t.offset || {
@@ -1503,14 +1503,14 @@ var Fe = C(`circle-dashed`, [[`path`, {
           o = i !== a;
         e.lineCap = o ? `butt` : i, e.lineJoin = `round`, An(e, t), e.beginPath();
         let s = t.kind !== `shape`,
-          c = r.map(e => ({
-            x: e.x + (s ? n.x : 0),
-            y: e.y + (s ? n.y : 0)
+          c = r.map(item => ({
+            x: item.x + (s ? n.x : 0),
+            y: item.y + (s ? n.y : 0)
           }));
         e.moveTo(c[0].x, c[0].y);
         for (let t = 1; t < r.length; t += 1) e.lineTo(c[t].x, c[t].y);
-        r.length === 1 && e.lineTo(c[0].x + .01, c[0].y + .01), e.stroke(), o && (e.fillStyle = t.color, [i === `round` ? c[0] : null, a === `round` ? c[c.length - 1] : null].filter(Boolean).forEach(n => {
-          e.beginPath(), e.arc(n.x, n.y, t.width / 2, 0, Math.PI * 2), e.fill();
+        r.length === 1 && e.lineTo(c[0].x + .01, c[0].y + .01), e.stroke(), o && (e.fillStyle = t.color, [i === `round` ? c[0] : null, a === `round` ? c[c.length - 1] : null].filter(Boolean).forEach(item => {
+          e.beginPath(), e.arc(item.x, item.y, t.width / 2, 0, Math.PI * 2), e.fill();
         })), e.restore();
       }
       function oi(e) {
@@ -1527,9 +1527,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
           willReadFrequently: true
         });
         c.setTransform(o, 0, 0, o, -r.left * o, -r.top * o), ai(c, e);
-        let l = c.getImageData(0, 0, s.width, s.height).data,
+        let data = c.getImageData(0, 0, s.width, s.height).data,
           u = 0;
-        for (let e = 3; e < l.length; e += 4) if (l[e] > 12 && ++u >= 2) return true;
+        for (let e = 3; e < data.length; e += 4) if (data[e] > 12 && ++u >= 2) return true;
         return false;
       }
       function si(e = A.value) {
@@ -1555,18 +1555,18 @@ var Fe = C(`circle-dashed`, [[`path`, {
           height: r,
           dpr: i
         } = e;
-        gr && W.mode === `move-selection` && W.historyRecorded ? (t.save(), t.setTransform(1, 0, 0, 1, 0, 0), t.drawImage(gr.background, 0, 0), t.drawImage(gr.selected, vr.x * N.value * i, vr.y * N.value * i), t.restore()) : (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), Pr(t, O.value.backgroundImage, n, r), O.value.strokes.forEach(e => {
-          (!z.open || e.id !== ar.value) && ai(t, e);
-        }), t.restore()), I.value?.length > 1 && (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), t.strokeStyle = `#2f7dff`, t.lineWidth = 1.25 / N.value, t.setLineDash([6 / N.value, 5 / N.value]), t.beginPath(), t.moveTo(I.value[0].x, I.value[0].y), I.value.slice(1).forEach(e => t.lineTo(e.x, e.y)), er.value && t.lineTo(I.value[0].x, I.value[0].y), t.stroke(), t.restore());
+        gr && W.mode === `move-selection` && W.historyRecorded ? (t.save(), t.setTransform(1, 0, 0, 1, 0, 0), t.drawImage(gr.background, 0, 0), t.drawImage(gr.selected, vr.x * N.value * i, vr.y * N.value * i), t.restore()) : (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), Pr(t, O.value.backgroundImage, n, r), O.value.strokes.forEach(item => {
+          (!z.open || item.id !== ar.value) && ai(t, item);
+        }), t.restore()), I.value?.length > 1 && (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), t.strokeStyle = `#2f7dff`, t.lineWidth = 1.25 / N.value, t.setLineDash([6 / N.value, 5 / N.value]), t.beginPath(), t.moveTo(I.value[0].x, I.value[0].y), I.value.slice(1).forEach(item => t.lineTo(item.x, item.y)), er.value && t.lineTo(I.value[0].x, I.value[0].y), t.stroke(), t.restore());
       }
       function li(items, t = false) {
-        let n = A.value;
-        if (!n) return null;
+        let value = A.value;
+        if (!value) return null;
         let r = document.createElement(`canvas`);
-        r.width = n.width, r.height = n.height;
+        r.width = value.width, r.height = value.height;
         let i = r.getContext(`2d`),
           a = window.devicePixelRatio || 1;
-        return i.setTransform(a, 0, 0, a, 0, 0), i.translate(P.x, P.y), i.scale(N.value, N.value), t && Pr(i, O.value.backgroundImage, n.width / a, n.height / a), items.forEach(e => ai(i, e)), r;
+        return i.setTransform(a, 0, 0, a, 0, 0), i.translate(P.x, P.y), i.scale(N.value, N.value), t && Pr(i, O.value.backgroundImage, value.width / a, value.height / a), items.forEach(item => ai(i, item)), r;
       }
       function ui(e, t) {
         return {
@@ -1577,9 +1577,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
       function di(e, t) {
         let n = Zn.value / 2 / N.value,
           r = Sn(e, t, n);
-        O.value.strokes = O.value.strokes.map(i => {
-          if (!Pn(i, e, t, n)) return i;
-          let a = i.offset || {
+        O.value.strokes = O.value.strokes.map(item => {
+          if (!Pn(item, e, t, n)) return item;
+          let a = item.offset || {
               x: 0,
               y: 0
             },
@@ -1588,8 +1588,8 @@ var Fe = C(`circle-dashed`, [[`path`, {
               y: e.y - a.y
             }));
           return {
-            ...i,
-            clips: [...(i.clips || []), {
+            ...item,
+            clips: [...(item.clips || []), {
               include: false,
               polygon: o
             }]
@@ -1619,8 +1619,8 @@ var Fe = C(`circle-dashed`, [[`path`, {
               x: 0,
               y: 0
             };
-            let t = W.baseStrokes.filter(e => _r.has(e.id));
-            gr = ui(W.baseStrokes.filter(e => !_r.has(e.id)), t), nr.value = true;
+            let t = W.baseStrokes.filter(item => _r.has(item.id));
+            gr = ui(W.baseStrokes.filter(item => !_r.has(item.id)), t), nr.value = true;
           } else W.mode = `lasso`, I.value = [n], er.value = false, L.value = [];
           J();
           return;
@@ -1694,9 +1694,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
             x: n.x - W.start.x,
             y: n.y - W.start.y
           };
-          !W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded && Math.hypot(n.x - W.last.x, n.y - W.last.y) >= .75 / N.value && (vr = e, L.value = [...W.dragIds], I.value = W.originalSelection.map(t => ({
-            x: t.x + e.x,
-            y: t.y + e.y
+          !W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded && Math.hypot(n.x - W.last.x, n.y - W.last.y) >= .75 / N.value && (vr = e, L.value = [...W.dragIds], I.value = W.originalSelection.map(item => ({
+            x: item.x + e.x,
+            y: item.y + e.y
           })), W.last = n, J());
         } else if (W.mode === `move-text` || W.mode === `move-shape`) {
           let e = {
@@ -1705,13 +1705,13 @@ var Fe = C(`circle-dashed`, [[`path`, {
           };
           if (!W.historyRecorded && Math.hypot(e.x, e.y) > .5 / N.value && (X(), W.historyRecorded = true), W.historyRecorded) {
             let t = W.dragIds[0];
-            O.value.strokes = W.baseStrokes.map(n => t === n.id ? {
-              ...n,
+            O.value.strokes = W.baseStrokes.map(item => t === item.id ? {
+              ...item,
               offset: {
-                x: (n.offset?.x || 0) + e.x,
-                y: (n.offset?.y || 0) + e.y
+                x: (item.offset?.x || 0) + e.x,
+                y: (item.offset?.y || 0) + e.y
               }
-            } : n), W.last = n, J();
+            } : item), W.last = n, J();
           }
         }
       }
@@ -1724,15 +1724,15 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
         if (W.mode === `lasso`) {
           let e = Bn(I.value || [], Math.max(1.25, 2 / N.value));
-          e.length >= 3 ? (I.value = e, er.value = true, L.value = O.value.strokes.filter(t => Fn(t, e)).map(e => e.id), L.value.length || Y(T(`SelectionEmpty`))) : Z();
+          e.length >= 3 ? (I.value = e, er.value = true, L.value = O.value.strokes.filter(item => Fn(item, e)).map(item => item.id), L.value.length || Y(T(`SelectionEmpty`))) : Z();
         }
-        mode === `move-selection` && W.historyRecorded && W.baseStrokes && _r && (O.value.strokes = W.baseStrokes.map(e => _r.has(e.id) ? {
-          ...e,
+        mode === `move-selection` && W.historyRecorded && W.baseStrokes && _r && (O.value.strokes = W.baseStrokes.map(item => _r.has(item.id) ? {
+          ...item,
           offset: {
-            x: (e.offset?.x || 0) + vr.x,
-            y: (e.offset?.y || 0) + vr.y
+            x: (item.offset?.x || 0) + vr.x,
+            y: (item.offset?.y || 0) + vr.y
           }
-        } : e), Z()), W.drawing = false, W.mode = null, W.baseStrokes = null, W.dragIds = null, W.originalSelection = null, gr = null, _r = null, vr = {
+        } : item), Z()), W.drawing = false, W.mode = null, W.baseStrokes = null, W.dragIds = null, W.originalSelection = null, gr = null, _r = null, vr = {
           x: 0,
           y: 0
         }, nr.value = false, rr.value = null, F.down = false, mode === `eraser` && (O.value.strokes = O.value.strokes.filter(oi)), [`pen`, `shape`, `eraser`].includes(mode) || [`move-selection`, `move-text`, `move-shape`].includes(mode) && W.historyRecorded, J();
@@ -1776,18 +1776,18 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
       }
       function yi() {
-        L.value.length && (X(), O.value.strokes = O.value.strokes.filter(e => !L.value.includes(e.id)), Z(), J());
+        L.value.length && (X(), O.value.strokes = O.value.strokes.filter(item => !L.value.includes(item.id)), Z(), J());
       }
       async function bi() {
         if (!on) return Y(T(`DesktopOpenRequired`));
-        let e = await on.openBoard();
-        if (e?.canceled || !e?.imageDataUrl) return;
+        let board = await on.openBoard();
+        if (board?.canceled || !board?.imageDataUrl) return;
         fn.clear();
-        let t = Nr(e.imageDataUrl);
+        let t = Nr(board.imageDataUrl);
         await t.decode();
         let n = hn(1);
-        n.name = String(e.fileName || T(`UntitledBoard`)).replace(/\.png$/i, ``), n.backgroundImage = {
-          dataUrl: e.imageDataUrl,
+        n.name = String(board.fileName || T(`UntitledBoard`)).replace(/\.png$/i, ``), n.backgroundImage = {
+          dataUrl: board.imageDataUrl,
           fitStage: false,
           x: 0,
           y: 0,
@@ -1796,11 +1796,11 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }, Hn.value = {
           pages: [n],
           pageIndex: 0
-        }, R.value = null, lr.value = e.filePath || null, ur.value = `board`, dr.value = true;
+        }, R.value = null, lr.value = board.filePath || null, ur.value = `board`, dr.value = true;
         let r = k.value?.clientWidth || t.naturalWidth,
           i = k.value?.clientHeight || t.naturalHeight,
           a = Math.max(.05, Math.min(1, (r - 48) / t.naturalWidth, (i - 48) / t.naturalHeight));
-        N.value = a, P.x = (r - t.naturalWidth * a) / 2, P.y = (i - t.naturalHeight * a) / 2, Object.keys(H).forEach(e => delete H[e]), Object.keys(U).forEach(e => delete U[e]), Z(), Wn = Un(), Ar(), J(), Y(T(`PngOpened`));
+        N.value = a, P.x = (r - t.naturalWidth * a) / 2, P.y = (i - t.naturalHeight * a) / 2, Object.keys(H).forEach(item => delete H[item]), Object.keys(U).forEach(item => delete U[item]), Z(), Wn = Un(), Ar(), J(), Y(T(`PngOpened`));
       }
       function xi() {
         let backgroundImage = O.value.backgroundImage,
@@ -1840,13 +1840,13 @@ var Fe = C(`circle-dashed`, [[`path`, {
           r.fillStyle = `rgba(110,142,122,.19)`;
           for (let t = e; t < n.width; t += 24) for (let e = i; e < n.height; e += 24) r.beginPath(), r.arc(t, e, 1, 0, Math.PI * 2), r.fill();
         }
-        return r.translate(-t.left, -t.top), Pr(r, O.value.backgroundImage, n.width, n.height), O.value.strokes.forEach(e => ai(r, e)), n.toDataURL(`image/png`);
+        return r.translate(-t.left, -t.top), Pr(r, O.value.backgroundImage, n.width, n.height), O.value.strokes.forEach(item => ai(r, item)), n.toDataURL(`image/png`);
       }
       function Ci(e) {
         if (dr.value && O.value.backgroundImage) return Si(e);
-        let t = A.value,
+        let value = A.value,
           n = document.createElement(`canvas`);
-        n.width = t.width, n.height = t.height;
+        n.width = value.width, n.height = value.height;
         let r = window.devicePixelRatio || 1,
           i = n.getContext(`2d`);
         if (i.fillStyle = e === `board` ? `#fcfdfc` : `#ffffff`, i.fillRect(0, 0, n.width, n.height), e === `board`) {
@@ -1856,7 +1856,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           i.fillStyle = `rgba(110,142,122,.19)`;
           for (let o = t; o < n.width; o += e) for (let t = a; t < n.height; t += e) i.beginPath(), i.arc(o, t, Math.max(1, r), 0, Math.PI * 2), i.fill();
         }
-        return i.setTransform(r, 0, 0, r, 0, 0), i.translate(P.x, P.y), i.scale(N.value, N.value), Pr(i, O.value.backgroundImage, t.width / r, t.height / r), O.value.strokes.forEach(e => ai(i, e)), n.toDataURL(`image/png`);
+        return i.setTransform(r, 0, 0, r, 0, 0), i.translate(P.x, P.y), i.scale(N.value, N.value), Pr(i, O.value.backgroundImage, value.width / r, value.height / r), O.value.strokes.forEach(item => ai(i, item)), n.toDataURL(`image/png`);
       }
       async function wi(e, t = `image`, n = null) {
         let r = _e(),
@@ -1892,7 +1892,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
         G = null, e(`cancelled`);
       }
       function Di() {
-        Xr(), Hn.value = gn(), R.value = null, Wn = Un(), lr.value = null, ur.value = `white`, dr.value = false, Object.keys(H).forEach(e => delete H[e]), Object.keys(U).forEach(e => delete U[e]), Z(), Ar(), J();
+        Xr(), Hn.value = gn(), R.value = null, Wn = Un(), lr.value = null, ur.value = `white`, dr.value = false, Object.keys(H).forEach(item => delete H[item]), Object.keys(U).forEach(item => delete U[item]), Z(), Ar(), J();
       }
       async function Oi() {
         if ($(), lr.value) {
@@ -1944,7 +1944,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           return;
         }
         if (event.key === `Delete` || event.key === `Backspace`) {
-          L.value.length ? (event.preventDefault(), yi()) : R.value && (event.preventDefault(), X(), O.value.strokes = O.value.strokes.filter(e => e.id !== R.value), R.value = null, J());
+          L.value.length ? (event.preventDefault(), yi()) : R.value && (event.preventDefault(), X(), O.value.strokes = O.value.strokes.filter(item => item.id !== R.value), R.value = null, J());
           return;
         }
         if (event.ctrlKey || event.metaKey || event.altKey) return;

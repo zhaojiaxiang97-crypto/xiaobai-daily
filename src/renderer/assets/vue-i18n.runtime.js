@@ -1322,12 +1322,12 @@ function Xn(e) {
 }
 function Zn(e) {
   let t = Wn + 1,
-    n = Un.length;
-  for (; t < n;) {
-    let r = t + n >>> 1,
+    length = Un.length;
+  for (; t < length;) {
+    let r = t + length >>> 1,
       i = Un[r],
       a = rr(i);
-    a < e || a === e && i.flags & 2 ? t = r + 1 : n = r;
+    a < e || a === e && i.flags & 2 ? t = r + 1 : length = r;
   }
   return t;
 }
@@ -1413,12 +1413,12 @@ function pr(e, t = L, n) {
   let r = (...n) => {
     r._d && ps(-1);
     let i = lr(t),
-      a = cs.length,
+      length = cs.length,
       flag;
     try {
       flag = e(...n);
     } finally {
-      for (let e = cs.length; e > a; e--) ds();
+      for (let e = cs.length; e > length; e--) ds();
       lr(i), r._d && ps(1);
     }
     return flag;
@@ -2108,13 +2108,13 @@ function _i(e) {
             r = r.nextSibling, c(e);
           }
         } else if (p & 8) {
-          let n = t.children;
-          n[0] === `
-` && (e.tagName === `PRE` || e.tagName === `TEXTAREA`) && (n = n.slice(1));
+          let children = t.children;
+          children[0] === `
+` && (e.tagName === `PRE` || e.tagName === `TEXTAREA`) && (children = children.slice(1));
           let {
             textContent: r
           } = e;
-          r !== n && r !== n.replace(/\r\n|\r/g, `
+          r !== children && r !== children.replace(/\r\n|\r/g, `
 `) && (Si(e, 0) || fi(), e.textContent = t.children);
         }
         if (d) {
@@ -2136,13 +2136,13 @@ function _i(e) {
     },
     m = (e, t, r, a, s, c, u) => {
       u ||= !!t.dynamicChildren;
-      let d = t.children,
-        p = d.length,
+      let children = t.children,
+        length = children.length,
         m = false;
-      for (let t = 0; t < p; t++) {
-        let h = u ? d[t] : d[t] = ks(d[t]),
+      for (let t = 0; t < length; t++) {
+        let h = u ? children[t] : children[t] = ks(children[t]),
           g = h.type === os;
-        e ? (g && !u && t + 1 < p && ks(d[t + 1]).type === os && (l(i(e.data.slice(h.children.length)), r, o(e)), e.data = h.children), e = f(e, h, a, s, c, u)) : g && !h.children ? l(h.el = i(``), r) : (m || (m = true, Si(r, 1) || fi()), n(null, h, r, null, a, s, hi(r), c));
+        e ? (g && !u && t + 1 < length && ks(children[t + 1]).type === os && (l(i(e.data.slice(h.children.length)), r, o(e)), e.data = h.children), e = f(e, h, a, s, c, u)) : g && !h.children ? l(h.el = i(``), r) : (m || (m = true, Si(r, 1) || fi()), n(null, h, r, null, a, s, hi(r), c));
       }
       return e;
     },
@@ -2491,15 +2491,15 @@ var Ri = e => e.type.__isKeepAlive,
         if (!_s(r) || !(r.shapeFlag & 4) && !(r.shapeFlag & 128)) return flag = null, r;
         let s = Ki(r);
         if (s.type === B) return flag = null, s;
-        let c = s.type,
-          l = tc(Fi(s) ? s.type.__asyncResolved || {} : c),
+        let type = s.type,
+          l = tc(Fi(s) ? s.type.__asyncResolved || {} : type),
           {
             include: u,
             exclude: d,
             max: f
           } = event;
         if (u && (!l || !Bi(u, l)) || d && l && Bi(d, l)) return s.shapeFlag &= -257, flag = s, r;
-        let p = s.key == null ? c : s.key,
+        let p = s.key == null ? type : s.key,
           m = i.get(p);
         return s.el && (s = Ts(s), r.shapeFlag & 128 && (r.ssContent = s)), onVnodeBeforeUpdate = p, m ? (s.el = m.el, s.component = m.component, s.transition && ti(s, s.transition), s.shapeFlag |= 512, a.delete(p), a.add(p)) : (a.add(p), f && a.size > parseInt(f, 10) && h(a.values().next().value)), s.shapeFlag |= 256, flag = s, qo(r.type) ? r : s;
       };
@@ -2582,13 +2582,13 @@ function ua(e) {
 function da(e, t, n = true, r = false) {
   let fallbackValue = L || H;
   if (fallbackValue) {
-    let n = fallbackValue.type;
+    let type = fallbackValue.type;
     if (e === aa) {
-      let e = tc(n, false);
-      if (e && (e === t || e === k(t) || e === ne(k(t)))) return n;
+      let e = tc(type, false);
+      if (e && (e === t || e === k(t) || e === ne(k(t)))) return type;
     }
-    let a = fa(fallbackValue[e] || n[e], t) || fa(fallbackValue.appContext[e], t);
-    return !a && r ? n : a;
+    let a = fa(fallbackValue[e] || type[e], t) || fa(fallbackValue.appContext[e], t);
+    return !a && r ? type : a;
   }
 }
 function fa(e, t) {
@@ -2603,7 +2603,7 @@ function pa(count, t, n, r) {
       r = false,
       s = false;
     n && (r = !en(count), s = $t(count), count = pt(count)), set = Array(count.length);
-    for (let n = 0, o = count.length; n < o; n++) set[n] = t(r ? s ? an(rn(count[n])) : rn(count[n]) : count[n], n, undefined, a && a[n]);
+    for (let n = 0, length = count.length; n < length; n++) set[n] = t(r ? s ? an(rn(count[n])) : rn(count[n]) : count[n], n, undefined, a && a[n]);
   } else if (typeof count == `number`) {
     set = Array(count);
     for (let n = 0; n < count; n++) set[n] = t(n + 1, n, undefined, a && a[n]);
@@ -2611,7 +2611,7 @@ function pa(count, t, n, r) {
     if (count[Symbol.iterator]) set = Array.from(count, (e, n) => t(e, n, undefined, a && a[n]));else {
       let keyList = Object.keys(count);
       set = Array(keyList.length);
-      for (let r = 0, o = keyList.length; r < o; r++) {
+      for (let r = 0, length = keyList.length; r < length; r++) {
         let o = keyList[r];
         set[r] = t(count[o], o, r, a && a[r]);
       }
@@ -2639,7 +2639,7 @@ function ha(e, t, event, r, i, a) {
   }
   let o = e[t];
   o && o._c && (o._d = false);
-  let c = cs.length;
+  let length = cs.length;
   us();
   let l;
   try {
@@ -2649,7 +2649,7 @@ function ha(e, t, event, r, i, a) {
       key: (fallbackValue && !v(fallbackValue) ? fallbackValue : `_${t}`) + (!i && r ? `_fb` : ``)
     }, i || (r ? r() : []), i && e._ === 1 ? 64 : -2);
   } catch (e) {
-    for (let e = cs.length; e > c; e--) ds();
+    for (let e = cs.length; e > length; e--) ds();
     throw e;
   } finally {
     o && o._c && (o._d = true);
@@ -2936,11 +2936,11 @@ function Ha(items, t, n, r) {
   }
 }
 function Ua(e) {
-  let t = e.type,
+  let type = e.type,
     {
       mixins: n,
       extends: r
-    } = t,
+    } = type,
     {
       mixins: i,
       optionsCache: a,
@@ -2948,9 +2948,9 @@ function Ua(e) {
         optionMergeStrategies: o
       }
     } = e.appContext,
-    s = a.get(t),
+    s = a.get(type),
     payload;
-  return s ? payload = s : !i.length && !n && !r ? payload = t : (payload = {}, i.length && i.forEach(item => Wa(payload, item, o, true)), Wa(payload, t, o)), y(t) && a.set(t, payload), payload;
+  return s ? payload = s : !i.length && !n && !r ? payload = type : (payload = {}, i.length && i.forEach(item => Wa(payload, item, o, true)), Wa(payload, type, o)), y(type) && a.set(type, payload), payload;
 }
 function Wa(e, t, n, r = false) {
   let {
@@ -3414,18 +3414,18 @@ function Eo(e, r, i = false) {
         r = l[t] = isArray(n) || g(n) ? {
           type: n
         } : assign({}, n),
-        i = r.type,
+        type = r.type,
         a = false,
         o = true;
-      if (isArray(i)) for (let e = 0; e < i.length; ++e) {
-        let t = i[e],
+      if (isArray(type)) for (let e = 0; e < type.length; ++e) {
+        let t = type[e],
           n = g(t) && t.name;
         if (n === `Boolean`) {
           a = true;
           break;
         }
         n === `String` && (o = false);
-      } else a = g(i) && i.name === `Boolean`;
+      } else a = g(type) && type.name === `Boolean`;
       r[0] = a, r[1] = o, (a || u(r, `default`)) && f.push(t);
     }
   }
@@ -3759,40 +3759,40 @@ function Ro(event, i) {
     se = (e, t, n, r, i, a, o, s, c = false) => {
       let l = e && e.children,
         u = e ? e.shapeFlag : 0,
-        d = t.children,
+        children = t.children,
         {
           patchFlag: f,
           shapeFlag: m
         } = t;
       if (f > 0) {
         if (f & 128) {
-          ue(l, d, n, r, i, a, o, s, c);
+          ue(l, children, n, r, i, a, o, s, c);
           return;
         }
         if (f & 256) {
-          le(l, d, n, r, i, a, o, s, c);
+          le(l, children, n, r, i, a, o, s, c);
           return;
         }
       }
-      m & 8 ? (u & 16 && ge(l, i, a), d !== l && p(n, d)) : u & 16 ? m & 16 ? ue(l, d, n, r, i, a, o, s, c) : ge(l, i, a, true) : (u & 8 && p(n, ``), m & 16 && O(d, n, r, i, a, o, s, c));
+      m & 8 ? (u & 16 && ge(l, i, a), children !== l && p(n, children)) : u & 16 ? m & 16 ? ue(l, children, n, r, i, a, o, s, c) : ge(l, i, a, true) : (u & 8 && p(n, ``), m & 16 && O(children, n, r, i, a, o, s, c));
     },
     le = (e, t, r, i, a, o, s, c, l) => {
       e ||= emptyItems, t ||= emptyItems;
-      let u = e.length,
+      let length = e.length,
         d = t.length,
-        f = Math.min(u, d),
+        f = Math.min(length, d),
         p = 0;
       for (; p < f; p++) {
         let n = t[p] = l ? As(t[p]) : ks(t[p]);
         v(e[p], n, r, null, a, o, s, c, l);
       }
-      u > d ? ge(e, a, o, true, false, f) : O(t, r, i, a, o, s, c, l, f);
+      length > d ? ge(e, a, o, true, false, f) : O(t, r, i, a, o, s, c, l, f);
     },
     ue = (e, t, r, i, a, o, s, c, l) => {
       let u = 0,
-        d = t.length,
+        length = t.length,
         f = e.length - 1,
-        p = d - 1;
+        p = length - 1;
       for (; u <= f && u <= p;) {
         let n = e[u],
           i = t[u] = l ? As(t[u]) : ks(t[u]);
@@ -3808,7 +3808,7 @@ function Ro(event, i) {
       if (u > f) {
         if (u <= p) {
           let e = p + 1,
-            n = e < d ? t[e].el : i;
+            n = e < length ? t[e].el : i;
           for (; u <= p;) v(null, t[u] = l ? As(t[u]) : ks(t[u]), r, n, a, o, s, c, l), u++;
         }
       } else if (u > p) for (; u <= f;) fe(e[u], a, o, true), u++;else {
@@ -3844,7 +3844,7 @@ function Ro(event, i) {
           let e = h + u,
             n = t[e],
             f = t[e + 1],
-            p = e + 1 < d ? f.el || Ko(f) : i;
+            p = e + 1 < length ? f.el || Ko(f) : i;
           C[u] === 0 ? v(null, n, r, p, a, o, s, c, l) : x && (diff < 0 || u !== w[diff] ? de(n, r, p, 2) : diff--);
         }
       }
@@ -4028,10 +4028,10 @@ function Vo(e, t) {
   return (!e || e && !e.pendingBranch) && t && !t.persisted;
 }
 function Ho(e, t, n = false) {
-  let r = e.children,
+  let children = e.children,
     i = t.children;
-  if (isArray(r) && isArray(i)) for (let e = 0; e < r.length; e++) {
-    let t = r[e],
+  if (isArray(children) && isArray(i)) for (let e = 0; e < children.length; e++) {
+    let t = children[e],
       a = i[e];
     a.shapeFlag & 1 && !a.dynamicChildren && ((a.patchFlag <= 0 || a.patchFlag === 32) && (a = i[e] = As(i[e]), a.el = t.el), !n && a.patchFlag !== -2 && Ho(t, a)), a.type === os && (a.patchFlag === -1 && (a = i[e] = As(a)), a.el = t.el), a.type === B && !a.el && (a.el = t.el);
   }
@@ -4044,8 +4044,8 @@ function Uo(items) {
     payload,
     flag,
     s,
-    c = items.length;
-  for (get = 0; get < c; get++) {
+    length = items.length;
+  for (get = 0; get < length; get++) {
     let c = items[get];
     if (c !== 0) {
       if (set = n[n.length - 1], items[set] < c) {
@@ -4489,12 +4489,12 @@ function Ns(e, t, n, r = null) {
 var Ps = $a(),
   Fs = 0;
 function Is(e, n, r) {
-  let i = e.type,
+  let type = e.type,
     fallbackValue = (n ? n.appContext : e.appContext) || Ps,
     o = {
       uid: Fs++,
       vnode: e,
-      type: i,
+      type: type,
       parent: n,
       appContext: fallbackValue,
       root: null,
@@ -4515,12 +4515,12 @@ function Is(e, n, r) {
       renderCache: [],
       components: null,
       directives: null,
-      propsOptions: Eo(i, fallbackValue),
-      emitsOptions: so(i, fallbackValue),
+      propsOptions: Eo(type, fallbackValue),
+      emitsOptions: so(type, fallbackValue),
       emit: null,
       emitted: null,
       propsDefaults: t,
-      inheritAttrs: i.inheritAttrs,
+      inheritAttrs: type.inheritAttrs,
       ctx: t,
       data: t,
       props: t,
@@ -4594,11 +4594,11 @@ function Ws(e, t = false, n = false) {
   return t && zs(false), o;
 }
 function Gs(e, t) {
-  let n = e.type;
+  let type = e.type;
   e.accessCache = Object.create(null), e.proxy = new Proxy(e.ctx, xa);
   let {
     setup: r
-  } = n;
+  } = type;
   if (r) {
     Qe();
     let n = e.setupContext = r.length > 1 ? $s(e) : null,
@@ -4631,10 +4631,10 @@ function Ys(e) {
 }
 var Xs = () => !qs;
 function Zs(e, t, n) {
-  let i = e.type;
+  let type = e.type;
   if (!e.render) {
-    if (!t && qs && !i.render) {
-      let fallbackValue = i.template || Ua(e).template;
+    if (!t && qs && !type.render) {
+      let fallbackValue = type.template || Ua(e).template;
       if (fallbackValue) {
         let {
             isCustomElement: n,
@@ -4643,15 +4643,15 @@ function Zs(e, t, n) {
           {
             delimiters: a,
             compilerOptions: o
-          } = i,
+          } = type,
           c = assign(assign({
             isCustomElement: n,
             delimiters: a
           }, r), o);
-        i.render = qs(fallbackValue, c);
+        type.render = qs(fallbackValue, c);
       }
     }
-    e.render = i.render || handler, Js && Js(e);
+    e.render = type.render || handler, Js && Js(e);
   }
   {
     let t = Bs(e);
@@ -4699,8 +4699,8 @@ var rc = (e, t) => Cn(e, t, Us);
 function ic(e, t, n) {
   try {
     ps(-1);
-    let r = arguments.length;
-    return r === 2 ? y(t) && !isArray(t) ? _s(t) ? V(e, null, [t]) : V(e, t) : V(e, null, t) : (r > 3 ? n = Array.prototype.slice.call(arguments, 2) : r === 3 && _s(n) && (n = [n]), V(e, t, n));
+    let length = arguments.length;
+    return length === 2 ? y(t) && !isArray(t) ? _s(t) ? V(e, null, [t]) : V(e, t) : V(e, null, t) : (length > 3 ? n = Array.prototype.slice.call(arguments, 2) : length === 3 && _s(n) && (n = [n]), V(e, t, n));
   } finally {
     ps(1);
   }
@@ -4803,7 +4803,7 @@ function Gc(items) {
     r = 0,
     set;
   for (; (set = t.exec(items)) !== null;) {
-    let a = set.index,
+    let index = set.index,
       o = t.lastIndex - 1,
       s = o + 1,
       c = 1,
@@ -4819,7 +4819,7 @@ function Gc(items) {
     if (c !== 0) break;
     let trimmed = items.slice(o + 1, s).trim(),
       d = trimmed.startsWith(`"`) && trimmed.endsWith(`"`) || trimmed.startsWith(`'`) && trimmed.endsWith(`'`) ? trimmed.slice(1, -1).trim() : trimmed;
-    n += items.slice(r, a), n += Wc(d) ? `url(about:blank)` : items.slice(a, s + 1), r = s + 1;
+    n += items.slice(r, index), n += Wc(d) ? `url(about:blank)` : items.slice(index, s + 1), r = s + 1;
   }
   return n + items.slice(r);
 }
@@ -5686,8 +5686,8 @@ function El(items, t) {
     needIndent: r
   } = items;
   items.push(`${n(`normalize`)}([`), items.indent(r());
-  let i = t.items.length;
-  for (let n = 0; n < i && (kl(items, t.items[n]), n !== i - 1); n++) items.push(`, `);
+  let length = t.items.length;
+  for (let n = 0; n < length && (kl(items, t.items[n]), n !== length - 1); n++) items.push(`, `);
   items.deindent(r()), items.push(`])`);
 }
 function Dl(items, t) {
@@ -5697,8 +5697,8 @@ function Dl(items, t) {
   } = items;
   if (t.cases.length > 1) {
     items.push(`${n(`plural`)}([`), items.indent(r());
-    let i = t.cases.length;
-    for (let n = 0; n < i && (kl(items, t.cases[n]), n !== i - 1); n++) items.push(`, `);
+    let length = t.cases.length;
+    for (let n = 0; n < length && (kl(items, t.cases[n]), n !== length - 1); n++) items.push(`, `);
     items.deindent(r()), items.push(`])`);
   }
 }
@@ -6120,10 +6120,10 @@ function ju(e, t) {
   if (!X(e)) return null;
   let n = ku.get(t);
   if (n || (n = Ou(t), n && ku.set(t, n)), !n) return null;
-  let r = n.length,
+  let length = n.length,
     i = e,
     a = 0;
-  for (; a < r;) {
+  for (; a < length;) {
     let e = n[a];
     if (Zl.includes(e) && Nl(i) || !X(i) || !Tc(i, e)) return null;
     let t = i[e];

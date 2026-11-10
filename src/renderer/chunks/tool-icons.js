@@ -4966,10 +4966,10 @@ var v = {
     id: `codex`,
     label: `Codex`
   }],
-  b = y.map(e => e.id),
+  b = y.map(item => item.id),
   x = 1440;
 function S(e) {
-  return y.find(t => t.id === e)?.label ?? e;
+  return y.find(item => item.id === e)?.label ?? e;
 }
 var C = [1, 3, 7, 30],
   w = [10, 15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600, 5400, 7200],
@@ -5192,7 +5192,7 @@ var ke = {
       "en-US": we
     }
   },
-  j = Object.fromEntries(Object.keys(c).map(e => [e, c[e]])),
+  j = Object.fromEntries(Object.keys(c).map(item => [item, c[item]])),
   M = `work`;
 function N(e) {
   return !!e && typeof e == `object` && !Array.isArray(e);
@@ -5277,19 +5277,19 @@ function Pe() {
         ...A,
         ...e
       }, H(U.value.themeMode), L(U.value.usageMode);
-    })), W.value = true, q.value = null, Y = v.get().then(e => {
+    })), W.value = true, q.value = null, Y = v.get().then(result => {
       U.value = {
         ...A,
-        ...e
+        ...result
       }, H(U.value.themeMode), L(U.value.usageMode), U.value.language && U.value.language !== l.global.locale.value && s(U.value.language), K.value = true;
-    }).catch(t => {
-      q.value = Z(t, e(`composables.settings.loadFailed`));
+    }).catch(err => {
+      q.value = Z(err, e(`composables.settings.loadFailed`));
     }).finally(() => {
       K.value = true, W.value = false, Y = null;
     }), Y);
   }
   async function n(t, n = {}) {
-    let r = U.value;
+    let value = U.value;
     U.value = {
       ...U.value,
       ...t
@@ -5302,7 +5302,7 @@ function Pe() {
         ...t
       }, n.silent || (J.value = Date.now()), true;
     } catch (n) {
-      return U.value = r, t.themeMode !== undefined && H(r.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), false;
+      return U.value = value, t.themeMode !== undefined && H(value.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), false;
     } finally {
       G.value = false;
     }

@@ -74,9 +74,9 @@ function ge(e) {
       if (e.maximumDays?.value) {
         if (e.start.value && e.end.value) {
           if (e.fixedDate.value) {
-            let n = H(e.start.value, e.end.value).length;
-            if (n <= e.maximumDays.value) {
-              let r = e.maximumDays.value - n - 1,
+            let length = H(e.start.value, e.end.value).length;
+            if (length <= e.maximumDays.value) {
+              let r = e.maximumDays.value - length - 1,
                 i = e.start.value.subtract({
                   days: r
                 }),
@@ -111,18 +111,18 @@ function ge(e) {
         end: r
       };
       if (e.maximumDays?.value && !e.end.value) {
-        let t = e.maximumDays.value,
+        let value = e.maximumDays.value,
           n = e.start.value,
           r = e.focusedValue.value;
         return B(r, n) ? {
           start: n.subtract({
-            days: t - 1
+            days: value - 1
           }),
           end: n
         } : {
           start: n,
           end: n.add({
-            days: t - 1
+            days: value - 1
           })
         };
       }
@@ -449,8 +449,8 @@ var _e = {
       }), y(Y, e => {
         e && !z(e, Z.value) && he(e), s(`update:startValue`, e);
       }), y([Y, X], ([e, t]) => {
-        let n = G.value;
-        if (!(n && n.start && n.end && e && t && z(n.start, e) && z(n.end, t))) {
+        let value = G.value;
+        if (!(value && value.start && value.end && e && t && z(value.start, e) && z(value.end, t))) {
           if (W.value = true, t && e) {
             let n = B(t, e) ? {
               start: t.copy(),
@@ -664,7 +664,7 @@ var _e = {
       function P(event) {
         if (E.value || (event.code === a.ENTER || event.code === a.SPACE_CODE) && (event.ctrlKey || event.metaKey || event.altKey)) return;
         event.preventDefault(), event.stopPropagation();
-        let t = r.parentElement.value,
+        let value = r.parentElement.value,
           i = r.dir.value === `rtl` ? -1 : 1;
         switch (event.code) {
           case a.ARROW_RIGHT:
@@ -688,7 +688,7 @@ var _e = {
             days: n
           });
           if (r.minValue.value && i.compare(r.minValue.value) < 0 || r.maxValue.value && i.compare(r.maxValue.value) > 0) return;
-          let a = t.querySelector(`[data-value='${i.toString()}']:not([data-outside-view])`);
+          let a = value.querySelector(`[data-value='${i.toString()}']:not([data-outside-view])`);
           if (!a) {
             if (n > 0) {
               if (r.isNextButtonDisabled()) return;
@@ -1429,8 +1429,8 @@ function Ye(e, t = new Date()) {
   };
 }
 function Xe(e, t) {
-  return qe.find(n => {
-    let r = Ye(n);
+  return qe.find(item => {
+    let r = Ye(item);
     return r.start === e && r.end === t;
   }) ?? null;
 }
@@ -1470,8 +1470,8 @@ var Ze = [`aria-label`, `title`],
         o = S(false),
         s = S(null);
       function c(e) {
-        let t = e.detail.originalEvent.target;
-        t instanceof Node && s.value?.contains(t) && e.preventDefault();
+        let target = e.detail.originalEvent.target;
+        target instanceof Node && s.value?.contains(target) && e.preventDefault();
       }
       function l(e) {
         e.preventDefault();

@@ -270,11 +270,11 @@ var Ke = {
           }))
         }]),
         v = x(() => {
-          let e = u.value,
-            t = q(e.resolution),
-            n = Ue(stateAlias.timelineDurationMs, e) / 1024 / 1024;
+          let value = u.value,
+            t = q(value.resolution),
+            n = Ue(stateAlias.timelineDurationMs, value) / 1024 / 1024;
           return c(`dayReplay.exportEstimate`, {
-            seconds: Math.ceil(He(stateAlias.timelineDurationMs, e.speed) / 1e3),
+            seconds: Math.ceil(He(stateAlias.timelineDurationMs, value.speed) / 1e3),
             width: t.width,
             height: t.height,
             size: n < 10 ? n.toFixed(1) : Math.round(n)
@@ -329,17 +329,17 @@ var Ke = {
         s = 0;
       function c() {
         s = 0;
-        let e = r.value,
+        let value = r.value,
           i = n.value;
-        if (!e || !i) return;
+        if (!value || !i) return;
         let clientWidth = i.clientWidth,
           clientHeight = i.clientHeight;
         if (!clientWidth || !clientHeight) return;
         let c = Math.min(window.devicePixelRatio || 1, 2),
           l = Math.round(clientWidth * c),
           u = Math.round(clientHeight * c);
-        (e.width !== l || e.height !== u) && (e.width = l, e.height = u);
-        let context = e.getContext(`2d`);
+        (value.width !== l || value.height !== u) && (value.width = l, value.height = u);
+        let context = value.getContext(`2d`);
         if (!context) return;
         context.clearRect(0, 0, l, u);
         let bitmap = t.bitmap;
@@ -535,14 +535,14 @@ var Et = class {
         i = Math.max(1, Math.ceil(r / mt));
       this.hourMarks = [];
       for (let e = Math.ceil(constructorValue.startBucket / pt); e * pt <= constructorValue.endBucket; e += i) this.hourMarks.push(e);
-      let a = this.blocks.length,
-        float32Array = new Float32Array(a * 2),
-        s = new Float32Array(a),
+      let length = this.blocks.length,
+        float32Array = new Float32Array(length * 2),
+        s = new Float32Array(length),
         c = new De(),
         l = new N(),
         u = new Te(),
         d = new N();
-      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(float32Array, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new L(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
+      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(float32Array, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, length), this.buildings.instanceColor = new L(new Float32Array(length * 3), 3), this.buildings.frustumCulled = false;
       let f = 6;
       this.blocks.forEach((item, t) => {
         float32Array[t * 2] = item.start, float32Array[t * 2 + 1] = item.end, s[t] = +!Me(item), Me(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), l.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
@@ -683,11 +683,11 @@ var Et = class {
         el && (el.style.visibility = t.visible ? `visible` : `hidden`, el.style.transform = `translate(${t.x}px, ${t.y}px) translate(-50%, -50%)`);
       }
       function oe() {
-        let e = f.value,
+        let value = f.value,
           t = S;
-        if (!t || !C || !e || s.compact) return;
-        let clientWidth = e.clientWidth,
-          clientHeight = e.clientHeight,
+        if (!t || !C || !value || s.compact) return;
+        let clientWidth = value.clientWidth,
+          clientHeight = value.clientHeight,
           i = C;
         _.value.forEach((item, a) => {
           ne.set(i.minuteToX(item * 60), 0, 10), ae(emptyItems[a] ?? null, t.project(ne, clientWidth, clientHeight));
@@ -699,8 +699,8 @@ var Et = class {
         });
       }
       function se() {
-        let e = f.value;
-        S && e && S.resize(e.clientWidth, e.clientHeight) && (O ? s.following && !s.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
+        let value = f.value;
+        S && value && S.resize(value.clientWidth, value.clientHeight) && (O ? s.following && !s.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
       }
       function ce(event) {
         g.value = true, payload = {
@@ -735,10 +735,10 @@ var Et = class {
       }), o(() => s.currentLabel, () => S?.requestRender()), o(() => s.compact, () => S?.requestRender()), o(() => s.playing, e => {
         e || S?.requestRender();
       }), b(() => {
-        let e = m.value,
+        let value = m.value,
           t = f.value;
-        if (e && t) {
-          if (S = R.create(e, 30, {
+        if (value && t) {
+          if (S = R.create(value, 30, {
             onFrame: ie,
             onRendered: oe
           }), !S) {
@@ -1222,9 +1222,9 @@ function Dn() {
   }
   function p() {
     for (; a.size > wn;) {
-      let e = a.keys().next().value;
-      if (e === undefined) break;
-      a.get(e)?.close(), a.delete(e);
+      let value = a.keys().next().value;
+      if (value === undefined) break;
+      a.get(value)?.close(), a.delete(value);
     }
   }
   function m(e) {
@@ -1445,14 +1445,14 @@ function $n(e, state, n) {
       fontFamily: i,
       texts: a
     } = n,
-    o = a.topItems.length,
-    s = (o > 0 ? 210 : 176) + o * 26,
+    length = a.topItems.length,
+    s = (length > 0 ? 210 : 176) + length * 26,
     c = 56 + Math.max(12, (464 - s) / 2);
   if (e.save(), e.globalAlpha = state * .78, e.fillStyle = r.surface, e.fillRect(0, 56, Q, 464), e.globalAlpha = state, e.fillStyle = r.dark ? `#1b1f23` : `#ffffff`, e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath(), e.roundRect(380, c, 520, s, 12), e.fill(), e.stroke(), e.textBaseline = `alphabetic`, e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 16px ${i}`, e.fillText(a.summaryTitle, 408, c + 40), e.textAlign = `right`, e.fillStyle = r.textMuted, e.font = `13px ${i}`, e.fillText(a.dateLabel, 872, c + 40), a.summaryItems.slice(0, 4).forEach((item, n) => {
     let a = 408 + n % 2 * 232,
       o = c + 82 + Math.floor(n / 2) * 52;
     e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 20px ${i}`, e.fillText(item.value, a, o), e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(item.detail ? `${item.label} · ${item.detail}` : item.label, a, o + 20);
-  }), o > 0) {
+  }), length > 0) {
     let t = c + 196;
     e.fillStyle = r.grid, e.fillRect(408, t - 22, 464, 1), e.textAlign = `left`, e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(a.topLabel, 408, t - 4), a.topItems.forEach((item, a) => {
       let o = t + 18 + a * 26;
@@ -1496,8 +1496,8 @@ var ir = class {
       this.frames = constructor, this.width = constructorValue;
     }
     async load(e, t) {
-      let n = this.frames.length;
-      for (let r = 0; r < n; r += tr) {
+      let length = this.frames.length;
+      for (let r = 0; r < length; r += tr) {
         if (e.aborted) throw rr();
         let part = this.frames.slice(r, r + tr),
           payload;
@@ -1511,7 +1511,7 @@ var ir = class {
           this.blobs.push(item ? new Blob([item], {
             type: `image/jpeg`
           }) : null);
-        }), t(Math.min(1, (r + part.length) / n));
+        }), t(Math.min(1, (r + part.length) / length));
       }
     }
     decode(decode) {
@@ -2129,9 +2129,9 @@ var Sr = [`aria-label`],
         });
       }
       async function _t(e) {
-        let t = z.value,
+        let value = z.value,
           n = K.value;
-        if (!t || !n || F.value) return;
+        if (!value || !n || F.value) return;
         W.pause();
         let abortController = new AbortController();
         Oe = abortController, F.value = true, Ee.value = 0, De.value = `encoding`, I.value = e, j(`feature_map_heat_click`, {
@@ -2144,14 +2144,14 @@ var Sr = [`aria-label`],
             let imageAsBase64 = await window.electronAPI.fetchImageAsBase64(we.value.avatarUrl);
             imageAsBase64.success && imageAsBase64.dataUrl && (diff = imageAsBase64.dataUrl);
           }
-          let a = vn(t),
+          let a = vn(value),
             replaced = new Date().toLocaleDateString(undefined, {
               year: `numeric`,
               month: `2-digit`,
               day: `2-digit`
             }).replace(/\//g, `.`),
             s = await xr({
-              timeline: t,
+              timeline: value,
               options: e,
               colors: q.value,
               theme: be.value,

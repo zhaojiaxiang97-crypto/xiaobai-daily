@@ -398,8 +398,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
     let validators = n.validators;
     if (validators === null) return;
     let o = t === 0 ? items.join(Yn) : items.slice(t).join(Yn),
-      s = validators.length;
-    for (let e = 0; e < s; e++) {
+      length = validators.length;
+    for (let e = 0; e < length; e++) {
       let t = validators[e];
       if (t.validator(o)) return t.classGroupId;
     }
@@ -426,8 +426,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
     return n;
   },
   rr = (count, t, n, r) => {
-    let i = count.length;
-    for (let a = 0; a < i; a++) {
+    let length = count.length;
+    for (let a = 0; a < length; a++) {
       let i = count[a];
       ir(i, t, n, r);
     }
@@ -456,8 +456,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
   },
   sr = (e, t, n, r) => {
     let entryList = Object.entries(e),
-      a = entryList.length;
-    for (let e = 0; e < a; e++) {
+      length = entryList.length;
+    for (let e = 0; e < length; e++) {
       let [a, o] = entryList[e];
       rr(o, cr(t, a), n, r);
     }
@@ -465,8 +465,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
   cr = (e, text) => {
     let n = e,
       parts = text.split(Yn),
-      i = parts.length;
-    for (let e = 0; e < i; e++) {
+      length = parts.length;
+    for (let e = 0; e < length; e++) {
       let t = parts[e],
         i = n.nextPart.get(t);
       i || (i = Jn(), n.nextPart.set(t, i)), n = i;
@@ -517,8 +517,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
           r = 0,
           i = 0,
           proxy,
-          o = e.length;
-        for (let s = 0; s < o; s++) {
+          length = e.length;
+        for (let s = 0; s < length; s++) {
           let o = e[s];
           if (n === 0 && r === 0) {
             if (o === fr) {
@@ -1993,15 +1993,15 @@ function K() {
   return activeElement;
 }
 function yi(e, t, n) {
-  let r = n.originalEvent.target,
+  let target = n.originalEvent.target,
     customEvent = new CustomEvent(e, {
       bubbles: false,
       cancelable: true,
       detail: n
     });
-  t && r.addEventListener(e, t, {
+  t && target.addEventListener(e, t, {
     once: true
-  }), r.dispatchEvent(customEvent);
+  }), target.dispatchEvent(customEvent);
 }
 function bi(e) {
   return e == null;
@@ -3169,8 +3169,8 @@ function Ja(e) {
 }
 function Ya(e) {
   let fallbackValue = e || window.event,
-    n = fallbackValue.target;
-  return n instanceof Element && Ja(n) ? false : fallbackValue.touches.length > 1 || (fallbackValue.preventDefault && fallbackValue.cancelable && fallbackValue.preventDefault(), false);
+    target = fallbackValue.target;
+  return target instanceof Element && Ja(target) ? false : fallbackValue.touches.length > 1 || (fallbackValue.preventDefault && fallbackValue.cancelable && fallbackValue.preventDefault(), false);
 }
 function Xa(e) {
   let t = V(),
@@ -3424,9 +3424,9 @@ function yo(event, t) {
   P(event, async (e, i) => {
     let a = i !== e;
     if (await z(), a) {
-      let a = r.value,
+      let value = r.value,
         o = bo(t.value);
-      e ? (l(`MOUNT`), u(`enter`), o === `none` && u(`after-enter`)) : o === `none` || o === `undefined` || n.value?.display === `none` ? (l(`UNMOUNT`), u(`leave`), u(`after-leave`)) : i && a !== o ? (l(`ANIMATION_OUT`), u(`leave`)) : (l(`UNMOUNT`), u(`after-leave`));
+      e ? (l(`MOUNT`), u(`enter`), o === `none` && u(`after-enter`)) : o === `none` || o === `undefined` || n.value?.display === `none` ? (l(`UNMOUNT`), u(`leave`), u(`after-leave`)) : i && value !== o ? (l(`ANIMATION_OUT`), u(`leave`)) : (l(`UNMOUNT`), u(`after-leave`));
     }
   }, {
     immediate: true
@@ -3585,9 +3585,9 @@ function ko(e, t, n = true) {
   return b(o => {
     if (!J || !A(n)) return;
     let s = async event => {
-        let o = event.target;
-        if (t?.value && o) {
-          if (Oo(t.value, o)) {
+        let target = event.target;
+        if (t?.value && target) {
+          if (Oo(t.value, target)) {
             i.value = false;
             return;
           }
@@ -3625,8 +3625,8 @@ function Ao(e, t, n = true) {
     let o = async event => {
       if (!t?.value) return;
       await z(), await z();
-      let r = event.target;
-      t.value && r && !Oo(t.value, r) && event.target && !i.value && yi(Do, e, {
+      let target = event.target;
+      t.value && target && !Oo(t.value, target) && event.target && !i.value && yi(Do, e, {
         originalEvent: event
       });
     };
@@ -3851,19 +3851,19 @@ var Go = R({
         });
       b(e => {
         if (!J) return;
-        let t = o.value;
+        let value = o.value;
         if (!eventAlias.trapped) return;
         function r(e) {
-          if (l.paused || !t) return;
-          let n = e.target;
-          t.contains(n) ? s.value = n : Wo(s.value, {
+          if (l.paused || !value) return;
+          let target = e.target;
+          value.contains(target) ? s.value = target : Wo(s.value, {
             select: true
           });
         }
         function i(e) {
-          if (l.paused || !t) return;
+          if (l.paused || !value) return;
           let relatedTarget = e.relatedTarget;
-          relatedTarget !== null && (t.contains(relatedTarget) || Wo(s.value, {
+          relatedTarget !== null && (value.contains(relatedTarget) || Wo(s.value, {
             select: true
           }));
         }
@@ -3871,11 +3871,11 @@ var Go = R({
           let n = s.value;
           if (n === null || !items.some(item => item.removedNodes.length > 0)) return;
           let r = K();
-          r && t.contains(r) || t.contains(n) || Wo(t);
+          r && value.contains(r) || value.contains(n) || Wo(value);
         }
         document.addEventListener(`focusin`, r), document.addEventListener(`focusout`, i);
         let mutationObserver = new MutationObserver(a);
-        t && mutationObserver.observe(t, {
+        value && mutationObserver.observe(value, {
           childList: true,
           subtree: true
         }), e(() => {
@@ -3890,19 +3890,19 @@ var Go = R({
         }), K() === t && Wo(e));
       }
       b(async e => {
-        let t = o.value;
-        if (await z(), !t) return;
+        let value = o.value;
+        if (await z(), !value) return;
         eventAlias.present !== false && c.add(l);
         let i = K();
-        !t.contains(i) && eventAlias.present !== false && d(t, i), e(() => {
+        !value.contains(i) && eventAlias.present !== false && d(value, i), e(() => {
           let customEvent = new CustomEvent(Io, Lo),
             n = e => {
               r(`unmountAutoFocus`, e);
             };
-          t.addEventListener(Io, n), t.dispatchEvent(customEvent), t.setAttribute(`data-focus-scope-unmounting`, ``), setTimeout(() => {
+          value.addEventListener(Io, n), value.dispatchEvent(customEvent), value.setAttribute(`data-focus-scope-unmounting`, ``), setTimeout(() => {
             customEvent.defaultPrevented || Wo(i ?? document.body, {
               select: true
-            }), t.removeEventListener(Io, n), c.remove(l), t.removeAttribute(`data-focus-scope-unmounting`);
+            }), value.removeEventListener(Io, n), c.remove(l), value.removeAttribute(`data-focus-scope-unmounting`);
           }, 0);
         });
       }), P(() => eventAlias.present, async (e, t) => {
@@ -3913,23 +3913,23 @@ var Go = R({
         }
         if (e !== true || t !== false) return;
         c.add(l), await z();
-        let n = o.value;
-        if (!n) return;
+        let value = o.value;
+        if (!value) return;
         let r = K();
-        n.contains(r) || d(n, r);
+        value.contains(r) || d(value, r);
       });
       function f(e) {
         if (!eventAlias.loop && !eventAlias.trapped || l.paused) return;
         let t = e.key === `Tab` && !e.altKey && !e.ctrlKey && !e.metaKey,
           r = K();
         if (t && r) {
-          let t = e.currentTarget,
-            [i, a] = zo(t);
+          let currentTarget = e.currentTarget,
+            [i, a] = zo(currentTarget);
           i && a ? !e.shiftKey && r === a ? (e.preventDefault(), eventAlias.loop && Wo(i, {
             select: true
           })) : e.shiftKey && r === i && (e.preventDefault(), eventAlias.loop && Wo(a, {
             select: true
-          })) : r === t && e.preventDefault();
+          })) : r === currentTarget && e.preventDefault();
         }
       }
       return (e, t) => (L(), F(i(wo), {
@@ -4107,9 +4107,9 @@ var is = R({
         i = B(() => t.checked ?? t.value);
       return P(i, (e, t) => {
         if (!r.value) return;
-        let n = r.value,
-          i = window.HTMLInputElement.prototype,
-          a = Object.getOwnPropertyDescriptor(i, `value`).set;
+        let value = r.value,
+          prototype = window.HTMLInputElement.prototype,
+          a = Object.getOwnPropertyDescriptor(prototype, `value`).set;
         if (a && e !== t) {
           let event = new Event(`input`, {
               bubbles: true
@@ -4117,7 +4117,7 @@ var is = R({
             r = new Event(`change`, {
               bubbles: true
             });
-          a.call(n, e), n.dispatchEvent(event), n.dispatchEvent(r);
+          a.call(value, e), value.dispatchEvent(event), value.dispatchEvent(r);
         }
       }), (e, r) => (L(), F(as, mt({
         ref_key: `primitiveElement`,
@@ -4876,11 +4876,11 @@ var qs = function (e) {
           _ = f - detectOverflow.left - detectOverflow.right,
           v = ls(p - detectOverflow[resolvedValue], g),
           y = ls(f - detectOverflow[flag], _),
-          b = t.middlewareData.shift,
-          x = !b,
+          shift = t.middlewareData.shift,
+          x = !shift,
           S = v,
           C = y;
-        b != null && b.enabled.x && (C = _), b != null && b.enabled.y && (S = g), x && !u && (d ? C = f - 2 * us(detectOverflow.left, detectOverflow.right) : S = p - 2 * us(detectOverflow.top, detectOverflow.bottom)), await o({
+        shift != null && shift.enabled.x && (C = _), shift != null && shift.enabled.y && (S = g), x && !u && (d ? C = f - 2 * us(detectOverflow.left, detectOverflow.right) : S = p - 2 * us(detectOverflow.top, detectOverflow.bottom)), await o({
           ...t,
           availableWidth: C,
           availableHeight: S
@@ -5214,17 +5214,17 @@ function Rc(e) {
     a = [...(n === `clippingAncestors` ? oc(t) ? [] : Lc(t, this._c) : [].concat(n)), r],
     o = Ic(t, a[0], i),
     s = o.top,
-    c = o.right,
-    l = o.bottom,
-    u = o.left;
+    right = o.right,
+    bottom = o.bottom,
+    left = o.left;
   for (let e = 1; e < a.length; e++) {
     let n = Ic(t, a[e], i);
-    s = us(n.top, s), c = ls(n.right, c), l = ls(n.bottom, l), u = us(n.left, u);
+    s = us(n.top, s), right = ls(n.right, right), bottom = ls(n.bottom, bottom), left = us(n.left, left);
   }
   return {
-    width: c - u,
-    height: l - s,
-    x: u,
+    width: right - left,
+    height: bottom - s,
+    x: left,
     y: s
   };
 }

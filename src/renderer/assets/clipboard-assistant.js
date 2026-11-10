@@ -590,10 +590,10 @@ var b = {
         V.value = e.id, H = false, t.dataTransfer?.setData(`text/plain`, e.id), t.dataTransfer && (t.dataTransfer.effectAllowed = `move`);
       }
       function In(e, event) {
-        let n = V.value;
-        if (!n || (event.preventDefault(), n === e.id)) return;
+        let value = V.value;
+        if (!value || (event.preventDefault(), value === e.id)) return;
         let r = [...O.value],
-          indexResult = r.findIndex(item => item.id === n),
+          indexResult = r.findIndex(item => item.id === value),
           a = r.findIndex(item => item.id === e.id);
         if (indexResult < 0 || a < 0) return;
         let [o] = r.splice(indexResult, 1);
@@ -686,8 +686,8 @@ var b = {
       }
       function Hn(event) {
         if (w.value !== `history`) return;
-        let t = event.currentTarget;
-        t.scrollHeight - t.scrollTop - t.clientHeight <= en && Z({
+        let currentTarget = event.currentTarget;
+        currentTarget.scrollHeight - currentTarget.scrollTop - currentTarget.clientHeight <= en && Z({
           append: true
         });
       }

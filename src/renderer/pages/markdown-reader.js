@@ -372,14 +372,14 @@ function kt(text, items) {
     l = items.startsWith(`h`) ? Number(items.slice(1)) : 0,
     u = l ? RegExp(`^#{${l}}\\s+`) : null,
     d = items === `unordered-list` ? /^[-*+]\s+(?!\[[ xX]\]\s+)/ : items === `ordered-list` ? /^\d+[.)]\s+/ : items === `task-list` ? /^[-*+]\s+\[[ xX]\]\s+/ : null,
-    f = c.map(e => e.match(/^(\s*)(.*)$/)?.[2] || ``).filter(e => e.trim()),
-    p = f.length > 0 && f.every(e => u ? u.test(e) : d ? d.test(e) : items === `quote` && /^>\s?/.test(e)),
+    f = c.map(item => item.match(/^(\s*)(.*)$/)?.[2] || ``).filter(item => item.trim()),
+    p = f.length > 0 && f.every(item => u ? u.test(item) : d ? d.test(item) : items === `quote` && /^>\s?/.test(item)),
     m = 1,
-    h = c.map(e => {
-      let n = e.match(/^(\s*)(.*)$/),
+    h = c.map(item => {
+      let n = item.match(/^(\s*)(.*)$/),
         r = n?.[1] || ``,
         i = n?.[2] || ``;
-      if (!i.trim() && c.length > 1) return e;
+      if (!i.trim() && c.length > 1) return item;
       let a = i;
       return a = l ? a.replace(/^#{1,6}\s+/, ``) : items === `quote` ? a.replace(/^>\s?/, ``) : a.replace(/^(?:[-*+]\s+(?:\[[ xX]\]\s+)?|\d+[.)]\s+)/, ``), p ? `${r}${a}` : l ? `${r}${`#`.repeat(l)} ${a}` : items === `unordered-list` ? `${r}- ${a}` : items === `task-list` ? `${r}- [ ] ${a}` : items === `quote` ? `${r}> ${a}` : `${r}${m++}. ${a}`;
     }).join(`
@@ -537,10 +537,10 @@ function Pt(items, t) {
 `),
     u = 0,
     d = 0,
-    f = l.map((e, n) => {
-      if (!t) return !e.trim() && l.length > 1 ? e : (n === 0 && (u = -2), d += 2, `${Tt}${e}`);
-      let i = e.startsWith(`	`) ? 1 : Math.min(2, e.length - e.trimStart().length);
-      return n === 0 && (u = Math.min(i, r - o)), d -= i, e.slice(i);
+    f = l.map((item, n) => {
+      if (!t) return !item.trim() && l.length > 1 ? item : (n === 0 && (u = -2), d += 2, `${Tt}${item}`);
+      let i = item.startsWith(`	`) ? 1 : Math.min(2, item.length - item.trimStart().length);
+      return n === 0 && (u = Math.min(i, r - o)), d -= i, item.slice(i);
     }).join(`
 `);
   return d === 0 ? null : a ? {
@@ -873,7 +873,7 @@ function Zt(items, t) {
       n.push(items.slice(r, i), `comment`), r = i;
       continue;
     }
-    let s = t.lineComments.find(t => items.startsWith(t, r));
+    let s = t.lineComments.find(item => items.startsWith(item, r));
     if (s && (!(t.hashNeedsBoundary && s === `#`) || /\s/.test(a))) {
       let t = items.indexOf(`
 `, r),
@@ -1078,18 +1078,18 @@ function xn(el) {
     currentNode.data.includes(`**`) && !currentNode.parentElement?.closest(`code, pre, kbd`) && r.push(currentNode);
   }
   for (let e of r) {
-    let n = e.data,
-      r = Array.from(n.matchAll(bn));
+    let data = e.data,
+      r = Array.from(data.matchAll(bn));
     if (!r.length) continue;
     let i = ownerDocument.createDocumentFragment(),
       a = 0;
     for (let e of r) {
       let r = e.index ?? 0;
-      i.append(n.slice(a, r));
+      i.append(data.slice(a, r));
       let o = ownerDocument.createElement(`strong`);
       o.textContent = e[1], i.append(o), a = r + e[0].length;
     }
-    i.append(n.slice(a)), e.replaceWith(i);
+    i.append(data.slice(a)), e.replaceWith(i);
   }
 }
 function Sn(el, t) {
@@ -1214,7 +1214,7 @@ var wn = class {
         html: html,
         line: pn(a, p),
         offset: p,
-        taskPositions: h.taskOffsets.map(e => p + e)
+        taskPositions: h.taskOffsets.map(item => p + item)
       });
     }
     if (this.cache.size > c.size * 2 + 200) for (let e of Array.from(this.cache.keys())) c.has(e) || this.cache.delete(e);
@@ -1237,15 +1237,15 @@ function Tn(el, t) {
   return null;
 }
 async function En(el, t) {
-  let body = new DOMParser().parseFromString(`<body>${el.map(e => e.html).join(`
+  let body = new DOMParser().parseFromString(`<body>${el.map(item => item.html).join(`
 `)}</body>`, `text/html`).body;
   for (let e of Array.from(body.querySelectorAll(`.markdown-code-toolbar`))) e.remove();
   for (let e of Array.from(body.querySelectorAll(`input[type="checkbox"]`))) e.setAttribute(`disabled`, ``), e.removeAttribute(`data-task-index`);
-  return await Promise.all(Array.from(body.querySelectorAll(`img[data-markdown-src]`)).map(async e => {
-    let n = e.getAttribute(`data-markdown-src`) || ``;
-    e.removeAttribute(`data-markdown-src`), e.classList.remove(`is-loading`);
+  return await Promise.all(Array.from(body.querySelectorAll(`img[data-markdown-src]`)).map(async item => {
+    let n = item.getAttribute(`data-markdown-src`) || ``;
+    item.removeAttribute(`data-markdown-src`), item.classList.remove(`is-loading`);
     let r = n ? await t(n).catch(() => null) : null;
-    r ? e.setAttribute(`src`, r) : e.remove();
+    r ? item.setAttribute(`src`, r) : item.remove();
   })), body.innerHTML;
 }
 function Dn(e, t, n) {
@@ -1462,12 +1462,12 @@ body { margin: 0; background: #fff; }
         }),
         L = M(() => {
           if (!r.lineNumbers) return [];
-          let e = c.value,
+          let value = c.value,
             t = R(),
             n = l.value - Q - 200,
             i = l.value + p.value + 200,
             a = [];
-          if (!e.length) {
+          if (!value.length) {
             let e = Math.max(0, Math.floor(n / t)),
               r = Math.min(k.value - 1, Math.ceil(i / t));
             for (let n = e; n <= r; n += 1) a.push({
@@ -1477,39 +1477,39 @@ body { margin: 0; background: #fff; }
             return a;
           }
           let o = 0,
-            s = e.length - 1;
+            s = value.length - 1;
           for (; o < s;) {
             let t = o + s >> 1;
-            e[t] < n ? o = t + 1 : s = t;
+            value[t] < n ? o = t + 1 : s = t;
           }
-          for (let t = Math.max(0, o - 1); t < e.length && e[t] <= i; t += 1) a.push({
+          for (let t = Math.max(0, o - 1); t < value.length && value[t] <= i; t += 1) a.push({
             line: t,
-            top: e[t] + Q - l.value
+            top: value[t] + Q - l.value
           });
           return a;
         });
       function R() {
-        let e = o.value;
-        return e && Number.parseFloat(window.getComputedStyle(e).lineHeight) || 24.5;
+        let value = o.value;
+        return value && Number.parseFloat(window.getComputedStyle(value).lineHeight) || 24.5;
       }
       function ce() {
-        let e = o.value;
+        let value = o.value;
         return {
-          text: e?.value ?? r.modelValue,
-          start: e?.selectionStart ?? 0,
-          end: e?.selectionEnd ?? 0
+          text: value?.value ?? r.modelValue,
+          start: value?.selectionStart ?? 0,
+          end: value?.selectionEnd ?? 0
         };
       }
       function le() {
-        let e = o.value;
-        e && (b.value = {
-          start: e.selectionStart,
-          end: e.selectionEnd
+        let value = o.value;
+        value && (b.value = {
+          start: value.selectionStart,
+          end: value.selectionEnd
         });
       }
       function pe() {
-        let e = o.value;
-        e && (i(`update:modelValue`, e.value), le());
+        let value = o.value;
+        value && (i(`update:modelValue`, value.value), le());
       }
       function me(e) {
         e.isComposing || pe();
@@ -1521,18 +1521,18 @@ body { margin: 0; background: #fff; }
         te.value && (te.value = false, pe());
       }
       function ge(e) {
-        let t = o.value;
-        if (!t || te.value || t.value === e) return;
+        let value = o.value;
+        if (!value || te.value || value.value === e) return;
         let {
           selectionStart: n,
           selectionEnd: r,
           scrollTop: i
-        } = t;
-        t.value = e, t.setSelectionRange(Math.min(n, e.length), Math.min(r, e.length)), t.scrollTop = i, le();
+        } = value;
+        value.value = e, value.setSelectionRange(Math.min(n, e.length), Math.min(r, e.length)), value.scrollTop = i, le();
       }
       function _e(e) {
-        let t = o.value;
-        t && e && (t.focus(), t.setSelectionRange(e.start, e.end), (e.replacement ? document.execCommand(`insertText`, false, e.replacement) : e.start === e.end || document.execCommand(`delete`, false)) || t.setRangeText(e.replacement, e.start, e.end, `end`), i(`update:modelValue`, t.value), t.setSelectionRange(e.selectionStart, e.selectionEnd), le());
+        let value = o.value;
+        value && e && (value.focus(), value.setSelectionRange(e.start, e.end), (e.replacement ? document.execCommand(`insertText`, false, e.replacement) : e.start === e.end || document.execCommand(`delete`, false)) || value.setRangeText(e.replacement, e.start, e.end, `end`), i(`update:modelValue`, value.value), value.setSelectionRange(e.selectionStart, e.selectionEnd), le());
       }
       function ve(e) {
         if (!o.value) return;
@@ -1565,21 +1565,21 @@ body { margin: 0; background: #fff; }
         r && (e.preventDefault(), e.stopPropagation(), ve(r));
       }
       function be() {
-        let e = o.value;
-        e && (l.value = e.scrollTop, i(`scroll`));
+        let value = o.value;
+        value && (l.value = value.scrollTop, i(`scroll`));
       }
       function xe() {
-        let e = o.value,
+        let value = o.value,
           t = s.value;
-        if (p.value = e?.clientHeight ?? 0, e && (ee.value = `${e.clientWidth}px`), !e || !t || !(r.lineNumbers || r.measureLines)) return;
-        let n = e.value.split(`
+        if (p.value = value?.clientHeight ?? 0, value && (ee.value = `${value.clientWidth}px`), !value || !t || !(r.lineNumbers || r.measureLines)) return;
+        let n = value.value.split(`
 `);
         if (n.length > In) {
           c.value = [];
           return;
         }
-        let i = window.getComputedStyle(e),
-          a = e.clientWidth - Number.parseFloat(i.paddingLeft) - Number.parseFloat(i.paddingRight);
+        let i = window.getComputedStyle(value),
+          a = value.clientWidth - Number.parseFloat(i.paddingLeft) - Number.parseFloat(i.paddingRight);
         t.style.width = `${Math.max(0, a)}px`;
         let l = document.createDocumentFragment();
         for (let e of n) {
@@ -1597,9 +1597,9 @@ body { margin: 0; background: #fff; }
         }, e ? 0 : 150);
       }
       function Ce() {
-        let e = o.value;
-        if (!e) return 0;
-        let t = e.scrollTop - Q,
+        let value = o.value;
+        if (!value) return 0;
+        let t = value.scrollTop - Q,
           n = c.value;
         if (!n.length) return Math.max(0, t / R());
         let r = 0,
@@ -1612,38 +1612,38 @@ body { margin: 0; background: #fff; }
         return r + Math.min(1, Math.max(0, (t - n[r]) / Math.max(1, a - n[r])));
       }
       function we(e) {
-        let t = c.value,
+        let value = c.value,
           n = Math.max(0, Math.floor(e)),
           r = e - n;
-        if (!t.length) return e * R() + Q;
-        let i = t[Math.min(n, t.length - 1)];
-        return i + r * ((n + 1 < t.length ? t[n + 1] : i + R()) - i) + Q;
+        if (!value.length) return e * R() + Q;
+        let i = value[Math.min(n, value.length - 1)];
+        return i + r * ((n + 1 < value.length ? value[n + 1] : i + R()) - i) + Q;
       }
       function Te(e) {
-        let t = o.value;
-        t && (t.scrollTop = e, l.value = t.scrollTop);
+        let value = o.value;
+        value && (value.scrollTop = e, l.value = value.scrollTop);
       }
       function Ee() {
-        let e = o.value;
-        return !!(e && e.scrollTop + e.clientHeight >= e.scrollHeight - 2);
+        let value = o.value;
+        return !!(value && value.scrollTop + value.clientHeight >= value.scrollHeight - 2);
       }
       function V(e) {
-        let t = o.value;
-        if (!t) return;
+        let value = o.value;
+        if (!value) return;
         let n = O.value[Math.min(Math.max(0, e), O.value.length - 1)] ?? 0;
-        t.focus({
+        value.focus({
           preventScroll: true
-        }), t.setSelectionRange(n, n), le(), (r.lineNumbers || r.measureLines) && xe(), Te(Math.max(0, we(e) - Q - 12));
+        }), value.setSelectionRange(n, n), le(), (r.lineNumbers || r.measureLines) && xe(), Te(Math.max(0, we(e) - Q - 12));
       }
       function H(e, t, n = true) {
-        let r = o.value;
-        if (!r) return;
-        n && r.focus({
+        let value = o.value;
+        if (!value) return;
+        n && value.focus({
           preventScroll: true
-        }), r.setSelectionRange(e, t), le();
+        }), value.setSelectionRange(e, t), le();
         let i = pn(O.value, e),
-          a = we(i) - r.clientHeight / 3;
-        (we(i) < r.scrollTop + 24 || we(i) > r.scrollTop + r.clientHeight - 48) && Te(Math.max(0, a));
+          a = we(i) - value.clientHeight / 3;
+        (we(i) < value.scrollTop + 24 || we(i) > value.scrollTop + value.clientHeight - 48) && Te(Math.max(0, a));
       }
       function De() {
         !te.value && document.activeElement === o.value && le();
@@ -1653,8 +1653,8 @@ body { margin: 0; background: #fff; }
 `).length !== (t ?? ``).split(`
 `).length);
       }), v(() => [r.lineNumbers, r.measureLines], () => ie(() => Se(true))), ae(() => {
-        let e = o.value;
-        e && (e.value = r.modelValue, e.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(e), p.value = e.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
+        let value = o.value;
+        value && (value.value = r.modelValue, value.setSelectionRange(0, 0), E = new ResizeObserver(() => Se(true)), E.observe(value), p.value = value.clientHeight), document.addEventListener(`selectionchange`, De), document.fonts?.ready.then(() => Se(true)), Se(true);
       }), re(() => {
         E?.disconnect(), document.removeEventListener(`selectionchange`, De), w !== null && window.clearTimeout(w);
       }), t({
@@ -1860,8 +1860,8 @@ body { margin: 0; background: #fff; }
         s = false, c();
       }
       v(() => r.query, e => {
-        let t = o.value;
-        t && !s && t.value !== e && (t.value = e);
+        let value = o.value;
+        value && !s && value.value !== e && (value.value = e);
       });
       function m(e) {
         e.isComposing || e.keyCode === 229 || (e.key === `Enter` ? (e.preventDefault(), e.shiftKey ? i(`previous`) : i(`next`)) : e.key === `Escape` && (e.preventDefault(), e.stopPropagation(), i(`close`)));
@@ -1941,18 +1941,18 @@ function Qn(e, t) {
   let i = q.readAsset({
     documentPath: e,
     source: t
-  }).then(e => e.dataUrl);
+  }).then(result => result.dataUrl);
   if (i.catch(() => Yn.delete(n)), Yn.size >= Xn) {
-    let e = Yn.keys().next().value;
-    e !== undefined && Yn.delete(e);
+    let value = Yn.keys().next().value;
+    value !== undefined && Yn.delete(value);
   }
   return Yn.set(n, i), i;
 }
 var $ = new Map();
 function $n(e, t, n) {
   if ($.set(Zn(e, t), n), $.size > Xn) {
-    let e = $.keys().next().value;
-    e !== undefined && $.delete(e);
+    let value = $.keys().next().value;
+    value !== undefined && $.delete(value);
   }
 }
 function er(e, t) {
@@ -1997,10 +1997,10 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         });
       }
       function u() {
-        let e = o.value;
-        if (!e) return;
+        let value = o.value;
+        if (!value) return;
         let documentPath = r.documentPath;
-        for (let n of Array.from(e.querySelectorAll(`img[data-markdown-src]:not([data-hydrated])`))) {
+        for (let n of Array.from(value.querySelectorAll(`img[data-markdown-src]:not([data-hydrated])`))) {
           n.setAttribute(`data-hydrated`, ``);
           let e = n.getAttribute(`data-markdown-src`) || ``;
           if (!documentPath || !e) {
@@ -2012,8 +2012,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
             n.src = r, n.classList.remove(`is-loading`);
             continue;
           }
-          Qn(documentPath, e).then(r => {
-            $n(documentPath, e, r), n.isConnected && (n.src = r, n.classList.remove(`is-loading`));
+          Qn(documentPath, e).then(result => {
+            $n(documentPath, e, result), n.isConnected && (n.src = result, n.classList.remove(`is-loading`));
           }).catch(() => l(n, e));
         }
       }
@@ -2038,15 +2038,15 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         });
       }
       function h(e) {
-        let t = e.target,
-          n = t.closest(`[data-copy-code]`);
+        let target = e.target,
+          n = target.closest(`[data-copy-code]`);
         if (n) {
           p(n);
           return;
         }
-        let r = t.closest(`a[href]`);
+        let r = target.closest(`a[href]`);
         if (!r) {
-          let e = t.closest(`img.markdown-image`);
+          let e = target.closest(`img.markdown-image`);
           e?.currentSrc && (s.value = {
             src: e.currentSrc,
             alt: e.alt,
@@ -2067,12 +2067,12 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         i(`openLink`, o);
       }
       function ee(e) {
-        let t = e.target;
-        if (!t.matches(`input.markdown-task-checkbox[data-task-index]`)) return;
-        let n = t.closest(`[data-block-index]`),
-          a = (n ? r.blocks[Number(n.dataset.blockIndex)] : undefined)?.taskPositions[Number(t.dataset.taskIndex)];
+        let target = e.target;
+        if (!target.matches(`input.markdown-task-checkbox[data-task-index]`)) return;
+        let n = target.closest(`[data-block-index]`),
+          a = (n ? r.blocks[Number(n.dataset.blockIndex)] : undefined)?.taskPositions[Number(target.dataset.taskIndex)];
         if (a === undefined) {
-          t.checked = !t.checked;
+          target.checked = !target.checked;
           return;
         }
         i(`toggleTask`, a);
@@ -2086,8 +2086,8 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         }
       }
       function b() {
-        let e = s.value;
-        if (e && /^(data|blob):/i.test(e.src)) return () => Xe(e.src, e.name);
+        let value = s.value;
+        if (value && /^(data|blob):/i.test(value.src)) return () => Xe(value.src, value.name);
       }
       function w(e) {
         e.key === `Escape` && (e.stopPropagation(), s.value = null);
@@ -2205,9 +2205,9 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
         c = M(() => i?.value || `zh-CN`),
         l = M(() => {
           let e = o.value.trim().toLocaleLowerCase(c.value);
-          return e ? n.recentFiles.filter(t => `${t.name} ${t.filePath}`.toLocaleLowerCase(c.value).includes(e)) : n.recentFiles;
+          return e ? n.recentFiles.filter(item => `${item.name} ${item.filePath}`.toLocaleLowerCase(c.value).includes(e)) : n.recentFiles;
         }),
-        f = M(() => n.headings.length ? Math.min(...n.headings.map(e => e.level)) : 1);
+        f = M(() => n.headings.length ? Math.min(...n.headings.map(item => item.level)) : 1);
       function p(e) {
         let t = new Date(e);
         if (Number.isNaN(t.getTime())) return ``;
@@ -2229,12 +2229,12 @@ var nr = [`data-block-index`, `data-source-line`, `innerHTML`],
       }
       return v(() => [n.activeHeadingId, n.tab], async () => {
         await ie();
-        let e = s.value,
-          t = e?.querySelector(`[aria-current="location"]`);
-        if (!e || !t) return;
-        let n = e.getBoundingClientRect(),
+        let value = s.value,
+          t = value?.querySelector(`[aria-current="location"]`);
+        if (!value || !t) return;
+        let n = value.getBoundingClientRect(),
           r = t.getBoundingClientRect();
-        r.top < n.top ? e.scrollTop += r.top - n.top - 8 : r.bottom > n.bottom && (e.scrollTop += r.bottom - n.bottom + 8);
+        r.top < n.top ? value.scrollTop += r.top - n.top - 8 : r.bottom > n.bottom && (value.scrollTop += r.bottom - n.bottom + 8);
       }), (e, t) => (T(), g(`aside`, sr, [D(d(nt), {
         class: `shrink-0 px-2 pt-2`,
         "model-value": n.tab,
@@ -2601,7 +2601,7 @@ var Or = {
         Ht = M(() => I.value ? I.value.split(`
 `).length : 0),
         Ut = M(() => Array.from(I.value.replace(/\s+/g, ``)).length),
-        Wt = M(() => L.value.filter(e => e.exists).slice(0, 5)),
+        Wt = M(() => L.value.filter(item => item.exists).slice(0, 5)),
         Gt = M(() => [{
           value: `preview`,
           icon: Ge,
@@ -2662,8 +2662,8 @@ var Or = {
       }
       function un() {
         et !== null && window.clearTimeout(et);
-        let e = I.value.length,
-          t = e < 2e4 ? 50 : e < 2e5 ? 150 : 320;
+        let length = I.value.length,
+          t = length < 2e4 ? 50 : length < 2e5 ? 150 : 320;
         et = window.setTimeout(() => {
           et = null, ln();
         }, t);
@@ -2784,23 +2784,23 @@ var Or = {
       }
       function Fn() {
         return j.value ? j.value.name : `${(Lt.value[0]?.text || I.value.split(`
-`).map(e => e.replace(/^#+\s*/, ``).trim()).find(Boolean) || ``).replace(/[\\/:*?"<>|]/g, `-`).slice(0, 60).trim() || l(`toolboxNative.untitledMarkdownDocument`)}.md`;
+`).map(item => item.replace(/^#+\s*/, ``).trim()).find(Boolean) || ``).replace(/[\\/:*?"<>|]/g, `-`).slice(0, 60).trim() || l(`toolboxNative.untitledMarkdownDocument`)}.md`;
       }
       async function Q(e = false) {
         if (z.value) return false;
-        let t = j.value;
-        if (!t) return await In();
+        let value = j.value;
+        if (!value) return await In();
         if (!Ft.value && !e) return true;
         z.value = true;
         let n = I.value;
         try {
           return j.value = await q.save({
-            filePath: t.filePath,
+            filePath: value.filePath,
             content: n,
-            expectedModifiedAt: e ? undefined : t.modifiedAt,
+            expectedModifiedAt: e ? undefined : value.modifiedAt,
             force: e,
-            lineEnding: t.lineEnding,
-            hasBom: t.hasBom
+            lineEnding: value.lineEnding,
+            hasBom: value.hasBom
           }), se.value = n, V.value = null, pn(), true;
         } catch (e) {
           if (e instanceof it && e.code === `FILE_CHANGED`) {
@@ -2818,11 +2818,11 @@ var Or = {
       async function In() {
         if (z.value) return false;
         z.value = true;
-        let e = I.value,
+        let value = I.value,
           t = j.value;
         try {
           let n = await q.saveAs({
-            content: e,
+            content: value,
             suggestedName: Fn(),
             sourcePath: t?.filePath,
             lineEnding: t?.lineEnding,
@@ -2832,7 +2832,7 @@ var Or = {
               filterName: l(`toolboxNative.markdownFileFilterName`)
             }
           });
-          return n.cancelled || !n.document ? false : (j.value = n.document, se.value = e, F.value = true, V.value = null, Je.lastPath = n.document.filePath, t?.filePath !== n.document.filePath && (fe.value += 1, ln(), q.watch(n.document.filePath).catch(() => undefined)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
+          return n.cancelled || !n.document ? false : (j.value = n.document, se.value = value, F.value = true, V.value = null, Je.lastPath = n.document.filePath, t?.filePath !== n.document.filePath && (fe.value += 1, ln(), q.watch(n.document.filePath).catch(() => undefined)), Cn(), Ie(l(`toolboxNative.markdownSavedAs`, {
             name: n.document.name
           })), true);
         } catch (e) {
@@ -2842,13 +2842,13 @@ var Or = {
         }
       }
       async function Rn(e = {}) {
-        let t = j.value;
-        if (!t || !e.skipConfirm && !(await vn())) return;
+        let value = j.value;
+        if (!value || !e.skipConfirm && !(await vn())) return;
         let n = yn(),
           r = ++Mt;
         dn();
         try {
-          let e = await q.read(t.filePath, {
+          let e = await q.read(value.filePath, {
             touch: false
           });
           if (r !== Mt) return;
@@ -2873,14 +2873,14 @@ var Or = {
         j.value && (await q.reveal(j.value.filePath).catch(() => W(l(`toolboxNative.markdownRevealFailed`))));
       }
       async function Vn() {
-        let e = j.value;
-        if (!e) return;
+        let value = j.value;
+        if (!value) return;
         let t = yn();
         try {
-          let n = await q.read(e.filePath, {
+          let n = await q.read(value.filePath, {
             touch: false
           });
-          if (j.value?.filePath !== e.filePath) return;
+          if (j.value?.filePath !== value.filePath) return;
           if (Ft.value) {
             V.value = `modified`;
             return;
@@ -2893,13 +2893,13 @@ var Or = {
         }
       }
       function Hn(e) {
-        let t = j.value;
-        if (t && e.filePath === t.filePath && !z.value) {
+        let value = j.value;
+        if (value && e.filePath === value.filePath && !z.value) {
           if (!e.exists) {
             V.value = `deleted`;
             return;
           }
-          if (e.modifiedAt === t.modifiedAt) {
+          if (e.modifiedAt === value.modifiedAt) {
             V.value === `deleted` && (V.value = null);
             return;
           }
@@ -2921,21 +2921,21 @@ var Or = {
         return i > 0 ? r.slice(i).toLowerCase() : ``;
       }
       async function Wn(text) {
-        let t = j.value;
-        if (!t) {
+        let value = j.value;
+        if (!value) {
           W(l(`toolboxNative.markdownSaveBeforeLink`));
           return;
         }
         let [n, r = ``] = text.split(`#`),
           i = n.split(`?`)[0];
-        if (r && (i === t.name || i === `./${t.name}`)) {
+        if (r && (i === value.name || i === `./${value.name}`)) {
           qn(r);
           return;
         }
         if (!a.includes(Un(text))) {
           try {
             (await q.openLocalFile({
-              documentPath: t.filePath,
+              documentPath: value.filePath,
               source: text
             })).action === `revealed` && Ie(l(`toolboxNative.markdownLinkRevealed`));
           } catch (e) {
@@ -2944,17 +2944,17 @@ var Or = {
           return;
         }
         let o = {
-            filePath: t.filePath,
-            name: t.name,
+            filePath: value.filePath,
+            name: value.name,
             scroll: yn()
           },
           s = null;
         if ((await kn(async () => {
-          let n = await q.openLinked({
-            documentPath: t.filePath,
+          let linked = await q.openLinked({
+            documentPath: value.filePath,
             source: text
           });
-          return s = n.anchor, n.document;
+          return s = linked.anchor, linked.document;
         }, `toolboxNative.markdownLinkedOpenFailed`, {
           keepHistory: true
         })) && (H.value = [...H.value.slice(-19), o], s)) {
@@ -2980,7 +2980,7 @@ var Or = {
           });
           return;
         }
-        let r = Lt.value.find(t => t.id === e);
+        let r = Lt.value.find(item => item.id === e);
         r && K.value?.revealLine(r.line);
       }
       function Yn() {
@@ -2997,15 +2997,15 @@ var Or = {
           me.value = _t;
           return;
         }
-        let e = Lt.value;
-        if (!e.length) {
+        let value = Lt.value;
+        if (!value.length) {
           me.value = ``;
           return;
         }
         if (Z.value === `edit`) {
           let t = K.value?.lineAtScrollTop() ?? 0,
-            n = e[0];
-          for (let r of e) if (r.line <= t + .5) n = r;else break;
+            n = value[0];
+          for (let r of value) if (r.line <= t + .5) n = r;else break;
           me.value = n.id;
           return;
         }
@@ -3013,8 +3013,8 @@ var Or = {
           n = Xe.value?.root();
         if (!t || !n) return;
         let r = t.scrollTop + 48,
-          i = e[0].id;
-        for (let t of e) {
+          i = value[0].id;
+        for (let t of value) {
           let e = n.querySelector(`#${CSS.escape(t.id)}`);
           if (e) {
             if (e.offsetTop <= r) i = t.id;else break;
@@ -3052,15 +3052,15 @@ var Or = {
         return J = t, t;
       }
       function rr() {
-        let e = K.value,
+        let value = K.value,
           t = G.value;
-        if (!e || !t) return;
+        if (!value || !t) return;
         let n = t.scrollHeight - t.clientHeight;
-        if (e.isAtBottom()) {
+        if (value.isAtBottom()) {
           t.scrollTop = n;
           return;
         }
-        let r = e.lineAtScrollTop(),
+        let r = value.lineAtScrollTop(),
           i = nr(),
           a = 0;
         for (; a + 1 < i.length && i[a + 1].line <= r;) a += 1;
@@ -3073,16 +3073,16 @@ var Or = {
         t.scrollTop = o.top + Math.min(1, Math.max(0, c)) * (s.top - o.top);
       }
       function ir() {
-        let e = K.value,
+        let value = K.value,
           t = G.value;
-        if (!e || !t) return;
+        if (!value || !t) return;
         if (t.scrollTop <= 1) {
-          e.setScrollTop(0);
+          value.setScrollTop(0);
           return;
         }
-        let n = e.element();
+        let n = value.element();
         if (t.scrollTop + t.clientHeight >= t.scrollHeight - 2 && n) {
-          e.setScrollTop(n.scrollHeight);
+          value.setScrollTop(n.scrollHeight);
           return;
         }
         let r = nr(),
@@ -3096,7 +3096,7 @@ var Or = {
           },
           c = (scrollTop - o.top) / Math.max(1, s.top - o.top),
           l = o.line + Math.min(1, Math.max(0, c)) * (s.line - o.line);
-        e.setScrollTop(e.scrollTopForLine(l));
+        value.setScrollTop(value.scrollTopForLine(l));
       }
       function ar() {
         $(), Z.value === `split` && O.syncScroll && er(`editor`) && rr();
@@ -3109,11 +3109,11 @@ var Or = {
       }
       function lr() {
         if (Z.value === `edit`) return K.value?.lineAtScrollTop() ?? 0;
-        let e = G.value;
-        if (!e) return 0;
+        let value = G.value;
+        if (!value) return 0;
         let t = nr(),
           n = 0;
-        for (let r of t) if (r.top <= e.scrollTop + 4) n = r.line;else break;
+        for (let r of t) if (r.top <= value.scrollTop + 4) n = r.line;else break;
         return n;
       }
       async function ur(e) {
@@ -3121,9 +3121,9 @@ var Or = {
         let t = F.value ? lr() : 0;
         k.value = e, O.mode = e, F.value && (await ie(), window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
           if (J = null, $n(300), Z.value !== `preview` && K.value?.setScrollTop(K.value.scrollTopForLine(t)), Z.value !== `edit`) {
-            let e = G.value,
-              n = [...nr()].reverse().find(e => e.line <= t);
-            e && n && (e.scrollTop = n.top);
+            let value = G.value,
+              n = [...nr()].reverse().find(item => item.line <= t);
+            value && n && (value.scrollTop = n.top);
           }
           an();
         })));
@@ -3147,8 +3147,8 @@ var Or = {
       function hr(e) {
         if (!Le.value) return;
         Le.value = false;
-        let t = e.currentTarget;
-        t.hasPointerCapture(e.pointerId) && t.releasePointerCapture(e.pointerId), J = null;
+        let currentTarget = e.currentTarget;
+        currentTarget.hasPointerCapture(e.pointerId) && currentTarget.releasePointerCapture(e.pointerId), J = null;
       }
       function gr(e) {
         let t = He.value?.getBoundingClientRect();
@@ -3242,7 +3242,7 @@ var Or = {
       async function ii(e) {
         if (!Tr(e)) return;
         e.preventDefault(), Dt = 0, Oe.value = false;
-        let t = Array.from(e.dataTransfer?.files || []).find(e => a.includes(Un(e.name)));
+        let t = Array.from(e.dataTransfer?.files || []).find(item => a.includes(Un(item.name)));
         if (!t) {
           W(l(`toolboxNative.markdownDropUnsupported`));
           return;
@@ -3330,8 +3330,8 @@ var Or = {
             touch: false
           }), `toolboxNative.markdownOpenFailed`, {
             skipConfirm: true
-          }).then(e => {
-            e || (Je.lastPath = null);
+          }).then(result => {
+            result || (Je.lastPath = null);
           });
         }
       }), re(() => {

@@ -93,7 +93,7 @@ function x(event) {
       O.value = true, k.value = ``;
       try {
         D.value = await f.getMacStatus();
-        let e = D.value.items.find(e => e.key === `accessibility`);
+        let e = D.value.items.find(item => item.key === `accessibility`);
         e && (A.value = {
           required: e.required,
           granted: e.granted
@@ -126,8 +126,8 @@ function x(event) {
     L = a(() => [`checking`, `downloading`, `verifying`, `starting`, `updating`, `stopping`].includes(I.value?.status || ``)),
     R;
   i(() => {
-    M(), N(), _.value ? (m.getStatus().then(e => {
-      I.value = e;
+    M(), N(), _.value ? (m.getStatus().then(result => {
+      I.value = result;
     }), R = m.onStatusChanged(e => {
       I.value = e;
     })) : (h.value.enableEnterKeyListener || !h.value.enterKeyLegacyMigrationHandled) && m.disable().then(() => p());
@@ -142,7 +142,7 @@ function x(event) {
     onRefresh: e => b(x, e),
     onLocalDataChanged: e => b(S, e),
     notifyLocalDataChanged: () => {
-      S.forEach(fn => fn());
+      S.forEach(item => item());
     },
     navigate: event.navigate,
     openUpdate: event.openUpdate,
@@ -165,7 +165,7 @@ function x(event) {
   return o(y, z), {
     ...z,
     runRefreshLoaders: () => {
-      x.forEach(fn => fn());
+      x.forEach(item => item());
     }
   };
 }
@@ -197,8 +197,8 @@ function O() {
     u = t(null),
     d;
   return i(() => {
-    _.value && (m.getStatus().then(e => {
-      u.value = e;
+    _.value && (m.getStatus().then(result => {
+      u.value = result;
     }).catch(() => undefined), d = m.onStatusChanged(e => {
       u.value = e;
     }));

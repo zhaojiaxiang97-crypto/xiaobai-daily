@@ -69,53 +69,53 @@ var Se = {
         Re = f(() => D.value === `selected` && O.value !== null),
         ze = f(() => !!(w.value && A.value && [`idle`, `pending`, `drawing`, `resizing`].includes(D.value))),
         Be = f(() => {
-          let e = G.value;
-          return e ? `${Math.round(e.width * U.value)} × ${Math.round(e.height * W.value)}` : ``;
+          let value = G.value;
+          return value ? `${Math.round(value.width * U.value)} × ${Math.round(value.height * W.value)}` : ``;
         }),
         Ve = f(() => {
-          let e = G.value;
-          if (!e) return {};
-          let t = e.y >= 28 ? e.y - 26 : e.y + 6;
+          let value = G.value;
+          if (!value) return {};
+          let t = value.y >= 28 ? value.y - 26 : value.y + 6;
           return {
-            left: `${Math.max(4, e.x)}px`,
+            left: `${Math.max(4, value.x)}px`,
             top: `${t}px`
           };
         }),
         He = f(() => {
-          let e = O.value;
-          if (!e) return {};
+          let value = O.value;
+          if (!value) return {};
           let {
               width: t,
               height: n
             } = j.value,
-            r = e.y + e.height + S;
-          return r + x > n - 4 && (r = e.y - x - S), r < 4 && (r = Math.max(4, e.y + e.height - x - S)), {
-            left: `${Math.min(Math.max(4, e.x + e.width - M.value), t - M.value - 4)}px`,
+            r = value.y + value.height + S;
+          return r + x > n - 4 && (r = value.y - x - S), r < 4 && (r = Math.max(4, value.y + value.height - x - S)), {
+            left: `${Math.min(Math.max(4, value.x + value.width - M.value), t - M.value - 4)}px`,
             top: `${r}px`
           };
         }),
         Ue = f(() => {
-          let e = A.value;
-          if (!e) return {};
+          let value = A.value;
+          if (!value) return {};
           let {
               width: t,
               height: n
             } = j.value,
-            r = e.x + 20,
-            i = e.y + 20;
-          return r + b > t - 4 && (r = e.x - 20 - b), i + 172 > n - 4 && (i = e.y - 20 - 172), {
+            r = value.x + 20,
+            i = value.y + 20;
+          return r + b > t - 4 && (r = value.x - 20 - b), i + 172 > n - 4 && (i = value.y - 20 - 172), {
             left: `${Math.max(4, r)}px`,
             top: `${Math.max(4, i)}px`
           };
         }),
         K = f(() => {
-          let e = A.value;
-          if (!e || !w.value) return {
+          let value = A.value;
+          if (!value || !w.value) return {
             coords: ``,
             color: ``
           };
-          let t = Math.min(w.value.width - 1, Math.max(0, Math.floor(e.x * U.value))),
-            n = Math.min(w.value.height - 1, Math.max(0, Math.floor(e.y * W.value)));
+          let t = Math.min(w.value.width - 1, Math.max(0, Math.floor(value.x * U.value))),
+            n = Math.min(w.value.height - 1, Math.max(0, Math.floor(value.y * W.value)));
           return {
             coords: `${t}, ${n}`,
             color: data ? me(data, (n * w.value.width + t) * 4) : ``
@@ -158,14 +158,14 @@ var Se = {
         };
       }
       function Je(e) {
-        let t = O.value;
-        if (!t) return null;
-        let n = Math.abs(e.x - t.x) <= y,
-          r = Math.abs(e.x - (t.x + t.width)) <= y,
-          i = Math.abs(e.y - t.y) <= y,
-          a = Math.abs(e.y - (t.y + t.height)) <= y,
-          o = e.x >= t.x - y && e.x <= t.x + t.width + y,
-          s = e.y >= t.y - y && e.y <= t.y + t.height + y;
+        let value = O.value;
+        if (!value) return null;
+        let n = Math.abs(e.x - value.x) <= y,
+          r = Math.abs(e.x - (value.x + value.width)) <= y,
+          i = Math.abs(e.y - value.y) <= y,
+          a = Math.abs(e.y - (value.y + value.height)) <= y,
+          o = e.x >= value.x - y && e.x <= value.x + value.width + y,
+          s = e.y >= value.y - y && e.y <= value.y + value.height + y;
         return i && n ? `nw` : i && r ? `ne` : a && n ? `sw` : a && r ? `se` : i && o ? `n` : a && o ? `s` : n && s ? `w` : r && s ? `e` : null;
       }
       let Ye = f(() => {
@@ -181,15 +181,15 @@ var Se = {
         });
       }
       function Xe() {
-        let e = Fe.value;
-        if (!e) return;
+        let value = Fe.value;
+        if (!value) return;
         let fallbackValue = window.devicePixelRatio || 1,
           {
             width: n,
             height: r
           } = j.value;
-        (e.width !== Math.round(n * fallbackValue) || e.height !== Math.round(r * fallbackValue)) && (e.width = Math.round(n * fallbackValue), e.height = Math.round(r * fallbackValue));
-        let i = g(e);
+        (value.width !== Math.round(n * fallbackValue) || value.height !== Math.round(r * fallbackValue)) && (value.width = Math.round(n * fallbackValue), value.height = Math.round(r * fallbackValue));
+        let i = g(value);
         if (i.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), i.clearRect(0, 0, n, r), !w.value) return;
         let a = G.value;
         if (i.fillStyle = `rgba(0,0,0,0.42)`, i.beginPath(), i.rect(0, 0, n, r), a && a.width > 0 && a.height > 0 && i.rect(a.x, a.y, a.width, a.height), i.fill(`evenodd`), !(!a || a.width <= 0 || a.height <= 0) && (i.strokeStyle = `#10b981`, i.lineWidth = O.value ? 1.5 : 2, i.strokeRect(a.x + .5, a.y + .5, Math.max(0, a.width - 1), Math.max(0, a.height - 1)), D.value === `selected` || D.value === `moving` || D.value === `resizing`)) {
@@ -198,14 +198,14 @@ var Se = {
         }
       }
       function Ze() {
-        let e = Ie.value,
+        let value = Ie.value,
           t = T.value,
           n = A.value;
-        if (!e || !t || !n || !ze.value) return;
+        if (!value || !t || !n || !ze.value) return;
         let fallbackValue = window.devicePixelRatio || 1,
           i = Math.round(b * fallbackValue);
-        e.width !== i && (e.width = i, e.height = i);
-        let a = g(e);
+        value.width !== i && (value.width = i, value.height = i);
+        let a = g(value);
         a.imageSmoothingEnabled = false, a.fillStyle = `#000`, a.fillRect(0, 0, i, i);
         let o = b / Pe * U.value,
           s = n.x * U.value,
@@ -318,20 +318,20 @@ var Se = {
         N.value || (O.value ? Z() : overlay.cancel());
       }
       function it(e, t, n) {
-        let r = O.value;
-        if (!r) return;
+        let value = O.value;
+        if (!value) return;
         let {
           width: i,
           height: a
         } = j.value;
         n ? O.value = Ke({
-          ...r,
-          width: Math.max(v, r.width + e),
-          height: Math.max(v, r.height + t)
+          ...value,
+          width: Math.max(v, value.width + e),
+          height: Math.max(v, value.height + t)
         }) : O.value = {
-          ...r,
-          x: Math.min(Math.max(0, r.x + e), i - r.width),
-          y: Math.min(Math.max(0, r.y + t), a - r.height)
+          ...value,
+          x: Math.min(Math.max(0, value.x + e), i - value.width),
+          y: Math.min(Math.max(0, value.y + t), a - value.height)
         }, Y();
       }
       function at() {
@@ -375,33 +375,33 @@ var Se = {
         r && O.value && (event.preventDefault(), it(r[0], r[1], event.altKey));
       }
       function st(e) {
-        let t = w.value,
-          n = Math.max(0, Math.min(t.width - 1, Math.round(e.x * U.value))),
-          r = Math.max(0, Math.min(t.height - 1, Math.round(e.y * W.value)));
+        let value = w.value,
+          n = Math.max(0, Math.min(value.width - 1, Math.round(e.x * U.value))),
+          r = Math.max(0, Math.min(value.height - 1, Math.round(e.y * W.value)));
         return {
           x: n,
           y: r,
-          width: Math.max(1, Math.min(t.width - n, Math.round(e.width * U.value))),
-          height: Math.max(1, Math.min(t.height - r, Math.round(e.height * W.value)))
+          width: Math.max(1, Math.min(value.width - n, Math.round(e.width * U.value))),
+          height: Math.max(1, Math.min(value.height - r, Math.round(e.height * W.value)))
         };
       }
       async function $(e) {
-        let t = w.value,
+        let value = w.value,
           n = O.value,
           r = T.value;
-        if (t && n && r && !N.value) {
+        if (value && n && r && !N.value) {
           N.value = true;
           try {
             let i = st(n),
               png;
-            if (e === `beautify` && t.afterCapture === `copy`) {
+            if (e === `beautify` && value.afterCapture === `copy`) {
               let e = he(r, i.x, i.y, i.width, i.height);
               try {
-                let n = t.style.enabled && t.style.balance ? fe(e, t.scale) : null;
+                let n = value.style.enabled && value.style.balance ? fe(e, value.scale) : null;
                 png = (await ge({
                   source: e,
-                  scale: t.scale,
-                  style: t.style,
+                  scale: value.scale,
+                  style: value.style,
                   annotations: [],
                   balance: n
                 })).png;
@@ -410,7 +410,7 @@ var Se = {
               }
             }
             let finish = await overlay.finish({
-              sessionId: t.sessionId,
+              sessionId: value.sessionId,
               action: e,
               rect: i,
               rendered: png
@@ -425,19 +425,19 @@ var Se = {
       }
       function ct() {
         w.value = null, data = null, X(null), k.value = null, A.value = null, D.value = `idle`, N.value = false, P.value = false, F.value = ``;
-        let e = T.value;
-        e && (e.width = 1, e.height = 1), Y();
+        let value = T.value;
+        value && (value.width = 1, value.height = 1), Y();
       }
       async function lt(e) {
         be(e), ct(), j.value = {
           width: window.innerWidth,
           height: window.innerHeight
         }, w.value = e;
-        let t = T.value;
-        if (t) {
-          t.width = e.width, t.height = e.height;
+        let value = T.value;
+        if (value) {
+          value.width = e.width, value.height = e.height;
           let n = pe(e.bitmap, e.width, e.height);
-          g(t).putImageData(n, 0, 0), data = n.data;
+          g(value).putImageData(n, 0, 0), data = n.data;
         }
         e.cursor && (A.value = {
           ...e.cursor

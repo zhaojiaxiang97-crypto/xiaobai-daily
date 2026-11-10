@@ -191,12 +191,12 @@ function j() {
     if (!S) {
       h.value = true;
       try {
-        let e = await s.getSession();
-        if (e) {
+        let session = await s.getSession();
+        if (session) {
           try {
             await s.syncUser(), u.value = await s.getSession();
           } catch {
-            u.value = e;
+            u.value = session;
           }
           await F();
           try {
@@ -277,19 +277,19 @@ function j() {
     }
   }
   async function H() {
-    let e = await s.updateAvatar();
-    e.avatarUrl && u.value && (u.value = {
+    let avatar = await s.updateAvatar();
+    avatar.avatarUrl && u.value && (u.value = {
       ...u.value,
-      avatarUrl: e.avatarUrl
+      avatarUrl: avatar.avatarUrl
     });
   }
   async function U(e) {
-    let t = await s.updateProfile(e);
+    let profile = await s.updateProfile(e);
     return u.value &&= {
       ...u.value,
-      nickname: t.nickname,
-      jobTitle: t.jobTitle
-    }, t;
+      nickname: profile.nickname,
+      jobTitle: profile.jobTitle
+    }, profile;
   }
   async function W(e) {
     let t = await s.changePassword(e);
@@ -304,8 +304,8 @@ function j() {
   }
   async function K(e) {
     try {
-      let t = await s.resetPassword(e);
-      return await z(), t;
+      let password = await s.resetPassword(e);
+      return await z(), password;
     } catch (e) {
       c(e);
     }
@@ -319,8 +319,8 @@ function j() {
   }
   async function J() {
     try {
-      let e = await s.syncUser();
-      return e && (u.value = e), !!e;
+      let user = await s.syncUser();
+      return user && (u.value = user), !!user;
     } catch {
       return false;
     }

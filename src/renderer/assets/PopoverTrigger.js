@@ -1837,22 +1837,22 @@ function mr(e) {
   let handler = t => {
       if (!e.maxValue.value || !r.value.length) return false;
       if (e.disabled.value) return true;
-      let n = r.value.at(-1).value;
-      return !t && !e.nextPage.value ? Wn(n.add({
+      let value = r.value.at(-1).value;
+      return !t && !e.nextPage.value ? Wn(value.add({
         months: 1
       }).set({
         day: 1
-      }), e.maxValue.value) : Wn(ur(n, t || e.nextPage.value), e.maxValue.value);
+      }), e.maxValue.value) : Wn(ur(value, t || e.nextPage.value), e.maxValue.value);
     },
     s = t => {
       if (!e.minValue.value || !r.value.length) return false;
       if (e.disabled.value) return true;
-      let n = r.value[0].value;
-      return !t && !e.prevPage.value ? Z(n.subtract({
+      let value = r.value[0].value;
+      return !t && !e.prevPage.value ? Z(value.subtract({
         months: 1
       }).set({
         day: 35
-      }), e.minValue.value) : Z(dr(n, t || e.prevPage.value), e.minValue.value);
+      }), e.minValue.value) : Z(dr(value, t || e.prevPage.value), e.minValue.value);
     };
   function c(t) {
     return !!(e.isDateDisabled?.(t) || e.disabled.value || e.maxValue.value && Wn(t, e.maxValue.value) || e.minValue.value && Z(t, e.minValue.value));
@@ -1860,10 +1860,10 @@ function mr(e) {
   let l = t => !!e.isDateUnavailable?.(t),
     u = w(() => r.value.length ? r.value[0].rows[0].map(item => t.dayOfWeek(Y(item), e.weekdayFormat.value)) : []),
     d = t => {
-      let n = r.value[0].value;
+      let value = r.value[0].value;
       if (!t && !e.nextPage.value) {
         let t = Q({
-          dateObj: n.add({
+          dateObj: value.add({
             months: e.pagedNavigation.value ? e.numberOfMonths.value : 1
           }),
           weekStartsOn: e.weekStartsOn.value,
@@ -1877,7 +1877,7 @@ function mr(e) {
         return;
       }
       let i = Q({
-        dateObj: fr(n, t || e.nextPage.value),
+        dateObj: fr(value, t || e.nextPage.value),
         weekStartsOn: e.weekStartsOn.value,
         locale: e.locale.value,
         fixedWeeks: e.fixedWeeks.value,
@@ -1886,18 +1886,18 @@ function mr(e) {
       r.value = i;
       let a = {};
       if (!t) {
-        let e = i[0].value.compare(n);
-        e >= X(n) && (a.day = 1), e >= 365 && (a.month = 1);
+        let e = i[0].value.compare(value);
+        e >= X(value) && (a.day = 1), e >= 365 && (a.month = 1);
       }
       e.placeholder.value = i[0].value.set({
         ...a
       });
     },
     f = t => {
-      let n = r.value[0].value;
+      let value = r.value[0].value;
       if (!t && !e.prevPage.value) {
         let t = Q({
-          dateObj: n.subtract({
+          dateObj: value.subtract({
             months: e.pagedNavigation.value ? e.numberOfMonths.value : 1
           }),
           weekStartsOn: e.weekStartsOn.value,
@@ -1911,7 +1911,7 @@ function mr(e) {
         return;
       }
       let i = Q({
-        dateObj: pr(n, t || e.prevPage.value),
+        dateObj: pr(value, t || e.prevPage.value),
         weekStartsOn: e.weekStartsOn.value,
         locale: e.locale.value,
         fixedWeeks: e.fixedWeeks.value,
@@ -1920,8 +1920,8 @@ function mr(e) {
       r.value = i;
       let a = {};
       if (!t) {
-        let e = n.compare(i[0].value);
-        e >= X(n) && (a.day = 1), e >= 365 && (a.month = 1);
+        let e = value.compare(i[0].value);
+        e >= X(value) && (a.day = 1), e >= 365 && (a.month = 1);
       }
       e.placeholder.value = i[0].value.set({
         ...a
@@ -1947,8 +1947,8 @@ function mr(e) {
   let p = w(() => {
     if (!r.value.length) return ``;
     if (e.locale.value !== t.getLocale() && t.setLocale(e.locale.value), r.value.length === 1) {
-      let e = r.value[0].value;
-      return `${t.fullMonthAndYear(Y(e), n.value)}`;
+      let value = r.value[0].value;
+      return `${t.fullMonthAndYear(Y(value), n.value)}`;
     }
     let i = Y(r.value[0].value),
       a = Y(r.value.at(-1).value),
@@ -2438,8 +2438,8 @@ var [$, hr] = m(`PopoverRoot`),
         },
         onInteractOutside: t[1] ||= async e => {
           r(`interactOutside`, e), e.defaultPrevented || (a.value = true, e.detail.originalEvent.type === `pointerdown` && (o.value = true));
-          let t = e.target;
-          g(i).triggerElement.value?.contains(t) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
+          let target = e.target;
+          g(i).triggerElement.value?.contains(target) && e.preventDefault(), e.detail.originalEvent.type === `focusin` && o.value && e.preventDefault();
         }
       }), {
         default: v(() => [_(e.$slots, `default`)]),

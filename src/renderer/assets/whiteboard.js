@@ -1153,9 +1153,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       let Or = y(() => O.value.strokes.find(item => item.id === R.value && item.kind === `shape`) || null),
         kr = y(() => {
-          let e = Or.value;
-          if (!e) return {};
-          let t = In(Mn(e)),
+          let value = Or.value;
+          if (!value) return {};
+          let t = In(Mn(value)),
             n = t.left * N.value + P.x,
             r = t.top * N.value + P.y,
             i = Math.max(8, (t.right - t.left) * N.value),
@@ -1273,14 +1273,14 @@ var Fe = C(`circle-dashed`, [[`path`, {
         B.value === `pen` ? Xn.value = e : B.value === `eraser` ? Zn.value = e : Qn.value = e;
       }
       function Wr(event, items) {
-        let n = Or.value;
-        if (!n) return;
-        let r = In(Mn(n));
+        let value = Or.value;
+        if (!value) return;
+        let r = In(Mn(value));
         br = {
           pointerId: event.pointerId,
           corner: items,
-          strokeId: n.id,
-          originalStroke: E(n),
+          strokeId: value.id,
+          originalStroke: E(value),
           originalBounds: r,
           fixedPoint: {
             x: items.includes(`left`) ? r.right : r.left,
@@ -1372,8 +1372,8 @@ var Fe = C(`circle-dashed`, [[`path`, {
             y: z.y
           },
           fontSize = z.fontSize,
-          r = ar.value;
-        yr = null, z.open = false, z.value = ``, ar.value = null, (trimmed || r) && (X(), r ? O.value.strokes = O.value.strokes.flatMap(item => item.id === r ? trimmed ? [{
+          value = ar.value;
+        yr = null, z.open = false, z.value = ``, ar.value = null, (trimmed || value) && (X(), value ? O.value.strokes = O.value.strokes.flatMap(item => item.id === value ? trimmed ? [{
           ...item,
           text: trimmed,
           color: M.value,
@@ -1441,11 +1441,11 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }
         if (event.key === `Enter` && !event.isComposing) {
           event.preventDefault();
-          let t = Gn.value,
-            fallbackValue = t?.selectionStart ?? z.value.length,
-            fallbackValueValue = t?.selectionEnd ?? fallbackValue;
+          let value = Gn.value,
+            fallbackValue = value?.selectionStart ?? z.value.length,
+            fallbackValueValue = value?.selectionEnd ?? fallbackValue;
           z.value = `${z.value.slice(0, fallbackValue)}\n${z.value.slice(fallbackValueValue)}`, ae(() => {
-            t?.focus(), t?.setSelectionRange(fallbackValue + 1, fallbackValue + 1);
+            value?.focus(), value?.setSelectionRange(fallbackValue + 1, fallbackValue + 1);
           });
         }
       }
@@ -1527,9 +1527,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
           willReadFrequently: true
         });
         context.setTransform(o, 0, 0, o, -r.left * o, -r.top * o), ai(context, e);
-        let l = context.getImageData(0, 0, element.width, element.height).data,
+        let data = context.getImageData(0, 0, element.width, element.height).data,
           u = 0;
-        for (let e = 3; e < l.length; e += 4) if (l[e] > 12 && ++u >= 2) return true;
+        for (let e = 3; e < data.length; e += 4) if (data[e] > 12 && ++u >= 2) return true;
         return false;
       }
       function si(e = A.value) {
@@ -1560,13 +1560,13 @@ var Fe = C(`circle-dashed`, [[`path`, {
         }), t.restore()), I.value?.length > 1 && (t.save(), t.translate(P.x, P.y), t.scale(N.value, N.value), t.strokeStyle = `#2f7dff`, t.lineWidth = 1.25 / N.value, t.setLineDash([6 / N.value, 5 / N.value]), t.beginPath(), t.moveTo(I.value[0].x, I.value[0].y), I.value.slice(1).forEach(item => t.lineTo(item.x, item.y)), er.value && t.lineTo(I.value[0].x, I.value[0].y), t.stroke(), t.restore());
       }
       function li(items, t = false) {
-        let n = A.value;
-        if (!n) return null;
+        let value = A.value;
+        if (!value) return null;
         let element = document.createElement(`canvas`);
-        element.width = n.width, element.height = n.height;
+        element.width = value.width, element.height = value.height;
         let context = element.getContext(`2d`),
           fallbackValue = window.devicePixelRatio || 1;
-        return context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.translate(P.x, P.y), context.scale(N.value, N.value), t && Pr(context, O.value.backgroundImage, n.width / fallbackValue, n.height / fallbackValue), items.forEach(item => ai(context, item)), element;
+        return context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.translate(P.x, P.y), context.scale(N.value, N.value), t && Pr(context, O.value.backgroundImage, value.width / fallbackValue, value.height / fallbackValue), items.forEach(item => ai(context, item)), element;
       }
       function ui(e, t) {
         return {
@@ -1844,9 +1844,9 @@ var Fe = C(`circle-dashed`, [[`path`, {
       }
       function Ci(e) {
         if (dr.value && O.value.backgroundImage) return Si(e);
-        let t = A.value,
+        let value = A.value,
           element = document.createElement(`canvas`);
-        element.width = t.width, element.height = t.height;
+        element.width = value.width, element.height = value.height;
         let fallbackValue = window.devicePixelRatio || 1,
           context = element.getContext(`2d`);
         if (context.fillStyle = e === `board` ? `#fcfdfc` : `#ffffff`, context.fillRect(0, 0, element.width, element.height), e === `board`) {
@@ -1856,7 +1856,7 @@ var Fe = C(`circle-dashed`, [[`path`, {
           context.fillStyle = `rgba(110,142,122,.19)`;
           for (let o = t; o < element.width; o += e) for (let t = a; t < element.height; t += e) context.beginPath(), context.arc(o, t, Math.max(1, fallbackValue), 0, Math.PI * 2), context.fill();
         }
-        return context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.translate(P.x, P.y), context.scale(N.value, N.value), Pr(context, O.value.backgroundImage, t.width / fallbackValue, t.height / fallbackValue), O.value.strokes.forEach(item => ai(context, item)), element.toDataURL(`image/png`);
+        return context.setTransform(fallbackValue, 0, 0, fallbackValue, 0, 0), context.translate(P.x, P.y), context.scale(N.value, N.value), Pr(context, O.value.backgroundImage, value.width / fallbackValue, value.height / fallbackValue), O.value.strokes.forEach(item => ai(context, item)), element.toDataURL(`image/png`);
       }
       async function wi(e, t = `image`, n = null) {
         let r = _e(),

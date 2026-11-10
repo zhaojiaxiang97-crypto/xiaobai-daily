@@ -22,8 +22,8 @@ function g(e) {
         i,
         a;
       if (`borderBoxSize` in t) {
-        let e = t.borderBoxSize,
-          n = Array.isArray(e) ? e[0] : e;
+        let borderBoxSize = t.borderBoxSize,
+          n = Array.isArray(borderBoxSize) ? borderBoxSize[0] : borderBoxSize;
         i = n.inlineSize, a = n.blockSize;
       } else i = r.offsetWidth, a = r.offsetHeight;
       n.value = {
@@ -56,12 +56,12 @@ function v(t = {}) {
     }, m(f, h);
   } else h = s(f);
   let g = (e = false) => {
-      let t = h.collectionRef.value;
-      if (!t) return [];
-      let n = Array.from(t.querySelectorAll(`[${_}]`)),
-        r = new Map(n.map((e, t) => [e, t])),
-        i = Array.from(h.itemMap.value.values()).sort((e, t) => (r.get(e.ref) ?? -1) - (r.get(t.ref) ?? -1));
-      return e ? i : i.filter(e => e.ref.dataset.disabled !== ``);
+      let value = h.collectionRef.value;
+      if (!value) return [];
+      let n = Array.from(value.querySelectorAll(`[${_}]`)),
+        r = new Map(n.map((item, t) => [item, t])),
+        i = Array.from(h.itemMap.value.values()).sort((left, right) => (r.get(left.ref) ?? -1) - (r.get(right.ref) ?? -1));
+      return e ? i : i.filter(item => item.ref.dataset.disabled !== ``);
     },
     v = l({
       name: `CollectionSlot`,

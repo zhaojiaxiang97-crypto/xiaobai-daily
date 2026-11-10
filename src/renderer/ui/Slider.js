@@ -3,7 +3,7 @@ import { An as d, Ct as f, Dn as p, Et as m, S as h, St as g, Tn as _, Yt as v, 
 import { n as j, r as ee, t as M } from "./Collection.js";
 function N(e = [], t, n) {
   let r = [...e];
-  return r[n] = t, r.sort((e, t) => e - t);
+  return r[n] = t, r.sort((left, right) => left - right);
 }
 function P(e, t, n) {
   let r = 100 / (n - t) * (e - t);
@@ -15,7 +15,7 @@ function F(e, t) {
 }
 function I(e, t) {
   if (e.length === 1) return 0;
-  let n = e.map(e => Math.abs(e - t)),
+  let n = e.map(item => Math.abs(item - t)),
     r = Math.min(...n);
   return n.indexOf(r);
 }
@@ -24,7 +24,7 @@ function L(e, t, n) {
   return (r - B([0, 50], [0, r])(t) * n) * n;
 }
 function R(e) {
-  return e.slice(0, -1).map((t, n) => e[n + 1] - t);
+  return e.slice(0, -1).map((item, n) => e[n + 1] - item);
 }
 function z(e, t) {
   if (t > 0) {
@@ -391,9 +391,9 @@ var U = [`PageUp`, `PageDown`],
           onStepKeyDown: t[6] ||= (e, t) => {
             if (!d(C)) {
               let n = d(U).includes(e.key) || e.shiftKey && d(W).includes(e.key) ? 10 : 1,
-                r = B.value,
-                i = R.value[r];
-              Q(i + d(h) * n * t, r, {
+                value = B.value,
+                i = R.value[value];
+              Q(i + d(h) * n * t, value, {
                 commit: true
               });
             }
@@ -443,15 +443,15 @@ var U = [`PageUp`, `PageDown`],
           e.key === `Home` ? (r(`homeKeyDown`, e), e.preventDefault()) : e.key === `End` ? (r(`endKeyDown`, e), e.preventDefault()) : d(U).concat(d(W)).includes(e.key) && (r(`stepKeyDown`, e), e.preventDefault());
         },
         onPointerdown: t[1] ||= e => {
-          let t = e.target;
-          t.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(t) ? t.focus() : r(`slideStart`, e);
+          let target = e.target;
+          target.setPointerCapture(e.pointerId), e.preventDefault(), d(i).thumbElements.value.includes(target) ? target.focus() : r(`slideStart`, e);
         },
         onPointermove: t[2] ||= e => {
           e.target.hasPointerCapture(e.pointerId) && r(`slideMove`, e);
         },
         onPointerup: t[3] ||= e => {
-          let t = e.target;
-          t.hasPointerCapture(e.pointerId) && (t.releasePointerCapture(e.pointerId), r(`slideEnd`, e));
+          let target = e.target;
+          target.hasPointerCapture(e.pointerId) && (target.releasePointerCapture(e.pointerId), r(`slideEnd`, e));
         }
       }), {
         default: v(() => [f(e.$slots, `default`)]),
@@ -476,7 +476,7 @@ var U = [`PageUp`, `PageDown`],
       let t = X(),
         r = K();
       n();
-      let i = k(() => t.currentModelValue.value.map(e => P(e, t.min.value, t.max.value))),
+      let i = k(() => t.currentModelValue.value.map(item => P(item, t.min.value, t.max.value))),
         a = k(() => t.currentModelValue.value.length > 1 ? Math.min(...i.value) : 0),
         s = k(() => 100 - Math.max(...i.value, 0));
       return (e, n) => (S(), y(d(o), {
@@ -532,7 +532,7 @@ var U = [`PageUp`, `PageDown`],
       return O(() => {
         i.thumbElements.value.push(c.value);
       }), T(() => {
-        let e = i.thumbElements.value.findIndex(e => e === c.value) ?? -1;
+        let e = i.thumbElements.value.findIndex(item => item === c.value) ?? -1;
         i.thumbElements.value.splice(e, 1);
       }), (e, t) => (S(), y(d(l), null, {
         default: v(() => [w(d(o), D(e.$attrs, {
@@ -587,7 +587,7 @@ var U = [`PageUp`, `PageDown`],
           forwardRef: i,
           currentElement: a
         } = n(),
-        o = k(() => a.value ? r(true).findIndex(e => e.ref === a.value) : -1);
+        o = k(() => a.value ? r(true).findIndex(item => item.ref === a.value) : -1);
       return (e, n) => (S(), y(ne, D({
         ref: d(i)
       }, t, {

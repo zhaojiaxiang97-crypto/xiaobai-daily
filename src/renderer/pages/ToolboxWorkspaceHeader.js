@@ -75,7 +75,7 @@ var x = p(`save-all`, [[`path`, {
         {
           t: R
         } = y(),
-        z = u(() => I.localTool || I.tool.price > 0 ? !I.localTool : Object.values(I.tool.priceOptions || {}).some(e => Number(e) > 0) || Object.values(I.tool.characterPriceOptions || {}).some(e => Number(e) > 0) ? true : Object.values(I.tool.tokenRateOptions || {}).some(e => Number(e?.withVideo) > 0 || Number(e?.withoutVideo) > 0)),
+        z = u(() => I.localTool || I.tool.price > 0 ? !I.localTool : Object.values(I.tool.priceOptions || {}).some(item => Number(item) > 0) || Object.values(I.tool.characterPriceOptions || {}).some(item => Number(item) > 0) ? true : Object.values(I.tool.tokenRateOptions || {}).some(item => Number(item?.withVideo) > 0 || Number(item?.withoutVideo) > 0)),
         B = `${F} hover:bg-muted hover:text-foreground`,
         V = `${F} hover:bg-primary/10`;
       return (u, p) => (o(), i(`header`, S, [f(`div`, C, [f(`button`, {

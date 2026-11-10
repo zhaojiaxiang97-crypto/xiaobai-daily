@@ -318,16 +318,16 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
         variants: r,
         defaultVariants: i
       } = t,
-      a = Object.keys(r).map(e => {
-        let t = n?.[e],
-          a = i?.[e];
+      a = Object.keys(r).map(item => {
+        let t = n?.[item],
+          a = i?.[item];
         if (t === null) return null;
         let o = Un(t) || Un(a);
-        return r[e][o];
+        return r[item][o];
       }),
-      o = n && Object.entries(n).reduce((e, t) => {
-        let [n, r] = t;
-        return r === undefined || (e[n] = r), e;
+      o = n && Object.entries(n).reduce((acc, cur) => {
+        let [n, r] = cur;
+        return r === undefined || (acc[n] = r), acc;
       }, {});
     return Wn(e, a, t?.compoundVariants?.reduce((e, t) => {
       let {
@@ -335,8 +335,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
         className: r,
         ...a
       } = t;
-      return Object.entries(a).every(e => {
-        let [t, n] = e;
+      return Object.entries(a).every(item => {
+        let [t, n] = item;
         return Array.isArray(n) ? n.includes({
           ...i,
           ...o
@@ -395,12 +395,12 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
       let n = $n(e, t + 1, i);
       if (n) return n;
     }
-    let a = n.validators;
-    if (a === null) return;
+    let validators = n.validators;
+    if (validators === null) return;
     let o = t === 0 ? e.join(Yn) : e.slice(t).join(Yn),
-      s = a.length;
-    for (let e = 0; e < s; e++) {
-      let t = a[e];
+      length = validators.length;
+    for (let e = 0; e < length; e++) {
+      let t = validators[e];
       if (t.validator(o)) return t.classGroupId;
     }
   },
@@ -426,8 +426,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
     return n;
   },
   rr = (e, t, n, r) => {
-    let i = e.length;
-    for (let a = 0; a < i; a++) {
+    let length = e.length;
+    for (let a = 0; a < length; a++) {
       let i = e[a];
       ir(i, t, n, r);
     }
@@ -456,8 +456,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
   },
   sr = (e, t, n, r) => {
     let i = Object.entries(e),
-      a = i.length;
-    for (let e = 0; e < a; e++) {
+      length = i.length;
+    for (let e = 0; e < length; e++) {
       let [a, o] = i[e];
       rr(o, cr(t, a), n, r);
     }
@@ -465,8 +465,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
   cr = (e, t) => {
     let n = e,
       r = t.split(Yn),
-      i = r.length;
-    for (let e = 0; e < i; e++) {
+      length = r.length;
+    for (let e = 0; e < length; e++) {
       let t = r[e],
         i = n.nextPart.get(t);
       i || (i = Jn(), n.nextPart.set(t, i)), n = i;
@@ -517,8 +517,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
           r = 0,
           i = 0,
           a,
-          o = e.length;
-        for (let s = 0; s < o; s++) {
+          length = e.length;
+        for (let s = 0; s < length; s++) {
           let o = e[s];
           if (n === 0 && r === 0) {
             if (o === fr) {
@@ -555,8 +555,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
   },
   gr = e => {
     let t = new Map();
-    return e.orderSensitiveModifiers.forEach((e, n) => {
-      t.set(e, 1e6 + n);
+    return e.orderSensitiveModifiers.forEach((item, n) => {
+      t.set(item, 1e6 + n);
     }), e => {
       let n = [],
         r = [];
@@ -578,8 +578,8 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
   }),
   vr = e => {
     let t = Object.create(null),
-      n = e.postfixLookupClassGroups;
-    if (n) for (let e = 0; e < n.length; e++) t[n[e]] = true;
+      postfixLookupClassGroups = e.postfixLookupClassGroups;
+    if (postfixLookupClassGroups) for (let e = 0; e < postfixLookupClassGroups.length; e++) t[postfixLookupClassGroups[e]] = true;
     return t;
   },
   yr = /\s+/,
@@ -659,7 +659,7 @@ var Un = e => typeof e == `boolean` ? `${e}` : e === 0 ? `0` : e,
       r,
       i,
       a,
-      o = o => (n = _r(t.reduce((e, t) => t(e), e())), r = n.cache.get, i = n.cache.set, a = s, s(o)),
+      o = o => (n = _r(t.reduce((acc, cur) => cur(acc), e())), r = n.cache.get, i = n.cache.set, a = s, s(o)),
       s = e => {
         let t = r(e);
         if (t) return t;
@@ -1987,21 +1987,21 @@ function vi(e, t) {
   }, e => (It(r, e), e)];
 }
 function K() {
-  let e = document.activeElement;
-  if (e == null) return null;
-  for (; e != null && e.shadowRoot != null && e.shadowRoot.activeElement != null;) e = e.shadowRoot.activeElement;
-  return e;
+  let activeElement = document.activeElement;
+  if (activeElement == null) return null;
+  for (; activeElement != null && activeElement.shadowRoot != null && activeElement.shadowRoot.activeElement != null;) activeElement = activeElement.shadowRoot.activeElement;
+  return activeElement;
 }
 function yi(e, t, n) {
-  let r = n.originalEvent.target,
+  let target = n.originalEvent.target,
     i = new CustomEvent(e, {
       bubbles: false,
       cancelable: true,
       detail: n
     });
-  t && r.addEventListener(e, t, {
+  t && target.addEventListener(e, t, {
     once: true
-  }), r.dispatchEvent(i);
+  }), target.dispatchEvent(i);
 }
 function bi(e) {
   return e == null;
@@ -2047,7 +2047,7 @@ function Si() {
       };
     },
     off: t,
-    trigger: (...t) => Promise.all(Array.from(e).map(e => e(...t))),
+    trigger: (...t) => Promise.all(Array.from(e).map(item => item(...t))),
     clear: () => {
       e.clear();
     }
@@ -2263,7 +2263,7 @@ function qi(e) {
 function Ji(e, ...t) {
   let n = t.flat(),
     r = n[0];
-  return qi(() => Object.fromEntries(typeof r == `function` ? Object.entries(f(e)).filter(([e, t]) => !r(A(t), e)) : Object.entries(f(e)).filter(e => !n.includes(e[0]))));
+  return qi(() => Object.fromEntries(typeof r == `function` ? Object.entries(f(e)).filter(([e, t]) => !r(A(t), e)) : Object.entries(f(e)).filter(item => !n.includes(item[0]))));
 }
 function Yi(e, t = 1e4) {
   return $e((n, r) => {
@@ -2441,17 +2441,17 @@ function Z(e) {
 function ca(...e) {
   let t = (e, t, n, r) => (e.addEventListener(t, n, r), () => e.removeEventListener(t, n, r)),
     n = B(() => {
-      let t = zi(A(e[0])).filter(e => e != null);
-      return t.every(e => typeof e != `string`) ? t : undefined;
+      let t = zi(A(e[0])).filter(item => item != null);
+      return t.every(item => typeof item != `string`) ? t : undefined;
     });
-  return ia(() => [n.value?.map(e => Z(e)) ?? [X].filter(e => e != null), zi(A(n.value ? e[1] : e[0])), zi(i(n.value ? e[2] : e[1])), A(n.value ? e[3] : e[2])], ([e, n, r, i], a, o) => {
+  return ia(() => [n.value?.map(e => Z(e)) ?? [X].filter(item => item != null), zi(A(n.value ? e[1] : e[0])), zi(i(n.value ? e[2] : e[1])), A(n.value ? e[3] : e[2])], ([e, n, r, i], a, o) => {
     if (!e?.length || !n?.length || !r?.length) return;
     let s = ki(i) ? {
         ...i
       } : i,
-      c = e.flatMap(e => n.flatMap(n => r.map(r => t(e, n, r, s))));
+      c = e.flatMap(item => n.flatMap(n => r.map(r => t(item, n, r, s))));
     o(() => {
-      c.forEach(e => e());
+      c.forEach(item => item());
     });
   }, {
     flush: `post`
@@ -2482,7 +2482,7 @@ function da(e, t, n = {}) {
       let t = zi(A(e)).map(Z).filter(Di);
       return new Set(t);
     }), e => {
-      s(), o.value && e.size && (a = new MutationObserver(t), e.forEach(e => a.observe(e, i)));
+      s(), o.value && e.size && (a = new MutationObserver(t), e.forEach(item => a.observe(item, i)));
     }, {
       immediate: true,
       flush: `post`
@@ -2577,10 +2577,10 @@ function _a(e, t = {}) {
     if (a.value) {
       a.value = !i.value;
       let t = A(e).split(`,`);
-      s.value = t.some(e => {
-        let t = e.includes(`not all`),
-          n = e.match(/\(\s*min-width:\s*(-?\d+(?:\.\d*)?[a-z]+\s*)\)/),
-          i = e.match(/\(\s*max-width:\s*(-?\d+(?:\.\d*)?[a-z]+\s*)\)/),
+      s.value = t.some(item => {
+        let t = item.includes(`not all`),
+          n = item.match(/\(\s*min-width:\s*(-?\d+(?:\.\d*)?[a-z]+\s*)\)/),
+          i = item.match(/\(\s*max-width:\s*(-?\d+(?:\.\d*)?[a-z]+\s*)\)/),
           a = !!(n || i);
         return n && a && (a = r >= Ri(n[1])), i && a && (a = r <= Ri(i[1])), t ? !a : a;
       });
@@ -2767,7 +2767,7 @@ function ka(e, t, n = {}) {
     },
     c = P(B(() => {
       let t = A(e);
-      return Array.isArray(t) ? t.map(e => Z(e)) : [Z(t)];
+      return Array.isArray(t) ? t.map(item => Z(item)) : [Z(t)];
     }), e => {
       if (s(), o.value && r) {
         a = new ResizeObserver(t);
@@ -2811,11 +2811,11 @@ function Aa(e, t = {
         }
       } else if (n) {
         let e = zi(n);
-        o.value = e.reduce((e, {
+        o.value = e.reduce((acc, {
           inlineSize: t
-        }) => e + t, 0), s.value = e.reduce((e, {
+        }) => acc + t, 0), s.value = e.reduce((acc, {
           blockSize: t
-        }) => e + t, 0);
+        }) => acc + t, 0);
       } else o.value = t.contentRect.width, s.value = t.contentRect.height;
     }, n);
   ta(() => {
@@ -2866,7 +2866,7 @@ function Ma(e) {
   }
   function a(t, n) {
     var r;
-    (r = ja.get(e)) == null || r.forEach(e => e(t, n));
+    (r = ja.get(e)) == null || r.forEach(item => item(t, n));
   }
   return {
     on: t,
@@ -2963,16 +2963,16 @@ function Pa(e, t = {}) {
           direction: a
         } = d.getComputedStyle(n),
         s = a === `rtl` ? -1 : 1,
-        c = n.scrollLeft;
-      x.left = c < m.value, x.right = c > m.value;
-      let l = Math.abs(c * s) <= (o.left || 0),
-        u = Math.abs(c * s) + n.clientWidth >= n.scrollWidth - (o.right || 0) - Na;
-      r === `flex` && i === `row-reverse` ? (b.left = u, b.right = l) : (b.left = l, b.right = u), m.value = c;
-      let f = n.scrollTop;
-      e === d.document && !f && (f = d.document.body.scrollTop), x.top = f < h.value, x.bottom = f > h.value;
-      let p = Math.abs(f) <= (o.top || 0),
-        g = Math.abs(f) + n.clientHeight >= n.scrollHeight - (o.bottom || 0) - Na;
-      r === `flex` && i === `column-reverse` ? (b.top = g, b.bottom = p) : (b.top = p, b.bottom = g), h.value = f;
+        scrollLeft = n.scrollLeft;
+      x.left = scrollLeft < m.value, x.right = scrollLeft > m.value;
+      let l = Math.abs(scrollLeft * s) <= (o.left || 0),
+        u = Math.abs(scrollLeft * s) + n.clientWidth >= n.scrollWidth - (o.right || 0) - Na;
+      r === `flex` && i === `row-reverse` ? (b.left = u, b.right = l) : (b.left = l, b.right = u), m.value = scrollLeft;
+      let scrollTop = n.scrollTop;
+      e === d.document && !scrollTop && (scrollTop = d.document.body.scrollTop), x.top = scrollTop < h.value, x.bottom = scrollTop > h.value;
+      let p = Math.abs(scrollTop) <= (o.top || 0),
+        g = Math.abs(scrollTop) + n.clientHeight >= n.scrollHeight - (o.bottom || 0) - Na;
+      r === `flex` && i === `column-reverse` ? (b.top = g, b.bottom = p) : (b.top = p, b.bottom = g), h.value = scrollTop;
     },
     T = e => {
       if (!d) return;
@@ -3074,7 +3074,7 @@ function Ra(e, t, n, r = {}) {
   });
 }
 function za(e) {
-  return e ? e.flatMap(e => e.type === Ie ? za(e.children) : [e]) : [];
+  return e ? e.flatMap(item => item.type === Ie ? za(item.children) : [item]) : [];
 }
 var [Ba, Va] = vi(`ConfigProvider`),
   Q = Ft({
@@ -3101,7 +3101,7 @@ function Ua(e, t, n = `.`, r) {
   return i;
 }
 function Wa(e) {
-  return (...t) => t.reduce((t, n) => Ua(t, n, ``, e), {});
+  return (...t) => t.reduce((acc, cur) => Ua(acc, cur, ``, e), {});
 }
 var Ga = Wa(),
   Ka = Wi(() => {
@@ -3163,14 +3163,14 @@ function Ja(e) {
   let t = window.getComputedStyle(e);
   if (t.overflowX === `scroll` || t.overflowY === `scroll` || t.overflowX === `auto` && e.clientWidth < e.scrollWidth || t.overflowY === `auto` && e.clientHeight < e.scrollHeight) return true;
   {
-    let t = e.parentNode;
-    return !(t instanceof Element) || t.tagName === `BODY` ? false : Ja(t);
+    let parentNode = e.parentNode;
+    return !(parentNode instanceof Element) || parentNode.tagName === `BODY` ? false : Ja(parentNode);
   }
 }
 function Ya(e) {
   let t = e || window.event,
-    n = t.target;
-  return n instanceof Element && Ja(n) ? false : t.touches.length > 1 || (t.preventDefault && t.cancelable && t.preventDefault(), false);
+    target = t.target;
+  return target instanceof Element && Ja(target) ? false : t.touches.length > 1 || (t.preventDefault && t.cancelable && t.preventDefault(), false);
 }
 function Xa(e) {
   let t = V(),
@@ -3216,12 +3216,12 @@ function Qa() {
       configurable: true,
       get: () => n instanceof Element ? n : n.$el
     }), !(n instanceof Element) && !Object.hasOwn(n, `$el`))) {
-      let t = n.$.exposed,
+      let exposed = n.$.exposed,
         r = Object.assign({}, a);
-      for (let e in t) Object.defineProperty(r, e, {
+      for (let e in exposed) Object.defineProperty(r, e, {
         enumerable: true,
         configurable: true,
-        get: () => t[e]
+        get: () => exposed[e]
       });
       e.exposed = r;
     }
@@ -3234,20 +3234,20 @@ function Qa() {
 }
 function $a(e) {
   let t = V(),
-    n = Object.keys(t?.type.props ?? {}).reduce((e, n) => {
-      let r = (t?.type.props[n]).default;
-      return r !== undefined && (e[n] = r), e;
+    n = Object.keys(t?.type.props ?? {}).reduce((acc, cur) => {
+      let r = (t?.type.props[cur]).default;
+      return r !== undefined && (acc[cur] = r), acc;
     }, {}),
     r = h(e);
   return B(() => {
     let e = {},
       i = t?.vnode.props ?? {};
-    return Object.keys(i).forEach(t => {
-      e[ae(t)] = i[t];
+    return Object.keys(i).forEach(item => {
+      e[ae(item)] = i[item];
     }), Object.keys({
       ...n,
       ...e
-    }).reduce((e, t) => (r.value[t] !== undefined && (e[t] = r.value[t]), e), {});
+    }).reduce((acc, cur) => (r.value[cur] !== undefined && (acc[cur] = r.value[cur]), acc), {});
   });
 }
 function eo(e, t) {
@@ -3275,12 +3275,12 @@ var no = function (e) {
     return e && (e.host || so(e.parentNode));
   },
   co = function (e, t) {
-    return t.map(function (t) {
-      if (e.contains(t)) return t;
-      var n = so(t);
-      return n && e.contains(n) ? n : (console.error(`aria-hidden`, t, `in not contained inside`, e, `. Doing nothing`), null);
-    }).filter(function (e) {
-      return !!e;
+    return t.map(function (item) {
+      if (e.contains(item)) return item;
+      var n = so(item);
+      return n && e.contains(n) ? n : (console.error(`aria-hidden`, item, `in not contained inside`, e, `. Doing nothing`), null);
+    }).filter(function (item) {
+      return !!item;
     });
   },
   lo = function (e, t, n, r) {
@@ -3308,10 +3308,10 @@ var no = function (e) {
       });
     };
     return u(t), s.clear(), oo++, function () {
-      o.forEach(function (e) {
-        var t = ro.get(e) - 1,
-          i = a.get(e) - 1;
-        ro.set(e, t), a.set(e, i), t || (io.has(e) || e.removeAttribute(r), io.delete(e)), i || e.removeAttribute(n);
+      o.forEach(function (item) {
+        var t = ro.get(item) - 1,
+          i = a.get(item) - 1;
+        ro.set(item, t), a.set(item, i), t || (io.has(item) || item.removeAttribute(r), io.delete(item)), i || item.removeAttribute(n);
       }), oo--, oo || (ro = new WeakMap(), ro = new WeakMap(), io = new WeakMap(), ao = {});
     };
   },
@@ -3363,13 +3363,13 @@ function go(e) {
     handleTypeaheadSearch: (n, r) => {
       if (t.value += n, e) e(n);else {
         let e = K(),
-          n = r.map(e => ({
-            ...e,
-            textValue: e.value?.textValue ?? e.ref.textContent?.trim() ?? ``
+          n = r.map(item => ({
+            ...item,
+            textValue: item.value?.textValue ?? item.ref.textContent?.trim() ?? ``
           })),
-          i = n.find(t => t.ref === e),
-          a = vo(n.map(e => e.textValue), t.value, i?.textValue),
-          o = n.find(e => e.textValue === a);
+          i = n.find(item => item.ref === e),
+          a = vo(n.map(item => item.textValue), t.value, i?.textValue),
+          o = n.find(item => item.textValue === a);
         return o && o.ref.focus(), o?.ref;
       }
     },
@@ -3379,14 +3379,14 @@ function go(e) {
   };
 }
 function _o(e, t) {
-  return e.map((n, r) => e[(t + r) % e.length]);
+  return e.map((item, r) => e[(t + r) % e.length]);
 }
 function vo(e, t, n) {
-  let r = t.length > 1 && Array.from(t).every(e => e === t[0]) ? t[0] : t,
+  let r = t.length > 1 && Array.from(t).every(item => item === t[0]) ? t[0] : t,
     i = n ? e.indexOf(n) : -1,
     a = _o(e, Math.max(i, 0));
-  r.length === 1 && (a = a.filter(e => e !== n));
-  let o = a.find(e => e.toLowerCase().startsWith(r.toLowerCase()));
+  r.length === 1 && (a = a.filter(item => item !== n));
+  let o = a.find(item => item.toLowerCase().startsWith(r.toLowerCase()));
   return o === n ? undefined : o;
 }
 function yo(e, t) {
@@ -3424,9 +3424,9 @@ function yo(e, t) {
   P(e, async (e, i) => {
     let a = i !== e;
     if (await z(), a) {
-      let a = r.value,
+      let value = r.value,
         o = bo(t.value);
-      e ? (l(`MOUNT`), u(`enter`), o === `none` && u(`after-enter`)) : o === `none` || o === `undefined` || n.value?.display === `none` ? (l(`UNMOUNT`), u(`leave`), u(`after-leave`)) : i && a !== o ? (l(`ANIMATION_OUT`), u(`leave`)) : (l(`UNMOUNT`), u(`after-leave`));
+      e ? (l(`MOUNT`), u(`enter`), o === `none` && u(`after-enter`)) : o === `none` || o === `undefined` || n.value?.display === `none` ? (l(`UNMOUNT`), u(`leave`), u(`after-leave`)) : i && value !== o ? (l(`ANIMATION_OUT`), u(`leave`)) : (l(`UNMOUNT`), u(`after-leave`));
     }
   }, {
     immediate: true
@@ -3437,9 +3437,9 @@ function yo(e, t) {
         r = n.includes(CSS.escape(e.animationName)),
         a = c.value === `mounted` ? `enter` : `leave`;
       if (r && (u(`after-${a}`), l(`ANIMATION_END`), !i.value)) {
-        let e = t.value.style.animationFillMode;
+        let animationFillMode = t.value.style.animationFillMode;
         t.value.style.animationFillMode = `forwards`, o = s?.setTimeout(() => {
-          t.value?.style.animationFillMode === `forwards` && (t.value.style.animationFillMode = e);
+          t.value?.style.animationFillMode === `forwards` && (t.value.style.animationFillMode = animationFillMode);
         });
       }
       n === `none` && l(`ANIMATION_END`);
@@ -3499,7 +3499,7 @@ var xo = R({
       let c = V();
       if (s && s?.length > 1) {
         let e = c?.parent?.type.name ? `<${c.parent.type.name} />` : `component`;
-        throw Error([`Detected an invalid children for \`${e}\` for  \`Presence\` component.`, ``, "Note: Presence works similarly to `v-if` directly, but it waits for animation/transition to finished before unmounting. So it expect only one direct child of valid VNode type.", `You can apply a few solutions:`, ["Provide a single child element so that `presence` directive attach correctly.", `Ensure the first child is an actual element instead of a raw text node or comment node.`].map(e => `  - ${e}`).join(`
+        throw Error([`Detected an invalid children for \`${e}\` for  \`Presence\` component.`, ``, "Note: Presence works similarly to `v-if` directly, but it waits for animation/transition to finished before unmounting. So it expect only one direct child of valid VNode type.", `You can apply a few solutions:`, ["Provide a single child element so that `presence` directive attach correctly.", `Ensure the first child is an actual element instead of a raw text node or comment node.`].map(item => `  - ${item}`).join(`
 `)].join(`
 `));
       }
@@ -3523,7 +3523,7 @@ var xo = R({
       return () => {
         if (!n.default) return null;
         let e = za(n.default()),
-          r = e.findIndex(e => e.type !== Me);
+          r = e.findIndex(item => item.type !== Me);
         if (r === -1) return e;
         let i = e[r];
         delete i.props?.ref;
@@ -3585,9 +3585,9 @@ function ko(e, t, n = true) {
   return b(o => {
     if (!J || !A(n)) return;
     let s = async n => {
-        let o = n.target;
-        if (t?.value && o) {
-          if (Oo(t.value, o)) {
+        let target = n.target;
+        if (t?.value && target) {
+          if (Oo(t.value, target)) {
             i.value = false;
             return;
           }
@@ -3625,8 +3625,8 @@ function Ao(e, t, n = true) {
     let o = async n => {
       if (!t?.value) return;
       await z(), await z();
-      let r = n.target;
-      t.value && r && !Oo(t.value, r) && n.target && !i.value && yi(Do, e, {
+      let target = n.target;
+      t.value && target && !Oo(t.value, target) && n.target && !i.value && yi(Do, e, {
         originalEvent: n
       });
     };
@@ -3683,11 +3683,11 @@ var jo = R({
           return l.value >= n;
         }),
         p = ko(async e => {
-          let t = [...Q.branches].some(t => t?.contains(e.target));
+          let t = [...Q.branches].some(item => item?.contains(e.target));
           n.present && f.value && !t && (r(`pointerDownOutside`, e), r(`interactOutside`, e), await z(), e.defaultPrevented || r(`dismiss`));
         }, o, () => n.present),
         m = Ao(e => {
-          let t = [...Q.branches].some(t => t?.contains(e.target));
+          let t = [...Q.branches].some(item => item?.contains(e.target));
           n.present && !t && (r(`focusOutside`, e), r(`interactOutside`, e), e.defaultPrevented || r(`dismiss`));
         }, o);
       return pa(`Escape`, e => {
@@ -3851,31 +3851,31 @@ var Go = R({
         });
       b(e => {
         if (!J) return;
-        let t = o.value;
+        let value = o.value;
         if (!n.trapped) return;
         function r(e) {
-          if (l.paused || !t) return;
-          let n = e.target;
-          t.contains(n) ? s.value = n : Wo(s.value, {
+          if (l.paused || !value) return;
+          let target = e.target;
+          value.contains(target) ? s.value = target : Wo(s.value, {
             select: true
           });
         }
         function i(e) {
-          if (l.paused || !t) return;
-          let n = e.relatedTarget;
-          n !== null && (t.contains(n) || Wo(s.value, {
+          if (l.paused || !value) return;
+          let relatedTarget = e.relatedTarget;
+          relatedTarget !== null && (value.contains(relatedTarget) || Wo(s.value, {
             select: true
           }));
         }
         function a(e) {
           let n = s.value;
-          if (n === null || !e.some(e => e.removedNodes.length > 0)) return;
+          if (n === null || !e.some(item => item.removedNodes.length > 0)) return;
           let r = K();
-          r && t.contains(r) || t.contains(n) || Wo(t);
+          r && value.contains(r) || value.contains(n) || Wo(value);
         }
         document.addEventListener(`focusin`, r), document.addEventListener(`focusout`, i);
         let c = new MutationObserver(a);
-        t && c.observe(t, {
+        value && c.observe(value, {
           childList: true,
           subtree: true
         }), e(() => {
@@ -3890,19 +3890,19 @@ var Go = R({
         }), K() === t && Wo(e));
       }
       b(async e => {
-        let t = o.value;
-        if (await z(), !t) return;
+        let value = o.value;
+        if (await z(), !value) return;
         n.present !== false && c.add(l);
         let i = K();
-        !t.contains(i) && n.present !== false && d(t, i), e(() => {
+        !value.contains(i) && n.present !== false && d(value, i), e(() => {
           let e = new CustomEvent(Io, Lo),
             n = e => {
               r(`unmountAutoFocus`, e);
             };
-          t.addEventListener(Io, n), t.dispatchEvent(e), t.setAttribute(`data-focus-scope-unmounting`, ``), setTimeout(() => {
+          value.addEventListener(Io, n), value.dispatchEvent(e), value.setAttribute(`data-focus-scope-unmounting`, ``), setTimeout(() => {
             e.defaultPrevented || Wo(i ?? document.body, {
               select: true
-            }), t.removeEventListener(Io, n), c.remove(l), t.removeAttribute(`data-focus-scope-unmounting`);
+            }), value.removeEventListener(Io, n), c.remove(l), value.removeAttribute(`data-focus-scope-unmounting`);
           }, 0);
         });
       }), P(() => n.present, async (e, t) => {
@@ -3913,23 +3913,23 @@ var Go = R({
         }
         if (e !== true || t !== false) return;
         c.add(l), await z();
-        let n = o.value;
-        if (!n) return;
+        let value = o.value;
+        if (!value) return;
         let r = K();
-        n.contains(r) || d(n, r);
+        value.contains(r) || d(value, r);
       });
       function f(e) {
         if (!n.loop && !n.trapped || l.paused) return;
         let t = e.key === `Tab` && !e.altKey && !e.ctrlKey && !e.metaKey,
           r = K();
         if (t && r) {
-          let t = e.currentTarget,
-            [i, a] = zo(t);
+          let currentTarget = e.currentTarget,
+            [i, a] = zo(currentTarget);
           i && a ? !e.shiftKey && r === a ? (e.preventDefault(), n.loop && Wo(i, {
             select: true
           })) : e.shiftKey && r === i && (e.preventDefault(), n.loop && Wo(a, {
             select: true
-          })) : r === t && e.preventDefault();
+          })) : r === currentTarget && e.preventDefault();
         }
       }
       return (e, t) => (L(), F(i(wo), {
@@ -4107,9 +4107,9 @@ var is = R({
         i = B(() => t.checked ?? t.value);
       return P(i, (e, t) => {
         if (!r.value) return;
-        let n = r.value,
-          i = window.HTMLInputElement.prototype,
-          a = Object.getOwnPropertyDescriptor(i, `value`).set;
+        let value = r.value,
+          prototype = window.HTMLInputElement.prototype,
+          a = Object.getOwnPropertyDescriptor(prototype, `value`).set;
         if (a && e !== t) {
           let t = new Event(`input`, {
               bubbles: true
@@ -4117,7 +4117,7 @@ var is = R({
             r = new Event(`change`, {
               bubbles: true
             });
-          a.call(n, e), n.dispatchEvent(t), n.dispatchEvent(r);
+          a.call(value, e), value.dispatchEvent(t), value.dispatchEvent(r);
         }
       }), (e, r) => (L(), F(as, mt({
         ref_key: `primitiveElement`,
@@ -4167,12 +4167,12 @@ var is = R({
         r = B(() => typeof t.value == `string` || typeof t.value == `number` || typeof t.value == `boolean` || t.value === null || t.value === undefined ? [{
           name: t.name,
           value: t.value
-        }] : typeof t.value == `object` && Array.isArray(t.value) ? t.value.flatMap((e, n) => typeof e == `object` ? Object.entries(e).map(([e, r]) => ({
+        }] : typeof t.value == `object` && Array.isArray(t.value) ? t.value.flatMap((item, n) => typeof item == `object` ? Object.entries(item).map(([e, r]) => ({
           name: `${t.name}[${n}][${e}]`,
           value: r
         })) : {
           name: `${t.name}[${n}]`,
-          value: e
+          value: item
         }) : t.value !== null && typeof t.value == `object` && !Array.isArray(t.value) ? Object.entries(t.value).map(([e, n]) => ({
           name: `${t.name}[${e}]`,
           value: n
@@ -4274,7 +4274,7 @@ function As(e, t, n) {
 function js(e, t, n, r) {
   let i = vs(e),
     a = As(_s(e), n === `start`, r);
-  return i && (a = a.map(e => e + `-` + i), t && (a = a.concat(a.map(Ts)))), a;
+  return i && (a = a.map(item => item + `-` + i), t && (a = a.concat(a.map(Ts)))), a;
 }
 function Ms(e) {
   let t = _s(e);
@@ -4424,7 +4424,7 @@ var Rs = 50,
         detectOverflow: Ls
       },
       c = await (o.isRTL == null ? undefined : o.isRTL(t)),
-      l = await o.getElementRects({
+      elementRects = await o.getElementRects({
         reference: e,
         floating: t,
         strategy: i
@@ -4432,7 +4432,7 @@ var Rs = 50,
       {
         x: u,
         y: d
-      } = Is(l, r, c),
+      } = Is(elementRects, r, c),
       f = r,
       p = 0,
       m = {};
@@ -4455,7 +4455,7 @@ var Rs = 50,
           placement: f,
           strategy: i,
           middlewareData: m,
-          rects: l,
+          rects: elementRects,
           platform: s,
           elements: {
             reference: e,
@@ -4465,14 +4465,14 @@ var Rs = 50,
       u = v ?? u, d = y ?? d, m[g] = {
         ...m[g],
         ...b
-      }, x && p < Rs && (p++, typeof x == `object` && (x.placement && (f = x.placement), x.rects && (l = x.rects === true ? await o.getElementRects({
+      }, x && p < Rs && (p++, typeof x == `object` && (x.placement && (f = x.placement), x.rects && (elementRects = x.rects === true ? await o.getElementRects({
         reference: e,
         floating: t,
         strategy: i
       }) : x.rects), {
         x: u,
         y: d
-      } = Is(l, f, c)), n = -1);
+      } = Is(elementRects, f, c)), n = -1);
     }
     return {
       x: u,
@@ -4507,7 +4507,7 @@ var Rs = 50,
         },
         p = Ss(i),
         m = bs(p),
-        h = await o.getDimensions(l),
+        dimensions = await o.getDimensions(l),
         g = p === `y`,
         _ = g ? `top` : `left`,
         v = g ? `bottom` : `right`,
@@ -4518,13 +4518,13 @@ var Rs = 50,
         C = S ? S[y] : 0;
       (!C || !(await (o.isElement == null ? undefined : o.isElement(S)))) && (C = s.floating[y] || a.floating[m]);
       let w = b / 2 - x / 2,
-        T = C / 2 - h[m] / 2 - 1,
+        T = C / 2 - dimensions[m] / 2 - 1,
         E = ls(d[_], T),
         ee = ls(d[v], T),
-        te = C - h[m] - ee,
-        ne = C / 2 - h[m] / 2 + w,
+        te = C - dimensions[m] - ee,
+        ne = C / 2 - dimensions[m] / 2 + w,
         re = hs(E, ne, te),
-        D = !c.arrow && vs(i) != null && ne !== re && a.reference[m] / 2 - (ne < E ? E : ee) - h[m] / 2 < 0,
+        D = !c.arrow && vs(i) != null && ne !== re && a.reference[m] / 2 - (ne < E ? E : ee) - dimensions[m] / 2 < 0,
         O = D ? ne < E ? ne - E : ne - te : 0;
       return {
         [p]: f[p] + O,
@@ -4581,10 +4581,10 @@ var Rs = 50,
         if (T = [...T, {
           placement: r,
           overflows: w
-        }], !w.every(e => e <= 0)) {
+        }], !w.every(item => item <= 0)) {
           let e = (i.flip?.index || 0) + 1,
             t = S[e];
-          if (t && (u !== `alignment` || _ === xs(t) || T.every(e => xs(e.placement) !== _ || e.overflows[0] > 0))) return {
+          if (t && (u !== `alignment` || _ === xs(t) || T.every(item => xs(item.placement) !== _ || item.overflows[0] > 0))) return {
             data: {
               index: e,
               overflows: T
@@ -4593,17 +4593,17 @@ var Rs = 50,
               placement: t
             }
           };
-          let n = T.filter(e => e.overflows[0] <= 0).sort((e, t) => e.overflows[1] - t.overflows[1])[0]?.placement;
+          let n = T.filter(item => item.overflows[0] <= 0).sort((left, right) => left.overflows[1] - right.overflows[1])[0]?.placement;
           if (!n) switch (f) {
             case `bestFit`:
               {
-                let e = T.filter(e => {
+                let e = T.filter(item => {
                   if (x) {
-                    let t = xs(e.placement);
+                    let t = xs(item.placement);
                     return t === _ || t === `y`;
                   }
                   return true;
-                }).map(e => [e.placement, e.overflows.filter(e => e > 0).reduce((e, t) => e + t, 0)]).sort((e, t) => e[1] - t[1])[0]?.[0];
+                }).map(item => [item.placement, item.overflows.filter(e => e > 0).reduce((acc, cur) => acc + cur, 0)]).sort((left, right) => left[1] - right[1])[0]?.[0];
                 e && (n = e);
                 break;
               }
@@ -4629,7 +4629,7 @@ function Hs(e, t) {
   };
 }
 function Us(e) {
-  return cs.some(t => e[t] >= 0);
+  return cs.some(item => e[item] >= 0);
 }
 var Ws = function (e) {
     return e === undefined && (e = {}), {
@@ -4876,17 +4876,17 @@ var qs = function (e) {
           _ = f - c.left - c.right,
           v = ls(p - c[m], g),
           y = ls(f - c[h], _),
-          b = t.middlewareData.shift,
-          x = !b,
+          shift = t.middlewareData.shift,
+          x = !shift,
           S = v,
           C = y;
-        b != null && b.enabled.x && (C = _), b != null && b.enabled.y && (S = g), x && !u && (d ? C = f - 2 * us(c.left, c.right) : S = p - 2 * us(c.top, c.bottom)), await o({
+        shift != null && shift.enabled.x && (C = _), shift != null && shift.enabled.y && (S = g), x && !u && (d ? C = f - 2 * us(c.left, c.right) : S = p - 2 * us(c.top, c.bottom)), await o({
           ...t,
           availableWidth: C,
           availableHeight: S
         });
-        let w = await i.getDimensions(a.floating);
-        return f !== w.width || p !== w.height ? {
+        let dimensions = await i.getDimensions(a.floating);
+        return f !== dimensions.width || p !== dimensions.height ? {
           reset: {
             rects: true
           }
@@ -5076,8 +5076,8 @@ function Dc(e, t, n, r) {
   });
 }
 function Oc(e, t) {
-  let n = gc(e).scrollLeft;
-  return t ? t.left + n : Dc($s(e)).left + n;
+  let scrollLeft = gc(e).scrollLeft;
+  return t ? t.left + scrollLeft : Dc($s(e)).left + scrollLeft;
 }
 function kc(e, t) {
   let n = e.getBoundingClientRect();
@@ -5121,12 +5121,12 @@ function jc(e) {
 }
 function Mc(e) {
   let t = gc(e),
-    n = e.ownerDocument.body,
-    r = us(e.scrollWidth, e.clientWidth, n.scrollWidth, n.clientWidth),
-    i = us(e.scrollHeight, e.clientHeight, n.scrollHeight, n.clientHeight),
+    body = e.ownerDocument.body,
+    r = us(e.scrollWidth, e.clientWidth, body.scrollWidth, body.clientWidth),
+    i = us(e.scrollHeight, e.clientHeight, body.scrollHeight, body.clientHeight),
     a = -t.scrollLeft + Oc(e),
     o = -t.scrollTop;
-  return hc(n).direction === `rtl` && (a += us(e.clientWidth, n.clientWidth) - r), {
+  return hc(body).direction === `rtl` && (a += us(e.clientWidth, body.clientWidth) - r), {
     width: r,
     height: i,
     x: a,
@@ -5139,27 +5139,27 @@ function Pc(e, t, n) {
   let r = n === `layoutViewport`,
     i = $(e),
     a = $s(e),
-    o = i.visualViewport,
-    s = a.clientWidth,
-    c = a.clientHeight,
+    visualViewport = i.visualViewport,
+    clientWidth = a.clientWidth,
+    clientHeight = a.clientHeight,
     l = 0,
     u = 0;
-  if (o) {
+  if (visualViewport) {
     let e = !pc() || t === `fixed`;
-    r ? e || (l = -o.offsetLeft, u = -o.offsetTop) : (s = o.width, c = o.height, e && (l = o.offsetLeft, u = o.offsetTop));
+    r ? e || (l = -visualViewport.offsetLeft, u = -visualViewport.offsetTop) : (clientWidth = visualViewport.width, clientHeight = visualViewport.height, e && (l = visualViewport.offsetLeft, u = visualViewport.offsetTop));
   }
   if (Oc(a) <= 0) {
-    let e = a.ownerDocument,
-      t = e.body,
-      n = getComputedStyle(t),
-      r = e.compatMode === `CSS1Compat` && parseFloat(n.marginLeft) + parseFloat(n.marginRight) || 0,
-      i = Math.abs(a.clientWidth - t.clientWidth - r),
+    let ownerDocument = a.ownerDocument,
+      body = ownerDocument.body,
+      n = getComputedStyle(body),
+      r = ownerDocument.compatMode === `CSS1Compat` && parseFloat(n.marginLeft) + parseFloat(n.marginRight) || 0,
+      i = Math.abs(a.clientWidth - body.clientWidth - r),
       o = getComputedStyle(a).scrollbarGutter === `stable both-edges` ? i / 2 : i;
-    o <= Nc && (s -= o);
+    o <= Nc && (clientWidth -= o);
   }
   return {
-    width: s,
-    height: c,
+    width: clientWidth,
+    height: clientHeight,
     x: l,
     y: u
   };
@@ -5192,7 +5192,7 @@ function Ic(e, t, n) {
 function Lc(e, t) {
   let n = t.get(e);
   if (n) return n;
-  let r = yc(e, [], false).filter(e => tc(e) && Qs(e) !== `body`),
+  let r = yc(e, [], false).filter(item => tc(item) && Qs(item) !== `body`),
     i = null,
     a = hc(e).position === `fixed`,
     o = a ? _c(e) : e;
@@ -5200,7 +5200,7 @@ function Lc(e, t) {
     let e = hc(o),
       t = dc(o),
       n = i ? i.position : a ? `fixed` : ``;
-    !t && (n === `fixed` || n === `absolute` && e.position === `static`) ? r = r.filter(e => e !== o) : i = e, o = _c(o);
+    !t && (n === `fixed` || n === `absolute` && e.position === `static`) ? r = r.filter(item => item !== o) : i = e, o = _c(o);
   }
   return t.set(e, r), r;
 }
@@ -5214,17 +5214,17 @@ function Rc(e) {
     a = [...(n === `clippingAncestors` ? oc(t) ? [] : Lc(t, this._c) : [].concat(n)), r],
     o = Ic(t, a[0], i),
     s = o.top,
-    c = o.right,
-    l = o.bottom,
-    u = o.left;
+    right = o.right,
+    bottom = o.bottom,
+    left = o.left;
   for (let e = 1; e < a.length; e++) {
     let n = Ic(t, a[e], i);
-    s = us(n.top, s), c = ls(n.right, c), l = ls(n.bottom, l), u = us(n.left, u);
+    s = us(n.top, s), right = ls(n.right, right), bottom = ls(n.bottom, bottom), left = us(n.left, left);
   }
   return {
-    width: c - u,
-    height: l - s,
-    x: u,
+    width: right - left,
+    height: bottom - s,
+    x: left,
     y: s
   };
 }
@@ -5267,8 +5267,8 @@ function Vc(e) {
 function Hc(e, t) {
   if (!nc(e) || hc(e).position === `fixed`) return null;
   if (t) return t(e);
-  let n = e.offsetParent;
-  return $s(e) === n && (n = n.ownerDocument.body), n;
+  let offsetParent = e.offsetParent;
+  return $s(e) === offsetParent && (offsetParent = offsetParent.ownerDocument.body), offsetParent;
 }
 function Uc(e, t) {
   let n = $(e);
@@ -5287,15 +5287,15 @@ function Uc(e, t) {
 }
 var Wc = async function (e) {
   let t = this.getOffsetParent || Uc,
-    n = this.getDimensions,
-    r = await n(e.floating);
+    getDimensions = this.getDimensions,
+    dimensions = await getDimensions(e.floating);
   return {
     reference: Bc(e.reference, await t(e.floating), e.strategy),
     floating: {
       x: 0,
       y: 0,
-      width: r.width,
-      height: r.height
+      width: dimensions.width,
+      height: dimensions.height
     }
   };
 };
@@ -5345,11 +5345,11 @@ function Jc(e, t, n) {
       },
       y = true;
     function b(t) {
-      let n = t[0].intersectionRatio;
+      let intersectionRatio = t[0].intersectionRatio;
       if (!qc(l, e.getBoundingClientRect())) return s();
-      if (n !== c) {
+      if (intersectionRatio !== c) {
         if (!y) return s();
-        n ? s(false, n) : i = setTimeout(() => {
+        intersectionRatio ? s(false, intersectionRatio) : i = setTimeout(() => {
           s(false, 1e-7);
         }, 1e3);
       }
@@ -5382,8 +5382,8 @@ function Yc(e, t, n, r) {
     } = r,
     l = Sc(e),
     u = i || a ? [...(l ? yc(l) : []), ...(t ? yc(t) : [])] : [];
-  u.forEach(e => {
-    i && e.addEventListener(`scroll`, n), a && e.addEventListener(`resize`, n);
+  u.forEach(item => {
+    i && item.addEventListener(`scroll`, n), a && item.addEventListener(`resize`, n);
   });
   let d = l && s ? Jc(l, n, a) : null,
     f = -1,
@@ -5404,8 +5404,8 @@ function Yc(e, t, n, r) {
   }
   return n(), () => {
     var e;
-    u.forEach(e => {
-      i && e.removeEventListener(`scroll`, n), a && e.removeEventListener(`resize`, n);
+    u.forEach(item => {
+      i && item.removeEventListener(`scroll`, n), a && item.removeEventListener(`resize`, n);
     }), d?.(), (e = p) == null || e.disconnect(), p = null, c && cancelAnimationFrame(m);
   };
 }

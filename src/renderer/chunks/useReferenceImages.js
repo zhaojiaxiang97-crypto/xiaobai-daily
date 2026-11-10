@@ -61,9 +61,9 @@ var S = {
         return e <= 0 ? `0 KB` : e >= 1048576 ? `${(e / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(e / 1024))} KB`;
       }
       function N(event) {
-        let t = event.target,
-          n = Array.from(t.files || []);
-        t.value = ``, d.addFiles(n);
+        let target = event.target,
+          n = Array.from(target.files || []);
+        target.value = ``, d.addFiles(n);
       }
       return (o, l) => (c(), r(s, null, [g(`input`, {
         ref_key: `input`,
@@ -116,8 +116,8 @@ function I(e) {
     n = o(``),
     r = new Map(),
     i = e.maxCount ?? 10,
-    a = p(() => t.value.some(e => e.uploading)),
-    s = p(() => t.value.some(e => e.error || !e.token));
+    a = p(() => t.value.some(item => item.uploading)),
+    s = p(() => t.value.some(item => item.error || !item.token));
   async function c(t) {
     if (!e.user.value) return;
     t.uploading = true, t.error = ``;
@@ -185,11 +185,11 @@ function I(e) {
     await Promise.all(o.map(c));
   }
   function u(e) {
-    let i = t.value.findIndex(t => t.id === e);
+    let i = t.value.findIndex(item => item.id === e);
     i < 0 || (r.get(e)?.abort(), r.delete(e), URL.revokeObjectURL(t.value[i].previewUrl), t.value.splice(i, 1), n.value = ``);
   }
   function f() {
-    r.forEach(e => e.abort()), r.clear(), t.value.forEach(e => URL.revokeObjectURL(e.previewUrl)), t.value = [], n.value = ``;
+    r.forEach(item => item.abort()), r.clear(), t.value.forEach(item => URL.revokeObjectURL(item.previewUrl)), t.value = [], n.value = ``;
   }
   return d(f), {
     items: t,

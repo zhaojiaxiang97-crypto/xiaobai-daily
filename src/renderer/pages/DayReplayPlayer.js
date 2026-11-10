@@ -1,4 +1,4 @@
-const __vite__mapDeps = (items, m = __vite__mapDeps, d = m.f || (m.f = ["../ui/icons/matrix-math.js", "../ui/Switch.js", "../chunks/vue-i18n.runtime.js", "../i18n/en-US-player.js", "../ui/icons/lucide-icons.js"])) => items.map(i => d[i]);
+const __vite__mapDeps = (items, m = __vite__mapDeps, d = m.f || (m.f = ["../ui/icons/matrix-math.js", "../ui/Switch.js", "../chunks/vue-i18n.runtime.js", "../i18n/en-US-player.js", "../ui/icons/lucide-icons.js"])) => items.map(item => d[item]);
 import { $n as e, An as t, Cn as n, O as r, S as i, St as a, Wt as o, Yt as s, Zt as c, b as l, bn as u, c as d, f, gt as p, j as m, k as h, n as g, nr as _, ot as v, rr as y, ut as b, v as x, vn as S, x as C, y as w } from "../chunks/vue-i18n.runtime.js";
 import { E as T, r as E, w as D } from "../i18n/en-US-player.js";
 import { t as O } from "../chunks/preload-helper.js";
@@ -231,50 +231,50 @@ var Ke = {
         _ = x(() => [{
           key: `screenshots`,
           label: c(`dayReplay.exportScreenshots`),
-          choices: B.map(e => ({
-            value: e,
-            label: c(m[e]),
-            disabled: e !== `none` && !o.hasScreenshots
+          choices: B.map(item => ({
+            value: item,
+            label: c(m[item]),
+            disabled: item !== `none` && !o.hasScreenshots
           })),
           hint: o.hasScreenshots ? undefined : c(`dayReplay.exportNoScreenshots`)
         }, {
           key: `pace`,
           label: c(`dayReplay.exportPace`),
-          choices: V.map(e => ({
-            value: e,
-            label: c(h[e])
+          choices: V.map(item => ({
+            value: item,
+            label: c(h[item])
           })),
           disabled: u.value.screenshots === `none`
         }, {
           key: `speed`,
           label: c(`dayReplay.exportSpeed`),
-          choices: H.map(e => ({
-            value: e,
-            label: `${e}×`
+          choices: H.map(item => ({
+            value: item,
+            label: `${item}×`
           }))
         }, {
           key: `resolution`,
           label: c(`dayReplay.exportResolution`),
-          choices: Le.map(e => ({
-            value: e,
-            label: f[e]
+          choices: Le.map(item => ({
+            value: item,
+            label: f[item]
           }))
         }, {
           key: `frameRate`,
           label: c(`dayReplay.exportFrameRate`),
-          choices: U.map(e => ({
-            value: e,
+          choices: U.map(item => ({
+            value: item,
             label: c(`dayReplay.exportFrameRateValue`, {
-              fps: e
+              fps: item
             })
           }))
         }]),
         v = x(() => {
-          let e = u.value,
-            t = q(e.resolution),
-            n = Ue(o.timelineDurationMs, e) / 1024 / 1024;
+          let value = u.value,
+            t = q(value.resolution),
+            n = Ue(o.timelineDurationMs, value) / 1024 / 1024;
           return c(`dayReplay.exportEstimate`, {
-            seconds: Math.ceil(He(o.timelineDurationMs, e.speed) / 1e3),
+            seconds: Math.ceil(He(o.timelineDurationMs, value.speed) / 1e3),
             width: t.width,
             height: t.height,
             size: n < 10 ? n.toFixed(1) : Math.round(n)
@@ -329,17 +329,17 @@ var Ke = {
         s = 0;
       function c() {
         s = 0;
-        let e = r.value,
+        let value = r.value,
           i = n.value;
-        if (!e || !i) return;
+        if (!value || !i) return;
         let clientWidth = i.clientWidth,
           clientHeight = i.clientHeight;
         if (!clientWidth || !clientHeight) return;
         let c = Math.min(window.devicePixelRatio || 1, 2),
           l = Math.round(clientWidth * c),
           u = Math.round(clientHeight * c);
-        (e.width !== l || e.height !== u) && (e.width = l, e.height = u);
-        let d = e.getContext(`2d`);
+        (value.width !== l || value.height !== u) && (value.width = l, value.height = u);
+        let d = value.getContext(`2d`);
         if (!d) return;
         d.clearRect(0, 0, l, u);
         let bitmap = t.bitmap;
@@ -535,17 +535,17 @@ var Et = class {
         i = Math.max(1, Math.ceil(r / mt));
       this.hourMarks = [];
       for (let e = Math.ceil(t.startBucket / pt); e * pt <= t.endBucket; e += i) this.hourMarks.push(e);
-      let a = this.blocks.length,
-        o = new Float32Array(a * 2),
-        s = new Float32Array(a),
+      let length = this.blocks.length,
+        o = new Float32Array(length * 2),
+        s = new Float32Array(length),
         c = new De(),
         l = new N(),
         u = new Te(),
         d = new N();
-      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(o, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, a), this.buildings.instanceColor = new L(new Float32Array(a * 3), 3), this.buildings.frustumCulled = false;
+      this.buildingGeometry = new P(1, 1, 1).translate(.5, .5, 0), this.buildingGeometry.setAttribute(`aSpan`, new L(o, 2)), this.buildingGeometry.setAttribute(`aKind`, new L(s, 1)), this.buildingMaterial = Tt(this.uniforms), this.buildings = new Oe(this.buildingGeometry, this.buildingMaterial, length), this.buildings.instanceColor = new L(new Float32Array(length * 3), 3), this.buildings.frustumCulled = false;
       let f = 6;
-      this.blocks.forEach((e, t) => {
-        o[t * 2] = e.start, o[t * 2 + 1] = e.end, s[t] = +!Me(e), Me(e) || (f = Math.max(f, ht * Math.sqrt(e.end - e.start))), this.cellBlocks.fill(t, e.start, e.end), l.set(this.bucketToX(e.start) + Y / 2, 0, 0), d.set(Math.max(.3, e.end - e.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
+      this.blocks.forEach((item, t) => {
+        o[t * 2] = item.start, o[t * 2 + 1] = item.end, s[t] = +!Me(item), Me(item) || (f = Math.max(f, ht * Math.sqrt(item.end - item.start))), this.cellBlocks.fill(t, item.start, item.end), l.set(this.bucketToX(item.start) + Y / 2, 0, 0), d.set(Math.max(.3, item.end - item.start - Y), 1, vt), c.compose(l, u, d), this.buildings.setMatrixAt(t, c);
       }), this.buildings.instanceMatrix.needsUpdate = true, this.maxHeight = f, this.trackGeometry = new P(n * 2 + 2, xt, 14).translate(0, -.2 / 2, 0);
       let p = new Ee(this.trackGeometry, this.trackMaterial);
       p.position.y = bt, this.beamGeometry = new P(X, 1, 16).translate(0, .5, 0), this.beamMaterial = new we({
@@ -582,8 +582,8 @@ var Et = class {
     }
     setColors(e, t) {
       let n = new ke();
-      this.blocks.forEach((r, i) => {
-        this.buildings.setColorAt(i, n.set(je(r, e, t)));
+      this.blocks.forEach((item, i) => {
+        this.buildings.setColorAt(i, n.set(je(item, e, t)));
       }), this.buildings.instanceColor && (this.buildings.instanceColor.needsUpdate = true), this.uniforms.uGround.value.set(t.ground), this.trackMaterial.color.set(t.ground);
     }
     setPlayhead(e) {
@@ -609,9 +609,9 @@ var Et = class {
     pick(e) {
       let t = -1,
         n = 1 / 0;
-      return this.blocks.forEach((r, i) => {
-        let a = this.bucketToX(r.start) + Y / 2,
-          o = a + Math.max(.3, r.end - r.start - Y);
+      return this.blocks.forEach((item, i) => {
+        let a = this.bucketToX(item.start) + Y / 2,
+          o = a + Math.max(.3, item.end - item.start - Y);
         if (this.hitBox.min.set(a, 0, -4), this.hitBox.max.set(o, Math.max(wt, this.currentHeight(i)), vt / 2), !e.intersectBox(this.hitBox, this.hitPoint)) return;
         let s = this.hitPoint.distanceToSquared(e.origin);
         s < n && (n = s, t = i);
@@ -683,14 +683,14 @@ var Et = class {
         el && (el.style.visibility = t.visible ? `visible` : `hidden`, el.style.transform = `translate(${t.x}px, ${t.y}px) translate(-50%, -50%)`);
       }
       function oe() {
-        let e = f.value,
+        let value = f.value,
           t = S;
-        if (!t || !C || !e || s.compact) return;
-        let clientWidth = e.clientWidth,
-          clientHeight = e.clientHeight,
+        if (!t || !C || !value || s.compact) return;
+        let clientWidth = value.clientWidth,
+          clientHeight = value.clientHeight,
           i = C;
-        _.value.forEach((e, a) => {
-          ne.set(i.minuteToX(e * 60), 0, 10), ae(x[a] ?? null, t.project(ne, clientWidth, clientHeight));
+        _.value.forEach((item, a) => {
+          ne.set(i.minuteToX(item * 60), 0, 10), ae(x[a] ?? null, t.project(ne, clientWidth, clientHeight));
         });
         let a = t.project(C.anchorAt(s.minute, te), clientWidth, clientHeight);
         ae(h.value, {
@@ -699,8 +699,8 @@ var Et = class {
         });
       }
       function se() {
-        let e = f.value;
-        S && e && S.resize(e.clientWidth, e.clientHeight) && (O ? s.following && !s.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
+        let value = f.value;
+        S && value && S.resize(value.clientWidth, value.clientHeight) && (O ? s.following && !s.overview ? S.requestRender() : S.refit() : (O = true, S.flyIn(!ee)));
       }
       function ce(event) {
         g.value = true, k = {
@@ -735,10 +735,10 @@ var Et = class {
       }), o(() => s.currentLabel, () => S?.requestRender()), o(() => s.compact, () => S?.requestRender()), o(() => s.playing, e => {
         e || S?.requestRender();
       }), b(() => {
-        let e = m.value,
+        let value = m.value,
           t = f.value;
-        if (e && t) {
-          if (S = R.create(e, 30, {
+        if (value && t) {
+          if (S = R.create(value, 30, {
             onFrame: ie,
             onRendered: oe
           }), !S) {
@@ -811,11 +811,11 @@ function At() {
     }];
   }
   function i(state, r, i) {
-    return state.top.map(e => ({
-      key: e.value,
-      name: n(r, e.value),
-      color: i[e.value] ?? `#999999`,
-      duration: t(e.activeSec)
+    return state.top.map(item => ({
+      key: item.value,
+      name: n(r, item.value),
+      color: i[item.value] ?? `#999999`,
+      duration: t(item.activeSec)
     }));
   }
   return {
@@ -948,24 +948,24 @@ function rn(e) {
 }
 function an(e, items) {
   let n = tn(e).getTime();
-  return items.map(e => {
-    let t = nn((Date.parse(e.startedAt) - n) / 6e4),
-      r = nn((Date.parse(e.endedAt) - n) / 6e4);
+  return items.map(item => {
+    let t = nn((Date.parse(item.startedAt) - n) / 6e4),
+      r = nn((Date.parse(item.endedAt) - n) / 6e4);
     return {
-      id: e.id,
+      id: item.id,
       startMinute: Math.min(t, r),
       endMinute: Math.max(t, r),
-      summary: e.summary.trim(),
-      category: e.category,
-      screenshotPath: rn(e)
+      summary: item.summary.trim(),
+      category: item.category,
+      screenshotPath: rn(item)
     };
-  }).filter(e => Number.isFinite(e.startMinute) && e.summary).sort((e, t) => e.startMinute - t.startMinute || e.endMinute - t.endMinute);
+  }).filter(item => Number.isFinite(item.startMinute) && item.summary).sort((left, right) => left.startMinute - right.startMinute || left.endMinute - right.endMinute);
 }
 function on(e, t, items) {
   let r = t.days[0]?.cells ?? [],
     i = new Uint8Array(Kt);
-  r.forEach((e, t) => {
-    e !== -1 && (i[t] = 1);
+  r.forEach((item, t) => {
+    item !== -1 && (i[t] = 1);
   });
   for (let e of items) {
     let t = Math.floor(e.startMinute / Z),
@@ -997,7 +997,7 @@ function on(e, t, items) {
     cumulative: f,
     weights: u,
     durationMs: p,
-    hasScreenshots: items.some(e => e.screenshotPath),
+    hasScreenshots: items.some(item => item.screenshotPath),
     frames: hn(items)
   };
 }
@@ -1065,7 +1065,7 @@ function hn(e) {
       path: screenshotPath
     }));
   }
-  return n.sort((e, t) => e.minute - t.minute);
+  return n.sort((left, right) => left.minute - right.minute);
 }
 function gn(e, t) {
   let n = 0,
@@ -1101,9 +1101,9 @@ function vn(e) {
     firstMinute: r,
     lastMinute: i,
     longest: a,
-    top: e.street.series.map((e, t) => ({
+    top: e.street.series.map((item, t) => ({
       value: t,
-      activeSec: e.activeSec
+      activeSec: item.activeSec
     })).slice(0, 3),
     recordCount: e.records.length
   };
@@ -1204,13 +1204,13 @@ function Dn() {
       let r = items.slice(e, e + Cn),
         l;
       try {
-        l = await Ie.thumbnails(r.map(e => e.path));
+        l = await Ie.thumbnails(r.map(item => item.path));
       } catch (e) {
         console.warn(`[DayReplay] 截图缩略图读取失败:`, e), l = r.map(() => null);
       }
       if (c || o !== s) return;
-      l.forEach((t, n) => {
-        i[e + n] = t ? new Blob([t], {
+      l.forEach((item, n) => {
+        i[e + n] = item ? new Blob([item], {
           type: `image/jpeg`
         }) : null;
       }), t.value = e + r.length, n.value += 1;
@@ -1222,9 +1222,9 @@ function Dn() {
   }
   function p() {
     for (; a.size > wn;) {
-      let e = a.keys().next().value;
-      if (e === undefined) break;
-      a.get(e)?.close(), a.delete(e);
+      let value = a.keys().next().value;
+      if (value === undefined) break;
+      a.get(value)?.close(), a.delete(value);
     }
   }
   function m(e) {
@@ -1232,12 +1232,12 @@ function Dn() {
     let t = i[e];
     if (!t) return;
     let r = s;
-    o.add(e), createImageBitmap(t).then(t => {
+    o.add(e), createImageBitmap(t).then(result => {
       if (o.delete(e), c || r !== s) {
-        t.close();
+        result.close();
         return;
       }
-      a.set(e, t), p(), n.value += 1;
+      a.set(e, result), p(), n.value += 1;
     }).catch(() => {
       o.delete(e), !(c || r !== s) && (i[e] = null, n.value += 1);
     });
@@ -1424,8 +1424,8 @@ function Zn(e, t, n) {
   e.textAlign = `center`, e.textBaseline = `top`, e.font = `12px ${i}`, e.fillStyle = r.textMuted;
   let o = t.record?.category ? a.categoryLabel?.(t.record.category) ?? t.record.category : ``,
     s = [t.clock, o, t.fastForward ? a.fastForward : ``].filter(Boolean).join(` · `);
-  e.fillText(s, Q / 2, kn), t.record && (e.font = `15px ${i}`, e.fillStyle = r.textPrimary, Wn(e, t.record.summary, An, 2).forEach((t, n) => {
-    e.fillText(t, Q / 2, 554 + n * jn);
+  e.fillText(s, Q / 2, kn), t.record && (e.font = `15px ${i}`, e.fillStyle = r.textPrimary, Wn(e, t.record.summary, An, 2).forEach((item, n) => {
+    e.fillText(item, Q / 2, 554 + n * jn);
   }));
 }
 function Qn(e, t, n) {
@@ -1445,18 +1445,18 @@ function $n(e, state, n) {
       fontFamily: i,
       texts: a
     } = n,
-    o = a.topItems.length,
-    s = (o > 0 ? 210 : 176) + o * 26,
+    length = a.topItems.length,
+    s = (length > 0 ? 210 : 176) + length * 26,
     c = 56 + Math.max(12, (464 - s) / 2);
-  if (e.save(), e.globalAlpha = state * .78, e.fillStyle = r.surface, e.fillRect(0, 56, Q, 464), e.globalAlpha = state, e.fillStyle = r.dark ? `#1b1f23` : `#ffffff`, e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath(), e.roundRect(380, c, 520, s, 12), e.fill(), e.stroke(), e.textBaseline = `alphabetic`, e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 16px ${i}`, e.fillText(a.summaryTitle, 408, c + 40), e.textAlign = `right`, e.fillStyle = r.textMuted, e.font = `13px ${i}`, e.fillText(a.dateLabel, 872, c + 40), a.summaryItems.slice(0, 4).forEach((t, n) => {
+  if (e.save(), e.globalAlpha = state * .78, e.fillStyle = r.surface, e.fillRect(0, 56, Q, 464), e.globalAlpha = state, e.fillStyle = r.dark ? `#1b1f23` : `#ffffff`, e.strokeStyle = r.grid, e.lineWidth = 1, e.beginPath(), e.roundRect(380, c, 520, s, 12), e.fill(), e.stroke(), e.textBaseline = `alphabetic`, e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 16px ${i}`, e.fillText(a.summaryTitle, 408, c + 40), e.textAlign = `right`, e.fillStyle = r.textMuted, e.font = `13px ${i}`, e.fillText(a.dateLabel, 872, c + 40), a.summaryItems.slice(0, 4).forEach((item, n) => {
     let a = 408 + n % 2 * 232,
       o = c + 82 + Math.floor(n / 2) * 52;
-    e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 20px ${i}`, e.fillText(t.value, a, o), e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(t.detail ? `${t.label} · ${t.detail}` : t.label, a, o + 20);
-  }), o > 0) {
+    e.textAlign = `left`, e.fillStyle = r.textPrimary, e.font = `600 20px ${i}`, e.fillText(item.value, a, o), e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(item.detail ? `${item.label} · ${item.detail}` : item.label, a, o + 20);
+  }), length > 0) {
     let t = c + 196;
-    e.fillStyle = r.grid, e.fillRect(408, t - 22, 464, 1), e.textAlign = `left`, e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(a.topLabel, 408, t - 4), a.topItems.forEach((n, a) => {
+    e.fillStyle = r.grid, e.fillRect(408, t - 22, 464, 1), e.textAlign = `left`, e.fillStyle = r.textMuted, e.font = `12px ${i}`, e.fillText(a.topLabel, 408, t - 4), a.topItems.forEach((item, a) => {
       let o = t + 18 + a * 26;
-      e.fillStyle = n.color, e.beginPath(), e.roundRect(408, o - 9, 10, 10, 3), e.fill(), e.textAlign = `left`, e.fillStyle = r.textSecondary, e.font = `13px ${i}`, e.fillText(n.name, 426, o), e.textAlign = `right`, e.fillStyle = r.textMuted, e.fillText(n.duration, 872, o);
+      e.fillStyle = item.color, e.beginPath(), e.roundRect(408, o - 9, 10, 10, 3), e.fill(), e.textAlign = `left`, e.fillStyle = r.textSecondary, e.font = `13px ${i}`, e.fillText(item.name, 426, o), e.textAlign = `right`, e.fillStyle = r.textMuted, e.fillText(item.duration, 872, o);
     });
   }
   e.restore();
@@ -1496,22 +1496,22 @@ var ir = class {
       this.frames = e, this.width = t;
     }
     async load(e, t) {
-      let n = this.frames.length;
-      for (let r = 0; r < n; r += tr) {
+      let length = this.frames.length;
+      for (let r = 0; r < length; r += tr) {
         if (e.aborted) throw rr();
         let i = this.frames.slice(r, r + tr),
           a;
         try {
-          a = await Ie.thumbnails(i.map(e => e.path), this.width);
+          a = await Ie.thumbnails(i.map(item => item.path), this.width);
         } catch (e) {
           console.warn(`[DayReplay] 导出用截图读取失败:`, e), a = i.map(() => null);
         }
         if (e.aborted) throw rr();
-        a.forEach(e => {
-          this.blobs.push(e ? new Blob([e], {
+        a.forEach(item => {
+          this.blobs.push(item ? new Blob([item], {
             type: `image/jpeg`
           }) : null);
-        }), t(Math.min(1, (r + i.length) / n));
+        }), t(Math.min(1, (r + i.length) / length));
       }
     }
     decode(e) {
@@ -1520,12 +1520,12 @@ var ir = class {
       if (t) return t;
       let n = this.blobs[e];
       if (!n) return Promise.resolve();
-      let r = createImageBitmap(n).then(t => {
+      let r = createImageBitmap(n).then(result => {
         if (this.disposed) {
-          t.close();
+          result.close();
           return;
         }
-        this.decoded.set(e, t), this.evict();
+        this.decoded.set(e, result), this.evict();
       }).catch(() => {
         this.blobs[e] = null;
       }).finally(() => {
@@ -1698,9 +1698,9 @@ async function vr(e, t, n) {
         record: S,
         label: t >= 900 ? w : ``,
         labelPoint: f.project(p.anchorAt(a, b), u.width, u.height),
-        hourPoints: p.hourMarks.map(e => ({
-          text: `${e}:00`,
-          point: f.project(x.set(p.minuteToX(e * 60), 0, 10), u.width, u.height)
+        hourPoints: p.hourMarks.map(item => ({
+          text: `${item}:00`,
+          point: f.project(x.set(p.minuteToX(item * 60), 0, 10), u.width, u.height)
         })),
         endCard: Math.min(1, Math.max(0, (t - 900 - y) / or)),
         screenshot: s,
@@ -1779,7 +1779,7 @@ async function yr(e, t, n, r, i) {
   };
 }
 async function br(e, t, n, r, i) {
-  let a = typeof MediaRecorder > `u` ? null : fr.find(e => MediaRecorder.isTypeSupported(e.mimeType)) ?? null;
+  let a = typeof MediaRecorder > `u` ? null : fr.find(item => MediaRecorder.isTypeSupported(item.mimeType)) ?? null;
   if (!a) throw new pr(`UNSUPPORTED`);
   let o = Math.min(ar, t.frameRate);
   e.renderAt(0, false);
@@ -1830,7 +1830,7 @@ async function br(e, t, n, r, i) {
       extension: a.extension
     };
   } finally {
-    d && cancelAnimationFrame(d), h && document.removeEventListener(`visibilitychange`, h), c.state !== `inactive` && c.stop(), s.getTracks().forEach(e => e.stop());
+    d && cancelAnimationFrame(d), h && document.removeEventListener(`visibilitychange`, h), c.state !== `inactive` && c.stop(), s.getTracks().forEach(item => item.stop());
   }
 }
 async function xr(e, t, n) {
@@ -2129,9 +2129,9 @@ var Sr = [`aria-label`],
         });
       }
       async function _t(e) {
-        let t = z.value,
+        let value = z.value,
           n = K.value;
-        if (!t || !n || F.value) return;
+        if (!value || !n || F.value) return;
         W.pause();
         let r = new AbortController();
         Oe = r, F.value = true, Ee.value = 0, De.value = `encoding`, I.value = e, j(`feature_map_heat_click`, {
@@ -2141,17 +2141,17 @@ var Sr = [`aria-label`],
         try {
           let i = null;
           if (we.value?.avatarUrl) {
-            let e = await window.electronAPI.fetchImageAsBase64(we.value.avatarUrl);
-            e.success && e.dataUrl && (i = e.dataUrl);
+            let imageAsBase64 = await window.electronAPI.fetchImageAsBase64(we.value.avatarUrl);
+            imageAsBase64.success && imageAsBase64.dataUrl && (i = imageAsBase64.dataUrl);
           }
-          let a = vn(t),
+          let a = vn(value),
             o = new Date().toLocaleDateString(undefined, {
               year: `numeric`,
               month: `2-digit`,
               day: `2-digit`
             }).replace(/\//g, `.`),
             s = await xr({
-              timeline: t,
+              timeline: value,
               options: e,
               colors: q.value,
               theme: be.value,
@@ -2180,7 +2180,7 @@ var Sr = [`aria-label`],
             }, r.signal),
             c = new Uint8Array(await s.blob.arrayBuffer()),
             l = new Date(),
-            u = [l.getHours(), l.getMinutes(), l.getSeconds()].map(e => String(e).padStart(2, `0`)).join(``);
+            u = [l.getHours(), l.getMinutes(), l.getSeconds()].map(item => String(item).padStart(2, `0`)).join(``);
           (await Ie.saveVideo(c, `${D(`dayReplay.videoFileName`)}_${g.date}_${u}`, s.extension)).cancelled || (ae(D(`dayReplay.exportSaved`)), j(`feature_map_heat_click`, {
             entry: `day_replay_export_saved_${s.extension}`
           }));

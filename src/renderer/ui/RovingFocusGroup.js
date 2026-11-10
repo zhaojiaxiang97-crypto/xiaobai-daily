@@ -30,7 +30,7 @@ function b(e, t = false) {
   }), n() !== r)) return;
 }
 function x(e, t) {
-  return e.map((n, r) => e[(t + r) % e.length]);
+  return e.map((item, r) => e[(t + r) % e.length]);
 }
 var [S, C] = r(`RovingFocusGroup`),
   w = d({
@@ -103,8 +103,8 @@ var [S, C] = r(`RovingFocusGroup`),
         if (e.currentTarget && e.target === e.currentTarget && t && !E.value) {
           let t = new CustomEvent(h, g);
           if (e.currentTarget.dispatchEvent(t), v(`entryFocus`, t), !t.defaultPrevented) {
-            let e = k().map(e => e.ref).filter(e => e.dataset.disabled !== ``);
-            b([e.find(e => e.getAttribute(`data-active`) === ``), e.find(e => e.getAttribute(`data-highlighted`) === ``), e.find(e => e.id === T.value), ...e].filter(Boolean), _.preventScrollOnEntryFocus);
+            let e = k().map(item => item.ref).filter(item => item.dataset.disabled !== ``);
+            b([e.find(item => item.getAttribute(`data-active`) === ``), e.find(item => item.getAttribute(`data-highlighted`) === ``), e.find(item => item.id === T.value), ...e].filter(Boolean), _.preventScrollOnEntryFocus);
           }
         }
         D.value = false;

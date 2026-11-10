@@ -91,13 +91,13 @@ var S = (e, t, n) => new Promise((r, i) => {
             waitTimeout: 2e3,
             maxRetries: 1,
             signal: t.signal
-          }).then(t => {
-            P || e !== N || (A.value = t, j.value = ``, M = true, R.value = false);
-          }).catch(t => S(null, null, function* () {
+          }).then(result => {
+            P || e !== N || (A.value = result, j.value = ``, M = true, R.value = false);
+          }).catch(err => S(null, null, function* () {
             if (P || e !== N) return;
-            let n = t?.code || t?.name,
+            let n = err?.code || err?.name,
               r = n === `KATEX_DISABLED`;
-            if (n === `WORKER_INIT_ERROR` || t?.fallbackToRenderer || n === `WORKER_BUSY` || n === `WORKER_TIMEOUT`) {
+            if (n === `WORKER_INIT_ERROR` || err?.fallbackToRenderer || n === `WORKER_BUSY` || n === `WORKER_TIMEOUT`) {
               let e = yield v();
               if (e) {
                 try {

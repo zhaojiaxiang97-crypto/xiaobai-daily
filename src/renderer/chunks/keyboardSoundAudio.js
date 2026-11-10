@@ -681,9 +681,9 @@ function D(e, t, items) {
     }, (e, n) => t.getChannelData(n)),
     a = Math.round(sampleRate * v),
     o = Math.round(sampleRate * b),
-    s = items.map(e => {
-      let n = Math.min(t.length, Math.max(0, Math.round(e.offsetSeconds * sampleRate))),
-        o = Math.min(t.length, n + Math.round(e.durationSeconds * sampleRate)),
+    s = items.map(item => {
+      let n = Math.min(t.length, Math.max(0, Math.round(item.offsetSeconds * sampleRate))),
+        o = Math.min(t.length, n + Math.round(item.durationSeconds * sampleRate)),
         s = 0;
       for (let e of i) for (let t = n; t < o; t += 1) s = Math.max(s, Math.abs(e[t]));
       let c = n,
@@ -697,8 +697,8 @@ function D(e, t, items) {
         onset: c,
         end: o
       };
-    }).filter(e => e.end > e.start),
-    c = s.reduce((e, t) => e + t.end - t.start + o, 0),
+    }).filter(item => item.end > item.start),
+    c = s.reduce((acc, cur) => acc + cur.end - cur.start + o, 0),
     l = e.createBuffer(t.numberOfChannels, Math.max(1, c), sampleRate),
     u = Math.max(1, Math.round(sampleRate * y)),
     d = [],
@@ -764,14 +764,14 @@ var k = class {
     }
   }
   async preview(e = this.switchType) {
-    let t = await this.loadPack(e),
+    let pack = await this.loadPack(e),
       n = this.getContext();
-    n.state === `suspended` && (await n.resume()), this.playFromPack(t);
+    n.state === `suspended` && (await n.resume()), this.playFromPack(pack);
   }
   async previewCustomCandidate(e) {
-    let t = await this.createCustomPack(e),
+    let customPack = await this.createCustomPack(e),
       n = this.getContext();
-    return n.state === `suspended` && (await n.resume()), this.playFromPack(t), Math.round(t.segments[0].durationSeconds * 1e3);
+    return n.state === `suspended` && (await n.resume()), this.playFromPack(customPack), Math.round(customPack.segments[0].durationSeconds * 1e3);
   }
   async isCustomSoundAvailable() {
     return (await this.loadPack(`custom`)).usesFallback !== true;
@@ -781,7 +781,7 @@ var k = class {
     for (let e of this.activeVoices) if (e.type === `custom`) try {
       e.source.stop();
     } catch {}
-    this.activeVoices = this.activeVoices.filter(e => e.type !== `custom`), this.applyVolume();
+    this.activeVoices = this.activeVoices.filter(item => item.type !== `custom`), this.applyVolume();
   }
   dispose() {
     for (let e of this.activeVoices) try {
@@ -820,9 +820,9 @@ var k = class {
     let t = this.getContext();
     this.loadingType = e;
     let n = x[e],
-      r = (e === `custom` ? this.loadCustomPack() : S(e) ? Promise.resolve(T(t, e)) : this.loadRecordedPack(e, n)).then(t => {
-        if (t.segments.length === 0) throw Error(this.hosts.t(`keyboardSoundErrors.noSegments`));
-        return this.loadingType === e && (this.loadedPack = t, this.lastSegmentIndex = -1), t;
+      r = (e === `custom` ? this.loadCustomPack() : S(e) ? Promise.resolve(T(t, e)) : this.loadRecordedPack(e, n)).then(result => {
+        if (result.segments.length === 0) throw Error(this.hosts.t(`keyboardSoundErrors.noSegments`));
+        return this.loadingType === e && (this.loadedPack = result, this.lastSegmentIndex = -1), result;
       }).finally(() => {
         this.loadingType === e && (this.loadingPack = null, this.loadingType = null);
       });
@@ -856,11 +856,11 @@ var k = class {
     let t = this.getContext(),
       n = new Uint8Array(e.byteLength);
     n.set(e);
-    let r = await t.decodeAudioData(n.buffer);
-    if (r.numberOfChannels < 1 || r.numberOfChannels > 2 || r.length <= 0 || r.duration <= 0 || r.duration > 3.05) throw Error(this.hosts.t(`keyboardSoundErrors.invalidChannels`));
+    let audioData = await t.decodeAudioData(n.buffer);
+    if (audioData.numberOfChannels < 1 || audioData.numberOfChannels > 2 || audioData.length <= 0 || audioData.duration <= 0 || audioData.duration > 3.05) throw Error(this.hosts.t(`keyboardSoundErrors.invalidChannels`));
     let i = 0;
-    for (let e = 0; e < r.numberOfChannels; e += 1) {
-      let t = r.getChannelData(e);
+    for (let e = 0; e < audioData.numberOfChannels; e += 1) {
+      let t = audioData.getChannelData(e);
       for (let e = 0; e < t.length; e += 1) {
         let n = t[e];
         if (!Number.isFinite(n)) throw Error(this.hosts.t(`keyboardSoundErrors.invalidSamples`));
@@ -869,29 +869,29 @@ var k = class {
     }
     if (i < .003) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
     let a = Math.max(.003, i * .025),
-      o = r.length,
+      length = audioData.length,
       s = -1;
-    for (let e = 0; e < r.length; e += 1) {
+    for (let e = 0; e < audioData.length; e += 1) {
       let t = false;
-      for (let n = 0; n < r.numberOfChannels; n += 1) if (Math.abs(r.getChannelData(n)[e]) >= a) {
+      for (let n = 0; n < audioData.numberOfChannels; n += 1) if (Math.abs(audioData.getChannelData(n)[e]) >= a) {
         t = true;
         break;
       }
-      t && (o = Math.min(o, e), s = e);
+      t && (length = Math.min(length, e), s = e);
     }
-    if (s < o) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
-    let c = Math.round(r.sampleRate * .001),
-      l = Math.round(r.sampleRate * p),
-      u = Math.round(r.sampleRate * m),
-      d = Math.max(0, o - c),
-      f = Math.min(r.length, s + 1),
+    if (s < length) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
+    let c = Math.round(audioData.sampleRate * .001),
+      l = Math.round(audioData.sampleRate * p),
+      u = Math.round(audioData.sampleRate * m),
+      d = Math.max(0, length - c),
+      f = Math.min(audioData.length, s + 1),
       h = Math.min(l, Math.max(1, f - d)),
       g = Math.max(u, h),
-      _ = t.createBuffer(r.numberOfChannels, g, r.sampleRate),
+      _ = t.createBuffer(audioData.numberOfChannels, g, audioData.sampleRate),
       v = Math.min(6, .8 / i),
-      y = Math.max(1, Math.round(r.sampleRate * .004));
-    for (let e = 0; e < r.numberOfChannels; e += 1) {
-      let t = r.getChannelData(e),
+      y = Math.max(1, Math.round(audioData.sampleRate * .004));
+    for (let e = 0; e < audioData.numberOfChannels; e += 1) {
+      let t = audioData.getChannelData(e),
         n = _.getChannelData(e);
       for (let e = 0; e < h; e += 1) {
         let r = e >= h - y ? Math.max(0, (h - e - 1) / y) : 1;
@@ -912,11 +912,11 @@ var k = class {
       masterGain = this.masterGain;
     if (!masterGain || e.segments.length === 0) return;
     if (this.activeVoices.length >= d) {
-      let e = this.activeVoices.reduce((e, t) => e.startedAt <= t.startedAt ? e : t);
+      let e = this.activeVoices.reduce((acc, cur) => acc.startedAt <= cur.startedAt ? acc : cur);
       try {
         e.source.stop();
       } catch {}
-      this.activeVoices = this.activeVoices.filter(t => t !== e);
+      this.activeVoices = this.activeVoices.filter(item => item !== e);
     }
     let r = Math.floor(Math.random() * e.segments.length);
     e.segments.length > 1 && r === this.lastSegmentIndex && (r = (r + 1 + Math.floor(Math.random() * (e.segments.length - 1))) % e.segments.length), this.lastSegmentIndex = r;
@@ -929,7 +929,7 @@ var k = class {
       type: e.type
     };
     this.activeVoices.push(o), a.onended = () => {
-      this.activeVoices = this.activeVoices.filter(e => e !== o), a.disconnect();
+      this.activeVoices = this.activeVoices.filter(item => item !== o), a.disconnect();
     }, a.start(0, i.offsetSeconds, i.durationSeconds);
   }
 };
@@ -948,9 +948,9 @@ var keyboardSoundAudioAPI = window.keyboardSoundAudioAPI,
   }),
   N = A({
     loadCustomFile: async () => {
-      let e = await keyboardSoundAudioAPI.loadCustomFile();
-      return !e.ok || !e.data ? null : {
-        data: e.data.data
+      let customFile = await keyboardSoundAudioAPI.loadCustomFile();
+      return !customFile.ok || !customFile.data ? null : {
+        data: customFile.data.data
       };
     },
     t: (e, t) => String(M.global.t(e, t ?? {}))

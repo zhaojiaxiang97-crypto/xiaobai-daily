@@ -381,13 +381,13 @@ var we = Object.defineProperty,
           let e = yield Ce();
           if (k) return;
           if (!e) return void (mt.value = true);
-          let t = e.useMonaco,
-            n = e.detectLanguage;
-          if (typeof n == `function` && (it = n), typeof t == `function`) {
+          let useMonaco = e.useMonaco,
+            detectLanguage = e.detectLanguage;
+          if (typeof detectLanguage == `function` && (it = detectLanguage), typeof useMonaco == `function`) {
             let e = pn();
             if (e && m.themes && Array.isArray(m.themes) && !m.themes.includes(e)) throw Error(`Preferred theme not in provided themes array`);
             R = _n();
-            let n = t(R);
+            let n = useMonaco(R);
             N = n.createEditor || N, Ze = n.createDiffEditor || Ze, Qe = n.updateCode || Qe, $e = n.updateDiff || $e, et = n.getEditor || et, P = n.getEditorView || P, F = n.getDiffEditorView || F, tt = n.cleanupEditor || tt, nt = n.safeClean || n.cleanupEditor || nt, rt = n.refreshDiffPresentation || rt, at = n.setTheme || at, Ge.value = true, !k && v.value && (yield ln(v.value));
           }
         } catch {
@@ -398,15 +398,15 @@ var we = Object.defineProperty,
       let U = l(typeof m.monacoOptions?.fontSize == `number` ? m.monacoOptions.fontSize : NaN),
         W = l(U.value),
         yt = h(() => {
-          let e = U.value,
+          let value = U.value,
             t = W.value;
-          return typeof e == `number` && Number.isFinite(e) && e > 0 && typeof t == `number` && Number.isFinite(t) && t > 0;
+          return typeof value == `number` && Number.isFinite(value) && value > 0 && typeof t == `number` && Number.isFinite(t) && t > 0;
         }),
         bt = h(() => {
           let e = m.monacoOptions?.fontSize;
           if (typeof e == `number` && Number.isFinite(e) && e > 0) return e;
-          let t = W.value;
-          return typeof t == `number` && Number.isFinite(t) && t > 0 ? t : 14;
+          let value = W.value;
+          return typeof value == `number` && Number.isFinite(value) && value > 0 ? value : 14;
         }),
         xt = h(() => {
           let e = m.monacoOptions?.lineHeight;
@@ -424,12 +424,12 @@ var we = Object.defineProperty,
           };
         }),
         G = h(() => {
-          let e = m.estimatedContentHeightPx;
-          return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : null;
+          let estimatedContentHeightPx = m.estimatedContentHeightPx;
+          return typeof estimatedContentHeightPx == `number` && Number.isFinite(estimatedContentHeightPx) && estimatedContentHeightPx > 0 ? estimatedContentHeightPx : null;
         }),
         wt = h(() => {
-          let e = m.estimatedHeightPx;
-          return typeof e == `number` && Number.isFinite(e) && e > 0 ? e : null;
+          let estimatedHeightPx = m.estimatedHeightPx;
+          return typeof estimatedHeightPx == `number` && Number.isFinite(estimatedHeightPx) && estimatedHeightPx > 0 ? estimatedHeightPx : null;
         }),
         Tt = h(() => {
           let e = m.monacoOptions?.fontFamily;
@@ -457,8 +457,8 @@ var we = Object.defineProperty,
         }),
         Ot = l(null);
       function K() {
-        let e = Ot.value;
-        return typeof e == `number` && Number.isFinite(e) && e > 0 ? Math.round(e) : null;
+        let value = Ot.value;
+        return typeof value == `number` && Number.isFinite(value) && value > 0 ? Math.round(value) : null;
       }
       function kt(e, t = false) {
         let n = Math.ceil(e),
@@ -481,13 +481,13 @@ var we = Object.defineProperty,
           }
         } catch {}
         try {
-          let e = v.value;
-          if (e) {
-            let t = e.querySelector(`.view-lines .view-line`);
+          let value = v.value;
+          if (value) {
+            let t = value.querySelector(`.view-lines .view-line`);
             if (t) try {
               if (typeof window < `u` && typeof window.getComputedStyle == `function`) {
-                let e = window.getComputedStyle(t).fontSize,
-                  n = e && e.match(/^(\d+(?:\.\d+)?)/);
+                let fontSize = window.getComputedStyle(t).fontSize,
+                  n = fontSize && fontSize.match(/^(\d+(?:\.\d+)?)/);
                 if (n) return Number.parseFloat(n[1]);
               }
             } catch {}
@@ -505,9 +505,9 @@ var we = Object.defineProperty,
         } catch {}
         let t = function () {
           try {
-            let e = v.value;
-            if (!e) return null;
-            let t = e.querySelector(`.view-lines .view-line`);
+            let value = v.value;
+            if (!value) return null;
+            let t = value.querySelector(`.view-lines .view-line`);
             if (t) {
               let e = Math.ceil(t.getBoundingClientRect().height);
               if (e > 0) return e;
@@ -635,7 +635,7 @@ var we = Object.defineProperty,
         let t = String(e ?? ``).trim(),
           n = t.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i)?.[1];
         if (n) {
-          let e = n.length === 3 ? n.split(``).map(e => `${e}${e}`).join(``) : n;
+          let e = n.length === 3 ? n.split(``).map(item => `${item}${item}`).join(``) : n;
           return .2126 * Number.parseInt(e.slice(0, 2), 16) + .7152 * Number.parseInt(e.slice(2, 4), 16) + .0722 * Number.parseInt(e.slice(4, 6), 16);
         }
         let r = t.match(/\d+(?:\.\d+)?/g);
@@ -644,11 +644,11 @@ var we = Object.defineProperty,
         return .2126 * i + .7152 * a + .0722 * o;
       }
       function Wt() {
-        let e = v.value,
+        let value = v.value,
           t = Ee.value;
-        if (!e || !t) return;
-        let n = e,
-          r = e.querySelector(`.monaco-editor`) || e,
+        if (!value || !t) return;
+        let n = value,
+          r = value.querySelector(`.monaco-editor`) || value,
           i = r.querySelector(`.monaco-editor-background`) || r,
           a = r.querySelector(`.view-lines`) || r,
           o = null,
@@ -698,18 +698,18 @@ var we = Object.defineProperty,
       }
       function Kt() {
         try {
-          let e = v.value;
-          if (!e) return;
-          let t = e.getBoundingClientRect().height,
+          let value = v.value;
+          if (!value) return;
+          let height = value.getBoundingClientRect().height,
             n = Ht();
           if (n != null && n > 0) {
             let r = kt(n, true),
               i = K();
-            e.style.minHeight = i == null ? `0px` : `${i}px`, e.style.height = `${r}px`, e.style.maxHeight = `none`, e.style.overflow = `visible`, q(e, t, r);
+            value.style.minHeight = i == null ? `0px` : `${i}px`, value.style.height = `${r}px`, value.style.maxHeight = `none`, value.style.overflow = `visible`, q(value, height, r);
             return;
           }
           let r = K();
-          r != null && (e.style.minHeight = `${r}px`, e.style.height = `${r}px`, e.style.maxHeight = `none`, e.style.overflow = `visible`, q(e, t, r));
+          r != null && (value.style.minHeight = `${r}px`, value.style.height = `${r}px`, value.style.maxHeight = `none`, value.style.overflow = `visible`, q(value, height, r));
         } catch {}
       }
       function qt() {
@@ -726,11 +726,11 @@ var we = Object.defineProperty,
       function Y(e = false) {
         T.value || (w.value ? Kt() : function () {
           try {
-            let e = v.value;
-            if (!e) return;
-            let t = e.getBoundingClientRect().height,
+            let value = v.value;
+            if (!value) return;
+            let height = value.getBoundingClientRect().height,
               n = Jt(),
-              r = Math.ceil(e.getBoundingClientRect?.call(e).height || 0),
+              r = Math.ceil(value.getBoundingClientRect?.call(value).height || 0),
               i = z.value ? function () {
                 var e, t;
                 try {
@@ -759,8 +759,8 @@ var we = Object.defineProperty,
                   if (!(n.width <= 0 || n.height <= 0)) return true;
                 }
                 return false;
-              }(e);
-            if (a || (j.value = null), Je > 0 && (Je--, A.value != null)) return void q(e, t, Q(e, A.value, n));
+              }(value);
+            if (a || (j.value = null), Je > 0 && (Je--, A.value != null)) return void q(value, height, Q(value, A.value, n));
             let o = z.value ? function (e) {
                 if (typeof window > `u`) return null;
                 try {
@@ -782,38 +782,38 @@ var we = Object.defineProperty,
                 } catch {
                   return null;
                 }
-              }(e) : null,
+              }(value) : null,
               s = z.value ? a ? o : Math.max(o ?? 0, i ?? 0) || null : Ht();
             if (s != null && s > 0) {
               let i = j.value != null && Date.now() < qe && s >= n - 1,
                 o = a && r > 0 && r < n - 1 && s >= n - 1,
-                c = Q(e, i ? j.value : o ? r : s, n, {
+                c = Q(value, i ? j.value : o ? r : s, n, {
                   clearEstimatedFloor: true
                 });
-              a && c < n - 1 && (j.value = c, qe = Date.now() + 160), q(e, t, c);
+              a && c < n - 1 && (j.value = c, qe = Date.now() + 160), q(value, height, c);
               return;
             }
-            if (A.value != null) return void q(e, t, Q(e, A.value, n));
+            if (A.value != null) return void q(value, height, Q(value, A.value, n));
             let c = a ? r : Math.max(r, i != null && i > 0 ? i : 0);
             if (c > 0) {
               let i = j.value != null && Date.now() < qe && c >= n - 1,
                 o = a && r > 0 && r < n - 1 && c >= n - 1,
-                s = Q(e, i ? j.value : o ? r : c, n);
-              a && s < n - 1 && (j.value = s, qe = Date.now() + 160), q(e, t, s);
+                s = Q(value, i ? j.value : o ? r : c, n);
+              a && s < n - 1 && (j.value = s, qe = Date.now() + 160), q(value, height, s);
               return;
             }
             let l = K();
-            if (l != null) return void q(e, t, Q(e, l, n));
-            let u = Number.parseFloat(e.style.height);
-            !Number.isNaN(u) && u > 0 ? q(e, t, Q(e, u, n)) : z.value || q(e, t, Q(e, n, n));
+            if (l != null) return void q(value, height, Q(value, l, n));
+            let u = Number.parseFloat(value.style.height);
+            !Number.isNaN(u) && u > 0 ? q(value, height, Q(value, u, n)) : z.value || q(value, height, Q(value, n, n));
           } catch {}
         }());
       }
       function X() {
         if (!z.value) return void J();
-        let e = v.value;
-        if (!e) return void J();
-        let t = e.querySelector(`.monaco-diff-editor`);
+        let value = v.value;
+        if (!value) return void J();
+        let t = value.querySelector(`.monaco-diff-editor`);
         if (!t || t.classList.contains(`side-by-side`)) return void J();
         let n = Array.from(t.querySelectorAll(`.editor.original .diff-hidden-lines`)),
           r = Array.from(t.querySelectorAll(`.editor.modified .diff-hidden-lines`)),
@@ -892,8 +892,8 @@ var we = Object.defineProperty,
         }
       }));
       let Xt = h(() => {
-          let e = y.value;
-          return e ? ye[e] || e.charAt(0).toUpperCase() + e.slice(1) : ye[``] || `Plain Text`;
+          let value = y.value;
+          return value ? ye[value] || value.charAt(0).toUpperCase() + value.slice(1) : ye[``] || `Plain Text`;
         }),
         Zt = h(() => function (e) {
           let t = function (e) {
@@ -951,8 +951,8 @@ var we = Object.defineProperty,
           }
         }
         let t = z.value ? F() : P(),
-          n = v.value;
-        t && n && (w.value ? (cn(true), n.style.maxHeight = `none`, n.style.overflow = `visible`, Y(true)) : (cn(false), n.style.overflow = z.value ? `hidden` : `auto`, Y(true)));
+          value = v.value;
+        t && value && (w.value ? (cn(true), value.style.maxHeight = `none`, value.style.overflow = `visible`, Y(true)) : (cn(false), value.style.overflow = z.value ? `hidden` : `auto`, Y(true)));
       }
       function on() {
         var e, t;
@@ -975,19 +975,19 @@ var we = Object.defineProperty,
       }
       function sn() {
         if (!Yt.value) return;
-        let e = y.value;
+        let value = y.value;
         if (we.value) {
-          let t = e === `html` ? `text/html` : `image/svg+xml`,
-            n = e === `html` ? Te(`artifacts.htmlPreviewTitle`) || `HTML Preview` : Te(`artifacts.svgPreviewTitle`) || `SVG Preview`;
+          let t = value === `html` ? `text/html` : `image/svg+xml`,
+            n = value === `html` ? Te(`artifacts.htmlPreviewTitle`) || `HTML Preview` : Te(`artifacts.svgPreviewTitle`) || `SVG Preview`;
           se(`previewCode`, {
             node: m.node,
             artifactType: t,
             artifactTitle: n,
-            id: `temp-${e}-${Date.now()}`
+            id: `temp-${value}-${Date.now()}`
           });
           return;
         }
-        e === `html` && (vt.value = !vt.value);
+        value === `html` && (vt.value = !vt.value);
       }
       function cn(e) {
         var t, n;
@@ -1059,8 +1059,8 @@ var we = Object.defineProperty,
           }(() => function (e) {
             return C(this, null, function* () {
               if (!N || k || (ht.value = false, H.value = false, function () {
-                let e = G.value;
-                Ot.value = O.value || e == null ? null : e;
+                let value = G.value;
+                Ot.value = O.value || value == null ? null : value;
               }(), qt(), J(), function (e) {
                 e.replaceChildren();
               }(e), k)) return;
@@ -1163,8 +1163,8 @@ var we = Object.defineProperty,
       function pn() {
         let e = function () {
             if (m.theme !== undefined) {
-              let e = m.theme;
-              return dn(e) ? m.isDark ? e.dark : e.light : e;
+              let theme = m.theme;
+              return dn(theme) ? m.isDark ? theme.dark : theme.light : theme;
             }
             return m.isDark ? m.darkTheme : m.lightTheme;
           }(),
@@ -1174,7 +1174,7 @@ var we = Object.defineProperty,
         let r = Array.isArray(m.themes) ? m.themes : [];
         if (!r.length || n == null) return n;
         let i = $(n),
-          a = r.map(e => $(e)).filter(e => !!e);
+          a = r.map(item => $(item)).filter(item => !!item);
         if (!i || a.includes(i)) return n;
         let o = $(t);
         return t != null && o && a.includes(o) ? t : r[0];
@@ -1200,7 +1200,7 @@ var we = Object.defineProperty,
             if (t != null) return t < 128;
           }
           let t = ($(e) ?? ``).toLowerCase();
-          return t ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(e => t.includes(e)) && ![`light`, `latte`, `dawn`, `lotus`].some(e => t.includes(e)) : !!m.isDark;
+          return t ? [`dark`, `night`, `moon`, `black`, `dracula`, `mocha`, `frappe`, `macchiato`, `palenight`, `ocean`, `poimandres`, `monokai`, `laserwave`, `tokyo`, `slack-dark`, `rose-pine`, `github-dark`, `material-theme`, `one-dark`, `catppuccin-mocha`, `catppuccin-frappe`, `catppuccin-macchiato`].some(item => t.includes(item)) && ![`light`, `latte`, `dawn`, `lotus`].some(item => t.includes(item)) : !!m.isDark;
         }(pn()) : !!m.isDark),
         hn = h(() => {
           if (!z.value) return mn.value ? `dark` : `light`;
@@ -1290,7 +1290,7 @@ var we = Object.defineProperty,
             }).finally(() => {
               Ae = null, je = null;
             }), Ae) : Promise.resolve()) : Promise.resolve();
-          }(at, t).then(n).catch(e => {}) : n();
+          }(at, t).then(n).catch(err => {}) : n();
         }({
           appearanceOnly: t != null && fn(e, t[0])
         });

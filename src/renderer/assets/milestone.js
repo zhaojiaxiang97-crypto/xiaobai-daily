@@ -418,8 +418,8 @@ var Qe = [`id`],
         return ke(fallbackValue) ? `` : fallbackValue;
       }
       function y() {
-        let e = i.value;
-        e && m() !== n.value && (e.innerHTML = Y(Me(n.value)), l.value = ke(e.innerHTML));
+        let value = i.value;
+        value && m() !== n.value && (value.innerHTML = Y(Me(n.value)), l.value = ke(value.innerHTML));
       }
       function b() {
         let e = m();
@@ -608,8 +608,8 @@ var Qe = [`id`],
         O.value = ``, B();
       }
       function U(e) {
-        let t = e.currentTarget;
-        t.scrollHeight - t.scrollTop - t.clientHeight <= 80 && B(true);
+        let currentTarget = e.currentTarget;
+        currentTarget.scrollHeight - currentTarget.scrollTop - currentTarget.clientHeight <= 80 && B(true);
       }
       function W(e) {
         let t = new Map(x.value);
@@ -1040,16 +1040,16 @@ var Qe = [`id`],
         F.value = ``;
         let t = 0,
           n = [...W.value],
-          r = Y.value;
+          value = Y.value;
         for (let i of e) {
           let e = ``;
           if (Ve(i.name) ? i.size > optionsAlias.config.attachmentMaxBytes && (e = S(`milestoneTool.errors.fileTooLarge`, {
             size: Ae(optionsAlias.config.attachmentMaxBytes)
-          })) : e = S(`milestoneTool.errors.fileType`), !e && r >= optionsAlias.config.attachmentLimit) {
+          })) : e = S(`milestoneTool.errors.fileType`), !e && value >= optionsAlias.config.attachmentLimit) {
             t += 1;
             continue;
           }
-          e || (r += 1), n.push({
+          e || (value += 1), n.push({
             id: crypto.randomUUID(),
             file: i,
             error: e
@@ -1061,8 +1061,8 @@ var Qe = [`id`],
         }));
       }
       function $e(event) {
-        let t = event.target;
-        Qe(Array.from(t.files || [])), t.value = ``;
+        let target = event.target;
+        Qe(Array.from(target.files || [])), target.value = ``;
       }
       function et(e) {
         W.value = W.value.filter(item => item.id !== e);
@@ -1889,19 +1889,19 @@ var Vn = {
       }
       function ut(e) {
         if (e) return;
-        let t = K.value;
+        let value = K.value;
         queueMicrotask(() => {
-          K.value === t && (K.value = null);
+          K.value === value && (K.value = null);
         });
       }
       async function dt() {
-        let e = K.value;
-        if (K.value = null, e && a.user) {
-          Z.cancelFor(e.id), O.value = O.value.filter(item => item.id !== e.id), Ge(W, e.id, false);
+        let value = K.value;
+        if (K.value = null, value && a.user) {
+          Z.cancelFor(value.id), O.value = O.value.filter(item => item.id !== value.id), Ge(W, value.id, false);
           try {
-            await Q.delete(a.user.csrfToken, e.id);
+            await Q.delete(a.user.csrfToken, value.id);
           } catch (t) {
-            Ye(e, true), L.value = Pe(t);
+            Ye(value, true), L.value = Pe(t);
           }
         }
       }

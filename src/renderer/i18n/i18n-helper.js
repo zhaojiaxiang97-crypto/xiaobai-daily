@@ -3927,7 +3927,7 @@ function y(e) {
 }
 var b = new Map(Object.entries(t).map(([e, t]) => [t, `toolboxNative.${e}`]));
 function x() {
-  let e = v.global.locale;
+  let locale = v.global.locale;
   function t(e, t = {}) {
     return v.global.t(e, t);
   }
@@ -3936,7 +3936,7 @@ function x() {
     return n ? t(n) : e;
   }
   return {
-    locale: e,
+    locale: locale,
     t,
     translateRemoteText: n
   };

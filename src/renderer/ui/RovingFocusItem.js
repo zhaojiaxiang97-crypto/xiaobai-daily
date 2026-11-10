@@ -59,7 +59,7 @@ var y = c({
       if (t !== undefined) {
         if (e.metaKey || e.ctrlKey || e.altKey || !y.allowShiftKey && e.shiftKey) return;
         e.preventDefault();
-        let n = [...w().map(e => e.ref).filter(e => e.dataset.disabled !== ``)];
+        let n = [...w().map(item => item.ref).filter(item => item.dataset.disabled !== ``)];
         if (t === `last`) n.reverse();else if (t === `prev` || t === `next`) {
           t === `prev` && n.reverse();
           let r = n.indexOf(e.currentTarget);

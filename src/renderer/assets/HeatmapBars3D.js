@@ -325,10 +325,10 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       }
       function It() {
         let e = At(),
-          t = Ue.value;
+          value = Ue.value;
         emptyItems.forEach((item, r) => {
           let fallbackValue = X(item)?.value ?? 0;
-          float32Array[r] = z[r] ?? S, at[r] = fallbackValue > 0 ? Ce + fallbackValue / e * (t - Ce) : S;
+          float32Array[r] = z[r] ?? S, at[r] = fallbackValue > 0 ? Ce + fallbackValue / e * (value - Ce) : S;
         }), Mt(), st = performance.now(), K = true, $();
       }
       function Lt(e) {
@@ -403,10 +403,10 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         visible: false
       };
       function Kt() {
-        let e = T.value;
-        if (!e) return;
-        let clientWidth = e.clientWidth,
-          clientHeight = e.clientHeight,
+        let value = T.value;
+        if (!value) return;
+        let clientWidth = value.clientWidth,
+          clientHeight = value.clientHeight,
           mapped = x.rows.map((item, r) => item.label ? Wt(-yt() - ft, 0, vt(r), clientWidth, clientHeight) : Gt),
           i = Ge.value ? 28 : 14,
           a = 1 / 0;
@@ -430,17 +430,17 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         I && ct && !G && (G = requestAnimationFrame(qt));
       }
       function Jt() {
-        let e = w.value;
-        if (!I || !e) return false;
-        let clientWidth = e.clientWidth,
-          clientHeight = e.clientHeight;
+        let value = w.value;
+        if (!I || !value) return false;
+        let clientWidth = value.clientWidth,
+          clientHeight = value.clientHeight;
         return !clientWidth || !clientHeight ? false : (I.setPixelRatio(Math.min(window.devicePixelRatio, 2)), I.setSize(clientWidth, clientHeight, false), M.aspect = clientWidth / clientHeight, M.updateProjectionMatrix(), true);
       }
       function Yt(e) {
-        let t = w.value;
-        if (!I || !t || !t.clientWidth) return;
-        Tt(t.clientWidth);
-        let n = Vt(t.clientWidth);
+        let value = w.value;
+        if (!I || !value || !value.clientWidth) return;
+        Tt(value.clientWidth);
+        let n = Vt(value.clientWidth);
         if (Math.abs(n - Ve.value) > 1) {
           Ve.value = n, e && (q = false);
           return;
@@ -451,25 +451,25 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         Yt(false);
       }
       async function Zt(e) {
-        let t = T.value;
-        if (!I || !t || !ct) return null;
+        let value = T.value;
+        if (!I || !value || !ct) return null;
         K &&= Lt(1 / 0), Ut(1 / 0), L?.update(), I.setPixelRatio(e), I.render(j, M);
-        let toDataURL = t.toDataURL(`image/png`);
+        let toDataURL = value.toDataURL(`image/png`);
         Jt(), I.render(j, M), Kt();
         let image = new Image();
-        image.className = `block h-full w-full`, image.src = toDataURL, await image.decode(), t.style.display = `none`, t.after(image);
+        image.className = `block h-full w-full`, image.src = toDataURL, await image.decode(), value.style.display = `none`, value.after(image);
         let i = Be.value;
         return i && (i.style.display = `none`), () => {
-          image.remove(), t.style.display = ``, i && (i.style.display = ``);
+          image.remove(), value.style.display = ``, i && (i.style.display = ``);
         };
       }
       ie({
         freezeForExport: Zt
       });
       function Qt(event) {
-        let t = T.value;
-        if (!t || !emptyItems.length) return -1;
-        let boundingClientRect = t.getBoundingClientRect();
+        let value = T.value;
+        if (!value || !emptyItems.length) return -1;
+        let boundingClientRect = value.getBoundingClientRect();
         Ze.set((event.clientX - boundingClientRect.left) / boundingClientRect.width * 2 - 1, -((event.clientY - boundingClientRect.top) / boundingClientRect.height) * 2 + 1), Xe.setFromCamera(Ze, M);
         let r = be / 2,
           i = -1,
@@ -524,9 +524,9 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
         if (payload = null, t > Ie) return;
         let n = Qt(event),
           r = $t(n),
-          i = T.value;
-        if (!r || !i) return;
-        let boundingClientRect = i.getBoundingClientRect(),
+          value = T.value;
+        if (!r || !value) return;
+        let boundingClientRect = value.getBoundingClientRect(),
           o = event.clientX - boundingClientRect.left,
           s = event.clientY - boundingClientRect.top;
         C(`cell-click`, {
@@ -534,7 +534,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
           value: X(emptyItems[n])?.value ?? 0,
           anchor: {
             getBoundingClientRect: () => {
-              let boundingClientRectResult = i.getBoundingClientRect();
+              let boundingClientRectResult = value.getBoundingClientRect();
               return new DOMRect(boundingClientRectResult.left + o, boundingClientRectResult.top + s, 1, 1);
             }
           }
@@ -552,12 +552,12 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
       return i([cn, ln, un], ([e, t], [n, r]) => {
         I && (Ot(), e !== n && (Ft(), Yt(true)), e !== n || t !== r ? It() : (Mt(), $()));
       }), m(() => {
-        let e = T.value,
+        let value = T.value,
           t = w.value;
-        if (e && t) {
+        if (value && t) {
           try {
             I = new le({
-              canvas: e,
+              canvas: value,
               alpha: true,
               antialias: window.devicePixelRatio < 2,
               powerPreference: `low-power`,
@@ -567,7 +567,7 @@ attribute float barHeight;`).replace(`#include <beginnormal_vertex>`, `#include 
             C(`unavailable`);
             return;
           }
-          I.setClearColor(0, 0), e.addEventListener(`webglcontextrestored`, $), L = new fe(M, e), L.enableDamping = true, L.dampingFactor = .12, L.enablePan = false, L.enableZoom = false, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
+          I.setClearColor(0, 0), value.addEventListener(`webglcontextrestored`, $), L = new fe(M, value), L.enableDamping = true, L.dampingFactor = .12, L.enablePan = false, L.enableZoom = false, L.rotateSpeed = .7, L.minPolarAngle = .1, L.maxPolarAngle = 1.36, L.minAzimuthAngle = -Math.PI / 3, L.maxAzimuthAngle = Math.PI / 3, L.addEventListener(`change`, $), L.addEventListener(`start`, () => {
             q = true, J = null;
           }), Dt(), Ot(), Ft(), It(), t.addEventListener(`wheel`, on, {
             capture: true,

@@ -110,8 +110,8 @@ var arrayToEnum = payload.arrayToEnum([`string`, `nan`, `number`, `integer`, `fl
       }, this.addIssues = (e = []) => {
         this.issues = [...this.issues, ...e];
       };
-      let t = new.target.prototype;
-      Object.setPrototypeOf ? Object.setPrototypeOf(this, t) : this.__proto__ = t, this.name = `ZodError`, this.issues = constructor;
+      let prototype = new.target.prototype;
+      Object.setPrototypeOf ? Object.setPrototypeOf(this, prototype) : this.__proto__ = prototype, this.name = `ZodError`, this.issues = constructor;
     }
     format(format) {
       let formatValue = format || function (e) {
@@ -610,8 +610,8 @@ var b = class {
       });
     }
     describe(describe) {
-      let t = this.constructor;
-      return new t({
+      let constructor = this.constructor;
+      return new constructor({
         ...this._def,
         description: describe
       });
@@ -1096,9 +1096,9 @@ x.create = e => new x({
   ...y(e)
 });
 function je(e, t) {
-  let n = (e.toString().split(`.`)[1] || ``).length,
+  let length = (e.toString().split(`.`)[1] || ``).length,
     r = (t.toString().split(`.`)[1] || ``).length,
-    i = n > r ? n : r;
+    i = length > r ? length : r;
   return Number.parseInt(e.toFixed(i).replace(`.`, ``)) % Number.parseInt(t.toFixed(i).replace(`.`, ``)) / 10 ** i;
 }
 var Me = class e extends b {
@@ -2266,9 +2266,9 @@ var Be = class e extends b {
         let e = new Map();
         for (let resolvedValue of mapped) {
           let r = resolvedValue.key,
-            i = resolvedValue.value;
-          if (r.status === `aborted` || i.status === `aborted`) return p;
-          (r.status === `dirty` || i.status === `dirty`) && t.dirty(), e.set(r.value, i.value);
+            value = resolvedValue.value;
+          if (r.status === `aborted` || value.status === `aborted`) return p;
+          (r.status === `dirty` || value.status === `dirty`) && t.dirty(), e.set(r.value, value.value);
         }
         return {
           status: t.value,
@@ -2395,7 +2395,7 @@ var Ve = class e extends b {
       let i = {
           errorMap: t.common.contextualErrorMap
         },
-        a = t.data;
+        data = t.data;
       if (this._def.returns instanceof B) {
         let e = this;
         return m(async function (...t) {
@@ -2403,7 +2403,7 @@ var Ve = class e extends b {
             s = await e._def.args.parseAsync(t, i).catch(err => {
               throw o.addIssue(n(t, err)), o;
             }),
-            c = await Reflect.apply(a, this, s);
+            c = await Reflect.apply(data, this, s);
           return await e._def.returns._def.type.parseAsync(c, i).catch(err => {
             throw o.addIssue(r(c, err)), o;
           });
@@ -2414,7 +2414,7 @@ var Ve = class e extends b {
         return m(function (...t) {
           let safeParse = e._def.args.safeParse(t, i);
           if (!safeParse.success) throw new l([n(t, safeParse.error)]);
-          let s = Reflect.apply(a, this, safeParse.data),
+          let s = Reflect.apply(data, this, safeParse.data),
             safeParseResult = e._def.returns.safeParse(s, i);
           if (!safeParseResult.success) throw new l([r(s, safeParseResult.error)]);
           return safeParseResult.data;
@@ -2754,9 +2754,9 @@ var W = class extends b {
     let {
         ctx: t
       } = this._processInputParams(e),
-      n = t.data;
-    return t.parsedType === arrayToEnum.undefined && (n = this._def.defaultValue()), this._def.innerType._parse({
-      data: n,
+      data = t.data;
+    return t.parsedType === arrayToEnum.undefined && (data = this._def.defaultValue()), this._def.innerType._parse({
+      data: data,
       path: t.path,
       parent: t
     });
@@ -2843,9 +2843,9 @@ var We = class extends b {
       let {
           ctx: t
         } = this._processInputParams(e),
-        n = t.data;
+        data = t.data;
       return this._def.type._parse({
-        data: n,
+        data: data,
         path: t.path,
         parent: t
       });

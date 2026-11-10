@@ -184,13 +184,13 @@ function ne(e, t, n) {
     b;
   function x() {
     if (l.value == null || d.value == null) return;
-    let e = i.value;
+    let value = i.value;
     u(l.value, d.value, {
       middleware: a.value,
       placement: o.value,
       strategy: s.value
     }).then(result => {
-      f.value = result.x, p.value = result.y, m.value = result.strategy, h.value = result.placement, _.value = result.middlewareData, v.value = e !== false;
+      f.value = result.x, p.value = result.y, m.value = result.strategy, h.value = result.placement, _.value = result.middlewareData, v.value = value !== false;
     });
   }
   function w() {
@@ -403,8 +403,8 @@ var re = [`dir`],
                 width: i,
                 height: a
               } = t.reference,
-              o = e.floating.style;
-            o.setProperty(`--reka-popper-available-width`, `${n}px`), o.setProperty(`--reka-popper-available-height`, `${r}px`), o.setProperty(`--reka-popper-anchor-width`, `${i}px`), o.setProperty(`--reka-popper-anchor-height`, `${a}px`);
+              style = e.floating.style;
+            style.setProperty(`--reka-popper-available-width`, `${n}px`), style.setProperty(`--reka-popper-available-height`, `${r}px`), style.setProperty(`--reka-popper-anchor-width`, `${i}px`), style.setProperty(`--reka-popper-anchor-height`, `${a}px`);
           }
         }), D.value && te({
           element: D.value,

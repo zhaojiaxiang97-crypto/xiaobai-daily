@@ -869,7 +869,7 @@ var k = class {
     }
     if (i < .003) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
     let a = Math.max(.003, i * .025),
-      o = decodeAudioData.length,
+      length = decodeAudioData.length,
       s = -1;
     for (let e = 0; e < decodeAudioData.length; e += 1) {
       let t = false;
@@ -877,13 +877,13 @@ var k = class {
         t = true;
         break;
       }
-      t && (o = Math.min(o, e), s = e);
+      t && (length = Math.min(length, e), s = e);
     }
-    if (s < o) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
+    if (s < length) throw Error(this.hosts.t(`keyboardSoundErrors.silent`));
     let c = Math.round(decodeAudioData.sampleRate * .001),
       l = Math.round(decodeAudioData.sampleRate * p),
       u = Math.round(decodeAudioData.sampleRate * m),
-      d = Math.max(0, o - c),
+      d = Math.max(0, length - c),
       f = Math.min(decodeAudioData.length, s + 1),
       h = Math.min(l, Math.max(1, f - d)),
       g = Math.max(u, h),

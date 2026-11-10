@@ -47,12 +47,12 @@ async function s(e) {
   let t = new Blob([e], {
       type: `image/png`
     }),
-    n = await createImageBitmap(t);
+    imageBitmap = await createImageBitmap(t);
   try {
-    let e = i(n.width, n.height);
-    return a(e).drawImage(n, 0, 0), e;
+    let e = i(imageBitmap.width, imageBitmap.height);
+    return a(e).drawImage(imageBitmap, 0, 0), e;
   } finally {
-    n.close();
+    imageBitmap.close();
   }
 }
 function c(e) {
@@ -62,7 +62,7 @@ function c(e) {
         n(Error(`PNG export failed`));
         return;
       }
-      e.arrayBuffer().then(e => fn(new Uint8Array(e)), n);
+      e.arrayBuffer().then(result => fn(new Uint8Array(result)), n);
     }, `image/png`);
   });
 }
@@ -74,7 +74,7 @@ function u(e) {
   e && (e.width = 1, e.height = 1);
 }
 function d(e, t) {
-  return `#${[e[t], e[t + 1], e[t + 2]].map(e => e.toString(16).padStart(2, `0`)).join(``)}`;
+  return `#${[e[t], e[t + 1], e[t + 2]].map(item => item.toString(16).padStart(2, `0`)).join(``)}`;
 }
 var f = `system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif`,
   p = 1.3,
@@ -105,7 +105,7 @@ function y(e) {
   t.font = g(e.size);
   let n = e.text.split(`
 `),
-    r = Math.max(e.size * .6, ...n.map(e => t.measureText(e || ` `).width));
+    r = Math.max(e.size * .6, ...n.map(item => t.measureText(item || ` `).width));
   return {
     x: e.x,
     y: e.y,
@@ -270,7 +270,7 @@ function T(e, t, n) {
     case `highlighter`:
       return {
         ...e,
-        points: e.points.map((e, r) => e + (r % 2 == 0 ? t : n))
+        points: e.points.map((item, r) => item + (r % 2 == 0 ? t : n))
       };
   }
 }
@@ -329,16 +329,16 @@ function k(e, t) {
   let n = t.size * p,
     r = (n - t.size) / 2;
   t.text.split(`
-`).forEach((i, a) => {
+`).forEach((item, a) => {
     let o = t.y + a * n + r;
-    e.strokeText(i, t.x, o), e.fillText(i, t.x, o);
+    e.strokeText(item, t.x, o), e.fillText(item, t.x, o);
   }), e.restore();
 }
 function A(e, t) {
-  let n = t.size;
-  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = n * .4, e.shadowOffsetY = n * .12, e.fillStyle = t.color, e.beginPath(), e.arc(t.x, t.y, n, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, n * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(t.color) > .7 ? `#111111` : `#ffffff`;
+  let size = t.size;
+  e.save(), e.shadowColor = `rgba(0,0,0,0.25)`, e.shadowBlur = size * .4, e.shadowOffsetY = size * .12, e.fillStyle = t.color, e.beginPath(), e.arc(t.x, t.y, size, 0, Math.PI * 2), e.fill(), e.shadowColor = `transparent`, e.lineWidth = Math.max(1.5, size * .14), e.strokeStyle = `rgba(255,255,255,0.95)`, e.stroke(), e.fillStyle = v(t.color) > .7 ? `#111111` : `#ffffff`;
   let r = String(t.value);
-  e.font = `700 ${Math.round(n * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, t.x, t.y + n * .04), e.restore();
+  e.font = `700 ${Math.round(size * (r.length > 2 ? .8 : r.length > 1 ? .95 : 1.1))}px ${f}`, e.textAlign = `center`, e.textBaseline = `middle`, e.fillText(r, t.x, t.y + size * .04), e.restore();
 }
 function j(e, t, n, r, o) {
   let s = _(t),
@@ -388,20 +388,20 @@ function L(e, t) {
     height: r
   } = e;
   if (n < 24 || r < 24) return null;
-  let i = a(e, {
+  let data = a(e, {
       willReadFrequently: true
     }).getImageData(0, 0, n, r).data,
-    o = [i[0], i[1], i[2]];
-  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(e => I(i, e, o))) return null;
+    o = [data[0], data[1], data[2]];
+  if (![0, (n - 1) * 4, (r - 1) * n * 4, ((r - 1) * n + n - 1) * 4].every(item => I(data, item, o))) return null;
   let s = Math.max(1, Math.floor(n / 1200)),
     c = Math.max(1, Math.floor(r / 1200)),
     l = e => {
       let t = e * n * 4;
-      for (let e = 0; e < n; e += s) if (!I(i, t + e * 4, o)) return false;
+      for (let e = 0; e < n; e += s) if (!I(data, t + e * 4, o)) return false;
       return true;
     },
     u = e => {
-      for (let t = 0; t < r; t += c) if (!I(i, (t * n + e) * 4, o)) return false;
+      for (let t = 0; t < r; t += c) if (!I(data, (t * n + e) * 4, o)) return false;
       return true;
     },
     f = Math.floor(r * P),
@@ -423,7 +423,7 @@ function L(e, t) {
     bottom: h,
     left: g,
     margin: v,
-    color: d(i, 0)
+    color: d(data, 0)
   };
 }
 var R = {
@@ -549,7 +549,7 @@ function G(e, t, r, i) {
       } else n.ready.then(() => t.onBackgroundLoaded?.(), () => {});
     }
   } else if (a.backgroundKind === `solid`) e.fillStyle = a.backgroundColor, e.fillRect(0, 0, o, s);else if (a.backgroundKind === `gradient`) {
-    let t = n.find(e => e.id === a.gradientId) ?? n[0],
+    let t = n.find(item => item.id === a.gradientId) ?? n[0],
       r = e.createLinearGradient(0, 0, o, s);
     r.addColorStop(0, t.stops[0]), r.addColorStop(1, t.stops[1]), e.fillStyle = r, e.fillRect(0, 0, o, s);
   } else a.backgroundKind === `blur` && H(e, t.source, o, s);
@@ -579,8 +579,8 @@ function K(e, t, n, r) {
   e.fillStyle = i ? `#2c2c2e` : `#f2f2f3`, e.fillRect(a, o, s, frameHeight), e.fillStyle = i ? `rgba(0,0,0,0.5)` : `rgba(0,0,0,0.08)`, e.fillRect(a, o + frameHeight - Math.max(1, Math.round(r)), s, Math.max(1, Math.round(r)));
   let l = 6 * r,
     u = o + frameHeight / 2;
-  if ([`#ff5f57`, `#febc2e`, `#28c840`].forEach((t, n) => {
-    e.fillStyle = t, e.beginPath(), e.arc(a + 16 * r + l + n * 20 * r, u, l, 0, Math.PI * 2), e.fill();
+  if ([`#ff5f57`, `#febc2e`, `#28c840`].forEach((item, n) => {
+    e.fillStyle = item, e.beginPath(), e.arc(a + 16 * r + l + n * 20 * r, u, l, 0, Math.PI * 2), e.fill();
   }), t.frame.startsWith(`browser`)) {
     let t = a + 92 * r,
       n = a + s - 20 * r,

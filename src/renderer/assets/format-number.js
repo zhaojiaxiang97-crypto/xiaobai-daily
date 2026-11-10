@@ -43,15 +43,15 @@ function p(e) {
   }, {
     start: Math.min(n, i),
     end: n
-  }].filter(e => e.end > e.start);
+  }].filter(item => item.end > item.start);
 }
 function m(e) {
-  return p(e).reduce((e, t) => e + t.end - t.start, 0);
+  return p(e).reduce((acc, cur) => acc + cur.end - cur.start, 0);
 }
 function h(e, t) {
-  return p(e).map(e => ({
-    start: d(t, e.start),
-    end: d(t, e.end)
+  return p(e).map(item => ({
+    start: d(t, item.start),
+    end: d(t, item.end)
   }));
 }
 function g(e, t, n) {
@@ -117,18 +117,18 @@ function b(e, t = Date.now()) {
     scheduledMs: 0,
     countdownMs: g
   };
-  let S = x.reduce((e, n) => e + Math.max(0, Math.min(t, n.end) - n.start), 0),
-    C = x[0].start,
+  let S = x.reduce((acc, cur) => acc + Math.max(0, Math.min(t, cur.end) - cur.start), 0),
+    start = x[0].start,
     w = x[x.length - 1].end,
     T = S * c;
-  if (t < C) return {
+  if (t < start) return {
     ...b,
     status: `before`,
     earnedToday: 0,
     earningPerMs: 0,
     workedMs: 0,
     scheduledMs: d,
-    countdownMs: C - t
+    countdownMs: start - t
   };
   if (t >= w) {
     let n = v(e);
@@ -163,7 +163,7 @@ function b(e, t = Date.now()) {
       countdownMs: g
     };
   }
-  if (x.find(e => t >= e.start && t < e.end)) return {
+  if (x.find(item => t >= item.start && t < item.end)) return {
     ...b,
     status: `working`,
     earnedToday: T,
@@ -172,7 +172,7 @@ function b(e, t = Date.now()) {
     scheduledMs: d,
     countdownMs: w - t
   };
-  let E = x.find(e => e.start > t);
+  let E = x.find(item => item.start > t);
   return {
     ...b,
     status: `lunch`,
@@ -242,7 +242,7 @@ function D(e, t, n) {
   };
 }
 function O(e) {
-  return e.wishes.find(t => t.id === e.activeWishId && !t.completedAt) ?? e.wishes.find(e => !e.completedAt) ?? null;
+  return e.wishes.find(item => item.id === e.activeWishId && !item.completedAt) ?? e.wishes.find(item => !item.completedAt) ?? null;
 }
 function k(e, t) {
   return Math.round((l(t).getTime() - l(e).getTime()) / i);
@@ -270,7 +270,7 @@ function A(e, t = Date.now()) {
     };
   }
   let r = e.countdownShown.slice(7),
-    i = e.countdowns.find(e => e.id === r),
+    i = e.countdowns.find(item => item.id === r),
     a = i ? S(i.date) : null;
   return !i || !a ? null : {
     kind: `custom`,
@@ -374,6 +374,6 @@ function H(fn, t, n) {
   });
 }
 function U(e) {
-  return [e.getHours(), e.getMinutes(), e.getSeconds()].map(e => String(e).padStart(2, `0`)).join(`:`);
+  return [e.getHours(), e.getMinutes(), e.getSeconds()].map(item => String(item).padStart(2, `0`)).join(`:`);
 }
 export { T as _, M as a, B as c, R as d, O as f, C as g, D as h, F as i, I as l, b as m, z as n, V as o, A as p, H as r, L as s, U as t, P as u, E as v, m as y };

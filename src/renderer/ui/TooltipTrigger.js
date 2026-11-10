@@ -14,12 +14,12 @@ function U(e, t) {
   }
   function o(e, t) {
     if (!t) return;
-    let i = e.currentTarget,
+    let currentTarget = e.currentTarget,
       a = {
         x: e.clientX,
         y: e.clientY
       },
-      o = G(a, W(a, i.getBoundingClientRect()), 1),
+      o = G(a, W(a, currentTarget.getBoundingClientRect()), 1),
       s = K(t.getBoundingClientRect()),
       c = J([...o, ...s]);
     r.value = c, n.value = true;
@@ -36,14 +36,14 @@ function U(e, t) {
     if (r.value) {
       let o = n => {
         if (!r.value || !(n.target instanceof Element)) return;
-        let o = n.target,
+        let target = n.target,
           s = {
             x: n.clientX,
             y: n.clientY
           },
-          c = e.value?.contains(o) || t.value?.contains(o),
+          c = e.value?.contains(target) || t.value?.contains(target),
           l = !q(s, r.value),
-          u = !!o.closest(`[data-grace-area-trigger]`);
+          u = !!target.closest(`[data-grace-area-trigger]`);
         c ? a() : (l || u) && (a(), i.trigger());
       };
       e.value?.ownerDocument.addEventListener(`pointermove`, o), n(() => e.value?.ownerDocument.removeEventListener(`pointermove`, o));
@@ -150,7 +150,7 @@ function q(e, t) {
 }
 function J(e) {
   let t = e.slice();
-  return t.sort((e, t) => e.x < t.x ? -1 : e.x > t.x ? 1 : e.y < t.y ? -1 : +(e.y > t.y)), oe(t);
+  return t.sort((left, right) => left.x < right.x ? -1 : left.x > right.x ? 1 : left.y < right.y ? -1 : +(left.y > right.y)), oe(t);
 }
 function oe(e) {
   if (e.length <= 1) return e.slice();

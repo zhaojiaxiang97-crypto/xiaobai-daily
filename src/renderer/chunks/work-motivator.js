@@ -51,12 +51,12 @@ var t = e(`eye-off`, [[`path`, {
     for (let n of e) t[n] = n;
     return t;
   }, items.getValidEnumValues = t => {
-    let n = items.objectKeys(t).filter(e => typeof t[t[e]] != `number`),
+    let n = items.objectKeys(t).filter(item => typeof t[t[item]] != `number`),
       r = {};
     for (let e of n) r[e] = t[e];
     return items.objectValues(r);
-  }, items.objectValues = t => items.objectKeys(t).map(function (e) {
-    return t[e];
+  }, items.objectValues = t => items.objectKeys(t).map(function (item) {
+    return t[item];
   }), items.objectKeys = typeof Object.keys == `function` ? e => Object.keys(e) : e => {
     let t = [];
     for (let n in e) Object.prototype.hasOwnProperty.call(e, n) && t.push(n);
@@ -65,7 +65,7 @@ var t = e(`eye-off`, [[`path`, {
     for (let n of e) if (fn(n)) return n;
   }, items.isInteger = typeof Number.isInteger == `function` ? e => Number.isInteger(e) : e => typeof e == `number` && Number.isFinite(e) && Math.floor(e) === e;
   function r(e, t = ` | `) {
-    return e.map(e => typeof e == `string` ? `'${e}'` : e).join(t);
+    return e.map(item => typeof item == `string` ? `'${item}'` : item).join(t);
   }
   items.joinValues = r, items.jsonStringifyReplacer = (e, t) => typeof t == `bigint` ? t.toString() : t;
 })(i ||= {});
@@ -110,8 +110,8 @@ var o = i.arrayToEnum([`string`, `nan`, `number`, `integer`, `float`, `boolean`,
       }, this.addIssues = (e = []) => {
         this.issues = [...this.issues, ...e];
       };
-      let t = new.target.prototype;
-      Object.setPrototypeOf ? Object.setPrototypeOf(this, t) : this.__proto__ = t, this.name = `ZodError`, this.issues = e;
+      let prototype = new.target.prototype;
+      Object.setPrototypeOf ? Object.setPrototypeOf(this, prototype) : this.__proto__ = prototype, this.name = `ZodError`, this.issues = e;
     }
     format(e) {
       let t = e || function (e) {
@@ -245,7 +245,7 @@ var ne = fn => {
     message: i.message
   };
   let s = ``,
-    c = r.filter(e => !!e).slice().reverse();
+    c = r.filter(item => !!item).slice().reverse();
   for (let e of c) s = e(o, {
     data: t,
     defaultError: s
@@ -262,7 +262,7 @@ function d(e, t) {
       issueData: t,
       data: e.data,
       path: e.path,
-      errorMaps: [e.common.contextualErrorMap, e.schemaErrorMap, n, n === u ? undefined : u].filter(e => !!e)
+      errorMaps: [e.common.contextualErrorMap, e.schemaErrorMap, n, n === u ? undefined : u].filter(item => !!item)
     });
   e.common.issues.push(r);
 }
@@ -485,8 +485,8 @@ var b = class {
         data: state,
         path: [],
         parent: t
-      }).then(e => h(e) ? {
-        value: e.value
+      }).then(result => h(result) ? {
+        value: result.value
       } : {
         issues: t.common.issues
       });
@@ -526,7 +526,7 @@ var b = class {
             code: c.custom,
             ...n(t)
           });
-        return typeof Promise < `u` && i instanceof Promise ? i.then(e => e ? true : (a(), false)) : i ? true : (a(), false);
+        return typeof Promise < `u` && i instanceof Promise ? i.then(result => result ? true : (a(), false)) : i ? true : (a(), false);
       });
     }
     refinement(fn, t) {
@@ -610,8 +610,8 @@ var b = class {
       });
     }
     describe(e) {
-      let t = this.constructor;
-      return new t({
+      let constructor = this.constructor;
+      return new constructor({
         ...this._def,
         description: e
       });
@@ -1031,52 +1031,52 @@ var x = class e extends b {
     });
   }
   get isDatetime() {
-    return !!this._def.checks.find(e => e.kind === `datetime`);
+    return !!this._def.checks.find(item => item.kind === `datetime`);
   }
   get isDate() {
-    return !!this._def.checks.find(e => e.kind === `date`);
+    return !!this._def.checks.find(item => item.kind === `date`);
   }
   get isTime() {
-    return !!this._def.checks.find(e => e.kind === `time`);
+    return !!this._def.checks.find(item => item.kind === `time`);
   }
   get isDuration() {
-    return !!this._def.checks.find(e => e.kind === `duration`);
+    return !!this._def.checks.find(item => item.kind === `duration`);
   }
   get isEmail() {
-    return !!this._def.checks.find(e => e.kind === `email`);
+    return !!this._def.checks.find(item => item.kind === `email`);
   }
   get isURL() {
-    return !!this._def.checks.find(e => e.kind === `url`);
+    return !!this._def.checks.find(item => item.kind === `url`);
   }
   get isEmoji() {
-    return !!this._def.checks.find(e => e.kind === `emoji`);
+    return !!this._def.checks.find(item => item.kind === `emoji`);
   }
   get isUUID() {
-    return !!this._def.checks.find(e => e.kind === `uuid`);
+    return !!this._def.checks.find(item => item.kind === `uuid`);
   }
   get isNANOID() {
-    return !!this._def.checks.find(e => e.kind === `nanoid`);
+    return !!this._def.checks.find(item => item.kind === `nanoid`);
   }
   get isCUID() {
-    return !!this._def.checks.find(e => e.kind === `cuid`);
+    return !!this._def.checks.find(item => item.kind === `cuid`);
   }
   get isCUID2() {
-    return !!this._def.checks.find(e => e.kind === `cuid2`);
+    return !!this._def.checks.find(item => item.kind === `cuid2`);
   }
   get isULID() {
-    return !!this._def.checks.find(e => e.kind === `ulid`);
+    return !!this._def.checks.find(item => item.kind === `ulid`);
   }
   get isIP() {
-    return !!this._def.checks.find(e => e.kind === `ip`);
+    return !!this._def.checks.find(item => item.kind === `ip`);
   }
   get isCIDR() {
-    return !!this._def.checks.find(e => e.kind === `cidr`);
+    return !!this._def.checks.find(item => item.kind === `cidr`);
   }
   get isBase64() {
-    return !!this._def.checks.find(e => e.kind === `base64`);
+    return !!this._def.checks.find(item => item.kind === `base64`);
   }
   get isBase64url() {
-    return !!this._def.checks.find(e => e.kind === `base64url`);
+    return !!this._def.checks.find(item => item.kind === `base64url`);
   }
   get minLength() {
     let e = null;
@@ -1096,9 +1096,9 @@ x.create = e => new x({
   ...y(e)
 });
 function je(e, t) {
-  let n = (e.toString().split(`.`)[1] || ``).length,
+  let length = (e.toString().split(`.`)[1] || ``).length,
     r = (t.toString().split(`.`)[1] || ``).length,
-    i = n > r ? n : r;
+    i = length > r ? length : r;
   return Number.parseInt(e.toFixed(i).replace(`.`, ``)) % Number.parseInt(t.toFixed(i).replace(`.`, ``)) / 10 ** i;
 }
 var Me = class e extends b {
@@ -1630,8 +1630,8 @@ var E = class e extends b {
       inclusive: true,
       exact: false,
       message: _def.maxLength.message
-    }), n.dirty()), t.common.async) return Promise.all([...t.data].map((e, n) => _def.type._parseAsync(new v(t, e, t.path, n)))).then(e => f.mergeArray(n, e));
-    let i = [...t.data].map((e, n) => _def.type._parseSync(new v(t, e, t.path, n)));
+    }), n.dirty()), t.common.async) return Promise.all([...t.data].map((item, n) => _def.type._parseAsync(new v(t, item, t.path, n)))).then(result => f.mergeArray(n, result));
+    let i = [...t.data].map((item, n) => _def.type._parseSync(new v(t, item, t.path, n)));
     return f.mergeArray(n, i);
   }
   get element() {
@@ -1691,7 +1691,7 @@ function D(e) {
   return e instanceof E ? new E({
     ...e._def,
     type: D(e.element)
-  }) : e instanceof H ? H.create(D(e.unwrap())) : e instanceof U ? U.create(D(e.unwrap())) : e instanceof N ? N.create(e.items.map(e => D(e))) : e;
+  }) : e instanceof H ? H.create(D(e.unwrap())) : e instanceof U ? U.create(D(e.unwrap())) : e instanceof N ? N.create(e.items.map(item => D(item))) : e;
 }
 var O = class e extends b {
   constructor() {
@@ -1779,7 +1779,7 @@ var O = class e extends b {
         });
       }
       return e;
-    }).then(e => f.mergeObjectSync(t, e)) : f.mergeObjectSync(t, s);
+    }).then(result => f.mergeObjectSync(t, result)) : f.mergeObjectSync(t, s);
   }
   get shape() {
     return this._def.shape();
@@ -1917,13 +1917,13 @@ var k = class extends b {
     function r(e) {
       for (let t of e) if (t.result.status === `valid`) return t.result;
       for (let n of e) if (n.result.status === `dirty`) return t.common.issues.push(...n.ctx.common.issues), n.result;
-      let n = e.map(e => new l(e.ctx.common.issues));
+      let n = e.map(item => new l(item.ctx.common.issues));
       return d(t, {
         code: c.invalid_union,
         unionErrors: n
       }), p;
     }
-    if (t.common.async) return Promise.all(options.map(async e => {
+    if (t.common.async) return Promise.all(options.map(async item => {
       let n = {
         ...t,
         common: {
@@ -1933,7 +1933,7 @@ var k = class extends b {
         parent: null
       };
       return {
-        result: await e._parseAsync({
+        result: await item._parseAsync({
           data: t.data,
           path: t.path,
           parent: n
@@ -1965,7 +1965,7 @@ var k = class extends b {
         }), n.common.issues.length && r.push(n.common.issues);
       }
       if (e) return t.common.issues.push(...e.ctx.common.issues), e.result;
-      let i = r.map(e => new l(e));
+      let i = r.map(item => new l(item));
       return d(t, {
         code: c.invalid_union,
         unionErrors: i
@@ -2046,7 +2046,7 @@ function j(e, t) {
   };
   if (n === o.object && r === o.object) {
     let n = i.objectKeys(t),
-      r = i.objectKeys(e).filter(e => n.indexOf(e) !== -1),
+      r = i.objectKeys(e).filter(item => n.indexOf(item) !== -1),
       a = {
         ...e,
         ...t
@@ -2155,11 +2155,11 @@ var N = class e extends b {
       exact: false,
       type: `array`
     }), t.dirty());
-    let r = [...n.data].map((e, t) => {
+    let r = [...n.data].map((item, t) => {
       let r = this._def.items[t] || this._def.rest;
-      return r ? r._parse(new v(n, e, n.path, t)) : null;
-    }).filter(e => !!e);
-    return n.common.async ? Promise.all(r).then(e => f.mergeArray(t, e)) : f.mergeArray(t, r);
+      return r ? r._parse(new v(n, item, n.path, t)) : null;
+    }).filter(item => !!item);
+    return n.common.async ? Promise.all(r).then(result => f.mergeArray(t, result)) : f.mergeArray(t, r);
   }
   get items() {
     return this._def.items;
@@ -2243,9 +2243,9 @@ var Be = class e extends b {
       }), p;
       let keyType = this._def.keyType,
         valueType = this._def.valueType,
-        a = [...n.data.entries()].map(([e, t], a) => ({
-          key: keyType._parse(new v(n, e, n.path, [a, `key`])),
-          value: valueType._parse(new v(n, t, n.path, [a, `value`]))
+        a = [...n.data.entries()].map(([e, t], item) => ({
+          key: keyType._parse(new v(n, e, n.path, [item, `key`])),
+          value: valueType._parse(new v(n, t, n.path, [item, `value`]))
         }));
       if (n.common.async) {
         let e = new Map();
@@ -2266,9 +2266,9 @@ var Be = class e extends b {
         let e = new Map();
         for (let n of a) {
           let r = n.key,
-            i = n.value;
-          if (r.status === `aborted` || i.status === `aborted`) return p;
-          (r.status === `dirty` || i.status === `dirty`) && t.dirty(), e.set(r.value, i.value);
+            value = n.value;
+          if (r.status === `aborted` || value.status === `aborted`) return p;
+          (r.status === `dirty` || value.status === `dirty`) && t.dirty(), e.set(r.value, value.value);
         }
         return {
           status: t.value,
@@ -2322,8 +2322,8 @@ var F = class e extends b {
         value: n
       };
     }
-    let s = [...n.data.values()].map((e, t) => valueType._parse(new v(n, e, n.path, t)));
-    return n.common.async ? Promise.all(s).then(e => a(e)) : a(s);
+    let s = [...n.data.values()].map((item, t) => valueType._parse(new v(n, item, n.path, t)));
+    return n.common.async ? Promise.all(s).then(result => a(result)) : a(s);
   }
   min(t, n) {
     return new e({
@@ -2374,7 +2374,7 @@ var Ve = class e extends b {
         return ne({
           data: e,
           path: t.path,
-          errorMaps: [t.common.contextualErrorMap, t.schemaErrorMap, te(), u].filter(e => !!e),
+          errorMaps: [t.common.contextualErrorMap, t.schemaErrorMap, te(), u].filter(item => !!item),
           issueData: {
             code: c.invalid_arguments,
             argumentsError: n
@@ -2385,7 +2385,7 @@ var Ve = class e extends b {
         return ne({
           data: e,
           path: t.path,
-          errorMaps: [t.common.contextualErrorMap, t.schemaErrorMap, te(), u].filter(e => !!e),
+          errorMaps: [t.common.contextualErrorMap, t.schemaErrorMap, te(), u].filter(item => !!item),
           issueData: {
             code: c.invalid_return_type,
             returnTypeError: n
@@ -2395,17 +2395,17 @@ var Ve = class e extends b {
       let i = {
           errorMap: t.common.contextualErrorMap
         },
-        a = t.data;
+        data = t.data;
       if (this._def.returns instanceof B) {
         let e = this;
         return m(async function (...t) {
           let o = new l([]),
-            s = await e._def.args.parseAsync(t, i).catch(e => {
-              throw o.addIssue(n(t, e)), o;
+            s = await e._def.args.parseAsync(t, i).catch(err => {
+              throw o.addIssue(n(t, err)), o;
             }),
-            c = await Reflect.apply(a, this, s);
-          return await e._def.returns._def.type.parseAsync(c, i).catch(e => {
-            throw o.addIssue(r(c, e)), o;
+            c = await Reflect.apply(data, this, s);
+          return await e._def.returns._def.type.parseAsync(c, i).catch(err => {
+            throw o.addIssue(r(c, err)), o;
           });
         });
       }
@@ -2414,7 +2414,7 @@ var Ve = class e extends b {
         return m(function (...t) {
           let o = e._def.args.safeParse(t, i);
           if (!o.success) throw new l([n(t, o.error)]);
-          let s = Reflect.apply(a, this, o.data),
+          let s = Reflect.apply(data, this, o.data),
             c = e._def.returns.safeParse(s, i);
           if (!c.success) throw new l([r(s, c.error)]);
           return c.data;
@@ -2552,7 +2552,7 @@ var R = class e extends b {
     });
   }
   exclude(items, n = this._def) {
-    return e.create(this.options.filter(e => !items.includes(e)), {
+    return e.create(this.options.filter(item => !items.includes(item)), {
       ...this._def,
       ...n
     });
@@ -2602,7 +2602,7 @@ var B = class extends b {
       code: c.invalid_type,
       expected: o.promise,
       received: t.parsedType
-    }), p) : m((t.parsedType === o.promise ? t.data : Promise.resolve(t.data)).then(e => this._def.type.parseAsync(e, {
+    }), p) : m((t.parsedType === o.promise ? t.data : Promise.resolve(t.data)).then(result => this._def.type.parseAsync(result, {
       path: t.path,
       errorMap: t.common.contextualErrorMap
     })));
@@ -2636,10 +2636,10 @@ var V = class extends b {
       };
     if (a.addIssue = a.addIssue.bind(a), r.type === `preprocess`) {
       let e = r.transform(n.data, a);
-      if (n.common.async) return Promise.resolve(e).then(async e => {
+      if (n.common.async) return Promise.resolve(e).then(async result => {
         if (t.value === `aborted`) return p;
         let r = await this._def.schema._parseAsync({
-          data: e,
+          data: result,
           path: n.path,
           parent: n
         });
@@ -2677,9 +2677,9 @@ var V = class extends b {
         data: n.data,
         path: n.path,
         parent: n
-      }).then(n => n.status === `aborted` ? p : (n.status === `dirty` && t.dirty(), e(n.value).then(() => ({
+      }).then(result => result.status === `aborted` ? p : (result.status === `dirty` && t.dirty(), e(result.value).then(() => ({
         status: t.value,
-        value: n.value
+        value: result.value
       }))));
     }
     if (r.type === `transform`) {
@@ -2701,7 +2701,7 @@ var V = class extends b {
         data: n.data,
         path: n.path,
         parent: n
-      }).then(e => h(e) ? Promise.resolve(r.transform(e.value, a)).then(e => ({
+      }).then(result => h(result) ? Promise.resolve(r.transform(result.value, a)).then(e => ({
         status: t.value,
         value: e
       })) : p);
@@ -2754,9 +2754,9 @@ var W = class extends b {
     let {
         ctx: t
       } = this._processInputParams(e),
-      n = t.data;
-    return t.parsedType === o.undefined && (n = this._def.defaultValue()), this._def.innerType._parse({
-      data: n,
+      data = t.data;
+    return t.parsedType === o.undefined && (data = this._def.defaultValue()), this._def.innerType._parse({
+      data: data,
       path: t.path,
       parent: t
     });
@@ -2790,9 +2790,9 @@ var G = class extends b {
           ...n
         }
       });
-    return g(r) ? r.then(e => ({
+    return g(r) ? r.then(result => ({
       status: `valid`,
-      value: e.status === `valid` ? e.value : this._def.catchValue({
+      value: result.status === `valid` ? result.value : this._def.catchValue({
         get error() {
           return new l(n.common.issues);
         },
@@ -2843,9 +2843,9 @@ var We = class extends b {
       let {
           ctx: t
         } = this._processInputParams(e),
-        n = t.data;
+        data = t.data;
       return this._def.type._parse({
-        data: n,
+        data: data,
         path: t.path,
         parent: t
       });
@@ -2900,7 +2900,7 @@ var We = class extends b {
     _parse(state) {
       let t = this._def.innerType._parse(state),
         n = e => (h(e) && (e.value = Object.freeze(e.value)), e);
-      return g(t) ? t.then(e => n(e)) : n(t);
+      return g(t) ? t.then(result => n(result)) : n(t);
     }
     unwrap() {
       return this._def.innerType;
@@ -2951,9 +2951,9 @@ var $e = create().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
       mode: `selected`
     };
     let t = [...options.rules];
-    if (!t.some(e => e.enabled && e.type === `record` && e.allDay && new Set(e.days).size === 7)) {
+    if (!t.some(item => item.enabled && item.type === `record` && item.allDay && new Set(item.days).size === 7)) {
       let e = `legacy-all-day`;
-      for (; t.some(t => t.id === e);) e += `-`;
+      for (; t.some(item => item.id === e);) e += `-`;
       t.unshift({
         id: e,
         enabled: true,
@@ -2995,17 +2995,17 @@ function X(e, t) {
 function st(items, t = new Date()) {
   if (!items.enabled) return true;
   let n = items.rules.filter(options => options.enabled),
-    r = n.some(e => e.type === `record`),
+    r = n.some(item => item.type === `record`),
     i = t.getHours() * 60 + t.getMinutes(),
     a = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 1),
     o = e => Number(e.slice(0, 2)) * 60 + Number(e.slice(3)),
-    s = n.filter(e => {
-      if (e.allDay) return X(e, t);
-      let n = o(e.start),
-        r = o(e.end);
-      return n < r ? X(e, t) && i >= n && i < r : X(e, t) && i >= n || X(e, a) && i < r;
+    s = n.filter(item => {
+      if (item.allDay) return X(item, t);
+      let n = o(item.start),
+        r = o(item.end);
+      return n < r ? X(item, t) && i >= n && i < r : X(item, t) && i >= n || X(item, a) && i < r;
     });
-  return !s.some(e => e.type === `exclude`) && (!r || s.some(e => e.type === `record`));
+  return !s.some(item => item.type === `exclude`) && (!r || s.some(item => item.type === `record`));
 }
 function ct(items, t = new Date()) {
   if (!items.enabled) return null;
@@ -3018,7 +3018,7 @@ function ct(items, t = new Date()) {
       n.getTime() > t.getTime() && r.add(n.getTime());
     }
   }
-  for (let t of [...r].sort((e, t) => e - t)) if (st(items, new Date(t)) !== n) return new Date(t);
+  for (let t of [...r].sort((left, right) => left - right)) if (st(items, new Date(t)) !== n) return new Date(t);
   return null;
 }
 var lt = [2, 3, 4, 5, 6],
@@ -3146,7 +3146,7 @@ function Dt(e) {
     r = Et(n.countdowns),
     i = Tt(n.wishes),
     a = typeof n.countdownShown == `string` ? n.countdownShown : t.countdownShown,
-    o = a === `none` || a === `weekend` || a === `payday` || a.startsWith(`custom:`) && r.some(e => `custom:${e.id}` === a) ? a : t.countdownShown,
+    o = a === `none` || a === `weekend` || a === `payday` || a.startsWith(`custom:`) && r.some(item => `custom:${item.id}` === a) ? a : t.countdownShown,
     s = Q(n.activeWishId),
     c = typeof n.opacity == `number` && Number.isFinite(n.opacity) ? Math.min(100, Math.max(40, Math.round(n.opacity))) : t.opacity,
     l = typeof n.payday == `number` && Number.isInteger(n.payday) && n.payday >= 1 && n.payday <= 31 ? n.payday : t.payday,
@@ -3171,7 +3171,7 @@ function Dt(e) {
     countdownShown: o,
     countdowns: r,
     wishes: i,
-    activeWishId: i.some(e => e.id === s) ? s : ``,
+    activeWishId: i.some(item => item.id === s) ? s : ``,
     expanded: u(`expanded`),
     alwaysOnTop: u(`alwaysOnTop`),
     opacity: c,

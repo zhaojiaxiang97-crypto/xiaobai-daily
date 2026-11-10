@@ -245,8 +245,8 @@ var _ = Object.defineProperty,
       function Oe() {
         return C(this, null, function* () {
           try {
-            let e = F.value;
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(e)), v.value = true, setTimeout(() => {
+            let value = F.value;
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(value)), v.value = true, setTimeout(() => {
               v.value = false;
             }, 1e3);
           } catch (e) {
@@ -273,8 +273,8 @@ var _ = Object.defineProperty,
       function Ne() {
         return C(this, null, function* () {
           if (!L || B || !P.value || g.loading && !g.progressiveRender) return;
-          let e = Ce.value;
-          if (e === G && !E.value && O.value) return x.value = true, void (g.loading && (b.value = false));
+          let value = Ce.value;
+          if (value === G && !E.value && O.value) return x.value = true, void (g.loading && (b.value = false));
           let t = F.value;
           if (!t) return Z(), E.value = null, void (G = ``);
           let n = ++k.value;
@@ -316,9 +316,9 @@ var _ = Object.defineProperty,
               let t = function (e) {
                 if (typeof window > `u` || typeof DOMParser > `u` || !e) return ``;
                 let t = e.replace(/["']\s*javascript:/gi, `#`).replace(/\bjavascript:/gi, `#`).replace(/["']\s*vbscript:/gi, `#`).replace(/\bvbscript:/gi, `#`).replace(/\bdata:text\/html/gi, `#`),
-                  n = new DOMParser().parseFromString(t, `image/svg+xml`).documentElement;
-                if (!n || n.nodeName.toLowerCase() !== `svg`) return ``;
-                let r = n;
+                  documentElement = new DOMParser().parseFromString(t, `image/svg+xml`).documentElement;
+                if (!documentElement || documentElement.nodeName.toLowerCase() !== `svg`) return ``;
+                let r = documentElement;
                 return function (e) {
                   let t = new Set([`script`]),
                     n = [e, ...Array.from(e.querySelectorAll(`*`))];
@@ -329,22 +329,22 @@ var _ = Object.defineProperty,
                     }
                     let n = Array.from(e.attributes);
                     for (let t of n) {
-                      let n = t.name;
-                      if (/^on/i.test(n)) e.removeAttribute(n);else {
-                        if (n === `style` && t.value) {
+                      let name = t.name;
+                      if (/^on/i.test(name)) e.removeAttribute(name);else {
+                        if (name === `style` && t.value) {
                           let r = t.value;
-                          if (Ae.some(e => e.test(r))) {
-                            e.removeAttribute(n);
+                          if (Ae.some(item => item.test(r))) {
+                            e.removeAttribute(name);
                             continue;
                           }
                         }
-                        if ((n === `href` || n === `xlink:href`) && t.value) {
+                        if ((name === `href` || name === `xlink:href`) && t.value) {
                           let r = Me(t.value);
                           if (!r) {
-                            e.removeAttribute(n);
+                            e.removeAttribute(name);
                             continue;
                           }
-                          r !== t.value && e.setAttribute(n, r);
+                          r !== t.value && e.setAttribute(name, r);
                         }
                       }
                     }
@@ -352,7 +352,7 @@ var _ = Object.defineProperty,
                 }(r), r.classList.add(`markstream-d2-root-svg`), r.outerHTML;
               }(e);
               O.value = t || ``;
-            })(d), G = e, g.loading && (b.value = false), E.value = null;
+            })(d), G = value, g.loading && (b.value = false), E.value = null;
           } catch (e) {
             if (n !== k.value) return;
             let t = e?.message ? String(e.message) : `D2 render failed.`;
@@ -392,10 +392,10 @@ var _ = Object.defineProperty,
         }
       }
       function $() {
-        let e = A.value;
-        if (!e) return;
-        let t = e.getBoundingClientRect().height;
-        t > 0 && (j.value = t);
+        let value = A.value;
+        if (!value) return;
+        let height = value.getBoundingClientRect().height;
+        height > 0 && (j.value = height);
       }
       return r(() => [g.node.code, g.loading, g.isDark], () => {
         Q();

@@ -5289,7 +5289,7 @@ function Pe() {
     }), Y);
   }
   async function n(t, n = {}) {
-    let r = U.value;
+    let value = U.value;
     U.value = {
       ...U.value,
       ...t
@@ -5302,7 +5302,7 @@ function Pe() {
         ...t
       }, n.silent || (J.value = Date.now()), true;
     } catch (n) {
-      return U.value = r, t.themeMode !== undefined && H(r.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), false;
+      return U.value = value, t.themeMode !== undefined && H(value.themeMode), q.value = Z(n, e(`composables.settings.saveFailed`)), false;
     } finally {
       G.value = false;
     }

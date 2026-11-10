@@ -102,27 +102,27 @@ var ce = {
         z = 0,
         B = null,
         V = f(() => T.value.trim().toLocaleLowerCase()),
-        H = f(() => w.value === `history` ? V.value ? E.value ?? [] : x.value : V.value ? S.value.filter(e => `${e.title}\n${e.preview}`.toLocaleLowerCase().includes(V.value)) : S.value),
+        H = f(() => w.value === `history` ? V.value ? E.value ?? [] : x.value : V.value ? S.value.filter(item => `${item.title}\n${item.preview}`.toLocaleLowerCase().includes(V.value)) : S.value),
         Me = f(() => V.value ? b(`NoMatch`) : w.value === `history` ? b(`EmptyHistory`) : b(`EmptyPhrases`)),
         Ne = f(() => _ ? `⌘1–9` : `Ctrl+1–9`),
         U = f(() => H.value[D.value] ?? null),
         W = f(() => {
-          let e = U.value,
+          let value = U.value,
             t = N.value;
-          return e && t && t.kind === e.kind && t.id === e.id ? t : null;
+          return value && t && t.kind === value.kind && t.id === value.id ? t : null;
         }),
         G = f(() => W.value?.title || U.value?.title || ``),
         Pe = f(() => W.value?.content ?? U.value?.preview ?? ``),
         Fe = f(() => {
-          let e = W.value;
-          if (!e) return ``;
+          let value = W.value;
+          if (!value) return ``;
           let t = [b(`Characters`, {
-            n: e.characterCount.toLocaleString()
+            n: value.characterCount.toLocaleString()
           })];
-          return e.kind === `history` ? (e.count > 1 && t.push(b(`CopyCount`, {
-            n: e.count
-          })), e.copiedAt && t.push(K(e.copiedAt, true))) : e.count > 0 && t.push(b(`UseCount`, {
-            n: e.count
+          return value.kind === `history` ? (value.count > 1 && t.push(b(`CopyCount`, {
+            n: value.count
+          })), value.copiedAt && t.push(K(value.copiedAt, true))) : value.count > 0 && t.push(b(`UseCount`, {
+            n: value.count
           })), t.join(` · `);
         });
       function K(e, t = false) {
@@ -150,14 +150,14 @@ var ce = {
         }).format(n);
       }
       function q() {
-        let e = U.value;
+        let value = U.value;
         L !== null && window.clearTimeout(L), L = null;
         let t = ++z;
-        if (!e || !clipboardPickerAPI) {
+        if (!value || !clipboardPickerAPI) {
           N.value = null;
           return;
         }
-        let n = `${e.kind}:${e.id}`;
+        let n = `${value.kind}:${value.id}`;
         if (P.has(n)) {
           N.value = P.get(n) ?? null;
           return;
@@ -166,8 +166,8 @@ var ce = {
           L = null;
           try {
             let r = await clipboardPickerAPI.detail({
-                kind: e.kind,
-                id: e.id
+                kind: value.kind,
+                id: value.id
               }),
               i = r.ok ? r.data : null;
             P.set(n, i), t === z && (N.value = i);
@@ -215,8 +215,8 @@ var ce = {
         }
       }
       function Z(e) {
-        let t = H.value.length;
-        t !== 0 && (D.value = Math.min(t - 1, Math.max(0, D.value + e)), u(() => {
+        let length = H.value.length;
+        length !== 0 && (D.value = Math.min(length - 1, Math.max(0, D.value + e)), u(() => {
           j.value?.querySelector(`[data-index="${D.value}"]`)?.scrollIntoView({
             block: `nearest`
           });

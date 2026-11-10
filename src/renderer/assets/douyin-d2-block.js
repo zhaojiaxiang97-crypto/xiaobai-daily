@@ -245,8 +245,8 @@ var defineProperty = Object.defineProperty,
       function Oe() {
         return C(this, null, function* () {
           try {
-            let e = F.value;
-            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(e)), v.value = true, setTimeout(() => {
+            let value = F.value;
+            typeof navigator < `u` && navigator.clipboard && typeof navigator.clipboard.writeText == `function` && (yield navigator.clipboard.writeText(value)), v.value = true, setTimeout(() => {
               v.value = false;
             }, 1e3);
           } catch (e) {
@@ -273,8 +273,8 @@ var defineProperty = Object.defineProperty,
       function Ne() {
         return C(this, null, function* () {
           if (!L || B || !P.value || g.loading && !g.progressiveRender) return;
-          let e = Ce.value;
-          if (e === G && !E.value && O.value) return x.value = true, void (g.loading && (b.value = false));
+          let value = Ce.value;
+          if (value === G && !E.value && O.value) return x.value = true, void (g.loading && (b.value = false));
           let t = F.value;
           if (!t) return Z(), E.value = null, void (G = ``);
           let n = ++k.value;
@@ -329,22 +329,22 @@ var defineProperty = Object.defineProperty,
                     }
                     let n = Array.from(value.attributes);
                     for (let payload of n) {
-                      let n = payload.name;
-                      if (/^on/i.test(n)) value.removeAttribute(n);else {
-                        if (n === `style` && payload.value) {
+                      let name = payload.name;
+                      if (/^on/i.test(name)) value.removeAttribute(name);else {
+                        if (name === `style` && payload.value) {
                           let r = payload.value;
                           if (Ae.some(item => item.test(r))) {
-                            value.removeAttribute(n);
+                            value.removeAttribute(name);
                             continue;
                           }
                         }
-                        if ((n === `href` || n === `xlink:href`) && payload.value) {
+                        if ((name === `href` || name === `xlink:href`) && payload.value) {
                           let r = Me(payload.value);
                           if (!r) {
-                            value.removeAttribute(n);
+                            value.removeAttribute(name);
                             continue;
                           }
-                          r !== payload.value && value.setAttribute(n, r);
+                          r !== payload.value && value.setAttribute(name, r);
                         }
                       }
                     }
@@ -352,7 +352,7 @@ var defineProperty = Object.defineProperty,
                 }(documentElementAlias), documentElementAlias.classList.add(`markstream-d2-root-svg`), documentElementAlias.outerHTML;
               }(el);
               O.value = t || ``;
-            })(d), G = e, g.loading && (b.value = false), E.value = null;
+            })(d), G = value, g.loading && (b.value = false), E.value = null;
           } catch (e) {
             if (n !== k.value) return;
             let t = e?.message ? String(e.message) : `D2 render failed.`;
@@ -392,10 +392,10 @@ var defineProperty = Object.defineProperty,
         }
       }
       function $() {
-        let e = A.value;
-        if (!e) return;
-        let t = e.getBoundingClientRect().height;
-        t > 0 && (j.value = t);
+        let value = A.value;
+        if (!value) return;
+        let height = value.getBoundingClientRect().height;
+        height > 0 && (j.value = height);
       }
       return r(() => [g.node.code, g.loading, g.isDark], () => {
         Q();
