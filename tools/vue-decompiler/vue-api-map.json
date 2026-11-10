@@ -1,0 +1,29 @@
+{
+  "_comment": "vue-i18n.runtime.js 导出短名 → Vue API。来源：AST 绑定分析 + 全库签名交叉验证。",
+  "_verified": "17/19 通过签名验证；Ct/k 已修正，suspicious 标注需进一步确认",
+  "map": {
+    "$n": "normalizeClass",
+    "An": "unref",
+    "Ct": "renderSlot",
+    "O": "createTextVNode",
+    "S": "createElementBlock",
+    "St": "renderList",
+    "Wt": "watch",
+    "b": "createBlock",
+    "c": "Fragment",
+    "gt": "openBlock",
+    "j": "defineComponent",
+    "mt": "onUnmounted",
+    "ot": "onMounted",
+    "rr": "toDisplayString",
+    "ut": "onBeforeMount",
+    "v": "computed",
+    "x": "createCommentVNode",
+    "y": "createElementVNode",
+    "k": "resolveComponent_or_createBlock"
+  },
+  "corrections": [
+    { "short": "Ct", "was": "withCtx", "now": "renderSlot", "evidence": "调用签名 (member,str) 共 290/385 次，形如 n(i.$slots, 'header-left', {}, undefined, true)" },
+    { "short": "k", "was": "resolveComponent", "now": "resolveComponent_or_createBlock", "evidence": "调用签名 (call,obj,obj) 达 1061 次，形如 re(se, {name:'...',appear:''}, {...})——更像直接渲染组件" }
+  ]
+}
