@@ -37,12 +37,12 @@ const sharedParts = [];
 T(ast, {
   VariableDeclaration(p) {
     if (inComp(p.node.start)) return;
-    if (p.scope.block.type !== 'Program') return;
+    if (!p.parentPath.isProgram()) return;
     sharedParts.push({ code: src.slice(p.node.start, p.node.end), names: p.node.declarations.map(d => t.isIdentifier(d.id) ? d.id.name : null).filter(Boolean) });
   },
   FunctionDeclaration(p) {
     if (inComp(p.node.start) || !p.node.id) return;
-    if (p.scope.block.type !== 'Program') return;
+    if (!p.parentPath.isProgram()) return;
     sharedParts.push({ code: src.slice(p.node.start, p.node.end), names: [p.node.id.name] });
   },
 });

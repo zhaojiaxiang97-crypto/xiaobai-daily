@@ -316,3 +316,60 @@ import { nr as at, Zt as Xe } from './vue-i18n.runtime.js';
 | 依赖完全解析 | 177（45%） |
 | 共享符号提取 | 8006 个顶层声明 |
 | vite build | 通过（真实组件被编译，10 modules / 239ms） |
+
+---
+
+## 阶段 7：依赖 100% 解析（关键 bug 修复）
+
+### 根因
+
+`cm` / `R_` / `VF` 等符号明明在 main.js 顶层，却没进 shared.js。原因：
+
+```js
+// 错误写法
+if (p.scope.block.type !== 'Program') return;   // 在 FunctionDeclaration 上，
+                                                 // p.scope 已经是函数自身的作用域，
+                                                 // 该判断恒为真 → 所有顶层函数被排除
+```
+
+**正确写法**：`if (!p.parentPath.isProgram()) return;`
+
+修复后顶层符号 **8006 → 9660**（补上 1654 个顶层函数）。
+
+### 结果
+
+| 指标 | 前 | 后 |
+|---|---|---|
+| 依赖完全解析组件 | 177 | **391（100%）** |
+| 共享符号 | 8006 | **9660** |
+| shared.js 体积 | — | 5.5MB（构建时 tree-shake，实测 3 组件产物仅 66KB） |
+
+### 工程验证
+
+```
+vite v5.4.21 building for production...
+✓ 11 modules transformed.
+dist/assets/index-C97sdWfc.js  66.46 kB │ gzip: 26.36 kB
+✓ built in 252ms
+```
+
+## 当前完成的全部阶段
+
+| 阶段 | 内容 | 结果 |
+|---|---|---|
+| 1 | AST 级 import 绑定分析 | ✅ |
+| 2 | API 语义映射（静态） | 6/118 识别（失败） |
+| 2.5 | **运行时指纹探测** | **16 项映射，修正 5 处错误** |
+| 3 | render → template 转换器 | ✅ |
+| 3.1 | 引号规范化 | ✅ |
+| 4 | 418 组件切分 | ✅ |
+| 4.5 | Fragment 修复 | 376 → **391 通过（93.5%）** |
+| 5 | 工程骨架 | ✅ vite build 通过 |
+| 6 | 依赖补全 | 12 → 177 完全解析 |
+| 7 | **顶层函数提取修复** | **391/391 = 100% 解析** |
+
+## 已明确的限制
+
+1. **模板里的子组件是 `<component :is="YM" />`** —— 语义正确但可读性差，需要组件注册表才能还原成 `<Ym />`
+2. **27 个组件无模板** —— renderless 或 render 写在别处
+3. **不等价** —— 逆向后再编译，静态提升/patchFlag 与原始产物必然不同
