@@ -262,3 +262,57 @@ deps.json                ← 每组件待补依赖清单
 3. `npm run dev` 逐个挂载验证
 
 在此之前，组件可编译但不可运行。
+
+---
+
+## 阶段 6：依赖补全（177/391 完全解析）
+
+### 修正 1：自由变量分析
+
+原分析只查 Program scope bindings，把 **setup 参数**（`e`、`t`）误判为外部依赖。
+改用 `path.scope.hasBinding(name)` 在每个引用点判断 → AlertTitle 的依赖从 8 个
+降到 6 个真实依赖。
+
+### 修正 2：跨 chunk 依赖
+
+`je` 之类不是 main.js 顶层声明，而是 **import 别名**
+（`import { xt as je } from "../ui/Switch.js"`）。补上对 main.js 全部 import
+语句的解析后：
+
+| 指标 | 修正前 | 修正后 |
+|---|---|---|
+| 完全解析依赖的组件 | 12 | **177** |
+| 仍有未解析依赖 | 379 | 214 |
+
+### 生成质量（AdmonitionNode.vue）
+
+```vue
+<template>
+<div :class="[`admonition`, [`admonition-${r.node.kind}`]]">
+  <div :id="c" :class="`admonition-legend`">...</div>
+</div>
+</template>
+
+<script setup>
+import { computed, ref, openBlock, createElementBlock, normalizeClass } from 'vue';
+import { l3e, u3e, d3e, f3e } from '../shared.js';
+import { nr as at, Zt as Xe } from './vue-i18n.runtime.js';
+</script>
+```
+
+三类 import（Vue API / 共享符号 / 跨 chunk 别名）都已正确生成。
+
+### 剩余 214 个的未解析项
+
+主要是 `cm`、`R_`、`VF` 这类，指向 main.js 之外、又不在 import 表里的符号
+（可能来自动态导入或更深的依赖链）。需要继续追依赖图。
+
+## 工程现状
+
+| 项 | 数值 |
+|---|---|
+| 组件总数 | 418 |
+| 可编译 `.vue` | 391（93.5%） |
+| 依赖完全解析 | 177（45%） |
+| 共享符号提取 | 8006 个顶层声明 |
+| vite build | 通过（真实组件被编译，10 modules / 239ms） |
