@@ -18,6 +18,9 @@ const SEMANTIC = new Set(['openBlock','createElementBlock','createElementVNode',
   'computed','watch','onMounted','onUnmounted','onBeforeMount','isArray','defineAsyncComponent']);
 
 const file = process.argv[2];
+// 组件注册表：把 <component :is="YM"/> 还原成 <SettingsSection/>
+let REGISTRY = {};
+try { REGISTRY = JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH || '/tmp/registry.json', 'utf8')).registry || {}; } catch {}
 const src = fs.readFileSync(file, 'utf8');
 const ast = P.parse(src, { sourceType: 'module' });
 const API = {};
@@ -106,6 +109,24 @@ function conv(node) {
           const k = t.isIdentifier(p.key) ? p.key.name : (t.isStringLiteral(p.key) ? p.key.value : null);
           if (k) { const a = attrFor(k, p.value); if (a) attrs += ' ' + a; }
         }
+      }
+      const idName = tagN && t.isIdentifier(tagN) ? tagN.name : null;
+      const known = idName ? REGISTRY[idName] : null;
+      if (known) {
+        let slotKids = (args[2] && t.isArrayExpression(args[2]))
+          ? args[2].elements.map(e => conv(e)).filter(Boolean).join('') : '';
+        if (!slotKids && args[2] && t.isObjectExpression(args[2])) {
+          for (const sp of args[2].properties) {
+            if (!t.isObjectProperty(sp)) continue;
+            let v = sp.value;
+            if (t.isCallExpression(v) && t.isIdentifier(v.callee)) v = v.arguments[0];
+            if (t.isArrowFunctionExpression(v) && t.isArrayExpression(v.body)) {
+              slotKids += v.body.elements.map(e => conv(e)).filter(Boolean).join('');
+            }
+          }
+        }
+        const ct = known.component;
+        return slotKids ? `<${ct}${attrs}>${slotKids}</${ct}>` : `<${ct}${attrs} />`;
       }
       return `<component :is="${tagN ? dyn(tagN) : 'unknown'}"${attrs} />`;
     }

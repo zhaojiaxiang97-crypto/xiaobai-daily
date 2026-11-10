@@ -373,3 +373,47 @@ dist/assets/index-C97sdWfc.js  66.46 kB │ gzip: 26.36 kB
 1. **模板里的子组件是 `<component :is="YM" />`** —— 语义正确但可读性差，需要组件注册表才能还原成 `<Ym />`
 2. **27 个组件无模板** —— renderless 或 render 写在别处
 3. **不等价** —— 逆向后再编译，静态提升/patchFlag 与原始产物必然不同
+
+---
+
+## 阶段 8：组件注册表（具名标签还原）
+
+### 问题
+
+转换出的模板里子组件是 `<component :is="YM" />`，语义正确但不可读。
+
+### 方案
+
+`registry.cjs` 扫描全库，从 `var X = defineComponent({ __name: 'Y' })` 建立
+**变量名 → 组件名** 映射（341 个），转换器查表把 `createBlock(YM, ...)` 还原为
+`<SettingsSection ...>`，并同时展开 slots（`{ default: withCtx(() => [...]) }`）。
+
+### 效果
+
+| 指标 | 值 |
+|---|---|
+| 有模板的组件 | 391 |
+| **还原为具名标签** | **163（41.7%）** |
+| 仍有 `<component :is>` | 228 |
+| 编译通过 | 391（不变） |
+
+样例：
+
+```html
+<!-- 前 -->
+<component :is="YM" id="about" />
+<!-- 后 -->
+<SettingsSection id="about"><div><p></p></div>...</SettingsSection>
+```
+
+### 剩余 228 个的原因
+
+组件引用不在 main.js 的注册表内（来自其他 chunk，或运行时动态解析）。
+跨文件变量名会冲突（同名短名在不同 chunk 指不同组件），不能简单合并注册表。
+
+### 用法
+
+```bash
+node tools/vue-decompiler/registry.cjs src/renderer /tmp/registry.json
+REGISTRY_PATH=/tmp/registry.json node tools/vue-decompiler/convert-component.cjs <组件.js>
+```
