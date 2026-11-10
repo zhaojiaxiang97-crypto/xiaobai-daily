@@ -32,12 +32,12 @@ function a(e, t) {
   return context;
 }
 function o(items, t, n) {
-  let r = t * n,
+  let row = t * n,
     i = items.byteOffset % 4 == 0 ? items : items.slice(),
-    a = new Uint32Array(i.buffer, i.byteOffset, r),
-    o = new Uint8ClampedArray(r * 4),
+    a = new Uint32Array(i.buffer, i.byteOffset, row),
+    o = new Uint8ClampedArray(row * 4),
     s = new Uint32Array(o.buffer);
-  for (let e = 0; e < r; e += 1) {
+  for (let e = 0; e < row; e += 1) {
     let t = a[e];
     s[e] = t & 65280 | (t & 255) << 16 | t >>> 16 & 255 | 4278190080;
   }
@@ -56,13 +56,13 @@ async function s(e) {
   }
 }
 function c(e) {
-  return new Promise((fn, n) => {
+  return new Promise((fn, items) => {
     e.toBlob(e => {
       if (!e) {
-        n(Error(`PNG export failed`));
+        items(Error(`PNG export failed`));
         return;
       }
-      e.arrayBuffer().then(result => fn(new Uint8Array(result)), n);
+      e.arrayBuffer().then(result => fn(new Uint8Array(result)), items);
     }, `image/png`);
   });
 }

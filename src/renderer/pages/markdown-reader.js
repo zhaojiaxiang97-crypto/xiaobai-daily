@@ -153,17 +153,17 @@ var ut = L(`corner-up-left`, [[`path`, {
       }
     },
     emits: [`select`, `update:modelValue`],
-    setup(r, {
+    setup(el, {
       emit: i
     }) {
-      let s = r,
+      let items = el,
         c = i,
-        l = o(s, [`modelValue`]),
+        l = o(items, [`modelValue`]),
         u = e(l),
-        f = a(s, `modelValue`, c);
+        f = a(items, `modelValue`, c);
       return V({
         modelValue: f
-      }), (e, r) => (T(), x(Ce, k({
+      }), (event, r) => (T(), x(Ce, k({
         role: `menuitemcheckbox`
       }, d(u), {
         "aria-checked": d(n)(d(f)) ? `mixed` : d(f),
@@ -172,7 +172,7 @@ var ut = L(`corner-up-left`, [[`path`, {
           c(`select`, e), d(n)(d(f)) ? f.value = true : f.value = !d(f);
         }
       }), {
-        default: y(() => [p(e.$slots, `default`, {
+        default: y(() => [p(event.$slots, `default`, {
           modelValue: d(f)
         })]),
         _: 3
@@ -1375,9 +1375,9 @@ body { margin: 0; background: #fff; }
         w = null,
         E = null,
         D = false,
-        O = M(() => fn(r.modelValue)),
-        k = M(() => O.value.length),
-        j = M(() => pn(O.value, b.value.start)),
+        options = M(() => fn(r.modelValue)),
+        k = M(() => options.value.length),
+        j = M(() => pn(options.value, b.value.start)),
         oe = M(() => `${Math.max(2, String(k.value).length) * 8 + 20}px`),
         F = M(() => Lt({
           text: r.modelValue,
@@ -1630,7 +1630,7 @@ body { margin: 0; background: #fff; }
       function V(e) {
         let value = o.value;
         if (!value) return;
-        let n = O.value[Math.min(Math.max(0, e), O.value.length - 1)] ?? 0;
+        let n = options.value[Math.min(Math.max(0, e), options.value.length - 1)] ?? 0;
         value.focus({
           preventScroll: true
         }), value.setSelectionRange(n, n), le(), (r.lineNumbers || r.measureLines) && xe(), Te(Math.max(0, we(e) - Q - 12));
@@ -1641,7 +1641,7 @@ body { margin: 0; background: #fff; }
         n && value.focus({
           preventScroll: true
         }), value.setSelectionRange(e, t), le();
-        let i = pn(O.value, e),
+        let i = pn(options.value, e),
           a = we(i) - value.clientHeight / 3;
         (we(i) < value.scrollTop + 24 || we(i) > value.scrollTop + value.clientHeight - 48) && Te(Math.max(0, a));
       }

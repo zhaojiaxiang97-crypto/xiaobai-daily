@@ -16,8 +16,8 @@ var h = `rovingFocusGroup.onEntryFocus`,
     PageDown: `last`,
     End: `last`
   };
-function v(e, t) {
-  return t === `rtl` ? e === `ArrowLeft` ? `ArrowRight` : e === `ArrowRight` ? `ArrowLeft` : e : e;
+function v(items, t) {
+  return t === `rtl` ? items === `ArrowLeft` ? `ArrowRight` : items === `ArrowRight` ? `ArrowLeft` : items : items;
 }
 function y(e, t, n) {
   let r = v(e.key, n);

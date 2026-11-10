@@ -55,7 +55,7 @@ import { createRequire as nodemoduleLib } from "node:module";
 nodemoduleLib(import.meta.url);
 import { i as rolldownLib, n as rolldownUtil, t as rolldownMod } from "./lib/rolldown-runtime.js";
 import { $ as settingsService, A as ENTER_KEY_RECORD_INTERVAL_SECONDS, At as settingsLib, B as workMotivatorWindowSize, Bt as getCustomDataDirForSelectedParent, C as aiModeKey, Ct as unknownType, D as migrateLegacyAiModeRows, E as getWorkOverviewModelSignature, F as getDefaultLocalEndpointPath, Ft as isDatabaseGenerationCurrent, Gt as decryptString, H as SCREENSHOT_HISTORY_LIMITS, Ht as getDatabaseStorageLocation, I as normalizeScheduledReportIntervalMinutes, J as normalizeScreenshotStyle, Jt as CLIPBOARD_HISTORY_RETENTION_DAYS, K as normalizeScreenshotAnnotations, Kt as encryptString, L as resolveLocalApiStyle, Lt as decryptCredential, M as SCHEDULED_REPORT_REDACTED_TIMELINE_SUMMARY, Mt as getDatabase, N as SCREENSHOT_INTERVAL_SECONDS, Nt as getDatabaseGeneration, O as normalizeScreenshotIntervalForAiMode, P as SUBSCRIPTION_THINKING_LEVELS, Pt as getOpenDatabaseConnection, Q as AGENT_SESSION_MANUAL_IMPORT_DAY_OPTIONS, Qt as CLIPBOARD_WORK_RECORD_CATEGORY_ID, R as normalizeWorkMotivatorConfig, Rt as encryptCredential, S as normalizeReportGenerationModel, St as unionType, T as getWorkOverviewModelPurpose, Tt as ZodIssueCode, Ut as migrateDatabaseStorage, V as SCREENSHOT_AFTER_CAPTURE_ACTIONS, Vt as getDatabaseDataDir, Wt as getLatestSchemaVersion, Y as resolveScreenshotBeautifierShortcut, Yt as CLIPBOARD_PHRASE_MAX_CONTENT_LENGTH, Z as AGENT_SESSION_IMPORT_MAX_INTERVAL_MINUTES, _ as getSinceLastRange, _t as nullType, an as builtinCategoriesForUsageMode, at as DEFAULT_RECORDING_SCHEDULE, b as toLocalDateKey, bt as recordType, c as resolveUsageModeConfigKey, ct as recordingRuleDaysFor, d as resolveCommonAppName, dt as booleanType, en as resolveClipboardAssistantShortcut, et as AGENT_SESSION_PROVIDER_IDS, f as AUTO_REPORT_TYPE_ORDER, ft as custom, g as getRecordedPeriodCandidates, gt as literalType, h as getLatestTaskRun, ht as instanceOfType, i as translateMenu, in as WORK_RECORD_CATEGORY_COLORS, it as openAgentSessionImportPeriod, j as IDLE_MINUTES_OPTIONS, jt as getCurrentDatabasePath, k as resolveAiMode, kt as closeDatabase, l as resolveUsageModeLocaleKey, lt as recordingScheduleSchema, m as getFillMissingCandidates, mt as enumType, n as settingsRepository, nt as hasOpenAgentSessionImportPeriod, o as isStudentMode, on as builtinCategoriesToDisableForUsageMode, ot as isRecordingTimeAllowed, p as autoReportTaskSchema, pt as discriminatedUnionType, r as getMainProcessUsageMode, rn as STUDENT_BUILTIN_WORK_RECORD_CATEGORY_PRESETS, rt as isWithinAgentSessionImportPeriods, s as normalizeUsageMode, sn as builtinWorkRecordCategoryId, st as nextRecordingScheduleChange, t as SENSITIVE_SETTING_KEYS, tt as closeAgentSessionImportPeriod, u as localizeCommonAppName, ut as arrayType, v as getStaticTaskRange, vt as numberType, w as buildAiConnectionInput, wt as ZodError, x as isPremiumReportGenerationModel, xt as stringType, y as templatesForReportType, yt as objectType, z as workMotivatorDateKey, zt as StorageLocationError } from "./services/settings.repository.js";
-import { $ as telemetryService, A as telemetryLib, B as telemetryApi, C as telemetryRepo, D as telemetryUtil, E as telemetryMod, H as telemetryConst, J as _0xe22873, M as telemetryClient, N as _0x11b305, O as _0x2897c9, P as _0x231789, Q as importAliasA, R as _0x23004e, S as _0x439c81, T as _0x218943, U as _0x58f2c7, V as _0x2ac41a, W as _0x565740, X as _0x526e8a, Y as settingsSvc, Z as _0x18d5e1, a as _0x401fe5, at as _0xfc21b3, b as _0x2ac963, c as _0x596d58, d as _0x41caa7, et as _0x3add38, g as _0x3d9fcc, h as _0x34dbec, it as _0x416bc0, j as _0x7697ad, k as _0xdc6aae, m as _0x53cb49, n as _0x12b869, nt as _0x5bc685, o as _0x5f545c, p as _0x49de04, r as _0x5b6c4b, rt as _0x4a3fb2, s as _0x3455b4, t as _0x105c3c, tt as _0x220889, u as _0x5986f8, v as _0x565abb, w as _0x198d0e, x as _0x5d968a, y as _0x3010b2 } from "./services/telemetry.service.js";
+import { $ as telemetryService, A as telemetryLib, B as telemetryApi, C as telemetryRepo, D as telemetryUtil, E as telemetryMod, H as telemetryConst, J as _0xe22873, M as telemetryClient, N as _0x11b305, O as _0x2897c9, P as _0x231789, Q as importAliasA, R as _0x23004e, S as items, T as _0x218943, U as _0x58f2c7, V as _0x2ac41a, W as _0x565740, X as _0x526e8a, Y as settingsSvc, Z as _0x18d5e1, a as _0x401fe5, at as _0xfc21b3, b as _0x2ac963, c as _0x596d58, d as _0x41caa7, et as _0x3add38, g as _0x3d9fcc, h as _0x34dbec, it as _0x416bc0, j as _0x7697ad, k as _0xdc6aae, m as _0x53cb49, n as _0x12b869, nt as _0x5bc685, o as _0x5f545c, p as _0x49de04, r as _0x5b6c4b, rt as _0x4a3fb2, s as _0x3455b4, t as _0x105c3c, tt as _0x220889, u as _0x5986f8, v as _0x565abb, w as _0x198d0e, x as _0x5d968a, y as _0x3010b2 } from "./services/telemetry.service.js";
 import { n as metricsSvc, t as _0x4448c9 } from "./services/native-active-context-collector.service.js";
 import { i as workLib, n as workUtil, t as workService } from "./services/work-record.repository.js";
 import { n as translate, t as appLib } from "./lib/app-language.js";
@@ -189,7 +189,7 @@ var AuthLoopbackService = class {
     starting = false;
     async request(requestValue) {
       const _0xc0568 = null,
-        _0x51fe98 = await fetch(_0x3add38 + "/desktop-auth.php", {
+        response = await fetch(_0x3add38 + "/desktop-auth.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -200,11 +200,11 @@ var AuthLoopbackService = class {
           const _0x49180a = _0xc0568;
           throw new Error(translate("browserLogin.connectionLost"));
         }),
-        _0x47be8e = await _0x51fe98.json().catch(() => {
+        _0x47be8e = await response.json().catch(() => {
           const _0x3dee56 = _0xc0568;
           throw new Error(translate("browserLogin.serviceUnavailable"));
         });
-      if (!_0x51fe98.ok || !_0x47be8e.ok) throw new Error(_0x47be8e.error?.message || translate("browserLogin.serviceUnavailable"));
+      if (!response.ok || !_0x47be8e.ok) throw new Error(_0x47be8e.error?.message || translate("browserLogin.serviceUnavailable"));
       return _0x47be8e.data;
     }
     async start() {
@@ -511,15 +511,15 @@ function cachedGrowthImage(cached) {
 }
 async function load(_0x2e8e15) {
   const _0x486c42 = join(directory$1(), digest(_0x2e8e15) + ".json");
-  let _0x5a793e;
+  let result;
   try {
-    _0x5a793e = JSON.parse(await readFile(_0x486c42, "utf8"));
-    if (!_0x5a793e || !/^data:image\/(png|jpeg|webp|gif);base64,/.test(_0x5a793e.data)) _0x5a793e = undefined;
+    result = JSON.parse(await readFile(_0x486c42, "utf8"));
+    if (!result || !/^data:image\/(png|jpeg|webp|gif);base64,/.test(result.data)) result = undefined;
   } catch {}
   const _0x188ec7 = /-[a-f0-9]{12,64}\.(png|webp|jpe?g|gif)$/i.test(new URL(_0x2e8e15).pathname);
-  if (_0x5a793e) {
-    if (!_0x188ec7 && Date.now() - _0x5a793e.savedAt > 0x5265c00) download(_0x2e8e15, _0x486c42).catch(() => {});
-    return _0x5a793e.data;
+  if (result) {
+    if (!_0x188ec7 && Date.now() - result.savedAt > 0x5265c00) download(_0x2e8e15, _0x486c42).catch(() => {});
+    return result.data;
   }
   return download(_0x2e8e15, _0x486c42).catch(() => null);
 }
@@ -1617,8 +1617,8 @@ var ReportPromptConfigService = class {
       const _0x3318cd = _0x32744f || "zh-CN",
         usageMode = normalizeUsageMode(_0x2b9325 ?? settingsRepository.getSettings().usageMode),
         usageModeLocaleKey = resolveUsageModeLocaleKey(_0x3318cd, usageMode),
-        _0x490186 = this.cache.get(usageModeLocaleKey);
-      if (_0x490186 && _0x490186.expiresAt > Date.now()) return _0x490186.config;
+        options = this.cache.get(usageModeLocaleKey);
+      if (options && options.expiresAt > Date.now()) return options.config;
       const configData = await this.fetchConfig(_0x3318cd, usageMode);
       return this.cache.set(usageModeLocaleKey, {
         expiresAt: Date.now() + CACHE_TTL_MS$2,
@@ -1887,15 +1887,15 @@ var ScreenshotService = class {
         _0x5ca471 = [],
         arr = [..._0x39eb3d];
       let _0x260b1c = [...enabledDisplayIds];
-      for (const _0x2ed76a of _0x33e64a) {
-        if (knownDisplayIds.includes(_0x2ed76a.id)) continue;
-        const _0x32caae = _0x3010b2(_0x2ed76a, arr);
+      for (const row of _0x33e64a) {
+        if (knownDisplayIds.includes(row.id)) continue;
+        const _0x32caae = _0x3010b2(row, arr);
         if (!_0x32caae) {
-          _0x18e9ba.push(_0x2ed76a.id), _0x260b1c.push(_0x2ed76a.id);
+          _0x18e9ba.push(row.id), _0x260b1c.push(row.id);
           continue;
         }
-        arr.splice(arr.indexOf(_0x32caae), 1), _0x5ca471.push(_0x2ed76a.id);
-        if (enabledDisplayIds.includes(_0x32caae.id)) _0x260b1c.push(_0x2ed76a.id);
+        arr.splice(arr.indexOf(_0x32caae), 1), _0x5ca471.push(row.id);
+        if (enabledDisplayIds.includes(_0x32caae.id)) _0x260b1c.push(row.id);
       }
       const _0x5c6d51 = !settings.displayEnableRepairDone;
       if (_0x5c6d51) _0x260b1c.push(..._0x14e83e);
@@ -11530,9 +11530,9 @@ async function showChatLoginCheckTip(showValue, _0x36b2dc, loginValue) {
   if (showValue.isDestroyed()) return;
   await showValue.webContents.executeJavaScript(buildChatLoginCheckTipScript(_0x36b2dc, loginValue)).catch(() => {});
 }
-function closeWindowAfterDelay(_0x11b606, _0x21a97a = 3000) {
+function closeWindowAfterDelay(closable, _0x21a97a = 3000) {
   setTimeout(() => {
-    if (!_0x11b606.isDestroyed()) _0x11b606.close();
+    if (!closable.isDestroyed()) closable.close();
   }, _0x21a97a);
 }
 function safeWebReportErrorCode(_0x16ae89) {
@@ -16495,18 +16495,18 @@ var AgentSessionImportService = class {
       if (this.runPromise && this.runGeneration === this.generation) return this.runPromise;
       const runPromise = this.runPromise,
         generation = this.generation,
-        _0x31645a = (async () => {
+        promise = (async () => {
           const _0x1284a2 = _0x2d703a;
           if (runPromise) await runPromise.catch(() => undefined);
           return this.runOnce(generation);
         })();
-      this.runPromise = _0x31645a, this.runGeneration = generation, emit("agent-session-import:changed");
+      this.runPromise = promise, this.runGeneration = generation, emit("agent-session-import:changed");
       const _0x12c826 = () => {
         const _0x45cb56 = _0x2d703a;
-        if (this.runPromise === _0x31645a) this.runPromise = null;
+        if (this.runPromise === promise) this.runPromise = null;
         emit("agent-session-import:changed");
       };
-      return _0x31645a.then(_0x12c826, _0x12c826), _0x31645a;
+      return promise.then(_0x12c826, _0x12c826), promise;
     }
     previewManual(previewValue) {
       const _0xd982ac = null,
@@ -20122,7 +20122,7 @@ function categoryHoursOf(_0x455e87) {
   return Object.fromEntries(Array.from(_0x455e87.categoryHours).map(([_0xb46e7c, _0x5ca020]) => [_0xb46e7c, _0x5ca020.map(item => Math.round(item * 10) / 10)]).filter(([, _0x5f251b]) => _0x5f251b.some(item => item > 0)));
 }
 function appFlowsOf(_0x319f23) {
-  const map = new Map(_0x439c81.map((item, _0x4ebb29) => [item.period, _0x4ebb29])),
+  const map = new Map(items.map((item, _0x4ebb29) => [item.period, _0x4ebb29])),
     _0x5b07b9 = new Map();
   for (const _0x4d3f6e of _0x319f23.periods) {
     if (_0x4d3f6e.activeDurationSec <= 0) continue;
@@ -22123,7 +22123,7 @@ var ScheduledReportService = class {
     }
     buildAppFlows(_0x1da6f4, flowsValue) {
       const flows = _0x49de04.getFlows(_0x1da6f4, flowsValue),
-        map = new Map(_0x439c81.map((item, _0xd10986) => [item.period, _0xd10986])),
+        map = new Map(items.map((item, _0xd10986) => [item.period, _0xd10986])),
         _0x2a3953 = new Map();
       for (const _0x24bdc8 of flows.periods) {
         if (_0x24bdc8.activeDurationSec <= 0) continue;
@@ -36611,11 +36611,11 @@ async function findVideoInput(video, _0x229b41, _0x46a685 = 10000) {
   const _0x5e22b4 = Date.now() + _0x46a685;
   while (Date.now() < _0x5e22b4) {
     for (const _0x2f8a57 of _0x229b41.videoInputs) try {
-      const _0xcb2226 = video.locator(_0x2f8a57).first();
-      if (!(await _0xcb2226.count())) continue;
-      const arr = ((await _0xcb2226.getAttribute("accept")) ?? "").toLowerCase();
+      const el = video.locator(_0x2f8a57).first();
+      if (!(await el.count())) continue;
+      const arr = ((await el.getAttribute("accept")) ?? "").toLowerCase();
       if (arr.includes("image") && !arr.includes("video")) continue;
-      return _0xcb2226;
+      return el;
     } catch {}
     await video.waitForTimeout(250);
   }

@@ -282,12 +282,12 @@ var Fe = C(`circle-dashed`, [[`path`, {
           locale: tn,
           t: nn
         } = de(),
-        handler = (e, t = {}) => nn(`toolboxNative.whiteboard${e}`, t);
+        handler = (row, el = {}) => nn(`toolboxNative.whiteboard${row}`, el);
       function rn(e) {
         let t = window.atob(String(e || ``).split(`,`)[1] || ``),
-          n = new Uint8Array(t.length);
-        for (let e = 0; e < t.length; e += 1) n[e] = t.charCodeAt(e);
-        return n.buffer;
+          items = new Uint8Array(t.length);
+        for (let e = 0; e < t.length; e += 1) items[e] = t.charCodeAt(e);
+        return items.buffer;
       }
       function an(e = new Date()) {
         let t = (e, t = 2) => String(e).padStart(t, `0`);

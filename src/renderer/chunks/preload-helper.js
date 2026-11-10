@@ -1,9 +1,9 @@
-var e = function (e, t) {
-    return new URL(e, t).href;
+var e = function (items, t) {
+    return new URL(items, t).href;
   },
   t = {},
   n = function (n, r, i) {
-    let a = Promise.resolve();
+    let promise = Promise.resolve();
     if (r && r.length > 0) {
       let elementsByTagName = document.getElementsByTagName(`link`),
         selector = document.querySelector(`meta[property=csp-nonce]`),
@@ -20,7 +20,7 @@ var e = function (e, t) {
       function l(e) {
         return import.meta.resolve ? import.meta.resolve(e) : new URL(e, import.meta.url).href;
       }
-      a = c(r.map(item => {
+      promise = c(r.map(item => {
         if (item = e(item, i), item = l(item), item in t) return;
         t[item] = true;
         let endsWith = item.endsWith(`.css`);
@@ -40,7 +40,7 @@ var e = function (e, t) {
       });
       if (t.payload = e, window.dispatchEvent(t), !t.defaultPrevented) throw e;
     }
-    return a.then(result => {
+    return promise.then(result => {
       for (let t of result || []) t.status === `rejected` && o(t.reason);
       return n().catch(o);
     });

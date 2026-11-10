@@ -28,9 +28,9 @@ var e = `today-work`,
     update_dialog_impression: `feature_map_update_expose`,
     update_action_click: `feature_map_update_click`
   };
-function a(t, n, r) {
+function a(row, n, r) {
   let options = {
-    type: t,
+    type: row,
     name: n,
     eventId: crypto.randomUUID(),
     eventName: n,

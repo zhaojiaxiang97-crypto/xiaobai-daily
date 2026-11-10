@@ -13,15 +13,15 @@ var I = class {
     };
     startedAt = 0;
     endsAt = 0;
-    constructor(e) {
-      this.uniforms.uGrow.value = e;
+    constructor(event) {
+      this.uniforms.uGrow.value = event;
     }
-    start(e, t) {
+    start(e, items) {
       if (!e) {
         this.uniforms.uTime.value = 1e7, this.endsAt = 0;
         return;
       }
-      this.startedAt = performance.now(), this.endsAt = t + this.uniforms.uGrow.value, this.uniforms.uTime.value = 0;
+      this.startedAt = performance.now(), this.endsAt = items + this.uniforms.uGrow.value, this.uniforms.uTime.value = 0;
     }
     step(e) {
       if (!this.endsAt) return false;
@@ -120,7 +120,7 @@ var oe = class {
         length = n.length;
       this.heights = new Float32Array(length), this.dims = new Float32Array(length);
       let i = new Float32Array(length),
-        a = new w(),
+        el = new w(),
         o = new _(),
         s = new y(),
         c = new _();
@@ -130,9 +130,9 @@ var oe = class {
       n.forEach((item, t) => {
         let n = Math.max(U, item.end - item.start - H),
           r = P(item) ? V : B * M(item);
-        this.heights[t] = r, u = Math.max(u, r), i[t] = j(item, this.set.dayCount, re, J), l = Math.max(l, i[t]), o.set((item.start + item.end) / 2 - z, 0, this.rowZ(item.dayIndex)), c.set(n, 1, this.layout.buildingDepth), a.compose(o, s, c), this.buildings.setMatrixAt(t, a);
+        this.heights[t] = r, u = Math.max(u, r), i[t] = j(item, this.set.dayCount, re, J), l = Math.max(l, i[t]), o.set((item.start + item.end) / 2 - z, 0, this.rowZ(item.dayIndex)), c.set(n, 1, this.layout.buildingDepth), el.compose(o, s, c), this.buildings.setMatrixAt(t, el);
       }), this.buildings.instanceMatrix.needsUpdate = true, this.maxDelay = l, this.trackGeometry = new v(1, 1, 1).translate(0, -.5, 0), this.tracks = new E(this.trackGeometry, this.trackMaterial, this.set.dayCount);
-      for (let e = 0; e < this.set.dayCount; e += 1) o.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), a.compose(o, s, c), this.tracks.setMatrixAt(e, a);
+      for (let e = 0; e < this.set.dayCount; e += 1) o.set(0, te, this.rowZ(e)), c.set(R + 1, ne, this.layout.trackDepth), el.compose(o, s, c), this.tracks.setMatrixAt(e, el);
       this.tracks.instanceMatrix.needsUpdate = true, this.root.add(this.tracks, this.buildings), this.colorSync = new L([this.buildings]);
       let d = this.set.dayCount * this.layout.rowPitch / 2,
         f = -z - this.layout.leftLabelSpace,

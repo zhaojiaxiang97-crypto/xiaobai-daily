@@ -2,7 +2,7 @@ import { $n as e, An as t, Ct as n, S as r, Wt as i, Yt as ee, Zt as te, b as a,
 import { E as oe, r as se, w as ce } from "../i18n/en-US-player.js";
 import { t as le } from "../chunks/preload-helper.js";
 import { N as ue, P as de, V as fe, X as pe, _ as h, k as me, v as g, x as he } from "../chunks/main.js";
-var _ = (e, t, n) => new Promise((r, i) => {
+var _ = (event, t, n) => new Promise((r, i) => {
     var handler = e => {
         try {
           a(n.next(e));
@@ -18,7 +18,7 @@ var _ = (e, t, n) => new Promise((r, i) => {
         }
       },
       a = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, te);
-    a((n = n.apply(e, t)).next());
+    a((n = n.apply(event, t)).next());
   }),
   ge = () => le(() => import(`./infographic_markstream-vue.js`), [], import.meta.url),
   v = null,
@@ -366,7 +366,7 @@ var ye = [`data-markstream-mode`],
       function G() {
         L.value = false;
       }
-      let K = null,
+      let closable = null,
         q = false,
         J = false,
         Y = false,
@@ -397,15 +397,15 @@ var ye = [`data-markstream-mode`],
                 });
               }();
               if (!e) return void console.warn(`Infographic library failed to load.`);
-              K &&= ((destroy = K.destroy) == null || destroy.call(K), null), C.value.innerHTML = ``, K = new e({
+              closable &&= ((destroy = closable.destroy) == null || destroy.call(closable), null), C.value.innerHTML = ``, closable = new e({
                 container: C.value,
                 width: `100%`,
                 height: `100%`
               });
               let i = ``;
-              if ((n = K.on) == null || n.call(K, `error`, e => {
+              if ((n = closable.on) == null || n.call(closable, `error`, e => {
                 i = (Array.isArray(e) ? e : [e]).map(item => item instanceof Error ? item.message : typeof item == `string` ? item : String(item && typeof item == `object` && `message` in item ? item.message ?? `` : item ?? ``)).filter(Boolean).join(`; `);
-              }), K.render(j.value), i) throw Error(i);
+              }), closable.render(j.value), i) throw Error(i);
               if (!C.value.childNodes.length) throw Error(`Infographic render returned empty output.`);
               O.value = true, X = value, d(() => {
                 Je();
@@ -446,7 +446,7 @@ var ye = [`data-markstream-mode`],
         !qe.value && ve() && (w.value = false), Z();
       }), ie(() => {
         var e, t;
-        if ((e = k.value) == null || e.destroy(), k.value = null, K &&= ((t = K.destroy) == null || t.call(K), null), X = ``, typeof window < `u`) try {
+        if ((e = k.value) == null || e.destroy(), k.value = null, closable &&= ((t = closable.destroy) == null || t.call(closable), null), X = ``, typeof window < `u`) try {
           window.removeEventListener(`keydown`, V);
         } catch {}
       });

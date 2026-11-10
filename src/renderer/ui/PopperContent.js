@@ -8,10 +8,10 @@ var R = F(`chevron-down`, [[`path`, {
   }]]),
   z = 0;
 function B() {
-  v(e => {
+  v(text => {
     if (!r) return;
     let selectorAll = document.querySelectorAll(`[data-reka-focus-guard]`);
-    document.body.insertAdjacentElement(`afterbegin`, selectorAll[0] ?? V()), document.body.insertAdjacentElement(`beforeend`, selectorAll[1] ?? V()), z++, e(() => {
+    document.body.insertAdjacentElement(`afterbegin`, selectorAll[0] ?? V()), document.body.insertAdjacentElement(`beforeend`, selectorAll[1] ?? V()), z++, text(() => {
       z === 1 && document.querySelectorAll(`[data-reka-focus-guard]`).forEach(item => item.remove()), z--;
     });
   });

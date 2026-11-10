@@ -9,7 +9,7 @@ var h = [`src`],
   v = a({
     __name: `PinApp`,
     setup(a) {
-      let v = window.screenshotToolAPI.pin,
+      let closable = window.screenshotToolAPI.pin,
         y = r(``),
         b = r(document.hasFocus()),
         x = r(``),
@@ -22,40 +22,40 @@ var h = [`src`],
         })), await l();
       }
       function E() {
-        requestAnimationFrame(() => requestAnimationFrame(() => v.painted()));
+        requestAnimationFrame(() => requestAnimationFrame(() => closable.painted()));
       }
       function D(event) {
-        event.button === 0 && (S = true, event.currentTarget.setPointerCapture(event.pointerId), v.dragStart({
+        event.button === 0 && (S = true, event.currentTarget.setPointerCapture(event.pointerId), closable.dragStart({
           screenX: event.screenX,
           screenY: event.screenY
         }));
       }
       function O(e) {
-        S && v.dragMove({
+        S && closable.dragMove({
           screenX: e.screenX,
           screenY: e.screenY
         });
       }
       function k() {
-        S && (S = false, v.dragEnd());
+        S && (S = false, closable.dragEnd());
       }
       function A(event) {
-        event.preventDefault(), event.deltaY !== 0 && v.zoom({
+        event.preventDefault(), event.deltaY !== 0 && closable.zoom({
           direction: event.deltaY < 0 ? 1 : -1,
           x: event.clientX,
           y: event.clientY
         });
       }
       function j(event) {
-        event.key === `Escape` && v.close();
+        event.key === `Escape` && closable.close();
       }
       function M(event) {
-        event.preventDefault(), v.menu();
+        event.preventDefault(), closable.menu();
       }
       return u(() => {
-        emptyItems.push(v.onOpen(e => {
+        emptyItems.push(closable.onOpen(e => {
           T(e);
-        }), v.onZoom(({
+        }), closable.onZoom(({
           zoom: e
         }) => {
           x.value = `${Math.round(e * 100)}%`, C !== null && window.clearTimeout(C), C = window.setTimeout(() => {
@@ -81,7 +81,7 @@ var h = [`src`],
         onPointerup: k,
         onPointercancel: k,
         onWheel: A,
-        onDblclick: a[0] ||= e => t(v).close(),
+        onDblclick: a[0] ||= e => t(closable).close(),
         onContextmenu: M
       }, [f(`div`, {
         class: e([`relative h-full w-full overflow-hidden rounded-[3px] transition-shadow`, b.value ? `shadow-[0_6px_20px_rgb(0_0_0/0.32),0_0_0_1.5px_rgb(16_185_129/0.9)]` : `shadow-[0_6px_18px_rgb(0_0_0/0.26),0_0_0_1px_rgb(0_0_0/0.1)]`])

@@ -46,14 +46,14 @@ var t = e(`copy`, [[`rect`, {
   c = [`ctrl`, `alt`, `shift`, `command`, `super`],
   l = new Set([`A`, `C`, `F`, `L`, `N`, `P`, `Q`, `R`, `S`, `T`, `V`, `W`, `X`, `Z`]);
 function u(text) {
-  let t = text.split(`+`).map(item => item.trim()).filter(Boolean),
-    n = t.pop()?.toUpperCase();
+  let items = text.split(`+`).map(item => item.trim()).filter(Boolean),
+    n = items.pop()?.toUpperCase();
   if (!n) return null;
   let r = /^[A-Z]$/.test(n),
     i = /^[0-9]$/.test(n),
     a = /^F([1-9]|1[0-2])$/.test(n);
   if (!r && !i && !a) return null;
-  let o = t.map(item => item.toLowerCase());
+  let o = items.map(item => item.toLowerCase());
   if (o.length > 3 || new Set(o).size !== o.length || o.some(item => !c.includes(item)) || o.includes(`command`) && o.includes(`super`)) return null;
   let s = o.some(item => item !== `shift`);
   if ((r || i) && !s) return null;

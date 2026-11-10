@@ -119,7 +119,7 @@ var Qe = [`id`],
       let c = event,
         f = s,
         {
-          t: m,
+          t: options,
           locale: g
         } = ee(),
         y = D(() => c.status === `completed`),
@@ -134,25 +134,25 @@ var Qe = [`id`],
         N = D(() => {
           let e = De(c.status);
           if (c.status === `completed`) return {
-            label: m(`milestoneTool.status.completed`),
+            label: options(`milestoneTool.status.completed`),
             className: e
           };
           if (c.status === `overdue`) return {
-            label: m(`milestoneTool.relative.overdueDays`, {
+            label: options(`milestoneTool.relative.overdueDays`, {
               days: Z(c.item.date, c.today)
             }),
             className: e
           };
-          let t = Z(c.today, c.item.date);
-          return t === 0 ? {
-            label: m(`milestoneTool.relative.today`),
+          let row = Z(c.today, c.item.date);
+          return row === 0 ? {
+            label: options(`milestoneTool.relative.today`),
             className: `bg-foreground/[0.08] font-semibold text-foreground`
-          } : t === 1 ? {
-            label: m(`milestoneTool.relative.tomorrow`),
+          } : row === 1 ? {
+            label: options(`milestoneTool.relative.tomorrow`),
             className: e
           } : {
-            label: m(`milestoneTool.relative.daysLeft`, {
-              days: t
+            label: options(`milestoneTool.relative.daysLeft`, {
+              days: row
             }),
             className: e
           };
@@ -162,7 +162,7 @@ var Qe = [`id`],
         B = D(() => c.uploads.filter(item => item.status === `failed`)),
         V = D(() => F.value.length ? Math.round(F.value.reduce((acc, cur) => acc + cur.progress, 0) / F.value.length) : 0);
       function ie(e) {
-        return [e.project || e.assignee.remark || e.assignee.nickname, e.dueDate, e.archived ? m(`milestoneTool.card.archived`) : ``].filter(Boolean).join(` · `);
+        return [e.project || e.assignee.remark || e.assignee.nickname, e.dueDate, e.archived ? options(`milestoneTool.card.archived`) : ``].filter(Boolean).join(` · `);
       }
       function oe(e) {
         window.getSelection()?.toString() || e.target?.closest(`button, a, [role="menuitem"], [data-no-toggle]`) || f(`toggleExpand`);
@@ -185,8 +185,8 @@ var Qe = [`id`],
         type: `button`,
         class: a([`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border transition-colors disabled:cursor-default`, y.value ? `border-primary bg-primary text-primary-foreground` : `border-muted-foreground/40 text-transparent hover:border-primary hover:text-primary`]),
         disabled: S.value || event.toggling,
-        title: S.value ? o(m)(`milestoneTool.card.autoCompleted`) : y.value ? o(m)(`milestoneTool.card.markIncomplete`) : o(m)(`milestoneTool.card.markComplete`),
-        "aria-label": y.value ? o(m)(`milestoneTool.card.markIncomplete`) : o(m)(`milestoneTool.card.markComplete`),
+        title: S.value ? o(options)(`milestoneTool.card.autoCompleted`) : y.value ? o(options)(`milestoneTool.card.markIncomplete`) : o(options)(`milestoneTool.card.markComplete`),
+        "aria-label": y.value ? o(options)(`milestoneTool.card.markIncomplete`) : o(options)(`milestoneTool.card.markComplete`),
         "aria-pressed": y.value,
         onClick: c[0] ||= e => f(`toggleComplete`)
       }, [event.toggling ? (v(), h(o(re), {
@@ -201,7 +201,7 @@ var Qe = [`id`],
         type: `button`,
         class: a([`min-w-0 flex-1 text-left text-sm font-medium leading-5 outline-none focus-visible:underline`, y.value ? `text-muted-foreground` : `text-foreground`]),
         "aria-expanded": event.expanded,
-        title: event.expanded ? o(m)(`milestoneTool.card.collapse`) : o(m)(`milestoneTool.card.expand`),
+        title: event.expanded ? o(options)(`milestoneTool.card.collapse`) : o(options)(`milestoneTool.card.expand`),
         onClick: c[1] ||= e => f(`toggleExpand`)
       }, [A(`span`, ot, C(event.item.title), 1)], 10, at), A(`span`, {
         class: a([`mt-px shrink-0 rounded-md px-1.5 text-[11px] font-medium leading-[18px]`, N.value.className])
@@ -212,8 +212,8 @@ var Qe = [`id`],
           default: p(() => [A(`button`, {
             type: `button`,
             class: `-mr-1.5 grid size-6 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground`,
-            title: o(m)(`milestoneTool.card.more`),
-            "aria-label": o(m)(`milestoneTool.card.more`)
+            title: o(options)(`milestoneTool.card.more`),
+            "aria-label": o(options)(`milestoneTool.card.more`)
           }, [b(o(I), {
             size: 15
           })], 8, st)]),
@@ -226,7 +226,7 @@ var Qe = [`id`],
             class: `text-xs`,
             onSelect: c[2] ||= e => f(`edit`)
           }, {
-            default: p(() => [b(o(t)), l(C(o(m)(`milestoneTool.card.edit`)), 1)]),
+            default: p(() => [b(o(t)), l(C(o(options)(`milestoneTool.card.edit`)), 1)]),
             _: 1
           }), w.value && !S.value ? (v(), h(o(H), {
             key: 0,
@@ -238,14 +238,14 @@ var Qe = [`id`],
               key: 0
             })) : (v(), h(o(Fe), {
               key: 1
-            })), l(` ` + C(y.value ? o(m)(`milestoneTool.card.markIncomplete`) : o(m)(`milestoneTool.card.markComplete`)), 1)]),
+            })), l(` ` + C(y.value ? o(options)(`milestoneTool.card.markIncomplete`) : o(options)(`milestoneTool.card.markComplete`)), 1)]),
             _: 1
           }, 8, [`disabled`])) : k(``, true), b(o(Ue)), b(o(H), {
             variant: `destructive`,
             class: `text-xs`,
             onSelect: c[4] ||= e => f(`delete`)
           }, {
-            default: p(() => [b(o(i)), l(C(o(m)(`milestoneTool.card.delete`)), 1)]),
+            default: p(() => [b(o(i)), l(C(o(options)(`milestoneTool.card.delete`)), 1)]),
             _: 1
           })]),
           _: 1
@@ -261,23 +261,23 @@ var Qe = [`id`],
       }, [event.detailLoading && event.item.content === null ? (v(), u(`div`, ct, [b(o(re), {
         size: 13,
         class: `animate-spin`
-      }), l(C(o(m)(`milestoneTool.loading`)), 1)])) : j.value ? (v(), u(`div`, {
+      }), l(C(o(options)(`milestoneTool.loading`)), 1)])) : j.value ? (v(), u(`div`, {
         key: 1,
         class: `break-words text-sm leading-relaxed text-foreground [&_h1]:my-1 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:my-1 [&_h2]:font-semibold [&_h3]:my-1 [&_h3]:font-semibold [&_hr]:my-2 [&_hr]:border-border [&_li]:my-0.5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-1 [&_ul]:list-disc [&_ul]:pl-5`,
         innerHTML: j.value
-      }, null, 8, lt)) : event.item.contentSummary ? k(``, true) : (v(), u(`p`, ut, C(o(m)(`milestoneTool.card.noDetail`)), 1))], 2)) : k(``, true), event.item.todoCount > 0 || event.item.attachmentCount > 0 && !event.expanded ? (v(), u(`div`, {
+      }, null, 8, lt)) : event.item.contentSummary ? k(``, true) : (v(), u(`p`, ut, C(o(options)(`milestoneTool.card.noDetail`)), 1))], 2)) : k(``, true), event.item.todoCount > 0 || event.item.attachmentCount > 0 && !event.expanded ? (v(), u(`div`, {
         key: 2,
         class: a([`mt-2 flex items-center gap-3 text-[11px] text-muted-foreground`, te.value])
       }, [event.item.todoCount > 0 ? (v(), u(`span`, dt, [b(o(Re), {
         "model-value": M.value,
         class: `h-1 max-w-[160px]`
-      }, null, 8, [`model-value`]), A(`span`, ft, C(o(m)(`milestoneTool.card.todoProgress`, {
+      }, null, 8, [`model-value`]), A(`span`, ft, C(o(options)(`milestoneTool.card.todoProgress`, {
         done: event.item.completedTodoCount,
         total: event.item.todoCount
       })), 1)])) : k(``, true), event.item.attachmentCount > 0 && !event.expanded ? (v(), u(`span`, {
         key: 1,
         class: `ml-auto inline-flex shrink-0 items-center gap-1 tabular-nums`,
-        title: o(m)(`milestoneTool.card.attachments`, {
+        title: o(options)(`milestoneTool.card.attachments`, {
           count: event.item.attachmentCount
         })
       }, [b(o(Se), {
@@ -312,8 +312,8 @@ var Qe = [`id`],
       }), A(`span`, vt, C(e.name) + ` · ` + C(o(Ae)(e.size)), 1), A(`button`, {
         type: `button`,
         class: `grid size-6 shrink-0 place-items-center rounded-md transition-colors hover:bg-muted hover:text-foreground`,
-        title: o(m)(`milestoneTool.card.download`),
-        "aria-label": o(m)(`milestoneTool.card.download`),
+        title: o(options)(`milestoneTool.card.download`),
+        "aria-label": o(options)(`milestoneTool.card.download`),
         onClick: t => f(`download`, e)
       }, [b(o(z), {
         size: 13
@@ -323,7 +323,7 @@ var Qe = [`id`],
         class: `text-muted-foreground`,
         onClick: c[5] ||= e => f(`toggleExpand`)
       }, {
-        default: p(() => [b(o(R)), l(C(o(m)(`milestoneTool.card.collapse`)), 1)]),
+        default: p(() => [b(o(R)), l(C(o(options)(`milestoneTool.card.collapse`)), 1)]),
         _: 1
       }), b(o(r), {
         variant: `ghost`,
@@ -331,7 +331,7 @@ var Qe = [`id`],
         class: `text-muted-foreground`,
         onClick: c[6] ||= e => f(`edit`)
       }, {
-        default: p(() => [b(o(t)), l(C(o(m)(`milestoneTool.card.edit`)), 1)]),
+        default: p(() => [b(o(t)), l(C(o(options)(`milestoneTool.card.edit`)), 1)]),
         _: 1
       })])], 2)) : k(``, true), c[8] ||= A(`div`, {
         class: `h-2.5`
@@ -342,14 +342,14 @@ var Qe = [`id`],
       }, [F.value.length ? (v(), u(`div`, xt, [b(o(re), {
         size: 13,
         class: `shrink-0 animate-spin`
-      }), A(`span`, St, C(o(m)(`milestoneTool.card.uploading`, {
+      }), A(`span`, St, C(o(options)(`milestoneTool.card.uploading`, {
         count: F.value.length,
         percent: V.value
       })), 1), A(`button`, {
         type: `button`,
         class: `shrink-0 font-medium hover:text-foreground`,
         onClick: c[7] ||= e => f(`cancelUploads`)
-      }, C(o(m)(`milestoneTool.card.cancelUpload`)), 1)])) : k(``, true), (v(true), u(_, null, d(B.value, e => (v(), u(`div`, {
+      }, C(o(options)(`milestoneTool.card.cancelUpload`)), 1)])) : k(``, true), (v(true), u(_, null, d(B.value, e => (v(), u(`div`, {
         key: e.id,
         class: `flex items-center gap-2 text-destructive`
       }, [b(o(Ke), {
@@ -358,7 +358,7 @@ var Qe = [`id`],
       }), A(`span`, {
         class: `min-w-0 flex-1 truncate`,
         title: e.error
-      }, C(o(m)(`milestoneTool.card.uploadFailed`, {
+      }, C(o(options)(`milestoneTool.card.uploadFailed`, {
         name: e.file.name,
         message: e.error
       })), 9, Ct), A(`button`, {
@@ -367,11 +367,11 @@ var Qe = [`id`],
         onClick: t => f(`retryUpload`, e.id)
       }, [b(o(xe), {
         size: 12
-      }), l(C(o(m)(`milestoneTool.card.retryUpload`)), 1)], 8, wt), A(`button`, {
+      }), l(C(o(options)(`milestoneTool.card.retryUpload`)), 1)], 8, wt), A(`button`, {
         type: `button`,
         class: `grid size-5 shrink-0 place-items-center rounded text-muted-foreground hover:text-foreground`,
-        title: o(m)(`milestoneTool.card.dismissUpload`),
-        "aria-label": o(m)(`milestoneTool.card.dismissUpload`),
+        title: o(options)(`milestoneTool.card.dismissUpload`),
+        "aria-label": o(options)(`milestoneTool.card.dismissUpload`),
         onClick: t => f(`dismissUpload`, e.id)
       }, [b(o(ne), {
         size: 12
@@ -406,7 +406,7 @@ var Qe = [`id`],
     emits: [`update:modelValue`],
     setup(event) {
       let t = event,
-        n = c(event, `modelValue`),
+        items = c(event, `modelValue`),
         {
           t: r
         } = ee(),
@@ -419,11 +419,11 @@ var Qe = [`id`],
       }
       function y() {
         let value = i.value;
-        value && m() !== n.value && (value.innerHTML = Y(Me(n.value)), l.value = ke(value.innerHTML));
+        value && m() !== items.value && (value.innerHTML = Y(Me(items.value)), l.value = ke(value.innerHTML));
       }
       function b() {
         let e = m();
-        l.value = e === ``, e !== n.value && (n.value = e);
+        l.value = e === ``, e !== items.value && (items.value = e);
       }
       function x() {
         if (document.activeElement !== i.value) {
@@ -457,7 +457,7 @@ var Qe = [`id`],
         icon: V,
         label: `milestoneTool.richText.orderedList`
       }];
-      return E(y), f(n, y), (t, n) => (v(), u(`div`, {
+      return E(y), f(items, y), (t, n) => (v(), u(`div`, {
         class: a([`overflow-hidden rounded-lg border border-input bg-transparent transition-colors focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 dark:bg-input/30`, event.disabled ? `pointer-events-none opacity-50` : ``])
       }, [A(`div`, Dt, [(v(), u(_, null, d(T, e => A(`button`, {
         key: e.command,
@@ -936,23 +936,23 @@ var Qe = [`id`],
         Te = D(() => Y.value >= m.config.attachmentLimit),
         De = D(() => Array.from(V.title).length > 400),
         Oe = D(() => {
-          let e = X();
+          let event = X();
           return [{
             label: S(`milestoneTool.editor.quickToday`),
-            value: e
+            value: event
           }, {
             label: S(`milestoneTool.editor.quickTomorrow`),
-            value: Ze(e, {
+            value: Ze(event, {
               days: 1
             })
           }, {
             label: S(`milestoneTool.editor.quickNextWeek`),
-            value: Ze(e, {
+            value: Ze(event, {
               days: 7
             })
           }, {
             label: S(`milestoneTool.editor.quickNextMonth`),
-            value: Ze(e, {
+            value: Ze(event, {
               months: 1
             })
           }];

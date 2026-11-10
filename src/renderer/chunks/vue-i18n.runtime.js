@@ -8,14 +8,14 @@
     childList: true,
     subtree: true
   });
-  function t(e) {
+  function items(e) {
     let length = {};
     return e.integrity && (length.integrity = e.integrity), e.referrerPolicy && (length.referrerPolicy = e.referrerPolicy), length.credentials = e.crossOrigin === `use-credentials` ? `include` : e.crossOrigin === `anonymous` ? `omit` : `same-origin`, length;
   }
   function n(e) {
     if (e.ep) return;
     e.ep = true;
-    let n = t(e);
+    let n = items(e);
     fetch(e.href, n);
   }
 })();
@@ -650,13 +650,13 @@ function vt(e, t, n, r, i, a) {
     let t = c.apply(e, a);
     return s ? rn(t) : t;
   }
-  let l = n;
-  o !== e && (s ? l = function (t, r) {
+  let options = n;
+  o !== e && (s ? options = function (t, r) {
     return n.call(this, mt(e, t), r, e);
-  } : n.length > 2 && (l = function (t, r) {
+  } : n.length > 2 && (options = function (t, r) {
     return n.call(this, t, r, e);
   }));
-  let u = c.call(o, l, r);
+  let u = c.call(o, options, r);
   return s && i ? i(u) : u;
 }
 function yt(e, t, n, r) {
@@ -2044,37 +2044,37 @@ function _i(e) {
         } = r,
         nodeType = n.nodeType;
       r.el = n, T === -2 && (d = false, r.dynamicChildren = null);
-      let D = null;
+      let result = null;
       switch (S) {
         case os:
-          nodeType === 3 ? (n.data !== r.children && (fi(), n.data = r.children), D = o(n)) : r.children === `` ? (l(r.el = i(``), s(n), n), D = n) : D = x();
+          nodeType === 3 ? (n.data !== r.children && (fi(), n.data = r.children), result = o(n)) : r.children === `` ? (l(r.el = i(``), s(n), n), result = n) : result = x();
           break;
         case B:
-          y(n) ? (D = o(n), v(r.el = n.content.firstChild, n, a)) : D = nodeType !== 8 || b ? x() : o(n);
+          y(n) ? (result = o(n), v(r.el = n.content.firstChild, n, a)) : result = nodeType !== 8 || b ? x() : o(n);
           break;
         case ss:
           if (b && (n = o(n), nodeType = n.nodeType), nodeType === 1 || nodeType === 3) {
-            D = n;
+            result = n;
             let e = !r.children.length;
-            for (let t = 0; t < r.staticCount; t++) e && (r.children += D.nodeType === 1 ? D.outerHTML : D.data), t === r.staticCount - 1 && (r.anchor = D), D = o(D);
-            return b ? o(D) : D;
+            for (let t = 0; t < r.staticCount; t++) e && (r.children += result.nodeType === 1 ? result.outerHTML : result.data), t === r.staticCount - 1 && (r.anchor = result), result = o(result);
+            return b ? o(result) : result;
           }
           x();
           break;
         case z:
-          D = b ? h(n, r, a, c, u, d) : x();
+          result = b ? h(n, r, a, c, u, d) : x();
           break;
         default:
-          if (w & 1) D = (nodeType !== 1 || r.type.toLowerCase() !== n.tagName.toLowerCase()) && !y(n) ? x() : p(n, r, a, c, u, d);else if (w & 6) {
+          if (w & 1) result = (nodeType !== 1 || r.type.toLowerCase() !== n.tagName.toLowerCase()) && !y(n) ? x() : p(n, r, a, c, u, d);else if (w & 6) {
             r.slotScopeIds = u;
             let e = s(n);
-            if (D = b ? _(n) : gi(n) && n.data === `teleport start` ? _(n, n.data, `teleport end`) : o(n), t(r, e, null, a, c, hi(e), d), (Fi(r) || r.component.asyncDep) && !r.component.subTree) {
+            if (result = b ? _(n) : gi(n) && n.data === `teleport start` ? _(n, n.data, `teleport end`) : o(n), t(r, e, null, a, c, hi(e), d), (Fi(r) || r.component.asyncDep) && !r.component.subTree) {
               let t;
-              b ? (t = V(ss), t.anchor = D ? D.previousSibling : e.lastChild) : t = n.nodeType === 3 ? Es(``) : V(n.nodeType === 8 ? B : `div`), t.el = n, r.component.subTree = t;
+              b ? (t = V(ss), t.anchor = result ? result.previousSibling : e.lastChild) : t = n.nodeType === 3 ? Es(``) : V(n.nodeType === 8 ? B : `div`), t.el = n, r.component.subTree = t;
             }
-          } else w & 64 ? D = nodeType === 8 ? r.type.hydrate(n, r, a, c, u, d, e, m) : x() : w & 128 && (D = r.type.hydrate(n, r, a, c, hi(s(n)), u, d, e, f));
+          } else w & 64 ? result = nodeType === 8 ? r.type.hydrate(n, r, a, c, u, d, e, m) : x() : w & 128 && (result = r.type.hydrate(n, r, a, c, hi(s(n)), u, d, e, f));
       }
-      return C != null && li(C, null, c, r), D;
+      return C != null && li(C, null, c, r), result;
     },
     p = (e, t, n, i, o, s) => {
       s ||= !!t.dynamicChildren;

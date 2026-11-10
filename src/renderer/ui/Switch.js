@@ -7,13 +7,13 @@ var yn = Object.create,
   Sn = Object.getOwnPropertyNames,
   Cn = Object.getPrototypeOf,
   wn = Object.prototype.hasOwnProperty,
-  Tn = (e, t) => () => (t || (e((t = {
+  Tn = (event, t) => () => (t || (event((t = {
     exports: {}
-  }).exports, t), e = null), t.exports),
+  }).exports, t), event = null), t.exports),
   En = (e, t) => {
     let resolvedValue = {};
-    for (var r in e) bn(resolvedValue, r, {
-      get: e[r],
+    for (var items in e) bn(resolvedValue, items, {
+      get: e[items],
       enumerable: true
     });
     return t || bn(resolvedValue, Symbol.toStringTag, {

@@ -75,10 +75,10 @@ var Se = {
         Ve = f(() => {
           let value = G.value;
           if (!value) return {};
-          let t = value.y >= 28 ? value.y - 26 : value.y + 6;
+          let text = value.y >= 28 ? value.y - 26 : value.y + 6;
           return {
             left: `${Math.max(4, value.x)}px`,
-            top: `${t}px`
+            top: `${text}px`
           };
         }),
         He = f(() => {
@@ -86,10 +86,10 @@ var Se = {
           if (!value) return {};
           let {
               width: t,
-              height: n
+              height: result
             } = j.value,
             r = value.y + value.height + S;
-          return r + x > n - 4 && (r = value.y - x - S), r < 4 && (r = Math.max(4, value.y + value.height - x - S)), {
+          return r + x > result - 4 && (r = value.y - x - S), r < 4 && (r = Math.max(4, value.y + value.height - x - S)), {
             left: `${Math.min(Math.max(4, value.x + value.width - M.value), t - M.value - 4)}px`,
             top: `${r}px`
           };
@@ -164,9 +164,9 @@ var Se = {
           r = Math.abs(e.x - (value.x + value.width)) <= y,
           i = Math.abs(e.y - value.y) <= y,
           a = Math.abs(e.y - (value.y + value.height)) <= y,
-          o = e.x >= value.x - y && e.x <= value.x + value.width + y,
+          response = e.x >= value.x - y && e.x <= value.x + value.width + y,
           s = e.y >= value.y - y && e.y <= value.y + value.height + y;
-        return i && n ? `nw` : i && r ? `ne` : a && n ? `sw` : a && r ? `se` : i && o ? `n` : a && o ? `s` : n && s ? `w` : r && s ? `e` : null;
+        return i && n ? `nw` : i && r ? `ne` : a && n ? `sw` : a && r ? `se` : i && response ? `n` : a && response ? `s` : n && s ? `w` : r && s ? `e` : null;
       }
       let Ye = f(() => {
         if (N.value) return `progress`;

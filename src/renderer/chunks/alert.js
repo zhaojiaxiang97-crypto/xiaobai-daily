@@ -13,15 +13,15 @@ function r(e) {
   }, 3e3);
 }
 function i(e, r, i = `unknown`) {
-  let a = {
+  let row = {
     id: ++t,
     type: `error`,
     message: e,
     creditFeature: r,
     creditTrigger: i
   };
-  n.push(a), setTimeout(() => {
-    let indexResult = n.findIndex(item => item.id === a.id);
+  n.push(row), setTimeout(() => {
+    let indexResult = n.findIndex(item => item.id === row.id);
     indexResult !== -1 && n.splice(indexResult, 1);
   }, 3e3);
 }

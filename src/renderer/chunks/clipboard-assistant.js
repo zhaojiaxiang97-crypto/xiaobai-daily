@@ -53,8 +53,8 @@ var b = {
     async getState() {
       return y(await window.electronAPI.clipboardAssistant.getState());
     },
-    async updateSettings(e) {
-      return y(await window.electronAPI.clipboardAssistant.updateSettings(e));
+    async updateSettings(row) {
+      return y(await window.electronAPI.clipboardAssistant.updateSettings(row));
     },
     async setShortcutEditing(e) {
       y(await window.electronAPI.clipboardAssistant.setShortcutEditing(e));

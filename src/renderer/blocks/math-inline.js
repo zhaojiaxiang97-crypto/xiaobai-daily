@@ -78,7 +78,7 @@ var S = (e, t, n) => new Promise((r, i) => {
         L = null,
         R = a(j.loading),
         z = y(),
-        B = null;
+        closable = null;
       function V() {
         return S(this, null, function* () {
           if (I) return;
@@ -87,7 +87,7 @@ var S = (e, t, n) => new Promise((r, i) => {
           let e = ++F,
             t = new AbortController();
           if (L = t, !P) try {
-            !B && D.value && (B = z(D.value)), yield B?.whenVisible;
+            !closable && D.value && (closable = z(D.value)), yield closable?.whenVisible;
           } catch {}
           h(A.value, k.value, {
             timeout: 1500,
@@ -124,7 +124,7 @@ var S = (e, t, n) => new Promise((r, i) => {
         O || M.value || V();
       }), c(() => {
         var e;
-        I = true, L &&= (L.abort(), null), (e = B?.destroy) == null || e.call(B), B = null;
+        I = true, L &&= (L.abort(), null), (e = closable?.destroy) == null || e.call(closable), closable = null;
       }), (n, a) => (o(), t(`span`, {
         ref_key: `containerEl`,
         ref: D,

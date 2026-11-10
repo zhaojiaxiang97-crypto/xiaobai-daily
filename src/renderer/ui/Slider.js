@@ -1,9 +1,9 @@
 import { $ as e, H as t, V as n, at as r, bt as i, h as a, j as o, lt as s, xt as c, yt as l, z as u } from "./Switch.js";
 import { An as d, Ct as f, Dn as p, Et as m, S as h, St as g, Tn as _, Yt as v, b as y, bn as b, c as x, gt as S, j as C, k as w, mt as T, nr as E, nt as D, ut as O, v as k, x as A } from "../chunks/vue-i18n.runtime.js";
 import { n as j, r as ee, t as M } from "./Collection.js";
-function N(e = [], t, n) {
-  let r = [...e];
-  return r[n] = t, r.sort((left, right) => left - right);
+function N(event = [], t, n) {
+  let el = [...event];
+  return el[n] = t, el.sort((left, right) => left - right);
 }
 function P(e, t, n) {
   let r = 100 / (n - t) * (e - t);

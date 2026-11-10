@@ -7,13 +7,13 @@ function h(e) {
   return p(() => e?.value || t.dir?.value || `ltr`);
 }
 function g(e) {
-  let n = c(),
-    r = p(() => n.value?.width ?? 0),
-    i = p(() => n.value?.height ?? 0),
+  let items = c(),
+    r = p(() => items.value?.width ?? 0),
+    i = p(() => items.value?.height ?? 0),
     blockSize;
   return f(() => {
     let r = t(e);
-    r ? (n.value = {
+    r ? (items.value = {
       width: r.offsetWidth,
       height: r.offsetHeight
     }, blockSize = new ResizeObserver(e => {
@@ -26,13 +26,13 @@ function g(e) {
           n = Array.isArray(borderBoxSize) ? borderBoxSize[0] : borderBoxSize;
         inlineSize = n.inlineSize, offsetHeight = n.blockSize;
       } else inlineSize = r.offsetWidth, offsetHeight = r.offsetHeight;
-      n.value = {
+      items.value = {
         width: inlineSize,
         height: offsetHeight
       };
     }), blockSize.observe(r, {
       box: `border-box`
-    })) : n.value = undefined;
+    })) : items.value = undefined;
   }), d(() => {
     blockSize?.disconnect(), blockSize = undefined;
   }), {

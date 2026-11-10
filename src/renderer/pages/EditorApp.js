@@ -78,11 +78,11 @@ var He = I(`grid-3x3`, [[`rect`, {
       }
     },
     emits: [`toast`],
-    setup(e, {
-      expose: t,
+    setup(event, {
+      expose: response,
       emit: n
     }) {
-      let r = e,
+      let row = event,
         i = n,
         editor = window.screenshotToolAPI.editor,
         o = S(false),
@@ -93,12 +93,12 @@ var He = I(`grid-3x3`, [[`rect`, {
         p = 0,
         m = null;
       async function _() {
-        if (!r.supported || o.value || !r.sessionId) return;
+        if (!row.supported || o.value || !row.sessionId) return;
         let e = ++p;
         o.value = true, l.value = ``;
         try {
           let t = await editor.ocr({
-            id: r.sessionId
+            id: row.sessionId
           });
           if (e !== p) return;
           if (!t.ok) {
@@ -121,13 +121,13 @@ var He = I(`grid-3x3`, [[`rect`, {
           i(`toast`, G(`ActionFailed`));
         }
       }
-      return v(() => r.sessionId, () => {
-        p += 1, o.value = false, s.value = ``, l.value = ``, u.value = false, r.autoRun && _();
+      return v(() => row.sessionId, () => {
+        p += 1, o.value = false, s.value = ``, l.value = ``, u.value = false, row.autoRun && _();
       }, {
         immediate: true
-      }), t({
+      }), response({
         run: _
-      }), (t, n) => (w(), g(`div`, K, [N(`p`, Ke, k(e.supported ? f(G)(`OcrHint`) : f(G)(`OcrUnsupported`)), 1), e.supported ? (w(), x(f(c), {
+      }), (t, n) => (w(), g(`div`, K, [N(`p`, Ke, k(event.supported ? f(G)(`OcrHint`) : f(G)(`OcrUnsupported`)), 1), event.supported ? (w(), x(f(c), {
         key: 0,
         variant: `outline`,
         size: `sm`,
@@ -1168,7 +1168,7 @@ var mn = {
         oe = S([]),
         se = S(``),
         z = S(`style`),
-        le = S(null),
+        items = S(null),
         ue = S(null),
         de = S(null),
         fe = S({
@@ -1605,13 +1605,13 @@ var mn = {
           Lt(e);
         }), editor.onReset(Rt), screenshotToolAPI.onTheme(({
           dark: e
-        }) => Ve(e))), window.addEventListener(`keydown`, Ft), window.addEventListener(`beforeunload`, $), le.value && (Ze = new ResizeObserver(e => {
+        }) => Ve(e))), window.addEventListener(`keydown`, Ft), window.addEventListener(`beforeunload`, $), items.value && (Ze = new ResizeObserver(e => {
           let t = e[0]?.contentRect;
           t && (fe.value = {
             width: t.width,
             height: t.height
           });
-        }), Ze.observe(le.value)), screenshotToolAPI.ready();
+        }), Ze.observe(items.value)), screenshotToolAPI.ready();
       }), O(() => {
         for (let e of emptyItems) e();
         window.removeEventListener(`keydown`, Ft), window.removeEventListener(`beforeunload`, $), Ze?.disconnect(), Xe && cancelAnimationFrame(Xe), J !== null && window.clearTimeout(J), $();
@@ -1705,7 +1705,7 @@ var mn = {
         size: 16
       })], 40, Sn)])], 4), N(`div`, Cn, [N(`main`, wn, [N(`div`, {
         ref_key: `stageRef`,
-        ref: le,
+        ref: items,
         class: `relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-[#ececee] dark:bg-[#0e0e10]`
       }, [X.value ? (w(), g(`div`, {
         key: 0,

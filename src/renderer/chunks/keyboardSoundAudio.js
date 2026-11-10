@@ -572,35 +572,35 @@ var href = new URL(`sound-CraeALTG.ogg`, import.meta.url).href,
       config: u
     }
   };
-function S(e) {
-  return e === `mobile-crisp` || e === `mobile-soft` || e === `digital` || e === `classic-click` || e === `laptop` || e === `typewriter` || e === `wood-tap` || e === `minimal-tick`;
+function S(text) {
+  return text === `mobile-crisp` || text === `mobile-soft` || text === `digital` || text === `classic-click` || text === `laptop` || text === `typewriter` || text === `wood-tap` || text === `minimal-tick`;
 }
 function C(e) {
-  let t = e >>> 0;
-  return () => (t = Math.imul(t, 1664525) + 1013904223 >>> 0, t / 4294967296 * 2 - 1);
+  let options = e >>> 0;
+  return () => (options = Math.imul(options, 1664525) + 1013904223 >>> 0, options / 4294967296 * 2 - 1);
 }
-function w(e, t, n, r) {
+function w(e, t, response, r) {
   if (e === `mobile-crisp`) {
-    let e = 1850 + n * 37,
+    let e = 1850 + response * 37,
       i = Math.sin(2 * Math.PI * e * t) * .34 * Math.exp(-92 * t),
       a = Math.sin(2 * Math.PI * e * 1.84 * t) * .11 * Math.exp(-128 * t),
       o = r * .25 * Math.exp(-210 * t);
     return i + a + o;
   }
   if (e === `mobile-soft`) {
-    let e = 880 + n * 21;
+    let e = 880 + response * 21;
     return Math.sin(2 * Math.PI * e * t) * .31 * Math.exp(-60 * t) + r * .09 * Math.exp(-145 * t);
   }
   if (e === `classic-click`) {
-    let e = 1460 + n * 29;
+    let e = 1460 + response * 29;
     return Math.sin(2 * Math.PI * e * t) * .22 * Math.exp(-112 * t) + r * .32 * Math.exp(-245 * t);
   }
   if (e === `laptop`) {
-    let e = 1080 + n * 18;
+    let e = 1080 + response * 18;
     return Math.sin(2 * Math.PI * e * t) * .17 * Math.exp(-125 * t) + r * .24 * Math.exp(-310 * t);
   }
   if (e === `typewriter`) {
-    let e = 390 + n * 9,
+    let e = 390 + response * 9,
       i = Math.sin(2 * Math.PI * e * t) * .24 * Math.exp(-52 * t),
       a = r * .42 * Math.exp(-105 * t),
       o = t - .009,
@@ -608,21 +608,21 @@ function w(e, t, n, r) {
     return i + a + s;
   }
   if (e === `wood-tap`) {
-    let e = 510 + n * 11,
+    let e = 510 + response * 11,
       i = Math.sin(2 * Math.PI * e * t) * .33 * Math.exp(-58 * t),
       a = Math.sin(2 * Math.PI * e * 2.06 * t) * .13 * Math.exp(-82 * t),
       o = r * .12 * Math.exp(-180 * t);
     return i + a + o;
   }
   if (e === `minimal-tick`) {
-    let e = 2550 + n * 43;
+    let e = 2550 + response * 43;
     return Math.sin(2 * Math.PI * e * t) * .22 * Math.exp(-175 * t) + r * .19 * Math.exp(-360 * t);
   }
-  let i = 2150 + n * 32,
-    a = 1320 + n * 18,
+  let i = 2150 + response * 32,
+    a = 1320 + response * 18,
     o = Math.min(1, t / .052),
-    s = i + (a - i) * o,
-    c = 2 * Math.PI * (i * t + (s - i) * t * .5),
+    items = i + (a - i) * o,
+    c = 2 * Math.PI * (i * t + (items - i) * t * .5),
     l = Math.min(1, t / .0015) * Math.exp(-48 * t);
   return (Math.sin(c) * .34 + Math.sin(c * 2) * .08 + r * .025 * Math.exp(-150 * t)) * l;
 }

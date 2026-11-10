@@ -62,25 +62,25 @@ var X = F(`arrow-up-right`, [[`path`, {
     d: `M6 16h.01`,
     key: `1pmjb7`
   }]]);
-function ge(e) {
-  let t = M(() => e.start.value ? !!e.isDateDisabled(e.start.value) : false),
-    n = M(() => e.end.value ? !!e.isDateDisabled(e.end.value) : false),
-    r = M(() => !!(t.value || n.value || e.start.value && e.end.value && B(e.end.value, e.start.value))),
-    handler = t => e.start.value ? U(e.start.value, t) : false,
-    a = t => e.end.value ? U(e.end.value, t) : false,
-    o = t => e.start.value && U(e.start.value, t) || e.end.value && U(e.end.value, t) ? true : e.end.value && e.start.value ? q(t, e.start.value, e.end.value) : false,
+function ge(event) {
+  let t = M(() => event.start.value ? !!event.isDateDisabled(event.start.value) : false),
+    n = M(() => event.end.value ? !!event.isDateDisabled(event.end.value) : false),
+    r = M(() => !!(t.value || n.value || event.start.value && event.end.value && B(event.end.value, event.start.value))),
+    handler = t => event.start.value ? U(event.start.value, t) : false,
+    a = t => event.end.value ? U(event.end.value, t) : false,
+    o = t => event.start.value && U(event.start.value, t) || event.end.value && U(event.end.value, t) ? true : event.end.value && event.start.value ? q(t, event.start.value, event.end.value) : false,
     s = t => {
-      if (e.isDateDisabled(t)) return true;
-      if (e.maximumDays?.value) {
-        if (e.start.value && e.end.value) {
-          if (e.fixedDate.value) {
-            let length = H(e.start.value, e.end.value).length;
-            if (length <= e.maximumDays.value) {
-              let r = e.maximumDays.value - length - 1,
-                subtract = e.start.value.subtract({
+      if (event.isDateDisabled(t)) return true;
+      if (event.maximumDays?.value) {
+        if (event.start.value && event.end.value) {
+          if (event.fixedDate.value) {
+            let length = H(event.start.value, event.end.value).length;
+            if (length <= event.maximumDays.value) {
+              let r = event.maximumDays.value - length - 1,
+                subtract = event.start.value.subtract({
                   days: r
                 }),
-                a = e.end.value.add({
+                a = event.end.value.add({
                   days: r
                 });
               return !q(t, subtract, a);
@@ -88,32 +88,32 @@ function ge(e) {
           }
           return false;
         }
-        if (e.start.value) {
-          let n = e.start.value.add({
-              days: e.maximumDays.value
+        if (event.start.value) {
+          let n = event.start.value.add({
+              days: event.maximumDays.value
             }),
-            subtractResult = e.start.value.subtract({
-              days: e.maximumDays.value
+            subtractResult = event.start.value.subtract({
+              days: event.maximumDays.value
             });
           return !q(t, subtractResult, n);
         }
       }
       return false;
     },
-    c = t => !!e.isDateHighlightable?.(t),
+    c = t => !!event.isDateHighlightable?.(t),
     l = M(() => {
-      if (e.start.value && e.end.value && !e.fixedDate.value || !e.start.value || !e.focusedValue.value) return null;
-      let t = B(e.start.value, e.focusedValue.value),
-        n = t ? e.start.value : e.focusedValue.value,
-        r = t ? e.focusedValue.value : e.start.value;
+      if (event.start.value && event.end.value && !event.fixedDate.value || !event.start.value || !event.focusedValue.value) return null;
+      let t = B(event.start.value, event.focusedValue.value),
+        n = t ? event.start.value : event.focusedValue.value,
+        r = t ? event.focusedValue.value : event.start.value;
       if (U(n, r)) return {
         start: n,
         end: r
       };
-      if (e.maximumDays?.value && !e.end.value) {
-        let value = e.maximumDays.value,
-          n = e.start.value,
-          r = e.focusedValue.value;
+      if (event.maximumDays?.value && !event.end.value) {
+        let value = event.maximumDays.value,
+          n = event.start.value,
+          r = event.focusedValue.value;
         return B(r, n) ? {
           start: n.subtract({
             days: value - 1
@@ -126,16 +126,16 @@ function ge(e) {
           })
         };
       }
-      return le(n, r, e.allowNonContiguousRanges.value ? () => false : e.isDateUnavailable, s, e.isDateHighlightable) ? {
+      return le(n, r, event.allowNonContiguousRanges.value ? () => false : event.isDateUnavailable, s, event.isDateHighlightable) ? {
         start: n,
         end: r
       } : null;
     }),
     u = e => !l.value || !l.value.start ? false : U(l.value.start, e),
     d = e => !l.value || !l.value.end ? false : U(l.value.end, e),
-    f = M(() => !!(e.start.value || e.end.value)),
-    p = M(() => !!(e.start.value && e.isDateDisabled(e.start.value))),
-    m = M(() => !!(e.end.value && e.isDateDisabled(e.end.value)));
+    f = M(() => !!(event.start.value || event.end.value)),
+    p = M(() => !!(event.start.value && event.isDateDisabled(event.start.value))),
+    m = M(() => !!(event.end.value && event.isDateDisabled(event.end.value)));
   return {
     isInvalid: r,
     isSelected: o,
@@ -148,13 +148,13 @@ function ge(e) {
     isDateDisabled: s,
     hasSelectedDate: f,
     isSelectedDisabled: M(() => {
-      let t = !!e.start.value,
-        n = !!e.end.value;
+      let t = !!event.start.value,
+        n = !!event.end.value;
       return !t && !n ? false : t && n ? p.value && m.value : t && p.value || n && m.value;
     }),
     selectedFocusableDate: M(() => {
-      if (e.start.value && !p.value) return e.start.value;
-      if (e.end.value && !m.value) return e.end.value;
+      if (event.start.value && !p.value) return event.start.value;
+      if (event.end.value && !m.value) return event.end.value;
     })
   };
 }

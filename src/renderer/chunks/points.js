@@ -1,5 +1,5 @@
-async function e(e) {
-  let t = await e;
+async function e(response) {
+  let t = await response;
   if (!t.ok) throw Error(t.error?.message || `Request failed`);
   return t.data;
 }

@@ -70,8 +70,8 @@ var t = e(`eye-off`, [[`path`, {
   items.joinValues = r, items.jsonStringifyReplacer = (e, t) => typeof t == `bigint` ? t.toString() : t;
 })(i ||= {});
 var a;
-(function (e) {
-  e.mergeShapes = (e, t) => ({
+(function (items) {
+  items.mergeShapes = (e, t) => ({
     ...e,
     ...t
   });
@@ -245,8 +245,8 @@ var ne = fn => {
     message: i.message
   };
   let s = ``,
-    c = r.filter(item => !!item).slice().reverse();
-  for (let e of c) s = e(o, {
+    result = r.filter(item => !!item).slice().reverse();
+  for (let e of result) s = e(o, {
     data: t,
     defaultError: s
   }).message;

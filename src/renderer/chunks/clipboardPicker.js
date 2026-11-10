@@ -80,7 +80,7 @@ var ce = {
           t: v,
           locale: y
         } = ne(),
-        handler = (e, t = {}) => v(`toolboxNative.clipboardPicker${e}`, t),
+        handler = (row, items = {}) => v(`toolboxNative.clipboardPicker${row}`, items),
         x = o([]),
         S = o([]),
         C = o(``),
@@ -127,17 +127,17 @@ var ce = {
         });
       function K(e, t = false) {
         if (!e) return ``;
-        let n = new Date(e);
-        if (Number.isNaN(n.getTime())) return ``;
+        let response = new Date(e);
+        if (Number.isNaN(response.getTime())) return ``;
         let r = new Date(),
           i = new Intl.DateTimeFormat(y.value, {
             hour: `2-digit`,
             minute: `2-digit`,
             hour12: false
-          }).format(n),
+          }).format(response),
           time = new Date(r.getFullYear(), r.getMonth(), r.getDate()).getTime();
-        return n.getTime() >= time ? i : n.getTime() >= time - 864e5 ? t ? `${handler(`Yesterday`)} ${i}` : handler(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
-          ...(t && n.getFullYear() !== r.getFullYear() ? {
+        return response.getTime() >= time ? i : response.getTime() >= time - 864e5 ? t ? `${handler(`Yesterday`)} ${i}` : handler(`Yesterday`) : new Intl.DateTimeFormat(y.value, {
+          ...(t && response.getFullYear() !== r.getFullYear() ? {
             year: `numeric`
           } : {}),
           month: `2-digit`,
@@ -147,7 +147,7 @@ var ce = {
             minute: `2-digit`,
             hour12: false
           } : {})
-        }).format(n);
+        }).format(response);
       }
       function q() {
         let value = U.value;

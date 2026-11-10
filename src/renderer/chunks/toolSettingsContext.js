@@ -60,7 +60,7 @@ function x(event) {
     } = l(),
     v = a(() => c.value || d.value),
     emptyItems = [],
-    S = [],
+    items = [],
     C = t(0),
     w = t(false),
     T = t(false);
@@ -140,9 +140,9 @@ function x(event) {
     highlightedItem: event.highlightedItem,
     refresh: event.refresh,
     onRefresh: e => b(emptyItems, e),
-    onLocalDataChanged: e => b(S, e),
+    onLocalDataChanged: e => b(items, e),
     notifyLocalDataChanged: () => {
-      S.forEach(item => item());
+      items.forEach(item => item());
     },
     navigate: event.navigate,
     openUpdate: event.openUpdate,

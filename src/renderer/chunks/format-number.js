@@ -107,8 +107,8 @@ function b(e, t = Date.now()) {
     scheduledMs: 0,
     countdownMs: g
   };
-  let x = h(e, s);
-  if (!x.length) return {
+  let items = h(e, s);
+  if (!items.length) return {
     ...options,
     status: `rest`,
     earnedToday: 0,
@@ -117,9 +117,9 @@ function b(e, t = Date.now()) {
     scheduledMs: 0,
     countdownMs: g
   };
-  let S = x.reduce((acc, cur) => acc + Math.max(0, Math.min(t, cur.end) - cur.start), 0),
-    start = x[0].start,
-    w = x[x.length - 1].end,
+  let S = items.reduce((acc, cur) => acc + Math.max(0, Math.min(t, cur.end) - cur.start), 0),
+    start = items[0].start,
+    w = items[items.length - 1].end,
     T = S * c;
   if (t < start) return {
     ...options,
@@ -163,7 +163,7 @@ function b(e, t = Date.now()) {
       countdownMs: g
     };
   }
-  if (x.find(item => t >= item.start && t < item.end)) return {
+  if (items.find(item => t >= item.start && t < item.end)) return {
     ...options,
     status: `working`,
     earnedToday: T,
@@ -172,7 +172,7 @@ function b(e, t = Date.now()) {
     scheduledMs: d,
     countdownMs: w - t
   };
-  let E = x.find(item => item.start > t);
+  let E = items.find(item => item.start > t);
   return {
     ...options,
     status: `lunch`,

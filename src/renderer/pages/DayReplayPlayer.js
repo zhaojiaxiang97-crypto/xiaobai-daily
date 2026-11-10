@@ -77,11 +77,11 @@ function z(result) {
   throw Error(result.error.message);
 }
 var Ie = {
-    async thumbnails(e, t) {
+    async thumbnails(event, items) {
       return z(await window.electronAPI.dayReplay.thumbnails({
-        paths: e,
-        ...(t ? {
-          width: t
+        paths: event,
+        ...(items ? {
+          width: items
         } : {})
       }));
     },
@@ -210,7 +210,7 @@ var Ke = {
         l = S({
           ...o.options
         }),
-        u = x(() => ({
+        promise = x(() => ({
           ...l,
           screenshots: o.hasScreenshots ? l.screenshots : `none`
         })),
@@ -244,7 +244,7 @@ var Ke = {
             value: item,
             label: c(h[item])
           })),
-          disabled: u.value.screenshots === `none`
+          disabled: promise.value.screenshots === `none`
         }, {
           key: `speed`,
           label: c(`dayReplay.exportSpeed`),
@@ -270,7 +270,7 @@ var Ke = {
           }))
         }]),
         v = x(() => {
-          let value = u.value,
+          let value = promise.value,
             t = q(value.resolution),
             n = Ue(o.timelineDurationMs, value) / 1024 / 1024;
           return c(`dayReplay.exportEstimate`, {
@@ -301,11 +301,11 @@ var Ke = {
         key: String(n.value),
         type: `button`,
         role: `radio`,
-        "aria-checked": u.value[event.key] === n.value,
-        class: e([`h-6 min-w-10 rounded-[5px] px-2 text-xs tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-40`, u.value[event.key] === n.value ? `bg-white text-[#111] shadow-sm dark:bg-white/15 dark:text-foreground` : `text-[#888] hover:text-[#333] dark:text-muted-foreground dark:hover:text-foreground`]),
+        "aria-checked": promise.value[event.key] === n.value,
+        class: e([`h-6 min-w-10 rounded-[5px] px-2 text-xs tabular-nums transition-colors disabled:cursor-not-allowed disabled:opacity-40`, promise.value[event.key] === n.value ? `bg-white text-[#111] shadow-sm dark:bg-white/15 dark:text-foreground` : `text-[#888] hover:text-[#333] dark:text-muted-foreground dark:hover:text-foreground`]),
         disabled: event.disabled || n.disabled,
         onClick: e => b(event.key, n.value)
-      }, y(n.label), 11, Xe))), 128))], 8, Ye), event.hint ? (p(), i(`p`, Ze, y(event.hint), 1)) : C(``, true)])], 64))), 128))]), w(`div`, Qe, [w(`p`, $e, y(v.value), 1), u.value.screenshots === `none` ? C(``, true) : (p(), i(`p`, et, y(t(c)(`dayReplay.exportPrivacyHint`)), 1))]), w(`div`, tt, [w(`button`, {
+      }, y(n.label), 11, Xe))), 128))], 8, Ye), event.hint ? (p(), i(`p`, Ze, y(event.hint), 1)) : C(``, true)])], 64))), 128))]), w(`div`, Qe, [w(`p`, $e, y(v.value), 1), promise.value.screenshots === `none` ? C(``, true) : (p(), i(`p`, et, y(t(c)(`dayReplay.exportPrivacyHint`)), 1))]), w(`div`, tt, [w(`button`, {
         type: `button`,
         class: `h-8 rounded-md px-3 text-xs text-[#666] transition-colors hover:bg-black/[0.05] dark:text-muted-foreground dark:hover:bg-white/5`,
         onClick: r[0] ||= e => s(`cancel`)
@@ -389,7 +389,7 @@ var Ke = {
       let n = event,
         r = t,
         a = u(null),
-        o = u(false),
+        options = u(false),
         s = x(() => ({
           start: n.startMinute / 5,
           end: n.endMinute / 5
@@ -401,13 +401,13 @@ var Ke = {
         return n.startMinute + r * (n.endMinute - n.startMinute);
       }
       function l(e) {
-        e.button === 0 && (o.value = true, e.currentTarget.setPointerCapture(e.pointerId), r(`scrub-start`), r(`seek`, c(e)));
+        e.button === 0 && (options.value = true, e.currentTarget.setPointerCapture(e.pointerId), r(`scrub-start`), r(`seek`, c(e)));
       }
       function d(e) {
-        o.value && r(`seek`, c(e));
+        options.value && r(`seek`, c(e));
       }
       function f(e) {
-        o.value && (o.value = false, e.currentTarget.releasePointerCapture(e.pointerId), r(`scrub-end`));
+        options.value && (options.value = false, e.currentTarget.releasePointerCapture(e.pointerId), r(`scrub-end`));
       }
       return (t, n) => (p(), i(`div`, {
         ref_key: `trackRef`,

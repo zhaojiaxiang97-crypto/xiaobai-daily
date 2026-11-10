@@ -2,14 +2,14 @@ import { $n as e, An as t, S as n, St as r, Wt as i, Zt as a, bn as o, c as s, g
 import { w as te } from "../i18n/en-US-player.js";
 import { C as ne, E as _, S as v, T as re, a as ie, h as ae, i as oe, l as se, m as ce, n as le, p as ue, r as de, s as y, t as fe, u as pe, v as me, x as he, y as ge } from "../vendors/OrbitControls.js";
 var b = new _();
-function x(e, t, n, r, i, a) {
+function x(el, t, items, r, i, a) {
   let o = 2 * Math.PI * i / 4,
     s = Math.max(a - 2 * i, 0),
     c = Math.PI / 4;
   b.copy(t), b[r] = 0, b.normalize();
   let l = .5 * o / (o + s),
-    u = 1 - b.angleTo(e) / c;
-  return Math.sign(b[n]) === 1 ? u * l : s / (o + s) + l + l * (1 - u);
+    u = 1 - b.angleTo(el) / c;
+  return Math.sign(b[items]) === 1 ? u * l : s / (o + s) + l + l * (1 - u);
 }
 var _e = class e extends ie {
     constructor(e = 1, t = 1, n = 1, r = 2, i = .1) {

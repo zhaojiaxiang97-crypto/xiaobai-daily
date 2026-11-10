@@ -74,14 +74,14 @@ var S = (e, t, n) => new Promise((r, i) => {
         P = false,
         F = null,
         I = y(),
-        L = null,
+        closable = null,
         R = i(k.loading);
       function z() {
         return S(this, null, function* () {
           if (P) return;
           if (!b.node.content) return R.value = false, A.value = ``, j.value = b.node.raw, void (M = true);
           if (!M) try {
-            !L && D.value && (L = I(D.value)), yield L?.whenVisible;
+            !closable && D.value && (closable = I(D.value)), yield closable?.whenVisible;
           } catch {}
           F &&= (F.abort(), null);
           let e = ++N,
@@ -121,7 +121,7 @@ var S = (e, t, n) => new Promise((r, i) => {
         A.value || z();
       }), c(() => {
         var e;
-        P = true, F &&= (F.abort(), null), (e = L?.destroy) == null || e.call(L), L = null;
+        P = true, F &&= (F.abort(), null), (e = closable?.destroy) == null || e.call(closable), closable = null;
       }), (n, i) => (a(), t(`div`, {
         ref_key: `containerEl`,
         ref: D,

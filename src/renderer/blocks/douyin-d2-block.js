@@ -5,30 +5,30 @@ var _ = Object.defineProperty,
   v = Object.getOwnPropertySymbols,
   y = Object.prototype.hasOwnProperty,
   b = Object.prototype.propertyIsEnumerable,
-  x = (e, t, n) => t in e ? _(e, t, {
+  x = (el, t, event) => t in el ? _(el, t, {
     enumerable: true,
     configurable: true,
     writable: true,
-    value: n
-  }) : e[t] = n,
+    value: event
+  }) : el[t] = event,
   S = (e, t) => {
     for (var n in t ||= {}) y.call(t, n) && x(e, n, t[n]);
     if (v) for (var n of v(t)) b.call(t, n) && x(e, n, t[n]);
     return e;
   },
-  C = (e, t, n) => new Promise((r, i) => {
+  C = (e, t, n) => new Promise((r, options) => {
     var handler = e => {
         try {
           s(n.next(e));
         } catch (e) {
-          i(e);
+          options(e);
         }
       },
       o = e => {
         try {
           s(n.throw(e));
         } catch (e) {
-          i(e);
+          options(e);
         }
       },
       s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, o);
@@ -260,7 +260,7 @@ var _ = Object.defineProperty,
       function X(e) {
         b.value = e === `source`;
       }
-      let Ae = [/javascript:/i, /expression\s*\(/i, /url\s*\(\s*javascript:/i, /@import/i],
+      let items = [/javascript:/i, /expression\s*\(/i, /url\s*\(\s*javascript:/i, /@import/i],
         je = /^(?:https?:|mailto:|tel:|#|\/|data:image\/(?:png|gif|jpe?g|webp);)/i;
       function Me(e) {
         if (!e) return ``;
@@ -333,7 +333,7 @@ var _ = Object.defineProperty,
                       if (/^on/i.test(name)) e.removeAttribute(name);else {
                         if (name === `style` && t.value) {
                           let r = t.value;
-                          if (Ae.some(item => item.test(r))) {
+                          if (items.some(item => item.test(r))) {
                             e.removeAttribute(name);
                             continue;
                           }

@@ -2,7 +2,7 @@ import { B as e, C as t, G as n, I as r, N as i, Q as a, T as o, V as s, _ as c,
 import { An as x, Ct as S, Dn as C, Et as ee, Gt as w, Nt as te, O as ne, S as T, V as E, Wt as re, Yt as D, b as O, bn as k, gt as A, j, k as M, nr as ie, nt as N, rr as ae, tr as P, ut as F, v as I, x as L } from "../chunks/vue-i18n.runtime.js";
 import { E as R } from "../i18n/en-US-player.js";
 import { a as z, i as B, n as V, r as H } from "./PopperContent.js";
-function U(e, t) {
+function U(event, el) {
   let n = _(false, 300);
   u(() => {
     n.value = false;
@@ -25,11 +25,11 @@ function U(e, t) {
     r.value = c, n.value = true;
   }
   return w(n => {
-    if (e.value && t.value) {
-      let handler = e => o(e, t.value),
-        i = t => o(t, e.value);
-      e.value.addEventListener(`pointerleave`, handler), t.value.addEventListener(`pointerleave`, i), n(() => {
-        e.value?.removeEventListener(`pointerleave`, handler), t.value?.removeEventListener(`pointerleave`, i);
+    if (event.value && el.value) {
+      let handler = e => o(e, el.value),
+        i = t => o(t, event.value);
+      event.value.addEventListener(`pointerleave`, handler), el.value.addEventListener(`pointerleave`, i), n(() => {
+        event.value?.removeEventListener(`pointerleave`, handler), el.value?.removeEventListener(`pointerleave`, i);
       });
     }
   }), w(n => {
@@ -41,12 +41,12 @@ function U(e, t) {
             x: n.clientX,
             y: n.clientY
           },
-          c = e.value?.contains(target) || t.value?.contains(target),
+          c = event.value?.contains(target) || el.value?.contains(target),
           l = !q(s, r.value),
           u = !!target.closest(`[data-grace-area-trigger]`);
         c ? a() : (l || u) && (a(), i.trigger());
       };
-      e.value?.ownerDocument.addEventListener(`pointermove`, o), n(() => e.value?.ownerDocument.removeEventListener(`pointermove`, o));
+      event.value?.ownerDocument.addEventListener(`pointermove`, o), n(() => event.value?.ownerDocument.removeEventListener(`pointermove`, o));
     }
   }), {
     isPointerInTransit: n,

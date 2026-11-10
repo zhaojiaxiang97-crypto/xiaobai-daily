@@ -313,8 +313,8 @@ var v = {
     async get() {
       return _(await window.electronAPI.settings.get());
     },
-    async update(e) {
-      let t = JSON.parse(JSON.stringify(e));
+    async update(options) {
+      let t = JSON.parse(JSON.stringify(options));
       return _(await window.electronAPI.settings.update(t));
     },
     async switchUsageMode(e) {

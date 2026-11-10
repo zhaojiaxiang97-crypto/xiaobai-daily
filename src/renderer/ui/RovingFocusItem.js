@@ -46,8 +46,8 @@ var y = c({
       y.focusable && b.onFocusableItemAdd();
     }), u(() => {
       y.focusable && b.onFocusableItemRemove();
-    }), i(() => y.focusable, (e, t) => {
-      e !== t && (e ? b.onFocusableItemAdd() : b.onFocusableItemRemove());
+    }), i(() => y.focusable, (event, t) => {
+      event !== t && (event ? b.onFocusableItemAdd() : b.onFocusableItemRemove());
     });
     function E(e) {
       if (e.key === `Tab` && e.shiftKey) {
@@ -59,13 +59,13 @@ var y = c({
       if (t !== undefined) {
         if (e.metaKey || e.ctrlKey || e.altKey || !y.allowShiftKey && e.shiftKey) return;
         e.preventDefault();
-        let n = [...w().map(item => item.ref).filter(item => item.dataset.disabled !== ``)];
-        if (t === `last`) n.reverse();else if (t === `prev` || t === `next`) {
-          t === `prev` && n.reverse();
-          let r = n.indexOf(e.currentTarget);
-          n = b.loop.value ? h(n, r + 1) : n.slice(r + 1);
+        let items = [...w().map(item => item.ref).filter(item => item.dataset.disabled !== ``)];
+        if (t === `last`) items.reverse();else if (t === `prev` || t === `next`) {
+          t === `prev` && items.reverse();
+          let r = items.indexOf(e.currentTarget);
+          items = b.loop.value ? h(items, r + 1) : items.slice(r + 1);
         }
-        d(() => v(n));
+        d(() => v(items));
       }
     }
     return (e, i) => (s(), o(n(T), null, {

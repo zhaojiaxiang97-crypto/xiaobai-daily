@@ -22,29 +22,29 @@ var ke = x(`chevrons-down-up`, [[`path`, {
   T = w - 32,
   E = 2,
   D = 9;
-function O(e) {
-  return Array.from(e).length > 1 ? 34 : 20;
+function O(items) {
+  return Array.from(items).length > 1 ? 34 : 20;
 }
-function je(e, t, n) {
-  let r = O(n),
-    i = e + t,
-    a = T - 20 - r - (t ? D : 0),
+function je(e, row, el) {
+  let r = O(el),
+    i = e + row,
+    a = T - 20 - r - (row ? D : 0),
     o = Math.min(25, a / i),
     s = o - E,
-    c = (T - (r + o * i + (t ? D : 0))) / 2,
+    c = (T - (r + o * i + (row ? D : 0))) / 2,
     l = c;
   c += r;
   let emptyItems = [];
   for (let n = 0; n < e; n++) emptyItems.push({
     x: c + E / 2,
-    power: t + e - 1 - n,
+    power: row + e - 1 - n,
     decimal: false
   }), c += o;
   let d = null;
-  t && (d = c, c += D);
-  for (let e = 0; e < t; e++) emptyItems.push({
+  row && (d = c, c += D);
+  for (let e = 0; e < row; e++) emptyItems.push({
     x: c + E / 2,
-    power: t - 1 - e,
+    power: row - 1 - e,
     decimal: true
   }), c += o;
   return {

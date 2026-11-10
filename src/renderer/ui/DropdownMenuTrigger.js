@@ -5,28 +5,28 @@ import { a as ie, i as W, n as ae, o as oe, t as G } from "./PopperContent.js";
 import { r as K, t as q } from "./Collection.js";
 import { t as se } from "./RovingFocusGroup.js";
 var ce = [`INPUT`, `TEXTAREA`];
-function J(e, t, n, r = {}) {
+function J(event, t, n, r = {}) {
   if (!t || r.enableIgnoredElement && ce.includes(t.nodeName)) return null;
   let {
       arrowKeyOptions: i = `both`,
       attributeName: a = `[data-reka-collection-item]`,
-      itemsArray: o = [],
-      loop: s = true,
+      itemsArray: el = [],
+      loop: items = true,
       dir: c = `ltr`,
       preventScroll: l = true,
       focus: u = false
     } = r,
-    [d, f, p, m, h, g] = [e.key === `ArrowRight`, e.key === `ArrowLeft`, e.key === `ArrowUp`, e.key === `ArrowDown`, e.key === `Home`, e.key === `End`],
+    [d, f, p, m, h, g] = [event.key === `ArrowRight`, event.key === `ArrowLeft`, event.key === `ArrowUp`, event.key === `ArrowDown`, event.key === `Home`, event.key === `End`],
     _ = p || m,
     v = d || f;
   if (!h && !g && (!_ && !v || i === `vertical` && v || i === `horizontal` && _)) return null;
-  let y = n ? Array.from(n.querySelectorAll(a)) : o;
+  let y = n ? Array.from(n.querySelectorAll(a)) : el;
   if (!y.length) return null;
-  l && e.preventDefault();
+  l && event.preventDefault();
   let b = null;
   return v || _ ? b = Y(y, t, {
     goForward: _ ? m : c === `ltr` ? d : f,
-    loop: s
+    loop: items
   }) : h ? b = y.at(0) || null : g && (b = y.at(-1) || null), u && b?.focus(), b;
 }
 function Y(e, t, n, r = e.includes(t) ? e.length : e.length + 1) {

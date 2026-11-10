@@ -1,17 +1,17 @@
 import { Wt as e, bn as t, n, v as r } from "./vue-i18n.runtime.js";
-function i(t, fn, r) {
+function i(response, fn, r) {
   let randomUUID = crypto.randomUUID(),
     a = false,
     desktopSync = window.electronAPI.desktopSync,
-    onChanged = desktopSync.onChanged(async e => {
-      if (e.id !== randomUUID || a) return;
+    onChanged = desktopSync.onChanged(async row => {
+      if (row.id !== randomUUID || a) return;
       let t = false;
       try {
         (r?.background || !document.hidden) && (r?.active?.() ?? true) && (t = (await fn()) !== false);
       } catch {} finally {
         desktopSync.ack({
           id: randomUUID,
-          deliveryId: e.deliveryId,
+          deliveryId: row.deliveryId,
           applied: t
         });
       }
@@ -21,7 +21,7 @@ function i(t, fn, r) {
       let e = !a && (r?.background || !document.hidden) && (r?.active?.() ?? true);
       e !== c && (c = !!e, e ? desktopSync.subscribe({
         id: randomUUID,
-        topic: t,
+        topic: response,
         params: r?.params
       }).catch(() => undefined) : desktopSync.unsubscribe(randomUUID).catch(() => undefined));
     },

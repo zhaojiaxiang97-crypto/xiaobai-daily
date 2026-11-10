@@ -42,8 +42,8 @@ import { t as Ri } from "./useGrowthTelemetry.js";
 import { a as zi, c as Bi, i as Vi, l as Hi, n as Ui, o as Wi, r as Gi, s as Ki, t as qi, u as Ji } from "./toolSettingsContext.js";
 import { a as Yi, c as Xi, i as Zi, n as Qi, o as $i, r as ea, s as ta, t as na } from "./format-number.js";
 var ra = [`screenshot`, `image_record`, `report`, `premium_report`, `visual_report`, `ai_template`, `template_market`, `todo_extract`, `todo_auto_completion`, `word_cloud`, `audio_transcription`, `ai_image`, `gpt_image`, `ai_video`, `voice_clone`, `voice_synthesis`, `publisher`, `model_diagnosis`, `bot_chat`, `bot_schedule`, `bot_consultation`, `knowledge_graph`];
-function ia(e) {
-  return typeof e == `string` ? /insufficient[_\s-]*(?:settlement[_\s-]*)?(?:balance|credits?)|(?:积分|余额).{0,12}(?:不足|不够|用尽)|(?:不足|不够).{0,12}(?:积分|余额)|(?:not enough|out of) (?:credits|balance)|balance.{0,12}too low/i.test(e) ? `credits` : /insufficient[_\s-]*quota|quota.{0,20}(?:exceed|exhaust|insufficient)|(?:额度|配额).{0,12}(?:不足|不够|用完|用尽|耗尽|超出|上限)|用量.{0,8}(?:上限|不足)/i.test(e) ? `quota` : null : null;
+function ia(event) {
+  return typeof event == `string` ? /insufficient[_\s-]*(?:settlement[_\s-]*)?(?:balance|credits?)|(?:积分|余额).{0,12}(?:不足|不够|用尽)|(?:不足|不够).{0,12}(?:积分|余额)|(?:not enough|out of) (?:credits|balance)|balance.{0,12}too low/i.test(event) ? `credits` : /insufficient[_\s-]*quota|quota.{0,20}(?:exceed|exhaust|insufficient)|(?:额度|配额).{0,12}(?:不足|不够|用完|用尽|耗尽|超出|上限)|用量.{0,8}(?:上限|不足)/i.test(event) ? `quota` : null : null;
 }
 function aa(event) {
   let t = new Set(ra),
@@ -70,7 +70,7 @@ function aa(event) {
     s = e => {
       e instanceof Element && (e.matches(`[data-credit-error]`) && r.add(e), e.querySelectorAll(`[data-credit-error]`).forEach(item => r.add(item)));
     },
-    c = () => {
+    items = () => {
       i = 0;
       let e = new Map();
       for (let resolvedValue of r) {
@@ -93,7 +93,7 @@ function aa(event) {
       n = new Set(e.keys());
     },
     l = () => {
-      i ||= requestAnimationFrame(c);
+      i ||= requestAnimationFrame(items);
     },
     u = () => {
       document.visibilityState === `hidden` && n.clear(), l();
@@ -13339,7 +13339,7 @@ var jne = {
         s = ref(Bp()),
         flag = ref(false),
         l = ref(``),
-        u = computed(() => [s.value.preferredName, s.value.aliases, s.value.rolePositioning, s.value.organizationsAndTitles, s.value.projectsAndBusiness, s.value.responsibilitiesAndWork, s.value.teamAndCollaborators, s.value.additionalContext].reduce((acc, cur) => acc + cur.length, 0));
+        u = computed(() => [s.value.preferredName, s.value.aliases, s.value.rolePositioning, s.value.organizationsAndTitles, s.value.projectsAndBusiness, s.value.responsibilitiesAndWork, s.value.teamAndCollaborators, s.value.additionalContext].reduce((acc, row) => acc + row.length, 0));
       watch(r, async value => {
         if (value) {
           l.value = ``;
@@ -29152,7 +29152,7 @@ var Qge = {
         zt = ref(``),
         Bt = ref(``),
         Vt = ref(false),
-        Ht = ref(null),
+        promise = ref(null),
         Ut = computed(() => Yy(Rt.value)),
         Wt = ref(`none`),
         Gt = ref(1),
@@ -31437,7 +31437,7 @@ var Qge = {
         Vt.value || (Rt.value = e, zt.value = ``);
       }
       function _u(e) {
-        Lt.value !== `recurrence` && (e.preventDefault(), ut(() => Ht.value?.focus()));
+        Lt.value !== `recurrence` && (e.preventDefault(), ut(() => promise.value?.focus()));
       }
       function vu(e) {
         return e ? e === 60 ? o(`todo.remind.beforeHour`) : o(`todo.remind.before`, {
@@ -34574,7 +34574,7 @@ var Qge = {
           }, 8, [`aria-label`, `disabled`])]), createElementVNode(`div`, gC, [Lt.value === `recurrence` ? createCommentVNode(``, true) : (openBlock(), createBlock(tb, {
             key: 0,
             ref_key: `timeRangePanel`,
-            ref: Ht,
+            ref: promise,
             target: It.value,
             "onUpdate:target": t[137] ||= e => It.value = e,
             class: `shrink-0`,

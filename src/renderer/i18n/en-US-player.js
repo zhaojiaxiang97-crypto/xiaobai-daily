@@ -3,7 +3,7 @@ var E = undefined,
   Se = typeof window < `u` && window.trustedTypes;
 if (Se) try {
   E = Se.createPolicy(`vue`, {
-    createHTML: e => e
+    createHTML: event => event
   });
 } catch {}
 var Ce = E ? e => E.createHTML(e) : e => e,
@@ -12,8 +12,8 @@ var Ce = E ? e => E.createHTML(e) : e => e,
   D = typeof document < `u` ? document : null,
   Ee = D && D.createElement(`template`),
   De = {
-    insert: (e, t, n) => {
-      t.insertBefore(e, n || null);
+    insert: (e, el, items) => {
+      el.insertBefore(e, items || null);
     },
     remove: e => {
       let parentNode = e.parentNode;

@@ -3,7 +3,7 @@ function e(e) {
 }
 var t = function () {
   let e = new Uint8Array(128);
-  for (let t = 0; t < 69; t++) e[` _-,;:!?.'"()[]{}@*/\\&#%\`^+<=>|~$0123456789abcdefghijklmnopqrstuvwxyz`.charCodeAt(t)] = t + 1;
+  for (let items = 0; items < 69; items++) e[` _-,;:!?.'"()[]{}@*/\\&#%\`^+<=>|~$0123456789abcdefghijklmnopqrstuvwxyz`.charCodeAt(items)] = items + 1;
   for (let t = 65; t <= 90; t++) e[t] = e[t + 32];
   return e;
 }();

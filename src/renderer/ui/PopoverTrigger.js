@@ -7,15 +7,15 @@ var pe = ce(`chevron-right`, [[`path`, {
   d: `m9 18 6-6-6-6`,
   key: `mthhwq`
 }]]);
-function T(e, t) {
-  return e - t * Math.floor(e / t);
+function T(event, t) {
+  return event - t * Math.floor(event / t);
 }
 var me = 1721426;
-function E(e, t, n, r) {
+function E(e, t, items, r) {
   t = O(e, t);
   let i = t - 1,
     a = -2;
-  return n <= 2 ? a = 0 : D(t) && (a = -1), 1721425 + 365 * i + Math.floor(i / 4) - Math.floor(i / 100) + Math.floor(i / 400) + Math.floor((367 * n - 362) / 12 + a + r);
+  return items <= 2 ? a = 0 : D(t) && (a = -1), 1721425 + 365 * i + Math.floor(i / 4) - Math.floor(i / 100) + Math.floor(i / 400) + Math.floor((367 * items - 362) / 12 + a + r);
 }
 function D(e) {
   return e % 4 == 0 && (e % 100 != 0 || e % 400 == 0);

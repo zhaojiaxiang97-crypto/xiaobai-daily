@@ -7,19 +7,19 @@ var we = Object.defineProperty,
   Ee = Object.getOwnPropertySymbols,
   De = Object.prototype.hasOwnProperty,
   y = Object.prototype.propertyIsEnumerable,
-  b = (e, t, n) => t in e ? we(e, t, {
+  b = (event, el, n) => el in event ? we(event, el, {
     enumerable: true,
     configurable: true,
     writable: true,
     value: n
-  }) : e[t] = n,
+  }) : event[el] = n,
   x = (e, t) => {
     for (var n in t ||= {}) De.call(t, n) && b(e, n, t[n]);
     if (Ee) for (var n of Ee(t)) y.call(t, n) && b(e, n, t[n]);
     return e;
   },
   S = (e, t) => Te(e, v(t)),
-  C = (e, t, n) => new Promise((r, i) => {
+  C = (e, t, n) => new Promise((items, i) => {
     var handler = e => {
         try {
           s(n.next(e));
@@ -34,7 +34,7 @@ var we = Object.defineProperty,
           i(e);
         }
       },
-      s = e => e.done ? r(e.value) : Promise.resolve(e.value).then(handler, o);
+      s = e => e.done ? items(e.value) : Promise.resolve(e.value).then(handler, o);
     s((n = n.apply(e, t)).next());
   }),
   Oe = {

@@ -28,10 +28,10 @@ var [A, j] = f(`DialogRoot`),
       }
     },
     emits: [`update:open`],
-    setup(e, {
+    setup(event, {
       emit: t
     }) {
-      let n = e,
+      let n = event,
         r = s(n, `open`, t, {
           defaultValue: n.defaultOpen,
           passive: n.open === undefined
