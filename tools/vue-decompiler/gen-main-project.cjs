@@ -96,12 +96,33 @@ const baseIndex={};
     if(e.isDirectory()) walk(p2,r2); else baseIndex[e.name]='./vendor/'+r2;
   }
 })(path.dirname(path.dirname(mainFile)),'');
-body=body.replace(/(["'`])(\.\.?\/[^"'`]+\.(?:js|css|webp|png|jpg|ico|ogg))\1/g,(m,q,ref)=>{
-  const base=ref.split('/').pop();
-  const hit=baseIndex[base];
-  if(hit) return q+hit+q;
-  return q+'./vendor/_removed.js'+q;
-});
+// AST 级路径重写：只处理字符串字面量，绝不动正则字面量
+try {
+  const astP = P.parse(body, { sourceType: 'module' });
+  let fixed = 0, dead = 0;
+  const rewriteLit = (node) => {
+    const val = node.value;
+    if (typeof val !== 'string') return null;
+    if (!/^\.\.?\/[^"'`]+\.(?:js|css|webp|png|jpg|ico|ogg)$/.test(val)) return null;
+    const base = val.split('/').pop();
+    const hit = baseIndex[base];
+    if (hit) { fixed++; return hit; }
+    dead++; return './vendor/_removed.js';
+  };
+  T(astP, {
+    StringLiteral(p) { const nv = rewriteLit(p.node); if (nv !== null) p.node.value = nv; },
+    TemplateLiteral(p) {
+      if (p.node.expressions.length) return;
+      const q = p.node.quasis[0];
+      const nv = rewriteLit({ value: q.value.cooked });
+      if (nv !== null) { q.value.cooked = nv; q.value.raw = nv; }
+    },
+  });
+  if (fixed || dead) {
+    body = G(astP, { compact: false, comments: true, jsescOption: { minimal: true } }).code;
+    console.error(`  路径重写(AST): ${fixed} 有效 + ${dead} 死引用`);
+  }
+} catch (e) { console.error('  路径重写失败:', String(e.message).slice(0, 60)); }
 try{
   const ast2=P.parse(body,{sourceType:'module'});
   let n=0;
@@ -137,11 +158,20 @@ for(const [local,info] of Object.entries(importMap)){
   if(rel.startsWith('../')) rel='./vendor/'+rel.slice(3);
   else if(rel.startsWith('./')) rel='./vendor/chunks/'+rel.slice(2);
   else rel='./vendor/'+rel;
-  // shared 自身也声明了这个名字 → 重命名 import 避免冲突
+  // shared 自身也声明了这个名字 → 用 AST 把 body 里的本地声明改名（文本替换会误伤正则 flag）
   let target=local;
   if(sharedNames.has(local)){
-    target='__imp_'+local;
-    body=body.replace(new RegExp('(?<![\\w$.`])'+local+'(?![\\w$])','g'), target);
+    let ok=false;
+    try{
+      const astD=P.parse(body,{sourceType:"module"});
+      const b0=astD.program.scope ? null : null;
+      T(astD,{Program(pp){
+        const b=pp.scope.getBinding(local);
+        if(b && b.scope===pp.scope){ try{ pp.scope.rename(local,"local_"+local); ok=true; }catch{} }
+      }});
+      if(ok){ body=G(astD,{compact:false,comments:true,jsescOption:{minimal:true}}).code; target="local_"+local; }
+    }catch{}
+    if(!ok) target="__imp_"+local;
   }
   const spec=info.imported==='default'?`default as ${target}`:(info.imported===target?target:`${info.imported} as ${target}`);
   crossImports.push(`import { ${spec} } from '${rel}';`);
