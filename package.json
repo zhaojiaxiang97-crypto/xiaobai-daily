@@ -65,5 +65,11 @@
     "vue-sonner": "^2.0.9",
     "wordcloud": "^1.2.3",
     "zod": "3.25.76"
+  },
+  "scripts": {
+    "build": "./build.sh",
+    "check": "./tools/check.sh",
+    "verify": "./tools/verify-app.sh build/extract/小白日报.app",
+    "selfcheck": "./tools/selfcheck.sh build/extract/小白日报.app"
   }
 }

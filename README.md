@@ -36,6 +36,23 @@
 
 auth.service / settings.repository 模块边界天然保留语义函数名。
 
+
+## 开发流程
+
+改完源码后必须跑全流程自检（约 4 分钟）：
+
+```bash
+./tools/check.sh      # 语法 → 构建 → 结构自检 → 九页面内容断言
+```
+
+只看「侧边栏存在」无法发现主内容空白——本项目两次事故（import 别名批量改名、
+函数参数批量改名）都是这个症状。`tools/verify-app.sh` 会断言九个页面的
+`.content-body` 文本长度。
+
+工具清单见 [tools/README.md](tools/README.md)，改动风险边界见
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)（含实测的「主进程可改、前端禁改」
+对照表）。
+
 ## 一键构建离线版
 
 ```bash

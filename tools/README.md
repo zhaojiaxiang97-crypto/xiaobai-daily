@@ -165,6 +165,51 @@ setup(t, { emit: n }) { let r = t; ... }
 **注意**：这些规则同样必须过 `scope.hasBinding`，且只用于 `_0x`（主进程）——
 前端短名使用同类规则风险高（见下方边界表）。
 
+
+## 应用验证脚本（最重要）
+
+| 脚本 | 用途 |
+|---|---|
+| `tools/verify-app.sh <App> [port]` | **内容断言**：启动 → 遍历九页面断言 `.content-body` 文本长度 → PASS/FAIL |
+| `tools/check.sh` | 全流程：语法 → 构建 → 结构自检 → 九页面内容断言 |
+| `tools/selfcheck.sh` | 产物结构与混淆残留统计 |
+
+### 为什么必须断言主内容
+
+本项目两次事故（round-0400 import 别名批量改名、round-0402 函数参数改名）都表现为
+**侧边栏正常、主内容区全空**。此前只检查「导航项存在」的验证方式无法发现，导致
+坏版本连续通过十余轮"验证"。`verify-app.sh` 断言 `.content-body` 的文本长度，
+能立即发现这类回归。
+
+测试数据要求：`$HOME/Library/Application Support/xiaobai-daily/data/xiaohei.db`
+（含 `usageModeGuideSeenUserId=1`，用于跳过新手引导直达主内容）。
+
+## 改动风险边界（实测结论，务必遵守）
+
+| 改动类型 | 主进程 | 前端 | 判据 |
+|---|---|---|---|
+| 变量/参数命名 | ✅ 安全 | ⚠️ 仅函数内局部变量 | 前端参数改名会破坏 Vue render |
+| import 别名改名 | ✅ 安全 | ❌ 禁止 | 前端别名被 Vue 运行时闭包引用 |
+| 顶层绑定改名 | ⚠️ 谨慎 | ❌ 禁止 | 跨 chunk 引用关系复杂 |
+| 括号属性→点访问 | ✅ | ✅ | AST 语义等价 |
+| `void 0`/`!0` 还原 | ✅ | ✅ | 语义等价 |
+| 字符串转义还原 | ✅ | ⚠️ 正则内不可动 | 正则字面量内的 `\x`/`\u` 合法 |
+
+## 反向启发式命名器
+
+`tools/deobf-rules.cjs <文件> [--suffix-only] [--imports]`
+
+从「使用目标」反推语义（与 `deobf.cjs` 从右侧表达式推断互补）：
+
+- **属性名反向**：`obj.prop = _0x` / `{ prop: _0x }` → 用 `prop`（本项目单条
+  规则收益最高，482 个）
+- 画像实体：按被访问的属性/方法归类（event/el/items/text/response/row/result）
+- init 属性名、调用名去动词、函数名名词
+- 所有候选都带后缀变体（`Value`/`Input`/`Arg`/`Data`/`Result`/`Item`/`Info`/`Ref`）
+  规避绑定冲突——这是解锁大量命名的关键
+
+**安全约束**：每个候选都必须通过 `scope.hasBinding`（沿作用域链），防止遮蔽。
+
 ## 尚未安全的操作
 
 - **组件级物理拆分**：实测顶层 9986 声明零重复，但一条 `var` 逗号链常含多个组件；
