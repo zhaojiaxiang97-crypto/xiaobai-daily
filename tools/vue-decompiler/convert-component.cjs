@@ -42,6 +42,24 @@ function unwrap(node) {
   if (t.isCallExpression(node) && t.isIdentifier(node.callee) && apiOf(node.callee.name) === 'unref') return unwrap(node.arguments[0]);
   return node;
 }
+const G = require('@babel/generator').default;
+// AST 级表达式重写：递归把 unref(x) 替换成 x（Vue 模板自动解包）
+function rewriteExpr(node) {
+  if (!node) return node;
+  const clone = t.cloneNode(node, true, true);
+  T(t.file(t.program([t.expressionStatement(clone)])), {
+    CallExpression(p) {
+      const c = p.node.callee;
+      if (!t.isIdentifier(c)) return;
+      const api = apiOf(c.name);
+      if (api === 'unref' && p.node.arguments.length === 1) {
+        p.replaceWith(t.cloneNode(p.node.arguments[0], true, true));
+        p.skip();
+      }
+    },
+  });
+  return clone;
+}
 function exprText(node) {
   if (!node) return '';
   if (t.isCallExpression(node) && t.isIdentifier(node.callee) && apiOf(node.callee.name) === 'unref') return exprText(node.arguments[0]);
@@ -56,7 +74,14 @@ function exprText(node) {
   }
   return txt(node).replace(/"/g, "'");
 }
-const dyn = n => exprText(unwrap(n));
+function dyn(n) {
+  if (!n) return '';
+  try {
+    const rewritten = rewriteExpr(unwrap(n));
+    const code = G(t.expressionStatement(rewritten), { compact: true, jsescOption: { minimal: true } }).code.replace(/;$/, '');
+    return code.replace(/"/g, "'");
+  } catch { return exprText(unwrap(n)); }
+}
 function strVal(n) {
   const x = unwrap(n);
   if (!x) return null;
@@ -143,7 +168,34 @@ function conv(node) {
       }
     }
     let inner = '';
-    if (args[2] && t.isArrayExpression(args[2])) inner = args[2].elements.map(e => conv(e)).filter(Boolean).join('');
+    const kids = args[2];
+    const childToTpl = (e) => {
+      if (!e) return '';
+      if (t.isSpreadElement(e)) return '';
+      const v = conv(e);
+      if (v) return v;
+      const x = unwrap(e);
+      if (t.isStringLiteral(x)) return x.value;
+      if (t.isTemplateLiteral(x) && x.expressions.length === 0) return x.quasis[0].value.cooked;
+      if (t.isNumericLiteral(x)) return String(x.value);
+      if (t.isCallExpression(x) && t.isIdentifier(x.callee) && apiOf(x.callee.name) === 'toDisplayString') {
+        const e2 = dyn(x.arguments[0]);
+        if (/[{}]/.test(e2)) return `<span v-text="${e2.replace(/"/g, "'")}" />`;
+        return `{{ ${e2} }}`;
+      }
+      if (t.isCallExpression(x) || t.isMemberExpression(x) || t.isIdentifier(x) || t.isLogicalExpression(x)
+          || t.isConditionalExpression(x) || t.isBinaryExpression(x) || t.isTemplateLiteral(x)) {
+        const e2 = dyn(x);
+        // 含花括号的表达式不能放进 {{ }}（Vue 模板解析器会把 }} 当插值结束）
+        if (/[{}]/.test(e2)) return `<span v-text="${e2.replace(/"/g, "'")}" />`;
+        return `{{ ${e2} }}`;
+      }
+      return '';
+    };
+    if (kids) {
+      if (t.isArrayExpression(kids)) inner = kids.elements.map(childToTpl).filter(Boolean).join('');
+      else inner = childToTpl(kids);   // 单表达式 child（Vue 编译器会省略 createTextVNode 的包裹）
+    }
     const VOID = /^(br|img|input|hr|meta|link|area|base|col|embed|source|track|wbr)$/;
     return VOID.test(tag) && !inner ? `<${tag}${attrs} />` : `<${tag}${attrs}>${inner}</${tag}>`;
   }
