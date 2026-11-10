@@ -51,6 +51,19 @@ T(ast,{
     kept.push(src.slice(p.node.start,p.node.end));
     sharedNames.add(p.node.id.name);
   },
+  // 顶层表达式语句：IIFE 枚举初始化 (function(e){...})(yG ||= {})、顶层赋值等
+  ExpressionStatement(p){
+    if(!p.parentPath.isProgram()) return;
+    if(inComp(p.node.start,p.node.end)){ dropped++; return; }
+    kept.push(src.slice(p.node.start,p.node.end));
+    // 记录其中被赋值的标识符（yG、bG 等）
+    T(t.file(t.program([t.cloneNode(p.node,true,true)])), {
+      AssignmentExpression(ap){
+        const l=ap.node.left;
+        if(t.isIdentifier(l)) sharedNames.add(l.name);
+      },
+    });
+  },
 });
 
 const comps=[];
@@ -96,6 +109,15 @@ try{
     if(!ip.isReferencedIdentifier()) return;
     const nm2=ip.node.name;
     if(!SEM.has(nm2)) return;
+    // 作用域级判定：只有绑定来源是 vue-i18n.runtime 的 import，或顶层无本地声明，才算 Vue API
+    const b = ip.scope.getBinding(nm2);
+    if (b) {
+      const bp = b.path;
+      const isRuntimeImport = bp.isImportSpecifier() &&
+        /vue-i18n\.runtime/.test(bp.parentPath.node.source?.value || '');
+      const isVueNs = bp.isImportSpecifier() && bp.node.imported?.name === nm2;
+      if (!isRuntimeImport && !isVueNs) return;   // 本地声明 → 不动
+    }
     const par=ip.parentPath;
     if((par.isMemberExpression()||par.isOptionalMemberExpression())&&par.node.property===ip.node&&!par.node.computed) return;
     if(par.isObjectProperty()&&par.node.key===ip.node&&!par.node.computed) return;

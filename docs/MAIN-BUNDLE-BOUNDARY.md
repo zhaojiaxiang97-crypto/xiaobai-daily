@@ -1,75 +1,90 @@
 # main bundle 的"模块边界"能否搞回来？—— 实测回答
 
-> round-0425
+> round-0425（本轮推翻了此前结论）
 
 ## 结论先说
 
-**不需要"搞回来"，我之前的判断下错了。**
+**不需要"搞回来"，而且"边界丢失"这个判断是错的。**
 
-"模块边界丢失 → 418 个组件不可运行"这个结论**基于一个有缺陷的实现**。
-实测数据显示：真正的障碍不是边界丢失，而是**我排除组件时粒度太粗**。
+实测证明：main bundle 的组件**接近可运行**，剩下的障碍是实现细节，不是架构问题。
 
-## 一、决定性数据
+## 一、决定性数据：边界根本不用恢复
 
-对 `renderer/chunks/main.js`（5.2 MB）的顶层结构实测：
+对 `renderer/chunks/main.js`（5.2 MB）顶层结构实测（declarator 粒度）：
 
 | 项目 | 数量 |
 |---|---|
-| 顶层声明（declarator 粒度） | **9687** |
-| 其中是组件的 | **458** |
-| **其中是普通代码的** | **9229** |
+| 顶层声明 | **9687** |
+| 其中组件 | **458** |
+| 其中普通代码 | **9229** |
 
-而我此前的实现按 **VariableDeclaration 整条**排除，遇到
+**组件边界是明确的** —— 458 个 `defineComponent({__name})` 调用就是边界，
+不需要 rollup 注释、不需要 `__vite__mapDeps`。其余 9229 个声明只需按原顺序
+放进 shared.js（函数声明会提升，`var` 顺序由原文件保证）。
+
+## 二、此前为什么失败：两个实现 bug
+
+### bug 1：排除粒度太粗
+
+原实现按 **VariableDeclaration 整条**排除。遇到
 `var a = 1, uc = defineComponent({...}), d = 3;` 这种混合声明时，
-**把整条都丢了** —— 连带丢掉 `a` 和 `d`。
+**整条都丢**，连带 `a` 和 `d`。
 
-结果：shared.js 只剩 **2484** 个符号，缺掉约 6700 个正常声明。
-渲染时的 `Mt is not defined`、`EntityStart` 未初始化，都是这么来的。
+后果：shared.js 只剩 **2484** 个符号（应 9229），缺约 6700 个。
+`Mt is not defined`、`EntityStart` 未初始化都是这么来的。
 
-**改成 declarator 粒度后：shared.js 符号 2484 → 9202**（shared.js 1.8 MB）。
+改成 declarator 粒度后：符号 2484 → **9202**。
 
-## 二、"边界"这个词用错了
+### bug 2：漏收顶层表达式语句
 
-main bundle 里确实没有模块边界标记（0 处 rollup 注释），但这**不重要**：
+```js
+var yG;
+(function (e) { e[e.EntityStart = 0] = 'EntityStart'; ... })(yG ||= {});   // ← IIFE
+var PJe = class { constructor() { this.state = yG.EntityStart; } };
+var IJe = xG(TJe);   // 立即 new PJe → yG 此时必须已赋值
+```
 
-- 组件边界是**明确的**：458 个 `defineComponent({__name})` 调用
-- 其余代码不需要"知道原属哪个模块"，只需要**按依赖顺序放进 shared.js**
-- ES 模块的函数声明会提升，`var` 声明也有固定的初始化顺序，
-  只要不把"组件内部代码"和"顶层代码"混在一起，就不会出问题
+`(function(e){...})(yG ||= {})` 是 **ExpressionStatement**，不是变量声明。
+原实现只收集 `VariableDeclaration` / `FunctionDeclaration`，**整个 IIFE 被漏掉**
+→ `yG` 声明了但永远没赋值 → `Cannot read properties of undefined (reading 'EntityStart')`。
 
-**所以问题从一开始就不是"边界丢了"，而是"排除得不干净"。**
+补上 ExpressionStatement 收集后：符号 9202 → **9214**，且构建**从 4 modules
+跳到 88 modules 通过**。
 
-## 三、修到哪一步了
+## 三、当前状态
 
-| 阶段 | shared 符号 | 状态 |
-|---|---|---|
-| 原实现（整条 VariableDeclaration 排除） | 2484 | 大量正常声明被误删 |
-| **改 declarator 粒度** | **9202** | 符号齐了 |
-| 组件生成 | 391 个 .vue | 正常 |
-| 构建 | ❌ | `Cannot assign to import 'h'` |
-
-## 四、剩下的一层（真实障碍，但可解）
-
-`h` 既是 Vue 的渲染函数（`h('div', ...)`），也可能是代码里的普通变量
-（实测 shared.js 里有 `h = r.day`、`h = 0`、`h = xiaoheiBot.onEvent(...)` 等赋值）。
-
-我把 SEM 集合里的名字**无条件**当作 Vue API 改写为 `__vue.h`，破坏了普通变量的语义。
-
-**修复方向明确**：改成**作用域级判定** ——
-只有确认该引用在顶层没有本地声明（或指向 vue-i18n.runtime 的 import）时，
-才改写成 `__vue.xxx`。用 babel 的 `scope.hasBinding()` 逐引用判断即可。
-
-## 五、对之前结论的修正
-
-| 之前的判断 | 修正后 |
+| 项 | 状态 |
 |---|---|
-| main bundle 418 组件"模块边界不可恢复 → 不可运行" | **结论下得太早**。边界不是障碍，是实现缺陷 |
-| 理由是"0 处 rollup 注释 + mapDeps 只覆盖懒加载" | 这个观测没错，但它**不构成障碍**——组件边界由 `defineComponent({__name})` 直接给出 |
-| 建议放弃 main bundle 路线 | **建议改为：继续修，路径清晰**（declarator 粒度已修完，剩作用域级 API 判定一层） |
+| main bundle 组件生成 | **391 个 .vue** ✅ |
+| shared.js | 2.3 MB，**9214 个符号** ✅ |
+| `vite build` | ✅ **88 modules 通过**（此前 4 modules） |
+| SSR 渲染 | ⏳ 卡在最后一层 |
 
-## 六、下一步（明确、可验证）
+**最后一层**：文本级路径替换误伤了代码里的正则字面量
+（`Unexpected flag _ in regular expression literal`）——
+我用正则替换 `"./x.js"` 这类路径时，误匹配了 `/\.js$/` 这样的正则。
+改成 AST 级路径重写即可。
 
-1. 把 Vue API 改写改为作用域级：`ip.scope.hasBinding(name)` 且绑定来源是
-   vue-i18n.runtime 的 import 时才改写
-2. 重跑：`gen2.cjs` → `vite build` → SSR 渲染
-3. 每修一层都能立刻用构建 + 渲染验证
+## 四、对之前结论的修正（重要）
+
+| 之前（round-0422/0424） | 现在（实测） |
+|---|---|
+| "main bundle 模块边界已被抹除，不可恢复" | **组件边界不需要恢复** —— 458 个 `__name` 就是边界 |
+| "418 组件可读不可运行，非努力可补" | **判断错误** —— 是两个实现 bug（排除粒度、漏收 IIFE），已修到 88 modules 构建通过 |
+| "平铺必然触发初始化顺序问题" | 确实会遇到，但**根源是漏收表达式语句**，补上即可 |
+
+**教训**：我把"观测到的现象"（0 处 rollup 注释、mapDeps 只覆盖懒加载）
+当成了"不可逾越的障碍"，而没有去验证**真正的失败原因**。实际失败原因是
+我自己的代码漏掉了两类顶层语句。
+
+## 五、要跑通还剩什么
+
+1. 把 shared.js 的路径重写从"文本正则"改成 AST 级（避免误伤正则字面量）
+2. 重跑 build + SSR，看新的错误
+3. 迭代 —— 每层都有明确的错误信息，不再是"sand"
+
+## 六、附带产出
+
+- `tools/vue-decompiler/gen-main-project.cjs` —— declarator 粒度 + ExpressionStatement
+  收集的工程生成器（本轮新增）
+- 391 个 main bundle 组件的 `.vue` 已能生成并通过 vite 构建
