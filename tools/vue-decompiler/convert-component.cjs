@@ -95,8 +95,9 @@ function conv(node) {
     if (!tag) {
       // 动态组件 / Fragment
       if (tagN && t.isIdentifier(tagN) && apiOf(tagN.name) === 'Fragment') {
-        const kids = args[1] && t.isArrayExpression(args[1]) ? args[1].elements.map(e => conv(e)).filter(Boolean).join('') : '';
-        return kids;
+        // Fragment 形态：createElementBlock(Fragment, null, [children]) —— children 在 args[2]
+        const kidArg = args.find(a => t.isArrayExpression(a));
+        return kidArg ? kidArg.elements.map(e => conv(e)).filter(Boolean).join('') : '';
       }
       let attrs = '';
       if (args[1] && t.isObjectExpression(args[1])) {

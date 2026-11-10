@@ -224,3 +224,41 @@ main.js 里历史上把 **renderSlot 误标为 withCtx**，导致 children 变�
 `CheckboxRoot` / `AvatarImage` / `ApiSettingsPage` 等：setup 返回的是逻辑或状态，
 render 在 `render()` 方法里，或是 renderless 组件。需扩展转换器支持
 `render: () => ...` 与 `render() {}` 形态。
+
+---
+
+## 阶段 4.5：Fragment 修复（391/418 = 93.5%）
+
+`createElementBlock(Fragment, null, [children])` 的子节点在 **args[2]**（args[1]
+是 null），而原实现只从 args[1] 取 → 大量组件转出空内容。
+
+修复（改成取参数里第一个 ArrayExpression）后：**376 → 391 通过，无模板 42 → 27**。
+
+## 阶段 5：工程骨架（已完成，vite build 通过）
+
+`template-package.json` / `template-vite.config.js` 提供可用的工程配置。
+
+实测：把 2 个真实还原的 `.vue` 挂进入口后 `npx vite build` 成功
+（10 modules transformed，239ms）。说明还原产物是**真 Vue SFC**，能被标准
+工具链处理。
+
+### 工程结构
+
+```
+index.html
+vite.config.js
+package.json
+src/components/*.vue     ← 391 个还原组件
+src/main.js              ← 入口
+deps.json                ← 每组件待补依赖清单
+```
+
+### 仍未完成：script 依赖补全
+
+`.vue` 的模板部分正确，但 script 里的辅助函数/常量仍是原 bundle 短名
+（如 `je`、`pc`、`t`），需：
+1. 从原 `main.js` 顶层提取共享符号 → `src/shared.js`
+2. 按 `deps.json` 为每个组件补 `import`
+3. `npm run dev` 逐个挂载验证
+
+在此之前，组件可编译但不可运行。

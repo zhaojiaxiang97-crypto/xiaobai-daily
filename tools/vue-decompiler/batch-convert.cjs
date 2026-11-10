@@ -4,7 +4,7 @@ const dir=process.argv[2];
 const files=fs.readdirSync(dir).filter(f=>f.endsWith('.js'));
 let ok=0,fail=0,empty=0;const fails=[];
 for(const f of files){
-  const out=require('child_process').execSync(`node ${__dirname}/conv-one.cjs ${path.join(dir,f)} 2>/dev/null`,{encoding:'utf8'}).trim();
+  const out=require('child_process').execSync(`node ${__dirname}/convert-component.cjs ${path.join(dir,f)} 2>/dev/null`,{encoding:'utf8'}).trim();
   if(!out){empty++;continue;}
   const vue=`<template>\n${out}\n</template>\n<script setup>\n</script>\n`;
   try{
