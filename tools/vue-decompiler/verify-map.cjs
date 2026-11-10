@@ -1,9 +1,9 @@
 // 验证 19 个已知映射：用全库调用签名交叉检验
 const fs = require('fs');
 const path = require('path');
-const P = require('./node_modules/@babel/parser');
-const T = require('./node_modules/@babel/traverse').default;
-const t = require('./node_modules/@babel/types');
+const P = require('@babel/parser');
+const T = require('@babel/traverse').default;
+const t = require('@babel/types');
 
 const KNOWN = {
   '$n': 'normalizeClass', 'An': 'unref', 'Ct': 'withCtx?|renderSlot', 'O': 'createTextVNode',

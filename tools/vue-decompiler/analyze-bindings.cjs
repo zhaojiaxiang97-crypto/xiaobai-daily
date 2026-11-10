@@ -1,8 +1,8 @@
 // AST 级 import 绑定分析：解析每个 chunk 的 Vue API 绑定与真实引用（排除遮蔽）
 const fs = require('fs');
-const P = require('./node_modules/@babel/parser');
-const T = require('./node_modules/@babel/traverse').default;
-const t = require('./node_modules/@babel/types');
+const P = require('@babel/parser');
+const T = require('@babel/traverse').default;
+const t = require('@babel/types');
 
 const file = process.argv[2];
 const src = fs.readFileSync(file, 'utf8');

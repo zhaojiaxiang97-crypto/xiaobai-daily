@@ -67,3 +67,39 @@ npm i @babel/parser @babel/traverse @babel/generator @babel/types @vue/compiler-
 node tools/vue-decompiler/analyze-bindings.cjs <chunk.js>
 node tools/vue-decompiler/verify-map.cjs src/renderer
 ```
+
+---
+
+## 阶段 3 进展（转换器已实现）
+
+`render2tpl.cjs` + `mkcomponent.cjs` + `compile-check.cjs`：递归把 vnode 树转成
+template 语法，生成 `.vue`，用 `@vue/compiler-sfc` 编译验证。
+
+### 试点结果（4 个组件）
+
+| 组件 | 结果 |
+|---|---|
+| `ui/Kbd.js` → Kbd.vue | ✅ 解析 + 编译 OK（745B） |
+| `ui/AlertDialogMedia.js` → AlertDialogMedia.vue | ✅ 解析 + 编译 OK（573B） |
+| `ui/DialogTitle.js` → DialogRoot.vue | ❌ 模板表达式解析失败 |
+| `ui/Slider.js` → SliderHorizontal.vue | ❌ 模板表达式解析失败 |
+
+**首次成功率 2/4**。
+
+### 暴露的两类系统性问题
+
+1. **未映射的 API 别名**：模板里出现 `<component :is="$">`，因为 `$`（导出短名
+   `_s`）不在映射表中。`vue-i18n.runtime.js` 有 **167 个导出**，当前只映射了 18 个
+   ——补齐这张表是本工程的主体工作量。
+2. **表达式引号冲突**：`:style="E({ \"--var\": ... })"` 内层双引号直接嵌在外层
+   属性双引号里，Vue 模板解析失败。需统一把表达式内字符串改为单引号/反引号。
+
+### 剩余工作
+
+| 阶段 | 内容 | 状态 |
+|---|---|---|
+| 3.1 | 补全 167 个导出的语义映射 | 待做（主体工作量） |
+| 3.2 | 表达式引号统一转义 | 待做 |
+| 3.3 | v-for / v-if / 动态组件的指令化 | 部分 |
+| 4 | 418 组件全量生成 + 逐组件编译验证 | 待做 |
+| 5 | 工程组装（package.json / vite.config / 入口） | 待做 |
