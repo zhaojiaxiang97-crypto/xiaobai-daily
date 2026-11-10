@@ -8,6 +8,7 @@ const t = require('@babel/types');
 
 const [,, srcFile, compDir, outDir] = process.argv;
 const src = fs.readFileSync(srcFile, 'utf8');
+const srcRoot = path.dirname(path.dirname(srcFile));  // chunks/main.js → src/renderer
 const ast = P.parse(src, { sourceType: 'unambiguous' });
 
 const VUE_API = new Set(['openBlock','createElementBlock','createElementVNode','createBlock','createVNode',
@@ -72,10 +73,45 @@ for (const sp of sharedParts) sp.names.forEach(n => allSharedNames.add(n));
 console.error('共享符号:', allSharedNames.size);
 
 // 3) 写 shared.js（全部导出）
-const body = sharedParts.map(sp => sp.code).join('\n\n');
+let body = sharedParts.map(sp => sp.code).join('\n\n');
+// 建立 basename → 真实相对路径 索引（renderer 内）
+const baseIndex = {};
+(function walkIdx(d, rel) {
+  for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+    const p2 = path.join(d, e.name);
+    const r2 = rel ? rel + '/' + e.name : e.name;
+    if (e.isDirectory()) walkIdx(p2, r2);
+    else baseIndex[e.name] = './vendor/' + r2;
+  }
+})(srcRoot, '');
+const deadRefs = new Set();
+body = body.replace(/(["'\`])(\.\.?\/[^"'\`]+)\1/g, (m, q, ref) => {
+  const base = ref.split('/').pop();
+  const hit = baseIndex[base];
+  if (hit) return q + hit + q;
+  // 找不到 → 已删除的死 chunk（round-0376 清理），替换为解析空对象的占位
+  deadRefs.add(base);
+  return q + './vendor/_removed.js' + q;
+});
 const exportLines = [...allSharedNames].filter(n => /^[A-Za-z_$][\w$]*$/.test(n))
   .map(n => `export { ${n} };`).join('\n');
-fs.writeFileSync(outDir + '/src/shared.js', `// 从 main bundle 提取的共享符号（CSS 常量、工具函数等）\n// 共 ${allSharedNames.size} 个顶层声明\n${body}\n\n${exportLines}\n`);
+// 跨 chunk 依赖：在 shared.js 里统一 re-export，组件只需 import shared.js
+const reexportLines = [];
+for (const [local, info] of Object.entries(importMap)) {
+  if (/vue-i18n\.runtime/.test(info.from)) continue;   // Vue API 走 'vue'
+  // 原路径相对 chunks/main.js → 转成相对工程 src/shared.js
+  // 原路径是相对 chunks/main.js；工程里把 renderer 原样复制到 src/vendor/
+  // 所以：../ui/X.js（= renderer/ui/X.js）→ ./vendor/ui/X.js
+  let rel = info.from || '';
+  if (rel.startsWith('../')) rel = './vendor/' + rel.slice(3);
+  else if (rel.startsWith('./')) rel = './vendor/chunks/' + rel.slice(2);
+  else rel = './vendor/' + rel;
+  const spec = info.imported === 'default' ? `default as ${local}` : (info.imported === local ? local : `${info.imported} as ${local}`);
+  reexportLines.push(`export { ${spec} } from '${rel}';`);
+}
+fs.mkdirSync(outDir + '/src/vendor', { recursive: true });
+fs.writeFileSync(outDir + '/src/vendor/_removed.js', 'export default {};\nexport const __removed = true;\n');
+fs.writeFileSync(outDir + '/src/shared.js', `// 从 main bundle 提取的共享符号（CSS 常量、工具函数等）\n// 共 ${allSharedNames.size} 个顶层声明 + ${reexportLines.length} 个跨 chunk re-export\n${reexportLines.join('\n')}\n\n${body}\n\n${exportLines}\n`);
 
 // 4) 生成组件 .vue
 let okCount = 0;
@@ -93,8 +129,17 @@ for (const f of fs.readdirSync(compDir).filter(x => x.endsWith('.js'))) {
   const m = compSrc.match(/\/\/ 外部依赖\(\d+\): (.+)/);
   const deps = m ? m[1].split(',').map(x => x.trim()).filter(Boolean) : [];
   const vueDeps = deps.filter(d => VUE_API.has(d));
-  const sharedDeps = deps.filter(d => !VUE_API.has(d) && allSharedNames.has(d));
-  const importedDeps = deps.filter(d => !VUE_API.has(d) && !allSharedNames.has(d) && importMap[d]);
+  const BROWSER = new Set(['window','document','navigator','location','history','screen','localStorage',
+    'sessionStorage','fetch','console','setTimeout','setInterval','clearTimeout','clearInterval',
+    'requestAnimationFrame','cancelAnimationFrame','queueMicrotask','URL','URLSearchParams','FormData',
+    'Blob','File','FileReader','TextEncoder','TextDecoder','atob','btoa','crypto','performance',
+    'structuredClone','Intl','Math','JSON','Object','Array','String','Number','Boolean','Date','RegExp',
+    'Error','Promise','Symbol','Map','Set','WeakMap','WeakSet','Proxy','Reflect','process','require',
+    'module','exports','globalThis','undefined','NaN','Infinity','parseInt','parseFloat','isNaN',
+    'isFinite','encodeURIComponent','decodeURIComponent','encodeURI','decodeURI','alert','prompt']);
+  // 非 Vue API 且非浏览器全局 → 一律从 shared.js 取（shared 已 re-export 跨 chunk 依赖）
+  const sharedDeps = deps.filter(d => !VUE_API.has(d) && !BROWSER.has(d));
+  const importedDeps = [];
   const BROWSER_GLOBALS = new Set(['window','document','navigator','location','history','screen','localStorage',
     'sessionStorage','fetch','XMLHttpRequest','WebSocket','Worker','console','setTimeout','setInterval',
     'clearTimeout','clearInterval','requestAnimationFrame','cancelAnimationFrame','queueMicrotask',
@@ -104,9 +149,18 @@ for (const f of fs.readdirSync(compDir).filter(x => x.endsWith('.js'))) {
     'process','require','module','exports','globalThis','undefined','NaN','Infinity','parseInt','parseFloat',
     'isNaN','isFinite','encodeURIComponent','decodeURIComponent','encodeURI','decodeURI','alert','prompt']);
   const unknown = deps.filter(d => !VUE_API.has(d) && !allSharedNames.has(d) && !importMap[d] && !BROWSER_GLOBALS.has(d));
-  let script = '';
-  if (vueDeps.length) script += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
-  if (sharedDeps.length) script += `import { ${[...new Set(sharedDeps)].join(', ')} } from '../shared.js';\n`;
+  // 提取 setup 参数与 props 别名（模板表达式里用的是这些名字）
+  const compBody = compSrc;
+  const setupM = compBody.match(/setup\s*\(\s*([\w$]+)/);
+  const propsArg = setupM ? setupM[1] : null;
+  const aliasM = compBody.match(/let\s+([\w$]+)\s*=\s*([\w$]+)\s*[,;]/);
+  const propsAlias = (aliasM && propsArg && aliasM[2] === propsArg) ? aliasM[1] : null;
+  let importsPart = '';
+  let bodyPart = '';
+  if (vueDeps.length) importsPart += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
+  if (propsArg) bodyPart += `const ${propsArg} = defineProps({});\n`;
+  if (propsAlias && propsAlias !== propsArg) bodyPart += `const ${propsAlias} = ${propsArg};\n`;
+  if (sharedDeps.length) importsPart += `import { ${[...new Set(sharedDeps)].join(', ')} } from '../shared.js';\n`;
   // 跨 chunk：保留原别名以便组件内引用不变
   const byFrom = {};
   for (const d of importedDeps) {
@@ -114,8 +168,8 @@ for (const f of fs.readdirSync(compDir).filter(x => x.endsWith('.js'))) {
     const rel = from.replace(/^\.\.\//, '../').replace(/^\.\//, './');
     (byFrom[rel] = byFrom[rel] || []).push(imported === d ? d : `${imported} as ${d}`);
   }
-  for (const [f2, specs] of Object.entries(byFrom)) script += `import { ${specs.join(', ')} } from '${f2}';\n`;
-  if (unknown.length) script += `// 未解析依赖: ${unknown.join(', ')}\n`;
+  // 跨 chunk 依赖统一由 shared.js re-export，组件只写 import { x } from '../shared.js'
+  const script = importsPart + bodyPart + (unknown.length ? `// 未解析依赖: ${unknown.join(', ')}\n` : '');
   const vue = `<template>\n${tpl}\n</template>\n\n<script setup>\n${script || '// 无外部依赖\n'}\n</script>\n`;
   fs.writeFileSync(`${outDir}/src/components/${name}.vue`, vue);
   okCount++;
