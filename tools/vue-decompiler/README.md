@@ -174,3 +174,53 @@ fn() === undefined        // 注意：openBlock 返回 undefined，不是数组�
 | ui + blocks 批量 20 个 | **20/20 全部编译通过** |
 
 （对比：阶段 3 首次试点为 2/4）
+
+---
+
+## 阶段 4：组件切分与批量转换（90% 编译通过）
+
+### 切分：`split-components.cjs`
+
+从单文件 bundle 提取内联组件为独立文件（**不改原文件，零风险**）：
+
+```bash
+node tools/vue-decompiler/split-components.cjs src/renderer/chunks/main.js /tmp/split-comps
+# → 提取组件: 418（原始 458 个 __name 标记，同名去重）
+```
+
+关键点：`__name` 的值是**模板字符串**（反引号）不是普通字符串，判���时两者都要接受
+（此前只判 StringLiteral 导致只提取到 1 个）。
+
+### 批量转换：`batch-convert.cjs`
+
+对提取出的组件逐个转 template 并编译验证。
+
+| 结果 | 数量 | 占比 |
+|---|---|---|
+| **编译通过** | **376** | **90%** |
+| 编译失败 | 0 | 0% |
+| 无模板（renderless / render 在别处） | 42 | 10% |
+
+### 转换质量样例
+
+```html
+<!-- AlertTitle -->
+<div data-slot="alert-title" :class="je('font-medium ...', t.class)">
+  <slot />
+</div>
+
+<!-- Kbd -->
+<kbd data-slot="kbd" :class="e('bg-muted ...', s.class)"><slot /></kbd>
+```
+
+### 关键修正：用法驱动的 slot 识别
+
+main.js 里历史上把 **renderSlot 误标为 withCtx**，导致 children 变成
+`withCtx(ctx.$slots, 'default')`。转换器改为**按用法判定**：任何调用只要首参形如
+`xxx.$slots` 且第二参是字符串，就视为 renderSlot → `<slot />`。不依赖函数名。
+
+### 剩余 10% 的成因
+
+`CheckboxRoot` / `AvatarImage` / `ApiSettingsPage` 等：setup 返回的是逻辑或状态，
+render 在 `render()` 方法里，或是 renderless 组件。需扩展转换器支持
+`render: () => ...` 与 `render() {}` 形态。
