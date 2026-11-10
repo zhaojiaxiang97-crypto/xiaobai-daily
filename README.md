@@ -37,6 +37,13 @@
 auth.service / settings.repository 模块边界天然保留语义函数名。
 
 
+## Vue 工程还原
+
+单个组件的 render → `.vue` 逆向已验证可行（见
+[docs/vue-project-pilot](docs/vue-project-pilot/README.md)，含可编译的 Kbd.vue 样例）。
+全量 418 个组件自动化需要实现完整反编译器（AST 绑定解析 + template 语法映射），
+代价高且产出与原始产物不完全等价 —— 详细障碍分析见该文档。
+
 ## 开发流程
 
 改完源码后必须跑全流程自检（约 4 分钟）：
