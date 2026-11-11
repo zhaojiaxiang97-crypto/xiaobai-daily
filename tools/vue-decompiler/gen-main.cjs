@@ -262,10 +262,12 @@ for (const [compName, tpl] of tplMap) {
   // shared 符号 import：只取 exportSet 里有的，且排除已被 props 绑定 / 组件 import 占用的名字
   const occupied = new Set([propsArg, propsAlias].filter(Boolean));
   for (const n2 of need) occupied.add(n2.alias);
+  // 检查范围：模板 + props 代码（props 默认值里会引用 shared 符号，如 default: Rl）
+  const scanText = tpl + '\n' + (propsCode || '');
   const sharedSpecs = [];
   for (const [orig, exported] of exportSet) {
     if (occupied.has(orig)) continue;
-    if (!new RegExp('(?<![\\w$])' + orig.replace(/\$/g, '\\$') + '(?![\\w$])').test(tpl)) continue;
+    if (!new RegExp('(?<![\\w$])' + orig.replace(/\$/g, '\\$') + '(?![\\w$])').test(scanText)) continue;
     sharedSpecs.push(exported === orig ? orig : `${exported} as ${orig}`);
   }
   if (sharedSpecs.length) {
