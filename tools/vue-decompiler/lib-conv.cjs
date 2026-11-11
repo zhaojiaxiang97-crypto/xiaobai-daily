@@ -463,6 +463,7 @@ for (const c of comps) {
   const bodyStmts = [];
   const used = new Set();
   const tplRenames = new Map();   // 模板要同步改的名字
+  const renameHistory = new Map(); // 原名 → 新名（累积），用于后续语句里的引用
   let counter = 0;
   const uniqueName = base => {
     let nn;
@@ -471,6 +472,9 @@ for (const c of comps) {
   };
   // 加入一条语句；与已用名冲突则改名（并把改名记到 tplRenames 供模板同步）
   const pushStmt = st => {
+    // 先按累积的改名历史切换本语句里的引用 ——
+    // 否则 `const s = o;` 里的 o 会保持原样，而 o 早被改名成 o_0 → 未绑定。
+    if (renameHistory.size) renameInStmt(st, renameHistory);
     const declared = namesOfStmt(st);
     const local = new Map();
     for (const nm of declared) {
@@ -479,6 +483,7 @@ for (const c of comps) {
         local.set(nm, nn);
         used.add(nn);
         tplRenames.set(nm, nn);
+        renameHistory.set(nm, nn);
       } else {
         used.add(nm);
       }
