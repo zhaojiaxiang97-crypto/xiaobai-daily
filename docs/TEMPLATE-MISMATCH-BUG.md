@@ -97,3 +97,62 @@ tpl = execFileSync('node', [convPath, tmp], ...);
 | 根因 | `convert-component` 是按文件的，`lib-conv` 按组件复用其输出 |
 | main bundle 渲染率 | 109（不受影响） |
 | 修复难度 | 低（照抄 gen-main 的临时文件写法） |
+
+---
+
+## 追加：第二个根因（转换器对 `createBlock(unref(X))` 返回空）
+
+修完模板归属后，`lib-conv` 仍然 0 个组件。继续查：
+
+`RangeCalendarCell` 的 render：
+
+```js
+return (e, n) => (w(), x(d(i), { as: e.as, role: `gridcell`, ... }))
+```
+
+AST 绑定查询：
+
+```
+x → import b  from ./vue-i18n.runtime.js   （b = createBlock）
+w → import gt from ./vue-i18n.runtime.js   （gt = openBlock）
+d → import An from ./vue-i18n.runtime.js   （An = unref）
+i → import j  from ../ui/Switch.js          （组件引用）
+```
+
+所以真实代码是：
+
+```js
+createBlock(unref(i), { ... })
+```
+
+**`convert-component` 在 `createBlock` 分支里对 `args[0]` 取字面标签：**
+
+```js
+const tag = tagN ? strVal(tagN) : null;
+if (!tag) { ...动态组件分支... }
+```
+
+`tagN` 是 `unref(i)`（CallExpression），不是 StringLiteral / Identifier，
+`strVal()` 返回 null → 走动态组件分支 → 最终返回空模板。
+
+**`AlertTitle` 能转是因为它的 render 用的是字面标签 `'div'`；**
+**独立 chunk 里的组件大量使用 `createBlock(unref(Comp), ...)` → 全部转不出。**
+
+### 修复方向
+
+在 `conv()` 的 `createBlock/createVNode/createElement*` 分支里，
+先对 `tagN` 做 `unwrap()`（去掉 `unref(...)`），再判断：
+
+```js
+const tagN = unwrap(args[0]);
+```
+
+`unwrap()` 在文件里已有实现（专门处理 unref 包装）。
+
+### 修正后的完整根因链（vendor 线）
+
+1. **模板张冠李戴**：`lib-conv` 每组件都传「整个文件」给转换器 → 13/16 共用模板
+2. **动态组件识别失败**：`createBlock(unref(X), ...)` 的 tag 是 CallExpression →
+   返回空模板
+
+两者叠加，导致 vendor 线的产出既少又错。

@@ -308,10 +308,17 @@ fs.mkdirSync(outDir, { recursive: true });
 let made = 0;
 for (const c of comps) {
   // 用成熟转换器拿 template
+  // 关键：必须只把「该组件自己」的源码喂给转换器。
+  // 之前传整个文件 → 每个组件都拿到第一个组件的模板（13/16 张冠李戴）。
   let tpl = '';
-  try {
-    tpl = execFileSync('node', [convPath, file], { encoding: 'utf8', env: process.env }).trim();
-  } catch (e) { }
+  {
+    const tmpFile = path.join('/tmp', '_lc_' + c.name.replace(/[^\w]/g, '_') + '.js');
+    try {
+      fs.writeFileSync(tmpFile, 'var __comp = ' + src.slice(c.node.start, c.node.end) + ';\nexport default {};\n');
+      tpl = execFileSync('node', [convPath, tmpFile], { encoding: 'utf8', env: process.env }).trim();
+    } catch (e) { }
+    try { fs.unlinkSync(tmpFile); } catch (e) { }
+  }
   if (!tpl) continue;
 
   const vueDeps = [...SEM].filter(a => new RegExp('(?<![\\w$])' + a + '\\s*\\(').test(tpl));
