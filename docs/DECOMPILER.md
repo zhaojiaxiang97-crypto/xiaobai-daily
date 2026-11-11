@@ -1,5 +1,7 @@
 # 反编译器：从打包产物还原 Vue 组件
 
+> main bundle 线（`gen-main.cjs`）。**vendor 独立 chunk 线见 [VENDOR.md](VENDOR.md)。**
+
 > 本文合并了 5 份过程文档的结论。过程记录见 `archive/`。
 
 ## 结论

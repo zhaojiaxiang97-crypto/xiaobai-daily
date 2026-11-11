@@ -1,12 +1,14 @@
 # 交付清单
 
-> 最后更新：round-0433
+> 最后更新：round-0460
 
 ## 一句话
 
 **你要的东西已经能用了**：仓库里有解混淆后的完整源码，`bash build.sh` 一键构建出可运行的离线应用。
-反编译器作为额外成果：main bundle 的 418 个组件中 **393 个还原为可编译 `.vue`**，
-其中 **94 个已在真实 Chrome 里渲染出正确 HTML**。
+
+反编译器作为额外成果，两条线都已闭合：
+- **main bundle**：418 个组件中 **392 个还原为可编译 `.vue`**，**109 个**在真实 Chrome 里渲染出正确 HTML，**112 个带从原应用恢复的 scoped 样式**
+- **vendor 独立 chunk**：**145 个组件全部可 import**，10 个可独立渲染（其余需要父组件上下文或真实 props）
 
 ---
 
@@ -77,17 +79,18 @@ tar xzf vue-components-v1.8.3.tar.gz && npm install && npm run dev
 
 ### 组件可用性
 
-| 位置 | 组件数 | 可编译 | 真实渲染 |
-|---|---|---|---|
-| **独立 chunk**（`ui/` `blocks/` `pages/`） | 160 | **122/123（99%）** | ✅ Kbd 已验证 |
-| **main bundle**（`renderer/chunks/main.js`） | 418 | **393/393** | **94（24%）** |
-| 去重总计 | **575** | — | — |
+| 位置 | 组件数 | 可编译 | 可 import | 真实渲染 |
+|---|---|---|---|---|
+| **main bundle**（`renderer/chunks/main.js`） | 418 | **392/392** | — | **109** |
+| **vendor 独立 chunk**（`ui/` `blocks/` `pages/` `vendors/`） | 148 | **145** | **145/145** | 10 |
+| 去重总计 | **575** | — | — | — |
 
 ### 关键事实
 
-- **未定义符号 0**（从 63 收敛到 0）
-- **`vite build` 通过**
-- **94 个组件在真实 Chrome 里渲染出完整 HTML**（`data-slot`、Tailwind class、slot 内容全对）
+- **main bundle：未定义符号 0**（从 63 收敛到 0）、`vite build` 通过、109 个渲染出完整 HTML
+- **main bundle：112 个组件带 scoped 样式**（从原 CSS 恢复 `[data-v-xxx]` 规则 + 665 个 CSS 变量）
+- **vendor：145/145 全部可 import**（修掉 3 个架构性 bug 后达成）
+- **vendor：10 个可独立渲染**，其余需要父组件上下文或真实 props（详见 [VENDOR.md](VENDOR.md)）
 
 ### 为什么只有 24%
 
@@ -137,8 +140,9 @@ tar xzf vue-components-v1.8.3.tar.gz && npm install && npm run dev
 
 1. **反编译器只到「能渲染」，不到「逐字节等价」** —— 逆向后再编译，静态提升、
    patchFlag、缓存槽位必然不同；功能等价可验证。
-2. **24% 之外的组件渲染需要真实业务数据** —— 要从原应用数据流反推每个组件的
-   prop 结构，是另一个量级的工程。
+2. **渲染率受组件库设计制约** —— main bundle 109/392、vendor 10/145。
+   剩余组件需要「父组件上下文 + 真实业务 props」，不是转换器能解决的
+   （vendor 的 71 个错误已逐个分类，见 [VENDOR.md](VENDOR.md)）。
 3. ~~组件内部 CSS 已丢失~~ → **已恢复**：392 个组件中 112 个带上了从原 CSS 提取的 scoped 样式（见 DECOMPILER.md）。
 4. **反混淆已到机械极限** —— 剩余 6122 个 `_0x` 无特征可推。
 5. **前端 import 别名不可批量改名** —— 会破坏渲染（实测整页空白）。
@@ -150,8 +154,9 @@ tar xzf vue-components-v1.8.3.tar.gz && npm install && npm run dev
 | 方向 | 成本 | 价值 | 建议 |
 |---|---|---|---|
 | 按需取用现有组件 | 0 | 高 | **推荐** |
-| 反推真实数据流让更多组件渲染 | 高（数十轮） | 中 | 收益/成本比差 |
-
+| 写真实 props fixture 提升渲染率 | 中 | 中 | 可试，但「合理数据」需按组件类型设计 |
+| 父组件组合渲染（`<DialogRoot><DialogContent/>`） | 中 | 低 | main bundle 试过只 +3 |
+| 继续压 vendor 剩余 25 个符号 | 高（逐个追） | 低 | 无共同根因，不划算 |
 | 继续反混淆 | 已到极限 | — | 不可行 |
 
 ---
