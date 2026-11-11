@@ -54,12 +54,14 @@ T(ast, {
     if (!callee) return;
     // 先经 import 表解析成本地语义（o → j → defineComponent）
     const imp = imports[callee];
+    // import 解析优先：本地名可能与 Vue 语义名撞车（如 dialog.js 里 h = defineComponent），
+    // 先按 import 表解析才能得到真实语义；SEM 只作无 import 时的兜底。
     let sem = null;
-    if (SEM.has(callee)) sem = callee;
-    else if (imp) {
+    if (imp) {
       if (isRuntime(imp.from)) sem = VUE_API_MAP[imp.imported] || (SEM.has(imp.imported) ? imp.imported : null);
       else sem = SEM.has(imp.imported) ? imp.imported : null;
     }
+    if (sem === null && SEM.has(callee)) sem = callee;
     if (sem !== 'defineComponent') return;
     const arg = init.arguments[0];
     if (!arg || !t.isObjectExpression(arg)) return;
@@ -122,7 +124,9 @@ for (const c of comps) {
       const targetAbs = path.resolve(path.dirname(path.resolve(file)), from);
       const relToRoot = path.relative(rendererRoot, targetAbs).split(path.sep).join('/');
       const key = relToRoot + '::' + info.imported;
-      if (COMP_MAP[key]) redirected = COMP_MAP[key];
+      const target = COMP_MAP[key];
+      // 只有目标 .vue 确实存在时才重定向（避免指向未生成的组件）
+      if (target && fs.existsSync(path.join(outDir, target + '.vue'))) redirected = target;
     }
     // 组件在 src/components/，vendor 在同级 src/vendor/ → 需要 ../
     const rel = from.startsWith('../')
@@ -149,6 +153,12 @@ for (const c of comps) {
   let script = '';
   if (vueDeps.length) script += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
   for (const [f2, specs] of Object.entries(byFrom)) {
+    // 重定向到已转换的组件 .vue（默认导出，同目录）
+    if (f2.startsWith('__vue__')) {
+      const compName = f2.slice(7);
+      script += `import ${specs[0]} from './${compName}.vue';\n`;
+      continue;
+    }
     const fixed = specs.map(sp => {
       const m = sp.match(/^(.*)\s+as\s+(\w+)$/);
       const name = m ? m[2] : sp;
