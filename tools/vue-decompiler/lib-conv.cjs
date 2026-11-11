@@ -479,35 +479,64 @@ for (const c of comps) {
         return true;
       });
       if (deps.length) {
-        // 已占用的名字（script 里已声明的 + 已重命名过的）
-        const occupied = new Set(
-          (script.match(/(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g) || [])
-            .map(x => x.replace(/^(?:const|let|var|function)\s+/, '')));
-        // props 参数 / 别名一定是占用名（script 里已 `const X = defineProps(...)`）
+        // ── 全部改用 AST：正则处理解构/嵌套作用域太容易漏 ——
+        // 提取模式（含解构）里的所有绑定名
+        const collectPat = (node, out) => {
+          if (!node) return;
+          if (t.isIdentifier(node)) { out.push(node.name); return; }
+          if (t.isObjectPattern(node)) {
+            for (const pr of node.properties) {
+              if (t.isObjectProperty(pr)) collectPat(pr.value, out);
+              else if (t.isRestElement(pr)) collectPat(pr.argument, out);
+            }
+            return;
+          }
+          if (t.isArrayPattern(node)) { for (const el of node.elements) collectPat(el, out); return; }
+          if (t.isAssignmentPattern(node)) { collectPat(node.left, out); return; }
+          if (t.isRestElement(node)) { collectPat(node.argument, out); return; }
+        };
+        // 一段代码里所有顶层声明的名字
+        const topNamesOf = codeText => {
+          const out = [];
+          try {
+            const a = P.parse(codeText, { sourceType: 'module' });
+            for (const st of a.program.body) {
+              if (t.isVariableDeclaration(st)) for (const d of st.declarations) collectPat(d.id, out);
+              else if (t.isFunctionDeclaration(st) && st.id) out.push(st.id.name);
+              else if (t.isClassDeclaration(st) && st.id) out.push(st.id.name);
+            }
+          } catch (e) {}
+          return out;
+        };
+        // AST 级改名：改所有引用与绑定，但跳过对象字面量的非计算属性 key
+        const renameInCode = (codeText, map) => {
+          if (!map.size) return codeText;
+          try {
+            const a = P.parse(codeText, { sourceType: 'module' });
+            T(a, {
+              Identifier(ip) {
+                const nm = ip.node.name;
+                if (!map.has(nm)) return;
+                const par = ip.parentPath;
+                if (par.isObjectProperty() && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
+                if (par.isMemberExpression() && par.node.property === ip.node && !par.node.computed) return;
+                ip.node.name = map.get(nm);
+              },
+            });
+            return G(a, { compact: false, jsescOption: { minimal: true } }).code;
+          } catch (e) { return codeText; }
+        };
+
+        // 已占用名字：script 里已有的顶层声明（AST 提取，含解构）
+        const occupied = new Set(topNamesOf(script));
+        // props 参数 / 别名一定是占用名
         if (c.setupParam) occupied.add(c.setupParam);
         if (c.alias) occupied.add(c.alias);
-        // 提取一段代码里所有「声明出来的名字」：普通声明 + 解构里的别名
-        const declaredNames = code => {
-          const out = [];
-          // 普通：const/let/var x = ...
-          for (const m of code.matchAll(/(?:const|let|var)\s+([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
-          // 函数声明
-          for (const m of code.matchAll(/^function\s+([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
-          // 解构：const { a, b: c, ...rest } = ... / const [x, y] = ...
-          const dm = code.match(/^(?:const|let|var)\s*([\[{][\s\S]*?[\]}])\s*=/);
-          if (dm) {
-            const pat = dm[1];
-            // 对象模式里 `key: alias` 取 alias；简写 `{a}` 取 a；数组模式全取
-            for (const m of pat.matchAll(/(?:^|[,{\[])\s*[A-Za-z_$][\w$]*\s*:\s*([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
-            for (const m of pat.matchAll(/(?:^|[,{\[])\s*([A-Za-z_$][\w$]*)(?=\s*[,}\]])/g)) out.push(m[1]);
-            for (const m of pat.matchAll(/\.\.\.\s*([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
-          }
-          return [...new Set(out)];
-        };
+
         const renames = new Map();
         let counter = 0;
         for (const d of deps) {
-          for (const nm of declaredNames(d.code)) {
+          for (const nm of topNamesOf(d.code)) {
             if (occupied.has(nm) && !renames.has(nm)) {
               let nn;
               do { nn = '_inl' + (counter++); } while (occupied.has(nn));
@@ -519,11 +548,13 @@ for (const c of comps) {
           }
         }
         let code = deps.map(d => d.kind === 'function' ? d.code : (d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`)).join('\n');
-        // 先改定义里的名字，再改模板里的引用（按词边界，避免误伤）
-        for (const [o, n] of renames) {
-          const re = new RegExp('(?<![\\w$])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g');
-          code = code.replace(re, n);
-          tpl2 = tpl2.replace(re, n);
+        if (renames.size) {
+          code = renameInCode(code, renames);
+          // 模板是字符串，按词边界改名（模板里不会有对象属性 key 的歧义）
+          for (const [o, n] of renames) {
+            const re = new RegExp('(?<![\\w$.])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g');
+            tpl2 = tpl2.replace(re, n);
+          }
         }
         if (code) script += `\n// ── 从原 setup 内联的定义（${deps.length} 项）──\n${code}\n`;
       }
