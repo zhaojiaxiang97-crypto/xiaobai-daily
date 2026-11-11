@@ -559,8 +559,28 @@ for (const c of comps) {
       // 用 AST 提取一段代码里引用到的标识符（比正则准）
       const freeIdsOf = codeText => {
         const out = new Set();
-        const nodes = parseStmts(codeText);
-        if (!nodes.length) return out;
+        let nodes = parseStmts(codeText);
+        if (!nodes.length) {
+          // 降级 1：包进函数体 —— 裸 `return ...` 片段在 module 顶层会报
+          // "'return' outside of function"，导致这里静默返回空集、漏掉它引用的所有符号。
+          nodes = parseStmts('function __wrap(){' + codeText + '\n}');
+          if (nodes.length) {
+            const wrapper = t.file(t.program(nodes.map(nd => t.cloneNode(nd, true, true))));
+            T(wrapper, {
+              Identifier(ip) {
+                if (!ip.isReferencedIdentifier()) return;
+                const nm = ip.node.name;
+                if (nm === '__wrap') return;
+                if (ip.scope.hasBinding(nm)) return;
+                out.add(nm);
+              },
+            });
+            return out;
+          }
+          // 降级 2：正则兜底，宁可多收不可漏收
+          for (const m of codeText.matchAll(/(?<![\w$.])([A-Za-z_$][\w$]*)(?![\w$])/g)) out.add(m[1]);
+          return out;
+        }
         const wrapper = t.file(t.program(nodes.map(nd => t.cloneNode(nd, true, true))));
         T(wrapper, {
           Identifier(ip) {
@@ -590,6 +610,27 @@ for (const c of comps) {
           }
         }
         frontier = next;
+      }
+      // ── 兜底扫描：对「已 push 的全部语句」做闭包收敛 ──
+      // 种子只来自模板，覆盖不到「render 副作用序列」这类被保留下来的代码。
+      // 这里扫整段已生成语句的自由标识符，把还没绑定、但在 setupDefs 里的名字补齐，
+      // 循环到集合不再增长（不动点）。
+      {
+        let prev = -1;
+        let g2 = 0;
+        while (chosen.size !== prev && g2++ < 8) {
+          prev = chosen.size;
+          const bodyText = bodyStmts.map(st => {
+            try { return G(st, { compact: true, jsescOption: { minimal: true } }).code; }
+            catch (e) { return ''; }
+          }).join('\n');
+          if (!bodyText) break;
+          for (const nm of freeIdsOf(bodyText)) {
+            if (chosen.has(nm) || skip.has(nm)) continue;
+            const def = setupDefs.get(nm);
+            if (def) chosen.set(nm, def);
+          }
+        }
       }
       // 按源码顺序输出并去重
       const ordered = [...chosen.values()].sort((a, b) => (a.start || 0) - (b.start || 0));
