@@ -91,6 +91,26 @@ shared body → 占位组件 → 组装 → 自检）。
 
 **要全部渲染，需从原应用数据流反推每个组件实际吃什么数据，是另一个量级的工程。**
 
+
+## 直接下载现成产物
+
+不用自己跑生成器 —— Release `v1.8.3` 上有打包好的产物：
+
+```bash
+gh release download v1.8.3 -R zhaojiaxiang97-crypto/xiaobai-daily \
+   -p "vue-components-v1.8.3.tar.gz"
+tar xzf vue-components-v1.8.3.tar.gz && cd . && npm install && npm run dev
+# → http://localhost:5300 实时渲染还原出的组件
+```
+
+产物内容（32MB）：
+- `src/components/*.vue` —— 393 个还原组件
+- `src/shared.js` —— 共享符号（2MB）
+- `src/vendor/` —— 原始 renderer 副本（跨 chunk 依赖）
+- `src/main.js` —— 演示入口（渲染 AlertTitle / AlertDescription）
+
+已验证：下载后 `tar tzf` 通过、393 个组件齐全、`npm run build` 3.3s 通过。
+
 ## 验证方法
 
 ```bash

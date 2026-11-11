@@ -62,6 +62,19 @@ RESULT: PASS
 
 ## 三、反编译器（额外成果，详见 [DECOMPILER.md](DECOMPILER.md)）
 
+
+### 直接下载现成产物
+
+Release `v1.8.3` 上有打包好的还原组件（32MB）：
+
+```bash
+gh release download v1.8.3 -R zhaojiaxiang97-crypto/xiaobai-daily \
+   -p "vue-components-v1.8.3.tar.gz"
+tar xzf vue-components-v1.8.3.tar.gz && npm install && npm run dev
+```
+
+393 个 `.vue` + `shared.js` + vendor 副本，`npm run build` 已验证 3.3s 通过。
+
 ### 组件可用性
 
 | 位置 | 组件数 | 可编译 | 真实渲染 |
