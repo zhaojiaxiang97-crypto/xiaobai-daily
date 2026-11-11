@@ -1,0 +1,1693 @@
+{
+ "App": {
+  "props": {},
+  "propKeys": []
+ },
+ "Sidebar": {
+  "props": {
+   "activeNav": "today-work",
+   "collapsed": false
+  },
+  "propKeys": [
+   "activeNav",
+   "collapsed"
+  ]
+ },
+ "c": {
+  "props": {
+   "size": 8,
+   "iconNode": {
+    "__arr": 4,
+    "sample": [
+     {
+      "__arr": 2,
+      "sample": [
+       "<deep>",
+       "<deep>"
+      ]
+     },
+     {
+      "__arr": 2,
+      "sample": [
+       "<deep>",
+       "<deep>"
+      ]
+     }
+    ]
+   },
+   "name": "maximize-2"
+  },
+  "propKeys": [
+   "size",
+   "iconNode",
+   "name"
+  ]
+ },
+ "CreditCampaignCard": {
+  "props": {
+   "userId": 1,
+   "variant": null,
+   "refreshKey": null
+  },
+  "propKeys": [
+   "userId",
+   "variant",
+   "refreshKey"
+  ]
+ },
+ "Popover": {
+  "props": {
+   "defaultOpen": false,
+   "open": false,
+   "modal": false
+  },
+  "propKeys": [
+   "defaultOpen",
+   "open",
+   "modal"
+  ]
+ },
+ "PopoverRoot": {
+  "props": {
+   "defaultOpen": false,
+   "open": false,
+   "modal": false
+  },
+  "propKeys": [
+   "defaultOpen",
+   "open",
+   "modal"
+  ]
+ },
+ "PopperRoot": {
+  "props": {},
+  "propKeys": []
+ },
+ "PopoverTrigger": {
+  "props": {
+   "asChild": true,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "as"
+  ]
+ },
+ "PopperAnchor": {
+  "props": {
+   "asChild": true,
+   "reference": null,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "reference",
+   "as"
+  ]
+ },
+ "Primitive": {
+  "props": {
+   "asChild": true,
+   "as": "div"
+  },
+  "propKeys": [
+   "asChild",
+   "as"
+  ]
+ },
+ "PrimitiveSlot": {
+  "props": {},
+  "propKeys": []
+ },
+ "PopoverContent": {
+  "props": {
+   "side": "top",
+   "alignOffset": 4,
+   "forceMount": false,
+   "sideOffset": 8,
+   "sideFlip": false,
+   "align": "start"
+  },
+  "propKeys": [
+   "side",
+   "alignOffset",
+   "forceMount",
+   "sideOffset",
+   "sideFlip",
+   "align",
+   "alignFlip",
+   "avoidCollisions",
+   "hideShiftedArrow",
+   "hideWhenDetached",
+   "disableUpdateOnLayoutShift",
+   "prioritizePosition",
+   "asChild",
+   "disableOutsidePointerEvents",
+   "class",
+   "memoDependencies",
+   "collisionBoundary",
+   "collisionPadding",
+   "arrowPadding",
+   "sticky",
+   "positionStrategy",
+   "updatePositionStrategy",
+   "reference",
+   "dir",
+   "as"
+  ]
+ },
+ "PopoverPortal": {
+  "props": {
+   "disabled": false,
+   "defer": false,
+   "forceMount": false,
+   "to": null
+  },
+  "propKeys": [
+   "disabled",
+   "defer",
+   "forceMount",
+   "to"
+  ]
+ },
+ "Teleport": {
+  "props": {
+   "to": null,
+   "disabled": false,
+   "defer": false,
+   "forceMount": false
+  },
+  "propKeys": [
+   "to",
+   "disabled",
+   "defer",
+   "forceMount"
+  ]
+ },
+ "Presence": {
+  "props": {
+   "present": false,
+   "forceMount": false
+  },
+  "propKeys": [
+   "present",
+   "forceMount"
+  ]
+ },
+ "UserProfileDialog": {
+  "props": {
+   "preferredNameFallback": "小白用户",
+   "onboarding": false,
+   "open": false,
+   "openModifiers": null
+  },
+  "propKeys": [
+   "preferredNameFallback",
+   "onboarding",
+   "open",
+   "openModifiers"
+  ]
+ },
+ "Dialog": {
+  "props": {
+   "open": false,
+   "defaultOpen": false,
+   "modal": false,
+   "unmountOnHide": false
+  },
+  "propKeys": [
+   "open",
+   "defaultOpen",
+   "modal",
+   "unmountOnHide"
+  ]
+ },
+ "DialogRoot": {
+  "props": {
+   "open": false,
+   "defaultOpen": false,
+   "modal": true,
+   "unmountOnHide": true
+  },
+  "propKeys": [
+   "open",
+   "defaultOpen",
+   "modal",
+   "unmountOnHide"
+  ]
+ },
+ "DialogContent": {
+  "props": {
+   "forceMount": false,
+   "disableOutsidePointerEvents": false,
+   "asChild": false,
+   "class": "!max-w-[680px] h-[86vh] flex flex-col gap-0 overflow-hidden p-0",
+   "overlayClass": false,
+   "showCloseButton": true
+  },
+  "propKeys": [
+   "forceMount",
+   "disableOutsidePointerEvents",
+   "asChild",
+   "class",
+   "overlayClass",
+   "showCloseButton",
+   "as"
+  ]
+ },
+ "DialogPortal": {
+  "props": {
+   "disabled": false,
+   "defer": false,
+   "forceMount": false,
+   "to": null
+  },
+  "propKeys": [
+   "disabled",
+   "defer",
+   "forceMount",
+   "to"
+  ]
+ },
+ "DialogOverlay": {
+  "props": {
+   "forceMount": false,
+   "asChild": false,
+   "class": true,
+   "as": null
+  },
+  "propKeys": [
+   "forceMount",
+   "asChild",
+   "class",
+   "as"
+  ]
+ },
+ "UsageModeSwitchDialog": {
+  "props": {
+   "target": null
+  },
+  "propKeys": [
+   "target"
+  ]
+ },
+ "AlertDialog": {
+  "props": {
+   "open": false,
+   "defaultOpen": false,
+   "unmountOnHide": false
+  },
+  "propKeys": [
+   "open",
+   "defaultOpen",
+   "unmountOnHide"
+  ]
+ },
+ "AlertDialogRoot": {
+  "props": {
+   "open": false,
+   "defaultOpen": false,
+   "unmountOnHide": false
+  },
+  "propKeys": [
+   "open",
+   "defaultOpen",
+   "unmountOnHide"
+  ]
+ },
+ "AlertDialogContent": {
+  "props": {
+   "forceMount": false,
+   "disableOutsidePointerEvents": false,
+   "asChild": false,
+   "class": false,
+   "overlayClass": false,
+   "size": "default"
+  },
+  "propKeys": [
+   "forceMount",
+   "disableOutsidePointerEvents",
+   "asChild",
+   "class",
+   "overlayClass",
+   "size",
+   "as"
+  ]
+ },
+ "AlertDialogPortal": {
+  "props": {
+   "disabled": false,
+   "defer": false,
+   "forceMount": false,
+   "to": null
+  },
+  "propKeys": [
+   "disabled",
+   "defer",
+   "forceMount",
+   "to"
+  ]
+ },
+ "AlertDialogOverlay": {
+  "props": {
+   "forceMount": false,
+   "asChild": false,
+   "as": null
+  },
+  "propKeys": [
+   "forceMount",
+   "asChild",
+   "as"
+  ]
+ },
+ "TodayWork": {
+  "props": {
+   "refreshKey": 1
+  },
+  "propKeys": [
+   "refreshKey"
+  ]
+ },
+ "BaseTransition": {
+  "props": {
+   "mode": "out-in",
+   "onBeforeEnter": "<fn>",
+   "onEnter": "<fn>",
+   "onAfterEnter": null,
+   "onEnterCancelled": "<fn>",
+   "onBeforeLeave": null
+  },
+  "propKeys": [
+   "mode",
+   "onBeforeEnter",
+   "onEnter",
+   "onAfterEnter",
+   "onEnterCancelled",
+   "onBeforeLeave",
+   "onLeave",
+   "onAfterLeave",
+   "onLeaveCancelled",
+   "onBeforeAppear",
+   "onAppear",
+   "onAfterAppear",
+   "onAppearCancelled",
+   "appear",
+   "persisted"
+  ]
+ },
+ "Checkbox": {
+  "props": {
+   "modelValue": true,
+   "disabled": false,
+   "asChild": false,
+   "required": false,
+   "class": "size-3.5",
+   "defaultValue": null
+  },
+  "propKeys": [
+   "modelValue",
+   "disabled",
+   "asChild",
+   "required",
+   "class",
+   "defaultValue",
+   "value",
+   "id",
+   "trueValue",
+   "falseValue",
+   "as",
+   "name"
+  ]
+ },
+ "CheckboxRoot": {
+  "props": {
+   "modelValue": true,
+   "disabled": false,
+   "value": "on",
+   "trueValue": true,
+   "falseValue": false,
+   "asChild": false
+  },
+  "propKeys": [
+   "modelValue",
+   "disabled",
+   "value",
+   "trueValue",
+   "falseValue",
+   "asChild",
+   "as",
+   "required",
+   "defaultValue",
+   "id",
+   "name"
+  ]
+ },
+ "CheckboxIndicator": {
+  "props": {
+   "forceMount": false,
+   "asChild": false,
+   "as": "span"
+  },
+  "propKeys": [
+   "forceMount",
+   "asChild",
+   "as"
+  ]
+ },
+ "AsyncComponentWrapper": {
+  "props": {},
+  "propKeys": []
+ },
+ "HeatmapBars3D": {
+  "props": {
+   "rows": {
+    "__arr": 1,
+    "sample": [
+     {
+      "key": "<deep>",
+      "label": "<deep>",
+      "cells": "<deep>"
+     }
+    ]
+   },
+   "columnLabels": {
+    "__arr": 8,
+    "sample": [
+     {
+      "index": "<deep>",
+      "text": "<deep>"
+     },
+     {
+      "index": "<deep>",
+      "text": "<deep>"
+     }
+    ]
+   },
+   "rowPitch": 1.3,
+   "clickable": true,
+   "hint": null
+  },
+  "propKeys": [
+   "rows",
+   "columnLabels",
+   "rowPitch",
+   "clickable",
+   "hint"
+  ]
+ },
+ "HeatmapCellDetail": {
+  "props": {
+   "target": null
+  },
+  "propKeys": [
+   "target"
+  ]
+ },
+ "TodayBarcodeCard": {
+  "props": {
+   "refreshKey": 1
+  },
+  "propKeys": [
+   "refreshKey"
+  ]
+ },
+ "BarcodeCanvas": {
+  "props": {
+   "result": {
+    "startDate": "2026-11-12",
+    "endDate": "2026-11-12",
+    "colorBy": "app",
+    "bucketMinutes": 5,
+    "series": {
+     "__arr": 3,
+     "sample": [
+      "<deep>",
+      "<deep>"
+     ]
+    },
+    "days": {
+     "__arr": 1,
+     "sample": [
+      "<deep>"
+     ]
+    }
+   },
+   "colors": {
+    "__arr": 3,
+    "sample": [
+     "#3987e5",
+     "#d95926"
+    ]
+   },
+   "theme": {
+    "dark": true,
+    "surface": "#14171a",
+    "track": "rgba(255, 255, 255, 0.045)",
+    "ground": "#2a2e32",
+    "idle": "#33383d",
+    "other": "#666b70"
+   },
+   "label": "今日作息",
+   "layout": "strip",
+   "compact": true
+  },
+  "propKeys": [
+   "result",
+   "colors",
+   "theme",
+   "label",
+   "layout",
+   "compact",
+   "highlight",
+   "dayLabels",
+   "emphasizedDay",
+   "monthMarks",
+   "centerTitle",
+   "centerSubtitle",
+   "nowMinute",
+   "bucketRange",
+   "selectable"
+  ]
+ },
+ "BarcodeTooltip": {
+  "props": {
+   "result": {
+    "startDate": "2026-11-12",
+    "endDate": "2026-11-12",
+    "colorBy": "app",
+    "bucketMinutes": 5,
+    "series": {
+     "__arr": 3,
+     "sample": [
+      "<deep>",
+      "<deep>"
+     ]
+    },
+    "days": {
+     "__arr": 1,
+     "sample": [
+      "<deep>"
+     ]
+    }
+   },
+   "colors": {
+    "__arr": 3,
+    "sample": [
+     "#3987e5",
+     "#d95926"
+    ]
+   },
+   "theme": {
+    "dark": true,
+    "surface": "#14171a",
+    "track": "rgba(255, 255, 255, 0.045)",
+    "ground": "#2a2e32",
+    "idle": "#33383d",
+    "other": "#666b70"
+   },
+   "hover": null
+  },
+  "propKeys": [
+   "result",
+   "colors",
+   "theme",
+   "hover"
+  ]
+ },
+ "TodayWorkScrollHint": {
+  "props": {
+   "container": {},
+   "ready": true
+  },
+  "propKeys": [
+   "container",
+   "ready"
+  ]
+ },
+ "NotificationPopover": {
+  "props": {
+   "open": false
+  },
+  "propKeys": [
+   "open"
+  ]
+ },
+ "SurveyDialog": {
+  "props": {},
+  "propKeys": []
+ },
+ "ExitReportReminderDialog": {
+  "props": {
+   "snapshot": null,
+   "open": false
+  },
+  "propKeys": [
+   "snapshot",
+   "open"
+  ]
+ },
+ "ProfileShareHost": {
+  "props": {},
+  "propKeys": []
+ },
+ "ProfileShareDialog": {
+  "props": {
+   "request": null,
+   "open": false,
+   "openModifiers": null
+  },
+  "propKeys": [
+   "request",
+   "open",
+   "openModifiers"
+  ]
+ },
+ "TodoSyncAgreementDialog": {
+  "props": {
+   "open": false
+  },
+  "propKeys": [
+   "open"
+  ]
+ },
+ "UpdateDialog": {
+  "props": {
+   "data": {
+    "version": "",
+    "currentVersion": "",
+    "releaseNotes": "",
+    "isForceUpdate": false,
+    "downloadUrl": null,
+    "readyToInstall": false
+   },
+   "percent": 0,
+   "state": {
+    "revision": 4,
+    "phase": "idle",
+    "attemptId": null,
+    "sourceVersion": "1.8.3",
+    "targetVersion": null,
+    "progress": null
+   },
+   "open": false,
+   "isUpdating": false
+  },
+  "propKeys": [
+   "data",
+   "percent",
+   "state",
+   "open",
+   "isUpdating"
+  ]
+ },
+ "UpdateReadyToast": {
+  "props": {
+   "version": "",
+   "open": false,
+   "ready": false
+  },
+  "propKeys": [
+   "version",
+   "open",
+   "ready"
+  ]
+ },
+ "UsageModeGuideDialog": {
+  "props": {
+   "currentMode": "work",
+   "open": false,
+   "recommendedMode": null,
+   "switching": false
+  },
+  "propKeys": [
+   "currentMode",
+   "open",
+   "recommendedMode",
+   "switching"
+  ]
+ },
+ "TodoPage": {
+  "props": {
+   "openTaskRequest": null
+  },
+  "propKeys": [
+   "openTaskRequest"
+  ]
+ },
+ "Select": {
+  "props": {
+   "modelValue": "assignedToMe",
+   "open": false,
+   "defaultOpen": false,
+   "multiple": false,
+   "disabled": false,
+   "required": false
+  },
+  "propKeys": [
+   "modelValue",
+   "open",
+   "defaultOpen",
+   "multiple",
+   "disabled",
+   "required",
+   "defaultValue",
+   "nullableValue",
+   "by",
+   "dir",
+   "autocomplete",
+   "name"
+  ]
+ },
+ "SelectRoot": {
+  "props": {
+   "open": false,
+   "defaultOpen": false,
+   "modelValue": "assignedToMe",
+   "nullableValue": "",
+   "multiple": false,
+   "disabled": false
+  },
+  "propKeys": [
+   "open",
+   "defaultOpen",
+   "modelValue",
+   "nullableValue",
+   "multiple",
+   "disabled",
+   "required",
+   "defaultValue",
+   "by",
+   "dir",
+   "autocomplete",
+   "name"
+  ]
+ },
+ "SelectTrigger": {
+  "props": {
+   "disabled": false,
+   "asChild": false,
+   "class": "h-8 w-auto min-w-[92px] shrink-0 border-[#e5e7eb] bg-white px-2 text-xs font-medium text-[#111827] hover:border-[#d1d5db] focus-visible:border-[#86efac] focus-visible:ring-0 data-[state=open]:border-[#86efac]",
+   "size": "default",
+   "reference": null,
+   "as": null
+  },
+  "propKeys": [
+   "disabled",
+   "asChild",
+   "class",
+   "size",
+   "reference",
+   "as"
+  ]
+ },
+ "SelectValue": {
+  "props": {
+   "asChild": false,
+   "placeholder": null,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "placeholder",
+   "as"
+  ]
+ },
+ "SelectIcon": {
+  "props": {
+   "asChild": true,
+   "as": "span"
+  },
+  "propKeys": [
+   "asChild",
+   "as"
+  ]
+ },
+ "SelectContent": {
+  "props": {
+   "forceMount": false,
+   "position": "popper",
+   "bodyLock": false,
+   "sideFlip": false,
+   "align": "start",
+   "alignFlip": false
+  },
+  "propKeys": [
+   "forceMount",
+   "position",
+   "bodyLock",
+   "sideFlip",
+   "align",
+   "alignFlip",
+   "avoidCollisions",
+   "hideShiftedArrow",
+   "hideWhenDetached",
+   "disableUpdateOnLayoutShift",
+   "prioritizePosition",
+   "asChild",
+   "disableOutsidePointerEvents",
+   "class",
+   "memoDependencies",
+   "side",
+   "sideOffset",
+   "alignOffset",
+   "collisionBoundary",
+   "collisionPadding",
+   "arrowPadding",
+   "sticky",
+   "positionStrategy",
+   "updatePositionStrategy",
+   "reference",
+   "dir",
+   "as"
+  ]
+ },
+ "SelectPortal": {
+  "props": {
+   "disabled": false,
+   "defer": false,
+   "forceMount": false,
+   "to": null
+  },
+  "propKeys": [
+   "disabled",
+   "defer",
+   "forceMount",
+   "to"
+  ]
+ },
+ "SelectProvider": {
+  "props": {
+   "context": {
+    "triggerElement": {
+     "__ref": "<deep>"
+    },
+    "onTriggerChange": "<fn>",
+    "valueElement": {
+     "__ref": "<deep>"
+    },
+    "onValueElementChange": "<fn>",
+    "contentId": "reka-select-content-v-2",
+    "modelValue": {
+     "__ref": "<deep>"
+    }
+   }
+  },
+  "propKeys": [
+   "context"
+  ]
+ },
+ "SelectScrollUpButton": {
+  "props": {
+   "asChild": false,
+   "class": false,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "class",
+   "as"
+  ]
+ },
+ "SelectViewport": {
+  "props": {
+   "asChild": false,
+   "nonce": null,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "nonce",
+   "as"
+  ]
+ },
+ "SelectItem": {
+  "props": {
+   "value": "assignedToMe",
+   "disabled": false,
+   "asChild": false,
+   "class": "text-xs",
+   "textValue": null,
+   "as": null
+  },
+  "propKeys": [
+   "value",
+   "disabled",
+   "asChild",
+   "class",
+   "textValue",
+   "as"
+  ]
+ },
+ "CollectionItem": {
+  "props": {
+   "value": {
+    "textValue": "我负责的"
+   }
+  },
+  "propKeys": [
+   "value"
+  ]
+ },
+ "SelectItemIndicator": {
+  "props": {
+   "asChild": false,
+   "as": "span"
+  },
+  "propKeys": [
+   "asChild",
+   "as"
+  ]
+ },
+ "SelectItemText": {
+  "props": {
+   "asChild": false,
+   "as": "span"
+  },
+  "propKeys": [
+   "asChild",
+   "as"
+  ]
+ },
+ "SelectScrollDownButton": {
+  "props": {
+   "asChild": false,
+   "class": false,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "class",
+   "as"
+  ]
+ },
+ "TodoLabelPopover": {
+  "props": {
+   "current": "工作",
+   "defaults": {
+    "__arr": 3,
+    "sample": [
+     "工作",
+     "会议"
+    ]
+   },
+   "history": {
+    "__arr": 0,
+    "sample": []
+   },
+   "open": false,
+   "disabled": false,
+   "custom": false
+  },
+  "propKeys": [
+   "current",
+   "defaults",
+   "history",
+   "open",
+   "disabled",
+   "custom"
+  ]
+ },
+ "TodoSourceBadge": {
+  "props": {
+   "source": null
+  },
+  "propKeys": [
+   "source"
+  ]
+ },
+ "FriendManagerDialog": {
+  "props": {
+   "context": "todo",
+   "open": false,
+   "openModifiers": null
+  },
+  "propKeys": [
+   "context",
+   "open",
+   "openModifiers"
+  ]
+ },
+ "TodoCommentsDialog": {
+  "props": {
+   "todoId": null,
+   "task": null,
+   "open": false
+  },
+  "propKeys": [
+   "todoId",
+   "task",
+   "open"
+  ]
+ },
+ "GenerateReport": {
+  "props": {
+   "refreshKey": 3,
+   "prefill": null
+  },
+  "propKeys": [
+   "refreshKey",
+   "prefill"
+  ]
+ },
+ "Button": {
+  "props": {
+   "variant": "outline",
+   "size": "sm",
+   "class": "relative h-8 text-xs gap-1.5 cursor-pointer",
+   "asChild": false,
+   "as": "button"
+  },
+  "propKeys": [
+   "variant",
+   "size",
+   "class",
+   "asChild",
+   "as"
+  ]
+ },
+ "ReportDateTimePicker": {
+  "props": {
+   "modelValue": "2026-11-12 00:00:00",
+   "label": "选择开始日期和时间",
+   "endBoundary": false,
+   "align": "start"
+  },
+  "propKeys": [
+   "modelValue",
+   "label",
+   "endBoundary",
+   "align"
+  ]
+ },
+ "DateTimePickerField": {
+  "props": {
+   "modelValue": "2026-11-12 00:00:00",
+   "label": "选择开始日期和时间",
+   "mode": "datetime",
+   "precision": "minute",
+   "valueFormat": "report",
+   "endBoundary": false
+  },
+  "propKeys": [
+   "modelValue",
+   "label",
+   "mode",
+   "precision",
+   "valueFormat",
+   "endBoundary",
+   "align",
+   "triggerClass",
+   "disabled",
+   "minuteStep",
+   "compact",
+   "showQuickDates",
+   "modal",
+   "maxDate",
+   "minDate",
+   "maxDateTime",
+   "minDateTime"
+  ]
+ },
+ "Sheet": {
+  "props": {
+   "open": false,
+   "defaultOpen": false,
+   "modal": false,
+   "unmountOnHide": false
+  },
+  "propKeys": [
+   "open",
+   "defaultOpen",
+   "modal",
+   "unmountOnHide"
+  ]
+ },
+ "SheetContent": {
+  "props": {
+   "class": "w-[60vw] !max-w-none p-0 gap-0 bg-white outline-none focus:outline-none",
+   "side": "right",
+   "showCloseButton": false,
+   "forceMount": false,
+   "disableOutsidePointerEvents": false,
+   "asChild": false
+  },
+  "propKeys": [
+   "class",
+   "side",
+   "showCloseButton",
+   "forceMount",
+   "disableOutsidePointerEvents",
+   "asChild",
+   "as"
+  ]
+ },
+ "SheetOverlay": {
+  "props": {
+   "forceMount": false,
+   "asChild": false,
+   "class": false,
+   "as": null
+  },
+  "propKeys": [
+   "forceMount",
+   "asChild",
+   "class",
+   "as"
+  ]
+ },
+ "RechargeDialog": {
+  "props": {
+   "open": false
+  },
+  "propKeys": [
+   "open"
+  ]
+ },
+ "CreditRechargePayment": {
+  "props": {},
+  "propKeys": []
+ },
+ "ReportGenerationBasisDialog": {
+  "props": {
+   "summary": null,
+   "open": false
+  },
+  "propKeys": [
+   "summary",
+   "open"
+  ]
+ },
+ "TimelinePage": {
+  "props": {
+   "refreshKey": 4
+  },
+  "propKeys": [
+   "refreshKey"
+  ]
+ },
+ "TimelineDateRangeBar": {
+  "props": {
+   "start": "2026-11-12",
+   "end": "2026-11-12",
+   "maxDate": "2026-11-12"
+  },
+  "propKeys": [
+   "start",
+   "end",
+   "maxDate"
+  ]
+ },
+ "ButtonGroup": {
+  "props": {
+   "class": false,
+   "orientation": null
+  },
+  "propKeys": [
+   "class",
+   "orientation"
+  ]
+ },
+ "Input": {
+  "props": {
+   "modelValue": "",
+   "class": "h-7 w-[180px] pl-8 text-xs",
+   "defaultValue": null
+  },
+  "propKeys": [
+   "modelValue",
+   "class",
+   "defaultValue"
+  ]
+ },
+ "AgentSessionManualImportDialog": {
+  "props": {
+   "open": false,
+   "openModifiers": null
+  },
+  "propKeys": [
+   "open",
+   "openModifiers"
+  ]
+ },
+ "TimelineWordCloudDialog": {
+  "props": {
+   "records": {
+    "__arr": 0,
+    "sample": []
+   },
+   "rangeStart": "2026-11-12",
+   "rangeEnd": "2026-11-12",
+   "generateSignal": 0,
+   "open": false
+  },
+  "propKeys": [
+   "records",
+   "rangeStart",
+   "rangeEnd",
+   "generateSignal",
+   "open"
+  ]
+ },
+ "TimelineWordCloudChargeDialog": {
+  "props": {
+   "recordCount": 0,
+   "open": false
+  },
+  "propKeys": [
+   "recordCount",
+   "open"
+  ]
+ },
+ "HeatMapPage": {
+  "props": {
+   "refreshKey": 5,
+   "initialView": "range"
+  },
+  "propKeys": [
+   "refreshKey",
+   "initialView"
+  ]
+ },
+ "ToggleGroup": {
+  "props": {
+   "type": "single",
+   "variant": "outline",
+   "size": "sm",
+   "modelValue": "heatmap",
+   "rovingFocus": false,
+   "disabled": false
+  },
+  "propKeys": [
+   "type",
+   "variant",
+   "size",
+   "modelValue",
+   "rovingFocus",
+   "disabled",
+   "loop",
+   "asChild",
+   "required",
+   "class",
+   "spacing",
+   "orientation",
+   "dir",
+   "as",
+   "name",
+   "defaultValue"
+  ]
+ },
+ "ToggleGroupRoot": {
+  "props": {
+   "type": "single",
+   "modelValue": "heatmap",
+   "rovingFocus": true,
+   "disabled": false,
+   "loop": true,
+   "asChild": false
+  },
+  "propKeys": [
+   "type",
+   "modelValue",
+   "rovingFocus",
+   "disabled",
+   "loop",
+   "asChild",
+   "required",
+   "orientation",
+   "dir",
+   "as",
+   "name",
+   "defaultValue"
+  ]
+ },
+ "RovingFocusGroup": {
+  "props": {
+   "dir": "ltr",
+   "orientation": null,
+   "loop": true,
+   "preventScrollOnEntryFocus": false,
+   "asChild": true,
+   "currentTabStopId": null
+  },
+  "propKeys": [
+   "dir",
+   "orientation",
+   "loop",
+   "preventScrollOnEntryFocus",
+   "asChild",
+   "currentTabStopId",
+   "defaultCurrentTabStopId",
+   "as"
+  ]
+ },
+ "CollectionSlot": {
+  "props": {},
+  "propKeys": []
+ },
+ "ToggleGroupItem": {
+  "props": {
+   "value": "heatmap",
+   "disabled": false,
+   "asChild": false,
+   "class": "h-6 min-w-[70px] rounded-[6px] px-2 text-xs text-[#666] border-0 data-[state=on]:bg-white data-[state=on]:text-[#111] data-[state=on]:shadow-sm",
+   "as": null,
+   "variant": null
+  },
+  "propKeys": [
+   "value",
+   "disabled",
+   "asChild",
+   "class",
+   "as",
+   "variant",
+   "size"
+  ]
+ },
+ "RovingFocusItem": {
+  "props": {
+   "focusable": true,
+   "active": true,
+   "allowShiftKey": false,
+   "asChild": true,
+   "as": "span",
+   "tabStopId": null
+  },
+  "propKeys": [
+   "focusable",
+   "active",
+   "allowShiftKey",
+   "asChild",
+   "as",
+   "tabStopId"
+  ]
+ },
+ "Toggle": {
+  "props": {
+   "defaultValue": false,
+   "modelValue": true,
+   "disabled": false,
+   "asChild": false,
+   "as": "button",
+   "required": false
+  },
+  "propKeys": [
+   "defaultValue",
+   "modelValue",
+   "disabled",
+   "asChild",
+   "as",
+   "required",
+   "name"
+  ]
+ },
+ "HeatMapRangePicker": {
+  "props": {
+   "start": "2026-11-06",
+   "end": "2026-11-12"
+  },
+  "propKeys": [
+   "start",
+   "end"
+  ]
+ },
+ "HeatMapRangeRhythmPanel": {
+  "props": {
+   "summaries": {
+    "__arr": 7,
+    "sample": [
+     {
+      "date": "<deep>",
+      "overview": "<deep>",
+      "totalRecords": "<deep>",
+      "focusMinutes": "<deep>",
+      "topCategory": "<deep>",
+      "activePeriod": "<deep>"
+     },
+     {
+      "date": "<deep>",
+      "overview": "<deep>",
+      "totalRecords": "<deep>",
+      "focusMinutes": "<deep>",
+      "topCategory": "<deep>",
+      "activePeriod": "<deep>"
+     }
+    ]
+   }
+  },
+  "propKeys": [
+   "summaries"
+  ]
+ },
+ "AppUsagePage": {
+  "props": {
+   "refreshKey": 6
+  },
+  "propKeys": [
+   "refreshKey"
+  ]
+ },
+ "SankeyChart": {
+  "props": {
+   "sources": {
+    "__arr": 4,
+    "sample": [
+     {
+      "id": "<deep>",
+      "label": "<deep>",
+      "neutral": "<deep>"
+     },
+     {
+      "id": "<deep>",
+      "label": "<deep>",
+      "neutral": "<deep>"
+     }
+    ]
+   },
+   "targets": {
+    "__arr": 3,
+    "sample": [
+     {
+      "id": "<deep>",
+      "label": "<deep>",
+      "color": "<deep>"
+     },
+     {
+      "id": "<deep>",
+      "label": "<deep>",
+      "color": "<deep>"
+     }
+    ]
+   },
+   "links": {
+    "__arr": 2,
+    "sample": [
+     {
+      "source": "<deep>",
+      "target": "<deep>",
+      "value": "<deep>"
+     },
+     {
+      "source": "<deep>",
+      "target": "<deep>",
+      "value": "<deep>"
+     }
+    ]
+   },
+   "sourceTitle": "时段",
+   "targetTitle": "应用",
+   "formatValue": "<fn>"
+  },
+  "propKeys": [
+   "sources",
+   "targets",
+   "links",
+   "sourceTitle",
+   "targetTitle",
+   "formatValue",
+   "linkColorBy"
+  ]
+ },
+ "HistoryPage": {
+  "props": {
+   "refreshKey": 7
+  },
+  "propKeys": [
+   "refreshKey"
+  ]
+ },
+ "DropdownMenu": {
+  "props": {
+   "defaultOpen": false,
+   "open": false,
+   "modal": false,
+   "dir": null
+  },
+  "propKeys": [
+   "defaultOpen",
+   "open",
+   "modal",
+   "dir"
+  ]
+ },
+ "DropdownMenuRoot": {
+  "props": {
+   "defaultOpen": false,
+   "open": null,
+   "modal": false,
+   "dir": null
+  },
+  "propKeys": [
+   "defaultOpen",
+   "open",
+   "modal",
+   "dir"
+  ]
+ },
+ "MenuRoot": {
+  "props": {
+   "dir": "ltr",
+   "open": false,
+   "modal": false
+  },
+  "propKeys": [
+   "dir",
+   "open",
+   "modal"
+  ]
+ },
+ "DropdownMenuTrigger": {
+  "props": {
+   "disabled": false,
+   "asChild": true,
+   "as": null
+  },
+  "propKeys": [
+   "disabled",
+   "asChild",
+   "as"
+  ]
+ },
+ "MenuAnchor": {
+  "props": {
+   "asChild": true,
+   "reference": null,
+   "as": null
+  },
+  "propKeys": [
+   "asChild",
+   "reference",
+   "as"
+  ]
+ },
+ "DropdownMenuContent": {
+  "props": {
+   "forceMount": false,
+   "loop": false,
+   "sideOffset": 4,
+   "sideFlip": false,
+   "align": "end",
+   "alignFlip": false
+  },
+  "propKeys": [
+   "forceMount",
+   "loop",
+   "sideOffset",
+   "sideFlip",
+   "align",
+   "alignFlip",
+   "avoidCollisions",
+   "hideShiftedArrow",
+   "hideWhenDetached",
+   "disableUpdateOnLayoutShift",
+   "prioritizePosition",
+   "asChild",
+   "class",
+   "memoDependencies",
+   "side",
+   "alignOffset",
+   "collisionBoundary",
+   "collisionPadding",
+   "arrowPadding",
+   "sticky",
+   "positionStrategy",
+   "updatePositionStrategy",
+   "reference",
+   "as"
+  ]
+ },
+ "DropdownMenuPortal": {
+  "props": {
+   "disabled": false,
+   "defer": false,
+   "forceMount": false,
+   "to": null
+  },
+  "propKeys": [
+   "disabled",
+   "defer",
+   "forceMount",
+   "to"
+  ]
+ },
+ "MenuPortal": {
+  "props": {
+   "to": null,
+   "disabled": false,
+   "defer": false,
+   "forceMount": false
+  },
+  "propKeys": [
+   "to",
+   "disabled",
+   "defer",
+   "forceMount"
+  ]
+ },
+ "MenuContent": {
+  "props": {
+   "sideOffset": 4,
+   "align": "end",
+   "forceMount": false,
+   "loop": false,
+   "sideFlip": false,
+   "alignFlip": false
+  },
+  "propKeys": [
+   "sideOffset",
+   "align",
+   "forceMount",
+   "loop",
+   "sideFlip",
+   "alignFlip",
+   "avoidCollisions",
+   "hideShiftedArrow",
+   "hideWhenDetached",
+   "disableUpdateOnLayoutShift",
+   "prioritizePosition",
+   "asChild",
+   "memoDependencies",
+   "side",
+   "alignOffset",
+   "collisionBoundary",
+   "collisionPadding",
+   "arrowPadding",
+   "sticky",
+   "positionStrategy",
+   "updatePositionStrategy",
+   "reference",
+   "as"
+  ]
+ },
+ "ApiSettingsPage": {
+  "props": {},
+  "propKeys": []
+ },
+ "PrivacyPage": {
+  "props": {
+   "refreshKey": 9
+  },
+  "propKeys": [
+   "refreshKey"
+  ]
+ }
+}
