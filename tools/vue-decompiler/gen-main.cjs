@@ -144,6 +144,13 @@ T(ast, {
   ExpressionStatement(p) {
     if (!p.parentPath.isProgram()) return;
     if (inComp(p.node.start, p.node.end)) return;
+    // 排除 X.install = ...（原应用的全局组件注册；还原成 .vue 后不需要，
+    // 且它会在 shared.js 顶层立即执行，与组件形成循环依赖 → TDZ 错误）
+    const t2 = p.node.expression;
+    if (t2 && t2.type === 'AssignmentExpression' && t2.left.type === 'MemberExpression'
+        && !t2.left.computed && t2.left.property && t2.left.property.name === 'install') {
+      return;
+    }
     topUnits.push({ start: p.node.start, kind: 'expr', code: src.slice(p.node.start, p.node.end) });
   },
 });
@@ -185,7 +192,13 @@ T(ast, {
           : (t.isTemplateLiteral(v) && v.expressions.length === 0 ? v.quasis[0].value.cooked : null);
       }
     }
-    if (name) components.push({ name, start: arg.start, end: arg.end, objStart: arg.start, objEnd: arg.end });
+    if (name) {
+      // 组件定义之后可能紧跟 [[__scopeId, `data-v-xxx`]]
+      const tail = src.slice(p.node.end, Math.min(src.length, p.node.end + 220));
+      const sm = tail.match(/__scopeId`?\s*,\s*[`'"](data-v-[0-9a-f]{8})[`'"]/);
+      components.push({ name, start: arg.start, end: arg.end, objStart: arg.start, objEnd: arg.end,
+                        scopeId: sm ? sm[1] : null });
+    }
   },
 });
 
@@ -200,6 +213,48 @@ const baseIndex = {};
   }
 })(rendererRoot, '');
 
+// A6.5) 收集 CSS 里各 scopeId 的样式规则（用于恢复 scoped CSS）
+const cssByScope = new Map();   // scopeId -> 规则文本
+try {
+  const cssDir = path.join(rendererRoot, 'styles');
+  if (fs.existsSync(cssDir)) {
+    for (const f of fs.readdirSync(cssDir).filter(x => x.endsWith('.css'))) {
+      const css = fs.readFileSync(path.join(cssDir, f), 'utf8');
+      // 按 scopeId 切分：匹配 [data-v-xxx] 开头的规则块（含嵌套媒体查询时保守处理）
+      const re = /\[data-v-([0-9a-f]{8})\]([^{]*?)\{([^{}]*)\}/g;
+      let m;
+      while ((m = re.exec(css)) !== null) {
+        const id = 'data-v-' + m[1];
+        const rule = `[${id}]${m[2]}{${m[3]}}`;
+        if (!cssByScope.has(id)) cssByScope.set(id, []);
+        cssByScope.get(id).push(rule);
+      }
+    }
+  }
+} catch (e) { console.error('  CSS 提取失败:', String(e.message).slice(0, 50)); }
+console.error('CSS scopeId 数:', cssByScope.size, '| 规则总数:', [...cssByScope.values()].reduce((a, b) => a + b.length, 0));
+
+// A6.6) 收集所有 CSS 变量定义（组件的 scoped 规则依赖它们）
+const varDefs = new Map();   // varName -> 值
+try {
+  const cssFiles = [];
+  (function walkCss(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p2 = path.join(d, e.name);
+      if (e.isDirectory()) walkCss(p2);
+      else if (e.name.endsWith('.css')) cssFiles.push(p2);
+    }
+  })(rendererRoot);
+  for (const f of cssFiles) {
+    const css = fs.readFileSync(f, 'utf8');
+    // 匹配 --name: value;（宽松匹配值，直到分号或右括号）
+    for (const m of css.matchAll(/(--[\w-]+)\s*:\s*([^;{}]+);/g)) {
+      if (!varDefs.has(m[1])) varDefs.set(m[1], m[2].trim());
+    }
+  }
+} catch (e) { console.error('  变量提取失败:', String(e.message).slice(0, 50)); }
+console.error('CSS 变量:', varDefs.size);
+
 // A7) 统一导出清单（组件 import 与 shared export 共用，避免不一致）
 const exportSet = new Map();   // 原名 -> S_原名
 for (const n of localNames) if (n) exportSet.set(n, 'S_' + n);
@@ -211,6 +266,13 @@ for (const c of crossList) if (!exportSet.has(c.local)) exportSet.set(c.local, c
 fs.mkdirSync(outDir + '/src/components', { recursive: true });
 fs.mkdirSync(outDir + '/src/vendor', { recursive: true });
 fs.writeFileSync(outDir + '/src/vendor/_removed.js', 'export default {};\n');
+// 公共样式变量（组件 scoped 规则依赖）
+try {
+  fs.mkdirSync(outDir + '/src/styles', { recursive: true });
+  const varLines = [...varDefs.entries()].map(([k, v]) => `  ${k}: ${v};`).join('\n');
+  fs.writeFileSync(outDir + '/src/styles/variables.css',
+    `/* 从原应用 CSS 提取的自定义属性（${varDefs.size} 个）\n   还原组件的 scoped 规则依赖这些变量 */\n:root {\n${varLines}\n}\n`);
+} catch (e) {}
 
 // B1) 先写组件（shared.js 要 import 它们）
 // 两遍：Pass1 只算模板（确定哪些能生成），Pass2 再写 .vue（import 只引用成功生成的）
@@ -278,8 +340,20 @@ for (const [compName, tpl] of tplMap) {
     const idx = script.search(/^const /m);
     script = idx >= 0 ? script.slice(0, idx) + sharedImport + script.slice(idx) : script + sharedImport;
   }
+  // scoped CSS：恢复该组件的 [data-v-xxx] 规则（用普通 <style>，因为选择器已带前缀）
+  const compInfo = components.find(x => x.name === compName);
+  const sid = compInfo ? compInfo.scopeId : null;
+  const cssRules = sid && cssByScope.has(sid) ? cssByScope.get(sid) : null;
+  const styleBlock = cssRules && cssRules.length
+    ? `\n<style>\n/* 从原应用 CSS 恢复（${sid}） */\n${cssRules.join('\n')}\n</style>\n`
+    : '';
+  // 模板根元素加 scopeId 属性，让 [data-v-xxx] 选择器生效
+  let tpl2 = tpl;
+  if (sid) {
+    tpl2 = tpl.replace(/^<([a-z][\w-]*)/, `<$1 ${sid}`);
+  }
   fs.writeFileSync(`${outDir}/src/components/${compName}.vue`,
-    `<template>\n${tpl}\n</template>\n\n<script setup>\n${script}</script>\n`);
+    `<template>\n${tpl2}\n</template>\n\n<script setup>\n${script}</script>\n${styleBlock}`);
 }
 
 // B2) 生成 shared.js 的 body（AST 级改写，按原位置排序）

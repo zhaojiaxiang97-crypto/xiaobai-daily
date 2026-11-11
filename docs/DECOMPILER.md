@@ -111,6 +111,42 @@ tar xzf vue-components-v1.8.3.tar.gz && cd . && npm install && npm run dev
 
 已验证：下载后 `tar tzf` 通过、393 个组件齐全、`npm run build` 3.3s 通过。
 
+
+## scoped CSS 恢复
+
+原应用用 `_export_sfc(comp, [...])` 给组件挂了 scopeId（`data-v-xxx`），对应 CSS 里有
+**2844 处 `[data-v-xxx]` 规则**、**691 个 CSS 自定义属性**。
+
+生成器现在会：
+1. 从组件定义后紧跟的 `[[__scopeId, 'data-v-xxx']]` 提取 scopeId
+2. 按 scopeId 从原 CSS 提取对应规则（129 个 scopeId / 2489 条规则）
+3. 写进组件的 `<style>` 块，并给模板根元素加上 `data-v-xxx` 属性
+4. 另生成 `src/styles/variables.css`（665 个 CSS 变量），入口 import 即可
+
+**结果：392 个组件中 112 个带上了 scoped 样式。**
+
+实测（真实 Chrome）：
+
+```
+--admonition-border = hsl(0 0% 87%)   ← 变量正确加载
+styleTags = 18                         ← 组件 style 块已注入
+```
+
+### 关键修复：`.install` 语句导致 TDZ
+
+原应用在顶层做全局组件注册：
+
+```js
+c$.install = e => { e.component(c$.__name, c$); };
+```
+
+这行若保留在 `shared.js` 顶层，会与组件形成**循环依赖**
+（`shared.js` import 组件 → 组件 import `shared.js`），执行时 `c$` 尚未初始化
+→ `Cannot access 'c$' before initialization`。
+
+**修复**：排除所有 `X.install = ...` 语句（还原成 `.vue` 后不需要全局注册）。
+效果：组件 import 从 59 降到 32，循环依赖大幅减少。
+
 ## 验证方法
 
 ```bash
