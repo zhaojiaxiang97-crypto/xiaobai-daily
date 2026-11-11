@@ -65,7 +65,7 @@ T(ast, {
     if (sem !== 'defineComponent') return;
     const arg = init.arguments[0];
     if (!arg || !t.isObjectExpression(arg)) return;
-    let name = null, propsCode = '{}', setupParam = null, alias = null;
+    let name = null, propsCode = '{}', setupParam = null, alias = null, setupNode = null;
     for (const pr of arg.properties) {
       if (!t.isObjectProperty(pr)) continue;
       const k = t.isIdentifier(pr.key) ? pr.key.name : (t.isStringLiteral(pr.key) ? pr.key.value : null);
@@ -75,6 +75,7 @@ T(ast, {
       }
       if (k === 'props') propsCode = src.slice(pr.value.start, pr.value.end);
       if (k === 'setup' && (t.isFunctionExpression(pr.value) || t.isArrowFunctionExpression(pr.value))) {
+        setupNode = pr.value;
         const fp = pr.value.params[0];
         if (t.isIdentifier(fp)) setupParam = fp.name;
         const bodySrc = src.slice(pr.value.start, pr.value.end);
@@ -83,6 +84,11 @@ T(ast, {
       }
     }
     // 形态二：ObjectMethod setup(o) { ... }（Kbd 等用的是这种）
+    if (!setupNode) {
+      for (const pr of arg.properties) {
+        if (t.isObjectMethod(pr) && t.isIdentifier(pr.key, { name: 'setup' })) setupNode = pr;
+      }
+    }
     if (!setupParam) {
       for (const pr of arg.properties) {
         if (t.isObjectMethod(pr) && t.isIdentifier(pr.key, { name: 'setup' })) {
@@ -114,11 +120,100 @@ T(ast, {
           },
         });
       } catch (e) {}
-      comps.push({ name, propsCode, setupParam, alias, free: [...free], node: arg });
+      comps.push({ name, propsCode, setupParam, alias, free: [...free], node: arg, setupNode });
     }
   },
 });
 if (!comps.length) { console.error('no-component'); process.exit(0); }
+
+// ── setup 作用域的定义（模板里引用的 ref/computed/局部函数都在这里）──
+// 转换器只取了 setup 返回的 render 并转成模板，setup 体内其余定义会被丢弃；
+// 模板引用了它们 → 运行时 ReferenceError。这里按引用把它们抽出来内联。
+function collectSetupDefs(setupNode) {
+  const defs = new Map();
+  if (!setupNode) return defs;
+  const body = setupNode.body;
+  const stmts = t.isBlockStatement(body) ? body.body
+    : (t.isExpression(body) ? [] : []);
+  for (const st of stmts) {
+    if (t.isVariableDeclaration(st)) {
+      for (const d of st.declarations) {
+        if (!t.isIdentifier(d.id)) continue;
+        // 跳过解构出来的 t / locale 之类（模板用不到就自然不会被选中）
+        defs.set(d.id.name, {
+          code: src.slice(d.start, d.end),
+          start: d.start,
+          kind: st.kind,
+        });
+      }
+    } else if (t.isFunctionDeclaration(st) && st.id) {
+      defs.set(st.id.name, { code: src.slice(st.start, st.end), start: st.start, kind: 'function' });
+    }
+  }
+  return defs;
+}
+
+// 压缩代码常把局部函数塞进逗号表达式：
+//   return (e, t) => (function N() { ... }, createElementVNode(...))
+// 转换器只取最后一项当模板，前面的定义必须捞回来内联。
+function collectRenderLocals(setupNode) {
+  const defs = [];
+  if (!setupNode) return defs;
+  const body = setupNode.body;
+  const stmts = t.isBlockStatement(body) ? body.body : [];
+  const ret = stmts.find(x => t.isReturnStatement(x));
+  if (!ret || !ret.argument) return defs;
+  let node = ret.argument;
+  let seqNode = null;
+  if (t.isSequenceExpression(node)) seqNode = node;
+  else if (t.isArrowFunctionExpression(node) || t.isFunctionExpression(node)) {
+    if (t.isSequenceExpression(node.body)) seqNode = node.body;
+    else if (t.isBlockStatement(node.body)) {
+      // 函数体内也可能先定义再 return
+      for (const st of node.body.body) {
+        if (t.isFunctionDeclaration(st) && st.id) {
+          defs.push({ name: st.id.name, code: src.slice(st.start, st.end), start: st.start });
+        } else if (t.isVariableDeclaration(st)) {
+          for (const d of st.declarations) {
+            if (t.isIdentifier(d.id)) defs.push({ name: d.id.name, code: `${st.kind} ${src.slice(d.start, d.end)};`, start: d.start });
+          }
+        }
+      }
+    }
+  }
+  if (seqNode) {
+    for (const item of seqNode.expressions.slice(0, -1)) {
+      if (t.isFunctionExpression(item) && item.id) {
+        defs.push({ name: item.id.name, code: src.slice(item.start, item.end), start: item.start });
+      } else if (t.isAssignmentExpression(item) && t.isIdentifier(item.left)) {
+        defs.push({ name: item.left.name, code: `const ${src.slice(item.start, item.end)};`, start: item.start });
+      }
+    }
+  }
+  return defs;
+}
+
+// 从 setup 定义表里，按「模板引用的名字」递归收集（依赖用标识符粗筛）
+function collectSetupDeps(setupDefs, wanted, skip) {
+  const out = new Map();
+  const queue = [...wanted];
+  const seenN = new Set();
+  while (queue.length) {
+    const nm = queue.shift();
+    if (seenN.has(nm)) continue;
+    seenN.add(nm);
+    if (skip.has(nm)) continue;
+    const def = setupDefs.get(nm);
+    if (!def) continue;
+    out.set(nm, def);
+    for (const r of (def.code.match(/[A-Za-z_$][\w$]*/g) || [])) {
+      if (r === nm) continue;
+      if (seenN.has(r)) continue;
+      if (setupDefs.has(r)) queue.push(r);
+    }
+  }
+  return [...out.values()].sort((a, b) => a.start - b.start);
+}
 
 // ── 从 chunk 顶层抽出「文件级定义」，供组件内联 ──────────────────────────
 // 结构：name -> { code, start, refs[] }
@@ -285,6 +380,27 @@ for (const c of comps) {
     if (deps.length) {
       const code = deps.map(d => d.kind === 'function' ? d.code : `${d.kind} ${d.code};`).join('\n');
       script += `\n// ── 从原 chunk 内联的文件级定义（${deps.length} 项）──\n${code}\n`;
+    }
+  }
+  // 内联 setup 体内被模板引用、但转换器没保留的定义
+  {
+    const setupDefs = collectSetupDefs(c.setupNode);
+    for (const d of collectRenderLocals(c.setupNode)) {
+      if (!setupDefs.has(d.name)) setupDefs.set(d.name, { code: d.code, start: d.start, kind: 'raw' });
+    }
+    if (setupDefs.size) {
+      const tplIds = new Set(tpl2.match(/[A-Za-z_$][\w$]*/g) || []);
+      const skip = new Set([
+        ...Object.keys(imports),
+        c.setupParam, c.alias,
+        'defineProps', 'defineEmits', 'defineExpose', 'undefined', 'true', 'false', 'null',
+      ].filter(Boolean));
+      const wanted = [...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm));
+      const deps = collectSetupDeps(setupDefs, wanted, skip);
+      if (deps.length) {
+        const code = deps.map(d => d.kind === 'function' ? d.code : (d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`)).join('\n');
+        script += `\n// ── 从原 setup 内联的定义（${deps.length} 项）──\n${code}\n`;
+      }
     }
   }
   fs.writeFileSync(path.join(outDir, `${c.name}.vue`),
