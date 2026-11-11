@@ -404,13 +404,88 @@ for (const c of comps) {
     if (!new RegExp('(?<![\\w$])' + local + '(?![\\w$])').test(tpl2)) continue;
     renamed.set(local, '__' + local);
   }
-  let script = '';
-  if (vueDeps.length) script += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
+  // ═══ 方案 B：全程 AST 组装 ═══
+  // 先拼字符串、再回头加约束的做法（前几轮的坑）会把冲突检测做成一团正则。
+  // 这里把所有语句先建成 AST 节点，在同一个作用域里统一检测/改名，最后一次性 generate。
+  const G = require('@babel/generator').default;
+  const parseStmts = codeText => {
+    try { return P.parse(codeText, { sourceType: 'module' }).program.body; }
+    catch (e) { return []; }
+  };
+  const collectPat = (node, out) => {
+    if (!node) return;
+    if (t.isIdentifier(node)) { out.push(node.name); return; }
+    if (t.isObjectPattern(node)) {
+      for (const pr of node.properties) {
+        if (t.isObjectProperty(pr)) collectPat(pr.value, out);
+        else if (t.isRestElement(pr)) collectPat(pr.argument, out);
+      }
+      return;
+    }
+    if (t.isArrayPattern(node)) { for (const el of node.elements) collectPat(el, out); return; }
+    if (t.isAssignmentPattern(node)) { collectPat(node.left, out); return; }
+    if (t.isRestElement(node)) { collectPat(node.argument, out); return; }
+  };
+  // 一条语句声明的名字
+  const namesOfStmt = st => {
+    const out = [];
+    if (t.isVariableDeclaration(st)) for (const d of st.declarations) collectPat(d.id, out);
+    else if (t.isFunctionDeclaration(st) && st.id) out.push(st.id.name);
+    else if (t.isClassDeclaration(st) && st.id) out.push(st.id.name);
+    return out;
+  };
+  // 在单条语句内改名（AST 级，跳过属性 key / 成员访问）
+  const renameInStmt = (st, map) => {
+    if (!map.size) return;
+    const wrapper = t.file(t.program([st]));
+    T(wrapper, {
+      Identifier(ip) {
+        const nm = ip.node.name;
+        if (!map.has(nm)) return;
+        const par = ip.parentPath;
+        if (par.isObjectProperty() && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
+        if (par.isMemberExpression() && par.node.property === ip.node && !par.node.computed) return;
+        ip.node.name = map.get(nm);
+      },
+    });
+  };
+
+  const bodyStmts = [];
+  const used = new Set();
+  const tplRenames = new Map();   // 模板要同步改的名字
+  let counter = 0;
+  const uniqueName = base => {
+    let nn;
+    do { nn = base + '_' + (counter++); } while (used.has(nn));
+    return nn;
+  };
+  // 加入一条语句；与已用名冲突则改名（并把改名记到 tplRenames 供模板同步）
+  const pushStmt = st => {
+    const declared = namesOfStmt(st);
+    const local = new Map();
+    for (const nm of declared) {
+      if (used.has(nm)) {
+        const nn = uniqueName(nm);
+        local.set(nm, nn);
+        used.add(nn);
+        tplRenames.set(nm, nn);
+      } else {
+        used.add(nm);
+      }
+    }
+    if (local.size) renameInStmt(st, local);
+    bodyStmts.push(st);
+  };
+  const pushCode = codeText => {
+    for (const st of parseStmts(codeText)) pushStmt(st);
+  };
+
+  // ── imports（单独，放最前）──
+  let importBlock = '';
+  if (vueDeps.length) importBlock += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
   for (const [f2, specs] of Object.entries(byFrom)) {
-    // 重定向到已转换的组件 .vue（默认导出，同目录）
     if (f2.startsWith('__vue__')) {
-      const compName = f2.slice(7);
-      script += `import ${specs[0]} from './${compName}.vue';\n`;
+      importBlock += `import ${specs[0]} from './${f2.slice(7)}.vue';\n`;
       continue;
     }
     const fixed = specs.map(sp => {
@@ -419,18 +494,20 @@ for (const c of comps) {
       if (renamed.has(name)) return (m ? m[1] : sp) + ' as ' + renamed.get(name);
       return sp;
     });
-    script += `import { ${fixed.join(', ')} } from '${f2}';\n`;
+    importBlock += `import { ${fixed.join(', ')} } from '${f2}';\n`;
   }
-  // 同步替换模板里的引用
-  for (const [oldN, newN] of renamed) {
-    tpl2 = tpl2.replace(new RegExp('(?<![\\w$])' + oldN + '(?![\\w$])', 'g'), newN);
+  for (const [o, n] of renamed) {
+    tpl2 = tpl2.replace(new RegExp('(?<![\\w$.])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g'), n);
   }
+  // import 里绑定的名字算已占用（避免内联项同名）
+  for (const nm of Object.keys(imports)) used.add(nm);
+
+  // 同步模板引用（props 参数改名的情形）
   const usedNames = new Set((tpl2.match(/[A-Za-z_$][\w$]*/g) || []));
   const importLocals = new Set(Object.keys(imports).filter(k => !isRuntime(imports[k].from)));
   if (c.setupParam && (usedNames.has(c.setupParam) || (c.alias && usedNames.has(c.alias)))) {
     let paramName = c.setupParam;
     let aliasName = c.alias;
-    // 与 import 别名冲突 → 统一改名为 props / p
     if (importLocals.has(paramName) || importLocals.has(aliasName || '')) {
       const propBodyIds = new Set((c.propsCode.match(/[A-Za-z_$][\w$]*/g) || []));
       const replacement = (importLocals.has('props') || propBodyIds.has('props')) ? '__props' : 'props';
@@ -439,24 +516,20 @@ for (const c of comps) {
       aliasName = null;
       paramName = replacement;
     }
-    script += `const ${paramName} = defineProps(${c.propsCode});\n`;
-    if (aliasName && aliasName !== paramName) script += `const ${aliasName} = ${paramName};\n`;
+    pushCode(`const ${paramName} = defineProps(${c.propsCode});`);
+    if (aliasName && aliasName !== paramName) pushCode(`const ${aliasName} = ${paramName};`);
   }
-  // 内联自由变量：组件引用的 chunk 文件级辅助函数/常量必须随组件一起走，
-  // 否则切分后既不在组件内、也不在 import 里 → 运行时 ReferenceError。
+
+  // ── 文件级内联 ──
   {
     const importKeys = new Set(Object.keys(imports));
-    const others = new Set(
-      [...(c.free || [])].filter(nm => nm !== c.setupParam && nm !== c.alias)
-    );
-    const deps = resolveDeps(others, importKeys);
-    if (deps.length) {
-      const code = deps.map(d => d.kind === 'function' ? d.code : `${d.kind} ${d.code};`).join('\n');
-      script += `\n// ── 从原 chunk 内联的文件级定义（${deps.length} 项）──\n${code}\n`;
+    const others = new Set([...(c.free || [])].filter(nm => nm !== c.setupParam && nm !== c.alias));
+    for (const d of resolveDeps(others, importKeys)) {
+      pushCode(d.kind === 'function' ? d.code : `${d.kind} ${d.code};`);
     }
   }
-  // ── 内联 setup 函数体内被模板引用、但转换器没保留的定义 ──
-  // 冲突时重命名（同时改模板引用），而不是跳过 —— 否则运行时就是 ReferenceError。
+
+  // ── setup 内联 ──
   {
     const setupDefs = new Map();
     if (c.innerDefs) for (const [k, v] of c.innerDefs) setupDefs.set(k, { code: v.code, start: v.start, kind: 'raw' });
@@ -471,95 +544,26 @@ for (const c of comps) {
         'defineProps', 'defineEmits', 'defineExpose', 'undefined', 'true', 'false', 'null', 'Math', 'JSON',
       ].filter(Boolean));
       const wanted = [...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm));
-      // 同一条解构语句会被它内多个别名引用 → 按 code 去重，避免重复声明
       const seenCode = new Set();
-      const deps = collectSetupDeps(setupDefs, wanted, skip).filter(d => {
-        if (seenCode.has(d.code)) return false;
+      for (const d of collectSetupDeps(setupDefs, wanted, skip)) {
+        if (seenCode.has(d.code)) continue;
         seenCode.add(d.code);
-        return true;
-      });
-      if (deps.length) {
-        // ── 全部改用 AST：正则处理解构/嵌套作用域太容易漏 ——
-        // 提取模式（含解构）里的所有绑定名
-        const collectPat = (node, out) => {
-          if (!node) return;
-          if (t.isIdentifier(node)) { out.push(node.name); return; }
-          if (t.isObjectPattern(node)) {
-            for (const pr of node.properties) {
-              if (t.isObjectProperty(pr)) collectPat(pr.value, out);
-              else if (t.isRestElement(pr)) collectPat(pr.argument, out);
-            }
-            return;
-          }
-          if (t.isArrayPattern(node)) { for (const el of node.elements) collectPat(el, out); return; }
-          if (t.isAssignmentPattern(node)) { collectPat(node.left, out); return; }
-          if (t.isRestElement(node)) { collectPat(node.argument, out); return; }
-        };
-        // 一段代码里所有顶层声明的名字
-        const topNamesOf = codeText => {
-          const out = [];
-          try {
-            const a = P.parse(codeText, { sourceType: 'module' });
-            for (const st of a.program.body) {
-              if (t.isVariableDeclaration(st)) for (const d of st.declarations) collectPat(d.id, out);
-              else if (t.isFunctionDeclaration(st) && st.id) out.push(st.id.name);
-              else if (t.isClassDeclaration(st) && st.id) out.push(st.id.name);
-            }
-          } catch (e) {}
-          return out;
-        };
-        // AST 级改名：改所有引用与绑定，但跳过对象字面量的非计算属性 key
-        const renameInCode = (codeText, map) => {
-          if (!map.size) return codeText;
-          try {
-            const a = P.parse(codeText, { sourceType: 'module' });
-            T(a, {
-              Identifier(ip) {
-                const nm = ip.node.name;
-                if (!map.has(nm)) return;
-                const par = ip.parentPath;
-                if (par.isObjectProperty() && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
-                if (par.isMemberExpression() && par.node.property === ip.node && !par.node.computed) return;
-                ip.node.name = map.get(nm);
-              },
-            });
-            return G(a, { compact: false, jsescOption: { minimal: true } }).code;
-          } catch (e) { return codeText; }
-        };
-
-        // 已占用名字：script 里已有的顶层声明（AST 提取，含解构）
-        const occupied = new Set(topNamesOf(script));
-        // props 参数 / 别名一定是占用名
-        if (c.setupParam) occupied.add(c.setupParam);
-        if (c.alias) occupied.add(c.alias);
-
-        const renames = new Map();
-        let counter = 0;
-        for (const d of deps) {
-          for (const nm of topNamesOf(d.code)) {
-            if (occupied.has(nm) && !renames.has(nm)) {
-              let nn;
-              do { nn = '_inl' + (counter++); } while (occupied.has(nn));
-              renames.set(nm, nn);
-              occupied.add(nn);
-            } else if (!occupied.has(nm)) {
-              occupied.add(nm);
-            }
-          }
-        }
-        let code = deps.map(d => d.kind === 'function' ? d.code : (d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`)).join('\n');
-        if (renames.size) {
-          code = renameInCode(code, renames);
-          // 模板是字符串，按词边界改名（模板里不会有对象属性 key 的歧义）
-          for (const [o, n] of renames) {
-            const re = new RegExp('(?<![\\w$.])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g');
-            tpl2 = tpl2.replace(re, n);
-          }
-        }
-        if (code) script += `\n// ── 从原 setup 内联的定义（${deps.length} 项）──\n${code}\n`;
+        pushCode(d.kind === 'function' || d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`);
       }
     }
   }
+
+  // 模板同步改名（内联冲突时）
+  for (const [o, n] of tplRenames) {
+    tpl2 = tpl2.replace(new RegExp('(?<![\\w$.])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g'), n);
+  }
+
+  const bodyCode = bodyStmts.map(st => {
+    try { return G(st, { compact: false, jsescOption: { minimal: true } }).code; }
+    catch (e) { return ''; }
+  }).filter(Boolean).join('\n');
+  const script = importBlock + (bodyCode ? '\n' + bodyCode + '\n' : '');
+
   fs.writeFileSync(path.join(outDir, `${c.name}.vue`),
     `<template>\n${tpl2}\n</template>\n\n<script setup>\n${script}</script>\n`);
   made++;
