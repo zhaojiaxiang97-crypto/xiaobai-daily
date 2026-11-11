@@ -20,7 +20,10 @@ const SEM = new Set(['openBlock','createElementBlock','createElementVNode','crea
   'computed','watch','onMounted','onUnmounted','onBeforeMount','isArray','defineAsyncComponent','ref',
   'reactive','nextTick','inject','provide','h','toRef','toRefs','shallowRef','triggerRef']);
 
-const [,, file, outDir, convPath] = process.argv;
+const [,, file, outDir, convPath, mapPath] = process.argv;
+// 组件映射表： "相对路径::导出名" -> 组件名（用于跨 chunk import 重定向到 .vue）
+let COMP_MAP = {};
+if (mapPath) { try { COMP_MAP = JSON.parse(fs.readFileSync(mapPath, 'utf8')); } catch {} }
 // 源文件所在目录（ui/blocks/pages/chunks），用于拼 vendor 内路径
 const srcDirName = path.basename(path.dirname(file));
 const src = fs.readFileSync(file, 'utf8');
@@ -112,11 +115,26 @@ for (const c of comps) {
     if (isRuntime(info.from)) continue;
     if (!new RegExp('(?<![\\w$])' + local + '(?![\\w$])').test(tpl)) continue;
     const from = info.from;
+    // 查映射表：该 chunk 的这个导出是否已被转换成 .vue（是则重定向 import）
+    let redirected = null;
+    if (Object.keys(COMP_MAP).length && from.startsWith('.')) {
+      const rendererRoot = path.dirname(path.dirname(path.resolve(file)));
+      const targetAbs = path.resolve(path.dirname(path.resolve(file)), from);
+      const relToRoot = path.relative(rendererRoot, targetAbs).split(path.sep).join('/');
+      const key = relToRoot + '::' + info.imported;
+      if (COMP_MAP[key]) redirected = COMP_MAP[key];
+    }
     // 组件在 src/components/，vendor 在同级 src/vendor/ → 需要 ../
     const rel = from.startsWith('../')
       ? '../vendor/' + from.slice(3)                                   // ../chunks/x → ../vendor/chunks/x
       : `../vendor/${srcDirName}/` + from.replace(/^\.\//, '');      // ./x → ../vendor/ui/x
-    (byFrom[rel] = byFrom[rel] || []).push(info.imported === local ? local : `${info.imported} as ${local}`);
+    if (redirected) {
+      // → import Foo from './Foo.vue'（同目录）
+      byFrom[`__vue__${redirected}`] = byFrom[`__vue__${redirected}`] || [];
+      byFrom[`__vue__${redirected}`].push(local);
+    } else {
+      (byFrom[rel] = byFrom[rel] || []).push(info.imported === local ? local : `${info.imported} as ${local}`);
+    }
   }
   // 冲突检测：props 代码里已声明的标识符，不能与 import 别名重名
   const propIds = new Set((c.propsCode.match(/[A-Za-z_$][\w$]*/g) || []));
