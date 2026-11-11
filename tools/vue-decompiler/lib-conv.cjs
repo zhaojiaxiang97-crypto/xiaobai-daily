@@ -120,7 +120,29 @@ T(ast, {
           },
         });
       } catch (e) {}
-      comps.push({ name, propsCode, setupParam, alias, free: [...free], node: arg, setupNode });
+      // 组件子树内的所有声明（含 setup 内、render 内、逗号表达式内的局部函数）
+      // 用局部 traverse 精确限定范围，避免同名符号串台
+      const innerDefs = new Map();
+      try {
+        p.traverse({
+          VariableDeclarator(d) {
+            if (!t.isIdentifier(d.node.id) || !d.node.init) return;
+            const kind = d.parent && d.parent.kind ? d.parent.kind : 'var';
+            innerDefs.set(d.node.id.name, {
+              code: `${kind} ${src.slice(d.node.start, d.node.end)};`,
+              start: d.node.start,
+            });
+          },
+          FunctionDeclaration(f) {
+            if (!f.node.id) return;
+            innerDefs.set(f.node.id.name, {
+              code: src.slice(f.node.start, f.node.end),
+              start: f.node.start,
+            });
+          },
+        });
+      } catch (e) {}
+      comps.push({ name, propsCode, setupParam, alias, free: [...free], node: arg, setupNode, innerDefs });
     }
   },
 });
@@ -384,7 +406,11 @@ for (const c of comps) {
   }
   // 内联 setup 体内被模板引用、但转换器没保留的定义
   {
-    const setupDefs = collectSetupDefs(c.setupNode);
+    const setupDefs = new Map();
+    // 1) 优先：组件子树内的声明（最精确，已含正确的作用域）
+    if (c.innerDefs) for (const [k, v] of c.innerDefs) setupDefs.set(k, { code: v.code, start: v.start, kind: 'raw' });
+    // 2) 补充：setup 体顶层 + render 逗号表达式里的定义
+    for (const [k, v] of collectSetupDefs(c.setupNode)) if (!setupDefs.has(k)) setupDefs.set(k, v);
     for (const d of collectRenderLocals(c.setupNode)) {
       if (!setupDefs.has(d.name)) setupDefs.set(d.name, { code: d.code, start: d.start, kind: 'raw' });
     }
