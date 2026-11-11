@@ -124,21 +124,53 @@ T(ast, {
       // 用局部 traverse 精确限定范围，避免同名符号串台
       const innerDefs = new Map();
       try {
+        // 提取声明里的所有绑定名（普通标识符 + 解构模式里的别名）
+        // 解构是关键：`let { state: N } = useX()` 里的 N 会被模板引用，
+        // 只认 Identifier 的写法会整条跳过 → 运行时 ReferenceError。
+        const bindingNames = node => {
+          const out = [];
+          const walk = n => {
+            if (!n) return;
+            if (t.isIdentifier(n)) { out.push(n.name); return; }
+            if (t.isObjectPattern(n)) {
+              for (const pr of n.properties) {
+                if (t.isObjectProperty(pr)) walk(pr.value);       // {key: alias} → alias
+                else if (t.isRestElement(pr)) walk(pr.argument);
+              }
+              return;
+            }
+            if (t.isArrayPattern(n)) { for (const el of n.elements) walk(el); return; }
+            if (t.isAssignmentPattern(n)) { walk(n.left); return; }   // {a: x = 1} → x
+            if (t.isRestElement(n)) { walk(n.argument); return; }
+          };
+          walk(node);
+          return out;
+        };
+
         p.traverse({
-          VariableDeclarator(d) {
-            if (!t.isIdentifier(d.node.id) || !d.node.init) return;
-            const kind = d.parent && d.parent.kind ? d.parent.kind : 'var';
-            innerDefs.set(d.node.id.name, {
-              code: `${kind} ${src.slice(d.node.start, d.node.end)};`,
-              start: d.node.start,
-            });
+          VariableDeclaration(decl) {
+            // 按「整条声明语句」内联：解构的右侧依赖（如 O()）必须一起带上，
+            // 否则内联出来的只有一个空洞的别名。
+            const kind = decl.node.kind || 'var';
+            const stmtCode = `${kind} ${src.slice(decl.node.start, decl.node.end).replace(/^\s*(?:var|let|const)\s+/, '')}`;
+            const stmtEnd = stmtCode.endsWith(';') || stmtCode.endsWith('}') ? '' : ';';
+            const fullCode = stmtCode + stmtEnd;
+            for (const d of decl.node.declarations) {
+              for (const nm of bindingNames(d.id)) {
+                if (!innerDefs.has(nm)) {
+                  innerDefs.set(nm, { code: fullCode, start: decl.node.start });
+                }
+              }
+            }
           },
           FunctionDeclaration(f) {
             if (!f.node.id) return;
-            innerDefs.set(f.node.id.name, {
-              code: src.slice(f.node.start, f.node.end),
-              start: f.node.start,
-            });
+            if (!innerDefs.has(f.node.id.name)) {
+              innerDefs.set(f.node.id.name, {
+                code: src.slice(f.node.start, f.node.end),
+                start: f.node.start,
+              });
+            }
           },
         });
       } catch (e) {}
@@ -439,26 +471,51 @@ for (const c of comps) {
         'defineProps', 'defineEmits', 'defineExpose', 'undefined', 'true', 'false', 'null', 'Math', 'JSON',
       ].filter(Boolean));
       const wanted = [...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm));
-      const deps = collectSetupDeps(setupDefs, wanted, skip);
+      // 同一条解构语句会被它内多个别名引用 → 按 code 去重，避免重复声明
+      const seenCode = new Set();
+      const deps = collectSetupDeps(setupDefs, wanted, skip).filter(d => {
+        if (seenCode.has(d.code)) return false;
+        seenCode.add(d.code);
+        return true;
+      });
       if (deps.length) {
         // 已占用的名字（script 里已声明的 + 已重命名过的）
         const occupied = new Set(
           (script.match(/(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g) || [])
             .map(x => x.replace(/^(?:const|let|var|function)\s+/, '')));
-        const nameOf = code => (code.match(/^(?:const|let|var)\s+([A-Za-z_$][\w$]*)/) || [])[1]
-          || (code.match(/^function\s+([A-Za-z_$][\w$]*)/) || [])[1] || null;
+        // props 参数 / 别名一定是占用名（script 里已 `const X = defineProps(...)`）
+        if (c.setupParam) occupied.add(c.setupParam);
+        if (c.alias) occupied.add(c.alias);
+        // 提取一段代码里所有「声明出来的名字」：普通声明 + 解构里的别名
+        const declaredNames = code => {
+          const out = [];
+          // 普通：const/let/var x = ...
+          for (const m of code.matchAll(/(?:const|let|var)\s+([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
+          // 函数声明
+          for (const m of code.matchAll(/^function\s+([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
+          // 解构：const { a, b: c, ...rest } = ... / const [x, y] = ...
+          const dm = code.match(/^(?:const|let|var)\s*([\[{][\s\S]*?[\]}])\s*=/);
+          if (dm) {
+            const pat = dm[1];
+            // 对象模式里 `key: alias` 取 alias；简写 `{a}` 取 a；数组模式全取
+            for (const m of pat.matchAll(/(?:^|[,{\[])\s*[A-Za-z_$][\w$]*\s*:\s*([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
+            for (const m of pat.matchAll(/(?:^|[,{\[])\s*([A-Za-z_$][\w$]*)(?=\s*[,}\]])/g)) out.push(m[1]);
+            for (const m of pat.matchAll(/\.\.\.\s*([A-Za-z_$][\w$]*)/g)) out.push(m[1]);
+          }
+          return [...new Set(out)];
+        };
         const renames = new Map();
         let counter = 0;
         for (const d of deps) {
-          const nm = nameOf(d.code);
-          if (!nm) continue;
-          if (occupied.has(nm)) {
-            let nn;
-            do { nn = '_inl' + (counter++); } while (occupied.has(nn));
-            renames.set(nm, nn);
-            occupied.add(nn);
-          } else {
-            occupied.add(nm);
+          for (const nm of declaredNames(d.code)) {
+            if (occupied.has(nm) && !renames.has(nm)) {
+              let nn;
+              do { nn = '_inl' + (counter++); } while (occupied.has(nn));
+              renames.set(nm, nn);
+              occupied.add(nn);
+            } else if (!occupied.has(nm)) {
+              occupied.add(nm);
+            }
           }
         }
         let code = deps.map(d => d.kind === 'function' ? d.code : (d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`)).join('\n');
