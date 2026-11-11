@@ -473,7 +473,18 @@ for (const c of comps) {
         used.add(nm);
       }
     }
-    if (local.size) renameInStmt(st, local);
+    if (local.size) {
+      renameInStmt(st, local);
+      // 回溯：已 push 的语句里可能有对**旧名**的引用（它们指向本条语句的声明，
+      // 例如 render 副作用序列里先出现的 N()，而 N 的声明在后面才被内联）。
+      // 不改的话：声明变成 N_10、引用还是 N() → 运行时 "N is not defined"。
+      for (const prev of bodyStmts) {
+        // 只改「对外的引用」，不改别条语句自己的同名声明（否则会改坏它的局部绑定）
+        const own = new Set(namesOfStmt(prev));
+        const filtered = new Map([...local].filter(([k]) => !own.has(k)));
+        if (filtered.size) renameInStmt(prev, filtered);
+      }
+    }
     bodyStmts.push(st);
   };
   const pushCode = codeText => {
