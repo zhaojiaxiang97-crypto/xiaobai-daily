@@ -73,7 +73,17 @@ T(ast, {
         const v = pr.value;
         name = t.isStringLiteral(v) ? v.value : (t.isTemplateLiteral(v) && v.expressions.length === 0 ? v.quasis[0].value.cooked : null);
       }
-      if (k === 'props') propsCode = src.slice(pr.value.start, pr.value.end);
+      if (k === 'props') {
+        // props 值可能是 `SomeFn({...})` 这类包装调用（props 规范化工具）。
+        // Vue 要求 defineProps 的参数是对象字面量，且包装函数往往没被内联，
+        // 所以这里解包：取调用里的第一个对象参数。
+        let pv = pr.value;
+        if (t.isCallExpression(pv)) {
+          const objArg = pv.arguments.find(a => t.isObjectExpression(a));
+          if (objArg) pv = objArg;
+        }
+        propsCode = src.slice(pv.start, pv.end);
+      }
       if (k === 'setup' && (t.isFunctionExpression(pr.value) || t.isArrowFunctionExpression(pr.value))) {
         setupNode = pr.value;
         const fp = pr.value.params[0];
@@ -408,10 +418,10 @@ for (const c of comps) {
   // 先拼字符串、再回头加约束的做法（前几轮的坑）会把冲突检测做成一团正则。
   // 这里把所有语句先建成 AST 节点，在同一个作用域里统一检测/改名，最后一次性 generate。
   const G = require('@babel/generator').default;
-  const parseStmts = codeText => {
+  function parseStmts(codeText) {
     try { return P.parse(codeText, { sourceType: 'module' }).program.body; }
     catch (e) { return []; }
-  };
+  }
   const collectPat = (node, out) => {
     if (!node) return;
     if (t.isIdentifier(node)) { out.push(node.name); return; }
@@ -527,6 +537,22 @@ for (const c of comps) {
       aliasName = null;
       paramName = replacement;
     }
+    // Vue 会把 defineProps 提升到 setup 之外 —— 它的 default 值不能引用局部变量。
+    // 所以 propsCode 里引用到的定义必须**先于** defineProps push。
+    try {
+      const earlyDefs = new Map();
+      if (c.innerDefs) for (const [k, v] of c.innerDefs) earlyDefs.set(k, { code: v.code, start: v.start, kind: 'raw' });
+      for (const [k, v] of collectSetupDefs(c.setupNode)) if (!earlyDefs.has(k)) earlyDefs.set(k, v);
+      for (const d of collectRenderLocals(c.setupNode)) {
+        if (!earlyDefs.has(d.name)) earlyDefs.set(d.name, { code: d.code, start: d.start, kind: 'raw' });
+      }
+      for (const nm of freeIdsOf(c.propsCode || '')) {
+        const def = earlyDefs.get(nm);
+        if (!def) continue;
+        if (used.has(nm)) continue;
+        pushCode(def.kind === 'function' || def.kind === 'raw' ? def.code : `${def.kind} ${def.code};`);
+      }
+    } catch (e) {}
     pushCode(`const ${paramName} = defineProps(${c.propsCode});`);
     if (aliasName && aliasName !== paramName) pushCode(`const ${aliasName} = ${paramName};`);
   }
@@ -568,7 +594,7 @@ for (const c of comps) {
       // 否则运行时报 "X is not defined"（它们既不在模板里、也不在 import 里）。
       const seed = new Set([...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm)));
       // 用 AST 提取一段代码里引用到的标识符（比正则准）
-      const freeIdsOf = codeText => {
+      function freeIdsOf(codeText) {
         const out = new Set();
         let nodes = parseStmts(codeText);
         if (!nodes.length) {
@@ -602,7 +628,7 @@ for (const c of comps) {
           },
         });
         return out;
-      };
+      }
 
       const chosen = new Map();     // name -> def
       const seenCode = new Set();
