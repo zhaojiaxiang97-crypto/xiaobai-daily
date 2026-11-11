@@ -183,6 +183,25 @@ function conv(node) {
         if (/[{}]/.test(e2)) return `<span v-text="${e2.replace(/"/g, "'")}" />`;
         return `{{ ${e2} }}`;
       }
+      // resolveComponent(X, props) 出现在 children 里 → 模板中改为泛型组件
+      // 注意：resolveComponent 是 render 函数专用 API，模板里不存在，
+      // 原样搬进模板会导致运行时 "Cannot destructure property 'slots' of undefined"
+      if (t.isCallExpression(x) && t.isIdentifier(x.callee) && apiOf(x.callee.name) === 'resolveComponent') {
+        const target = x.arguments[0];
+        const propsArg = x.arguments[1];
+        const isName = target ? dyn(target) : 'undefined';
+        let attrs = '';
+        if (propsArg && t.isObjectExpression(propsArg)) {
+          for (const pr of propsArg.properties) {
+            if (!t.isObjectProperty(pr)) continue;
+            const k = t.isIdentifier(pr.key) ? pr.key.name : (t.isStringLiteral(pr.key) ? pr.key.value : null);
+            if (!k) continue;
+            const a = attrFor(k, pr.value);
+            if (a) attrs += ' ' + a;
+          }
+        }
+        return `<component :is="${isName}"${attrs} />`;
+      }
       if (t.isCallExpression(x) || t.isMemberExpression(x) || t.isIdentifier(x) || t.isLogicalExpression(x)
           || t.isConditionalExpression(x) || t.isBinaryExpression(x) || t.isTemplateLiteral(x)) {
         const e2 = dyn(x);
