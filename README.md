@@ -6,14 +6,21 @@
 ## 交付状态
 
 先读 **[docs/DELIVERY.md](docs/DELIVERY.md)** —— 应用可用性、源码可读性、
-575 个组件的可用性矩阵、工具链清单、已知限制，都在那一份里。
+575 个组件的可用性矩阵、工具链清单、已知限制。
+
+文档导航见 **[docs/INDEX.md](docs/INDEX.md)**（按「你要做什么」分组）。
 
 快速验证：`./tools/check.sh`（语法 → 构建 → 九页面内容断言，约 4 分钟）
 
+
 ## 文档
 
-- [docs/FILE-GUIDE.md](docs/FILE-GUIDE.md)——每个文件名（含哈希 chunk）的实际含义索引
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)——运行架构、模块依赖图、核心数据流、原始工程形态反推、asar 结构、改造点速查
+完整导航见 **[docs/INDEX.md](docs/INDEX.md)**。核心三份：
+
+- [DELIVERY.md](docs/DELIVERY.md) —— 交付清单（状态 / 能力 / 限制）
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) —— 三层架构、模块依赖图、数据流
+- [DECOMPILER.md](docs/DECOMPILER.md) —— 反编译器（393 个 .vue、94 个真实渲染）
+
 
 ## 改造内容
 
