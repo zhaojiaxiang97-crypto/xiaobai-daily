@@ -375,11 +375,46 @@ for (const c of comps) {
   }
   if (!tpl) continue;
 
+  // 组件源码里出现的所有名字（宽松集合，用切片 + 正则）
+  // 不用 p.traverse：在这个位置它对组件子树返回空集（实测 size=0）。
+  // import 决策本就是「宁可多收不可漏」，宽松正合适。
+  const compRefs = new Set();
+  const assignedInComp = new Set();   // 组件内被赋值的名字（不能当 import，否则 'Cannot assign to import'）
+  try {
+    const compText = src.slice(c.node.start, c.node.end);
+    for (const m of compText.matchAll(/(?<![\w$.])([A-Za-z_$][\w$]*)(?![\w$])/g)) compRefs.add(m[1]);
+    for (const m of compText.matchAll(/(?<![\w$.])([A-Za-z_$][\w$]*)\s*=(?![=>])/g)) assignedInComp.add(m[1]);
+    for (const m of compText.matchAll(/(?:\+\+|--)\s*([A-Za-z_$][\w$]*)|([A-Za-z_$][\w$]*)\s*(?:\+\+|--)/g)) {
+      if (m[1]) assignedInComp.add(m[1]);
+      if (m[2]) assignedInComp.add(m[2]);
+    }
+    for (const m of compText.matchAll(/([A-Za-z_$][\w$]*)\s*\+=|\/\*=|-\*=|= /g)) if (m[1]) assignedInComp.add(m[1]);
+  } catch (e) {}
   const vueDeps = [...SEM].filter(a => new RegExp('(?<![\\w$])' + a + '\\s*\\(').test(tpl));
+  // script 里用到的 Vue 运行时 API 别名（如 Barcode3D 的 A = computed）
+  // 这类名字的 import 来源是 vue-i18n.runtime，会被 isRuntime 跳过；
+  // 而 vueDeps 只扫模板，导致 script 里的用法没 import → "X is not defined"。
+  const runtimeAliasImports = [];
+  {
+    const seenLocal = new Set([...vueDeps]);
+    for (const [local, info] of Object.entries(imports)) {
+      if (!isRuntime(info.from)) continue;
+      if (!compRefs.has(local)) continue;
+      if (seenLocal.has(local)) continue;
+      const sem = VUE_API_MAP[info.imported] || (SEM.has(info.imported) ? info.imported : null);
+      if (!sem) continue;
+      seenLocal.add(local);
+      runtimeAliasImports.push(sem === local ? local : `${sem} as ${local}`);
+    }
+  }
+  // （compRefs 已在上面算好，用于 import 决策）
   const byFrom = {};
   for (const [local, info] of Object.entries(imports)) {
     if (isRuntime(info.from)) continue;
-    if (!new RegExp('(?<![\\w$])' + local + '(?![\\w$])').test(tpl)) continue;
+    const inTpl = new RegExp('(?<![\\w$])' + local + '(?![\\w$])').test(tpl);
+    if (!inTpl && !compRefs.has(local)) continue;
+    // 组件内被赋值的名字不能做成 import（rollup 会报 Cannot assign to import）
+    if (assignedInComp.has(local) && !inTpl) continue;
     const from = info.from;
     // 查映射表：该 chunk 的这个导出是否已被转换成 .vue（是则重定向 import）
     let redirected = null;
@@ -508,7 +543,10 @@ for (const c of comps) {
 
   // ── imports（单独，放最前）──
   let importBlock = '';
-  if (vueDeps.length) importBlock += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
+  {
+    const vueSpecs = [...new Set([...vueDeps, ...runtimeAliasImports])];
+    if (vueSpecs.length) importBlock += `import { ${vueSpecs.join(', ')} } from 'vue';\n`;
+  }
   for (const [f2, specs] of Object.entries(byFrom)) {
     if (f2.startsWith('__vue__')) {
       importBlock += `import ${specs[0]} from './${f2.slice(7)}.vue';\n`;
@@ -635,51 +673,45 @@ for (const c of comps) {
         return out;
       }
 
-      const chosen = new Map();     // name -> def
+      // ── 迭代收敛：generate → scan → refill → regenerate ──
+      // 一次性算种子不够：内联进来的语句自己会引用新名字，而那些名字不在模板里。
+      // 所以每 push 一批就重新扫一遍已生成内容，直到没有新的可解析未绑定名。
+      const chosen = new Map();
       const seenCode = new Set();
-      let frontier = new Set(seed);
+      const pushDef = def => {
+        if (seenCode.has(def.code)) return false;
+        seenCode.add(def.code);
+        pushCode(def.kind === 'function' || def.kind === 'raw' ? def.code : `${def.kind} ${def.code};`);
+        return true;
+      };
+      const bodyTextOf = () => bodyStmts.map(st => {
+        try { return G(st, { compact: true, jsescOption: { minimal: true } }).code; }
+        catch (e) { return ''; }
+      }).join('\n');
+
+      let frontier = new Set([...seed].filter(nm => !chosen.has(nm) && !skip.has(nm) && setupDefs.has(nm)));
       let guard = 0;
       while (frontier.size && guard++ < 8) {
-        const next = new Set();
+        // 1. 把 frontier 里的定义按源码顺序 push
+        const batch = [];
         for (const nm of frontier) {
           if (chosen.has(nm) || skip.has(nm)) continue;
           const def = setupDefs.get(nm);
           if (!def) continue;
           chosen.set(nm, def);
-          // 这条定义自己的引用 → 下一轮 frontier
-          for (const r of freeIdsOf(def.code)) {
-            if (!chosen.has(r) && !skip.has(r) && setupDefs.has(r)) next.add(r);
-          }
+          batch.push({ nm, def });
+        }
+        batch.sort((a, b) => (a.def.start || 0) - (b.def.start || 0));
+        for (const { def } of batch) pushDef(def);
+        // 2. 重新扫描已生成内容，找出新的可解析未绑定名
+        const bodyText = bodyTextOf();
+        if (!bodyText) break;
+        const next = new Set();
+        for (const nm of freeIdsOf(bodyText)) {
+          if (chosen.has(nm) || skip.has(nm)) continue;
+          if (setupDefs.has(nm)) next.add(nm);
         }
         frontier = next;
-      }
-      // ── 兜底扫描：对「已 push 的全部语句」做闭包收敛 ──
-      // 种子只来自模板，覆盖不到「render 副作用序列」这类被保留下来的代码。
-      // 这里扫整段已生成语句的自由标识符，把还没绑定、但在 setupDefs 里的名字补齐，
-      // 循环到集合不再增长（不动点）。
-      {
-        let prev = -1;
-        let g2 = 0;
-        while (chosen.size !== prev && g2++ < 8) {
-          prev = chosen.size;
-          const bodyText = bodyStmts.map(st => {
-            try { return G(st, { compact: true, jsescOption: { minimal: true } }).code; }
-            catch (e) { return ''; }
-          }).join('\n');
-          if (!bodyText) break;
-          for (const nm of freeIdsOf(bodyText)) {
-            if (chosen.has(nm) || skip.has(nm)) continue;
-            const def = setupDefs.get(nm);
-            if (def) chosen.set(nm, def);
-          }
-        }
-      }
-      // 按源码顺序输出并去重
-      const ordered = [...chosen.values()].sort((a, b) => (a.start || 0) - (b.start || 0));
-      for (const d of ordered) {
-        if (seenCode.has(d.code)) continue;
-        seenCode.add(d.code);
-        pushCode(d.kind === 'function' || d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`);
       }
     }
   }
