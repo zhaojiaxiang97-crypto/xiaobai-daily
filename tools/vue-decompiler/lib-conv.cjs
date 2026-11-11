@@ -423,6 +423,55 @@ for (const c of comps) {
       script += `\n// ── 从原 chunk 内联的文件级定义（${deps.length} 项）──\n${code}\n`;
     }
   }
+  // ── 内联 setup 函数体内被模板引用、但转换器没保留的定义 ──
+  // 冲突时重命名（同时改模板引用），而不是跳过 —— 否则运行时就是 ReferenceError。
+  {
+    const setupDefs = new Map();
+    if (c.innerDefs) for (const [k, v] of c.innerDefs) setupDefs.set(k, { code: v.code, start: v.start, kind: 'raw' });
+    for (const [k, v] of collectSetupDefs(c.setupNode)) if (!setupDefs.has(k)) setupDefs.set(k, v);
+    for (const d of collectRenderLocals(c.setupNode)) {
+      if (!setupDefs.has(d.name)) setupDefs.set(d.name, { code: d.code, start: d.start, kind: 'raw' });
+    }
+    if (setupDefs.size) {
+      const tplIds = new Set(tpl2.match(/[A-Za-z_$][\w$]*/g) || []);
+      const skip = new Set([
+        ...Object.keys(imports), c.setupParam, c.alias,
+        'defineProps', 'defineEmits', 'defineExpose', 'undefined', 'true', 'false', 'null', 'Math', 'JSON',
+      ].filter(Boolean));
+      const wanted = [...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm));
+      const deps = collectSetupDeps(setupDefs, wanted, skip);
+      if (deps.length) {
+        // 已占用的名字（script 里已声明的 + 已重命名过的）
+        const occupied = new Set(
+          (script.match(/(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g) || [])
+            .map(x => x.replace(/^(?:const|let|var|function)\s+/, '')));
+        const nameOf = code => (code.match(/^(?:const|let|var)\s+([A-Za-z_$][\w$]*)/) || [])[1]
+          || (code.match(/^function\s+([A-Za-z_$][\w$]*)/) || [])[1] || null;
+        const renames = new Map();
+        let counter = 0;
+        for (const d of deps) {
+          const nm = nameOf(d.code);
+          if (!nm) continue;
+          if (occupied.has(nm)) {
+            let nn;
+            do { nn = '_inl' + (counter++); } while (occupied.has(nn));
+            renames.set(nm, nn);
+            occupied.add(nn);
+          } else {
+            occupied.add(nm);
+          }
+        }
+        let code = deps.map(d => d.kind === 'function' ? d.code : (d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`)).join('\n');
+        // 先改定义里的名字，再改模板里的引用（按词边界，避免误伤）
+        for (const [o, n] of renames) {
+          const re = new RegExp('(?<![\\w$])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g');
+          code = code.replace(re, n);
+          tpl2 = tpl2.replace(re, n);
+        }
+        if (code) script += `\n// ── 从原 setup 内联的定义（${deps.length} 项）──\n${code}\n`;
+      }
+    }
+  }
   fs.writeFileSync(path.join(outDir, `${c.name}.vue`),
     `<template>\n${tpl2}\n</template>\n\n<script setup>\n${script}</script>\n`);
   made++;
