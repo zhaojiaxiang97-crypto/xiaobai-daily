@@ -96,10 +96,96 @@ T(ast, {
         }
       }
     }
-    if (name) comps.push({ name, propsCode, setupParam, alias });
+    if (name) {
+      // 自由变量分析：组件引用了、但既非 import 也非组件内部的标识符
+      // （通常是 chunk 文件级的辅助函数/常量；切分后必须一并带进组件）
+      const free = new Set();
+      try {
+        const fileAst = t.file(t.program([t.variableDeclaration('var', [
+          t.variableDeclarator(t.identifier('__c'), t.cloneNode(arg, true, true))
+        ])]));
+        T(fileAst, {
+          Identifier(ip) {
+            if (!ip.isReferencedIdentifier()) return;
+            const nm = ip.node.name;
+            if (nm === '__c') return;
+            if (ip.scope.hasBinding(nm)) return;
+            free.add(nm);
+          },
+        });
+      } catch (e) {}
+      comps.push({ name, propsCode, setupParam, alias, free: [...free], node: arg });
+    }
   },
 });
 if (!comps.length) { console.error('no-component'); process.exit(0); }
+
+// ── 从 chunk 顶层抽出「文件级定义」，供组件内联 ──────────────────────────
+// 结构：name -> { code, start, refs[] }
+const topDefs = new Map();
+T(ast, {
+  VariableDeclaration(p) {
+    if (!p.parentPath.isProgram()) return;
+    for (const d of p.node.declarations) {
+      if (!t.isIdentifier(d.id)) continue;
+      // 组件定义本身不进 topDefs（否则会被当作自由变量再内联一次）
+      if (d.init && t.isCallExpression(d.init) && t.isIdentifier(d.init.callee)) {
+        const cn = d.init.callee.name;
+        const cimp = imports[cn];
+        let csem = null;
+        if (cimp) csem = isRuntime(cimp.from)
+          ? (VUE_API_MAP[cimp.imported] || (SEM.has(cimp.imported) ? cimp.imported : null))
+          : (SEM.has(cimp.imported) ? cimp.imported : null);
+        if (csem === null && SEM.has(cn)) csem = cn;
+        if (csem === 'defineComponent') continue;
+      }
+      // 单条声明里可能多个 declarator，逐个抽（保持各自代码）
+      const code = src.slice(d.start, d.end);
+      const refs = new Set();
+      T(t.file(t.program([t.variableDeclaration(p.node.kind, [t.cloneNode(d, true, true)])])), {
+        Identifier(ip) {
+          if (!ip.isReferencedIdentifier()) return;
+          const nm = ip.node.name;
+          if (nm === d.id.name) return;
+          if (ip.scope.hasBinding(nm)) return;
+          refs.add(nm);
+        },
+      });
+      topDefs.set(d.id.name, { code, start: d.start, kind: p.node.kind, refs: [...refs] });
+    }
+  },
+  FunctionDeclaration(p) {
+    if (!p.parentPath.isProgram() || !p.node.id) return;
+    const refs = new Set();
+    T(t.file(t.program([t.cloneNode(p.node, true, true)])), {
+      Identifier(ip) {
+        if (!ip.isReferencedIdentifier()) return;
+        const nm = ip.node.name;
+        if (nm === p.node.id.name) return;
+        if (ip.scope.hasBinding(nm)) return;
+        refs.add(nm);
+      },
+    });
+    topDefs.set(p.node.id.name, { code: src.slice(p.node.start, p.node.end), start: p.node.start, kind: 'function', refs: [...refs] });
+  },
+});
+// 递归收集：给定自由变量集合，返回需要内联的定义（按源码顺序）
+function resolveDeps(freeNames, importKeys) {
+  const want = new Map();
+  const queue = [...freeNames];
+  const seenN = new Set();
+  while (queue.length) {
+    const nm = queue.shift();
+    if (seenN.has(nm)) continue;
+    seenN.add(nm);
+    if (importKeys.has(nm)) continue;          // 是 import，另行处理
+    const def = topDefs.get(nm);
+    if (!def) continue;                        // 未知（全局/浏览器 API）
+    want.set(nm, def);
+    for (const r of def.refs) if (!seenN.has(r)) queue.push(r);
+  }
+  return [...want.values()].sort((a, b) => a.start - b.start);
+}
 
 fs.mkdirSync(outDir, { recursive: true });
 let made = 0;
@@ -187,6 +273,19 @@ for (const c of comps) {
     }
     script += `const ${paramName} = defineProps(${c.propsCode});\n`;
     if (aliasName && aliasName !== paramName) script += `const ${aliasName} = ${paramName};\n`;
+  }
+  // 内联自由变量：组件引用的 chunk 文件级辅助函数/常量必须随组件一起走，
+  // 否则切分后既不在组件内、也不在 import 里 → 运行时 ReferenceError。
+  {
+    const importKeys = new Set(Object.keys(imports));
+    const others = new Set(
+      [...(c.free || [])].filter(nm => nm !== c.setupParam && nm !== c.alias)
+    );
+    const deps = resolveDeps(others, importKeys);
+    if (deps.length) {
+      const code = deps.map(d => d.kind === 'function' ? d.code : `${d.kind} ${d.code};`).join('\n');
+      script += `\n// ── 从原 chunk 内联的文件级定义（${deps.length} 项）──\n${code}\n`;
+    }
   }
   fs.writeFileSync(path.join(outDir, `${c.name}.vue`),
     `<template>\n${tpl2}\n</template>\n\n<script setup>\n${script}</script>\n`);
