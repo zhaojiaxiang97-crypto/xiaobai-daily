@@ -9,9 +9,9 @@
 | 项 | 数值 |
 |---|---|
 | 组件总数 | 575（main bundle 418 + 独立 chunk 160，重名 3） |
-| 已切分并生成 `.vue` | **393**（main bundle）+ **122**（独立 chunk，99%） |
-| 可编译 | main bundle 393/393、独立 chunk 122/123 |
-| **真实浏览器渲染成功** | **94 / 393（24%）**，独立 chunk 的 Kbd 也已验证 |
+| 已切分并生成 `.vue` | **392**（main bundle）+ **145**（独立 chunk） |
+| 可编译 | main bundle 392/392、独立 chunk 145/145 |
+| **真实浏览器渲染成功** | **109 / 392**，独立 chunk 10 / 145（见 [VENDOR.md](VENDOR.md)） |
 | 未定义符号 | **0**（从 63 收敛到 0） |
 | `vite build` | ✅ 通过 |
 
@@ -22,7 +22,7 @@
 | 位置 | 组件数 | 结论 |
 |---|---|---|
 | **独立 chunk**（`ui/` `blocks/` `pages/`，43 个文件） | 160 | ✅ 天然模块化（一文件一模块、真实 import 关系），**122/123 还原为可编译 .vue** |
-| **main bundle**（`renderer/chunks/main.js`，5.2MB） | 418 | ✅ 也能做 —— 393 个 .vue、依赖归零、构建通过、94 个真实渲染 |
+| **main bundle**（`renderer/chunks/main.js`，5.2MB） | 418 | ✅ 也能做 —— 392 个 .vue、依赖归零、构建通过、109 个真实渲染 |
 
 > 早期曾误判"main bundle 模块边界已抹除 → 不可恢复"。**这个结论是错的**：
 > 组件边界由 `defineComponent({__name})` 直接给出，458 个组件 vs 9229 个普通声明，

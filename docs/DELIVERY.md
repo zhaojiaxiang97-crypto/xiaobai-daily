@@ -75,7 +75,11 @@ gh release download v1.8.3 -R zhaojiaxiang97-crypto/xiaobai-daily \
 tar xzf vue-components-v1.8.3.tar.gz && npm install && npm run dev
 ```
 
-393 个 `.vue` + `shared.js` + vendor 副本，`npm run build` 已验证 3.3s 通过。
+内含 **两批组件**（分开目录，避免同名冲突）：
+- `src/components/` —— **392 个**（main bundle）
+- `src/vendor-components/` —— **145 个**（vendor 独立 chunk）
+
+外加 `shared.js`、`src/vendor/` 副本。**537 个组件全量 import 已验证、`vite build` 1.5s 通过。**
 
 ### 组件可用性
 
@@ -126,7 +130,7 @@ tar xzf vue-components-v1.8.3.tar.gz && npm install && npm run dev
 
 | 工具 | 用途 |
 |---|---|
-| `gen-main.cjs` | **主生成器**：main bundle → 393 个 .vue + shared.js |
+| `gen-main.cjs` | **主生成器**：main bundle → 392 个 .vue + shared.js |
 | `lib-conv.cjs` | 独立 chunk → 可运行 .vue（99%） |
 | `convert-component.cjs` | render 函数 → template |
 | `registry.cjs` | 组件注册表（341 项） |
