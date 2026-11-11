@@ -148,6 +148,18 @@ T(ast, {
 });
 if (!comps.length) { console.error('no-component'); process.exit(0); }
 
+// 原文件的全部 import 源码（必须随临时文件一起喂给转换器）
+// 否则 convert-component 的 API 表为空，只能靠全局 VUE_API_MAP 兜底 ——
+// 而全局表是对 main bundle 探测的，不同 chunk 的短名含义不同：
+//   本 chunk 里 x = import b = createBlock，但 VUE_API_MAP['x'] = createCommentVNode
+//   → 被当作注释节点丢弃 → 整个 render 变空模板。
+const importSrc = [];
+T(ast, {
+  ImportDeclaration(p) {
+    if (p.parentPath.isProgram()) importSrc.push(src.slice(p.node.start, p.node.end));
+  },
+});
+
 // ── setup 作用域的定义（模板里引用的 ref/computed/局部函数都在这里）──
 // 转换器只取了 setup 返回的 render 并转成模板，setup 体内其余定义会被丢弃；
 // 模板引用了它们 → 运行时 ReferenceError。这里按引用把它们抽出来内联。
@@ -308,10 +320,17 @@ fs.mkdirSync(outDir, { recursive: true });
 let made = 0;
 for (const c of comps) {
   // 用成熟转换器拿 template
+  // 只转该组件，但把原文件的 import 一起带上（API 表靠它建立）
   let tpl = '';
-  try {
-    tpl = execFileSync('node', [convPath, file], { encoding: 'utf8', env: process.env }).trim();
-  } catch (e) { }
+  {
+    const tmpFile = path.join('/tmp', '_lc_' + c.name.replace(/[^\w]/g, '_') + '.js');
+    try {
+      fs.writeFileSync(tmpFile,
+        importSrc.join('\n') + '\nvar __c = ' + src.slice(c.node.start, c.node.end) + ';\nexport default {};\n');
+      tpl = execFileSync('node', [convPath, tmpFile], { encoding: 'utf8', env: process.env }).trim();
+    } catch (e) { }
+    try { fs.unlinkSync(tmpFile); } catch (e) { }
+  }
   if (!tpl) continue;
 
   const vueDeps = [...SEM].filter(a => new RegExp('(?<![\\w$])' + a + '\\s*\\(').test(tpl));
@@ -402,31 +421,6 @@ for (const c of comps) {
     if (deps.length) {
       const code = deps.map(d => d.kind === 'function' ? d.code : `${d.kind} ${d.code};`).join('\n');
       script += `\n// ── 从原 chunk 内联的文件级定义（${deps.length} 项）──\n${code}\n`;
-    }
-  }
-  // 内联 setup 体内被模板引用、但转换器没保留的定义
-  {
-    const setupDefs = new Map();
-    // 1) 优先：组件子树内的声明（最精确，已含正确的作用域）
-    if (c.innerDefs) for (const [k, v] of c.innerDefs) setupDefs.set(k, { code: v.code, start: v.start, kind: 'raw' });
-    // 2) 补充：setup 体顶层 + render 逗号表达式里的定义
-    for (const [k, v] of collectSetupDefs(c.setupNode)) if (!setupDefs.has(k)) setupDefs.set(k, v);
-    for (const d of collectRenderLocals(c.setupNode)) {
-      if (!setupDefs.has(d.name)) setupDefs.set(d.name, { code: d.code, start: d.start, kind: 'raw' });
-    }
-    if (setupDefs.size) {
-      const tplIds = new Set(tpl2.match(/[A-Za-z_$][\w$]*/g) || []);
-      const skip = new Set([
-        ...Object.keys(imports),
-        c.setupParam, c.alias,
-        'defineProps', 'defineEmits', 'defineExpose', 'undefined', 'true', 'false', 'null',
-      ].filter(Boolean));
-      const wanted = [...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm));
-      const deps = collectSetupDeps(setupDefs, wanted, skip);
-      if (deps.length) {
-        const code = deps.map(d => d.kind === 'function' ? d.code : (d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`)).join('\n');
-        script += `\n// ── 从原 setup 内联的定义（${deps.length} 项）──\n${code}\n`;
-      }
     }
   }
   fs.writeFileSync(path.join(outDir, `${c.name}.vue`),
