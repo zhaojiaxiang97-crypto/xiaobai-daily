@@ -97,7 +97,14 @@ function classExpr(n) {
 }
 function attrFor(k, v) {
   if (k === 'key' || k === 'ref_key' || k === 'ref_for') return null;
-  if (/^on[A-Z]/.test(k)) return `@${k.slice(2).toLowerCase()}="${dyn(v)}"`;
+  if (/^on[A-Z]/.test(k)) {
+    // Vue 编译器会把事件处理器缓存在 renderCache 里：X[i] ||= fn 或 [X[i]||=fn, other]
+    // 这些形式在模板里不成立，需要取出真实函数
+    let node = v;
+    if (t.isArrayExpression(node) && node.elements.length) node = node.elements[0];
+    if (t.isAssignmentExpression(node) && node.operator === '||=') node = node.right;
+    return `@${k.slice(2).toLowerCase()}="${dyn(node)}"`;
+  }
   if (k === 'class') return `:class="${classExpr(v)}"`;
   if (k === 'style') return `:style="${dyn(v)}"`;
   if (k === 'innerHTML') return `v-html="${dyn(v)}"`;
