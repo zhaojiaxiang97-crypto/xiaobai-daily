@@ -152,7 +152,10 @@ function conv(node) {
   if (api === 'createCommentVNode') return '';
   const args = node.arguments;
   if (['createElementVNode','createElementBlock','createBlock','createVNode'].includes(api)) {
-    const tagN = args[0];
+    // 独立 chunk 里组件渲染常写成 createBlock(unref(Comp), ...)，
+    // 必须先去掉 unref 包装，否则 tagN 是 CallExpression → strVal 返回 null
+    // → 误判成"无法识别的动态组件" → 返回空模板。
+    const tagN = unwrap(args[0]);
     const tag = tagN ? strVal(tagN) : null;
     if (!tag) {
       // 动态组件 / Fragment
@@ -275,7 +278,17 @@ function conv(node) {
 let best = '';
 T(ast, {
   ArrowFunctionExpression(p) {
-    const b = seq(p.node.body);
+    // render 有两种写法：
+    //   (e, t) => createBlock(...)                    ← body 直接是调用
+    //   (e, t) => { return w(), createBlock(...) }     ← body 是块，内含 return
+    // 以前只处理第一种，独立 chunk 里大量组件用第二种 → 模板为空。
+    let raw = p.node.body;
+    if (t.isBlockStatement(raw)) {
+      const ret = raw.body.find(x => t.isReturnStatement(x) && x.argument);
+      if (!ret) return;
+      raw = ret.argument;
+    }
+    const b = seq(raw);
     if (!t.isCallExpression(b)) return;
     const fn = t.isIdentifier(b.callee) ? b.callee.name : null;
     const api = fn ? apiOf(fn) : null;
