@@ -539,13 +539,61 @@ for (const c of comps) {
     }
     if (setupDefs.size) {
       const tplIds = new Set(tpl2.match(/[A-Za-z_$][\w$]*/g) || []);
+      // skip 只能放「实际会生成 import 的名字」——用 byFrom 而不是 Object.keys(imports)。
+      // 否则：某符号是 import 的、但模板没用到（不会生成 import），
+      // 却因为被 skip 挡住而不参与内联 → 悬空引用。
+      const actuallyImported = new Set();
+      for (const specs of Object.values(byFrom)) {
+        for (const sp of specs) {
+          const m = sp.match(/\s+as\s+([A-Za-z_$][\w$]*)$/);
+          actuallyImported.add(m ? m[1] : sp);
+        }
+      }
       const skip = new Set([
-        ...Object.keys(imports), c.setupParam, c.alias,
+        ...actuallyImported, c.setupParam, c.alias,
         'defineProps', 'defineEmits', 'defineExpose', 'undefined', 'true', 'false', 'null', 'Math', 'JSON',
       ].filter(Boolean));
-      const wanted = [...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm));
+      // 迭代到不动点：模板直接引用的只是种子；内联代码新引用的符号也必须继续带出，
+      // 否则运行时报 "X is not defined"（它们既不在模板里、也不在 import 里）。
+      const seed = new Set([...tplIds].filter(nm => setupDefs.has(nm) && !skip.has(nm)));
+      // 用 AST 提取一段代码里引用到的标识符（比正则准）
+      const freeIdsOf = codeText => {
+        const out = new Set();
+        const nodes = parseStmts(codeText);
+        if (!nodes.length) return out;
+        const wrapper = t.file(t.program(nodes.map(nd => t.cloneNode(nd, true, true))));
+        T(wrapper, {
+          Identifier(ip) {
+            if (!ip.isReferencedIdentifier()) return;
+            const nm = ip.node.name;
+            if (ip.scope.hasBinding(nm)) return;
+            out.add(nm);
+          },
+        });
+        return out;
+      };
+
+      const chosen = new Map();     // name -> def
       const seenCode = new Set();
-      for (const d of collectSetupDeps(setupDefs, wanted, skip)) {
+      let frontier = new Set(seed);
+      let guard = 0;
+      while (frontier.size && guard++ < 8) {
+        const next = new Set();
+        for (const nm of frontier) {
+          if (chosen.has(nm) || skip.has(nm)) continue;
+          const def = setupDefs.get(nm);
+          if (!def) continue;
+          chosen.set(nm, def);
+          // 这条定义自己的引用 → 下一轮 frontier
+          for (const r of freeIdsOf(def.code)) {
+            if (!chosen.has(r) && !skip.has(r) && setupDefs.has(r)) next.add(r);
+          }
+        }
+        frontier = next;
+      }
+      // 按源码顺序输出并去重
+      const ordered = [...chosen.values()].sort((a, b) => (a.start || 0) - (b.start || 0));
+      for (const d of ordered) {
         if (seenCode.has(d.code)) continue;
         seenCode.add(d.code);
         pushCode(d.kind === 'function' || d.kind === 'raw' ? d.code : `${d.kind} ${d.code};`);
