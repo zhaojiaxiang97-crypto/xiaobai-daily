@@ -77,7 +77,8 @@ function exprText(node) {
 function dyn(n) {
   if (!n) return '';
   try {
-    const rewritten = rewriteExpr(unwrap(n));
+    const cleaned = stripCommentVNodes(unwrap(n));
+    const rewritten = rewriteExpr(cleaned);
     const code = G(t.expressionStatement(rewritten), { compact: true, jsescOption: { minimal: true } }).code.replace(/;$/, '');
     return code.replace(/"/g, "'");
   } catch { return exprText(unwrap(n)); }
@@ -113,6 +114,31 @@ function attrFor(k, v) {
   return `:${k}="${dyn(v)}"`;
 }
 function seq(n) { return t.isSequenceExpression(n) ? n.expressions[n.expressions.length - 1] : n; }
+// createCommentVNode('', true) 是 render 里的"注释/空节点"，模板里没有对应物。
+// 它常出现在三元表达式的 else 分支（cond ? <内容> : 注释节点），
+// 直接搬进模板会引用未绑定的 render API（如 N('.vue 里报 N is not defined）。
+function stripCommentVNodes(node, depth = 0) {
+  if (!node || depth > 12) return node;
+  if (t.isCallExpression(node) && t.isIdentifier(node.callee) && apiOf(node.callee.name) === 'createCommentVNode') {
+    return t.identifier('undefined');
+  }
+  if (t.isConditionalExpression(node)) {
+    return t.conditionalExpression(
+      stripCommentVNodes(node.test, depth + 1),
+      stripCommentVNodes(node.consequent, depth + 1),
+      stripCommentVNodes(node.alternate, depth + 1));
+  }
+  if (t.isLogicalExpression(node)) {
+    return t.logicalExpression(node.operator,
+      stripCommentVNodes(node.left, depth + 1),
+      stripCommentVNodes(node.right, depth + 1));
+  }
+  if (t.isSequenceExpression(node)) {
+    const ex = node.expressions.map(x => stripCommentVNodes(x, depth + 1));
+    return t.sequenceExpression(ex);
+  }
+  return node;
+}
 function conv(node) {
   if (!node) return '';
   if (t.isSequenceExpression(node)) return conv(node.expressions[node.expressions.length - 1]);
@@ -123,6 +149,7 @@ function conv(node) {
   if (!t.isCallExpression(node)) return '';
   const fn = t.isIdentifier(node.callee) ? node.callee.name : null;
   const api = fn ? apiOf(fn) : null;
+  if (api === 'createCommentVNode') return '';
   const args = node.arguments;
   if (['createElementVNode','createElementBlock','createBlock','createVNode'].includes(api)) {
     const tagN = args[0];
