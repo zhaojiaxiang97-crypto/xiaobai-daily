@@ -1,0 +1,703 @@
+{
+ "AlertDialogMedia::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "CodeBlockNode::default": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Collection::n": {
+  "type": "object{width,height}",
+  "arity": 1
+ },
+ "Collection::r": {
+  "type": "use-context:ConfigProviderContext",
+  "suggested": "useConfigProviderContext",
+  "arity": 1
+ },
+ "Collection::t": {
+  "type": "useCollection",
+  "arity": 0
+ },
+ "DialogTitle::a": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DialogTitle::i": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DialogTitle::n": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DialogTitle::o": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DialogTitle::r": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DialogTitle::s": {
+  "type": "use-context:DialogRootContext",
+  "suggested": "useDialogRootContext",
+  "arity": 1
+ },
+ "DialogTitle::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuItem::n": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "DropdownMenuItem::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::a": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::c": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::i": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::l": {
+  "type": "unknown",
+  "arity": 3
+ },
+ "DropdownMenuTrigger::n": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::o": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::r": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::s": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "DropdownMenuTrigger::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Kbd::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopoverTrigger::A": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "PopoverTrigger::C": {
+  "type": "hook-needs-context",
+  "arity": 1
+ },
+ "PopoverTrigger::D": {
+  "type": "string:Asia/Shanghai",
+  "arity": 0
+ },
+ "PopoverTrigger::E": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "PopoverTrigger::O": {
+  "type": "object{calendar,era,year,month}",
+  "arity": 1
+ },
+ "PopoverTrigger::S": {
+  "type": "hook-needs-context",
+  "arity": 1
+ },
+ "PopoverTrigger::T": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "PopoverTrigger::_": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "PopoverTrigger::a": {
+  "type": "hook-needs-context",
+  "arity": 1
+ },
+ "PopoverTrigger::b": {
+  "type": "hook-needs-context",
+  "arity": 1
+ },
+ "PopoverTrigger::c": {
+  "type": "object{ALT,ARROW_DOWN,ARROW_LEFT,ARROW_RIGHT}",
+  "arity": 0
+ },
+ "PopoverTrigger::d": {
+  "type": "throws:Cannot destructure property 's",
+  "arity": 1
+ },
+ "PopoverTrigger::f": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "PopoverTrigger::g": {
+  "type": "throws:Cannot destructure property 'd",
+  "arity": 1
+ },
+ "PopoverTrigger::h": {
+  "type": "boolean:true",
+  "arity": 5
+ },
+ "PopoverTrigger::i": {
+  "type": "use-context:PopoverRootContext",
+  "suggested": "usePopoverRootContext",
+  "arity": 1
+ },
+ "PopoverTrigger::k": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "PopoverTrigger::l": {
+  "type": "object{setLocale,getLocale,fullMonth,fullYear}",
+  "arity": 1
+ },
+ "PopoverTrigger::m": {
+  "type": "hook-needs-context",
+  "arity": 1
+ },
+ "PopoverTrigger::n": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopoverTrigger::o": {
+  "type": "object{isDateSelected,isInvalid,hasSelectedDate,isSelectedDateDisabled}",
+  "arity": 1
+ },
+ "PopoverTrigger::p": {
+  "type": "throws:First argument to Intl.Locale ",
+  "arity": 1
+ },
+ "PopoverTrigger::r": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopoverTrigger::s": {
+  "type": "use-context:ConfigProviderContext",
+  "suggested": "useConfigProviderContext",
+  "arity": 1
+ },
+ "PopoverTrigger::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopoverTrigger::u": {
+  "type": "throws:Cannot destructure property 'd",
+  "arity": 1
+ },
+ "PopoverTrigger::v": {
+  "type": "hook-needs-context",
+  "arity": 3
+ },
+ "PopoverTrigger::w": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "PopoverTrigger::x": {
+  "type": "throws:Class constructor e cannot be ",
+  "arity": 0
+ },
+ "PopoverTrigger::y": {
+  "type": "hook-needs-context",
+  "arity": 3
+ },
+ "PopperContent::a": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopperContent::i": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopperContent::n": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "PopperContent::o": {
+  "type": "undefined:undefined",
+  "arity": 0
+ },
+ "PopperContent::r": {
+  "type": "use-context:PopperContentContext",
+  "suggested": "usePopperContentContext",
+  "arity": 1
+ },
+ "PopperContent::s": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "PopperContent::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "RovingFocusGroup::a": {
+  "type": "hook-needs-context",
+  "arity": 2
+ },
+ "RovingFocusGroup::i": {
+  "type": "hook-needs-context",
+  "arity": 3
+ },
+ "RovingFocusGroup::n": {
+  "type": "use-context:RovingFocusGroupContext",
+  "suggested": "useRovingFocusGroupContext",
+  "arity": 1
+ },
+ "RovingFocusGroup::r": {
+  "type": "throws:e is not iterable",
+  "arity": 1
+ },
+ "RovingFocusGroup::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "RovingFocusItem::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Slider::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::$": {
+  "type": "shallowRef",
+  "arity": 0
+ },
+ "Switch::A": {
+  "type": "usePrimitiveElement",
+  "arity": 0
+ },
+ "Switch::At": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::B": {
+  "type": "computed",
+  "arity": 1
+ },
+ "Switch::C": {
+  "type": "string:unchecked",
+  "arity": 1
+ },
+ "Switch::Ct": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::D": {
+  "type": "boolean:false",
+  "arity": 2
+ },
+ "Switch::Dt": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::E": {
+  "type": "hook-needs-context",
+  "arity": 1
+ },
+ "Switch::Et": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::F": {
+  "type": "useState-ish",
+  "arity": 2
+ },
+ "Switch::Ft": {
+  "type": "object{default}",
+  "arity": 3
+ },
+ "Switch::G": {
+  "type": "object{}",
+  "arity": 0
+ },
+ "Switch::H": {
+  "type": "computed",
+  "arity": 1
+ },
+ "Switch::I": {
+  "type": "use-context:ConfigProviderContext",
+  "suggested": "useConfigProviderContext",
+  "arity": 1
+ },
+ "Switch::J": {
+  "type": "undefined:undefined",
+  "arity": 1
+ },
+ "Switch::K": {
+  "type": "use-context:ConfigProviderContext",
+  "suggested": "useConfigProviderContext",
+  "arity": 1
+ },
+ "Switch::L": {
+  "type": "undefined:undefined",
+  "arity": 1
+ },
+ "Switch::M": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::Mt": {
+  "type": "function:() => (t || (event((",
+  "arity": 2
+ },
+ "Switch::N": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::Nt": {
+  "type": "object{}",
+  "arity": 2
+ },
+ "Switch::O": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::Ot": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::P": {
+  "type": "object{search,handleTypeaheadSearch,resetTypeahead}",
+  "arity": 1
+ },
+ "Switch::Pt": {
+  "type": "throws:Calling `require` for \"undefin",
+  "arity": 1
+ },
+ "Switch::Q": {
+  "type": "function:() => {\n      m.stop",
+  "arity": 0
+ },
+ "Switch::R": {
+  "type": "object{}",
+  "arity": 0
+ },
+ "Switch::S": {
+  "type": "throws:e is not iterable",
+  "arity": 1
+ },
+ "Switch::St": {
+  "type": "function:n => {\n    if (t?.va",
+  "arity": 2
+ },
+ "Switch::T": {
+  "type": "boolean:false",
+  "arity": 1
+ },
+ "Switch::Tt": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::U": {
+  "type": "object{}",
+  "arity": 1
+ },
+ "Switch::V": {
+  "type": "throws:Cannot read properties of null",
+  "arity": 0
+ },
+ "Switch::W": {
+  "type": "use-context:ConfigProviderContext",
+  "suggested": "useConfigProviderContext",
+  "arity": 1
+ },
+ "Switch::X": {
+  "type": "object{width,height,stop}",
+  "arity": 1
+ },
+ "Switch::Y": {
+  "type": "ref",
+  "arity": 1
+ },
+ "Switch::Z": {
+  "type": "object{on,once,off,emit}",
+  "arity": 1
+ },
+ "Switch::_": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::_t": {
+  "type": "hook-needs-context",
+  "arity": 3
+ },
+ "Switch::a": {
+  "type": "hook-needs-context",
+  "arity": 4
+ },
+ "Switch::at": {
+  "type": "computed",
+  "arity": 3
+ },
+ "Switch::b": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::bt": {
+  "type": "number:NaN",
+  "arity": 1
+ },
+ "Switch::c": {
+  "type": "directive-like",
+  "arity": 1
+ },
+ "Switch::ct": {
+  "type": "non-fn:boolean",
+  "arity": null
+ },
+ "Switch::d": {
+  "type": "directive-like",
+  "arity": 1
+ },
+ "Switch::dt": {
+  "type": "boolean:false",
+  "arity": 2
+ },
+ "Switch::et": {
+  "type": "shallowRef",
+  "arity": 0
+ },
+ "Switch::f": {
+  "type": "directive-like",
+  "arity": 1
+ },
+ "Switch::ft": {
+  "type": "function:function n(...n) {\n ",
+  "arity": 1
+ },
+ "Switch::g": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::gt": {
+  "type": "boolean:true",
+  "arity": 1
+ },
+ "Switch::h": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::ht": {
+  "type": "function:() => {\n      m.stop",
+  "arity": 3
+ },
+ "Switch::i": {
+  "type": "directive-like",
+  "arity": 1
+ },
+ "Switch::it": {
+  "type": "shallowRef",
+  "arity": 3
+ },
+ "Switch::j": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::jt": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::k": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::kt": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::l": {
+  "type": "object{options,fn}",
+  "arity": 1
+ },
+ "Switch::lt": {
+  "type": "object{}",
+  "arity": 1
+ },
+ "Switch::m": {
+  "type": "boolean:false",
+  "arity": 1
+ },
+ "Switch::mt": {
+  "type": "object{isPending,start,stop}",
+  "arity": 2
+ },
+ "Switch::n": {
+  "type": "string:focus-visible:border",
+  "arity": 1
+ },
+ "Switch::nt": {
+  "type": "object{isSupported,stop}",
+  "arity": 2
+ },
+ "Switch::o": {
+  "type": "object{}",
+  "arity": 3
+ },
+ "Switch::ot": {
+  "type": "object{on,off,trigger,clear}",
+  "arity": 0
+ },
+ "Switch::p": {
+  "type": "string:#document",
+  "arity": 1
+ },
+ "Switch::pt": {
+  "type": "object{isActive,pause,resume}",
+  "arity": 1
+ },
+ "Switch::q": {
+  "type": "object{define,reuse}",
+  "arity": 0
+ },
+ "Switch::r": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::rt": {
+  "type": "object{x,y,isScrolling,arrivedState}",
+  "arity": 1
+ },
+ "Switch::s": {
+  "type": "directive-like",
+  "arity": 1
+ },
+ "Switch::st": {
+  "type": "function:(...a) => (t += 1, r",
+  "arity": 1
+ },
+ "Switch::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::tt": {
+  "type": "computed",
+  "arity": 1
+ },
+ "Switch::u": {
+  "type": "directive-like",
+  "arity": 1
+ },
+ "Switch::ut": {
+  "type": "ref",
+  "arity": 1
+ },
+ "Switch::v": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::vt": {
+  "type": "object{}",
+  "arity": 0
+ },
+ "Switch::w": {
+  "type": "string:closed",
+  "arity": 1
+ },
+ "Switch::wt": {
+  "type": "functional-component",
+  "arity": 2
+ },
+ "Switch::x": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "Switch::xt": {
+  "type": "string:",
+  "arity": 0
+ },
+ "Switch::y": {
+  "type": "non-fn:string",
+  "arity": null
+ },
+ "Switch::yt": {
+  "type": "unknown",
+  "arity": 2
+ },
+ "Switch::z": {
+  "type": "computed",
+  "arity": 2
+ },
+ "TooltipTrigger::a": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "TooltipTrigger::c": {
+  "type": "undefined:undefined",
+  "arity": 1
+ },
+ "TooltipTrigger::i": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "TooltipTrigger::n": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "TooltipTrigger::o": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "TooltipTrigger::r": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "TooltipTrigger::s": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "TooltipTrigger::t": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::a": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::c": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::i": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::n": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::o": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::r": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::s": {
+  "type": "non-fn:object",
+  "arity": null
+ },
+ "alert-dialog::t": {
+  "type": "non-fn:object",
+  "arity": null
+ }
+}
