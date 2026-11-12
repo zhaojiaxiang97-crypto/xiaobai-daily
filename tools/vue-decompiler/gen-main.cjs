@@ -456,10 +456,29 @@ for (const [varName, compName] of compVarToName) {
   if (!new RegExp('(?<![\\w$])' + varName.replace(/\$/g, '\\$') + '(?![\\w$])').test(body)) continue;
   compImports.push(`import ${varName} from './components/${compName}.vue';`);
 }
+// 符号身份注释：从运行时探针得到的类型标注（本轮新增，只加注释、不改代码）
+const SYMBOL_TYPES = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'symbol-types.json'), 'utf8')); }
+  catch (e) { return {}; }
+})();
+const labelOf = (from, imported) => {
+  const m = /([^/]+)\.js$/.exec(from || '');
+  if (!m) return null;
+  return SYMBOL_TYPES[`${m[1]}::${imported}`] || null;
+};
 const crossImports = crossList.map(c => {
   const spec = c.imported === 'default' ? `default as ${c.inner}`
     : (c.imported === c.inner ? c.inner : `${c.imported} as ${c.inner}`);
-  return `import { ${spec} } from '${c.from}';`;
+  const t = labelOf(c.from, c.imported);
+  let cmt = '';
+  if (t) {
+    // 注释内容必须单行化：类型标注里可能含错误消息的换行符，
+    // 直接拼会让注释只覆盖首行、后面变成断掉的代码（实测会 SyntaxError）
+    const oneLine = x => String(x).replace(/\s+/g, ' ').trim().slice(0, 60);
+    if (t.suggested) cmt = `// [已知] ${oneLine(t.suggested)}（来自 reka-ui 错误消息）\n`;
+    else if (t.type && !t.type.startsWith('non-fn')) cmt = `// [推断] ${oneLine(t.type)}\n`;
+  }
+  return `${cmt}import { ${spec} } from '${c.from}';`;
 });
 const exportLines = [];
 for (const n of localNames) if (n) exportLines.push(`export { ${n} as S_${n} };`);
