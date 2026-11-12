@@ -10,7 +10,6 @@ const { execFileSync } = require('child_process');
 const P = require('@babel/parser');
 const T = require('@babel/traverse').default;
 const t = require('@babel/types');
-const G = require('@babel/generator').default;
 
 const [,, mainFile, convPath, outDir] = process.argv;
 
@@ -293,7 +292,90 @@ for (const c of components) {
 }
 
 // Pass2：写 .vue
-for (const [compName, tpl] of tplMap) {
+// ── AST 组装机制（照搬 lib-conv.cjs round-0453/0456 的成熟实现）──
+// 为什么必须 AST：字符串拼接 + 正则改名在解构 / 嵌套作用域下必漏。
+const G = require('@babel/generator').default;
+const parseStmts = codeText => {
+  try { return P.parse(codeText, { sourceType: 'module' }).program.body; } catch (e) { return []; }
+};
+const collectPatNames = (node, out) => {
+  if (!node) return out;
+  if (t.isIdentifier(node)) { out.push(node.name); return out; }
+  if (t.isObjectPattern(node)) {
+    for (const pr of node.properties) {
+      if (t.isObjectProperty(pr)) collectPatNames(pr.value, out);
+      else if (t.isRestElement(pr)) collectPatNames(pr.argument, out);
+    }
+    return out;
+  }
+  if (t.isArrayPattern(node)) { for (const el of node.elements) collectPatNames(el, out); return out; }
+  if (t.isAssignmentPattern(node)) { collectPatNames(node.left, out); return out; }
+  if (t.isRestElement(node)) { collectPatNames(node.argument, out); return out; }
+  return out;
+};
+const namesOfStmt = st => {
+  const out = [];
+  if (t.isVariableDeclaration(st)) for (const d of st.declarations) collectPatNames(d.id, out);
+  else if (t.isFunctionDeclaration(st) && st.id) out.push(st.id.name);
+  else if (t.isClassDeclaration(st) && st.id) out.push(st.id.name);
+  return out;
+};
+const renameInStmt = (st, map) => {
+  if (!map.size) return;
+  const wrapper = t.file(t.program([st]));
+  T(wrapper, {
+    Identifier(ip) {
+      const nm = ip.node.name;
+      if (!map.has(nm)) return;
+      const par = ip.parentPath;
+      if (par.isObjectProperty() && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
+      if (par.isMemberExpression() && par.node.property === ip.node && !par.node.computed) return;
+      ip.node.name = map.get(nm);
+    },
+  });
+};
+
+for (const [compName, tplRaw] of tplMap) {
+  let tpl = tplRaw;
+  const bodyStmts = [];
+  const used = new Set();
+  // 预占：Vue API import + 兄弟组件 import + props 参数，避免 setup 声明与之撞名
+  for (const a of [...VUE_APIS]) used.add(a);
+  for (const [vn] of compVarToName) used.add(vn);
+  const tplRenames = new Map();
+  const renameHistory = new Map();
+  let counter = 0;
+  const uniqueName = base => { let nn; do { nn = base + '_' + (counter++); } while (used.has(nn)); return nn; };
+  const pushStmt = st => {
+    if (renameHistory.size) renameInStmt(st, renameHistory);
+    const declared = namesOfStmt(st);
+    const local = new Map();
+    for (const nm of declared) {
+      if (used.has(nm)) {
+        const nn = uniqueName(nm);
+        local.set(nm, nn); used.add(nn); tplRenames.set(nm, nn); renameHistory.set(nm, nn);
+      } else { used.add(nm); }
+    }
+    if (local.size) {
+      renameInStmt(st, local);
+      for (const prev of bodyStmts) {
+        const own = new Set(namesOfStmt(prev));
+        const filtered = new Map([...local].filter(([k]) => !own.has(k)));
+        if (filtered.size) renameInStmt(prev, filtered);
+      }
+    }
+    bodyStmts.push(st);
+  };
+  // 内联代码里的相对路径也要重写到 vendor/（否则 import('./X.js') 解析失败）
+  const rewritePaths = codeText => {
+    return codeText.replace(/(["'`])(\.\.?\/[^"'`]+\.(?:js|css|webp|png|jpg|ico|ogg))\1/g, (m, q, p2) => {
+      const hit = baseIndex[p2.split('/').pop()];
+      // 组件的 import 路径前缀要按组件所在目录修正（.vue 在 src/components/）
+      return hit ? q + hit.replace(/^\.\/vendor\//, '../vendor/') + q : m;
+    });
+  };
+  const pushCode = codeText => { for (const st of parseStmts(rewritePaths(codeText))) pushStmt(st); };
+
   const need = [];
   for (const [varName, cn] of compVarToName) {
     if (!madeComponents.has(cn)) continue;                    // 只引用已生成的
@@ -302,14 +384,10 @@ for (const [compName, tpl] of tplMap) {
     }
   }
   const vueDeps = [...VUE_APIS].filter(a => new RegExp('(?<![\\w$])' + a + '\\s*\\(').test(tpl));
-  let script = '';
-  if (vueDeps.length) script += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
-  for (const n of new Map(need.map(x => [x.from, x])).values()) {
-    script += `import ${n.alias} from './${n.from}.vue';\n`;
-  }
-  // props 绑定：模板表达式用的是原 setup 参数名与别名（如 e / t），必须在这里建立绑定
-  const compSrc = src.slice(components.find(x => x.name === compName).objStart,
-                            components.find(x => x.name === compName).objEnd);
+
+  // ── props 绑定（先 push，setup 声明可能引用它）──
+  const setupSourceInfo = components.find(x => x.name === compName);
+  const compSrc = setupSourceInfo ? src.slice(setupSourceInfo.objStart, setupSourceInfo.objEnd) : '';
   const setupM = compSrc.match(/setup\s*\(\s*([\w$]+)/);
   const propsArg = setupM ? setupM[1] : null;
   const aliasM = compSrc.match(/let\s+([\w$]+)\s*=\s*([\w$]+)\s*[,;]/);
@@ -318,13 +396,54 @@ for (const [compName, tpl] of tplMap) {
   const propsCode = propsM ? propsM[1] : '{}';
   const usedInTpl = new Set(tpl.match(/[A-Za-z_$][\w$]*/g) || []);
   if (propsArg && (usedInTpl.has(propsArg) || (propsAlias && usedInTpl.has(propsAlias)))) {
-    script += `const ${propsArg} = defineProps(${propsCode});\n`;
-    if (propsAlias && propsAlias !== propsArg) script += `const ${propsAlias} = ${propsArg};\n`;
+    pushCode(`const ${propsArg} = defineProps(${propsCode});`);
+    if (propsAlias && propsAlias !== propsArg) pushCode(`const ${propsAlias} = ${propsArg};`);
   }
-  // shared 符号 import：只取 exportSet 里有的，且排除已被 props 绑定 / 组件 import 占用的名字
-  const occupied = new Set([propsArg, propsAlias].filter(Boolean));
+
+  // ── setup 函数体的顶层声明（模板引用的短名往往就是它们）──
+  let objAst = null;
+  try { objAst = P.parse('(' + compSrc + ')', { sourceType: 'module' }); } catch (e) {}
+  const OFF = 1;   // 前面拼了一个 '('
+  const setupStmts = [];
+  const takeBody = body => {
+    if (!body || !t.isBlockStatement(body)) return;
+    for (const st of body.body) {
+      if (t.isReturnStatement(st)) continue;          // render 已转成模板
+      if (t.isVariableDeclaration(st) || t.isFunctionDeclaration(st) || t.isClassDeclaration(st)) {
+        setupStmts.push(st);
+      }
+    }
+  };
+  if (objAst) {
+    T(objAst, {
+      ObjectMethod(p) {
+        if (!t.isIdentifier(p.node.key, { name: 'setup' })) return;
+        takeBody(p.node.body);
+      },
+      ObjectProperty(p) {
+        if (!t.isIdentifier(p.node.key, { name: 'setup' })) return;
+        const fn = p.node.value;
+        if (t.isFunctionExpression(fn) || t.isArrowFunctionExpression(fn)) takeBody(fn.body);
+      },
+    });
+  }
+  // 按源码顺序 push（setupStmts 里的节点来自 compSrc 的切片解析，位置是相对的，
+  // 直接 pushStmt 需要 AST 节点 —— 这里直接从 compSrc 重新取源码再 parse）
+  for (const st of setupStmts) {
+    const code = compSrc.slice(st.start - OFF, st.end - OFF);
+    pushCode(code.endsWith(';') || code.endsWith('}') ? code : code + ';');
+  }
+
+  // ── 组装 ──
+  let script = '';
+  if (vueDeps.length) script += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
+  for (const n of new Map(need.map(x => [x.from, x])).values()) {
+    script += `import ${n.alias} from './${n.from}.vue';\n`;
+  }
+  // 本地声明过的名字（props / setup）—— 优先于 shared import
+  const occupied = new Set(used);
   for (const n2 of need) occupied.add(n2.alias);
-  // 检查范围：模板 + props 代码（props 默认值里会引用 shared 符号，如 default: Rl）
+  for (const [o, nn] of tplRenames) { /* 模板同步改名在后面统一做 */ }
   const scanText = tpl + '\n' + (propsCode || '');
   const sharedSpecs = [];
   for (const [orig, exported] of exportSet) {
@@ -340,6 +459,17 @@ for (const [compName, tpl] of tplMap) {
     const idx = script.search(/^const /m);
     script = idx >= 0 ? script.slice(0, idx) + sharedImport + script.slice(idx) : script + sharedImport;
   }
+  // 模板同步改名（setup 内联时发生的冲突改名）
+  for (const [o, nn] of tplRenames) {
+    tpl = tpl.replace(new RegExp('(?<![\\w$.])' + o.replace(/\$/g, '\\$') + '(?![\\w$])', 'g'), nn);
+  }
+  // 把 push 进 bodyStmts 的语句 serialize 出来，接到 script 末尾
+  const bodyCode = bodyStmts.map(st => {
+    try { return G(st, { compact: false, jsescOption: { minimal: true } }).code; }
+    catch (e) { return ''; }
+  }).filter(Boolean).join('\n');
+  script += (bodyCode ? '\n' + bodyCode + '\n' : '');
+
   // scoped CSS：恢复该组件的 [data-v-xxx] 规则（用普通 <style>，因为选择器已带前缀）
   const compInfo = components.find(x => x.name === compName);
   const sid = compInfo ? compInfo.scopeId : null;
