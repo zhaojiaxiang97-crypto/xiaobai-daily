@@ -220,6 +220,14 @@ function conv(node) {
         if (/[{}]/.test(e2)) return `<span v-text="${e2.replace(/"/g, "'")}" />`;
         return `{{ ${e2} }}`;
       }
+      // withDirectives(inner, [[dir, arg], ...]) —— 必须**先**拆外层，
+      // 否则会落到下面的兜底分支（含花括号 → 变成 <span v-text="withDirectives(...)"），
+      // 把整段 render 调用泄漏进模板。
+      if (t.isCallExpression(x) && t.isIdentifier(x.callee) && apiOf(x.callee.name) === 'withDirectives') {
+        const inner = x.arguments[0];
+        const innerTpl = inner ? conv(inner) : '';
+        if (innerTpl) return innerTpl;
+      }
       // resolveComponent(X, props) 出现在 children 里 → 模板中改为泛型组件
       // 注意：resolveComponent 是 render 函数专用 API，模板里不存在，
       // 原样搬进模板会导致运行时 "Cannot destructure property 'slots' of undefined"
