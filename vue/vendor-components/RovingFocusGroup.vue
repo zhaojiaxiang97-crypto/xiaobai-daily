@@ -5,6 +5,7 @@
 <script setup>
 import { unref as i, renderSlot as a, createBlock as c, openBlock as u, defineComponent as d } from 'vue';
 import { vt as n, yt as r } from '../vendor/ui/Switch.js';
+// [符号说明] p=useConfigProviderContext
 import { r as p, t as m } from '../vendor/ui/Collection.js';
 
 var h = `rovingFocusGroup.onEntryFocus`;

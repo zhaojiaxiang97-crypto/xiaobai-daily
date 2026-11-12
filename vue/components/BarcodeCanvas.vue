@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] f=useConfigProviderContext
 import { S_px as px, S_a as a, S_o as o, S_c as c, S_f as f, S_g as g, S__ as _, S_v as v, S_w as w, S_at as at } from '../shared.js';
 const event = defineProps({
       result: {},

@@ -5,6 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import gz from './PasswordInput.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_no as no, S_Vo as Vo, S_is as is, S_xs as xs, S_state as state, S_i as i, S_o as o, S_s as s, S_u as u, S_d as d, S_p as p, S_S as S, S_w as w, S_T as T, S_O as O, S_A as A, S_j as j, S_ee as ee, S_te as te, S_P as P, S_mt as mt } from '../shared.js';
 const e = defineProps({
       state: {}

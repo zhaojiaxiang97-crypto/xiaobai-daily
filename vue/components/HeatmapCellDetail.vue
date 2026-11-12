@@ -4,5 +4,6 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] D=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_i as i, S_p as p, S_w as w, S_D as D, S_O as O, S_k as k, S_j as j, S_ee as ee, S_M as M, S_me as me, S_P as P, S_at as at, S_zn as zn } from '../shared.js';
 </script>

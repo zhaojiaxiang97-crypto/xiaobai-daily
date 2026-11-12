@@ -4,6 +4,7 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_xs as xs, S_e as e, S_t as t, S_u as u, S_w as w, S_ue as ue, S_fe as fe } from '../shared.js';
 const options = defineProps({
       modelValue: {},

@@ -5,6 +5,17 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const P = require('@babel/parser');
 const T = require('@babel/traverse').default;
+
+// 符号身份标注（运行时探针结果），只用于给 import 加注释
+const SYMBOL_TYPES = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'symbol-types.json'), 'utf8')); }
+  catch (e) { return {}; }
+})();
+const labelOf = (from, imported) => {
+  const m = /([^/]+)\.js$/.exec(from || '');
+  if (!m) return null;
+  return SYMBOL_TYPES[`${m[1]}::${imported}`] || null;
+};
 const t = require('@babel/types');
 
 const VUE_API_MAP = {
@@ -558,6 +569,21 @@ for (const c of comps) {
       if (renamed.has(name)) return (m ? m[1] : sp) + ' as ' + renamed.get(name);
       return sp;
     });
+    // 符号说明：只标注该 import 里身份已知的符号（只加注释、不改结构）
+    {
+      const known = [];
+      for (const sp of fixed) {
+        const mm = /^(.*?)\s+as\s+(\w+)$/.exec(sp);
+        const exp = mm ? mm[1].trim() : sp.trim();
+        const local = mm ? mm[2] : sp.trim();
+        const tg = labelOf(f2, exp);
+        if (tg && tg.suggested) known.push(`${local}=${tg.suggested}`);
+      }
+      if (known.length) {
+        const oneLine = known.join(', ').replace(/\s+/g, ' ').slice(0, 120);
+        importBlock += `// [符号说明] ${oneLine}\n`;
+      }
+    }
     importBlock += `import { ${fixed.join(', ')} } from '${f2}';\n`;
   }
   for (const [o, n] of renamed) {

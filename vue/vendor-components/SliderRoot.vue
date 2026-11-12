@@ -5,6 +5,7 @@
 <script setup>
 import { unref as d, renderSlot as f, createElementBlock as h, renderList as g, createBlock as y, Fragment as x, openBlock as S, defineComponent as C, onUnmounted as T, onBeforeMount as O, computed as k, createCommentVNode as A } from 'vue';
 import { H as t, yt as l, z as u } from '../vendor/ui/Switch.js';
+// [符号说明] ee=useConfigProviderContext
 import { n as j, r as ee, t as M } from '../vendor/ui/Collection.js';
 
 function N(event = [], t, n_18) {

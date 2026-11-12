@@ -4,6 +4,7 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
 import { S_eee as eee, S_is as is, S_px as px, S_t as t, S_n as n, S_i as i, S_u as u, S_d as d, S_f as f, S_p as p, S_y as y, S_x as x, S_w as w, S_Te as Te } from '../shared.js';
 const e = defineProps({
       disabled: {

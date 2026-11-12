@@ -5,5 +5,6 @@
 <script setup>
 import { toDisplayString } from 'vue';
 import By from './Select.vue';
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
 import { S_is as is, S_ms as ms, S_xs as xs, S_sm as sm, S_px as px, S_e as e, S_t as t, S_n as n, S_r as r, S_i as i, S_a as a, S_o as o, S_l as l, S_u as u, S_d as d, S_f as f, S_p as p, S_m as m, S__ as _, S_y as y, S_b as b, S_x as x, S_S as S, S_P as P, S_Te as Te, S_cr as cr, S_Di as Di } from '../shared.js';
 </script>

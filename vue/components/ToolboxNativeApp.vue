@@ -4,6 +4,7 @@
 
 <script setup>
 import gM from './RechargeDialog.vue';
+// [符号说明] D=useConfigProviderContext
 import { S_no as no, S_is as is, S_e as e, S_r as r, S__ as _, S_y as y, S_b as b, S_x as x, S_S as S, S_C as C, S_w as w, S_D as D, S_k as k, S_A as A, S_ce as ce, S_le as le, S_ue as ue, S_de as de, S_Be as Be } from '../shared.js';
 const items = defineProps({
       active: {

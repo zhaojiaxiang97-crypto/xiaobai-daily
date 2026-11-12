@@ -3,5 +3,6 @@
 </template>
 
 <script setup>
+// [符号说明] f=useConfigProviderContext
 import { S_is as is, S_flag as flag, S_e as e, S_f as f, S__i as _i } from '../shared.js';
 </script>

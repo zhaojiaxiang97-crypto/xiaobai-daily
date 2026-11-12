@@ -5,6 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import md from './BaseSeparator.vue';
+// [符号说明] f=useConfigProviderContext
 import { S_So as So, S_Co as Co, S_wo as wo, S_ko as ko, S_is as is, S_zs as zs, S_Zs as Zs, S_sm as sm, S_h2 as h2, S_e as e, S_i as i, S_a as a, S_o as o, S_s as s, S_d as d, S_f as f, S_p as p, S_m as m, S_g as g, S_v as v, S_y as y, S_w as w, S_he as he, S_$t as $t, S_en as en, S_Mr as Mr } from '../shared.js';
 const event = defineProps({
       modelValue: {},

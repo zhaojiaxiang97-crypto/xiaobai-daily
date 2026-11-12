@@ -4,6 +4,7 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] u=useConfigProviderContext
 import { S_is as is, S_h2 as h2, S_alt as alt, S_e as e, S_r as r, S_i as i, S_o as o, S_s as s, S_c as c, S_l as l, S_u as u, S_p as p, S_m as m, S_g as g, S_Nt as Nt, S_Vn as Vn } from '../shared.js';
 const event = defineProps({
       badge: {},

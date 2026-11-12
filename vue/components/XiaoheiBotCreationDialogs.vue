@@ -6,6 +6,7 @@
 import { withDirectives } from 'vue';
 import Pp from './Badge.vue';
 import sg from './Checkbox.vue';
+// [符号说明] f=useConfigProviderContext
 import { S_is as is, S_alt as alt, S_t as t, S_c as c, S_l as l, S_f as f } from '../shared.js';
 const e = defineProps({});
 </script>

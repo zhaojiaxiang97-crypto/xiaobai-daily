@@ -3,5 +3,6 @@
 </template>
 
 <script setup>
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_l as l, S_u as u, S_d as d, S_f as f, S_p as p, S_P as P, S_Be as Be } from '../shared.js';
 </script>

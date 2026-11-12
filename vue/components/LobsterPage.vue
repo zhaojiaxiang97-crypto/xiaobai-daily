@@ -4,5 +4,6 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
+// [符号说明] D=useConfigProviderContext
 import { S_Fo as Fo, S_is as is, S_xs as xs, S_Ts as Ts, S_ks as ks, S_sm as sm, S_pre as pre, S_px as px, S_h2 as h2, S_e as e, S_n as n, S_i as i, S_o as o, S_s as s, S_c as c, S_d as d, S_p as p, S_v as v, S_y as y, S_w as w, S_D as D, S_O as O, S_P as P, S_Te as Te, S_Bn as Bn, S_ui as ui } from '../shared.js';
 </script>

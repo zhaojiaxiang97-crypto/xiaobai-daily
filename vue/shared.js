@@ -33,73 +33,132 @@ import m9 from './components/WoodenFishFigure.vue';
 import G9 from './components/App.vue';
 import L2t from './components/TodoFloatingWindow.vue';
 import V2t from './components/WoodenFishWindow.vue';
+// [推断] usePrimitiveElement
 import { A as src_e } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { At as src_t } from './vendor/ui/Switch.js';
+// [推断] computed
 import { B as src_n } from './vendor/ui/Switch.js';
+// [推断] string:unchecked
 import { C as src_r } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { Ct as src_i } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { Dt as src_a } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { Et as src_o } from './vendor/ui/Switch.js';
+// [推断] useState-ish
 import { F as src_s } from './vendor/ui/Switch.js';
+// [推断] object{default}
 import { Ft as src_c } from './vendor/ui/Switch.js';
+// [推断] computed
 import { H as src_l } from './vendor/ui/Switch.js';
+// [已知] useConfigProviderContext（来自 reka-ui 错误消息）
 import { I as src_u } from './vendor/ui/Switch.js';
+// [推断] undefined:undefined
 import { J as src_d } from './vendor/ui/Switch.js';
+// [已知] useConfigProviderContext（来自 reka-ui 错误消息）
 import { K as src_f } from './vendor/ui/Switch.js';
+// [推断] undefined:undefined
 import { L as src_p } from './vendor/ui/Switch.js';
+// [推断] function:() => (t || (event((
 import { Mt as src_m } from './vendor/ui/Switch.js';
+// [推断] object{}
 import { Nt as src_g } from './vendor/ui/Switch.js';
 import { O as src__ } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { Ot as src_v } from './vendor/ui/Switch.js';
+// [推断] object{search,handleTypeaheadSearch,resetTypeahead}
 import { P as src_y } from './vendor/ui/Switch.js';
+// [推断] function:() => { m.stop
 import { Q as src_b } from './vendor/ui/Switch.js';
+// [推断] object{}
 import { R as src_x } from './vendor/ui/Switch.js';
+// [推断] throws:e is not iterable
 import { S as src_S } from './vendor/ui/Switch.js';
+// [推断] function:n => { if (t?.va
 import { St as src_C } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { Tt as src_w } from './vendor/ui/Switch.js';
+// [推断] object{}
 import { U as src_T } from './vendor/ui/Switch.js';
+// [推断] throws:Cannot read properties of null
 import { V as src_E } from './vendor/ui/Switch.js';
+// [已知] useConfigProviderContext（来自 reka-ui 错误消息）
 import { W as src_D } from './vendor/ui/Switch.js';
+// [推断] object{width,height,stop}
 import { X as src_O } from './vendor/ui/Switch.js';
+// [推断] ref
 import { Y as src_k } from './vendor/ui/Switch.js';
+// [推断] object{on,once,off,emit}
 import { Z as src_A } from './vendor/ui/Switch.js';
 import { _ as src_j } from './vendor/ui/Switch.js';
+// [推断] hook-needs-context
 import { _t as src_ee } from './vendor/ui/Switch.js';
+// [推断] hook-needs-context
 import { a as src_te } from './vendor/ui/Switch.js';
+// [推断] computed
 import { at as src_M } from './vendor/ui/Switch.js';
+// [推断] number:NaN
 import { bt as src_ne } from './vendor/ui/Switch.js';
 import { ct as src_N } from './vendor/ui/Switch.js';
+// [推断] directive-like
 import { d as src_re } from './vendor/ui/Switch.js';
+// [推断] shallowRef
 import { et as src_ie } from './vendor/ui/Switch.js';
+// [推断] function:function n(...n) {
 import { ft as src_ae } from './vendor/ui/Switch.js';
 import { g as src_oe } from './vendor/ui/Switch.js';
+// [推断] boolean:true
 import { gt as src_se } from './vendor/ui/Switch.js';
 import { h as src_ce } from './vendor/ui/Switch.js';
+// [推断] function:() => { m.stop
 import { ht as src_le } from './vendor/ui/Switch.js';
+// [推断] directive-like
 import { i as src_ue } from './vendor/ui/Switch.js';
+// [推断] shallowRef
 import { it as src_de } from './vendor/ui/Switch.js';
 import { j as src_fe } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { jt as src_pe } from './vendor/ui/Switch.js';
 import { k as src_me } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { kt as src_he } from './vendor/ui/Switch.js';
+// [推断] object{}
 import { lt as src_ge } from './vendor/ui/Switch.js';
+// [推断] string:focus-visible:border
 import { n as src__e } from './vendor/ui/Switch.js';
+// [推断] object{isSupported,stop}
 import { nt as src_ve } from './vendor/ui/Switch.js';
+// [推断] object{}
 import { o as src_ye } from './vendor/ui/Switch.js';
+// [推断] object{on,off,trigger,clear}
 import { ot as src_be } from './vendor/ui/Switch.js';
+// [推断] object{isActive,pause,resume}
 import { pt as src_xe } from './vendor/ui/Switch.js';
+// [推断] object{define,reuse}
 import { q as src_Se } from './vendor/ui/Switch.js';
 import { r as src_P } from './vendor/ui/Switch.js';
+// [推断] object{x,y,isScrolling,arrivedState}
 import { rt as src_Ce } from './vendor/ui/Switch.js';
+// [推断] directive-like
 import { s as src_we } from './vendor/ui/Switch.js';
 import { t as src_Te } from './vendor/ui/Switch.js';
+// [推断] computed
 import { tt as src_Ee } from './vendor/ui/Switch.js';
+// [推断] directive-like
 import { u as src_De } from './vendor/ui/Switch.js';
+// [推断] ref
 import { ut as src_Oe } from './vendor/ui/Switch.js';
+// [推断] object{}
 import { vt as src_ke } from './vendor/ui/Switch.js';
+// [推断] functional-component
 import { wt as src_Ae } from './vendor/ui/Switch.js';
+// [推断] string:
 import { xt as src_je } from './vendor/ui/Switch.js';
+// [推断] unknown
 import { yt as src_Me } from './vendor/ui/Switch.js';
+// [推断] computed
 import { z as src_Ne } from './vendor/ui/Switch.js';
 import { $ as src_Pe } from './vendor/chunks/vue-i18n.runtime.js';
 import { Cn as src_Ie } from './vendor/chunks/vue-i18n.runtime.js';
@@ -178,32 +237,56 @@ import { t as src_an } from './vendor/chunks/check.js';
 import { a as src_on } from './vendor/ui/PopperContent.js';
 import { i as src_sn } from './vendor/ui/PopperContent.js';
 import { n as src_cn } from './vendor/ui/PopperContent.js';
+// [推断] undefined:undefined
 import { o as src_ln } from './vendor/ui/PopperContent.js';
+// [推断] functional-component
 import { s as src_un } from './vendor/ui/PopperContent.js';
+// [推断] functional-component
 import { A as src_dn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { C as src_fn } from './vendor/ui/PopoverTrigger.js';
+// [推断] string:Asia/Shanghai
 import { D as src_pn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { E as src_mn } from './vendor/ui/PopoverTrigger.js';
+// [推断] object{calendar,era,year,month}
 import { O as src_hn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { S as src_gn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { T as src__n } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { a as src_vn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { b as src_yn } from './vendor/ui/PopoverTrigger.js';
+// [推断] object{ALT,ARROW_DOWN,ARROW_LEFT,ARROW_RIGHT}
 import { c as src_bn } from './vendor/ui/PopoverTrigger.js';
+// [推断] throws:Cannot destructure property 's
 import { d as src_xn } from './vendor/ui/PopoverTrigger.js';
+// [推断] throws:Cannot destructure property 'd
 import { g as src_Sn } from './vendor/ui/PopoverTrigger.js';
+// [已知] usePopoverRootContext（来自 reka-ui 错误消息）
 import { i as src_Cn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { k as src_wn } from './vendor/ui/PopoverTrigger.js';
+// [推断] object{setLocale,getLocale,fullMonth,fullYear}
 import { l as src_Tn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { m as src_En } from './vendor/ui/PopoverTrigger.js';
 import { n as src_Dn } from './vendor/ui/PopoverTrigger.js';
+// [推断] object{isDateSelected,isInvalid,hasSelectedDate,isSelectedDa
 import { o as src_On } from './vendor/ui/PopoverTrigger.js';
+// [推断] throws:First argument to Intl.Locale
 import { p as src_kn } from './vendor/ui/PopoverTrigger.js';
 import { r as src_An } from './vendor/ui/PopoverTrigger.js';
+// [已知] useConfigProviderContext（来自 reka-ui 错误消息）
 import { s as src_jn } from './vendor/ui/PopoverTrigger.js';
 import { t as src_Mn } from './vendor/ui/PopoverTrigger.js';
+// [推断] throws:Cannot destructure property 'd
 import { u as src_Nn } from './vendor/ui/PopoverTrigger.js';
+// [推断] hook-needs-context
 import { w as src_Pn } from './vendor/ui/PopoverTrigger.js';
+// [推断] throws:Class constructor e cannot be
 import { x as src_Fn } from './vendor/ui/PopoverTrigger.js';
 import { t as src_In } from './vendor/chunks/chevron-up.js';
 import { t as src_Ln } from './vendor/chunks/circle-question-mark.js';
@@ -255,6 +338,7 @@ import { x as src_Or } from './vendor/chunks/tool-icons.js';
 import { y as src_kr } from './vendor/chunks/tool-icons.js';
 import { t as src_Ar } from './vendor/chunks/flag.js';
 import { t as src_jr } from './vendor/chunks/image-down.js';
+// [推断] functional-component
 import { n as src_Mr } from './vendor/ui/DropdownMenuItem.js';
 import { t as src_Nr } from './vendor/ui/DropdownMenuItem.js';
 import { t as src_Pr } from './vendor/ui/icons/icon-minimize.js';
@@ -264,15 +348,19 @@ import { t as src_Lr } from './vendor/chunks/isValueEqualOrExist.js';
 import { a as src_Rr } from './vendor/ui/DropdownMenuTrigger.js';
 import { c as src_zr } from './vendor/ui/DropdownMenuTrigger.js';
 import { i as src_Br } from './vendor/ui/DropdownMenuTrigger.js';
+// [推断] unknown
 import { l as src_Vr } from './vendor/ui/DropdownMenuTrigger.js';
 import { n as src_Hr } from './vendor/ui/DropdownMenuTrigger.js';
 import { o as src_Ur } from './vendor/ui/DropdownMenuTrigger.js';
 import { r as src_Wr } from './vendor/ui/DropdownMenuTrigger.js';
 import { s as src_Gr } from './vendor/ui/DropdownMenuTrigger.js';
 import { t as src_Kr } from './vendor/ui/DropdownMenuTrigger.js';
+// [已知] useConfigProviderContext（来自 reka-ui 错误消息）
 import { r as src_qr } from './vendor/ui/Collection.js';
+// [推断] useCollection
 import { t as src_Jr } from './vendor/ui/Collection.js';
 import { a as src_Yr } from './vendor/ui/TooltipTrigger.js';
+// [推断] undefined:undefined
 import { c as src_Xr } from './vendor/ui/TooltipTrigger.js';
 import { i as src_Zr } from './vendor/ui/TooltipTrigger.js';
 import { n as src_Qr } from './vendor/ui/TooltipTrigger.js';
@@ -285,6 +373,7 @@ import { i as src_ii } from './vendor/ui/DialogTitle.js';
 import { n as src_ai } from './vendor/ui/DialogTitle.js';
 import { o as src_oi } from './vendor/ui/DialogTitle.js';
 import { r as src_si } from './vendor/ui/DialogTitle.js';
+// [已知] useDialogRootContext（来自 reka-ui 错误消息）
 import { s as src_ci } from './vendor/ui/DialogTitle.js';
 import { t as src_li } from './vendor/ui/DialogTitle.js';
 import { a as src_ui } from './vendor/chunks/dialog.js';
@@ -301,6 +390,7 @@ import { o as src_bi } from './vendor/ui/alert-dialog.js';
 import { r as src_xi } from './vendor/ui/alert-dialog.js';
 import { s as src_Si } from './vendor/ui/alert-dialog.js';
 import { t as src_Ci } from './vendor/ui/alert-dialog.js';
+// [推断] hook-needs-context
 import { i as src_wi } from './vendor/ui/RovingFocusGroup.js';
 import { t as src_Ti } from './vendor/ui/RovingFocusGroup.js';
 import { t as src_Ei } from './vendor/ui/RovingFocusItem.js';

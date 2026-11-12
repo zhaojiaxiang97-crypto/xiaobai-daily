@@ -10,7 +10,9 @@ import { r as F } from '../vendor/ui/icons/lucide-icons.js';
 import { u as ne } from '../vendor/i18n/i18n-helper.js';
 import { t as re } from '../vendor/chunks/check.js';
 import { s as ie } from '../vendor/ui/PopperContent.js';
+// [符号说明] fe=useConfigProviderContext
 import { A as ae, D as I, E as L, O as R, T as z, _ as B, a as oe, c as se, g as ce, m as ue, p as de, s as fe } from '../vendor/ui/PopoverTrigger.js';
+// [符号说明] me=useConfigProviderContext
 import { r as me } from '../vendor/ui/Collection.js';
 
 function ge(event) {

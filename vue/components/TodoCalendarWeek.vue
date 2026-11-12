@@ -4,6 +4,7 @@
 
 <script setup>
 import { withDirectives } from 'vue';
+// [符号说明] u=useConfigProviderContext
 import { S_cy as cy, S_ly as ly, S_px as px, S_counter as counter, S_e as e, S_i as i, S_o as o, S_s as s, S_l as l, S_u as u, S__ as _, S_v as v, S_y as y, S_b as b, S_w as w, S_le as le, S_me as me, S_at as at } from '../shared.js';
 </script>
 

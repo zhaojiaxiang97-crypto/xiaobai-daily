@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] f=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_sm as sm, S_t as t, S_r as r, S_i as i, S_s as s, S_l as l, S_f as f, S_p as p, S_m as m, S_P as P, S_Te as Te } from '../shared.js';
 const e = defineProps({});
 </script>

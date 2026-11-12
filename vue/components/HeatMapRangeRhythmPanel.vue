@@ -5,6 +5,7 @@
 <script setup>
 import { h } from 'vue';
 import md from './BaseSeparator.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_xs as xs, S_pb as pb, S_px as px, S_counter as counter, S_e as e, S_t as t, S_l as l, S_u as u, S__ as _, S_b as b, S_C as C, S_w as w, S_at as at, S_mt as mt } from '../shared.js';
 const text = defineProps({
       summaries: {}

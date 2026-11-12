@@ -4,6 +4,7 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_px as px, S_e as e, S_t as t, S_i as i, S_a as a, S_u as u, S_w as w, S_Nt as Nt } from '../shared.js';
 const text = defineProps({
       open: {

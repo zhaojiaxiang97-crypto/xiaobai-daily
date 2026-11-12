@@ -5,6 +5,7 @@
 <script setup>
 import { createElementVNode, toDisplayString } from 'vue';
 import cp from './MarkdownRenderer.vue';
+// [符号说明] f=useConfigProviderContext, D=useConfigProviderContext
 import { S_is as is, S_ws as ws, S_sm as sm, S_alt as alt, S_NVt as NVt, S_e as e, S_t as t, S_r as r, S_i as i, S_c as c, S_d as d, S_f as f, S_p as p, S_m as m, S_g as g, S__ as _, S_v as v, S_x as x, S_S as S, S_w as w, S_D as D, S_O as O, S_k as k, S_j as j, S_ee as ee, S_te as te, S_M as M, S_P as P, S_Xe as Xe, S_yt as yt, S_zn as zn } from '../shared.js';
 </script>
 

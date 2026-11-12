@@ -5,6 +5,7 @@
 <script setup>
 import ul from './CalendarPrev.vue';
 import By from './Select.vue';
+// [符号说明] D=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_Ys as Ys, S_sm as sm, S_t as t, S_p as p, S__ as _, S_T as T, S_D as D, S_O as O, S_k as k, S_te as te, S_P as P, S_Te as Te, S_Ln as Ln, S_li as li } from '../shared.js';
 const e = defineProps({});
 </script>

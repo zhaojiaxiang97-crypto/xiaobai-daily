@@ -6,6 +6,7 @@
 import H_ from './FeatureInfoDialog.vue';
 import By from './Select.vue';
 import fV from './SubscriptionModelSettings.vue';
+// [符号说明] u=useConfigProviderContext, D=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_sm as sm, S_t as t, S_r as r, S_i as i, S_u as u, S_p as p, S_v as v, S_b as b, S_w as w, S_D as D, S_O as O, S_P as P } from '../shared.js';
 const e = defineProps({
       disabled: {

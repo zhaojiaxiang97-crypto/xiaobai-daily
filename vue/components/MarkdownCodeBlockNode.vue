@@ -4,6 +4,7 @@
 
 <script setup>
 import i$ from './CodeBlockShell.vue';
+// [符号说明] D=useConfigProviderContext
 import { S_is as is, S_lg as lg, S_o as o, S_s as s, S_c as c, S_l as l, S_x as x, S_S as S, S_C as C, S_E as E, S_D as D, S_pe as pe, S_me as me, S_he as he, S_ge as ge, S__e as _e, S_ve as ve, S_ye as ye, S_at as at } from '../shared.js';
 const event = defineProps({
       node: {},

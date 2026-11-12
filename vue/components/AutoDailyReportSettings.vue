@@ -5,5 +5,6 @@
 <script setup>
 import H_ from './FeatureInfoDialog.vue';
 import zAe from './AutoReportTaskDialog.vue';
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
 import { S_to as to, S_is as is, S_xs as xs, S_sm as sm, S_out as out, S_e as e, S_t as t, S_i as i, S_s as s, S_c as c, S_u as u, S_d as d, S_f as f, S_p as p, S_m as m, S_S as S, S_E as E, S_O as O, S_P as P, S_Te as Te, S_wt as wt, S__i as _i } from '../shared.js';
 </script>

@@ -5,6 +5,7 @@
 <script setup>
 import { unref as h, renderSlot as _, createElementBlock as x, watch as C, createBlock as T, openBlock as O, defineComponent as A, computed as P } from 'vue';
 import { a as t, c as n, ct as r, d as i, f as a, i as o, j as s, l as c, s as f, u as p, yt as m } from '../vendor/ui/Switch.js';
+// [符号说明] L=useConfigProviderContext
 import { n as I, r as L } from '../vendor/ui/Collection.js';
 
 function K(e_20) {

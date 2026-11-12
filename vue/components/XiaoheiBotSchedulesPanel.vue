@@ -5,6 +5,7 @@
 <script setup>
 import By from './Select.vue';
 import CP from './DateTimePickerField.vue';
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext, D=useConfigProviderContext
 import { S_Wa as Wa, S_qa as qa, S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_r as r, S_u as u, S_d as d, S_f as f, S_p as p, S_g as g, S_x as x, S_C as C, S_w as w, S_T as T, S_D as D, S_P as P, S_Te as Te, S_Ft as Ft, S_Qr as Qr } from '../shared.js';
 const e = defineProps({
       conversationId: {},

@@ -17,6 +17,7 @@ import KVe from './ToolsSettingsSection.vue';
 import AHe from './ExperimentSettingsSection.vue';
 import lWe from './AboutSettingsSection.vue';
 import SWe from './MacPermissionCheckDialog.vue';
+// [符号说明] f=useConfigProviderContext
 import { S_to as to, S_is as is, S_xs as xs, S_pb as pb, S_out as out, S_i as i, S_d as d, S_f as f, S_g as g, S__ as _, S_y as y, S_b as b, S_$e as $e, S_wt as wt, S_pr as pr } from '../shared.js';
 const e = defineProps({
       refreshKey: {},

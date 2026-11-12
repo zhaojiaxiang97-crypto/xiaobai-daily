@@ -4,6 +4,7 @@
 
 <script setup>
 import { unref as T, renderSlot as E, createBlock as j, openBlock as P } from 'vue';
+// [符号说明] r=useConfigProviderContext
 import { B as e, D as t, I as r, N as a, lt as _, z as w } from '../vendor/ui/Switch.js';
 
 const props = defineProps({

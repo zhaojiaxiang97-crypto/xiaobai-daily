@@ -4,6 +4,7 @@
 
 <script setup>
 import ul from './CalendarPrev.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_vo as vo, S_is as is, S_px as px, S_h2 as h2, S_r as r, S_i as i, S_a as a, S_u as u, S_p as p, S_P as P, S_mt as mt, S_an as an, S_sr as sr } from '../shared.js';
 const e = defineProps({
       platform: {},

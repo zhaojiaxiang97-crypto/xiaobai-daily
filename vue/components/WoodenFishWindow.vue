@@ -4,6 +4,7 @@
 
 <script setup>
 import m9 from './WoodenFishFigure.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_is as is, S_a as a, S_c as c, S_u as u, S_g as g, S__ as _, S_y as y, S_b as b, S_x as x, S_S as S, S_w as w, S_T as T, S_E as E } from '../shared.js';
 </script>
 

@@ -6,6 +6,7 @@
 import { toDisplayString } from 'vue';
 import xl from './MenuRadioItem.vue';
 import Pp from './Badge.vue';
+// [符号说明] D=useConfigProviderContext
 import { S_Yo as Yo, S_is as is, S_e as e, S_t as t, S_p as p, S_w as w, S_D as D, S_k as k, S_dn as dn } from '../shared.js';
 </script>
 

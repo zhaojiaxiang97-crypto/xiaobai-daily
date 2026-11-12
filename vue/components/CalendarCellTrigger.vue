@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
 import { S_is as is, S_as as as, S_up as up, S_e as e, S_a as a, S_c as c, S_l as l, S_u as u, S_d as d, S_f as f, S_p as p, S_m as m, S__ as _, S_v as v, S_fe as fe, S_xt as xt } from '../shared.js';
 const t = defineProps({
       day: {

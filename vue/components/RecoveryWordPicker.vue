@@ -4,6 +4,7 @@
 
 <script setup>
 import { toDisplayString, withDirectives } from 'vue';
+// [符号说明] f=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_sm as sm, S_px as px, S_r as r, S_i as i, S_o as o, S_l as l, S_f as f, S_p as p, S_P as P, S_xt as xt } from '../shared.js';
 const e = defineProps({
       modelValue: {},

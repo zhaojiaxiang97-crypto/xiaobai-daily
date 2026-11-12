@@ -5,6 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import sg from './Checkbox.vue';
+// [符号说明] u=useConfigProviderContext
 import { S_is as is, S_lg as lg, S_px as px, S_e as e, S_t as t, S_u as u } from '../shared.js';
 const event = defineProps({
       items: {},

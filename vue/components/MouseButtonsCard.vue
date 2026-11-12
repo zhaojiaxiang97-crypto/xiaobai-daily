@@ -4,6 +4,7 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
 import { S_n as n, S_i as i, S_o as o, S_s as s, S_l as l, S_u as u, S_d as d, S_f as f, S_p as p, S_g as g, S_y as y, S_x as x, S_w as w, S_at as at } from '../shared.js';
 const items = defineProps({
       left: {},

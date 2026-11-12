@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] u=useConfigProviderContext
 import { S_u as u } from '../shared.js';
 const event = defineProps({
       showHeader: {
