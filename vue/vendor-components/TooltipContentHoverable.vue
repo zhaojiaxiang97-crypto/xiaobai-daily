@@ -4,7 +4,7 @@
 
 <script setup>
 import { unref as x, renderSlot as S, createBlock as O, openBlock as A } from 'vue';
-// [符号说明] r=useConfigProviderContext
+// [符号说明] e~computed, r=useConfigProviderContext, l~computed, _~ref
 import { B as e, C as t, I as r, N as i, Q as a, T as o, V as s, at as l, dt as u, ut as _ } from '../vendor/ui/Switch.js';
 
 function U(event, el) {

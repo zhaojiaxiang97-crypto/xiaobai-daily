@@ -4,6 +4,7 @@
 
 <script setup>
 import Ly from './LeaderboardAvatar.vue';
+// [符号说明] n~computed
 import { S_is as is, S_n as n, S_o as o, S_v as v, S_at as at, S_St as St } from '../shared.js';
 const event = defineProps({
       allItems: {},

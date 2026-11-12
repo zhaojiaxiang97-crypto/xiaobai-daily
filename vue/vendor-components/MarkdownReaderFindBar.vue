@@ -4,6 +4,7 @@
 
 <script setup>
 import { normalizeClass as u, unref as d, renderSlot as p, createTextVNode as h, createElementBlock as g, renderList as _, watch as v, openBlock as T, toDisplayString as A, onBeforeMount as ae, createElementVNode as P } from 'vue';
+// [符号说明] e~computed, a~computed, l~computed
 import { B as e, C as t, T as n, U as r, V as i, at as a, lt as o, xt as c, z as l } from '../vendor/ui/Switch.js';
 import { t as R } from '../vendor/ui/icons/lucide-icons.js';
 import { t as ue } from '../vendor/i18n/i18n-helper.js';

@@ -4,6 +4,7 @@
 
 <script setup>
 import { unref as d, renderSlot as f, createElementBlock as h, renderList as g, createBlock as y, openBlock as S, onUnmounted as T, onBeforeMount as O, computed as k } from 'vue';
+// [符号说明] t~computed
 import { H as t, V as n, j as o, lt as s, xt as c, yt as l } from '../vendor/ui/Switch.js';
 import { n as j, t as M } from '../vendor/ui/Collection.js';
 

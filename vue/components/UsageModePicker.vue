@@ -5,7 +5,7 @@
 <script setup>
 import ul from './CalendarPrev.vue';
 import xl from './MenuRadioItem.vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] l~computed, u=useConfigProviderContext
 import { S_is as is, S_xs as xs, S_sm as sm, S_px as px, S_t as t, S_l as l, S_u as u, S_p as p, S_Be as Be, S_mt as mt, S_an as an } from '../shared.js';
 const e = defineProps({
       modelValue: {},

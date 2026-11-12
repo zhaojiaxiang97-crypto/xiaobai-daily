@@ -6,7 +6,7 @@
 
 <script setup>
 import { unref as x, renderSlot as S, createElementBlock as T, openBlock as A, computed as I } from 'vue';
-// [符号说明] r=useConfigProviderContext
+// [符号说明] e~computed, r=useConfigProviderContext, _~ref
 import { B as e, C as t, G as n, I as r, N as i, V as s, ut as _, xt as v } from '../vendor/ui/Switch.js';
 // [符号说明] H=usePopperContentContext
 import { r as H } from '../vendor/ui/PopperContent.js';

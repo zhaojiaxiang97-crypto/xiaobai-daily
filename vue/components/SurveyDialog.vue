@@ -4,5 +4,6 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
+// [符号说明] n~computed
 import { S_is as is, S_sm as sm, S_state as state, S_px as px, S_e as e, S_n as n, S_o as o, S_v as v, S_w as w, S_an as an } from '../shared.js';
 </script>

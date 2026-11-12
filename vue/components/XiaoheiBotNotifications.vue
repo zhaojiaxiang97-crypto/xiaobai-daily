@@ -4,6 +4,7 @@
 
 <script setup>
 import gp from './Tabs.vue';
+// [符号说明] n~computed, l~computed
 import { S_is as is, S_sm as sm, S_h2 as h2, S_e as e, S_n as n, S_i as i, S_l as l, S_p as p, S_P as P, S_zn as zn } from '../shared.js';
 </script>
 

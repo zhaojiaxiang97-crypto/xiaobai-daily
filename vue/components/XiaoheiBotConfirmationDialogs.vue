@@ -5,6 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import Pp from './Badge.vue';
+// [符号说明] M~computed
 import { S_is as is, S_alt as alt, S_t as t, S_A as A, S_j as j, S_ee as ee, S_te as te, S_M as M } from '../shared.js';
 const e = defineProps({});
 </script>

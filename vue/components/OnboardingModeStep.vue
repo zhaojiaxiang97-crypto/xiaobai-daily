@@ -4,7 +4,7 @@
 
 <script setup>
 import pp from './UsageModePicker.vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] n~computed, l~computed, u=useConfigProviderContext
 import { S_is as is, S_px as px, S_n as n, S_r as r, S_c as c, S_l as l, S_u as u, S_p as p, S_P as P } from '../shared.js';
 const e = defineProps({});
 </script>

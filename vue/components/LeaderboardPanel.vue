@@ -7,7 +7,7 @@ import { toDisplayString } from 'vue';
 import zy from './FriendManagerDialog.vue';
 import CP from './DateTimePickerField.vue';
 import Tgt from './LeaderboardShareDialog.vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] l~computed, u=useConfigProviderContext
 import { S_bo as bo, S_is as is, S_oc as oc, S_e as e, S_i as i, S_c as c, S_l as l, S_u as u, S_d as d, S_g as g, S_v as v, S_S as S, S_C as C, S_w as w, S_T as T, S_ae as ae, S_Me as Me, S_Pe as Pe, S_We as We, S_Ge as Ge, S_Ke as Ke, S_Xe as Xe, S_Qt as Qt, S_dn as dn, S_An as An, S_zn as zn, S_ui as ui, S__i as _i } from '../shared.js';
 </script>
 

@@ -5,5 +5,6 @@
 <script setup>
 import ol from './CalendarHeadCell.vue';
 import sg from './Checkbox.vue';
+// [符号说明] M~computed
 import { S_yo as yo, S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_p as p, S_x as x, S_w as w, S_j as j, S_ee as ee, S_M as M, S_ae as ae, S_se as se, S_P as P, S_mt as mt, S_lr as lr, S_li as li } from '../shared.js';
 </script>

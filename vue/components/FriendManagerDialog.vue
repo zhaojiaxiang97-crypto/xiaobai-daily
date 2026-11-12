@@ -5,7 +5,7 @@
 <script setup>
 import { createElementVNode, toDisplayString } from 'vue';
 import Ly from './LeaderboardAvatar.vue';
-// [符号说明] D=useConfigProviderContext
+// [符号说明] D=useConfigProviderContext, k~ref, ie~shallowRef, we~指令
 import { S_is as is, S_Zhe as Zhe, S_e as e, S_t as t, S_o as o, S_p as p, S_v as v, S_C as C, S_w as w, S_T as T, S_E as E, S_D as D, S_k as k, S_ie as ie, S_xe as xe, S_Se as Se, S_P as P, S_Ce as Ce, S_we as we, S_Ae as Ae, S_Xe as Xe, S_yt as yt, S_zn as zn, S_li as li } from '../shared.js';
 const event = defineProps({});
 const n = event;

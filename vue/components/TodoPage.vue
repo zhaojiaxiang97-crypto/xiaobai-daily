@@ -12,6 +12,7 @@ import xl from './MenuRadioItem.vue';
 import md from './BaseSeparator.vue';
 import Mpe from './TodoCalendarView.vue';
 import By from './Select.vue';
+// [符号说明] n~computed, l~computed, M~computed, ie~shallowRef, ue~指令
 import { S_sa as sa, S_ma as ma, S_ga as ga, S__a as _a, S_Ea as Ea, S_to as to, S_uo as uo, S__o as _o, S_vo as vo, S_So as So, S_Bo as Bo, S_Go as Go, S_Ko as Ko, S_Xo as Xo, S_Zo as Zo, S_Qo as Qo, S_$o as $o, S_es as es, S_is as is, S_as as as, S_cs as cs, S_xs as xs, S_Cs as Cs, S_ws as ws, S_Es as Es, S_nee as nee, S_tc as tc, S_nc as nc, S_ac as ac, S_ef as ef, S_nf as nf, S_pf as pf, S__f as _f, S_sm as sm, S_lg as lg, S_X_ as X_, S_J_e as J_e, S_pve as pve, S_px as px, S_e as e, S_t as t, S_n as n, S_r as r, S_a as a, S_o as o, S_l as l, S_p as p, S_v as v, S_y as y, S_w as w, S_te as te, S_M as M, S_ne as ne, S_ie as ie, S_ae as ae, S_oe as oe, S_ce as ce, S_le as le, S_ue as ue, S_ve as ve, S_Be as Be, S_Xe as Xe, S_Qe as Qe, S_yt as yt, S_xt as xt, S_St as St, S_Tt as Tt, S_Dt as Dt, S_Ot as Ot, S_kt as kt, S_Nt as Nt, S_Ft as Ft, S_tn as tn, S_an as an, S_un as un, S_yn as yn, S_Nn as Nn, S_Pn as Pn, S_zn as zn, S_Bn as Bn, S_Xn as Xn, S_pr as pr, S_mr as mr, S_Ar as Ar, S_jr as jr, S_Pr as Pr, S_Fr as Fr, S_Ir as Ir, S_ti as ti, S_ri as ri, S_ii as ii, S_li as li } from '../shared.js';
 </script>
 

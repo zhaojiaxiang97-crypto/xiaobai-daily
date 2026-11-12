@@ -10,7 +10,7 @@ import CP from './DateTimePickerField.vue';
 import OW from './Sheet.vue';
 import M$ from './ReportGenerationBasisDialog.vue';
 import v5 from './ReportCcShareDialog.vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] n~computed, u=useConfigProviderContext, k~ref, Oe~ref, Ne~computed
 import { S_to as to, S_uo as uo, S_is as is, S_xs as xs, S_Cs as Cs, S_sm as sm, S_px as px, S_h2 as h2, S_e as e, S_n as n, S_r as r, S_u as u, S_d as d, S_p as p, S_v as v, S_y as y, S_w as w, S_E as E, S_O as O, S_k as k, S_ne as ne, S_xe as xe, S_Se as Se, S_P as P, S_Ce as Ce, S_Te as Te, S_Oe as Oe, S_Me as Me, S_Ne as Ne, S_Ve as Ve, S_mt as mt, S_vt as vt, S_Et as Et, S_wn as wn, S_zn as zn, S_ui as ui, S__i as _i } from '../shared.js';
 const items = defineProps({
       refreshKey: {}

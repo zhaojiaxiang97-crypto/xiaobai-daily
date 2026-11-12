@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] l~computed
 import { S_c as c, S_l as l, S_p as p, S_m as m } from '../shared.js';
 </script>
 

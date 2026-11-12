@@ -11,7 +11,7 @@ import O8 from './KeyboardHeatmapPanel.vue';
 import FSt from './HeatMapRangeRhythmPanel.vue';
 import TCt from './HeatMapYearHighlightsPanel.vue';
 import a5 from './HeatMapBadgeShareDialog.vue';
-// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext, D=useConfigProviderContext
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext, D=useConfigProviderContext, k~ref, re~指令, ie~shallowRef, ue~指令, 
 import { S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_r as r, S_i as i, S_s as s, S_u as u, S_f as f, S_p as p, S_y as y, S_x as x, S_w as w, S_E as E, S_D as D, S_O as O, S_k as k, S_te as te, S_ne as ne, S_N as N, S_re as re, S_ie as ie, S_se as se, S_le as le, S_ue as ue, S_me as me, S_xe as xe, S_De as De, S_Oe as Oe, S_ke as ke, S_Ye as Ye, S_at as at, S_ot as ot, S_ut as ut, S_Rt as Rt, S_Ht as Ht, S_zn as zn } from '../shared.js';
 const event = defineProps({
       refreshKey: {},

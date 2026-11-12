@@ -5,7 +5,7 @@
 <script setup>
 import { toDisplayString } from 'vue';
 import Pzt from './XiaoheiBotShareDetailDialog.vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] l~computed, u=useConfigProviderContext
 import { S_no as no, S_is as is, S_xs as xs, S_sm as sm, S_href as href, S_lg as lg, S_alt as alt, S_r as r, S_i as i, S_a as a, S_o as o, S_l as l, S_u as u, S_d as d, S_p as p, S_v as v, S_P as P, S_at as at, S_mt as mt } from '../shared.js';
 const e = defineProps({
       items: {},

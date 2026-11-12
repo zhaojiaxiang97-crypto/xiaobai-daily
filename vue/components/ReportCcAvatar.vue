@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] n~computed
 import { S_alt as alt, S_n as n, S_i as i, S_at as at } from '../shared.js';
 const e = defineProps({
       name: {},

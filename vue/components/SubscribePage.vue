@@ -4,6 +4,6 @@
 
 <script setup>
 import { createElementVNode } from 'vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] l~computed, u=useConfigProviderContext, k~ref, ie~shallowRef, ue~指令, de~shallowRef
 import { S_$a as $a, S_to as to, S_vo as vo, S_Ao as Ao, S_is as is, S_hs as hs, S_xs as xs, S_sm as sm, S_lg as lg, S_pb as pb, S_px as px, S_US as US, S_cE as cE, S_h2 as h2, S_alt as alt, S_e as e, S_t as t, S_r as r, S_a as a, S_o as o, S_c as c, S_l as l, S_u as u, S_d as d, S_p as p, S_m as m, S__ as _, S_v as v, S_x as x, S_w as w, S_k as k, S_ie as ie, S_ue as ue, S_de as de, S_fe as fe, S_pe as pe, S_he as he, S_ve as ve, S_ye as ye, S_be as be, S_P as P, S_Pe as Pe, S_Xe as Xe, S_Qe as Qe, S_st as st, S_yt as yt, S_xt as xt, S_At as At, S_jt as jt, S_It as It, S_Rt as Rt, S_zt as zt, S_Vt as Vt, S_en as en, S_zn as zn } from '../shared.js';
 </script>

@@ -5,5 +5,6 @@
 <script setup>
 import { toDisplayString } from 'vue';
 import xl from './MenuRadioItem.vue';
+// [符号说明] we~指令
 import { S_is as is, S_Ys as Ys, S_e as e, S_t as t, S_p as p, S_oe as oe, S_se as se, S_xe as xe, S_Se as Se, S_we as we, S_$i as $i } from '../shared.js';
 </script>

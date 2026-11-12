@@ -5,6 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import md from './BaseSeparator.vue';
+// [符号说明] n~computed
 import { S_is as is, S_e as e, S_t as t, S_n as n, S_p as p, S_v as v, S_O as O, S_A as A, S_N as N, S_Ae as Ae, S_an as an } from '../shared.js';
 const items = defineProps({
       open: {

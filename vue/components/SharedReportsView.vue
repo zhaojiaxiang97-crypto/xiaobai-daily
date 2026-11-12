@@ -8,7 +8,7 @@ import zy from './FriendManagerDialog.vue';
 import By from './Select.vue';
 import cw from './ButtonGroup.vue';
 import v5 from './ReportCcShareDialog.vue';
-// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext, D=useConfigProviderContext
+// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext, D=useConfigProviderContext, ue~指令, we~指令, Ee~computed
 import { S_Oo as Oo, S_is as is, S_xs as xs, S_Cs as Cs, S_sm as sm, S_px as px, S_h2 as h2, S_e as e, S_a as a, S_o as o, S_u as u, S_f as f, S_p as p, S_v as v, S_y as y, S_b as b, S_C as C, S_w as w, S_D as D, S_le as le, S_ue as ue, S__e as _e, S_ye as ye, S_be as be, S_Se as Se, S_P as P, S_we as we, S_Te as Te, S_Ee as Ee, S_ke as ke, S_Me as Me, S_Be as Be, S_an as an, S_zn as zn } from '../shared.js';
 const text = defineProps({
       mode: {}

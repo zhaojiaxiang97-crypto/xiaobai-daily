@@ -4,5 +4,6 @@
 
 <script setup>
 import H_ from './FeatureInfoDialog.vue';
+// [符号说明] n~computed, de~shallowRef
 import { S_is as is, S_xs as xs, S_sm as sm, S_n as n, S_i as i, S_a as a, S_o as o, S_s as s, S_p as p, S_N as N, S_ae as ae, S_de as de, S_P as P, S_Te as Te } from '../shared.js';
 </script>

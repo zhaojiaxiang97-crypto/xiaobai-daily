@@ -4,6 +4,7 @@
 
 <script setup>
 import { unref as T, renderSlot as E, createBlock as j, openBlock as P } from 'vue';
+// [符号说明] e~computed, p~computed
 import { B as e, D as t, L as i, N as a, at as p, lt as _ } from '../vendor/ui/Switch.js';
 import { a as ie } from '../vendor/ui/PopperContent.js';
 // [符号说明] K=useConfigProviderContext

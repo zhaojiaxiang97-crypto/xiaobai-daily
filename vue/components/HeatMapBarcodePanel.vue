@@ -7,6 +7,7 @@ import { toDisplayString } from 'vue';
 import md from './BaseSeparator.vue';
 import sg from './Checkbox.vue';
 import KL from './ToggleGroup.vue';
+// [符号说明] l~computed
 import { S_to as to, S_is as is, S_sm as sm, S_mx as mx, S_h2 as h2, S_l as l, S_d as d, S_p as p, S_v as v, S_S as S, S_C as C, S_E as E, S_te as te, S_ae as ae, S_ce as ce, S_he as he, S_ge as ge, S_ye as ye, S_Qe as Qe, S_Rt as Rt, S_zn as zn } from '../shared.js';
 const e = defineProps({
       refreshKey: {}

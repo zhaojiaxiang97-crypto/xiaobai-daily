@@ -5,5 +5,6 @@
 <script setup>
 import md from './BaseSeparator.vue';
 import sg from './Checkbox.vue';
+// [符号说明] k~ref
 import { S_is as is, S_px as px, S_e as e, S_t as t, S_a as a, S_y as y, S_b as b, S_k as k } from '../shared.js';
 </script>

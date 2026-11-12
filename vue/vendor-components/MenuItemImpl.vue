@@ -4,7 +4,7 @@
 
 <script setup>
 import { unref as T, renderSlot as E, createBlock as j, openBlock as P, computed as V } from 'vue';
-// [符号说明] d=useConfigProviderContext
+// [符号说明] e~computed, d=useConfigProviderContext
 import { B as e, E as n, L as i, N as a, O as o, S as l, V as u, W as d, j as h, lt as _, vt as b } from '../vendor/ui/Switch.js';
 import { t as q } from '../vendor/ui/Collection.js';
 

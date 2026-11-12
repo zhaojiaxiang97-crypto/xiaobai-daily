@@ -4,6 +4,7 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] n~computed
 import { S_no as no, S_pre as pre, S_n as n, S_r as r, S_i as i } from '../shared.js';
 const e = defineProps({
       node: {}

@@ -4,6 +4,7 @@
 
 <script setup>
 import sg from './Checkbox.vue';
+// [符号说明] n~computed
 import { S_is as is, S_e as e, S_t as t, S_n as n, S_g as g, S__ as _ } from '../shared.js';
 </script>
 

@@ -4,5 +4,6 @@
 
 <script setup>
 import rU from './DateRangePickerField.vue';
+// [符号说明] n~computed
 import { S_to as to, S_is as is, S_e as e, S_n as n, S_r as r } from '../shared.js';
 </script>

@@ -4,6 +4,7 @@
 
 <script setup>
 import { openBlock, createElementBlock, createBlock, renderList, toDisplayString } from 'vue';
+// [符号说明] n~computed
 import { S_n as n, S_a as a, S_o as o, S_s as s, S_c as c, S_d as d, S_v as v } from '../shared.js';
 const e = defineProps({
       value: {},

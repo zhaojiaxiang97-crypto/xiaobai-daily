@@ -4,6 +4,7 @@
 
 <script setup>
 import { withDirectives } from 'vue';
+// [符号说明] n~computed
 import { S_px as px, S_pet as pet, S_alt as alt, S_Q5 as Q5, S_counter as counter, S_t as t, S_n as n, S_r as r, S_s as s, S_d as d, S_v as v, S_at as at } from '../shared.js';
 const e = defineProps({});
 </script>

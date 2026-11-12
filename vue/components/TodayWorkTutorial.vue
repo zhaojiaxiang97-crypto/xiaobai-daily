@@ -4,6 +4,7 @@
 
 <script setup>
 import Wie from './ChromaKeyVideo.vue';
+// [符号说明] n~computed
 import { S_is as is, S_ls as ls, S_n as n, S_a as a, S_s as s, S_c as c, S_p as p, S_w as w, S_ui as ui } from '../shared.js';
 const e = defineProps({});
 </script>

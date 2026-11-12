@@ -4,6 +4,7 @@
 
 <script setup>
 import { createElementBlock as g, openBlock as T } from 'vue';
+// [符号说明] e~computed, a~computed
 import { B as e, C as t, T as n, U as r, V as i, at as a, lt as o } from '../vendor/ui/Switch.js';
 
 const props = defineProps({

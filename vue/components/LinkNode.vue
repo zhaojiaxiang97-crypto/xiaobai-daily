@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] n~computed
 import { S_is as is, S_e as e, S_n as n, S_r as r, S_a as a, S_o as o, S_Be as Be } from '../shared.js';
 const event = defineProps({
       node: {},

@@ -13,7 +13,7 @@ import ict from './TimelineWordCloudDialog.vue';
 import I3 from './SankeyChart.vue';
 import Ect from './TimelineDateRangeBar.vue';
 import Olt from './AgentSessionManualImportDialog.vue';
-// [符号说明] f=useConfigProviderContext
+// [符号说明] n~computed, f=useConfigProviderContext, k~ref, M~computed, ie~shallowRef
 import { S_oa as oa, S_Ta as Ta, S_Ia as Ia, S_Ra as Ra, S_Ja as Ja, S_is as is, S_xs as xs, S_Cs as Cs, S_Ps as Ps, S_sm as sm, S_pb as pb, S_px as px, S_mx as mx, S_h2 as h2, S_D3 as D3, S_vut as vut, S_yut as yut, S_but as but, S_xut as xut, S_Sut as Sut, S_Cut as Cut, S_wut as wut, S_Tut as Tut, S_Eut as Eut, S_Dut as Dut, S_Out as Out, S_kut as kut, S_Aut as Aut, S_jut as jut, S_Mut as Mut, S_Nut as Nut, S_o6 as o6, S_e as e, S_t as t, S_n as n, S_r as r, S_i as i, S_s as s, S_f as f, S_p as p, S__ as _, S_v as v, S_y as y, S_x as x, S_w as w, S_k as k, S_A as A, S_ee as ee, S_M as M, S_ne as ne, S_N as N, S_ie as ie, S_se as se, S_ge as ge, S__e as _e, S_ye as ye, S_P as P, S_Ie as Ie, S_H as H, S_Xe as Xe, S_Ze as Ze, S_$e as $e, S_nt as nt, S_at as at, S_ot as ot, S_mt as mt, S_ht as ht, S_vt as vt, S_Tt as Tt, S_tn as tn, S_nn as nn, S_on as on, S_un as un, S_Dn as Dn, S_Jn as Jn, S_Yn as Yn, S_Xn as Xn, S_Zn as Zn, S_Qn as Qn, S_$n as $n, S_er as er, S_tr as tr, S_nr as nr, S_rr as rr, S_ir as ir, S_ar as ar, S_or as or, S_cr as cr, S_pr as pr, S_mr as mr, S_hr as hr, S_gr as gr, S__r as _r, S_vr as vr, S_yr as yr, S_br as br, S_xr as xr, S_Cr as Cr, S_Ar as Ar, S_Br as Br, S_Yr as Yr, S_ui as ui, S__i as _i } from '../shared.js';
 </script>
 

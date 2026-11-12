@@ -3,5 +3,6 @@
 </template>
 
 <script setup>
+// [符号说明] n~computed
 import { S_xs as xs, S_sm as sm, S_pre as pre, S_e as e, S_n as n, S_r as r, S_i as i, S_p as p, S_mt as mt } from '../shared.js';
 </script>

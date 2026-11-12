@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] n~computed
 import { S_bFt as bFt, S_n as n, S_je as je } from '../shared.js';
 const event = defineProps({
       align: {

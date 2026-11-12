@@ -4,6 +4,7 @@
 
 <script setup>
 import XH from './DataTransferDialogShell.vue';
+// [符号说明] n~computed, l~computed
 import { S_is as is, S_n as n, S_r as r, S_l as l } from '../shared.js';
 const e = defineProps({
       open: {

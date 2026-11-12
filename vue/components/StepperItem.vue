@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] l~computed
 import { S_is as is, S_as as as, S_state as state, S_t as t, S_i as i, S_a as a, S_c as c, S_l as l, S_fe as fe } from '../shared.js';
 const e = defineProps({
       step: {

@@ -357,7 +357,11 @@ for (const [compName, tpl] of tplMap) {
         const c = crossByLocal.get(orig);
         if (!c) continue;
         const t = labelOf(c.from, c.imported);
-        if (t && t.suggested) known.push(`${orig}=${t.suggested}`);
+        if (!t) continue;
+        // = 确定（来自 reka-ui 错误消息）；~ 推断（来自运行时返回值结构）
+        if (t.suggested) known.push(`${orig}=${t.suggested}`);
+        else if (['computed','ref','shallowRef'].includes(t.type)) known.push(`${orig}~${t.type}`);
+        else if (String(t.type).startsWith('directive-like')) known.push(`${orig}~指令`);
       }
       if (known.length) {
         const oneLine = known.join(', ').replace(/\s+/g, ' ').slice(0, 120);

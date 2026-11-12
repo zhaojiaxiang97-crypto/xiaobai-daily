@@ -4,6 +4,7 @@
 
 <script setup>
 import { h, normalizeClass as u, unref as d, renderSlot as p, createElementBlock as g, renderList as _, watch as v, openBlock as T, onUnmounted as O, toDisplayString as A, onBeforeMount as ae, createCommentVNode as N, createElementVNode as P } from 'vue';
+// [符号说明] e~computed, a~computed
 import { B as e, C as t, T as n, U as r, V as i, at as a, lt as o, r as s } from '../vendor/ui/Switch.js';
 import { l as ce, t as ue } from '../vendor/i18n/i18n-helper.js';
 import { t as Re } from '../vendor/chunks/useAuth.js';

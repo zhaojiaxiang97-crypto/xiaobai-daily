@@ -4,6 +4,7 @@
 
 <script setup>
 import Pp from './Badge.vue';
+// [符号说明] n~computed
 import { S_is as is, S_xs as xs, S_sm as sm, S_px as px, S_n as n, S_i as i, S_o as o, S_p as p, S__ as _, S_v as v, S_w as w, S_E as E, S_P as P, S_Te as Te } from '../shared.js';
 const e = defineProps({
       disabled: {

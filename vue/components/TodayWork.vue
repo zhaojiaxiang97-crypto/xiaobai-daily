@@ -9,6 +9,7 @@ import gae from './FirstReportGuideCard.vue';
 import voe from './TodayBarcodeCard.vue';
 import xoe from './TodayWorkScrollHint.vue';
 import b_ from './HeatmapCellDetail.vue';
+// [符号说明] n~computed, re~指令, ue~指令, de~shallowRef
 import { S_rs as rs, S_is as is, S_As as As, S_href as href, S_px as px, S_h2 as h2, S_alt as alt, S_out as out, S_e as e, S_n as n, S_i as i, S_a as a, S_d as d, S_p as p, S_v as v, S_y as y, S_C as C, S_w as w, S_T as T, S_E as E, S_re as re, S_ae as ae, S_ue as ue, S_de as de, S_pe as pe, S_Ae as Ae, S_je as je, S_Me as Me, S_Re as Re, S_Ge as Ge, S_Ke as Ke, S_Qe as Qe, S_$e as $e, S_wt as wt } from '../shared.js';
 const event = defineProps({
       refreshKey: {}

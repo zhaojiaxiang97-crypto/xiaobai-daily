@@ -577,7 +577,10 @@ for (const c of comps) {
         const exp = mm ? mm[1].trim() : sp.trim();
         const local = mm ? mm[2] : sp.trim();
         const tg = labelOf(f2, exp);
-        if (tg && tg.suggested) known.push(`${local}=${tg.suggested}`);
+        if (!tg) continue;
+        if (tg.suggested) known.push(`${local}=${tg.suggested}`);
+        else if (['computed','ref','shallowRef'].includes(tg.type)) known.push(`${local}~${tg.type}`);
+        else if (String(tg.type).startsWith('directive-like')) known.push(`${local}~指令`);
       }
       if (known.length) {
         const oneLine = known.join(', ').replace(/\s+/g, ' ').slice(0, 120);

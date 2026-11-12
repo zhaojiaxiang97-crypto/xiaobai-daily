@@ -4,6 +4,7 @@
 
 <script setup>
 import { normalizeClass as o, unref as s, renderSlot as c, createTextVNode as l, createElementBlock as u, createBlock as p, openBlock as m, createCommentVNode as y, createElementVNode as b } from 'vue';
+// [符号说明] e~computed, a~computed
 import { B as e, _ as t, lt as n, r, xt as i, z as a } from '../vendor/ui/Switch.js';
 import { a as S } from '../vendor/ui/DialogTitle.js';
 

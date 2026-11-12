@@ -6,6 +6,7 @@
 import { toDisplayString } from 'vue';
 import md from './BaseSeparator.vue';
 import AU from './MouseHeatmapConsentDialog.vue';
+// [符号说明] we~指令
 import { S_to as to, S_is as is, S_xs as xs, S_px as px, S_e as e, S_a as a, S_d as d, S_m as m, S_we as we, S_Te as Te, S_Qe as Qe, S_$e as $e, S_at as at, S_zn as zn } from '../shared.js';
 const event = defineProps({
       refreshKey: {},

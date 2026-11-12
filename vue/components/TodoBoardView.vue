@@ -5,6 +5,7 @@
 <script setup>
 import { withDirectives, h } from 'vue';
 import xl from './MenuRadioItem.vue';
+// [符号说明] l~computed
 import { S_xs as xs, S_lg as lg, S_px as px, S_e as e, S_r as r, S_i as i, S_a as a, S_o as o, S_s as s, S_l as l, S_v as v, S_x as x, S_S as S, S_C as C, S_w as w, S_E as E } from '../shared.js';
 const event = defineProps({
       tasks: {},

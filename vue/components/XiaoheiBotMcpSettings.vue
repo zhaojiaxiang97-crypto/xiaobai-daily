@@ -6,6 +6,7 @@
 import uc from './Alert.vue';
 import Dp from './Card.vue';
 import EO from './Empty.vue';
+// [符号说明] n~computed
 import { S_is as is, S_xs as xs, S_sm as sm, S_n as n, S_r as r, S_i as i, S_s as s, S_p as p, S_g as g, S_v as v, S_y as y, S_E as E, S_P as P } from '../shared.js';
 </script>
 

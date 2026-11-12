@@ -4,6 +4,7 @@
 
 <script setup>
 import { unref as x, renderSlot as S, createTextVNode as ne, createBlock as O, openBlock as A, toDisplayString as ae, onBeforeMount as F, computed as I } from 'vue';
+// [符号说明] e~computed, l~computed, _~ref
 import { B as e, C as t, G as n, N as i, Q as a, T as o, V as s, at as l, dt as u, g as d, k as p, ut as _ } from '../vendor/ui/Switch.js';
 import { E as R } from '../vendor/i18n/en-US-player.js';
 import { n as V } from '../vendor/ui/PopperContent.js';

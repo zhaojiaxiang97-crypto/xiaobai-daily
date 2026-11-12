@@ -5,7 +5,7 @@
 <script setup>
 import xl from './MenuRadioItem.vue';
 import md from './BaseSeparator.vue';
-// [符号说明] u=useConfigProviderContext
+// [符号说明] n~computed, u=useConfigProviderContext, ie~shallowRef
 import { S_is as is, S_px as px, S_n as n, S_u as u, S_w as w, S_E as E, S_ee as ee, S_ie as ie, S_ae as ae, S_P as P, S_Te as Te, S_mr as mr } from '../shared.js';
 const event = defineProps({
       disabled: {

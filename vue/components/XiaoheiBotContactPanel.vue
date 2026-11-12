@@ -4,6 +4,7 @@
 
 <script setup>
 import { withDirectives } from 'vue';
+// [符号说明] l~computed
 import { S_ts as ts, S_is as is, S_Cs as Cs, S_h2 as h2, S_e as e, S_t as t, S_i as i, S_l as l, S_p as p, S_ee as ee, S_te as te, S_ne as ne, S_he as he, S_ge as ge, S_P as P, S_Wr as Wr } from '../shared.js';
 </script>
 

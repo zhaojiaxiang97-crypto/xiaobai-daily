@@ -4,6 +4,7 @@
 
 <script setup>
 import { unref as d, renderSlot as f, createElementBlock as h, renderList as g, createBlock as y, Fragment as x, openBlock as S, computed as k } from 'vue';
+// [符号说明] e~shallowRef, t~computed, u~computed
 import { $ as e, H as t, bt as i, h as a, j as o, lt as s, xt as c, yt as l, z as u } from '../vendor/ui/Switch.js';
 
 const props = defineProps({

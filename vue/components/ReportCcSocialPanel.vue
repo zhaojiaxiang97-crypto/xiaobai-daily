@@ -5,6 +5,7 @@
 <script setup>
 import { createElementVNode, toDisplayString, withDirectives } from 'vue';
 import xl from './MenuRadioItem.vue';
+// [符号说明] n~computed, l~computed
 import { S_Qo as Qo, S_is as is, S_xs as xs, S_Ws as Ws, S_sm as sm, S_lg as lg, S_px as px, S_l5 as l5, S_HAt as HAt, S_e as e, S_n as n, S_r as r, S_s as s, S_c as c, S_l as l, S_p as p, S_v as v, S_b as b, S_x as x, S_S as S, S_C as C, S_w as w, S_O as O, S_j as j, S_ee as ee, S_te as te, S_Xe as Xe, S_mt as mt, S_yt as yt, S_Nt as Nt, S_An as An, S_zn as zn } from '../shared.js';
 const event = defineProps({});
 const t = event;

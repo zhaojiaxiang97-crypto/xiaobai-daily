@@ -4,6 +4,7 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] n~computed
 import { S_href as href, S_t as t, S_n as n } from '../shared.js';
 const e = defineProps({
       node: {}

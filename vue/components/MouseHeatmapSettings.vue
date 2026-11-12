@@ -5,6 +5,7 @@
 <script setup>
 import md from './BaseSeparator.vue';
 import Pp from './Badge.vue';
+// [符号说明] n~computed, l~computed
 import { S_is as is, S_xs as xs, S_sm as sm, S_px as px, S_t as t, S_n as n, S_r as r, S_i as i, S_a as a, S_c as c, S_l as l, S_p as p, S_P as P, S_Te as Te, S_mt as mt, S_Or as Or } from '../shared.js';
 const e = defineProps({});
 </script>

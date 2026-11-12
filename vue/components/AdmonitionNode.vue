@@ -4,6 +4,7 @@
 
 <script setup>
 import { createElementVNode, resolveComponent } from 'vue';
+// [符号说明] n~computed
 import { S_s$ as s$, S_h3e as h3e, S_e as e, S_n as n, S_i as i, S_a as a, S_o as o, S_s as s, S_c as c, S_v as v, S_Xe as Xe, S_at as at, S_Tt as Tt } from '../shared.js';
 const items = defineProps({
       node: {},

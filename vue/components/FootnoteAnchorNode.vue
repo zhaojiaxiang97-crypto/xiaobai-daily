@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] n~computed
 import { S_sm as sm, S_href as href, S_n as n, S_a as a } from '../shared.js';
 const event = defineProps({
       node: {}

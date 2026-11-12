@@ -4,6 +4,7 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
+// [符号说明] n~computed
 import { S_xs as xs, S_px as px, S_P3 as P3, S_n as n, S_a as a, S_m as m, S_g as g, S__ as _, S_at as at } from '../shared.js';
 const event = defineProps({
       sources: {},

@@ -4,6 +4,7 @@
 
 <script setup>
 import { normalizeClass as o, unref as s, renderSlot as c, createElementBlock as u, openBlock as m } from 'vue';
+// [符号说明] e~computed
 import { B as e, _ as t, lt as n, xt as i } from '../vendor/ui/Switch.js';
 
 const props = defineProps({

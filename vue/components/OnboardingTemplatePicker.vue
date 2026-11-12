@@ -4,6 +4,7 @@
 
 <script setup>
 import Pp from './Badge.vue';
+// [符号说明] l~computed
 import { S_is as is, S_lg as lg, S_px as px, S_t as t, S_a as a, S_o as o, S_l as l, S_p as p, S_w as w, S_an as an } from '../shared.js';
 const e = defineProps({});
 const n = e;

@@ -4,6 +4,7 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
+// [符号说明] n~computed, l~computed
 import { S_is as is, S_y8 as y8, S_t as t, S_n as n, S_r as r, S_i as i, S_l as l, S_v as v, S_w as w, S_Qt as Qt, S_dn as dn } from '../shared.js';
 const e = defineProps({
       modelValue: {

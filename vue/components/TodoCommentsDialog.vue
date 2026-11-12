@@ -4,5 +4,6 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
+// [符号说明] Ne~computed
 import { S_is as is, S_xs as xs, S_e as e, S_t as t, S_i as i, S_p as p, S_A as A, S_Ne as Ne, S_Pe as Pe, S_Be as Be, S_mt as mt, S_un as un, S_In as In } from '../shared.js';
 </script>

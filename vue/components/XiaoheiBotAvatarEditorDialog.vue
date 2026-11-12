@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] l~computed
 import { S_is as is, S_alt as alt, S_t as t, S_l as l, S_p as p, S_an as an } from '../shared.js';
 const e = defineProps({});
 </script>

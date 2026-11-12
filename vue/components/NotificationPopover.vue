@@ -3,6 +3,7 @@
 </template>
 
 <script setup>
+// [符号说明] re~指令
 import { S_is as is, S_sm as sm, S_lg as lg, S_px as px, S_t as t, S_w as w, S_re as re, S_ae as ae, S_oe as oe, S_se as se, S_Be as Be, S_mt as mt, S_dn as dn } from '../shared.js';
 </script>
 
