@@ -15,6 +15,12 @@
 2. [MODULES.md](MODULES.md) —— 主进程 47 个模块 + 145 条内部依赖
 3. [COMPONENT-INDEX.md](COMPONENT-INDEX.md) —— 418 组件 + 1600 函数名 → 行号索引
 
+## 我要确认这个仓库真的能用
+
+[END-TO-END-VERIFICATION.md](END-TO-END-VERIFICATION.md) —— **端到端验收记录**：
+从 `git clone` 到 `bash build.sh` 到产物启动，全流程实测通过
+（asar 45M / unpacked 323M / 九页面入口齐全）。
+
 ## 我要直接拿组件来用
 
 `vue/` 目录里有 **537 个还原的 `.vue`**，clone 即可用：
