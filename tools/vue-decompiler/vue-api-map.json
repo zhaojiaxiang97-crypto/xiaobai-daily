@@ -1,33 +1,117 @@
-{
-  "_source": "运行时行为探测（CDP 在渲染进程直接 import 运行时模块，逐个导出做行为测试）。比静态 AST 推断可靠。",
-  "_verify_method": "每项都通过特征行为断言：createElementVNode('div',{id},[]) 返回 type==='div' 的 vnode；normalizeClass(['a','b'])==='a b'；toDisplayString(null)==='' && toDisplayString(123)==='123'；unref({__v_isRef:true,value:'X'})==='X'；openBlock() 返回 undefined；createTextVNode() 返回 type===Symbol(v-txt) 的 vnode。",
-  "map": {
-    "j":  "defineComponent",
-    "gt": "openBlock",
-    "H":  "createElementVNode",
-    "S":  "createElementBlock",
-    "b":  "createBlock",
-    "k":  "createVNode",
-    "y":  "createVNodeVariant",
-    "O":  "createTextVNode",
-    "x":  "createCommentVNode",
-    "D":  "createStaticVNode",
-    "$n": "normalizeClass",
-    "rr": "toDisplayString",
-    "An": "unref",
-    "Bn": "isArray",
-    "Ct": "renderSlot",
-    "A":  "defineAsyncComponent"
-  },
-  "corrections_vs_static": [
-    {"short": "y",  "static_guess": "createElementVNode", "actual": "createVNodeVariant", "evidence": "arity 1 且 fn() 直接返回 vnode；真正 createElementVNode 是 H（arity 3）"},
-    {"short": "H",  "static_guess": "(未识别)", "actual": "createElementVNode", "evidence": "fn('div',{id:'p'},['x']) → vnode.type==='div' 且 arity===3"},
-    {"short": "St", "static_guess": "renderList", "actual": "(待查/非 renderList)", "evidence": "arity 4；renderList 是 h（fn([1,2],i=>i) 返回 2 元素数组）"},
-    {"short": "gt", "static_guess": "openBlock (曾怀疑被 St 取代)", "actual": "openBlock", "evidence": "openBlock 返回 undefined（blockStack.push 后无返回值），不是返回数组；gt 符合"},
-    {"short": "Ct", "static_guess": "withCtx", "actual": "renderSlot", "evidence": "用法恒为 (ctx.$slots, 'name')；withCtx 的签名是 (fn)→fn"}
-  ],
-  "unresolved": {
-    "Yt": "疑似 withCtx 但 _n 未设置，待进一步确认",
-    "St": "arity 4 返回 array，需更多样本"
-  }
-}
+[
+ {
+  "rt": "$t",
+  "name": "withScopeId",
+  "exact": true
+ },
+ {
+  "rt": "An",
+  "name": "unref",
+  "exact": true
+ },
+ {
+  "rt": "Cn",
+  "name": "shallowRef",
+  "exact": true
+ },
+ {
+  "rt": "Gt",
+  "name": "watchEffect",
+  "exact": true
+ },
+ {
+  "rt": "On",
+  "name": "toValue",
+  "exact": true
+ },
+ {
+  "rt": "Q",
+  "name": "isRuntimeOnly",
+  "exact": true
+ },
+ {
+  "rt": "S",
+  "name": "createElementBlock",
+  "exact": true
+ },
+ {
+  "rt": "T",
+  "name": "createRenderer",
+  "exact": true
+ },
+ {
+  "rt": "W",
+  "name": "hasInjectionContext",
+  "exact": true
+ },
+ {
+  "rt": "_n",
+  "name": "proxyRefs",
+  "exact": true
+ },
+ {
+  "rt": "_t",
+  "name": "popScopeId",
+  "exact": true
+ },
+ {
+  "rt": "b",
+  "name": "createBlock",
+  "exact": true
+ },
+ {
+  "rt": "bn",
+  "name": "ref",
+  "exact": true
+ },
+ {
+  "rt": "g",
+  "name": "callWithErrorHandling",
+  "exact": true
+ },
+ {
+  "rt": "gt",
+  "name": "openBlock",
+  "exact": true
+ },
+ {
+  "rt": "i",
+  "name": "BaseTransitionPropsValidators",
+  "exact": true
+ },
+ {
+  "rt": "ln",
+  "name": "isProxy",
+  "exact": false
+ },
+ {
+  "rt": "rt",
+  "name": "nextTick",
+  "exact": true
+ },
+ {
+  "rt": "wn",
+  "name": "stop",
+  "exact": true
+ },
+ {
+  "rt": "wt",
+  "name": "resolveComponent",
+  "exact": true
+ },
+ {
+  "rt": "xn",
+  "name": "shallowReactive",
+  "exact": true
+ },
+ {
+  "rt": "yt",
+  "name": "pushScopeId",
+  "exact": true
+ },
+ {
+  "rt": "z",
+  "name": "getCurrentInstance",
+  "exact": true
+ }
+]
