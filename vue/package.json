@@ -1,0 +1,10 @@
+{
+  "name": "xiaobai-vue-components",
+  "private": true,
+  "version": "1.8.3",
+  "type": "module",
+  "description": "从 小白日报 v1.8.3 打包产物还原的 Vue 组件（537 个，107 个可独立渲染）",
+  "scripts": { "dev": "vite", "build": "vite build" },
+  "dependencies": { "vue": "^3.4.0" },
+  "devDependencies": { "vite": "^5.0.0", "@vitejs/plugin-vue": "^5.0.0" }
+}

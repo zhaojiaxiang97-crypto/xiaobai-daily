@@ -1,0 +1,66 @@
+# 小白日报 v1.8.3 — 还原的 Vue 组件
+
+从 Electron 打包产物反编译出的组件，**共 537 个**，分两批。
+
+## 结构
+
+```
+components/          392 个（从 chunks/main.js 反编译）
+vendor-components/   145 个（从 ui/ blocks/ pages/ vendors/ 反编译）
+shared.js            2.1M，main bundle 的共享符号（7548 个本地 + 301 跨 chunk）
+styles/variables.css 665 个 CSS 变量（components/ 里的 scoped 规则要用）
+vendor/              原始 renderer 的必要部分（组件的跨 chunk 依赖）
+index.html / main.js 演示入口
+```
+
+## 快速跑起来
+
+```bash
+npm install
+npm run dev      # 或 npx vite
+```
+
+## 可用性（实测，不是估计）
+
+把 537 个组件一次性挂载到真实 Chrome（空 props、无父组件）得到的结果：
+
+| 批次 | 总数 | 可独立渲染 | 空白 | 报错 |
+|---|---|---|---|---|
+| `components/` | 392 | **98** | 52 | 242 |
+| `vendor-components/` | 145 | **9** | 65 | 71 |
+| **合计** | **537** | **107** | 117 | 313 |
+
+完整的组件级清单见仓库 `docs/render-verified-components.json`。
+
+### 能独立渲染的 107 个是什么样
+
+- **`components/` 里的 98 个**：结构简单、props 可选、无强依赖——`Alert` / `Card` /
+  `Avatar` / `Calendar` / `Table` / `Dialog`（子组件）等
+- **`vendor-components/` 里的 9 个**：全是子组件（`Footer` / `Header` / `Media` /
+  `Shortcut` / `Next` / `Prev` / `Thumb`），不依赖 Root 提供的 context
+
+### 其余 430 个为什么不能单独渲染
+
+| 原因 | 例子 |
+|---|---|
+| 需要父组件 context | `DialogContent` / `PopoverContent` 必须在 `DialogRoot` / `PopoverRoot` 内 |
+| 需要真实 props | 空 props 下访问 `props.xxx.yyy` 会抛错 |
+| 需要业务数据 | `HeatMapPage` / `LeaderboardPanel` 要真实数据才能算 |
+
+**这不是转换质量问题**，是这些组件的设计本来就需要上下文。
+**但它们都能编译**——537 个全部通过 `vite build`。
+
+## 怎么用
+
+- **要拿组件直接用** → 从上面那 107 个里挑
+- **只参考结构/写法** → 537 个都能看（都能编译）
+- **要跑起来看效果** → 只有 107 个能独立跑
+
+## 已知限制
+
+1. **逆向后再编译与原始产物不等价**——静态提升、patchFlag、缓存槽位都不同，功能等价
+2. **局部变量名不可还原**——压缩时语义已丢失（如 `function Za(e) { return B(() => !A(e)) }`
+   里的 `B`/`A`），只能确定少数全局符号（如 `H` = `withCtx`）
+3. **scoped 样式按原 CSS 恢复**（`[data-v-xxx]` 规则 + 665 个 CSS 变量）
+
+详见仓库 `docs/DECOMPILER.md`（main 批次）与 `docs/VENDOR.md`（vendor 批次）。

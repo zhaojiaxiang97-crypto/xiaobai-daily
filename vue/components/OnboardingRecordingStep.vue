@@ -1,0 +1,8 @@
+<template>
+<div><section><div><h2><component :is="uo" :class="`size-4 text-primary`" />{{ a(s(`methodTitle`)) }}</h2><p>{{ a(s(`methodDesc`)) }}</p></div><div><p><component :is="zn" :class="`size-3.5 animate-spin`" />{{ a(s(`loadingTemplates`)) }}</p></div></section><section><h2><component :is="rn" :class="`size-4 text-primary`" />{{ a(s(`frequencyTitle`)) }}</h2><p>{{ a(s(`frequencyDesc`)) }}</p><div :class="`mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3`" role="radiogroup" :aria-label="a(s(`frequencyTitle`))"></div><p>{{ C.value }}</p><p><component :is="sr" :class="`mt-1 size-3 shrink-0`" />{{ a(s(`estimateNote`)) }}</p></section><p>{{ a(s(`moreSettingsHint`)) }}</p><footer><component :is="P" variant="ghost" :class="`h-9 cursor-pointer gap-1.5 px-3`" :disabled="!!v.value" @click="e=>i(`back`)" /><div><p>{{ y.value }}</p><component :is="P" variant="outline" :class="`h-9 cursor-pointer gap-2 px-4`" :disabled="!x.value" @click="e=>E(true)" /><component :is="P" :class="`h-9 cursor-pointer gap-2 px-4`" :disabled="!x.value" data-testid="onboarding-recording-start" @click="e=>E(false)" /></div></footer><component :is="gh" :open="g.value" @update:open="e=>g.value=e" :templates="c" :selected-id="m.value" @select="T" /></div>
+</template>
+
+<script setup>
+import gh from './OnboardingTemplatePicker.vue';
+import { S_uo as uo, S_is as is, S_sm as sm, S_px as px, S_h2 as h2, S_e as e, S_i as i, S_a as a, S_s as s, S_c as c, S_p as p, S_m as m, S_g as g, S_v as v, S_y as y, S_x as x, S_C as C, S_T as T, S_E as E, S_P as P, S_mt as mt, S_rn as rn, S_zn as zn, S_sr as sr } from '../shared.js';
+</script>

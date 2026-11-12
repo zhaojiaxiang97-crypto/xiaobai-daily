@@ -65,7 +65,24 @@ RESULT: PASS
 ## 三、反编译器（额外成果，详见 [DECOMPILER.md](DECOMPILER.md)）
 
 
-### 直接下载现成产物
+### 组件就在仓库里（`vue/`）
+
+537 个 `.vue` 已纳入仓库，clone 即可用：
+
+```bash
+cd vue && npm install && npm run dev
+```
+
+| 目录 | 内容 |
+|---|---|
+| `vue/components/` | 392 个（main bundle） |
+| `vue/vendor-components/` | 145 个（独立 chunk） |
+| `vue/README.md` | 结构 + **实测可用性清单** + 限制 |
+
+**537 个里 107 个可独立渲染**（main 98 + vendor 9），其余需要父组件上下文
+或真实 props，但**全部能编译**。完整清单见 `docs/render-verified-components.json`。
+
+### 或直接下载现成产物
 
 Release `v1.8.3` 上有打包好的还原组件（32MB）：
 

@@ -1,0 +1,9 @@
+<template>
+<div :class="`overflow-hidden rounded-xl border border-black/[0.07] bg-white/70 shadow-[0_1px_2px_rgba(0,0,0,0.02)]`"><div><div><span :class="[`flex size-7 shrink-0 items-center justify-center rounded-full`,e.status===`failed`?`bg-red-50 text-red-500`:e.status===`skipped`?`bg-amber-50 text-amber-600`:`bg-emerald-50 text-emerald-600`]"><component :is="Ys" :size="14" /></span><div><span>{{ Se(e.status) }}</span><span>{{ e.triggerType===`manual`?t(`settings.todoAutoCompletion.triggerManual`):t(`settings.todoAutoCompletion.triggerScheduled`) }}</span></div></div><span>{{ xe(e.createdAt) }}</span></div><div><div><div><p>{{ t(`settings.todoAutoCompletion.timelineRecords`) }}</p><p>{{ e.recordCount }}</p></div><div><p>{{ t(`settings.todoAutoCompletion.incompleteCandidates`) }}</p><p>{{ e.candidateCount }}</p></div><div><p>{{ t(`settings.todoAutoCompletion.completed`) }}</p><p>{{ e.completedCount }}</p></div><div><p>{{ t(`settings.todoAutoCompletion.actualCost`) }}</p><p>{{ toDisplayString(we(e.chargedYuan))+` `+toDisplayString(t(`commonUnits.credits`)) }}</p></div></div><div><span><span>{{ toDisplayString(t(`settings.todoAutoCompletion.evaluationScope`))+`：` }}</span>{{ ` `+toDisplayString(se(e.assigneeScope))+` · `+toDisplayString(oe(e.taskRange)) }}</span><span>{{ ` `+toDisplayString(t(`settings.todoAutoCompletion.actualInput`))+` `+toDisplayString($i(e.inputTokens))+` · `+toDisplayString(t(`settings.todoAutoCompletion.actualOutput`))+` `+toDisplayString($i(e.outputTokens)) }}</span></div><div><p>{{ t(`settings.todoAutoCompletion.returnedTasks`) }}</p><div></div></div><div>{{ e.errorCode }}</div></div></div>
+</template>
+
+<script setup>
+import { toDisplayString } from 'vue';
+import xl from './MenuRadioItem.vue';
+import { S_is as is, S_Ys as Ys, S_e as e, S_t as t, S_p as p, S_oe as oe, S_se as se, S_xe as xe, S_Se as Se, S_we as we, S_$i as $i } from '../shared.js';
+</script>
