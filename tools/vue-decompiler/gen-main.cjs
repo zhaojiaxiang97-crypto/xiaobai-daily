@@ -292,6 +292,17 @@ for (const c of components) {
   madeComponents.add(c.name);
 }
 
+// 符号身份标注（运行时探针结果），供 Pass2 的 import 注释使用
+const SYMBOL_TYPES = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'symbol-types.json'), 'utf8')); }
+  catch (e) { return {}; }
+})();
+const labelOf = (from, imported) => {
+  const m = /([^/]+)\.js$/.exec(from || '');
+  if (!m) return null;
+  return SYMBOL_TYPES[`${m[1]}::${imported}`] || null;
+};
+
 // Pass2：写 .vue
 for (const [compName, tpl] of tplMap) {
   const need = [];
@@ -335,7 +346,24 @@ for (const [compName, tpl] of tplMap) {
   if (sharedSpecs.length) {
     // shared import 必须在最前（ESM 位置要求），因此前置到 script
     script = script.replace(/^/, '');   // 占位
-    const sharedImport = `import { ${[...new Set(sharedSpecs)].join(', ')} } from '../shared.js';\n`;
+    let sharedImport = `import { ${[...new Set(sharedSpecs)].join(', ')} } from '../shared.js';\n`;
+    // 符号身份说明：把已知身份的符号列在上方（只加注释、不拆 import，零风险）
+    {
+      // 只标注「该组件实际 import 的符号」（sharedSpecs），不是全部已知符号
+      const known = [];
+      for (const spec of sharedSpecs) {
+        const m = /\s+as\s+([A-Za-z_$][\w$]*)$/.exec(spec);
+        const orig = m ? m[1] : spec.trim();
+        const c = crossByLocal.get(orig);
+        if (!c) continue;
+        const t = labelOf(c.from, c.imported);
+        if (t && t.suggested) known.push(`${orig}=${t.suggested}`);
+      }
+      if (known.length) {
+        const oneLine = known.join(', ').replace(/\s+/g, ' ').slice(0, 120);
+        sharedImport = `// [符号说明] ${oneLine}\n` + sharedImport;
+      }
+    }
     // 插到所有 import 之后、第一个 const 之前
     const idx = script.search(/^const /m);
     script = idx >= 0 ? script.slice(0, idx) + sharedImport + script.slice(idx) : script + sharedImport;
@@ -456,16 +484,6 @@ for (const [varName, compName] of compVarToName) {
   if (!new RegExp('(?<![\\w$])' + varName.replace(/\$/g, '\\$') + '(?![\\w$])').test(body)) continue;
   compImports.push(`import ${varName} from './components/${compName}.vue';`);
 }
-// 符号身份注释：从运行时探针得到的类型标注（本轮新增，只加注释、不改代码）
-const SYMBOL_TYPES = (() => {
-  try { return JSON.parse(fs.readFileSync(path.join(__dirname, 'symbol-types.json'), 'utf8')); }
-  catch (e) { return {}; }
-})();
-const labelOf = (from, imported) => {
-  const m = /([^/]+)\.js$/.exec(from || '');
-  if (!m) return null;
-  return SYMBOL_TYPES[`${m[1]}::${imported}`] || null;
-};
 const crossImports = crossList.map(c => {
   const spec = c.imported === 'default' ? `default as ${c.inner}`
     : (c.imported === c.inner ? c.inner : `${c.imported} as ${c.inner}`);
