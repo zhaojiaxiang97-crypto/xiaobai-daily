@@ -5,446 +5,457 @@
 <title>小白日报 v1.8.3 — 组件预览</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;background:#f6f7f9;color:#111}
-header.top{padding:24px 28px 16px;background:#fff;border-bottom:1px solid #e3e6ea}
-h1{margin:0 0 6px;font-size:19px}
-.sub{color:#5b6470;font-size:13px}
-.meta{margin-top:10px;font-size:13px;color:#39424e}
-.meta b{color:#111}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:20px 28px 40px}
+body{margin:0;font-family:system-ui,-apple-system,"PingFang SC",sans-serif;background:#f5f6f8;color:#111}
+header.top{padding:26px 30px 18px;background:#fff;border-bottom:1px solid #e3e6ea}
+h1{margin:0 0 8px;font-size:20px;letter-spacing:-.01em}
+.sub{color:#5b6470;font-size:13.5px;line-height:1.6}
+.note{margin-top:12px;padding:10px 13px;background:#fff8e6;border-left:3px solid #e8b44a;border-radius:4px;font-size:12.5px;color:#6b5320;line-height:1.65}
+.meta{margin-top:14px;font-size:13px;color:#39424e}
+.meta b{color:#111;font-size:15px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:18px;padding:22px 30px 44px}
 figure.card{margin:0;background:#fff;border:1px solid #e3e6ea;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
-figure.card img{width:100%;display:block;background:#fff;border-bottom:1px solid #eef0f3}
-figcaption{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;font-size:12px}
+.shot{padding:18px;background:#fff;border-bottom:1px solid #eef0f3;display:flex;align-items:center;justify-content:center;min-height:100px}
+.shot img{max-width:100%;height:auto;display:block}
+figure.card.empty .shot{background:#fafbfc}
+figcaption{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;font-size:12px}
 .name{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:600}
-.tag{font-size:11px;padding:2px 6px;border-radius:4px}
+.tag{font-size:11px;padding:2px 7px;border-radius:4px;font-weight:500}
 .tag.main{background:#e8eef9;color:#2b5dad}
 .tag.vendor{background:#f9ece8;color:#a34727}
-section.failed{padding:20px 28px 40px}
-table{border-collapse:collapse;font-size:12px;width:100%;max-width:760px}
-th,td{text-align:left;padding:6px 10px;border-bottom:1px solid #e8ebef}
-th{color:#5b6470;font-weight:600}
+section.failed{padding:0 30px 44px}
+h2{font-size:15px;margin:0 0 10px}
+table{border-collapse:collapse;font-size:12px;width:100%;max-width:820px;background:#fff;border:1px solid #e3e6ea;border-radius:8px;overflow:hidden}
+th,td{text-align:left;padding:7px 12px;border-bottom:1px solid #eef0f3}
+th{background:#fafbfc;color:#5b6470;font-weight:600}
+tr:last-child td{border-bottom:none}
+code{font-family:ui-monospace,monospace;font-size:11px;background:#f2f4f7;padding:1px 5px;border-radius:3px}
 </style>
 </head>
 <body>
 <header class="top">
   <h1>小白日报 v1.8.3 — 组件预览</h1>
   <div class="sub">从 Electron 打包产物反编译出的 Vue 组件，在隔离环境逐个渲染后截图。</div>
+  <div class="note">
+    <b>关于这些截图</b>：组件是在<strong>无 props、无父组件上下文</strong>的裸环境下渲染的，
+    样式由 Tailwind CDN 提供。所以看到的是「组件结构本身」，不是它在真实应用里的样子——
+    很多组件的效果依赖于传进来的数据和周围的父组件。
+  </div>
   <div class="meta">
-    共 <b>107</b> 个组件 → 成功渲染 <b>102</b> 个
-    （其中 main 93、
+    参与渲染 <b>107</b> 个 → 成功 <b>102</b> 个
+    （main 93、
     vendor 9）
   </div>
 </header>
 <div class="grid">
     <figure class="card">
-      <img src="img/Alert.png" alt="Alert" loading="lazy">
+      <div class="shot"><img src="img/Alert.png" alt="Alert" loading="lazy"></div>
       <figcaption><span class="name">Alert</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/AlertDescription.png" alt="AlertDescription" loading="lazy">
+      <div class="shot"><img src="img/AlertDescription.png" alt="AlertDescription" loading="lazy"></div>
       <figcaption><span class="name">AlertDescription</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/AlertTitle.png" alt="AlertTitle" loading="lazy">
+      <div class="shot"><img src="img/AlertTitle.png" alt="AlertTitle" loading="lazy"></div>
       <figcaption><span class="name">AlertTitle</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Avatar.png" alt="Avatar" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Avatar.png" alt="Avatar" loading="lazy"></div>
       <figcaption><span class="name">Avatar</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/BadgeListPage.png" alt="BadgeListPage" loading="lazy">
+      <div class="shot"><img src="img/BadgeListPage.png" alt="BadgeListPage" loading="lazy"></div>
       <figcaption><span class="name">BadgeListPage</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ButtonGroup.png" alt="ButtonGroup" loading="lazy">
+      <div class="shot"><img src="img/ButtonGroup.png" alt="ButtonGroup" loading="lazy"></div>
       <figcaption><span class="name">ButtonGroup</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Calendar.png" alt="Calendar" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Calendar.png" alt="Calendar" loading="lazy"></div>
       <figcaption><span class="name">Calendar</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CalendarNext.png" alt="CalendarNext" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CalendarNext.png" alt="CalendarNext" loading="lazy"></div>
       <figcaption><span class="name">CalendarNext</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CalendarNextButton.png" alt="CalendarNextButton" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CalendarNextButton.png" alt="CalendarNextButton" loading="lazy"></div>
       <figcaption><span class="name">CalendarNextButton</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CalendarPrev.png" alt="CalendarPrev" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CalendarPrev.png" alt="CalendarPrev" loading="lazy"></div>
       <figcaption><span class="name">CalendarPrev</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CalendarPrevButton.png" alt="CalendarPrevButton" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CalendarPrevButton.png" alt="CalendarPrevButton" loading="lazy"></div>
       <figcaption><span class="name">CalendarPrevButton</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CalendarRoot.png" alt="CalendarRoot" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CalendarRoot.png" alt="CalendarRoot" loading="lazy"></div>
       <figcaption><span class="name">CalendarRoot</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/Card.png" alt="Card" loading="lazy">
+      <div class="shot"><img src="img/Card.png" alt="Card" loading="lazy"></div>
       <figcaption><span class="name">Card</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/CardContent.png" alt="CardContent" loading="lazy">
+      <div class="shot"><img src="img/CardContent.png" alt="CardContent" loading="lazy"></div>
       <figcaption><span class="name">CardContent</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/CardDescription.png" alt="CardDescription" loading="lazy">
+      <div class="shot"><img src="img/CardDescription.png" alt="CardDescription" loading="lazy"></div>
       <figcaption><span class="name">CardDescription</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/CardFooter.png" alt="CardFooter" loading="lazy">
+      <div class="shot"><img src="img/CardFooter.png" alt="CardFooter" loading="lazy"></div>
       <figcaption><span class="name">CardFooter</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/CardHeader.png" alt="CardHeader" loading="lazy">
+      <div class="shot"><img src="img/CardHeader.png" alt="CardHeader" loading="lazy"></div>
       <figcaption><span class="name">CardHeader</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/CardTitle.png" alt="CardTitle" loading="lazy">
+      <div class="shot"><img src="img/CardTitle.png" alt="CardTitle" loading="lazy"></div>
       <figcaption><span class="name">CardTitle</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CodeBlockShell.png" alt="CodeBlockShell" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CodeBlockShell.png" alt="CodeBlockShell" loading="lazy"></div>
       <figcaption><span class="name">CodeBlockShell</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CommandInput.png" alt="CommandInput" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CommandInput.png" alt="CommandInput" loading="lazy"></div>
       <figcaption><span class="name">CommandInput</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/CommandList.png" alt="CommandList" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/CommandList.png" alt="CommandList" loading="lazy"></div>
       <figcaption><span class="name">CommandList</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/Empty.png" alt="Empty" loading="lazy">
+      <div class="shot"><img src="img/Empty.png" alt="Empty" loading="lazy"></div>
       <figcaption><span class="name">Empty</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/EmptyHeader.png" alt="EmptyHeader" loading="lazy">
+      <div class="shot"><img src="img/EmptyHeader.png" alt="EmptyHeader" loading="lazy"></div>
       <figcaption><span class="name">EmptyHeader</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/EmptyMedia.png" alt="EmptyMedia" loading="lazy">
+      <div class="shot"><img src="img/EmptyMedia.png" alt="EmptyMedia" loading="lazy"></div>
       <figcaption><span class="name">EmptyMedia</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/EmptyTitle.png" alt="EmptyTitle" loading="lazy">
+      <div class="shot"><img src="img/EmptyTitle.png" alt="EmptyTitle" loading="lazy"></div>
       <figcaption><span class="name">EmptyTitle</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/Field.png" alt="Field" loading="lazy">
+      <div class="shot"><img src="img/Field.png" alt="Field" loading="lazy"></div>
       <figcaption><span class="name">Field</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/FieldDescription.png" alt="FieldDescription" loading="lazy">
+      <div class="shot"><img src="img/FieldDescription.png" alt="FieldDescription" loading="lazy"></div>
       <figcaption><span class="name">FieldDescription</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/FieldError.png" alt="FieldError" loading="lazy">
+      <div class="shot"><img src="img/FieldError.png" alt="FieldError" loading="lazy"></div>
       <figcaption><span class="name">FieldError</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/FieldGroup.png" alt="FieldGroup" loading="lazy">
+      <div class="shot"><img src="img/FieldGroup.png" alt="FieldGroup" loading="lazy"></div>
       <figcaption><span class="name">FieldGroup</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/FieldLabel.png" alt="FieldLabel" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/FieldLabel.png" alt="FieldLabel" loading="lazy"></div>
       <figcaption><span class="name">FieldLabel</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/HardBreakNode.png" alt="HardBreakNode" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/HardBreakNode.png" alt="HardBreakNode" loading="lazy"></div>
       <figcaption><span class="name">HardBreakNode</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/HeatMapYearStepper.png" alt="HeatMapYearStepper" loading="lazy">
+      <div class="shot"><img src="img/HeatMapYearStepper.png" alt="HeatMapYearStepper" loading="lazy"></div>
       <figcaption><span class="name">HeatMapYearStepper</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/ImageNode.png" alt="ImageNode" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/ImageNode.png" alt="ImageNode" loading="lazy"></div>
       <figcaption><span class="name">ImageNode</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/InlineCodeNode.png" alt="InlineCodeNode" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/InlineCodeNode.png" alt="InlineCodeNode" loading="lazy"></div>
       <figcaption><span class="name">InlineCodeNode</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/InputGroup.png" alt="InputGroup" loading="lazy">
+      <div class="shot"><img src="img/InputGroup.png" alt="InputGroup" loading="lazy"></div>
       <figcaption><span class="name">InputGroup</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/InputGroupAddon.png" alt="InputGroupAddon" loading="lazy">
+      <div class="shot"><img src="img/InputGroupAddon.png" alt="InputGroupAddon" loading="lazy"></div>
       <figcaption><span class="name">InputGroupAddon</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Item.png" alt="Item" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Item.png" alt="Item" loading="lazy"></div>
       <figcaption><span class="name">Item</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ItemActions.png" alt="ItemActions" loading="lazy">
+      <div class="shot"><img src="img/ItemActions.png" alt="ItemActions" loading="lazy"></div>
       <figcaption><span class="name">ItemActions</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ItemContent.png" alt="ItemContent" loading="lazy">
+      <div class="shot"><img src="img/ItemContent.png" alt="ItemContent" loading="lazy"></div>
       <figcaption><span class="name">ItemContent</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ItemDescription.png" alt="ItemDescription" loading="lazy">
+      <div class="shot"><img src="img/ItemDescription.png" alt="ItemDescription" loading="lazy"></div>
       <figcaption><span class="name">ItemDescription</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ItemGroup.png" alt="ItemGroup" loading="lazy">
+      <div class="shot"><img src="img/ItemGroup.png" alt="ItemGroup" loading="lazy"></div>
       <figcaption><span class="name">ItemGroup</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ItemMedia.png" alt="ItemMedia" loading="lazy">
+      <div class="shot"><img src="img/ItemMedia.png" alt="ItemMedia" loading="lazy"></div>
       <figcaption><span class="name">ItemMedia</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ItemTitle.png" alt="ItemTitle" loading="lazy">
+      <div class="shot"><img src="img/ItemTitle.png" alt="ItemTitle" loading="lazy"></div>
       <figcaption><span class="name">ItemTitle</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/KeyboardHeatmapPanel.png" alt="KeyboardHeatmapPanel" loading="lazy">
+      <div class="shot"><img src="img/KeyboardHeatmapPanel.png" alt="KeyboardHeatmapPanel" loading="lazy"></div>
       <figcaption><span class="name">KeyboardHeatmapPanel</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/LeaderboardAvatar.png" alt="LeaderboardAvatar" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/LeaderboardAvatar.png" alt="LeaderboardAvatar" loading="lazy"></div>
       <figcaption><span class="name">LeaderboardAvatar</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/LeaderboardCelebration.png" alt="LeaderboardCelebration" loading="lazy">
+      <div class="shot"><img src="img/LeaderboardCelebration.png" alt="LeaderboardCelebration" loading="lazy"></div>
       <figcaption><span class="name">LeaderboardCelebration</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/LeaderboardPodium.png" alt="LeaderboardPodium" loading="lazy">
+      <div class="shot"><img src="img/LeaderboardPodium.png" alt="LeaderboardPodium" loading="lazy"></div>
       <figcaption><span class="name">LeaderboardPodium</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/LeaderboardShareDialog.png" alt="LeaderboardShareDialog" loading="lazy">
+      <div class="shot"><img src="img/LeaderboardShareDialog.png" alt="LeaderboardShareDialog" loading="lazy"></div>
       <figcaption><span class="name">LeaderboardShareDialog</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/ListboxContent.png" alt="ListboxContent" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/ListboxContent.png" alt="ListboxContent" loading="lazy"></div>
       <figcaption><span class="name">ListboxContent</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/ListboxFilter.png" alt="ListboxFilter" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/ListboxFilter.png" alt="ListboxFilter" loading="lazy"></div>
       <figcaption><span class="name">ListboxFilter</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/ListboxItem.png" alt="ListboxItem" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/ListboxItem.png" alt="ListboxItem" loading="lazy"></div>
       <figcaption><span class="name">ListboxItem</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/LoginPage.png" alt="LoginPage" loading="lazy">
+      <div class="shot"><img src="img/LoginPage.png" alt="LoginPage" loading="lazy"></div>
       <figcaption><span class="name">LoginPage</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/MarkdownRenderer.png" alt="MarkdownRenderer" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/MarkdownRenderer.png" alt="MarkdownRenderer" loading="lazy"></div>
       <figcaption><span class="name">MarkdownRenderer</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/NativeSelectOption.png" alt="NativeSelectOption" loading="lazy">
+      <div class="shot"><img src="img/NativeSelectOption.png" alt="NativeSelectOption" loading="lazy"></div>
       <figcaption><span class="name">NativeSelectOption</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/PaymentQrCode.png" alt="PaymentQrCode" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/PaymentQrCode.png" alt="PaymentQrCode" loading="lazy"></div>
       <figcaption><span class="name">PaymentQrCode</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/PrivacyPage.png" alt="PrivacyPage" loading="lazy">
+      <div class="shot"><img src="img/PrivacyPage.png" alt="PrivacyPage" loading="lazy"></div>
       <figcaption><span class="name">PrivacyPage</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ProfileShareDialog.png" alt="ProfileShareDialog" loading="lazy">
+      <div class="shot"><img src="img/ProfileShareDialog.png" alt="ProfileShareDialog" loading="lazy"></div>
       <figcaption><span class="name">ProfileShareDialog</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Progress.png" alt="Progress" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Progress.png" alt="Progress" loading="lazy"></div>
       <figcaption><span class="name">Progress</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/ProgressRoot.png" alt="ProgressRoot" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/ProgressRoot.png" alt="ProgressRoot" loading="lazy"></div>
       <figcaption><span class="name">ProgressRoot</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/ReportCcAvatar.png" alt="ReportCcAvatar" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/ReportCcAvatar.png" alt="ReportCcAvatar" loading="lazy"></div>
       <figcaption><span class="name">ReportCcAvatar</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ReportCompanion.png" alt="ReportCompanion" loading="lazy">
+      <div class="shot"><img src="img/ReportCompanion.png" alt="ReportCompanion" loading="lazy"></div>
       <figcaption><span class="name">ReportCompanion</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/ScreenshotPromptManager.png" alt="ScreenshotPromptManager" loading="lazy">
+      <div class="shot"><img src="img/ScreenshotPromptManager.png" alt="ScreenshotPromptManager" loading="lazy"></div>
       <figcaption><span class="name">ScreenshotPromptManager</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/SelectContentImpl.png" alt="SelectContentImpl" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/SelectContentImpl.png" alt="SelectContentImpl" loading="lazy"></div>
       <figcaption><span class="name">SelectContentImpl</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/SelectIcon.png" alt="SelectIcon" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/SelectIcon.png" alt="SelectIcon" loading="lazy"></div>
       <figcaption><span class="name">SelectIcon</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/SelectItemAlignedPosition.png" alt="SelectItemAlignedPosition" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/SelectItemAlignedPosition.png" alt="SelectItemAlignedPosition" loading="lazy"></div>
       <figcaption><span class="name">SelectItemAlignedPosition</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/SheetFooter.png" alt="SheetFooter" loading="lazy">
+      <div class="shot"><img src="img/SheetFooter.png" alt="SheetFooter" loading="lazy"></div>
       <figcaption><span class="name">SheetFooter</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/SheetHeader.png" alt="SheetHeader" loading="lazy">
+      <div class="shot"><img src="img/SheetHeader.png" alt="SheetHeader" loading="lazy"></div>
       <figcaption><span class="name">SheetHeader</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Skeleton.png" alt="Skeleton" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Skeleton.png" alt="Skeleton" loading="lazy"></div>
       <figcaption><span class="name">Skeleton</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Spinner.png" alt="Spinner" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Spinner.png" alt="Spinner" loading="lazy"></div>
       <figcaption><span class="name">Spinner</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/StatisticsCompanion.png" alt="StatisticsCompanion" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/StatisticsCompanion.png" alt="StatisticsCompanion" loading="lazy"></div>
       <figcaption><span class="name">StatisticsCompanion</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Stepper.png" alt="Stepper" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Stepper.png" alt="Stepper" loading="lazy"></div>
       <figcaption><span class="name">Stepper</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/StepperRoot.png" alt="StepperRoot" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/StepperRoot.png" alt="StepperRoot" loading="lazy"></div>
       <figcaption><span class="name">StepperRoot</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/Table.png" alt="Table" loading="lazy">
+      <div class="shot"><img src="img/Table.png" alt="Table" loading="lazy"></div>
       <figcaption><span class="name">Table</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TableBody.png" alt="TableBody" loading="lazy">
+      <div class="shot"><img src="img/TableBody.png" alt="TableBody" loading="lazy"></div>
       <figcaption><span class="name">TableBody</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TableCell.png" alt="TableCell" loading="lazy">
+      <div class="shot"><img src="img/TableCell.png" alt="TableCell" loading="lazy"></div>
       <figcaption><span class="name">TableCell</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TableHead.png" alt="TableHead" loading="lazy">
+      <div class="shot"><img src="img/TableHead.png" alt="TableHead" loading="lazy"></div>
       <figcaption><span class="name">TableHead</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TableHeader.png" alt="TableHeader" loading="lazy">
+      <div class="shot"><img src="img/TableHeader.png" alt="TableHeader" loading="lazy"></div>
       <figcaption><span class="name">TableHeader</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TableRow.png" alt="TableRow" loading="lazy">
+      <div class="shot"><img src="img/TableRow.png" alt="TableRow" loading="lazy"></div>
       <figcaption><span class="name">TableRow</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/Tabs.png" alt="Tabs" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/Tabs.png" alt="Tabs" loading="lazy"></div>
       <figcaption><span class="name">Tabs</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/TabsRoot.png" alt="TabsRoot" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/TabsRoot.png" alt="TabsRoot" loading="lazy"></div>
       <figcaption><span class="name">TabsRoot</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/TimelineDateRangeBar.png" alt="TimelineDateRangeBar" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/TimelineDateRangeBar.png" alt="TimelineDateRangeBar" loading="lazy"></div>
       <figcaption><span class="name">TimelineDateRangeBar</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TodayBarcodeCard.png" alt="TodayBarcodeCard" loading="lazy">
+      <div class="shot"><img src="img/TodayBarcodeCard.png" alt="TodayBarcodeCard" loading="lazy"></div>
       <figcaption><span class="name">TodayBarcodeCard</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/TodoBallFigure.png" alt="TodoBallFigure" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/TodoBallFigure.png" alt="TodoBallFigure" loading="lazy"></div>
       <figcaption><span class="name">TodoBallFigure</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TodoLabelPopover.png" alt="TodoLabelPopover" loading="lazy">
+      <div class="shot"><img src="img/TodoLabelPopover.png" alt="TodoLabelPopover" loading="lazy"></div>
       <figcaption><span class="name">TodoLabelPopover</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/TodoPersonSearchResult.png" alt="TodoPersonSearchResult" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/TodoPersonSearchResult.png" alt="TodoPersonSearchResult" loading="lazy"></div>
       <figcaption><span class="name">TodoPersonSearchResult</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/TodoTimeInput.png" alt="TodoTimeInput" loading="lazy">
+      <div class="shot"><img src="img/TodoTimeInput.png" alt="TodoTimeInput" loading="lazy"></div>
       <figcaption><span class="name">TodoTimeInput</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/UsageModePicker.png" alt="UsageModePicker" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/UsageModePicker.png" alt="UsageModePicker" loading="lazy"></div>
       <figcaption><span class="name">UsageModePicker</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/WebsitePrivacyDialog.png" alt="WebsitePrivacyDialog" loading="lazy">
+      <div class="shot"><img src="img/WebsitePrivacyDialog.png" alt="WebsitePrivacyDialog" loading="lazy"></div>
       <figcaption><span class="name">WebsitePrivacyDialog</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/XiaoheiBotAvatarEditorDialog.png" alt="XiaoheiBotAvatarEditorDialog" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/XiaoheiBotAvatarEditorDialog.png" alt="XiaoheiBotAvatarEditorDialog" loading="lazy"></div>
       <figcaption><span class="name">XiaoheiBotAvatarEditorDialog</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/XiaoheiBotAvatarEffect.png" alt="XiaoheiBotAvatarEffect" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/XiaoheiBotAvatarEffect.png" alt="XiaoheiBotAvatarEffect" loading="lazy"></div>
       <figcaption><span class="name">XiaoheiBotAvatarEffect</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/XiaoheiBotAvatarFrame.png" alt="XiaoheiBotAvatarFrame" loading="lazy">
+      <div class="shot"><img src="img/XiaoheiBotAvatarFrame.png" alt="XiaoheiBotAvatarFrame" loading="lazy"></div>
       <figcaption><span class="name">XiaoheiBotAvatarFrame</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/XiaoheiBotAvatarSyncBadge.png" alt="XiaoheiBotAvatarSyncBadge" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/XiaoheiBotAvatarSyncBadge.png" alt="XiaoheiBotAvatarSyncBadge" loading="lazy"></div>
       <figcaption><span class="name">XiaoheiBotAvatarSyncBadge</span><span class="tag main">main</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/XiaoheiBotSettingsDialog.png" alt="XiaoheiBotSettingsDialog" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/XiaoheiBotSettingsDialog.png" alt="XiaoheiBotSettingsDialog" loading="lazy"></div>
       <figcaption><span class="name">XiaoheiBotSettingsDialog</span><span class="tag main">main</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/AlertDialogFooter.png" alt="AlertDialogFooter" loading="lazy">
+      <div class="shot"><img src="img/AlertDialogFooter.png" alt="AlertDialogFooter" loading="lazy"></div>
       <figcaption><span class="name">AlertDialogFooter</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/AlertDialogHeader.png" alt="AlertDialogHeader" loading="lazy">
+      <div class="shot"><img src="img/AlertDialogHeader.png" alt="AlertDialogHeader" loading="lazy"></div>
       <figcaption><span class="name">AlertDialogHeader</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/AlertDialogMedia.png" alt="AlertDialogMedia" loading="lazy">
+      <div class="shot"><img src="img/AlertDialogMedia.png" alt="AlertDialogMedia" loading="lazy"></div>
       <figcaption><span class="name">AlertDialogMedia</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/DialogHeader.png" alt="DialogHeader" loading="lazy">
+      <div class="shot"><img src="img/DialogHeader.png" alt="DialogHeader" loading="lazy"></div>
       <figcaption><span class="name">DialogHeader</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/DropdownMenuShortcut.png" alt="DropdownMenuShortcut" loading="lazy">
+      <div class="shot"><img src="img/DropdownMenuShortcut.png" alt="DropdownMenuShortcut" loading="lazy"></div>
       <figcaption><span class="name">DropdownMenuShortcut</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/Kbd.png" alt="Kbd" loading="lazy">
+      <div class="shot"><img src="img/Kbd.png" alt="Kbd" loading="lazy"></div>
       <figcaption><span class="name">Kbd</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/RangeCalendarNext.png" alt="RangeCalendarNext" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/RangeCalendarNext.png" alt="RangeCalendarNext" loading="lazy"></div>
       <figcaption><span class="name">RangeCalendarNext</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
-    <figure class="card">
-      <img src="img/RangeCalendarPrev.png" alt="RangeCalendarPrev" loading="lazy">
+    <figure class="card empty">
+      <div class="shot"><img src="img/RangeCalendarPrev.png" alt="RangeCalendarPrev" loading="lazy"></div>
       <figcaption><span class="name">RangeCalendarPrev</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
     <figure class="card">
-      <img src="img/SliderThumbImpl.png" alt="SliderThumbImpl" loading="lazy">
+      <div class="shot"><img src="img/SliderThumbImpl.png" alt="SliderThumbImpl" loading="lazy"></div>
       <figcaption><span class="name">SliderThumbImpl</span><span class="tag vendor">vendor</span></figcaption>
     </figure>
 </div>
-<section class="failed"><h2 style="font-size:15px">未能渲染的 5 个</h2><table><tr><th>组件</th><th>批次</th><th>原因</th></tr><tr><td>MarkdownCodeBlockNode</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for property 'l'</td></tr><tr><td>TodoCommentBody</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for property 'r'</td></tr><tr><td>TodoPostRichText</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for property 'r'</td></tr><tr><td>WoodenFishFigure</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for property 'i'</td></tr><tr><td>WoodenFishWindow</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for property 'i'</td></tr></table></section>
+<section class="failed"><h2>未能渲染的 5 个</h2><table><tr><th>组件</th><th>批次</th><th>状态</th></tr><tr><td>MarkdownCodeBlockNode</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for pr</td></tr><tr><td>TodoCommentBody</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for pr</td></tr><tr><td>TodoPostRichText</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for pr</td></tr><tr><td>WoodenFishFigure</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for pr</td></tr><tr><td>WoodenFishWindow</td><td>components</td><td>THROW:'set' on proxy: trap returned falsish for pr</td></tr></table></section>
 </body>
 </html>
