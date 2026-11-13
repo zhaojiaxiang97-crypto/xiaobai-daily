@@ -482,11 +482,34 @@ for (const [varName, compName] of compVarToName) {
 if (placeholderCount) console.error(`占位组件: ${placeholderCount}`);
 
 // B3) 组装 shared.js
+// 组件 import 是 shared.js ↔ 组件 的模块循环依赖根源：
+//   shared.js → import App from './components/App.vue'
+//   App.vue   → import { ... } from '../shared.js'   （391/392 个组件都这样）
+// ESM 在循环里求值时未初始化绑定会抛 TDZ（实测 `Cannot access 'G9' before initialization`）。
+// 但实测只有 7 个组件在 shared.js 内部被真正引用，其余 22 个是正则把属性名
+// （如 `e.id`）误判成引用。这里改成 AST 精确判断，只保留真正需要的。
 const compImports = [];
-for (const [varName, compName] of compVarToName) {
-  if (!madeComponents.has(compName)) continue;
-  if (!new RegExp('(?<![\\w$])' + varName.replace(/\$/g, '\\$') + '(?![\\w$])').test(body)) continue;
-  compImports.push(`import ${varName} from './components/${compName}.vue';`);
+{
+  let bodyAst = null;
+  try { bodyAst = P.parse(body, { sourceType: 'module' }); } catch (e) {}
+  const usedNames = new Set();
+  if (bodyAst) {
+    const bf = t.file(bodyAst.program);
+    T(bf, {
+      Identifier(ip) {
+        if (!ip.isReferencedIdentifier()) return;
+        const par = ip.parentPath;
+        if ((par.isMemberExpression() || par.isOptionalMemberExpression()) && par.node.property === ip.node && !par.node.computed) return;
+        if ((par.isObjectProperty()) && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
+        usedNames.add(ip.node.name);
+      },
+    });
+  }
+  for (const [varName, compName] of compVarToName) {
+    if (!madeComponents.has(compName)) continue;
+    if (!usedNames.has(varName)) continue;
+    compImports.push(`import ${varName} from './components/${compName}.vue';`);
+  }
 }
 const crossImports = crossList.map(c => {
   const spec = c.imported === 'default' ? `default as ${c.inner}`
