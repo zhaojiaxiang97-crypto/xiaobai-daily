@@ -3,7 +3,9 @@
 </template>
 
 <script setup>
-import { S_is as is, S_s$ as s$, S_li as li } from '../shared.js';
+import __ca_s from './NodeRenderer.vue';
+import { S_is as is, S_li as li } from '../shared.js';
+const s$ = __ca_s;
 </script>
 
 <style>

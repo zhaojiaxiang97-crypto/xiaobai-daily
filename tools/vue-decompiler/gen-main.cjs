@@ -157,10 +157,17 @@ T(ast, {
 topUnits.sort((a, b) => a.start - b.start);
 
 // A4) 符号分类：本地声明 vs cross-chunk import vs Vue API
+// 注意：这里必须写块级花括号。`if (kind==='var') for (...) if (...) add(); else if (...)`
+// 里的 else 会绑到内层 if 上，导致所有顶层 function 声明从未进入 localNames
+// （表现为 bootstrap.js 里 `aa is not defined`：函数在 shared.js 定义了却没有导出）。
 const localNames = new Set();
 for (const u of topUnits) {
-  if (u.kind === 'var') for (const d of u.declarators) if (t.isIdentifier(d.id)) localNames.add(d.id.name);
-  else if (u.kind === 'func') localNames.add(/function\s+([\w$]+)/.exec(u.code)?.[1]);
+  if (u.kind === 'var') {
+    for (const d of u.declarators) if (t.isIdentifier(d.id)) localNames.add(d.id.name);
+  } else if (u.kind === 'func') {
+    const nm = /function\s+([\w$]+)/.exec(u.code)?.[1];
+    if (nm) localNames.add(nm);
+  }
 }
 const crossList = [];
 for (const [local, info] of Object.entries(importMap)) {
@@ -174,6 +181,51 @@ for (const [local, info] of Object.entries(importMap)) {
   crossList.push({ local, imported: info.imported, from: rel, inner: 'src_' + local, exported: 'S_' + local });
 }
 const crossByLocal = new Map(crossList.map(c => [c.local, c]));
+
+// A4.5) 判定「求值期即读组件绑定」的顶层 unit —— 必须拆到 bootstrap.js
+// 成因：shared.js 顶层的 `var Q9 = ... ? L2t : V2t : G9`、`var OZ = DZ` 会立即读取组件
+// 的 import 绑定，而组件又 import shared.js；ESM 循环求值时绑定尚未初始化 → TDZ。
+const unitCodeOf = u => u.code || G(t.variableDeclaration(u.varKind, u.declarators.map(d => t.cloneNode(d, true, true))), { compact: false, comments: true, jsescOption: { minimal: true } }).code;
+const unitInfos = topUnits.map(u => ({ u, code: unitCodeOf(u), defs: unitDefinedNames(u), refs: null }));
+for (const it of unitInfos) it.refs = unitFreeRefs(it.code);
+const compLocals = new Set(compVarToName.keys());
+// 组件别名关系：`var OZ = DZ`（DZ 是组件局部名）—— 组件侧引用别名时要直接 import 目标组件
+const compAlias = new Map();
+for (const u of topUnits) {
+  if (u.kind !== 'var') continue;
+  for (const d of u.declarators) {
+    if (t.isIdentifier(d.id) && t.isIdentifier(d.init) && compLocals.has(d.init.name)) compAlias.set(d.id.name, d.init.name);
+  }
+}
+const deferredIdx = new Set();
+unitInfos.forEach((it, i) => { for (const n of it.refs) if (compLocals.has(n)) { deferredIdx.add(i); return; } });
+const seedCount = deferredIdx.size;
+// 传递闭包：引用「已被移出符号」的 unit 也要一起走，否则 shared 里留下悬空引用
+const closureRounds = Number(process.env.REFACTOR_CLOSURE ?? 6);
+let closureAdded = 0;
+for (let r = 0; r < closureRounds; r++) {
+  const moved = new Set();
+  for (const i of deferredIdx) for (const d of unitInfos[i].defs) moved.add(d);
+  const add = [];
+  unitInfos.forEach((it, i) => {
+    if (deferredIdx.has(i)) return;
+    for (const n of it.refs) if (moved.has(n) && !it.defs.has(n)) { add.push(i); return; }
+  });
+  if (!add.length) break;
+  for (const i of add) deferredIdx.add(i);
+  closureAdded += add.length;
+}
+// 保护：闭包失控时退回「只移种子」，避免把共享工具整片搬走
+const CLOSURE_CAP = Number(process.env.REFACTOR_CAP ?? 200);
+if (deferredIdx.size > CLOSURE_CAP) {
+  process.stderr.write(`[refactor] 闭包 ${deferredIdx.size} 超阈值 ${CLOSURE_CAP}，退化为只移种子\n`);
+  deferredIdx.clear();
+  unitInfos.forEach((it, i) => { for (const n of it.refs) if (compLocals.has(n)) { deferredIdx.add(i); return; } });
+  closureAdded = 0;
+}
+const movedNames = new Set();
+for (const i of deferredIdx) for (const d of unitInfos[i].defs) movedNames.add(d);
+process.stderr.write(`[refactor] 种子 ${seedCount} + 闭包 ${closureAdded} = ${deferredIdx.size} unit / 移出符号 ${movedNames.size}: ${[...movedNames].join(',')}\n`);
 
 // A5) 组件清单
 const components = [];
@@ -338,10 +390,20 @@ for (const [compName, tpl] of tplMap) {
   // 检查范围：模板 + props 代码（props 默认值里会引用 shared 符号，如 default: Rl）
   const scanText = tpl + '\n' + (propsCode || '');
   const sharedSpecs = [];
+  const aliasSpecs = [];   // 已被移出 shared 的组件别名（如 OZ = DZ）→ 直接 import 目标组件
   for (const [orig, exported] of exportSet) {
     if (occupied.has(orig)) continue;
     if (!new RegExp('(?<![\\w$])' + orig.replace(/\$/g, '\\$') + '(?![\\w$])').test(scanText)) continue;
+    if (movedNames.has(orig)) {
+      const tgt = compAlias.get(orig);
+      const cn = tgt ? compVarToName.get(tgt) : null;
+      if (cn && components.some(x => x.name === cn)) aliasSpecs.push([orig, cn]);
+      continue;
+    }
     sharedSpecs.push(exported === orig ? orig : `${exported} as ${orig}`);
+  }
+  for (const [orig, cn] of aliasSpecs) {
+    script = `import __ca_${orig.replace(/\$/g, '')} from './${cn}.vue';\nconst ${orig} = __ca_${orig.replace(/\$/g, '')};\n` + script;
   }
   if (sharedSpecs.length) {
     // shared import 必须在最前（ESM 位置要求），因此前置到 script
@@ -393,12 +455,12 @@ for (const [compName, tpl] of tplMap) {
 // 这些 unit 是应用启动/注册代码（如 `setup: () => createElementVNode(Tooltip, ...)`、
 // `Q9 === App`），把它们留在 shared.js 里就会让 shared.js import 组件，
 // 从而和「组件 import shared.js」形成模块循环 → TDZ。
-function unitReferencesComponent(u, compLocals) {
-  if (!compLocals.size || !u.code) return false;
+function unitReferencesComponent(code, compLocals) {
+  if (!compLocals.size || !code) return false;
   let ast;
-  try { ast = P.parse(u.code, { sourceType: 'module' }); } catch (e) { return false; }
+  try { ast = P.parse(code, { sourceType: 'module' }); } catch (e) { return false; }
   let hit = false;
-  T(t.file(ast.program), {
+  T(ast, {
     Identifier(ip) {
       if (hit) return;
       if (!ip.isReferencedIdentifier()) return;
@@ -408,21 +470,71 @@ function unitReferencesComponent(u, compLocals) {
   return hit;
 }
 
+// 取出一个 unit 最终代码里「无本地绑定」的自由引用符号
+function unitFreeRefs(code) {
+  const refs = new Set();
+  let ast;
+  try { ast = P.parse(code, { sourceType: 'module' }); } catch (e) { return refs; }
+  T(ast, {
+    Identifier(ip) {
+      if (!ip.isReferencedIdentifier()) return;
+      const nm = ip.node.name;
+      if (ip.scope.hasBinding(nm)) return;
+      refs.add(nm);
+    },
+  });
+  return refs;
+}
+
+// 一个 unit 在模块顶层声明的名字
+function unitDefinedNames(u) {
+  const defs = new Set();
+  if (u.kind === 'var') { for (const d of u.declarators) if (t.isIdentifier(d.id)) defs.add(d.id.name); }
+  else if (u.kind === 'func') { const m = /function\s+([\w$]+)/.exec(u.code || ''); if (m) defs.add(m[1]); }
+  return defs;
+}
+
 function buildSharedBody() {
-  const codes = [];
-  const compLocals = new Set(compVarToName.keys());
-  let deferred = 0;
-  for (const u of topUnits) {
-    // 跳过「引用组件」的 unit —— 彻底打破 shared.js ↔ 组件的循环依赖
-    if (unitReferencesComponent(u, compLocals)) { deferred++; continue; }
-    if (u.kind === 'var') {
-      codes.push({ start: u.start, code: G(t.variableDeclaration(u.varKind, u.declarators.map(d => t.cloneNode(d, true, true))), { compact: false, comments: true, jsescOption: { minimal: true } }).code });
-    } else {
-      codes.push({ start: u.start, code: u.code });
-    }
-  }
-  process.stderr.write(`[refactor] 移到 bootstrap 的 unit: ${deferred}\n`);
-  let body = codes.map(c => c.code).join('\n\n');
+  const sharedCodes = [], bootCodes = [];
+  unitInfos.forEach((it, i) => { (deferredIdx.has(i) ? bootCodes : sharedCodes).push(it.code); });
+  process.stderr.write(`[refactor] shared unit ${sharedCodes.length} | bootstrap unit ${bootCodes.length}\n`);
+
+  // 两条分支走同一条改写管线：shared 侧留 shared.js，被移出的写进 bootstrap.js
+  const rw = applyPipeline(sharedCodes.join('\n\n'));
+  const bootRw = applyPipeline(bootCodes.join('\n\n'));
+  const bootLink = linkBootToShared(bootRw.body, movedNames);
+  process.stderr.write(`[refactor] bootstrap: ${bootCodes.length} unit | 回连 shared 符号 ${bootLink.n} 处\n`);
+  return {
+    body: rw.body, vueN: rw.vueN, crossN: rw.crossN, fixN: rw.fixN, deadN: rw.deadN,
+    bootBody: bootLink.code, movedNames,
+  };
+}
+
+// bootstrap 侧对 shared.js 符号的引用 → __s.S_xxx（bootstrap 单向依赖 shared）
+function linkBootToShared(code, movedNames) {
+  let ast;
+  try { ast = P.parse(code, { sourceType: 'module' }); } catch (e) { return { code, n: 0 }; }
+  let n = 0;
+  T(ast, {
+    Identifier(ip) {
+      if (!ip.isReferencedIdentifier()) return;
+      const nm = ip.node.name;
+      if (!localNames.has(nm) || movedNames.has(nm)) return;
+      if (ip.scope.hasBinding(nm)) return;   // 本模块（bootstrap）内已声明
+      const par = ip.parentPath;
+      if (par.isObjectProperty() && par.node.key === ip.node && !par.node.computed) return;
+      if ((par.isMemberExpression() || par.isOptionalMemberExpression())
+          && par.node.property === ip.node && !par.node.computed) return;
+      if (par.isVariableDeclarator() && par.node.id === ip.node) return;
+      ip.replaceWith(t.memberExpression(t.identifier('__s'), t.identifier('S_' + nm)));
+      n++;
+    },
+  });
+  return { code: n ? G(ast, { compact: false, comments: true, jsescOption: { minimal: true } }).code : code, n };
+}
+
+function applyPipeline(input) {
+  let body = input;
 
   // B2a) Vue API 引用 → __vue.xxx
   let ast2 = P.parse(body, { sourceType: 'module' });
@@ -491,10 +603,10 @@ function buildSharedBody() {
   return { body, vueN, crossN, fixN, deadN };
 }
 
-const { body, vueN, crossN, fixN, deadN } = buildSharedBody();
+const { body, vueN, crossN, fixN, deadN, bootBody } = buildSharedBody();
 
 // B2.5) 为「body 里被引用但组件未生成」的组件补占位 .vue（避免悬空引用）
-const bodyText = body;
+const bodyText = body + '\n' + bootBody;
 for (const [varName, compName] of compVarToName) {
   if (madeComponents.has(compName)) continue;
   if (!new RegExp('(?<![\\w$])' + varName.replace(/\$/g, '\\$') + '(?![\\w$])').test(bodyText)) continue;
@@ -512,29 +624,33 @@ if (placeholderCount) console.error(`占位组件: ${placeholderCount}`);
 // ESM 在循环里求值时未初始化绑定会抛 TDZ（实测 `Cannot access 'G9' before initialization`）。
 // 但实测只有 7 个组件在 shared.js 内部被真正引用，其余 22 个是正则把属性名
 // （如 `e.id`）误判成引用。这里改成 AST 精确判断，只保留真正需要的。
-const compImports = [];
-{
-  let bodyAst = null;
-  try { bodyAst = P.parse(body, { sourceType: 'module' }); } catch (e) {}
+// 生成某段代码里真正被引用的组件 import 语句（AST 精确，避免属性名误判）
+function usedComponentNames(code) {
   const usedNames = new Set();
-  if (bodyAst) {
-    const bf = t.file(bodyAst.program);
-    T(bf, {
-      Identifier(ip) {
-        if (!ip.isReferencedIdentifier()) return;
-        const par = ip.parentPath;
-        if ((par.isMemberExpression() || par.isOptionalMemberExpression()) && par.node.property === ip.node && !par.node.computed) return;
-        if ((par.isObjectProperty()) && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
-        usedNames.add(ip.node.name);
-      },
-    });
-  }
+  let ast = null;
+  try { ast = P.parse(code, { sourceType: 'module' }); } catch (e) { return usedNames; }
+  T(ast, {
+    Identifier(ip) {
+      if (!ip.isReferencedIdentifier()) return;
+      const par = ip.parentPath;
+      if ((par.isMemberExpression() || par.isOptionalMemberExpression()) && par.node.property === ip.node && !par.node.computed) return;
+      if ((par.isObjectProperty()) && par.node.key === ip.node && !par.node.computed && !par.node.shorthand) return;
+      usedNames.add(ip.node.name);
+    },
+  });
+  return usedNames;
+}
+function compImportsFrom(usedNames) {
+  const out = [];
   for (const [varName, compName] of compVarToName) {
     if (!madeComponents.has(compName)) continue;
     if (!usedNames.has(varName)) continue;
-    compImports.push(`import ${varName} from './components/${compName}.vue';`);
+    out.push(`import ${varName} from './components/${compName}.vue';`);
   }
+  return out;
 }
+const compImports = compImportsFrom(usedComponentNames(body));
+const bootCompImports = compImportsFrom(usedComponentNames(bootBody));
 const crossImports = crossList.map(c => {
   const spec = c.imported === 'default' ? `default as ${c.inner}`
     : (c.imported === c.inner ? c.inner : `${c.imported} as ${c.inner}`);
@@ -550,9 +666,10 @@ const crossImports = crossList.map(c => {
   return `${cmt}import { ${spec} } from '${c.from}';`;
 });
 const exportLines = [];
-for (const n of localNames) if (n) exportLines.push(`export { ${n} as S_${n} };`);
+for (const n of localNames) if (n && !movedNames.has(n)) exportLines.push(`export { ${n} as S_${n} };`);
 for (const c of crossList) if (!localNames.has(c.local)) exportLines.push(`export { ${c.inner} as ${c.exported} };`);
 for (const [varName, compName] of compVarToName) {
+  if (movedNames.has(varName)) continue;
   if (madeComponents.has(compName) && compImports.some(l => l.includes(` ${varName} `))) {
     exportLines.push(`export { ${varName} as S_${varName} };`);
   }
@@ -569,6 +686,21 @@ ${body}
 ${[...new Set(exportLines)].join('\n')}
 `;
 fs.writeFileSync(outDir + '/src/shared.js', sharedCode);
+
+// B3.5) 写 bootstrap.js —— 承载「求值期即读组件绑定」的顶层 unit
+// 依赖方向单一：bootstrap.js → shared.js，bootstrap.js → 组件；组件 → shared.js。无环。
+const bootstrapCode = `// 自动生成：从 shared.js 拆出的启动侧代码
+// 这些顶层 unit 在模块求值期会立即读取组件 import 绑定，而组件又 import shared.js，
+// 循环求值时未初始化的绑定会抛 TDZ（Cannot access 'X' before initialization）。
+import * as __vue from 'vue';
+${bootCompImports.join('\n')}
+${crossImports.join('\n')}
+import * as __s from './shared.js';
+
+${bootBody}
+`;
+fs.writeFileSync(outDir + '/src/bootstrap.js', bootstrapCode);
+console.error(`bootstrap.js ${(bootstrapCode.length / 1024).toFixed(1)}KB | 组件import ${bootCompImports.length} | unit ${movedNames.size} 个符号`);
 
 // B4) 未定义符号自检（排除外部全局）
 try {

@@ -6,7 +6,7 @@
 import { toDisplayString } from 'vue';
 import xl from './MenuRadioItem.vue';
 // [符号说明] M~computed
-import { S_vo as vo, S_is as is, S_sm as sm, S_px as px, S_e as e, S_t as t, S_i as i, S_d as d, S_p as p, S_v as v, S_T as T, S_M as M, S_ne as ne, S_P as P } from '../shared.js';
+import { S_vo as vo, S_is as is, S_sm as sm, S_px as px, S_h3 as h3, S_e as e, S_t as t, S_i as i, S_d as d, S_p as p, S_v as v, S_T as T, S_M as M, S_ne as ne, S_P as P } from '../shared.js';
 const text = defineProps({
       userId: {},
       variant: {},

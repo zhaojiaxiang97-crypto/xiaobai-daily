@@ -5,7 +5,7 @@
 <script setup>
 import tb from './TodoScheduleRangePanel.vue';
 // [符号说明] n~computed
-import { S_rx as rx, S_n as n, S_d as d, S_g as g, S_y as y, S_x as x } from '../shared.js';
+import { S_rx as rx, S_y2 as y2, S_x2 as x2, S_n as n, S_d as d, S_g as g, S_y as y, S_x as x } from '../shared.js';
 </script>
 
 <style>

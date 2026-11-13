@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { S_is as is, S_as as as, S_a as a, S_s as s, S_fe as fe, S_at as at } from '../shared.js';
+import { S_is as is, S_as as as, S_fit as fit, S_a as a, S_s as s, S_fe as fe, S_at as at } from '../shared.js';
 const e = defineProps({
       nonce: {
         type: String,

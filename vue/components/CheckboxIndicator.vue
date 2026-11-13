@@ -4,7 +4,7 @@
 
 <script setup>
 // [符号说明] n~computed
-import { S_is as is, S_as as as, S_state as state, S_n as n } from '../shared.js';
+import { S_is as is, S_as as as, S_fl as fl, S_state as state, S_n as n } from '../shared.js';
 const e = defineProps({
       forceMount: {
         type: Boolean,

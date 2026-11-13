@@ -4,7 +4,7 @@
 
 <script setup>
 // [符号说明] n~computed
-import { S_is as is, S_sm as sm, S_alt as alt, S_e as e, S_t as t, S_n as n, S_i as i, S_s as s, S_d as d, S_p as p, S_P as P, S_at as at } from '../shared.js';
+import { S_is as is, S_sm as sm, S_h3 as h3, S_alt as alt, S_e as e, S_t as t, S_n as n, S_i as i, S_s as s, S_d as d, S_p as p, S_P as P, S_at as at } from '../shared.js';
 </script>
 
 <style>

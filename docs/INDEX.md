@@ -42,7 +42,9 @@ cd vue && npm install && npm run dev
 2. [VENDOR.md](VENDOR.md) —— **vendor 独立 chunk 线**：145 个组件全部可 import、
    10 可渲染、71 个错误分类、3 个架构性修复
 3. [SYMBOL-RESTORE.md](SYMBOL-RESTORE.md) —— **符号还原**：能做到什么、做不到什么
-4. 工具在 `tools/vue-decompiler/`
+4. [TDZ-BOOTSTRAP-SPLIT.md](TDZ-BOOTSTRAP-SPLIT.md) —— **整应用入口**：为什么要把启动
+   代码从 `shared.js` 拆到 `bootstrap.js`，以及怎么验证（`verify-root-entry.sh`）
+5. 工具在 `tools/vue-decompiler/`
 
 ## 我要改代码并验证
 

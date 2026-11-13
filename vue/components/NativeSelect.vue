@@ -5,7 +5,7 @@
 <script setup>
 import { createElementVNode, withCtx } from 'vue';
 import md from './BaseSeparator.vue';
-import { S_is as is, S_sm as sm, S_lg as lg, S_CN as CN, S_t as t, S_r as r, S_i as i, S_v as v, S_y as y, S_w as w, S_je as je, S_Xe as Xe, S_$e as $e, S_ot as ot, S_bt as bt, S_un as un, S_pr as pr } from '../shared.js';
+import { S_is as is, S_sm as sm, S_lg as lg, S_CN as CN, S_fit as fit, S_t as t, S_r as r, S_i as i, S_v as v, S_y as y, S_w as w, S_je as je, S_Xe as Xe, S_$e as $e, S_ot as ot, S_bt as bt, S_un as un, S_pr as pr } from '../shared.js';
 const e = defineProps({
       modelValue: {},
       class: {

@@ -6,7 +6,7 @@
 import { createElementVNode, withDirectives, resolveComponent } from 'vue';
 import Ip from './CreditCampaignCard.vue';
 // [符号说明] l~computed, we~指令
-import { S_is as is, S_os as os, S_e as e, S_o as o, S_s as s, S_l as l, S_v as v, S_x as x, S_w as w, S_oe as oe, S_ce as ce, S_xe as xe, S_Se as Se, S_P as P, S_Ce as Ce, S_we as we, S_Xe as Xe, S_Tt as Tt, S_An as An, S_Pr as Pr } from '../shared.js';
+import { S_is as is, S_os as os, S_bot as bot, S_e as e, S_o as o, S_s as s, S_l as l, S_v as v, S_x as x, S_w as w, S_oe as oe, S_ce as ce, S_xe as xe, S_Se as Se, S_P as P, S_Ce as Ce, S_we as we, S_Xe as Xe, S_Tt as Tt, S_An as An, S_Pr as Pr } from '../shared.js';
 const items = defineProps({
       collapsed: {
         type: Boolean

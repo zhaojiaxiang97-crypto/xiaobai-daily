@@ -3,8 +3,10 @@
 </template>
 
 <script setup>
+import __ca_s from './NodeRenderer.vue';
 // [符号说明] n~computed, l~computed, u=useConfigProviderContext
-import { S_is as is, S_th as th, S_s$ as s$, S_e as e, S_n as n, S_r as r, S_i as i, S_a as a, S_o as o, S_s as s, S_l as l, S_u as u, S_d as d } from '../shared.js';
+import { S_is as is, S_th as th, S_e as e, S_n as n, S_r as r, S_i as i, S_a as a, S_o as o, S_s as s, S_l as l, S_u as u, S_d as d } from '../shared.js';
+const s$ = __ca_s;
 const event = defineProps({
       node: {},
       indexKey: {},

@@ -3,8 +3,10 @@
 </template>
 
 <script setup>
+import __ca_s from './NodeRenderer.vue';
 // [符号说明] n~computed
-import { S_is as is, S_s$ as s$, S_n as n } from '../shared.js';
+import { S_is as is, S_n as n } from '../shared.js';
+const s$ = __ca_s;
 const e = defineProps({
       node: {},
       indexKey: {},

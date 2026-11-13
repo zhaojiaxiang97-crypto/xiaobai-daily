@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { S_sm as sm, S_w as w, S_je as je, S_cn as cn } from '../shared.js';
+import { S_sm as sm, S_fit as fit, S_w as w, S_je as je, S_cn as cn } from '../shared.js';
 const e = defineProps({
       class: {
         type: [Boolean, null, String, Object, Array]

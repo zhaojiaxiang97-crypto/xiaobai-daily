@@ -4,7 +4,7 @@
 
 <script setup>
 // [符号说明] n~computed
-import { S_is as is, S_cy as cy, S_rx as rx, S_cx as cx, S_n as n, S_r as r, S_i as i, S_a as a, S_d as d, S_g as g } from '../shared.js';
+import { S_is as is, S_ry as ry, S_cy as cy, S_rx as rx, S_cx as cx, S_n as n, S_r as r, S_i as i, S_a as a, S_d as d, S_g as g } from '../shared.js';
 const e = defineProps({
       texts: {},
       tone: {},

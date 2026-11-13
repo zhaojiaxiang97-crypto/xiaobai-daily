@@ -149,6 +149,42 @@ c$.install = e => { e.component(c$.__name, c$); };
 **修复**：排除所有 `X.install = ...` 语句（还原成 `.vue` 后不需要全局注册）。
 效果：组件 import 从 59 降到 32，循环依赖大幅减少。
 
+### 彻底的修复：启动代码拆到 `bootstrap.js`
+
+`.install` 只是把环从 59 降到 32，环本身还在。真正的元凶是**求值期立即读取组件绑定**：
+
+```js
+var Z9 = new URLSearchParams(location.search).get('window'),
+  Q9 = Z9 === 'todo-floating' ? L2t : Z9 === 'wooden-fish' ? V2t : G9,   // Ct = createApp
+  $9 = Ct(Q9);
+aa((e, t) => Ot('action', e, t)), $9.use(Yt), $9.mount('#app');
+```
+
+`G9` / `L2t` / `V2t` 都是组件的 import 绑定。以 `App.vue` 为入口时求值顺序是
+`App.vue（求值中）→ shared.js → 读 G9（尚未初始化）→ TDZ`。
+
+`gen-main.cjs` 的做法：
+
+1. 每个顶层 unit 用 AST 算两个集合：声明的名字、无本地绑定的自由引用（不用正则拼字符串）
+2. 种子 = 引用了组件局部名的 unit；再跑**传递闭包**，把引用了「已移出符号」的 unit 一起带走，
+   否则 shared.js 里会留下悬空引用
+3. 两部分走同一条改写管线（Vue API → `__vue.x`、跨 chunk 改名、资源路径重写）
+4. bootstrap 侧对 shared 符号的引用改写成 `__s.S_xxx`，依赖方向变成单向：
+   `bootstrap.js → shared.js`、`bootstrap.js → 组件`、`组件 → shared.js`
+5. 顺带修掉一个静默 bug：`if (kind==='var') for (…) if (…) add(); else if (kind==='func') …`
+   里的 `else` 绑在内层 `if` 上，导致**所有顶层函数名从未进入 localNames**（2134 个漏项），
+   表现是 bootstrap.js 里 `aa is not defined` —— 函数在 shared.js 里定义了，却没有 `export`
+
+实测规模：2120 个 unit 里只有 7 个要拆（6 个种子 + 1 个闭包）、22 个符号。
+组件 import 从 6 降到 **0**，`未定义` 保持 0，批量渲染 104 → 105（同一脚本、同一环境）。
+
+以 `App.vue` 为入口的真实 Chrome 对照：
+
+| 版本 | 结果 |
+|---|---|
+| 拆分前 | `ReferenceError: Cannot access 'G9' before initialization` |
+| 拆分后 | 加载成功，`bootstrap.js` 执行完 `#app` 已由 Vue 接管 |
+
 ## 验证方法
 
 ```bash

@@ -3,8 +3,10 @@
 </template>
 
 <script setup>
+import __ca_s from './NodeRenderer.vue';
+import { S_is as is, S_r as r, S_i as i, S_dt as dt } from '../shared.js';
+const s$ = __ca_s;
 import dd from './SelectTrigger.vue';
-import { S_is as is, S_s$ as s$, S_r as r, S_i as i, S_dt as dt } from '../shared.js';
 const e = defineProps({
       node: {},
       indexKey: {},

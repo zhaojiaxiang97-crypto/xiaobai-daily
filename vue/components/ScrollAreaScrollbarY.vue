@@ -5,6 +5,6 @@
 <script setup>
 import Du from './ScrollAreaScrollbarImpl.vue';
 // [符号说明] n~computed
-import { S_is as is, S_px as px, S_t as t, S_n as n, S_r as r, S_a as a, S_y as y, S_at as at } from '../shared.js';
+import { S_is as is, S_cu as cu, S_px as px, S_t as t, S_n as n, S_r as r, S_a as a, S_y as y, S_at as at } from '../shared.js';
 const e = defineProps({});
 </script>

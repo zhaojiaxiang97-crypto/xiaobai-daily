@@ -4,5 +4,5 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
-import { S_is as is, S_xs as xs, S_sm as sm, S_e as e, S_t as t, S_a as a, S_c as c, S_b as b, S_P as P } from '../shared.js';
+import { S_is as is, S_xs as xs, S_sm as sm, S_bot as bot, S_e as e, S_t as t, S_a as a, S_c as c, S_b as b, S_P as P } from '../shared.js';
 </script>

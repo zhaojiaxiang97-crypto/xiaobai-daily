@@ -5,7 +5,7 @@
 <script setup>
 import { toDisplayString, withDirectives } from 'vue';
 // [符号说明] l~computed
-import { S_ts as ts, S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_r as r, S_i as i, S_l as l, S_w as w, S_mt as mt } from '../shared.js';
+import { S_ts as ts, S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_h3 as h3, S_e as e, S_t as t, S_r as r, S_i as i, S_l as l, S_w as w, S_mt as mt } from '../shared.js';
 const row = defineProps({
       todoId: {},
       commentCount: {},

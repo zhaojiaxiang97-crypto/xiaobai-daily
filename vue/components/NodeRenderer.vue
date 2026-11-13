@@ -5,7 +5,9 @@
 </template>
 
 <script setup>
-import { S_is as is, S_OZ as OZ, S_e as e, S_t as t, S_c as c } from '../shared.js';
+import __ca_OZ from './HeadingNode.vue';
+import { S_is as is, S_e as e, S_t as t, S_c as c } from '../shared.js';
+const OZ = __ca_OZ;
 </script>
 
 <style>

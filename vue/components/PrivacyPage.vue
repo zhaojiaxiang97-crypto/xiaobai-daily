@@ -3,5 +3,5 @@
 </template>
 
 <script setup>
-import { S_pa as pa, S_io as io, S_bo as bo, S_Eo as Eo, S_jo as jo, S_Ho as Ho, S_ns as ns, S_is as is, S_js as js, S_p2 as p2, S_h2 as h2, S_p3 as p3, S_r as r, S_p as p, S_v as v, S_Vt as Vt, S_Dr as Dr } from '../shared.js';
+import { S_pa as pa, S_io as io, S_bo as bo, S_Eo as Eo, S_jo as jo, S_Ho as Ho, S_ns as ns, S_is as is, S_js as js, S_p1 as p1, S_p2 as p2, S_h2 as h2, S_p3 as p3, S_r as r, S_p as p, S_v as v, S_Vt as Vt, S_Dr as Dr } from '../shared.js';
 </script>

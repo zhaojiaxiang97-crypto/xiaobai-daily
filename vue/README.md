@@ -18,11 +18,20 @@
 ```
 components/          392 个（从 chunks/main.js 反编译）
 vendor-components/   145 个（从 ui/ blocks/ pages/ vendors/ 反编译）
-shared.js            2.1M，main bundle 的共享符号（7548 个本地 + 301 跨 chunk）
+shared.js            2.1M，main bundle 的共享符号（9202 个本地 + 301 跨 chunk）
+bootstrap.js         32K，应用启动侧代码（根组件选择 + createApp().mount('#app')）
 styles/variables.css 665 个 CSS 变量（components/ 里的 scoped 规则要用）
 vendor/              原始 renderer 的必要部分（组件的跨 chunk 依赖）
-index.html / main.js 演示入口
+app.html             整应用入口（加载 bootstrap.js）
+index.html / main.js 组件画廊入口
 ```
+
+`shared.js` 与 `bootstrap.js` 的拆分不是风格问题：原 bundle 顶层既有符号定义，
+也有 `var Q9 = ... ? L2t : V2t : G9; createApp(Q9).mount('#app')` 这类**求值期立即
+读取组件绑定**的启动代码。后者留在 shared.js 里，就会和 391 个 `import shared.js`
+的组件形成模块环，以 `App.vue` 为入口加载时抛
+`Cannot access 'G9' before initialization`。拆开后依赖是单向的：
+`bootstrap.js → shared.js`、`bootstrap.js → 组件`、`组件 → shared.js`。
 
 ## 快速跑起来
 
@@ -66,6 +75,20 @@ npm run dev      # 或 npx vite
 - **要拿组件直接用** → 从上面那 107 个里挑
 - **只参考结构/写法** → 537 个都能看（都能编译）
 - **要跑起来看效果** → 只有 107 个能独立跑
+- **要看整应用入口** → `app.html`（加载 `bootstrap.js`，真实 Chrome 实测：模块加载完成、
+  `createApp` 挂载成功、无 TDZ 报错）
+
+## 整应用入口的验证结果
+
+以 `App.vue` 为入口在真实 Chrome 里加载，两版对照（同一环境、同一页面）：
+
+| 版本 | 结果 |
+|---|---|
+| 拆分前（shared.js 含启动代码） | `ReferenceError: Cannot access 'G9' before initialization` |
+| 拆分后（启动代码在 bootstrap.js） | 加载成功；`bootstrap.js` 执行后 `#app` 已由 Vue 接管 |
+
+渲染出的是空注释节点而非完整界面：`App.vue` 依赖 Electron 主进程的 IPC 数据
+（设置、待办、登录态），浏览器里没有这些来源。挂载链路本身是通的。
 
 ## 已知限制
 

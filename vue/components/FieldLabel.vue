@@ -4,7 +4,7 @@
 
 <script setup>
 import PO from './Label.vue';
-import { S_is as is, S_lg as lg, S_p as p, S_w as w, S_je as je } from '../shared.js';
+import { S_is as is, S_lg as lg, S_fit as fit, S_p as p, S_w as w, S_je as je } from '../shared.js';
 const e = defineProps({
       class: {
         type: [Boolean, null, String, Object, Array]

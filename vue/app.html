@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小白日报（还原整应用入口）</title>
+  <link rel="stylesheet" href="./styles/variables.css" />
+</head>
+<body>
+  <!--
+    整应用入口：bootstrap.js 承载原 main.js 里「求值期即读组件绑定」的顶层代码
+    （启动分支 + 三个根组件选择 + createApp().mount('#app')）。
+    这些代码若留在 shared.js，会与 391 个 import shared.js 的组件形成模块环，
+    按 App.vue 为入口加载时抛 TDZ：Cannot access 'G9' before initialization。
+  -->
+  <div id="app"></div>
+  <script type="module" src="./bootstrap.js"></script>
+</body>
+</html>

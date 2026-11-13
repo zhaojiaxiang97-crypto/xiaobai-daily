@@ -10,7 +10,7 @@ import eVt from './XiaoheiBotConsultationPanel.vue';
 import RVt from './XiaoheiBotSideTopicPanel.vue';
 import lHt from './XiaoheiBotOnboardingCard.vue';
 // [符号说明] l~computed, u=useConfigProviderContext, D=useConfigProviderContext
-import { S_to as to, S_Yo as Yo, S_is as is, S_$s as $s, S_alt as alt, S_e as e, S_l as l, S_u as u, S_p as p, S_m as m, S_v as v, S_S as S, S_C as C, S_D as D, S_ee as ee, S_te as te, S_Me as Me, S_xt as xt, S_wt as wt, S_Ot as Ot, S_Pt as Pt, S_Ft as Ft, S_Lt as Lt, S_Ht as Ht, S_Ut as Ut, S_Jt as Jt, S_Yt as Yt, S_Xt as Xt, S_Zt as Zt, S_rn as rn, S_cn as cn, S_ln as ln, S_un as un, S_An as An, S_zn as zn, S_Qr as Qr } from '../shared.js';
+import { S_to as to, S_Yo as Yo, S_is as is, S_$s as $s, S_alt as alt, S_OHt as OHt, S_e as e, S_l as l, S_u as u, S_p as p, S_m as m, S_v as v, S_S as S, S_C as C, S_D as D, S_ee as ee, S_te as te, S_Me as Me, S_xt as xt, S_wt as wt, S_Ot as Ot, S_Pt as Pt, S_Ft as Ft, S_Lt as Lt, S_Ht as Ht, S_Ut as Ut, S_Jt as Jt, S_Yt as Yt, S_Xt as Xt, S_Zt as Zt, S_rn as rn, S_cn as cn, S_ln as ln, S_un as un, S_An as An, S_zn as zn, S_Qr as Qr } from '../shared.js';
 const event = defineProps({
       active: {
         type: Boolean,
