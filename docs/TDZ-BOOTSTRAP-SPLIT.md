@@ -96,3 +96,38 @@ tools/vue-decompiler/verify-root-entry.sh <out> 5212
   宁可报错也不搬走整片共享工具
 - `App.vue` 里仍有少量悬空符号（如 `iW`），它们是原 bundle 里本就不在本模块作用域的引用，
   只在事件回调触发时求值，不影响挂载
+
+## 整应用首屏：推进到哪一步
+
+TDZ 解决后，可以把 `vue/app.html` 放进**原 Electron 外壳**里跑：启动原 app
+（`--remote-debugging-port=9229`），用 CDP 把窗口导航到本地 vite 的 `app.html`。
+preload 会在新页面注入，`window.electronAPI` 可用，IPC 走真实主进程。
+
+实测（真实 Chrome + 真 preload）：
+
+| 构建模式 | `#app` 内容 | 现象 |
+|---|---|---|
+| 默认（组件库优先） | 7 字节 | `Cannot read properties of undefined (reading 'value')` |
+| `RESTORE_SETUP_HOOKS=1` | **8296 字节** | 渲染出应用锁界面（见 `vue/preview/app-lock.png`） |
+
+`RESTORE_SETUP_HOOKS=1` 打开后，生成器会识别原组件 setup 里的
+`{ t: N } = useI18n()` 这类解构并补回绑定。首屏文本从 `加载中...` 变成
+标题栏 + 应用锁密码框 + `返回密码解锁`。
+
+代价是批量挂载率：**105 → 83**。原因是裸挂载环境没有 `app.use(i18n)`，
+`useI18n()` 抛 `NOT_INSTALLED`，直接把组件打成错误态。两种用途正交，所以做成开关，
+默认关闭。
+
+也试过「把 setup 顶层声明整体还原」，数据否掉了这个方向：
+
+| 方案 | 批量挂载 OK | App 首屏 |
+|---|---|---|
+| 不还原 | 105 | 崩溃（undefined.value） |
+| 只还原模板引用到的声明 + 依赖闭包（App 20/63 条） | 60 | 崩溃（null.value） |
+| 只还原 hook 解构（开关） | 83 | 渲染出应用锁界面 |
+
+原因：模板里的短名（`p` / `a` / `o`）在原组件里是 `ref` / `computed`，初值又依赖
+IPC 与别的 setup 局部符号。只搬声明、不搬依赖链，拿到的仍是半成品；而把依赖链全搬进来，
+就把「组件库」变成了「半个应用」，批量挂载自然崩。**要真正跑起来，需要的是
+setup 函数体的完整还原（含数据来源 mock），那是另一个量级的工作。**
+

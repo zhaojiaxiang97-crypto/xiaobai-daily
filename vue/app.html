@@ -4,14 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>小白日报（还原整应用入口）</title>
+  <!-- 原应用的两层样式：preload-helper.css 是 Tailwind 产物（utility class 全靠它），
+       main.css 是各组件的 scoped 规则（[data-v-xxx]）。缺一层就会白底白字或布局塌陷。 -->
   <link rel="stylesheet" href="./styles/variables.css" />
+  <link rel="stylesheet" href="./vendor/styles/preload-helper.css" />
+  <link rel="stylesheet" href="./vendor/styles/main.css" />
+  <style>
+    /* 原 index.html 的背景来自 Electron 外壳；浏览器里要自己补一层，
+       否则 body 透明 → 深色主题下出现白底白字 */
+    html, body { height: 100%; margin: 0; background: var(--background); color: var(--foreground); }
+  </style>
 </head>
 <body>
   <!--
     整应用入口：bootstrap.js 承载原 main.js 里「求值期即读组件绑定」的顶层代码
     （启动分支 + 三个根组件选择 + createApp().mount('#app')）。
-    这些代码若留在 shared.js，会与 391 个 import shared.js 的组件形成模块环，
-    按 App.vue 为入口加载时抛 TDZ：Cannot access 'G9' before initialization。
+
+    注意能力边界：本页在真实 Electron 里加载（复用原 preload → window.electronAPI 可用）
+    才能拿到主进程数据。直接在普通浏览器打开只会渲染到 loading / 应用锁一层，
+    因为组件里的 setup 局部状态（ref/computed）尚未还原，模板取到的是 undefined。
+    要看到应用锁界面，需用 RESTORE_SETUP_HOOKS=1 重新生成组件（会牺牲批量挂载率，见 docs）。
   -->
   <div id="app"></div>
   <script type="module" src="./bootstrap.js"></script>

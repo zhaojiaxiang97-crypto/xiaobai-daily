@@ -364,6 +364,8 @@ for (const [compName, tpl] of tplMap) {
       need.push({ from: cn, alias: varName });
     }
   }
+  const compSrc = src.slice(components.find(x => x.name === compName).objStart,
+                            components.find(x => x.name === compName).objEnd);
   const vueDeps = [...VUE_APIS].filter(a => new RegExp('(?<![\\w$])' + a + '\\s*\\(').test(tpl));
   let script = '';
   if (vueDeps.length) script += `import { ${[...new Set(vueDeps)].join(', ')} } from 'vue';\n`;
@@ -371,8 +373,6 @@ for (const [compName, tpl] of tplMap) {
     script += `import ${n.alias} from './${n.from}.vue';\n`;
   }
   // props 绑定：模板表达式用的是原 setup 参数名与别名（如 e / t），必须在这里建立绑定
-  const compSrc = src.slice(components.find(x => x.name === compName).objStart,
-                            components.find(x => x.name === compName).objEnd);
   const setupM = compSrc.match(/setup\s*\(\s*([\w$]+)/);
   const propsArg = setupM ? setupM[1] : null;
   const aliasM = compSrc.match(/let\s+([\w$]+)\s*=\s*([\w$]+)\s*[,;]/);
@@ -389,11 +389,37 @@ for (const [compName, tpl] of tplMap) {
   for (const n2 of need) occupied.add(n2.alias);
   // 检查范围：模板 + props 代码（props 默认值里会引用 shared 符号，如 default: Rl）
   const scanText = tpl + '\n' + (propsCode || '');
+  // setup 解构还原：原组件里 `{ t: N } = useI18n()` 这类声明，setup 体没还原，
+  // 模板引用 N 就会悬空；更糟的是 shared 里可能存在同名的跨 chunk 符号，
+  // 生成器会把它当成 N 导入（实测 App.vue 的 N 因此拿到别的 chunk 的符号，
+  // 报 `$setup.N is not a function`）。所以：局部解构优先于 shared 同名符号。
+  // 开关：默认关闭。理由（实测，同一脚本同一环境）：
+  //   关闭 → 批量挂载 105 个组件可渲染；打开 → 83 个（useI18n 等在无 i18n 实例的
+  //   裸挂载环境里抛 NOT_INSTALLED）。但整应用入口（app.html + 真 preload）反过来，
+  //   关闭时模板里的 N/se/ke 没有绑定，首屏只有 1.8KB；打开后 8.3KB 且渲染出应用锁界面。
+  const setupDestructure = [];
+  if (process.env.RESTORE_SETUP_HOOKS === '1') {
+    const desRe = /\{\s*([^{}]*?)\s*\}\s*=\s*([A-Za-z_$][\w$]*)\s*\(\s*\)/g;
+    let dm;
+    while ((dm = desRe.exec(compSrc))) {
+      const inner = dm[1], hook = dm[2];
+      if (!exportSet.has(hook)) continue;
+      for (const part of inner.split(',')) {
+        const pm = /^\s*([\w$]+)\s*:\s*([\w$]+)\s*$/.exec(part);
+        if (!pm) continue;
+        const key = pm[1], local = pm[2];
+        if (!usedInTpl.has(local)) continue;
+        if (setupDestructure.some(x => x.local === local)) continue;
+        setupDestructure.push({ hook, key, local });
+      }
+    }
+  }
   const sharedSpecs = [];
   const aliasSpecs = [];   // 已被移出 shared 的组件别名（如 OZ = DZ）→ 直接 import 目标组件
   for (const [orig, exported] of exportSet) {
     if (occupied.has(orig)) continue;
     if (!new RegExp('(?<![\\w$])' + orig.replace(/\$/g, '\\$') + '(?![\\w$])').test(scanText)) continue;
+    if (setupDestructure.some(x => x.local === orig)) continue;   // 局部解构优先，不吃 shared 同名符号
     if (movedNames.has(orig)) {
       const tgt = compAlias.get(orig);
       const cn = tgt ? compVarToName.get(tgt) : null;
@@ -405,10 +431,23 @@ for (const [compName, tpl] of tplMap) {
   for (const [orig, cn] of aliasSpecs) {
     script = `import __ca_${orig.replace(/\$/g, '')} from './${cn}.vue';\nconst ${orig} = __ca_${orig.replace(/\$/g, '')};\n` + script;
   }
+  // 解构用到的 hook（如 useI18n 的压缩名）本身要能从 shared 拿到
+  for (const d of setupDestructure) {
+    const exported = exportSet.get(d.hook);
+    if (!exported) continue;
+    const spec = exported === d.hook ? d.hook : `${exported} as ${d.hook}`;
+    if (!sharedSpecs.includes(spec)) sharedSpecs.push(spec);
+  }
   if (sharedSpecs.length) {
     // shared import 必须在最前（ESM 位置要求），因此前置到 script
     script = script.replace(/^/, '');   // 占位
     let sharedImport = `import { ${[...new Set(sharedSpecs)].join(', ')} } from '../shared.js';\n`;
+    // setup 解构：紧跟 import 之后，保证模板里用到的局部名有绑定
+    if (setupDestructure.length) {
+      sharedImport += setupDestructure
+        .map(d => `const { ${d.key}: ${d.local} } = ${d.hook}();\n`)
+        .join('');
+    }
     // 符号身份说明：把已知身份的符号列在上方（只加注释、不拆 import，零风险）
     {
       // 只标注「该组件实际 import 的符号」（sharedSpecs），不是全部已知符号
@@ -450,6 +489,8 @@ for (const [compName, tpl] of tplMap) {
     `<template>\n${tpl2}\n</template>\n\n<script setup>\n${script}</script>\n${styleBlock}`);
 }
 
+// 从组件源码的 setup 体里还原「模板引用到」的顶层声明（含依赖闭包）
+// 返回 { code, localNames, sharedRefs, vueApis }
 // B2) 生成 shared.js 的 body（AST 级改写，按原位置排序）
 // 判断一个顶层 unit 是否引用了组件符号（compVarToName 的 key）
 // 这些 unit 是应用启动/注册代码（如 `setup: () => createElementVNode(Tooltip, ...)`、

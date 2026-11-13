@@ -198,6 +198,16 @@ node tools/vue-decompiler/gen-render-test.cjs /tmp/proj
 tools/vue-decompiler/verify-browser.sh /tmp/proj
 ```
 
+想渲染整应用首屏（`app.html`）时加环境变量重新生成：
+
+```bash
+RESTORE_SETUP_HOOKS=1 node tools/vue-decompiler/gen-main.cjs <main.js> \
+     tools/vue-decompiler/convert-component.cjs /tmp/proj
+```
+
+它会补回 `{ t: N } = useI18n()` 这类 setup 解构绑定，让首屏从 loading 推进到应用锁界面；
+代价是批量挂载率 105 → 83。两种用途正交，所以默认关闭。
+
 独立 chunk 路线：
 
 ```bash

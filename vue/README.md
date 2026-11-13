@@ -75,8 +75,10 @@ npm run dev      # 或 npx vite
 - **要拿组件直接用** → 从上面那 107 个里挑
 - **只参考结构/写法** → 537 个都能看（都能编译）
 - **要跑起来看效果** → 只有 107 个能独立跑
-- **要看整应用入口** → `app.html`（加载 `bootstrap.js`，真实 Chrome 实测：模块加载完成、
-  `createApp` 挂载成功、无 TDZ 报错）
+- **要看整应用入口** → `app.html`（加载 `bootstrap.js`）。必须在原 Electron 外壳里加载
+  （复用原 preload，`window.electronAPI` 才有数据），直接开浏览器只能到 loading 一层。
+  要用 `RESTORE_SETUP_HOOKS=1` 重新生成才能渲染出应用锁界面，代价见
+  `docs/TDZ-BOOTSTRAP-SPLIT.md`
 
 ## 整应用入口的验证结果
 
@@ -87,8 +89,13 @@ npm run dev      # 或 npx vite
 | 拆分前（shared.js 含启动代码） | `ReferenceError: Cannot access 'G9' before initialization` |
 | 拆分后（启动代码在 bootstrap.js） | 加载成功；`bootstrap.js` 执行后 `#app` 已由 Vue 接管 |
 
-渲染出的是空注释节点而非完整界面：`App.vue` 依赖 Electron 主进程的 IPC 数据
-（设置、待办、登录态），浏览器里没有这些来源。挂载链路本身是通的。
+放进**原 Electron 外壳**里（CDP 导航到本地 vite 的 `app.html`，preload 注入，
+IPC 真实）：默认产物只到 loading 一层；`RESTORE_SETUP_HOOKS=1` 重新生成后能渲染出
+应用锁界面（`preview/app-lock.png`），因为组件里的 i18n / store 解构被补回。
+代价是批量挂载率 105 → 83（裸挂载没有 i18n 实例），所以做成开关默认关闭。
+
+再往下的坎是 setup 函数体本身：模板里的 `p` / `a` 在原组件里是 `ref` / `computed`，
+初值依赖 IPC，只搬声明不搬依赖链仍是半成品（实测批量挂载 105 → 60，首屏仍崩）。
 
 ## 已知限制
 
