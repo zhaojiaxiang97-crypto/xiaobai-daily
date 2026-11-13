@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="UTF-8"></head><body>
+<div id="app"></div>
+<script type="module">
+import { createApp, h } from 'vue';
+const app = createApp({ render: () => h('div', '你好 world') });
+app.mount('#app');
+window.__MIN__ = document.getElementById('app').innerHTML;
+</script>
+</body></html>

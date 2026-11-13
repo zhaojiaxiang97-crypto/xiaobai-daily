@@ -1,1 +1,13 @@
-<!doctype html><html><head><meta charset="UTF-8"><title>小白日报还原组件</title></head><body style="margin:0"><div id="app"></div><script type="module" src="/main.js"></script></body></html>
+<!doctype html><html><head><meta charset="UTF-8"><title>组件画廊</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui;background:#f6f7f9;color:#111}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:20px}
+.card{background:#fff;border:1px solid #e3e6ea;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.card header{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:#fafbfc;border-bottom:1px solid #eef0f3}
+.name{font-weight:600;font-size:13px;font-family:ui-monospace,monospace}
+.tag{font-size:11px;padding:2px 6px;border-radius:4px;background:#e8eef9;color:#2b5dad}
+.card[data-group="vendor-components"] .tag{background:#f9ece8;color:#a34727}
+.body{padding:14px;min-height:80px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px}
+.err{color:#c00;font-size:11px;white-space:pre-wrap;margin:0}
+</style></head><body><div id="app"></div><script type="module" src="/gallery.js"></script></body></html>
