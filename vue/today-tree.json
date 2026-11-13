@@ -1,0 +1,2337 @@
+{
+ "name": "App",
+ "props": {},
+ "children": [
+  {
+   "name": "Sidebar",
+   "props": {
+    "activeNav": "today-work",
+    "collapsed": false
+   },
+   "children": [
+    {
+     "name": null,
+     "props": {
+      "size": 8
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 8,
+        "iconNode": null,
+        "name": "maximize-2"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 14
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 14,
+        "iconNode": null,
+        "name": "panel-left"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "clipboard-list"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "circle-check"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "file-text"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "clock"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "flame"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "chart-column"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "history"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "messages-square"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 16,
+      "stroke-width": 1.5,
+      "class": "nav-icon"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 16,
+        "stroke-width": 1.5,
+        "class": "nav-icon",
+        "iconNode": null,
+        "name": "shield-check"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "CreditCampaignCard",
+     "props": {
+      "userId": 1,
+      "variant": null,
+      "refreshKey": null
+     },
+     "children": []
+    },
+    {
+     "name": "Popover",
+     "props": {
+      "defaultOpen": false,
+      "open": false,
+      "modal": false
+     },
+     "children": [
+      {
+       "name": "PopoverRoot",
+       "props": {
+        "defaultOpen": false,
+        "open": false,
+        "modal": false
+       },
+       "children": [
+        {
+         "name": "PopperRoot",
+         "props": {},
+         "children": [
+          {
+           "name": "PopoverTrigger",
+           "props": {
+            "asChild": true,
+            "as": null
+           },
+           "children": [
+            {
+             "name": "PopoverTrigger",
+             "props": {
+              "asChild": true,
+              "as": "button"
+             },
+             "children": [
+              {
+               "name": "PopperAnchor",
+               "props": {
+                "asChild": true,
+                "reference": null,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "Primitive",
+                 "props": {
+                  "asChild": true,
+                  "as": "div"
+                 },
+                 "children": [
+                  {
+                   "name": "PrimitiveSlot",
+                   "props": {},
+                   "children": [
+                    {
+                     "name": "Primitive",
+                     "props": {
+                      "asChild": true,
+                      "as": "button"
+                     },
+                     "children": [
+                      {
+                       "name": "PrimitiveSlot",
+                       "props": {},
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "name": "PopoverContent",
+           "props": {
+            "side": "top",
+            "alignOffset": 4,
+            "forceMount": false,
+            "sideOffset": 8,
+            "sideFlip": false,
+            "align": "start"
+           },
+           "children": [
+            {
+             "name": "PopoverPortal",
+             "props": {
+              "disabled": false,
+              "defer": false,
+              "forceMount": false,
+              "to": null
+             },
+             "children": [
+              {
+               "name": "Teleport",
+               "props": {
+                "to": null,
+                "disabled": false,
+                "defer": false,
+                "forceMount": false
+               },
+               "children": [
+                {
+                 "name": "PopoverContent",
+                 "props": {
+                  "sideOffset": 8,
+                  "align": "start",
+                  "side": "top",
+                  "alignOffset": 4,
+                  "forceMount": false,
+                  "sideFlip": false
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "UserProfileDialog",
+     "props": {
+      "preferredNameFallback": "小白用户",
+      "onboarding": false,
+      "open": false,
+      "openModifiers": null
+     },
+     "children": [
+      {
+       "name": "Dialog",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": false,
+        "unmountOnHide": false
+       },
+       "children": [
+        {
+         "name": "DialogRoot",
+         "props": {
+          "open": false,
+          "defaultOpen": false,
+          "modal": true,
+          "unmountOnHide": true
+         },
+         "children": [
+          {
+           "name": "DialogContent",
+           "props": {
+            "forceMount": false,
+            "disableOutsidePointerEvents": false,
+            "asChild": false,
+            "class": "!max-w-[680px] h-[86vh] flex flex-col gap-0 overflow-hidden p-0",
+            "overlayClass": false,
+            "showCloseButton": true
+           },
+           "children": [
+            {
+             "name": "DialogPortal",
+             "props": {
+              "disabled": false,
+              "defer": false,
+              "forceMount": false,
+              "to": null
+             },
+             "children": [
+              {
+               "name": "Teleport",
+               "props": {
+                "to": null,
+                "disabled": false,
+                "defer": false,
+                "forceMount": false
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "forceMount": false,
+                  "asChild": false,
+                  "class": true,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "DialogOverlay",
+                   "props": {
+                    "as": null,
+                    "forceMount": false,
+                    "asChild": false
+                   },
+                   "children": [
+                    {
+                     "name": "Presence",
+                     "props": {
+                      "present": false,
+                      "forceMount": false
+                     },
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "name": "DialogContent",
+                 "props": {
+                  "forceMount": false,
+                  "disableOutsidePointerEvents": null,
+                  "asChild": false,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "UsageModeSwitchDialog",
+     "props": {
+      "target": null
+     },
+     "children": [
+      {
+       "name": "AlertDialog",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "unmountOnHide": false
+       },
+       "children": [
+        {
+         "name": "AlertDialogRoot",
+         "props": {
+          "open": false,
+          "defaultOpen": false,
+          "unmountOnHide": false
+         },
+         "children": [
+          {
+           "name": "DialogRoot",
+           "props": {
+            "open": false,
+            "defaultOpen": false,
+            "modal": true,
+            "unmountOnHide": true
+           },
+           "children": [
+            {
+             "name": "AlertDialogContent",
+             "props": {
+              "forceMount": false,
+              "disableOutsidePointerEvents": false,
+              "asChild": false,
+              "class": false,
+              "overlayClass": false,
+              "size": "default"
+             },
+             "children": [
+              {
+               "name": "AlertDialogPortal",
+               "props": {
+                "disabled": false,
+                "defer": false,
+                "forceMount": false,
+                "to": null
+               },
+               "children": [
+                {
+                 "name": "Teleport",
+                 "props": {
+                  "to": null,
+                  "disabled": false,
+                  "defer": false,
+                  "forceMount": false
+                 },
+                 "children": [
+                  {
+                   "name": "AlertDialogOverlay",
+                   "props": {
+                    "forceMount": false,
+                    "asChild": false,
+                    "as": null
+                   },
+                   "children": [
+                    {
+                     "name": "DialogOverlay",
+                     "props": {
+                      "as": null,
+                      "forceMount": false,
+                      "asChild": false
+                     },
+                     "children": [
+                      {
+                       "name": "Presence",
+                       "props": {
+                        "present": false,
+                        "forceMount": false
+                       },
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  },
+                  {
+                   "name": "AlertDialogContent",
+                   "props": {
+                    "forceMount": false,
+                    "disableOutsidePointerEvents": null,
+                    "asChild": false,
+                    "as": null
+                   },
+                   "children": [
+                    {
+                     "name": "DialogContent",
+                     "props": {
+                      "as": null,
+                      "forceMount": false,
+                      "disableOutsidePointerEvents": null,
+                      "asChild": false
+                     },
+                     "children": [
+                      {
+                       "name": "Presence",
+                       "props": {
+                        "present": false,
+                        "forceMount": false
+                       },
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "TodayWork",
+   "props": {
+    "refreshKey": 10
+   },
+   "children": [
+    {
+     "name": null,
+     "props": {
+      "name": "slogan",
+      "mode": "out-in",
+      "appear": false,
+      "persisted": false,
+      "css": true,
+      "onBeforeEnter": null
+     },
+     "children": [
+      {
+       "name": "BaseTransition",
+       "props": {
+        "mode": "out-in",
+        "onBeforeEnter": null,
+        "onEnter": null,
+        "onAfterEnter": null,
+        "onEnterCancelled": null,
+        "onBeforeLeave": null
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 13,
+      "stroke-width": 1.5,
+      "class": "shrink-0 text-[#aaa] dark:text-muted-foreground"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 13,
+        "stroke-width": 1.5,
+        "class": "shrink-0 text-[#aaa] dark:text-muted-foreground",
+        "iconNode": null,
+        "name": "shield-check"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 18,
+      "class": "text-primary/50"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 18,
+        "class": "text-primary/50",
+        "iconNode": null,
+        "name": "shield-check"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Checkbox",
+     "props": {
+      "modelValue": true,
+      "disabled": false,
+      "asChild": false,
+      "required": false,
+      "class": "size-3.5",
+      "defaultValue": null
+     },
+     "children": [
+      {
+       "name": "CheckboxRoot",
+       "props": {
+        "modelValue": true,
+        "disabled": false,
+        "value": "on",
+        "trueValue": true,
+        "falseValue": false,
+        "asChild": false
+       },
+       "children": [
+        {
+         "name": "Primitive",
+         "props": {
+          "asChild": false,
+          "as": "button"
+         },
+         "children": [
+          {
+           "name": "CheckboxIndicator",
+           "props": {
+            "forceMount": false,
+            "asChild": false,
+            "as": "span"
+           },
+           "children": [
+            {
+             "name": "Presence",
+             "props": {
+              "present": true,
+              "forceMount": false
+             },
+             "children": [
+              {
+               "name": "Primitive",
+               "props": {
+                "asChild": false,
+                "as": "span"
+               },
+               "children": [
+                {
+                 "name": null,
+                 "props": {},
+                 "children": [
+                  {
+                   "name": "c",
+                   "props": {
+                    "iconNode": null,
+                    "name": "check"
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Checkbox",
+     "props": {
+      "modelValue": false,
+      "disabled": false,
+      "asChild": false,
+      "required": false,
+      "class": "size-3.5",
+      "defaultValue": null
+     },
+     "children": [
+      {
+       "name": "CheckboxRoot",
+       "props": {
+        "modelValue": false,
+        "disabled": false,
+        "value": "on",
+        "trueValue": true,
+        "falseValue": false,
+        "asChild": false
+       },
+       "children": [
+        {
+         "name": "Primitive",
+         "props": {
+          "asChild": false,
+          "as": "button"
+         },
+         "children": [
+          {
+           "name": "CheckboxIndicator",
+           "props": {
+            "forceMount": false,
+            "asChild": false,
+            "as": "span"
+           },
+           "children": [
+            {
+             "name": "Presence",
+             "props": {
+              "present": false,
+              "forceMount": false
+             },
+             "children": []
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "AsyncComponentWrapper",
+     "props": {},
+     "children": [
+      {
+       "name": "HeatmapBars3D",
+       "props": {
+        "rows": null,
+        "columnLabels": null,
+        "rowPitch": 1.3,
+        "clickable": true,
+        "hint": null
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "HeatmapCellDetail",
+     "props": {
+      "target": null
+     },
+     "children": [
+      {
+       "name": "Dialog",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": false,
+        "unmountOnHide": false
+       },
+       "children": [
+        {
+         "name": "DialogRoot",
+         "props": {
+          "open": false,
+          "defaultOpen": false,
+          "modal": true,
+          "unmountOnHide": true
+         },
+         "children": [
+          {
+           "name": "DialogContent",
+           "props": {
+            "forceMount": false,
+            "disableOutsidePointerEvents": false,
+            "asChild": false,
+            "class": "flex max-h-[85vh] min-w-0 flex-col gap-3 overflow-hidden duration-200 ease-out data-open:slide-in-from-bottom-4 sm:!max-w-[720px]",
+            "overlayClass": "duration-200",
+            "showCloseButton": true
+           },
+           "children": [
+            {
+             "name": "DialogPortal",
+             "props": {
+              "disabled": false,
+              "defer": false,
+              "forceMount": false,
+              "to": null
+             },
+             "children": [
+              {
+               "name": "Teleport",
+               "props": {
+                "to": null,
+                "disabled": false,
+                "defer": false,
+                "forceMount": false
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "forceMount": false,
+                  "asChild": false,
+                  "class": "duration-200",
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "DialogOverlay",
+                   "props": {
+                    "as": null,
+                    "forceMount": false,
+                    "asChild": false
+                   },
+                   "children": [
+                    {
+                     "name": "Presence",
+                     "props": {
+                      "present": false,
+                      "forceMount": false
+                     },
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "name": "DialogContent",
+                 "props": {
+                  "forceMount": false,
+                  "disableOutsidePointerEvents": null,
+                  "asChild": false,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "TodayBarcodeCard",
+     "props": {
+      "refreshKey": 10
+     },
+     "children": [
+      {
+       "name": null,
+       "props": {
+        "size": 12
+       },
+       "children": [
+        {
+         "name": "c",
+         "props": {
+          "size": 12,
+          "iconNode": null,
+          "name": "play"
+         },
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": null,
+       "props": {
+        "size": 13
+       },
+       "children": [
+        {
+         "name": "c",
+         "props": {
+          "size": 13,
+          "iconNode": null,
+          "name": "chevron-right"
+         },
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "BarcodeCanvas",
+       "props": {
+        "result": {
+         "startDate": "2026-11-13",
+         "endDate": "2026-11-13",
+         "colorBy": "app",
+         "bucketMinutes": 5,
+         "series": null,
+         "days": null
+        },
+        "colors": null,
+        "theme": {
+         "dark": true,
+         "surface": "#14171a",
+         "track": "rgba(255, 255, 255, 0.045)",
+         "ground": "#2a2e32",
+         "idle": "#33383d",
+         "other": "#666b70"
+        },
+        "label": "今日作息",
+        "layout": "strip",
+        "compact": true
+       },
+       "children": []
+      },
+      {
+       "name": "BarcodeTooltip",
+       "props": {
+        "result": {
+         "startDate": "2026-11-13",
+         "endDate": "2026-11-13",
+         "colorBy": "app",
+         "bucketMinutes": 5,
+         "series": null,
+         "days": null
+        },
+        "colors": null,
+        "theme": {
+         "dark": true,
+         "surface": "#14171a",
+         "track": "rgba(255, 255, 255, 0.045)",
+         "ground": "#2a2e32",
+         "idle": "#33383d",
+         "other": "#666b70"
+        },
+        "hover": null
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 13,
+      "stroke-width": 1.5,
+      "class": "text-[#999] dark:text-muted-foreground"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 13,
+        "stroke-width": 1.5,
+        "class": "text-[#999] dark:text-muted-foreground",
+        "iconNode": null,
+        "name": "monitor"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "size": 10,
+      "class": "text-white"
+     },
+     "children": [
+      {
+       "name": "c",
+       "props": {
+        "size": 10,
+        "class": "text-white",
+        "iconNode": null,
+        "name": "check"
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "TodayWorkScrollHint",
+     "props": {
+      "container": {},
+      "ready": true
+     },
+     "children": [
+      {
+       "name": null,
+       "props": {
+        "name": "scroll-hint",
+        "appear": false,
+        "persisted": false,
+        "css": true,
+        "mode": null,
+        "onBeforeEnter": null
+       },
+       "children": [
+        {
+         "name": "BaseTransition",
+         "props": {
+          "mode": null,
+          "onBeforeEnter": null,
+          "onEnter": null,
+          "onAfterEnter": null,
+          "onEnterCancelled": null,
+          "onBeforeLeave": null
+         },
+         "children": []
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "NotificationPopover",
+   "props": {
+    "open": false
+   },
+   "children": [
+    {
+     "name": null,
+     "props": {
+      "name": "fade",
+      "appear": false,
+      "persisted": false,
+      "css": true,
+      "mode": null,
+      "onBeforeEnter": null
+     },
+     "children": [
+      {
+       "name": "BaseTransition",
+       "props": {
+        "mode": null,
+        "onBeforeEnter": null,
+        "onEnter": null,
+        "onAfterEnter": null,
+        "onEnterCancelled": null,
+        "onBeforeLeave": null
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "name": "slide-left",
+      "appear": false,
+      "persisted": false,
+      "css": true,
+      "mode": null,
+      "onBeforeEnter": null
+     },
+     "children": [
+      {
+       "name": "BaseTransition",
+       "props": {
+        "mode": null,
+        "onBeforeEnter": null,
+        "onEnter": null,
+        "onAfterEnter": null,
+        "onEnterCancelled": null,
+        "onBeforeLeave": null
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Dialog",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": false,
+      "unmountOnHide": false
+     },
+     "children": [
+      {
+       "name": "DialogRoot",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": true,
+        "unmountOnHide": true
+       },
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "AlertDialog",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "unmountOnHide": false
+     },
+     "children": [
+      {
+       "name": "AlertDialogRoot",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "unmountOnHide": false
+       },
+       "children": [
+        {
+         "name": "DialogRoot",
+         "props": {
+          "open": false,
+          "defaultOpen": false,
+          "modal": true,
+          "unmountOnHide": true
+         },
+         "children": [
+          {
+           "name": "AlertDialogContent",
+           "props": {
+            "forceMount": false,
+            "disableOutsidePointerEvents": false,
+            "asChild": false,
+            "class": false,
+            "overlayClass": false,
+            "size": "default"
+           },
+           "children": [
+            {
+             "name": "AlertDialogPortal",
+             "props": {
+              "disabled": false,
+              "defer": false,
+              "forceMount": false,
+              "to": null
+             },
+             "children": [
+              {
+               "name": "Teleport",
+               "props": {
+                "to": null,
+                "disabled": false,
+                "defer": false,
+                "forceMount": false
+               },
+               "children": [
+                {
+                 "name": "AlertDialogOverlay",
+                 "props": {
+                  "forceMount": false,
+                  "asChild": false,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "DialogOverlay",
+                   "props": {
+                    "as": null,
+                    "forceMount": false,
+                    "asChild": false
+                   },
+                   "children": [
+                    {
+                     "name": "Presence",
+                     "props": {
+                      "present": false,
+                      "forceMount": false
+                     },
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "name": "AlertDialogContent",
+                 "props": {
+                  "forceMount": false,
+                  "disableOutsidePointerEvents": null,
+                  "asChild": false,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "DialogContent",
+                   "props": {
+                    "as": null,
+                    "forceMount": false,
+                    "disableOutsidePointerEvents": null,
+                    "asChild": false
+                   },
+                   "children": [
+                    {
+                     "name": "Presence",
+                     "props": {
+                      "present": false,
+                      "forceMount": false
+                     },
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "SurveyDialog",
+   "props": {},
+   "children": [
+    {
+     "name": "Dialog",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": false,
+      "unmountOnHide": false
+     },
+     "children": [
+      {
+       "name": "DialogRoot",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": true,
+        "unmountOnHide": true
+       },
+       "children": [
+        {
+         "name": "DialogContent",
+         "props": {
+          "forceMount": false,
+          "disableOutsidePointerEvents": false,
+          "asChild": false,
+          "class": "sm:max-w-[480px] gap-0 p-0 overflow-hidden",
+          "overlayClass": false,
+          "showCloseButton": true
+         },
+         "children": [
+          {
+           "name": "DialogPortal",
+           "props": {
+            "disabled": false,
+            "defer": false,
+            "forceMount": false,
+            "to": null
+           },
+           "children": [
+            {
+             "name": "Teleport",
+             "props": {
+              "to": null,
+              "disabled": false,
+              "defer": false,
+              "forceMount": false
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "forceMount": false,
+                "asChild": false,
+                "class": true,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "as": null,
+                  "forceMount": false,
+                  "asChild": false
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "name": "DialogContent",
+               "props": {
+                "forceMount": false,
+                "disableOutsidePointerEvents": null,
+                "asChild": false,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "ExitReportReminderDialog",
+   "props": {
+    "snapshot": null,
+    "open": false
+   },
+   "children": [
+    {
+     "name": "Dialog",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": false,
+      "unmountOnHide": false
+     },
+     "children": [
+      {
+       "name": "DialogRoot",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": true,
+        "unmountOnHide": true
+       },
+       "children": [
+        {
+         "name": "DialogContent",
+         "props": {
+          "forceMount": false,
+          "disableOutsidePointerEvents": false,
+          "asChild": false,
+          "class": "max-w-[460px] gap-0 p-0 overflow-hidden",
+          "overlayClass": false,
+          "showCloseButton": false
+         },
+         "children": [
+          {
+           "name": "DialogPortal",
+           "props": {
+            "disabled": false,
+            "defer": false,
+            "forceMount": false,
+            "to": null
+           },
+           "children": [
+            {
+             "name": "Teleport",
+             "props": {
+              "to": null,
+              "disabled": false,
+              "defer": false,
+              "forceMount": false
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "forceMount": false,
+                "asChild": false,
+                "class": true,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "as": null,
+                  "forceMount": false,
+                  "asChild": false
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "name": "DialogContent",
+               "props": {
+                "forceMount": false,
+                "disableOutsidePointerEvents": null,
+                "asChild": false,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "ProfileShareHost",
+   "props": {},
+   "children": [
+    {
+     "name": "ProfileShareDialog",
+     "props": {
+      "request": null,
+      "open": false,
+      "openModifiers": null
+     },
+     "children": [
+      {
+       "name": "Dialog",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": false,
+        "unmountOnHide": false
+       },
+       "children": [
+        {
+         "name": "DialogRoot",
+         "props": {
+          "open": false,
+          "defaultOpen": false,
+          "modal": true,
+          "unmountOnHide": true
+         },
+         "children": [
+          {
+           "name": "DialogContent",
+           "props": {
+            "forceMount": false,
+            "disableOutsidePointerEvents": false,
+            "asChild": false,
+            "class": "profile-share-dialog !max-w-[960px] gap-0 overflow-hidden p-0",
+            "overlayClass": false,
+            "showCloseButton": true
+           },
+           "children": [
+            {
+             "name": "DialogPortal",
+             "props": {
+              "disabled": false,
+              "defer": false,
+              "forceMount": false,
+              "to": null
+             },
+             "children": [
+              {
+               "name": "Teleport",
+               "props": {
+                "to": null,
+                "disabled": false,
+                "defer": false,
+                "forceMount": false
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "forceMount": false,
+                  "asChild": false,
+                  "class": true,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "DialogOverlay",
+                   "props": {
+                    "as": null,
+                    "forceMount": false,
+                    "asChild": false
+                   },
+                   "children": [
+                    {
+                     "name": "Presence",
+                     "props": {
+                      "present": false,
+                      "forceMount": false
+                     },
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                },
+                {
+                 "name": "DialogContent",
+                 "props": {
+                  "forceMount": false,
+                  "disableOutsidePointerEvents": null,
+                  "asChild": false,
+                  "as": null
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": null,
+     "props": {
+      "enterActiveClass": "transition duration-200 ease-out",
+      "enterFromClass": "opacity-0 translate-y-2",
+      "leaveActiveClass": "transition duration-150 ease-in",
+      "leaveToClass": "opacity-0 translate-y-2",
+      "appear": false,
+      "persisted": false
+     },
+     "children": [
+      {
+       "name": "BaseTransition",
+       "props": {
+        "mode": null,
+        "onBeforeEnter": null,
+        "onEnter": null,
+        "onAfterEnter": null,
+        "onEnterCancelled": null,
+        "onBeforeLeave": null
+       },
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "TodoSyncAgreementDialog",
+   "props": {
+    "open": false
+   },
+   "children": [
+    {
+     "name": "Dialog",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": false,
+      "unmountOnHide": false
+     },
+     "children": [
+      {
+       "name": "DialogRoot",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": true,
+        "unmountOnHide": true
+       },
+       "children": [
+        {
+         "name": "DialogContent",
+         "props": {
+          "forceMount": false,
+          "disableOutsidePointerEvents": false,
+          "asChild": false,
+          "class": "!w-[440px] gap-0 p-5",
+          "overlayClass": false,
+          "showCloseButton": false
+         },
+         "children": [
+          {
+           "name": "DialogPortal",
+           "props": {
+            "disabled": false,
+            "defer": false,
+            "forceMount": false,
+            "to": null
+           },
+           "children": [
+            {
+             "name": "Teleport",
+             "props": {
+              "to": null,
+              "disabled": false,
+              "defer": false,
+              "forceMount": false
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "forceMount": false,
+                "asChild": false,
+                "class": true,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "as": null,
+                  "forceMount": false,
+                  "asChild": false
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "name": "DialogContent",
+               "props": {
+                "forceMount": false,
+                "disableOutsidePointerEvents": null,
+                "asChild": false,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "UpdateDialog",
+   "props": {
+    "data": {
+     "version": "1.8.5",
+     "currentVersion": "1.8.3",
+     "releaseNotes": "- **Bug修复：** 个人中心里向好友展示记录条数、热力图等数据时，确认弹窗点「同意并开启」没有反应，现在可以正常开启分享。",
+     "isForceUpdate": false,
+     "downloadUrl": "https://cnb.cool/epiphanymind/XiaoheiReleases/-/releases/download/v1.8.5/XiaoheiDailyAssistant-1.8.5-mac-arm64.dmg.zip",
+     "readyToInstall": false
+    },
+    "percent": 0,
+    "state": {
+     "revision": 2,
+     "phase": "available",
+     "attemptId": null,
+     "sourceVersion": "1.8.3",
+     "targetVersion": "1.8.5",
+     "progress": null
+    },
+    "open": false,
+    "isUpdating": false
+   },
+   "children": [
+    {
+     "name": null,
+     "props": {
+      "enterActiveClass": "transition duration-200 ease-out",
+      "enterFromClass": "opacity-0",
+      "enterToClass": "opacity-100",
+      "leaveActiveClass": "transition duration-150 ease-in",
+      "leaveFromClass": "opacity-100",
+      "leaveToClass": "opacity-0"
+     },
+     "children": [
+      {
+       "name": "BaseTransition",
+       "props": {
+        "mode": null,
+        "onBeforeEnter": null,
+        "onEnter": null,
+        "onAfterEnter": null,
+        "onEnterCancelled": null,
+        "onBeforeLeave": null
+       },
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "UpdateReadyToast",
+   "props": {
+    "version": "",
+    "open": false,
+    "ready": false
+   },
+   "children": [
+    {
+     "name": null,
+     "props": {
+      "enterActiveClass": "transition duration-200 ease-out",
+      "enterFromClass": "opacity-0 translate-y-2",
+      "leaveActiveClass": "transition duration-150 ease-in",
+      "leaveToClass": "opacity-0 translate-y-2",
+      "appear": false,
+      "persisted": false
+     },
+     "children": [
+      {
+       "name": "BaseTransition",
+       "props": {
+        "mode": null,
+        "onBeforeEnter": null,
+        "onEnter": null,
+        "onAfterEnter": null,
+        "onEnterCancelled": null,
+        "onBeforeLeave": null
+       },
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "UsageModeGuideDialog",
+   "props": {
+    "currentMode": "work",
+    "open": false,
+    "recommendedMode": null,
+    "switching": false
+   },
+   "children": [
+    {
+     "name": "Dialog",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": false,
+      "unmountOnHide": false
+     },
+     "children": [
+      {
+       "name": "DialogRoot",
+       "props": {
+        "open": false,
+        "defaultOpen": false,
+        "modal": true,
+        "unmountOnHide": true
+       },
+       "children": [
+        {
+         "name": "DialogContent",
+         "props": {
+          "forceMount": false,
+          "disableOutsidePointerEvents": false,
+          "asChild": false,
+          "class": "gap-6 p-7 sm:max-w-[720px]",
+          "overlayClass": false,
+          "showCloseButton": true
+         },
+         "children": [
+          {
+           "name": "DialogPortal",
+           "props": {
+            "disabled": false,
+            "defer": false,
+            "forceMount": false,
+            "to": null
+           },
+           "children": [
+            {
+             "name": "Teleport",
+             "props": {
+              "to": null,
+              "disabled": false,
+              "defer": false,
+              "forceMount": false
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "forceMount": false,
+                "asChild": false,
+                "class": true,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "DialogOverlay",
+                 "props": {
+                  "as": null,
+                  "forceMount": false,
+                  "asChild": false
+                 },
+                 "children": [
+                  {
+                   "name": "Presence",
+                   "props": {
+                    "present": false,
+                    "forceMount": false
+                   },
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "name": "DialogContent",
+               "props": {
+                "forceMount": false,
+                "disableOutsidePointerEvents": null,
+                "asChild": false,
+                "as": null
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Dialog",
+   "props": {
+    "open": false,
+    "defaultOpen": false,
+    "modal": false,
+    "unmountOnHide": false
+   },
+   "children": [
+    {
+     "name": "DialogRoot",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": true,
+      "unmountOnHide": true
+     },
+     "children": [
+      {
+       "name": "DialogContent",
+       "props": {
+        "forceMount": false,
+        "disableOutsidePointerEvents": false,
+        "asChild": false,
+        "class": "!w-[380px]",
+        "overlayClass": false,
+        "showCloseButton": true
+       },
+       "children": [
+        {
+         "name": "DialogPortal",
+         "props": {
+          "disabled": false,
+          "defer": false,
+          "forceMount": false,
+          "to": null
+         },
+         "children": [
+          {
+           "name": "Teleport",
+           "props": {
+            "to": null,
+            "disabled": false,
+            "defer": false,
+            "forceMount": false
+           },
+           "children": [
+            {
+             "name": "DialogOverlay",
+             "props": {
+              "forceMount": false,
+              "asChild": false,
+              "class": true,
+              "as": null
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "as": null,
+                "forceMount": false,
+                "asChild": false
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "DialogContent",
+             "props": {
+              "forceMount": false,
+              "disableOutsidePointerEvents": null,
+              "asChild": false,
+              "as": null
+             },
+             "children": [
+              {
+               "name": "Presence",
+               "props": {
+                "present": false,
+                "forceMount": false
+               },
+               "children": []
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Dialog",
+   "props": {
+    "open": false,
+    "defaultOpen": false,
+    "modal": false,
+    "unmountOnHide": false
+   },
+   "children": [
+    {
+     "name": "DialogRoot",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": true,
+      "unmountOnHide": true
+     },
+     "children": [
+      {
+       "name": "DialogContent",
+       "props": {
+        "forceMount": false,
+        "disableOutsidePointerEvents": false,
+        "asChild": false,
+        "class": "!w-[380px]",
+        "overlayClass": false,
+        "showCloseButton": true
+       },
+       "children": [
+        {
+         "name": "DialogPortal",
+         "props": {
+          "disabled": false,
+          "defer": false,
+          "forceMount": false,
+          "to": null
+         },
+         "children": [
+          {
+           "name": "Teleport",
+           "props": {
+            "to": null,
+            "disabled": false,
+            "defer": false,
+            "forceMount": false
+           },
+           "children": [
+            {
+             "name": "DialogOverlay",
+             "props": {
+              "forceMount": false,
+              "asChild": false,
+              "class": true,
+              "as": null
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "as": null,
+                "forceMount": false,
+                "asChild": false
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "DialogContent",
+             "props": {
+              "forceMount": false,
+              "disableOutsidePointerEvents": null,
+              "asChild": false,
+              "as": null
+             },
+             "children": [
+              {
+               "name": "Presence",
+               "props": {
+                "present": false,
+                "forceMount": false
+               },
+               "children": []
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Dialog",
+   "props": {
+    "open": false,
+    "defaultOpen": false,
+    "modal": false,
+    "unmountOnHide": false
+   },
+   "children": [
+    {
+     "name": "DialogRoot",
+     "props": {
+      "open": false,
+      "defaultOpen": false,
+      "modal": true,
+      "unmountOnHide": true
+     },
+     "children": [
+      {
+       "name": "DialogContent",
+       "props": {
+        "forceMount": false,
+        "disableOutsidePointerEvents": false,
+        "asChild": false,
+        "class": "!w-[360px]",
+        "overlayClass": false,
+        "showCloseButton": true
+       },
+       "children": [
+        {
+         "name": "DialogPortal",
+         "props": {
+          "disabled": false,
+          "defer": false,
+          "forceMount": false,
+          "to": null
+         },
+         "children": [
+          {
+           "name": "Teleport",
+           "props": {
+            "to": null,
+            "disabled": false,
+            "defer": false,
+            "forceMount": false
+           },
+           "children": [
+            {
+             "name": "DialogOverlay",
+             "props": {
+              "forceMount": false,
+              "asChild": false,
+              "class": true,
+              "as": null
+             },
+             "children": [
+              {
+               "name": "DialogOverlay",
+               "props": {
+                "as": null,
+                "forceMount": false,
+                "asChild": false
+               },
+               "children": [
+                {
+                 "name": "Presence",
+                 "props": {
+                  "present": false,
+                  "forceMount": false
+                 },
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "DialogContent",
+             "props": {
+              "forceMount": false,
+              "disableOutsidePointerEvents": null,
+              "asChild": false,
+              "as": null
+             },
+             "children": [
+              {
+               "name": "Presence",
+               "props": {
+                "present": false,
+                "forceMount": false
+               },
+               "children": []
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,46 +1,53 @@
 import './styles/variables.css';
-import { createApp, h } from 'vue';
-import TREE from './tree-today.json';
+import { createApp, h, Teleport, BaseTransition, Transition, KeepAlive, Suspense } from 'vue';
+import TREE from './today-tree.json';
 
 const MAIN = import.meta.glob('./components/*.vue');
-const VENDOR = import.meta.glob('./vendor-components/*.vue');
+const VENDOR_COMP = import.meta.glob('./vendor-components/*.vue');
+const VENDOR_MODS = import.meta.glob('./vendor/ui/*.js');
 
-const findLoader = (name) => {
-  for (const map of [MAIN, VENDOR]) {
+// Vue 自带的内置组件
+const BUILTIN = { Teleport, BaseTransition, Transition, KeepAlive, Suspense };
+
+const findVue = (name) => {
+  for (const map of [MAIN, VENDOR_COMP]) {
     const k = Object.keys(map).find(x => x.endsWith('/' + name + '.vue'));
     if (k) return map[k];
   }
   return null;
 };
 
-// 预加载所有需要的组件
-const needed = new Set();
-(function collect(n) { if (n.usable) needed.add(n.name); n.children.forEach(collect); })(TREE);
-
-const COMPONENTS = {};
-let pending = needed.size;
-
-const root = document.getElementById('app');
 window.__STATUS__ = 'loading';
 
 (async () => {
-  for (const name of needed) {
-    const loader = findLoader(name);
+  const COMPONENTS = {};
+  // 1) 从 .vue 加载
+  const names = new Set();
+  (function collect(n) { if (n.name) names.add(n.name); n.children.forEach(collect); })(TREE);
+  for (const name of names) {
+    const loader = findVue(name);
     if (!loader) continue;
-    try {
-      const mod = await loader();
-      COMPONENTS[name] = mod.default || mod;
-    } catch (e) { /* 单个失败不影响 */ }
+    try { const m = await loader(); COMPONENTS[name] = m.default || m; } catch (e) {}
   }
-  window.__STATUS__ = 'loaded:' + Object.keys(COMPONENTS).length + '/' + needed.size;
+  // 2) 从 vendor chunk 按 __name 索引补齐
+  const vendorIndex = {};
+  for (const key of Object.keys(VENDOR_MODS)) {
+    try {
+      const mod = await VENDOR_MODS[key]();
+      for (const v of Object.values(mod)) {
+        const nm = v && (v.__name || v.name);
+        if (nm && !COMPONENTS[nm] && !vendorIndex[nm]) vendorIndex[nm] = v;
+      }
+    } catch (e) {}
+  }
+  Object.assign(COMPONENTS, vendorIndex);
+  window.__INDEXED__ = Object.keys(COMPONENTS).length;
+  window.__STATUS__ = 'loaded';
 
-  // 强制打开需要 open 的组件
   const fixProps = (props) => {
     const p = {};
     for (const [k, v] of Object.entries(props || {})) {
-      if (v === '<fn>' || v === '<deep>' || v === '<sym>' || (v && typeof v === 'object' && v.__arr !== undefined)) continue;
-      if (v && typeof v === 'object' && '__ref' in v) { p[k] = v.__ref; continue; }
-      if (v === null) continue;
+      if (v === null || typeof v === 'function') continue;
       p[k] = v;
     }
     if ('open' in p) p.open = true;
@@ -48,27 +55,35 @@ window.__STATUS__ = 'loading';
     return p;
   };
 
-  const build = (n) => {
-    const Comp = n.usable ? COMPONENTS[n.name] : null;
-    const kids = n.children.filter(c => c.usable || c.children.length).map(build).filter(Boolean);
-    if (Comp) {
-      try {
-        return h(Comp, fixProps(n.props), kids.length ? { default: () => kids } : undefined);
-      } catch (e) {
-        return h('div', { class: 'ph', 'data-err': String(e && e.message || e).slice(0, 40) });
-      }
+  // 透明容器：缺失时直接渲染子节点，避免破坏 DOM 结构
+  const TRANSPARENT = new Set(['Presence', 'Teleport', 'BaseTransition', 'AsyncComponentWrapper',
+    'Primitive', 'PrimitiveSlot', 'CollectionItem', 'CollectionSlot', 'Transition', 'Suspense', 'KeepAlive']);
+
+  const MAXD = parseInt(new URLSearchParams(location.search).get('depth') || '99', 10);
+  const build = (n, d = 0) => {
+    if (d >= MAXD) return n.name ? h('span', { style: 'color:#999' }, '[' + n.name + ']') : null;
+    const kids = n.children.map(c => build(c, d + 1)).filter(x => x !== null && x !== undefined);
+    if (TRANSPARENT.has(n.name)) {
+      if (kids.length === 1) return kids[0];
+      return kids.length ? h('div', kids) : null;
     }
-    // 不可用节点：用 div 占位但承载子节点
-    return kids.length ? h('div', { class: 'ph-wrap' }, kids) : null;
+    if (n.name) {
+      const C = COMPONENTS[n.name];
+      if (C) {
+        try { return h(C, fixProps(n.props), kids.length ? { default: () => kids } : undefined); }
+        catch (e) { return h('div', { 'data-err': String(e && e.message || e).slice(0, 30) }); }
+      }
+      return kids.length ? h('div', { 'data-missing': n.name }, kids) : null;
+    }
+    return kids.length ? h('div', kids) : null;
   };
 
+  const root = document.getElementById('app');
   try {
     const app = createApp({ render: () => build(TREE) });
     app.config.warnHandler = () => {};
-    app.config.errorHandler = (e) => { (window.__ERRS__ ||= []).push(String(e && e.message || e).slice(0, 100)); };
+    app.config.errorHandler = (e) => { (window.__ERRS__ ||= []).push(String(e && e.message || e).slice(0, 90)); };
     app.mount(root);
-    window.__STATUS__ = 'OK:' + root.innerHTML.length;
-  } catch (e) {
-    window.__STATUS__ = 'THROW:' + String(e && e.message || e).slice(0, 80);
-  }
+    window.__STATUS__ = 'OK:' + root.innerHTML.length + ':' + root.innerText.length;
+  } catch (e) { window.__STATUS__ = 'THROW:' + String(e && e.message || e).slice(0, 80); }
 })();
