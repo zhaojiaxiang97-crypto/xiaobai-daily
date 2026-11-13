@@ -389,15 +389,39 @@ for (const [compName, tpl] of tplMap) {
 }
 
 // B2) 生成 shared.js 的 body（AST 级改写，按原位置排序）
+// 判断一个顶层 unit 是否引用了组件符号（compVarToName 的 key）
+// 这些 unit 是应用启动/注册代码（如 `setup: () => createElementVNode(Tooltip, ...)`、
+// `Q9 === App`），把它们留在 shared.js 里就会让 shared.js import 组件，
+// 从而和「组件 import shared.js」形成模块循环 → TDZ。
+function unitReferencesComponent(u, compLocals) {
+  if (!compLocals.size || !u.code) return false;
+  let ast;
+  try { ast = P.parse(u.code, { sourceType: 'module' }); } catch (e) { return false; }
+  let hit = false;
+  T(t.file(ast.program), {
+    Identifier(ip) {
+      if (hit) return;
+      if (!ip.isReferencedIdentifier()) return;
+      if (compLocals.has(ip.node.name)) hit = true;
+    },
+  });
+  return hit;
+}
+
 function buildSharedBody() {
   const codes = [];
+  const compLocals = new Set(compVarToName.keys());
+  let deferred = 0;
   for (const u of topUnits) {
+    // 跳过「引用组件」的 unit —— 彻底打破 shared.js ↔ 组件的循环依赖
+    if (unitReferencesComponent(u, compLocals)) { deferred++; continue; }
     if (u.kind === 'var') {
       codes.push({ start: u.start, code: G(t.variableDeclaration(u.varKind, u.declarators.map(d => t.cloneNode(d, true, true))), { compact: false, comments: true, jsescOption: { minimal: true } }).code });
     } else {
       codes.push({ start: u.start, code: u.code });
     }
   }
+  process.stderr.write(`[refactor] 移到 bootstrap 的 unit: ${deferred}\n`);
   let body = codes.map(c => c.code).join('\n\n');
 
   // B2a) Vue API 引用 → __vue.xxx
