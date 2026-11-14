@@ -286,6 +286,31 @@ We 真实值  = {"configured":false,"enabled":false,"locked":false,
 结论：**数据链路已通，UI 分支未通**。下一步应该盯模板侧（条件渲染还原），
 而不是继续调还原范围。
 
+
+## 最新卡点：`We.value` 更新了，模板读到的还是初值
+
+继续往下，把矛盾缩到最小：
+
+| 观察点 | 值 |
+|---|---|
+| setup 内 `We.value`（getState 后立刻） | `{configured:false, enabled:false, locked:false}` |
+| setup 内 `We.value`（1.5 秒后再读） | 同上 —— **稳定，没被重置** |
+| 模板渲染的 `We` | `{configured:true, enabled:true, locked:true}` —— **初值** |
+
+同一份组件，setup 里是真值、模板里是初值。已排除：
+
+- 不是 `v-if` 的问题：写死 `v-if="false"` 时锁屏确实消失（`#app` 变 4283B）
+- 不是重复实例：模板里 `R$t` 只出现两次（import + 一处渲染）
+- 不是 `onStateChanged` 回调覆盖：去掉监听后仍是初值
+- 不是声明形式：把 `We` 从 `let` 声明链里拆成独立 `const We = ref(...)`，依然初值
+
+用 `@vue/compiler-sfc` 编译确认：`bindings.We = setup-let`，render 里是 `$setup.We`。
+也就是说模板走的是 `proxyRefs(setupResult)` 解包路径，理论上应该实时。
+
+**所以问题是「ref 更新没有触发模板重渲染」** —— 这是响应式链路问题，
+不是还原范围问题，也不是条件渲染问题。下一步要查的是：这个 ref 为什么没被依赖追踪
+（或更新为什么没进调度队列）。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，
