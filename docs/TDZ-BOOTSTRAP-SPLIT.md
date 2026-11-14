@@ -264,6 +264,28 @@ onBeforeMount(async () => {
 2. `ZR.getState()` 的真实值要写回 `We`（裸对象，无 `{ok,data}` 包装）
 3. 模板里的条件渲染（`Ge` / `We.locked` 分支）要保留下来
 
+
+## 初始化链路跑通了：`We` 拿到真实值
+
+给生命周期回调体加「逐条 try/catch」之后（`onBeforeMount(async () => { … })` 里每条语句
+独立 try），`App` 的初始化链能一路跑到底。探针确认：
+
+```
+GS 调用    = yes
+We 真实值  = {"configured":false,"enabled":false,"locked":false,
+             "retryAfterSeconds":0,"recoveryMode":"wordSelection"}
+```
+
+也就是说：之前那串 `en = Dt(o.value), jt = ZR.onStateChanged(...)` 抛错会打断整段初始化，
+现在被隔离掉了，`We.value = await ZR.getState()` 正常执行、状态正确落地。
+
+**但界面仍然显示锁屏。** `We.locked` 已经是 `false`，`<component :is="R$t">` 手工加的
+`v-if="We && We.locked"` 却没有让它消失。这一层的成因还没查清（可能 `v-if` 与
+`:is` 的组合、或者模板里 `We` 的解析路径与 setup 里的不是同一个）。
+
+结论：**数据链路已通，UI 分支未通**。下一步应该盯模板侧（条件渲染还原），
+而不是继续调还原范围。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，

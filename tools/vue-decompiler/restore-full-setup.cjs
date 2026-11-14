@@ -1,17 +1,4 @@
-#!/usr/bin/env node
-// 实验脚本：把某个组件的 setup 顶层语句「全量」还原进 <script setup>。
-//
-// 进展（2026-11，真 Electron 外壳 + 真 preload，App 组件）：
-//   - 符号可解析性检查：70/70 条顶层语句全部保留（shared 导入 34 个）
-//   - 支持 try/catch 语句（原 setup 拉初始状态就在里面）
-//   - 支持「隐式赋值预声明」：严格模式下给未声明变量赋值会抛 ReferenceError，
-//     把整段初始化打断（实测 onBeforeMount 里的 en/jt）
-//
-// 已知卡点：App 的 onBeforeMount 里还有一批隐式变量（en/jt/At...），
-// 逐个预声明后仍会在某处抛错，setup 中断 → 首屏退化。
-// 说明「只还原顶层语句」不够：原 setup 的声明链需要更完整地还原。
-//
-// 用法: node restore-full-setup.cjs <组件名> <目标 .vue> <shared.js>
+// 原型：把 App.vue 的 setup 还原「放宽」到全部顶层语句（不再只挑初值安全的）
 // 目的：让拉数据的初始化逻辑真的执行 —— 真外壳里 IPC 是真的，只要跑起来就能拿到真数据
 const fs = require('fs');
 const P = require('/tmp/w509/nm/node_modules/@babel/parser');
@@ -151,6 +138,34 @@ while (changed) {
   }
 }
 
+// 生命周期回调体逐条 try/catch：原 setup 里 onBeforeMount 的初始化链是一长串
+// `en = ..., jt = ...; try { We.value = await ZR.getState() } ...`，
+// 只要前面任意一条抛 ReferenceError，后面的状态同步就永远不执行。
+// 包成逐条 try，保证能跑到底。
+function wrapCallbackBody(st) {
+  const clone = t.cloneNode(st, true, true);
+  T(t.file(t.program([clone])), {
+    CallExpression(p2) {
+      if (!t.isIdentifier(p2.node.callee)) return;
+      const nm = p2.node.callee.name;
+      if (!/^(onBeforeMount|onMounted|onBeforeUnmount|onUnmounted|onActivated|onDeactivated)$/.test(nm)) return;
+      const fn = p2.node.arguments[0];
+      if (!fn || !(t.isArrowFunctionExpression(fn) || t.isFunctionExpression(fn))) return;
+      if (t.isBlockStatement(fn.body)) {
+        const wrapped = [];
+        for (const inner of fn.body.body) {
+          if (t.isReturnStatement(inner) || t.isTryStatement(inner)) { wrapped.push(inner); continue; }
+          wrapped.push(t.tryStatement(t.blockStatement([inner]), t.catchClause(t.identifier('__e'), t.blockStatement([]))));
+        }
+        fn.body.body = wrapped;
+      } else {
+        fn.body = t.blockStatement([t.tryStatement(t.blockStatement([t.expressionStatement(fn.body)]), t.catchClause(t.identifier('__e'), t.blockStatement([])))]);
+      }
+    },
+  });
+  return clone;
+}
+
 // 生成代码
 const parts = [];
 const vueApis = new Set();
@@ -180,7 +195,8 @@ function guardTopCalls(st) {
 }
 
 for (const st of keep) {
-  const st2 = (t.isVariableDeclaration(st) || t.isExpressionStatement(st)) ? guardTopCalls(st) : st;
+  let st2 = (t.isVariableDeclaration(st) || t.isExpressionStatement(st)) ? guardTopCalls(st) : st;
+  st2 = wrapCallbackBody(st2);
   parts.push(G(st2, { compact: false, comments: false, jsescOption: { minimal: true } }).code);
   if (t.isVariableDeclaration(st)) {
     for (const d of st.declarations) {
