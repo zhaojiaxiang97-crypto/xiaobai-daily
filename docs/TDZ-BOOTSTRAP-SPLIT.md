@@ -332,6 +332,37 @@ We 真实值  = {"configured":false,"enabled":false,"locked":false,
 结论：还原出来的这套组件树首次渲染是正常的（能出应用锁面板），但**响应式更新没有生效**。
 下一步要查的是 `app.mount` 之后 effect 是否正常建立、以及模板是否被编译成了静态节点。
 
+
+### 最硬的一条证据：同一个 reactive 对象，模板和 setup 读到两个值
+
+给 `We` 打上 `__id: 'live'` 标记，模板里输出 `{id, locked}`：
+
+```
+模板里的 We   = {"id":"live","locked":true}        ← 同一对象，旧值
+setup 里 2s    = {"__id":"live", ..., "locked":false}  ← 同一对象，新值
+重渲染次数     = 0
+```
+
+对象是**同一个**（`__id` 都在），但模板读到的是首次渲染时的值，且 `onUpdated` 一次没触发。
+
+也就是说：`Object.assign(We, 真实状态)` 在 reactive 上确实写成功了（setup 里能读到），
+但这个写入**没有把 render effect 排进更新队列**。
+
+`@vue/compiler-sfc` 编译产物确认模板不是静态的：
+
+```js
+_createElementVNode("span", _hoisted_5, _toDisplayString($setup.__probeWe()), 1 /* TEXT */)
+```
+
+patchFlag 有 TEXT 标记，`$setup` 访问路径也在，理论上应该响应。
+
+所以问题收敛到一句话：**这个还原产物里，首次渲染没有把 `We` 收集进 render effect 的依赖**。
+可能是首次渲染时 `We` 的读取没经过 reactive proxy（比如被内联成局部常量），
+或者 render effect 在挂载后就没有处于 active 状态。
+
+下一步：直接查 `app._instance.effect.active`，以及首次渲染时 `We.locked` 的 getter 有没有被命中
+（给 reactive 加自定义 getter 计数）。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，
