@@ -1,5 +1,5 @@
 <template>
-<div data-v-8329ed73><div ref="r" :class="`todo-post-rich-text`" :style="at(c?.value)" v-html="s?.value"></div><button type="button" :class="`mt-1 text-xs font-medium text-[#16a34a] hover:text-[#15803d]`" @click="e=>i=!i">{{ i?n(`todo.activity.collapseText`):n(`todo.activity.expandText`) }}</button></div>
+<div data-v-8329ed73><div ref="r" :class="`todo-post-rich-text`" :style="c?.value" v-html="s?.value"></div><button type="button" :class="`mt-1 text-xs font-medium text-[#16a34a] hover:text-[#15803d]`" @click="e=>i=!i">{{ i?n(`todo.activity.collapseText`):n(`todo.activity.expandText`) }}</button></div>
 </template>
 
 <script setup>

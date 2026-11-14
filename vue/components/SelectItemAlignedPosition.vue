@@ -1,5 +1,5 @@
 <template>
-<div ref="state" :style="at({display:`flex`,flexDirection:`column`,position:`fixed`,zIndex:_})"><component :is="fe" /></div>
+<div ref="state" :style="{display:`flex`,flexDirection:`column`,position:`fixed`,zIndex:_}"><component :is="fe" /></div>
 </template>
 
 <script setup>

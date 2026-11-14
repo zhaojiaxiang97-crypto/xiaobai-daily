@@ -1,5 +1,5 @@
 <template>
-<div data-v-687930fa :class="`composer-pet`" :style="at({bottom:`calc(100% - ${counter}px)`})"><button type="button" :class="`composer-pet__button`" :aria-label="t(`xiaoheiBot.composerPet.openGrowth`)" :aria-busy="n" @click="withDirectives(d,[`stop`])"><img :class="`composer-pet__art`" :src="s?.value" alt="" draggable="false" @error="e=>s.value=Q5" /></button><span><span v-text="t(`todayWork.growthEntry.${r}`)" /></span></div>
+<div data-v-687930fa :class="`composer-pet`" :style="{bottom:`calc(100% - ${counter}px)`}"><button type="button" :class="`composer-pet__button`" :aria-label="t(`xiaoheiBot.composerPet.openGrowth`)" :aria-busy="n" @click="withDirectives(d,[`stop`])"><img :class="`composer-pet__art`" :src="s?.value" alt="" draggable="false" @error="e=>s.value=Q5" /></button><span><span v-text="t(`todayWork.growthEntry.${r}`)" /></span></div>
 </template>
 
 <script setup>

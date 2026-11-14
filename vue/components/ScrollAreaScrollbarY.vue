@@ -1,5 +1,5 @@
 <template>
-<component :is="Du" :ref="r" :is-horizontal="false" data-orientation="vertical" :style="at({top:0,right:t.dir.value===`ltr`?0:undefined,left:t.dir.value===`rtl`?0:undefined,bottom:`var(--reka-scroll-area-corner-height)`,'--reka-scroll-area-thumb-height':a?.value?`${cu(a?.value)}px`:undefined})" @ondragscroll="e=>n.onDragScroll(e.y)" />
+<component :is="Du" :ref="r" :is-horizontal="false" data-orientation="vertical" :style="{top:0,right:t.dir.value===`ltr`?0:undefined,left:t.dir.value===`rtl`?0:undefined,bottom:`var(--reka-scroll-area-corner-height)`,'--reka-scroll-area-thumb-height':a?.value?`${cu(a?.value)}px`:undefined}" @ondragscroll="e=>n.onDragScroll(e.y)" />
 </template>
 
 <script setup>

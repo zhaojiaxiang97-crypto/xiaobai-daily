@@ -1,5 +1,5 @@
 <template>
-<span data-v-c3a40817 :class="[`avatar-effect`,[e.stage&&`avatar-effect--${e.stage}`,{'avatar-effect--collapsed':r}]]" :style="at(o?.value)" aria-hidden="true"><img :class="`avatar-effect__image`" :src="e.src" alt="" /><svg :class="`avatar-effect__motion`" viewBox="0 0 180 180" fill="currentColor"><g></g></svg></span>
+<span data-v-c3a40817 :class="[`avatar-effect`,[e.stage&&`avatar-effect--${e.stage}`,{'avatar-effect--collapsed':r}]]" :style="o?.value" aria-hidden="true"><img :class="`avatar-effect__image`" :src="e.src" alt="" /><svg :class="`avatar-effect__motion`" viewBox="0 0 180 180" fill="currentColor"><g></g></svg></span>
 </template>
 
 <script setup>

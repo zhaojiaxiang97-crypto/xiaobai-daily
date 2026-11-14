@@ -1,5 +1,5 @@
 <template>
-<div data-v-bce7723a :class="`flex flex-col items-center gap-3 cursor-pointer`" @click="t=>o=e"><div :class="`relative flex items-center justify-center w-[88px] h-[88px] rounded-full text-[30px] transition-transform duration-300 hover:scale-110`" :style="at(e.unlocked?{background:d(e.tier),boxShadow:f(e.tier)}:{background:`linear-gradient(135deg, #f0f0f0, #e4e4e4)`})"><span :class="[`relative z-10`,e.unlocked?`drop-shadow-sm`:`opacity-40 grayscale`]">{{ e.icon }}</span></div><span :class="[`text-xs text-center leading-tight max-w-[92px]`,e.unlocked?`text-[#555]`:`text-[#ccc]`]">{{ m(e) }}</span></div>
+<div data-v-bce7723a :class="`flex flex-col items-center gap-3 cursor-pointer`" @click="t=>o=e"><div :class="`relative flex items-center justify-center w-[88px] h-[88px] rounded-full text-[30px] transition-transform duration-300 hover:scale-110`" :style="e.unlocked?{background:d(e.tier),boxShadow:f(e.tier)}:{background:`linear-gradient(135deg, #f0f0f0, #e4e4e4)`}"><span :class="[`relative z-10`,e.unlocked?`drop-shadow-sm`:`opacity-40 grayscale`]">{{ e.icon }}</span></div><span :class="[`text-xs text-center leading-tight max-w-[92px]`,e.unlocked?`text-[#555]`:`text-[#ccc]`]">{{ m(e) }}</span></div>
 </template>
 
 <script setup>

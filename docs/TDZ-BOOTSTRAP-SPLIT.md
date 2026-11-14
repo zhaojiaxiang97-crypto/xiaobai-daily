@@ -160,6 +160,35 @@ App 的 setup 有 70 条顶层语句，安全子集只取其中 20 条（初值�
 所以当前正解是「安全子集 + 显式开关」：默认产物拿 112 个可渲染组件，
 需要看整应用首屏时开 `RESTORE_SETUP_HOOKS=1`（117 个 + 应用锁界面）。
 
+
+## 模板辅助函数：`:style="X(...)"` 的外层调用要去掉
+
+除 i18n 之外，全量还原还有第二个障碍：模板里的 `:style="at({...})"`。
+`at` 本该是 `normalizeStyle` 一类编译期辅助函数，但 shared 里同名符号是 vue-i18n 的调度器
+（`nr`），调用直接抛 `at is not a function`，style 整块丢失。
+
+这类符号不能靠名字对齐。现在的处理是**把外层调用去掉**：
+`normalizeStyle` 对纯对象/数组就是原样返回，`:style="at({...})"` 与 `:style="{...}"` 等价。
+生成器里做（37 个组件命中），实测批量挂载仍是 112，没有回归。
+
+## 首屏布局：能看见，但还没对齐
+
+真实 Chrome + 真 preload 下的当前状态（`RESTORE_SETUP_HOOKS=1` 的产物）：
+
+- `#app` 内容 8247 B
+- i18n 已装上（`__app__.__VUE_I18N_SYMBOL__` 为真），文案是真实翻译
+  （`小白已锁定` / `忘记密码？使用助记词重设`）
+- `--sidebar-expanded-w: 220px`（setup 还原的 computed 生效）
+- 应用锁面板完整渲染（锁图标 + 说明 + 密码框 + 入口链接），见 `vue/preview/app-lock.png`
+
+没对齐的是外壳层宽度：原 CSS 的 `#app{width:100%;height:100%}` 依赖 html/body 有高度，
+宿主页面已经补了 `html,body{height:100%}`；但 `.app-layout` 的 flex 规则（`flex:1 1 0%`）
+在没有正确父级 flex 上下文时，宽度只剩内容宽度（12px 或内容宽 820px）。
+
+试过三种宿主写法：不加 #app 规则（12px，界面不可见）、`#app{display:flex}`（820px，面板可见但错位）、
+`#app>*{width:100%!important}`（1192px，但面板被挤没）。最终保留「可见」的那一版，
+精确对齐需要照着原外壳的 flex 上下文补，属于外壳适配、不影响还原产物本身。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，

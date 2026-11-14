@@ -1,5 +1,5 @@
 <template>
-<div ref="a" :class="`w-full min-w-0`"><canvas ref="o" :class="`block cursor-crosshair`" role="img" :aria-label="event.label" :style="at({width:`${f.value.width}px`,height:`${f.value.height}px`})" @pointermove="_" @pointerleave="v"></canvas></div>
+<div ref="a" :class="`w-full min-w-0`"><canvas ref="o" :class="`block cursor-crosshair`" role="img" :aria-label="event.label" :style="{width:`${f.value.width}px`,height:`${f.value.height}px`}" @pointermove="_" @pointerleave="v"></canvas></div>
 </template>
 
 <script setup>

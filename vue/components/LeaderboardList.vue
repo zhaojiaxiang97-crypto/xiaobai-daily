@@ -1,5 +1,5 @@
 <template>
-<div data-v-1729278b><component :is="St" name="lb-row" tag="div" :class="`lb-list-rows`" /><div><div :class="`lb-row-bar`" :style="at({width:o(event.pinnedMe.recordCount)})"></div><span>{{ event.pinnedMe.rank }}</span><component :is="Ly" :name="event.pinnedMe.displayName" :avatar-url="event.pinnedMe.avatarUrl" :color-key="event.pinnedMe.userKey" :size="32" /><div><div><span>{{ event.pinnedMe.displayName }}</span><span>{{ n(`leaderboard.myPosition`) }}</span></div><span>{{ event.pinnedHint }}</span></div><component :is="Eg" :item="event.pinnedMe" /><span><span v-text="n(`leaderboard.records`,{count:event.pinnedMe.recordCount})" /></span></div></div>
+<div data-v-1729278b><component :is="St" name="lb-row" tag="div" :class="`lb-list-rows`" /><div><div :class="`lb-row-bar`" :style="{width:o(event.pinnedMe.recordCount)}"></div><span>{{ event.pinnedMe.rank }}</span><component :is="Ly" :name="event.pinnedMe.displayName" :avatar-url="event.pinnedMe.avatarUrl" :color-key="event.pinnedMe.userKey" :size="32" /><div><div><span>{{ event.pinnedMe.displayName }}</span><span>{{ n(`leaderboard.myPosition`) }}</span></div><span>{{ event.pinnedHint }}</span></div><component :is="Eg" :item="event.pinnedMe" /><span><span v-text="n(`leaderboard.records`,{count:event.pinnedMe.recordCount})" /></span></div></div>
 </template>
 
 <script setup>

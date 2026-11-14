@@ -1,5 +1,5 @@
 <template>
-<div><component :is="fe" :ref="s" :style="at({minWidth:a.scrollbarXEnabled.value?`fit-content`:undefined})" :as-child="n.asChild" :as="e.as" /></div>
+<div><component :is="fe" :ref="s" :style="{minWidth:a.scrollbarXEnabled.value?`fit-content`:undefined}" :as-child="n.asChild" :as="e.as" /></div>
 </template>
 
 <script setup>

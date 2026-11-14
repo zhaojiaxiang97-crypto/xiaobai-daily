@@ -1,5 +1,5 @@
 <template>
-<div><component :is="Qe" :to="r.rangePickerTarget??`#heatmap-panel-actions`" defer="" /><div><component :is="zn" :size="18" :class="`animate-spin`" />{{ ` `+toDisplayString(a(`mouseHeatmap.loading`)) }}</div><div :class="`pointer-events-none fixed z-50 rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background shadow-md`" :style="at(Te?.value)"><div>{{ we.value.title }}</div><div>{{ we.value.text }}</div></div><component :is="AU" :open="d" @update:open="e=>$e(d)?d.value=e:null" @confirm="m" /></div>
+<div><component :is="Qe" :to="r.rangePickerTarget??`#heatmap-panel-actions`" defer="" /><div><component :is="zn" :size="18" :class="`animate-spin`" />{{ ` `+toDisplayString(a(`mouseHeatmap.loading`)) }}</div><div :class="`pointer-events-none fixed z-50 rounded-md bg-foreground px-2.5 py-1.5 text-xs text-background shadow-md`" :style="Te?.value"><div>{{ we.value.title }}</div><div>{{ we.value.text }}</div></div><component :is="AU" :open="d" @update:open="e=>$e(d)?d.value=e:null" @confirm="m" /></div>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-<div data-preserve-light-surface="" :class="`box-border flex items-center justify-center rounded-lg border border-black/10 bg-white p-3`" :style="at(s?.value)"><img :src="n" :alt="text.alt" :class="`block`" :style="at(o?.value)" @error="c" /></div>
+<div data-preserve-light-surface="" :class="`box-border flex items-center justify-center rounded-lg border border-black/10 bg-white p-3`" :style="s?.value"><img :src="n" :alt="text.alt" :class="`block`" :style="o?.value" @error="c" /></div>
 </template>
 
 <script setup>

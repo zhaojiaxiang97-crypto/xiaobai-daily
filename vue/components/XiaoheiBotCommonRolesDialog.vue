@@ -1,5 +1,5 @@
 <template>
-<article data-v-984a4963 :class="`role-card`"><div><div :class="`role-avatar`" :style="at({backgroundColor:e.avatarColor})"><img :src="e.avatar" alt="" loading="lazy" @error="e=>e.target.style.display=`none`" /><span>{{ e.name.slice(0,1) }}</span></div><div><h3>{{ e.name }}</h3><p>{{ e.subtitle }}</p></div></div><p :class="`role-description`" :title="e.description">{{ e.description }}</p><div><span :class="`role-card-tag`" :title="e.tags[0]">{{ e.tags[0] }}</span><component :is="P" variant="outline" size="sm" @click="t=>s.value=e" /><component :is="P" size="sm" :disabled="!!i||n" :title="p(`commonRoles.addTitle`)" @click="t=>d(e)" /></div></article>
+<article data-v-984a4963 :class="`role-card`"><div><div :class="`role-avatar`" :style="{backgroundColor:e.avatarColor}"><img :src="e.avatar" alt="" loading="lazy" @error="e=>e.target.style.display=`none`" /><span>{{ e.name.slice(0,1) }}</span></div><div><h3>{{ e.name }}</h3><p>{{ e.subtitle }}</p></div></div><p :class="`role-description`" :title="e.description">{{ e.description }}</p><div><span :class="`role-card-tag`" :title="e.tags[0]">{{ e.tags[0] }}</span><component :is="P" variant="outline" size="sm" @click="t=>s.value=e" /><component :is="P" size="sm" :disabled="!!i||n" :title="p(`commonRoles.addTitle`)" @click="t=>d(e)" /></div></article>
 </template>
 
 <script setup>

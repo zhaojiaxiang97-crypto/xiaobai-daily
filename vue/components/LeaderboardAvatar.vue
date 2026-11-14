@@ -1,5 +1,5 @@
 <template>
-<span data-v-d3083d4b :class="`leaderboard-avatar`" :style="at(o?.value)"><img :src="e.avatarUrl" alt="" draggable="false" @error="e=>r=true" /></span>
+<span data-v-d3083d4b :class="`leaderboard-avatar`" :style="o?.value"><img :src="e.avatarUrl" alt="" draggable="false" @error="e=>r=true" /></span>
 </template>
 
 <script setup>

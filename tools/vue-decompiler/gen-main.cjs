@@ -342,6 +342,7 @@ const madeComponents = new Set();
 let safeSetupCount = 0;
 let danglingCount = 0;
 let optChainCount = 0;
+let styleUnwrapCount = 0;
 let placeholderCount = 0;
 const tplMap = new Map();   // compName -> template
 const seen = new Set();
@@ -557,6 +558,16 @@ for (const [compName, tpl] of tplMap) {
   if (sid) {
     tpl2 = tpl.replace(/^<([a-z][\w-]*)/, `<$1 ${sid}`);
   }
+  // 模板里 :style="X(...)" 的辅助函数调用去掉（X 来自 shared 时语义不可信）
+  {
+    const sharedLocal = new Set([...sharedSpecs].map(sp => {
+      const mm = /\s+as\s+([A-Za-z_$][\w$]*)$/.exec(sp);
+      return mm ? mm[1] : sp.trim();
+    }));
+    const r = unwrapStyleCalls(tpl2, sharedLocal);
+    if (r.count) { tpl2 = r.tpl; styleUnwrapCount++; }
+  }
+
   // 模板里的 `X.value` 加可选链：还原出来的绑定有一部分在真实环境里是 null/undefined
   // （i18n 未安装、store 未就绪），`null.value` 会直接打断整棵 render。
   // 只改读取位置，赋值（X.value = ...）保持原样。
@@ -755,6 +766,37 @@ function onlyValueAccess(tpl, name) {
   if (!all.length) return false;
   const valAcc = tpl.match(new RegExp('(?<![\\w$.])' + esc + '\\.value(?![\\w$])', 'g')) || [];
   return all.length === valAcc.length;
+}
+
+// `:style="at({...})"` 里的 at 是模板编译期辅助函数（normalizeStyle 一类），
+// 但 shared 里同名的符号是别的 chunk 的导出（实测是 vue-i18n 的调度器 nr），
+// 调用即崩或返回 undefined → style 整块丢失。这里把外层调用去掉：
+// normalizeStyle 对纯对象/数组就是原样返回，去掉等价。
+function unwrapStyleCalls(tpl, sharedNames) {
+  const re = /:style="([A-Za-z_$][\w$]*)\(/g;
+  let out = '';
+  let last = 0;
+  let m;
+  let count = 0;
+  while ((m = re.exec(tpl))) {
+    const name = m[1];
+    if (!sharedNames.has(name)) continue;
+    const openIdx = re.lastIndex - 1;
+    let depth = 0;
+    let j = openIdx;
+    for (; j < tpl.length; j++) {
+      const ch = tpl[j];
+      if (ch === '(') depth++;
+      else if (ch === ')') { depth--; if (depth === 0) break; }
+    }
+    if (j >= tpl.length) break;
+    out += tpl.slice(last, m.index) + ':style="' + tpl.slice(openIdx + 1, j);
+    last = j + 1;
+    count++;
+  }
+  if (!count) return { tpl, count: 0 };
+  out += tpl.slice(last);
+  return { tpl: out, count };
 }
 
 // B2) 生成 shared.js 的 body（AST 级改写，按原位置排序）
@@ -1031,4 +1073,5 @@ try {
 if (safeSetupCount) console.error(`[setup] 安全子集还原的组件: ${safeSetupCount}`);
 if (danglingCount) console.error(`[兜底] 悬空符号占位: ${danglingCount} 处`);
 if (optChainCount) console.error(`[容错] 模板 .value 加可选链的组件: ${optChainCount}`);
+if (styleUnwrapCount) console.error(`[容错] :style 外层辅助函数调用去掉的组件: ${styleUnwrapCount}`);
 console.error(`shared.js ${(sharedCode.length / 1024 / 1024).toFixed(1)}MB | 本地 ${localNames.size} | cross ${crossList.length} | 组件import ${compImports.length} | Vue改写 ${vueN} | cross改写 ${crossN} | 路径 ${fixN}+${deadN}死 | 生成组件 ${madeComponents.size}`);

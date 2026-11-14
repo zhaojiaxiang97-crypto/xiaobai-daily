@@ -1,5 +1,5 @@
 <template>
-<component :is="fe" :ref="_" :as-child="n.asChild" :as="e.as" :dir="m" :style="at({position:`relative`,'--reka-scroll-area-corner-width':`${counter}px`,'--reka-scroll-area-corner-height':`${i}px`})" />
+<component :is="fe" :ref="_" :as-child="n.asChild" :as="e.as" :dir="m" :style="{position:`relative`,'--reka-scroll-area-corner-width':`${counter}px`,'--reka-scroll-area-corner-height':`${i}px`}" />
 </template>
 
 <script setup>

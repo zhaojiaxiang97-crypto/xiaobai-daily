@@ -1,5 +1,5 @@
 <template>
-<span data-v-11b00f46 :class="`chroma-key-video`" :style="at({width:`${e.width}px`,height:`${o?.value}px`})"><video ref="r" :src="e.src" muted="" loop="" playsinline="" preload="auto" :class="`chroma-key-video__source`" aria-hidden="true"></video><canvas ref="n" :class="`chroma-key-video__canvas`" :width="e.width*2" :height="o?.value*2"></canvas></span>
+<span data-v-11b00f46 :class="`chroma-key-video`" :style="{width:`${e.width}px`,height:`${o?.value}px`}"><video ref="r" :src="e.src" muted="" loop="" playsinline="" preload="auto" :class="`chroma-key-video__source`" aria-hidden="true"></video><canvas ref="n" :class="`chroma-key-video__canvas`" :width="e.width*2" :height="o?.value*2"></canvas></span>
 </template>
 
 <script setup>
