@@ -189,6 +189,27 @@ App 的 setup 有 70 条顶层语句，安全子集只取其中 20 条（初值�
 `#app>*{width:100%!important}`（1192px，但面板被挤没）。最终保留「可见」的那一版，
 精确对齐需要照着原外壳的 flex 上下文补，属于外壳适配、不影响还原产物本身。
 
+
+### 补一个关键事实：应用锁真实状态是「未设置」
+
+在真外壳里直接调 `window.electronAPI.appLock.getState()`：
+
+```json
+{"ok":true,"data":{"configured":false,"enabled":false,"locked":false,
+ "retryAfterSeconds":0,"recoveryMode":"wordSelection"}}
+```
+
+也就是说这台机器上**从来没设过应用锁**，界面不应该出现锁屏。它出现是因为
+`App.vue` 里 `We = ref({configured:true, enabled:true, locked:true})` 这个**初值**
+从来没有被真实状态覆盖 —— 拉状态的初始化逻辑依赖 IPC，被「安全子集」排除了。
+
+手工验证过：在 `App.vue` 的 setup 里补一段 `onBeforeMount` 调 `getState` 并
+`Object.assign(We.value, data)`，IPC 返回正常（日志可见 `locked:false`），但锁屏**仍然显示** ——
+说明显示条件在 `AppLockOverlay` 内部（它有自己的一套状态判断），只同步 `App` 的 `We` 不够。
+
+结论：主界面差的是「初始化链路」，不是渲染能力。要往下走必须还原
+`App` 与 `AppLockOverlay` 里那些依赖 IPC 的初始化语句，而不是在宿主层打补丁。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，
