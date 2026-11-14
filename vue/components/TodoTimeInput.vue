@@ -5,8 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import md from './BaseSeparator.vue';
-// [符号说明] f=useConfigProviderContext
-import { S_sm as sm, S_px as px, S_e as e, S_t as t, S_f as f, S_w as w } from '../shared.js';
+import { S_sm as sm, S_px as px, S_e as e, S_t as t, S_w as w } from '../shared.js';
 const event = defineProps({
       modelValue: {},
       label: {},
@@ -19,4 +18,9 @@ const event = defineProps({
       }
     });
 const n = event;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function f(e) {
+  s.value = false, c.value = e, e !== n.modelValue && r(`update:modelValue`, e);
+}
 </script>

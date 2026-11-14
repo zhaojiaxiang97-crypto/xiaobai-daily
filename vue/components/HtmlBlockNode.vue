@@ -1,9 +1,13 @@
 <template>
-<component data-v-4d8bb24b :is="Be(h.value?p.value:`div`)" />
+<component data-v-4d8bb24b :is="Be(h?.value?p?.value:`div`)" />
 </template>
 
 <script setup>
-import { S_is as is, S_p as p, S_Be as Be } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_is as is, S_Be as Be } from '../shared.js';
+const h = { value: undefined };
+const p = { value: undefined };
 </script>
 
 <style>

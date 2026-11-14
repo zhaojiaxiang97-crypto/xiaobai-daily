@@ -13,6 +13,9 @@
     /* 原 index.html 的背景来自 Electron 外壳；浏览器里要自己补一层，
        否则 body 透明 → 深色主题下出现白底白字 */
     html, body { height: 100%; margin: 0; background: var(--background); color: var(--foreground); }
+    /* 原应用的 #app 由外壳样式撑满；缺了这两条，.app-layout 宽度会塌成内容宽度（实测 12px） */
+    #app { display: flex; height: 100vh; }
+    .app-layout { width: 100%; }
   </style>
 </head>
 <body>

@@ -1,16 +1,18 @@
 <template>
-<span data-v-e225bcc7 :class="[`avatar-sync-badge`,`avatar-sync-badge--${e.size}`]" aria-hidden="true"><component :is="ns" :size="n.value" :stroke-width="2" /></span>
+<span data-v-e225bcc7 :class="[`avatar-sync-badge`,`avatar-sync-badge--${e.size}`]" aria-hidden="true"><component :is="ns" :size="n?.value" :stroke-width="2" /></span>
 </template>
 
 <script setup>
-// [符号说明] n~computed
-import { S_ns as ns, S_is as is, S_sm as sm, S_n as n } from '../shared.js';
+import { S_ns as ns, S_is as is, S_sm as sm } from '../shared.js';
 const e = defineProps({
       size: {
         default: `sm`
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const n = { value: undefined };
 </script>
 
 <style>

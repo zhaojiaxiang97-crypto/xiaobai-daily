@@ -1,12 +1,83 @@
 <template>
-<aside data-v-bab976a3 :class="`side-topic-panel`" :aria-label="i(`xiaoheiBot.sideTopic.title`)"><header><div><div><strong>{{ i(`xiaoheiBot.sideTopic.title`) }}</strong></div><div><span><span v-text="i(`xiaoheiBot.sideTopic.replies`,{count:D.value})" /></span><span>{{ i(`xiaoheiBot.sideTopic.independent`) }}</span></div></div><component :is="P" variant="ghost" size="icon-sm" :class="`side-topic-collapse-button`" :title="i(`xiaoheiBot.sideTopic.collapse`)" :aria-label="i(`xiaoheiBot.sideTopic.collapse`)" @click="e=>r(`close`)" /></header><div ref="h" :class="`consultation-side-scroll`" @scroll="k"><div ref="g" :class="`consultation-side-transcript`"><p>{{ p.value }}<component :is="P" variant="ghost" size="sm" :disabled="d.value||f.value" @click="e=>j()" /></p><div><component :is="zn" :size="20" :class="`animate-spin`" /><span>{{ i(`xiaoheiBot.sideTopic.loading`) }}</span></div><article><div><div><span><img :src="O(x.value.authorBotId)" alt="" /></span></div></div><div><span>{{ toDisplayString(x.value.authorName)+` ` }}<span>{{ i(`xiaoheiBot.sideTopic.sourceLabel`) }}</span></span><div><component :is="cp" :content="x.value.content" open-external-links="" @openlink="c" /></div></div></article><p>{{ i(`xiaoheiBot.sideTopic.empty`) }}</p></div></div><footer><div :class="[`composer`,{'is-busy':S.value}]"><span v-text="Xe(createElementVNode(`textarea`,{ref_key:`composer`,ref:_,'onUpdate:modelValue':t[2]||=e=>m.value=e,class:`composer-editor`,rows:`1`,placeholder:i(`xiaoheiBot.sideTopic.composerPlaceholder`),disabled:f.value,onKeydown:M},null,40,NVt),[[yt,m.value]])" /><div><span>{{ i(`xiaoheiBot.sideTopic.composerHint`) }}</span><button type="button" :class="`send-button send-button--stop`" :title="i(`xiaoheiBot.sideTopic.stop`)" :aria-label="i(`xiaoheiBot.sideTopic.stop`)" @click="te"><component :is="w" :size="12" :stroke-width="0" fill="currentColor" /></button><button type="button" :class="`send-button`" :disabled="!m.value.trim()||f.value" :title="i(`xiaoheiBot.sideTopic.send`)" :aria-label="i(`xiaoheiBot.sideTopic.send`)" @click="ee"><component :is="ws" :size="16" :stroke-width="1.8" /></button></div></div></footer></aside>
+<aside data-v-bab976a3 :class="`side-topic-panel`" :aria-label="i(`xiaoheiBot.sideTopic.title`)"><header><div><div><strong>{{ i(`xiaoheiBot.sideTopic.title`) }}</strong></div><div><span><span v-text="i(`xiaoheiBot.sideTopic.replies`,{count:D?.value})" /></span><span>{{ i(`xiaoheiBot.sideTopic.independent`) }}</span></div></div><component :is="P" variant="ghost" size="icon-sm" :class="`side-topic-collapse-button`" :title="i(`xiaoheiBot.sideTopic.collapse`)" :aria-label="i(`xiaoheiBot.sideTopic.collapse`)" @click="e=>r(`close`)" /></header><div ref="h" :class="`consultation-side-scroll`" @scroll="k"><div ref="g" :class="`consultation-side-transcript`"><p>{{ p }}<component :is="P" variant="ghost" size="sm" :disabled="d||f" @click="e=>j()" /></p><div><component :is="zn" :size="20" :class="`animate-spin`" /><span>{{ i(`xiaoheiBot.sideTopic.loading`) }}</span></div><article><div><div><span><img :src="O(x.value.authorBotId)" alt="" /></span></div></div><div><span>{{ toDisplayString(x.value.authorName)+` ` }}<span>{{ i(`xiaoheiBot.sideTopic.sourceLabel`) }}</span></span><div><component :is="cp" :content="x.value.content" open-external-links="" @openlink="c" /></div></div></article><p>{{ i(`xiaoheiBot.sideTopic.empty`) }}</p></div></div><footer><div :class="[`composer`,{'is-busy':S?.value}]"><span v-text="Xe(createElementVNode(`textarea`,{ref_key:`composer`,ref:_,'onUpdate:modelValue':t[2]||=e=>m=e,class:`composer-editor`,rows:`1`,placeholder:i(`xiaoheiBot.sideTopic.composerPlaceholder`),disabled:f,onKeydown:M},null,40,NVt),[[yt,m]])" /><div><span>{{ i(`xiaoheiBot.sideTopic.composerHint`) }}</span><button type="button" :class="`send-button send-button--stop`" :title="i(`xiaoheiBot.sideTopic.stop`)" :aria-label="i(`xiaoheiBot.sideTopic.stop`)" @click="te"><component :is="w" :size="12" :stroke-width="0" fill="currentColor" /></button><button type="button" :class="`send-button`" :disabled="!m.trim()||f" :title="i(`xiaoheiBot.sideTopic.send`)" :aria-label="i(`xiaoheiBot.sideTopic.send`)" @click="ee"><component :is="ws" :size="16" :stroke-width="1.8" /></button></div></div></footer></aside>
 </template>
 
 <script setup>
 import { createElementVNode, toDisplayString } from 'vue';
 import cp from './MarkdownRenderer.vue';
-// [符号说明] f=useConfigProviderContext, D=useConfigProviderContext, k~ref, M~computed
-import { S_is as is, S_ws as ws, S_sm as sm, S_alt as alt, S_NVt as NVt, S_e as e, S_t as t, S_r as r, S_i as i, S_c as c, S_d as d, S_f as f, S_p as p, S_m as m, S_g as g, S__ as _, S_v as v, S_x as x, S_S as S, S_w as w, S_D as D, S_O as O, S_k as k, S_j as j, S_ee as ee, S_te as te, S_M as M, S_P as P, S_Xe as Xe, S_yt as yt, S_zn as zn } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_is as is, S_ws as ws, S_sm as sm, S_alt as alt, S_NVt as NVt, S_e as e, S_t as t, S_r as r, S_i as i, S_c as c, S_g as g, S_v as v, S_w as w, S_P as P, S_Xe as Xe, S_yt as yt, S_zn as zn } from '../shared.js';
+const x = { value: undefined };
+const D = { value: undefined };
+const S = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let d = ref(false);
+let f = ref(false);
+let p = ref(``);
+let m = ref(``);
+let _ = ref(null);
+function T(e) {
+  return [`pending`, `streaming`, `failed`, `cancelled`].includes(e.status) ? true : !!e.content.trim() || !!N5(e);
+}
+function O(e) {
+  let t = o.value.find(item => item.kind === `xiaohei` && item.botId === e);
+  return t ? s(t) : undefined;
+}
+function k() {
+  let value = h.value;
+  value && (v.value = value.scrollHeight - value.scrollTop - value.clientHeight < 64);
+}
+async function j() {
+  let e = ++y;
+  d.value = true;
+  try {
+    let messages = await window.electronAPI.xiaoheiBot.listMessages({
+      conversationId: b.value
+    });
+    if (e !== y) return;
+    if (!messages.ok) throw Error(messages.error.message);
+    u.value = messages.data.messages, p.value = ``, await A();
+  } catch (t) {
+    e === y && (p.value = t instanceof Error ? t.message : String(t));
+  } finally {
+    e === y && (d.value = false);
+  }
+}
+async function ee() {
+  let e = m.value.trim();
+  if (e && !f.value) {
+    f.value = true, p.value = ``;
+    try {
+      let sendMessage = await window.electronAPI.xiaoheiBot.sendMessage({
+        taskId: crypto.randomUUID(),
+        conversationId: b.value,
+        content: e,
+        mentions: [],
+        attachments: [],
+        deliveryMode: S.value ? `append` : `normal`
+      });
+      if (!sendMessage.ok) throw Error(sendMessage.error.message);
+      m.value = ``, ne(), v.value = true, await A(), _.value?.focus();
+    } catch (e) {
+      p.value = e instanceof Error ? e.message : String(e);
+    } finally {
+      f.value = false;
+    }
+  }
+}
+async function te() {
+  if (!S.value) return;
+  let abortConversation = await window.electronAPI.xiaoheiBot.abortConversation({
+    conversationId: b.value
+  });
+  abortConversation.ok || (p.value = abortConversation.error.message);
+}
+function M(e) {
+  e.key === `Enter` && !e.shiftKey && !e.isComposing && (e.preventDefault(), ee());
+}
 </script>
 
 <style>

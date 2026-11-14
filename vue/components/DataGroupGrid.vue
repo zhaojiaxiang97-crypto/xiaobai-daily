@@ -3,8 +3,19 @@
 </template>
 
 <script setup>
-// [符号说明] f=useConfigProviderContext
-import { S_is as is, S_px as px, S_ZH as ZH, S_$H as $H, S_eU as eU, S_get as get, S_e as e, S_r as r, S_i as i, S_o as o, S_f as f, S_p as p, S_v as v, S_mt as mt, S_an as an } from '../shared.js';
+import { S_is as is, S_px as px, S_ZH as ZH, S_$H as $H, S_eU as eU, S_get as get, S_e as e, S_r as r, S_v as v, S_mt as mt, S_an as an } from '../shared.js';
 const items = defineProps({});
 const t = items;
+
+// [兜底] 模板引用但无来源的符号
+const i = { value: undefined };
+const o = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function f(e) {
+  i.value.get(e)?.disabled || d(o.value.has(e) ? n.value.filter(item => item !== e) : [...n.value, e]);
+}
+function p(e) {
+  return e.disabled ? e.note ?? `` : e.count === undefined ? `` : e.count === null ? `…` : e.count.toLocaleString();
+}
 </script>

@@ -1,11 +1,11 @@
 <template>
-<div data-v-4d9ce96f ref="l" :style="at(D.value)" :class="[`code-block-container rounded-lg border overflow-hidden`,{dark:n.isDark}]"><component :is="i$" :show-header="n.showHeader" :show-collapse-button="n.showCollapseButton" :show-font-size-buttons="n.showFontSizeButtons" :enable-font-size-control="n.enableFontSizeControl" :show-copy-button="n.showCopyButton" :show-expand-button="n.showExpandButton" :show-preview-button="n.showPreviewButton" :show-tooltips="n.showTooltips" :is-dark="n.isDark" :loading="n.loading" :stream="n.stream" :is-collapsed="c.value" :is-expanded="s.value" :copy-text="o.value" :is-previewable="E.value" :code-font-size="S.value" :code-font-min="10" :code-font-max="36" :default-code-font-size="x.value" :font-baseline-ready="C.value" @togglecollapse="he" @decreasefont="_e" @resetfont="ve" @increasefont="ge" @copy="pe" @toggleexpand="me" @preview="ye" /></div>
+<div data-v-4d9ce96f ref="l" :style="at(D?.value)" :class="[`code-block-container rounded-lg border overflow-hidden`,{dark:n.isDark}]"><component :is="i$" :show-header="n.showHeader" :show-collapse-button="n.showCollapseButton" :show-font-size-buttons="n.showFontSizeButtons" :enable-font-size-control="n.enableFontSizeControl" :show-copy-button="n.showCopyButton" :show-expand-button="n.showExpandButton" :show-preview-button="n.showPreviewButton" :show-tooltips="n.showTooltips" :is-dark="n.isDark" :loading="n.loading" :stream="n.stream" :is-collapsed="c?.value" :is-expanded="s?.value" :copy-text="o?.value" :is-previewable="E?.value" :code-font-size="S?.value" :code-font-min="10" :code-font-max="36" :default-code-font-size="x?.value" :font-baseline-ready="C?.value" @togglecollapse="he" @decreasefont="_e" @resetfont="ve" @increasefont="ge" @copy="pe" @toggleexpand="me" @preview="ye" /></div>
 </template>
 
 <script setup>
 import i$ from './CodeBlockShell.vue';
-// [符号说明] l~computed, D=useConfigProviderContext
-import { S_is as is, S_lg as lg, S_o as o, S_s as s, S_c as c, S_l as l, S_x as x, S_S as S, S_C as C, S_E as E, S_D as D, S_pe as pe, S_me as me, S_he as he, S_ge as ge, S__e as _e, S_ve as ve, S_ye as ye, S_at as at } from '../shared.js';
+// [符号说明] l~computed
+import { S_is as is, S_lg as lg, S_l as l, S_pe as pe, S_me as me, S_he as he, S_ge as ge, S__e as _e, S_ve as ve, S_ye as ye, S_at as at } from '../shared.js';
 const event = defineProps({
       node: {},
       loading: {
@@ -80,6 +80,16 @@ const event = defineProps({
       estimatedContentHeightPx: {}
     });
 const n = event;
+
+// [兜底] 模板引用但无来源的符号
+const D = { value: undefined };
+const c = { value: undefined };
+const s = { value: undefined };
+const o = { value: undefined };
+const E = { value: undefined };
+const S = { value: undefined };
+const x = { value: undefined };
+const C = { value: undefined };
 </script>
 
 <style>

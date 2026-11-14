@@ -1,11 +1,10 @@
 <template>
-<div data-v-a3a8afce :class="[`admonition`,[`admonition-${r.node.kind}`]]"><div :id="c" :class="`admonition-legend`"><svg></svg><span>{{ a.value }}</span><button :class="`admonition-toggle`" :aria-expanded="!o.value" :aria-controls="`${c}-content`" @click="s"><svg :style="at({rotate:o.value?`0deg`:`90deg`})" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg></button></div><span v-text="Xe(createElementVNode(`div`,{id:`${c}-content`,class:`admonition-content`,'aria-labelledby':c},[resolveComponent(s$,{'index-key':`admonition-${items.indexKey}`,nodes:r.node.children,'custom-id':r.customId,typewriter:r.typewriter,onCopy:n[0]||=e=>i(`copy`,e)},null,8,[`index-key`,`nodes`,`custom-id`,`typewriter`])],8,h3e),[[Tt,!o.value]])" /></div>
+<div data-v-a3a8afce :class="[`admonition`,[`admonition-${r.node.kind}`]]"><div :id="c" :class="`admonition-legend`"><svg></svg><span>{{ a?.value }}</span><button :class="`admonition-toggle`" :aria-expanded="!o?.value" :aria-controls="`${c}-content`" @click="s"><svg :style="at({rotate:o?.value?`0deg`:`90deg`})" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg></button></div><span v-text="Xe(createElementVNode(`div`,{id:`${c}-content`,class:`admonition-content`,'aria-labelledby':c},[resolveComponent(s$,{'index-key':`admonition-${items.indexKey}`,nodes:r.node.children,'custom-id':r.customId,typewriter:r.typewriter,onCopy:n[0]||=e=>i(`copy`,e)},null,8,[`index-key`,`nodes`,`custom-id`,`typewriter`])],8,h3e),[[Tt,!o?.value]])" /></div>
 </template>
 
 <script setup>
 import __ca_s from './NodeRenderer.vue';
-// [符号说明] n~computed
-import { S_w3 as w3, S_e as e, S_n as n, S_i as i, S_a as a, S_o as o, S_s as s, S_c as c, S_v as v, S_Xe as Xe, S_at as at, S_Tt as Tt } from '../shared.js';
+import { S_w3 as w3, S_e as e, S_i as i, S_c as c, S_v as v, S_Xe as Xe, S_at as at, S_Tt as Tt } from '../shared.js';
 const s$ = __ca_s;
 import { createElementVNode, resolveComponent } from 'vue';
 const items = defineProps({
@@ -20,6 +19,17 @@ const items = defineProps({
       customId: {}
     });
 const r = items;
+
+// [兜底] 模板引用但无来源的符号
+const a = { value: undefined };
+const o = { value: undefined };
+const h3e = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let n = undefined;
+function s() {
+  r.node.collapsible && (o.value = !o.value);
+}
 </script>
 
 <style>

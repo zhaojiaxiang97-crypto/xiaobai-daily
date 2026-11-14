@@ -5,8 +5,18 @@
 <script setup>
 import { toDisplayString } from 'vue';
 import lH from './ReportCcAvatar.vue';
-// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
-import { S_is as is, S_lg as lg, S_px as px, S_e as e, S_t as t, S_c as c, S_u as u, S_f as f, S_w as w, S_an as an } from '../shared.js';
+import { S_is as is, S_lg as lg, S_px as px, S_e as e, S_t as t, S_w as w, S_an as an } from '../shared.js';
 const items = defineProps({});
 const n = items;
+
+// [兜底] 模板引用但无来源的符号
+const u = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function c(e) {
+  return e.remark || e.nickname || e.email || `?`;
+}
+function f(e) {
+  r.value = u.value.has(e.userId) ? r.value.filter(item => item.userId !== e.userId) : [...r.value, l(e)];
+}
 </script>

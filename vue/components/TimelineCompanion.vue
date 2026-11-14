@@ -1,10 +1,30 @@
 <template>
-<button data-v-1af4db62 type="button" :class="`timeline-companion`" :aria-label="t(`timeline.companionOpenGrowth`)" :aria-busy="r.value" @click="c"><img :src="i.value" alt="" draggable="false" @error="e=>i.value=z3" /></button>
+<button data-v-1af4db62 type="button" :class="`timeline-companion`" :aria-label="t(`timeline.companionOpenGrowth`)" :aria-busy="r" @click="c"><img :src="i?.value" alt="" draggable="false" @error="e=>i.value=z3" /></button>
 </template>
 
 <script setup>
-import { S_z3 as z3, S_alt as alt, S_t as t, S_r as r, S_i as i, S_c as c } from '../shared.js';
+import { S_z3 as z3, S_alt as alt, S_t as t } from '../shared.js';
 const e = defineProps({});
+
+// [兜底] 模板引用但无来源的符号
+const i = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let r = ref(false);
+async function c() {
+  if (!r.value) {
+    r.value = true;
+    try {
+      await window.electronAPI.growth.open();
+    } catch (e) {
+      let n = (e instanceof Error ? e.message : ``).includes(`请先登录`) ? `loginRequired` : `openError`;
+      Ai(t(`todayWork.growthEntry.${n}`));
+    } finally {
+      r.value = false;
+    }
+  }
+}
 </script>
 
 <style>

@@ -4,7 +4,7 @@
 
 <script setup>
 // [符号说明] n~computed
-import { S_is as is, S_e as e, S_n as n, S_r as r, S_a as a, S_o as o, S_Be as Be } from '../shared.js';
+import { S_is as is, S_e as e, S_n as n, S_r as r, S_a as a, S_Be as Be } from '../shared.js';
 const event = defineProps({
       node: {},
       indexKey: {},
@@ -22,6 +22,9 @@ const event = defineProps({
       animationIteration: {}
     });
 const t = event;
+
+// [兜底] 模板引用但无来源的符号
+const o = { value: undefined };
 </script>
 
 <style>

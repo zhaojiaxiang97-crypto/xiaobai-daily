@@ -1,9 +1,9 @@
 <template>
-<span data-v-c3a40817 :class="[`avatar-effect`,[e.stage&&`avatar-effect--${e.stage}`,{'avatar-effect--collapsed':r.value}]]" :style="at(o.value)" aria-hidden="true"><img :class="`avatar-effect__image`" :src="e.src" alt="" /><svg :class="`avatar-effect__motion`" viewBox="0 0 180 180" fill="currentColor"><g></g></svg></span>
+<span data-v-c3a40817 :class="[`avatar-effect`,[e.stage&&`avatar-effect--${e.stage}`,{'avatar-effect--collapsed':r}]]" :style="at(o?.value)" aria-hidden="true"><img :class="`avatar-effect__image`" :src="e.src" alt="" /><svg :class="`avatar-effect__motion`" viewBox="0 0 180 180" fill="currentColor"><g></g></svg></span>
 </template>
 
 <script setup>
-import { S_alt as alt, S_r as r, S_o as o, S_g as g, S_at as at } from '../shared.js';
+import { S_alt as alt, S_g as g, S_at as at } from '../shared.js';
 const e = defineProps({
       src: {},
       stage: {},
@@ -13,6 +13,13 @@ const e = defineProps({
       fallbackColor: {}
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const o = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let r = ref(false);
 </script>
 
 <style>

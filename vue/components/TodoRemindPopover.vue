@@ -4,7 +4,7 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
-import { S_is as is, S_sm as sm, S_px as px, S_t as t, S_a as a, S_s as s, S_w as w, S_an as an } from '../shared.js';
+import { S_is as is, S_sm as sm, S_px as px, S_t as t, S_w as w, S_an as an } from '../shared.js';
 const e = defineProps({
       open: {
         type: Boolean
@@ -16,4 +16,14 @@ const e = defineProps({
       choices: {}
     });
 const n = e;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function a(e) {
+  return e === 60 ? i(`todo.remind.beforeHour`) : i(`todo.remind.before`, {
+    count: e
+  });
+}
+function s(e) {
+  r(`select`, e), r(`update:open`, false);
+}
 </script>

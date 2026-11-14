@@ -1,10 +1,9 @@
 <template>
-<span data-v-41c5d7d2 :class="[`avatar-frame`,[a.value?`avatar-frame--badged`:null,a.value?`avatar-frame--${e.badgeSize??`sm`}`:null]]"><span><slot /></span><component :is="vIt" :origin="n.value" :size="e.badgeSize??`sm`" /></span>
+<span data-v-41c5d7d2 :class="[`avatar-frame`,[a?.value?`avatar-frame--badged`:null,a?.value?`avatar-frame--${e.badgeSize??`sm`}`:null]]"><span><slot /></span><component :is="vIt" :origin="n?.value" :size="e.badgeSize??`sm`" /></span>
 </template>
 
 <script setup>
-// [符号说明] n~computed
-import { S_is as is, S_sm as sm, S_n as n, S_a as a } from '../shared.js';
+import { S_is as is, S_sm as sm } from '../shared.js';
 const e = defineProps({
       origin: {},
       originKey: {},
@@ -14,6 +13,11 @@ const e = defineProps({
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const a = { value: undefined };
+const vIt = { value: undefined };
+const n = { value: undefined };
 </script>
 
 <style>

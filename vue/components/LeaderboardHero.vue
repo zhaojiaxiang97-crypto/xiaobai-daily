@@ -1,10 +1,10 @@
 <template>
-<section data-v-9347e030><div><p><span :class="[`lb-hero-dot`,{'is-live':text.isLive}]"></span><span>{{ text.isLive?i(`leaderboard.live`):i(`leaderboard.settled`) }}</span><span>{{ `· `+toDisplayString(text.statusText) }}</span></p><div><p><span>{{ c.value[0] }}</span><span>{{ text.me.rank }}</span><span>{{ c.value[1] }}</span></p><span>{{ text.headline }}</span></div><div><div><span>{{ text.me.recordCount }}</span><span>{{ i(`leaderboard.metric.records`) }}</span></div><div><span>{{ i(`leaderboard.changeSame`) }}</span><span><span v-text="i(`leaderboard.metric.change`,{previous:text.previousLabel})" /></span></div><div><span>{{ toDisplayString(a.value)+`%` }}</span><span>{{ i(`leaderboard.metric.percent`) }}</span></div><div><span><span v-text="i(`leaderboard.streakDays`,{days:s.value})" /></span><span>{{ i(`leaderboard.metric.streak`) }}</span></div></div><div><div><div :class="`lb-hero-progress-fill`" :style="at({width:`${Math.round((text.progressRatio??0)*100)}%`})"></div></div><span>{{ text.progressText }}</span></div></div><div><div><button type="button" :class="`lb-hero-friend`" @click="e=>r(`addFriend`)"><component :is="tc" :size="13" />{{ ` `+toDisplayString(i(`leaderboard.addFriend`))+` ` }}<span>{{ (text.friendRequestCount??0)>99?`99+`:text.friendRequestCount }}</span></button><button type="button" :class="`lb-hero-share`" :disabled="!text.me" @click="e=>r(`share`)"><component :is="Ds" :size="13" />{{ ` `+toDisplayString(i(`leaderboard.share`)) }}</button></div></div></section>
+<section data-v-9347e030><div><p><span :class="[`lb-hero-dot`,{'is-live':text.isLive}]"></span><span>{{ text.isLive?i(`leaderboard.live`):i(`leaderboard.settled`) }}</span><span>{{ `· `+toDisplayString(text.statusText) }}</span></p><div><p><span>{{ c.value[0] }}</span><span>{{ text.me.rank }}</span><span>{{ c.value[1] }}</span></p><span>{{ text.headline }}</span></div><div><div><span>{{ text.me.recordCount }}</span><span>{{ i(`leaderboard.metric.records`) }}</span></div><div><span>{{ i(`leaderboard.changeSame`) }}</span><span><span v-text="i(`leaderboard.metric.change`,{previous:text.previousLabel})" /></span></div><div><span>{{ toDisplayString(a?.value)+`%` }}</span><span>{{ i(`leaderboard.metric.percent`) }}</span></div><div><span><span v-text="i(`leaderboard.streakDays`,{days:s?.value})" /></span><span>{{ i(`leaderboard.metric.streak`) }}</span></div></div><div><div><div :class="`lb-hero-progress-fill`" :style="at({width:`${Math.round((text.progressRatio??0)*100)}%`})"></div></div><span>{{ text.progressText }}</span></div></div><div><div><button type="button" :class="`lb-hero-friend`" @click="e=>r(`addFriend`)"><component :is="tc" :size="13" />{{ ` `+toDisplayString(i(`leaderboard.addFriend`))+` ` }}<span>{{ (text.friendRequestCount??0)>99?`99+`:text.friendRequestCount }}</span></button><button type="button" :class="`lb-hero-share`" :disabled="!text.me" @click="e=>r(`share`)"><component :is="Ds" :size="13" />{{ ` `+toDisplayString(i(`leaderboard.share`)) }}</button></div></div></section>
 </template>
 
 <script setup>
 import { toDisplayString } from 'vue';
-import { S_is as is, S_Ds as Ds, S_tc as tc, S_dot as dot, S_e as e, S_r as r, S_i as i, S_a as a, S_s as s, S_c as c, S_p as p, S_v as v, S_me as me, S_at as at } from '../shared.js';
+import { S_is as is, S_Ds as Ds, S_tc as tc, S_dot as dot, S_e as e, S_r as r, S_i as i, S_p as p, S_v as v, S_me as me, S_at as at } from '../shared.js';
 const text = defineProps({
       me: {},
       totalUsers: {},
@@ -23,6 +23,11 @@ const text = defineProps({
       friendRequestCount: {}
     });
 const n = text;
+
+// [兜底] 模板引用但无来源的符号
+const c = { value: undefined };
+const a = { value: undefined };
+const s = { value: undefined };
 </script>
 
 <style>

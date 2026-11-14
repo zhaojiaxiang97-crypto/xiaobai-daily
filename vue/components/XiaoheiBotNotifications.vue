@@ -1,11 +1,15 @@
 <template>
-<section data-v-4794d21a><header><div><component :is="P" variant="ghost" size="icon-sm" :class="`shrink-0`" :aria-label="n(`botUi.back`)" :title="n(`botUi.back`)" @click="e=>i(`close`)" /><div><h1>{{ n(`botUi.notifications`) }}</h1><p>{{ n(`botUi.notificationSubtitle`) }}</p></div></div></header><div><div><div><div><h2>{{ n(`botUi.activity`) }}</h2><p>{{ n(`botUi.activityHint`) }}</p></div><component :is="gp" :modelValue="l.value" @update:modelvalue="e=>l.value=e" activation-mode="manual" /></div><div :class="`flex justify-center py-16`" :aria-label="n(`botUi.loadingNotifications`)"><component :is="zn" :size="22" :class="`animate-spin text-muted-foreground`" /></div></div></div></section>
+<section data-v-4794d21a><header><div><component :is="P" variant="ghost" size="icon-sm" :class="`shrink-0`" :aria-label="n(`botUi.back`)" :title="n(`botUi.back`)" @click="e=>i(`close`)" /><div><h1>{{ n(`botUi.notifications`) }}</h1><p>{{ n(`botUi.notificationSubtitle`) }}</p></div></div></header><div><div><div><div><h2>{{ n(`botUi.activity`) }}</h2><p>{{ n(`botUi.activityHint`) }}</p></div><component :is="gp" :modelValue="l" @update:modelvalue="e=>l=e" activation-mode="manual" /></div><div :class="`flex justify-center py-16`" :aria-label="n(`botUi.loadingNotifications`)"><component :is="zn" :size="22" :class="`animate-spin text-muted-foreground`" /></div></div></div></section>
 </template>
 
 <script setup>
 import gp from './Tabs.vue';
-// [符号说明] n~computed, l~computed
-import { S_is as is, S_sm as sm, S_h1 as h1, S_h2 as h2, S_e as e, S_n as n, S_i as i, S_l as l, S_p as p, S_P as P, S_zn as zn } from '../shared.js';
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let l = ref(`all`);
+// [符号说明] n~computed
+import { S_is as is, S_sm as sm, S_h1 as h1, S_h2 as h2, S_e as e, S_n as n, S_i as i, S_p as p, S_P as P, S_zn as zn } from '../shared.js';
 </script>
 
 <style>

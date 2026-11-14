@@ -1,10 +1,20 @@
 <template>
-<code data-v-4f389e00><span>{{ c.value }}</span><span :class="[`inline-code-stream-delta`,[m.value]]" @animationend="p">{{ l.value }}</span></code>
+<code data-v-4f389e00><span>{{ c?.value }}</span><span :class="[`inline-code-stream-delta`,[m]]" @animationend="p">{{ l }}</span></code>
 </template>
 
 <script setup>
-// [符号说明] l~computed
-import { S_c as c, S_l as l, S_p as p, S_m as m } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+const c = { value: undefined };
+import { ref, computed } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let l = ref(``);
+let counter = ref(0);
+function p() {
+  l.value &&= (c.value = d(), ``);
+}
+let m = computed(() => counter.value % 2 == 0 ? `inline-code-stream-delta--a` : `inline-code-stream-delta--b`);
 </script>
 
 <style>

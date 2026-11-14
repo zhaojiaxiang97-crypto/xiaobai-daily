@@ -1,10 +1,29 @@
 <template>
-<button data-v-a2cfabe0 type="button" role="tab" :class="[`flex min-w-0 flex-col items-center rounded-md px-0.5 pt-2 pb-1.5 transition-colors`,y.value===t?`bg-black/[0.04]`:`hover:bg-black/[0.03]`]" :aria-selected="y.value===t" @click="e=>y.value=t"><span :class="[`year-trend-value text-xs leading-none tabular-nums whitespace-nowrap`,[y.value===t||v.value===t?`font-semibold text-(--foreground)`:`text-[#999]`,{'is-selected':y.value===t}]]">{{ w(e.records) }}</span><div><span :class="`w-full max-w-[28px] rounded-t-[4px] rounded-b-[2px] transition-[height] duration-200`" :style="at(C(e.records,t))"></span></div><span :class="[`mt-2 text-xs leading-none whitespace-nowrap`,y.value===t?`font-medium text-(--foreground)`:`text-[#555]`]">{{ e.label }}</span></button>
+<button data-v-a2cfabe0 type="button" role="tab" :class="[`flex min-w-0 flex-col items-center rounded-md px-0.5 pt-2 pb-1.5 transition-colors`,y===t?`bg-black/[0.04]`:`hover:bg-black/[0.03]`]" :aria-selected="y===t" @click="e=>y=t"><span :class="[`year-trend-value text-xs leading-none tabular-nums whitespace-nowrap`,[y===t||v?.value===t?`font-semibold text-(--foreground)`:`text-[#999]`,{'is-selected':y===t}]]">{{ w(e.records) }}</span><div><span :class="`w-full max-w-[28px] rounded-t-[4px] rounded-b-[2px] transition-[height] duration-200`" :style="at(C(e.records,t))"></span></div><span :class="[`mt-2 text-xs leading-none whitespace-nowrap`,y===t?`font-medium text-(--foreground)`:`text-[#555]`]">{{ e.label }}</span></button>
 </template>
 
 <script setup>
 import md from './BaseSeparator.vue';
-import { S_is as is, S_xs as xs, S_pb as pb, S_px as px, S_e as e, S_t as t, S_v as v, S_y as y, S_b as b, S_C as C, S_w as w, S_at as at, S_mt as mt } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_is as is, S_xs as xs, S_pb as pb, S_px as px, S_e as e, S_t as t, S_b as b, S_at as at, S_mt as mt } from '../shared.js';
+const v = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let y = ref(0);
+function C(e, t) {
+  return e <= 0 ? {
+    height: `2px`,
+    background: `var(--heatmap-empty)`
+  } : {
+    height: `max(3px, ${e / _.value * 100}%)`,
+    background: t === v.value ? `var(--heatmap-4)` : `var(--heatmap-2)`
+  };
+}
+function w(e) {
+  return WU(e, a.value);
+}
 </script>
 
 <style>

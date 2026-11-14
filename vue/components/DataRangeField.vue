@@ -4,6 +4,8 @@
 
 <script setup>
 import rU from './DateRangePickerField.vue';
-// [符号说明] n~computed
-import { S_to as to, S_is as is, S_e as e, S_n as n, S_r as r } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_to as to, S_is as is, S_e as e, S_r as r } from '../shared.js';
+const n = { value: undefined };
 </script>

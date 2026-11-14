@@ -6,8 +6,13 @@
 import { toDisplayString } from 'vue';
 import xl from './MenuRadioItem.vue';
 import Pp from './Badge.vue';
-// [符号说明] D=useConfigProviderContext, k~ref
-import { S_Yo as Yo, S_is as is, S_e as e, S_t as t, S_p as p, S_w as w, S_D as D, S_k as k, S_dn as dn } from '../shared.js';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function k(e) {
+  C.value = true, v.value = e, c.value = null, O();
+}
+// [符号说明] D=useConfigProviderContext
+import { S_Yo as Yo, S_is as is, S_e as e, S_t as t, S_p as p, S_w as w, S_D as D, S_dn as dn } from '../shared.js';
 </script>
 
 <style>

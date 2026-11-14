@@ -5,8 +5,7 @@
 <script setup>
 import { withDirectives } from 'vue';
 import sg from './Checkbox.vue';
-// [符号说明] u=useConfigProviderContext
-import { S_is as is, S_lg as lg, S_px as px, S_e as e, S_t as t, S_u as u } from '../shared.js';
+import { S_is as is, S_lg as lg, S_px as px, S_e as e, S_t as t } from '../shared.js';
 const event = defineProps({
       items: {},
       modelValue: {},
@@ -15,4 +14,9 @@ const event = defineProps({
       }
     });
 const n = event;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function u(e) {
+  r(`update:modelValue`, n.modelValue.includes(e) ? n.modelValue.filter(item => item !== e) : [...n.modelValue, e]);
+}
 </script>

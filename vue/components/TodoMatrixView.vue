@@ -5,7 +5,7 @@
 <script setup>
 import { toDisplayString, withDirectives, h } from 'vue';
 import md from './BaseSeparator.vue';
-import { S_is as is, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_r as r, S_i as i, S_p as p, S__ as _, S_v as v, S_y as y, S_b as b, S_x as x, S_w as w, S_mt as mt, S_Ft as Ft, S_an as an, S_Ar as Ar } from '../shared.js';
+import { S_is as is, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_r as r, S_i as i, S_p as p, S_w as w, S_mt as mt, S_Ft as Ft, S_an as an, S_Ar as Ar } from '../shared.js';
 const event = defineProps({
       tasks: {},
       selectedTaskId: {},
@@ -24,6 +24,32 @@ const event = defineProps({
       error: {}
     });
 const n = event;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function _(e) {
+  let canManage = n.canManage(e);
+  return e.dueDateMissing ? [`text-[#9ca3af]`, canManage ? `hover:border-[#e5e7eb] hover:bg-white` : `cursor-default`] : g(e) ? [`text-[#ef4444]`, canManage ? `hover:border-[#fecaca] hover:bg-[#fef2f2]` : `cursor-default`] : ry(e, c.value) ? [`text-[#d97706]`, canManage ? `hover:border-[#fed7aa] hover:bg-[#fff7ed]` : `cursor-default`] : [`text-[#16a34a]`, canManage ? `hover:border-[#bbf7d0] hover:bg-[#f0fdf4]` : `cursor-default`];
+}
+function v(e) {
+  return i(e === `high` ? `todo.priority.highShort` : e === `medium` ? `todo.priority.mediumShort` : `todo.priority.lowShort`);
+}
+function y(e) {
+  return e === `high` ? `text-[#ef4444]` : e === `medium` ? `text-[#f59e0b]` : `text-[#3b82f6]`;
+}
+function b() {
+  l.value = null;
+}
+function x(e, t, r) {
+  if (!n.canManage(t)) {
+    e.preventDefault();
+    return;
+  }
+  l.value = {
+    taskId: t.id,
+    from: r,
+    over: null
+  }, e.dataTransfer && (e.dataTransfer.effectAllowed = `move`, e.dataTransfer.setData(`text/plain`, String(t.id)));
+}
 </script>
 
 <style>

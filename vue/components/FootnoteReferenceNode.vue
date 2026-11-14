@@ -4,11 +4,19 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
-// [符号说明] n~computed
-import { S_href as href, S_t as t, S_n as n } from '../shared.js';
+import { S_href as href, S_t as t } from '../shared.js';
 const e = defineProps({
       node: {}
     });
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function n() {
+  if (typeof document > `u`) return;
+  let e = document.querySelector(t);
+  e ? e.scrollIntoView({
+    behavior: `smooth`
+  }) : console.warn(`Element with href: ${t} not found`);
+}
 </script>
 
 <style>

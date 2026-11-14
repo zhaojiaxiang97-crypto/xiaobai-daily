@@ -1,11 +1,14 @@
 <template>
-<button data-v-93268ec8 type="button" :class="[`profile-share-template`,{'is-selected':e.id===s.value}]" :aria-pressed="e.id===s.value" @click="t=>s.value=e.id"><span><canvas ref="t => ce(e.id, t)"></canvas></span><span><span v-text="r(`profile.share.templates.${e.id}`)" /></span></button>
+<button data-v-93268ec8 type="button" :class="[`profile-share-template`,{'is-selected':e.id===s?.value}]" :aria-pressed="e.id===s?.value" @click="t=>s.value=e.id"><span><canvas ref="t => ce(e.id, t)"></canvas></span><span><span v-text="r(`profile.share.templates.${e.id}`)" /></span></button>
 </template>
 
 <script setup>
-import { S_is as is, S_e as e, S_r as r, S_s as s, S_v as v, S_ce as ce } from '../shared.js';
+import { S_is as is, S_e as e, S_r as r, S_v as v, S_ce as ce } from '../shared.js';
 const items = defineProps({});
 const t = items;
+
+// [兜底] 模板引用但无来源的符号
+const s = { value: undefined };
 </script>
 
 <style>

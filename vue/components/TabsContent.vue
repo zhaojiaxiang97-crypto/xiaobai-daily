@@ -1,9 +1,9 @@
 <template>
-<component :is="h" :present="e.forceMount||o.value" force-mount="" />
+<component :is="h" :present="e.forceMount||o?.value" force-mount="" />
 </template>
 
 <script setup>
-import { S_is as is, S_as as as, S_o as o } from '../shared.js';
+import { S_is as is, S_as as as } from '../shared.js';
 const e = defineProps({
       value: {
         type: [String, Number],
@@ -23,4 +23,8 @@ const e = defineProps({
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const h = { value: undefined };
+const o = { value: undefined };
 </script>

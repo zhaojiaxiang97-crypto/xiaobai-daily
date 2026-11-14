@@ -1,9 +1,9 @@
 <template>
-<span data-v-d3083d4b :class="`leaderboard-avatar`" :style="at(o.value)"><img :src="e.avatarUrl" alt="" draggable="false" @error="e=>r.value=true" /></span>
+<span data-v-d3083d4b :class="`leaderboard-avatar`" :style="at(o?.value)"><img :src="e.avatarUrl" alt="" draggable="false" @error="e=>r=true" /></span>
 </template>
 
 <script setup>
-import { S_alt as alt, S_r as r, S_o as o, S_at as at } from '../shared.js';
+import { S_alt as alt, S_at as at } from '../shared.js';
 const e = defineProps({
       name: {},
       avatarUrl: {},
@@ -13,6 +13,13 @@ const e = defineProps({
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const o = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let r = ref(false);
 </script>
 
 <style>

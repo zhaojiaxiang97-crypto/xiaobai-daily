@@ -5,5 +5,14 @@
 <script setup>
 import { withDirectives } from 'vue';
 import md from './BaseSeparator.vue';
-import { S_is as is, S_sm as sm, S_px as px, S_e as e, S_t as t, S_i as i, S_m as m, S__ as _, S_w as w, S_Nt as Nt, S_an as an, S_mr as mr } from '../shared.js';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function m(text) {
+  let t = text.trim().slice(0, jv);
+  t && (r(`select`, t), r(`update:open`, false));
+}
+function _(e) {
+  r(`remove-history`, e), r(`update:open`, false);
+}
+import { S_is as is, S_sm as sm, S_px as px, S_e as e, S_t as t, S_i as i, S_w as w, S_Nt as Nt, S_an as an, S_mr as mr } from '../shared.js';
 </script>

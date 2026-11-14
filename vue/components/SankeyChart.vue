@@ -1,11 +1,10 @@
 <template>
-<div data-v-e97ee5e8 ref="n"><div :class="`relative`" :style="at({width:`${a.value.width}px`})"><div><span :class="`absolute top-0 text-right`" :style="at({right:`${a.value.width-a.value.sourceX-P3}px`})">{{ event.sourceTitle }}</span><span :class="`absolute top-0`" :style="at({left:`${a.value.targetX}px`})">{{ event.targetTitle }}</span></div><div :class="`relative`" :style="at({height:`${a.value.height}px`})" @mousemove="g" @mouseleave="_"><svg :width="a.value.width" :height="a.value.height" :class="`absolute inset-0 block`"></svg><div :class="`pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md`" :style="at(h.value)"><div>{{ m.value.title }}</div><div>{{ m.value.value }}</div></div></div></div></div>
+<div data-v-e97ee5e8 ref="n"><div :class="`relative`" :style="at({width:`${a.value.width}px`})"><div><span :class="`absolute top-0 text-right`" :style="at({right:`${a.value.width-a.value.sourceX-P3}px`})">{{ event.sourceTitle }}</span><span :class="`absolute top-0`" :style="at({left:`${a.value.targetX}px`})">{{ event.targetTitle }}</span></div><div :class="`relative`" :style="at({height:`${a.value.height}px`})" @mousemove="g" @mouseleave="_"><svg :width="a.value.width" :height="a.value.height" :class="`absolute inset-0 block`"></svg><div :class="`pointer-events-none absolute z-10 whitespace-nowrap rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-md`" :style="at(h?.value)"><div>{{ m.value.title }}</div><div>{{ m.value.value }}</div></div></div></div></div>
 </template>
 
 <script setup>
 import md from './BaseSeparator.vue';
-// [符号说明] n~computed
-import { S_xs as xs, S_px as px, S_P3 as P3, S_n as n, S_a as a, S_m as m, S_g as g, S__ as _, S_at as at } from '../shared.js';
+import { S_xs as xs, S_px as px, S_P3 as P3, S_at as at } from '../shared.js';
 const event = defineProps({
       sources: {},
       targets: {},
@@ -18,6 +17,30 @@ const event = defineProps({
       linkColorBy: {}
     });
 const t = event;
+
+// [兜底] 模板引用但无来源的符号
+const m = { value: undefined };
+const a = { value: undefined };
+const h = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let n = ref(null);
+let l = ref(null);
+let u = ref({
+  x: 0,
+  y: 0
+});
+function g(e) {
+  let t = e.currentTarget.getBoundingClientRect();
+  u.value = {
+    x: e.clientX - t.left,
+    y: e.clientY - t.top
+  };
+}
+function _() {
+  c.value = null, l.value = null;
+}
 </script>
 
 <style>

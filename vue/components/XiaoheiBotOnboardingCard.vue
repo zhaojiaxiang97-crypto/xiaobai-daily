@@ -1,9 +1,16 @@
 <template>
-<button data-v-b0fa3887 type="button" :aria-pressed="_.value===e.key" @click="t=>b(e.key)"><span><component :is="Be(e.icon)" :size="16" /></span><span><strong><span v-text="t(`xiaoheiBot.onboardingCard.${e.key}`)" /></strong><small><span v-text="t(`xiaoheiBot.onboardingCard.${e.key}Hint`)" /></small></span><component :is="an" :class="`onboarding-card__choice-check`" :size="13" /></button>
+<button data-v-b0fa3887 type="button" :aria-pressed="_===e.key" @click="t=>b(e.key)"><span><component :is="Be(e.icon)" :size="16" /></span><span><strong><span v-text="t(`xiaoheiBot.onboardingCard.${e.key}`)" /></strong><small><span v-text="t(`xiaoheiBot.onboardingCard.${e.key}Hint`)" /></small></span><component :is="an" :class="`onboarding-card__choice-check`" :size="13" /></button>
 </template>
 
 <script setup>
-import { S_is as is, S_e as e, S_t as t, S__ as _, S_v as v, S_b as b, S_Be as Be, S_an as an } from '../shared.js';
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let _ = ref(``);
+function b(e) {
+  _.value = e, p.value = t(`xiaoheiBot.onboardingCard.${e}Purpose`);
+}
+import { S_is as is, S_e as e, S_t as t, S_v as v, S_Be as Be, S_an as an } from '../shared.js';
 </script>
 
 <style>

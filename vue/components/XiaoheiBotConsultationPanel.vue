@@ -1,10 +1,45 @@
 <template>
-<aside data-v-06e8b278 :class="`consultation-side-panel`" :aria-label="i(`xiaoheiBot.consultation.records`)"><header><div><div><strong>{{ u.value.consultation.ownerName }}</strong><component :is="pa" :size="13" aria-hidden="true" /><strong>{{ u.value.consultation.targetName }}</strong></div><div><span :class="[`consultation-side-status consultation-side-tag`,{'text-primary':v.value||u.value.consultation.status===`completed`}]"><component :is="zn" :size="12" :class="`animate-spin`" /><span><span v-text="i(`xiaoheiBot.consultation.${u.value.consultation.status}`)" /></span></span><span>{{ i(`xiaoheiBot.consultation.records`) }}</span></div></div><component :is="P" variant="ghost" size="icon-sm" :class="`shrink-0`" :aria-label="i(`app.close`)" @click="e=>r(`close`)" /></header><div ref="p" :class="`consultation-side-scroll`" @scroll="x"><div ref="m" :class="`consultation-side-transcript`"><p>{{ P5({status:`failed`,errorMessage:f.value},i) }}<component :is="P" variant="ghost" size="sm" :disabled="d.value" @click="e=>C()" /></p><div><component :is="zn" :size="20" :class="`animate-spin`" /><span>{{ i(`xiaoheiBot.consultation.loading`) }}</span></div><component :is="P" variant="ghost" size="sm" :class="`self-center text-xs`" :disabled="d.value" @click="e=>{h.value=false,C(true);}" /><p><span v-text="P5({status:`failed`,errorMessage:u.value.consultation.error},i)" /></p></div></div></aside>
+<aside data-v-06e8b278 :class="`consultation-side-panel`" :aria-label="i(`xiaoheiBot.consultation.records`)"><header><div><div><strong>{{ u.consultation.ownerName }}</strong><component :is="pa" :size="13" aria-hidden="true" /><strong>{{ u.consultation.targetName }}</strong></div><div><span :class="[`consultation-side-status consultation-side-tag`,{'text-primary':v?.value||u.consultation.status===`completed`}]"><component :is="zn" :size="12" :class="`animate-spin`" /><span><span v-text="i(`xiaoheiBot.consultation.${u.consultation.status}`)" /></span></span><span>{{ i(`xiaoheiBot.consultation.records`) }}</span></div></div><component :is="P" variant="ghost" size="icon-sm" :class="`shrink-0`" :aria-label="i(`app.close`)" @click="e=>r(`close`)" /></header><div ref="p" :class="`consultation-side-scroll`" @scroll="x"><div ref="m" :class="`consultation-side-transcript`"><p>{{ P5({status:`failed`,errorMessage:f},i) }}<component :is="P" variant="ghost" size="sm" :disabled="d" @click="e=>C()" /></p><div><component :is="zn" :size="20" :class="`animate-spin`" /><span>{{ i(`xiaoheiBot.consultation.loading`) }}</span></div><component :is="P" variant="ghost" size="sm" :class="`self-center text-xs`" :disabled="d" @click="e=>{h=false,C(true);}" /><p><span v-text="P5({status:`failed`,errorMessage:u.consultation.error},i)" /></p></div></div></aside>
 </template>
 
 <script setup>
-// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext
-import { S_pa as pa, S_is as is, S_xs as xs, S_sm as sm, S_P5 as P5, S_e as e, S_r as r, S_i as i, S_u as u, S_d as d, S_f as f, S_p as p, S_m as m, S_v as v, S_x as x, S_C as C, S_P as P, S_zn as zn } from '../shared.js';
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let u = ref(null);
+let d = ref(false);
+let f = ref(``);
+let h = ref(true);
+function x() {
+  let value = p.value;
+  value && (h.value = value.scrollHeight - value.scrollTop - value.clientHeight < 64);
+}
+async function C(e = false, t = false) {
+  let r = ++g;
+  t || (d.value = true);
+  try {
+    let consultationDetail = await window.electronAPI.xiaoheiBot.consultationDetail({
+      id: n.id,
+      beforeSeq: e ? u.value?.beforeSeq ?? undefined : undefined
+    });
+    if (r !== g) return;
+    if (!consultationDetail.ok) throw Error(consultationDetail.error.message);
+    let value = p.value,
+      a = value?.scrollHeight ?? 0,
+      o = value?.scrollTop ?? 0;
+    if (u.value) {
+      let n = new Map(u.value.messages.map(item => [item.id, item]));
+      consultationDetail.data.messages.forEach(item => n.set(item.id, item)), consultationDetail.data.messages = [...n.values()].sort((left, right) => left.seq - right.seq), e || (consultationDetail.data.hasMore = u.value.hasMore, consultationDetail.data.beforeSeq = u.value.beforeSeq);
+    }
+    if (u.value = consultationDetail.data, f.value = ``, await ut(), r !== g) return;
+    e && value ? value.scrollTop = o + value.scrollHeight - a : S();
+  } catch (e) {
+    r === g && (f.value = e instanceof Error ? e.message : String(e));
+  } finally {
+    r === g && (d.value = false);
+  }
+}
+import { S_pa as pa, S_is as is, S_xs as xs, S_sm as sm, S_P5 as P5, S_e as e, S_r as r, S_i as i, S_p as p, S_m as m, S_v as v, S_P as P, S_zn as zn } from '../shared.js';
 </script>
 
 <style>

@@ -7,6 +7,14 @@ import { toDisplayString } from 'vue';
 import ol from './CalendarHeadCell.vue';
 import ul from './CalendarPrev.vue';
 import Pp from './Badge.vue';
-import { S_is as is, S_ms as ms, S_lg as lg, S_ok as ok, S_t as t, S_p as p, S_b as b, S_x as x } from '../shared.js';
+import { S_is as is, S_ms as ms, S_lg as lg, S_ok as ok, S_t as t, S_p as p } from '../shared.js';
 const e = defineProps({});
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function b(e) {
+  return t(e === `screenshot` ? `settings.screenshotModel` : `settings.reportModel`);
+}
+function x(e) {
+  return l.value?.diagnosis?.items.find(t => t.purpose === e);
+}
 </script>

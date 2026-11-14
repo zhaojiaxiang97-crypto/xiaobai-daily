@@ -4,7 +4,14 @@
 
 <script setup>
 import Pp from './Badge.vue';
-import { S_is as is, S_cc as cc, S_e as e, S_E as E, S_li as li } from '../shared.js';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function E(e) {
+  return e === `xiaohei_read_attachment` ? t(x(`readTool`)) : e === `write` ? t(x(`writeTool`)) : t(x(`otherTool`), {
+    name: e ?? t(x(`tool`))
+  });
+}
+import { S_is as is, S_cc as cc, S_e as e, S_li as li } from '../shared.js';
 </script>
 
 <style>

@@ -4,9 +4,12 @@
 
 <script setup>
 // [符号说明] n~computed
-import { S_is as is, S_px as px, S_h2 as h2, S_n as n, S_r as r, S_p as p, S_Be as Be, S_mt as mt } from '../shared.js';
+import { S_is as is, S_px as px, S_h2 as h2, S_n as n, S_p as p, S_Be as Be, S_mt as mt } from '../shared.js';
 const e = defineProps({
       id: {}
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const r = { value: undefined };
 </script>

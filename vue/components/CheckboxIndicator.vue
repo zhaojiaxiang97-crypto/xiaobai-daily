@@ -20,4 +20,7 @@ const e = defineProps({
         default: `span`
       }
     });
+
+// [兜底] 模板引用但无来源的符号
+const h = { value: undefined };
 </script>

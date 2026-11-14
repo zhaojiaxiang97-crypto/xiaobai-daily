@@ -4,12 +4,16 @@
 
 <script setup>
 import md from './BaseSeparator.vue';
-// [符号说明] D=useConfigProviderContext
-import { S_xs as xs, S_px as px, S_e as e, S_t as t, S_D as D } from '../shared.js';
+import { S_xs as xs, S_px as px, S_e as e, S_t as t } from '../shared.js';
 const items = defineProps({
       start: {},
       end: {},
       maxDate: {}
     });
 const n = items;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function D(e, t) {
+  T(e, t), o.value = false;
+}
 </script>

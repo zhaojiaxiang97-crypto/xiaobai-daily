@@ -1,11 +1,15 @@
 <template>
-<aside data-v-6ecb36b3><p> 预览模式：按会话随机展示 App 手机角标（确认后关闭 preview-platform-origin.ts） </p><div><div><div><h2>{{ t(`xiaoheiBot.conversations`) }}</h2><span :class="`contact-panel__count`" :aria-label="i?t(`xiaoheiBot.contactCount`,{count:l.length}):t(`common.loading`)">{{ i?l.length:t(`common.loading`) }}</span></div><div><component :is="P" type="button" variant="ghost" size="icon" :class="`icon-button`" :title="t(`xiaoheiBot.searchPlaceholder`)" :aria-label="t(`xiaoheiBot.searchPlaceholder`)" @click="e=>ne.value=true" /><component :is="P" type="button" data-notification-trigger="" :class="`icon-button contact-panel__activity relative`" size="icon" :variant="ge?`secondary`:`ghost`" :title="t(`botUi.activity`)" :aria-label="t(`botUi.activity`)" :aria-pressed="ge" @click="withDirectives(he,[`stop`])" /><component :is="Wr" /></div></div></div><div><div><component :is="Cs" :size="20" :stroke-width="1.5" /><span>{{ t(`xiaoheiBot.noContacts`) }}</span></div></div><footer><component :is="P" type="button" variant="ghost" :class="`contact-settings-button cursor-pointer`" :disabled="!i||te.loading.value" :aria-label="t(`xiaoheiBot.capabilityTutorial.entry`)" @click="e=>te.show(true)" /><component :is="P" type="button" variant="ghost" :class="`contact-settings-button cursor-pointer`" :title="t(`xiaoheiBot.settings.entry`)" :aria-label="t(`xiaoheiBot.settings.entry`)" @click="ee" /></footer></aside>
+<aside data-v-6ecb36b3><p> 预览模式：按会话随机展示 App 手机角标（确认后关闭 preview-platform-origin.ts） </p><div><div><div><h2>{{ t(`xiaoheiBot.conversations`) }}</h2><span :class="`contact-panel__count`" :aria-label="i?t(`xiaoheiBot.contactCount`,{count:l.length}):t(`common.loading`)">{{ i?l.length:t(`common.loading`) }}</span></div><div><component :is="P" type="button" variant="ghost" size="icon" :class="`icon-button`" :title="t(`xiaoheiBot.searchPlaceholder`)" :aria-label="t(`xiaoheiBot.searchPlaceholder`)" @click="e=>ne=true" /><component :is="P" type="button" data-notification-trigger="" :class="`icon-button contact-panel__activity relative`" size="icon" :variant="ge?`secondary`:`ghost`" :title="t(`botUi.activity`)" :aria-label="t(`botUi.activity`)" :aria-pressed="ge" @click="withDirectives(he,[`stop`])" /><component :is="Wr" /></div></div></div><div><div><component :is="Cs" :size="20" :stroke-width="1.5" /><span>{{ t(`xiaoheiBot.noContacts`) }}</span></div></div><footer><component :is="P" type="button" variant="ghost" :class="`contact-settings-button cursor-pointer`" :disabled="!i||te.loading.value" :aria-label="t(`xiaoheiBot.capabilityTutorial.entry`)" @click="e=>te.show(true)" /><component :is="P" type="button" variant="ghost" :class="`contact-settings-button cursor-pointer`" :title="t(`xiaoheiBot.settings.entry`)" :aria-label="t(`xiaoheiBot.settings.entry`)" @click="ee" /></footer></aside>
 </template>
 
 <script setup>
 import { withDirectives } from 'vue';
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let ne = ref(false);
 // [符号说明] l~computed
-import { S_ts as ts, S_is as is, S_Cs as Cs, S_h2 as h2, S_e as e, S_t as t, S_i as i, S_l as l, S_p as p, S_ee as ee, S_te as te, S_ne as ne, S_he as he, S_ge as ge, S_P as P, S_Wr as Wr } from '../shared.js';
+import { S_ts as ts, S_is as is, S_Cs as Cs, S_h2 as h2, S_e as e, S_t as t, S_i as i, S_l as l, S_p as p, S_ee as ee, S_te as te, S_he as he, S_ge as ge, S_P as P, S_Wr as Wr } from '../shared.js';
 </script>
 
 <style>

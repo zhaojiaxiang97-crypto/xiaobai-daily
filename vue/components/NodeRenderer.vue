@@ -8,6 +8,9 @@
 import __ca_OZ from './HeadingNode.vue';
 import { S_is as is, S_e as e, S_t as t, S_c as c } from '../shared.js';
 const OZ = __ca_OZ;
+
+// [兜底] 模板引用但无来源的符号
+const rt = () => undefined;
 </script>
 
 <style>

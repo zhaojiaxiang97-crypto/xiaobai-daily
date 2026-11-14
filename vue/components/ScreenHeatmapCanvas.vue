@@ -3,8 +3,7 @@
 </template>
 
 <script setup>
-// [符号说明] f=useConfigProviderContext
-import { S_px as px, S_a as a, S_o as o, S_f as f, S__ as _, S_v as v, S_w as w, S_at as at } from '../shared.js';
+import { S_px as px, S_a as a, S_o as o, S_w as w, S_at as at } from '../shared.js';
 const event = defineProps({
       displays: {},
       grids: {},
@@ -14,4 +13,23 @@ const event = defineProps({
       label: {}
     });
 const r = event;
+
+// [兜底] 模板引用但无来源的符号
+const f = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function _(e) {
+  let value = o.value;
+  if (!value) return;
+  let n = value.getBoundingClientRect(),
+    r = iyt(f.value, e.clientX - n.left, e.clientY - n.top);
+  c.value = r, i(`hover`, r ? {
+    ...r,
+    clientX: e.clientX,
+    clientY: e.clientY
+  } : null);
+}
+function v() {
+  c.value = null, i(`hover`, null);
+}
 </script>

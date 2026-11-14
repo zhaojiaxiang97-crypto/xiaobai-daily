@@ -4,5 +4,11 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
-import { S_sm as sm, S_e as e, S_r as r, S_p as p, S_g as g, S_b as b, S_S as S, S_T as T } from '../shared.js';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function S(e, t) {
+  for (let t of [`profile.ledgerTypes.${e}`, `profile.usageRecordTypes.${e}`]) if (i(t)) return r(t);
+  return t || r(`profile.ledgerAdjustment`);
+}
+import { S_sm as sm, S_e as e, S_r as r, S_p as p, S_g as g, S_b as b, S_T as T } from '../shared.js';
 </script>

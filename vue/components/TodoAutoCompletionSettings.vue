@@ -5,6 +5,27 @@
 <script setup>
 import { toDisplayString } from 'vue';
 import xl from './MenuRadioItem.vue';
-// [符号说明] we~指令
-import { S_is as is, S_Ys as Ys, S_e as e, S_t as t, S_p as p, S_oe as oe, S_se as se, S_xe as xe, S_Se as Se, S_we as we, S_$i as $i } from '../shared.js';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function oe(e = r.value.todoAutoCompletionTaskRange) {
+  return t(e === `week` ? `settings.todoAutoCompletion.weekTasks` : e === `all` ? `settings.todoAutoCompletion.allTasks` : `settings.todoAutoCompletion.todayTasks`);
+}
+function se(e = r.value.todoAutoCompletionAssigneeScope) {
+  return t(e === `allAccessible` ? `settings.todoAutoCompletion.allAccessibleTasks` : `settings.todoAutoCompletion.assignedToMe`);
+}
+function xe(e) {
+  if (!e) return `--`;
+  let date = new Date(e);
+  return Number.isNaN(date.getTime()) ? e : date.toLocaleString(n.value);
+}
+function Se(e) {
+  return t(e === `failed` ? `settings.todoAutoCompletion.statusFailed` : e === `skipped` ? `settings.todoAutoCompletion.statusSkipped` : `settings.todoAutoCompletion.statusSuccess`);
+}
+function we(e) {
+  let value = N.value,
+    n = value.inputPriceYuanPerM > 0 ? value.inputPriceCreditsPerM / value.inputPriceYuanPerM : 1e3,
+    r = Math.round(Math.max(0, e) * n * 1e8) / 1e8;
+  return Zi(r > 0 ? Math.ceil(r) : 0);
+}
+import { S_is as is, S_Ys as Ys, S_e as e, S_t as t, S_p as p, S_$i as $i } from '../shared.js';
 </script>

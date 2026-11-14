@@ -1,14 +1,56 @@
 <template>
-<li data-v-ada2660e :class="[`fm-row`,{'is-new':C.value===e.userId,'is-active':w.value===e.userId||D.value===e.userId}]"><div><component :is="Ly" :name="ie(e)" :avatar-url="e.avatarUrl??null" :color-key="e.email" :size="32" /><div><span>{{ toDisplayString(ie(e))+` ` }}<span><span v-text="o(`friendManager.originalNickname`,{name:e.nickname})" /></span></span><span>{{ e.email }}</span></div><div><button type="button" :class="`fm-icon-button`" :title="o(`friendManager.remark`)" :aria-label="o(`friendManager.remark`)" @click="t=>xe(e)"><component :is="v" :size="14" /></button><button type="button" :class="`fm-icon-button is-danger`" :title="o(`friendManager.remove`)" :aria-label="o(`friendManager.remove`)" @click="t=>we(e)"><component :is="Ae" :size="14" /></button></div></div><div><span v-text="Xe(createElementVNode(`input`,{id:`friend-remark-${e.userId}`,'onUpdate:modelValue':n[5]||=e=>T.value=e,class:`fm-input`,maxlength:`64`,disabled:E.value,placeholder:o(`friendManager.remarkPlaceholder`),onKeydown:t=>Ce(t,e)},null,40,Zhe),[[yt,T.value]])" /><button type="button" :class="`fm-button`" :disabled="E.value" @click="Se">{{ o(`friendManager.cancel`) }}</button><button type="button" :class="`fm-button is-primary`" :disabled="E.value" @click="t=>P(e)"><component :is="zn" :size="14" :class="`animate-spin`" />{{ ` `+toDisplayString(o(`friendManager.save`)) }}</button></div><p>{{ k.value.message }}</p></li>
+<li data-v-ada2660e :class="[`fm-row`,{'is-new':C===e.userId,'is-active':w===e.userId||D===e.userId}]"><div><component :is="Ly" :name="ie(e)" :avatar-url="e.avatarUrl??null" :color-key="e.email" :size="32" /><div><span>{{ toDisplayString(ie(e))+` ` }}<span><span v-text="o(`friendManager.originalNickname`,{name:e.nickname})" /></span></span><span>{{ e.email }}</span></div><div><button type="button" :class="`fm-icon-button`" :title="o(`friendManager.remark`)" :aria-label="o(`friendManager.remark`)" @click="t=>xe(e)"><component :is="v" :size="14" /></button><button type="button" :class="`fm-icon-button is-danger`" :title="o(`friendManager.remove`)" :aria-label="o(`friendManager.remove`)" @click="t=>we(e)"><component :is="Ae" :size="14" /></button></div></div><div><span v-text="Xe(createElementVNode(`input`,{id:`friend-remark-${e.userId}`,'onUpdate:modelValue':n[5]||=e=>T=e,class:`fm-input`,maxlength:`64`,disabled:E,placeholder:o(`friendManager.remarkPlaceholder`),onKeydown:t=>Ce(t,e)},null,40,Zhe),[[yt,T]])" /><button type="button" :class="`fm-button`" :disabled="E" @click="Se">{{ o(`friendManager.cancel`) }}</button><button type="button" :class="`fm-button is-primary`" :disabled="E" @click="t=>P(e)"><component :is="zn" :size="14" :class="`animate-spin`" />{{ ` `+toDisplayString(o(`friendManager.save`)) }}</button></div><p>{{ k.message }}</p></li>
 </template>
 
 <script setup>
 import { createElementVNode, toDisplayString } from 'vue';
 import Ly from './LeaderboardAvatar.vue';
-// [符号说明] D=useConfigProviderContext, k~ref, ie~shallowRef, we~指令
-import { S_is as is, S_fm as fm, S_Zhe as Zhe, S_e as e, S_t as t, S_o as o, S_p as p, S_v as v, S_C as C, S_w as w, S_T as T, S_E as E, S_D as D, S_k as k, S_ie as ie, S_xe as xe, S_Se as Se, S_P as P, S_Ce as Ce, S_we as we, S_Ae as Ae, S_Xe as Xe, S_yt as yt, S_zn as zn, S_li as li } from '../shared.js';
+import { S_is as is, S_fm as fm, S_Zhe as Zhe, S_e as e, S_t as t, S_o as o, S_p as p, S_v as v, S_Ae as Ae, S_Xe as Xe, S_yt as yt, S_zn as zn, S_li as li } from '../shared.js';
 const event = defineProps({});
 const n = event;
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let C = ref(null);
+let w = ref(null);
+let T = ref(``);
+let E = ref(false);
+let D = ref(null);
+let k = ref(null);
+function ie(e) {
+  return e.remark?.trim() || e.nickname?.trim() || e.email.split(`@`)[0] || e.email;
+}
+function xe(e) {
+  D.value = null, k.value = null, w.value = e.userId, T.value = e.remark ?? ``, ut(() => {
+    let elementById = document.getElementById(`friend-remark-${e.userId}`);
+    elementById?.focus(), elementById?.select();
+  });
+}
+function Se() {
+  E.value || (w.value = null, k.value = null);
+}
+async function P(e) {
+  if (!E.value) {
+    E.value = true, k.value = null;
+    try {
+      let updateFriendRemark = await Y_.updateFriendRemark(e.userId, T.value);
+      ae(y.value.map(item => item.userId === e.userId ? updateFriendRemark : item)), w.value = null;
+    } catch (t) {
+      k.value = {
+        id: e.userId,
+        message: t instanceof Error ? t.message : o(`friendManager.remarkFailed`)
+      };
+    } finally {
+      E.value = false;
+    }
+  }
+}
+function Ce(e, t) {
+  e.isComposing || (e.key === `Enter` ? (e.preventDefault(), P(t)) : e.key === `Escape` && (e.preventDefault(), e.stopPropagation(), Se()));
+}
+function we(e) {
+  w.value = null, k.value = null, D.value = e.userId;
+}
 </script>
 
 <style>

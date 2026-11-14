@@ -1,18 +1,43 @@
 <template>
-<aside data-v-a0bffcba :class="[`sidebar`,{'sidebar-collapsed':items.collapsed}]"><div :class="`sidebar-drag-area`" @dblclick="xe"><div :class="`traffic-lights`" @mouseenter="e=>oe.value=true" @mouseleave="e=>oe.value=false"><button :class="[`traffic-light traffic-light-close`,{'show-icon':oe.value}]" @click="Ce"></button><button :class="[`traffic-light traffic-light-minimize`,{'show-icon':oe.value}]" @click="Se"></button><button :class="[`traffic-light traffic-light-maximize`,{'show-icon':oe.value}]" @click="P"><component :is="Pr" :size="8" /></button></div><div :class="`sidebar-titlebar-actions`" @dblclick="withDirectives(()=>{},[`stop`])"><button :class="`titlebar-action-btn`" @click="we" :title="v(`common.collapseMenu`)"><component :is="os" :size="14" /></button></div><div></div></div><span v-text="Xe(createElementVNode(`div`,{id:`xiaohei-bot-sidebar-host`,ref_key:`contactPanelHost`,ref:o,class:`sidebar-bot-host`},null,512),[[Tt,ce.value===`bot`]])" /><nav></nav><div>{{ v(`sidebar.more`) }}</div><nav></nav><div><span v-text="Xe(resolveComponent(Ip,{ref_key:`campaignCardRef`,ref:w,'user-id':s?.userId??null,onClaimed:l},null,8,[`user-id`,`onClaimed`]),[[Tt,!items.collapsed]])" /><div><component :is="An" :open="x.value" @update:open="e=>x.value=e" />{{ undefined }}</div></div></aside>
+<aside data-v-a0bffcba :class="[`sidebar`,{'sidebar-collapsed':items.collapsed}]"><div :class="`sidebar-drag-area`" @dblclick="xe"><div :class="`traffic-lights`" @mouseenter="e=>oe=true" @mouseleave="e=>oe=false"><button :class="[`traffic-light traffic-light-close`,{'show-icon':oe}]" @click="Ce"></button><button :class="[`traffic-light traffic-light-minimize`,{'show-icon':oe}]" @click="Se"></button><button :class="[`traffic-light traffic-light-maximize`,{'show-icon':oe}]" @click="P"><component :is="Pr" :size="8" /></button></div><div :class="`sidebar-titlebar-actions`" @dblclick="withDirectives(()=>{},[`stop`])"><button :class="`titlebar-action-btn`" @click="we" :title="v(`common.collapseMenu`)"><component :is="os" :size="14" /></button></div><div></div></div><span v-text="Xe(createElementVNode(`div`,{id:`xiaohei-bot-sidebar-host`,ref_key:`contactPanelHost`,ref:o,class:`sidebar-bot-host`},null,512),[[Tt,ce?.value===`bot`]])" /><nav></nav><div>{{ v(`sidebar.more`) }}</div><nav></nav><div><span v-text="Xe(resolveComponent(Ip,{ref_key:`campaignCardRef`,ref:w,'user-id':s?.userId??null,onClaimed:l},null,8,[`user-id`,`onClaimed`]),[[Tt,!items.collapsed]])" /><div><component :is="An" :open="x" @update:open="e=>x=e" />{{ undefined }}</div></div></aside>
 </template>
 
 <script setup>
 import { createElementVNode, withDirectives, resolveComponent } from 'vue';
 import Ip from './CreditCampaignCard.vue';
-// [符号说明] l~computed, we~指令
-import { S_is as is, S_os as os, S_bot as bot, S_e as e, S_o as o, S_s as s, S_l as l, S_v as v, S_x as x, S_w as w, S_oe as oe, S_ce as ce, S_xe as xe, S_Se as Se, S_P as P, S_Ce as Ce, S_we as we, S_Xe as Xe, S_Tt as Tt, S_An as An, S_Pr as Pr } from '../shared.js';
+// [符号说明] l~computed
+import { S_is as is, S_os as os, S_bot as bot, S_e as e, S_s as s, S_l as l, S_v as v, S_Xe as Xe, S_Tt as Tt, S_An as An, S_Pr as Pr } from '../shared.js';
 const items = defineProps({
       collapsed: {
         type: Boolean
       },
       activeNav: {}
     });
+
+// [兜底] 模板引用但无来源的符号
+const ce = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let o = ref(null);
+let x = ref(false);
+let w = ref(null);
+let oe = ref(false);
+function xe() {
+  electronAPI?.maximize?.();
+}
+function Se() {
+  electronAPI?.minimize?.();
+}
+function P() {
+  electronAPI?.maximize?.();
+}
+function Ce() {
+  electronAPI?.close?.();
+}
+function we() {
+  a(`update:collapsed`, !i.collapsed);
+}
 </script>
 
 <style>

@@ -5,7 +5,7 @@
 <script setup>
 import Ly from './LeaderboardAvatar.vue';
 // [符号说明] n~computed
-import { S_is as is, S_n as n, S_o as o, S_v as v, S_at as at, S_St as St } from '../shared.js';
+import { S_is as is, S_n as n, S_v as v, S_at as at, S_St as St } from '../shared.js';
 const event = defineProps({
       allItems: {},
       items: {},
@@ -16,6 +16,14 @@ const event = defineProps({
       }
     });
 const t = event;
+
+// [兜底] 模板引用但无来源的符号
+const Eg = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function o(e) {
+  return `${Math.max(4, Math.round(e / r.value * 100))}%`;
+}
 </script>
 
 <style>

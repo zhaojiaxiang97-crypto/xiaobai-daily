@@ -1,12 +1,22 @@
 <template>
-<article data-v-f137fce8 :class="`memory-card`" role="listitem" :data-memory-id="e.id"><p>{{ e.content }}</p><div><div><component :is="Pp" variant="secondary" /><span>{{ y(e.updatedAt) }}</span></div><div><component :is="P" variant="ghost" size="icon-xs" :disabled="c.value" :aria-label="r(`xiaoheiBot.memory.edit`)" @click="t=>x(e)" /><component :is="P" variant="ghost" size="icon-xs" :disabled="c.value" :aria-label="r(`xiaoheiBot.memory.delete`)" @click="t=>p.value=e" /></div></div></article>
+<article data-v-f137fce8 :class="`memory-card`" role="listitem" :data-memory-id="e.id"><p>{{ e.content }}</p><div><div><component :is="Pp" variant="secondary" /><span>{{ y(e.updatedAt) }}</span></div><div><component :is="P" variant="ghost" size="icon-xs" :disabled="c" :aria-label="r(`xiaoheiBot.memory.edit`)" @click="t=>x(e)" /><component :is="P" variant="ghost" size="icon-xs" :disabled="c" :aria-label="r(`xiaoheiBot.memory.delete`)" @click="t=>p=e" /></div></div></article>
 </template>
 
 <script setup>
 import Pp from './Badge.vue';
-import { S_is as is, S_xs as xs, S_e as e, S_r as r, S_c as c, S_p as p, S_y as y, S_x as x, S_P as P } from '../shared.js';
+import { S_is as is, S_xs as xs, S_e as e, S_r as r, S_y as y, S_P as P } from '../shared.js';
 const row = defineProps({});
 const t = row;
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let c = ref(false);
+let p = ref(null);
+function x(e = null) {
+  d.value = e ? {
+    ...e
+  } : null, f.value = e?.content ?? ``, l.value = ``, u.value = true;
+}
 </script>
 
 <style>

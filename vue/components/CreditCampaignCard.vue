@@ -1,18 +1,49 @@
 <template>
-<section data-v-5fa5b663 :data-campaign-id="e.id" :class="`rounded-[10px] bg-black/[0.02] p-4 px-5 dark:bg-white/[0.03]`" :aria-label="i(`creditCampaign.sectionLabel`)"><div><div><component :is="vo" :size="14" :stroke-width="1.5" :class="`text-muted-foreground`" /><h3>{{ i(`creditCampaign.sectionLabel`) }}</h3></div><span><span v-text="i(`creditCampaign.endsOn`,{date:e.endDate})" /></span></div><div><p>{{ e.displayTitle||e.name }}</p><p>{{ e.name }}</p><p>{{ e.description }}</p><div><div><p>{{ toDisplayString(i(`creditCampaign.dailyPrefix`))+` ` }}<strong :class="`text-xl font-semibold text-primary`" :title="String(e.dailyCredits)">{{ T(e.dailyCredits) }}</strong>{{ ` `+toDisplayString(i(`creditCampaign.creditsUnit`)) }}</p><p>{{ toDisplayString(i(`creditCampaign.claimedDays`,{days:T(e.claimedDays)}))+` · `+toDisplayString(i(`creditCampaign.totalClaimedPrefix`))+` ` }}<span :title="String(e.totalCredits)">{{ T(e.totalCredits) }}</span>{{ ` `+toDisplayString(i(`creditCampaign.creditsUnit`)) }}</p></div><div><component :is="P" size="sm" :disabled="d.value||e.claimedToday" @click="t=>M(e)" /><component :is="P" size="sm" variant="outline" :class="`profile-external-button`" @click="t=>ne(e)" /></div></div></div></section>
+<section data-v-5fa5b663 :data-campaign-id="e.id" :class="`rounded-[10px] bg-black/[0.02] p-4 px-5 dark:bg-white/[0.03]`" :aria-label="i(`creditCampaign.sectionLabel`)"><div><div><component :is="vo" :size="14" :stroke-width="1.5" :class="`text-muted-foreground`" /><h3>{{ i(`creditCampaign.sectionLabel`) }}</h3></div><span><span v-text="i(`creditCampaign.endsOn`,{date:e.endDate})" /></span></div><div><p>{{ e.displayTitle||e.name }}</p><p>{{ e.name }}</p><p>{{ e.description }}</p><div><div><p>{{ toDisplayString(i(`creditCampaign.dailyPrefix`))+` ` }}<strong :class="`text-xl font-semibold text-primary`" :title="String(e.dailyCredits)">{{ T(e.dailyCredits) }}</strong>{{ ` `+toDisplayString(i(`creditCampaign.creditsUnit`)) }}</p><p>{{ toDisplayString(i(`creditCampaign.claimedDays`,{days:T(e.claimedDays)}))+` · `+toDisplayString(i(`creditCampaign.totalClaimedPrefix`))+` ` }}<span :title="String(e.totalCredits)">{{ T(e.totalCredits) }}</span>{{ ` `+toDisplayString(i(`creditCampaign.creditsUnit`)) }}</p></div><div><component :is="P" size="sm" :disabled="d||e.claimedToday" @click="t=>M(e)" /><component :is="P" size="sm" variant="outline" :class="`profile-external-button`" @click="t=>ne(e)" /></div></div></div></section>
 </template>
 
 <script setup>
 import { toDisplayString } from 'vue';
 import xl from './MenuRadioItem.vue';
-// [符号说明] M~computed
-import { S_vo as vo, S_is as is, S_sm as sm, S_px as px, S_h3 as h3, S_e as e, S_t as t, S_i as i, S_d as d, S_p as p, S_v as v, S_T as T, S_M as M, S_ne as ne, S_P as P } from '../shared.js';
+import { S_vo as vo, S_is as is, S_sm as sm, S_px as px, S_h3 as h3, S_e as e, S_t as t, S_i as i, S_p as p, S_v as v, S_T as T, S_P as P } from '../shared.js';
 const text = defineProps({
       userId: {},
       variant: {},
       refreshKey: {}
     });
 const r = text;
+import { ref, computed } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let u = ref(null);
+let d = computed(() => u.value !== null);
+async function M(e) {
+  if (e.claimedToday || d.value || !b.value.some(item => item.id === e.id)) return;
+  let userId = r.userId,
+    n = ++h;
+  g = false, u.value = e.id;
+  try {
+    let claimCreditCampaign = await Mi.claimCreditCampaign(e.id);
+    if (n !== h || userId !== r.userId || !_) return;
+    k(claimCreditCampaign), flag.value = true, Ep.success(claimCreditCampaign.alreadyClaimed ? i(`creditCampaign.toastAlreadyClaimed`) : i(`creditCampaign.toastClaimed`, {
+      credits: T(claimCreditCampaign.grantedCredits)
+    })), s(`claimed`), userId !== null && o.emit(userId);
+  } catch (e) {
+    n === h && _ && Ep.error(e instanceof Error ? e.message : i(`creditCampaign.claimFailed`));
+  } finally {
+    n === h && (u.value = null, ee());
+  }
+}
+async function ne(e) {
+  let externalUrl = e.externalUrl;
+  if (externalUrl) try {
+    let e = new URL(externalUrl);
+    if (![`https:`, `http:`].includes(e.protocol) || e.username || e.password) throw Error(i(`creditCampaign.linkInvalid`));
+    await window.electronAPI.openExternal(externalUrl);
+  } catch (e) {
+    Ep.error(e instanceof Error ? e.message : i(`creditCampaign.openFailed`));
+  }
+}
 </script>
 
 <style>

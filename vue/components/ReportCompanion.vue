@@ -1,11 +1,11 @@
 <template>
-<div data-v-8108dfc8 :class="[`report-companion`,{'report-companion--compact':e.compact}]"><img :src="o.value" :alt="n(`generateReport.companion.${e.state}Title`)" draggable="false" @error="d" /><div><strong><span v-text="n(`generateReport.companion.${e.state}Title`)" /></strong><p><span v-text="n(`generateReport.companion.${e.state}Description`)" /></p><span><component :is="zn" :size="13" :class="`animate-spin motion-reduce:animate-none`" aria-hidden="true" />{{ ` `+toDisplayString(n(e.state===`waiting`?`generateReport.queuing`:`generateReport.generating`)) }}</span></div></div>
+<div data-v-8108dfc8 :class="[`report-companion`,{'report-companion--compact':e.compact}]"><img :src="o?.value" :alt="n(`generateReport.companion.${e.state}Title`)" draggable="false" @error="d" /><div><strong><span v-text="n(`generateReport.companion.${e.state}Title`)" /></strong><p><span v-text="n(`generateReport.companion.${e.state}Description`)" /></p><span><component :is="zn" :size="13" :class="`animate-spin motion-reduce:animate-none`" aria-hidden="true" />{{ ` `+toDisplayString(n(e.state===`waiting`?`generateReport.queuing`:`generateReport.generating`)) }}</span></div></div>
 </template>
 
 <script setup>
 import { toDisplayString } from 'vue';
 // [符号说明] n~computed
-import { S_is as is, S_state as state, S_alt as alt, S_n as n, S_o as o, S_d as d, S_p as p, S_v as v, S_zn as zn } from '../shared.js';
+import { S_is as is, S_state as state, S_alt as alt, S_n as n, S_p as p, S_v as v, S_zn as zn } from '../shared.js';
 const e = defineProps({
       state: {},
       compact: {
@@ -13,6 +13,18 @@ const e = defineProps({
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const o = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function d() {
+  let e = t.state === `completed` ? `completed` : `writing`;
+  a.value[e] !== i[e] && (a.value = {
+    ...a.value,
+    [e]: i[e]
+  });
+}
 </script>
 
 <style>

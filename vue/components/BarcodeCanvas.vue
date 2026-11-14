@@ -1,10 +1,9 @@
 <template>
-<div ref="a" :class="`w-full min-w-0`"><canvas ref="o" :class="[`block`,{'cursor-pointer':event.selectable&&c.value!==null}]" role="img" :aria-label="event.label" :style="at({width:`${f.value.width}px`,height:`${f.value.height}px`})" @pointermove="g" @pointerleave="_" @click="v"></canvas></div>
+<div ref="a" :class="`w-full min-w-0`"><canvas ref="o" :class="[`block`,{'cursor-pointer':event.selectable&&c!==null}]" role="img" :aria-label="event.label" :style="at({width:`${f.value.width}px`,height:`${f.value.height}px`})" @pointermove="g" @pointerleave="_" @click="v"></canvas></div>
 </template>
 
 <script setup>
-// [符号说明] f=useConfigProviderContext
-import { S_px as px, S_a as a, S_o as o, S_c as c, S_f as f, S_g as g, S__ as _, S_v as v, S_w as w, S_at as at } from '../shared.js';
+import { S_px as px, S_a as a, S_o as o, S_w as w, S_at as at } from '../shared.js';
 const event = defineProps({
       result: {},
       colors: {},
@@ -47,4 +46,32 @@ const event = defineProps({
       }
     });
 const r = event;
+
+// [兜底] 模板引用但无来源的符号
+const f = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let c = ref(null);
+function g(e) {
+  let value = o.value;
+  if (!value) return;
+  let n = value.getBoundingClientRect(),
+    a = qg(f.value, e.clientX - n.left, e.clientY - n.top, r.bucketRange ?? undefined);
+  c.value = a?.dayIndex ?? null, i(`hover`, a ? {
+    ...a,
+    clientX: e.clientX,
+    clientY: e.clientY
+  } : null);
+}
+function _() {
+  c.value = null, i(`hover`, null);
+}
+function v(e) {
+  let value = o.value;
+  if (!r.selectable || !value) return;
+  let n = value.getBoundingClientRect(),
+    a = qg(f.value, e.clientX - n.left, e.clientY - n.top, r.bucketRange ?? undefined);
+  a && r.result.days[a.dayIndex]?.activeSec && i(`select`, a.dayIndex);
+}
 </script>

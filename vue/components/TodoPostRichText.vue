@@ -1,10 +1,10 @@
 <template>
-<div data-v-8329ed73><div ref="r" :class="`todo-post-rich-text`" :style="at(c.value)" v-html="s.value"></div><button type="button" :class="`mt-1 text-xs font-medium text-[#16a34a] hover:text-[#15803d]`" @click="e=>i.value=!i.value">{{ i.value?n(`todo.activity.collapseText`):n(`todo.activity.expandText`) }}</button></div>
+<div data-v-8329ed73><div ref="r" :class="`todo-post-rich-text`" :style="at(c?.value)" v-html="s?.value"></div><button type="button" :class="`mt-1 text-xs font-medium text-[#16a34a] hover:text-[#15803d]`" @click="e=>i=!i">{{ i?n(`todo.activity.collapseText`):n(`todo.activity.expandText`) }}</button></div>
 </template>
 
 <script setup>
 // [符号说明] n~computed
-import { S_xs as xs, S_n as n, S_r as r, S_i as i, S_s as s, S_c as c, S_v as v, S_at as at, S_mt as mt } from '../shared.js';
+import { S_xs as xs, S_n as n, S_r as r, S_v as v, S_at as at, S_mt as mt } from '../shared.js';
 const e = defineProps({
       html: {},
       maxLines: {
@@ -12,6 +12,14 @@ const e = defineProps({
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const c = { value: undefined };
+const s = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let i = ref(false);
 </script>
 
 <style>

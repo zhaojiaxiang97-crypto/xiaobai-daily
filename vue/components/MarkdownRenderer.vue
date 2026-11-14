@@ -1,9 +1,65 @@
 <template>
-<div data-v-75b20e9b :class="`markdown-body text-[15px] leading-[1.8] text-[#1a1a1a] dark:text-foreground`" @click="te" @contextmenu="ee" @mouseover="j" @mouseleave="A" @focusin="j" @focusout="A" v-html="T.value"></div><component :is="Qe" to="body" />
+<div data-v-75b20e9b :class="`markdown-body text-[15px] leading-[1.8] text-[#1a1a1a] dark:text-foreground`" @click="te" @contextmenu="ee" @mouseover="j" @mouseleave="A" @focusin="j" @focusout="A" v-html="T"></div><component :is="Qe" to="body" />
 </template>
 
 <script setup>
-import { S_to as to, S_is as is, S_v as v, S_T as T, S_A as A, S_j as j, S_ee as ee, S_te as te, S_Qe as Qe } from '../shared.js';
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let T = ref(``);
+function A() {
+  k.value = null;
+}
+function j(e) {
+  if (!n.openLocalLinks || !(e.target instanceof Element)) return;
+  let t = e.target.closest(`[data-local-path]`);
+  if (!t) {
+    A();
+    return;
+  }
+  let r = t.getBoundingClientRect();
+  k.value = {
+    path: t.dataset.localPath ?? ``,
+    left: Math.max(8, Math.min(r.left, window.innerWidth - 328)),
+    top: r.top
+  };
+}
+async function ee(e) {
+  if (!n.openLocalLinks || !(e.target instanceof Element)) return;
+  let t = e.target.closest(`[data-local-path]`);
+  if (t) {
+    e.preventDefault(), e.stopPropagation(), A();
+    try {
+      if (typeof window.electronAPI?.xiaoheiBot?.showReplyFileMenu != `function`) throw Error(Yt.global.t(`markdownRenderer.fileMenuUnavailable`));
+      let showReplyFileMenu = await window.electronAPI.xiaoheiBot.showReplyFileMenu({
+        path: t.dataset.localPath ?? ``,
+        botId: n.localBotId
+      });
+      if (!showReplyFileMenu.ok) throw Error(showReplyFileMenu.error.message);
+    } catch (e) {
+      r(`localPathError`, e instanceof Error ? e.message : String(e));
+    }
+  }
+}
+function te(e) {
+  if (!(e.target instanceof Element)) return;
+  let t = e.target.closest(`[data-local-path]`);
+  if (n.openLocalLinks && t) {
+    e.preventDefault(), r(`openLocalLink`, t.dataset.localPath ?? ``, t.dataset.revealFile === `true`);
+    return;
+  }
+  if (!n.openExternalLinks) return;
+  let i = e.target.closest(`a`);
+  if (!i) return;
+  e.preventDefault();
+  let a = i.getAttribute(`href`)?.trim() ?? ``;
+  try {
+    let e = new URL(a);
+    if (![`http:`, `https:`].includes(e.protocol) || e.username || e.password) return;
+    r(`openLink`, e.toString());
+  } catch {}
+}
+import { S_to as to, S_is as is, S_v as v, S_Qe as Qe } from '../shared.js';
 </script>
 
 <style>

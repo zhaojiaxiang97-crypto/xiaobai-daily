@@ -1,12 +1,15 @@
 <template>
-<button data-v-2f9cfa3f type="button" :class="[`lb-share-template`,{'is-selected':e.id===o.value}]" :aria-pressed="e.id===o.value" @click="t=>o.value=e.id"><span><canvas ref="t => D(e.id, t)"></canvas></span><span><span v-text="r(`leaderboard.templates.${e.id}`)" /></span></button>
+<button data-v-2f9cfa3f type="button" :class="[`lb-share-template`,{'is-selected':e.id===o?.value}]" :aria-pressed="e.id===o?.value" @click="t=>o.value=e.id"><span><canvas ref="t => D(e.id, t)"></canvas></span><span><span v-text="r(`leaderboard.templates.${e.id}`)" /></span></button>
 </template>
 
 <script setup>
 // [符号说明] D=useConfigProviderContext
-import { S_is as is, S_e as e, S_r as r, S_o as o, S_v as v, S_D as D } from '../shared.js';
+import { S_is as is, S_e as e, S_r as r, S_v as v, S_D as D } from '../shared.js';
 const text = defineProps({});
 const t = text;
+
+// [兜底] 模板引用但无来源的符号
+const o = { value: undefined };
 </script>
 
 <style>

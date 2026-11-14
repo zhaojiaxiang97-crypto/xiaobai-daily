@@ -1,14 +1,26 @@
 <template>
-<span data-v-03641323 :class="[[n&&e.node.center?`text-node-center`:``],`whitespace-pre-wrap break-words text-node`]"><span>{{ u.value }}</span><span :class="[`text-node-stream-delta`,[g.value]]" @animationend="h">{{ d.value }}</span></span>
+<span data-v-03641323 :class="[[n&&e.node.center?`text-node-center`:``],`whitespace-pre-wrap break-words text-node`]"><span>{{ u?.value }}</span><span :class="[`text-node-stream-delta`,[g]]" @animationend="h">{{ d }}</span></span>
 </template>
 
 <script setup>
-// [符号说明] n~computed, u=useConfigProviderContext
-import { S_pre as pre, S_n as n, S_u as u, S_d as d, S_g as g } from '../shared.js';
+// [符号说明] n~computed
+import { S_pre as pre, S_n as n } from '../shared.js';
 const e = defineProps({
       node: {}
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const u = { value: undefined };
+import { ref, computed } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let d = ref(``);
+let counter = ref(0);
+function h() {
+  d.value &&= (u.value = p(), ``);
+}
+let g = computed(() => counter.value % 2 == 0 ? `text-node-stream-delta--a` : `text-node-stream-delta--b`);
 </script>
 
 <style>

@@ -30,6 +30,16 @@ const VUE_APIS = new Set(['openBlock','createElementBlock','createElementVNode',
   'computed','watch','onMounted','onUnmounted','onBeforeMount','isArray','defineAsyncComponent','ref',
   'reactive','nextTick','inject','provide','h','toRef','toRefs','shallowRef','triggerRef']);
 // 外部全局：不计入"未定义"（浏览器/AMD/CommonJS）
+const SAFE_SETUP_HOOKS = new Set(['ref','shallowRef','reactive','computed','toRef','toRefs',
+  'readonly','markRaw','customRef','shallowReactive']);
+const SAFE_NAMES = new Set(['ref','shallowRef','reactive','computed','toRef','toRefs','readonly',
+  'markRaw','customRef','shallowReactive','window','document','navigator','location','localStorage',
+  'sessionStorage','Math','JSON','Object','Array','String','Number','Boolean','Date','RegExp','Map',
+  'Set','WeakMap','WeakSet','Promise','Symbol','Intl','undefined','NaN','Infinity','parseInt',
+  'parseFloat','isNaN','isFinite','encodeURIComponent','decodeURIComponent','structuredClone',
+  'console','performance','setTimeout','clearTimeout','requestAnimationFrame','queueMicrotask',
+  'TextEncoder','TextDecoder','URL','URLSearchParams','Error','TypeError','globalThis']);
+
 const EXTERNALS = new Set(['window','document','console','performance','URL','localStorage',
   'sessionStorage','clearTimeout','setTimeout','clearInterval','setInterval','crypto',
   'requestAnimationFrame','cancelAnimationFrame','queueMicrotask','structuredClone',
@@ -329,6 +339,9 @@ try {
 // B1) 先写组件（shared.js 要 import 它们）
 // 两遍：Pass1 只算模板（确定哪些能生成），Pass2 再写 .vue（import 只引用成功生成的）
 const madeComponents = new Set();
+let safeSetupCount = 0;
+let danglingCount = 0;
+let optChainCount = 0;
 let placeholderCount = 0;
 const tplMap = new Map();   // compName -> template
 const seen = new Set();
@@ -414,12 +427,28 @@ for (const [compName, tpl] of tplMap) {
       }
     }
   }
+  // setup 安全子集还原（默认开，RESTORE_SAFE_SETUP=0 可关）
+  // 已被占用的名字不能出现在 setup 还原里，否则 SFC 编译器报重复声明
+  // （实测：TodoPage 的组件 import 别名 tl 与 setup 里的 function tl 撞车）
+  const reservedNames = new Set([
+    ...setupDestructure.map(d => d.local),
+    ...need.map(n => n.alias),
+    propsArg, propsAlias,
+    ...vueDeps,
+  ].filter(Boolean));
+  const setupSafe = process.env.RESTORE_SAFE_SETUP === '0'
+    ? { code: '', localNames: new Set(), vueApis: new Set(), count: 0, refLike: new Set() }
+    : restoreSafeSetup(compSrc, tpl, reservedNames);
+  if (setupSafe.count) safeSetupCount++;
+
   const sharedSpecs = [];
   const aliasSpecs = [];   // 已被移出 shared 的组件别名（如 OZ = DZ）→ 直接 import 目标组件
   for (const [orig, exported] of exportSet) {
     if (occupied.has(orig)) continue;
     if (!new RegExp('(?<![\\w$])' + orig.replace(/\$/g, '\\$') + '(?![\\w$])').test(scanText)) continue;
     if (setupDestructure.some(x => x.local === orig)) continue;   // 局部解构优先，不吃 shared 同名符号
+    if (setupSafe.localNames.has(orig)) continue;                  // setup 还原的局部名优先
+    if (onlyValueAccess(tpl, orig)) continue;                      // 只读 .value → 必须用局部占位
     if (movedNames.has(orig)) {
       const tgt = compAlias.get(orig);
       const cn = tgt ? compVarToName.get(tgt) : null;
@@ -438,6 +467,43 @@ for (const [compName, tpl] of tplMap) {
     const spec = exported === d.hook ? d.hook : `${exported} as ${d.hook}`;
     if (!sharedSpecs.includes(spec)) sharedSpecs.push(spec);
   }
+  // 兜底：模板引用但既没有本地绑定、也没有 shared 导出的符号。
+  // 原 bundle 里这些名字来自组件的 setup 返回对象或 app.config.globalProperties，
+  // 还原后无处可取。给一个安全占位，让成员访问（X.value）不炸 —— 渲染降级但不白屏。
+  {
+    const bound = new Set([
+      ...setupSafe.localNames,
+      ...setupDestructure.map(d => d.local),
+      ...need.map(n => n.alias),
+      ...aliasSpecs.map(a => a[0]),
+      propsArg, propsAlias,
+      ...vueDeps,
+      ...[...sharedSpecs].map(sp => {
+        const m = /\s+as\s+([A-Za-z_$][\w$]*)$/.exec(sp);
+        return m ? m[1] : sp.trim();
+      }),
+    ].filter(Boolean));
+    const dangle = [...templateRefNames(tpl)].filter(n =>
+      !bound.has(n) && !SAFE_NAMES.has(n) && (onlyValueAccess(tpl, n) || !bound.has(n)));
+    if (dangle.length) {
+      const lines = dangle.map(n => {
+        const isCall = new RegExp('(?<![\\w$.])' + n.replace(/\$/g, '\\$') + '\\s*\\(').test(tpl);
+        // 用普通对象而不是 ref()：省掉 import，也避免与已有的 vue import 位置冲突
+        return isCall ? `const ${n} = () => undefined;` : `const ${n} = { value: undefined };`;
+      });
+      script += `\n// [兜底] 模板引用但无来源的符号\n${lines.join('\n')}\n`;
+      danglingCount += dangle.length;
+    }
+  }
+
+  // setup 还原代码用到的 Vue API 需要单独 import（差集，避免与 vueDeps 重名）
+  if (setupSafe.vueApis.size) {
+    const extra = [...setupSafe.vueApis].filter(a => !vueDeps.includes(a));
+    if (extra.length) script += `import { ${extra.join(', ')} } from 'vue';\n`;
+  }
+  if (setupSafe.code) {
+    script += `\n// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明\n${setupSafe.code}\n`;
+  }
   if (sharedSpecs.length) {
     // shared import 必须在最前（ESM 位置要求），因此前置到 script
     script = script.replace(/^/, '');   // 占位
@@ -445,7 +511,13 @@ for (const [compName, tpl] of tplMap) {
     // setup 解构：紧跟 import 之后，保证模板里用到的局部名有绑定
     if (setupDestructure.length) {
       sharedImport += setupDestructure
-        .map(d => `const { ${d.key}: ${d.local} } = ${d.hook}();\n`)
+        // hook 调用要容错：i18n 未安装时 useI18n() 会抛 MUST_BE_CALL_SETUP_TOP/NOT_INSTALLED，
+        // 异常会中断整个 setup，导致后面所有绑定缺失、首屏全白。
+        .map((d, i) => {
+          const def = d.key === 't' ? "() => ''" : '{ value: undefined }';
+          return `const __hs_${i} = (() => { try { return ${d.hook}() ?? {}; } catch (e) { return {}; } })();\n`
+            + `const { ${d.key}: ${d.local} = ${def} } = __hs_${i};\n`;
+        })
         .join('');
     }
     // 符号身份说明：把已知身份的符号列在上方（只加注释、不拆 import，零风险）
@@ -485,12 +557,206 @@ for (const [compName, tpl] of tplMap) {
   if (sid) {
     tpl2 = tpl.replace(/^<([a-z][\w-]*)/, `<$1 ${sid}`);
   }
+  // 模板里的 `X.value` 加可选链：还原出来的绑定有一部分在真实环境里是 null/undefined
+  // （i18n 未安装、store 未就绪），`null.value` 会直接打断整棵 render。
+  // 只改读取位置，赋值（X.value = ...）保持原样。
+  {
+    const before = tpl2;
+    // 关键：模板里 Vue 会自动解包 ref/computed，`p.value` 会变成 `(220).value` = undefined。
+    // 原 render 函数里 p 没有被解包，所以写的是 `p.value`；转成模板必须去掉 `.value`。
+    for (const nm of setupSafe.refLike) {
+      const esc = nm.replace(/\$/g, '\\$');
+      tpl2 = tpl2.replace(
+        new RegExp('(?<![A-Za-z0-9_$.])' + esc + '\\.value(?![A-Za-z0-9_$])', 'g'), nm);
+    }
+    // v-model 的绑定会被编译成赋值，不能加可选链（会变成 `X?.value = $event`，语法错误）
+    const vmHold = [];
+    let guarded = tpl2.replace(/v-model(?::[\w.-]+)?\s*=\s*"[^"]*"/g, m => {
+      vmHold.push(m);
+      return `@@VM${vmHold.length - 1}@@`;
+    });
+    // 只改「读取」：`.value` 后面若跟 . / [ 或任何赋值符，一律不动
+    // （实测踩过 X.value.foo = e、X.value[i] = t、X.value += 1 三种）
+    guarded = guarded.replace(
+      /(?<![A-Za-z0-9_$.])([A-Za-z_$][\w$]*)\.value(?!\s*(?:\.|\[|=(?!=)|[+\-*/%]=|\|\|=|&&=|\?\?=))/g,
+      '$1?.value');
+    tpl2 = guarded.replace(/@@VM(\d+)@@/g, (_, i) => vmHold[Number(i)]);
+    if (tpl2 !== before) optChainCount++;
+  }
   fs.writeFileSync(`${outDir}/src/components/${compName}.vue`,
     `<template>\n${tpl2}\n</template>\n\n<script setup>\n${script}</script>\n${styleBlock}`);
 }
 
 // 从组件源码的 setup 体里还原「模板引用到」的顶层声明（含依赖闭包）
 // 返回 { code, localNames, sharedRefs, vueApis }
+// ── setup「安全子集」还原 ─────────────────────────────────────────────
+// 目标：模板里 p/a/o 这类短名在原组件是 ref/computed，而生成器会把它们错配到 shared
+// 的同名跨 chunk 符号（实测 p.value 变 undefined，布局宽度塌成 12px）。
+// 做法：只还原初值不依赖 IPC / 未知 hook 的声明，初值取原代码字面量，
+// 这样浏览器里也能算出正确初值（n = electronAPI?.platform ?? 'darwin' → 'darwin'）。
+// 判定一个表达式是否「不依赖外部副作用」：只允许安全全局 + 白名单 hook + 已知局部名
+function safeExpr(node, localNames, deps) {
+  if (!node) return true;
+  let bad = false;
+  let ast;
+  // 必须克隆：traverse 会在原节点上挂 path，之后再用 generator 生成同一个节点会炸
+  try { ast = t.file(t.program([t.expressionStatement(t.cloneNode(node, true, true))])); }
+  catch (e) { return false; }
+  T(ast, {
+    AwaitExpression() { bad = true; },
+    YieldExpression() { bad = true; },
+    ThisExpression() { bad = true; },
+    CallExpression(p) {
+      if (bad) return;
+      const c = p.node.callee;
+      if (t.isIdentifier(c) && SAFE_SETUP_HOOKS.has(c.name)) return;
+      if (t.isMemberExpression(c) && t.isIdentifier(c.object) && SAFE_NAMES.has(c.object.name)) return;
+      if (t.isMemberExpression(c) && t.isMemberExpression(c.object)) return;   // a.b.c()
+      bad = true;
+    },
+    NewExpression(p) {
+      if (bad) return;
+      const c = p.node.callee;
+      if (!(t.isIdentifier(c) && SAFE_NAMES.has(c.name))) bad = true;
+    },
+    Identifier(p) {
+      if (bad || !p.isReferencedIdentifier()) return;
+      const par = p.parentPath;
+      if (par.isCallExpression() && par.node.callee === p.node) return;            // 由 CallExpression 判
+      if (par.isNewExpression() && par.node.callee === p.node) return;
+      if (par.isMemberExpression() && par.node.property === p.node && !par.node.computed) return;
+      if (par.isObjectProperty() && par.node.key === p.node && !par.node.computed) return;
+      const nm = p.node.name;
+      if (localNames.has(nm)) { deps.add(nm); return; }
+      if (SAFE_NAMES.has(nm)) return;
+      bad = true;
+    },
+  });
+  return !bad;
+}
+
+// 返回 { code, localNames, vueApis, count }
+function restoreSafeSetup(compSrc, tpl, provided) {
+  const out = { code: '', localNames: new Set(), vueApis: new Set(), count: 0, refLike: new Set() };
+  if (!compSrc) return out;
+  let compAst = null;
+  try { compAst = P.parse('(' + compSrc + ')', { sourceType: 'script' }); } catch (e) { return out; }
+  let setupBody = null;
+  T(compAst, { ObjectMethod(p) { if (t.isIdentifier(p.node.key, { name: 'setup' })) setupBody = p.node.body; } });
+  if (!setupBody) return out;
+
+  // 1) 候选：第一层声明，Identifier 形式的 declarator 拆开
+  const items = [];   // { name, node(init or func), kind, deps:Set, safe }
+  const byName = new Map();
+  for (const st of setupBody.body) {
+    if (t.isVariableDeclaration(st)) {
+      for (const d of st.declarations) {
+        if (!t.isIdentifier(d.id)) continue;      // ObjectPattern 交给 hook 解构
+        const it0 = { name: d.id.name, init: d.init, kind: 'var', deps: new Set(), safe: true };
+        items.push(it0); if (!byName.has(it0.name)) byName.set(it0.name, it0);
+      }
+    } else if (t.isFunctionDeclaration(st) && st.id) {
+      const it0 = { name: st.id.name, init: null, fn: st, kind: 'func', deps: new Set(), safe: true };
+      items.push(it0); if (!byName.has(it0.name)) byName.set(it0.name, it0);
+    }
+  }
+  if (!items.length) return out;
+  const candidates = new Set(items.map(x => x.name));
+
+  // 2) 自身安全性
+  for (const it of items) {
+    if (it.kind === 'func') { it.safe = true; continue; }
+    it.safe = safeExpr(it.init, candidates, it.deps);
+  }
+
+  // 3) 模板引用 → 种子；先求依赖闭包，再做「剔除到不动点」（顺序反了会死循环：
+  //    被剔除的依赖会被重新加回来）
+  const tplIds = templateRefNames(tpl);
+  const seeds = items.filter(x => tplIds.has(x.name) && !provided.has(x.name));
+  const pool = new Set();
+  {
+    const q = [...seeds];
+    while (q.length) {
+      const x = q.pop();
+      if (pool.has(x)) continue;
+      pool.add(x);
+      for (const dep of x.deps) { const dd = byName.get(dep); if (dd) q.push(dd); }
+    }
+  }
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const it of [...pool]) {
+      let bad = !it.safe;
+      if (!bad) for (const dep of it.deps) {
+        const dd = byName.get(dep);
+        if (dd && !pool.has(dd)) { bad = true; break; }
+        if (!dd && provided.has(dep)) { /* 由 hook 解构提供，可用 */ }
+        else if (!dd && !provided.has(dep)) { bad = true; break; }
+      }
+      if (bad) { pool.delete(it); changed = true; }
+    }
+  }
+  const keep = pool;
+  if (!keep.size) return out;
+
+  // 4) 按原顺序生成
+  const keptOrdered = items.filter(x => keep.has(x));
+  const parts = [];
+  for (const it of keptOrdered) {
+    if (it.kind === 'func') parts.push(G(it.fn, { compact: false, comments: false, jsescOption: { minimal: true } }).code);
+    else {
+      const expr = it.init
+        ? G(it.init, { compact: false, comments: false, jsescOption: { minimal: true } }).code
+        : 'undefined';
+      parts.push(`let ${it.name} = ${expr};`);
+      // Vue API 需要 import
+      for (const h of SAFE_SETUP_HOOKS) if (new RegExp('(?<![\\w$.])' + h + '\\s*\\(').test(expr)) out.vueApis.add(h);
+      // 记住「ref 型」绑定：模板里 Vue 会自动解包 ref，`X.value` 必须写成 `X`
+      if (it.init && t.isCallExpression(it.init) && t.isIdentifier(it.init.callee)
+          && ['ref', 'shallowRef', 'computed', 'customRef', 'toRef'].includes(it.init.callee.name)) {
+        out.refLike.add(it.name);
+      }
+      if (/\bwindow\b|\bdocument\b/.test(expr)) { /* 全局，无需 import */ }
+    }
+    out.localNames.add(it.name);
+  }
+  out.code = parts.join('\n');
+  out.count = keptOrdered.length;
+  return out;
+}
+
+// 模板表达式里引用的名字（AST 口径，避免把对象键/成员属性算进来）
+function templateRefNames(tpl) {
+  const ids = new Set();
+  const zones = [];
+  for (const m of tpl.matchAll(/\{\{([\s\S]*?)\}\}/g)) zones.push(m[1]);
+  for (const m of tpl.matchAll(/(?:^|\s)(?::|@|v-[\w:.-]+)[\w:.-]*\s*=\s*"([^"]*)"/g)) zones.push(m[1]);
+  for (const z of zones) {
+    let a = null;
+    try { a = P.parse('(' + z + ')', { sourceType: 'script' }); } catch (e) {
+      try { a = P.parse('[' + z + ']', { sourceType: 'script' }); } catch (e2) {}
+    }
+    if (!a) continue;
+    T(a, { Identifier(ip) {
+      if (!ip.isReferencedIdentifier()) return;
+      if (ip.scope.hasBinding(ip.node.name)) return;
+      ids.add(ip.node.name);
+    } });
+  }
+  return ids;
+}
+
+// 模板里 X 是否「只以 X.value 形式出现」——这类名字在原组件里一定是 ref/computed，
+// 而 shared 里的同名跨 chunk 符号几乎必然是撞名的错符号（实测 App 的 Ut/Wt 取到 null）。
+function onlyValueAccess(tpl, name) {
+  const esc = name.replace(/\$/g, '\\$');
+  const all = tpl.match(new RegExp('(?<![\\w$.])' + esc + '(?![\\w$])', 'g')) || [];
+  if (!all.length) return false;
+  const valAcc = tpl.match(new RegExp('(?<![\\w$.])' + esc + '\\.value(?![\\w$])', 'g')) || [];
+  return all.length === valAcc.length;
+}
+
 // B2) 生成 shared.js 的 body（AST 级改写，按原位置排序）
 // 判断一个顶层 unit 是否引用了组件符号（compVarToName 的 key）
 // 这些 unit 是应用启动/注册代码（如 `setup: () => createElementVNode(Tooltip, ...)`、
@@ -762,4 +1028,7 @@ try {
   console.error('自检解析失败:', String(e.message).slice(0, 80));
 }
 
+if (safeSetupCount) console.error(`[setup] 安全子集还原的组件: ${safeSetupCount}`);
+if (danglingCount) console.error(`[兜底] 悬空符号占位: ${danglingCount} 处`);
+if (optChainCount) console.error(`[容错] 模板 .value 加可选链的组件: ${optChainCount}`);
 console.error(`shared.js ${(sharedCode.length / 1024 / 1024).toFixed(1)}MB | 本地 ${localNames.size} | cross ${crossList.length} | 组件import ${compImports.length} | Vue改写 ${vueN} | cross改写 ${crossN} | 路径 ${fixN}+${deadN}死 | 生成组件 ${madeComponents.size}`);

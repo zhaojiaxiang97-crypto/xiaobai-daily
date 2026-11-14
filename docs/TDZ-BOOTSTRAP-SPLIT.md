@@ -90,6 +90,51 @@ mkdir -p <out>/src/vendor && cp -R <renderer>/* <out>/src/vendor/
 tools/vue-decompiler/verify-root-entry.sh <out> 5212
 ```
 
+
+## 让首屏真正有内容：三处容错
+
+TDZ 修完之后首屏还是白的，逐个排掉三个原因（数据来自真实 Chrome + 真 preload）：
+
+**1. 模板里 `X.value` 的语义在转换中变了。**
+原组件的 render 函数直接访问 `p.value`（setup 返回的 computed 没被解包）；转成模板后
+Vue 会自动解包 ref，`p.value` 变成 `(220).value` = `undefined`。
+实测表现：`:style="{'--sidebar-expanded-w': `${p.value}px`}"` 渲染成 `undefinedpx`，
+`.app-layout` 宽度塌成 12px，整页只剩一个图标。
+
+修法：还原 setup 声明时记录「ref 型绑定」（`ref/shallowRef/computed/customRef/toRef` 初始化），
+模板里把这些名字的 `.value` 去掉；剩下的未知绑定加可选链 `?.value` 防崩
+（只改读取，`v-model` 与赋值一律不动 —— 否则编译成 `X?.value = e` 直接语法错误）。
+
+**2. hook 抛异常会中断整个 setup。**
+i18n 未安装时 `useI18n()` 抛 `NOT_INSTALLED`，异常打断 setup，后面所有绑定都没建立。
+修法：解构前先 try/catch 兜住 hook 调用，并给解构项默认值（`t` 默认 `() => ''`，其余 `{ value: undefined }`）。
+
+**3. 宿主页面缺两条布局规则。**
+原应用由 Electron 外壳保证 `#app` 撑满；浏览器里要自己补：
+
+```css
+#app { display: flex; height: 100vh; }
+.app-layout { width: 100%; }
+```
+
+缺这两条，`.app-layout` 只有内容宽度（实测 12px），界面等于不可见。
+
+## 三处修复后的实测
+
+| 项 | 值 |
+|---|---|
+| 批量挂载（默认产物） | 105 → **112** |
+| 批量挂载（`RESTORE_SETUP_HOOKS=1`） | 83 → **117** |
+| 首屏 `#app` 内容 | 7B → **8246B** |
+| 首屏可见文案 | `加载中… / 小白日报 / 小白已锁定 / 保护你的工作记录，请输入应用锁密码后继续 / 忘记密码？使用助记词重设` |
+
+注意 `RESTORE_SETUP_HOOKS=1` 现在的批量挂载率**反超**默认产物（117 > 112）：hook 调用被
+try/catch 兜住后，i18n/store 解构不再把组件打成错误态，之前的「105 → 83 回归」消失了。
+
+**仍然到的边界**：首屏停在 loading 骨架 + 应用锁一层，主界面不出来。
+原因是 App 的 setup 里那些「初值依赖 IPC」的声明（拉数据、初始化）被安全子集剔除了，
+加载流程根本没跑。要往下走需要执行这些逻辑，也就是真正的 setup 体还原 + 数据来源处理。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，

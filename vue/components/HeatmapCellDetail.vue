@@ -4,6 +4,54 @@
 
 <script setup>
 import { toDisplayString } from 'vue';
-// [符号说明] D=useConfigProviderContext, k~ref, M~computed
-import { S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_i as i, S_p as p, S_w as w, S_D as D, S_O as O, S_k as k, S_j as j, S_ee as ee, S_M as M, S_me as me, S_P as P, S_at as at, S_zn as zn } from '../shared.js';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function D(e) {
+  let date = new Date(e.endedAt);
+  return `${E(date.getHours())}:${E(date.getMinutes())}:${E(date.getSeconds())}`;
+}
+function O(e) {
+  if (!T.includes(e.source)) return e.summary.trim();
+  let t = $f.parse(e.summary);
+  return (new DOMParser().parseFromString(t, `text/html`).body.textContent ?? ``).trim();
+}
+function k(e) {
+  let t = e.details?.title;
+  return typeof t == `string` ? t.trim() : ``;
+}
+function j(e) {
+  return f_(e.category, a.value);
+}
+function ee(e) {
+  return Ooe(e.category, l.value);
+}
+function M(e) {
+  let t = te[e.source];
+  return i(t || `timeline.unknownSource`);
+}
+async function me(e) {
+  let t = u.value[e.id];
+  if (t?.open) {
+    t.open = false;
+    return;
+  }
+  if (t && t.urls.length > 0) {
+    t.open = true;
+    return;
+  }
+  u.value[e.id] = {
+    open: true,
+    loading: true,
+    urls: [],
+    error: ``
+  };
+  let n = (await Promise.all(pe(e).map(item => window.electronAPI.readLocalImage(item).catch(() => null)))).flatMap(item => item?.ok && item.dataUrl ? [item.dataUrl] : []);
+  u.value[e.id] = {
+    open: true,
+    loading: false,
+    urls: n,
+    error: n.length > 0 ? `` : i(`heatmapCellDetail.imageFailed`)
+  };
+}
+import { S_is as is, S_xs as xs, S_sm as sm, S_lg as lg, S_px as px, S_e as e, S_t as t, S_i as i, S_p as p, S_w as w, S_P as P, S_at as at, S_zn as zn } from '../shared.js';
 </script>

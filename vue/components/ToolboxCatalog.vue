@@ -1,8 +1,33 @@
 <template>
-<li><button type="button" :class="`group grid min-h-[62px] w-full grid-cols-[38px_minmax(180px,1fr)_minmax(164px,236px)_24px] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left transition-colors hover:bg-muted/70 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary/40 active:bg-muted`" @click="t=>g(e)"><span :class="`relative inline-flex size-[34px] items-center justify-center rounded-[10px]`" :style="at(D(e))"><component :is="Be(wr[e.icon]||cc)" :size="20" :stroke-width="1.8" /><img :class="`absolute inset-0 size-full rounded-[inherit] bg-white object-contain p-[3px]`" :src="e.logoUrl" alt="" @error="w" /><span></span></span><span><span><strong>{{ e.name }}</strong><span>new</span><span>{{ T(e) }}</span><span :class="[`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold`,e.status===`testing`?`bg-primary/10 text-primary`:`bg-muted text-muted-foreground`]">{{ e.status===`testing`?o(`toolboxNative.testing`):o(`toolboxNative.comingSoon`) }}</span></span><span>{{ e.description }}</span></span><span><span><em>{{ C(o(`toolboxNative.generate`)) }}</em><b>{{ undefined }}<small>{{ S.value }}</small></b><small>{{ C(o(`toolboxNative.per10kCharactersAndUp`)) }}</small></span></span><component :is="pa" :class="`text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary`" :size="15" aria-hidden="true" /></button></li>
+<li><button type="button" :class="`group grid min-h-[62px] w-full grid-cols-[38px_minmax(180px,1fr)_minmax(164px,236px)_24px] items-center gap-3 rounded-[10px] px-2.5 py-2 text-left transition-colors hover:bg-muted/70 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-primary/40 active:bg-muted`" @click="t=>g(e)"><span :class="`relative inline-flex size-[34px] items-center justify-center rounded-[10px]`" :style="at(D(e))"><component :is="Be(wr[e.icon]||cc)" :size="20" :stroke-width="1.8" /><img :class="`absolute inset-0 size-full rounded-[inherit] bg-white object-contain p-[3px]`" :src="e.logoUrl" alt="" @error="w" /><span></span></span><span><span><strong>{{ e.name }}</strong><span>new</span><span>{{ T(e) }}</span><span :class="[`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold`,e.status===`testing`?`bg-primary/10 text-primary`:`bg-muted text-muted-foreground`]">{{ e.status===`testing`?o(`toolboxNative.testing`):o(`toolboxNative.comingSoon`) }}</span></span><span>{{ e.description }}</span></span><span><span><em>{{ C(o(`toolboxNative.generate`)) }}</em><b>{{ undefined }}<small>{{ S?.value }}</small></b><small>{{ C(o(`toolboxNative.per10kCharactersAndUp`)) }}</small></span></span><component :is="pa" :class="`text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary`" :size="15" aria-hidden="true" /></button></li>
 </template>
 
 <script setup>
-// [符号说明] D=useConfigProviderContext
-import { S_pa as pa, S_is as is, S_cc as cc, S_em as em, S_px as px, S_alt as alt, S_e as e, S_t as t, S_o as o, S_p as p, S_g as g, S_b as b, S_x as x, S_S as S, S_C as C, S_w as w, S_T as T, S_D as D, S_Be as Be, S_at as at, S_wr as wr, S_li as li } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_pa as pa, S_is as is, S_cc as cc, S_em as em, S_px as px, S_alt as alt, S_e as e, S_t as t, S_o as o, S_p as p, S_b as b, S_x as x, S_Be as Be, S_at as at, S_wr as wr, S_li as li } from '../shared.js';
+const S = { value: undefined };
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function g(e) {
+  trackActionEvent(`tool_card_click`, {
+    entry: `toolbox`,
+    tool: e.slug
+  }), i(`open`, e);
+}
+function C(text) {
+  return text.trim().replace(/^\/\s*/, ``);
+}
+function w(e) {
+  e.currentTarget.style.display = `none`;
+}
+function T(e) {
+  return r.categories.find(item => item.id === e.category)?.label || e.category;
+}
+function D(e) {
+  return {
+    color: e.accentColor,
+    backgroundColor: `color-mix(in srgb, ${e.accentColor} 10%, var(--card))`
+  };
+}
 </script>

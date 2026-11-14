@@ -3,7 +3,6 @@
 </template>
 
 <script setup>
-import { S_i as i } from '../shared.js';
 const e = defineProps({
       node: {},
       customId: {},
@@ -11,6 +10,11 @@ const e = defineProps({
       customHtmlTags: {}
     });
 const t = e;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function i(e) {
+  return String(e.content ?? ``);
+}
 </script>
 
 <style>

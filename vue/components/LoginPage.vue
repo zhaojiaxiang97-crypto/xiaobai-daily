@@ -1,12 +1,43 @@
 <template>
-<section data-v-c8ac9b5f><main><img :class="`login-mascot`" :src="mie" alt="" aria-hidden="true" draggable="false" /><h1>{{ r(`login.browser.hero`) }}</h1><p>{{ r(`login.browser.subtitle`) }}</p><div><button type="button" :class="`login-button`" :disabled="a.value!==`idle`" @click="p"><component :is="zn" :size="16" :class="`animate-spin`" />{{ ` `+toDisplayString(r(`login.browser.${a.value===`idle`?`button`:a.value===`opening`?`opening`:a.value===`finishing`?`finishing`:`waiting`}`)) }}</button><div><button type="button" @click="h">{{ r(`login.browser.reopen`) }}</button><button type="button" @click="m">{{ r(`login.browser.cancel`) }}</button></div><p>{{ o.value }}</p></div></main><footer><button type="button" @click="e=>g(`privacy-policy`)">{{ r(`login.browser.privacy`) }}</button><button type="button" @click="e=>g(`user-agreement`)">{{ r(`login.browser.terms`) }}</button><button type="button" @click="e=>n(`show-wechat-qrcode`)">{{ r(`login.browser.support`) }}</button></footer></section>
+<section data-v-c8ac9b5f><main><img :class="`login-mascot`" :src="mie" alt="" aria-hidden="true" draggable="false" /><h1>{{ r(`login.browser.hero`) }}</h1><p>{{ r(`login.browser.subtitle`) }}</p><div><button type="button" :class="`login-button`" :disabled="a!==`idle`" @click="p"><component :is="zn" :size="16" :class="`animate-spin`" />{{ ` `+toDisplayString(r(`login.browser.${a===`idle`?`button`:a===`opening`?`opening`:a===`finishing`?`finishing`:`waiting`}`)) }}</button><div><button type="button" @click="h">{{ r(`login.browser.reopen`) }}</button><button type="button" @click="m">{{ r(`login.browser.cancel`) }}</button></div><p>{{ o }}</p></div></main><footer><button type="button" @click="e=>g(`privacy-policy`)">{{ r(`login.browser.privacy`) }}</button><button type="button" @click="e=>g(`user-agreement`)">{{ r(`login.browser.terms`) }}</button><button type="button" @click="e=>n(`show-wechat-qrcode`)">{{ r(`login.browser.support`) }}</button></footer></section>
 </template>
 
 <script setup>
 import { toDisplayString } from 'vue';
 // [符号说明] n~computed
-import { S_is as is, S_mie as mie, S_h1 as h1, S_alt as alt, S_n as n, S_r as r, S_a as a, S_o as o, S_p as p, S_m as m, S_g as g, S_zn as zn } from '../shared.js';
+import { S_is as is, S_mie as mie, S_h1 as h1, S_alt as alt, S_n as n, S_r as r, S_zn as zn } from '../shared.js';
 const e = defineProps({});
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let a = ref(`idle`);
+let o = ref(``);
+async function p() {
+  if (a.value !== `idle`) return;
+  let e = ++c;
+  a.value = `opening`, o.value = ``;
+  try {
+    let t = Pi(await window.electronAPI.auth.browserStart());
+    if (d || e !== c) return;
+    l = t.expiresAt, u = t.intervalMs, a.value = `waiting`, f(e);
+  } catch (t) {
+    if (d || e !== c) return;
+    a.value = `idle`, o.value = t instanceof Error ? t.message : r(`login.browser.retry`);
+  }
+}
+async function m() {
+  Pi(await window.electronAPI.auth.browserCancel()).success && (++c, clearTimeout(str), a.value = `idle`, o.value = ``);
+}
+async function h() {
+  try {
+    Pi(await window.electronAPI.auth.browserReopen()), o.value = ``;
+  } catch (e) {
+    o.value = e instanceof Error ? e.message : r(`login.browser.retry`);
+  }
+}
+function g(e) {
+  window.electronAPI.openExternal(`https://xiaoheiribao.com/legal/${e}.html`);
+}
 </script>
 
 <style>

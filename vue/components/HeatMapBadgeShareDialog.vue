@@ -1,16 +1,42 @@
 <template>
-<dialog data-v-6ca0fba7 ref="o" :class="`badge-share-dialog`" @click="h" @close="e=>r(`close`)"><header><div><h2>{{ i(`heatMap.yearHighlights.shareAchievement`) }}</h2><p>{{ toDisplayString(event.badge.name)+` · `+toDisplayString(event.year) }}</p></div><button type="button" :aria-label="i(`common.close`)" @click="m"><component :is="Nt" :size="18" /></button></header><div><div><canvas ref="s" width="1080" height="1440" :aria-label="event.badge.name" role="img"></canvas></div><aside><img :src="event.badge.image" alt="" /><h3>{{ event.badge.name }}</h3><p>{{ event.badge.desc }}</p><div><span>{{ i(`heatMap.yearHighlights.metricLabel`) }}</span><strong>{{ event.badge.metric }}</strong></div><small>{{ event.badge.unlockedLabel }}</small><p>{{ i(`heatMap.shareMaker.footerNote`) }}</p><button type="button" :class="`badge-share-save`" :disabled="!c.value||l.value" @click="g"><component :is="Vn" :size="16" />{{ l.value?i(`heatMap.shareMaker.saving`):i(`heatMap.shareMaker.exportPng`) }}</button><span>{{ u.value }}</span></aside></div></dialog>
+<dialog data-v-6ca0fba7 ref="o" :class="`badge-share-dialog`" @click="h" @close="e=>r(`close`)"><header><div><h2>{{ i(`heatMap.yearHighlights.shareAchievement`) }}</h2><p>{{ toDisplayString(event.badge.name)+` · `+toDisplayString(event.year) }}</p></div><button type="button" :aria-label="i(`common.close`)" @click="m"><component :is="Nt" :size="18" /></button></header><div><div><canvas ref="s" width="1080" height="1440" :aria-label="event.badge.name" role="img"></canvas></div><aside><img :src="event.badge.image" alt="" /><h3>{{ event.badge.name }}</h3><p>{{ event.badge.desc }}</p><div><span>{{ i(`heatMap.yearHighlights.metricLabel`) }}</span><strong>{{ event.badge.metric }}</strong></div><small>{{ event.badge.unlockedLabel }}</small><p>{{ i(`heatMap.shareMaker.footerNote`) }}</p><button type="button" :class="`badge-share-save`" :disabled="!c||l" @click="g"><component :is="Vn" :size="16" />{{ l?i(`heatMap.shareMaker.saving`):i(`heatMap.shareMaker.exportPng`) }}</button><span>{{ u }}</span></aside></div></dialog>
 </template>
 
 <script setup>
 import { toDisplayString } from 'vue';
-// [符号说明] l~computed, u=useConfigProviderContext
-import { S_is as is, S_h2 as h2, S_h3 as h3, S_alt as alt, S_e as e, S_r as r, S_i as i, S_o as o, S_s as s, S_c as c, S_l as l, S_u as u, S_p as p, S_m as m, S_g as g, S_Nt as Nt, S_Vn as Vn } from '../shared.js';
+import { S_is as is, S_h2 as h2, S_h3 as h3, S_alt as alt, S_e as e, S_r as r, S_i as i, S_o as o, S_s as s, S_p as p, S_Nt as Nt, S_Vn as Vn } from '../shared.js';
 const event = defineProps({
       badge: {},
       year: {}
     });
 const n = event;
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let c = ref(false);
+let l = ref(false);
+let u = ref(``);
+function m() {
+  o.value?.close();
+}
+function h(e) {
+  e.target === o.value && m();
+}
+async function g() {
+  if (c.value && s.value && !l.value) {
+    l.value = true, u.value = ``;
+    try {
+      (await window.electronAPI.saveImage(s.value.toDataURL(`image/png`), {
+        prefix: `annualHeatmap`,
+        styleName: a.value.startsWith(`zh`) ? `勋章纪念` : `Badge Keepsake`
+      })).cancelled || (u.value = i(`heatMap.shareMaker.saved`));
+    } catch (e) {
+      console.error(`[HeatMapBadgeShare] Save failed:`, e), u.value = i(`heatMap.shareMaker.saveFailed`);
+    } finally {
+      l.value = false;
+    }
+  }
+}
 </script>
 
 <style>

@@ -1,15 +1,19 @@
 <template>
-<div data-v-3294a0c8 :class="`lb-podium-slot`" :data-rank="e.rank"><div><span :class="[`lb-podium-avatar`,{'is-me':e.isMe}]"><component :is="Ly" :name="e.displayName" :avatar-url="e.avatarUrl" :color-key="e.userKey" :size="e.rank===1?48:42" /><component :is="ao" :class="`lb-podium-crown`" :size="e.rank===1?18:16" :stroke-width="2" /></span><div><span>{{ e.displayName }}</span><span>{{ n(`leaderboard.currentUser`) }}</span></div><div><span v-text="n(`leaderboard.records`,{count:e.recordCount})" /></div><div><span><span v-text="n(`leaderboard.podiumLead`,{gap:i.value})" /></span><component :is="Eg" :item="e" /></div></div><div><span>{{ e.rank }}</span></div></div>
+<div data-v-3294a0c8 :class="`lb-podium-slot`" :data-rank="e.rank"><div><span :class="[`lb-podium-avatar`,{'is-me':e.isMe}]"><component :is="Ly" :name="e.displayName" :avatar-url="e.avatarUrl" :color-key="e.userKey" :size="e.rank===1?48:42" /><component :is="ao" :class="`lb-podium-crown`" :size="e.rank===1?18:16" :stroke-width="2" /></span><div><span>{{ e.displayName }}</span><span>{{ n(`leaderboard.currentUser`) }}</span></div><div><span v-text="n(`leaderboard.records`,{count:e.recordCount})" /></div><div><span><span v-text="n(`leaderboard.podiumLead`,{gap:i?.value})" /></span><component :is="Eg" :item="e" /></div></div><div><span>{{ e.rank }}</span></div></div>
 </template>
 
 <script setup>
 import Ly from './LeaderboardAvatar.vue';
 // [符号说明] n~computed
-import { S_ao as ao, S_is as is, S_n as n, S_i as i, S_v as v, S_me as me } from '../shared.js';
+import { S_ao as ao, S_is as is, S_n as n, S_v as v, S_me as me } from '../shared.js';
 const e = defineProps({
       items: {}
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const i = { value: undefined };
+const Eg = { value: undefined };
 </script>
 
 <style>

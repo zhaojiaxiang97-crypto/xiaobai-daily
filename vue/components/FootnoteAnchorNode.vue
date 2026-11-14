@@ -3,12 +3,21 @@
 </template>
 
 <script setup>
-// [符号说明] n~computed
-import { S_sm as sm, S_href as href, S_n as n, S_a as a } from '../shared.js';
+import { S_sm as sm, S_href as href, S_a as a } from '../shared.js';
 const event = defineProps({
       node: {}
     });
 const t = event;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function n(e) {
+  if (e.preventDefault(), typeof document > `u`) return;
+  let n = `fnref-${String(t.node.id ?? ``)}`,
+    elementByIdResult = document.getElementById(n);
+  elementByIdResult && elementByIdResult.scrollIntoView({
+    behavior: `smooth`
+  });
+}
 </script>
 
 <style>

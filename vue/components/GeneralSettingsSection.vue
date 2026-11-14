@@ -1,5 +1,5 @@
 <template>
-<component :is="Uy" :value="e.value" />
+<component :is="Uy" :value="e?.value" />
 </template>
 
 <script setup>

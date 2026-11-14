@@ -1,5 +1,5 @@
 <template>
-<div data-v-2a6eae76><section :class="[`conversation-panel`,{'conversation-panel--with-side-panel':mt.active&&C.id&&(Ht.value||Ut.value),'conversation-panel--with-side-topic':mt.active&&C.id&&Ut.value}]" @dragenter="Yt" @dragover="Xt" @dragleave="e=>Jt.value=Math.max(0,Jt.value-1)" @drop="Zt" @dragend="e=>Jt.value=0"><div><component :is="$s" :size="28" /><strong>{{ l(`xiaoheiBot.dropAttachments`) }}</strong><span>{{ l(`xiaoheiBot.dropAttachmentsHint`) }}</span></div><header><div><component :is="Z5" :origin="C.cloudCreatedOrigin" :origin-key="C.botId??C.id" :synced="!!C.mobileSyncEnabled" badge-size="md" /><div><div><button type="button" :class="`conversation-header__profile-button`" :aria-expanded="S" aria-haspopup="dialog" @click="(...e)=>D&&D(...e)"><span>{{ C.unnamed?OHt(C.name):C.name }}</span><span><span v-text="l(`xiaoheiBot.groupBotCount`,{count:ln.value})" /></span><span>{{ l(`xiaoheiBot.mobileSyncTag`) }}</span></button></div><button type="button" :class="`conversation-header__description`" @click="(...e)=>D&&D(...e)">{{ C.description?.trim()||l(`xiaoheiBot.headerNoDescription`) }}</button></div></div><div :class="[`conversation-header__actions`,{'conversation-header__actions--mac':cn}]" @pointerdowncapture="Pt" @clickcapture="Pt" @pointermovecapture="Ft" @keydowncapture="xt(Ft,[`tab`])"><component :is="Qr" :delay-duration="120" /><component :is="Qr" :delay-duration="120" />{{ undefined }}<component :is="Qr" :delay-duration="120" /></div></header><div ref="un" :class="`message-viewport`" @scroll="(...e)=>ee&&ee(...e)" @wheelpassive="(...e)=>te&&te(...e)"><div ref="rn" :class="`message-list`"><div><component :is="zn" :size="16" :class="`animate-spin`" /><span>{{ l(`common.loading`) }}</span></div><div><component :is="zn" :size="13" :stroke-width="1.8" :class="`activity-spinner`" aria-hidden="true" /><span>{{ l(`xiaoheiBot.loadingOlderMessages`) }}</span></div><component :is="Qr" :delay-duration="120" /><div><span><img :src="u" alt="" /></span><component :is="lHt" /></div><span><span v-text="l(`xiaoheiBot.consultation.waitingFor`,{name:v.map(item=>item.targetName).join(`、`)})" /></span><div><span><component :is="Yo" :size="22" :stroke-width="1.5" /></span><strong>{{ l(`xiaoheiBot.emptyConversationTitle`) }}</strong><p><span v-text="l(`xiaoheiBot.emptyConversationDesc`,{name:C.name})" /></p></div></div></div><footer ref="Lt" :class="`composer-wrap`"><component :is="wt" name="scroll-to-bottom" /><component :is="An" :open="Me" @update:open="q" /></footer></section><component :is="OW" :open="mt.active&&Ot.value&&!!C.id" @update:open="e=>Ot.value=e" /><component :is="eVt" :id="Ht.value" @close="e=>Ht.value=null" /><component :is="RVt" :detail="Ut.value" @close="e=>Ut.value=null" /><component :is="OW" :open="mt.active&&m&&!!(C.kind===`group`||C.botId)" @update:open="e=>m.value=e" /></div>
+<div data-v-2a6eae76><section :class="[`conversation-panel`,{'conversation-panel--with-side-panel':mt.active&&C.id&&(Ht||Ut),'conversation-panel--with-side-topic':mt.active&&C.id&&Ut}]" @dragenter="Yt" @dragover="Xt" @dragleave="e=>Jt=Math.max(0,Jt-1)" @drop="Zt" @dragend="e=>Jt=0"><div><component :is="$s" :size="28" /><strong>{{ l(`xiaoheiBot.dropAttachments`) }}</strong><span>{{ l(`xiaoheiBot.dropAttachmentsHint`) }}</span></div><header><div><component :is="Z5" :origin="C.cloudCreatedOrigin" :origin-key="C.botId??C.id" :synced="!!C.mobileSyncEnabled" badge-size="md" /><div><div><button type="button" :class="`conversation-header__profile-button`" :aria-expanded="S" aria-haspopup="dialog" @click="(...e)=>D&&D(...e)"><span>{{ C.unnamed?OHt(C.name):C.name }}</span><span><span v-text="l(`xiaoheiBot.groupBotCount`,{count:ln?.value})" /></span><span>{{ l(`xiaoheiBot.mobileSyncTag`) }}</span></button></div><button type="button" :class="`conversation-header__description`" @click="(...e)=>D&&D(...e)">{{ C.description?.trim()||l(`xiaoheiBot.headerNoDescription`) }}</button></div></div><div :class="[`conversation-header__actions`,{'conversation-header__actions--mac':cn}]" @pointerdowncapture="Pt" @clickcapture="Pt" @pointermovecapture="Ft" @keydowncapture="xt(Ft,[`tab`])"><component :is="Qr" :delay-duration="120" /><component :is="Qr" :delay-duration="120" />{{ undefined }}<component :is="Qr" :delay-duration="120" /></div></header><div ref="un" :class="`message-viewport`" @scroll="(...e)=>ee&&ee(...e)" @wheelpassive="(...e)=>te&&te(...e)"><div ref="rn" :class="`message-list`"><div><component :is="zn" :size="16" :class="`animate-spin`" /><span>{{ l(`common.loading`) }}</span></div><div><component :is="zn" :size="13" :stroke-width="1.8" :class="`activity-spinner`" aria-hidden="true" /><span>{{ l(`xiaoheiBot.loadingOlderMessages`) }}</span></div><component :is="Qr" :delay-duration="120" /><div><span><img :src="u" alt="" /></span><component :is="lHt" /></div><span><span v-text="l(`xiaoheiBot.consultation.waitingFor`,{name:v.map(item=>item.targetName).join(`、`)})" /></span><div><span><component :is="Yo" :size="22" :stroke-width="1.5" /></span><strong>{{ l(`xiaoheiBot.emptyConversationTitle`) }}</strong><p><span v-text="l(`xiaoheiBot.emptyConversationDesc`,{name:C.name})" /></p></div></div></div><footer ref="Lt" :class="`composer-wrap`"><component :is="wt" name="scroll-to-bottom" /><component :is="An" :open="Me" @update:open="q" /></footer></section><component :is="OW" :open="mt.active&&Ot&&!!C.id" @update:open="e=>Ot=e" /><component :is="eVt" :id="Ht" @close="e=>Ht=null" /><component :is="RVt" :detail="Ut" @close="e=>Ut=null" /><component :is="OW" :open="mt.active&&m&&!!(C.kind===`group`||C.botId)" @update:open="e=>m.value=e" /></div>
 </template>
 
 <script setup>
@@ -10,7 +10,7 @@ import eVt from './XiaoheiBotConsultationPanel.vue';
 import RVt from './XiaoheiBotSideTopicPanel.vue';
 import lHt from './XiaoheiBotOnboardingCard.vue';
 // [符号说明] l~computed, u=useConfigProviderContext, D=useConfigProviderContext
-import { S_to as to, S_Yo as Yo, S_is as is, S_$s as $s, S_alt as alt, S_OHt as OHt, S_e as e, S_l as l, S_u as u, S_p as p, S_m as m, S_v as v, S_S as S, S_C as C, S_D as D, S_ee as ee, S_te as te, S_Me as Me, S_xt as xt, S_wt as wt, S_Ot as Ot, S_Pt as Pt, S_Ft as Ft, S_Lt as Lt, S_Ht as Ht, S_Ut as Ut, S_Jt as Jt, S_Yt as Yt, S_Xt as Xt, S_Zt as Zt, S_rn as rn, S_cn as cn, S_ln as ln, S_un as un, S_An as An, S_zn as zn, S_Qr as Qr } from '../shared.js';
+import { S_to as to, S_Yo as Yo, S_is as is, S_$s as $s, S_alt as alt, S_OHt as OHt, S_e as e, S_l as l, S_u as u, S_p as p, S_m as m, S_v as v, S_S as S, S_C as C, S_D as D, S_ee as ee, S_te as te, S_Me as Me, S_xt as xt, S_wt as wt, S_Lt as Lt, S_rn as rn, S_un as un, S_An as An, S_zn as zn, S_Qr as Qr } from '../shared.js';
 const event = defineProps({
       active: {
         type: Boolean,
@@ -18,6 +18,33 @@ const event = defineProps({
       }
     });
 const mt = event;
+
+// [兜底] 模板引用但无来源的符号
+const ln = { value: undefined };
+const q = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let Ot = ref(false);
+function Pt() {
+  At.value = null, jt.value = true;
+}
+function Ft() {
+  Mt.value || (jt.value = false);
+}
+let Ht = ref(null);
+let Ut = ref(null);
+let Jt = ref(0);
+function Yt(e) {
+  e.dataTransfer?.types.includes(`Files`) && (e.preventDefault(), Jt.value += 1);
+}
+function Xt(e) {
+  e.dataTransfer?.types.includes(`Files`) && (e.preventDefault(), e.dataTransfer.dropEffect = `copy`);
+}
+function Zt(e) {
+  Jt.value = 0, e.dataTransfer?.types.includes(`Files`) && Be(e);
+}
+let cn = window.electronAPI?.platform === `darwin`;
 </script>
 
 <style>

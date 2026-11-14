@@ -3,8 +3,7 @@
 </template>
 
 <script setup>
-// [符号说明] n~computed
-import { S_bFt as bFt, S_n as n, S_je as je } from '../shared.js';
+import { S_bFt as bFt, S_je as je } from '../shared.js';
 const event = defineProps({
       align: {
         default: `inline-start`
@@ -14,4 +13,11 @@ const event = defineProps({
       }
     });
 const t = event;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function n(e) {
+  let currentTarget = e.currentTarget,
+    target = e.target;
+  target && target.closest(`button`) || currentTarget && currentTarget?.parentElement && currentTarget.parentElement?.querySelector(`input`)?.focus();
+}
 </script>

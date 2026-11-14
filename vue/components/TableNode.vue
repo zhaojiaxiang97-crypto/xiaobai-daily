@@ -1,11 +1,11 @@
 <template>
-<th data-v-7a6d3bf6 dir="auto" :class="[n.align===`right`?`text-right`:n.align===`center`?`text-center`:`text-left`]"><component :is="s$" :nodes="n.children" :index-key="`table-th-${t.indexKey}`" :custom-id="t.customId" :typewriter="t.typewriter" @copy="e=>d.$emit(`copy`,e)" /><button type="button" :class="`table-node__resize-handle`" :aria-label="`Resize columns ${r+1} and ${r+2}`" @pointerdown="e=>function(e,t){if(t.button!==0)return;let n=function(){let e=i.value?.querySelectorAll(`thead th`);return Array.from(e??[],e=>Math.round(e.getBoundingClientRect().width));}(),r=n[e],s=n[e+1];r&&s&&(t.preventDefault(),o={index:e,startX:t.clientX,startWidth:r,nextStartWidth:s,widths:n},a.value=n,window.addEventListener(`pointermove`,l),window.addEventListener(`pointerup`,u),window.addEventListener(`pointercancel`,u));}(r,e)"></button></th>
+<th data-v-7a6d3bf6 dir="auto" :class="[n.align===`right`?`text-right`:n.align===`center`?`text-center`:`text-left`]"><component :is="s$" :nodes="n.children" :index-key="`table-th-${t.indexKey}`" :custom-id="t.customId" :typewriter="t.typewriter" @copy="e=>d.$emit(`copy`,e)" /><button type="button" :class="`table-node__resize-handle`" :aria-label="`Resize columns ${r+1} and ${r+2}`" @pointerdown="e=>function(e,t){if(t.button!==0)return;let n=function(){let e=i?.querySelectorAll(`thead th`);return Array.from(e??[],e=>Math.round(e.getBoundingClientRect().width));}(),r=n[e],s=n[e+1];r&&s&&(t.preventDefault(),o={index:e,startX:t.clientX,startWidth:r,nextStartWidth:s,widths:n},a=n,window.addEventListener(`pointermove`,l),window.addEventListener(`pointerup`,u),window.addEventListener(`pointercancel`,u));}(r,e)"></button></th>
 </template>
 
 <script setup>
 import __ca_s from './NodeRenderer.vue';
-// [符号说明] n~computed, l~computed, u=useConfigProviderContext
-import { S_is as is, S_th as th, S_e as e, S_n as n, S_r as r, S_i as i, S_a as a, S_o as o, S_s as s, S_l as l, S_u as u, S_d as d } from '../shared.js';
+// [符号说明] n~computed
+import { S_is as is, S_th as th, S_e as e, S_n as n, S_r as r, S_o as o, S_s as s, S_d as d } from '../shared.js';
 const s$ = __ca_s;
 const event = defineProps({
       node: {},
@@ -19,6 +19,23 @@ const event = defineProps({
       customId: {}
     });
 const t = event;
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let i = ref(null);
+let a = ref([]);
+function l(e) {
+  if (!o) return;
+  e.preventDefault();
+  let t = o.startWidth + o.nextStartWidth,
+    n = Math.min(48, Math.floor(t / 2)),
+    r = Math.max(n, Math.min(t - n, Math.round(o.startWidth + e.clientX - o.startX))),
+    i = [...o.widths];
+  i[o.index] = r, i[o.index + 1] = t - r, a.value = i;
+}
+function u() {
+  o &&= (window.removeEventListener(`pointermove`, l), window.removeEventListener(`pointerup`, u), window.removeEventListener(`pointercancel`, u), null);
+}
 </script>
 
 <style>

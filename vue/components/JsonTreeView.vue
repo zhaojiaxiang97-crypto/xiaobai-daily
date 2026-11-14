@@ -1,5 +1,5 @@
 <template>
-<div><component :is="IPe" :value="state.value" root="" /></div>
+<div><component :is="IPe" :value="state?.value" root="" /></div>
 </template>
 
 <script setup>

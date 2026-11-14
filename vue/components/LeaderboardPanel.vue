@@ -1,5 +1,5 @@
 <template>
-<div data-v-a55ea416><div><div><div><button type="button" :class="({'is-active':d.value===`global`})" @click="e=>Ke(`global`)"><component :is="bo" :size="13" />{{ i(`leaderboard.scope.global`) }}</button><button type="button" :class="({'is-active':d.value===`friends`})" @click="e=>Ke(`friends`)"><component :is="oc" :size="13" />{{ i(`leaderboard.scope.friends`) }}</button></div><div></div></div><div><div><button type="button" :class="`lb-icon-button`" :aria-label="i(`leaderboard.prevAria`)" @click="e=>We(-1)"><component :is="Qt" :size="15" /></button><component :is="CP" :modelValue="l.value" @update:modelvalue="e=>l.value=e" :label="i(`common.selectDate`)" mode="date" align="end" :max-date="c.value" /><button type="button" :class="`lb-icon-button`" :aria-label="i(`leaderboard.nextAria`)" :disabled="ae.value" @click="e=>We(1)"><component :is="dn" :size="15" /></button></div><button type="button" :class="`lb-chip-button`" @click="Ge"><span v-text="i(`leaderboard.backToCurrent.${u.value}`)" /></button><button type="button" :class="`lb-icon-button`" :aria-label="i(`leaderboard.refresh`)" :title="i(`leaderboard.refresh`)" :disabled="g.value" @click="e=>Pe()"><component :is="zn" :size="14" :class="`animate-spin`" /></button><component :is="An" /></div></div><div><component :is="zn" :size="18" :class="`animate-spin`" />{{ ` `+toDisplayString(i(`common.loading`)) }}</div><component :is="Tgt" :open="w.value" @update:open="e=>w.value=e" :context="Me.value" /><component :is="zy" :open="T.value" @update:open="e=>T.value=e" context="leaderboard" @added="Xe" /><component :is="ui" :open="S.value" @update:open="e=>S.value=e" /><component :is="_i" :open="C.value" @update:open="e=>C.value=e" /></div>
+<div data-v-a55ea416><div><div><div><button type="button" :class="({'is-active':d===`global`})" @click="e=>Ke(`global`)"><component :is="bo" :size="13" />{{ i(`leaderboard.scope.global`) }}</button><button type="button" :class="({'is-active':d===`friends`})" @click="e=>Ke(`friends`)"><component :is="oc" :size="13" />{{ i(`leaderboard.scope.friends`) }}</button></div><div></div></div><div><div><button type="button" :class="`lb-icon-button`" :aria-label="i(`leaderboard.prevAria`)" @click="e=>We(-1)"><component :is="Qt" :size="15" /></button><component :is="CP" :modelValue="l?.value" @update:modelvalue="e=>l.value=e" :label="i(`common.selectDate`)" mode="date" align="end" :max-date="c?.value" /><button type="button" :class="`lb-icon-button`" :aria-label="i(`leaderboard.nextAria`)" :disabled="ae?.value" @click="e=>We(1)"><component :is="dn" :size="15" /></button></div><button type="button" :class="`lb-chip-button`" @click="Ge"><span v-text="i(`leaderboard.backToCurrent.${u}`)" /></button><button type="button" :class="`lb-icon-button`" :aria-label="i(`leaderboard.refresh`)" :title="i(`leaderboard.refresh`)" :disabled="g" @click="e=>Pe()"><component :is="zn" :size="14" :class="`animate-spin`" /></button><component :is="An" /></div></div><div><component :is="zn" :size="18" :class="`animate-spin`" />{{ ` `+toDisplayString(i(`common.loading`)) }}</div><component :is="Tgt" :open="w" @update:open="e=>w=e" :context="Me?.value" /><component :is="zy" :open="T" @update:open="e=>T=e" context="leaderboard" @added="Xe" /><component :is="ui" :open="S" @update:open="e=>S=e" /><component :is="_i" :open="C" @update:open="e=>C=e" /></div>
 </template>
 
 <script setup>
@@ -7,8 +7,68 @@ import { toDisplayString } from 'vue';
 import zy from './FriendManagerDialog.vue';
 import CP from './DateTimePickerField.vue';
 import Tgt from './LeaderboardShareDialog.vue';
-// [符号说明] l~computed, u=useConfigProviderContext
-import { S_bo as bo, S_is as is, S_oc as oc, S_e as e, S_i as i, S_c as c, S_l as l, S_u as u, S_d as d, S_g as g, S_v as v, S_S as S, S_C as C, S_w as w, S_T as T, S_ae as ae, S_Me as Me, S_Pe as Pe, S_We as We, S_Ge as Ge, S_Ke as Ke, S_Xe as Xe, S_Qt as Qt, S_dn as dn, S_An as An, S_zn as zn, S_ui as ui, S__i as _i } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_bo as bo, S_is as is, S_oc as oc, S_e as e, S_i as i, S_v as v, S_Qt as Qt, S_dn as dn, S_An as An, S_zn as zn, S_ui as ui, S__i as _i } from '../shared.js';
+const l = { value: undefined };
+const c = { value: undefined };
+const ae = { value: undefined };
+const Me = { value: undefined };
+import { ref, computed } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let u = ref(`day`);
+let d = ref(`global`);
+let m = ref(null);
+let g = ref(false);
+let S = ref(false);
+let C = ref(false);
+let w = ref(false);
+let T = ref(false);
+let se = computed(() => m.value?.me ?? null);
+async function Pe(e = {}) {
+  let t = r();
+  if (!N.value || b.value) return false;
+  let n = e.silent === true && m.value !== null;
+  if (n && M) return false;
+  let a = ++ne,
+    o = {
+      date: l.value,
+      period: u.value,
+      scope: d.value
+    };
+  M = true, n || (g.value = true, x.value = ``), c.value = xg();
+  try {
+    let daily = await pg.getDaily(o);
+    if (a !== ne) return false;
+    if (daily.period) f.value = true;else if (o.period !== `day` || o.scope !== `global`) return f.value = false, u.value = `day`, d.value = `global`, false;
+    return m.value = daily, e.silent || t(`insight_view_loaded`, {
+      panel: `leaderboard`
+    }), x.value = ``, p.value &&= {
+      ...p.value,
+      profileVisible: daily.profileVisible
+    }, Fe(daily), ee && (ee = false, daily.me && (w.value = true)), true;
+  } catch (e) {
+    return !n && a === ne && (x.value = e instanceof Error ? e.message : i(`leaderboard.loadFailed`)), false;
+  } finally {
+    a === ne && (n || (g.value = false), M = false);
+  }
+}
+function We(e) {
+  let t = yae(l.value, u.value, e);
+  l.value = t > c.value ? c.value : t;
+}
+function Ge() {
+  l.value = xg();
+}
+function Ke(e) {
+  d.value !== e && (d.value = e, trackActionEvent(`feature_map_heat_click`, {
+    entry: `leaderboard_scope_${e}`
+  }));
+}
+function Xe() {
+  O = true;
+}
 </script>
 
 <style>

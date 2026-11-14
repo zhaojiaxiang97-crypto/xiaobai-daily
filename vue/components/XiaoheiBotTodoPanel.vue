@@ -1,13 +1,82 @@
 <template>
-<aside data-v-d5b8b655 :class="`bot-todo-panel`" :aria-label="i(`botTodos.title`)"><header><component :is="P" variant="ghost" size="icon-sm" :disabled="d.value" :aria-label="i(`common.back`)" @click="ne" /><strong>{{ C.value }}</strong><span>{{ counter.value }}</span><div><component :is="P" variant="ghost" size="icon-sm" :disabled="d.value||u.value||m.value" :aria-label="i(`common.refresh`)" @click="N" /><component :is="P" variant="ghost" size="icon-sm" :aria-label="i(`common.close`)" @click="e=>r(`close`)" /></div></header><p>{{ f.value }}</p><form :class="`detail-layout`" @submit="withDirectives(M,[`prevent`])"><div><component :is="Rp" :modelValue="g.title" @update:modelvalue="e=>g.title=e" :class="`title-editor`" :aria-label="i(`botTodos.taskTitle`)" required="" maxlength="1000" rows="2" /><div><span :class="[`status-pill`,`status-${p.value.status}`]"><component :is="Wa" :size="12" />{{ D(p.value) }}</span><span><component :is="Vs" :size="12" />{{ p.value.categoryLabel||i(`todo.category.${p.value.category}`) }}</span><component :is="U_" :source="p.value.source" /></div><div><div><span><component :is="Ft" :size="14" />{{ i(`botTodos.dueDate`) }}</span><component :is="CP" :modelValue="w.value" @update:modelvalue="e=>w.value=e" :label="i(`botTodos.dueDate`)" mode="datetime" precision="minute" value-format="local" align="end" compact="" trigger-class="!w-full !min-h-8 !h-auto !rounded-lg !text-xs" /></div><div><span><component :is="Ar" :size="14" />{{ i(`botTodos.priority`) }}</span><component :is="By" :modelValue="g.priority" @update:modelvalue="e=>g.priority=e" /></div></div><section><h4><component :is="Us" :size="14" />{{ i(`botTodos.description`) }}</h4><component :is="Rp" :modelValue="g.description" @update:modelvalue="e=>g.description=e" :class="`description-editor`" :aria-label="i(`botTodos.description`)" maxlength="5000" rows="6" /></section><section><h4><component :is="Io" :size="14" />{{ i(`botTodos.subtasks`) }}<span>{{ toDisplayString(p.value.subtasks.filter(item=>item.done).length)+` / `+toDisplayString(p.value.subtasks.length) }}</span></h4></section><button type="button" :class="`open-full`" @click="e=>r(`openTodo`,p.value.id)">{{ i(`botTodos.openInTodos`) }}<component :is="Lt" :size="13" /></button></div><footer><span v-text="m.value?(openBlock(),createElementBlock(Fragment,{key:0},[resolveComponent(P,{type:`button`,variant:`outline`,size:`sm`,disabled:d.value,onClick:t[12]||=e=>m.value=false},{default:H(()=>[createTextVNode(toDisplayString(i(`common.cancel`)),1)]),_:1},8,[`disabled`]),resolveComponent(P,{type:`submit`,size:`sm`,disabled:d.value},{default:H(()=>[d.value?(openBlock(),createBlock(zn,{key:0,size:14,class:`animate-spin`})):createCommentVNode(``,true),createTextVNode(toDisplayString(i(`common.save`)),1)]),_:1},8,[`disabled`])],64)):(openBlock(),createElementBlock(Fragment,{key:1},[resolveComponent(P,{type:`button`,variant:`ghost`,size:`sm`,class:`mr-auto text-destructive`,disabled:d.value,onClick:t[13]||=e=>h.value=p.value},{default:H(()=>[createTextVNode(toDisplayString(i(`common.delete`)),1)]),_:1},8,[`disabled`]),resolveComponent(P,{type:`button`,variant:`outline`,size:`sm`,disabled:d.value,onClick:ee},{default:H(()=>[resolveComponent(v,{size:13}),createTextVNode(toDisplayString(i(`common.edit`)),1)]),_:1},8,[`disabled`]),resolveComponent(P,{type:`button`,size:`sm`,disabled:d.value,onClick:t[14]||=e=>te(`status`,{id:p.value.id,status:p.value.status===`done`?`todo`:`done`})},{default:H(()=>[resolveComponent(an,{size:14}),createTextVNode(toDisplayString(p.value.status===`done`?i(`botTodos.reopen`):i(`botTodos.complete`)),1)]),_:1},8,[`disabled`])],64))" /></footer></form><component :is="_i" :open="!!h.value" @update:open="e=>{e||(h.value=null);}" /></aside>
+<aside data-v-d5b8b655 :class="`bot-todo-panel`" :aria-label="i(`botTodos.title`)"><header><component :is="P" variant="ghost" size="icon-sm" :disabled="d" :aria-label="i(`common.back`)" @click="ne" /><strong>{{ C?.value }}</strong><span>{{ counter }}</span><div><component :is="P" variant="ghost" size="icon-sm" :disabled="d||u||m" :aria-label="i(`common.refresh`)" @click="N" /><component :is="P" variant="ghost" size="icon-sm" :aria-label="i(`common.close`)" @click="e=>r(`close`)" /></div></header><p>{{ f }}</p><form :class="`detail-layout`" @submit="withDirectives(M,[`prevent`])"><div><component :is="Rp" :modelValue="g.title" @update:modelvalue="e=>g.title=e" :class="`title-editor`" :aria-label="i(`botTodos.taskTitle`)" required="" maxlength="1000" rows="2" /><div><span :class="[`status-pill`,`status-${p.status}`]"><component :is="Wa" :size="12" />{{ D(p) }}</span><span><component :is="Vs" :size="12" />{{ p.categoryLabel||i(`todo.category.${p.category}`) }}</span><component :is="U_" :source="p.source" /></div><div><div><span><component :is="Ft" :size="14" />{{ i(`botTodos.dueDate`) }}</span><component :is="CP" :modelValue="w?.value" @update:modelvalue="e=>w.value=e" :label="i(`botTodos.dueDate`)" mode="datetime" precision="minute" value-format="local" align="end" compact="" trigger-class="!w-full !min-h-8 !h-auto !rounded-lg !text-xs" /></div><div><span><component :is="Ar" :size="14" />{{ i(`botTodos.priority`) }}</span><component :is="By" :modelValue="g.priority" @update:modelvalue="e=>g.priority=e" /></div></div><section><h4><component :is="Us" :size="14" />{{ i(`botTodos.description`) }}</h4><component :is="Rp" :modelValue="g.description" @update:modelvalue="e=>g.description=e" :class="`description-editor`" :aria-label="i(`botTodos.description`)" maxlength="5000" rows="6" /></section><section><h4><component :is="Io" :size="14" />{{ i(`botTodos.subtasks`) }}<span>{{ toDisplayString(p.subtasks.filter(item=>item.done).length)+` / `+toDisplayString(p.subtasks.length) }}</span></h4></section><button type="button" :class="`open-full`" @click="e=>r(`openTodo`,p.id)">{{ i(`botTodos.openInTodos`) }}<component :is="Lt" :size="13" /></button></div><footer><span v-text="m?(openBlock(),createElementBlock(Fragment,{key:0},[resolveComponent(P,{type:`button`,variant:`outline`,size:`sm`,disabled:d,onClick:t[12]||=e=>m=false},{default:H(()=>[createTextVNode(toDisplayString(i(`common.cancel`)),1)]),_:1},8,[`disabled`]),resolveComponent(P,{type:`submit`,size:`sm`,disabled:d},{default:H(()=>[d?(openBlock(),createBlock(zn,{key:0,size:14,class:`animate-spin`})):createCommentVNode(``,true),createTextVNode(toDisplayString(i(`common.save`)),1)]),_:1},8,[`disabled`])],64)):(openBlock(),createElementBlock(Fragment,{key:1},[resolveComponent(P,{type:`button`,variant:`ghost`,size:`sm`,class:`mr-auto text-destructive`,disabled:d,onClick:t[13]||=e=>h=p},{default:H(()=>[createTextVNode(toDisplayString(i(`common.delete`)),1)]),_:1},8,[`disabled`]),resolveComponent(P,{type:`button`,variant:`outline`,size:`sm`,disabled:d,onClick:ee},{default:H(()=>[resolveComponent(v,{size:13}),createTextVNode(toDisplayString(i(`common.edit`)),1)]),_:1},8,[`disabled`]),resolveComponent(P,{type:`button`,size:`sm`,disabled:d,onClick:t[14]||=e=>te(`status`,{id:p.id,status:p.status===`done`?`todo`:`done`})},{default:H(()=>[resolveComponent(an,{size:14}),createTextVNode(toDisplayString(p.status===`done`?i(`botTodos.reopen`):i(`botTodos.complete`)),1)]),_:1},8,[`disabled`])],64))" /></footer></form><component :is="_i" :open="!!h" @update:open="e=>{e||(h=null);}" /></aside>
 </template>
 
 <script setup>
 import { openBlock, createElementBlock, createBlock, createTextVNode, createCommentVNode, toDisplayString, withDirectives, resolveComponent } from 'vue';
 import By from './Select.vue';
 import CP from './DateTimePickerField.vue';
-// [符号说明] u=useConfigProviderContext, f=useConfigProviderContext, D=useConfigProviderContext, M~computed
-import { S_Wa as Wa, S_Io as Io, S_is as is, S_xs as xs, S_Vs as Vs, S_Us as Us, S_sm as sm, S_lg as lg, S_bot as bot, S_h4 as h4, S_counter as counter, S_e as e, S_t as t, S_r as r, S_i as i, S_u as u, S_d as d, S_f as f, S_p as p, S_m as m, S_g as g, S__ as _, S_v as v, S_C as C, S_w as w, S_D as D, S_ee as ee, S_te as te, S_M as M, S_ne as ne, S_N as N, S_P as P, S_H as H, S_Ft as Ft, S_Lt as Lt, S_an as an, S_zn as zn, S_mr as mr, S_Ar as Ar, S__i as _i } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_Wa as Wa, S_Io as Io, S_is as is, S_xs as xs, S_Vs as Vs, S_Us as Us, S_sm as sm, S_lg as lg, S_bot as bot, S_h4 as h4, S_e as e, S_t as t, S_r as r, S_i as i, S_g as g, S__ as _, S_v as v, S_w as w, S_P as P, S_H as H, S_Ft as Ft, S_Lt as Lt, S_an as an, S_zn as zn, S_mr as mr, S_Ar as Ar, S__i as _i } from '../shared.js';
+const C = { value: undefined };
+const Rp = { value: undefined };
+const U_ = { value: undefined };
+const Fragment = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let counter = ref(0);
+let u = ref(false);
+let d = ref(false);
+let f = ref(``);
+let p = ref(null);
+let m = ref(false);
+let h = ref(null);
+function D(e) {
+  return i(`todo.status.${e.status === `in-progress` ? `inProgress` : e.status}`);
+}
+function ee() {
+  let value = p.value;
+  value && (++b, Object.assign(g, {
+    title: value.title,
+    description: value.description,
+    dueDate: value.dueDate ?? ``,
+    dueTime: value.dueTime ?? ``,
+    priority: value.priority,
+    assigneeEmails: (value.assignees ?? [value.assignee]).map(item => item.email).join(`, `),
+    followerEmails: (value.followers ?? []).map(item => item.email).join(`, `)
+  }), m.value = true);
+}
+async function te(e, t) {
+  if (d.value) return;
+  let conversationId = n.conversationId;
+  d.value = true, f.value = ``;
+  try {
+    let i = await k(e, t, conversationId);
+    if (conversationId !== n.conversationId) return;
+    p.value?.id === t.id && (p.value = i.task ?? null), m.value = false, h.value = null, await A();
+  } catch (e) {
+    conversationId === n.conversationId && (f.value = e instanceof Error ? e.message : String(e));
+  } finally {
+    d.value = false;
+  }
+}
+function M() {
+  let value = p.value;
+  if (!value || !g.title.trim()) return;
+  let t = {
+    id: value.id
+  };
+  for (let n of [`title`, `description`, `dueDate`, `dueTime`, `priority`]) {
+    let r = n === `title` ? g[n].trim() : g[n];
+    r !== (value[n] ?? ``) && (t[n] = r);
+  }
+  let n = text => text.split(/[,，;；\s]+/).map(item => item.trim()).filter(Boolean),
+    r = (value.assignees ?? [value.assignee]).map(item => item.email),
+    i = (value.followers ?? []).map(item => item.email);
+  if (JSON.stringify(n(g.assigneeEmails)) !== JSON.stringify(r) && (t.assigneeEmails = n(g.assigneeEmails)), JSON.stringify(n(g.followerEmails)) !== JSON.stringify(i) && (t.followerEmails = n(g.followerEmails)), Object.keys(t).length === 1) {
+    m.value = false;
+    return;
+  }
+  te(`update`, t);
+}
+function ne() {
+  ++b, p.value = null, m.value = false, f.value = ``;
+}
+function N() {
+  d.value || m.value || h.value || u.value || (A(), p.value && j(p.value));
+}
 </script>
 
 <style>

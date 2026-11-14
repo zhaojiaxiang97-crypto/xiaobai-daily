@@ -1,12 +1,34 @@
 <template>
-<div data-v-687930fa :class="`composer-pet`" :style="at({bottom:`calc(100% - ${counter.value}px)`})"><button type="button" :class="`composer-pet__button`" :aria-label="t(`xiaoheiBot.composerPet.openGrowth`)" :aria-busy="n.value" @click="withDirectives(d,[`stop`])"><img :class="`composer-pet__art`" :src="s.value" alt="" draggable="false" @error="e=>s.value=Q5" /></button><span><span v-text="t(`todayWork.growthEntry.${r.value}`)" /></span></div>
+<div data-v-687930fa :class="`composer-pet`" :style="at({bottom:`calc(100% - ${counter}px)`})"><button type="button" :class="`composer-pet__button`" :aria-label="t(`xiaoheiBot.composerPet.openGrowth`)" :aria-busy="n" @click="withDirectives(d,[`stop`])"><img :class="`composer-pet__art`" :src="s?.value" alt="" draggable="false" @error="e=>s.value=Q5" /></button><span><span v-text="t(`todayWork.growthEntry.${r}`)" /></span></div>
 </template>
 
 <script setup>
 import { withDirectives } from 'vue';
-// [符号说明] n~computed
-import { S_px as px, S_pet as pet, S_alt as alt, S_Q5 as Q5, S_counter as counter, S_t as t, S_n as n, S_r as r, S_s as s, S_d as d, S_v as v, S_at as at } from '../shared.js';
+import { S_px as px, S_pet as pet, S_alt as alt, S_Q5 as Q5, S_t as t, S_v as v, S_at as at } from '../shared.js';
 const e = defineProps({});
+
+// [兜底] 模板引用但无来源的符号
+const s = { value: undefined };
+import { ref } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let n = ref(false);
+let r = ref(``);
+let counter = ref(8);
+async function d() {
+  if (!n.value) {
+    n.value = true, r.value = ``;
+    try {
+      await window.electronAPI.growth.open();
+    } catch (e) {
+      if (!i) return;
+      let t = e instanceof Error ? e.message : ``;
+      r.value = t.includes(`请先登录`) ? `loginRequired` : t.includes(`暂未向当前账号开放`) ? `unavailable` : `openError`;
+    } finally {
+      n.value = false;
+    }
+  }
+}
 </script>
 
 <style>

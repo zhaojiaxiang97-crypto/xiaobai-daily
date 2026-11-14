@@ -10,4 +10,7 @@ const e = defineProps({
       }
     });
 const t = e;
+
+// [兜底] 模板引用但无来源的符号
+const Lp = { value: undefined };
 </script>

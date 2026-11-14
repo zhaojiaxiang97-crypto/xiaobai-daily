@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { S_is as is, S_as as as, S_state as state, S_e as e, S_r as r, S_i as i, S_a as a, S_o as o, S_fe as fe } from '../shared.js';
+import { S_is as is, S_as as as, S_state as state, S_e as e, S_r as r, S_o as o, S_fe as fe } from '../shared.js';
 const event = defineProps({
       asChild: {
         type: Boolean,
@@ -15,4 +15,18 @@ const event = defineProps({
       }
     });
 const t = event;
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+function i(e) {
+  let boundingClientRect = e.target.getBoundingClientRect(),
+    n = e.clientX - boundingClientRect.left,
+    i = e.clientY - boundingClientRect.top;
+  r.handleThumbDown(e, {
+    x: n,
+    y: i
+  });
+}
+function a(e) {
+  r.handleThumbUp(e);
+}
 </script>

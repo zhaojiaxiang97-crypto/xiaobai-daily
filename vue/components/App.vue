@@ -1,5 +1,5 @@
 <template>
-<div data-v-84811ec9 :class="[`app-layout`,{'app-layout--win':n===`win32`,'app-layout--maximized':n===`win32`&&r.value}]" :style="at({'--sidebar-expanded-w':`${p.value}px`,'--sidebar-w':a.value||!se||!te.value||D.value?`0px`:`${p.value}px`})"><component :is="pie" :collapsed="a.value" @update:collapsed="e=>a.value=e" :active-nav="o.value" @update:activenav="vn" @showwechatqrcode="Ke" @openupdate="tt" @contactpaneltargetchange="e=>f.value=e" /><main><div :class="[`main-content`,{'main-content--win':n===`win32`,'main-content--toolbox-workspace':o.value===`toolbox`&&m.value,'main-content--toolbox-left-controls':o.value===`toolbox`&&m.value&&(!se||D.value||a.value),'main-content--xiaohei-bot':o.value===`xiaohei-bot`,'main-content--xiaohei-bot-left-controls':o.value===`xiaohei-bot`&&a.value}]"><div :class="`content-header`" @dblclick="on"><div><div :class="`traffic-lights`" @mouseenter="e=>i.value=true" @mouseleave="e=>i.value=false"><button :class="[`traffic-light traffic-light-close`,{'show-icon':i.value}]" @click="ln"></button><button :class="[`traffic-light traffic-light-minimize`,{'show-icon':i.value}]" @click="sn"></button><button :class="[`traffic-light traffic-light-maximize`,{'show-icon':i.value}]" @click="cn"><component :is="Pr" :size="8" /></button></div><div><button :class="`collapsed-action-btn`" @click="e=>a.value=false" :title="N(`common.expandMenu`)"><component :is="os" :size="14" /></button></div><span>{{ $.value }}</span></div><div><button :class="`win-btn`" @click="sn" :title="N(`app.minimize`)"></button><button :class="`win-btn`" @click="cn" :title="r.value?N(`app.restore`):N(`app.maximize`)"><svg></svg></button><button :class="`win-btn win-btn-close`" @click="ln" :title="N(`app.close`)"></button></div></div><div><div><component :is="zn" :size="20" :class="`animate-spin`" /><span>{{ N(`common.loading`) }}</span></div></div></div></main><div></div><component :is="IQt" :open="ke" @update:open="e=>$e(ke)?ke.value=e:null" @opentodo="Sn" @openreportcc="xn" @openupdate="tt" @opensharecard="e=>iW({kind:`month`,month:e})" /></div><component :is="ZQt" /><component :is="Bie" :open="Ut.value" @update:open="e=>Ut.value=e" :snapshot="Wt.value" @generate="gn" @exit="hn" @suppresschange="_n" /><component :is="jZt" /><component :is="tQt" /><component :is="R$t" :state="We.value" @statechanged="e=>We.value=e" />
+<div data-v-84811ec9 :class="[`app-layout`,{'app-layout--win':n===`win32`,'app-layout--maximized':n===`win32`&&r}]" :style="at({'--sidebar-expanded-w':`${p}px`,'--sidebar-w':a||!se||!te||D?`0px`:`${p}px`})"><component :is="pie" :collapsed="a" @update:collapsed="e=>a=e" :active-nav="o" @update:activenav="vn" @showwechatqrcode="Ke" @openupdate="tt" @contactpaneltargetchange="e=>f.value=e" /><main><div :class="[`main-content`,{'main-content--win':n===`win32`,'main-content--toolbox-workspace':o===`toolbox`&&m,'main-content--toolbox-left-controls':o===`toolbox`&&m&&(!se||D||a),'main-content--xiaohei-bot':o===`xiaohei-bot`,'main-content--xiaohei-bot-left-controls':o===`xiaohei-bot`&&a}]"><div :class="`content-header`" @dblclick="on"><div><div :class="`traffic-lights`" @mouseenter="e=>i=true" @mouseleave="e=>i=false"><button :class="[`traffic-light traffic-light-close`,{'show-icon':i}]" @click="ln"></button><button :class="[`traffic-light traffic-light-minimize`,{'show-icon':i}]" @click="sn"></button><button :class="[`traffic-light traffic-light-maximize`,{'show-icon':i}]" @click="cn"><component :is="Pr" :size="8" /></button></div><div><button :class="`collapsed-action-btn`" @click="e=>a=false" :title="N(`common.expandMenu`)"><component :is="os" :size="14" /></button></div><span>{{ $?.value }}</span></div><div><button :class="`win-btn`" @click="sn" :title="N(`app.minimize`)"></button><button :class="`win-btn`" @click="cn" :title="r?N(`app.restore`):N(`app.maximize`)"><svg></svg></button><button :class="`win-btn win-btn-close`" @click="ln" :title="N(`app.close`)"></button></div></div><div><div><component :is="zn" :size="20" :class="`animate-spin`" /><span>{{ N(`common.loading`) }}</span></div></div></div></main><div></div><component :is="IQt" :open="ke" @update:open="e=>$e(ke)?ke.value=e:null" @opentodo="Sn" @openreportcc="xn" @openupdate="tt" @opensharecard="e=>iW({kind:`month`,month:e})" /></div><component :is="ZQt" /><component :is="Bie" :open="Ut" @update:open="e=>Ut=e" :snapshot="Wt" @generate="gn" @exit="hn" @suppresschange="_n" /><component :is="jZt" /><component :is="tQt" /><component :is="R$t" :state="We" @statechanged="e=>We=e" />
 </template>
 
 <script setup>
@@ -10,8 +10,110 @@ import tQt from './WoodenFish.vue';
 import IQt from './NotificationPopover.vue';
 import ZQt from './SurveyDialog.vue';
 import R$t from './AppLockOverlay.vue';
-// [符号说明] n~computed, f=useConfigProviderContext, D=useConfigProviderContext
-import { S_is as is, S_os as os, S_state as state, S_px as px, S_iW as iW, S_bot as bot, S_e as e, S_n as n, S_r as r, S_i as i, S_a as a, S_o as o, S_f as f, S_p as p, S_m as m, S_w as w, S_D as D, S_te as te, S_N as N, S_se as se, S_ke as ke, S_We as We, S_Ke as Ke, S_$e as $e, S_tt as tt, S_at as at, S_Ut as Ut, S_Wt as Wt, S_on as on, S_sn as sn, S_cn as cn, S_ln as ln, S_hn as hn, S_gn as gn, S__n as _n, S_vn as vn, S_xn as xn, S_Sn as Sn, S_zn as zn, S_Pr as Pr } from '../shared.js';
+
+// [兜底] 模板引用但无来源的符号
+import { S_is as is, S_os as os, S_state as state, S_px as px, S_iW as iW, S_bot as bot, S_e as e, S_w as w, S_N as N, S_se as se, S_ke as ke, S_$e as $e, S_at as at, S_zn as zn, S_Pr as Pr } from '../shared.js';
+const $ = { value: undefined };
+const f = { value: undefined };
+import { ref, computed } from 'vue';
+
+// [setup 还原] 原组件 setup 里初值不依赖 IPC 的声明
+let electronAPI = window.electronAPI;
+let n = electronAPI?.platform ?? `darwin`;
+let r = ref(false);
+let i = ref(false);
+let a = ref(false);
+let o = ref(`today-work`);
+let d = ref(292);
+let p = computed(() => o.value === `xiaohei-bot` ? d.value : 220);
+let m = ref(false);
+let T = ref(false);
+let E = ref(false);
+let D = computed(() => T.value || E.value);
+let te = ref(false);
+let We = ref({
+  configured: true,
+  enabled: true,
+  locked: true,
+  retryAfterSeconds: 0,
+  recoveryMode: `wordSelection`
+});
+function Ke(e = `service`) {
+  He.value = e, Ue.value = `https://xiaoheiribao.com/api/qrcode.php?scene=client&t=${Date.now()}`, Ve.value = true;
+}
+async function tt() {
+  ke.value = false;
+  try {
+    let e = await window.electronAPI?.updater?.check?.(),
+      t = await window.electronAPI?.updater?.getState?.();
+    if (t && q(t), !e?.hasUpdate) {
+      e?.message && Oi(e.message);
+      return;
+    }
+    Je.value = true;
+  } catch (e) {
+    Ai(e instanceof Error ? e.message : N(`updateDialog.updateFailedTitle`));
+  }
+}
+let Ut = ref(false);
+let Wt = ref(null);
+function on() {
+  electronAPI?.maximize?.();
+}
+function sn() {
+  electronAPI?.minimize?.();
+}
+function cn() {
+  electronAPI?.maximize?.();
+}
+function ln() {
+  electronAPI?.close?.();
+}
+async function hn() {
+  await Ht;
+  try {
+    await P_.markExitReminderShown();
+  } catch (e) {
+    console.warn(`[exit-report-reminder] 无法保存当天退出选择:`, e);
+  }
+  Ut.value = false, Ot(`action`, `exit_report_reminder_dismiss`), await P_.confirmQuit();
+}
+async function gn() {
+  await Ht, Ut.value = false, await P_.cancelQuitCheck(), Ot(`action`, `exit_report_reminder_generate`), fn(`exit_reminder`);
+}
+function _n(e) {
+  Gt.value = e, Ht = Ht.then(async () => {
+    await P_.setSuppressExitReminder(e), e && Ot(`action`, `exit_report_reminder_suppress`);
+  }).catch(err => {
+    console.warn(`[exit-report-reminder] 无法保存退出提醒偏好:`, err);
+  });
+}
+function vn(e) {
+  if (!D.value) {
+    if (e === `todo` && !z$t(oe.value?.userId)) {
+      j.value = o.value, O.value = e, w.value = true;
+      return;
+    }
+    e === `heat-map` && (s.value = `range`), o.value = e, S.value += 1, kt(e), e === `generate-report` ? Ot(`action`, `report_page_view`, {
+      entry: `sidebar`
+    }) : e === `subscribe` ? Ot(`action`, `pricing_page_view`, {
+      entry: `sidebar`
+    }) : e === `settings` ? trackActionEvent(`capture_control_impression`, {
+      entry: `settings`
+    }) : e === `privacy` && trackActionEvent(`capture_control_impression`, {
+      entry: `privacy`
+    });
+  }
+}
+function xn(e) {
+  rMt(e), o.value !== `history` && vn(`history`);
+}
+function Sn(e) {
+  k.value = {
+    taskId: e,
+    requestId: ++A
+  }, vn(`todo`);
+}
 </script>
 
 <style>
