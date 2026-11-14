@@ -363,6 +363,45 @@ patchFlag 有 TEXT 标记，`$setup` 访问路径也在，理论上应该响应�
 下一步：直接查 `app._instance.effect.active`，以及首次渲染时 `We.locked` 的 getter 有没有被命中
 （给 reactive 加自定义 getter 计数）。
 
+
+### 排除双实例 + 修正 effect 判定（Vue 3.5 用 flags）
+
+两条重要修正：
+
+**1. Vue 只有一份，不是双实例。** 在 `bootstrap.js` 里把 `__vue` 命名空间挂到 window，
+组件里再 `import * as __v2 from 'vue'` 对比：`__v2 === window.__V1__` 为 **true**。
+版本 3.5.45，`vue.js` 只有一个资源 URL。
+
+**2. `effect.active` 那条结论是假阴性。** Vue 3.5 把 `ReactiveEffect` 的活跃位挪进了
+`flags`（`EffectFlags.ACTIVE`），没有 `active` 属性。按 `eff.active` 读会得到 `undefined`，
+被判成「已停止」。改用 `flags` 读：
+
+```
+effect.flags = 37   active-bit = YES
+instance.isUnmounted = false
+```
+
+所以 effect 是活的、组件没卸载。
+
+### 于是问题变成：首次渲染没有收集依赖
+
+对照实验：
+
+| 观测 | 值 |
+|---|---|
+| `watch(() => We.locked)` | **触发 1 次**（`true -> false`） |
+| `r.value = true`（最简单的 ref） | 赋值成功，模板仍显示 `false` |
+| `onUpdated` 计数 | 0 |
+| `effect.flags` / `isUnmounted` | 37（active） / false |
+
+响应式系统是好的（watch 能收到变更）、Vue 是单实例、effect 也是活的 ——
+但 render effect 就是不重跑。
+
+结论：**首次渲染时模板读取的 ref 没有被收集进 render effect 的依赖**。
+这是 Vue 内部行为，下一步该用 dev 构建的 `onRenderTracked` 看首次渲染到底 track 了什么，
+或者用 `h()` 手写一份等价 render 做对照 —— 如果手写能响应而模板不能，
+问题就锁定在模板编译产物上。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，
