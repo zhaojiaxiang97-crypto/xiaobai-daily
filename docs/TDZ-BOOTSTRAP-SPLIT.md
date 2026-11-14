@@ -210,6 +210,38 @@ App 的 setup 有 70 条顶层语句，安全子集只取其中 20 条（初值�
 结论：主界面差的是「初始化链路」，不是渲染能力。要往下走必须还原
 `App` 与 `AppLockOverlay` 里那些依赖 IPC 的初始化语句，而不是在宿主层打补丁。
 
+
+## 初始化链路：已经定位到具体语句
+
+上一轮只知道「主界面差初始化链路」。这一轮把它挖出来了。`App` 的 setup 里有一整块：
+
+```js
+onBeforeMount(async () => {
+  en = Dt(o.value), jt = ZR.onStateChanged(e => { We.value = e, Ge.value = true; });
+  try { We.value = await ZR.getState(); } catch {} finally { Ge.value = true; }
+  At = window.electronAPI?.notifications?.onNativeAction?.(...);
+  ...
+});
+```
+
+- `We` = 应用锁状态（`configured/enabled/locked`），模板按 `Ge ? We.locked ? 锁屏 : null : …` 分支
+- `Ge` = 是否已加载完
+- `ZR` = 应用锁 API 封装
+
+**两个实测事实**：
+
+1. `ZR.getState()` 返回的是**裸对象**
+   `{"configured":false,"enabled":false,"locked":false,...}` —— 没有 `{ok, data}` 包装。
+   （上一轮的手工补丁按 `r.ok && r.data` 判断，所以永远不成立，白试。）
+2. 这块代码**根本没执行到**：`en = Dt(o.value), jt = ZR.onStateChanged(...)` 是序列表达式，
+   `en`/`jt` 在原 setup 里声明过、但没被还原，严格模式下直接抛 `ReferenceError`，
+   `onBeforeMount` 整个中断，后面的 `We.value = await ZR.getState()` 不会跑。
+
+也就是说：**锁屏常驻不是渲染问题，是 `onBeforeMount` 第一行就抛错**。
+
+把 `en`/`jt` 预声明成 `let` 后，首屏反而变成 0 字节（setup 里下一个隐式变量继续抛）。
+说明「只还原顶层语句 + 补几个 let」不够，原 setup 的声明链要更完整地还原。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，

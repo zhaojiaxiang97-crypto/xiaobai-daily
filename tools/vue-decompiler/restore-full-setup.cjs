@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// 实验脚本：把某个组件的 setup 顶层语句「全量」还原进 <script setup>（含拉数据/副作用逻辑）。
+// 实验脚本：把某个组件的 setup 顶层语句「全量」还原进 <script setup>。
 //
-// 实测结论（2026-11，真 Electron 外壳 + 真 preload，App 组件）：
-//   - 70/70 条顶层语句都能找到符号来源（shared 导入 34 个），脚本语法可过
-//   - 但首屏反而退化：#app 从 8246B 掉到 1809B（只剩 loading）
-//     原因：useI18n()/store hook 在真外壳里也会抛（i18n 实例没装上），
-//     异常打断 setup；`at` 这类模板辅助函数的语义在 shared 里被同名符号覆盖。
-//   - 目前只有「安全子集」（见 gen-main.cjs 的 restoreSafeSetup）是正收益。
+// 进展（2026-11，真 Electron 外壳 + 真 preload，App 组件）：
+//   - 符号可解析性检查：70/70 条顶层语句全部保留（shared 导入 34 个）
+//   - 支持 try/catch 语句（原 setup 拉初始状态就在里面）
+//   - 支持「隐式赋值预声明」：严格模式下给未声明变量赋值会抛 ReferenceError，
+//     把整段初始化打断（实测 onBeforeMount 里的 en/jt）
 //
-// 保留原因：符号可解析性检查（declaredNames/resolvable/迭代剔除）是可复用的，
-// 将来补上 hook 兜底与辅助函数映射后可以再试。
+// 已知卡点：App 的 onBeforeMount 里还有一批隐式变量（en/jt/At...），
+// 逐个预声明后仍会在某处抛错，setup 中断 → 首屏退化。
+// 说明「只还原顶层语句」不够：原 setup 的声明链需要更完整地还原。
 //
 // 用法: node restore-full-setup.cjs <组件名> <目标 .vue> <shared.js>
 // 目的：让拉数据的初始化逻辑真的执行 —— 真外壳里 IPC 是真的，只要跑起来就能拿到真数据
@@ -74,9 +74,12 @@ const stmts = [];
 for (const st of setupBody.body) {
   if (t.isVariableDeclaration(st) || t.isExpressionStatement(st)) stmts.push(st);
   else if (t.isFunctionDeclaration(st) && st.id) stmts.push(st);
+  // try/catch：原 setup 里拉初始状态就是 `try { We.value = await ZR.getState() } finally { Ge.value = true }`
+  else if (t.isTryStatement(st)) stmts.push(st);
 }
 
 function declaredNames(st) {
+  if (t.isTryStatement(st)) return [];
   if (t.isFunctionDeclaration(st)) return st.id ? [st.id.name] : [];
   if (!t.isVariableDeclaration(st)) return [];
   const acc = [];
@@ -222,11 +225,31 @@ const keptShared = oldSpecs.filter(sp => !declared.has(nameOfSpec(sp)));
 const sharedAll = [...new Set([...sharedSpecs, ...keptShared])];
 const vueAll = [...new Set([...vueApis, 'ref', 'computed'].filter(a => !declared.has(a) || true))];
 
+// 严格模式（ESM）下给未声明变量赋值会抛 ReferenceError，整段初始化就断了。
+// 实测：onBeforeMount 里 `en = Dt(o.value)` 的 en 在原 setup 里是声明过的，
+// 没还原到就抛出，导致后面的 We.value = await ZR.getState() 根本不执行。
+const implicitAssigned = new Set();
+{
+  // 用整体作用域分析：任何「赋值目标没有绑定」的标识符都要在块首预声明，
+  // 否则严格模式下 ReferenceError 会把整段初始化打断（实测 onBeforeMount 里的 jt/en）。
+  const fullAst = P.parse(code, { sourceType: 'module' });
+  T(fullAst, {
+    AssignmentExpression(p2) {
+      if (!t.isIdentifier(p2.node.left)) return;
+      const nm = p2.node.left.name;
+      if (p2.scope.getBinding(nm)) return;
+      implicitAssigned.add(nm);
+    },
+  });
+}
+const implicitDecl = implicitAssigned.size ? `let ${[...implicitAssigned].join(', ')};\n` : '';
+
 const vueImport = `import { ${vueAll.join(', ')} } from 'vue';\n`;
 const sharedImport = sharedAll.length ? `import { ${sharedAll.join(', ')} } from '../shared.js';\n` : '';
 
 const safeHelper = "const __safe = (fn) => { try { return fn() ?? {}; } catch (e) { return {}; } };\n";
-let newScript = `${vueImport}${compImports.join('\n')}\n${sharedImport}\n// [setup 还原-全量] ${keep.length}/${stmts.length} 条顶层语句\n${safeHelper}${code}\n`;
+let newScript = `${vueImport}${compImports.join('\n')}\n${sharedImport}\n// [setup 还原-全量] ${keep.length}/${stmts.length} 条顶层语句\n${safeHelper}${implicitDecl}${code}\n`;
+if (implicitAssigned.size) console.log(`  未声明赋值预置 let: ${[...implicitAssigned].join(',')}`);
 
 const styleM = /(<style>[\s\S]*<\/style>)/.exec(vueSrc);
 if (!fs.existsSync(vueFile + '.bak2')) fs.writeFileSync(vueFile + '.bak2', vueSrc);
