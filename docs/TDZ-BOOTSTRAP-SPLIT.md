@@ -402,6 +402,23 @@ instance.isUnmounted = false
 或者用 `h()` 手写一份等价 render 做对照 —— 如果手写能响应而模板不能，
 问题就锁定在模板编译产物上。
 
+
+## 对照实验：Vue 正常、最小 SFC 正常、只有还原出的 App.vue 不响应
+
+三组对照，都跑在同一个真 Electron 外壳、同一份 `vue@3.5.45`：
+
+| 对照组 | 做法 | 结果 |
+|---|---|---|
+| 手写 render | `createApp({ setup() { return () => h('div', String(c.value)) } })` | **正常**，`0/0/0 → 1/2/1` |
+| 最小 SFC | `<template><span>{{ c }}</span></template>` + `<script setup>` | **正常**，同上 |
+| 还原的 `App.vue` | 生成器产出（超长单行模板 + `$setup.X`） | **不响应**，任何 ref 都停在首渲染值 |
+
+关掉模板编译优化（`hoistStatic: false`、`cacheHandlers: false`）也不改变结果。
+
+结论：问题不在 Vue、不在环境、不在 `<script setup>` 本身，而在**生成器产出的 App.vue 模板
+编译产物**。下一步该做的是对这份模板二分裁剪 —— 删掉一半看响应式是否恢复，逐步收缩到
+触发点（大概率是某个具体节点写法让整棵 block 的更新路径失效）。
+
 ## 边界
 
 - 传递闭包有阈值保护（`REFACTOR_CAP`，默认 200 个 unit）。闭包失控时退化为只移种子，
